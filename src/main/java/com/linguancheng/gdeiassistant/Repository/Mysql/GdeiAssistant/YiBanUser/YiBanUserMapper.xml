@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.YiBanUser.YiBanUserMapper">
+
+    <!-- 开启YiBanUserMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <select id="selectUsername" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select username from yibanUser where userid=#{userid} limit 1
+    </select>
+
+    <insert id="insertYiBanUser">
+        insert into yibanUser (userid,username) values (#{userid},#{username})
+    </insert>
+
+    <update id="updateYiBanUser">
+        update yibanUser set username=#{username} where userid=#{userid}
+    </update>
+
+</mapper>

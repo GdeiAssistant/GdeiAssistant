@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <settings>
+
+        <!-- 关闭二级缓存 -->
+        <setting name="cacheEnabled" value="false"/>
+
+        <!-- 开启延迟加载的开关 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+
+        <!-- 按需加载 -->
+        <setting name="aggressiveLazyLoading" value="false"/>
+
+    </settings>
+
+</configuration>

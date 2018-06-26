@@ -1,0 +1,1492 @@
+html, body, ul, li, p, div, form, h1, h2, h3, h4, h5, h6, img, a img, input {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+ul, li {
+    list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6, b, i, em {
+    font-size: 1em;
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, input, button, textarea, select {
+    font: normal 12px/1.5 "Microsoft YaHei", "Microsoft JhengHei", STHeiti, MingLiu, san-serif;
+    outline: none;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #0099cc;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+.img img, video {
+    vertical-align: middle;
+}
+
+html {
+    -webkit-text-size-adjust: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    background: #fff;
+    height: 100%;
+}
+
+body {
+    min-width: 320px;
+    margin: 0 auto;
+    background: #e3eeec;
+    min-height: 100%;
+}
+
+.nodis, .noDis {
+    display: none !important;
+}
+
+.novis, .noVis {
+    visibility: hidden
+}
+
+a.fucdis, a.fucdis:hover, a.fucdis:visited {
+    cursor: default;
+    color: #2ab39f
+}
+
+body * {
+    -webkit-text-size-adjust: none;
+}
+
+input, textarea {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0)
+}
+
+.nodis {
+    display: none !important
+}
+
+.i {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* common */
+.search {
+    height: 40px;
+    position: relative;
+    padding-left: 33px;
+    background: #fff
+}
+
+.search .i {
+    background: url(../../img/lostandfound/search.png) no-repeat;
+    background-size: 14px;
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    left: 14px;
+    top: 14px;
+}
+
+.search .txt {
+    padding: 8px 0;
+    display: block;
+}
+
+.search input {
+    width: 80%;
+    height: 24px;
+    line-height: 24px;
+}
+
+.search button {
+    color: #24b19c;
+    border: none;
+    outline: none;
+    background: #fff;
+    width: 20%;
+    text-align: right;
+}
+
+.footer {
+    text-align: center;
+    line-height: 38px;
+    height: 38px;
+    margin-top: 20px;
+    color: #999;
+}
+
+.footer span, .footer a {
+    margin: 0 3px;
+}
+
+.head .back {
+    padding: 10px;
+    width: 22px;
+    height: 20px;
+    position: absolute;
+    top: 0px;
+    left: 10px;
+}
+
+.head .back .iarr {
+    position: static;
+    display: block;
+}
+
+.head .logo {
+    position: relative;
+    padding-left: 35px;
+    display: inline-block;
+    height: 100%
+}
+
+/* index */
+.menus {
+    height: 150px;
+}
+
+.menu {
+    width: 25%;
+    height: 50px;
+    background: #3cc2a5;
+    float: left;
+}
+
+.menu:nth-child(odd) {
+    background: #24b19c
+}
+
+.menu a {
+    color: #fff;
+    display: block;
+    height: 100%;
+    text-align: center;
+}
+
+.menu .i {
+    background: url(../../img/lostandfound/menu.png) no-repeat;
+    background-size: 88px;
+    width: 22px;
+    height: 16px;
+    margin: 9px 0 4px;
+}
+
+.menu .ibicycle {
+    background-position: 0 0
+}
+
+.menu .iphone {
+    background-position: -22px 0
+}
+
+.menu .ipc {
+    background-position: -44px 0
+}
+
+.menu .iparts {
+    background-position: -66px 0
+}
+
+.menu .iappliances {
+    background-position: 0 -16px
+}
+
+.menu .isport {
+    background-position: -22px -16px
+}
+
+.menu .iclothes {
+    background-position: -44px -16px
+}
+
+.menu .ibook {
+    background-position: -66px -16px
+}
+
+.menu .ilife {
+    background-position: 0 -32px
+}
+
+.menu .iother {
+    background-position: -22px -32px
+}
+
+.menu .idigital {
+    background-position: -44px -32px
+}
+
+.menu .ilease {
+    background-position: -66px -32px
+}
+
+.menu .icard {
+    background: url(../../img/lostandfound/icard.png) no-repeat;
+    background-size: 80%;
+}
+
+.menu .iidcard {
+    background: url(../../img/lostandfound/idcard.png) no-repeat;
+    background-size: 80%;
+}
+
+.menu .ibank {
+    background: url(../../img/lostandfound/ibank.png) no-repeat;
+    background-size: 80%;
+}
+
+.menu .ibook {
+    background: url(../../img/lostandfound/ibook.png) no-repeat;
+    background-size: 80%;
+}
+
+.menu .ikey {
+    background: url(../../img/lostandfound/ikey.png) no-repeat;
+    background-size: 80%;
+}
+
+.menu .ibag {
+    background: url(../../img/lostandfound/ibag.png) no-repeat;
+    background-size: 80%;
+}
+
+.menu .icloth {
+    background-position: -44px -16px
+}
+
+.menu .isport {
+    background: url(../../img/lostandfound/7.png) no-repeat;
+    background-size: 80%;
+    background-position: center;
+}
+
+.contact_tip {
+    margin-top: 20px;
+    text-align: center;
+    color:#f6383a;
+}
+
+.menu .t {
+    color: #fff;
+    display: block;
+    line-height: 12px;
+}
+
+.location {
+    margin: 10px 10px 0;
+    height: 50px;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0 0 2px #d6e0de;
+    text-align: center;
+    line-height: 50px;
+    font-size: 16px;
+}
+
+.location a {
+    display: block;
+    height: 100%;
+    color: #32c3a5;
+}
+
+.location .iloc {
+    background: url(../../img/lostandfound/iloc.png) no-repeat;
+    background-size: 14px;
+    width: 14px;
+    height: 19px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.entry {
+    margin: 10px 5px 0;
+    height: 50px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex
+}
+
+.entry .btn {
+    margin: 5px;
+    height: 50px;
+    border-radius: 3px;
+    box-shadow: 0 0 2px #d6e0de;
+    display: block;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    width: 50%;
+}
+
+.entry .btnpublish {
+    background: #fff url(../../img/lostandfound/publish.png) no-repeat center;
+    background-size: 102px;
+}
+
+.entry .btnprofile {
+    background: #fff url(../../img/lostandfound/profile.png) no-repeat center;
+    background-size: 102px;
+}
+
+.entry .btn {
+    margin: 5px 0;
+    height: 50px;
+    font-size: 1rem;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0 0 2px #d6e0de;
+    display: block;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    width: 50%;
+    text-align: center;
+    line-height: 50px;
+    color: #111;
+}
+
+.entry .on {
+    background: #3CC3A5;
+    color: #fff;
+}
+
+.lists {
+    margin: 10px auto;
+    width: 100%
+}
+
+.list {
+    display: inline-block;
+    width: 46.5%;
+    position: relative;
+    margin: 4px 0 4px 2%;
+    background: #fff
+}
+
+.list a {
+    display: block;
+    padding-bottom: 2px;
+}
+
+.list .img {
+    width: 100%;
+    height: 170px;
+    overflow: hidden;
+    display: block;
+}
+
+.list img {
+    width: 100%;
+    margin-top: -25px;
+}
+
+.list h5 {
+    color: #52c1b1;
+    font-size: 14px;
+    padding: 2px 5px 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 20px;
+}
+
+.list .summary {
+    color: #92999a;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 110px;
+    padding-left: 5px;
+}
+
+.list .price {
+    position: absolute;
+    bottom: 4px;
+    right: 3px;
+    color: #92999a;
+    line-height: 18px;
+    height: 18px;
+    width: 55px;
+    text-align: right;
+}
+
+/* search */
+.head {
+    height: 40px;
+    position: relative;
+    padding: 0 15px;
+    background: #3cc2a5;
+}
+
+.head .ihead {
+    position: absolute;
+    left: 7px;
+    top: 9px;
+    background: url(../../img/lostandfound/head.png) no-repeat;
+    background-size: 20px;
+    width: 20px;
+    height: 23px;
+}
+
+.head .t {
+    font-size: 16px;
+    line-height: 40px;
+    color: #fff;
+}
+
+.searchpage .tabs {
+    height: 50px;
+}
+
+.searchpage .tab {
+    width: 50%;
+    height: 50px;
+    background: #3cc2a5;
+    float: left;
+}
+
+.searchpage .tab:nth-child(odd) {
+    background: #24b19c
+}
+
+.searchpage .tab a {
+    color: #fff;
+    display: block;
+    height: 100%;
+    text-align: center;
+}
+
+.searchpage .tab .i {
+    background: url(../../img/lostandfound/tab.png) no-repeat;
+    background-size: 88px;
+    width: 22px;
+    height: 16px;
+    margin: 9px 0 4px;
+}
+
+.searchpage .tab .itime {
+    background-position: 0 -16px
+}
+
+.searchpage .tab .iprice {
+    background-position: -44px -16px
+}
+
+.searchpage .tab .ihot {
+    background-position: -66px -16px
+}
+
+.searchpage .tab .idefault {
+    background-position: -22px -16px
+}
+
+.searchpage .tab .t {
+    color: #fff;
+    display: block;
+    line-height: 12px;
+}
+
+.searchpage .tabs .on {
+    background: #1da496
+}
+
+.searchpage .tabs .on .itime {
+    background-position: 0 0
+}
+
+.searchpage .tabs .on .iprice {
+    background-position: -44px 0
+}
+
+.searchpage .tabs .on .ihot {
+    background-position: -66px 0
+}
+
+.searchpage .tabs .on .idefault {
+    background-position: -22px 0
+}
+
+.searchpage .tabs .on .t {
+    color: #ffc100;
+}
+
+.lis {
+    margin: 10px;
+}
+
+.li {
+    position: relative;
+    padding: 5px 5px 5px 95px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #d6e0de;
+    height: 80px;
+    margin-bottom: 7px;
+    overflow: hidden;
+}
+
+.li .img {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    text-align: center;
+}
+
+.li img {
+    width: 100%;
+}
+
+.li h5 {
+    color: #1c826c;
+    font-size: 16px;
+    line-height: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
+}
+
+.li .site {
+    font-size: 14px;
+    color: #999;
+    overflow: hidden;
+    height: 22px;
+    line-height: 22px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
+}
+
+.li .isite {
+    background: url(../../img/lostandfound/iloc2.png) no-repeat;
+    background-size: 10px;
+    width: 10px;
+    height: 15px;
+    margin-right: 3px;
+}
+
+.li .price {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    color: #eb5055;
+    line-height: 18px;
+    height: 18px;
+    width: 55px;
+    text-align: right;
+    font-size: 14px
+}
+
+/* profile */
+.head .opt {
+    position: absolute;
+    right: 10px;
+}
+
+.head .opt a {
+    display: block;
+    color: #fff;
+    line-height: 40px;
+    height: 40px;
+    font-size: 14px;
+    padding-left: 20px;
+}
+
+.head .iedit {
+    background: url(../../img/lostandfound/edit.png) no-repeat;
+    background-size: 12px;
+    width: 12px;
+    height: 12px;
+    margin-right: 3px;
+}
+
+.profile {
+    position: relative;
+    background: #44c1a5;
+    border-top: 1px solid #39b89d;
+    border-bottom: 4px solid #3cab93;
+    padding: 30px 20px 20px 140px;
+    min-height: 90px;
+}
+
+.profile .avt {
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile .avt img {
+    width: 100%;
+    border-radius: 48px;
+}
+
+.profile .nm {
+    font-size: 20px;
+    color: #fff;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.profile .qq, .profile .phone {
+    color: #fff;
+    line-height: 21px;
+    font-size: 14px;
+    display: block;
+}
+
+.profile .phone a {
+    color: #fff;
+}
+
+.status {
+    margin: 10px;
+}
+
+.status .tabs {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    margin-bottom: 10px
+}
+
+.status .tab {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: block;
+    position: relative;
+    color: #44c1a5;
+    text-align: center;
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+}
+
+.status .tab .line {
+    width: 28px;
+    height: 1px;
+    background: #44c1a5;
+    position: absolute;
+    left: 50%;
+    margin-left: -14px;
+    bottom: 0;
+    display: none
+}
+
+.status .tabs .on .line {
+    display: block;
+}
+
+.status .stat {
+    background: #fff;
+    margin-bottom: 8px
+}
+
+.status .stat .info {
+    position: relative;
+    padding: 8px 8px 8px 75px;
+    min-height: 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.status .info .img {
+    position: absolute;
+    left: 8px;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+}
+
+.status .info img {
+    width: 100%
+}
+
+.status .info h5 {
+    color: #1c826c;
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 4px
+}
+
+.status .info .price {
+    color: #eb5055;
+    line-height: 18px;
+    height: 18px;
+}
+
+.status .info .tm {
+    color: #999
+}
+
+.status .stat .btns {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex
+}
+
+.status .btns .btn {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: block;
+    padding: 7px 0;
+}
+
+.status .btns .btn b {
+    display: block;
+    color: #999;
+    border-left: 1px solid #ddd;
+    text-align: center;
+    line-height: 16px;
+    height: 16px;
+}
+
+.status .btns .btn:first-child b {
+    border-left: none;
+}
+
+.nostatus {
+    background: url(../../img/lostandfound/nostatus.png) no-repeat center 60px;
+    background-size: 88px;
+    padding-top: 170px;
+    min-height: 200px
+}
+
+.nostatus .tip {
+    text-align: center;
+    color: #44c1a5;
+    margin-bottom: 25px
+}
+
+.nostatus .btns {
+    text-align: center;
+}
+
+.nostatus .btns .btn {
+    background: #44c1a5;
+    color: #fff;
+    border-radius: 16px;
+    height: 33px;
+    line-height: 33px;
+    font-size: 14px;
+    width: 140px;
+    display: inline-block;
+}
+
+/* detail */
+.detail {
+}
+
+.detail .imgs {
+    display: none;
+}
+
+/*.detail .imgs{overflow: hidden;height: 375px;position: relative;}
+.detail .scroll{position: absolute;width:1280px;}
+.detail .img{width:320px;display: inline;overflow: hidden;text-align: center;float: left;}*/
+.detail .img img {
+    display: inherit;
+    margin: 0 auto
+}
+
+.detail .info {
+    background: #44c1a5;
+    padding: 10px 70px 10px 12px;
+    position: relative;
+}
+
+.detail .info .tit {
+    font-size: 18px;
+    color: #fff;
+}
+
+.detail .info .tm {
+    font-size: 14px;
+    color: #fff;
+}
+
+.detail .info .price {
+    position: absolute;
+    right: 15px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: #ffb300;
+    text-align: center;
+    line-height: 55px;
+    color: #fff;
+    font-size: 18px;
+    top: -28px;
+    z-index: 99
+}
+
+.detail .info .price b {
+    position: absolute;
+    top: 4px;
+    font-size: 12px;
+    line-height: 12px;
+    left: 50%;
+    margin-left: -5px;
+}
+
+.detail .info .read {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    color: #fff;
+}
+
+.detail .info .read em {
+    margin-left: 3px;
+}
+
+.detail .site {
+    background: #fff;
+    padding: 8px 10px 8px 98px;
+    color: #45c1a6;
+    line-height: 20px;
+    font-size: 14px;
+    position: relative;
+}
+
+.detail .site span {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+}
+
+.detail .site .isite {
+    background: url(../../img/lostandfound/site.png) no-repeat;
+    background-size: 10px;
+    width: 10px;
+    height: 14px;
+    margin-right: 4px
+}
+
+.userinfo {
+    margin-bottom: 20px;
+    min-height: 100%
+}
+
+.userinfo .user, .userinfo .info, .userinfo .contact {
+    margin: 10px 10px 0;
+    background: #fff;
+    box-shadow: 0 0 2px #d6e0de;
+}
+
+.userinfo .user {
+    height: 30px;
+    padding: 20px 15px 20px 60px;
+    position: relative;
+    display: block;
+}
+
+.userinfo .user .avt {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    left: 15px;
+    top: 20px;
+    border-radius: 50%
+}
+
+.userinfo .user .avt img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%
+}
+
+.userinfo .user .nm {
+    line-height: 30px;
+    font-size: 16px;
+    color: #565656;
+}
+
+.userinfo .info, .userinfo .contact {
+    position: relative;
+    padding: 15px 15px 15px 60px;
+    font-size: 14px;
+    color: #666;
+}
+
+.userinfo .info p, .userinfo .contact p {
+    line-height: 20px;
+    margin-bottom: 2px
+}
+
+.userinfo .info .iinfo,
+.userinfo .contact .icontact {
+    background: url(../../img/lostandfound/info.png) no-repeat;
+    width: 30px;
+    height: 30px;
+    background-size: 30px;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+.userinfo .contact .icontact {
+    background-position: 0 -30px;
+}
+
+.userinfo .contact .cont a {
+    margin-left: 5px;
+}
+
+.userinfo .contact .phone a {
+    color: #565656;
+}
+
+.focus span {
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background: #666;
+    font-size: 0
+}
+
+.focus span.current {
+    background: #fff
+}
+
+/* publish */
+.body1 {
+    background: #fff
+}
+
+.head .iarr {
+    background: url(../../img/lostandfound/arr.png) no-repeat;
+    background-size: 22px;
+    width: 22px;
+    height: 20px;
+    margin-right: 3px;
+    position: absolute;
+    top: 10px;
+    left: 20px;
+}
+
+.head .t2 {
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    line-height: 40px;
+    color: #fff;
+}
+
+.picture {
+    background: #3cc2a5;
+    border-top: 1px solid #39b89d;
+}
+
+.picture .images {
+    padding: 25px 16px 0;
+    margin-bottom: 5px;
+}
+
+.images .image {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    display: inline-block;
+    margin: 0 6px 10px;
+    vertical-align: top
+}
+
+.images .image .img {
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    display: block;
+}
+
+.images .image img {
+    width: 100%;
+}
+
+.images .image a {
+    display: block;
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    margin-left: -19px;
+    width: 18px;
+    height: 18px;
+    padding: 10px;
+}
+
+.images .image .iclose {
+    width: 18px;
+    height: 18px;
+    background: url(../../img/lostandfound/close.png) no-repeat;
+    background-size: 18px
+}
+
+.images .addimg {
+    width: 68px;
+    height: 68px;
+    border: 2px solid #fff;
+    display: inline-block;
+    margin: 0 6px 10px;
+    vertical-align: top;
+    position: relative;
+}
+
+#file_input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 68px;
+    height: 68px;
+    opacity: 0;
+    z-index: 1
+}
+
+.images .addimg .iadd {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -12px
+}
+
+.images .addimg .iadd .i1 {
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    top: 11px;
+    background: #fff
+}
+
+.images .addimg .iadd .i2 {
+    height: 100%;
+    width: 2px;
+    position: absolute;
+    left: 11px;
+    background: #fff
+}
+
+.picture .tip {
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    padding-bottom: 3px;
+}
+
+.picture .forp4 {
+    padding: 25px 9px 0;
+}
+
+.picture .forp4 .image {
+    margin: 0 1px 10px;
+}
+
+.picture .forp4 .addimg {
+    margin: 0 1px 10px;
+}
+
+.form {
+    padding: 0 20px;
+}
+
+.form .frm {
+    position: relative;
+    padding-left: 90px;
+    font-size: 16px;
+    border-bottom: 2px solid #3cc2a5;
+    height: 70px;
+}
+
+.form .frmt {
+    position: absolute;
+    left: 0;
+    color: #202020;
+    height: 70px;
+    line-height: 70px
+}
+
+.form .frmc {
+    padding-top: 18px;
+}
+
+.form .frmc input {
+    color: #202020;
+    background: none;
+    height: 34px;
+    line-height: 34px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.form .frmc b {
+    height: 34px;
+    line-height: 34px;
+    font-size: 16px;
+    width: 100%;
+    color: #202020;
+    display: block;
+    position: relative;
+}
+
+.form .frmc b .iarrow {
+    background: url(../../img/lostandfound/arrow.png) no-repeat;
+    width: 8px;
+    height: 12px;
+    background-size: 8px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.form .frmtip {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #fe6a7c;
+    height: 15px;
+    line-height: 15px;
+    font-size: 12px;
+    color: #fff;
+    padding: 0 3px;
+    display: none
+}
+
+.form .frmerr {
+    border-color: #fe6a7c;
+}
+
+.form .frmerr .frmtip {
+    display: block;
+}
+
+.form .which {
+    padding-top: 18px;
+    line-height: 34px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.form .which label {
+    display: inline-block;
+    margin-right: 2rem;
+}
+
+.sky {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    display: none;
+    z-index: 9
+}
+
+.sky .mark {
+    background: #000;
+    opacity: .5;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    display: none;
+    z-index: 99
+}
+
+.sky .mw {
+    width: 225px;
+    position: fixed;
+    background: #fff;
+    left: 50%;
+    margin-left: -112px;
+    top: 50%;
+    margin-top: -210px;
+    display: none;
+    z-index: 999
+}
+
+.sky .mwt {
+    border-top: 4px solid #3cc3a5;
+    height: 40px;
+    border-bottom: 1px solid #666;
+    position: relative;
+    line-height: 40px;
+    font-size: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.sky .mwt .mwclose {
+    position: absolute;
+    right: 6px;
+    width: 11px;
+    height: 13px;
+    top: 3px;
+    display: block;
+    padding: 10px;
+}
+
+.sky .mwt .imwclose {
+    display: block;
+    width: 11px;
+    height: 13px;
+    top: 13px;
+    background: url(../../img/lostandfound/mwclose.png) no-repeat;
+    background-size: 11px;
+}
+
+.sky .mwc ul {
+    padding: 10px 0;
+}
+
+.sky .mwc li {
+    line-height: 30px;
+    height: 30px;
+    text-align: center;
+    color: #666;
+    font-size: 14px
+}
+
+.sky .mwc li a {
+    color: #666;
+    display: block;
+}
+
+.sky .tipmw {
+    width: 80%;
+    margin-left: -40%;
+}
+
+.sky .tipmw .tip {
+    line-height: 20px;
+    padding: 15px 25px;
+    margin-bottom: 10px;
+    font-size: 14px
+}
+
+.sky .tipmw .btns2 {
+    text-align: center;
+    padding-bottom: 20px
+}
+
+.sky .tipmw .btns2 .btn {
+    display: inline-block;
+    padding: 0 20px;
+    line-height: 26px;
+    height: 26px;
+    margin: 0 5px;
+    background: #44c1a5;
+    color: #fff;
+    border: 1px solid #44c1a5;
+}
+
+.sky .tipmw .btns2 .btn2 {
+    background: #eee;
+    border-color: #ccc;
+    color: #333;
+}
+
+/* userinfo */
+.body2 {
+    background: #3cc3a5
+}
+
+.body2 .head {
+    border-bottom: 1px solid #39b89d
+}
+
+.body2 .footer {
+    color: #eee;
+    margin-top: 200px;
+}
+
+.form .tit {
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    margin: 40px 0 0;
+}
+
+.form .tit .iline {
+    width: 100%;
+    height: 1px;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -1px;
+    background: #fff
+}
+
+.form .tit b {
+    padding: 0 20px;
+    background: #3cc3a5;
+    display: inline-block;
+    position: relative;
+}
+
+.userform .frm {
+    border-color: #fff;
+    padding-left: 65px;
+    height: 60px;
+}
+
+.userform .frmt {
+    color: #fff;
+    height: 60px;
+    line-height: 60px
+}
+
+.userform .frmc {
+    padding-top: 12px;
+}
+
+.userform .frmc input {
+    color: #fff;
+}
+
+.userform .frmerr {
+    border-color: #fe6a7c;
+}
+
+.form .btn {
+    background: #fff;
+    padding: 5px;
+    margin-top: 25px;
+}
+
+.form .btn a {
+    display: block;
+    border: 1px solid #3cc3a5;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    font-size: 18px;
+    color: #3cc3a5;
+}
+
+/* reg */
+.regform,
+.loginform {
+    padding: 0 30px;
+}
+
+.regform .tit,
+.loginform .tit {
+    font-size: 18px;
+}
+
+.regform .frm,
+.loginform .frm {
+    height: 60px;
+    border-color: #fff;
+    padding-left: 65px;
+}
+
+.regform .frmt,
+.loginform .frmt {
+    color: #fff;
+    height: 60px;
+    line-height: 60px
+}
+
+.regform .frmc,
+.loginform .frmc {
+    padding-top: 12px;
+}
+
+.regform .frmc input,
+.loginform .frmc input {
+    color: #fff;
+}
+
+.regform .frmerr,
+.loginform .frmerr {
+    border-color: #fe6a7c;
+}
+
+.tologin {
+    margin-top: 30px;
+    text-align: center;
+    color: #fff;
+    height: 32px;
+    text-align: center;
+}
+
+.tologin a {
+    color: #fff;
+    display: inline-block;
+    line-height: 16px;
+    padding: 8px 0;
+    width: 80px;
+}
+
+.tologin .ilogin {
+    background: url(../../img/lostandfound/tologin.png) no-repeat;
+    background-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    vertical-align: top
+}
+
+/* login */
+.logintip {
+    margin-top: 10px;
+    color: #fff;
+}
+
+.logintip a {
+    color: #fff;
+}
+
+.loginform .tit {
+    margin-top: 20px;
+}
+
+.formbg {
+    padding: 33px 0 0;
+    background-size: 118px
+}
+
+.formbg a {
+    display: block;
+    height: 40px;
+    background: #fff url(../../img/lostandfound/qq.png) no-repeat center;
+    background-size: 77px;
+}
+
+.isPC {
+    width: 480px;
+    margin: 0 auto;
+    border: 1px solid #ededed;
+    border-width: 0 1px
+}
+
+.isPC .sky {
+    width: 480px;
+}
+
+.isPC .sky .tipmw {
+    width: 380px;
+    margin-left: -190px;
+}

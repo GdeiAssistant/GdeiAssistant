@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper">
+
+    <!-- 开启ProfileMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <select id="selectUninitializedUsername" resultType="java.lang.String">
+        select username from profile where realname is null
+    </select>
+
+    <select id="selectUserProfile" parameterType="java.lang.String"
+            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.Profile">
+        select * from profile where username=#{username} limit 1
+    </select>
+
+    <resultMap id="introductionResultMap" type="com.linguancheng.gdeiassistant.Pojo.Entity.Introduction">
+        <result property="introductionContent" column="introduction"/>
+        <result property="username" column="username"/>
+    </resultMap>
+
+    <select id="selectUserIntroduction" parameterType="java.lang.String"
+            resultMap="introductionResultMap">
+        select * from introduction where username=#{username} limit 1
+    </select>
+
+    <select id="selectAuthorProfile" parameterType="java.lang.String"
+            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.AuthorProfile">
+        select * from profile where username=#{username} limit 1
+    </select>
+
+    <insert id="initUserProfile">
+        insert into profile (username,kickname) values (#{username},#{kickname})
+    </insert>
+
+    <insert id="initUserIntroduction" parameterType="java.lang.String">
+        insert into introduction (username) values (#{username})
+    </insert>
+
+    <update id="updateRealName">
+        update profile set realname=#{realname} where username=#{username}
+    </update>
+
+    <update id="updateUserProfile" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.Profile">
+        update profile
+        <set>
+            <if test='kickname!=null'>
+                kickname=#{kickname},
+            </if>
+            <if test='gender!=null'>
+                gender=#{gender},
+            </if>
+            <if test='genderOrientation!=null'>
+                genderOrientation=#{genderOrientation},
+            </if>
+        </set>
+        where username=#{username}
+    </update>
+
+    <update id="updateUserLocation" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.Profile">
+        update profile set region=#{region},state=#{state},city=#{city} where username=#{username}
+    </update>
+
+    <update id="updateUserIntroduction">
+        update introduction set introduction=#{introduction} where username=#{username}
+    </update>
+
+</mapper>

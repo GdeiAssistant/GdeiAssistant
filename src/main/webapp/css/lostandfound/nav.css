@@ -1,0 +1,60 @@
+@charset "utf-8";
+.main-nav {
+    position: fixed;
+    bottom: 0;
+    left: auto;
+    right: auto;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    padding: 4px 0;
+    background: #3CC3A5;
+    color: #fff;
+}
+
+.main-nav > div {
+    width: 20%;
+    float: left;
+    height: 2.7rem;
+}
+
+.main-nav a {
+    color: inherit;
+}
+
+.main-nav a.on {
+    /*color: #9de2d0;*/
+}
+
+.ibar {
+    display: block;
+}
+
+.ibar img {
+    height: 1.4rem;
+}
+
+.main-nav .publish .pubbtn {
+    background: #3CC3A5;
+    position: absolute;
+    border-radius: 50%;
+    width: 4.2rem;
+    height: 4.2rem;
+    left: 50%;
+    margin-left: -2.1rem;
+    top: -1rem;
+    bottom: 0;
+}
+
+.main-nav .publish .pubbtn .inner {
+    box-sizing: border-box;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 0.3rem auto;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: url("/img/lostandfound/pub.png") no-repeat center;
+    background-size: 4rem;
+    cursor: pointer;
+}

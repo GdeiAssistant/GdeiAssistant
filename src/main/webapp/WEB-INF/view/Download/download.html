@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>广东二师助手客户端下载</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telphone=no, email=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="MobileOptimized" content="320">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="browsermode" content="application">
+    <meta name="x5-page-mode" content="app">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="/css/common/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/download/download-global.css">
+    <link rel="stylesheet" type="text/css" href="/css/download/download-base.css">
+    <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/js/download/download.js"></script>
+</head>
+<body>
+
+<input type="hidden" id="android_url" value="#">
+<input type="hidden" id="android_google_play_url" value="#">
+
+<div class="header margin-bottom60">
+    <div class="container">
+        <h1 class="pull-left">广东二师助手</h1>
+    </div>
+</div>
+
+<div class="banxin">
+
+    <div class="app_logo margin-bottom60">
+        <img src="/img/download/logo.png" width="120" height="120" alt="">
+    </div>
+
+    <div style="display:block;margin:0 auto;width:180px;" id="wx_btn2">
+
+        <!-- 安卓版下载 -->
+        <a href="javascript:" onclick="androidDownload()"
+           style="display:block;margin:0 auto;width:180px;">
+            <img src="/img/download/android.png" alt="" class="center-block margin-bottom60">
+        </a>
+
+        <!-- Google Play 安卓版下载 -->
+        <a href="javascript:" onclick="androidGooglePlayDownload()"
+           style="display:block;margin:0 auto;width:180px;">
+            <img src="/img/download/googleplay.png" alt="" class="center-block margin-bottom60">
+        </a>
+
+        <!-- App Store iOS下载 -->
+        <a href="javascript:" onclick="iOSDownload()"
+           style="display:block;margin:0 auto;width:180px;">
+            <img src="/img/download/appstore.png" alt="" class="center-block margin-bottom60">
+        </a>
+
+        <!-- Microsoft UWP版下载 -->
+        <a href="javascript:" onclick="UWPDownload()"
+           style="display:block;margin:0 auto;width:180px;">
+            <img src="/img/download/microsoft.png" alt="" class="center-block margin-bottom60">
+        </a>
+
+    </div>
+
+    <hr class="margin-bottom60">
+    <div class="desp">
+        <h2>应用介绍</h2>
+        <div class="dsp margin-bottom60">
+            <section>
+                为广东第二师范学院专属打造的校园服务应用，提供课表查询、成绩查询、等级考试查询、图书借阅查询和消费流水查询等综合性功能
+            </section>
+        </div>
+    </div>
+    <hr class="margin-bottom60">
+
+    <div>
+        <h2>应用截图</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>
+                        <div style="">
+                            <img src="/img/download/screenshot_01.jpg">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="">
+                            <img src="/img/download/screenshot_02.jpg">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="">
+                            <img src="/img/download/screenshot_05.jpg">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="">
+                            <img src="/img/download/screenshot_04.jpg">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="">
+                            <img src="/img/download/screenshot_03.jpg">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="wxtip" id="JweixinTip">
+    <span class="wxtip-icon"></span>
+    <p class="wxtip-txt">点击右上角<br>选择在其他浏览器中打开</p>
+</div>
+
+</body>
+</html>

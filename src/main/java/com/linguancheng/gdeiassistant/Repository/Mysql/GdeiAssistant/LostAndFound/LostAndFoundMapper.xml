@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound.LostAndFoundMapper">
+
+    <!-- 开启LostAndFoundMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <resultMap id="LostAndFoundItem" type="com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="location" column="location"/>
+        <result property="itemType" column="itemType"/>
+        <result property="lostType" column="lostType"/>
+        <result property="state" column="state"/>
+        <result property="publishTime" column="publishTime"/>
+    </resultMap>
+
+    <select id="selectItemByID" parameterType="java.lang.Integer"
+            resultMap="LostAndFoundItem">
+        select * from lostandfound where id=#{id} limit 1
+    </select>
+
+    <select id="selectItemByUsername" parameterType="java.lang.String"
+            resultMap="LostAndFoundItem">
+        select * from lostandfound where username=#{username} order by id desc
+    </select>
+
+    <select id="selectAvailableItem" resultMap="LostAndFoundItem">
+        select * from lostandfound where lostType=#{lostType} and state='0'
+         order by id desc limit #{start},#{size}
+    </select>
+
+    <select id="selectItemByItemType" resultMap="LostAndFoundItem">
+        select * from lostandfound where lostType=#{lostType} and itemType=#{itemType} and state='0'
+         order by id desc limit #{start},#{size}
+    </select>
+
+    <select id="selectItemWithKeyword" resultMap="LostAndFoundItem">
+        select distinct * from lostandfound where state='0' and lostType=#{lostType} and (name like '%${keyword}%'
+         or description like '%${keyword}%' or location like '%${keyword}%')
+         order by id desc limit #{start},#{size}
+    </select>
+
+    <insert id="insertItem" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem">
+        insert into lostandfound (username,name,description,location,itemType,lostType,qq,wechat,phone,state,publishTime)
+        values (#{username},#{name},#{description},#{location},#{itemType},#{lostType}
+        ,#{qq},#{wechat},#{phone},'0',#{publishTime})
+    </insert>
+
+    <update id="updateItemInfo">
+        update lostandfound set name=#{name},description=#{description},location=#{location},
+        itemType=#{itemType},lostType=#{lostType},qq=#{qq},wechat=#{wechat},phone=#{phone} where id=#{id}
+    </update>
+
+    <update id="updateItemState">
+        update lostandfound set state=#{state} where id=#{id}
+    </update>
+
+</mapper>

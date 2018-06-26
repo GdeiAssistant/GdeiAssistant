@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Privacy.PrivacyMapper">
+
+    <!-- 开启PrivacyMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <select id="selectPrivacy" parameterType="java.lang.String"
+            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.Privacy">
+        select * from privacy where username=#{username}
+    </select>
+
+    <insert id="initPrivacy">
+        insert into privacy (username,gender,genderOrientation,region,introduction)
+         values(#{username},true,true,true,true)
+    </insert>
+
+    <update id="updateGender">
+        update privacy
+        <choose>
+            <when test="gender">
+                set gender='1'
+            </when>
+            <otherwise>
+                set gender='0'
+            </otherwise>
+        </choose>
+        where username=#{username}
+    </update>
+
+    <update id="updateGenderOrientation">
+        update privacy
+        <choose>
+            <when test="genderOrientation">
+                set genderOrientation='1'
+            </when>
+            <otherwise>
+                set genderOrientation='0'
+            </otherwise>
+        </choose>
+        where username=#{username}
+    </update>
+
+    <update id="updateRegion">
+        update privacy
+        <choose>
+            <when test="region">
+                set region='1'
+            </when>
+            <otherwise>
+                set region='0'
+            </otherwise>
+        </choose>
+        where username=#{username}
+    </update>
+
+    <update id="updateIntroduction">
+        update privacy
+        <choose>
+            <when test="introduction">
+                set introduction='1'
+            </when>
+            <otherwise>
+                set introduction='0'
+            </otherwise>
+        </choose>
+        where username=#{username}
+    </update>
+
+</mapper>

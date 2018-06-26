@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
+
+    <!-- 获取配置参数 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <!-- JDBC配置参数 -->
+                <value>classpath:config/mysql/app-jdbc.properties</value>
+                <value>classpath:config/mysql/log-jdbc.properties</value>
+                <value>classpath:config/mongodb/mongodb-config.properties</value>
+                <!-- 易班轻应用配置参数 -->
+                <value>classpath:config/yiban/userlogin.properties</value>
+                <value>classpath:config/yiban/ershou.properties</value>
+                <value>classpath:config/yiban/lostandfound.properties</value>
+                <value>classpath:config/yiban/secret.properties</value>
+                <value>classpath:config/yiban/dating.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置MongoClient -->
+    <mongo:mongo-client id="mongoClient" host="${mongo.host}" port="${mongo.port}"
+                        credentials="${mongo.username}:${mongo.password}@${mongo.dbname}">
+        <mongo:client-options
+                connections-per-host="${mongo.connectionsPerHost}"
+                min-connections-per-host="${mongo.minConnectionsPerHost}"
+                threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
+                connect-timeout="${mongo.connectTimeout}"
+                max-wait-time="${mongo.maxWaitTime}"
+                socket-keep-alive="${mongo.socketKeepAlive}"
+                socket-timeout="${mongo.socketTimeout}"
+                max-connection-idle-time="${mongo.maxConnectionIdleTime}"
+                max-connection-life-time="${mongo.maxConnectionLifeTime}"
+                heartbeat-socket-timeout="${mongo.heartbeatSocketTimeout}"
+                heartbeat-connect-timeout="${mongo.heartbeatConnectTimeout}"
+                min-heartbeat-frequency="${mongo.minHeartbeatFrequency}"
+                heartbeat-frequency="${mongo.heartbeatFrequency}"/>
+    </mongo:mongo-client>
+
+    <!-- 配置MongoDB Factory -->
+    <mongo:db-factory id="mongoDbFactory" dbname="${mongo.dbname}" mongo-ref="mongoClient"/>
+
+    <!-- Spring提供的MongoDB操作模板 -->
+    <mongo:template id="mongoTemplate" db-factory-ref="mongoDbFactory" write-concern="NORMAL"/>
+
+    <!-- 设置应用数据源c3p0 -->
+    <bean id="appDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${app.jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${app.jdbc.url}"/>
+        <property name="user" value="${app.jdbc.username}"/>
+        <property name="password" value="${app.jdbc.password}"/>
+        <property name="maxPoolSize" value="${app.jdbc.maxPoolSize}"/>
+        <property name="minPoolSize" value="${app.jdbc.minPoolSize}"/>
+        <property name="maxIdleTime" value="${app.jdbc.maxIdleTime}"/>
+    </bean>
+
+    <!-- 设置日志数据源c3p0 -->
+    <!--<bean id="logDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">-->
+    <!--<property name="driverClass" value="${log.jdbc.driverClassName}"/>-->
+    <!--<property name="jdbcUrl" value="${log.jdbc.url}"/>-->
+    <!--<property name="user" value="${log.jdbc.username}"/>-->
+    <!--<property name="password" value="${log.jdbc.password}"/>-->
+    <!--<property name="maxPoolSize" value="${log.jdbc.maxPoolSize}"/>-->
+    <!--<property name="minPoolSize" value="${log.jdbc.minPoolSize}"/>-->
+    <!--<property name="maxIdleTime" value="${log.jdbc.maxIdleTime}"/>-->
+    <!--</bean>-->
+
+    <!-- 应用数据库的SQLSessionFactory -->
+    <bean id="appSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>
+        <property name="dataSource" ref="appDataSource"/>
+    </bean>
+
+    <!-- 日志数据库的SQLSessionFactory -->
+    <!--<bean id="logSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+    <!--<property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>-->
+    <!--<property name="dataSource" ref="logDataSource"/>-->
+    <!--</bean>-->
+
+    <!-- 应用数据源事务管理 -->
+    <bean id="appTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="appDataSource"/>
+    </bean>
+
+    <!-- 日志数据源事务管理 -->
+    <!--<bean id="logTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+    <!--<property name="dataSource" ref="logDataSource"/>-->
+    <!--</bean>-->
+
+    <!-- 控制器映射器和控制器适配器 -->
+    <mvc:annotation-driven/>
+
+    <!-- 定时任务扫描注解 -->
+    <task:annotation-driven scheduler="scheduler"/>
+
+    <!-- 定时任务使用多线程 -->
+    <task:scheduler id="scheduler" pool-size="5"/>
+
+    <!-- 校园新闻系统地址 -->
+    <util:list id="schoolNewsUrlList" value-type="java.lang.String">
+        <!-- 学生工作 -->
+        <value>http://web.gdei.edu.cn/gdei/stuwork/stuadmin</value>
+        <!-- 后勤工作 -->
+        <value>http://web.gdei.edu.cn/gdei/hqserv/ggxx</value>
+        <!-- 选课工作 -->
+        <value>http://web.gdei.edu.cn/jwc/jwtz/xkgz</value>
+        <!-- 调停课通知 -->
+        <value>http://web.gdei.edu.cn/jwc/jwtz/tktz</value>
+        <!-- 等级竞赛通知 -->
+        <value>http://web.gdei.edu.cn/jwc/jwtz/kwtz</value>
+    </util:list>
+
+    <!-- 文件上传配置的MultipartResolver处理器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+    </bean>
+
+    <!-- 配置FreeMarker的模板路径 -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/view/"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">3600</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="number_format">#.##</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- HTML视图渲染器 -->
+    <bean id="htmlViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <property name="contentType" value="text/html; charset=UTF-8"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <property name="exposeSessionAttributes" value="true"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="redirectHttp10Compatible" value="false"/>
+        <property name="cache" value="true"/>
+        <property name="suffix" value=".html"/>
+        <property name="order" value="0"/>
+    </bean>
+
+    <!-- JSP视图渲染器 -->
+    <bean id="jspViewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="redirectHttp10Compatible" value="false"/>
+        <property name="order" value="1"/>
+    </bean>
+
+    <!-- 加载Properties配置文件 -->
+    <bean id="propertiesReader" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <!-- 读取字符串加密解密器密钥 -->
+                <value>classpath:/config/jaq/encryptor.properties</value>
+                <!-- 读取校历开学日期和学期数 -->
+                <value>classpath:/config/schedule/schedule.properties</value>
+                <!-- 读取安卓APP更新版本信息 -->
+                <value>classpath:/config/version/android.properties</value>
+                <!-- 读取对象存储访问控制安全令牌信息 -->
+                <value>classpath:/config/oss/token.properties</value>
+                <!-- 读取对象存储访问控制的区域信息 -->
+                <value>classpath:/config/oss/api.properties</value>
+                <!-- 读取微信公众号配置信息 -->
+                <value>classpath:/config/wechat/account.properties</value>
+                <!-- 读取微信小程序配置信息 -->
+                <value>classpath:/config/wechat/app.properties</value>
+                <!-- 读取OSS管理对象存储服务的权限密钥信息 -->
+                <value>classpath:/config/oss/oss.properties</value>
+                <!-- 读取阿里云API权限令牌信息 -->
+                <value>classpath:/config/face/face.properties</value>
+                <!-- 读取百度云秘钥 -->
+                <value>classpath:/config/baidu/token.properties</value>
+                <!-- 读取教务系统配置信息 -->
+                <value>classpath:/config/eduaction/system.properties</value>
+                <!-- 读取网络代理配置信息 -->
+                <value>classpath:/config/network/proxy.properties</value>
+                <!-- 读取阿里云市场身份认证信息 -->
+                <value>classpath:/config/aliyun/appcode.properties</value>
+                <!-- 读取网络超时配置信息 -->
+                <value>classpath:/config/network/timeout.properties</value>
+            </list>
+        </property>
+        <property name="fileEncoding" value="UTF-8"/>
+    </bean>
+
+    <!-- 拦截器 -->
+    <mvc:interceptors>
+        <!-- 用户登录状态校验拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.linguancheng.gdeiassistant.Interceptor.LoginInterceptor">
+                <!-- 不进行拦截的地址列表 -->
+                <property name="exceptionList">
+                    <list>
+                        <!-- 用户注销 -->
+                        <value>/logout</value>
+                        <!-- 用户登录 -->
+                        <value>/login</value>
+                        <value>/userlogin</value>
+                        <!-- 使用协议 -->
+                        <value>/agreement</value>
+                        <!-- Restful API -->
+                        <value>/rest</value>
+                        <!-- 微信接口 -->
+                        <value>/wechat</value>
+                        <!-- 易班接口 -->
+                        <value>/yiban</value>
+                        <!-- 客户端下载 -->
+                        <value>/download</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 易班站内应用授权信息 -->
+    <util:map id="yiBanAppAuthorizeMap" scope="singleton">
+
+    </util:map>
+
+    <!-- 易班网站接入授权信息 -->
+    <util:map id="yiBanAuthorizeMap" scope="singleton">
+
+    </util:map>
+
+    <!-- 易班轻应用授权信息 -->
+    <util:map id="yiBanLightAppAuthorizeMap" scope="singleton">
+        <entry key="userlogin">
+            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+                <property name="appID" value="${yiban.userlogin.appId}"/>
+                <property name="appSecret" value="${yiban.userlogin.appSecret}"/>
+                <property name="callbackURL" value="${yiban.userlogin.callbackURL}"/>
+            </bean>
+        </entry>
+        <entry key="secret">
+            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+                <property name="appID" value="${yiban.secret.appId}"/>
+                <property name="appSecret" value="${yiban.secret.appSecret}"/>
+                <property name="callbackURL" value="${yiban.secret.callbackURL}"/>
+            </bean>
+        </entry>
+        <entry key="ershou">
+            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+                <property name="appID" value="${yiban.ershou.appId}"/>
+                <property name="appSecret" value="${yiban.ershou.appSecret}"/>
+                <property name="callbackURL" value="${yiban.ershou.callbackURL}"/>
+            </bean>
+        </entry>
+        <entry key="lostandfound">
+            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+                <property name="appID" value="${yiban.lostandfound.appId}"/>
+                <property name="appSecret" value="${yiban.lostandfound.appSecret}"/>
+                <property name="callbackURL" value="${yiban.lostandfound.callbackURL}"/>
+            </bean>
+        </entry>
+        <entry key="dating">
+            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+                <property name="appID" value="${yiban.dating.appId}"/>
+                <property name="appSecret" value="${yiban.dating.appSecret}"/>
+                <property name="callbackURL" value="${yiban.dating.callbackURL}"/>
+            </bean>
+        </entry>
+    </util:map>
+
+    <!-- 配置个人资料性别字典 -->
+    <util:map id="genderMap">
+        <entry key="0" value="未选择"/>
+        <entry key="1" value="男"/>
+        <entry key="2" value="女"/>
+        <entry key="3" value="其他"/>
+    </util:map>
+
+    <!-- 配置个人资料性取向字典 -->
+    <util:map id="genderOrientationMap">
+        <entry key="0">
+            <map>
+                <entry key="0" value="未选择"/>
+                <entry key="1" value="未选择"/>
+                <entry key="2" value="其他"/>
+                <entry key="3" value="其他"/>
+                <entry key="4" value="双性恋"/>
+            </map>
+        </entry>
+        <entry key="1">
+            <map>
+                <entry key="0" value="未选择"/>
+                <entry key="1" value="未选择"/>
+                <entry key="2" value="同性恋"/>
+                <entry key="3" value="异性恋"/>
+                <entry key="4" value="双性恋"/>
+            </map>
+        </entry>
+        <entry key="2">
+            <map>
+                <entry key="0" value="未选择"/>
+                <entry key="1" value="未选择"/>
+                <entry key="2" value="异性恋"/>
+                <entry key="3" value="同性恋"/>
+                <entry key="4" value="双性恋"/>
+            </map>
+        </entry>
+        <entry key="3">
+            <map>
+                <entry key="0" value="未选择"/>
+                <entry key="1" value="未选择"/>
+                <entry key="2" value="其他"/>
+                <entry key="3" value="其他"/>
+                <entry key="4" value="双性恋"/>
+            </map>
+        </entry>
+    </util:map>
+
+    <!-- 配置个人资料性取向选中状态字典 -->
+    <util:map id="genderOrientationCheckedStateMap">
+        <entry key="0">
+            <array value-type="java.lang.Boolean">
+                <value>false</value>
+                <value>false</value>
+            </array>
+        </entry>
+        <entry key="1">
+            <array value-type="java.lang.Boolean">
+                <value>false</value>
+                <value>false</value>
+            </array>
+        </entry>
+        <entry key="2">
+            <array value-type="java.lang.Boolean">
+                <value>true</value>
+                <value>false</value>
+            </array>
+        </entry>
+        <entry key="3">
+            <array value-type="java.lang.Boolean">
+                <value>false</value>
+                <value>true</value>
+            </array>
+        </entry>
+        <entry key="4">
+            <array value-type="java.lang.Boolean">
+                <value>true</value>
+                <value>true</value>
+            </array>
+        </entry>
+    </util:map>
+
+    <!-- 配置Rest服务客户端 -->
+    <bean class="org.springframework.web.client.RestTemplate"/>
+
+    <!-- 配置异步Rest服务客户端 -->
+    <bean class="org.springframework.web.client.AsyncRestTemplate"/>
+
+    <!-- 自动扫描组件 -->
+    <context:component-scan base-package="com.linguancheng.gdeiassistant"/>
+
+    <!-- 自动扫描mapper接口，并注入应用SqlSessionFactory -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant"/>
+        <property name="sqlSessionFactoryBeanName" value="appSqlSessionFactory"/>
+    </bean>
+
+    <!-- 自动扫描mapper接口，并注入日志SqlSessionFactory -->
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+        <!--<property name="basePackage" value="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs"/>-->
+        <!--<property name="sqlSessionFactoryBeanName" value="logSqlSessionFactory"/>-->
+    <!--</bean>-->
+
+    <!-- 启动对AspectJ注解的支持 -->
+    <aop:aspectj-autoproxy/>
+
+</beans>

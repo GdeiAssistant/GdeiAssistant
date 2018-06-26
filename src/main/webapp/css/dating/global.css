@@ -1,0 +1,221 @@
+* {
+    appearance: normal;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font-style: normal;
+    vertical-align: baseline;
+    outline: none;
+    font-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+ul, li {
+    list-style-type: none;
+}
+
+*:focus {
+    outline: none;
+}
+
+*, *:after, *:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+a:hover {
+    text-decoration: none !important;
+}
+
+::selection {
+    background-color: #CCC;
+    color: #000;
+}
+
+div, a, p, img, blockquote, form, fieldset, textarea, input, label, iframe, code, pre {
+    display: block;
+    /*position:relative;
+    overflow:hidden;*/
+}
+
+p > a {
+    display: inline;
+    text-decoration: none;
+}
+
+p > a:hover {
+    text-decoration: underline;
+}
+
+p > span {
+    display: inline;
+}
+
+span > a {
+    display: inline;
+}
+
+a > span {
+    display: inline;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/*h1 > a, h2 > a, h3 > a, h4 > a, h5 > a, h6 > a {
+	display: inline;
+}*/
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+html {
+    font-size: 62.5%;
+    height: 100%;
+}
+
+body {
+    font-family: "Helvetica Neue", "Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft YaHei", Helvetica, sans-serif;
+    max-width: 480px;
+    margin: 0 auto;
+    background: #eee;
+    color: #666;
+    font-size: 1.4rem;
+    height: 100%;
+}
+
+.clear {
+    clear: both;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.active {
+    display: none;
+}
+
+.gray {
+    color: #999;
+}
+
+.sky {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    display: none;
+    z-index: 9
+}
+
+.sky .mark {
+    background: #000;
+    opacity: .5;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    display: none;
+    z-index: 99
+}
+
+.sky .mw {
+    width: 225px;
+    position: fixed;
+    background: #fff;
+    left: 50%;
+    margin-left: -112px;
+    top: 50%;
+    margin-top: -50px;
+    display: none;
+    z-index: 999
+}
+
+.action {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.action div {
+    width: 100%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    height: auto;
+    text-align: center;
+    color: white;
+}
+
+.sky .mwt {
+    border-top: 4px solid #72D6C6;
+    height: 40px;
+    border-bottom: 1px solid #666;
+    position: relative;
+    line-height: 40px;
+    font-size: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.sky .mwt .mwclose {
+    position: absolute;
+    right: 6px;
+    width: 11px;
+    height: 13px;
+    top: 3px;
+    display: block;
+    padding: 10px;
+}
+
+.sky .mwt .imwclose {
+    display: block;
+    width: 11px;
+    height: 13px;
+    top: 13px;
+    background: url(/img/dating/mwclose.png) no-repeat;
+    background-size: 11px;
+}
+
+.t {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 40px;
+    color: #fff;
+}
+
+.sky .contactinfo {
+    padding: 2rem 1rem;
+    text-align: center;
+}
+

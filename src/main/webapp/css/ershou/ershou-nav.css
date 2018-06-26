@@ -1,0 +1,32 @@
+@charset "utf-8";
+
+.main-nav {
+    position: fixed;
+    bottom: 0;
+    left: auto;
+    right: auto;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    padding: 4px 0;
+    background: #3CC3A5;
+    color: #fff;
+}
+
+.main-nav > div {
+    width: 33.3%;
+    float: left;
+    height: 2.7rem;
+}
+
+.main-nav a {
+    color: inherit;
+}
+
+.ibar {
+    display: block;
+}
+
+.ibar img {
+    height: 1.4rem;
+}

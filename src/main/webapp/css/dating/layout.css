@@ -1,0 +1,918 @@
+.warp {
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.head {
+    width: 100%;
+    max-width: 480px;
+    height: 4.2rem;
+    background: url(/img/dating/background-head.png) no-repeat;
+    position: fixed;
+    top: 0;
+    z-index: 2;
+}
+
+.logo {
+    width: 15rem;
+    float: left;
+    margin: 0.5rem auto auto 1.5rem;
+}
+
+.account {
+    float: right;
+    margin-right: .5rem;
+}
+
+.account:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.Nologin a {
+    padding: .3rem 1rem;
+    background: #F3C616;
+    color: #fff;
+    border-radius: .5rem;
+    -webkit-border-radius: .5rem;
+    float: right;
+    margin: .7rem .5rem 0 .5rem;
+}
+
+.Nologin a:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.loginWin a {
+    font-size: 2rem;
+    color: #fff;
+    float: left;
+    margin: 0 1rem 0 0;
+    line-height: 4.2rem;
+}
+
+.loginWin a i {
+    font-size: 2.4rem;
+}
+
+.loginWin a:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.menu {
+    float: left;
+    margin-top: .7rem;
+    position: relative;
+}
+
+.menu i.pulldown {
+    width: 1.5rem;
+    height: 2rem;
+    color: #fff;
+    font-size: 2.2rem;
+}
+
+.meunList {
+    width: 8rem;
+    background: url(/img/dating/background-head.png);
+    position: absolute;
+    top: 3.4rem;
+    left: -3.5rem;
+    display: none;
+    z-index: 2;
+}
+
+.meunList li a {
+    width: 100%;
+    color: #fff;
+    font-size: 1.6rem;
+    text-align: center;
+    line-height: 3rem;
+}
+
+/*.meunShow{top: 3.4rem; opacity: 1; z-index: 1; -webkit-transform: 1s;}*/
+.panel-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: none;
+}
+
+.content {
+    width: 95%;
+    border-top: 5rem solid rgba(0, 0, 0, 0);
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+#banner {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#banner .swiper-slide {
+    position: relative;
+    text-align: center;
+}
+
+#banner img {
+    max-width: 100%;
+}
+
+.pagination {
+    position: absolute;
+    z-index: 20;
+    bottom: .5rem;
+    width: 6rem;
+    text-align: center;
+    right: 0;
+}
+
+.swiper-pagination-bullet {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 4px;
+    background: #fff;
+    margin: 0 2px;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.swiper-pagination-bullet-active {
+    background: #ff6600;
+}
+
+.sexTab {
+    width: 100%;
+    height: 3.5rem;
+    background: #FFFFFF;
+    margin-top: 1rem;
+}
+
+.sexTab li {
+    width: 50%;
+    height: 3.5rem;
+    line-height: 3.5rem;
+    text-align: center;
+    font-size: 1.8rem;
+    float: left;
+}
+
+.sexTab li a {
+    color: #333;
+}
+
+.sexTab li.selected {
+    background: #78e2d1;
+}
+
+.sexTab li.selected a {
+    color: #fff;
+}
+
+@media (min-width: 410px ) {
+    .sexTab {
+        width: 100%;
+        height: 3.5rem;
+        background: #FFFFFF;
+        margin-top: 1rem;
+    }
+
+    .sexTab li {
+        width: 50%;
+        height: 3.5rem;
+        line-height: 3.5rem;
+        text-align: center;
+        font-size: 1.8rem;
+        float: left;
+    }
+}
+
+@media (min-width: 640px ) {
+    .sexTab {
+        width: 100%;
+        height: 4rem;
+        background: #FFFFFF;
+        margin-top: 1rem;
+    }
+
+    .sexTab li {
+        width: 50%;
+        height: 4rem;
+        line-height: 4rem;
+        text-align: center;
+        font-size: 2rem;
+        float: left;
+    }
+}
+
+.sexWrapper {
+    width: 200%;
+    overflow: hidden;
+}
+
+.cards {
+    float: left;
+    width: 52%;
+    margin-top: 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.cards:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.cardsBox {
+    width: 100%;
+}
+
+.cardsBox li {
+    width: 100%;
+    height: auto;
+    padding: .5rem;
+    margin-bottom: 0.5rem;
+    background: #fff;
+    display: inline-block;
+}
+
+.cardsBox:after {
+    clear: both;
+    display: block;
+}
+
+.Peopleimg {
+    width: 100%;
+    height: 50%;
+    background: #ccc;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.Peopleimg a {
+    width: 100%;
+    height: 50%;
+    display: block;
+}
+
+.Peopleimg img {
+    vertical-align: middle;
+}
+
+.P-title a {
+    color: #6dcbbd;
+    font-size: 1.8rem;
+    font-weight: bold;
+    line-height: 2.8rem;
+}
+
+.p-info {
+    width: 100%;
+    color: #666;
+    font-size: 1.5rem;
+    margin-top: 2px;
+    margin-left: 2px;
+    line-height: 1.6rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.p-reply {
+    text-align: right;
+    color: #6dcbbd;
+}
+
+.p-reply a {
+    color: #6dcbbd;
+}
+
+/**内页**/
+.conterInfo {
+    width: 90%;
+    margin: 0 auto;
+    border-top: 5rem solid rgba(0, 0, 0, 0);
+    position: relative;
+}
+
+.releaseBox {
+    width: 100%;
+    background: #fff;
+    overflow: hidden;
+}
+
+.releaseName {
+    width: 100%;
+    line-height: 4rem;
+    font-size: 2.6rem;
+    color: #6dcbbd;
+    font-weight: bold;
+    padding-left: 1rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.Photo {
+    width: 100%;
+    min-height: 20rem;
+    background: #ccc;
+}
+
+.formInput {
+    width: 100%;
+    margin: 1.5rem 0;
+}
+
+.inputBox {
+    width: 80%;
+    height: 3rem;
+    border-bottom: #2ee8d0 solid .1rem;
+    background: #fff;
+    margin: .2rem auto;
+    border-radius: initial;
+    -webkit-border-radius: initial;
+}
+
+.textBox {
+    width: 100%;
+    border-top: #eee dashed .2rem;
+    padding: .5rem 0 1rem 0;
+    position: relative;
+}
+
+.textarea {
+    width: 80%;
+    height: 8rem;
+    padding: .8rem;
+    border: #ccc solid .1rem;
+    border-radius: .5rem;
+    -webkit-border-radius: .5rem;
+    margin: 1rem auto;
+    box-shadow: #ccc 0 .3rem .5rem inset;
+}
+
+.circleBtn {
+    width: 7rem;
+    height: 7rem;
+    margin: 0 auto;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    background: #2ee9d0;
+    color: #FFFFFF;
+    font-size: 2rem;
+    box-shadow: #999 .5rem .1rem .5rem;
+}
+
+.yuan {
+    width: 11px;
+    height: 11px;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    background: #eee;
+    position: absolute;
+}
+
+.record {
+    width: 100%;
+    margin: 2rem auto 2rem auto;
+    background: #fff;
+}
+
+.record-t {
+    width: 100%;
+    height: 4rem;
+    line-height: 4rem;
+    padding: 0 1rem;
+    color: #333;
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.record-t i {
+    color: #46c0a9;
+    font-size: 1.8rem;
+    margin-right: .5rem;
+}
+
+.record-t span {
+    float: right;
+    color: #666;
+    margin-right: 2rem;
+}
+
+.MessageBox {
+    width: 100%;
+    padding: 1.5rem 3rem;
+    border-top: #eee dashed .1rem;
+    position: relative;
+}
+
+.movieName {
+    font-size: 1.6rem;
+    color: #6ccbbc;
+    font-weight: bold;
+}
+
+.movieName span {
+    float: right;
+}
+
+.movieName span a {
+    color: #46c0a9;
+    font-size: 1.2rem;
+}
+
+.Message {
+    width: 100%;
+    font-size: 1.4;
+    margin-top: 3px;
+    line-height: 2rem;
+}
+
+.MessageTime {
+    text-align: right;
+    font-size: 1.2rem;
+    color: #999;
+}
+
+.miaoshu {
+    width: 100%;
+    padding: 1rem;
+    line-height: 3rem;
+}
+
+.miaoshu i {
+    font-size: 2rem;
+    color: #888;
+}
+
+.yuepian {
+    width: 80%;
+    margin: 1rem auto 2rem auto;
+}
+
+.yuepian li {
+    width: 100%;
+    height: 4rem;
+    border-bottom: #ccc dashed .1rem;
+    line-height: 4rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.yuepian li span {
+    color: #000;
+    font-weight: bold;
+}
+
+.footer {
+    text-align: center;
+    line-height: 38px;
+    height: 38px;
+    margin-top: 20px;
+    color: #999;
+}
+
+.footer span, .footer a {
+    margin: 0 3px;
+}
+
+/**时间插件**/
+
+.page {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#datescroll div {
+    float: left;
+    margin-left: 10%;
+    margin-top: 15px;
+    padding-right: 22px;
+}
+
+#datescroll_datetime div {
+    float: left;
+    margin-left: 10%;
+    padding-right: 22px;
+}
+
+#yearwrapper {
+    position: absolute;
+    left: 0;
+    top: 45px;
+    bottom: 60px;
+    width: 80%;
+}
+
+#monthwrapper {
+    position: absolute;
+    left: 26%;
+    top: 45px;
+    bottom: 60px;
+    width: 80%;
+}
+
+#daywrapper {
+    position: absolute;
+    left: 50%;
+    top: 45px;
+    bottom: 60px;
+    width: 80%;
+}
+
+#Hourwrapper {
+    position: absolute;
+    left: 0;
+    top: 195px;
+    bottom: 68px;
+    width: 80%;
+}
+
+#Minutewrapper {
+    position: absolute;
+    left: 26%;
+    top: 195px;
+    bottom: 68px;
+    width: 80%;
+}
+
+#Secondwrapper {
+    position: absolute;
+    left: 50%;
+    top: 195px;
+    bottom: 68px;
+    width: 80%;
+}
+
+#Hourwrapper ul li {
+    color: #898989;
+    font-size: 12px;
+}
+
+#Minutewrapper ul li {
+    color: #898989;
+    font-size: 12px;
+}
+
+#Secondwrapper ul li {
+    color: #898989;
+    font-size: 12px;
+}
+
+#yearwrapper ul li {
+    color: #898989;
+    font-size: 12px;
+}
+
+#monthwrapper ul li {
+    color: #898989;
+    font-size: 12px;
+}
+
+#daywrapper ul li {
+    color: #898989;
+    font-size: 12px;
+}
+
+#markyear {
+    position: relative;
+    margin-left: 76px;
+    top: -2px;
+}
+
+#markmonth {
+    position: relative;
+    margin-left: 40px;
+    top: -2px;
+}
+
+#markday {
+    position: relative;
+    margin-left: 42px;
+    top: -2px;
+}
+
+#markhour {
+    position: relative;
+    margin-left: 62px;
+    top: -2px;
+}
+
+#markminut {
+    position: relative;
+    margin-left: 58px;
+    top: -2px;
+}
+
+#marksecond {
+    position: relative;
+    margin-left: 68px;
+    top: -2px;
+}
+
+#dateheader {
+    width: 100%;
+    height: 50px;
+    background: #79C12F;
+    text-align: center;
+    color: #fff;
+    line-height: 50px;
+    font-size: 20px;
+}
+
+#setcancle ul {
+    text-align: center;
+    line-height: 30px;
+    margin: 1px auto;
+    font-size: 20px;
+}
+
+#setcancle ul li {
+    border-radius: 3px;
+    float: left;
+    width: 40%;
+    height: 30px;
+    list-style-type: none;
+    font-family: 'microsoft yahei';
+    font-size: 16px;
+}
+
+#dateconfirm {
+    position: absolute;
+    background: #79C12F;
+    left: 20px;
+    color: #fff;
+}
+
+#datecancle {
+    position: absolute;
+    background: #dcdddd;
+    right: 20px;
+    width: 40%;
+    color: #666;
+}
+
+#dateshadow {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #000;
+    filter: alpha(Opacity=50);
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+    z-index: 5;
+}
+
+#datePage {
+    font-size: 22px;
+    border-radius: 3px;
+    position: fixed;
+    top: 110px;
+    MARGIN-RIGHT: auto;
+    vertical-align: middle;
+    MARGIN-LEFT: auto;
+    width: 80%;;
+    height: 240px;
+    background: #FFFFFF;
+    z-index: 9999999;
+}
+
+#datetitle {
+    width: 100%;
+    height: 50px;
+    background: #79C12F;
+    text-align: center;
+    color: #fff;
+    line-height: 50px;
+    font-size: 20px;
+    font-family: 'microsoft yahei';
+}
+
+#datetitle h1 {
+    font-weight: normal;
+}
+
+#datemark {
+    font-size: 18px;
+    left: 5%;
+    width: 90%;
+    height: 20px;
+    position: absolute;
+    top: 108px;
+    background: #eee;
+    border: 1px solid #eee;
+}
+
+#timemark {
+    font-size: 18px;
+    left: 5%;
+    width: 90%;
+    height: 20px;
+    position: absolute;
+    top: 242px;
+    background: #eee;
+    border: 1px solid #eee;
+}
+
+#datescroll {
+    background: #F8F8F8;
+    width: 94%;
+    margin: 10px 3%;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    height: 120px;
+    text-align: center;
+    line-height: 40px;
+}
+
+#datescroll_datetime {
+    display: none;
+    background: #F8F8F8;
+    width: 94%;
+    margin: 10px 3%;
+    margin-top: 10px;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    height: 120px;
+    text-align: center;
+    line-height: 40px;
+}
+
+#yearwrapper ul, #monthwrapper ul, #daywrapper ul {
+    width: 40%;
+}
+
+#Hourwrapper ul, #Minutewrapper ul, #Secondwrapper ul {
+    width: 40%;
+}
+
+#dateFooter {
+    width: 100%;
+    background: #fff;
+    height: 50px;
+    bottom: 0px;
+    position: absolute;
+}
+
+/*用户联系方式弹出框*/
+.mask {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.maskBox {
+    color: #78e2d1;
+    width: 90%;
+    height: auto;
+    background: #fff;
+    border-radius: .5rem;
+    -webkit-border-radius: .5rem;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    margin-left: -45%;
+    border: .3rem solid #78e2d1
+}
+
+@media (min-width: 640px) {
+    .maskBox {
+        width: 90%;
+        max-width: 600px;
+        height: auto;
+        background: #fff;
+        border-radius: .5rem;
+        -webkit-border-radius: .5rem;
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        margin-left: -300px;
+        border: 5px solid #78e2d1
+    }
+}
+
+.mask a {
+    text-align: center;
+}
+
+.header {
+    width: 100%;
+    height: 5rem;
+    background-color: #78e2d1;
+    font-size: 3rem;
+}
+
+.header {
+    line-height: 5rem;
+    color: white;
+}
+
+.coninfo {
+    width: 100%;
+    height: 8rem;
+    font-size: 3rem;
+}
+
+.bottom {
+    width: 100%;
+    height: 5rem;
+    border-top: .3rem solid #78e2d1;
+    font-size: 3rem;
+}
+
+.bottom a {
+    line-height: 5rem;
+    text-align: center;
+    letter-spacing: 2rem;
+}
+
+.comment {
+    float: right;
+    font-weight: normal;
+    line-height: 1.5rem;
+}
+
+.igood {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    top: 2px;
+    height: 1.5rem;
+    width: 1.5rem;
+    background: url(/img/dating/good.png) center no-repeat;
+    background-size: 1.4rem;
+}
+
+.ipregood {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    top: 2px;
+    height: 1.5rem;
+    width: 1.5rem;
+    background: url(/img/dating/pregood.png) center no-repeat;
+    background-size: 1.4rem;
+}
+
+.skycontainer a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.skypub {
+    bottom: 2rem;
+    direction: right;
+    position: fixed;
+    right: 2rem;
+}
+
+@media (min-width: 480px) {
+    .skypub {
+        bottom: 2rem;
+        direction: right;
+        position: fixed;
+        left: 50%;
+        right: 50%;
+        margin-left: calc(240px - 8rem);
+        margin-left: -webkit-calc(240px - 8rem);
+    }
+}
+
+.skypub i {
+    display: inline-block;
+    width: 4.8rem;
+    height: 4.8rem;
+    background-image: url(/img/dating/publish.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}

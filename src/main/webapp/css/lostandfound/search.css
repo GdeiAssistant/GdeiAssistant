@@ -1,0 +1,80 @@
+html, body, ul, li, p, div, form, h1, h2, h3, h4, h5, h6, img, a img, input {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+ul, li {
+    list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6, b, i, em {
+    font-size: 1em;
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.input {
+    border: 2px solid #6CDBC7;
+    border-radius: 6px;
+    padding: 8px;
+    margin: 5px;
+}
+
+.input input {
+    width: 90%;
+    line-height: 21px;
+    border: none;
+    outline: none;
+}
+
+.radios {
+    margin: 1rem 20%;
+}
+
+.radios .radio {
+    width: 48%;
+    display: inline-block;
+    text-align: center;
+    color: #8f8f91;
+}
+
+.radios .radio img {
+    width: 70%;
+    display: block;
+    margin: 1rem auto;
+}
+
+.buttons .button {
+    display: inline-block;
+    width: 40%;
+    text-align: center;
+    border-radius: 5px;
+    line-height: 3rem;
+    margin: 0 4%;
+}
+
+.buttons .ok {
+    background: #61D8C4;
+}
+
+.buttons .ok button {
+    color: #fff;
+}
+
+.buttons .button button {
+    border: 0;
+    background: inherit;
+    outline: none;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.buttons .cancel {
+    border: 1px solid #E2E2E4;
+}

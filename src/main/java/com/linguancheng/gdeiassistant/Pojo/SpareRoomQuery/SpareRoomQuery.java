@@ -1,7 +1,5 @@
 package com.linguancheng.gdeiassistant.Pojo.SpareRoomQuery;
 
-import com.sun.istack.internal.Nullable;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -22,12 +20,10 @@ public class SpareRoomQuery implements Serializable {
     private Integer type;
 
     //最小座位数
-    @Nullable
     @Min(0)
     private Integer minSeating;
 
     //最大座位数
-    @Nullable
     @Max(500)
     private Integer maxSeating;
 

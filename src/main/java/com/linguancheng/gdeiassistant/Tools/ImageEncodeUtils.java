@@ -1,11 +1,9 @@
 package com.linguancheng.gdeiassistant.Tools;
 
-import org.springframework.stereotype.Component;
-import sun.misc.BASE64Encoder;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Base64;
 
 public class ImageEncodeUtils {
 
@@ -43,7 +41,7 @@ public class ImageEncodeUtils {
             while ((len = inputStream.read(data)) != -1) {
                 byteArrayOutputStream.write(data, 0, len);
             }
-            result = new BASE64Encoder().encode(byteArrayOutputStream.toByteArray());
+            result = Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -85,7 +83,7 @@ public class ImageEncodeUtils {
                     BufferedImage.SCALE_SMOOTH);
             newBufferedImage.getGraphics().drawImage(bufferedImage, 0, 0, width, height, null);
             ImageIO.write(newBufferedImage, type, byteArrayOutputStream);
-            result = new BASE64Encoder().encode(byteArrayOutputStream.toByteArray());
+            result = Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

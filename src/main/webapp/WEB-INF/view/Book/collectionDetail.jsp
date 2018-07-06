@@ -45,6 +45,8 @@
     response.setHeader("Cache-Control", "must-revalidate");
 %>
 
+<div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+
 <div class="hd">
     <h1 class="page_title">图书详细信息</h1>
     <p class="page_desc">广东第二师范学院移动图书馆</p>
@@ -59,39 +61,46 @@
             <div class="weui-msg">
                 <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
                 <div class="weui-msg__text-area">
-                    <h2 class="weui-msg__title">详细信息</h2>
-                    <p class="weui-msg__desc">${CollectionDetail.detailContent}</p>
+                    <h2 class="weui-msg__title">${CollectionDetail.bookname}</h2>
                 </div>
+                <p style="color: #999;font-size: 16px;">作者：${CollectionDetail.author}</p>
+                <p style="color: #999;font-size: 16px;">题名/责任者：${CollectionDetail.principal}</p>
+                <p style="color: #999;font-size: 16px;">出版社/出版年：${CollectionDetail.publishingHouse}</p>
+                <p style="color: #999;font-size: 16px;">ISBN/定价：${CollectionDetail.price}</p>
+                <p style="color: #999;font-size: 16px;">载体形态项：${CollectionDetail.physicalDescriptionArea}</p>
+                <p style="color: #999;font-size: 16px;">个人责任者：${CollectionDetail.personalPrincipal}</p>
+                <p style="color: #999;font-size: 16px;">学科主题：${CollectionDetail.subjectTheme}</p>
+                <p style="color: #999;font-size: 16px;">中图法分类号：${CollectionDetail.chineseLibraryClassification}</p>
             </div>
 
             <div class="weui-cells__title" style="font-size: 16px">馆藏分布情况</div>
 
-            <c:forEach items="${CollectionDetail.collectionDistributionList}" var="collectionDistributionList">
+            <c:forEach items="${CollectionDetail.collectionDistributionList}" var="collectionDistribution">
 
                 <div class="weui-cells">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
                             <p>馆藏地</p>
                         </div>
-                        <div class="weui-cell__ft">${collectionDistributionList.location}</div>
+                        <div class="weui-cell__ft">${collectionDistribution.location}</div>
                     </div>
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
                             <p>索取号</p>
                         </div>
-                        <div class="weui-cell__ft">${collectionDistributionList.callNumber}</div>
+                        <div class="weui-cell__ft">${collectionDistribution.callNumber}</div>
                     </div>
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
                             <p>登录号</p>
                         </div>
-                        <div class="weui-cell__ft">${collectionDistributionList.accessionNumber}</div>
+                        <div class="weui-cell__ft">${collectionDistribution.barcode}</div>
                     </div>
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
                             <p>状态</p>
                         </div>
-                        <div class="weui-cell__ft">${collectionDistributionList.state}</div>
+                        <div class="weui-cell__ft">${collectionDistribution.state}</div>
                     </div>
                 </div>
 

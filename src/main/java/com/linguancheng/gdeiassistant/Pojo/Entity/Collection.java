@@ -14,40 +14,29 @@ public class Collection implements Serializable {
     //书名
     private String bookname;
 
-    //书目信息
-    private String bookinfo;
+    //著者
+    private String author;
 
-    //馆藏数量
-    private int sumCount;
-
-    //可借数量
-    private int availableCount;
+    //出版者
+    private String publishingHouse;
 
     //详细信息URL
     private String detailURL;
 
-    public String getBookinfo() {
-        return bookinfo;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setBookinfo(String bookinfo) {
-        this.bookinfo = bookinfo;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public int getSumCount() {
-        return sumCount;
+    public String getPublishingHouse() {
+        return publishingHouse;
     }
 
-    public void setSumCount(int sumCount) {
-        this.sumCount = sumCount;
-    }
-
-    public int getAvailableCount() {
-        return availableCount;
-    }
-
-    public void setAvailableCount(int availableCount) {
-        this.availableCount = availableCount;
+    public void setPublishingHouse(String publishingHouse) {
+        this.publishingHouse = publishingHouse;
     }
 
     public String getDetailURL() {

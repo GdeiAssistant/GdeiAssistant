@@ -19,7 +19,7 @@ public class CollectionController {
 
     @Autowired
     private CollectionQueryService collectionQueryService;
-    
+
     @RequestMapping(value = "/collection", method = RequestMethod.GET)
     public ModelAndView ResolveCollectionPage() {
         return new ModelAndView("Book/collection");
@@ -28,23 +28,30 @@ public class CollectionController {
     /**
      * 查询图书详细信息
      *
-     * @param response
      * @param collectionDetailQuery
      * @param bindingResult
      * @return
      */
     @RequestMapping(value = "/collectiondetail")
-    public ModelAndView CollectionDetailQuery(HttpServletResponse response, @Validated CollectionDetailQuery collectionDetailQuery, BindingResult bindingResult) {
+    public ModelAndView CollectionDetailQuery(@Validated CollectionDetailQuery collectionDetailQuery, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Book/collectionDetail");
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("QueryErrorMessage", "请求参数不合法");
         } else {
-            CollectionDetailQueryResult collectionDetailQueryResult = collectionQueryService.CollectionDetailQuery(collectionDetailQuery.getUrl());
+            CollectionDetailQueryResult collectionDetailQueryResult = collectionQueryService
+                    .CollectionDetailQuery(collectionDetailQuery);
             switch (collectionDetailQueryResult.getCollectionDetailQueryResultEnum()) {
                 case SERVER_ERROR:
-                case TIME_OUT:
                     modelAndView.addObject("QueryErrorMessage", "移动图书馆系统维护中,请稍候再试");
+                    break;
+
+                case TIME_OUT:
+                    modelAndView.addObject("QueryErrorMessage", "网络连接超时，请重试");
+                    break;
+
+                case EMPTY_RESULT:
+                    modelAndView.addObject("QueryErrorMessage", "该图书暂无馆藏信息");
                     break;
 
                 case SUCCESS:
@@ -71,6 +78,9 @@ public class CollectionController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("QueryErrorMessage", "请求参数不合法");
         } else {
+            if (collectionQuery.getPage() == null) {
+                collectionQuery.setPage(1);
+            }
             CollectionQueryResult collectionQueryResult = collectionQueryService.CollectionQuery(collectionQuery.getPage(), collectionQuery.getBookname());
             switch (collectionQueryResult.getCollectionQueryResultEnum()) {
                 case EMPTY_RESULT:

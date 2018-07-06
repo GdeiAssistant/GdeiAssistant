@@ -14,14 +14,95 @@ public class CollectionDetail implements Serializable {
 
     private List<CollectionDistribution> collectionDistributionList;
 
-    private String detailContent;
+    //书名
+    private String bookname;
 
-    public String getDetailContent() {
-        return detailContent;
+    //作者
+    private String author;
+
+    //题名/责任者
+    private String principal;
+
+    //出版社/出版年
+    private String publishingHouse;
+
+    //ISBN/定价
+    private String price;
+
+    //载体形态项
+    private String PhysicalDescriptionArea;
+
+    //个人责任者
+    private String personalPrincipal;
+
+    //学科主题
+    private String subjectTheme;
+
+    //中图法分类号
+    private String chineseLibraryClassification;
+
+    public String getAuthor() {
+        return author;
     }
 
-    public void setDetailContent(String detailContent) {
-        this.detailContent = detailContent;
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(String principal) {
+        this.principal = principal;
+    }
+
+    public String getPublishingHouse() {
+        return publishingHouse;
+    }
+
+    public void setPublishingHouse(String publishingHouse) {
+        this.publishingHouse = publishingHouse;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getPhysicalDescriptionArea() {
+        return PhysicalDescriptionArea;
+    }
+
+    public void setPhysicalDescriptionArea(String physicalDescriptionArea) {
+        PhysicalDescriptionArea = physicalDescriptionArea;
+    }
+
+    public String getPersonalPrincipal() {
+        return personalPrincipal;
+    }
+
+    public void setPersonalPrincipal(String personalPrincipal) {
+        this.personalPrincipal = personalPrincipal;
+    }
+
+    public String getSubjectTheme() {
+        return subjectTheme;
+    }
+
+    public void setSubjectTheme(String subjectTheme) {
+        this.subjectTheme = subjectTheme;
+    }
+
+    public String getChineseLibraryClassification() {
+        return chineseLibraryClassification;
+    }
+
+    public void setChineseLibraryClassification(String chineseLibraryClassification) {
+        this.chineseLibraryClassification = chineseLibraryClassification;
     }
 
     public List<CollectionDistribution> getCollectionDistributionList() {
@@ -30,5 +111,13 @@ public class CollectionDetail implements Serializable {
 
     public void setCollectionDistributionList(List<CollectionDistribution> collectionDistributionList) {
         this.collectionDistributionList = collectionDistributionList;
+    }
+
+    public String getBookname() {
+        return bookname;
+    }
+
+    public void setBookname(String bookname) {
+        this.bookname = bookname;
     }
 }

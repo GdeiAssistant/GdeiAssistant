@@ -13,7 +13,7 @@ public class CollectionQueryResult {
 
     private ServiceResultEnum collectionQueryResultEnum;
 
-    private int sumPage;
+    private Integer sumPage;
 
     private List<Collection> collectionList;
 
@@ -33,11 +33,11 @@ public class CollectionQueryResult {
         this.collectionQueryResultEnum = collectionQueryResultEnum;
     }
 
-    public int getSumPage() {
+    public Integer getSumPage() {
         return sumPage;
     }
 
-    public void setSumPage(int sumPage) {
+    public void setSumPage(Integer sumPage) {
         this.sumPage = sumPage;
     }
 }

@@ -8,9 +8,8 @@ import javax.validation.constraints.NotNull;
 
 public class CollectionQuery {
 
-    @NotNull(message = "查询的页数不能为空")
-    @Min(0)
-    private int page;
+    @Min(1)
+    private Integer page;
 
     @NotBlank(message = "查询的图书不能为空")
     private String bookname;
@@ -23,11 +22,11 @@ public class CollectionQuery {
         this.bookname = bookname;
     }
 
-    public int getPage() {
+    public Integer getPage() {
         return page;
     }
 
-    public void setPage(int page) {
+    public void setPage(Integer page) {
         this.page = page;
     }
 }

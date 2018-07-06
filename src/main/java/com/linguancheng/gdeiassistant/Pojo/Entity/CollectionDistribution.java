@@ -17,8 +17,8 @@ public class CollectionDistribution implements Serializable {
     //索取号
     private String callNumber;
 
-    //登录号
-    private String accessionNumber;
+    //条码号
+    private String barcode;
 
     //状态
     private String state;
@@ -39,19 +39,19 @@ public class CollectionDistribution implements Serializable {
         this.callNumber = callNumber;
     }
 
-    public String getAccessionNumber() {
-        return accessionNumber;
-    }
-
-    public void setAccessionNumber(String accessionNumber) {
-        this.accessionNumber = accessionNumber;
-    }
-
     public String getState() {
         return state;
     }
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
     }
 }

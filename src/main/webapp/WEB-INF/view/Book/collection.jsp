@@ -53,18 +53,33 @@
                 var collectionList = JSON.parse(sessionStorageList);
                 for (var i = 0; i < collectionList.length; i++) {
                     var bookname = collectionList[i].bookname;
-                    var bookinfo = collectionList[i].bookinfo;
-                    var sumCount = collectionList[i].sumCount;
-                    var availableCount = collectionList[i].availableCount;
-                    var detailURL = collectionList[i].detailURL;
-                    $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
-                        "<div class='weui-cell__bd'>" +
-                        "<p>" + bookname + "</p>" +
-                        "<p style='font-size: 13px;color: #999'>" + bookinfo + "</p>" +
-                        "</div>" +
-                        "<div class='weui-cell__ft' style='font-size: 15px;margin-left:20px'>" + "馆藏：" + sumCount + "<br>可借：" + availableCount +
-                        "</div>" +
-                        "</a>");
+                    var author = collectionList[i].author;
+                    var publishingHouse = collectionList[i].publishingHouse;
+                    var detailURL = collectionList[i].detailURL.toString();
+                    if (typeof(author) != "undefined" && typeof (publishingHouse) != "undefined") {
+                        $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
+                            "<div class='weui-cell__bd'>" +
+                            "<p>" + bookname + "</p>" +
+                            "<p style='font-size: 13px;color: #999'>" + author + "</p>" +
+                            "<p style='font-size:13px;color:#999'>" + publishingHouse + "</p></div></a>");
+                    }
+                    else if (typeof (author) == "undefined") {
+                        $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
+                            "<div class='weui-cell__bd'>" +
+                            "<p>" + bookname + "</p>" +
+                            "<p style='font-size:13px;color:#999'>" + publishingHouse + "</p></div></a>");
+                    }
+                    else if (typeof (publishingHouse) == "undefined") {
+                        $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
+                            "<div class='weui-cell__bd'>" +
+                            "<p>" + bookname + "</p>" +
+                            "<p style='font-size:13px;color:#999'>" + publishingHouse + "</p></div></a>");
+                    }
+                    else {
+                        $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
+                            "<div class='weui-cell__bd'>" +
+                            "<p>" + bookname + "</p></div></a>");
+                    }
                     setDetailURL(detailURL);
                 }
                 if ($("#currentPage").val() === $("#sumPage").val()) {
@@ -92,7 +107,7 @@
 
         //访问高级检索URL
         function openAdvancedSearchPage() {
-            window.location.href = 'http://lib2.gdei.edu.cn:8080/sms/opac/search/showiphoneSearch.action';
+            window.location.href = 'http://agentdockingopac.featurelib.libsou.com/showhome/search/showSearch?schoolId=705';
         }
 
         //监听返回事件
@@ -112,12 +127,7 @@
         //查看图书详细信息
         function getDetailInfo(url) {
             sessionStorage.setItem("anchor", url);
-            window.location.href = '/collectiondetail?url=' + url;
-        }
-
-        //返回主页
-        function backToIndex() {
-            window.location.href = '/index';
+            window.location.href = '/collectiondetail?' + url;
         }
 
         //提交查询请求
@@ -207,18 +217,33 @@
                                 sessionStorage.setItem("sumPage", cetQueryResultEnum.sumPage);
                                 for (var i = 0; i < collectionList.length; i++) {
                                     var bookname = collectionList[i].bookname;
-                                    var bookinfo = collectionList[i].bookinfo;
-                                    var sumCount = collectionList[i].sumCount;
-                                    var availableCount = collectionList[i].availableCount;
+                                    var author = collectionList[i].author;
+                                    var publishingHouse = collectionList[i].publishingHouse;
                                     var detailURL = collectionList[i].detailURL.toString();
-                                    $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
-                                        "<div class='weui-cell__bd'>" +
-                                        "<p>" + bookname + "</p>" +
-                                        "<p style='font-size: 13px;color: #999'>" + bookinfo + "</p>" +
-                                        "</div>" +
-                                        "<div class='weui-cell__ft' style='font-size: 15px;margin-left:20px'>" + "馆藏：" + sumCount + "<br>可借：" + availableCount +
-                                        "</div>" +
-                                        "</a>");
+                                    if (typeof(author) != "undefined" && typeof (publishingHouse) != "undefined") {
+                                        $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
+                                            "<div class='weui-cell__bd'>" +
+                                            "<p>" + bookname + "</p>" +
+                                            "<p style='font-size: 13px;color: #999'>" + author + "</p>" +
+                                            "<p style='font-size:13px;color:#999'>" + publishingHouse + "</p></div></a>");
+                                    }
+                                    else if (typeof (author) == "undefined") {
+                                        $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
+                                            "<div class='weui-cell__bd'>" +
+                                            "<p>" + bookname + "</p>" +
+                                            "<p style='font-size:13px;color:#999'>" + publishingHouse + "</p></div></a>");
+                                    }
+                                    else if (typeof (publishingHouse) == "undefined") {
+                                        $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
+                                            "<div class='weui-cell__bd'>" +
+                                            "<p>" + bookname + "</p>" +
+                                            "<p style='font-size:13px;color:#999'>" + publishingHouse + "</p></div></a>");
+                                    }
+                                    else {
+                                        $(".weui-cells").append("<a id='" + detailURL + "' class='weui-cell' href='javascript:' style='color: black'>" +
+                                            "<div class='weui-cell__bd'>" +
+                                            "<p>" + bookname + "</p></div></a>");
+                                    }
                                     setDetailURL(detailURL);
                                 }
                                 if ($("#currentPage").val() === $("#sumPage").val()) {
@@ -292,7 +317,7 @@
     response.setHeader("Cache-Control", "must-revalidate");
 %>
 
-<div class="weui_cells_title" onclick="backToIndex()">返回主页</div>
+<div class="weui_cells_title" onclick="history.go(-1)">返回</div>
 
 <input type="hidden" id="currentPage" value="1"/>
 <input type="hidden" id="sumPage" value="1"/>
@@ -417,22 +442,24 @@
             <div class="weui-cells">
 
                     <%-- 显示馆藏信息 --%>
-                <c:forEach var="collectionList" items="${CollectionList}">
+                <c:forEach var="collection" items="${CollectionList}">
 
-                    <a id='${collectionList.detailURL}' class='weui-cell'
+                    <a id='${collection.detailURL}' class='weui-cell'
                        href='javascript:'
                        style='color: black'>
                         <div class='weui-cell__bd'>
-                            <p>${collectionList.bookname}</p>
-                            <p style='font-size: 13px;color: #999'>${collectionList.bookinfo}</p>
-                        </div>
-                        <div class='weui-cell__ft' style='font-size: 15px;margin-left:20px'>
-                            馆藏：${collectionList.sumCount}<br>可借：${collectionList.availableCount}
+                            <p>${collection.bookname}</p>
+                            <c:if test="${collection.author!=null}">
+                                <p style='font-size: 13px;color: #999'>${collection.author}</p>
+                            </c:if>
+                            <c:if test="${collection.publishingHouse!=null}">
+                                <p style='font-size: 13px;color: #999'>${collection.publishingHouse}</p>
+                            </c:if>
                         </div>
                     </a>
 
                     <script>
-                        setDetailURL("${collectionList.detailURL}");
+                        setDetailURL("${collection.detailURL}");
                     </script>
 
                 </c:forEach>

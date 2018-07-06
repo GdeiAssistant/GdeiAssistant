@@ -3,6 +3,7 @@ package com.linguancheng.gdeiassistant.Service.CollectionQuery;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
+import com.linguancheng.gdeiassistant.Pojo.CollectionQuery.CollectionDetailQuery;
 import com.linguancheng.gdeiassistant.Pojo.CollectionQuery.CollectionDetailQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.CollectionQuery.CollectionQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Collection;
@@ -38,15 +39,15 @@ public class CollectionQueryService {
      * @param keyword
      * @return
      */
-    public CollectionQueryResult CollectionQuery(int page, String keyword) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("config/spring/applicationContext.xml");
-        CollectionQueryResult collectionQueryResult = (CollectionQueryResult) context.getBean("collectionQueryResult");
+    public CollectionQueryResult CollectionQuery(Integer page, String keyword) {
+        CollectionQueryResult collectionQueryResult = new CollectionQueryResult();
         try {
             OkHttpClient okHttpClient = new OkHttpClient.Builder().
-                    connectTimeout(5, TimeUnit.SECONDS).readTimeout(5, TimeUnit.SECONDS).
-                    writeTimeout(5, TimeUnit.SECONDS).build();
+                    connectTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS).
+                    writeTimeout(10, TimeUnit.SECONDS).build();
             //查询图书列表
-            String url = "http://lib2.gdei.edu.cn:8080/search?kw=" + keyword + "&searchtype=anywords";
+            String url = "http://agentdockingopac.featurelib.libsou.com/showhome/searchlist/opacSearchList?search=" + keyword
+                    + "&xc=3&schoolId=705&centerDomain=&searchtype=title";
             if (page != 1) {
                 url = url + "&page=" + page;
             }
@@ -55,55 +56,38 @@ public class CollectionQueryService {
             if (response.isSuccessful()) {
                 //解析HTML页面
                 Document document = Jsoup.parse(response.body().string());
-                String resultNumber = document.getElementsByClass("wrap").first().text();
-                String s1[] = resultNumber.split(" ");
-                String s2[] = s1[1].split("条");
-                //获取图书搜索结果数
-                int sum = Integer.valueOf(s2[0]);
-                //计算页数
-                int sumPage = 0;
-                if (sum % 20 == 0) {
-                    sumPage = sum / 20;
-                } else {
-                    sumPage = (sum / 20) + 1;
+                Integer currentPage = 1;
+                Integer sumPage = null;
+                Element pagenum = document.getElementById("pagenum");
+                if (pagenum == null) {
+                    //没有搜索结果
+                    throw new ErrorQueryConditionException("搜索结果为空");
+                }
+                sumPage = Integer.valueOf(pagenum.select("option").first().text().split("/")[1]);
+                if (currentPage > sumPage) {
+                    //已经超过总页数
+                    throw new ErrorQueryConditionException("查询页数超过总页数");
                 }
                 collectionQueryResult.setSumPage(sumPage);
+                //馆藏图书列表
                 List<Collection> collectionList = new ArrayList<>();
-                if (sum == 0) {
-                    throw new ErrorQueryConditionException("查询结果为空");
-                } else {
-                    Elements li = document.select("li");
-                    for (Element element : li) {
-                        Element a = element.select("a").first();
-                        String detailURL = a.attr("href");
-                        String str0[] = detailURL.split("%3fctrlno%");
-                        String str1[] = str0[1].split("&kw=");
-                        detailURL = str1[0];
-                        String bookname = a.text();
-                        String divContent = element.select("div").first().text();
-                        String s3[] = divContent.split(" ");
-                        for (int j = 0; j < s3.length; j++) {
-                            s3[j] = s3[j].trim();
+                Elements list = document.getElementsByClass("list");
+                for (Element collectionLis : list.select("li")) {
+                    Collection collection = new Collection();
+                    collection.setDetailURL(collectionLis.select("a").attr("href").split("\\?")[1]);
+                    collection.setBookname(collectionLis.getElementsByClass("title").first()
+                            .select("span").first().text().split(" ")[1]);
+                    Elements details = collectionLis.getElementsByClass("detail")
+                            .first().select("p");
+                    if (details.size() != 0) {
+                        if (details.size() == 1) {
+                            collection.setPublishingHouse(details.get(0).text());
+                        } else if (details.size() == 2) {
+                            collection.setAuthor(details.get(0).text());
+                            collection.setPublishingHouse(details.get(1).text());
                         }
-                        String s4[] = s3[0].split("：");
-                        String bookinfo = null;
-                        if (s4.length > 1) {
-                            bookinfo = s4[1] + " " + s3[1] + " " + s3[2];
-                        } else {
-                            bookinfo = s3[1] + " " + s3[2];
-                        }
-                        String s5[] = s3[4].split("：");
-                        int sumCount = Integer.valueOf(s5[1].trim());
-                        String s6[] = s3[6].split("：");
-                        int availableCount = Integer.valueOf(s6[1].trim());
-                        Collection collection = new Collection();
-                        collection.setBookname(bookname);
-                        collection.setBookinfo(bookinfo);
-                        collection.setSumCount(sumCount);
-                        collection.setAvailableCount(availableCount);
-                        collection.setDetailURL(detailURL);
-                        collectionList.add(collection);
                     }
+                    collectionList.add(collection);
                 }
                 //关闭响应
                 response.close();
@@ -129,40 +113,51 @@ public class CollectionQueryService {
     /**
      * 查询图书详细信息
      *
-     * @param url
+     * @param collectionDetailQuery
      * @return
      */
-    public CollectionDetailQueryResult CollectionDetailQuery(String url) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("config/spring/applicationContext.xml");
-        CollectionDetailQueryResult collectionDetailQueryResult = (CollectionDetailQueryResult) context.getBean("collectionDetailQueryResult");
+    public CollectionDetailQueryResult CollectionDetailQuery(CollectionDetailQuery collectionDetailQuery) {
+        CollectionDetailQueryResult collectionDetailQueryResult = new CollectionDetailQueryResult();
         try {
             OkHttpClient okHttpClient = new OkHttpClient.Builder().
-                    connectTimeout(5, TimeUnit.SECONDS).readTimeout(5, TimeUnit.SECONDS).
-                    writeTimeout(5, TimeUnit.SECONDS).build();
-            Request request = new Request.Builder().url("http://lib2.gdei.edu.cn:8080/search?d=http%3a%2f%2f210.38.64.115%3a81%2fbookinfo.aspx%3fctrlno%" + url).build();
+                    connectTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS).
+                    writeTimeout(10, TimeUnit.SECONDS).build();
+            Request request = new Request.Builder().url("http://agentdockingopac.featurelib.libsou.com/showhome/searchdetail" +
+                    "/opacSearchDetail?opacUrl=" + collectionDetailQuery.getOpacUrl() + "&search=" + collectionDetailQuery.getSearch()
+                    + "&schoolId=" + collectionDetailQuery.getSchoolId() + "&searchtype=" + collectionDetailQuery.getSearchtype() + "&page="
+                    + collectionDetailQuery.getPage() + "&xc=" + collectionDetailQuery.getXc()).build();
             Response response = okHttpClient.newCall(request).execute();
             Document document = Jsoup.parse(response.body().string());
-            if (response.isSuccessful() && document.title().isEmpty()) {
-                String detailContent = document.getElementById("ctl00_ContentPlaceHolder1_bookcardinfolbl").text();
-                List<CollectionDistribution> collectionDistributionList = new ArrayList<>();
+            if (response.isSuccessful()) {
                 CollectionDetail collectionDetail = new CollectionDetail();
-                Elements sheet = document.getElementsByClass("sheet");
-                for (Element element : sheet) {
-                    String location = element.select("tr").first().select("td").first().text();
-                    String callNumber = element.select("tr").get(1).select("td").first().text();
-                    String accessionNumber = element.select("tr").get(2).select("td").first().text();
-                    String state = element.select("tr").get(3).select("td").first().text();
+                Element tit = document.getElementsByClass("tit").first();
+                if (tit == null) {
+                    collectionDetailQueryResult.setCollectionDetailQueryResultEnum(ServiceResultEnum.EMPTY_RESULT);
+                    return collectionDetailQueryResult;
+                }
+                Element catalog = document.getElementsByClass("catalog").first();
+                Elements tableLib = document.getElementsByClass("tableLib");
+                collectionDetail.setBookname(tit.select("h1").text());
+                collectionDetail.setAuthor(tit.select("p").text().split("：")[1]);
+                collectionDetail.setPrincipal(catalog.select("p").first().text().split("：")[1]);
+                collectionDetail.setPublishingHouse(catalog.select("p").get(1).text().split("：")[1]);
+                collectionDetail.setPrice(catalog.select("p").get(2).text().split("：")[1]);
+                collectionDetail.setPhysicalDescriptionArea(catalog.select("p").get(3).text().split("：")[1]);
+                collectionDetail.setPersonalPrincipal(catalog.select("p").get(4).text().split("：")[1]);
+                collectionDetail.setSubjectTheme(catalog.select("p").get(5).text().split("：")[1]);
+                collectionDetail.setChineseLibraryClassification(catalog.select("p").get(6).text().split("：")[1]);
+                List<CollectionDistribution> collectionDistributionList = new ArrayList<>();
+                for (Element distribution : tableLib) {
                     CollectionDistribution collectionDistribution = new CollectionDistribution();
-                    collectionDistribution.setLocation(location);
-                    collectionDistribution.setCallNumber(callNumber);
-                    collectionDistribution.setAccessionNumber(accessionNumber);
-                    collectionDistribution.setState(state);
+                    collectionDistribution.setBarcode(distribution.select("td").first().text());
+                    collectionDistribution.setCallNumber(distribution.select("td").get(1).text());
+                    collectionDistribution.setLocation(distribution.select("td").get(2).text());
+                    collectionDistribution.setState(distribution.select("td").get(3).text());
                     collectionDistributionList.add(collectionDistribution);
                 }
                 collectionDetail.setCollectionDistributionList(collectionDistributionList);
-                collectionDetail.setDetailContent(detailContent);
-                collectionDetailQueryResult.setCollectionDetail(collectionDetail);
                 collectionDetailQueryResult.setCollectionDetailQueryResultEnum(ServiceResultEnum.SUCCESS);
+                collectionDetailQueryResult.setCollectionDetail(collectionDetail);
                 return collectionDetailQueryResult;
             }
             throw new ServerErrorException("移动图书馆系统异常");

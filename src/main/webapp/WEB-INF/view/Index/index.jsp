@@ -148,7 +148,7 @@
             <i style="background: url(/img/function/cet.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>四六级查询</p>
         </div>
-        <div onclick="window.location.href='/collection'">
+        <div onclick="window.location.href='http://agentdockingopac.featurelib.libsou.com/showhome/search/showSearch?schoolId=705'">
             <i style="background: url(/img/function/collection.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>馆藏查询</p>
         </div>

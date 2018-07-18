@@ -69,15 +69,15 @@
     </bean>
 
     <!-- 设置日志数据源c3p0 -->
-    <!--<bean id="logDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">-->
-    <!--<property name="driverClass" value="${log.jdbc.driverClassName}"/>-->
-    <!--<property name="jdbcUrl" value="${log.jdbc.url}"/>-->
-    <!--<property name="user" value="${log.jdbc.username}"/>-->
-    <!--<property name="password" value="${log.jdbc.password}"/>-->
-    <!--<property name="maxPoolSize" value="${log.jdbc.maxPoolSize}"/>-->
-    <!--<property name="minPoolSize" value="${log.jdbc.minPoolSize}"/>-->
-    <!--<property name="maxIdleTime" value="${log.jdbc.maxIdleTime}"/>-->
-    <!--</bean>-->
+    <bean id="logDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+    <property name="driverClass" value="${log.jdbc.driverClassName}"/>
+    <property name="jdbcUrl" value="${log.jdbc.url}"/>
+    <property name="user" value="${log.jdbc.username}"/>
+    <property name="password" value="${log.jdbc.password}"/>
+    <property name="maxPoolSize" value="${log.jdbc.maxPoolSize}"/>
+    <property name="minPoolSize" value="${log.jdbc.minPoolSize}"/>
+    <property name="maxIdleTime" value="${log.jdbc.maxIdleTime}"/>
+    </bean>
 
     <!-- 应用数据库的SQLSessionFactory -->
     <bean id="appSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -86,10 +86,10 @@
     </bean>
 
     <!-- 日志数据库的SQLSessionFactory -->
-    <!--<bean id="logSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
-    <!--<property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>-->
-    <!--<property name="dataSource" ref="logDataSource"/>-->
-    <!--</bean>-->
+    <bean id="logSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>
+    <property name="dataSource" ref="logDataSource"/>
+    </bean>
 
     <!-- 应用数据源事务管理 -->
     <bean id="appTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -97,9 +97,9 @@
     </bean>
 
     <!-- 日志数据源事务管理 -->
-    <!--<bean id="logTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
-    <!--<property name="dataSource" ref="logDataSource"/>-->
-    <!--</bean>-->
+    <bean id="logTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="logDataSource"/>
+    </bean>
 
     <!-- 控制器映射器和控制器适配器 -->
     <mvc:annotation-driven/>
@@ -191,13 +191,15 @@
                 <!-- 读取百度云秘钥 -->
                 <value>classpath:/config/baidu/token.properties</value>
                 <!-- 读取教务系统配置信息 -->
-                <value>classpath:/config/eduaction/system.properties</value>
+                <value>classpath:/config/education/system.properties</value>
                 <!-- 读取网络代理配置信息 -->
                 <value>classpath:/config/network/proxy.properties</value>
                 <!-- 读取阿里云市场身份认证信息 -->
                 <value>classpath:/config/aliyun/appcode.properties</value>
                 <!-- 读取网络超时配置信息 -->
                 <value>classpath:/config/network/timeout.properties</value>
+                <!-- 读取教务缓存时间间隔配置信息 -->
+                <value>classpath:/config/education/cache.properties</value>
             </list>
         </property>
         <property name="fileEncoding" value="UTF-8"/>
@@ -380,10 +382,10 @@
     </bean>
 
     <!-- 自动扫描mapper接口，并注入日志SqlSessionFactory -->
-    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
-        <!--<property name="basePackage" value="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs"/>-->
-        <!--<property name="sqlSessionFactoryBeanName" value="logSqlSessionFactory"/>-->
-    <!--</bean>-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs"/>
+        <property name="sqlSessionFactoryBeanName" value="logSqlSessionFactory"/>
+    </bean>
 
     <!-- 启动对AspectJ注解的支持 -->
     <aop:aspectj-autoproxy/>

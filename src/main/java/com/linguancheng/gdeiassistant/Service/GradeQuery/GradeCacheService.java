@@ -10,6 +10,7 @@ import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -34,6 +35,8 @@ public class GradeCacheService {
 
     private int currentUserStart = 0;
 
+    private int gradeInterval;
+
     @Autowired
     private AsyncRestTemplate asyncRestTemplate;
 
@@ -44,6 +47,11 @@ public class GradeCacheService {
     private UserMapper userMapper;
 
     private Log log = LogFactory.getLog(GradeCacheService.class);
+
+    @Value("#{propertiesReader['education.cache.grade.interval']}")
+    public void setGradeInterval(int gradeInterval) {
+        this.gradeInterval = gradeInterval;
+    }
 
     /**
      * 查询用户保存的成绩信息
@@ -74,7 +82,7 @@ public class GradeCacheService {
                         .decryptString(user.getUsername()));
                 //如果最后更新日期距今已超过7天，则进行更新
                 if (gradeDocument == null || Duration.between(gradeDocument.getUpdateDateTime()
-                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= 7) {
+                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= gradeInterval) {
                     try {
                         HttpHeaders httpHeaders = new HttpHeaders();
                         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

@@ -9,6 +9,7 @@ import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,6 +34,8 @@ public class ScheduleCacheService {
 
     private int currentUserStart = 0;
 
+    private int scheduleInterval;
+
     @Autowired
     private AsyncRestTemplate asyncRestTemplate;
 
@@ -43,6 +46,11 @@ public class ScheduleCacheService {
     private UserMapper userMapper;
 
     private Log log = LogFactory.getLog(ScheduleCacheService.class);
+
+    @Value("#{propertiesReader['education.cache.schedule.interval']}")
+    public void setScheduleInterval(int scheduleInterval) {
+        this.scheduleInterval = scheduleInterval;
+    }
 
     /**
      * 查询用户保存的课表信息
@@ -73,7 +81,7 @@ public class ScheduleCacheService {
                         .decryptString(user.getUsername()));
                 //如果最后更新日期距今已超过3天，则进行更新
                 if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()
-                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= 3) {
+                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= scheduleInterval) {
                     HttpHeaders httpHeaders = new HttpHeaders();
                     httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

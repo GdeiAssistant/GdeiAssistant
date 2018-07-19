@@ -60,4 +60,9 @@ dependencies {
     compile group: 'com.aliyun', name: 'aliyun-java-sdk-sts', version: '2.1.6'
     compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.6.3'
     compile group: 'org.springframework.data', name: 'spring-data-mongodb', version: '2.0.4.RELEASE'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0.1'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0.1'
+    compile group: 'javax.activation', name: 'activation', version: '1.1.1'
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+
 }

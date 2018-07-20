@@ -18,10 +18,13 @@
     <meta name="browsermode" content="application">
     <meta name="x5-page-mode" content="app">
     <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="/css/common/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/common/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/download/download-global.css">
     <link rel="stylesheet" type="text/css" href="/css/download/download-base.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/js/common/swiper.js"></script>
+    <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script type="text/javascript" src="/js/download/download.js"></script>
 </head>
 <body>
@@ -41,81 +44,130 @@
         <img src="/img/download/logo.png" width="120" height="120" alt="">
     </div>
 
-    <div style="display:block;margin:0 auto;width:180px;" id="wx_btn2">
+    <!-- 电脑界面 -->
+    <div id="desktop" style="display: none">
 
-        <!-- 安卓版下载 -->
-        <a href="javascript:" onclick="androidDownload()"
-           style="display:block;margin:0 auto;width:180px;">
-            <img src="/img/download/android.png" alt="" class="center-block margin-bottom60">
-        </a>
+        <div style="display:block;margin:0 auto;width:500px">
 
-        <!-- Google Play 安卓版下载 -->
-        <a href="javascript:" onclick="androidGooglePlayDownload()"
-           style="display:block;margin:0 auto;width:180px;">
-            <img src="/img/download/googleplay.png" alt="" class="center-block margin-bottom60">
-        </a>
+            <!-- 安卓版下载和微信小程序 -->
+            <a href="javascript:" style="width:100%;display:block">
+                <div style="width:80%;height: 50px;" class="margin-bottom60 center-block">
+                    <img src="/img/download/android.png" style="float: left;" alt=""
+                         onclick="androidDownload()">
+                    <img src="/img/download/wechat.png" style="float: right;" alt="" onclick="WechatApp()">
+                </div>
+            </a>
 
-        <!-- App Store iOS下载 -->
-        <a href="javascript:" onclick="iOSDownload()"
-           style="display:block;margin:0 auto;width:180px;">
-            <img src="/img/download/appstore.png" alt="" class="center-block margin-bottom60">
-        </a>
+            <!-- 安卓谷歌专版和iOS版本下载 -->
+            <a href="javascript:" style="width:100%;display:block">
+                <div style="width:80%;height: 50px;" class="margin-bottom60 center-block">
+                    <img src="/img/download/googleplay.png" style="float: left" alt=""
+                         onclick="androidGooglePlayDownload()">
+                    <img src="/img/download/appstore.png" style="float: right;" alt="" onclick="iOSDownload()">
+                </div>
+            </a>
 
-        <!-- Microsoft UWP版下载 -->
-        <a href="javascript:" onclick="UWPDownload()"
-           style="display:block;margin:0 auto;width:180px;">
-            <img src="/img/download/microsoft.png" alt="" class="center-block margin-bottom60">
-        </a>
+            <!-- UWP版本下载 -->
+            <a href="javascript:" style="width:100%;display:block">
+                <div style="width:80%;height: 50px;" class="margin-bottom60 center-block">
+                    <a href="javascript:" onclick="" style="display:block;width:180px;">
+                        <img src="/img/download/microsoft.png" style="float: left" alt=""
+                             onclick="UWPDownload()">
+                    </a>
+                </div>
+            </a>
 
-    </div>
-
-    <hr class="margin-bottom60">
-    <div class="desp">
-        <h2>应用介绍</h2>
-        <div class="dsp margin-bottom60">
-            <section>
-                为广东第二师范学院专属打造的校园服务应用，提供课表查询、成绩查询、等级考试查询、图书借阅查询和消费流水查询等综合性功能
-            </section>
         </div>
-    </div>
-    <hr class="margin-bottom60">
 
-    <div>
-        <h2>应用截图</h2>
-        <div class="table-responsive">
-            <table class="table">
-                <tbody>
-                <tr>
-                    <td>
-                        <div style="">
-                            <img src="/img/download/screenshot_01.jpg">
-                        </div>
-                    </td>
-                    <td>
-                        <div style="">
-                            <img src="/img/download/screenshot_02.jpg">
-                        </div>
-                    </td>
-                    <td>
-                        <div style="">
-                            <img src="/img/download/screenshot_05.jpg">
-                        </div>
-                    </td>
-                    <td>
-                        <div style="">
-                            <img src="/img/download/screenshot_04.jpg">
-                        </div>
-                    </td>
-                    <td>
-                        <div style="">
-                            <img src="/img/download/screenshot_03.jpg">
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
+
+    <!-- 手机界面 -->
+    <div id="phone" style="display: none">
+
+        <div style="display:block;margin:0 auto;width:100%">
+
+            <!-- 安卓版下载 -->
+            <a href="javascript:" onclick="androidDownload()"
+               style="display:block;margin:0 auto;width:180px;">
+                <img src="/img/download/android.png" alt="" class="center-block margin-bottom60">
+            </a>
+
+            <!-- 微信小程序 -->
+            <a href="javascript:" onclick="WechatApp()" style="display:block;margin:0 auto;width:180px;">
+                <img src="/img/download/wechat.png" alt="" class="margin-bottom60 center-block">
+            </a>
+
+            <!-- Google Play 安卓版下载 -->
+            <a href="javascript:" onclick="androidGooglePlayDownload()"
+               style="display:block;margin:0 auto;width:180px;">
+                <img src="/img/download/googleplay.png" alt="" class="center-block margin-bottom60">
+            </a>
+
+            <!-- App Store iOS下载 -->
+            <a href="javascript:" onclick="iOSDownload()"
+               style="display:block;margin:0 auto;width:180px;">
+                <img src="/img/download/appstore.png" alt="" class="margin-bottom60 center-block">
+            </a>
+
+            <!-- Microsoft UWP版下载 -->
+            <a href="javascript:" onclick="UWPDownload()"
+               style="display:block;margin:0 auto;width:180px;">
+                <img src="/img/download/microsoft.png" alt="" class="margin-bottom60 center-block">
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr class="margin-bottom60">
+<div class="desp">
+    <h2>应用介绍</h2>
+    <div class="dsp margin-bottom60">
+        <section>
+            为广东第二师范学院专属打造的校园服务应用，提供课表查询、成绩查询、等级考试查询、图书借阅查询和消费流水查询等综合性功能
+        </section>
+    </div>
+</div>
+<hr class="margin-bottom60">
+
+<div>
+    <h2>应用截图</h2>
+    <div class="table-responsive">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <div style="">
+                        <img src="/img/download/screenshot_01.jpg">
+                    </div>
+                </td>
+                <td>
+                    <div style="">
+                        <img src="/img/download/screenshot_02.jpg">
+                    </div>
+                </td>
+                <td>
+                    <div style="">
+                        <img src="/img/download/screenshot_05.jpg">
+                    </div>
+                </td>
+                <td>
+                    <div style="">
+                        <img src="/img/download/screenshot_04.jpg">
+                    </div>
+                </td>
+                <td>
+                    <div style="">
+                        <img src="/img/download/screenshot_03.jpg">
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 </div>
 

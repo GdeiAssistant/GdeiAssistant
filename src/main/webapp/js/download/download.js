@@ -1,3 +1,13 @@
+//检测浏览器窗口大小并显示对应下载页
+$(function () {
+    if (document.body.clientWidth > 500) {
+        $("#desktop").show();
+    }
+    else {
+        $("#phone").show();
+    }
+});
+
 //获取客户端下载地址
 $(function () {
     $.ajax({
@@ -49,4 +59,14 @@ function iOSDownload() {
 
 function UWPDownload() {
     alert("暂无UWP版本");
+}
+
+function WechatApp() {
+    $.photoBrowser({
+        items: [
+            {
+                image: "/img/download/qrcode.jpg",
+            }
+        ]
+    }).open();
 }

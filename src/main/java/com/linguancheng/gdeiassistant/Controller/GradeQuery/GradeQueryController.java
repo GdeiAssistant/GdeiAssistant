@@ -126,24 +126,28 @@ public class GradeQueryController {
                         case PASSWORD_INCORRECT:
                             //身份凭证异常
                             result.setSuccess(false);
+                            result.setEmpty(false);
                             result.setErrorMessage("密码错误，请重新登录");
                             break;
 
                         case SERVER_ERROR:
                             //服务器异常
                             result.setSuccess(false);
+                            result.setEmpty(false);
                             result.setErrorMessage("学院教务系统维护中,暂不可用");
                             break;
 
                         case TIME_OUT:
                             //连接超时
                             result.setSuccess(false);
+                            result.setEmpty(false);
                             result.setErrorMessage("网络连接超时，请重试");
                             break;
 
                         case ERROR_CONDITION:
                             //当前学年暂不可用
                             result.setSuccess(false);
+                            result.setEmpty(true);
                             result.setErrorMessage("当前学年暂不可以查询");
                             break;
 
@@ -165,18 +169,21 @@ public class GradeQueryController {
                 case PASSWORD_ERROR:
                     //用户名或密码错误
                     result.setSuccess(false);
+                    result.setEmpty(false);
                     result.setErrorMessage("密码已更新，请重新登录");
                     break;
 
                 case TIME_OUT:
                     //连接超时
                     result.setSuccess(false);
+                    result.setEmpty(false);
                     result.setErrorMessage("网络连接超时，请稍候再试");
                     break;
 
                 case SERVER_ERROR:
                     //服务器异常
                     result.setSuccess(false);
+                    result.setEmpty(false);
                     result.setErrorMessage("教务系统维护中，请稍候再试");
                     break;
             }

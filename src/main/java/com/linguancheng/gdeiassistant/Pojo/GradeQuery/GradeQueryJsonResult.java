@@ -30,6 +30,8 @@ public class GradeQueryJsonResult {
 
     private boolean success;
 
+    private boolean empty;
+
     private String errorMessage;
 
     public Integer getQueryYear() {
@@ -110,5 +112,13 @@ public class GradeQueryJsonResult {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public boolean isEmpty() {
+        return empty;
+    }
+
+    public void setEmpty(boolean empty) {
+        this.empty = empty;
     }
 }

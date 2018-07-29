@@ -131,7 +131,9 @@ public class GradeCacheService {
                                         secondTermGPA_Arrays[queryYear] = result.getBody().getSecondTermGPA();
                                         secondTermIGP_Arrays[queryYear] = result.getBody().getSecondTermIGP();
                                     } else {
-                                        hasError[0] = true;
+                                        if (!result.getBody().isEmpty()) {
+                                            hasError[0] = true;
+                                        }
                                     }
                                     countDownLatch.countDown();
                                 }

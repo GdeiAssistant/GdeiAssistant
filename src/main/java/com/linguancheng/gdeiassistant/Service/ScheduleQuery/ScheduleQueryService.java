@@ -43,26 +43,35 @@ public class ScheduleQueryService {
 
     private String url;
 
+    private int startYear;
+
+    private int startMonth;
+
+    private int startDate;
+
     private int year;
-
-    private int month;
-
-    private int date;
 
     private int term;
 
+    private int timeout;
+
     @Value("#{propertiesReader['schedule.start.date']}")
 
-    public void setDate(int date) {
-        this.date = date;
+    public void setStartDate(int startDate) {
+        this.startDate = startDate;
     }
 
     @Value("#{propertiesReader['schedule.start.month']}")
-    public void setMonth(int month) {
-        this.month = month;
+    public void setStartMonth(int startMonth) {
+        this.startMonth = startMonth;
     }
 
     @Value("#{propertiesReader['schedule.start.year']}")
+    public void setStartYear(int startYear) {
+        this.startYear = startYear;
+    }
+
+    @Value("#{propertiesReader['schedule.year']}")
     public void setYear(int year) {
         this.year = year;
     }
@@ -72,22 +81,20 @@ public class ScheduleQueryService {
         this.term = term;
     }
 
-    @Autowired
-    private HttpClientFactory httpClientFactory;
-
     @Value("#{propertiesReader['education.system.url']}")
     public void setUrl(String url) {
         this.url = url;
     }
 
-    private Log log = LogFactory.getLog(ScheduleQueryService.class);
-
-    private int timeout;
-
     @Value("#{propertiesReader['timeout.schedulequery']}")
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
+
+    @Autowired
+    private HttpClientFactory httpClientFactory;
+
+    private Log log = LogFactory.getLog(ScheduleQueryService.class);
 
     /**
      * 获取当前周数
@@ -96,11 +103,11 @@ public class ScheduleQueryService {
      */
     public int getCurrentWeek() {
         //当前日期
-        LocalDate currentDate = LocalDate.now();
+        LocalDate current = LocalDate.now();
         //开学日期
-        LocalDate startDate = LocalDate.of(year, month, date);
+        LocalDate start = LocalDate.of(startYear, startMonth, startDate);
         //计算当前周数
-        int result = (int) (startDate.until(currentDate, ChronoUnit.WEEKS) + 1);
+        int result = (int) (start.until(current, ChronoUnit.WEEKS) + 1);
         if (result < 1) {
             return 1;
         }
@@ -179,13 +186,7 @@ public class ScheduleQueryService {
                         Elements xndOptions = document.getElementsByAttributeValue("name", "xnd").first().select("option");
                         for (Element option : xndOptions) {
                             if (option.hasAttr("selected")) {
-                                if (defaultTerm == 1) {
-                                    defaultYear = Integer.parseInt((option.attr("value").split("-"))[0]);
-                                } else if (defaultTerm == 2) {
-                                    defaultYear = Integer.parseInt((option.attr("value").split("-"))[1]);
-                                } else {
-                                    throw new ServerErrorException("教务系统异常");
-                                }
+                                defaultYear = Integer.parseInt((option.attr("value").split("-"))[0]);
                             }
                         }
                         if (defaultYear == year && defaultTerm == term) {
@@ -213,7 +214,7 @@ public class ScheduleQueryService {
                         //特殊的空课程,用于标记当前单元格被上边的课程信息占用,即上边同列课程的课程时长大于1
                         Schedule specialEmptySchedule = new Schedule();
                         //存放课表信息的数组,包含特殊的空课程对象
-                        Schedule[][] schedulesWithSpecialEmptySchedule = new Schedule[84][10];
+                        Schedule[][] schedulesWithSpecialEmptySchedule = new Schedule[70][10];
                         //存放课表信息的列表,过滤特殊的空课程对象后添加入该列表
                         List<Schedule> schedulesWithoutSpecialEmptySchedule = new ArrayList<>();
                         //当前单元格位置position值
@@ -227,7 +228,7 @@ public class ScheduleQueryService {
                             //记录当前访问列数据的游标,若当前为第3行或第8行或第13行,初始列游标值为2,否则初始值为1
                             //因为特殊行里面的第一列包含上午/下午的信息提示
                             int currentColumnIndexInThisRow;
-                            if (row == 2 || row == 7 || row == 11) {
+                            if (row == 2 || row == 6 || row == 10) {
                                 currentColumnIndexInThisRow = 2;
                             } else {
                                 currentColumnIndexInThisRow = 1;

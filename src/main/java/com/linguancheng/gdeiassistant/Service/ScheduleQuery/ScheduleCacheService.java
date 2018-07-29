@@ -121,6 +121,9 @@ public class ScheduleCacheService {
                                     semaphore.release();
                                 }
                             }
+                            else{
+                                semaphore.release();
+                            }
                         }
                     });
 

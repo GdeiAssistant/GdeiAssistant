@@ -1,12 +1,15 @@
 package com.linguancheng.gdeiassistant.Service.Privacy;
 
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
+import com.linguancheng.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
+import com.linguancheng.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Privacy.PrivacyMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Privacy;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -16,6 +19,12 @@ public class PrivacyService {
 
     @Resource(name = "privacyMapper")
     private PrivacyMapper privacyMapper;
+
+    @Autowired
+    private GradeDao gradeDao;
+
+    @Autowired
+    private ScheduleDao scheduleDao;
 
     private Log log = LogFactory.getLog(PrivacyService.class);
 
@@ -106,6 +115,25 @@ public class PrivacyService {
             return true;
         } catch (Exception e) {
             log.error("更新个人简介隐私配置异常：" + e);
+            return false;
+        }
+    }
+
+    /**
+     * 更新教务信息缓存隐私配置
+     *
+     * @param state
+     * @param username
+     * @return
+     */
+    public boolean UpdateCache(boolean state, String username) {
+        try {
+            privacyMapper.updateCache(state, StringEncryptUtils.encryptString(username));
+            gradeDao.removeGrade(username);
+            scheduleDao.removeSchedule(username);
+            return true;
+        } catch (Exception e) {
+            log.error("更新教务信息缓存隐私配置异常：" + e);
             return false;
         }
     }

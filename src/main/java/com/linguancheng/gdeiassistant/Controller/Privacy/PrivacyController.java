@@ -122,6 +122,15 @@ public class PrivacyController {
                     }
                     break;
 
+                case 4:
+                    if (privacyService.UpdateCache(state, username)) {
+                        result.setSuccess(true);
+                    } else {
+                        result.setSuccess(false);
+                        result.setErrorMessage("服务器异常，请稍候再试");
+                    }
+                    break;
+
                 default:
                     result.setSuccess(false);
                     result.setErrorMessage("请求参数不合法");

@@ -1,0 +1,26 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+.gitignore
+gradlew
+gradlew.bat
+src/main/resources/config/aliyun/
+src/main/resources/config/baidu/
+src/main/resources/config/face/
+src/main/resources/config/jaq/
+src/main/resources/config/log4j2/
+src/main/resources/config/mongodb/
+src/main/resources/config/mysql/app-jdbc.properties
+src/main/resources/config/mysql/log-jdbc.properties
+src/main/resources/config/network/proxy.properties
+src/main/resources/config/oss/
+src/main/resources/config/version/
+src/main/resources/config/wechat/
+src/test/
+src/main/resources/config/yiban

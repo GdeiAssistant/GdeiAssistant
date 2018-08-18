@@ -14,8 +14,8 @@
     </select>
 
     <insert id="initPrivacy">
-        insert into privacy (username,gender,genderOrientation,region,introduction)
-         values(#{username},true,true,true,true)
+        insert into privacy (username,gender,genderOrientation,region,introduction,cache)
+         values(#{username},true,true,true,true,true)
     </insert>
 
     <update id="updateGender">
@@ -65,6 +65,19 @@
             </when>
             <otherwise>
                 set introduction='0'
+            </otherwise>
+        </choose>
+        where username=#{username}
+    </update>
+
+    <update id="updateCache">
+        update privacy
+        <choose>
+            <when test="cache">
+                set cache='1'
+            </when>
+            <otherwise>
+                set cache='0'
             </otherwise>
         </choose>
         where username=#{username}

@@ -19,4 +19,7 @@ public interface PrivacyMapper {
 
     public void updateIntroduction(@Param("introduction") boolean introduction
             , @Param("username") String username) throws Exception;
+
+    public void updateCache(@Param("cache") boolean cache, @Param("username") String username)
+            throws Exception;
 }

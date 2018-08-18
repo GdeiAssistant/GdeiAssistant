@@ -22,6 +22,9 @@ $(function () {
                     if (result.data.introduction === true) {
                         $("#introduction").prop("checked", true);
                     }
+                    if (result.data.cache === true) {
+                        $("#cache").prop("checked", true);
+                    }
                 }
                 else {
                     $.toptip(result.errorMessage, 'error');

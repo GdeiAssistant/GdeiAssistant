@@ -35,4 +35,15 @@ public class GradeDaoImpl implements GradeDao {
         return mongoTemplate.findOne(new Query(Criteria.where("username").is(username))
                 , GradeDocument.class, "grade");
     }
+
+    /**
+     * 删除用户缓存的成绩信息
+     *
+     * @param username
+     */
+    @Override
+    public void removeGrade(String username) {
+        mongoTemplate.remove(new Query(Criteria.where("username").is(username)), "grade");
+    }
+
 }

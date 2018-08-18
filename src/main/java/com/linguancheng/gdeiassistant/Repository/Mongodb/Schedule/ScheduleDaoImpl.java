@@ -35,4 +35,14 @@ public class ScheduleDaoImpl implements ScheduleDao {
         return mongoTemplate.findOne(new Query(Criteria.where("username").is(username))
                 , ScheduleDocument.class, "schedule");
     }
+
+    /**
+     * 删除用户缓存的课表信息
+     *
+     * @param username
+     */
+    @Override
+    public void removeSchedule(String username) {
+        mongoTemplate.remove(new Query(Criteria.where("username").is(username)), "schedule");
+    }
 }

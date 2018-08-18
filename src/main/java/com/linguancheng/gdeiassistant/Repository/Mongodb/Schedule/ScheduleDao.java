@@ -8,4 +8,6 @@ public interface ScheduleDao {
 
     public ScheduleDocument queryScheduleByUsername(String username);
 
+    public void removeSchedule(String username);
+
 }

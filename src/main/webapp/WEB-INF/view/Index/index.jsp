@@ -205,6 +205,10 @@
             <i style="background: url(/img/function/sport.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>体测查询</p>
         </div>
+        <div onclick="window.location.href='https://github.com/MorningCatty/GdeiAssistant-WebApp'">
+            <i style="background: url(/img/function/github.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>代码开源</p>
+        </div>
         <div id="wechat" style="display: none" onclick="window.location.href='/wechat/attach'">
             <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>绑定微信</p>

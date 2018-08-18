@@ -11,43 +11,53 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Privacy implements Serializable {
 
-    private boolean gender;
+    private Boolean gender;
 
-    private boolean genderOrientation;
+    private Boolean genderOrientation;
 
-    private boolean region;
+    private Boolean region;
 
-    private boolean introduction;
+    private Boolean introduction;
 
-    public boolean isGender() {
+    private Boolean cache;
+
+    public Boolean isGender() {
         return gender;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(Boolean gender) {
         this.gender = gender;
     }
 
-    public boolean isGenderOrientation() {
+    public Boolean isGenderOrientation() {
         return genderOrientation;
     }
 
-    public void setGenderOrientation(boolean genderOrientation) {
+    public void setGenderOrientation(Boolean genderOrientation) {
         this.genderOrientation = genderOrientation;
     }
 
-    public boolean isRegion() {
+    public Boolean isRegion() {
         return region;
     }
 
-    public void setRegion(boolean region) {
+    public void setRegion(Boolean region) {
         this.region = region;
     }
 
-    public boolean isIntroduction() {
+    public Boolean isIntroduction() {
         return introduction;
     }
 
-    public void setIntroduction(boolean introduction) {
+    public void setIntroduction(Boolean introduction) {
         this.introduction = introduction;
+    }
+
+    public Boolean isCache() {
+        return cache;
+    }
+
+    public void setCache(Boolean cache) {
+        this.cache = cache;
     }
 }

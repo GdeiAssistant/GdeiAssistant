@@ -316,7 +316,7 @@ public class ScheduleQueryService {
                                                         //上课地点
                                                         String location = "";
                                                         //检查是否已经安排课程
-                                                        if (string[j + 4] == null) {
+                                                        if (string.length <= 4 || string[j + 4] == null) {
                                                             location = "暂未安排";
                                                         } else {
                                                             if (string[j + 4].contains("（")) {

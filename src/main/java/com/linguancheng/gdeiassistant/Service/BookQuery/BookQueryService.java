@@ -72,10 +72,10 @@ public class BookQueryService {
             }
             throw new ServerErrorException("图书馆系统异常");
         } catch (IOException e) {
-            log.error("续借图书异常:" + e);
+            log.error("续借图书异常:" , e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("续借图书异常" + e);
+            log.error("续借图书异常" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {
@@ -186,13 +186,13 @@ public class BookQueryService {
                 throw new ServerErrorException("图书馆系统异常");
             }
         } catch (IOException e) {
-            log.error("查询借阅图书异常：" + e);
+            log.error("查询借阅图书异常：" , e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (PasswordIncorrectException e) {
-            log.error("查询借阅图书异常：" + e);
+            log.error("查询借阅图书异常：" , e);
             result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (Exception e) {
-            log.error("查询借阅图书异常：" + e);
+            log.error("查询借阅图书异常：" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {

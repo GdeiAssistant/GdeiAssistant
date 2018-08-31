@@ -72,7 +72,7 @@ public class DatingService {
                 result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
             }
         } catch (Exception e) {
-            log.error("根据ID查询卖室友详细信息异常：" + e);
+            log.error("根据ID查询卖室友详细信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -98,7 +98,7 @@ public class DatingService {
             result.setResultType(DataBaseResultEnum.SUCCESS);
             result.setResultData(list);
         } catch (Exception e) {
-            log.error("分页查询卖室友信息列表异常：" + e);
+            log.error("分页查询卖室友信息列表异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -115,7 +115,7 @@ public class DatingService {
             datingMapper.updateDatingProfile(datingProfile);
             return DataBaseResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("更新卖室友信息异常：" + e);
+            log.error("更新卖室友信息异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -132,7 +132,7 @@ public class DatingService {
             datingMapper.updateDatingProfileState(id, state);
             return DataBaseResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("更新卖室友信息状态异常：" + e);
+            log.error("更新卖室友信息状态异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -152,7 +152,7 @@ public class DatingService {
             result.setResultType(DataBaseResultEnum.SUCCESS);
             result.setResultData(datingProfile.getProfileId());
         } catch (Exception e) {
-            log.error("添加卖室友信息异常" + e);
+            log.error("添加卖室友信息异常" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -193,7 +193,7 @@ public class DatingService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("查找撩一下记录异常：" + e);
+            log.error("查找撩一下记录异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -219,7 +219,7 @@ public class DatingService {
                 result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
             }
         } catch (Exception e) {
-            log.error("根据ID查找撩一下记录异常：" + e);
+            log.error("根据ID查找撩一下记录异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -246,7 +246,7 @@ public class DatingService {
             datingMapper.insertDatingMessage(datingMessage);
             return DataBaseResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("添加撩一下记录异常：" + e);
+            log.error("添加撩一下记录异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -273,7 +273,7 @@ public class DatingService {
             datingMapper.insertDatingMessage(datingMessage);
             return DataBaseResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("更新撩一下状态异常：" + e);
+            log.error("更新撩一下状态异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -302,7 +302,7 @@ public class DatingService {
             result.setResultType(DataBaseResultEnum.SUCCESS);
             result.setResultData(list);
         } catch (Exception e) {
-            log.error("分页查找用户卖室友消息异常：" + e);
+            log.error("分页查找用户卖室友消息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -322,7 +322,7 @@ public class DatingService {
             result.setResultType(DataBaseResultEnum.SUCCESS);
             result.setResultData(count);
         } catch (Exception e) {
-            log.error("查询用户卖室友未阅读消息数量异常：" + e);
+            log.error("查询用户卖室友未阅读消息数量异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -340,7 +340,7 @@ public class DatingService {
             datingMapper.insertDatingMessage(datingMessage);
             return DataBaseResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("添加卖室友通知消息异常：" + e);
+            log.error("添加卖室友通知消息异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -357,7 +357,7 @@ public class DatingService {
             datingMapper.updateDatingMessageState(id, state);
             return DataBaseResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("更新卖室友通知消息阅读状态异常：" + e);
+            log.error("更新卖室友通知消息阅读状态异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }

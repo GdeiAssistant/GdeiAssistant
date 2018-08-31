@@ -118,7 +118,7 @@ public class RealNameService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (Exception e) {
-            log.error("获取用户真实姓名异常：" + e);
+            log.error("获取用户真实姓名异常：" , e);
             result.setResultType(BoolResultEnum.ERROR);
         } finally {
             if (httpClient != null) {
@@ -153,7 +153,7 @@ public class RealNameService {
             result.setResultData(cardInfo.getName());
             result.setResultType(BoolResultEnum.SUCCESS);
         } catch (Exception e) {
-            log.error("获取用户真实姓名异常：" + e);
+            log.error("获取用户真实姓名异常：" , e);
             result.setResultType(BoolResultEnum.ERROR);
         } finally {
             if (httpClient != null) {

@@ -108,7 +108,7 @@ public class UserProfileService {
                 result.setResultType(DataBaseResultEnum.INCORRECT_USERNAME);
             }
         } catch (Exception e) {
-            log.error("获取用户作者简要资料异常：" + e);
+            log.error("获取用户作者简要资料异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -132,7 +132,7 @@ public class UserProfileService {
                 result.setResultType(DataBaseResultEnum.INCORRECT_USERNAME);
             }
         } catch (Exception e) {
-            log.error("获取用户个人资料异常：" + e);
+            log.error("获取用户个人资料异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -160,7 +160,7 @@ public class UserProfileService {
                 }
             }
         } catch (Exception e) {
-            log.error("获取用户个人简介异常：" + e);
+            log.error("获取用户个人简介异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -221,7 +221,7 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户个人简介异常：" + e);
+            log.error("更新用户个人简介异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -250,7 +250,7 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户所在地异常：" + e);
+            log.error("更新用户所在地异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -274,7 +274,7 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户性别异常：" + e);
+            log.error("更新用户性别异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -298,7 +298,7 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户性取向异常：" + e);
+            log.error("更新用户性取向异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -322,7 +322,7 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户昵称异常：" + e);
+            log.error("更新用户昵称异常：" , e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -355,7 +355,7 @@ public class UserProfileService {
 
                     @Override
                     public void onFailure(Throwable ex) {
-                        log.error("同步用户个人资料真实姓名异常：" + ex);
+                        log.error("同步用户个人资料真实姓名异常：" , ex);
                         semaphore.release();
                     }
 
@@ -368,7 +368,7 @@ public class UserProfileService {
                                 log.error("同步用户个人资料真实姓名异常：" + result.getBody().getErrorMessage());
                             }
                         } catch (Exception e) {
-                            log.error("同步用户个人资料真实姓名异常：" + e);
+                            log.error("同步用户个人资料真实姓名异常：" , e);
                         } finally {
                             semaphore.release();
                         }
@@ -376,7 +376,7 @@ public class UserProfileService {
                 });
             }
         } catch (Exception e) {
-            log.error("同步用户个人资料真实姓名异常：" + e);
+            log.error("同步用户个人资料真实姓名异常：" , e);
         }
     }
 

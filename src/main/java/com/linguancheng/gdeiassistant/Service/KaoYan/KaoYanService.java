@@ -108,16 +108,16 @@ public class KaoYanService {
             }
             throw new ServerErrorException("查询系统异常");
         } catch (IOException e) {
-            log.error("查询考研成绩异常：" + e);
+            log.error("查询考研成绩异常：" , e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (ServerErrorException e) {
-            log.error("查询考研成绩异常：" + e);
+            log.error("查询考研成绩异常：" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } catch (ErrorQueryConditionException e) {
-            log.error("查询考研成绩异常：" + e);
+            log.error("查询考研成绩异常：" , e);
             result.setResultType(ServiceResultEnum.ERROR_CONDITION);
         } catch (Exception e) {
-            log.error("查询考研成绩异常：" + e);
+            log.error("查询考研成绩异常：" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         }
         return result;

@@ -98,13 +98,13 @@ public class CollectionQueryService {
             }
             throw new ServerErrorException("移动图书馆系统异常");
         } catch (IOException e) {
-            log.error("查询馆藏图书异常：" + e);
+            log.error("查询馆藏图书异常：" , e);
             collectionQueryResult.setCollectionQueryResultEnum(ServiceResultEnum.TIME_OUT);
         } catch (ErrorQueryConditionException e) {
-            log.error("查询馆藏图书异常：" + e);
+            log.error("查询馆藏图书异常：" , e);
             collectionQueryResult.setCollectionQueryResultEnum(ServiceResultEnum.EMPTY_RESULT);
         } catch (Exception e) {
-            log.error("查询馆藏图书异常：" + e);
+            log.error("查询馆藏图书异常：" , e);
             collectionQueryResult.setCollectionQueryResultEnum(ServiceResultEnum.SERVER_ERROR);
         }
         return collectionQueryResult;
@@ -162,10 +162,10 @@ public class CollectionQueryService {
             }
             throw new ServerErrorException("移动图书馆系统异常");
         } catch (IOException e) {
-            log.error("查询馆藏图书详细信息异常：" + e);
+            log.error("查询馆藏图书详细信息异常：" , e);
             collectionDetailQueryResult.setCollectionDetailQueryResultEnum(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("查询馆藏图书详细信息异常：" + e);
+            log.error("查询馆藏图书详细信息异常：" , e);
             collectionDetailQueryResult.setCollectionDetailQueryResultEnum(ServiceResultEnum.SERVER_ERROR);
         }
         return collectionDetailQueryResult;

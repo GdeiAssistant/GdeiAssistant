@@ -48,7 +48,7 @@ public class SecretService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("获取树洞信息异常：" + e);
+            log.error("获取树洞信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -71,7 +71,7 @@ public class SecretService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("获取用户发布树洞信息异常：" + e);
+            log.error("获取用户发布树洞信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -88,7 +88,7 @@ public class SecretService {
             Secret secret = secretMapper.selectSecretByID(id);
             return secret != null;
         } catch (Exception e) {
-            log.error("ID查询树洞信息异常：" + e);
+            log.error("ID查询树洞信息异常：" , e);
             return false;
         }
     }
@@ -116,7 +116,7 @@ public class SecretService {
                 result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
             }
         } catch (Exception e) {
-            log.error("获取树洞详细信息异常：" + e);
+            log.error("获取树洞详细信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -135,7 +135,7 @@ public class SecretService {
             secretMapper.insertSecret(secretContent);
             return true;
         } catch (Exception e) {
-            log.error("添加树洞信息异常：" + e);
+            log.error("添加树洞信息异常：" , e);
             return false;
         }
     }
@@ -159,7 +159,7 @@ public class SecretService {
             secretMapper.insertSecretComment(secretComment);
             return true;
         } catch (Exception e) {
-            log.error("添加树洞评论异常：" + e);
+            log.error("添加树洞评论异常：" , e);
             return false;
         }
     }
@@ -183,7 +183,7 @@ public class SecretService {
             }
             return true;
         } catch (Exception e) {
-            log.error("更改树洞点赞状态异常：" + e);
+            log.error("更改树洞点赞状态异常：" , e);
             return false;
         }
     }

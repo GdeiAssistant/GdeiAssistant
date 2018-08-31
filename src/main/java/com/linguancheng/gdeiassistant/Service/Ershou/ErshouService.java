@@ -77,7 +77,7 @@ public class ErshouService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("ID查询二手商品信息异常：" + e);
+            log.error("ID查询二手商品信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -119,7 +119,7 @@ public class ErshouService {
                 }
             }
         } catch (Exception e) {
-            log.error("ID查询二手商品详细信息异常：" + e);
+            log.error("ID查询二手商品详细信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -144,7 +144,7 @@ public class ErshouService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("查询个人二手商品信息异常：" + e);
+            log.error("查询个人二手商品信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -171,7 +171,7 @@ public class ErshouService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("分页查询二手商品信息异常：" + e);
+            log.error("分页查询二手商品信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -199,7 +199,7 @@ public class ErshouService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("关键词查询二手商品信息异常：" + e);
+            log.error("关键词查询二手商品信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -227,7 +227,7 @@ public class ErshouService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("指定类型查询二手商品信息异常：" + e);
+            log.error("指定类型查询二手商品信息异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -251,7 +251,7 @@ public class ErshouService {
             result.setResultData(ershouItem);
             result.setResultType(BoolResultEnum.SUCCESS);
         } catch (Exception e) {
-            log.error("保存二手商品信息异常：" + e);
+            log.error("保存二手商品信息异常：" , e);
             result.setResultType(BoolResultEnum.ERROR);
         }
         return result;
@@ -270,7 +270,7 @@ public class ErshouService {
             ershouMapper.updateItemInfo(ershouItem);
             return BoolResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("更新二手商品信息异常：" + e);
+            log.error("更新二手商品信息异常：" , e);
             return BoolResultEnum.ERROR;
         }
     }
@@ -287,7 +287,7 @@ public class ErshouService {
             ershouMapper.updateItemState(id, state);
             return BoolResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("更新二手商品信息状态异常：" + e);
+            log.error("更新二手商品信息状态异常：" , e);
             return BoolResultEnum.ERROR;
         }
     }

@@ -78,7 +78,7 @@ public class LostAndFoundService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("ID查询失物招领物品异常：" + e);
+            log.error("ID查询失物招领物品异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -121,7 +121,7 @@ public class LostAndFoundService {
                 }
             }
         } catch (Exception e) {
-            log.error("ID查询失物招领物品异常：" + e);
+            log.error("ID查询失物招领物品异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -147,7 +147,7 @@ public class LostAndFoundService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("查询个人失物招领物品异常：" + e);
+            log.error("查询个人失物招领物品异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -174,7 +174,7 @@ public class LostAndFoundService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("分页查询失物物品异常：" + e);
+            log.error("分页查询失物物品异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -201,7 +201,7 @@ public class LostAndFoundService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("分页查询招领物品异常：" + e);
+            log.error("分页查询招领物品异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -230,7 +230,7 @@ public class LostAndFoundService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("关键词查询失物物品异常：" + e);
+            log.error("关键词查询失物物品异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -259,7 +259,7 @@ public class LostAndFoundService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("关键词查询招领物品异常：" + e);
+            log.error("关键词查询招领物品异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -288,7 +288,7 @@ public class LostAndFoundService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("指定类型查询失物物品异常：" + e);
+            log.error("指定类型查询失物物品异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -317,7 +317,7 @@ public class LostAndFoundService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("指定类型查询招领物品异常：" + e);
+            log.error("指定类型查询招领物品异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -339,7 +339,7 @@ public class LostAndFoundService {
             result.setResultData(lostAndFoundItem);
             result.setResultType(BoolResultEnum.SUCCESS);
         } catch (Exception e) {
-            log.error("保存失物招领物品异常：" + e);
+            log.error("保存失物招领物品异常：" , e);
             result.setResultType(BoolResultEnum.ERROR);
         }
         return result;
@@ -358,7 +358,7 @@ public class LostAndFoundService {
             lostAndFoundMapper.updateItemInfo(lostAndFoundItem);
             return BoolResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("更新失物招领物品异常：" + e);
+            log.error("更新失物招领物品异常：" , e);
             return BoolResultEnum.ERROR;
         }
     }
@@ -375,7 +375,7 @@ public class LostAndFoundService {
             lostAndFoundMapper.updateItemState(id, state);
             return BoolResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("更新失物招领物品状态异常：" + e);
+            log.error("更新失物招领物品状态异常：" , e);
             return BoolResultEnum.ERROR;
         }
     }

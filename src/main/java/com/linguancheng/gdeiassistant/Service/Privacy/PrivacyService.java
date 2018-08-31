@@ -45,7 +45,7 @@ public class PrivacyService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("获取用户隐私配置异常：" + e);
+            log.error("获取用户隐私配置异常：" , e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -63,7 +63,7 @@ public class PrivacyService {
             privacyMapper.updateGender(state, StringEncryptUtils.encryptString(username));
             return true;
         } catch (Exception e) {
-            log.error("更新性别隐私配置异常：" + e);
+            log.error("更新性别隐私配置异常：" , e);
             return false;
         }
     }
@@ -80,7 +80,7 @@ public class PrivacyService {
             privacyMapper.updateGenderOrientation(state, StringEncryptUtils.encryptString(username));
             return true;
         } catch (Exception e) {
-            log.error("更新性取向隐私配置异常：" + e);
+            log.error("更新性取向隐私配置异常：" , e);
             return false;
         }
     }
@@ -97,7 +97,7 @@ public class PrivacyService {
             privacyMapper.updateRegion(state, StringEncryptUtils.encryptString(username));
             return true;
         } catch (Exception e) {
-            log.error("更新国家和地区隐私配置异常：" + e);
+            log.error("更新国家和地区隐私配置异常：" , e);
             return false;
         }
     }
@@ -114,7 +114,7 @@ public class PrivacyService {
             privacyMapper.updateIntroduction(state, StringEncryptUtils.encryptString(username));
             return true;
         } catch (Exception e) {
-            log.error("更新个人简介隐私配置异常：" + e);
+            log.error("更新个人简介隐私配置异常：" , e);
             return false;
         }
     }
@@ -133,7 +133,7 @@ public class PrivacyService {
             scheduleDao.removeSchedule(username);
             return true;
         } catch (Exception e) {
-            log.error("更新教务信息缓存隐私配置异常：" + e);
+            log.error("更新教务信息缓存隐私配置异常：" , e);
             return false;
         }
     }

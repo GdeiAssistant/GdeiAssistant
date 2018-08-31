@@ -114,16 +114,16 @@ public class TeacherLoginService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
-            log.error("教师登录异常：" + e);
+            log.error("教师登录异常：" , e);
             return LoginResultEnum.TIME_OUT;
         } catch (ServerErrorException | RecognitionException e) {
-            log.error("教师登录异常：" + e);
+            log.error("教师登录异常：" , e);
             return LoginResultEnum.SERVER_ERROR;
         } catch (PasswordIncorrectException e) {
-            log.error("教师登录异常：" + e);
+            log.error("教师登录异常：" , e);
             return LoginResultEnum.PASSWORD_ERROR;
         } catch (Exception e) {
-            log.error("教师登录异常：" + e);
+            log.error("教师登录异常：" , e);
             return LoginResultEnum.SERVER_ERROR;
         } finally {
             if (httpClient != null) {

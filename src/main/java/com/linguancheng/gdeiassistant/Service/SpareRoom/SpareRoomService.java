@@ -293,16 +293,16 @@ public class SpareRoomService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
-            log.error("查询空课室异常：" + e);
+            log.error("查询空课室异常：" , e);
             baseResult.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (ServerErrorException e) {
-            log.error("查询空课室异常：" + e);
+            log.error("查询空课室异常：" , e);
             baseResult.setResultType(ServiceResultEnum.SERVER_ERROR);
         } catch (ErrorQueryConditionException e) {
-            log.error("查询空课室异常：" + e);
+            log.error("查询空课室异常：" , e);
             baseResult.setResultType(ServiceResultEnum.ERROR_CONDITION);
         } catch (Exception e) {
-            log.error("查询空课室异常：" + e);
+            log.error("查询空课室异常：" , e);
             baseResult.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {

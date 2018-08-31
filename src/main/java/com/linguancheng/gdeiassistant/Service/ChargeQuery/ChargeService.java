@@ -78,7 +78,7 @@ public class ChargeService {
                 return VerifyClientKeyCodeResultEnum.VERIFY_FAILURE;
             }
         } catch (WsgException e) {
-            log.error("校园卡充值校验客户端异常：" + e);
+            log.error("校园卡充值校验客户端异常：" , e);
             return VerifyClientKeyCodeResultEnum.VERIFY_EXCEPTION;
         }
     }
@@ -97,7 +97,7 @@ public class ChargeService {
             chargeLog.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             chargeMapper.insertChargeLog(chargeLog);
         } catch (Exception e) {
-            log.error("保存用户校园卡充值记录异常：" + e);
+            log.error("保存用户校园卡充值记录异常：" , e);
         }
     }
 
@@ -122,13 +122,13 @@ public class ChargeService {
             }
             throw new UnsupportClientTypeException();
         } catch (UnsupportSecurityVersionException e) {
-            log.error("校园卡充值生成服务端校验码异常：" + e);
+            log.error("校园卡充值生成服务端校验码异常：" , e);
             result.setResultType(GetServerKeyCodeResultEnum.UNSUPPORT_SECURITYVERSION);
         } catch (UnsupportClientTypeException e) {
-            log.error("校园卡充值生成服务端校验码异常：" + e);
+            log.error("校园卡充值生成服务端校验码异常：" , e);
             result.setResultType(GetServerKeyCodeResultEnum.UNSUPPORT_CLIENTTYPE);
         } catch (WsgException e) {
-            log.error("校园卡充值生成服务端校验码异常：" + e);
+            log.error("校园卡充值生成服务端校验码异常：" , e);
             result.setResultType(GetServerKeyCodeResultEnum.INCORRECT_USERINFORMATION);
         }
         return result;
@@ -177,13 +177,13 @@ public class ChargeService {
             result.setResultType(ChargeRequestResultEnum.REQUEST_SUCCESS);
             return result;
         } catch (AccountNotAvailableException e) {
-            log.error("校园卡充值异常：" + e);
+            log.error("校园卡充值异常：" , e);
             result.setResultType(ChargeRequestResultEnum.ACCOUNT_NOT_AVAILABLE);
         } catch (InconsistentInformationException e) {
-            log.error("校园卡充值异常：" + e);
+            log.error("校园卡充值异常：" , e);
             result.setResultType(ChargeRequestResultEnum.INCONSISTENT_INFORMATION);
         } catch (Exception e) {
-            log.error("校园卡充值异常：" + e);
+            log.error("校园卡充值异常：" , e);
             result.setResultType(ChargeRequestResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {

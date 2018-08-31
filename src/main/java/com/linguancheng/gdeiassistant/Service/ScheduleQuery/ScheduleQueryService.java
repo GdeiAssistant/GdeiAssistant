@@ -225,7 +225,7 @@ public class ScheduleQueryService {
                         for (int row = 2; row < trs.size(); row++) {
                             //获取该行内所有列
                             Elements tds = trs.get(row).select("td");
-                            //记录当前访问列数据的游标,若当前为第3行或第8行或第13行,初始列游标值为2,否则初始值为1
+                            //记录当前访问列数据的游标,若当前为第3行或第7行或第11行,初始列游标值为2,否则初始值为1
                             //因为特殊行里面的第一列包含上午/下午的信息提示
                             int currentColumnIndexInThisRow;
                             if (row == 2 || row == 6 || row == 10) {
@@ -336,7 +336,7 @@ public class ScheduleQueryService {
                                                         schedule.setScheduleTeacher(teacher);
                                                         schedule.setScheduleLocation(location);
                                                         schedule.setRow(row - 2);
-                                                        if (row == 2 || row == 7 || row == 11) {
+                                                        if (row == 2 || row == 6 || row == 10) {
                                                             schedule.setColumn(currentColumnIndexInThisRow - 2);
                                                         } else {
                                                             schedule.setColumn(currentColumnIndexInThisRow - 1);

@@ -213,19 +213,19 @@ public class GradeQueryService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (PasswordIncorrectException e) {
-            log.error("课程成绩查询异常：" + e);
+            log.error("课程成绩查询异常：" , e);
             gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (NotAvailableConditionException e) {
-            log.error("课程成绩查询异常：" + e);
+            log.error("课程成绩查询异常：" , e);
             gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.ERROR_CONDITION);
         } catch (ServerErrorException e) {
-            log.error("课程成绩查询异常：" + e);
+            log.error("课程成绩查询异常：" , e);
             gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
         } catch (IOException e) {
-            log.error("课程成绩查询异常：" + e);
+            log.error("课程成绩查询异常：" , e);
             gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("课程成绩查询异常：" + e);
+            log.error("课程成绩查询异常：" , e);
             gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {

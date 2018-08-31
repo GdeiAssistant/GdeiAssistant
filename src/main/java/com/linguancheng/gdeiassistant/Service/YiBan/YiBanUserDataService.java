@@ -36,7 +36,7 @@ public class YiBanUserDataService {
             }
             return true;
         } catch (Exception e) {
-            log.error("同步易班绑定账号异常：" + e);
+            log.error("同步易班绑定账号异常：" , e);
             return false;
         }
     }
@@ -61,7 +61,7 @@ public class YiBanUserDataService {
                 result.setResultType(AttachResultEnum.ATTACHED);
             }
         } catch (Exception e) {
-            log.error("检查易班绑定账号状态异常：" + e);
+            log.error("检查易班绑定账号状态异常：" , e);
             result.setResultType(AttachResultEnum.SERVER_ERROR);
         }
         return result;

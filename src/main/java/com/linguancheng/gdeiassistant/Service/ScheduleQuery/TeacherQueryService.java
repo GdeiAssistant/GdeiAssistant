@@ -257,16 +257,16 @@ public class TeacherQueryService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
-            log.error("教师个人课表查询异常：" + e);
+            log.error("教师个人课表查询异常：" , e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (ServerErrorException e) {
-            log.error("教师个人课表查询异常：" + e);
+            log.error("教师个人课表查询异常：" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } catch (PasswordIncorrectException e) {
-            log.error("教师个人课表查询异常：" + e);
+            log.error("教师个人课表查询异常：" , e);
             result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (Exception e) {
-            log.error("教师个人课表查询异常：" + e);
+            log.error("教师个人课表查询异常：" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {

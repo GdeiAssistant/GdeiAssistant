@@ -69,7 +69,7 @@ public class UserDataService {
                 privacyMapper.initPrivacy(encryptUser.getUsername());
             }
         } catch (Exception e) {
-            log.error("同步用户数据异常：" + e);
+            log.error("同步用户数据异常：" , e);
             //抛出异常进行事务回滚
             throw new SyncTransactionException("同步用户数据异常，进行回滚");
         }

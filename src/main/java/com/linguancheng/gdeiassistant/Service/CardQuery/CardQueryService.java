@@ -75,16 +75,16 @@ public class CardQueryService {
             result.setResultType(ServiceResultEnum.SUCCESS);
             return result;
         } catch (PasswordIncorrectException e) {
-            log.error("查询饭卡基本信息异常：" + e);
+            log.error("查询饭卡基本信息异常：" , e);
             result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (ServerErrorException e) {
-            log.error("查询饭卡基本信息异常：" + e);
+            log.error("查询饭卡基本信息异常：" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } catch (IOException e) {
-            log.error("查询饭卡基本信息异常：" + e);
+            log.error("查询饭卡基本信息异常：" , e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("查询饭卡基本信息异常" + e);
+            log.error("查询饭卡基本信息异常" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {
@@ -121,16 +121,16 @@ public class CardQueryService {
             cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.SUCCESS);
             return cardQueryResult;
         } catch (PasswordIncorrectException e) {
-            log.error("查询消费流水异常：" + e);
+            log.error("查询消费流水异常：" , e);
             cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (ServerErrorException e) {
-            log.error("查询消费流水异常：" + e);
+            log.error("查询消费流水异常：" , e);
             cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
         } catch (IOException e) {
-            log.error("查询消费流水异常：" + e);
+            log.error("查询消费流水异常：" , e);
             cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("查询消费流水异常：" + e);
+            log.error("查询消费流水异常：" , e);
             cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {
@@ -172,13 +172,13 @@ public class CardQueryService {
                     break;
             }
         } catch (PasswordIncorrectException e) {
-            log.error("校园卡挂失异常：" + e);
+            log.error("校园卡挂失异常：" , e);
             result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (IOException e) {
-            log.error("校园卡挂失异常：" + e);
+            log.error("校园卡挂失异常：" , e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("校园卡挂失异常：" + e);
+            log.error("校园卡挂失异常：" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {

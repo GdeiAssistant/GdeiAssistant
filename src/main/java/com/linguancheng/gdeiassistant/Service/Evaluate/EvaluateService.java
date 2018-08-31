@@ -213,13 +213,13 @@ public class EvaluateService {
             httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
             return TeacherEvaluate(httpClient, username, keycode, number, directlySubmit);
         } catch (IOException e) {
-            log.error("一键评教异常：" + e);
+            log.error("一键评教异常：" , e);
             return ServiceResultEnum.TIME_OUT;
         } catch (NotAvailableTimeException e) {
-            log.error("一键评教异常：" + e);
+            log.error("一键评教异常：" , e);
             return ServiceResultEnum.ERROR_CONDITION;
         } catch (Exception e) {
-            log.error("一键评教异常：" + e);
+            log.error("一键评教异常：" , e);
             return ServiceResultEnum.SERVER_ERROR;
         } finally {
             if (httpClient != null) {

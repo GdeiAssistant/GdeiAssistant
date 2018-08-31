@@ -102,7 +102,7 @@ public class YiBanLoginService {
             }
             throw new ServerErrorException();
         } catch (Exception e) {
-            log.error("易班登录异常：" + e);
+            log.error("易班登录异常：" , e);
             result.setResultType(LoginResultEnum.SERVER_ERROR);
         }
         return result;

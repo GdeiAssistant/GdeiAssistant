@@ -371,16 +371,16 @@ public class ScheduleQueryService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {
-            log.error("查询课表异常：" + e);
+            log.error("查询课表异常：" , e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } catch (PasswordIncorrectException e) {
-            log.error("查询课表异常：" + e);
+            log.error("查询课表异常：" , e);
             result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (IOException e) {
-            log.error("查询课表异常：" + e);
+            log.error("查询课表异常：" , e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("查询课表异常：" + e);
+            log.error("查询课表异常：" , e);
             e.printStackTrace();
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {

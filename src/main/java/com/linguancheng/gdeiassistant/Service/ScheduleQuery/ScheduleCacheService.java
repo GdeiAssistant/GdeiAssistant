@@ -106,7 +106,7 @@ public class ScheduleCacheService {
 
                             @Override
                             public void onFailure(Throwable ex) {
-                                log.error("定时查询保存课表信息异常：" + ex);
+                                log.error("定时查询保存课表信息异常：" , ex);
                                 semaphore.release();
                             }
 
@@ -123,7 +123,7 @@ public class ScheduleCacheService {
                                         document.setUpdateDateTime(new Date());
                                         scheduleDao.saveSchedule(document);
                                     } catch (Exception e) {
-                                        log.error("定时查询保存课表信息异常：" + e);
+                                        log.error("定时查询保存课表信息异常：" , e);
                                     } finally {
                                         semaphore.release();
                                     }
@@ -136,7 +136,7 @@ public class ScheduleCacheService {
                 }
             }
         } catch (Exception e) {
-            log.error("定时查询保存课表信息异常：" + e);
+            log.error("定时查询保存课表信息异常：" , e);
         }
     }
 }

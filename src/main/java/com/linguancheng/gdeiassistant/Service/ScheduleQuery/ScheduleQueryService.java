@@ -171,7 +171,8 @@ public class ScheduleQueryService {
                     //成功进入学生个人主页,进行课表查询操作
                     httpGet = new HttpGet(url + "xskbcx.aspx?xh=" + number);
                     httpResponse = httpClient.execute(httpGet);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    //将<br>标签替换为转义标签以便解析处理
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         Elements xqdOptions = document.getElementsByAttributeValue("name", "xqd").first().select("option");
                         //默认的学年学期是否与配置文件中配置的学年学期相同
@@ -202,7 +203,8 @@ public class ScheduleQueryService {
                             basicNameValuePairList.add(new BasicNameValuePair("xqd", document.getElementsByAttributeValue("name", "xqd").first().select("option").get(term - 1).attr("value")));
                             httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairList, StandardCharsets.UTF_8));
                             httpResponse = httpClient.execute(httpPost);
-                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                            //将<br>标签替换为<info>转义标签以便解析处理
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
                             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                                 throw new ServerErrorException("教务系统异常");
                             }
@@ -280,7 +282,7 @@ public class ScheduleQueryService {
                                                 rowspan = 1;
                                             }
                                             //将单元格里的课表信息按独立行进行分割单独处理
-                                            String string[] = tds.get(currentColumnIndexInThisRow).text().split(" ");
+                                            String string[] = tds.get(currentColumnIndexInThisRow).text().split("\\$info\\$");
                                             //记录单元格中的独立课表信息下标
                                             int n = 0;
                                             if (string.length == 0) {
@@ -291,32 +293,26 @@ public class ScheduleQueryService {
                                                         //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
                                                     } else {
                                                         //有效的课表头信息,进行信息处理
-                                                        //检查当前独立课表信息中课表名称有无空格
-                                                        boolean isThisScheduleNameContainSpace = false;
-                                                        if (!string[j + 2].contains("{")) {
-                                                            j++;
-                                                            isThisScheduleNameContainSpace = true;
-                                                        }
                                                         String time[] = string[j + 2].split("[{]");
-                                                        String week = time[1].substring(0, time[1].length() - 1);
-                                                        //课程名称
-                                                        String name = null;
-                                                        //若当前独立课表信息中，课表名称存在空格，则将空格去除合并
-                                                        if (isThisScheduleNameContainSpace) {
-                                                            name = string[j - 1] + string[j];
+                                                        //课程周数
+                                                        String week = null;
+                                                        if (time.length < 2) {
+                                                            week = time[0].substring(0, time[0].length() - 1);
                                                         } else {
-                                                            name = string[j];
+                                                            week = time[1].substring(0, time[1].length() - 1);
                                                         }
-                                                        //课程类型
-                                                        String type = string[j + 1];
+                                                        //课程名称
+                                                        String name = string[j];
                                                         //课程节数
                                                         String lesson = time[0];
+                                                        //课程类型
+                                                        String type = string[j + 1];
                                                         //任课教师
                                                         String teacher = string[j + 3];
                                                         //上课地点
                                                         String location = "";
                                                         //检查是否已经安排课程
-                                                        if (string.length <= 4 || string[j + 4] == null) {
+                                                        if (string.length <= j + 5 || string[j + 4] == null) {
                                                             location = "暂未安排";
                                                         } else {
                                                             if (string[j + 4].contains("（")) {
@@ -385,6 +381,7 @@ public class ScheduleQueryService {
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
             log.error("查询课表异常：" + e);
+            e.printStackTrace();
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {

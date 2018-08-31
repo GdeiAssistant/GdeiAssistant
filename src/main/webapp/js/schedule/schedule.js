@@ -194,7 +194,7 @@ function handleScheduleQueryResult(scheduleQueryResult) {
 
 //清除原课表信息
 function clearTableSchedule() {
-    for (var i = 1; i <= 12; i++) {
+    for (var i = 1; i <= 10; i++) {
         for (var j = 1; j <= 7; j++) {
             $("tr:eq(" + i + ") td:eq(" + j + ")").show()
                 .text("").removeAttr("rowspan")

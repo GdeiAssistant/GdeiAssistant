@@ -82,7 +82,7 @@ public class ScheduleCacheService {
             //设置线程信号量，限制最大同时查询的线程数为10
             Semaphore semaphore = new Semaphore(10);
             for (User user : userList) {
-                Privacy privacy = privacyMapper.selectPrivacy(StringEncryptUtils.encryptString(user.getUsername()));
+                Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
                 if (privacy.isCache()) {
                     ScheduleDocument scheduleDocument = scheduleDao.queryScheduleByUsername(StringEncryptUtils
                             .decryptString(user.getUsername()));

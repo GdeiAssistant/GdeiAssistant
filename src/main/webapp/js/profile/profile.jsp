@@ -21,8 +21,6 @@
 
     var genderOrientationMap = [];
 
-    var genderOrientationCheckedStateMap = [];
-
     $(function () {
         loadProfile();
         loadAvatar();
@@ -122,24 +120,9 @@
 
         var map;
 
-        <c:forEach items="${profile:getGenderOrientationMap()}" var="m">
+        <c:forEach items="${profile:getGenderOrientationMap()}" var="genderOrientationEntry">
 
-        map = [];
-
-        <c:forEach items="${m.value}" var="n">
-        map[${n.key}] = "${n.value}";
-        </c:forEach>
-
-        genderOrientationMap[${m.key}] = map;
-
-        </c:forEach>
-
-        <c:forEach items="${profile:getGenderOrientationCheckedStateMap()}" var="genderOrientationCheckedStateEntry">
-
-        genderOrientationCheckedStateMap[${genderOrientationCheckedStateEntry.key}] = {
-            0: ${genderOrientationCheckedStateEntry.value[0]},
-            1:${genderOrientationCheckedStateEntry.value[1]}
-        };
+        genderOrientationMap[${genderOrientationEntry.key}] = "${genderOrientationEntry.value}";
 
         </c:forEach>
 
@@ -157,12 +140,15 @@
                     $("#realname").text(realname);
                     //性别
                     let gender = result.data.gender == null ? 0 : result.data.gender;
-                    $("#gender").text(genderMap[gender]);
+                    if (gender == 3) {
+                        $("#gender").text(result.data.customGenderName);
+                    }
+                    else {
+                        $("#gender").text(genderMap[gender]);
+                    }
                     //性取向
                     var genderOrientation = result.data.genderOrientation == null ? 0 : result.data.genderOrientation;
-                    $("#genderOrientation").text(genderOrientationMap[gender][genderOrientation]);
-                    $("#genderOrientation_male").prop("checked", genderOrientationCheckedStateMap[genderOrientation][0]);
-                    $("#genderOrientation_female").prop("checked", genderOrientationCheckedStateMap[genderOrientation][1]);
+                    $("#genderOrientation").text(genderOrientationMap[genderOrientation]);
                     var location = result.data.region;
                     if (location != null) {
                         if (result.data.state != null && result.data.state != result.data.region) {
@@ -384,6 +370,11 @@
         $("#changeKickname").popup();
     }
 
+    //弹出自定义性别窗口
+    function showCustomGenderDialog() {
+        $("#customGender").popup();
+    }
+
     //修改昵称
     function changeKickname() {
         if ($("#kickname").val().length > 0) {
@@ -392,6 +383,32 @@
                 url: "/rest/profile/kickname",
                 data: {
                     kickname: $("#kickname").val()
+                },
+                type: 'post',
+                success: function (updateResult) {
+                    if (updateResult.success === true) {
+                        loadProfile();
+                    }
+                    else {
+                        showCustomErrorTip(updateResult.errorMessage);
+                    }
+                },
+                error: function () {
+                    showNetworkErrorTip();
+                }
+            });
+        }
+    }
+
+    //提交自定义性别
+    function submitCustomGender() {
+        if ($("#customGenderName").val().length > 0) {
+            $.closePopup();
+            $.ajax({
+                url: "/rest/profile/gender",
+                data: {
+                    gender: 3,
+                    customGenderName: $("#customGenderName").val()
                 },
                 type: 'post',
                 success: function (updateResult) {
@@ -421,10 +438,49 @@
         weui.picker(genderPicker, {
             defaultValue: [0],
             onConfirm: function (gender) {
+                if (gender == 3) {
+                    showCustomGenderDialog();
+                }
+                else {
+                    $.ajax({
+                        url: "/rest/profile/gender",
+                        data: {
+                            gender: gender[0].value
+                        },
+                        type: 'post',
+                        success: function (updateResult) {
+                            if (updateResult.success === true) {
+                                loadProfile();
+                            }
+                            else {
+                                showCustomErrorTip(updateResult.errorMessage);
+                            }
+                        },
+                        error: function () {
+                            showNetworkErrorTip();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    //修改性取向
+    function changeGenderOrientation() {
+        var genderOrientationPicker = [];
+        for (var i = 0; i < genderOrientationMap.length; i++) {
+            genderOrientationPicker[i] = {
+                label: genderOrientationMap[i],
+                value: i
+            }
+        }
+        weui.picker(genderOrientationPicker, {
+            defaultValue: [0],
+            onConfirm: function (genderOrientation) {
                 $.ajax({
-                    url: "/rest/profile/gender",
+                    url: "/rest/profile/genderOrientation",
                     data: {
-                        gender: gender[0].value
+                        genderOrientation: genderOrientation[0].value
                     },
                     type: 'post',
                     success: function (updateResult) {
@@ -439,40 +495,6 @@
                         showNetworkErrorTip();
                     }
                 });
-            }
-        });
-    }
-
-    //弹出性取向修改窗口
-    function showGenderOrientationDialog() {
-        $("#changeGenderOrientation").popup();
-    }
-
-    //修改性取向
-    function changeGenderOrientation() {
-        var genderOrientation = 1;
-        if ($("#genderOrientation_male").prop("checked")) {
-            genderOrientation = genderOrientation + 1;
-        }
-        if ($("#genderOrientation_female").prop("checked")) {
-            genderOrientation = genderOrientation + 2;
-        }
-        $.ajax({
-            url: "/rest/profile/genderOrientation",
-            data: {
-                genderOrientation: genderOrientation
-            },
-            type: 'post',
-            success: function (updateResult) {
-                if (updateResult.success === true) {
-                    loadProfile();
-                }
-                else {
-                    showCustomErrorTip(updateResult.errorMessage);
-                }
-            },
-            error: function () {
-                showNetworkErrorTip();
             }
         });
     }

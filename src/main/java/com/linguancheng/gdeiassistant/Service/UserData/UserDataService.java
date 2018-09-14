@@ -1,26 +1,18 @@
 package com.linguancheng.gdeiassistant.Service.UserData;
 
-import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
-import com.linguancheng.gdeiassistant.Exception.CommonException.SyncTransactionException;
+import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Privacy.PrivacyMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
-import com.linguancheng.gdeiassistant.Pojo.Entity.Introduction;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Privacy;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Profile;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
-import com.linguancheng.gdeiassistant.Service.Profile.RealNameService;
-import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class UserDataService {
@@ -43,7 +35,7 @@ public class UserDataService {
      * @return
      */
     @Transactional
-    public void SyncUserData(User user) throws SyncTransactionException {
+    public void SyncUserData(User user) throws TransactionException {
         try {
             User encryptUser = user.encryptUser();
             //检测数据库中有无该用户记录
@@ -71,7 +63,7 @@ public class UserDataService {
         } catch (Exception e) {
             log.error("同步用户数据异常：" , e);
             //抛出异常进行事务回滚
-            throw new SyncTransactionException("同步用户数据异常，进行回滚");
+            throw new TransactionException("同步用户数据异常，进行回滚");
         }
     }
 }

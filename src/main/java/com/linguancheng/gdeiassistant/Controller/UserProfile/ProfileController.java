@@ -12,6 +12,7 @@ import com.linguancheng.gdeiassistant.Service.Privacy.PrivacyService;
 import com.linguancheng.gdeiassistant.Service.Profile.RealNameService;
 import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
+import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import com.linguancheng.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
 import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.dom4j.Document;
@@ -120,12 +121,22 @@ public class ProfileController {
                         modelAndView.addObject("KickName", profile.getKickname());
                         boolean containProfile = false;
                         if (privacy.isGender()) {
-                            modelAndView.addObject("Gender", profile.getGender());
-                            containProfile = true;
+                            if (profile.getGender()!=null && profile.getGender() != 0) {
+                                if (profile.getGender() != 3) {
+                                    modelAndView.addObject("Gender", profile.getCustomGenderName());
+                                } else {
+                                    modelAndView.addObject("Gender", UserProfileService
+                                            .getGenderMap().get(profile.getGender()));
+                                }
+                                containProfile = true;
+                            }
                         }
                         if (privacy.isGenderOrientation()) {
-                            modelAndView.addObject("GenderOrientation", profile.getGenderOrientation());
-                            containProfile = true;
+                            if (profile.getGenderOrientation()!=null && profile.getGenderOrientation() != 0) {
+                                modelAndView.addObject("GenderOrientation", UserProfileService
+                                        .getGenderOrientationMap().get(profile.getGenderOrientation()));
+                                containProfile = true;
+                            }
                         }
                         if (privacy.isRegion()) {
                             StringBuilder location = new StringBuilder("");
@@ -535,9 +546,9 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/profile/gender", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateGender(HttpServletRequest request, int gender) {
+    public BaseJsonResult UpdateGender(HttpServletRequest request, int gender, String customGenderName) {
         BaseJsonResult jsonResult = new BaseJsonResult();
-        if (gender < 0 || gender > 3) {
+        if (gender < 0 || gender > 3 || (gender == 3 && StringUtils.isBlank(customGenderName))) {
             jsonResult.setSuccess(false);
             jsonResult.setErrorMessage("请求参数不合法");
         } else {
@@ -546,7 +557,7 @@ public class ProfileController {
                 jsonResult.setSuccess(false);
                 jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
             } else {
-                DataBaseResultEnum updateProfileResultEnum = userProfileService.UpdateGender(username, gender);
+                DataBaseResultEnum updateProfileResultEnum = userProfileService.UpdateGender(username, gender, customGenderName);
                 switch (updateProfileResultEnum) {
                     case SUCCESS:
                         jsonResult.setSuccess(true);
@@ -578,7 +589,7 @@ public class ProfileController {
     @ResponseBody
     public BaseJsonResult UpdateGenderOrientation(HttpServletRequest request, int genderOrientation) {
         BaseJsonResult jsonResult = new BaseJsonResult();
-        if (genderOrientation > 0 && genderOrientation <= 4) {
+        if (genderOrientation >= 0 && genderOrientation <= 4) {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);

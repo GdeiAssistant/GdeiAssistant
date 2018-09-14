@@ -70,13 +70,13 @@
 
     <!-- 设置日志数据源c3p0 -->
     <bean id="logDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-    <property name="driverClass" value="${log.jdbc.driverClassName}"/>
-    <property name="jdbcUrl" value="${log.jdbc.url}"/>
-    <property name="user" value="${log.jdbc.username}"/>
-    <property name="password" value="${log.jdbc.password}"/>
-    <property name="maxPoolSize" value="${log.jdbc.maxPoolSize}"/>
-    <property name="minPoolSize" value="${log.jdbc.minPoolSize}"/>
-    <property name="maxIdleTime" value="${log.jdbc.maxIdleTime}"/>
+        <property name="driverClass" value="${log.jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${log.jdbc.url}"/>
+        <property name="user" value="${log.jdbc.username}"/>
+        <property name="password" value="${log.jdbc.password}"/>
+        <property name="maxPoolSize" value="${log.jdbc.maxPoolSize}"/>
+        <property name="minPoolSize" value="${log.jdbc.minPoolSize}"/>
+        <property name="maxIdleTime" value="${log.jdbc.maxIdleTime}"/>
     </bean>
 
     <!-- 应用数据库的SQLSessionFactory -->
@@ -87,8 +87,8 @@
 
     <!-- 日志数据库的SQLSessionFactory -->
     <bean id="logSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-    <property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>
-    <property name="dataSource" ref="logDataSource"/>
+        <property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>
+        <property name="dataSource" ref="logDataSource"/>
     </bean>
 
     <!-- 应用数据源事务管理 -->
@@ -98,7 +98,7 @@
 
     <!-- 日志数据源事务管理 -->
     <bean id="logTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-    <property name="dataSource" ref="logDataSource"/>
+        <property name="dataSource" ref="logDataSource"/>
     </bean>
 
     <!-- 控制器映射器和控制器适配器 -->
@@ -294,76 +294,11 @@
 
     <!-- 配置个人资料性取向字典 -->
     <util:map id="genderOrientationMap">
-        <entry key="0">
-            <map>
-                <entry key="0" value="未选择"/>
-                <entry key="1" value="未选择"/>
-                <entry key="2" value="其他"/>
-                <entry key="3" value="其他"/>
-                <entry key="4" value="双性恋"/>
-            </map>
-        </entry>
-        <entry key="1">
-            <map>
-                <entry key="0" value="未选择"/>
-                <entry key="1" value="未选择"/>
-                <entry key="2" value="同性恋"/>
-                <entry key="3" value="异性恋"/>
-                <entry key="4" value="双性恋"/>
-            </map>
-        </entry>
-        <entry key="2">
-            <map>
-                <entry key="0" value="未选择"/>
-                <entry key="1" value="未选择"/>
-                <entry key="2" value="异性恋"/>
-                <entry key="3" value="同性恋"/>
-                <entry key="4" value="双性恋"/>
-            </map>
-        </entry>
-        <entry key="3">
-            <map>
-                <entry key="0" value="未选择"/>
-                <entry key="1" value="未选择"/>
-                <entry key="2" value="其他"/>
-                <entry key="3" value="其他"/>
-                <entry key="4" value="双性恋"/>
-            </map>
-        </entry>
-    </util:map>
-
-    <!-- 配置个人资料性取向选中状态字典 -->
-    <util:map id="genderOrientationCheckedStateMap">
-        <entry key="0">
-            <array value-type="java.lang.Boolean">
-                <value>false</value>
-                <value>false</value>
-            </array>
-        </entry>
-        <entry key="1">
-            <array value-type="java.lang.Boolean">
-                <value>false</value>
-                <value>false</value>
-            </array>
-        </entry>
-        <entry key="2">
-            <array value-type="java.lang.Boolean">
-                <value>true</value>
-                <value>false</value>
-            </array>
-        </entry>
-        <entry key="3">
-            <array value-type="java.lang.Boolean">
-                <value>false</value>
-                <value>true</value>
-            </array>
-        </entry>
-        <entry key="4">
-            <array value-type="java.lang.Boolean">
-                <value>true</value>
-                <value>true</value>
-            </array>
-        </entry>
+        <entry key="0" value="未选择"/>
+        <entry key="1" value="异性恋"/>
+        <entry key="2" value="同性恋"/>
+        <entry key="3" value="双性恋"/>
+        <entry key="4" value="无性恋"/>
     </util:map>
 
     <!-- 配置Rest服务客户端 -->

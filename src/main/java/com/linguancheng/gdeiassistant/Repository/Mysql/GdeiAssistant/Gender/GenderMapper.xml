@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Gender.GenderMapper">
+
+    <!-- 开启GenderMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <select id="selectCustomGender" resultType="java.lang.String">
+        select customGender from gender where username=#{username}
+    </select>
+
+    <insert id="insertCustomGender">
+        insert into gender (username,customGender) values(#{username},#{customGender})
+    </insert>
+
+    <update id="updateCustomGender">
+        update gender set customGender=#{customGender} where username=#{username}
+    </update>
+
+    <delete id="deleteCustomGender">
+        delete from gender where username=#{username}
+    </delete>
+
+</mapper>

@@ -32,15 +32,6 @@ CREATE TABLE `chargeLogs` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `chargeLogs`
---
-
-LOCK TABLES `chargeLogs` WRITE;
-/*!40000 ALTER TABLE `chargeLogs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `chargeLogs` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -51,7 +42,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-27  2:18:26
+-- Dump completed on 2018-09-15  4:25:07
 CREATE DATABASE  IF NOT EXISTS `gdeiassistant` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `gdeiassistant`;
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
@@ -86,15 +77,6 @@ CREATE TABLE `cet` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `cet`
---
-
-LOCK TABLES `cet` WRITE;
-/*!40000 ALTER TABLE `cet` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cet` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `datingMessage`
 --
 
@@ -112,15 +94,6 @@ CREATE TABLE `datingMessage` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `datingMessage`
---
-
-LOCK TABLES `datingMessage` WRITE;
-/*!40000 ALTER TABLE `datingMessage` DISABLE KEYS */;
-/*!40000 ALTER TABLE `datingMessage` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `datingPick`
 --
 
@@ -136,15 +109,6 @@ CREATE TABLE `datingPick` (
   PRIMARY KEY (`pickId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `datingPick`
---
-
-LOCK TABLES `datingPick` WRITE;
-/*!40000 ALTER TABLE `datingPick` DISABLE KEYS */;
-/*!40000 ALTER TABLE `datingPick` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `datingProfile`
@@ -168,15 +132,6 @@ CREATE TABLE `datingProfile` (
   PRIMARY KEY (`profileId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `datingProfile`
---
-
-LOCK TABLES `datingProfile` WRITE;
-/*!40000 ALTER TABLE `datingProfile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `datingProfile` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ershou`
@@ -203,37 +158,18 @@ CREATE TABLE `ershou` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ershou`
+-- Table structure for table `gender`
 --
 
-LOCK TABLES `ershou` WRITE;
-/*!40000 ALTER TABLE `ershou` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ershou` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `grade`
---
-
-DROP TABLE IF EXISTS `grade`;
+DROP TABLE IF EXISTS `gender`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `grade` (
+CREATE TABLE `gender` (
   `username` varchar(24) NOT NULL,
-  `grade` varchar(10000) DEFAULT NULL,
-  PRIMARY KEY (`username`),
-  CONSTRAINT `gradeUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `customGender` varchar(50) NOT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `grade`
---
-
-LOCK TABLES `grade` WRITE;
-/*!40000 ALTER TABLE `grade` DISABLE KEYS */;
-/*!40000 ALTER TABLE `grade` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `introduction`
@@ -249,15 +185,6 @@ CREATE TABLE `introduction` (
   CONSTRAINT `introductionUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `introduction`
---
-
-LOCK TABLES `introduction` WRITE;
-/*!40000 ALTER TABLE `introduction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `introduction` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `lostandfound`
@@ -284,15 +211,6 @@ CREATE TABLE `lostandfound` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `lostandfound`
---
-
-LOCK TABLES `lostandfound` WRITE;
-/*!40000 ALTER TABLE `lostandfound` DISABLE KEYS */;
-/*!40000 ALTER TABLE `lostandfound` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `privacy`
 --
 
@@ -305,18 +223,10 @@ CREATE TABLE `privacy` (
   `genderOrientation` tinyint(1) NOT NULL,
   `region` tinyint(1) NOT NULL,
   `introduction` tinyint(1) NOT NULL,
+  `cache` tinyint(1) NOT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `privacy`
---
-
-LOCK TABLES `privacy` WRITE;
-/*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
-/*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `profile`
@@ -340,15 +250,6 @@ CREATE TABLE `profile` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `profile`
---
-
-LOCK TABLES `profile` WRITE;
-/*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `profile` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `secretComment`
 --
 
@@ -369,15 +270,6 @@ CREATE TABLE `secretComment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `secretComment`
---
-
-LOCK TABLES `secretComment` WRITE;
-/*!40000 ALTER TABLE `secretComment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `secretComment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `secretContent`
 --
 
@@ -394,15 +286,6 @@ CREATE TABLE `secretContent` (
   CONSTRAINT `secretUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `secretContent`
---
-
-LOCK TABLES `secretContent` WRITE;
-/*!40000 ALTER TABLE `secretContent` DISABLE KEYS */;
-/*!40000 ALTER TABLE `secretContent` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `secretLike`
@@ -422,15 +305,6 @@ CREATE TABLE `secretLike` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `secretLike`
---
-
-LOCK TABLES `secretLike` WRITE;
-/*!40000 ALTER TABLE `secretLike` DISABLE KEYS */;
-/*!40000 ALTER TABLE `secretLike` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `user`
 --
 
@@ -445,15 +319,6 @@ CREATE TABLE `user` (
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `wechatUser`
@@ -472,15 +337,6 @@ CREATE TABLE `wechatUser` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `wechatUser`
---
-
-LOCK TABLES `wechatUser` WRITE;
-/*!40000 ALTER TABLE `wechatUser` DISABLE KEYS */;
-/*!40000 ALTER TABLE `wechatUser` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `yibanUser`
 --
 
@@ -495,15 +351,6 @@ CREATE TABLE `yibanUser` (
   CONSTRAINT `yibanUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `yibanUser`
---
-
-LOCK TABLES `yibanUser` WRITE;
-/*!40000 ALTER TABLE `yibanUser` DISABLE KEYS */;
-/*!40000 ALTER TABLE `yibanUser` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -514,4 +361,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-27  2:18:26
+-- Dump completed on 2018-09-15  4:25:07

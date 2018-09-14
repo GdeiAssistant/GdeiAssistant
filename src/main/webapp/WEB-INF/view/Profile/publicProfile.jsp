@@ -65,76 +65,41 @@
 
     <div class="weui-cells">
 
-        <c:if test="${Gender!=null and Gender>=1 and Gender<=3}">
+        <c:if test="${Gender!=null}">
+
             <div class="weui-cell">
                 <div class="weui-cell__bd">
                     <p>性别</p>
                 </div>
                 <div class="weui-cell__ft">
-                    <c:choose>
-                        <c:when test="${Gender==1}">
-                            男
-                        </c:when>
-                        <c:when test="${Gender==2}">
-                            女
-                        </c:when>
-                        <c:otherwise>
-                            其他
-                        </c:otherwise>
-                    </c:choose>
+                        ${Gender}
                 </div>
             </div>
 
-            <c:if test="${GenderOrientation!=null && GenderOrientation>=2 && GenderOrientation<=4}">
+        </c:if>
 
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <p>性取向</p>
-                    </div>
-                    <div class="weui-cell__ft">
-                        <c:choose>
-                            <c:when test="${GenderOrientation==2}">
-                                <c:choose>
-                                    <c:when test="${Gender==1}">
-                                        同性恋
-                                    </c:when>
-                                    <c:when test="${Gender==2}">
-                                        异性恋
-                                    </c:when>
-                                    <c:otherwise>
-                                        其他
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:when>
-                            <c:when test="${GenderOrientation==3}">
-                                <c:choose>
-                                    <c:when test="${Gender==1}">
-                                        异性恋
-                                    </c:when>
-                                    <c:when test="${Gender==2}">
-                                        同性恋
-                                    </c:when>
-                                    <c:otherwise>
-                                        其他
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:when>
-                            <c:when test="${GenderOrientation==4}">
-                                双性恋
-                            </c:when>
-                        </c:choose>
-                    </div>
+        <c:if test="${GenderOrientation!=null}">
+
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>性取向</p>
                 </div>
-            </c:if>
+                <div class="weui-cell__ft">
+                        ${GenderOrientation}
+                </div>
+            </div>
+
         </c:if>
 
         <c:if test="${Location!=null}">
+
             <div class="weui-cell">
                 <div class="weui-cell__bd">
                     <p>所在地</p>
                 </div>
                 <div class="weui-cell__ft">${Location}</div>
             </div>
+
         </c:if>
 
     </div>
@@ -144,6 +109,7 @@
 </c:if>
 
 <c:if test="${Introduction!=null}">
+
     <div class="weui-cells__title">个人简介</div>
 
     <div class="weui-cells">
@@ -151,6 +117,7 @@
             <div class="weui-cell__bd">${Introduction}</div>
         </div>
     </div>
+
 </c:if>
 
 </body>

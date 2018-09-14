@@ -8,12 +8,23 @@
     <!-- 开启ProfileMapper namespace下的二级缓存 -->
     <cache/>
 
+    <resultMap id="profileResultMap" type="com.linguancheng.gdeiassistant.Pojo.Entity.Profile">
+        <result property="username" column="username"/>
+        <result property="kickname" column="kickname"/>
+        <result property="realname" column="realname"/>
+        <result property="gender" column="gender"/>
+        <result property="genderOrientation" column="genderOrientation"/>
+        <result property="region" column="region"/>
+        <result property="state" column="state"/>
+        <result property="city" column="city"/>
+    </resultMap>
+
     <select id="selectUninitializedUsername" resultType="java.lang.String">
         select username from profile where realname is null
     </select>
 
     <select id="selectUserProfile" parameterType="java.lang.String"
-            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.Profile">
+            resultMap="profileResultMap">
         select * from profile where username=#{username} limit 1
     </select>
 

@@ -23,12 +23,4 @@
         <example>${profile:getGenderOrientationMap()}</example>
     </function>
 
-    <function>
-        <description>获取性取向选中状态字典</description>
-        <name>getGenderOrientationCheckedStateMap</name>
-        <function-class>com.linguancheng.gdeiassistant.Service.Profile.UserProfileService</function-class>
-        <function-signature>java.util.Map getGenderOrientationCheckedStateMap()</function-signature>
-        <example>${profile:getGenderOrientationCheckedStateMap()}</example>
-    </function>
-
 </taglib>

@@ -2,7 +2,9 @@ package com.linguancheng.gdeiassistant.Service.Profile;
 
 import com.aliyun.oss.OSSClient;
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
+import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
+import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Gender.GenderMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.AuthorProfile;
@@ -20,6 +22,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -42,6 +45,9 @@ public class UserProfileService {
     @Resource(name = "userMapper")
     private UserMapper userMapper;
 
+    @Resource(name = "genderMapper")
+    private GenderMapper genderMapper;
+
     private String accessKeyID;
 
     private String accessKeySecret;
@@ -52,15 +58,8 @@ public class UserProfileService {
 
     private static Map<Integer, Map<Integer, String>> genderOrientationMap;
 
-    private static Map<Integer, Boolean[]> genderOrientationCheckedStateMap;
-
     @Autowired
     public AsyncRestTemplate asyncRestTemplate;
-
-    @Resource(name = "genderOrientationCheckedStateMap")
-    public void setGenderOrientationCheckedStateMap(Map<Integer, Boolean[]> genderOrientationCheckedStateMap) {
-        UserProfileService.genderOrientationCheckedStateMap = genderOrientationCheckedStateMap;
-    }
 
     @Resource(name = "genderMap")
     public void setGenderMap(Map<Integer, String> genderMap) {
@@ -108,7 +107,7 @@ public class UserProfileService {
                 result.setResultType(DataBaseResultEnum.INCORRECT_USERNAME);
             }
         } catch (Exception e) {
-            log.error("获取用户作者简要资料异常：" , e);
+            log.error("获取用户作者简要资料异常：", e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -125,6 +124,9 @@ public class UserProfileService {
         try {
             Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
             if (profile != null) {
+                if (profile.getGender().equals(3)) {
+                    profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
+                }
                 result.setResultType(DataBaseResultEnum.SUCCESS);
                 profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
                 result.setResultData(profile);
@@ -132,7 +134,7 @@ public class UserProfileService {
                 result.setResultType(DataBaseResultEnum.INCORRECT_USERNAME);
             }
         } catch (Exception e) {
-            log.error("获取用户个人资料异常：" , e);
+            log.error("获取用户个人资料异常：", e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -160,7 +162,7 @@ public class UserProfileService {
                 }
             }
         } catch (Exception e) {
-            log.error("获取用户个人简介异常：" , e);
+            log.error("获取用户个人简介异常：", e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -221,7 +223,7 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户个人简介异常：" , e);
+            log.error("更新用户个人简介异常：", e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -250,7 +252,7 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户所在地异常：" , e);
+            log.error("更新用户所在地异常：", e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -262,10 +264,24 @@ public class UserProfileService {
      * @param gender
      * @return
      */
-    public DataBaseResultEnum UpdateGender(String username, int gender) {
+    @Transactional
+    public DataBaseResultEnum UpdateGender(String username, int gender, String customGenderName) {
         try {
             User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
             if (queryUser != null) {
+                //若选择传统性别，则清除自定义性别表记录
+                if (gender != 3) {
+                    if (genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)) != null) {
+                        genderMapper.deleteCustomGender(StringEncryptUtils.encryptString(username));
+                    }
+                } else {
+                    //保存自定义性别
+                    if (genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)) != null) {
+                        genderMapper.updateCustomGender(StringEncryptUtils.encryptString(username), customGenderName);
+                    } else {
+                        genderMapper.insertCustomGender(StringEncryptUtils.encryptString(username), customGenderName);
+                    }
+                }
                 Profile profile = new Profile();
                 profile.setGender(gender);
                 profile.setUsername(StringEncryptUtils.encryptString(username));
@@ -274,8 +290,8 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户性别异常：" , e);
-            return DataBaseResultEnum.ERROR;
+            log.error("更新用户性别异常：", e);
+            throw new TransactionException("更新用户性别异常，进行事务回滚");
         }
     }
 
@@ -298,7 +314,7 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户性取向异常：" , e);
+            log.error("更新用户性取向异常：", e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -322,7 +338,7 @@ public class UserProfileService {
             }
             return DataBaseResultEnum.INCORRECT_USERNAME;
         } catch (Exception e) {
-            log.error("更新用户昵称异常：" , e);
+            log.error("更新用户昵称异常：", e);
             return DataBaseResultEnum.ERROR;
         }
     }
@@ -355,7 +371,7 @@ public class UserProfileService {
 
                     @Override
                     public void onFailure(Throwable ex) {
-                        log.error("同步用户个人资料真实姓名异常：" , ex);
+                        log.error("同步用户个人资料真实姓名异常：", ex);
                         semaphore.release();
                     }
 
@@ -368,7 +384,7 @@ public class UserProfileService {
                                 log.error("同步用户个人资料真实姓名异常：" + result.getBody().getErrorMessage());
                             }
                         } catch (Exception e) {
-                            log.error("同步用户个人资料真实姓名异常：" , e);
+                            log.error("同步用户个人资料真实姓名异常：", e);
                         } finally {
                             semaphore.release();
                         }
@@ -376,7 +392,7 @@ public class UserProfileService {
                 });
             }
         } catch (Exception e) {
-            log.error("同步用户个人资料真实姓名异常：" , e);
+            log.error("同步用户个人资料真实姓名异常：", e);
         }
     }
 
@@ -396,9 +412,5 @@ public class UserProfileService {
      */
     public static Map getGenderOrientationMap() {
         return genderOrientationMap;
-    }
-
-    public static Map getGenderOrientationCheckedStateMap() {
-        return genderOrientationCheckedStateMap;
     }
 }

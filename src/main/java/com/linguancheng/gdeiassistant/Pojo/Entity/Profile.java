@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Pojo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,8 @@ public class Profile implements Serializable {
     private Integer gender;
 
     private Integer genderOrientation;
+
+    private String customGenderName;
 
     private String region;
 
@@ -89,5 +92,13 @@ public class Profile implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getCustomGenderName() {
+        return customGenderName;
+    }
+
+    public void setCustomGenderName(String customGenderName) {
+        this.customGenderName = customGenderName;
     }
 }

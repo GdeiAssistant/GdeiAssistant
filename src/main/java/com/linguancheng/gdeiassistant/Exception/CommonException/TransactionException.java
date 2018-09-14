@@ -6,13 +6,13 @@ package com.linguancheng.gdeiassistant.Exception.CommonException;
  * Author:林冠成
  * Date:2018/3/4
  */
-public class SyncTransactionException extends RuntimeException {
+public class TransactionException extends RuntimeException {
 
-    public SyncTransactionException() {
+    public TransactionException() {
         super();
     }
 
-    public SyncTransactionException(String message) {
+    public TransactionException(String message) {
         super(message);
     }
 }

@@ -1,7 +1,7 @@
 package com.linguancheng.gdeiassistant.Controller.Dispatcher;
 
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.linguancheng.gdeiassistant.Exception.CommonException.SyncTransactionException;
+import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
@@ -106,7 +106,7 @@ public class DispatcherController {
                         } else {
                             modelAndView.setViewName("redirect:/index");
                         }
-                    } catch (SyncTransactionException e) {
+                    } catch (TransactionException e) {
                         //同步数据失败
                         redirectAttributes.addFlashAttribute("LoginErrorMessage", "学院系统维护中，请稍候再试");
                         redirectAttributes.addFlashAttribute("LoginUsername", resultUser.getUsername());

@@ -1,7 +1,7 @@
 package com.linguancheng.gdeiassistant.Controller.YiBan;
 
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.linguancheng.gdeiassistant.Exception.CommonException.SyncTransactionException;
+import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
@@ -108,7 +108,7 @@ public class YiBanUserAttachController {
                         result.setSuccess(true);
                         return result;
                     }
-                } catch (SyncTransactionException e) {
+                } catch (TransactionException e) {
                     result.setSuccess(false);
                     result.setErrorMessage("学院系统维护中，请稍候再试");
                 }

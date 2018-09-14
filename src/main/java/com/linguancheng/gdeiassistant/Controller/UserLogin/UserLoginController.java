@@ -1,9 +1,8 @@
 package com.linguancheng.gdeiassistant.Controller.UserLogin;
 
-import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.linguancheng.gdeiassistant.Exception.CommonException.SyncTransactionException;
+import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Profile;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Redirect.RedirectInfo;
@@ -124,7 +123,7 @@ public class UserLoginController {
                         resultUser.setXm(Optional.ofNullable(getUserProfileResult.getResultData())
                                 .map(Profile::getRealname).orElse(""));
                         userLoginJsonResult.setUser(resultUser);
-                    } catch (SyncTransactionException e) {
+                    } catch (TransactionException e) {
                         userLoginJsonResult.setSuccess(false);
                         userLoginJsonResult.setErrorMessage("学院系统维护中,请稍候再试");
                     }
@@ -194,7 +193,7 @@ public class UserLoginController {
                         } else {
                             modelAndView.setViewName("redirect:/index");
                         }
-                    } catch (SyncTransactionException e) {
+                    } catch (TransactionException e) {
                         //同步数据失败
                         redirectAttributes.addFlashAttribute("LoginErrorMessage", "学院系统维护中，请稍候再试");
                         redirectAttributes.addFlashAttribute("LoginUsername", user.getUsername());

@@ -82,7 +82,7 @@
         </div>
         <div id="gender" class="weui-cell__ft"></div>
     </div>
-    <div class="weui-cell" href="javascript:" onclick="showGenderOrientationDialog()">
+    <div class="weui-cell" href="javascript:" onclick="changeGenderOrientation()">
         <div class="weui-cell__bd">
             <p>性取向</p>
         </div>
@@ -167,39 +167,31 @@
     </div>
 </div>
 
-<!-- 修改性取向弹窗 -->
-<div id="changeGenderOrientation" style="height: 200px" class="weui-popup__container">
+<!-- 自定义性别窗口 -->
+<div id="customGender" class="weui-popup__container">
     <div class="weui-popup__overlay"></div>
     <div class="weui-popup__modal">
         <div class="toolbar">
             <div class="toolbar-inner">
                 <a href="javascript:" style="left:0" class="picker-button close-popup">取消</a>
-                <a href="javascript:" style="right:0" class="picker-button close-popup"
-                   onclick="changeGenderOrientation()">保存</a>
-                <h1 class="title">请选择性取向🏳️‍🌈</h1>
+                <h1 class="title">自定义性别</h1>
             </div>
         </div>
         <div class="modal-content">
-            <div class="weui-cells__title">这里可以双选哦</div>
-            <div class="weui-cells weui-cells_checkbox">
-                <label class="weui-cell weui-check__label">
+            <div class="weui-cells__title">请输入你的性别</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
                     <div class="weui-cell__hd">
-                        <input id="genderOrientation_male" type="checkbox" class="weui-check">
-                        <i class="weui-icon-checked"></i>
+                        <label class="weui-label">性别</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <p>男</p>
+                        <input id="customGenderName" class="weui-input" type="text" onkeyup="inputLengthCheck(this,50)">
                     </div>
-                </label>
-                <label class="weui-cell weui-check__label">
-                    <div class="weui-cell__hd">
-                        <input id="genderOrientation_female" type="checkbox" class="weui-check">
-                        <i class="weui-icon-checked"></i>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <p>女</p>
-                    </div>
-                </label>
+                </div>
+            </div>
+            <!-- 提交按钮 -->
+            <div class="weui_btn_area">
+                <a class="weui_btn weui_btn_primary" href="javascript:" onclick="submitCustomGender()">确认</a>
             </div>
         </div>
     </div>

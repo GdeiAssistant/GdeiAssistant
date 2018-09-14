@@ -12,6 +12,7 @@ import com.gdeiassistant.gdeiassistant.Service.Privacy.PrivacyService;
 import com.gdeiassistant.gdeiassistant.Service.Profile.RealNameService;
 import com.gdeiassistant.gdeiassistant.Service.Profile.UserProfileService;
 import com.gdeiassistant.gdeiassistant.Service.UserLogin.UserLoginService;
+import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
 import com.gdeiassistant.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
 import com.gdeiassistant.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.dom4j.Document;
@@ -120,18 +121,28 @@ public class ProfileController {
                         modelAndView.addObject("KickName", profile.getKickname());
                         boolean containProfile = false;
                         if (privacy.isGender()) {
-                            modelAndView.addObject("Gender", profile.getGender());
-                            containProfile = true;
+                            if (profile.getGender()!=null && profile.getGender() != 0) {
+                                if (profile.getGender() != 3) {
+                                    modelAndView.addObject("Gender", profile.getCustomGenderName());
+                                } else {
+                                    modelAndView.addObject("Gender", UserProfileService
+                                            .getGenderMap().get(profile.getGender()));
+                                }
+                                containProfile = true;
+                            }
                         }
                         if (privacy.isGenderOrientation()) {
-                            modelAndView.addObject("GenderOrientation", profile.getGenderOrientation());
-                            containProfile = true;
+                            if (profile.getGenderOrientation()!=null && profile.getGenderOrientation() != 0) {
+                                modelAndView.addObject("GenderOrientation", UserProfileService
+                                        .getGenderOrientationMap().get(profile.getGenderOrientation()));
+                                containProfile = true;
+                            }
                         }
                         if (privacy.isRegion()) {
                             StringBuilder location = new StringBuilder("");
                             Region region = regionMap.get(profile.getRegion());
                             if (region == null) {
-                                location.append("未�?�择");
+                                location.append("未选择");
                             } else {
                                 location.append(region.getName().substring(4, region.getName().length()));
                                 State state = region.getStateMap().get(profile.getState());
@@ -157,7 +168,7 @@ public class ProfileController {
 
                                 case ERROR:
                                 case INCORRECT_USERNAME:
-                                    modelAndView.addObject("Introduction", "加载个人�?介失�?");
+                                    modelAndView.addObject("Introduction", "加载个人简介失败");
                                     break;
 
                                 case EMPTY_RESULT:
@@ -184,7 +195,7 @@ public class ProfileController {
             case ERROR:
                 modelAndView.setViewName("Error/commonError");
                 modelAndView.addObject("ErrorTitle", "错误提示");
-                modelAndView.addObject("ErrorMessage", "服务器异常，请稍候再�?");
+                modelAndView.addObject("ErrorMessage", "服务器异常，请稍候再试");
                 break;
         }
         return modelAndView;
@@ -202,7 +213,7 @@ public class ProfileController {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
         } else {
             String url = userProfileService.GetUserAvatar(username);
             if (url == null || url.trim().isEmpty()) {
@@ -231,7 +242,7 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
         } else {
             String url = userProfileService.GetUserAvatar(username);
             if (url == null || url.trim().isEmpty()) {
@@ -263,7 +274,7 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
         } else {
             if (file == null || file.getSize() <= 0 || file.getSize() >= 1024 * 1024 * 2) {
                 jsonResult.setSuccess(false);
@@ -306,14 +317,14 @@ public class ProfileController {
                                 profile.setCity(null);
                             } else {
                                 profile.setRegion(region.getName().substring(4, region.getName().length()));
-                                //获取�?/州信�?
+                                //获取省/州信息
                                 State state = region.getStateMap().get(profile.getState());
                                 if (state == null) {
                                     profile.setState(null);
                                     profile.setCity(null);
                                 } else {
                                     profile.setState(state.getName());
-                                    //获取�?/直辖�?
+                                    //获取市/直辖市
                                     City city = state.getCityMap().get(profile.getCity());
                                     if (city == null) {
                                         profile.setCity(null);
@@ -351,7 +362,7 @@ public class ProfileController {
 
             case PASSWORD_ERROR:
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("密码已更新，请重新登�?");
+                jsonResult.setErrorMessage("密码已更新，请重新登录");
                 break;
         }
         return jsonResult;
@@ -371,31 +382,31 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
         } else {
             BaseResult<Profile, DataBaseResultEnum> result = userProfileService.GetUserProfile(username);
             switch (result.getResultType()) {
                 case SUCCESS:
                     Profile profile = result.getResultData();
                     if (!regionMap.containsKey(profile.getRegion())) {
-                        profile.setRegion("未�?�择");
+                        profile.setRegion("未选择");
                     } else {
                         //获取国家/地区信息
                         Region region = regionMap.get(profile.getRegion());
                         if (region == null) {
-                            profile.setRegion("未�?�择");
+                            profile.setRegion("未选择");
                             profile.setState("");
                             profile.setCity("");
                         } else {
                             profile.setRegion(region.getName().substring(4, region.getName().length()));
-                            //获取�?/州信�?
+                            //获取省/州信息
                             State state = region.getStateMap().get(profile.getState());
                             if (state == null) {
                                 profile.setState("");
                                 profile.setCity("");
                             } else {
                                 profile.setState(state.getName());
-                                //获取�?/直辖�?
+                                //获取市/直辖市
                                 City city = state.getCityMap().get(profile.getCity());
                                 if (city == null) {
                                     profile.setCity("");
@@ -424,7 +435,7 @@ public class ProfileController {
     }
 
     /**
-     * 更新用户个人�?�?
+     * 更新用户个人简介
      *
      * @param request
      * @param introduction
@@ -439,7 +450,7 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             updateIntroductionJsonResult.setSuccess(false);
-            updateIntroductionJsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+            updateIntroductionJsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
         } else {
             if (introduction != null && introduction.getBytes("gb2312").length <= 80) {
                 if (introduction.equals("")) {
@@ -453,24 +464,24 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         updateIntroductionJsonResult.setSuccess(false);
-                        updateIntroductionJsonResult.setErrorMessage("请求参数不合�?");
+                        updateIntroductionJsonResult.setErrorMessage("请求参数不合法");
                         break;
 
                     case ERROR:
                         updateIntroductionJsonResult.setSuccess(false);
-                        updateIntroductionJsonResult.setErrorMessage("服务器异常，请稍候再�?");
+                        updateIntroductionJsonResult.setErrorMessage("服务器异常，请稍候再试");
                         break;
                 }
             } else {
                 updateIntroductionJsonResult.setSuccess(false);
-                updateIntroductionJsonResult.setErrorMessage("请求参数不合�?");
+                updateIntroductionJsonResult.setErrorMessage("请求参数不合法");
             }
         }
         return updateIntroductionJsonResult;
     }
 
     /**
-     * 获取用户个人�?�?
+     * 获取用户个人简介
      *
      * @param request
      * @return
@@ -482,7 +493,7 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
         } else {
             BaseResult<String, DataBaseResultEnum> result = userProfileService.GetUserIntroduction(username);
             switch (result.getResultType()) {
@@ -493,12 +504,12 @@ public class ProfileController {
 
                 case INCORRECT_USERNAME:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("请求参数不合�?");
+                    jsonResult.setErrorMessage("请求参数不合法");
                     break;
 
                 case ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("加载个人�?介失�?");
+                    jsonResult.setErrorMessage("加载个人简介失败");
                     break;
 
                 case EMPTY_RESULT:
@@ -516,7 +527,7 @@ public class ProfileController {
         DataJsonResult<List<Region>> jsonResult = new DataJsonResult<>();
         if (regionMap == null || regionMap.isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("加载国家/地区列表失败，请稍�?�再�?");
+            jsonResult.setErrorMessage("加载国家/地区列表失败，请稍候再试");
         } else {
             List<Region> regionList = new ArrayList<>(regionMap.values());
             regionList.sort(new RegionComparator());
@@ -535,18 +546,18 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/profile/gender", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateGender(HttpServletRequest request, int gender) {
+    public BaseJsonResult UpdateGender(HttpServletRequest request, int gender, String customGenderName) {
         BaseJsonResult jsonResult = new BaseJsonResult();
-        if (gender < 0 || gender > 3) {
+        if (gender < 0 || gender > 3 || (gender == 3 && StringUtils.isBlank(customGenderName))) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合�?");
+            jsonResult.setErrorMessage("请求参数不合法");
         } else {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
             } else {
-                DataBaseResultEnum updateProfileResultEnum = userProfileService.UpdateGender(username, gender);
+                DataBaseResultEnum updateProfileResultEnum = userProfileService.UpdateGender(username, gender, customGenderName);
                 switch (updateProfileResultEnum) {
                     case SUCCESS:
                         jsonResult.setSuccess(true);
@@ -554,12 +565,12 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
                         break;
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("服务器异常，请稍候再�?");
+                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
                         break;
                 }
             }
@@ -568,7 +579,7 @@ public class ProfileController {
     }
 
     /**
-     * 更新用户性取�?
+     * 更新用户性取向
      *
      * @param request
      * @param genderOrientation
@@ -578,11 +589,11 @@ public class ProfileController {
     @ResponseBody
     public BaseJsonResult UpdateGenderOrientation(HttpServletRequest request, int genderOrientation) {
         BaseJsonResult jsonResult = new BaseJsonResult();
-        if (genderOrientation > 0 && genderOrientation <= 4) {
+        if (genderOrientation >= 0 && genderOrientation <= 4) {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
             } else {
                 DataBaseResultEnum updateProfileResultEnum = userProfileService.UpdateGenderOrientation(username, genderOrientation);
                 switch (updateProfileResultEnum) {
@@ -592,12 +603,12 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
                         break;
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("服务器异常，请稍候再�?");
+                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
                         break;
                 }
             }
@@ -609,7 +620,7 @@ public class ProfileController {
     }
 
     /**
-     * 更新用户�?在地
+     * 更新用户所在地
      *
      * @param request
      * @param region
@@ -624,34 +635,34 @@ public class ProfileController {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
             } else {
                 DataBaseResultEnum updateProfileResultEnum = null;
                 //判断国家/地区代码是否合法
                 if (regionMap.containsKey(region)) {
                     if (regionMap.get(region).getStateMap() == null || regionMap.get(region).getStateMap().size() == 0) {
-                        //�?/州为�?
+                        //省/州为空
                         updateProfileResultEnum = userProfileService.UpdateRegion(username, region, null, null);
                     } else {
                         Map<String, State> stateMap = regionMap.get(region).getStateMap();
-                        //判断�?/州代码是否合�?
+                        //判断省/州代码是否合法
                         if (stateMap.containsKey(state)) {
                             if (stateMap.get(state).getCityMap() == null || stateMap.get(state).getCityMap().size() == 0) {
-                                //�?/直辖市为�?
+                                //市/直辖市为空
                                 updateProfileResultEnum = userProfileService.UpdateRegion(username, region, state, null);
                             } else {
                                 Map<String, City> cityMap = stateMap.get(state).getCityMap();
-                                //判断�?/直辖市代码是否合�?
+                                //判断市/直辖市代码是否合法
                                 if (cityMap.containsKey(city)) {
                                     updateProfileResultEnum = userProfileService.UpdateRegion(username, region, state, city);
                                 } else {
                                     jsonResult.setSuccess(false);
-                                    jsonResult.setErrorMessage("不合法的�?/直辖市代�?");
+                                    jsonResult.setErrorMessage("不合法的市/直辖市代码");
                                 }
                             }
                         } else {
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("不合法的�?/州代�?");
+                            jsonResult.setErrorMessage("不合法的省/州代码");
                         }
                     }
                 } else {
@@ -666,12 +677,12 @@ public class ProfileController {
 
                         case INCORRECT_USERNAME:
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+                            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
                             break;
 
                         case ERROR:
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("服务器异常，请稍候再�?");
+                            jsonResult.setErrorMessage("服务器异常，请稍候再试");
                             break;
                     }
                 }
@@ -699,7 +710,7 @@ public class ProfileController {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
             } else {
                 DataBaseResultEnum updateProfileResultEnum = userProfileService.UpdateKickname(username, kickname);
                 switch (updateProfileResultEnum) {
@@ -709,12 +720,12 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("用户身份凭证过期，请稍�?�再�?");
+                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
                         break;
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("服务器异常，请稍候再�?");
+                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
                         break;
                 }
             }
@@ -740,7 +751,7 @@ public class ProfileController {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
         if (bindingResult.hasErrors()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合�?");
+            jsonResult.setErrorMessage("请求参数不合法");
         } else {
             BaseResult<String, BoolResultEnum> result = realNameService
                     .GetUserRealName(request, user.getUsername(), user.getPassword());

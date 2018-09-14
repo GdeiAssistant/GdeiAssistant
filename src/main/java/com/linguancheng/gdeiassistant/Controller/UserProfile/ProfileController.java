@@ -122,7 +122,7 @@ public class ProfileController {
                         boolean containProfile = false;
                         if (privacy.isGender()) {
                             if (profile.getGender()!=null && profile.getGender() != 0) {
-                                if (profile.getGender() != 3) {
+                                if (profile.getGender() == 3) {
                                     modelAndView.addObject("Gender", profile.getCustomGenderName());
                                 } else {
                                     modelAndView.addObject("Gender", UserProfileService

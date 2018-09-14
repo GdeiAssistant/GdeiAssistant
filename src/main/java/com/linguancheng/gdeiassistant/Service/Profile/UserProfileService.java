@@ -124,7 +124,7 @@ public class UserProfileService {
         try {
             Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
             if (profile != null) {
-                if (profile.getGender().equals(3)) {
+                if (profile.getGender()!=null && profile.getGender().equals(3)) {
                     profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
                 }
                 result.setResultType(DataBaseResultEnum.SUCCESS);

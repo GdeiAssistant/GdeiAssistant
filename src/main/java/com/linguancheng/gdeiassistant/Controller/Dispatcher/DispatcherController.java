@@ -1,7 +1,7 @@
 package com.gdeiassistant.gdeiassistant.Controller.Dispatcher;
 
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.gdeiassistant.gdeiassistant.Exception.CommonException.SyncTransactionException;
+import com.gdeiassistant.gdeiassistant.Exception.CommonException.TransactionException;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
@@ -44,11 +44,11 @@ public class DispatcherController {
     public ModelAndView DoDispatch(HttpServletRequest request, HttpServletResponse response
             , boolean relink, RedirectInfo redirectInfo
             , RedirectAttributes redirectAttributes) throws WsgException {
-        //�?查自动登录状�?
+        //检查自动登录状态
         ModelAndView modelAndView = new ModelAndView();
         int autoLoginState = autoLoginService.CheckAutoLogin(request);
         if (autoLoginState == AUTOLOGIN_NOT) {
-            //不自动登�?,返回登录主页
+            //不自动登录,返回登录主页
             if (redirectInfo.needToRedirect()) {
                 modelAndView.setViewName("redirect:/login?redirect_url=" + redirectInfo.getRedirect_url());
             } else {
@@ -67,7 +67,7 @@ public class DispatcherController {
                     cookiePassword = cookie.getValue();
                 }
             }
-            //将用户信息进行解�?
+            //将用户信息进行解密
             cookieUsername = StringEncryptUtils.decryptString(cookieUsername);
             cookiePassword = StringEncryptUtils.decryptString(cookiePassword);
             //清除已登录用户的用户凭证记录
@@ -79,7 +79,7 @@ public class DispatcherController {
                 case LOGIN_SUCCESS:
                     //登录成功
                     User resultUser = result.getResultData();
-                    //同步数据库用户数�?
+                    //同步数据库用户数据
                     try {
                         userDataService.SyncUserData(resultUser);
                         //将用户信息数据写入Session
@@ -87,12 +87,12 @@ public class DispatcherController {
                         request.getSession().setAttribute("password", resultUser.getPassword());
                         request.getSession().setAttribute("keycode", resultUser.getKeycode());
                         request.getSession().setAttribute("number", resultUser.getNumber());
-                        //将加密的用户信息保存到Cookie�?
+                        //将加密的用户信息保存到Cookie中
                         String username = StringEncryptUtils.encryptString(resultUser.getUsername());
                         String password = StringEncryptUtils.encryptString(resultUser.getPassword());
                         Cookie usernameCookie = new Cookie("username", username);
                         Cookie passwordCookie = new Cookie("password", password);
-                        //设置Cookie�?大有效时间为3个月
+                        //设置Cookie最大有效时间为3个月
                         usernameCookie.setMaxAge(7776000);
                         usernameCookie.setPath("/");
                         usernameCookie.setHttpOnly(true);
@@ -106,9 +106,9 @@ public class DispatcherController {
                         } else {
                             modelAndView.setViewName("redirect:/index");
                         }
-                    } catch (SyncTransactionException e) {
+                    } catch (TransactionException e) {
                         //同步数据失败
-                        redirectAttributes.addFlashAttribute("LoginErrorMessage", "学院系统维护中，请稍候再�?");
+                        redirectAttributes.addFlashAttribute("LoginErrorMessage", "学院系统维护中，请稍候再试");
                         redirectAttributes.addFlashAttribute("LoginUsername", resultUser.getUsername());
                         redirectAttributes.addFlashAttribute("LoginPassword", resultUser.getPassword());
                         if (redirectInfo.needToRedirect()) {
@@ -120,7 +120,7 @@ public class DispatcherController {
                     break;
 
                 case SERVER_ERROR:
-                    //服务器异�?
+                    //服务器异常
                     redirectAttributes.addFlashAttribute("LoginErrorMessage", "学院系统维护中，暂不可用");
                     redirectAttributes.addFlashAttribute("LoginUsername", cookieUsername);
                     redirectAttributes.addFlashAttribute("LoginPassword", cookiePassword);
@@ -133,10 +133,10 @@ public class DispatcherController {
                 case TIME_OUT:
                     //连接超时
                     if (!relink) {
-                        //如果第一次连接失�?,则重新尝试一�?
+                        //如果第一次连接失败,则重新尝试一次
                         modelAndView.setViewName("forward:/?relink=true");
                     } else {
-                        redirectAttributes.addFlashAttribute("LoginErrorMessage", "连接教务系统超时,请稍候再�?");
+                        redirectAttributes.addFlashAttribute("LoginErrorMessage", "连接教务系统超时,请稍候再试");
                         redirectAttributes.addFlashAttribute("LoginUsername", cookieUsername);
                         redirectAttributes.addFlashAttribute("LoginPassword", cookiePassword);
                         if (redirectInfo.needToRedirect()) {

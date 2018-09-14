@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.gdeiassistant.gdeiassistant.Enum.Base.AttachResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.gdeiassistant.gdeiassistant.Exception.CommonException.SyncTransactionException;
+import com.gdeiassistant.gdeiassistant.Exception.CommonException.TransactionException;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanUser;
@@ -29,7 +29,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 public class YiBanLoginController {
@@ -89,7 +88,7 @@ public class YiBanLoginController {
                     } else {
                         modelAndView.setViewName("redirect:/index");
                     }
-                } catch (SyncTransactionException e) {
+                } catch (TransactionException e) {
                     modelAndView.addObject("ErrorMessage", "学院系统维护中，请稍候再试");
                     modelAndView.setViewName("YiBan/yibanError");
                 }

@@ -1,7 +1,7 @@
 package com.gdeiassistant.gdeiassistant.Controller.Wechat;
 
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.gdeiassistant.gdeiassistant.Exception.CommonException.SyncTransactionException;
+import com.gdeiassistant.gdeiassistant.Exception.CommonException.TransactionException;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseJsonResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
@@ -161,7 +161,7 @@ public class WechatAttachController {
                         result.setSuccess(true);
                         return result;
                     }
-                } catch (SyncTransactionException e) {
+                } catch (TransactionException e) {
                     result.setSuccess(false);
                     result.setErrorMessage("学院系统维护中，请稍候再试");
                 }

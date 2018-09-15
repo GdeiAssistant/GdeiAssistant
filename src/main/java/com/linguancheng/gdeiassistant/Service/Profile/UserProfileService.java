@@ -56,7 +56,7 @@ public class UserProfileService {
 
     private static Map<Integer, String> genderMap;
 
-    private static Map<Integer, Map<Integer, String>> genderOrientationMap;
+    private static Map<Integer, String> genderOrientationMap;
 
     @Autowired
     public AsyncRestTemplate asyncRestTemplate;
@@ -67,7 +67,7 @@ public class UserProfileService {
     }
 
     @Resource(name = "genderOrientationMap")
-    public void setGenderOrientationMap(Map<Integer, Map<Integer, String>> genderOrientationMap) {
+    public void setGenderOrientationMap(Map<Integer, String> genderOrientationMap) {
         UserProfileService.genderOrientationMap = genderOrientationMap;
     }
 
@@ -124,7 +124,7 @@ public class UserProfileService {
         try {
             Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
             if (profile != null) {
-                if (profile.getGender()!=null && profile.getGender().equals(3)) {
+                if (profile.getGender() != null && profile.getGender().equals(3)) {
                     profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
                 }
                 result.setResultType(DataBaseResultEnum.SUCCESS);

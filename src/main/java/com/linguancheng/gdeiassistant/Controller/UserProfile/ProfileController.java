@@ -125,25 +125,21 @@ public class ProfileController {
                                 if (profile.getGender() == 3) {
                                     modelAndView.addObject("Gender", profile.getCustomGenderName());
                                 } else {
-                                    modelAndView.addObject("Gender", UserProfileService
-                                            .getGenderMap().get(profile.getGender()));
+                                    modelAndView.addObject("Gender", UserProfileService.getGenderMap().get(profile.getGender()));
                                 }
                                 containProfile = true;
                             }
                         }
                         if (privacy.isGenderOrientation()) {
                             if (profile.getGenderOrientation()!=null && profile.getGenderOrientation() != 0) {
-                                modelAndView.addObject("GenderOrientation", UserProfileService
-                                        .getGenderOrientationMap().get(profile.getGenderOrientation()));
+                                modelAndView.addObject("GenderOrientation", UserProfileService.getGenderOrientationMap().get(profile.getGenderOrientation()));
                                 containProfile = true;
                             }
                         }
                         if (privacy.isRegion()) {
                             StringBuilder location = new StringBuilder("");
                             Region region = regionMap.get(profile.getRegion());
-                            if (region == null) {
-                                location.append("未选择");
-                            } else {
+                            if (region != null) {
                                 location.append(region.getName().substring(4, region.getName().length()));
                                 State state = region.getStateMap().get(profile.getState());
                                 if (state != null) {
@@ -155,9 +151,9 @@ public class ProfileController {
                                         location.append(city.getName());
                                     }
                                 }
+                                modelAndView.addObject("Location", location.toString());
+                                containProfile = true;
                             }
-                            modelAndView.addObject("Location", location.toString());
-                            containProfile = true;
                         }
                         if (privacy.isIntroduction()) {
                             BaseResult<String, DataBaseResultEnum> introductionResult = userProfileService.GetUserIntroduction(username);

@@ -285,7 +285,7 @@
     </util:map>
 
     <!-- 配置个人资料性别字典 -->
-    <util:map id="genderMap">
+    <util:map id="genderMap" key-type="java.lang.Integer" value-type="java.lang.String">
         <entry key="0" value="未选择"/>
         <entry key="1" value="男"/>
         <entry key="2" value="女"/>
@@ -293,7 +293,7 @@
     </util:map>
 
     <!-- 配置个人资料性取向字典 -->
-    <util:map id="genderOrientationMap">
+    <util:map id="genderOrientationMap" key-type="java.lang.Integer" value-type="java.lang.String">
         <entry key="0" value="未选择"/>
         <entry key="1" value="异性恋"/>
         <entry key="2" value="同性恋"/>

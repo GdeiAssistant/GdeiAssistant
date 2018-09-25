@@ -6,7 +6,6 @@
 .idea
 *.iml
 out
-gen
 .gitignore
 gradlew
 gradlew.bat
@@ -24,3 +23,4 @@ src/main/resources/config/version/
 src/main/resources/config/wechat/
 src/test/
 src/main/resources/config/yiban
+/src/main/resources/config/education/cache.properties

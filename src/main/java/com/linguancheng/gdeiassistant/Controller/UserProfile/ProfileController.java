@@ -121,7 +121,7 @@ public class ProfileController {
                         modelAndView.addObject("KickName", profile.getKickname());
                         boolean containProfile = false;
                         if (privacy.isGender()) {
-                            if (profile.getGender()!=null && profile.getGender() != 0) {
+                            if (profile.getGender() != null && profile.getGender() != 0) {
                                 if (profile.getGender() == 3) {
                                     modelAndView.addObject("Gender", profile.getCustomGenderName());
                                 } else {
@@ -131,7 +131,7 @@ public class ProfileController {
                             }
                         }
                         if (privacy.isGenderOrientation()) {
-                            if (profile.getGenderOrientation()!=null && profile.getGenderOrientation() != 0) {
+                            if (profile.getGenderOrientation() != null && profile.getGenderOrientation() != 0) {
                                 modelAndView.addObject("GenderOrientation", UserProfileService.getGenderOrientationMap().get(profile.getGenderOrientation()));
                                 containProfile = true;
                             }
@@ -544,7 +544,7 @@ public class ProfileController {
     @ResponseBody
     public BaseJsonResult UpdateGender(HttpServletRequest request, int gender, String customGenderName) {
         BaseJsonResult jsonResult = new BaseJsonResult();
-        if (gender < 0 || gender > 3 || (gender == 3 && StringUtils.isBlank(customGenderName))) {
+        if (gender < 0 || gender > UserProfileService.getGenderMap().size() + 1 || (gender == 3 && StringUtils.isBlank(customGenderName))) {
             jsonResult.setSuccess(false);
             jsonResult.setErrorMessage("请求参数不合法");
         } else {
@@ -585,7 +585,7 @@ public class ProfileController {
     @ResponseBody
     public BaseJsonResult UpdateGenderOrientation(HttpServletRequest request, int genderOrientation) {
         BaseJsonResult jsonResult = new BaseJsonResult();
-        if (genderOrientation >= 0 && genderOrientation <= 4) {
+        if (genderOrientation >= 0 && genderOrientation <= UserProfileService.getGenderOrientationMap().size() + 1) {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);

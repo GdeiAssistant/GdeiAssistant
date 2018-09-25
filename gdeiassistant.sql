@@ -1,6 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `gdeiassistantLogs` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `gdeiassistantLogs`;
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.19, for macos10.12 (x86_64)
 --
 -- Host: localhost    Database: gdeiassistantLogs
 -- ------------------------------------------------------
@@ -32,6 +32,22 @@ CREATE TABLE `chargeLogs` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `closeLogs`
+--
+
+DROP TABLE IF EXISTS `closeLogs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `closeLogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(24) NOT NULL,
+  `resetname` varchar(24) NOT NULL,
+  `time` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -42,10 +58,10 @@ CREATE TABLE `chargeLogs` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-15  4:25:07
+-- Dump completed on 2018-09-26  4:18:19
 CREATE DATABASE  IF NOT EXISTS `gdeiassistant` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `gdeiassistant`;
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.19, for macos10.12 (x86_64)
 --
 -- Host: localhost    Database: gdeiassistant
 -- ------------------------------------------------------
@@ -72,7 +88,8 @@ DROP TABLE IF EXISTS `cet`;
 CREATE TABLE `cet` (
   `username` varchar(24) CHARACTER SET utf8 NOT NULL,
   `number` bigint(15) DEFAULT NULL,
-  PRIMARY KEY (`username`)
+  PRIMARY KEY (`username`),
+  CONSTRAINT `cetUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -86,10 +103,12 @@ DROP TABLE IF EXISTS `datingMessage`;
 CREATE TABLE `datingMessage` (
   `messageId` int(11) NOT NULL AUTO_INCREMENT,
   `pickId` int(11) NOT NULL,
-  `username` varchar(24) NOT NULL,
+  `username` varchar(24) CHARACTER SET utf8 NOT NULL,
   `type` tinyint(1) NOT NULL,
   `state` tinyint(1) NOT NULL,
-  PRIMARY KEY (`messageId`)
+  PRIMARY KEY (`messageId`),
+  KEY `datingMessageUsername` (`username`),
+  CONSTRAINT `datingMessageUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -103,10 +122,12 @@ DROP TABLE IF EXISTS `datingPick`;
 CREATE TABLE `datingPick` (
   `pickId` int(11) NOT NULL AUTO_INCREMENT,
   `profileId` int(11) NOT NULL,
-  `username` varchar(24) NOT NULL,
+  `username` varchar(24) CHARACTER SET utf8 NOT NULL,
   `content` varchar(50) NOT NULL,
   `state` tinyint(1) NOT NULL,
-  PRIMARY KEY (`pickId`)
+  PRIMARY KEY (`pickId`),
+  KEY `datingPickUsername` (`username`),
+  CONSTRAINT `datingPickUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -119,7 +140,7 @@ DROP TABLE IF EXISTS `datingProfile`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `datingProfile` (
   `profileId` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(24) NOT NULL,
+  `username` varchar(24) CHARACTER SET utf8 NOT NULL,
   `kickname` varchar(15) NOT NULL,
   `area` tinyint(1) NOT NULL,
   `grade` tinyint(1) NOT NULL,
@@ -129,7 +150,9 @@ CREATE TABLE `datingProfile` (
   `qq` varchar(15) DEFAULT NULL,
   `wechat` varchar(20) DEFAULT NULL,
   `state` tinyint(1) NOT NULL,
-  PRIMARY KEY (`profileId`)
+  PRIMARY KEY (`profileId`),
+  KEY `datingProfileUsername` (`username`),
+  CONSTRAINT `datingProfileUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -153,7 +176,8 @@ CREATE TABLE `ershou` (
   `state` tinyint(1) NOT NULL,
   `publishTime` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `username_idx` (`username`)
+  KEY `ershouUsername` (`username`),
+  CONSTRAINT `ershouUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -165,9 +189,10 @@ DROP TABLE IF EXISTS `gender`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gender` (
-  `username` varchar(24) NOT NULL,
+  `username` varchar(24) CHARACTER SET utf8 NOT NULL,
   `customGender` varchar(50) NOT NULL,
-  PRIMARY KEY (`username`)
+  PRIMARY KEY (`username`),
+  CONSTRAINT `genderUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -182,7 +207,7 @@ CREATE TABLE `introduction` (
   `username` varchar(24) CHARACTER SET utf8 NOT NULL,
   `introduction` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`username`),
-  CONSTRAINT `introductionUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `introductionUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -195,7 +220,7 @@ DROP TABLE IF EXISTS `lostandfound`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `lostandfound` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(24) NOT NULL,
+  `username` varchar(24) CHARACTER SET utf8 NOT NULL,
   `name` varchar(25) NOT NULL,
   `description` varchar(100) NOT NULL,
   `location` varchar(30) NOT NULL,
@@ -206,7 +231,9 @@ CREATE TABLE `lostandfound` (
   `phone` varchar(11) DEFAULT NULL,
   `state` tinyint(1) NOT NULL,
   `publishTime` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `lostandfoundUsername` (`username`),
+  CONSTRAINT `lostandfoundUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -224,7 +251,8 @@ CREATE TABLE `privacy` (
   `region` tinyint(1) NOT NULL,
   `introduction` tinyint(1) NOT NULL,
   `cache` tinyint(1) NOT NULL,
-  PRIMARY KEY (`username`)
+  PRIMARY KEY (`username`),
+  CONSTRAINT `privacyUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -245,7 +273,7 @@ CREATE TABLE `profile` (
   `state` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
   `city` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`username`),
-  CONSTRAINT `profileUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `profileUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -263,9 +291,9 @@ CREATE TABLE `secretComment` (
   `avatarTheme` tinyint(2) NOT NULL,
   `publishTime` datetime NOT NULL,
   KEY `CommentId_idx` (`id`),
-  KEY `CommentUsername_idx` (`username`),
+  KEY `secretCommentUsername` (`username`),
   CONSTRAINT `CommentId` FOREIGN KEY (`id`) REFERENCES `secretContent` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `CommentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `secretCommentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -282,8 +310,8 @@ CREATE TABLE `secretContent` (
   `content` varchar(100) NOT NULL,
   `theme` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `secretUsername_idx` (`username`),
-  CONSTRAINT `secretUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `secretContentUsername` (`username`),
+  CONSTRAINT `secretContentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -298,9 +326,9 @@ CREATE TABLE `secretLike` (
   `id` int(10) unsigned NOT NULL,
   `username` varchar(24) NOT NULL,
   KEY `LikeId_idx` (`id`),
-  KEY `LikeUsername_idx` (`username`),
+  KEY `secretLikeUsername` (`username`),
   CONSTRAINT `LikeId` FOREIGN KEY (`id`) REFERENCES `secretContent` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `LikeUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `secretLikeUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -313,9 +341,10 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `username` varchar(24) NOT NULL,
-  `password` varchar(24) NOT NULL,
-  `keycode` varchar(64) NOT NULL,
-  `number` varchar(24) NOT NULL,
+  `password` varchar(24) DEFAULT NULL,
+  `keycode` varchar(64) DEFAULT NULL,
+  `number` varchar(24) DEFAULT NULL,
+  `state` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -331,8 +360,8 @@ CREATE TABLE `wechatUser` (
   `wechatId` varchar(30) NOT NULL,
   `username` varchar(24) NOT NULL,
   PRIMARY KEY (`wechatId`),
-  KEY `username_idx` (`username`),
-  CONSTRAINT `username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `wechatUserUsername` (`username`),
+  CONSTRAINT `wechatUserUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -347,8 +376,8 @@ CREATE TABLE `yibanUser` (
   `userid` int(11) NOT NULL,
   `username` varchar(24) NOT NULL,
   PRIMARY KEY (`userid`),
-  KEY `username_idx` (`username`),
-  CONSTRAINT `yibanUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `yibanUserUsername` (`username`),
+  CONSTRAINT `yibanUserUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -361,4 +390,4 @@ CREATE TABLE `yibanUser` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-15  4:25:07
+-- Dump completed on 2018-09-26  4:18:19

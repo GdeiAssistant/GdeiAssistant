@@ -2,6 +2,7 @@ package com.linguancheng.gdeiassistant.Tools;
 
 import com.taobao.wsgsvr.EncryptWithCfg;
 import com.taobao.wsgsvr.WsgException;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -58,22 +59,6 @@ public class StringEncryptUtils {
      * @return
      */
     public static String SHA1MapString(String text) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            digest.update(text.getBytes());
-            byte messageDigest[] = digest.digest();
-            StringBuilder hexString = new StringBuilder();
-            for (byte aMessageDigest : messageDigest) {
-                String shaHex = Integer.toHexString(aMessageDigest & 0xFF);
-                if (shaHex.length() < 2) {
-                    hexString.append(0);
-                }
-                hexString.append(shaHex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return DigestUtils.sha1Hex(text);
     }
 }

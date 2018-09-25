@@ -20,4 +20,8 @@
         update yibanUser set username=#{username} where userid=#{userid}
     </update>
 
+    <update id="resetYiBanUser">
+        update yibanUser set username=null where username=#{username}
+    </update>
+
 </mapper>

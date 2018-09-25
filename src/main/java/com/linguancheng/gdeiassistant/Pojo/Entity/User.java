@@ -43,6 +43,12 @@ public class User implements Serializable {
 
     private String xm;
 
+    /**
+     * 账号状态
+     * 0为正常，-1为用户自主注销
+     */
+    private Integer state;
+
     public String getPassword() {
         return password;
     }
@@ -98,6 +104,12 @@ public class User implements Serializable {
             if (number != null) {
                 decryptUser.setNumber(StringEncryptUtils.decryptString(number));
             }
+            if (xm != null) {
+                decryptUser.setXm(xm);
+            }
+            if (state != null) {
+                decryptUser.setState(state);
+            }
         } catch (WsgException e) {
             e.printStackTrace();
         }
@@ -118,6 +130,12 @@ public class User implements Serializable {
             }
             if (number != null) {
                 encryptUser.setNumber(StringEncryptUtils.encryptString(number));
+            }
+            if (xm != null) {
+                encryptUser.setXm(xm);
+            }
+            if (state != null) {
+                encryptUser.setState(state);
             }
         } catch (WsgException e) {
             e.printStackTrace();
@@ -143,5 +161,13 @@ public class User implements Serializable {
         this.password = password;
         this.keycode = keycode;
         this.number = number;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 }

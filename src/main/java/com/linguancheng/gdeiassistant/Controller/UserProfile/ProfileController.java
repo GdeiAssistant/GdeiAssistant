@@ -185,7 +185,7 @@ public class ProfileController {
             case INCORRECT_USERNAME:
                 modelAndView.setViewName("Error/commonError");
                 modelAndView.addObject("ErrorTitle", "错误提示");
-                modelAndView.addObject("ErrorMessage", "该用户不存在");
+                modelAndView.addObject("ErrorMessage", "该用户不存在或已自主注销");
                 break;
 
             case ERROR:

@@ -120,6 +120,17 @@
     </a>
 </div>
 
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/close'">
+        <div class="weui-cell__bd">
+            <p>删除账号</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+</div>
+
 <!-- 裁剪头像弹窗 -->
 <div id="drawImageDialog" class="weui-popup__container">
     <div class="weui-popup__overlay"></div>

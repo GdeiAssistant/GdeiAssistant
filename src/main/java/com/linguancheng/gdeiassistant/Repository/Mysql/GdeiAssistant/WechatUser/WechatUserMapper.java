@@ -9,4 +9,6 @@ public interface WechatUserMapper {
     public void insertWechatUser(@Param("wechatId") String wechatID, @Param("username") String username) throws Exception;
 
     public void updateWechatUser(@Param("wechatId") String wechatID, @Param("username") String username) throws Exception;
+
+    public void resetWechatUser(String username);
 }

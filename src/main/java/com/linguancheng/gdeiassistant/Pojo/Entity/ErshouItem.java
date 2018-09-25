@@ -21,7 +21,7 @@ public class ErshouItem implements Serializable {
 
     private List<String> pictureURL;
 
-    private int id;
+    private Integer id;
 
     private String username;
 
@@ -33,7 +33,7 @@ public class ErshouItem implements Serializable {
     @Length(max = 100)
     private String description;
 
-    private float price;
+    private Float price;
 
     @NotBlank(message = "交易地点不能为空")
     @Length(max = 30)
@@ -41,7 +41,7 @@ public class ErshouItem implements Serializable {
 
     @Min(0)
     @Max(11)
-    private int type;
+    private Integer type;
 
     @NotBlank(message = "QQ不能为空")
     @Length(max = 20)
@@ -50,15 +50,15 @@ public class ErshouItem implements Serializable {
     @Length(max = 11)
     private String phone;
 
-    private int state;
+    private Integer state;
 
     private Date publishTime;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -78,11 +78,11 @@ public class ErshouItem implements Serializable {
         this.description = description;
     }
 
-    public float getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
@@ -94,11 +94,11 @@ public class ErshouItem implements Serializable {
         this.location = location;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -118,11 +118,11 @@ public class ErshouItem implements Serializable {
         this.phone = phone;
     }
 
-    public int getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 

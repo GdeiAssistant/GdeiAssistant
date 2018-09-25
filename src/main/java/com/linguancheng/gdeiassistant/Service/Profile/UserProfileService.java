@@ -122,14 +122,19 @@ public class UserProfileService {
     public BaseResult<Profile, DataBaseResultEnum> GetUserProfile(String username) {
         BaseResult<Profile, DataBaseResultEnum> result = new BaseResult<>();
         try {
-            Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
-            if (profile != null) {
-                if (profile.getGender() != null && profile.getGender().equals(3)) {
-                    profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
+            User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+            if (!user.getState().equals(-1)) {
+                Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+                if (profile != null) {
+                    if (profile.getGender() != null && profile.getGender().equals(3)) {
+                        profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
+                    }
+                    result.setResultType(DataBaseResultEnum.SUCCESS);
+                    profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
+                    result.setResultData(profile);
+                } else {
+                    result.setResultType(DataBaseResultEnum.INCORRECT_USERNAME);
                 }
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-                profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
-                result.setResultData(profile);
             } else {
                 result.setResultType(DataBaseResultEnum.INCORRECT_USERNAME);
             }

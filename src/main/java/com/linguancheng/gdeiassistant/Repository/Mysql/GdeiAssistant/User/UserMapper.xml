@@ -13,24 +13,33 @@
         select * from user where username=#{username} limit 1
     </select>
 
+    <select id="selectDeletedUserCount" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select count(username) from user where username like concat(concat('%',#{username}),'%')
+    </select>
+
     <select id="selectUserList" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
-        select * from user order by username limit #{start},#{size}
+        select * from user order by username limit #{start},#{size} where state!=-1
     </select>
 
     <select id="selectUserCount" resultType="java.lang.Integer">
-        select count(username) from user;
+        select count(username) from user where state!=-1;
     </select>
 
     <select id="selectAllUser" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
-        select * from user;
+        select * from user where state!=-1;
     </select>
 
     <insert id="insertUser" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
-        insert into user (username,password,keycode,number) values (#{username},#{password},#{keycode},#{number})
+        insert into user (username,password,keycode,number,state) values (#{username},#{password},#{keycode},#{number},0)
     </insert>
 
     <update id="updateUser" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
-        update user set password=#{password},keycode=#{keycode},number=#{number} where username=#{username}
+        update user set password=#{password},keycode=#{keycode},number=#{number},state=0 where username=#{username}
+    </update>
+
+    <update id="closeUser" parameterType="java.lang.String">
+        update user set username=#{resetname},password=null,keycode=null,number=null,state=-1 where username=#{username}
     </update>
 
 </mapper>

@@ -75,6 +75,15 @@
         update profile set region=#{region},state=#{state},city=#{city} where username=#{username}
     </update>
 
+    <update id="resetUserProfile">
+        update profile set kickname=#{kickname},realname=null,gender=null,genderOrientation=null,
+        region=null,state=null,city=null where username=#{username}
+    </update>
+
+    <update id="resetUserIntroduction">
+        update introduction set introduction=null where username=#{username}
+    </update>
+
     <update id="updateUserIntroduction">
         update introduction set introduction=#{introduction} where username=#{username}
     </update>

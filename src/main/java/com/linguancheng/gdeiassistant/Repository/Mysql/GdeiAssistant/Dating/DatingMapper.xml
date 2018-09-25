@@ -46,6 +46,10 @@
         select * from datingProfile where profileId=#{profileId} limit 1
     </select>
 
+    <select id="selectDatingProfileByUsername" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.DatingProfile">
+        select * from datingProfile where username=#{username}
+    </select>
+
     <update id="updateDatingProfile">
         update datingProfile set kickname=#{kickname},grade=#{grade},faculty=#{faculty},hometown=#{hometown}
         ,condition=#{condition},qq=#{qq},wechat=#{wechat} where profileId=#{profileId}

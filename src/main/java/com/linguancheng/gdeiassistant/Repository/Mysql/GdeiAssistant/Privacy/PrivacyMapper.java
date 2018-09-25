@@ -9,6 +9,8 @@ public interface PrivacyMapper {
 
     public void initPrivacy(String username) throws Exception;
 
+    public void resetPrivacy(String username) throws Exception;
+
     public void updateGender(@Param("gender") boolean gender, @Param("username") String username) throws Exception;
 
     public void updateGenderOrientation(@Param("genderOrientation") boolean genderOrientation

@@ -25,6 +25,10 @@ public interface ProfileMapper {
 
     public void updateUserLocation(Profile profile) throws Exception;
 
+    public void resetUserProfile(@Param("username") String username, @Param("kickname") String kickname) throws Exception;
+
+    public void resetUserIntroduction(@Param("username") String username);
+
     public void updateUserIntroduction(@Param("username") String username, @Param("introduction") String introduction) throws Exception;
 
     public AuthorProfile selectAuthorProfile(String username) throws Exception;

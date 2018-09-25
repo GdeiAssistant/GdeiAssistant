@@ -99,7 +99,7 @@ public class UserLoginService {
         if (quickLogin) {
             try {
                 User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(user.getUsername()));
-                if (queryUser != null) {
+                if (queryUser != null && !queryUser.getState().equals(-1)) {
                     //将数据库查询的用户数据与用户提交的用户信息进行对比
                     User decryptUser = queryUser.decryptUser();
                     if (StringUtils.isNotBlank(user.getPassword())) {
@@ -172,16 +172,16 @@ public class UserLoginService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {
-            log.error("用户登录异常：" , e);
+            log.error("用户登录异常：", e);
             result.setResultType(LoginResultEnum.SERVER_ERROR);
         } catch (PasswordIncorrectException e) {
-            log.error("用户登录异常：" , e);
+            log.error("用户登录异常：", e);
             result.setResultType(LoginResultEnum.PASSWORD_ERROR);
         } catch (IOException e) {
-            log.error("用户登录异常：" , e);
+            log.error("用户登录异常：", e);
             result.setResultType(LoginResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("用户登录异常：" , e);
+            log.error("用户登录异常：", e);
             result.setResultType(LoginResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {
@@ -300,7 +300,7 @@ public class UserLoginService {
 
                     @Override
                     public void onFailure(Throwable ex) {
-                        log.error("定时更新用户账号信息异常：" , ex);
+                        log.error("定时更新用户账号信息异常：", ex);
                         semaphore.release();
                     }
 
@@ -311,7 +311,7 @@ public class UserLoginService {
                 });
             }
         } catch (Exception e) {
-            log.error("定时更新用户账号信息异常：" , e);
+            log.error("定时更新用户账号信息异常：", e);
         }
     }
 }

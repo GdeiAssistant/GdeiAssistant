@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Close.CloseMapper">
+
+    <insert id="insertCloseLog" keyProperty="id" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.CloseLog">
+        insert into closeLogs (username,resetname,time) values(#{username},#{resetname},#{time})
+    </insert>
+
+</mapper>

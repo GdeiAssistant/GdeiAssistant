@@ -20,6 +20,8 @@ public interface DatingMapper {
 
     public DatingProfile selectDatingProfileById(Integer profileId);
 
+    public List<DatingProfile> selectDatingProfileByUsername(String username);
+
     public void updateDatingProfile(DatingProfile datingProfile);
 
     public void updateDatingProfileState(@Param("profileId") Integer profileId, @Param("state") Integer state);

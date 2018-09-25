@@ -289,7 +289,7 @@
         <entry key="0" value="未选择"/>
         <entry key="1" value="男"/>
         <entry key="2" value="女"/>
-        <entry key="3" value="其他"/>
+        <entry key="3" value="自定义"/>
     </util:map>
 
     <!-- 配置个人资料性取向字典 -->
@@ -299,6 +299,8 @@
         <entry key="2" value="同性恋"/>
         <entry key="3" value="双性恋"/>
         <entry key="4" value="无性恋"/>
+        <entry key="5" value="泛性恋"/>
+        <entry key="6" value="其他"/>
     </util:map>
 
     <!-- 配置Rest服务客户端 -->

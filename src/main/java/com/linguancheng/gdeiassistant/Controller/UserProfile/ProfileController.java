@@ -460,7 +460,7 @@ public class ProfileController {
             updateIntroductionJsonResult.setSuccess(false);
             updateIntroductionJsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
         } else {
-            if (introduction != null && introduction.getBytes("gb2312").length <= 80) {
+            if (introduction != null && introduction.length() <= 80) {
                 if (introduction.equals("")) {
                     introduction = null;
                 }

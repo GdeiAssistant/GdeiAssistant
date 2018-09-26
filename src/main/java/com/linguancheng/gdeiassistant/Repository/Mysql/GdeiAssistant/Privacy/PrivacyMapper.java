@@ -16,6 +16,12 @@ public interface PrivacyMapper {
     public void updateGenderOrientation(@Param("genderOrientation") boolean genderOrientation
             , @Param("username") String username) throws Exception;
 
+    public void updateFaculty(@Param("faculty") boolean faculty
+            , @Param("username") String username) throws Exception;
+
+    public void updateMajor(@Param("major") boolean major
+            , @Param("username") String username) throws Exception;
+
     public void updateRegion(@Param("region") boolean region
             , @Param("username") String username) throws Exception;
 

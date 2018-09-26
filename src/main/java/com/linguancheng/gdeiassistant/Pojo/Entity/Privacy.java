@@ -19,6 +19,10 @@ public class Privacy implements Serializable {
 
     private Boolean introduction;
 
+    private Boolean faculty;
+
+    private Boolean major;
+
     private Boolean cache;
 
     public Boolean isGender() {
@@ -59,5 +63,21 @@ public class Privacy implements Serializable {
 
     public void setCache(Boolean cache) {
         this.cache = cache;
+    }
+
+    public Boolean isFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Boolean faculty) {
+        this.faculty = faculty;
+    }
+
+    public Boolean isMajor() {
+        return major;
+    }
+
+    public void setMajor(Boolean major) {
+        this.major = major;
     }
 }

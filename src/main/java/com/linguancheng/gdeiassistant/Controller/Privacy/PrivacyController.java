@@ -87,6 +87,7 @@ public class PrivacyController {
         } else {
             switch (index) {
                 case 0:
+                    //性别
                     if (privacyService.UpdateGender(state, username)) {
                         result.setSuccess(true);
                     } else {
@@ -96,6 +97,7 @@ public class PrivacyController {
                     break;
 
                 case 1:
+                    //性取向
                     if (privacyService.UpdateGenderOrientation(state, username)) {
                         result.setSuccess(true);
                     } else {
@@ -105,6 +107,27 @@ public class PrivacyController {
                     break;
 
                 case 2:
+                    //院系
+                    if (privacyService.UpdateFaculty(state, username)) {
+                        result.setSuccess(true);
+                    } else {
+                        result.setSuccess(false);
+                        result.setErrorMessage("服务器异常，请稍后再试");
+                    }
+                    break;
+
+                case 3:
+                    //专业
+                    if (privacyService.UpdateMajor(state, username)) {
+                        result.setSuccess(true);
+                    } else {
+                        result.setSuccess(false);
+                        result.setErrorMessage("服务器异常，请稍后再试");
+                    }
+                    break;
+
+                case 4:
+                    //所在地
                     if (privacyService.UpdateLocation(state, username)) {
                         result.setSuccess(true);
                     } else {
@@ -113,7 +136,8 @@ public class PrivacyController {
                     }
                     break;
 
-                case 3:
+                case 5:
+                    //个人简介
                     if (privacyService.UpdateIntroduction(state, username)) {
                         result.setSuccess(true);
                     } else {
@@ -122,7 +146,8 @@ public class PrivacyController {
                     }
                     break;
 
-                case 4:
+                case 6:
+                    //教务数据
                     if (privacyService.UpdateCache(state, username)) {
                         result.setSuccess(true);
                     } else {

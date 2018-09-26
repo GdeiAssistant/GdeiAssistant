@@ -58,6 +58,8 @@ public class UserProfileService {
 
     private static Map<Integer, String> genderOrientationMap;
 
+    private static Map<Integer, String> facultyMap;
+
     @Autowired
     public AsyncRestTemplate asyncRestTemplate;
 
@@ -69,6 +71,11 @@ public class UserProfileService {
     @Resource(name = "genderOrientationMap")
     public void setGenderOrientationMap(Map<Integer, String> genderOrientationMap) {
         UserProfileService.genderOrientationMap = genderOrientationMap;
+    }
+
+    @Resource(name = "facultyMap")
+    public void setFacultyMap(Map<Integer, String> facultyMap) {
+        UserProfileService.facultyMap = facultyMap;
     }
 
     @Value("#{propertiesReader['oss.accessKeySecret']}")
@@ -325,6 +332,54 @@ public class UserProfileService {
     }
 
     /**
+     * 更新院系个人资料
+     *
+     * @param username
+     * @param faculty
+     * @return
+     */
+    public DataBaseResultEnum UpdateFaculty(String username, int faculty) {
+        try {
+            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+            if (queryUser != null) {
+                Profile profile = new Profile();
+                profile.setFaculty(faculty);
+                profile.setUsername(StringEncryptUtils.encryptString(username));
+                profileMapper.updateUserProfile(profile);
+                return DataBaseResultEnum.SUCCESS;
+            }
+            return DataBaseResultEnum.INCORRECT_USERNAME;
+        } catch (Exception e) {
+            log.error("更新用户院系异常：", e);
+            return DataBaseResultEnum.ERROR;
+        }
+    }
+
+    /**
+     * 更新专业个人资料
+     *
+     * @param username
+     * @param major
+     * @return
+     */
+    public DataBaseResultEnum UpdateMajor(String username, String major) {
+        try {
+            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+            if (queryUser != null) {
+                Profile profile = new Profile();
+                profile.setMajor(major);
+                profile.setUsername(StringEncryptUtils.encryptString(username));
+                profileMapper.updateUserProfile(profile);
+                return DataBaseResultEnum.SUCCESS;
+            }
+            return DataBaseResultEnum.INCORRECT_USERNAME;
+        } catch (Exception e) {
+            log.error("更新用户专业异常：", e);
+            return DataBaseResultEnum.ERROR;
+        }
+    }
+
+    /**
      * 更新昵称个人资料
      *
      * @param username
@@ -417,5 +472,14 @@ public class UserProfileService {
      */
     public static Map getGenderOrientationMap() {
         return genderOrientationMap;
+    }
+
+    /**
+     * 获取院系字典
+     *
+     * @return
+     */
+    public static Map getFacultyMap() {
+        return facultyMap;
     }
 }

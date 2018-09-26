@@ -22,6 +22,10 @@ public class Profile implements Serializable {
 
     private Integer genderOrientation;
 
+    private Integer faculty;
+
+    private String major;
+
     private String customGenderName;
 
     private String region;
@@ -100,5 +104,21 @@ public class Profile implements Serializable {
 
     public void setCustomGenderName(String customGenderName) {
         this.customGenderName = customGenderName;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public Integer getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Integer faculty) {
+        this.faculty = faculty;
     }
 }

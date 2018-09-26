@@ -24,28 +24,19 @@
             getIntroduction();
         });
 
-        //检测Input文字长度是否超过限制
+        //检测Input文字长度是否超过限制并进行实时字数反馈
         function inputLengthCheck(str, maxLen) {
-            var w = 0;
-            for (var i = 0; i < str.value.length; i++) {
-                var c = str.value.charCodeAt(i);
-                if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
-                    w++;
-                }
-                else {
-                    w += 2;
-                }
-                if (w > maxLen) {
-                    str.value = str.value.substr(0, i);
-                    break;
-                }
+            if (str.value.length > maxLen) {
+                str.value = str.value.substr(0, maxLen);
             }
+            $("#introductionLength").text(str.value.length);
         }
 
         //弹出修改个人简介窗口
         function showIntroductionDialog() {
             $("#introduction_input").val($("#introduction_cache").val());
             $("#changeIntroduction").popup();
+            $("#introductionLength").text($("#introduction_input").val().length);
         }
 
         //获取个人简介内容
@@ -158,8 +149,12 @@
                         </label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input id="introduction_input" class="weui-input" onkeyup="inputLengthCheck(this,80)"
-                               placeholder="请输入个人简介信息" type="text" value="">
+                        <textarea id="introduction_input" onkeyup="inputLengthCheck(this,80)"
+                                  placeholder="请输入个人简介信息" type="text"
+                                  class="weui-textarea" placeholder="请输入文本"></textarea>
+                        <div class="weui-textarea-counter">
+                            <span id="introductionLength">0</span>/80
+                        </div>
                     </div>
                 </div>
             </div>

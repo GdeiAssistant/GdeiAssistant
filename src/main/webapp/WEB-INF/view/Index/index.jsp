@@ -21,102 +21,7 @@
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
-    <script type="text/javascript">
-
-        //消除iOS点击延迟
-        $(function () {
-            FastClick.attach(document.body);
-        });
-
-        //加载个人姓名信息和头像地址
-        $(function () {
-            $.ajax({
-                url: '/rest/profile',
-                async: true,
-                type: 'get',
-                success: function (result) {
-                    if (result.success === true) {
-                        let realname = result.data.realname == null ? "暂未录入" : result.data.realname;
-                        $("#right_name").text(realname);
-                    }
-                }
-            });
-            $.ajax({
-                url: '/rest/avatar',
-                async: true,
-                type: 'get',
-                success: function (result) {
-                    if (result.success === true) {
-                        if (result.data !== '') {
-                            $("#right_avatar").attr("src", result.data);
-                        }
-                    }
-                }
-            });
-            //隐藏部分不可用功能
-            let functionSize = $("[class='links']").find("div").length;
-            if (navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger") {
-                //显示微信功能
-                $("#wechat").show();
-                $("#tice").show();
-            }
-            <c:if test="${sessionScope.yiBanUserID!=null}">
-            //易班授权登录，显示绑定易班菜单
-            $("#yiban").show();
-            </c:if>
-            //重新调整单元格边框属性
-            var j = 0;
-            for (var i = 0; i < functionSize; i++) {
-                if (!$("[class='links']").find("div").eq(i).is(":hidden")) {
-                    if ((j + 1) % 1 == 0) {
-                        $("[class='links']").find("div").eq(i).css("border-right", "1px solid #E2E0E3")
-                    }
-                    else if ((j + 1) % 2 == 0) {
-                        $("[class='links']").find("div").eq(i).css("border-right", "1px solid #E2E0E3")
-                    }
-                    if ((j + 1) % 3 == 0) {
-                        $("[class='links']").find("div").eq(i).css("border-right", "0px");
-                    }
-                    j++;
-                }
-            }
-        });
-
-        //弹出重新绑定易班确认框
-        function showYibanAttachConfirm() {
-            weui.confirm('重新绑定易班账号将退出当前账号，你确定吗？', {
-                title: '重新绑定易班',
-                buttons: [{
-                    label: '取消',
-                    type: 'default'
-                }, {
-                    label: '确定',
-                    type: 'primary',
-                    onClick: function () {
-                        window.location.href = '/yiban/attach';
-                    }
-                }]
-            });
-        }
-
-        //弹出退出确认框
-        function showLogoutConfirm() {
-            weui.confirm('你确定退出当前账号并清除账号缓存吗？', {
-                title: '退出当前账号',
-                buttons: [{
-                    label: '取消',
-                    type: 'default'
-                }, {
-                    label: '退出',
-                    type: 'primary',
-                    onClick: function () {
-                        window.location.href = '/logout';
-                    }
-                }]
-            });
-        }
-
-    </script>
+    <jsp:include page="/js/index/index.jsp"/>
 </head>
 <body>
 
@@ -200,8 +105,7 @@
             <i style="background: url(/img/function/download.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>客户端下载</p>
         </div>
-        <div id="tice" style="display: none"
-             onclick="window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa2d196aa4b8a7600&redirect_uri=http%3A%2F%2F5itsn.com%2FWeixin%2FOAuth2%2FUserInfoCallback&response_type=code&scope=snsapi_userinfo&state=TestUrlTestResult&connect_redirect=1#wechat_redirect'">
+        <div onclick="linkToPFTSystem()">
             <i style="background: url(/img/function/sport.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>体测查询</p>
         </div>
@@ -209,11 +113,11 @@
             <i style="background: url(/img/function/github.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>代码开源</p>
         </div>
-        <div id="wechat" style="display: none" onclick="window.location.href='/wechat/attach'">
+        <div onclick="showWechatAttachConfirm()">
             <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>绑定微信</p>
         </div>
-        <div id="yiban" style="display: none" onclick="showYibanAttachConfirm()">
+        <div onclick="showYibanAttachConfirm()">
             <i style="background: url(/img/function/yiban.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>绑定易班</p>
         </div>

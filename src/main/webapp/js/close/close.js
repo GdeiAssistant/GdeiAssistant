@@ -26,12 +26,15 @@ function postCloseRequest() {
             success: function (result) {
                 $("#loadingToast, .weui_mask").hide();
                 if (result.success) {
-                    weui.alert('删除账号成功，即将返回主页', {
+                    var alert = weui.alert('删除账号成功，即将返回主页', function () {
+                        return false;
+                    }, {
                         title: '注销成功',
                         buttons: [{
                             label: '确定',
                             type: 'primary',
                             onClick: function () {
+                                alert.hide();
                                 window.location.href = '/logout';
                             }
                         }]

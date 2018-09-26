@@ -88,9 +88,23 @@
         </div>
         <div id="genderOrientation" class="weui-cell__ft"></div>
     </div>
+    <div class="weui-cell" href="javascript:" onclick="changeFaculty()">
+        <div class="weui-cell__bd">
+            <p>院系</p>
+        </div>
+        <div id="faculty" class="weui-cell__ft"></div>
+    </div>
+    <div class="weui-cell" href="javascript:" onclick="showMajorDialog()">
+        <div class="weui-cell__bd">
+            <p>专业</p>
+        </div>
+        <div id="major_text" class="weui-cell__ft"></div>
+    </div>
 </div>
 
 <input type="hidden" id="kickname_val" name="kickname_val">
+<input type="hidden" id="gender_val" name="gender_val">
+<input type="hidden" id="major_val" name="major_val">
 
 <div class="weui-cells">
     <div class="weui-cell" href="javascript:" onclick="changeRegion()">
@@ -148,7 +162,7 @@
     </div>
 </div>
 
-<!-- 修改昵称弹窗 -->
+<!-- 修改昵称窗口 -->
 <div id="changeKickname" class="weui-popup__container">
     <div class="weui-popup__overlay"></div>
     <div class="weui-popup__modal">
@@ -203,6 +217,35 @@
             <!-- 提交按钮 -->
             <div class="weui_btn_area">
                 <a class="weui_btn weui_btn_primary" href="javascript:" onclick="submitCustomGender()">确认</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 修改专业弹窗 -->
+<div id="changeMajor" class="weui-popup__container">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <a href="javascript:" style="left:0" class="picker-button close-popup">取消</a>
+                <h1 class="title">修改专业</h1>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">专业</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input id="major" class="weui-input" type="text" onkeyup="inputLengthCheck(this,20)">
+                    </div>
+                </div>
+            </div>
+            <!-- 提交按钮 -->
+            <div class="weui_btn_area">
+                <a class="weui_btn weui_btn_primary" href="javascript:" onclick="changeMajor()">确认</a>
             </div>
         </div>
     </div>

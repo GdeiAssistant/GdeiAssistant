@@ -303,6 +303,27 @@
         <entry key="6" value="其他"/>
     </util:map>
 
+    <!-- 配置院系字典 -->
+    <util:map id="facultyMap" key-type="java.lang.Integer" value-type="java.lang.String">
+        <entry key="0" value="未选择"/>
+        <entry key="1" value="教育学院"/>
+        <entry key="2" value="政法系"/>
+        <entry key="3" value="中文系"/>
+        <entry key="4" value="数学系"/>
+        <entry key="5" value="外语系"/>
+        <entry key="6" value="物理与信息工程系"/>
+        <entry key="7" value="化学系"/>
+        <entry key="8" value="生物与食品工程学院"/>
+        <entry key="9" value="体育学院"/>
+        <entry key="10" value="美术学院"/>
+        <entry key="11" value="计算机科学系"/>
+        <entry key="12" value="音乐系"/>
+        <entry key="13" value="教师研修学院"/>
+        <entry key="14" value="成人教育学院"/>
+        <entry key="15" value="网络教育学院"/>
+        <entry key="16" value="马克思主义学院"/>
+    </util:map>
+
     <!-- 配置Rest服务客户端 -->
     <bean class="org.springframework.web.client.RestTemplate"/>
 

@@ -39,17 +39,31 @@
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
+        <div class="weui-cell__bd">公开我的院系</div>
+        <div class="weui-cell__ft">
+            <input id="faculty" class="weui-switch" type="checkbox"
+                   onchange="changePrivacySetting(2)">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch">
+        <div class="weui-cell__bd">公开我的专业</div>
+        <div class="weui-cell__ft">
+            <input id="major" class="weui-switch" type="checkbox"
+                   onchange="changePrivacySetting(3)">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的国家/地区</div>
         <div class="weui-cell__ft">
             <input id="region" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting(2)">
+                   onchange="changePrivacySetting(4)">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的个人简介</div>
         <div class="weui-cell__ft">
             <input id="introduction" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting(3)">
+                   onchange="changePrivacySetting(5)">
         </div>
     </div>
 </div>
@@ -60,7 +74,7 @@
         <div class="weui-cell__bd">缓存我的教务数据</div>
         <div class="weui-cell__ft">
             <input id="cache" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting(4)">
+                   onchange="changePrivacySetting(6)">
         </div>
     </div>
 </div>

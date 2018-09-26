@@ -21,6 +21,8 @@
 
     var genderOrientationMap = [];
 
+    var facultyMap = [];
+
     $(function () {
         loadProfile();
         loadAvatar();
@@ -118,11 +120,15 @@
 
         </c:forEach>
 
-        var map;
-
         <c:forEach items="${profile:getGenderOrientationMap()}" var="genderOrientationEntry">
 
         genderOrientationMap[${genderOrientationEntry.key}] = "${genderOrientationEntry.value}";
+
+        </c:forEach>
+
+        <c:forEach items="${profile:getFacultyMap()}" var="facultyEntry">
+
+        facultyMap[${facultyEntry.key}] = "${facultyEntry.value}";
 
         </c:forEach>
 
@@ -142,6 +148,7 @@
                     let gender = result.data.gender == null ? 0 : result.data.gender;
                     if (gender == 3) {
                         $("#gender").text(result.data.customGenderName);
+                        $("#gender_val").val(result.data.customGenderName);
                     }
                     else {
                         $("#gender").text(genderMap[gender]);
@@ -162,6 +169,12 @@
                     else {
                         $("#location").text("未选择");
                     }
+                    //院系
+                    var faculty = result.data.faculty == null ? 0 : result.data.faculty;
+                    $("#faculty").text(facultyMap[faculty]);
+                    //专业
+                    $("#major_text").text(result.data.major == null ? "未填写" : result.data.major);
+                    $("#major_val").val(result.data.major == null ? "" : result.data.major);
                 }
                 else {
                     showCustomErrorTip(result.errorMessage);
@@ -372,7 +385,14 @@
 
     //弹出自定义性别窗口
     function showCustomGenderDialog() {
+        $("#customGenderName").val($("#gender_val").val());
         $("#customGender").popup();
+    }
+
+    //弹出专业修改窗口
+    function showMajorDialog() {
+        $("#major").val($("#major_val").val());
+        $("#changeMajor").popup();
     }
 
     //修改昵称
@@ -497,6 +517,65 @@
                 });
             }
         });
+    }
+
+    //修改院系
+    function changeFaculty() {
+        var facultyPicker = [];
+        for (var i = 0; i < facultyMap.length; i++) {
+            facultyPicker[i] = {
+                label: facultyMap[i],
+                value: i
+            }
+        }
+        weui.picker(facultyPicker, {
+            defaultValue: [0],
+            onConfirm: function (faculty) {
+                $.ajax({
+                    url: "/rest/profile/faculty",
+                    data: {
+                        faculty: faculty[0].value
+                    },
+                    type: 'post',
+                    success: function (updateResult) {
+                        if (updateResult.success === true) {
+                            loadProfile();
+                        }
+                        else {
+                            showCustomErrorTip(updateResult.errorMessage);
+                        }
+                    },
+                    error: function () {
+                        showNetworkErrorTip();
+                    }
+                });
+            }
+        });
+    }
+
+    //修改专业
+    function changeMajor() {
+        if ($("#major").val().length > 0 && $("#major").val().length <= 20) {
+            $.closePopup();
+            $.ajax({
+                url: "/rest/profile/major",
+                data: {
+                    major: $("#major").val()
+                },
+                type: 'post',
+                success: function (updateResult) {
+                    if (updateResult.success === true) {
+                        loadProfile();
+                    }
+                    else {
+                        showCustomErrorTip(updateResult.errorMessage);
+                    }
+                },
+                error: function () {
+                    showNetworkErrorTip();
+                }
+            });
+        }
     }
 
     //显示网络错误提示

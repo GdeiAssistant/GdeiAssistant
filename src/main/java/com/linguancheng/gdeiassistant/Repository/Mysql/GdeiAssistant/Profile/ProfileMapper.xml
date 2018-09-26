@@ -67,6 +67,12 @@
             <if test='genderOrientation!=null'>
                 genderOrientation=#{genderOrientation},
             </if>
+            <if test='faculty!=null'>
+                faculty=#{faculty},
+            </if>
+            <if test='major!=null'>
+                major=#{major}
+            </if>
         </set>
         where username=#{username}
     </update>

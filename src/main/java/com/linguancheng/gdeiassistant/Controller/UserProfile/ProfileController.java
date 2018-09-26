@@ -131,8 +131,20 @@ public class ProfileController {
                             }
                         }
                         if (privacy.isGenderOrientation()) {
-                            if (profile.getGenderOrientation() != null && profile.getGenderOrientation() != 0) {
+                            if (profile.getGenderOrientation() != null && !profile.getGenderOrientation().equals(0)) {
                                 modelAndView.addObject("GenderOrientation", UserProfileService.getGenderOrientationMap().get(profile.getGenderOrientation()));
+                                containProfile = true;
+                            }
+                        }
+                        if (privacy.isFaculty()) {
+                            if (profile.getFaculty() != null && !profile.getFaculty().equals(0)) {
+                                modelAndView.addObject("Faculty", UserProfileService.getFacultyMap().get(profile.getFaculty()));
+                                containProfile = true;
+                            }
+                        }
+                        if (privacy.isMajor()) {
+                            if (StringUtils.isNotBlank(profile.getMajor())) {
+                                modelAndView.addObject("Major", profile.getMajor());
                                 containProfile = true;
                             }
                         }
@@ -616,6 +628,48 @@ public class ProfileController {
     }
 
     /**
+     * 更新用户院系
+     *
+     * @param request
+     * @param faculty
+     * @return
+     */
+    @RequestMapping(value = "/rest/profile/faculty", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseJsonResult UpdateFaculty(HttpServletRequest request, int faculty) {
+        BaseJsonResult jsonResult = new BaseJsonResult();
+        if (faculty >= 0 && faculty <= UserProfileService.getFacultyMap().size() + 1) {
+            String username = (String) request.getSession().getAttribute("username");
+            if (username == null || username.trim().isEmpty()) {
+                jsonResult.setSuccess(false);
+                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+            } else {
+                DataBaseResultEnum updateProfileResultEnum = userProfileService
+                        .UpdateFaculty(username, faculty);
+                switch (updateProfileResultEnum) {
+                    case SUCCESS:
+                        jsonResult.setSuccess(true);
+                        break;
+
+                    case INCORRECT_USERNAME:
+                        jsonResult.setSuccess(false);
+                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                        break;
+
+                    case ERROR:
+                        jsonResult.setSuccess(false);
+                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                        break;
+                }
+            }
+        } else {
+            jsonResult.setSuccess(false);
+            jsonResult.setErrorMessage("请求参数异常");
+        }
+        return jsonResult;
+    }
+
+    /**
      * 更新用户所在地
      *
      * @param request
@@ -681,6 +735,50 @@ public class ProfileController {
                             jsonResult.setErrorMessage("服务器异常，请稍候再试");
                             break;
                     }
+                }
+            }
+        } else {
+            jsonResult.setSuccess(false);
+            jsonResult.setErrorMessage("请求参数异常");
+        }
+        return jsonResult;
+    }
+
+
+    /**
+     * 更新用户专业
+     *
+     * @param request
+     * @param major
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    @RequestMapping(value = "/rest/profile/major", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseJsonResult UpdateMajor(HttpServletRequest request, String major) throws UnsupportedEncodingException {
+        BaseJsonResult jsonResult = new BaseJsonResult();
+        if (StringUtils.isNotBlank(major) && major.getBytes("GB2312").length <= 20) {
+            String username = (String) request.getSession().getAttribute("username");
+            if (username == null || username.trim().isEmpty()) {
+                jsonResult.setSuccess(false);
+                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+            } else {
+                DataBaseResultEnum updateProfileResultEnum = userProfileService
+                        .UpdateMajor(username, major);
+                switch (updateProfileResultEnum) {
+                    case SUCCESS:
+                        jsonResult.setSuccess(true);
+                        break;
+
+                    case INCORRECT_USERNAME:
+                        jsonResult.setSuccess(false);
+                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                        break;
+
+                    case ERROR:
+                        jsonResult.setSuccess(false);
+                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                        break;
                 }
             }
         } else {

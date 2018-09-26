@@ -91,6 +91,32 @@
 
         </c:if>
 
+        <c:if test="${Faculty!=null}">
+
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>院系</p>
+                </div>
+                <div class="weui-cell__ft">
+                        ${Faculty}
+                </div>
+            </div>
+
+        </c:if>
+
+        <c:if test="${Major!=null}">
+
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>专业</p>
+                </div>
+                <div class="weui-cell__ft">
+                        ${Major}
+                </div>
+            </div>
+
+        </c:if>
+
         <c:if test="${Location!=null}">
 
             <div class="weui-cell">

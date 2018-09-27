@@ -46,7 +46,7 @@ CREATE TABLE `closeLogs` (
   `resetname` varchar(24) NOT NULL,
   `time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -58,7 +58,7 @@ CREATE TABLE `closeLogs` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-26  4:18:19
+-- Dump completed on 2018-09-27 22:04:22
 CREATE DATABASE  IF NOT EXISTS `gdeiassistant` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `gdeiassistant`;
 -- MySQL dump 10.13  Distrib 5.7.19, for macos10.12 (x86_64)
@@ -250,6 +250,8 @@ CREATE TABLE `privacy` (
   `genderOrientation` tinyint(1) NOT NULL,
   `region` tinyint(1) NOT NULL,
   `introduction` tinyint(1) NOT NULL,
+  `faculty` tinyint(1) NOT NULL,
+  `major` tinyint(1) NOT NULL,
   `cache` tinyint(1) NOT NULL,
   PRIMARY KEY (`username`),
   CONSTRAINT `privacyUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -269,6 +271,8 @@ CREATE TABLE `profile` (
   `realname` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
   `gender` tinyint(1) DEFAULT NULL,
   `genderOrientation` tinyint(1) DEFAULT NULL,
+  `faculty` tinyint(1) DEFAULT NULL,
+  `major` varchar(20) DEFAULT NULL,
   `region` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
   `state` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
   `city` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
@@ -390,4 +394,4 @@ CREATE TABLE `yibanUser` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-26  4:18:19
+-- Dump completed on 2018-09-27 22:04:22

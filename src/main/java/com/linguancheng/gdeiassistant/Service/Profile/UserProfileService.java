@@ -217,6 +217,20 @@ public class UserProfileService {
     }
 
     /**
+     * 删除用户头像
+     *
+     * @param username
+     */
+    public void DeleteAvatar(String username) {
+        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/common/" + username + ".jpg")) {
+            //删除文件
+            ossClient.deleteObject("gdeiassistant-userdata", "avatar/common/" + username + ".jpg");
+        }
+        ossClient.shutdown();
+    }
+
+    /**
      * 更新个人简介
      *
      * @param username

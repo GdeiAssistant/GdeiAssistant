@@ -19,6 +19,7 @@ import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMa
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.WechatUser.WechatUserMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.YiBanUser.YiBanUserMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Close.CloseMapper;
+import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
@@ -41,6 +42,9 @@ import java.util.List;
 public class CloseAccountService {
 
     private Log log = LogFactory.getLog(CloseAccountService.class);
+
+    @Autowired
+    private UserProfileService userProfileService;
 
     @Autowired
     private UserMapper userMapper;
@@ -146,6 +150,8 @@ public class CloseAccountService {
             profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(username));
             //重置用户隐私配置
             privacyMapper.resetPrivacy(StringEncryptUtils.encryptString(username));
+            //删除用户头像
+            userProfileService.DeleteAvatar(username);
             //删除用户账号信息
             Integer count = userMapper.selectDeletedUserCount("del_"
                     + StringEncryptUtils.SHA1MapString(username).substring(0, 15));

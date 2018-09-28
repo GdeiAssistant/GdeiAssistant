@@ -423,47 +423,49 @@ public class UserProfileService {
     @Scheduled(cron = "0 0 6 * * ?")
     public void InitUserRealName() {
         try {
-            List<String> list = profileMapper.selectUninitializedUsername();
+            List<User> list = profileMapper.selectUninitializedUsername();
             //设置线程信号量，限制最大同时查询的线程数为10
             Semaphore semaphore = new Semaphore(10);
-            for (String username : list) {
-                User user = userMapper.selectUser(username).decryptUser();
-                HttpHeaders httpHeaders = new HttpHeaders();
-                httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-                MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-                params.add("username", user.getUsername());
-                params.add("password", user.getPassword());
-                params.add("keycode", user.getKeycode());
-                params.add("number", user.getNumber());
-                semaphore.acquire();
-                ListenableFuture<ResponseEntity<DataJsonResult<String>>> future = asyncRestTemplate
-                        .exchange("https://www.gdeiassistant.cn/rest/api/profile/realname"
-                                , HttpMethod.POST, new HttpEntity<>(params, httpHeaders)
-                                , new ParameterizedTypeReference<DataJsonResult<String>>() {
-                                });
-                future.addCallback(new ListenableFutureCallback<ResponseEntity<DataJsonResult<String>>>() {
+            for (User user : list) {
+                if (!user.getState().equals(-1)) {
+                    User decryptUser = user.decryptUser();
+                    HttpHeaders httpHeaders = new HttpHeaders();
+                    httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+                    params.add("username", user.getUsername());
+                    params.add("password", user.getPassword());
+                    params.add("keycode", user.getKeycode());
+                    params.add("number", user.getNumber());
+                    semaphore.acquire();
+                    ListenableFuture<ResponseEntity<DataJsonResult<String>>> future = asyncRestTemplate
+                            .exchange("https://www.gdeiassistant.cn/rest/api/profile/realname"
+                                    , HttpMethod.POST, new HttpEntity<>(params, httpHeaders)
+                                    , new ParameterizedTypeReference<DataJsonResult<String>>() {
+                                    });
+                    future.addCallback(new ListenableFutureCallback<ResponseEntity<DataJsonResult<String>>>() {
 
-                    @Override
-                    public void onFailure(Throwable ex) {
-                        log.error("同步用户个人资料真实姓名异常：", ex);
-                        semaphore.release();
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseEntity<DataJsonResult<String>> result) {
-                        try {
-                            if (result.getBody().isSuccess()) {
-                                profileMapper.updateRealName(username, result.getBody().getData());
-                            } else {
-                                log.error("同步用户个人资料真实姓名异常：" + result.getBody().getErrorMessage());
-                            }
-                        } catch (Exception e) {
-                            log.error("同步用户个人资料真实姓名异常：", e);
-                        } finally {
+                        @Override
+                        public void onFailure(Throwable ex) {
+                            log.error("同步用户个人资料真实姓名异常：", ex);
                             semaphore.release();
                         }
-                    }
-                });
+
+                        @Override
+                        public void onSuccess(ResponseEntity<DataJsonResult<String>> result) {
+                            try {
+                                if (result.getBody().isSuccess()) {
+                                    profileMapper.updateRealName(decryptUser.getUsername(), result.getBody().getData());
+                                } else {
+                                    log.error("同步用户个人资料真实姓名异常：" + result.getBody().getErrorMessage());
+                                }
+                            } catch (Exception e) {
+                                log.error("同步用户个人资料真实姓名异常：", e);
+                            } finally {
+                                semaphore.release();
+                            }
+                        }
+                    });
+                }
             }
         } catch (Exception e) {
             log.error("同步用户个人资料真实姓名异常：", e);

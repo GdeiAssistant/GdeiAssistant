@@ -3,13 +3,14 @@ package com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.AuthorProfile;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.Introduction;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.Profile;
+import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface ProfileMapper {
 
-    public List<String> selectUninitializedUsername() throws Exception;
+    public List<User> selectUninitializedUsername() throws Exception;
 
     public Profile selectUserProfile(String username) throws Exception;
 

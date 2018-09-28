@@ -20,8 +20,8 @@
         update wechatUser set wechatId=#{wechatId} where username=#{username}
     </update>
 
-    <update id="resetWechatUser">
-        update wechatUser set username=null where username=#{username}
-    </update>
+    <delete id="resetWechatUser">
+        delete from wechatUser where username=#{username}
+    </delete>
 
 </mapper>

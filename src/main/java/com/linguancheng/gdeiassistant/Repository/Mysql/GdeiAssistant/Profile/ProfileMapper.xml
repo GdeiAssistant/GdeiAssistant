@@ -19,8 +19,9 @@
         <result property="city" column="city"/>
     </resultMap>
 
-    <select id="selectUninitializedUsername" resultType="java.lang.String">
-        select username from profile where realname is null
+    <select id="selectUninitializedUser" resultType="java.lang.String">
+        select user.username,user.password,user.keycode,user.number,user.state from profile
+         join user using (username) where profile.realname is null
     </select>
 
     <select id="selectUserProfile" parameterType="java.lang.String"

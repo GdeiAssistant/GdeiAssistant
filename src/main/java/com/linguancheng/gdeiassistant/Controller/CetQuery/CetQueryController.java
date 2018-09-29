@@ -39,7 +39,7 @@ public class CetQueryController {
         return new ModelAndView("Cet/cet");
     }
 
-    @RequestMapping(value = "/cet/checkcode", method = RequestMethod.GET)
+    @RequestMapping(value = {"/cet/checkcode", "/rest/cet/checkcode"}, method = RequestMethod.GET)
     @ResponseBody
     public DataJsonResult<String> GetCheckCodeImage(HttpServletRequest request) {
         DataJsonResult<String> dataJsonResult = new DataJsonResult<>();
@@ -81,7 +81,7 @@ public class CetQueryController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/rest/cet/number", method = RequestMethod.GET)
+    @RequestMapping(value = "/cet/number", method = RequestMethod.GET)
     @ResponseBody
     public DataJsonResult<Long> GetCetNumber(HttpServletRequest request) {
         DataJsonResult<Long> dataJsonResult = new DataJsonResult<>();
@@ -111,7 +111,7 @@ public class CetQueryController {
         return dataJsonResult;
     }
 
-    @RequestMapping(value = "/rest/cet/number", method = RequestMethod.POST)
+    @RequestMapping(value = "/cet/number", method = RequestMethod.POST)
     @ResponseBody
     public BaseJsonResult SaveCetNumber(HttpServletRequest request, Long number) {
         BaseJsonResult baseJsonResult = new BaseJsonResult();

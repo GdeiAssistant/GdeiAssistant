@@ -28,7 +28,7 @@ function inputLengthCheck(str, maxLen) {
 //导入保存的准考证号
 function importNumber() {
     $.ajax({
-        url: '/rest/cet/number',
+        url: '/cet/number',
         type: 'get',
         success: function (result) {
             if (result.success) {

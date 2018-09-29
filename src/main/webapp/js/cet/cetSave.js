@@ -9,7 +9,7 @@ function saveCetNumber() {
         //删除保存的准考证号
         $("#loadingToast, .weui_mask").show();
         $.ajax({
-            url: '/rest/cet/number',
+            url: '/cet/number',
             type: 'post',
             success: function (result) {
                 $("#loadingToast, .weui_mask").hide();
@@ -30,7 +30,7 @@ function saveCetNumber() {
         if ($("#cetNumberInput").val().length === 15) {
             $("#loadingToast, .weui_mask").show();
             $.ajax({
-                url: '/rest/cet/number',
+                url: '/cet/number',
                 type: 'post',
                 data: {
                     number: $("#cetNumberInput").val()

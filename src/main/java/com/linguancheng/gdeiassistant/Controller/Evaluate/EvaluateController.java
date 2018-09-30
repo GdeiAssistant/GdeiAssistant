@@ -1,11 +1,14 @@
 package com.linguancheng.gdeiassistant.Controller.Evaluate;
 
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
+import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
 import com.linguancheng.gdeiassistant.Service.Evaluate.EvaluateService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
+import com.linguancheng.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,12 +23,12 @@ public class EvaluateController {
     @Autowired
     private EvaluateService evaluateService;
 
-    @RequestMapping("/evaluate")
+    @RequestMapping(value = "/evaluate", method = RequestMethod.GET)
     public ModelAndView ResolveTeacherEvaluatePage() {
         return new ModelAndView("Evaluate/evaluate");
     }
 
-    @RequestMapping(value = "/rest/evaluate", method = RequestMethod.POST)
+    @RequestMapping(value = "/evaluate", method = RequestMethod.POST)
     @ResponseBody
     public BaseJsonResult StartEvaluate(HttpServletRequest request, boolean directlySubmit) {
         BaseJsonResult baseJsonResult = new BaseJsonResult();
@@ -61,4 +64,33 @@ public class EvaluateController {
         return baseJsonResult;
     }
 
+    @RequestMapping(value = "/rest/evaluate", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseJsonResult StartEvaluate(HttpServletRequest request, @Validated(value = ServiceQueryValidGroup.class) User user
+            , boolean directlySubmit) {
+        BaseJsonResult baseJsonResult = new BaseJsonResult();
+        ServiceResultEnum resultEnum = evaluateService.TeacherEvaluate(request, user.getUsername()
+                , user.getKeycode(), user.getNumber(), directlySubmit);
+        switch (resultEnum) {
+            case SUCCESS:
+                baseJsonResult.setSuccess(true);
+                break;
+
+            case TIME_OUT:
+                baseJsonResult.setSuccess(false);
+                baseJsonResult.setErrorMessage("网络连接超时，请重试");
+                break;
+
+            case ERROR_CONDITION:
+                baseJsonResult.setSuccess(false);
+                baseJsonResult.setErrorMessage("现在不是教学评价开放时间或你已完成教学评价");
+                break;
+
+            case SERVER_ERROR:
+                baseJsonResult.setSuccess(false);
+                baseJsonResult.setErrorMessage("教务系统异常，请稍候再试");
+                break;
+        }
+        return baseJsonResult;
+    }
 }

@@ -30,7 +30,7 @@ public class CollectionDetail implements Serializable {
     private String price;
 
     //载体形态项
-    private String PhysicalDescriptionArea;
+    private String physicalDescriptionArea;
 
     //个人责任者
     private String personalPrincipal;
@@ -74,11 +74,11 @@ public class CollectionDetail implements Serializable {
     }
 
     public String getPhysicalDescriptionArea() {
-        return PhysicalDescriptionArea;
+        return physicalDescriptionArea;
     }
 
     public void setPhysicalDescriptionArea(String physicalDescriptionArea) {
-        PhysicalDescriptionArea = physicalDescriptionArea;
+        this.physicalDescriptionArea = physicalDescriptionArea;
     }
 
     public String getPersonalPrincipal() {

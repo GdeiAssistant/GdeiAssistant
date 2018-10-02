@@ -223,10 +223,61 @@ public class CardController {
      * 设置校园卡挂失
      *
      * @param request
+     * @param user
+     * @param bindingResult
      * @param cardPassword
      * @return
      */
-    @RequestMapping(value = "/setcardlost", method = RequestMethod.POST)
+    @RequestMapping(value = "/rest/cardlost", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseJsonResult CardLost(HttpServletRequest request, @Validated(UserLoginValidGroup.class) User user
+            , BindingResult bindingResult, String cardPassword) {
+        BaseJsonResult jsonResult = new BaseJsonResult();
+        if (bindingResult.hasErrors()) {
+            jsonResult.setSuccess(false);
+            jsonResult.setErrorMessage("请求参数不合法");
+        } else {
+            if (StringUtils.isNotBlank(cardPassword) && cardPassword.length() == 6
+                    && cardPassword.matches("^[0-9]*$")) {
+                BaseResult<String, ServiceResultEnum> cardLostResult = cardQueryService
+                        .CardLost(request, user.getUsername(), user.getPassword(), cardPassword);
+                switch (cardLostResult.getResultType()) {
+                    case SUCCESS:
+                        jsonResult.setSuccess(true);
+                        break;
+
+                    case TIME_OUT:
+                        jsonResult.setSuccess(false);
+                        jsonResult.setErrorMessage("网络连接超时，请重试");
+                        break;
+
+                    case SERVER_ERROR:
+                        jsonResult.setSuccess(false);
+                        jsonResult.setErrorMessage("校园支付管理平台维护中，请稍后再试");
+                        break;
+
+                    case ERROR_CONDITION:
+                        jsonResult.setSuccess(false);
+                        jsonResult.setErrorMessage(cardLostResult.getResultData());
+                        break;
+                }
+            }
+            else{
+                jsonResult.setSuccess(false);
+                jsonResult.setErrorMessage("请求参数不合法");
+            }
+        }
+        return jsonResult;
+    }
+
+    /**
+     * 设置校园卡挂失
+     *
+     * @param request
+     * @param cardPassword
+     * @return
+     */
+    @RequestMapping(value = "/cardlost", method = RequestMethod.POST)
     @ResponseBody
     public BaseJsonResult CardLost(HttpServletRequest request, String cardPassword) {
         BaseJsonResult jsonResult = new BaseJsonResult();
@@ -236,7 +287,9 @@ public class CardController {
         } else {
             String username = (String) request.getSession().getAttribute("username");
             String password = (String) request.getSession().getAttribute("password");
-            if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
+            if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)
+                    && StringUtils.isNotBlank(cardPassword) && cardPassword.length() == 6
+                    && cardPassword.matches("^[0-9]*$")) {
                 BaseResult<String, ServiceResultEnum> cardLostResult = cardQueryService.CardLost(request, username, password, cardPassword);
                 switch (cardLostResult.getResultType()) {
                     case SUCCESS:

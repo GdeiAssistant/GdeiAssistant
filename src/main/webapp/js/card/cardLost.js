@@ -30,7 +30,7 @@ function postCardLostRequest() {
     else {
         $("#loadingToast, .weui_mask").show();
         $.ajax({
-            url: '/setcardlost',
+            url: '/cardlost',
             type: 'post',
             data: {
                 cardPassword: password

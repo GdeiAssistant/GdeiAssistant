@@ -1,6 +1,8 @@
 package com.linguancheng.gdeiassistant.Controller.CollectionQuery;
 
 import com.linguancheng.gdeiassistant.Pojo.CollectionQuery.*;
+import com.linguancheng.gdeiassistant.Pojo.Entity.CollectionDetail;
+import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.linguancheng.gdeiassistant.Service.CollectionQuery.CollectionQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,42 @@ public class CollectionController {
     @RequestMapping(value = "/collection", method = RequestMethod.GET)
     public ModelAndView ResolveCollectionPage() {
         return new ModelAndView("Book/collection");
+    }
+
+    @RequestMapping(value = "/rest/collectiondetail", method = RequestMethod.POST)
+    @ResponseBody
+    public DataJsonResult<CollectionDetail> RestCollectionDetailQuery(@Validated CollectionDetailQuery collectionDetailQuery
+            , BindingResult bindingResult) {
+        DataJsonResult<CollectionDetail> jsonResult = new DataJsonResult<>();
+        if (bindingResult.hasErrors()) {
+            jsonResult.setSuccess(false);
+            jsonResult.setErrorMessage("请求参数不合法");
+        } else {
+            CollectionDetailQueryResult result = collectionQueryService
+                    .CollectionDetailQuery(collectionDetailQuery);
+            switch (result.getCollectionDetailQueryResultEnum()) {
+                case SERVER_ERROR:
+                    jsonResult.setSuccess(false);
+                    jsonResult.setErrorMessage("移动图书馆系统维护中,请稍候再试");
+                    break;
+
+                case TIME_OUT:
+                    jsonResult.setSuccess(false);
+                    jsonResult.setErrorMessage("网络连接超时，请重试");
+                    break;
+
+                case EMPTY_RESULT:
+                    jsonResult.setSuccess(false);
+                    jsonResult.setErrorMessage("该图书暂无馆藏信息");
+                    break;
+
+                case SUCCESS:
+                    jsonResult.setSuccess(true);
+                    jsonResult.setData(result.getCollectionDetail());
+                    break;
+            }
+        }
+        return jsonResult;
     }
 
     /**

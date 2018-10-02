@@ -8,6 +8,7 @@ import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import com.linguancheng.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -67,8 +68,13 @@ public class EvaluateController {
     @RequestMapping(value = "/rest/evaluate", method = RequestMethod.POST)
     @ResponseBody
     public BaseJsonResult StartEvaluate(HttpServletRequest request, @Validated(value = ServiceQueryValidGroup.class) User user
-            , boolean directlySubmit) {
+            , BindingResult bindingResult, boolean directlySubmit) {
         BaseJsonResult baseJsonResult = new BaseJsonResult();
+        if (bindingResult.hasErrors()) {
+            baseJsonResult.setSuccess(false);
+            baseJsonResult.setErrorMessage("请求参数不合法");
+            return baseJsonResult;
+        }
         ServiceResultEnum resultEnum = evaluateService.TeacherEvaluate(request, user.getUsername()
                 , user.getKeycode(), user.getNumber(), directlySubmit);
         switch (resultEnum) {

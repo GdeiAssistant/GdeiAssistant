@@ -17,7 +17,7 @@
     </insert>
 
     <update id="updateWechatUser">
-        update wechatUser set wechatId=#{wechatId} where username=#{username}
+        update wechatUser set username=#{username} where wechatId=#{wechatId}
     </update>
 
     <delete id="resetWechatUser">

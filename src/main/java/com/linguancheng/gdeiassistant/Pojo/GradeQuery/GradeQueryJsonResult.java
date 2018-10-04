@@ -14,8 +14,6 @@ public class GradeQueryJsonResult {
 
     private Integer queryYear;
 
-    private Integer currentTerm;
-
     private Double firstTermGPA;
 
     private Double firstTermIGP;
@@ -40,14 +38,6 @@ public class GradeQueryJsonResult {
 
     public void setQueryYear(Integer queryYear) {
         this.queryYear = queryYear;
-    }
-
-    public Integer getCurrentTerm() {
-        return currentTerm;
-    }
-
-    public void setCurrentTerm(Integer currentTerm) {
-        this.currentTerm = currentTerm;
     }
 
     public Double getFirstTermGPA() {

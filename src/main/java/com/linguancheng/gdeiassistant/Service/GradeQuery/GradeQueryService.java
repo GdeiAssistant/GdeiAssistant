@@ -41,23 +41,12 @@ public class GradeQueryService {
 
     private String url;
 
-    private int currentTerm;
-
     @Autowired
     private HttpClientFactory httpClientFactory;
 
     @Value("#{propertiesReader['education.system.url']}")
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public int getCurrentTerm() {
-        return currentTerm;
-    }
-
-    @Value("#{propertiesReader['schedule.term']}")
-    public void setCurrentTerm(int currentTerm) {
-        this.currentTerm = currentTerm;
     }
 
     private Log log = LogFactory.getLog(GradeQueryService.class);

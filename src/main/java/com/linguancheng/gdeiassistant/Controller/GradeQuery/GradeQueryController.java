@@ -111,7 +111,6 @@ public class GradeQueryController {
                             result.setFirstTermGradeList(firstTermGradeList);
                             result.setSecondTermGradeList(secondTermGradeList);
                             result.setQueryYear(year);
-                            result.setCurrentTerm(gradeQueryService.getCurrentTerm());
                             return result;
                         }
                     }
@@ -161,7 +160,6 @@ public class GradeQueryController {
                             result.setSecondTermGPA(gradeQueryResult.getSecondTermGPA());
                             result.setSecondTermIGP(gradeQueryResult.getSecondTermIGP());
                             result.setQueryYear(gradeQueryResult.getQueryYear());
-                            result.setCurrentTerm(gradeQueryService.getCurrentTerm());
                             break;
                     }
                     break;
@@ -248,7 +246,6 @@ public class GradeQueryController {
                     gradeQueryJsonResult.setFirstTermGradeList(firstTermGradeList);
                     gradeQueryJsonResult.setSecondTermGradeList(secondTermGradeList);
                     gradeQueryJsonResult.setQueryYear(year);
-                    gradeQueryJsonResult.setCurrentTerm(gradeQueryService.getCurrentTerm());
                     return gradeQueryJsonResult;
                 }
                 //若缓存不存在或要求强制更新，则从教务系统获取
@@ -293,7 +290,6 @@ public class GradeQueryController {
                         gradeQueryJsonResult.setSecondTermGPA(gradeQueryResult.getSecondTermGPA());
                         gradeQueryJsonResult.setSecondTermIGP(gradeQueryResult.getSecondTermIGP());
                         gradeQueryJsonResult.setQueryYear(gradeQueryJsonResult.getQueryYear());
-                        gradeQueryJsonResult.setCurrentTerm(gradeQueryService.getCurrentTerm());
                         break;
                 }
             }

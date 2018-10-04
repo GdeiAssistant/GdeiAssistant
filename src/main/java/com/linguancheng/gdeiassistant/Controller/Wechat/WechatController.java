@@ -35,9 +35,6 @@ public class WechatController {
     }
 
     @Autowired
-    private WechatUserDataService wechatUserDataService;
-
-    @Autowired
     private WechatService wechatService;
 
     /**
@@ -96,43 +93,18 @@ public class WechatController {
         wechatBaseMessage.setCreateTime(new Date().getTime());
         //回复的响应文本
         String responseText = null;
-        //检查用户账号绑定状态
-        BaseResult<String, AttachResultEnum> checkWechatAttachStateResult = wechatUserDataService
-                .CheckWechatAttachState(fromUserName);
-        switch (checkWechatAttachStateResult.getResultType()) {
-            case ATTACHED:
-                //用户已绑定账号,通过WechatID获取Username
-                BaseResult<User, BoolResultEnum> queryWechatUserDataResult = wechatUserDataService
-                        .QueryWechatUserData(checkWechatAttachStateResult.getResultData());
-                switch (queryWechatUserDataResult.getResultType()) {
-                    case SUCCESS:
-                        wechatBaseMessage = wechatService.HandleUserRequest(wechatBaseMessage
-                                , RequestTypeEnum.getRequestTypeEnumByFunctionName(requestMap.get("Content"))
-                                , queryWechatUserDataResult.getResultData());
-                        if(wechatBaseMessage instanceof WechatTextMessage){
-                            responseText = XMLParseUtils.ParseWechatTextMessageToXML((WechatTextMessage) wechatBaseMessage);
-                        }
-                        else{
-                            responseText = XMLParseUtils.ParseWechatImageTextMessageToXML((WechatImageTextMessage) wechatBaseMessage);
-                        }
-                        break;
-
-                    case ERROR:
-                        responseText = XMLParseUtils.ParseWechatTextMessageToXML(new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试"));
-                        break;
-                }
-                break;
-
-            case NOT_ATTACHED:
-                //用户未绑定账号，提示用户绑定账号
-                responseText = XMLParseUtils.ParseWechatTextMessageToXML(new WechatTextMessage(wechatBaseMessage, "微信号未绑定教务系统账号，请点击<a href=\"https://www.gdeiassistant.cn/wechat/attach\">进入绑定</a>"+fromUserName));
-                break;
-
-            case SERVER_ERROR:
-                //服务器异常
-                responseText = XMLParseUtils.ParseWechatTextMessageToXML(new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试"));
-                break;
+        //获取用户发送的文本信息
+        String content = requestMap.get("Content");
+        //转发到对应的事务处理器进行处理，返回处理结果
+        WechatBaseMessage resultMessage = wechatService.HandleUserRequest(request, wechatBaseMessage
+                , RequestTypeEnum.getRequestTypeEnumByFunctionName(content.split("-")[0])
+                , content, fromUserName);
+        if (resultMessage instanceof WechatTextMessage) {
+            responseText = XMLParseUtils.ParseWechatTextMessageToXML((WechatTextMessage) resultMessage);
+        } else {
+            responseText = XMLParseUtils.ParseWechatImageTextMessageToXML((WechatImageTextMessage) resultMessage);
         }
+        //返回响应信息
         printWriter.print(responseText);
         printWriter.flush();
         printWriter.close();

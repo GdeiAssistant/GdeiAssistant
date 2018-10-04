@@ -51,6 +51,15 @@ public class WechatAttachController {
         this.appid = appid;
     }
 
+    /**
+     * 进入绑定微信页面
+     *
+     * @param request
+     * @param code
+     * @param state
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping(value = "/wechat/attach", method = RequestMethod.GET)
     public ModelAndView ResolveWechatUserAttachPage(HttpServletRequest request, String code, String state) throws UnsupportedEncodingException {
         ModelAndView modelAndView = new ModelAndView();

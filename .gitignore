@@ -21,6 +21,6 @@ src/main/resources/config/network/proxy.properties
 src/main/resources/config/oss/
 src/main/resources/config/version/
 src/main/resources/config/wechat/
-src/test/
 src/main/resources/config/yiban
-/src/main/resources/config/education/cache.properties
+src/main/resources/config/education/cache.properties
+src/test/

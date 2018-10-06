@@ -12,25 +12,9 @@
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/authiframe.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
-    <script>
-        //消除iOS点击延迟
-        $(function () {
-            FastClick.attach(document.body);
-        });
-    </script>
+    <jsp:include page="/js/yiban/yibanAuthorize.jsp"/>
 </head>
 <body>
-
-<script type="text/javascript">
-    $(function () {
-        (function () {
-            App.AuthDialog.show({
-                client_id: '${ClientID}',
-                redirect_uri: '${RedirectURL}'
-            });
-        })();
-    });
-</script>
 
 </body>
 </html>

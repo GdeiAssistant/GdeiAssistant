@@ -88,22 +88,6 @@
         }
     }
 
-    //弹出重新绑定微信确认框
-    function showWechatAttachConfirm() {
-        if (wechatUser) {
-            window.location.href = '/wechat/attach';
-        }
-        else {
-            weui.alert('请使用微信客户端进行登录', {
-                title: '错误提示',
-                buttons: [{
-                    label: '确定',
-                    type: 'primary'
-                }]
-            });
-        }
-    }
-
     //弹出重新绑定易班确认框
     function showYibanAttachConfirm() {
         if (yibanUser) {

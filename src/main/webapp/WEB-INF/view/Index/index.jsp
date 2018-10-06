@@ -113,7 +113,7 @@
             <i style="background: url(/img/function/github.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>代码开源</p>
         </div>
-        <div onclick="showWechatAttachConfirm()">
+        <div onclick="window.location.href = 'https://mp.weixin.qq.com/s/oCY_FNisckiw8y0C0a2tmg'">
             <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>绑定微信</p>
         </div>

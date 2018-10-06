@@ -228,37 +228,7 @@ public class WechatService {
 
                             case ATTACH:
                                 //更改绑定账号
-                                //检测用户发送的文本内容合法性
-                                if (contentText.split("-").length == 3) {
-                                    String username = contentText.split("-")[1];
-                                    String password = contentText.split("-")[2];
-                                    if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)
-                                            && username.length() <= 20 && password.length() <= 35) {
-                                        //进行用户登录
-                                        BaseResult<User, LoginResultEnum> loginResult = userLoginService.UserLogin(request
-                                                , new User(username, password), true);
-                                        switch (loginResult.getResultType()) {
-                                            case LOGIN_SUCCESS:
-                                                //登录成功，进行微信账号绑定
-                                                if (wechatUserDataService.SyncWechatUserData(username, wechatId)) {
-                                                    return new WechatTextMessage(wechatBaseMessage, "绑定微信账号成功");
-                                                }
-                                                return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
-
-                                            case PASSWORD_ERROR:
-                                                //密码错误
-                                                return new WechatTextMessage(wechatBaseMessage, "账号密码错误，请检查并重试");
-
-                                            case SERVER_ERROR:
-                                            case TIME_OUT:
-                                            default:
-                                                //服务器异常
-                                                return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
-                                        }
-                                    }
-                                }
-                                return new WechatTextMessage(wechatBaseMessage, "发送的文本格式有误，请检查并重试！" +
-                                        "绑定账号文本格式：绑定账号-教务系统账号用户名-教务系统账号密码。例：绑定账号-lisiyi-123456");
+                                return HandleAttachRequest(request, wechatId, contentText, wechatBaseMessage);
 
                             default:
                                 //其他请求
@@ -274,37 +244,7 @@ public class WechatService {
                 //未绑定微信账号
                 switch (requestTypeEnum) {
                     case ATTACH:
-                        //检测用户发送的文本内容合法性
-                        if (contentText.split("-").length == 3) {
-                            String username = contentText.split("-")[1];
-                            String password = contentText.split("-")[2];
-                            if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)
-                                    && username.length() <= 20 && password.length() <= 35) {
-                                //进行用户登录
-                                BaseResult<User, LoginResultEnum> loginResult = userLoginService.UserLogin(request
-                                        , new User(username, password), true);
-                                switch (loginResult.getResultType()) {
-                                    case LOGIN_SUCCESS:
-                                        //登录成功，进行微信账号绑定
-                                        if (wechatUserDataService.SyncWechatUserData(username, wechatId)) {
-                                            return new WechatTextMessage(wechatBaseMessage, "绑定微信账号成功");
-                                        }
-                                        return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
-
-                                    case PASSWORD_ERROR:
-                                        //密码错误
-                                        return new WechatTextMessage(wechatBaseMessage, "账号密码错误，请检查并重试");
-
-                                    case SERVER_ERROR:
-                                    case TIME_OUT:
-                                    default:
-                                        //服务器异常
-                                        return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
-                                }
-                            }
-                        }
-                        return new WechatTextMessage(wechatBaseMessage, "发送的文本格式有误，请检查并重试！" +
-                                "绑定账号文本格式：绑定账号-教务系统账号用户名-教务系统账号密码。例：绑定账号-lisiyi-123456");
+                        return HandleAttachRequest(request, wechatId, contentText, wechatBaseMessage);
 
                     default:
                         return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发送如下格式文本" +
@@ -354,5 +294,63 @@ public class WechatService {
             return jsonObject.getString("unionid");
         }
         return null;
+    }
+
+    /**
+     * 处理绑定账号请求
+     *
+     * @param request
+     * @param wechatId
+     * @param contentText
+     * @param wechatBaseMessage
+     * @return
+     */
+    private WechatBaseMessage HandleAttachRequest(HttpServletRequest request, String wechatId
+            , String contentText, WechatBaseMessage wechatBaseMessage) {
+        //检测用户发送的文本内容合法性
+        if (contentText.split("-").length >= 3) {
+            String username = contentText.split("-")[1];
+            String password = null;
+            if (contentText.split("-").length > 3) {
+                String arrays[] = contentText.split("-");
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 2; i < arrays.length; i++) {
+                    if (i != arrays.length - 1) {
+                        stringBuilder.append(arrays[i]).append("-");
+                    } else {
+                        stringBuilder.append(arrays[i]);
+                    }
+                }
+                password = stringBuilder.toString();
+            } else {
+                password = contentText.split("-")[2];
+            }
+            if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)
+                    && username.length() <= 20 && password.length() <= 35) {
+                //进行用户登录
+                BaseResult<User, LoginResultEnum> loginResult = userLoginService.UserLogin(request
+                        , new User(username, password), true);
+                switch (loginResult.getResultType()) {
+                    case LOGIN_SUCCESS:
+                        //登录成功，进行微信账号绑定
+                        if (wechatUserDataService.SyncWechatUserData(username, wechatId)) {
+                            return new WechatTextMessage(wechatBaseMessage, "绑定微信账号成功");
+                        }
+                        return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
+
+                    case PASSWORD_ERROR:
+                        //密码错误
+                        return new WechatTextMessage(wechatBaseMessage, "账号密码错误，请检查并重试");
+
+                    case SERVER_ERROR:
+                    case TIME_OUT:
+                    default:
+                        //服务器异常
+                        return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
+                }
+            }
+        }
+        return new WechatTextMessage(wechatBaseMessage, "发送的文本格式有误，请检查并重试！" +
+                "绑定账号文本格式：绑定账号-教务系统账号用户名-教务系统账号密码。例：绑定账号-lisiyi-123456");
     }
 }

@@ -14,6 +14,7 @@ import com.gdeiassistant.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Pojo.YiBan.YiBanTokenJsonResult;
 import com.gdeiassistant.gdeiassistant.Service.UserData.UserDataService;
+import com.gdeiassistant.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.gdeiassistant.gdeiassistant.Service.YiBan.YiBanLoginService;
 import com.gdeiassistant.gdeiassistant.Service.YiBan.YiBanUserDataService;
 import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
@@ -35,6 +36,9 @@ public class YiBanLoginController {
 
     @Autowired
     private YiBanLoginService yiBanLoginService;
+
+    @Autowired
+    private UserLoginService userLoginService;
 
     @Autowired
     private UserDataService userDataService;
@@ -81,8 +85,7 @@ public class YiBanLoginController {
                     //将用户信息数据写入Session
                     request.getSession().setAttribute("username", resultUser.getUsername());
                     request.getSession().setAttribute("password", resultUser.getPassword());
-                    request.getSession().setAttribute("keycode", resultUser.getKeycode());
-                    request.getSession().setAttribute("number", resultUser.getNumber());
+                    userLoginService.AsyncUpdateSession(request);
                     if (redirectInfo.needToRedirect()) {
                         modelAndView.setViewName("redirect:/" + redirectInfo.getRedirect_url());
                     } else {

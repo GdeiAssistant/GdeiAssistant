@@ -5,6 +5,7 @@ import com.gdeiassistant.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Factory.HttpClientFactory;
+import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserLoginResult;
 import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanUser;
@@ -79,12 +80,12 @@ public class YiBanLoginService {
             if (user != null) {
                 String decryptedUsername = StringEncryptUtils.decryptString(user.getUsername());
                 String decryptedPassword = StringEncryptUtils.decryptString(user.getPassword());
-                BaseResult<User, LoginResultEnum> userLoginResult = userLoginService
+                UserLoginResult userLoginResult = userLoginService
                         .UserLogin(request, new User(decryptedUsername, decryptedPassword), true);
-                switch (userLoginResult.getResultType()) {
+                switch (userLoginResult.getLoginResultEnum()) {
                     case LOGIN_SUCCESS:
                         result.setResultType(LoginResultEnum.LOGIN_SUCCESS);
-                        result.setResultData(userLoginResult.getResultData());
+                        result.setResultData(userLoginResult.getUser());
                         break;
 
                     case PASSWORD_ERROR:
@@ -102,7 +103,7 @@ public class YiBanLoginService {
             }
             throw new ServerErrorException();
         } catch (Exception e) {
-            log.error("易班登录异常：" , e);
+            log.error("易班登录异常：", e);
             result.setResultType(LoginResultEnum.SERVER_ERROR);
         }
         return result;

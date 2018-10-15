@@ -31,17 +31,17 @@ public class User implements Serializable {
     //教务系统账号密码
     private String password;
 
-    //教务系统账号加密Key值
-    @NotBlank(message = "加密Key不能为空", groups = {ServiceQueryValidGroup.class})
-    @Size(min = 32, max = 32, message = "加密Key长度不合法", groups = {ServiceQueryValidGroup.class})
+    //教务系统账号加密值
+    @NotBlank(message = "加密值不能为空", groups = {ServiceQueryValidGroup.class})
+    @Size(max = 32, message = "加密值长度不合法", groups = {ServiceQueryValidGroup.class})
     private String keycode;
 
     //教务系统账号学号
     @NotBlank(message = "学号不能为空", groups = {ServiceQueryValidGroup.class})
-    @Size(min = 11, max = 11, message = "学号长度不合法", groups = {ServiceQueryValidGroup.class})
+    @Size(max = 11, message = "学号长度不合法", groups = {ServiceQueryValidGroup.class})
     private String number;
 
-    private String xm;
+    private String realname;
 
     /**
      * 账号状态
@@ -81,12 +81,22 @@ public class User implements Serializable {
         this.number = number;
     }
 
+    @Deprecated
     public String getXm() {
-        return xm;
+        return realname;
     }
 
-    public void setXm(String xm) {
-        this.xm = xm;
+    @Deprecated
+    public void setXm(String realname) {
+        this.realname = realname;
+    }
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
     }
 
     public User decryptUser() {
@@ -104,8 +114,8 @@ public class User implements Serializable {
             if (number != null) {
                 decryptUser.setNumber(StringEncryptUtils.decryptString(number));
             }
-            if (xm != null) {
-                decryptUser.setXm(xm);
+            if (realname != null) {
+                decryptUser.setRealname(realname);
             }
             if (state != null) {
                 decryptUser.setState(state);
@@ -131,8 +141,8 @@ public class User implements Serializable {
             if (number != null) {
                 encryptUser.setNumber(StringEncryptUtils.encryptString(number));
             }
-            if (xm != null) {
-                encryptUser.setXm(xm);
+            if (realname != null) {
+                encryptUser.setRealname(realname);
             }
             if (state != null) {
                 encryptUser.setState(state);

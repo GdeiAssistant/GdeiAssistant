@@ -104,11 +104,14 @@
     <!-- 控制器映射器和控制器适配器 -->
     <mvc:annotation-driven/>
 
-    <!-- 定时任务扫描注解 -->
-    <task:annotation-driven scheduler="scheduler"/>
+    <!-- 配置异步任务执行器和定时任务调度器 -->
+    <task:annotation-driven scheduler="scheduler" executor="executor"/>
 
     <!-- 定时任务使用多线程 -->
     <task:scheduler id="scheduler" pool-size="5"/>
+
+    <!-- 异步任务执行器 -->
+    <task:executor id="executor" pool-size="5-50" queue-capacity="10"/>
 
     <!-- 校园新闻系统地址 -->
     <util:list id="schoolNewsUrlList" value-type="java.lang.String">
@@ -216,13 +219,16 @@
                     <list>
                         <!-- 用户注销 -->
                         <value>/logout</value>
-                        <!-- 用户登录 -->
+                        <!-- 用户登录页面 -->
                         <value>/login</value>
+                        <!-- 用户登录接口 -->
                         <value>/userlogin</value>
                         <!-- 使用协议 -->
                         <value>/agreement</value>
-                        <!-- Restful API -->
+                        <!-- 移动端的 Restful API -->
                         <value>/rest</value>
+                        <!-- 应用内的 WEB API -->
+                        <value>/api</value>
                         <!-- 微信接口 -->
                         <value>/wechat</value>
                         <!-- 易班接口 -->

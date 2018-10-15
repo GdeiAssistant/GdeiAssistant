@@ -5,6 +5,7 @@ import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionExcep
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
 import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.Service.UserLogin.AutoLoginService;
@@ -73,20 +74,19 @@ public class DispatcherController {
             //清除已登录用户的用户凭证记录
             userLoginService.ClearUserLoginCredentials(request);
             //进行用户登录
-            BaseResult<User, LoginResultEnum> result = userLoginService.UserLogin(request
+            UserLoginResult userLoginResult = userLoginService.UserLogin(request
                     , new User(cookieUsername, cookiePassword), true);
-            switch (result.getResultType()) {
+            switch (userLoginResult.getLoginResultEnum()) {
                 case LOGIN_SUCCESS:
                     //登录成功
-                    User resultUser = result.getResultData();
+                    User resultUser = userLoginResult.getUser();
                     //同步数据库用户数据
                     try {
                         userDataService.SyncUserData(resultUser);
                         //将用户信息数据写入Session
                         request.getSession().setAttribute("username", resultUser.getUsername());
                         request.getSession().setAttribute("password", resultUser.getPassword());
-                        request.getSession().setAttribute("keycode", resultUser.getKeycode());
-                        request.getSession().setAttribute("number", resultUser.getNumber());
+                        userLoginService.AsyncUpdateSession(request);
                         //将加密的用户信息保存到Cookie中
                         String username = StringEncryptUtils.encryptString(resultUser.getUsername());
                         String password = StringEncryptUtils.encryptString(resultUser.getPassword());

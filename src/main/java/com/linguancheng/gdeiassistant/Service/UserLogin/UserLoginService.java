@@ -1,11 +1,13 @@
 package com.linguancheng.gdeiassistant.Service.UserLogin;
 
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
+import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -37,6 +40,7 @@ import org.springframework.web.client.AsyncRestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -50,6 +54,10 @@ import java.util.concurrent.Semaphore;
 
 @Service
 public class UserLoginService {
+
+    private Log log = LogFactory.getLog(UserLoginService.class);
+
+    private int timeout;
 
     private String url;
 
@@ -67,9 +75,6 @@ public class UserLoginService {
         this.url = url;
     }
 
-    private Log log = LogFactory.getLog(UserLoginService.class);
-
-    private int timeout;
 
     @Value("#{propertiesReader['timeout.userlogin']}")
     public void setTimeout(int timeout) {
@@ -93,8 +98,8 @@ public class UserLoginService {
      * @param quickLogin
      * @return
      */
-    public BaseResult<User, LoginResultEnum> UserLogin(HttpServletRequest request, User user, boolean quickLogin) {
-        BaseResult<User, LoginResultEnum> result = new BaseResult<>();
+    public UserLoginResult UserLogin(HttpServletRequest request, User user, boolean quickLogin) {
+        UserLoginResult userLoginResult = new UserLoginResult();
         //查询数据库,若账号密码相同,则直接通过登录校验
         if (quickLogin) {
             try {
@@ -106,18 +111,18 @@ public class UserLoginService {
                         if (decryptUser.getUsername().equals(user.getUsername())
                                 && decryptUser.getPassword().equals(user.getPassword())) {
                             //登录成功,缓存并返回用户信息
-                            result.setResultData(queryUser.decryptUser());
-                            result.setResultType(LoginResultEnum.LOGIN_SUCCESS);
-                            return result;
+                            userLoginResult.setUser(queryUser.decryptUser());
+                            userLoginResult.setLoginResultEnum(LoginResultEnum.LOGIN_SUCCESS);
+                            return userLoginResult;
                         }
                     } else {
                         if (decryptUser.getUsername().equals(user.getUsername())
                                 && decryptUser.getKeycode().equals(user.getKeycode())
                                 && decryptUser.getNumber().equals(user.getNumber())) {
                             //登录成功,缓存并返回用户信息
-                            result.setResultData(queryUser.decryptUser());
-                            result.setResultType(LoginResultEnum.LOGIN_SUCCESS);
-                            return result;
+                            userLoginResult.setUser(queryUser.decryptUser());
+                            userLoginResult.setLoginResultEnum(LoginResultEnum.LOGIN_SUCCESS);
+                            return userLoginResult;
                         }
                     }
                 }
@@ -173,16 +178,16 @@ public class UserLoginService {
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {
             log.error("用户登录异常：", e);
-            result.setResultType(LoginResultEnum.SERVER_ERROR);
+            userLoginResult.setLoginResultEnum(LoginResultEnum.SERVER_ERROR);
         } catch (PasswordIncorrectException e) {
             log.error("用户登录异常：", e);
-            result.setResultType(LoginResultEnum.PASSWORD_ERROR);
+            userLoginResult.setLoginResultEnum(LoginResultEnum.PASSWORD_ERROR);
         } catch (IOException e) {
             log.error("用户登录异常：", e);
-            result.setResultType(LoginResultEnum.TIME_OUT);
+            userLoginResult.setLoginResultEnum(LoginResultEnum.TIME_OUT);
         } catch (Exception e) {
             log.error("用户登录异常：", e);
-            result.setResultType(LoginResultEnum.SERVER_ERROR);
+            userLoginResult.setLoginResultEnum(LoginResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {
                 try {
@@ -192,7 +197,7 @@ public class UserLoginService {
                 }
             }
         }
-        return result;
+        return userLoginResult;
     }
 
     /**
@@ -204,7 +209,7 @@ public class UserLoginService {
      * @throws IOException
      * @throws ServerErrorException
      */
-    private BaseResult<User, LoginResultEnum> LoginCasSystem(CloseableHttpClient httpClient, User user) throws Exception {
+    private UserLoginResult LoginCasSystem(CloseableHttpClient httpClient, User user) throws Exception {
         HttpGet httpGet = new HttpGet(url + "login_cas.aspx");
         HttpResponse httpResponse = httpClient.execute(httpGet);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -215,14 +220,15 @@ public class UserLoginService {
             if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().isEmpty()) {
                 //获取学生的教务系统信息
                 String script = document.select("script").first().data();
-                String s1[] = script.split("=");
-                String s2[] = s1[1].split("'");
-                String system_identity = user.getUsername();
-                String system_password = user.getPassword();
-                String system_number = s2[0].substring(0, 11);
-                String system_key = document.getElementById("Form1").toString().substring(system_identity.length() + 66, system_identity.length() + 98);
+                String username = user.getUsername();
+                String password = user.getPassword();
+                String keycode = (document.getElementById("Form1").attr("action")
+                        .split("&")[1]).split("=")[1];
+                String number = ((script.split("=")[1]).split("'")[0]).substring(0, 11);
+                Long timestamp = Long.valueOf(document.getElementById("Form1")
+                        .attr("action").split("&")[2].split("=")[1]);
                 //进行教务系统身份校验
-                return CasVerify(httpClient, system_identity, system_password, system_key, system_number);
+                return CasVerify(httpClient, username, password, keycode, number, timestamp);
             }
             throw new ServerErrorException("教务系统异常");
         }
@@ -234,37 +240,40 @@ public class UserLoginService {
      * UserLoginService内部调用的模块方法
      *
      * @param httpClient
-     * @param system_identity
-     * @param system_password
-     * @param system_key
-     * @param system_number
+     * @param username
+     * @param password
+     * @param keycode
+     * @param number
+     * @param timestamp
      * @return
      * @throws IOException
      * @throws ServerErrorException
      */
-    private BaseResult<User, LoginResultEnum> CasVerify(CloseableHttpClient httpClient, String system_identity
-            , String system_password, String system_key, String system_number) throws IOException, ServerErrorException {
-        BaseResult<User, LoginResultEnum> result = new BaseResult<>();
-        HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + system_identity + "&k=" + system_key);
+    private UserLoginResult CasVerify(CloseableHttpClient httpClient, String username
+            , String password, String keycode, String number, Long timestamp) throws IOException, ServerErrorException {
+        UserLoginResult userLoginResult = new UserLoginResult();
+        HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
+                + keycode + "&timestamp=" + timestamp);
         HttpResponse httpResponse = httpClient.execute(httpGet);
         if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            httpGet = new HttpGet(url + "xs_main.aspx?xh=" + system_number);
+            httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number + "&type=1");
             httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
                 //获取学生的身份证号
-                httpGet = new HttpGet(url + "xsgrxx.aspx?xh=" + system_number);
+                httpGet = new HttpGet(url + "xsgrxx.aspx?xh=" + number);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     //缓存学生的信息
                     User user = new User();
-                    user.setUsername(system_identity);
-                    user.setPassword(system_password);
-                    user.setKeycode(system_key);
-                    user.setNumber(system_number);
-                    result.setResultData(user);
-                    result.setResultType(LoginResultEnum.LOGIN_SUCCESS);
-                    return result;
+                    user.setUsername(username);
+                    user.setPassword(password);
+                    user.setKeycode(keycode);
+                    user.setNumber(number);
+                    userLoginResult.setUser(user);
+                    userLoginResult.setTimestamp(timestamp);
+                    userLoginResult.setLoginResultEnum(LoginResultEnum.LOGIN_SUCCESS);
+                    return userLoginResult;
                 }
                 throw new ServerErrorException("教务系统异常");
             }
@@ -274,9 +283,69 @@ public class UserLoginService {
     }
 
     /**
+     * 同步地与教务系统会话同步
+     *
+     * @param request
+     * @return
+     */
+    public ServiceResultEnum SyncUpdateSession(HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        if (httpSession.getAttribute("timestamp") == null) {
+            String username = (String) httpSession.getAttribute("username");
+            String password = (String) httpSession.getAttribute("password");
+            User user = new User(username, password);
+            UserLoginResult userLoginResult = UserLogin(request, user, false);
+            switch (userLoginResult.getLoginResultEnum()) {
+                case LOGIN_SUCCESS:
+                    httpSession.setAttribute("keycode", userLoginResult.getUser().getKeycode());
+                    httpSession.setAttribute("number", userLoginResult.getUser().getNumber());
+                    httpSession.setAttribute("timestamp", userLoginResult.getTimestamp());
+                    return ServiceResultEnum.SUCCESS;
+
+                case PASSWORD_ERROR:
+                    return ServiceResultEnum.PASSWORD_INCORRECT;
+
+                case TIME_OUT:
+                    return ServiceResultEnum.TIME_OUT;
+
+                case SERVER_ERROR:
+                    return ServiceResultEnum.SERVER_ERROR;
+            }
+        }
+        return ServiceResultEnum.SUCCESS;
+    }
+
+    /**
+     * 异步地与教务系统会话进行同步
+     *
+     * @param request
+     */
+    @Async
+    public void AsyncUpdateSession(HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        if (httpSession.getAttribute("timestamp") == null) {
+            String username = (String) httpSession.getAttribute("username");
+            String password = (String) httpSession.getAttribute("password");
+            User user = new User(username, password);
+            UserLoginResult userLoginResult = UserLogin(request, user, false);
+            switch (userLoginResult.getLoginResultEnum()) {
+                case LOGIN_SUCCESS:
+                    httpSession.setAttribute("keycode", userLoginResult.getUser().getKeycode());
+                    httpSession.setAttribute("number", userLoginResult.getUser().getNumber());
+                    httpSession.setAttribute("timestamp", userLoginResult.getTimestamp());
+                    break;
+
+                default:
+                    //同步会话失败
+                    break;
+            }
+        }
+    }
+
+    /**
      * 定时更新用户账号信息
      */
-    @Scheduled(fixedDelay = 5000)
+    @Deprecated
     public void UpdateUserData() {
         try {
             List<User> userList = userMapper.selectAllUser();

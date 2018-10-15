@@ -9,9 +9,11 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
 import com.linguancheng.gdeiassistant.Service.GradeQuery.GradeCacheService;
 import com.linguancheng.gdeiassistant.Service.GradeQuery.GradeQueryService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
+import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import com.linguancheng.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,6 +56,8 @@ public class GradeQueryController {
      * @param request
      * @param user
      * @param year
+     * @param refresh
+     * @param timestamp
      * @param bindingResult
      * @return
      */
@@ -61,8 +65,8 @@ public class GradeQueryController {
     @RestQueryLog
     @ResponseBody
     public GradeQueryJsonResult GradeQuery(HttpServletRequest request, @Validated(value = ServiceQueryValidGroup.class) User user
-            , @RequestParam(value = "year", required = false) Integer year
-            , @RequestParam(value = "refresh", required = false, defaultValue = "false") Boolean refresh
+            , Integer year, Long timestamp, @RequestParam(value = "refresh", required = false
+            , defaultValue = "false") Boolean refresh
             , BindingResult bindingResult) {
         GradeQueryJsonResult result = new GradeQueryJsonResult();
         if (year != null && (year < 0 || year > 3) || bindingResult.hasErrors()) {
@@ -73,8 +77,8 @@ public class GradeQueryController {
             String keycode = user.getKeycode();
             String number = user.getNumber();
             //校验用户账号身份
-            BaseResult<User, LoginResultEnum> loginResult = userLoginService.UserLogin(request, user, true);
-            switch (loginResult.getResultType()) {
+            UserLoginResult userLoginResult = userLoginService.UserLogin(request, user, true);
+            switch (userLoginResult.getLoginResultEnum()) {
                 case LOGIN_SUCCESS:
                     //优先查询缓存数据
                     if (!refresh) {
@@ -119,8 +123,39 @@ public class GradeQueryController {
                         //若没有指定查询的学年，则进行默认学年查询
                         year = -1;
                     }
+                    //检测是否已与教务系统进行会话同步
+                    if (timestamp == null) {
+                        //进行会话同步
+                        userLoginResult = userLoginService.UserLogin(request, user, false);
+                        switch (userLoginResult.getLoginResultEnum()) {
+                            case LOGIN_SUCCESS:
+                                timestamp = userLoginResult.getTimestamp();
+                                break;
+
+                            case SERVER_ERROR:
+                                //服务器异常
+                                result.setSuccess(false);
+                                result.setEmpty(false);
+                                result.setErrorMessage("学院教务系统维护中,暂不可用");
+                                return result;
+
+                            case TIME_OUT:
+                                //连接超时
+                                result.setSuccess(false);
+                                result.setEmpty(false);
+                                result.setErrorMessage("网络连接超时，请重试");
+                                return result;
+
+                            case PASSWORD_ERROR:
+                                //用户名或密码错误
+                                result.setSuccess(false);
+                                result.setEmpty(false);
+                                result.setErrorMessage("密码已更新，请重新登录");
+                                return result;
+                        }
+                    }
                     GradeQueryResult gradeQueryResult = gradeQueryService.GradeQuery(request, username
-                            , keycode, number, year);
+                            , keycode, number, timestamp, year);
                     switch (gradeQueryResult.getGradeServiceResultEnum()) {
                         case PASSWORD_INCORRECT:
                             //身份凭证异常
@@ -148,6 +183,13 @@ public class GradeQueryController {
                             result.setSuccess(false);
                             result.setEmpty(true);
                             result.setErrorMessage("当前学年暂不可以查询");
+                            break;
+
+                        case TIMESTAMP_INVALID:
+                            //时间戳校验失败
+                            result.setSuccess(false);
+                            result.setEmpty(false);
+                            result.setErrorMessage("时间戳校验失败，请尝试重新登录");
                             break;
 
                         case SUCCESS:
@@ -194,22 +236,21 @@ public class GradeQueryController {
      *
      * @param request
      * @param year
+     * @param refresh
      * @return
      */
-    @RequestMapping(value = "/gradequery", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/gradequery", method = RequestMethod.POST)
     @QueryLog
     @ResponseBody
     public GradeQueryJsonResult GradeQuery(HttpServletRequest request
-            , @RequestParam(value = "year", required = false) Integer year
-            , @RequestParam(value = "refresh", required = false, defaultValue = "false") Boolean refresh) {
+            , Integer year, @RequestParam(value = "refresh", required = false
+            , defaultValue = "false") Boolean refresh) {
         GradeQueryJsonResult gradeQueryJsonResult = new GradeQueryJsonResult();
         if (year != null && (year < 0 || year > 3)) {
             gradeQueryJsonResult.setSuccess(false);
             gradeQueryJsonResult.setErrorMessage("请求参数不合法");
         } else {
             String username = (String) request.getSession().getAttribute("username");
-            String keycode = (String) request.getSession().getAttribute("keycode");
-            String number = (String) request.getSession().getAttribute("number");
             //优先查询缓存数据
             if (!refresh) {
                 GradeDocument gradeDocument = gradeCacheService.ReadGrade(username);
@@ -253,7 +294,37 @@ public class GradeQueryController {
                     //若没有指定查询的学年，则进行默认学年查询
                     year = -1;
                 }
-                GradeQueryResult gradeQueryResult = gradeQueryService.GradeQuery(request, username, keycode, number, year);
+                //检测是否已与教务系统进行会话同步
+                if (request.getSession().getAttribute("timestamp") != null) {
+                    //进行会话同步
+                    switch (userLoginService.SyncUpdateSession(request)) {
+                        case SUCCESS:
+                            break;
+
+                        case TIME_OUT:
+                            //连接超时
+                            gradeQueryJsonResult.setSuccess(false);
+                            gradeQueryJsonResult.setErrorMessage("网络连接超时，请重试");
+                            return gradeQueryJsonResult;
+
+                        case PASSWORD_INCORRECT:
+                            //身份凭证异常
+                            gradeQueryJsonResult.setSuccess(false);
+                            gradeQueryJsonResult.setErrorMessage("用户凭证已过期，请重新登录");
+                            return gradeQueryJsonResult;
+
+                        default:
+                            //服务器异常
+                            gradeQueryJsonResult.setSuccess(false);
+                            gradeQueryJsonResult.setErrorMessage("学院教务系统维护中，暂不可用");
+                            return gradeQueryJsonResult;
+                    }
+                }
+                String keycode = (String) request.getSession().getAttribute("keycode");
+                String number = (String) request.getSession().getAttribute("number");
+                Long timestamp = (Long) request.getSession().getAttribute("timestamp");
+                GradeQueryResult gradeQueryResult = gradeQueryService
+                        .GradeQuery(request, username, keycode, number, timestamp, year);
                 switch (gradeQueryResult.getGradeServiceResultEnum()) {
                     case PASSWORD_INCORRECT:
                         //身份凭证异常
@@ -265,6 +336,12 @@ public class GradeQueryController {
                         //服务器异常
                         gradeQueryJsonResult.setSuccess(false);
                         gradeQueryJsonResult.setErrorMessage("学院教务系统维护中，暂不可用");
+                        break;
+
+                    case TIMESTAMP_INVALID:
+                        //时间戳校验失败
+                        gradeQueryJsonResult.setSuccess(false);
+                        gradeQueryJsonResult.setErrorMessage("时间戳校验失败，请尝试重新登录");
                         break;
 
                     case TIME_OUT:

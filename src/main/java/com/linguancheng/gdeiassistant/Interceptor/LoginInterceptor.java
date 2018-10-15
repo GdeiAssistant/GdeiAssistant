@@ -35,11 +35,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         HttpSession httpSession = request.getSession();
         String username = (String) httpSession.getAttribute("username");
         String password = (String) httpSession.getAttribute("password");
-        String keycode = (String) httpSession.getAttribute("keycode");
-        String number = (String) httpSession.getAttribute("number");
 
-        if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password) && !StringUtils.isBlank(keycode)
-                && !StringUtils.isBlank(number)) {
+        if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
             return true;
         }
 

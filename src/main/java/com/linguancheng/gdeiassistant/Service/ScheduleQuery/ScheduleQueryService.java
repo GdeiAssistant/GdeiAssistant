@@ -3,6 +3,7 @@ package com.linguancheng.gdeiassistant.Service.ScheduleQuery;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
+import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
@@ -155,232 +156,247 @@ public class ScheduleQueryService {
      * @param request
      * @return
      */
-    public BaseResult<List<Schedule>, ServiceResultEnum> ScheduleQuery(HttpServletRequest request, String username, String keycode, String number) {
+    public BaseResult<List<Schedule>, ServiceResultEnum> ScheduleQuery(HttpServletRequest request
+            , String username, String keycode, String number, Long timestamp) {
         BaseResult<List<Schedule>, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
         try {
             httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
-            HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k=" + keycode);
+            HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
+                    + keycode + "&timestamp=" + timestamp);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                //进入教务系统个人主页
-                httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number);
-                httpResponse = httpClient.execute(httpGet);
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
-                    //成功进入学生个人主页,进行课表查询操作
-                    httpGet = new HttpGet(url + "xskbcx.aspx?xh=" + number);
+                if (document.toString().equals("您登陆的系统已经很长时间没有操作了，为安全起见请重新登录后再进行操作！")) {
+                    throw new TimeStampIncorrectException("时间戳校验失败");
+                } else {
+                    //进入教务系统个人主页
+                    httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number);
                     httpResponse = httpClient.execute(httpGet);
-                    //将<br>标签替换为转义标签以便解析处理
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                        Elements xqdOptions = document.getElementsByAttributeValue("name", "xqd").first().select("option");
-                        //默认的学年学期是否与配置文件中配置的学年学期相同
-                        boolean isDefaultEqualsCurrent = false;
-                        int defaultTerm = 0;
-                        int defaultYear = 0;
-                        for (Element option : xqdOptions) {
-                            if (option.hasAttr("selected")) {
-                                defaultTerm = Integer.valueOf(option.attr("value"));
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
+                        //成功进入学生个人主页,进行课表查询操作
+                        httpGet = new HttpGet(url + "xskbcx.aspx?xh=" + number);
+                        httpResponse = httpClient.execute(httpGet);
+                        //将<br>标签替换为转义标签以便解析处理
+                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
+                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                            Elements xqdOptions = document.getElementsByAttributeValue("name", "xqd").first().select("option");
+                            //默认的学年学期是否与配置文件中配置的学年学期相同
+                            boolean isDefaultEqualsCurrent = false;
+                            int defaultTerm = 0;
+                            int defaultYear = 0;
+                            for (Element option : xqdOptions) {
+                                if (option.hasAttr("selected")) {
+                                    defaultTerm = Integer.valueOf(option.attr("value"));
+                                }
                             }
-                        }
-                        Elements xndOptions = document.getElementsByAttributeValue("name", "xnd").first().select("option");
-                        for (Element option : xndOptions) {
-                            if (option.hasAttr("selected")) {
-                                defaultYear = Integer.parseInt((option.attr("value").split("-"))[0]);
+                            Elements xndOptions = document.getElementsByAttributeValue("name", "xnd").first().select("option");
+                            for (Element option : xndOptions) {
+                                if (option.hasAttr("selected")) {
+                                    defaultYear = Integer.parseInt((option.attr("value").split("-"))[0]);
+                                }
                             }
-                        }
-                        if (defaultYear == year && defaultTerm == term) {
-                            isDefaultEqualsCurrent = true;
-                        }
-                        if (!isDefaultEqualsCurrent) {
-                            HttpPost httpPost = new HttpPost(url + "xskbcx.aspx?xh=" + number);
-                            List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
-                            basicNameValuePairList.add(new BasicNameValuePair("__EVENTTARGET", ""));
-                            basicNameValuePairList.add(new BasicNameValuePair("__EVENTARGUMENT", ""));
-                            basicNameValuePairList.add(new BasicNameValuePair("__VIEWSTATE", document.getElementsByAttributeValue("name", "__VIEWSTATE").first().val()));
-                            basicNameValuePairList.add(new BasicNameValuePair("xnd", document.getElementsByAttributeValue("name", "xnd").first().select("option").first().attr("value")));
-                            basicNameValuePairList.add(new BasicNameValuePair("xqd", document.getElementsByAttributeValue("name", "xqd").first().select("option").get(term - 1).attr("value")));
-                            httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairList, StandardCharsets.UTF_8));
-                            httpResponse = httpClient.execute(httpPost);
-                            //将<br>标签替换为<info>转义标签以便解析处理
-                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
-                            if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                                throw new ServerErrorException("教务系统异常");
+                            if (defaultYear == year && defaultTerm == term) {
+                                isDefaultEqualsCurrent = true;
                             }
-                        }
-                        //获取存放课表信息的表格
-                        Element table = document.getElementById("Table1");
-                        //获取表格中的所有行
-                        Elements trs = table.select("tr");
-                        //特殊的空课程,用于标记当前单元格被上边的课程信息占用,即上边同列课程的课程时长大于1
-                        Schedule specialEmptySchedule = new Schedule();
-                        //存放课表信息的数组,包含特殊的空课程对象
-                        Schedule[][] schedulesWithSpecialEmptySchedule = new Schedule[70][10];
-                        //存放课表信息的列表,过滤特殊的空课程对象后添加入该列表
-                        List<Schedule> schedulesWithoutSpecialEmptySchedule = new ArrayList<>();
-                        //当前单元格位置position值
-                        int currentPosition = 0;
-                        //当前行最大位置position值
-                        int currentRowMaxPosition = 0;
-                        //前两行为行列信息,从第三行开始获取信息
-                        for (int row = 2; row < trs.size(); row++) {
-                            //获取该行内所有列
-                            Elements tds = trs.get(row).select("td");
-                            //记录当前访问列数据的游标,若当前为第3行或第7行或第11行,初始列游标值为2,否则初始值为1
-                            //因为特殊行里面的第一列包含上午/下午的信息提示
-                            int currentColumnIndexInThisRow;
-                            if (row == 2 || row == 6 || row == 10) {
-                                currentColumnIndexInThisRow = 2;
-                            } else {
-                                currentColumnIndexInThisRow = 1;
+                            if (!isDefaultEqualsCurrent) {
+                                HttpPost httpPost = new HttpPost(url + "xskbcx.aspx?xh=" + number);
+                                List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
+                                basicNameValuePairList.add(new BasicNameValuePair("__EVENTTARGET", ""));
+                                basicNameValuePairList.add(new BasicNameValuePair("__EVENTARGUMENT", ""));
+                                basicNameValuePairList.add(new BasicNameValuePair("__VIEWSTATE", document.getElementsByAttributeValue("name", "__VIEWSTATE").first().val()));
+                                basicNameValuePairList.add(new BasicNameValuePair("xnd", document.getElementsByAttributeValue("name", "xnd").first().select("option").first().attr("value")));
+                                basicNameValuePairList.add(new BasicNameValuePair("xqd", document.getElementsByAttributeValue("name", "xqd").first().select("option").get(term - 1).attr("value")));
+                                httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairList, StandardCharsets.UTF_8));
+                                httpResponse = httpClient.execute(httpPost);
+                                //将<br>标签替换为<info>转义标签以便解析处理
+                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
+                                if (httpResponse.getStatusLine().getStatusCode() != 200) {
+                                    throw new ServerErrorException("教务系统异常");
+                                }
                             }
-                            //当前行的列最大游标
-                            int maxColumnIndex;
-                            if (tds.size() < 7) {
-                                maxColumnIndex = tds.size() - 1;
-                            } else {
-                                maxColumnIndex = 6;
-                            }
-                            //遍历当前行,获取课表信息
-                            for (currentRowMaxPosition = currentRowMaxPosition + 7; currentPosition < currentRowMaxPosition; currentPosition++) {
-                                if (schedulesWithSpecialEmptySchedule[currentPosition][0] == specialEmptySchedule) {
-                                    //当前position指向特殊空Schedule对象,跳过当前单元格
+                            //获取存放课表信息的表格
+                            Element table = document.getElementById("Table1");
+                            //获取表格中的所有行
+                            Elements trs = table.select("tr");
+                            //特殊的空课程,用于标记当前单元格被上边的课程信息占用,即上边同列课程的课程时长大于1
+                            Schedule specialEmptySchedule = new Schedule();
+                            //存放课表信息的数组,包含特殊的空课程对象
+                            Schedule[][] schedulesWithSpecialEmptySchedule = new Schedule[70][10];
+                            //存放课表信息的列表,过滤特殊的空课程对象后添加入该列表
+                            List<Schedule> schedulesWithoutSpecialEmptySchedule = new ArrayList<>();
+                            //当前单元格位置position值
+                            int currentPosition = 0;
+                            //当前行最大位置position值
+                            int currentRowMaxPosition = 0;
+                            //前两行为行列信息,从第三行开始获取信息
+                            for (int row = 2; row < trs.size(); row++) {
+                                //获取该行内所有列
+                                Elements tds = trs.get(row).select("td");
+                                //记录当前访问列数据的游标,若当前为第3行或第7行或第11行,初始列游标值为2,否则初始值为1
+                                //因为特殊行里面的第一列包含上午/下午的信息提示
+                                int currentColumnIndexInThisRow;
+                                if (row == 2 || row == 6 || row == 10) {
+                                    currentColumnIndexInThisRow = 2;
                                 } else {
-                                    //判断当前行是否已经遍历完
-                                    if (currentPosition % 7 <= maxColumnIndex) {
-                                        //判断当前position的课程信息是否为空课表信息
-                                        //下面的字符非空格而是一个特殊的Unicode字符
-                                        if (tds.get(currentColumnIndexInThisRow).text().equals(" ")) {
-                                            //不存在课表信息
-                                        } else {
-                                            //当前td标签属性,代表课程时长
-                                            int rowspan;
-                                            //判断td标签有无rowspan属性,该属性代表课程时长
-                                            if (tds.get(currentColumnIndexInThisRow).hasAttr("rowspan")) {
-                                                //通过rowspan属性得到课程时长
-                                                rowspan = Integer.parseInt(tds.get(currentColumnIndexInThisRow).attr("rowspan"));
-                                                //将当前单元格下方对应的原单元格的课程信息标记为特殊空课程
-                                                switch (rowspan) {
-                                                    case 2:
-                                                        schedulesWithSpecialEmptySchedule[currentPosition + 7][0] = specialEmptySchedule;
-                                                        break;
+                                    currentColumnIndexInThisRow = 1;
+                                }
+                                //当前行的列最大游标
+                                int maxColumnIndex;
+                                if (tds.size() < 7) {
+                                    maxColumnIndex = tds.size() - 1;
+                                } else {
+                                    maxColumnIndex = 6;
+                                }
+                                //遍历当前行,获取课表信息
+                                for (currentRowMaxPosition = currentRowMaxPosition + 7; currentPosition < currentRowMaxPosition; currentPosition++) {
+                                    if (schedulesWithSpecialEmptySchedule[currentPosition][0] == specialEmptySchedule) {
+                                        //当前position指向特殊空Schedule对象,跳过当前单元格
+                                    } else {
+                                        //判断当前行是否已经遍历完
+                                        if (currentPosition % 7 <= maxColumnIndex) {
+                                            //判断当前position的课程信息是否为空课表信息
+                                            //下面的字符非空格而是一个特殊的Unicode字符
+                                            if (tds.get(currentColumnIndexInThisRow).text().equals(" ")) {
+                                                //不存在课表信息
+                                            } else {
+                                                //当前td标签属性,代表课程时长
+                                                int rowspan;
+                                                //判断td标签有无rowspan属性,该属性代表课程时长
+                                                if (tds.get(currentColumnIndexInThisRow).hasAttr("rowspan")) {
+                                                    //通过rowspan属性得到课程时长
+                                                    rowspan = Integer.parseInt(tds.get(currentColumnIndexInThisRow).attr("rowspan"));
+                                                    //将当前单元格下方对应的原单元格的课程信息标记为特殊空课程
+                                                    switch (rowspan) {
+                                                        case 2:
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 7][0] = specialEmptySchedule;
+                                                            break;
 
-                                                    case 3:
-                                                        schedulesWithSpecialEmptySchedule[currentPosition + 7][0] = specialEmptySchedule;
-                                                        schedulesWithSpecialEmptySchedule[currentPosition + 14][0] = specialEmptySchedule;
-                                                        break;
+                                                        case 3:
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 7][0] = specialEmptySchedule;
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 14][0] = specialEmptySchedule;
+                                                            break;
 
-                                                    case 4:
-                                                        schedulesWithSpecialEmptySchedule[currentPosition + 7][0] = specialEmptySchedule;
-                                                        schedulesWithSpecialEmptySchedule[currentPosition + 14][0] = specialEmptySchedule;
-                                                        schedulesWithSpecialEmptySchedule[currentPosition + 21][0] = specialEmptySchedule;
-                                                        break;
+                                                        case 4:
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 7][0] = specialEmptySchedule;
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 14][0] = specialEmptySchedule;
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 21][0] = specialEmptySchedule;
+                                                            break;
+                                                    }
+                                                } else {
+                                                    //如果td标签没有rowspan属性,则该课程课程时长为默认的1
+                                                    rowspan = 1;
                                                 }
-                                            } else {
-                                                //如果td标签没有rowspan属性,则该课程课程时长为默认的1
-                                                rowspan = 1;
-                                            }
-                                            //将单元格里的课表信息按独立行进行分割单独处理
-                                            String string[] = tds.get(currentColumnIndexInThisRow).text().split("\\$info\\$");
-                                            //记录单元格中的独立课表信息下标
-                                            int n = 0;
-                                            if (string.length == 0) {
-                                                schedulesWithSpecialEmptySchedule[currentPosition][0] = specialEmptySchedule;
-                                            } else {
-                                                for (int j = 0; j < string.length; j++) {
-                                                    if (string[j].isEmpty() || string[j].substring(0, 1).equals("<") || string[j].equals(" ") || string[j].substring(0, 1).equals("(")) {
-                                                        //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
-                                                    } else {
-                                                        //有效的课表头信息,进行信息处理
-                                                        String time[] = string[j + 2].split("[{]");
-                                                        //课程周数
-                                                        String week = null;
-                                                        if (time.length < 2) {
-                                                            week = time[0].substring(0, time[0].length() - 1);
+                                                //将单元格里的课表信息按独立行进行分割单独处理
+                                                String string[] = tds.get(currentColumnIndexInThisRow).text().split("\\$info\\$");
+                                                //记录单元格中的独立课表信息下标
+                                                int n = 0;
+                                                if (string.length == 0) {
+                                                    schedulesWithSpecialEmptySchedule[currentPosition][0] = specialEmptySchedule;
+                                                } else {
+                                                    for (int j = 0; j < string.length; j++) {
+                                                        if (string[j].isEmpty() || string[j].substring(0, 1).equals("<") || string[j].equals(" ") || string[j].substring(0, 1).equals("(")) {
+                                                            //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
                                                         } else {
-                                                            week = time[1].substring(0, time[1].length() - 1);
-                                                        }
-                                                        //课程名称
-                                                        String name = string[j];
-                                                        //课程节数
-                                                        String lesson = time[0];
-                                                        //课程类型
-                                                        String type = string[j + 1];
-                                                        //任课教师
-                                                        String teacher = string[j + 3];
-                                                        //上课地点
-                                                        String location = "";
-                                                        //检查是否已经安排课程
-                                                        if (string.length <= j + 4 || string[j + 4] == null) {
-                                                            location = "暂未安排";
-                                                        } else {
-                                                            if (string[j + 4].contains("（")) {
-                                                                String locations[] = string[j + 4].split("（");
-                                                                location = locations[0];
+                                                            //有效的课表头信息,进行信息处理
+                                                            String time[] = string[j + 2].split("[{]");
+                                                            //课程周数
+                                                            String week = null;
+                                                            if (time.length < 2) {
+                                                                week = time[0].substring(0, time[0].length() - 1);
                                                             } else {
-                                                                location = string[j + 4];
+                                                                week = time[1].substring(0, time[1].length() - 1);
                                                             }
+                                                            //课程名称
+                                                            String name = string[j];
+                                                            //课程节数
+                                                            String lesson = time[0];
+                                                            //课程类型
+                                                            String type = string[j + 1];
+                                                            //任课教师
+                                                            String teacher = string[j + 3];
+                                                            //上课地点
+                                                            String location = "";
+                                                            //检查是否已经安排课程
+                                                            if (string.length <= j + 4 || string[j + 4] == null) {
+                                                                location = "暂未安排";
+                                                            } else {
+                                                                if (string[j + 4].contains("（")) {
+                                                                    String locations[] = string[j + 4].split("（");
+                                                                    location = locations[0];
+                                                                } else {
+                                                                    location = string[j + 4];
+                                                                }
+                                                            }
+                                                            Schedule schedule = new Schedule();
+                                                            schedule.setPosition(currentPosition);
+                                                            schedule.setScheduleLength(rowspan);
+                                                            schedule.setScheduleName(name);
+                                                            schedule.setScheduleType(type);
+                                                            schedule.setScheduleLesson(lesson);
+                                                            schedule.setScheduleWeek(week);
+                                                            schedule.setScheduleTeacher(teacher);
+                                                            schedule.setScheduleLocation(location);
+                                                            schedule.setRow(row - 2);
+                                                            if (row == 2 || row == 6 || row == 10) {
+                                                                schedule.setColumn(currentColumnIndexInThisRow - 2);
+                                                            } else {
+                                                                schedule.setColumn(currentColumnIndexInThisRow - 1);
+                                                            }
+                                                            schedule.setColorCode(ScheduleColorUtils.getScheduleColor(currentPosition));
+                                                            schedulesWithSpecialEmptySchedule[currentPosition][n] = schedule;
+                                                            n++;
+                                                            j = j + 4;
                                                         }
-                                                        Schedule schedule = new Schedule();
-                                                        schedule.setPosition(currentPosition);
-                                                        schedule.setScheduleLength(rowspan);
-                                                        schedule.setScheduleName(name);
-                                                        schedule.setScheduleType(type);
-                                                        schedule.setScheduleLesson(lesson);
-                                                        schedule.setScheduleWeek(week);
-                                                        schedule.setScheduleTeacher(teacher);
-                                                        schedule.setScheduleLocation(location);
-                                                        schedule.setRow(row - 2);
-                                                        if (row == 2 || row == 6 || row == 10) {
-                                                            schedule.setColumn(currentColumnIndexInThisRow - 2);
-                                                        } else {
-                                                            schedule.setColumn(currentColumnIndexInThisRow - 1);
-                                                        }
-                                                        schedule.setColorCode(ScheduleColorUtils.getScheduleColor(currentPosition));
-                                                        schedulesWithSpecialEmptySchedule[currentPosition][n] = schedule;
-                                                        n++;
-                                                        j = j + 4;
                                                     }
                                                 }
                                             }
+                                            currentColumnIndexInThisRow = currentColumnIndexInThisRow + 1;
                                         }
-                                        currentColumnIndexInThisRow = currentColumnIndexInThisRow + 1;
                                     }
                                 }
                             }
-                        }
-                        for (Schedule[] schedules : schedulesWithSpecialEmptySchedule) {
-                            for (Schedule schedule : schedules) {
-                                if (schedule != null && schedule != specialEmptySchedule) {
-                                    schedulesWithoutSpecialEmptySchedule.add(schedule);
+                            for (Schedule[] schedules : schedulesWithSpecialEmptySchedule) {
+                                for (Schedule schedule : schedules) {
+                                    if (schedule != null && schedule != specialEmptySchedule) {
+                                        schedulesWithoutSpecialEmptySchedule.add(schedule);
+                                    }
                                 }
                             }
+                            result.setResultData(schedulesWithoutSpecialEmptySchedule);
+                            result.setResultType(ServiceResultEnum.SUCCESS);
+                            return result;
+                        } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                            throw new PasswordIncorrectException("账号密码错误");
                         }
-                        result.setResultData(schedulesWithoutSpecialEmptySchedule);
-                        result.setResultType(ServiceResultEnum.SUCCESS);
-                        return result;
-                    } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                        throw new PasswordIncorrectException("账号密码错误");
+                        throw new ServerErrorException("教务系统异常");
                     }
                     throw new ServerErrorException("教务系统异常");
                 }
-                throw new ServerErrorException("教务系统异常");
             } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                if (httpResponse.getFirstHeader("Location").getValue()
+                        .equals("/loginTs/loginTs_yzsb.html")) {
+                    //时间戳校验失败
+                    throw new TimeStampIncorrectException("时间戳校验失败");
+                }
                 throw new PasswordIncorrectException("账号密码错误");
             }
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {
-            log.error("查询课表异常：" , e);
+            log.error("查询课表异常：", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } catch (PasswordIncorrectException e) {
-            log.error("查询课表异常：" , e);
+            log.error("查询课表异常：", e);
             result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
+        } catch (TimeStampIncorrectException e) {
+            log.error("查询课表异常；", e);
+            result.setResultType(ServiceResultEnum.TIMESTAMP_INVALID);
         } catch (IOException e) {
-            log.error("查询课表异常：" , e);
+            log.error("查询课表异常：", e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("查询课表异常：" , e);
+            log.error("查询课表异常：", e);
             e.printStackTrace();
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {

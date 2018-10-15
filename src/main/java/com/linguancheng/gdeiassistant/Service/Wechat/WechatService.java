@@ -12,6 +12,7 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatArticle;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatImageTextMessage;
@@ -328,9 +329,9 @@ public class WechatService {
             if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)
                     && username.length() <= 20 && password.length() <= 35) {
                 //进行用户登录
-                BaseResult<User, LoginResultEnum> loginResult = userLoginService.UserLogin(request
+                UserLoginResult userLoginResult = userLoginService.UserLogin(request
                         , new User(username, password), true);
-                switch (loginResult.getResultType()) {
+                switch (userLoginResult.getLoginResultEnum()) {
                     case LOGIN_SUCCESS:
                         //登录成功，进行微信账号绑定
                         if (wechatUserDataService.SyncWechatUserData(username, wechatId)) {

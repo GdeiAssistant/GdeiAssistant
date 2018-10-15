@@ -1,35 +1,33 @@
 package com.linguancheng.gdeiassistant.Pojo.UserLogin;
 
+import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * 广东二师助手团队 林冠成 版权所有
+ * All rights reserved © 2016 - 2018
+ * Author:林冠成
+ * Date:2018/10/15
+ */
+
 @Component
 @Scope("prototype")
-public class UserLoginJsonResult {
+public class UserLoginResult {
 
-    private boolean success;
-
-    private String errorMessage;
+    private LoginResultEnum loginResultEnum;
 
     private User user;
 
     private Long timestamp;
 
-    public boolean isSuccess() {
-        return success;
+    public LoginResultEnum getLoginResultEnum() {
+        return loginResultEnum;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setLoginResultEnum(LoginResultEnum loginResultEnum) {
+        this.loginResultEnum = loginResultEnum;
     }
 
     public User getUser() {

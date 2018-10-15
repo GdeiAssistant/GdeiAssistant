@@ -5,6 +5,7 @@ import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionExcep
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
 import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Service.Wechat.WechatService;
@@ -132,8 +133,8 @@ public class WechatAttachController {
         }
         //清除已登录用户的用户凭证记录
         userLoginService.ClearUserLoginCredentials(request);
-        BaseResult<User, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request, user, true);
-        switch (userLoginResult.getResultType()) {
+        UserLoginResult userLoginResult = userLoginService.UserLogin(request, user, true);
+        switch (userLoginResult.getLoginResultEnum()) {
             case PASSWORD_ERROR:
                 result.setSuccess(false);
                 result.setErrorMessage("用户账户或密码错误，请检查并重试");
@@ -156,7 +157,7 @@ public class WechatAttachController {
 
             case LOGIN_SUCCESS:
                 //同步用户教务系统账号信息到数据库
-                User resultUser = userLoginResult.getResultData();
+                User resultUser = userLoginResult.getUser();
                 //同步用户数据
                 try {
                     userDataService.SyncUserData(resultUser);
@@ -165,8 +166,7 @@ public class WechatAttachController {
                         //将用户信息数据写入Session
                         request.getSession().setAttribute("username", resultUser.getUsername());
                         request.getSession().setAttribute("password", resultUser.getPassword());
-                        request.getSession().setAttribute("keycode", resultUser.getKeycode());
-                        request.getSession().setAttribute("number", resultUser.getNumber());
+                        userLoginService.AsyncUpdateSession(request);
                         result.setSuccess(true);
                         return result;
                     }

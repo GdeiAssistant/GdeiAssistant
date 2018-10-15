@@ -54,7 +54,7 @@ function postQueryForm(year) {
     $("#loadingToast, .weui_mask").show();
     if (typeof year === "undefined") {
         $.ajax({
-            url: "/gradequery",
+            url: "/api/gradequery",
             type: 'post',
             success: function (gradeQueryResult) {
                 //隐藏进度条
@@ -77,7 +77,7 @@ function postQueryForm(year) {
     }
     else {
         $.ajax({
-            url: "/gradequery",
+            url: "/api/gradequery",
             data: {year: year},
             type: 'post',
             success: function (gradeQueryResult) {

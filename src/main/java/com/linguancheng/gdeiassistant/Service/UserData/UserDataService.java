@@ -43,8 +43,8 @@ public class UserDataService {
             if (queryUser != null) {
                 //该用户已经存在,检查是否需要更新用户数据
                 queryUser = queryUser.decryptUser();
-                if (!queryUser.getUsername().equals(user.getUsername()) || !queryUser.getPassword().equals(user.getPassword())
-                        || !queryUser.getKeycode().equals(user.getKeycode()) || !queryUser.getNumber().equals(user.getNumber())) {
+                if (!queryUser.getUsername().equals(user.getUsername())
+                        || !queryUser.getPassword().equals(user.getPassword())) {
                     userMapper.updateUser(encryptUser);
                 }
             } else {
@@ -61,7 +61,7 @@ public class UserDataService {
                 privacyMapper.initPrivacy(encryptUser.getUsername());
             }
         } catch (Exception e) {
-            log.error("同步用户数据异常：" , e);
+            log.error("同步用户数据异常：", e);
             //抛出异常进行事务回滚
             throw new TransactionException("同步用户数据异常，进行回滚");
         }

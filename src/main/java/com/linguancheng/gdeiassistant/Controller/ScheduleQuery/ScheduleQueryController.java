@@ -14,15 +14,12 @@ import com.gdeiassistant.gdeiassistant.Service.ScheduleQuery.ScheduleCacheServic
 import com.gdeiassistant.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
 import com.gdeiassistant.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
-import com.gdeiassistant.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
+import com.gdeiassistant.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,49 +57,60 @@ public class ScheduleQueryController {
     @RestQueryLog
     @ResponseBody
     public ScheduleQueryJsonResult ScheduleQuery(HttpServletRequest request
-            , @Validated(value = ServiceQueryValidGroup.class) User user
-            , Integer week, Long timestamp, @RequestParam(name = "refresh", required = false
-            , defaultValue = "false") Boolean refresh, BindingResult bindingResult) {
+            , @ModelAttribute("user") @Validated(value = UserLoginValidGroup.class) User user
+            , BindingResult bindingResult, Integer week, Long timestamp
+            , @RequestParam(name = "refresh", required = false
+            , defaultValue = "false") Boolean refresh) {
         ScheduleQueryJsonResult scheduleQueryJsonResult = new ScheduleQueryJsonResult();
-        if (bindingResult.hasErrors() || (week != null && (week < 0 || week > 20))) {
+        if (bindingResult.hasErrors()) {
             scheduleQueryJsonResult.setSuccess(false);
-            scheduleQueryJsonResult.setErrorMessage("请求参数不合�?");
+            scheduleQueryJsonResult.setErrorMessage("API接口已更新，请更新应用至最新版本");
+        } else if (week != null && (week < 0 || week > 20)) {
+            scheduleQueryJsonResult.setSuccess(false);
+            scheduleQueryJsonResult.setErrorMessage("请求参数不合法");
         } else {
-            String username = user.getUsername();
-            String keycode = user.getKeycode();
-            String number = user.getNumber();
             //校验用户账号身份
-            UserLoginResult userLoginResult = userLoginService.UserLogin(request, user, true);
+            UserLoginResult userLoginResult = userLoginService.UserLogin(request
+                    , user, true);
             switch (userLoginResult.getLoginResultEnum()) {
                 case LOGIN_SUCCESS:
                     if (!refresh) {
                         //优先查询缓存数据
-                        ScheduleDocument scheduleDocument = scheduleCacheService.ReadSchedule(username);
+                        ScheduleDocument scheduleDocument = scheduleCacheService
+                                .ReadSchedule(user.getUsername());
                         if (scheduleDocument != null) {
                             if (week == null) {
                                 week = scheduleQueryService.getCurrentWeek();
                             }
                             scheduleQueryJsonResult.setSuccess(true);
                             scheduleQueryJsonResult.setScheduleList(scheduleQueryService
-                                    .getSpecifiedWeekSchedule(scheduleDocument.getScheduleList(), week));
+                                    .getSpecifiedWeekSchedule(scheduleDocument
+                                            .getScheduleList(), week));
                             scheduleQueryJsonResult.setSelectedWeek(week);
                             return scheduleQueryJsonResult;
                         }
                     }
                     //若缓存数据不存在或要求强制更新，则从教务系统获取
-                    //�?测是否已与教务系统进行会话同�?
+                    //检测是否已与教务系统进行会话同步
                     if (timestamp == null) {
                         //进行会话同步
-                        userLoginResult = userLoginService.UserLogin(request, user, false);
+                        userLoginResult = userLoginService.UserLogin(request, user
+                                , false);
                         switch (userLoginResult.getLoginResultEnum()) {
                             case LOGIN_SUCCESS:
                                 timestamp = userLoginResult.getTimestamp();
+                                if (StringUtils.isBlank(user.getKeycode())) {
+                                    user.setKeycode(userLoginResult.getUser().getKeycode());
+                                }
+                                if (StringUtils.isBlank(user.getNumber())) {
+                                    user.setNumber(userLoginResult.getUser().getNumber());
+                                }
                                 break;
 
                             case SERVER_ERROR:
-                                //服务器异�?
+                                //服务器异常
                                 scheduleQueryJsonResult.setSuccess(false);
-                                scheduleQueryJsonResult.setErrorMessage("教务系统维护中，请稍候再�?");
+                                scheduleQueryJsonResult.setErrorMessage("教务系统维护中，请稍候再试");
                                 return scheduleQueryJsonResult;
 
                             case TIME_OUT:
@@ -114,46 +122,47 @@ public class ScheduleQueryController {
                             case PASSWORD_ERROR:
                                 //用户名或密码错误
                                 scheduleQueryJsonResult.setSuccess(false);
-                                scheduleQueryJsonResult.setErrorMessage("密码已更新，请重新登�?");
+                                scheduleQueryJsonResult.setErrorMessage("密码已更新，请重新登录");
                                 return scheduleQueryJsonResult;
                         }
                     }
                     BaseResult<List<Schedule>, ServiceResultEnum> scheduleQueryResult = scheduleQueryService
-                            .ScheduleQuery(request, username, keycode, number, timestamp);
+                            .ScheduleQuery(request, user.getUsername(), user.getKeycode()
+                                    , user.getNumber(), timestamp);
                     switch (scheduleQueryResult.getResultType()) {
                         case SERVER_ERROR:
-                            //服务器异�?
+                            //服务器异常
                             scheduleQueryJsonResult.setSuccess(false);
-                            scheduleQueryJsonResult.setErrorMessage("教务系统维护中，请稍候再�?");
+                            scheduleQueryJsonResult.setErrorMessage("教务系统维护中，请稍候再试");
                             break;
 
                         case TIME_OUT:
                             //连接超时
                             scheduleQueryJsonResult.setSuccess(false);
-                            scheduleQueryJsonResult.setErrorMessage("网络连接超时，请稍�?�再�?");
+                            scheduleQueryJsonResult.setErrorMessage("网络连接超时，请稍候再试");
                             break;
 
                         case PASSWORD_INCORRECT:
                             //用户名或密码错误
                             scheduleQueryJsonResult.setSuccess(false);
-                            scheduleQueryJsonResult.setErrorMessage("密码已更新，请重新登�?");
+                            scheduleQueryJsonResult.setErrorMessage("密码已更新，请重新登录");
                             break;
 
                         case SUCCESS:
                             //查询成功
                             scheduleQueryJsonResult.setSuccess(true);
                             if (week == null) {
-                                //无指定查询周数，则默认返回当前周数课�?
+                                //无指定查询周数，则默认返回当前周数课表
                                 scheduleQueryJsonResult.setScheduleList(scheduleQueryService
                                         .getSpecifiedWeekSchedule(scheduleQueryResult.getResultData()
                                                 , scheduleQueryService.getCurrentWeek()));
                                 scheduleQueryJsonResult.setSelectedWeek(scheduleQueryService.getCurrentWeek());
                             } else if (week.equals(0)) {
-                                //若周数指定为0，则返回�?有周数的课表
+                                //若周数指定为0，则返回所有周数的课表
                                 scheduleQueryJsonResult.setScheduleList(scheduleQueryResult.getResultData());
                                 scheduleQueryJsonResult.setSelectedWeek(0);
                             } else {
-                                //返回指定周数的课�?
+                                //返回指定周数的课表
                                 scheduleQueryJsonResult.setScheduleList(scheduleQueryService
                                         .getSpecifiedWeekSchedule(scheduleQueryResult.getResultData()
                                                 , week));
@@ -166,19 +175,19 @@ public class ScheduleQueryController {
                 case PASSWORD_ERROR:
                     //用户名或密码错误
                     scheduleQueryJsonResult.setSuccess(false);
-                    scheduleQueryJsonResult.setErrorMessage("密码已更新，请重新登�?");
+                    scheduleQueryJsonResult.setErrorMessage("密码已更新，请重新登录");
                     break;
 
                 case TIME_OUT:
                     //连接超时
                     scheduleQueryJsonResult.setSuccess(false);
-                    scheduleQueryJsonResult.setErrorMessage("网络连接超时，请稍�?�再�?");
+                    scheduleQueryJsonResult.setErrorMessage("网络连接超时，请稍候再试");
                     break;
 
                 case SERVER_ERROR:
-                    //服务器异�?
+                    //服务器异常
                     scheduleQueryJsonResult.setSuccess(false);
-                    scheduleQueryJsonResult.setErrorMessage("教务系统维护中，请稍候再�?");
+                    scheduleQueryJsonResult.setErrorMessage("教务系统维护中，请稍候再试");
                     break;
             }
         }
@@ -222,7 +231,7 @@ public class ScheduleQueryController {
             }
         }
         //若缓存数据不存在或要求强制更新，则从教务系统获取
-        //�?测是否已与教务系统进行会话同�?
+        //检测是否已与教务系统进行会话同步
         if (request.getSession().getAttribute("timestamp") != null) {
             //进行会话同步
             switch (userLoginService.SyncUpdateSession(request)) {
@@ -238,13 +247,13 @@ public class ScheduleQueryController {
                 case PASSWORD_INCORRECT:
                     //身份凭证异常
                     scheduleQueryJsonResult.setSuccess(false);
-                    scheduleQueryJsonResult.setErrorMessage("用户凭证已过期，请重新登�?");
+                    scheduleQueryJsonResult.setErrorMessage("用户凭证已过期，请重新登录");
                     return scheduleQueryJsonResult;
 
                 default:
-                    //服务器异�?
+                    //服务器异常
                     scheduleQueryJsonResult.setSuccess(false);
-                    scheduleQueryJsonResult.setErrorMessage("教务系统维护�?,请稍候再�?");
+                    scheduleQueryJsonResult.setErrorMessage("教务系统维护中,请稍候再试");
                     return scheduleQueryJsonResult;
             }
         }
@@ -258,17 +267,17 @@ public class ScheduleQueryController {
                 //查询课表成功
                 scheduleQueryJsonResult.setSuccess(true);
                 if (week == null) {
-                    //无指定查询周数，则默认返回当前周数课�?
+                    //无指定查询周数，则默认返回当前周数课表
                     scheduleQueryJsonResult.setScheduleList(scheduleQueryService
                             .getSpecifiedWeekSchedule(scheduleQueryResult.getResultData()
                                     , scheduleQueryService.getCurrentWeek()));
                     scheduleQueryJsonResult.setSelectedWeek(scheduleQueryService.getCurrentWeek());
                 } else if (week.equals(0)) {
-                    //若周数指定为0，则返回�?有周数的课表
+                    //若周数指定为0，则返回所有周数的课表
                     scheduleQueryJsonResult.setScheduleList(scheduleQueryResult.getResultData());
                     scheduleQueryJsonResult.setSelectedWeek(0);
                 } else {
-                    //返回指定周数的课�?
+                    //返回指定周数的课表
                     scheduleQueryJsonResult.setScheduleList(scheduleQueryService
                             .getSpecifiedWeekSchedule(scheduleQueryResult.getResultData()
                                     , week));
@@ -276,16 +285,22 @@ public class ScheduleQueryController {
                 }
                 break;
 
+            case TIMESTAMP_INVALID:
+            case PASSWORD_INCORRECT:
+                scheduleQueryJsonResult.setSuccess(false);
+                scheduleQueryJsonResult.setErrorMessage("用户凭证已过期，请重新登录");
+                break;
+
             case TIME_OUT:
                 //连接超时
                 scheduleQueryJsonResult.setSuccess(false);
-                scheduleQueryJsonResult.setErrorMessage("连接教务系统超时,请稍候再�?");
+                scheduleQueryJsonResult.setErrorMessage("连接教务系统超时,请稍候再试");
                 break;
 
             case SERVER_ERROR:
-                //服务器异�?
+                //服务器异常
                 scheduleQueryJsonResult.setSuccess(false);
-                scheduleQueryJsonResult.setErrorMessage("教务系统维护�?,请稍候再�?");
+                scheduleQueryJsonResult.setErrorMessage("教务系统维护中,请稍候再试");
                 break;
         }
         return scheduleQueryJsonResult;

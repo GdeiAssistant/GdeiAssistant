@@ -7,11 +7,12 @@ import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
 import com.linguancheng.gdeiassistant.Service.Evaluate.EvaluateService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import com.linguancheng.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
+import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -100,7 +101,8 @@ public class EvaluateController {
 
     @RequestMapping(value = "/rest/evaluate", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult StartEvaluate(HttpServletRequest request, @Validated(value = ServiceQueryValidGroup.class) User user
+    public BaseJsonResult StartEvaluate(HttpServletRequest request
+            , @ModelAttribute("user") @Validated(value = UserLoginValidGroup.class) User user
             , BindingResult bindingResult, Long timestamp, boolean directlySubmit) {
         BaseJsonResult baseJsonResult = new BaseJsonResult();
         if (bindingResult.hasErrors()) {
@@ -111,10 +113,17 @@ public class EvaluateController {
         //检测是否已与教务系统进行会话同步
         if (timestamp == null) {
             //进行会话同步
-            UserLoginResult userLoginResult = userLoginService.UserLogin(request, user, false);
+            UserLoginResult userLoginResult = userLoginService.UserLogin(request,
+                    user, false);
             switch (userLoginResult.getLoginResultEnum()) {
                 case LOGIN_SUCCESS:
                     timestamp = userLoginResult.getTimestamp();
+                    if (StringUtils.isBlank(user.getKeycode())) {
+                        user.setKeycode(userLoginResult.getUser().getKeycode());
+                    }
+                    if (StringUtils.isBlank(user.getNumber())) {
+                        user.setNumber(userLoginResult.getUser().getNumber());
+                    }
                     break;
 
                 case SERVER_ERROR:
@@ -141,6 +150,12 @@ public class EvaluateController {
         switch (resultEnum) {
             case SUCCESS:
                 baseJsonResult.setSuccess(true);
+                break;
+
+            case TIMESTAMP_INVALID:
+                //时间戳校验失败
+                baseJsonResult.setSuccess(false);
+                baseJsonResult.setErrorMessage("时间戳校验失败，请尝试重新登录");
                 break;
 
             case TIME_OUT:

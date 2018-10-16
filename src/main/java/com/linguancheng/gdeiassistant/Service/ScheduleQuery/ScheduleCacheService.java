@@ -94,8 +94,6 @@ public class ScheduleCacheService {
                         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                         params.add("username", StringEncryptUtils.decryptString(user.getUsername()));
                         params.add("password", StringEncryptUtils.decryptString(user.getPassword()));
-                        params.add("keycode", StringEncryptUtils.decryptString(user.getKeycode()));
-                        params.add("number", StringEncryptUtils.decryptString(user.getNumber()));
                         params.add("refresh", String.valueOf(true));
                         params.add("week", String.valueOf(0));
                         semaphore.acquire();

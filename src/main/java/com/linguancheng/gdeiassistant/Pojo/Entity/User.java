@@ -2,7 +2,6 @@ package com.linguancheng.gdeiassistant.Pojo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
-import com.linguancheng.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
 import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import com.taobao.wsgsvr.WsgException;
 import org.hibernate.validator.constraints.NotBlank;
@@ -21,8 +20,8 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements Serializable {
 
-    @NotBlank(message = "用户名不能为空", groups = {UserLoginValidGroup.class, ServiceQueryValidGroup.class})
-    @Size(min = 1, max = 20, message = "用户名长度超过限制", groups = {UserLoginValidGroup.class, ServiceQueryValidGroup.class})
+    @NotBlank(message = "用户名不能为空", groups = {UserLoginValidGroup.class})
+    @Size(min = 1, max = 20, message = "用户名长度超过限制", groups = {UserLoginValidGroup.class})
     //教务系统账号用户名
     private String username;
 
@@ -32,15 +31,12 @@ public class User implements Serializable {
     private String password;
 
     //教务系统账号加密值
-    @NotBlank(message = "加密值不能为空", groups = {ServiceQueryValidGroup.class})
-    @Size(max = 32, message = "加密值长度不合法", groups = {ServiceQueryValidGroup.class})
     private String keycode;
 
     //教务系统账号学号
-    @NotBlank(message = "学号不能为空", groups = {ServiceQueryValidGroup.class})
-    @Size(max = 11, message = "学号长度不合法", groups = {ServiceQueryValidGroup.class})
     private String number;
 
+    //用户真实姓名
     private String realname;
 
     /**

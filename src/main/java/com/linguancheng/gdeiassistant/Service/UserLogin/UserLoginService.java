@@ -115,15 +115,6 @@ public class UserLoginService {
                             userLoginResult.setLoginResultEnum(LoginResultEnum.LOGIN_SUCCESS);
                             return userLoginResult;
                         }
-                    } else {
-                        if (decryptUser.getUsername().equals(user.getUsername())
-                                && decryptUser.getKeycode().equals(user.getKeycode())
-                                && decryptUser.getNumber().equals(user.getNumber())) {
-                            //登录成功,缓存并返回用户信息
-                            userLoginResult.setUser(queryUser.decryptUser());
-                            userLoginResult.setLoginResultEnum(LoginResultEnum.LOGIN_SUCCESS);
-                            return userLoginResult;
-                        }
                     }
                 }
             } catch (Exception e) {

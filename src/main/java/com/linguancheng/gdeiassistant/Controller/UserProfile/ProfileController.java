@@ -14,7 +14,6 @@ import com.linguancheng.gdeiassistant.Service.Profile.RealNameService;
 import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import com.linguancheng.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
 import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -842,7 +841,8 @@ public class ProfileController {
     @RequestMapping(value = "/rest/api/profile/realname", method = RequestMethod.POST)
     @ResponseBody
     public DataJsonResult<String> getUserRealName(HttpServletRequest request
-            , @Validated(ServiceQueryValidGroup.class) User user, BindingResult bindingResult) {
+            , @ModelAttribute("user") @Validated(UserLoginValidGroup.class) User user
+            , BindingResult bindingResult) {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
         if (bindingResult.hasErrors()) {
             jsonResult.setSuccess(false);

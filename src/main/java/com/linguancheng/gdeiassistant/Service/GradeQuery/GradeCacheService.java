@@ -104,8 +104,6 @@ public class GradeCacheService {
                                 MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                                 params.add("username", StringEncryptUtils.decryptString(user.getUsername()));
                                 params.add("password", StringEncryptUtils.decryptString(user.getPassword()));
-                                params.add("keycode", StringEncryptUtils.decryptString(user.getKeycode()));
-                                params.add("number", StringEncryptUtils.decryptString(user.getNumber()));
                                 params.add("refresh", String.valueOf(true));
                                 params.add("year", String.valueOf(i));
                                 ListenableFuture<ResponseEntity<GradeQueryJsonResult>> future = asyncRestTemplate

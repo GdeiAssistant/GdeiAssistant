@@ -434,8 +434,6 @@ public class UserProfileService {
                     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                     params.add("username", user.getUsername());
                     params.add("password", user.getPassword());
-                    params.add("keycode", user.getKeycode());
-                    params.add("number", user.getNumber());
                     semaphore.acquire();
                     ListenableFuture<ResponseEntity<DataJsonResult<String>>> future = asyncRestTemplate
                             .exchange("https://www.gdeiassistant.cn/rest/api/profile/realname"

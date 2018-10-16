@@ -14,15 +14,12 @@ import com.linguancheng.gdeiassistant.Service.GradeQuery.GradeCacheService;
 import com.linguancheng.gdeiassistant.Service.GradeQuery.GradeQueryService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import com.linguancheng.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
+import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,25 +61,26 @@ public class GradeQueryController {
     @RequestMapping(value = "/rest/gradequery", method = RequestMethod.POST)
     @RestQueryLog
     @ResponseBody
-    public GradeQueryJsonResult GradeQuery(HttpServletRequest request, @Validated(value = ServiceQueryValidGroup.class) User user
-            , Integer year, Long timestamp, @RequestParam(value = "refresh", required = false
-            , defaultValue = "false") Boolean refresh
-            , BindingResult bindingResult) {
+    public GradeQueryJsonResult GradeQuery(HttpServletRequest request
+            , @ModelAttribute("user") @Validated(value = UserLoginValidGroup.class) User user
+            , BindingResult bindingResult, Integer year, Long timestamp
+            , @RequestParam(value = "refresh", required = false
+            , defaultValue = "false") Boolean refresh) {
         GradeQueryJsonResult result = new GradeQueryJsonResult();
-        if (year != null && (year < 0 || year > 3) || bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
+            result.setSuccess(false);
+            result.setErrorMessage("API接口已更新，请更新应用至最新版本");
+        } else if (year != null && (year < 0 || year > 3)) {
             result.setSuccess(false);
             result.setErrorMessage("请求参数不合法");
         } else {
-            String username = user.getUsername();
-            String keycode = user.getKeycode();
-            String number = user.getNumber();
             //校验用户账号身份
             UserLoginResult userLoginResult = userLoginService.UserLogin(request, user, true);
             switch (userLoginResult.getLoginResultEnum()) {
                 case LOGIN_SUCCESS:
                     //优先查询缓存数据
                     if (!refresh) {
-                        GradeDocument gradeDocument = gradeCacheService.ReadGrade(username);
+                        GradeDocument gradeDocument = gradeCacheService.ReadGrade(user.getUsername());
                         if (gradeDocument != null) {
                             List<GradeDocument.GradeList> gradeLists = gradeDocument.getGradeList();
                             if (year == null) {
@@ -93,7 +91,8 @@ public class GradeQueryController {
                                 result.setErrorMessage("当前学年暂不可以查询");
                                 return result;
                             }
-                            List<Grade> gradeList = gradeDocument.getGradeList().get(year).getGradeList();
+                            List<Grade> gradeList = gradeDocument.getGradeList().get(year)
+                                    .getGradeList();
                             List<Grade> firstTermGradeList = new ArrayList<>();
                             List<Grade> secondTermGradeList = new ArrayList<>();
                             for (Grade grade : gradeList) {
@@ -130,6 +129,12 @@ public class GradeQueryController {
                         switch (userLoginResult.getLoginResultEnum()) {
                             case LOGIN_SUCCESS:
                                 timestamp = userLoginResult.getTimestamp();
+                                if (StringUtils.isBlank(user.getKeycode())) {
+                                    user.setKeycode(userLoginResult.getUser().getKeycode());
+                                }
+                                if (StringUtils.isBlank(user.getNumber())) {
+                                    user.setNumber(userLoginResult.getUser().getNumber());
+                                }
                                 break;
 
                             case SERVER_ERROR:
@@ -154,8 +159,8 @@ public class GradeQueryController {
                                 return result;
                         }
                     }
-                    GradeQueryResult gradeQueryResult = gradeQueryService.GradeQuery(request, username
-                            , keycode, number, timestamp, year);
+                    GradeQueryResult gradeQueryResult = gradeQueryService.GradeQuery(request, user.getUsername()
+                            , user.getKeycode(), user.getNumber(), timestamp, year);
                     switch (gradeQueryResult.getGradeServiceResultEnum()) {
                         case PASSWORD_INCORRECT:
                             //身份凭证异常

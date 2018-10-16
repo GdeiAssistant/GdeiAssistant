@@ -14,15 +14,12 @@ import com.linguancheng.gdeiassistant.Service.ScheduleQuery.ScheduleCacheService
 import com.linguancheng.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import com.linguancheng.gdeiassistant.ValidGroup.User.ServiceQueryValidGroup;
+import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,31 +57,35 @@ public class ScheduleQueryController {
     @RestQueryLog
     @ResponseBody
     public ScheduleQueryJsonResult ScheduleQuery(HttpServletRequest request
-            , @Validated(value = ServiceQueryValidGroup.class) User user
-            , Integer week, Long timestamp, @RequestParam(name = "refresh", required = false
-            , defaultValue = "false") Boolean refresh, BindingResult bindingResult) {
+            , @ModelAttribute("user") @Validated(value = UserLoginValidGroup.class) User user
+            , BindingResult bindingResult, Integer week, Long timestamp
+            , @RequestParam(name = "refresh", required = false
+            , defaultValue = "false") Boolean refresh) {
         ScheduleQueryJsonResult scheduleQueryJsonResult = new ScheduleQueryJsonResult();
-        if (bindingResult.hasErrors() || (week != null && (week < 0 || week > 20))) {
+        if (bindingResult.hasErrors()) {
+            scheduleQueryJsonResult.setSuccess(false);
+            scheduleQueryJsonResult.setErrorMessage("API接口已更新，请更新应用至最新版本");
+        } else if (week != null && (week < 0 || week > 20)) {
             scheduleQueryJsonResult.setSuccess(false);
             scheduleQueryJsonResult.setErrorMessage("请求参数不合法");
         } else {
-            String username = user.getUsername();
-            String keycode = user.getKeycode();
-            String number = user.getNumber();
             //校验用户账号身份
-            UserLoginResult userLoginResult = userLoginService.UserLogin(request, user, true);
+            UserLoginResult userLoginResult = userLoginService.UserLogin(request
+                    , user, true);
             switch (userLoginResult.getLoginResultEnum()) {
                 case LOGIN_SUCCESS:
                     if (!refresh) {
                         //优先查询缓存数据
-                        ScheduleDocument scheduleDocument = scheduleCacheService.ReadSchedule(username);
+                        ScheduleDocument scheduleDocument = scheduleCacheService
+                                .ReadSchedule(user.getUsername());
                         if (scheduleDocument != null) {
                             if (week == null) {
                                 week = scheduleQueryService.getCurrentWeek();
                             }
                             scheduleQueryJsonResult.setSuccess(true);
                             scheduleQueryJsonResult.setScheduleList(scheduleQueryService
-                                    .getSpecifiedWeekSchedule(scheduleDocument.getScheduleList(), week));
+                                    .getSpecifiedWeekSchedule(scheduleDocument
+                                            .getScheduleList(), week));
                             scheduleQueryJsonResult.setSelectedWeek(week);
                             return scheduleQueryJsonResult;
                         }
@@ -93,10 +94,17 @@ public class ScheduleQueryController {
                     //检测是否已与教务系统进行会话同步
                     if (timestamp == null) {
                         //进行会话同步
-                        userLoginResult = userLoginService.UserLogin(request, user, false);
+                        userLoginResult = userLoginService.UserLogin(request, user
+                                , false);
                         switch (userLoginResult.getLoginResultEnum()) {
                             case LOGIN_SUCCESS:
                                 timestamp = userLoginResult.getTimestamp();
+                                if (StringUtils.isBlank(user.getKeycode())) {
+                                    user.setKeycode(userLoginResult.getUser().getKeycode());
+                                }
+                                if (StringUtils.isBlank(user.getNumber())) {
+                                    user.setNumber(userLoginResult.getUser().getNumber());
+                                }
                                 break;
 
                             case SERVER_ERROR:
@@ -119,7 +127,8 @@ public class ScheduleQueryController {
                         }
                     }
                     BaseResult<List<Schedule>, ServiceResultEnum> scheduleQueryResult = scheduleQueryService
-                            .ScheduleQuery(request, username, keycode, number, timestamp);
+                            .ScheduleQuery(request, user.getUsername(), user.getKeycode()
+                                    , user.getNumber(), timestamp);
                     switch (scheduleQueryResult.getResultType()) {
                         case SERVER_ERROR:
                             //服务器异常
@@ -274,6 +283,12 @@ public class ScheduleQueryController {
                                     , week));
                     scheduleQueryJsonResult.setSelectedWeek(week);
                 }
+                break;
+
+            case TIMESTAMP_INVALID:
+            case PASSWORD_INCORRECT:
+                scheduleQueryJsonResult.setSuccess(false);
+                scheduleQueryJsonResult.setErrorMessage("用户凭证已过期，请重新登录");
                 break;
 
             case TIME_OUT:

@@ -31,11 +31,11 @@
     </select>
 
     <insert id="insertUser" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
-        insert into user (username,password,keycode,number,state) values (#{username},#{password},#{keycode},#{number},0)
+        insert into user (username,password,state) values (#{username},#{password},0)
     </insert>
 
     <update id="updateUser" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
-        update user set password=#{password},keycode=#{keycode},number=#{number},state=0 where username=#{username}
+        update user set password=#{password},state=0 where username=#{username}
     </update>
 
     <update id="closeUser" parameterType="java.lang.String">

@@ -6,14 +6,11 @@ import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrec
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import net.sf.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -30,7 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -42,7 +38,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,50 +123,78 @@ public class UserLoginService {
                 }
             } catch (Exception e) {
                 //若查询数据库或加解密出现异常,则放弃数据库校验,使用学校教务系统登录校验
-                e.printStackTrace();
+                log.error("用户登录数据库校验异常：", e);
             }
         }
+        //用户不存在或与数据库的数据信息不匹配,进行普通登录
         CloseableHttpClient httpClient = null;
+        if (StringUtils.isBlank(user.getPassword())) {
+            try {
+                //若用户未填入密码，则通过加密值和学号从数据库查询密码值
+                User queryUser = userMapper.selectUser(StringEncryptUtils
+                        .encryptString(user.getUsername()));
+                if (queryUser != null && !queryUser.getState().equals(-1)) {
+                    queryUser = queryUser.decryptUser();
+                    if (queryUser.getUsername().equals(user.getUsername())
+                            && queryUser.getKeycode().equals(user.getKeycode())
+                            && queryUser.getNumber().equals(user.getNumber())) {
+                        //数据库校验通过，填入数据库中保存的密码值
+                        user.setPassword(queryUser.getPassword());
+                    } else {
+                        //数据库校验不通过，提示用户重新登录
+                        userLoginResult.setLoginResultEnum(LoginResultEnum.PASSWORD_ERROR);
+                        return userLoginResult;
+                    }
+                }
+            } catch (Exception e) {
+                //获取密码值失败
+                log.error("用户登录数据库校验异常：", e);
+                userLoginResult.setLoginResultEnum(LoginResultEnum.SERVER_ERROR);
+                return userLoginResult;
+            }
+        }
         try {
             httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
-            //用户不存在或与数据库的数据信息不匹配,进行普通登录
-            HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login?service=http://my.gdei.edu.cn:8002/index/index.jsp");
+            HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
             HttpResponse httpResponse = httpClient.execute(httpGet);
-            Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                if (document.title().equals("广东第二师范学院中央认证服务－登录")) {
-                    HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login?service=http://my.gdei.edu.cn:8002/index/index.jsp");
-                    //封装身份认证需要POST发送的相关数据
-                    BasicNameValuePair basicNameValuePair_1 = new BasicNameValuePair("username", user.getUsername());
-                    BasicNameValuePair basicNameValuePair_2 = new BasicNameValuePair("password", user.getPassword());
-                    BasicNameValuePair basicNameValuePair_3 = new BasicNameValuePair("service", "http://my.gdei.edu.cn:8002/index/index.jsp");
-                    BasicNameValuePair basicNameValuePair_4 = new BasicNameValuePair("imageField.x", "0");
-                    BasicNameValuePair basicNameValuePair_5 = new BasicNameValuePair("imageField.y", "0");
-                    List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
-                    //将BasicNameValuePair对象添加到ArrayList中
-                    basicNameValuePairs.add(basicNameValuePair_1);
-                    basicNameValuePairs.add(basicNameValuePair_2);
-                    basicNameValuePairs.add(basicNameValuePair_3);
-                    basicNameValuePairs.add(basicNameValuePair_4);
-                    basicNameValuePairs.add(basicNameValuePair_5);
-                    //绑定表单参数
-                    httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
-                    httpResponse = httpClient.execute(httpPost);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (document.title().equals("广东第二师范学院中央认证服务－登录")) {
-                        //认证失败,提示账号或密码错误
-                        throw new PasswordIncorrectException("登录账号密码不正确");
-                    }
-                    httpGet = new HttpGet(document.select("a").first().attr("href"));
-                    httpResponse = httpClient.execute(httpGet);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("首页")) {
-                        //连接到教务系统
-                        return LoginCasSystem(httpClient, user);
-                    }
+                HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login?service=http://my.gdei.edu.cn:8002/index/index.jsp");
+                //封装身份认证需要POST发送的相关数据
+                BasicNameValuePair basicNameValuePair_1 = new BasicNameValuePair("username", user.getUsername());
+                BasicNameValuePair basicNameValuePair_2 = new BasicNameValuePair("password", user.getPassword());
+                BasicNameValuePair basicNameValuePair_3 = new BasicNameValuePair("service", "http://my.gdei.edu.cn:8002/index/index.jsp");
+                BasicNameValuePair basicNameValuePair_4 = new BasicNameValuePair("imageField.x", "0");
+                BasicNameValuePair basicNameValuePair_5 = new BasicNameValuePair("imageField.y", "0");
+                List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
+                //将BasicNameValuePair对象添加到ArrayList中
+                basicNameValuePairs.add(basicNameValuePair_1);
+                basicNameValuePairs.add(basicNameValuePair_2);
+                basicNameValuePairs.add(basicNameValuePair_3);
+                basicNameValuePairs.add(basicNameValuePair_4);
+                basicNameValuePairs.add(basicNameValuePair_5);
+                //绑定表单参数
+                httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
+                httpResponse = httpClient.execute(httpPost);
+                Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                if(httpResponse.getStatusLine().getStatusCode()!=200){
+                    //服务器异常
                     throw new ServerErrorException("教务系统异常");
-                } else {
-                    //自动登录
+                }
+                if (!document.select("body").get(0).hasAttr("bgcolor")) {
+                    //认证失败,提示账号或密码错误
+                    throw new PasswordIncorrectException("登录账号密码不正确");
+                }
+                httpGet = new HttpGet(document.select("a").first().attr("href"));
+                httpResponse = httpClient.execute(httpGet);
+                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                    //连接到教务系统
+                    return LoginCasSystem(httpClient, user);
+                }
+                throw new ServerErrorException("教务系统异常");
+            } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
+                    //已经通过了认证
                     return LoginCasSystem(httpClient, user);
                 }
             }
@@ -213,11 +236,11 @@ public class UserLoginService {
         HttpGet httpGet = new HttpGet(url + "login_cas.aspx");
         HttpResponse httpResponse = httpClient.execute(httpGet);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("»ªÄÏÀí¹¤´óÑ§ÖÐÑëÈÏÖ¤·þÎñ")) {
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
             httpGet = new HttpGet(document.select("a").first().attr("href"));
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().isEmpty()) {
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 //获取学生的教务系统信息
                 String script = document.select("script").first().data();
                 String username = user.getUsername();
@@ -259,7 +282,7 @@ public class UserLoginService {
             httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number + "&type=1");
             httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 //获取学生的身份证号
                 httpGet = new HttpGet(url + "xsgrxx.aspx?xh=" + number);
                 httpResponse = httpClient.execute(httpGet);

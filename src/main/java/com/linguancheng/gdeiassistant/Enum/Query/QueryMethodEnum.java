@@ -12,7 +12,7 @@ public enum QueryMethodEnum {
 
     private String method;
 
-    public String getMethodValue() {
+    public String getMethod() {
         return method;
     }
 

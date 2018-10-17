@@ -6,8 +6,13 @@ import com.linguancheng.gdeiassistant.Exception.QueryException.NotAvailableCondi
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.Document.GradeDocument;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Grade;
+import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
+import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -43,6 +48,12 @@ public class GradeQueryService {
     private String url;
 
     @Autowired
+    private UserLoginService userLoginService;
+
+    @Autowired
+    private GradeCacheService gradeCacheService;
+
+    @Autowired
     private HttpClientFactory httpClientFactory;
 
     @Value("#{propertiesReader['education.system.url']}")
@@ -69,7 +80,7 @@ public class GradeQueryService {
      * @param year
      * @return
      */
-    public GradeQueryResult GradeQuery(HttpServletRequest request, String username, String keycode
+    private GradeQueryResult GradeQuery(HttpServletRequest request, String username, String keycode
             , String number, Long timestamp, int year) {
         GradeQueryResult gradeQueryResult = new GradeQueryResult();
         CloseableHttpClient httpClient = null;
@@ -244,4 +255,111 @@ public class GradeQueryService {
         return gradeQueryResult;
     }
 
+    /**
+     * 从MongoDB中获取用户缓存的成绩信息
+     *
+     * @param username
+     * @param year
+     * @return
+     */
+    public GradeQueryResult GetUserGradeDocument(String username, Integer year) {
+        GradeQueryResult gradeQueryResult = new GradeQueryResult();
+        GradeDocument gradeDocument = gradeCacheService.ReadGrade(username);
+        if (gradeDocument != null) {
+            List<GradeDocument.GradeList> gradeLists = gradeDocument.getGradeList();
+            if (year == null) {
+                year = gradeLists.size() - 1;
+            }
+            if (gradeLists.size() == 0 || year >= gradeLists.size()) {
+                gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum
+                        .ERROR_CONDITION);
+                return gradeQueryResult;
+            }
+            List<Grade> gradeList = gradeDocument.getGradeList().get(year)
+                    .getGradeList();
+            List<Grade> firstTermGradeList = new ArrayList<>();
+            List<Grade> secondTermGradeList = new ArrayList<>();
+            for (Grade grade : gradeList) {
+                if (grade.getGrade_term().equals("1")) {
+                    firstTermGradeList.add(grade);
+                } else {
+                    secondTermGradeList.add(grade);
+                }
+            }
+            Double firstTermGPA = gradeDocument.getFirstTermGPAList().get(year);
+            Double secondTermGPA = gradeDocument.getSecondTermGPAList().get(year);
+            Double firstTermIGP = gradeDocument.getFirstTermIGPList().get(year);
+            Double secondTermIGP = gradeDocument.getSecondTermIGPList().get(year);
+            gradeQueryResult.setFirstTermGPA(firstTermGPA);
+            gradeQueryResult.setFirstTermIGP(firstTermIGP);
+            gradeQueryResult.setSecondTermGPA(secondTermGPA);
+            gradeQueryResult.setSecondTermIGP(secondTermIGP);
+            gradeQueryResult.setFirstTermGradeList(firstTermGradeList);
+            gradeQueryResult.setSecondTermGradeList(secondTermGradeList);
+            gradeQueryResult.setQueryYear(year);
+            gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.SUCCESS);
+            return gradeQueryResult;
+        }
+        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.EMPTY_RESULT);
+        return gradeQueryResult;
+    }
+
+    /**
+     * 从教务系统获取用户的成绩信息
+     *
+     * @param request
+     * @param user
+     * @param year
+     * @param timestamp
+     * @return
+     */
+    public GradeQueryResult QueryGradeData(HttpServletRequest request, User user
+            , Integer year, Long timestamp) {
+        GradeQueryResult gradeQueryResult = new GradeQueryResult();
+        if (year == null) {
+            //若没有指定查询的学年，则进行默认学年查询
+            year = -1;
+        }
+        //检测是否已与教务系统进行会话同步
+        if (timestamp == null) {
+            if (request.getSession().getAttribute("timestamp") == null) {
+                //进行会话同步
+                UserLoginResult userLoginResult = userLoginService.UserLogin(request
+                        , user, false);
+                switch (userLoginResult.getLoginResultEnum()) {
+                    case LOGIN_SUCCESS:
+                        timestamp = userLoginResult.getTimestamp();
+                        if (StringUtils.isBlank(user.getKeycode())) {
+                            user.setKeycode(userLoginResult.getUser().getKeycode());
+                        }
+                        if (StringUtils.isBlank(user.getNumber())) {
+                            user.setNumber(userLoginResult.getUser().getNumber());
+                        }
+                        userLoginService.AsyncUpdateSession(request);
+                        return GradeQuery(request, user.getUsername()
+                                , user.getKeycode(), user.getNumber(), timestamp, year);
+
+                    case TIME_OUT:
+                        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.TIME_OUT);
+                        break;
+
+                    case PASSWORD_ERROR:
+                        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
+                        break;
+
+                    case SERVER_ERROR:
+                        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
+                        break;
+                }
+            } else {
+                timestamp = (Long) request.getSession().getAttribute("timestamp");
+                return GradeQuery(request, user.getUsername()
+                        , user.getKeycode(), user.getNumber(), timestamp, year);
+            }
+        } else {
+            return GradeQuery(request, user.getUsername()
+                    , user.getKeycode(), user.getNumber(), timestamp, year);
+        }
+        return gradeQueryResult;
+    }
 }

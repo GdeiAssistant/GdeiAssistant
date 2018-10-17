@@ -5,9 +5,14 @@ import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrec
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.Document.ScheduleDocument;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
+import com.linguancheng.gdeiassistant.Pojo.Entity.User;
+import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.ScheduleColorUtils;
+import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -56,6 +61,12 @@ public class ScheduleQueryService {
 
     private int timeout;
 
+    @Autowired
+    private UserLoginService userLoginService;
+
+    @Autowired
+    private ScheduleCacheService scheduleCacheService;
+
     @Value("#{propertiesReader['schedule.start.date']}")
 
     public void setStartDate(int startDate) {
@@ -98,11 +109,96 @@ public class ScheduleQueryService {
     private Log log = LogFactory.getLog(ScheduleQueryService.class);
 
     /**
+     * 通过教务系统获取
+     *
+     * @param request
+     * @param user
+     * @param timestamp
+     * @return
+     */
+    public ScheduleQueryResult QueryScheduleData(HttpServletRequest request, User user, Long timestamp) {
+        ScheduleQueryResult result = new ScheduleQueryResult();
+        //检测是否已与教务系统进行会话同步
+        if (timestamp == null) {
+            if (request.getSession().getAttribute("timestamp") == null) {
+                //进行会话同步
+                UserLoginResult userLoginResult = userLoginService.UserLogin(request, user
+                        , false);
+                switch (userLoginResult.getLoginResultEnum()) {
+                    case LOGIN_SUCCESS:
+                        timestamp = userLoginResult.getTimestamp();
+                        if (StringUtils.isBlank(user.getKeycode())) {
+                            user.setKeycode(userLoginResult.getUser().getKeycode());
+                        }
+                        if (StringUtils.isBlank(user.getNumber())) {
+                            user.setNumber(userLoginResult.getUser().getNumber());
+                        }
+                        userLoginService.AsyncUpdateSession(request);
+                        return ScheduleQuery(request, user.getUsername(), user.getKeycode()
+                                , user.getNumber(), timestamp);
+
+                    case SERVER_ERROR:
+                        //服务器异常
+                        result.setScheduleServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
+                        break;
+
+                    case TIME_OUT:
+                        //连接超时
+                        result.setScheduleServiceResultEnum(ServiceResultEnum.TIME_OUT);
+                        break;
+
+                    case PASSWORD_ERROR:
+                        //用户名或密码错误
+                        result.setScheduleServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
+                        break;
+                }
+            } else {
+                timestamp = (Long) request.getSession().getAttribute("timestamp");
+                ScheduleQuery(request, user.getUsername(), user.getKeycode(), user.getNumber()
+                        , timestamp);
+            }
+        } else {
+            return ScheduleQuery(request, user.getUsername(), user.getKeycode(), user.getNumber()
+                    , timestamp);
+        }
+        return result;
+    }
+
+    /**
+     * 从MongoDB缓存中获取课表信息
+     *
+     * @param username
+     * @param week
+     * @return
+     */
+    public ScheduleQueryResult GetScheduleDocument(String username, Integer week) {
+        ScheduleQueryResult result = new ScheduleQueryResult();
+        try {
+            ScheduleDocument scheduleDocument = scheduleCacheService.ReadSchedule(username);
+            if (scheduleDocument != null) {
+                //若未指定查询周数，则查询当前周数课表
+                if (week == null) {
+                    week = GetCurrentWeek();
+                }
+                result.setScheduleList(GetSpecifiedWeekSchedule(scheduleDocument
+                        .getScheduleList(), week));
+                result.setSelectedWeek(week);
+                result.setScheduleServiceResultEnum(ServiceResultEnum.SUCCESS);
+            }
+            result.setScheduleServiceResultEnum(ServiceResultEnum.EMPTY_RESULT);
+        } catch (Exception e) {
+            log.error("通过缓存获取课表信息异常：", e);
+            result.setScheduleServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
+        }
+        return result;
+    }
+
+    /**
      * 获取当前周数
      *
      * @return
      */
-    public int getCurrentWeek() {
+    public int GetCurrentWeek() {
         //当前日期
         LocalDate current = LocalDate.now();
         //开学日期
@@ -125,7 +221,7 @@ public class ScheduleQueryService {
      * @param week
      * @return
      */
-    public List<Schedule> getSpecifiedWeekSchedule(List<Schedule> scheduleList, int week) {
+    public List<Schedule> GetSpecifiedWeekSchedule(List<Schedule> scheduleList, int week) {
         List<Schedule> list = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
             String scheduleWeek = schedule.getScheduleWeek();
@@ -156,9 +252,9 @@ public class ScheduleQueryService {
      * @param request
      * @return
      */
-    public BaseResult<List<Schedule>, ServiceResultEnum> ScheduleQuery(HttpServletRequest request
+    private ScheduleQueryResult ScheduleQuery(HttpServletRequest request
             , String username, String keycode, String number, Long timestamp) {
-        BaseResult<List<Schedule>, ServiceResultEnum> result = new BaseResult<>();
+        ScheduleQueryResult result = new ScheduleQueryResult();
         CloseableHttpClient httpClient = null;
         try {
             httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
@@ -364,8 +460,8 @@ public class ScheduleQueryService {
                                     }
                                 }
                             }
-                            result.setResultData(schedulesWithoutSpecialEmptySchedule);
-                            result.setResultType(ServiceResultEnum.SUCCESS);
+                            result.setScheduleList(schedulesWithoutSpecialEmptySchedule);
+                            result.setScheduleServiceResultEnum(ServiceResultEnum.SUCCESS);
                             return result;
                         } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
                             throw new PasswordIncorrectException("账号密码错误");
@@ -385,20 +481,20 @@ public class ScheduleQueryService {
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {
             log.error("查询课表异常：", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            result.setScheduleServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
         } catch (PasswordIncorrectException e) {
             log.error("查询课表异常：", e);
-            result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
+            result.setScheduleServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (TimeStampIncorrectException e) {
             log.error("查询课表异常；", e);
-            result.setResultType(ServiceResultEnum.TIMESTAMP_INVALID);
+            result.setScheduleServiceResultEnum(ServiceResultEnum.TIMESTAMP_INVALID);
         } catch (IOException e) {
             log.error("查询课表异常：", e);
-            result.setResultType(ServiceResultEnum.TIME_OUT);
+            result.setScheduleServiceResultEnum(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
             log.error("查询课表异常：", e);
             e.printStackTrace();
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            result.setScheduleServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {
                 try {

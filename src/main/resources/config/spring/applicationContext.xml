@@ -102,7 +102,16 @@
     </bean>
 
     <!-- 控制器映射器和控制器适配器 -->
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven conversion-service="conversionService"/>
+
+    <!-- 类型转换器 -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.linguancheng.gdeiassistant.Converter.StringToLoginMethodEnumConverter"/>
+            </set>
+        </property>
+    </bean>
 
     <!-- 配置异步任务执行器和定时任务调度器 -->
     <task:annotation-driven scheduler="scheduler" executor="executor"/>

@@ -108,7 +108,7 @@
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <bean class="com.gdeiassistant.gdeiassistant.Converter.StringToLoginMethodEnumConverter"/>
+                <bean class="com.gdeiassistant.gdeiassistant.Converter.StringToQueryMethodEnumConverter"/>
             </set>
         </property>
     </bean>

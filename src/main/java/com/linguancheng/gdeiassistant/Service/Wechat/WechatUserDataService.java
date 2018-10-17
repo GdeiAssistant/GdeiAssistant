@@ -52,14 +52,9 @@ public class WechatUserDataService {
     public BaseResult<User, BoolResultEnum> QueryWechatUserData(String username) {
         BaseResult<User, BoolResultEnum> result = new BaseResult<>();
         try {
-            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username)).decryptUser();
             if (queryUser != null) {
-                User user = new User();
-                user.setUsername(StringEncryptUtils.decryptString(queryUser.getUsername()));
-                user.setPassword(StringEncryptUtils.decryptString(queryUser.getPassword()));
-                user.setKeycode(StringEncryptUtils.decryptString(queryUser.getKeycode()));
-                user.setNumber(StringEncryptUtils.decryptString(queryUser.getNumber()));
-                result.setResultData(user);
+                result.setResultData(queryUser);
                 result.setResultType(BoolResultEnum.SUCCESS);
                 return result;
             }

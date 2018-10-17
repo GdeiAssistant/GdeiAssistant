@@ -70,7 +70,7 @@ public class GradeQueryController {
         if (bindingResult.hasErrors()) {
             result.setSuccess(false);
             result.setErrorMessage("API接口已更新，请更新应用至最新版本");
-        } else if (year != null && (year < 0 || year > 3)) {
+        } else if ((year != null && (year < 0 || year > 3)) || method == null) {
             result.setSuccess(false);
             result.setErrorMessage("请求参数不合法");
         } else {
@@ -99,7 +99,8 @@ public class GradeQueryController {
                     switch (method) {
                         case CACHE_FIRST:
                             //优先查询缓存
-                            gradeQueryResult = GetUserGradeDocument(user.getUsername(), year);
+                            gradeQueryResult = gradeQueryService.GetUserGradeDocument(user
+                                    .getUsername(), year);
                             switch (gradeQueryResult.getGradeServiceResultEnum()) {
                                 case SUCCESS:
                                     //查询成功
@@ -115,7 +116,8 @@ public class GradeQueryController {
 
                                 case EMPTY_RESULT:
                                     //缓存无数据，获取教务系统成绩数据
-                                    gradeQueryResult = QueryGradeData(request, user, year, timestamp);
+                                    gradeQueryResult = gradeQueryService.QueryGradeData(request
+                                            , user, year, timestamp);
                                     switch (gradeQueryResult.getGradeServiceResultEnum()) {
                                         case SUCCESS:
                                             //查询成功
@@ -178,7 +180,8 @@ public class GradeQueryController {
 
                         case CACHE_ONLY:
                             //只查询缓存
-                            gradeQueryResult = GetUserGradeDocument(user.getUsername(), year);
+                            gradeQueryResult = gradeQueryService.GetUserGradeDocument(user
+                                    .getUsername(), year);
                             switch (gradeQueryResult.getGradeServiceResultEnum()) {
                                 case SUCCESS:
                                     //查询成功
@@ -210,7 +213,8 @@ public class GradeQueryController {
 
                         case QUERY_ONLY:
                             //只查询教务系统
-                            gradeQueryResult = QueryGradeData(request, user, year, timestamp);
+                            gradeQueryResult = gradeQueryService.QueryGradeData(request, user
+                                    , year, timestamp);
                             switch (gradeQueryResult.getGradeServiceResultEnum()) {
                                 case SUCCESS:
                                     //查询成功
@@ -287,7 +291,7 @@ public class GradeQueryController {
             , Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) {
         GradeQueryJsonResult result = new GradeQueryJsonResult();
-        if (year != null && (year < 0 || year > 3)) {
+        if ((year != null && (year < 0 || year > 3)) || method == null) {
             result.setSuccess(false);
             result.setErrorMessage("请求参数不合法");
         } else {
@@ -297,7 +301,7 @@ public class GradeQueryController {
             switch (method) {
                 case CACHE_FIRST:
                     //优先查询缓存
-                    gradeQueryResult = GetUserGradeDocument(username, year);
+                    gradeQueryResult = gradeQueryService.GetUserGradeDocument(username, year);
                     switch (gradeQueryResult.getGradeServiceResultEnum()) {
                         case SUCCESS:
                             //查询成功
@@ -313,8 +317,8 @@ public class GradeQueryController {
 
                         case EMPTY_RESULT:
                             //缓存无数据，获取教务系统成绩数据
-                            gradeQueryResult = QueryGradeData(request, new User(username, password)
-                                    , year, null);
+                            gradeQueryResult = gradeQueryService.QueryGradeData(request
+                                    , new User(username, password), year, null);
                             switch (gradeQueryResult.getGradeServiceResultEnum()) {
                                 case SUCCESS:
                                     //查询成功
@@ -376,7 +380,7 @@ public class GradeQueryController {
                     break;
 
                 case CACHE_ONLY:
-                    gradeQueryResult = GetUserGradeDocument(username, year);
+                    gradeQueryResult = gradeQueryService.GetUserGradeDocument(username, year);
                     switch (gradeQueryResult.getGradeServiceResultEnum()) {
                         case SUCCESS:
                             //查询成功
@@ -408,8 +412,8 @@ public class GradeQueryController {
 
                 case QUERY_ONLY:
                     //只查询教务系统
-                    gradeQueryResult = QueryGradeData(request, new User(username, password)
-                            , year, null);
+                    gradeQueryResult = gradeQueryService.QueryGradeData(request
+                            , new User(username, password), year, null);
                     switch (gradeQueryResult.getGradeServiceResultEnum()) {
                         case SUCCESS:
                             //查询成功
@@ -468,113 +472,5 @@ public class GradeQueryController {
             }
         }
         return result;
-    }
-
-    /**
-     * 从MongoDB中获取用户缓存的成绩信息
-     *
-     * @param username
-     * @param year
-     * @return
-     */
-    private GradeQueryResult GetUserGradeDocument(String username, Integer year) {
-        GradeQueryResult gradeQueryResult = new GradeQueryResult();
-        GradeDocument gradeDocument = gradeCacheService.ReadGrade(username);
-        if (gradeDocument != null) {
-            List<GradeDocument.GradeList> gradeLists = gradeDocument.getGradeList();
-            if (year == null) {
-                year = gradeLists.size() - 1;
-            }
-            if (gradeLists.size() == 0 || year >= gradeLists.size()) {
-                gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum
-                        .ERROR_CONDITION);
-                return gradeQueryResult;
-            }
-            List<Grade> gradeList = gradeDocument.getGradeList().get(year)
-                    .getGradeList();
-            List<Grade> firstTermGradeList = new ArrayList<>();
-            List<Grade> secondTermGradeList = new ArrayList<>();
-            for (Grade grade : gradeList) {
-                if (grade.getGrade_term().equals("1")) {
-                    firstTermGradeList.add(grade);
-                } else {
-                    secondTermGradeList.add(grade);
-                }
-            }
-            Double firstTermGPA = gradeDocument.getFirstTermGPAList().get(year);
-            Double secondTermGPA = gradeDocument.getSecondTermGPAList().get(year);
-            Double firstTermIGP = gradeDocument.getFirstTermIGPList().get(year);
-            Double secondTermIGP = gradeDocument.getSecondTermIGPList().get(year);
-            gradeQueryResult.setFirstTermGPA(firstTermGPA);
-            gradeQueryResult.setFirstTermIGP(firstTermIGP);
-            gradeQueryResult.setSecondTermGPA(secondTermGPA);
-            gradeQueryResult.setSecondTermIGP(secondTermIGP);
-            gradeQueryResult.setFirstTermGradeList(firstTermGradeList);
-            gradeQueryResult.setSecondTermGradeList(secondTermGradeList);
-            gradeQueryResult.setQueryYear(year);
-            gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.SUCCESS);
-            return gradeQueryResult;
-        }
-        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.EMPTY_RESULT);
-        return gradeQueryResult;
-    }
-
-    /**
-     * 从教务系统获取用户的成绩信息
-     *
-     * @param request
-     * @param user
-     * @param year
-     * @param timestamp
-     * @return
-     */
-    private GradeQueryResult QueryGradeData(HttpServletRequest request, User user
-            , Integer year, Long timestamp) {
-        GradeQueryResult gradeQueryResult = new GradeQueryResult();
-        if (year == null) {
-            //若没有指定查询的学年，则进行默认学年查询
-            year = -1;
-        }
-        //检测是否已与教务系统进行会话同步
-        if (timestamp == null) {
-            if (request.getSession().getAttribute("timestamp") == null) {
-                //进行会话同步
-                UserLoginResult userLoginResult = userLoginService.UserLogin(request
-                        , user, false);
-                switch (userLoginResult.getLoginResultEnum()) {
-                    case LOGIN_SUCCESS:
-                        timestamp = userLoginResult.getTimestamp();
-                        if (StringUtils.isBlank(user.getKeycode())) {
-                            user.setKeycode(userLoginResult.getUser().getKeycode());
-                        }
-                        if (StringUtils.isBlank(user.getNumber())) {
-                            user.setNumber(userLoginResult.getUser().getNumber());
-                        }
-                        userLoginService.AsyncUpdateSession(request);
-                        return gradeQueryService.GradeQuery(request, user.getUsername()
-                                , user.getKeycode(), user.getNumber(), timestamp, year);
-
-                    case TIME_OUT:
-                        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.TIME_OUT);
-                        break;
-
-                    case PASSWORD_ERROR:
-                        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
-                        break;
-
-                    case SERVER_ERROR:
-                        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
-                        break;
-                }
-            } else {
-                timestamp = (Long) request.getSession().getAttribute("timestamp");
-                gradeQueryService.GradeQuery(request, user.getUsername()
-                        , user.getKeycode(), user.getNumber(), timestamp, year);
-            }
-        } else {
-            return gradeQueryService.GradeQuery(request, user.getUsername()
-                    , user.getKeycode(), user.getNumber(), timestamp, year);
-        }
-        return gradeQueryResult;
     }
 }

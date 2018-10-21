@@ -84,8 +84,7 @@ public class WechatService {
                         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                         params.add("username", queryWechatUserDataResult.getResultData().getUsername());
                         params.add("password", queryWechatUserDataResult.getResultData().getPassword());
-                        params.add("keycode", queryWechatUserDataResult.getResultData().getKeycode());
-                        params.add("number", queryWechatUserDataResult.getResultData().getNumber());
+                        params.add("method", String.valueOf(2));
                         switch (requestTypeEnum) {
                             case CARD:
                                 //查询校园卡基本信息

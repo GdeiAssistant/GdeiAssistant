@@ -51,15 +51,26 @@ public class HttpClientFactory {
      * 获取携带CookieStore的CloseableHttpClient对象
      *
      * @param httpSession
+     * @param automaticRedirect
      * @param timeOut
      * @return
      * @throws HttpSessionRequiredException
      */
-    public CloseableHttpClient getHttpClient(HttpSession httpSession, int timeOut) throws HttpSessionRequiredException {
+    public CloseableHttpClient getHttpClient(HttpSession httpSession
+            , boolean automaticRedirect, int timeOut) throws HttpSessionRequiredException {
         timeOut = timeOut * 1000;
         if (httpSession != null) {
             if (httpSession.getAttribute("cookieStore") != null) {
-                return HttpClients.custom()
+                if (automaticRedirect) {
+                    return HttpClients.custom()
+                            .setDefaultRequestConfig(RequestConfig.custom().
+                                    setSocketTimeout(timeOut).setConnectTimeout(timeOut).
+                                    setConnectionRequestTimeout(timeOut).setStaleConnectionCheckEnabled(true).build())
+                            .setConnectionManager(httpClientConnectionManagerFactory.getHttpClientConnectionManager())
+                            .setDefaultCookieStore((CookieStore) httpSession
+                                    .getAttribute("cookieStore")).build();
+                }
+                return HttpClients.custom().disableRedirectHandling()
                         .setDefaultRequestConfig(RequestConfig.custom().
                                 setSocketTimeout(timeOut).setConnectTimeout(timeOut).
                                 setConnectionRequestTimeout(timeOut).setStaleConnectionCheckEnabled(true).build())
@@ -70,7 +81,16 @@ public class HttpClientFactory {
                 //Session中没有CookieStore,在Session中创建新的CookieStore并在构造HttpClient将其添入
                 CookieStore cookieStore = new BasicCookieStore();
                 httpSession.setAttribute("cookieStore", cookieStore);
-                return HttpClients.custom()
+                if (automaticRedirect) {
+                    return HttpClients.custom()
+                            .setDefaultRequestConfig(RequestConfig.custom()
+                                    .setSocketTimeout(timeOut).setConnectTimeout(timeOut)
+                                    .setConnectionRequestTimeout(timeOut).setStaleConnectionCheckEnabled(true).build())
+                            .setConnectionManager(httpClientConnectionManagerFactory.getHttpClientConnectionManager())
+                            .setDefaultCookieStore(cookieStore)
+                            .build();
+                }
+                return HttpClients.custom().disableRedirectHandling()
                         .setDefaultRequestConfig(RequestConfig.custom()
                                 .setSocketTimeout(timeOut).setConnectTimeout(timeOut)
                                 .setConnectionRequestTimeout(timeOut).setStaleConnectionCheckEnabled(true).build())

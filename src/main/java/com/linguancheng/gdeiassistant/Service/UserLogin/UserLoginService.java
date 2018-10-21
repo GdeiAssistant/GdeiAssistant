@@ -5,16 +5,19 @@ import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
+import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -65,6 +68,9 @@ public class UserLoginService {
     @Autowired
     private HttpClientFactory httpClientFactory;
 
+    @Autowired
+    private UserDao userDao;
+
     @Value("#{propertiesReader['education.system.url']}")
     public void setUrl(String url) {
         this.url = url;
@@ -93,8 +99,8 @@ public class UserLoginService {
      * @param quickLogin
      * @return
      */
-    public UserLoginResult UserLogin(HttpServletRequest request, User user, boolean quickLogin) {
-        UserLoginResult userLoginResult = new UserLoginResult();
+    public BaseResult<UserCertificate, LoginResultEnum> UserLogin(HttpServletRequest request, User user, boolean quickLogin) {
+        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = new BaseResult<>();
         //查询数据库,若账号密码相同,则直接通过登录校验
         if (quickLogin) {
             try {
@@ -106,8 +112,10 @@ public class UserLoginService {
                         if (decryptUser.getUsername().equals(user.getUsername())
                                 && decryptUser.getPassword().equals(user.getPassword())) {
                             //登录成功,缓存并返回用户信息
-                            userLoginResult.setUser(queryUser.decryptUser());
-                            userLoginResult.setLoginResultEnum(LoginResultEnum.LOGIN_SUCCESS);
+                            UserCertificate userCertificate = new UserCertificate();
+                            userCertificate.setUser(queryUser.decryptUser());
+                            userLoginResult.setResultData(userCertificate);
+                            userLoginResult.setResultType(LoginResultEnum.LOGIN_SUCCESS);
                             return userLoginResult;
                         }
                     }
@@ -133,19 +141,19 @@ public class UserLoginService {
                         user.setPassword(queryUser.getPassword());
                     } else {
                         //数据库校验不通过，提示用户重新登录
-                        userLoginResult.setLoginResultEnum(LoginResultEnum.PASSWORD_ERROR);
+                        userLoginResult.setResultType(LoginResultEnum.PASSWORD_ERROR);
                         return userLoginResult;
                     }
                 }
             } catch (Exception e) {
                 //获取密码值失败
                 log.error("用户登录数据库校验异常：", e);
-                userLoginResult.setLoginResultEnum(LoginResultEnum.SERVER_ERROR);
+                userLoginResult.setResultType(LoginResultEnum.SERVER_ERROR);
                 return userLoginResult;
             }
         }
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
             HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
@@ -167,7 +175,7 @@ public class UserLoginService {
                 httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
                 httpResponse = httpClient.execute(httpPost);
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if(httpResponse.getStatusLine().getStatusCode()!=200){
+                if (httpResponse.getStatusLine().getStatusCode() != 200) {
                     //服务器异常
                     throw new ServerErrorException("教务系统异常");
                 }
@@ -192,16 +200,16 @@ public class UserLoginService {
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {
             log.error("用户登录异常：", e);
-            userLoginResult.setLoginResultEnum(LoginResultEnum.SERVER_ERROR);
+            userLoginResult.setResultType(LoginResultEnum.SERVER_ERROR);
         } catch (PasswordIncorrectException e) {
             log.error("用户登录异常：", e);
-            userLoginResult.setLoginResultEnum(LoginResultEnum.PASSWORD_ERROR);
+            userLoginResult.setResultType(LoginResultEnum.PASSWORD_ERROR);
         } catch (IOException e) {
             log.error("用户登录异常：", e);
-            userLoginResult.setLoginResultEnum(LoginResultEnum.TIME_OUT);
+            userLoginResult.setResultType(LoginResultEnum.TIME_OUT);
         } catch (Exception e) {
             log.error("用户登录异常：", e);
-            userLoginResult.setLoginResultEnum(LoginResultEnum.SERVER_ERROR);
+            userLoginResult.setResultType(LoginResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {
                 try {
@@ -223,28 +231,33 @@ public class UserLoginService {
      * @throws IOException
      * @throws ServerErrorException
      */
-    private UserLoginResult LoginCasSystem(CloseableHttpClient httpClient, User user) throws Exception {
+    private BaseResult<UserCertificate, LoginResultEnum> LoginCasSystem(CloseableHttpClient httpClient, User user) throws Exception {
         HttpGet httpGet = new HttpGet(url + "login_cas.aspx");
         HttpResponse httpResponse = httpClient.execute(httpGet);
-        Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+        if (httpResponse.getStatusLine().getStatusCode() == 302
+                && ("https://security.gdei.edu.cn/cas/login" +
+                "?service=http://jwgl.gdei.edu.cn/login_cas.aspx")
+                .equals(httpResponse.getFirstHeader("Location").getValue())) {
+            httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login?service=http://jwgl.gdei.edu.cn/login_cas.aspx");
+            httpResponse = httpClient.execute(httpGet);
+            Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             httpGet = new HttpGet(document.select("a").first().attr("href"));
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                //获取学生的教务系统信息
-                String script = document.select("script").first().data();
-                String username = user.getUsername();
-                String password = user.getPassword();
-                String keycode = (document.getElementById("Form1").attr("action")
-                        .split("&")[1]).split("=")[1];
-                String number = ((script.split("=")[1]).split("'")[0]).substring(0, 11);
-                Long timestamp = Long.valueOf(document.getElementById("Form1")
-                        .attr("action").split("&")[2].split("=")[1]);
-                //进行教务系统身份校验
-                return CasVerify(httpClient, username, password, keycode, number, timestamp);
-            }
-            throw new ServerErrorException("教务系统异常");
+            httpGet = new HttpGet(url + document.select("a").attr("href"));
+            httpResponse = httpClient.execute(httpGet);
+            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+            //获取学生的教务系统信息
+            String script = document.select("script").first().data();
+            String username = user.getUsername();
+            String password = user.getPassword();
+            String keycode = (document.getElementById("Form1").attr("action")
+                    .split("&")[1]).split("=")[1];
+            String number = ((script.split("=")[1]).split("'")[0]).substring(0, 11);
+            Long timestamp = Long.valueOf(document.getElementById("Form1")
+                    .attr("action").split("&")[2].split("=")[1]);
+            //进行教务系统身份校验
+            return CasVerify(httpClient, username, password, keycode, number, timestamp);
         }
         throw new ServerErrorException("教务系统异常");
     }
@@ -263,17 +276,20 @@ public class UserLoginService {
      * @throws IOException
      * @throws ServerErrorException
      */
-    private UserLoginResult CasVerify(CloseableHttpClient httpClient, String username
+    private BaseResult<UserCertificate, LoginResultEnum> CasVerify(CloseableHttpClient httpClient, String username
             , String password, String keycode, String number, Long timestamp) throws IOException, ServerErrorException {
-        UserLoginResult userLoginResult = new UserLoginResult();
+        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = new BaseResult<>();
         HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
                 + keycode + "&timestamp=" + timestamp);
-        HttpResponse httpResponse = httpClient.execute(httpGet);
+        CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
         if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            httpResponse.close();
             httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number + "&type=1");
             httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            if (httpResponse.getStatusLine().getStatusCode() == 200
+                    && "正方教务管理系统".equals(new String(document.title()
+                    .getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8))) {
                 //获取学生的身份证号
                 httpGet = new HttpGet(url + "xsgrxx.aspx?xh=" + number);
                 httpResponse = httpClient.execute(httpGet);
@@ -284,9 +300,11 @@ public class UserLoginService {
                     user.setPassword(password);
                     user.setKeycode(keycode);
                     user.setNumber(number);
-                    userLoginResult.setUser(user);
-                    userLoginResult.setTimestamp(timestamp);
-                    userLoginResult.setLoginResultEnum(LoginResultEnum.LOGIN_SUCCESS);
+                    UserCertificate userCertificate = new UserCertificate();
+                    userCertificate.setUser(user);
+                    userCertificate.setTimestamp(timestamp);
+                    userLoginResult.setResultData(userCertificate);
+                    userLoginResult.setResultType(LoginResultEnum.LOGIN_SUCCESS);
                     return userLoginResult;
                 }
                 throw new ServerErrorException("教务系统异常");
@@ -304,16 +322,16 @@ public class UserLoginService {
      */
     public ServiceResultEnum SyncUpdateSession(HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
-        if (httpSession.getAttribute("timestamp") == null) {
-            String username = (String) httpSession.getAttribute("username");
-            String password = (String) httpSession.getAttribute("password");
+        String username = (String) request.getSession().getAttribute("username");
+        String password = (String) httpSession.getAttribute("password");
+        UserCertificate userCertificate = userDao.queryUserCertificate(username);
+        if (userCertificate == null) {
             User user = new User(username, password);
-            UserLoginResult userLoginResult = UserLogin(request, user, false);
-            switch (userLoginResult.getLoginResultEnum()) {
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = UserLogin(request
+                    , user, false);
+            switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
-                    httpSession.setAttribute("keycode", userLoginResult.getUser().getKeycode());
-                    httpSession.setAttribute("number", userLoginResult.getUser().getNumber());
-                    httpSession.setAttribute("timestamp", userLoginResult.getTimestamp());
+                    userDao.saveUserCertificate(userLoginResult.getResultData());
                     return ServiceResultEnum.SUCCESS;
 
                 case PASSWORD_ERROR:
@@ -337,16 +355,16 @@ public class UserLoginService {
     @Async
     public void AsyncUpdateSession(HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
-        if (httpSession.getAttribute("timestamp") == null) {
-            String username = (String) httpSession.getAttribute("username");
-            String password = (String) httpSession.getAttribute("password");
+        String username = (String) request.getSession().getAttribute("username");
+        String password = (String) httpSession.getAttribute("password");
+        UserCertificate userCertificate = userDao.queryUserCertificate(username);
+        if (userCertificate == null) {
             User user = new User(username, password);
-            UserLoginResult userLoginResult = UserLogin(request, user, false);
-            switch (userLoginResult.getLoginResultEnum()) {
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = UserLogin(request,
+                    user, false);
+            switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
-                    httpSession.setAttribute("keycode", userLoginResult.getUser().getKeycode());
-                    httpSession.setAttribute("number", userLoginResult.getUser().getNumber());
-                    httpSession.setAttribute("timestamp", userLoginResult.getTimestamp());
+                    userDao.saveUserCertificate(userLoginResult.getResultData());
                     break;
 
                 default:

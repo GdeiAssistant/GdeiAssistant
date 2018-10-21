@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Service.ScheduleQuery;
 
+import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
@@ -8,8 +9,10 @@ import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
 import com.linguancheng.gdeiassistant.Pojo.Document.ScheduleDocument;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
+import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.ScheduleColorUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
@@ -67,6 +70,9 @@ public class ScheduleQueryService {
     @Autowired
     private ScheduleCacheService scheduleCacheService;
 
+    @Autowired
+    private UserDao userDao;
+
     @Value("#{propertiesReader['schedule.start.date']}")
 
     public void setStartDate(int startDate) {
@@ -113,55 +119,49 @@ public class ScheduleQueryService {
      *
      * @param request
      * @param user
-     * @param timestamp
      * @return
      */
-    public ScheduleQueryResult QueryScheduleData(HttpServletRequest request, User user, Long timestamp) {
+    public ScheduleQueryResult QueryScheduleData(HttpServletRequest request, User user) {
         ScheduleQueryResult result = new ScheduleQueryResult();
         //检测是否已与教务系统进行会话同步
-        if (timestamp == null) {
-            if (request.getSession().getAttribute("timestamp") == null) {
-                //进行会话同步
-                UserLoginResult userLoginResult = userLoginService.UserLogin(request, user
-                        , false);
-                switch (userLoginResult.getLoginResultEnum()) {
-                    case LOGIN_SUCCESS:
-                        timestamp = userLoginResult.getTimestamp();
-                        if (StringUtils.isBlank(user.getKeycode())) {
-                            user.setKeycode(userLoginResult.getUser().getKeycode());
-                        }
-                        if (StringUtils.isBlank(user.getNumber())) {
-                            user.setNumber(userLoginResult.getUser().getNumber());
-                        }
-                        userLoginService.AsyncUpdateSession(request);
-                        return ScheduleQuery(request, user.getUsername(), user.getKeycode()
-                                , user.getNumber(), timestamp);
+        UserCertificate userCertificate = userDao.queryUserCertificate(user.getUsername());
+        if (userCertificate == null) {
+            //进行会话同步
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+                    .UserLogin(request, user, false);
+            switch (userLoginResult.getResultType()) {
+                case LOGIN_SUCCESS:
+                    Long timestamp = userLoginResult.getResultData().getTimestamp();
+                    if (StringUtils.isBlank(user.getKeycode())) {
+                        user.setKeycode(userLoginResult.getResultData().getUser().getKeycode());
+                    }
+                    if (StringUtils.isBlank(user.getNumber())) {
+                        user.setNumber(userLoginResult.getResultData().getUser().getNumber());
+                    }
+                    userCertificate = new UserCertificate();
+                    userCertificate.setUser(user);
+                    userCertificate.setTimestamp(timestamp);
+                    userDao.saveUserCertificate(userCertificate);
+                    return ScheduleQuery(request, user.getUsername()
+                            , user.getKeycode(), user.getNumber(), timestamp);
 
-                    case SERVER_ERROR:
-                        //服务器异常
-                        result.setScheduleServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
-                        break;
+                case TIME_OUT:
+                    result.setScheduleServiceResultEnum(ServiceResultEnum.TIME_OUT);
+                    break;
 
-                    case TIME_OUT:
-                        //连接超时
-                        result.setScheduleServiceResultEnum(ServiceResultEnum.TIME_OUT);
-                        break;
+                case PASSWORD_ERROR:
+                    result.setScheduleServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
+                    break;
 
-                    case PASSWORD_ERROR:
-                        //用户名或密码错误
-                        result.setScheduleServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
-                        break;
-                }
-            } else {
-                timestamp = (Long) request.getSession().getAttribute("timestamp");
-                ScheduleQuery(request, user.getUsername(), user.getKeycode(), user.getNumber()
-                        , timestamp);
+                case SERVER_ERROR:
+                    result.setScheduleServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
+                    break;
             }
-        } else {
-            return ScheduleQuery(request, user.getUsername(), user.getKeycode(), user.getNumber()
-                    , timestamp);
+            return result;
         }
-        return result;
+        return ScheduleQuery(request, userCertificate.getUser().getUsername()
+                , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
+                , userCertificate.getTimestamp());
     }
 
     /**
@@ -257,7 +257,7 @@ public class ScheduleQueryService {
         ScheduleQueryResult result = new ScheduleQueryResult();
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
             HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
                     + keycode + "&timestamp=" + timestamp);
             HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -267,10 +267,9 @@ public class ScheduleQueryService {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 } else {
                     //进入教务系统个人主页
-                    httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number);
+                    httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number + "&type=1");
                     httpResponse = httpClient.execute(httpGet);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
+                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         //成功进入学生个人主页,进行课表查询操作
                         httpGet = new HttpGet(url + "xskbcx.aspx?xh=" + number);
                         httpResponse = httpClient.execute(httpGet);

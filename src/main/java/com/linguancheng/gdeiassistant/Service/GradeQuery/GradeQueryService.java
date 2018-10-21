@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Service.GradeQuery;
 
+import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.NotAvailableConditionException;
@@ -10,7 +11,9 @@ import com.linguancheng.gdeiassistant.Pojo.Document.GradeDocument;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Grade;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
+import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
@@ -54,6 +57,9 @@ public class GradeQueryService {
     private GradeCacheService gradeCacheService;
 
     @Autowired
+    private UserDao userDao;
+
+    @Autowired
     private HttpClientFactory httpClientFactory;
 
     @Value("#{propertiesReader['education.system.url']}")
@@ -85,25 +91,26 @@ public class GradeQueryService {
         GradeQueryResult gradeQueryResult = new GradeQueryResult();
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
             //快速连接教务系统
             HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
                     + keycode + "&timestamp=" + timestamp);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (document.toString().equals("您登陆的系统已经很长时间没有操作了，为安全起见请重新登录后再进行操作！")) {
+                if (new String(document.toString().getBytes(StandardCharsets.UTF_8)
+                        , StandardCharsets.UTF_8).equals("您登陆的系统已经很长时间没有操作了" +
+                        "，为安全起见请重新登录后再进行操作！")) {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 } else {
-                    httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number);
+                    httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number + "&type=1");
                     httpResponse = httpClient.execute(httpGet);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
+                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         //成功进入学生个人主页,进行成绩查询操作
                         httpGet = new HttpGet(url + "xscj_gc.aspx?xh=" + number);
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("现代教学管理信息系统")) {
+                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
                             //获取所有可用的学年列表
                             List<String> yearList = new ArrayList<>();
                             Element yearSelect = document.getElementById("ddlXN");
@@ -140,7 +147,7 @@ public class GradeQueryService {
                             httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
                             httpResponse = httpClient.execute(httpPost);
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                            if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("现代教学管理信息系统")) {
+                            if (httpResponse.getStatusLine().getStatusCode() == 200) {
                                 //获取存放成绩的表格
                                 Element element = document.getElementsByClass("datelist").first();
                                 //得到所有的行
@@ -270,7 +277,11 @@ public class GradeQueryService {
             if (year == null) {
                 year = gradeLists.size() - 1;
             }
-            if (gradeLists.size() == 0 || year >= gradeLists.size()) {
+            if (gradeLists.size() == 0) {
+                gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.EMPTY_RESULT);
+                return gradeQueryResult;
+            }
+            if (year >= gradeLists.size()) {
                 gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum
                         .ERROR_CONDITION);
                 return gradeQueryResult;
@@ -310,56 +321,52 @@ public class GradeQueryService {
      * @param request
      * @param user
      * @param year
-     * @param timestamp
      * @return
      */
-    public GradeQueryResult QueryGradeData(HttpServletRequest request, User user
-            , Integer year, Long timestamp) {
+    public GradeQueryResult QueryGradeData(HttpServletRequest request, User user, Integer year) {
         GradeQueryResult gradeQueryResult = new GradeQueryResult();
         if (year == null) {
             //若没有指定查询的学年，则进行默认学年查询
             year = -1;
         }
         //检测是否已与教务系统进行会话同步
-        if (timestamp == null) {
-            if (request.getSession().getAttribute("timestamp") == null) {
-                //进行会话同步
-                UserLoginResult userLoginResult = userLoginService.UserLogin(request
-                        , user, false);
-                switch (userLoginResult.getLoginResultEnum()) {
-                    case LOGIN_SUCCESS:
-                        timestamp = userLoginResult.getTimestamp();
-                        if (StringUtils.isBlank(user.getKeycode())) {
-                            user.setKeycode(userLoginResult.getUser().getKeycode());
-                        }
-                        if (StringUtils.isBlank(user.getNumber())) {
-                            user.setNumber(userLoginResult.getUser().getNumber());
-                        }
-                        userLoginService.AsyncUpdateSession(request);
-                        return GradeQuery(request, user.getUsername()
-                                , user.getKeycode(), user.getNumber(), timestamp, year);
+        UserCertificate userCertificate = userDao.queryUserCertificate(user.getUsername());
+        if (userCertificate == null) {
+            //进行会话同步
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+                    .UserLogin(request, user, false);
+            switch (userLoginResult.getResultType()) {
+                case LOGIN_SUCCESS:
+                    Long timestamp = userLoginResult.getResultData().getTimestamp();
+                    if (StringUtils.isBlank(user.getKeycode())) {
+                        user.setKeycode(userLoginResult.getResultData().getUser().getKeycode());
+                    }
+                    if (StringUtils.isBlank(user.getNumber())) {
+                        user.setNumber(userLoginResult.getResultData().getUser().getNumber());
+                    }
+                    userCertificate = new UserCertificate();
+                    userCertificate.setUser(user);
+                    userCertificate.setTimestamp(timestamp);
+                    userDao.saveUserCertificate(userCertificate);
+                    return GradeQuery(request, user.getUsername()
+                            , user.getKeycode(), user.getNumber(), timestamp, year);
 
-                    case TIME_OUT:
-                        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.TIME_OUT);
-                        break;
+                case TIME_OUT:
+                    gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.TIME_OUT);
+                    break;
 
-                    case PASSWORD_ERROR:
-                        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
-                        break;
+                case PASSWORD_ERROR:
+                    gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
+                    break;
 
-                    case SERVER_ERROR:
-                        gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
-                        break;
-                }
-            } else {
-                timestamp = (Long) request.getSession().getAttribute("timestamp");
-                return GradeQuery(request, user.getUsername()
-                        , user.getKeycode(), user.getNumber(), timestamp, year);
+                case SERVER_ERROR:
+                    gradeQueryResult.setGradeServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
+                    break;
             }
-        } else {
-            return GradeQuery(request, user.getUsername()
-                    , user.getKeycode(), user.getNumber(), timestamp, year);
+            return gradeQueryResult;
         }
-        return gradeQueryResult;
+        return GradeQuery(request, userCertificate.getUser().getUsername()
+                , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
+                , userCertificate.getTimestamp(), year);
     }
 }

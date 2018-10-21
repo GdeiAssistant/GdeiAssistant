@@ -19,7 +19,7 @@
     </select>
 
     <select id="selectUserList" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
-        select * from user order by username limit #{start},#{size} where state!=-1
+        select * from user where state!=-1 order by username limit #{start},#{size}
     </select>
 
     <select id="selectUserCount" resultType="java.lang.Integer">

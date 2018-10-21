@@ -5,7 +5,7 @@ import com.gdeiassistant.gdeiassistant.Exception.CommonException.TransactionExce
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
-import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.gdeiassistant.gdeiassistant.Service.UserData.UserDataService;
 import com.gdeiassistant.gdeiassistant.Tools.StringEncryptUtils;
 import com.gdeiassistant.gdeiassistant.Service.UserLogin.AutoLoginService;
@@ -74,12 +74,12 @@ public class DispatcherController {
             //清除已登录用户的用户凭证记录
             userLoginService.ClearUserLoginCredentials(request);
             //进行用户登录
-            UserLoginResult userLoginResult = userLoginService.UserLogin(request
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request
                     , new User(cookieUsername, cookiePassword), true);
-            switch (userLoginResult.getLoginResultEnum()) {
+            switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
                     //登录成功
-                    User resultUser = userLoginResult.getUser();
+                    User resultUser = userLoginResult.getResultData().getUser();
                     //同步数据库用户数据
                     try {
                         userDataService.SyncUserData(resultUser);

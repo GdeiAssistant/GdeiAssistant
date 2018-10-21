@@ -5,7 +5,7 @@ import com.gdeiassistant.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Factory.HttpClientFactory;
-import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanUser;
@@ -80,12 +80,12 @@ public class YiBanLoginService {
             if (user != null) {
                 String decryptedUsername = StringEncryptUtils.decryptString(user.getUsername());
                 String decryptedPassword = StringEncryptUtils.decryptString(user.getPassword());
-                UserLoginResult userLoginResult = userLoginService
+                BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
                         .UserLogin(request, new User(decryptedUsername, decryptedPassword), true);
-                switch (userLoginResult.getLoginResultEnum()) {
+                switch (userLoginResult.getResultType()) {
                     case LOGIN_SUCCESS:
                         result.setResultType(LoginResultEnum.LOGIN_SUCCESS);
-                        result.setResultData(userLoginResult.getUser());
+                        result.setResultData(userLoginResult.getResultData().getUser());
                         break;
 
                     case PASSWORD_ERROR:

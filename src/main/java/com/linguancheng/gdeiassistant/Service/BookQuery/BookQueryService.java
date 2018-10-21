@@ -60,7 +60,7 @@ public class BookQueryService {
         BaseResult<String, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
             HttpPost httpPost = new HttpPost("http://lib2.gdei.edu.cn:8080/sms/opac/user/" + url);
             HttpResponse httpResponse = httpClient.execute(httpPost);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -72,10 +72,10 @@ public class BookQueryService {
             }
             throw new ServerErrorException("图书馆系统异常");
         } catch (IOException e) {
-            log.error("续借图书异常:" , e);
+            log.error("续借图书异常:", e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("续借图书异常" , e);
+            log.error("续借图书异常", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {
@@ -102,7 +102,7 @@ public class BookQueryService {
         BaseResult<List<Book>, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
             //进入移动图书馆主页
             HttpGet httpGet = new HttpGet("http://m.5read.com/705");
             HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -186,13 +186,13 @@ public class BookQueryService {
                 throw new ServerErrorException("图书馆系统异常");
             }
         } catch (IOException e) {
-            log.error("查询借阅图书异常：" , e);
+            log.error("查询借阅图书异常：", e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (PasswordIncorrectException e) {
-            log.error("查询借阅图书异常：" , e);
+            log.error("查询借阅图书异常：", e);
             result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (Exception e) {
-            log.error("查询借阅图书异常：" , e);
+            log.error("查询借阅图书异常：", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {

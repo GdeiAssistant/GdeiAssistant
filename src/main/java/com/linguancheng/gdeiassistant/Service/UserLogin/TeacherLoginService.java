@@ -68,7 +68,7 @@ public class TeacherLoginService {
     public LoginResultEnum TeacherLogin(HttpServletRequest request, String username, String password) {
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
             HttpGet httpGet = new HttpGet(url);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -114,16 +114,16 @@ public class TeacherLoginService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
-            log.error("教师登录异常：" , e);
+            log.error("教师登录异常：", e);
             return LoginResultEnum.TIME_OUT;
         } catch (ServerErrorException | RecognitionException e) {
-            log.error("教师登录异常：" , e);
+            log.error("教师登录异常：", e);
             return LoginResultEnum.SERVER_ERROR;
         } catch (PasswordIncorrectException e) {
-            log.error("教师登录异常：" , e);
+            log.error("教师登录异常：", e);
             return LoginResultEnum.PASSWORD_ERROR;
         } catch (Exception e) {
-            log.error("教师登录异常：" , e);
+            log.error("教师登录异常：", e);
             return LoginResultEnum.SERVER_ERROR;
         } finally {
             if (httpClient != null) {

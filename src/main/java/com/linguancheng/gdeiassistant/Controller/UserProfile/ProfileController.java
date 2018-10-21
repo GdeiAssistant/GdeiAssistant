@@ -8,7 +8,7 @@ import com.gdeiassistant.gdeiassistant.Pojo.Profile.*;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseJsonResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.DataJsonResult;
-import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.gdeiassistant.gdeiassistant.Service.Privacy.PrivacyService;
 import com.gdeiassistant.gdeiassistant.Service.Profile.RealNameService;
 import com.gdeiassistant.gdeiassistant.Service.Profile.UserProfileService;
@@ -307,8 +307,8 @@ public class ProfileController {
     public DataJsonResult<Profile> GetUserProfile(HttpServletRequest request
             , @Validated(value = UserLoginValidGroup.class) User user) {
         DataJsonResult<Profile> jsonResult = new DataJsonResult<>();
-        UserLoginResult userLoginResult = userLoginService.UserLogin(request, user, true);
-        switch (userLoginResult.getLoginResultEnum()) {
+        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request, user, true);
+        switch (userLoginResult.getResultType()) {
             case LOGIN_SUCCESS:
                 BaseResult<Profile, DataBaseResultEnum> result = userProfileService.GetUserProfile(user.getUsername());
                 switch (result.getResultType()) {

@@ -94,7 +94,7 @@ public class ScheduleCacheService {
                         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                         params.add("username", StringEncryptUtils.decryptString(user.getUsername()));
                         params.add("password", StringEncryptUtils.decryptString(user.getPassword()));
-                        params.add("refresh", String.valueOf(true));
+                        params.add("method", String.valueOf(1));
                         params.add("week", String.valueOf(0));
                         semaphore.acquire();
                         ListenableFuture<ResponseEntity<ScheduleQueryJsonResult>> future = asyncRestTemplate

@@ -84,7 +84,7 @@ public class GradeCacheService {
             //设置线程信号量，限制最大同时查询的线程数为10
             for (User user : userList) {
                 Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
-                if(privacy.isCache()){
+                if (privacy.isCache()) {
                     GradeDocument gradeDocument = gradeDao.queryGradeByUsername(StringEncryptUtils
                             .decryptString(user.getUsername()));
                     //如果最后更新日期距今已超过7天，则进行更新
@@ -104,7 +104,7 @@ public class GradeCacheService {
                                 MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                                 params.add("username", StringEncryptUtils.decryptString(user.getUsername()));
                                 params.add("password", StringEncryptUtils.decryptString(user.getPassword()));
-                                params.add("refresh", String.valueOf(true));
+                                params.add("method", String.valueOf(1));
                                 params.add("year", String.valueOf(i));
                                 ListenableFuture<ResponseEntity<GradeQueryJsonResult>> future = asyncRestTemplate
                                         .postForEntity("https://www.gdeiassistant.cn/rest/gradequery"
@@ -113,7 +113,7 @@ public class GradeCacheService {
 
                                     @Override
                                     public void onFailure(Throwable ex) {
-                                        log.error("定时查询保存成绩信息异常：" , ex);
+                                        log.error("定时查询保存成绩信息异常：", ex);
                                         countDownLatch.countDown();
                                     }
 
@@ -190,13 +190,13 @@ public class GradeCacheService {
                                 gradeDao.saveGrade(document);
                             }
                         } catch (Exception e) {
-                            log.error("定时查询保存成绩信息异常：" , e);
+                            log.error("定时查询保存成绩信息异常：", e);
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            log.error("定时查询保存成绩信息异常：" , e);
+            log.error("定时查询保存成绩信息异常：", e);
         }
     }
 }

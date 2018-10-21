@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Service.SpareRoom;
 
+import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
@@ -7,8 +8,13 @@ import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorExcep
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
 import com.linguancheng.gdeiassistant.Pojo.Entity.SpareRoom;
+import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.SpareRoomQuery.SpareRoomQuery;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
+import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
+import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
+import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -40,6 +46,12 @@ public class SpareRoomService {
     @Autowired
     private HttpClientFactory httpClientFactory;
 
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private UserLoginService userLoginService;
+
     @Value("#{propertiesReader['education.system.url']}")
     public void setUrl(String url) {
         this.url = url;
@@ -63,12 +75,12 @@ public class SpareRoomService {
      * @param number
      * @return
      */
-    public BaseResult<List<SpareRoom>, ServiceResultEnum> QuerySpareRoom(HttpServletRequest request
+    private BaseResult<List<SpareRoom>, ServiceResultEnum> QuerySpareRoom(HttpServletRequest request
             , String username, String keycode, String number, Long timestamp, SpareRoomQuery spareRoomQuery) {
         BaseResult<List<SpareRoom>, ServiceResultEnum> baseResult = new BaseResult<>();
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
             HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
                     + keycode + "&timestamp=" + timestamp);
             HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -81,12 +93,12 @@ public class SpareRoomService {
                     httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number);
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
+                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         //成功进入学生个人主页，进入空课室查询页面
                         httpGet = new HttpGet(url + "xxjsjy.aspx?xh=" + number);
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("现代教学管理信息系统")) {
+                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
                             Elements kssjOptions = document.getElementById("kssj").select("option");
                             Elements jssjOptions = document.getElementById("jssj").select("option");
                             if (spareRoomQuery.getStartTime() >= kssjOptions.size()) {
@@ -332,5 +344,56 @@ public class SpareRoomService {
             }
         }
         return baseResult;
+    }
+
+    /**
+     * 与教务系统进行会话同步并查询空教室信息
+     *
+     * @param request
+     * @param user
+     * @param spareRoomQuery
+     * @return
+     */
+    public BaseResult<List<SpareRoom>, ServiceResultEnum> SyncSessionAndQuerySpareRoom(HttpServletRequest request
+            , User user, SpareRoomQuery spareRoomQuery) {
+        BaseResult<List<SpareRoom>, ServiceResultEnum> result = new BaseResult<>();
+        UserCertificate userCertificate = userDao.queryUserCertificate(user.getUsername());
+        //检测是否已与教务系统进行会话同步
+        if (userCertificate == null) {
+            //进行会话同步
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+                    .UserLogin(request, user, false);
+            switch (userLoginResult.getResultType()) {
+                case LOGIN_SUCCESS:
+                    Long timestamp = userLoginResult.getResultData().getTimestamp();
+                    if (StringUtils.isBlank(user.getKeycode())) {
+                        user.setKeycode(userLoginResult.getResultData().getUser().getKeycode());
+                    }
+                    if (StringUtils.isBlank(user.getNumber())) {
+                        user.setNumber(userLoginResult.getResultData().getUser().getNumber());
+                    }
+                    userCertificate = new UserCertificate();
+                    userCertificate.setUser(user);
+                    userCertificate.setTimestamp(timestamp);
+                    userDao.saveUserCertificate(userCertificate);
+                    return QuerySpareRoom(request, user.getUsername()
+                            , user.getKeycode(), user.getNumber(), timestamp, spareRoomQuery);
+
+                case TIME_OUT:
+                    result.setResultType(ServiceResultEnum.TIME_OUT);
+                    break;
+
+                case PASSWORD_ERROR:
+                    result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
+                    break;
+
+                case SERVER_ERROR:
+                    result.setResultType(ServiceResultEnum.SERVER_ERROR);
+                    break;
+            }
+            return result;
+        }
+        return QuerySpareRoom(request, user.getUsername(), user.getKeycode(), user.getNumber()
+                , userCertificate.getTimestamp(), spareRoomQuery);
     }
 }

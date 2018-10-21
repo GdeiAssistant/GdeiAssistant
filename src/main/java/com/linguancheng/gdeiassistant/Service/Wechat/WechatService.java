@@ -12,15 +12,13 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatArticle;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatImageTextMessage;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
-import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import com.taobao.wsgsvr.WsgException;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -329,9 +327,9 @@ public class WechatService {
             if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)
                     && username.length() <= 20 && password.length() <= 35) {
                 //进行用户登录
-                UserLoginResult userLoginResult = userLoginService.UserLogin(request
+                BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request
                         , new User(username, password), true);
-                switch (userLoginResult.getLoginResultEnum()) {
+                switch (userLoginResult.getResultType()) {
                     case LOGIN_SUCCESS:
                         //登录成功，进行微信账号绑定
                         if (wechatUserDataService.SyncWechatUserData(username, wechatId)) {

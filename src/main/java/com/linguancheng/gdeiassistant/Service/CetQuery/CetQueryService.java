@@ -69,7 +69,7 @@ public class CetQueryService {
         BaseResult<String, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
             HttpGet httpGet = new HttpGet("http://www.chsi.com.cn/cet/");
             httpGet.setHeader("Referer", "http://www.chsi.com.cn/cet/");
             httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
@@ -89,13 +89,13 @@ public class CetQueryService {
             }
             throw new ServerErrorException("访问学信网异常");
         } catch (ServerErrorException e) {
-            log.error("查询四六级成绩异常：" , e);
+            log.error("查询四六级成绩异常：", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } catch (IOException e) {
-            log.error("查询四六级成绩异常：" , e);
+            log.error("查询四六级成绩异常：", e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("查询四六级成绩异常：" , e);
+            log.error("查询四六级成绩异常：", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {
@@ -119,7 +119,7 @@ public class CetQueryService {
         CetQueryResult cetQueryResult = new CetQueryResult();
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
             //查询CET成绩信息
             HttpGet httpGet = new HttpGet("http://www.chsi.com.cn/cet/query?zkzh=" + cetQuery.getNumber() + "&xm=" + cetQuery.getName() + "&yzm=" + cetQuery.getCheckcode());
             httpGet.setHeader("Referer", "http://www.chsi.com.cn/cet/");
@@ -172,19 +172,19 @@ public class CetQueryService {
             }
             throw new ServerErrorException("学信网系统异常");
         } catch (ServerErrorException e) {
-            log.error("查询四六级成绩异常：" , e);
+            log.error("查询四六级成绩异常：", e);
             cetQueryResult.setCetQueryResultEnum(ServiceResultEnum.SERVER_ERROR);
         } catch (PasswordIncorrectException e) {
-            log.error("查询四六级成绩异常：" , e);
+            log.error("查询四六级成绩异常：", e);
             cetQueryResult.setCetQueryResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (ErrorQueryConditionException e) {
-            log.error("查询四六级成绩异常：" , e);
+            log.error("查询四六级成绩异常：", e);
             cetQueryResult.setCetQueryResultEnum(ServiceResultEnum.ERROR_CONDITION);
         } catch (IOException e) {
-            log.error("查询四六级成绩异常：" , e);
+            log.error("查询四六级成绩异常：", e);
             cetQueryResult.setCetQueryResultEnum(ServiceResultEnum.TIME_OUT);
         } catch (Exception e) {
-            log.error("查询四六级成绩异常：" , e);
+            log.error("查询四六级成绩异常：", e);
             cetQueryResult.setCetQueryResultEnum(ServiceResultEnum.SERVER_ERROR);
         }
         return cetQueryResult;
@@ -207,7 +207,7 @@ public class CetQueryService {
                 result.setResultType(DataBaseResultEnum.SUCCESS);
             }
         } catch (Exception e) {
-            log.error("导入四六级准考证号异常：" , e);
+            log.error("导入四六级准考证号异常：", e);
             result.setResultType(DataBaseResultEnum.ERROR);
         }
         return result;
@@ -230,7 +230,7 @@ public class CetQueryService {
             }
             return BoolResultEnum.SUCCESS;
         } catch (Exception e) {
-            log.error("保存四六级准考证号异常：" , e);
+            log.error("保存四六级准考证号异常：", e);
             return BoolResultEnum.ERROR;
         }
     }

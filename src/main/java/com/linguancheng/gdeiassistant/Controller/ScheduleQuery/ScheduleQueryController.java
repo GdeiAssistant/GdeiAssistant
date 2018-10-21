@@ -2,11 +2,13 @@ package com.linguancheng.gdeiassistant.Controller.ScheduleQuery;
 
 import com.linguancheng.gdeiassistant.Annotation.QueryLog;
 import com.linguancheng.gdeiassistant.Annotation.RestQueryLog;
+import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Query.QueryMethodEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
@@ -40,7 +42,6 @@ public class ScheduleQueryController {
      * @param user
      * @param week
      * @param method
-     * @param timestamp
      * @param bindingResult
      * @return
      */
@@ -49,8 +50,7 @@ public class ScheduleQueryController {
     @ResponseBody
     public ScheduleQueryJsonResult ScheduleQuery(HttpServletRequest request
             , @ModelAttribute("user") @Validated(value = UserLoginValidGroup.class) User user
-            , BindingResult bindingResult, Integer week, Long timestamp
-            , @RequestParam(name = "method", required = false
+            , BindingResult bindingResult, Integer week, @RequestParam(name = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) {
         ScheduleQueryJsonResult result = new ScheduleQueryJsonResult();
         if (bindingResult.hasErrors()) {
@@ -61,10 +61,10 @@ public class ScheduleQueryController {
             result.setErrorMessage("请求参数不合法");
         } else {
             //校验用户账号身份
-            UserLoginResult userLoginResult = userLoginService.UserLogin(request
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request
                     , user, true);
             ScheduleQueryResult scheduleQueryResult = null;
-            switch (userLoginResult.getLoginResultEnum()) {
+            switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
                     switch (method) {
                         case CACHE_FIRST:
@@ -82,7 +82,8 @@ public class ScheduleQueryController {
                                     //缓存中没有数据
                                 case SERVER_ERROR:
                                     //缓存查询异常
-                                    scheduleQueryResult = scheduleQueryService.QueryScheduleData(request, user, timestamp);
+                                    scheduleQueryResult = scheduleQueryService
+                                            .QueryScheduleData(request, user);
                                     switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
                                         case SUCCESS:
                                             //查询成功
@@ -160,7 +161,8 @@ public class ScheduleQueryController {
                             break;
 
                         case QUERY_ONLY:
-                            scheduleQueryResult = scheduleQueryService.QueryScheduleData(request, user, timestamp);
+                            scheduleQueryResult = scheduleQueryService
+                                    .QueryScheduleData(request, user);
                             switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
                                 case SUCCESS:
                                     //查询成功
@@ -274,7 +276,7 @@ public class ScheduleQueryController {
                     case SERVER_ERROR:
                         //缓存查询异常
                         scheduleQueryResult = scheduleQueryService.QueryScheduleData(request
-                                , new User(username, password), null);
+                                , new User(username, password));
                         switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
                             case SUCCESS:
                                 //查询成功
@@ -353,7 +355,7 @@ public class ScheduleQueryController {
 
             case QUERY_ONLY:
                 scheduleQueryResult = scheduleQueryService.QueryScheduleData(request
-                        , new User(username, password), null);
+                        , new User(username, password));
                 switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
                     case SUCCESS:
                         //查询成功

@@ -1,11 +1,17 @@
 package com.linguancheng.gdeiassistant.Service.Evaluate;
 
+import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
-import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.EvaluateException.NotAvailableTimeException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.Entity.User;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
+import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
+import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
+import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -36,6 +42,12 @@ public class EvaluateService {
 
     @Autowired
     private HttpClientFactory httpClientFactory;
+
+    @Autowired
+    private UserLoginService userLoginService;
+
+    @Autowired
+    private UserDao userDao;
 
     @Value("#{propertiesReader['education.system.url']}")
     public void setUrl(String url) {
@@ -77,7 +89,7 @@ public class EvaluateService {
                 httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number);
                 httpResponse = httpClient.execute(httpGet);
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
+                if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     //成功进入学生个人主页,获取所有评教列表
                     Elements tops = document.getElementsByClass("nav").first().getElementsByClass("top");
                     for (Element top : tops) {
@@ -96,7 +108,7 @@ public class EvaluateService {
                                     httpGet = new HttpGet(url + evaluationList.get(0));
                                     httpResponse = httpClient.execute(httpGet);
                                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                                    if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("现代教学管理信息系统")) {
+                                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
                                         //填写所有的评教信息并保存
                                         for (String url : evaluationList) {
                                             //构建需要POST提交的Form表单
@@ -221,11 +233,11 @@ public class EvaluateService {
      * @param keycode
      * @param number
      */
-    public ServiceResultEnum TeacherEvaluate(HttpServletRequest request
+    private ServiceResultEnum TeacherEvaluate(HttpServletRequest request
             , String username, String keycode, String number, Long timestamp, boolean directlySubmit) {
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
             return TeacherEvaluate(httpClient, username, keycode, number, timestamp, directlySubmit);
         } catch (IOException e) {
             log.error("一键评教异常：", e);
@@ -248,5 +260,52 @@ public class EvaluateService {
                 }
             }
         }
+    }
+
+    /**
+     * 与教务系统进行会话同步，并进行一键评教
+     *
+     * @param request
+     * @param user
+     * @param directlySubmit
+     * @return
+     */
+    public ServiceResultEnum SyncSessionAndEvaluate(HttpServletRequest request, User user
+            , boolean directlySubmit) {
+        UserCertificate userCertificate = userDao.queryUserCertificate(user.getUsername());
+        //检测是否已与教务系统进行会话同步
+        if (userCertificate == null) {
+            //进行会话同步
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+                    .UserLogin(request, user, false);
+            switch (userLoginResult.getResultType()) {
+                case LOGIN_SUCCESS:
+                    Long timestamp = userLoginResult.getResultData().getTimestamp();
+                    if (StringUtils.isBlank(user.getKeycode())) {
+                        user.setKeycode(userLoginResult.getResultData().getUser().getKeycode());
+                    }
+                    if (StringUtils.isBlank(user.getNumber())) {
+                        user.setNumber(userLoginResult.getResultData().getUser().getNumber());
+                    }
+                    userCertificate = new UserCertificate();
+                    userCertificate.setUser(user);
+                    userCertificate.setTimestamp(timestamp);
+                    userDao.saveUserCertificate(userCertificate);
+                    return TeacherEvaluate(request, user.getUsername()
+                            , user.getKeycode(), user.getNumber(), timestamp, directlySubmit);
+
+                case TIME_OUT:
+                    return ServiceResultEnum.TIME_OUT;
+
+                case PASSWORD_ERROR:
+                    return ServiceResultEnum.PASSWORD_INCORRECT;
+
+                case SERVER_ERROR:
+                    return ServiceResultEnum.SERVER_ERROR;
+            }
+        }
+        return TeacherEvaluate(request, userCertificate.getUser().getUsername()
+                , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
+                , userCertificate.getTimestamp(), directlySubmit);
     }
 }

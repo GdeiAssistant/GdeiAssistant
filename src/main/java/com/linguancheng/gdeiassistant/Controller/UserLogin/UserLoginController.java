@@ -7,8 +7,9 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.Profile;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
+import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
 import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
@@ -47,6 +48,9 @@ public class UserLoginController {
 
     @Autowired
     private UserProfileService userProfileService;
+
+    @Autowired
+    private UserDao userDao;
 
     /**
      * 进入登录界面
@@ -91,9 +95,9 @@ public class UserLoginController {
             if (quickLogin == null) {
                 quickLogin = true;
             }
-            UserLoginResult userLoginResult = userLoginService
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
                     .UserLogin(request, user, quickLogin);
-            switch (userLoginResult.getLoginResultEnum()) {
+            switch (userLoginResult.getResultType()) {
                 case PASSWORD_ERROR:
                     //用户名或密码错误
                     userLoginJsonResult.setSuccess(false);
@@ -114,7 +118,7 @@ public class UserLoginController {
 
                 case LOGIN_SUCCESS:
                     //登录成功
-                    User resultUser = userLoginResult.getUser();
+                    User resultUser = userLoginResult.getResultData().getUser();
                     try {
                         //同步数据库用户数据
                         userDataService.SyncUserData(resultUser);
@@ -125,7 +129,7 @@ public class UserLoginController {
                                 .map(Profile::getRealname).orElse(""));
                         //若使用普通连接，则配置登录会话时间戳
                         if (!quickLogin) {
-                            userLoginJsonResult.setTimestamp(userLoginResult.getTimestamp());
+                            userLoginJsonResult.setTimestamp(userLoginResult.getResultData().getTimestamp());
                         }
                         userLoginJsonResult.setUser(resultUser);
                         userLoginJsonResult.setSuccess(true);
@@ -167,11 +171,11 @@ public class UserLoginController {
         } else {
             //清除已登录用户的用户凭证记录
             userLoginService.ClearUserLoginCredentials(request);
-            UserLoginResult userLoginResult = userLoginService.UserLogin(request, user, true);
-            switch (userLoginResult.getLoginResultEnum()) {
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request, user, true);
+            switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
                     //登录成功
-                    User resultUser = userLoginResult.getUser();
+                    User resultUser = userLoginResult.getResultData().getUser();
                     //同步数据库用户数据
                     try {
                         userDataService.SyncUserData(resultUser);

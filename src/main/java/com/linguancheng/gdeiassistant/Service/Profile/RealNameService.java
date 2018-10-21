@@ -68,20 +68,20 @@ public class RealNameService {
         BaseResult<String, BoolResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
             HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + user.getUsername() + "&k=" + user.getKeycode());
             HttpResponse httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().isEmpty()) {
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 httpGet = new HttpGet(url + "xs_main.aspx?xh=" + user.getNumber());
                 httpResponse = httpClient.execute(httpGet);
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
+                if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     //获取学生的身份证号
                     httpGet = new HttpGet(url + "xsgrxx.aspx?xh=" + user.getNumber());
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("现代教学管理信息系统")) {
+                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         String pin = document.getElementById("lbl_sfzh").text();
                         //获取身份证后六位数字
                         if (pin.substring(pin.length() - 1, pin.length()).equals("X")) {
@@ -118,7 +118,7 @@ public class RealNameService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (Exception e) {
-            log.error("获取用户真实姓名异常：" , e);
+            log.error("获取用户真实姓名异常：", e);
             result.setResultType(BoolResultEnum.ERROR);
         } finally {
             if (httpClient != null) {
@@ -145,7 +145,7 @@ public class RealNameService {
         BaseResult<String, BoolResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), timeout);
+            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
             //登录支付管理平台
             cardQueryService.LoginCardSystem(httpClient, username, password);
             //获取校园卡基本信息
@@ -153,7 +153,7 @@ public class RealNameService {
             result.setResultData(cardInfo.getName());
             result.setResultType(BoolResultEnum.SUCCESS);
         } catch (Exception e) {
-            log.error("获取用户真实姓名异常：" , e);
+            log.error("获取用户真实姓名异常：", e);
             result.setResultType(BoolResultEnum.ERROR);
         } finally {
             if (httpClient != null) {

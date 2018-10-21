@@ -4,6 +4,7 @@ import com.linguancheng.gdeiassistant.Annotation.QueryLog;
 import com.linguancheng.gdeiassistant.Annotation.RestQueryLog;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.SpareRoom;
+import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.SpareRoomQuery.SpareRoomQuery;
@@ -84,74 +85,40 @@ public class SpareRoomController {
             jsonResult.setErrorMessage("请求参数不合法");
         } else {
             String username = (String) WebUtils.getSessionAttribute(request, "username");
-            //检测是否已与教务系统进行会话同步
-            if (request.getSession().getAttribute("timestamp") != null) {
-                //进行会话同步
-                switch (userLoginService.SyncUpdateSession(request)) {
-                    case SUCCESS:
-                        break;
+            String password = (String) WebUtils.getSessionAttribute(request, "password");
+            BaseResult<List<SpareRoom>, ServiceResultEnum> baseResult = spareRoomService
+                    .SyncSessionAndQuerySpareRoom(request, new User(username, password), spareRoomQuery);
+            switch (baseResult.getResultType()) {
+                case SUCCESS:
+                    jsonResult.setSuccess(true);
+                    jsonResult.setData(baseResult.getResultData());
+                    break;
 
-                    case TIME_OUT:
-                        //连接超时
-                        jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("网络连接超时，请重试");
-                        return jsonResult;
+                case EMPTY_RESULT:
+                case ERROR_CONDITION:
+                    jsonResult.setSuccess(false);
+                    jsonResult.setErrorMessage("没有空闲的课室");
+                    break;
 
-                    case PASSWORD_INCORRECT:
-                        //身份凭证异常
-                        jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("用户凭证已过期，请重新登录");
-                        return jsonResult;
+                case TIMESTAMP_INVALID:
+                    jsonResult.setSuccess(false);
+                    jsonResult.setErrorMessage("时间戳校验失败，请尝试重新登录");
+                    break;
 
-                    default:
-                        //服务器异常
-                        jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("学院教务系统维护中，暂不可用");
-                        return jsonResult;
-                }
-            }
-            String keycode = (String) WebUtils.getSessionAttribute(request, "keycode");
-            String number = (String) WebUtils.getSessionAttribute(request, "number");
-            Long timestamp = (Long) WebUtils.getSessionAttribute(request, "timestamp");
-            if (!StringUtils.isBlank(username) && !StringUtils.isBlank(keycode) && !StringUtils.isBlank(number)) {
-                BaseResult<List<SpareRoom>, ServiceResultEnum> baseResult = spareRoomService
-                        .QuerySpareRoom(request, username, keycode, number, timestamp
-                                , spareRoomQuery);
-                switch (baseResult.getResultType()) {
-                    case SUCCESS:
-                        jsonResult.setSuccess(true);
-                        jsonResult.setData(baseResult.getResultData());
-                        break;
+                case TIME_OUT:
+                    jsonResult.setSuccess(false);
+                    jsonResult.setErrorMessage("网络连接超时，请重试");
+                    break;
 
-                    case EMPTY_RESULT:
-                    case ERROR_CONDITION:
-                        jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("没有空闲的课室");
-                        break;
+                case SERVER_ERROR:
+                    jsonResult.setSuccess(false);
+                    jsonResult.setErrorMessage("教务系统异常，请稍后再试");
+                    break;
 
-                    case TIMESTAMP_INVALID:
-                        jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("时间戳校验失败，请尝试重新登录");
-                        break;
-
-                    case TIME_OUT:
-                        jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("网络连接超时，请重试");
-                        break;
-
-                    case SERVER_ERROR:
-                        jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("教务系统异常，请稍后再试");
-                        break;
-
-                    case PASSWORD_INCORRECT:
-                        jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("你的密码已更新，请重新登录");
-                        break;
-                }
-            } else {
-                jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证已过期，请重新登录");
+                case PASSWORD_INCORRECT:
+                    jsonResult.setSuccess(false);
+                    jsonResult.setErrorMessage("你的密码已更新，请重新登录");
+                    break;
             }
         }
         return jsonResult;

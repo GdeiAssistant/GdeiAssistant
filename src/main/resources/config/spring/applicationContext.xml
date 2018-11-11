@@ -229,6 +229,10 @@
                 <value>classpath:/config/network/timeout.properties</value>
                 <!-- 读取教务缓存时间间隔配置信息 -->
                 <value>classpath:/config/education/cache.properties</value>
+                <!-- 读取JWT秘钥信息 -->
+                <value>classpath:/config/jwt/secret.properties</value>
+                <!-- 第三方API配置参数 -->
+                <value>classpath:/config/api/ipaddress.properties</value>
             </list>
         </property>
         <property name="fileEncoding" value="UTF-8"/>

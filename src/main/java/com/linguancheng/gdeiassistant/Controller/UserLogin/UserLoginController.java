@@ -2,15 +2,19 @@ package com.linguancheng.gdeiassistant.Controller.UserLogin;
 
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
+import com.linguancheng.gdeiassistant.Enum.Base.TokenValidResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
-import com.linguancheng.gdeiassistant.Pojo.Entity.Profile;
-import com.linguancheng.gdeiassistant.Pojo.Entity.User;
+import com.linguancheng.gdeiassistant.Pojo.Entity.*;
 import com.linguancheng.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import com.linguancheng.gdeiassistant.Pojo.TokenRefresh.TokenRefreshJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginJsonResult;
-import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
+import com.linguancheng.gdeiassistant.Service.IPAddress.IPService;
 import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
+import com.linguancheng.gdeiassistant.Service.Token.LoginTokenService;
 import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
@@ -23,6 +27,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -50,7 +55,10 @@ public class UserLoginController {
     private UserProfileService userProfileService;
 
     @Autowired
-    private UserDao userDao;
+    private LoginTokenService loginTokenService;
+
+    @Autowired
+    private IPService ipService;
 
     /**
      * 进入登录界面
@@ -76,6 +84,77 @@ public class UserLoginController {
     }
 
     /**
+     * 使令牌信息主动过期
+     *
+     * @param signature
+     * @return
+     */
+    @RequestMapping(value = "/rest/token/expire", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult ExpireToken(@RequestParam("token") String signature) {
+        JsonResult jsonResult = new JsonResult();
+        TokenValidResultEnum tokenValidResultEnum = loginTokenService.ExpireToken(signature);
+        switch (tokenValidResultEnum) {
+            case SUCCESS:
+                jsonResult.setSuccess(true);
+                break;
+
+            case ERROR:
+                jsonResult.setSuccess(false);
+                jsonResult.setMessage("主动过期令牌出现错误");
+                break;
+        }
+        return jsonResult;
+    }
+
+    /**
+     * 刷新登录令牌
+     *
+     * @param request
+     * @param refreshTokenSignature
+     * @return
+     */
+    @RequestMapping(value = "/rest/token/refresh", method = RequestMethod.POST)
+    @ResponseBody
+    public TokenRefreshJsonResult RefreshToken(HttpServletRequest request
+            , @RequestParam("token") String refreshTokenSignature) {
+        TokenRefreshJsonResult result = new TokenRefreshJsonResult();
+        //获取用户请求的IP地址
+        String ip = ipService.GetRequestRealIPAddress(request);
+        TokenRefreshResult tokenRefreshResult = loginTokenService
+                .RefreshToken(refreshTokenSignature, ip);
+        switch (tokenRefreshResult.getTokenValidResultEnum()) {
+            case SUCCESS:
+                //刷新令牌成功
+                result.setSuccess(true);
+                result.setAccessToken(tokenRefreshResult.getAccessToken().getSignature());
+                result.setRefreshToken(tokenRefreshResult.getRefreshToken().getSignature());
+                break;
+
+            case ERROR:
+                result.setSuccess(false);
+                result.setMessage("刷新令牌服务暂不可用，请稍后再试");
+                break;
+
+            case UNUSUAL_LOCATION:
+                result.setSuccess(false);
+                result.setMessage("你正在非常用地点登录，请重新登录验证");
+                break;
+
+            case NOT_MATCH:
+                result.setSuccess(false);
+                result.setMessage("令牌信息不匹配");
+                break;
+
+            case EXPIRED:
+                result.setSuccess(false);
+                result.setMessage("你的登录凭证已过期，请重新登录验证");
+                break;
+        }
+        return result;
+    }
+
+    /**
      * 用户登录接口
      *
      * @param request
@@ -86,11 +165,11 @@ public class UserLoginController {
     @RequestMapping(value = "/rest/userlogin", method = RequestMethod.POST)
     @ResponseBody
     public UserLoginJsonResult UserLogin(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user
-            , Boolean quickLogin, BindingResult bindingResult) {
+            , @RequestParam("unionId") String unionId, Boolean quickLogin, BindingResult bindingResult) {
         UserLoginJsonResult userLoginJsonResult = new UserLoginJsonResult();
         if (bindingResult.hasErrors()) {
             userLoginJsonResult.setSuccess(false);
-            userLoginJsonResult.setErrorMessage("请求参数不合法");
+            userLoginJsonResult.setMessage("请求参数不合法");
         } else {
             if (quickLogin == null) {
                 quickLogin = true;
@@ -101,19 +180,19 @@ public class UserLoginController {
                 case PASSWORD_ERROR:
                     //用户名或密码错误
                     userLoginJsonResult.setSuccess(false);
-                    userLoginJsonResult.setErrorMessage("用户名或密码错误,登录失败");
+                    userLoginJsonResult.setMessage("用户名或密码错误，登录失败");
                     break;
 
                 case SERVER_ERROR:
                     //服务器异常
                     userLoginJsonResult.setSuccess(false);
-                    userLoginJsonResult.setErrorMessage("教务系统维护中,请稍候再试");
+                    userLoginJsonResult.setMessage("教务系统维护中，请稍候再试");
                     break;
 
                 case TIME_OUT:
                     //连接超时
                     userLoginJsonResult.setSuccess(false);
-                    userLoginJsonResult.setErrorMessage("网络连接超时,请稍候再试");
+                    userLoginJsonResult.setMessage("网络连接超时，请稍候再试");
                     break;
 
                 case LOGIN_SUCCESS:
@@ -127,15 +206,38 @@ public class UserLoginController {
                                 .GetUserProfile(user.getUsername());
                         resultUser.setRealname(Optional.ofNullable(getUserProfileResult.getResultData())
                                 .map(Profile::getRealname).orElse(""));
-                        //若使用普通连接，则配置登录会话时间戳
-                        if (!quickLogin) {
-                            userLoginJsonResult.setTimestamp(userLoginResult.getResultData().getTimestamp());
+                        //获取权限令牌和刷新令牌
+                        BaseResult<AccessToken, TokenValidResultEnum> getAccessTokenResult = loginTokenService
+                                .GetAccessToken(user.getUsername(), ipService.GetRequestRealIPAddress(request), unionId);
+                        switch (getAccessTokenResult.getResultType()) {
+                            case SUCCESS:
+                                BaseResult<RefreshToken, TokenValidResultEnum> getRefreshTokenResult = loginTokenService
+                                        .GetRefreshToken(getAccessTokenResult.getResultData());
+                                switch (getRefreshTokenResult.getResultType()) {
+                                    case SUCCESS:
+                                        userLoginJsonResult.setSuccess(true);
+                                        userLoginJsonResult.setUser(resultUser);
+                                        userLoginJsonResult.setAccessToken(getAccessTokenResult.getResultData().getSignature());
+                                        userLoginJsonResult.setRefreshToken(getRefreshTokenResult.getResultData().getSignature());
+                                        break;
+
+                                    case ERROR:
+                                    default:
+                                        userLoginJsonResult.setSuccess(false);
+                                        userLoginJsonResult.setMessage("获取令牌信息失败，请稍候再试");
+                                        break;
+                                }
+                                break;
+
+                            case ERROR:
+                            default:
+                                userLoginJsonResult.setSuccess(false);
+                                userLoginJsonResult.setMessage("获取令牌信息失败，请稍候再试");
+                                break;
                         }
-                        userLoginJsonResult.setUser(resultUser);
-                        userLoginJsonResult.setSuccess(true);
                     } catch (TransactionException e) {
                         userLoginJsonResult.setSuccess(false);
-                        userLoginJsonResult.setErrorMessage("学院系统维护中,请稍候再试");
+                        userLoginJsonResult.setMessage("学院系统维护中，请稍候再试");
                     }
                     break;
             }

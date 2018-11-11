@@ -39,9 +39,10 @@ public class QueryLogAspect {
     @After("RestQueryAction()")
     public void RestSaveQueryLog(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        String functionName = joinPoint.getSignature().getName();
-        String username = Optional.ofNullable((User) args[1]).map(User::getUsername).orElse("unknown");
+        HttpServletRequest request = (HttpServletRequest) args[0];
+        String username = ((User) request.getAttribute("user")).getUsername();
         String dateTime = dateFormat.format(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        String functionName = joinPoint.getSignature().getName();
         switch (functionName) {
             //成绩查询
             case "GradeQuery":
@@ -63,10 +64,10 @@ public class QueryLogAspect {
     @After("QueryAction()")
     public void SaveQueryLog(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        String functionName = joinPoint.getSignature().getName();
         String username = Optional.ofNullable(String.valueOf(WebUtils.getSessionAttribute((HttpServletRequest) args[0]
                 , "username"))).orElse("unknown");
         String dateTime = dateFormat.format(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        String functionName = joinPoint.getSignature().getName();
         switch (functionName) {
             //成绩查询
             case "GradeQuery":

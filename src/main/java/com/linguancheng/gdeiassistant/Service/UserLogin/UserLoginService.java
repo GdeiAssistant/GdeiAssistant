@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Service.UserLogin;
 
+import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
@@ -89,6 +90,29 @@ public class UserLoginService {
      */
     public void ClearUserLoginCredentials(HttpServletRequest request) {
         httpClientFactory.ClearCookies(request.getSession());
+    }
+
+    /**
+     * 查询数据库中用户名对应的用户账号信息
+     *
+     * @param username
+     * @return
+     */
+    public BaseResult<User, DataBaseResultEnum> GetUserByUsername(String username) {
+        BaseResult<User, DataBaseResultEnum> result = new BaseResult<>();
+        try {
+            User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+            if (user == null) {
+                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
+            } else {
+                result.setResultData(user.decryptUser());
+                result.setResultType(DataBaseResultEnum.SUCCESS);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setResultType(DataBaseResultEnum.ERROR);
+        }
+        return result;
     }
 
     /**

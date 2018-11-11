@@ -1,20 +1,13 @@
 package com.linguancheng.gdeiassistant.Controller.Evaluate;
 
-import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
+import com.linguancheng.gdeiassistant.Annotation.RestAuthentication;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Service.Evaluate.EvaluateService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
-import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,8 +32,8 @@ public class EvaluateController {
 
     @RequestMapping(value = "/evaluate", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult StartEvaluate(HttpServletRequest request, boolean directlySubmit) {
-        BaseJsonResult baseJsonResult = new BaseJsonResult();
+    public JsonResult StartEvaluate(HttpServletRequest request, boolean directlySubmit) {
+        JsonResult baseJsonResult = new JsonResult();
         String username = (String) WebUtils.getSessionAttribute(request, "username");
         String password = (String) WebUtils.getSessionAttribute(request, "password");
         //检测是否已与教务系统进行会话同步
@@ -53,19 +46,19 @@ public class EvaluateController {
                 case TIME_OUT:
                     //连接超时
                     baseJsonResult.setSuccess(false);
-                    baseJsonResult.setErrorMessage("网络连接超时，请重试");
+                    baseJsonResult.setMessage("网络连接超时，请重试");
                     return baseJsonResult;
 
                 case PASSWORD_INCORRECT:
                     //身份凭证异常
                     baseJsonResult.setSuccess(false);
-                    baseJsonResult.setErrorMessage("用户凭证已过期，请重新登录");
+                    baseJsonResult.setMessage("用户凭证已过期，请重新登录");
                     return baseJsonResult;
 
                 default:
                     //服务器异常
                     baseJsonResult.setSuccess(false);
-                    baseJsonResult.setErrorMessage("学院教务系统维护中，暂不可用");
+                    baseJsonResult.setMessage("学院教务系统维护中，暂不可用");
                     return baseJsonResult;
             }
         }
@@ -78,38 +71,33 @@ public class EvaluateController {
 
             case TIME_OUT:
                 baseJsonResult.setSuccess(false);
-                baseJsonResult.setErrorMessage("网络连接超时，请重试");
+                baseJsonResult.setMessage("网络连接超时，请重试");
                 break;
 
             case TIMESTAMP_INVALID:
                 baseJsonResult.setSuccess(false);
-                baseJsonResult.setErrorMessage("时间戳校验失败，请尝试重新登录");
+                baseJsonResult.setMessage("时间戳校验失败，请尝试重新登录");
                 break;
 
             case ERROR_CONDITION:
                 baseJsonResult.setSuccess(false);
-                baseJsonResult.setErrorMessage("现在不是教学评价开放时间或你已完成教学评价");
+                baseJsonResult.setMessage("现在不是教学评价开放时间或你已完成教学评价");
                 break;
 
             case SERVER_ERROR:
                 baseJsonResult.setSuccess(false);
-                baseJsonResult.setErrorMessage("教务系统异常，请稍候再试");
+                baseJsonResult.setMessage("教务系统异常，请稍候再试");
                 break;
         }
         return baseJsonResult;
     }
 
     @RequestMapping(value = "/rest/evaluate", method = RequestMethod.POST)
+    @RestAuthentication
     @ResponseBody
-    public BaseJsonResult StartEvaluate(HttpServletRequest request
-            , @ModelAttribute("user") @Validated(value = UserLoginValidGroup.class) User user
-            , BindingResult bindingResult, boolean directlySubmit) {
-        BaseJsonResult baseJsonResult = new BaseJsonResult();
-        if (bindingResult.hasErrors()) {
-            baseJsonResult.setSuccess(false);
-            baseJsonResult.setErrorMessage("请求参数不合法");
-            return baseJsonResult;
-        }
+    public JsonResult StartEvaluate(HttpServletRequest request, String token, boolean directlySubmit) {
+        JsonResult baseJsonResult = new JsonResult();
+        User user = (User) request.getAttribute("user");
         ServiceResultEnum resultEnum = evaluateService.SyncSessionAndEvaluate(request, user, directlySubmit);
         switch (resultEnum) {
             case SUCCESS:
@@ -119,22 +107,22 @@ public class EvaluateController {
             case TIMESTAMP_INVALID:
                 //时间戳校验失败
                 baseJsonResult.setSuccess(false);
-                baseJsonResult.setErrorMessage("时间戳校验失败，请尝试重新登录");
+                baseJsonResult.setMessage("时间戳校验失败，请尝试重新登录");
                 break;
 
             case TIME_OUT:
                 baseJsonResult.setSuccess(false);
-                baseJsonResult.setErrorMessage("网络连接超时，请重试");
+                baseJsonResult.setMessage("网络连接超时，请重试");
                 break;
 
             case ERROR_CONDITION:
                 baseJsonResult.setSuccess(false);
-                baseJsonResult.setErrorMessage("现在不是教学评价开放时间或你已完成教学评价");
+                baseJsonResult.setMessage("现在不是教学评价开放时间或你已完成教学评价");
                 break;
 
             case SERVER_ERROR:
                 baseJsonResult.setSuccess(false);
-                baseJsonResult.setErrorMessage("教务系统异常，请稍候再试");
+                baseJsonResult.setMessage("教务系统异常，请稍候再试");
                 break;
         }
         return baseJsonResult;

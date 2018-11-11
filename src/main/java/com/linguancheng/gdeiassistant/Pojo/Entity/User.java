@@ -77,17 +77,7 @@ public class User implements Serializable {
         this.number = number;
     }
 
-    @Deprecated
-    public String getXm() {
-        return realname;
-    }
-
-    @Deprecated
-    public void setXm(String realname) {
-        this.realname = realname;
-    }
-
-    public String getRealname() {
+       public String getRealname() {
         return realname;
     }
 

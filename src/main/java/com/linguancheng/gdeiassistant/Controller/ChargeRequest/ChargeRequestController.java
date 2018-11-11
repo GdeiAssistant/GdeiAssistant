@@ -33,7 +33,7 @@ public class ChargeRequestController {
     public ChargeRequestJsonResult ChargeRequest() {
         ChargeRequestJsonResult chargeRequestJsonResult = new ChargeRequestJsonResult();
         chargeRequestJsonResult.setSuccess(false);
-        chargeRequestJsonResult.setErrorMessage("校园卡充值功能已关闭");
+        chargeRequestJsonResult.setMessage("校园卡充值功能已关闭");
         return chargeRequestJsonResult;
     }
 
@@ -46,12 +46,12 @@ public class ChargeRequestController {
         ChargeRequestJsonResult chargeRequestJsonResult = new ChargeRequestJsonResult();
         if (bindingResult.hasErrors()) {
             chargeRequestJsonResult.setSuccess(false);
-            chargeRequestJsonResult.setErrorMessage("请求参数不合法");
+            chargeRequestJsonResult.setMessage("请求参数不合法");
             return chargeRequestJsonResult;
         }
         if (request.getSession() == null) {
             chargeRequestJsonResult.setSuccess(false);
-            chargeRequestJsonResult.setErrorMessage("用户身份凭证过期,请重新打开充值页面");
+            chargeRequestJsonResult.setMessage("用户身份凭证过期,请重新打开充值页面");
             return chargeRequestJsonResult;
         } else {
             //判断是否需要做安全校验
@@ -60,19 +60,19 @@ public class ChargeRequestController {
                     case VERIFY_SUCCESS:
                         if (chargeSecurity.isTimeStampExpired()) {
                             chargeRequestJsonResult.setSuccess(false);
-                            chargeRequestJsonResult.setErrorMessage("当前系统时间不正确,请校正后重试");
+                            chargeRequestJsonResult.setMessage("当前系统时间不正确,请校正后重试");
                             return chargeRequestJsonResult;
                         }
                         break;
 
                     case VERIFY_FAILURE:
                         chargeRequestJsonResult.setSuccess(false);
-                        chargeRequestJsonResult.setErrorMessage("非法的客户端请求");
+                        chargeRequestJsonResult.setMessage("非法的客户端请求");
                         return chargeRequestJsonResult;
 
                     case VERIFY_EXCEPTION:
                         chargeRequestJsonResult.setSuccess(false);
-                        chargeRequestJsonResult.setErrorMessage("饭卡充值系统维护中,请稍候再试");
+                        chargeRequestJsonResult.setMessage("饭卡充值系统维护中,请稍候再试");
                         return chargeRequestJsonResult;
                 }
             }
@@ -81,25 +81,25 @@ public class ChargeRequestController {
                 case SERVER_ERROR:
                     //服务器异常
                     chargeRequestJsonResult.setSuccess(false);
-                    chargeRequestJsonResult.setErrorMessage("饭卡充值系统维护中,请稍候再试");
+                    chargeRequestJsonResult.setMessage("饭卡充值系统维护中,请稍候再试");
                     break;
 
                 case REQUEST_EXPIRED:
                     //用户身份凭证过期
                     chargeRequestJsonResult.setSuccess(false);
-                    chargeRequestJsonResult.setErrorMessage("用户身份凭证过期,请重新打开充值页面");
+                    chargeRequestJsonResult.setMessage("用户身份凭证过期,请重新打开充值页面");
                     break;
 
                 case ACCOUNT_NOT_AVAILABLE:
                     //充值金额不合法
                     chargeRequestJsonResult.setSuccess(false);
-                    chargeRequestJsonResult.setErrorMessage("充值金额不合法");
+                    chargeRequestJsonResult.setMessage("充值金额不合法");
                     break;
 
                 case INCONSISTENT_INFORMATION:
                     //校验用户姓名信息出现不一致的安全问题
                     chargeRequestJsonResult.setSuccess(false);
-                    chargeRequestJsonResult.setErrorMessage("支付环境不安全,已停止交易");
+                    chargeRequestJsonResult.setMessage("支付环境不安全,已停止交易");
                     break;
 
                 case REQUEST_SUCCESS:
@@ -120,17 +120,17 @@ public class ChargeRequestController {
                             case NULL_USERINFORMATION:
                             case INCORRECT_USERINFORMATION:
                                 chargeRequestJsonResult.setSuccess(false);
-                                chargeRequestJsonResult.setErrorMessage("请求参数不合法");
+                                chargeRequestJsonResult.setMessage("请求参数不合法");
                                 break;
 
                             case UNSUPPORT_CLIENTTYPE:
                                 chargeRequestJsonResult.setSuccess(false);
-                                chargeRequestJsonResult.setErrorMessage("不支持当前客户端类型");
+                                chargeRequestJsonResult.setMessage("不支持当前客户端类型");
                                 break;
 
                             case UNSUPPORT_SECURITYVERSION:
                                 chargeRequestJsonResult.setSuccess(false);
-                                chargeRequestJsonResult.setErrorMessage("不支持当前安全校验版本");
+                                chargeRequestJsonResult.setMessage("不支持当前安全校验版本");
                                 break;
                         }
                     } else {

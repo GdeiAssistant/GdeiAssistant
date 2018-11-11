@@ -133,7 +133,7 @@
 <div class="weui_msg">
 
     <div class="weui_extra_area">
-        <p>广东二师助手团队 林冠成 版权所有</p>
+        <p>广东二师助手团队 版权所有</p>
         <p>All rights reserved © 2016 - 2018</p>
     </div>
 

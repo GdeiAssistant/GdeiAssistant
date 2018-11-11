@@ -7,7 +7,6 @@ import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrec
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
-import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Cet.CetMapper;
 import com.linguancheng.gdeiassistant.Pojo.CetQuery.CetNumberQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.CetQuery.CetQuery;
@@ -16,9 +15,6 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.Cet;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Tools.ImageEncodeUtils;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -36,7 +32,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by linguancheng on 2017/7/21.

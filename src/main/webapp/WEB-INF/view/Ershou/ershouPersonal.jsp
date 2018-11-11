@@ -92,7 +92,7 @@
                         $("#kickname").text(result.data.kickname);
                     }
                     else {
-                        showErrorTip(result.errorMessage);
+                        showErrorTip(result.message);
                     }
                 },
                 error: function () {
@@ -112,7 +112,7 @@
                         }
                     }
                     else {
-                        showErrorTip(result.errorMessage);
+                        showErrorTip(result.message);
                     }
                 },
                 error: function () {
@@ -127,8 +127,8 @@
         }
 
         //显示错误提示
-        function showErrorTip(errorMessage) {
-            $(".weui_warn").text(errorMessage).show().delay(2000).hide(0);
+        function showErrorTip(message) {
+            $(".weui_warn").text(message).show().delay(2000).hide(0);
         }
 
         //上架商品
@@ -144,7 +144,7 @@
                         window.location.reload();
                     }
                     else {
-                        showErrorTip(result.errorMessage);
+                        showErrorTip(result.message);
                     }
                 },
                 error: function () {
@@ -166,7 +166,7 @@
                         window.location.reload();
                     }
                     else {
-                        showErrorTip(result.errorMessage);
+                        showErrorTip(result.message);
                     }
                 },
                 error: function () {
@@ -197,7 +197,7 @@
                                     window.location.reload();
                                 }
                                 else {
-                                    showErrorTip(result.errorMessage);
+                                    showErrorTip(result.message);
                                 }
                             },
                             error: function () {

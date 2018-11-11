@@ -129,7 +129,7 @@ function postQueryForm(week) {
                     handleScheduleQueryResult(scheduleQueryResult);
                 }
                 else {
-                    showCustomErrorTip(scheduleQueryResult.errorMessage);
+                    showCustomErrorTip(scheduleQueryResult.message);
                 }
             },
             error: function () {
@@ -150,7 +150,7 @@ function postQueryForm(week) {
                     handleScheduleQueryResult(scheduleQueryResult);
                 }
                 else {
-                    showCustomErrorTip(scheduleQueryResult.errorMessage);
+                    showCustomErrorTip(scheduleQueryResult.message);
                 }
             },
             error: function () {
@@ -230,8 +230,8 @@ function showNetworkErrorTip() {
 }
 
 //显示自定义错误提示
-function showCustomErrorTip(errorMessage) {
-    weui.confirm(errorMessage, {
+function showCustomErrorTip(message) {
+    weui.confirm(message, {
         title: '错误提示',
         buttons: [{
             label: '返回主页',

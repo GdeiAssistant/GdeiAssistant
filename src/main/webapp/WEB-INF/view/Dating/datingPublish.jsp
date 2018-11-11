@@ -97,8 +97,8 @@
             });
         });
 
-        function showErrorTip(errorMessage) {
-            $(".weui_warn").text(errorMessage).show().delay(2000).hide(0);
+        function showErrorTip(message) {
+            $(".weui_warn").text(message).show().delay(2000).hide(0);
         }
 
         //发布卖室友信息
@@ -183,7 +183,7 @@
                         }
                         else {
                             $(".circleBtn").attr("disabled", false);
-                            showErrorTip(result.errorMessage);
+                            showErrorTip(result.message);
                         }
                     },
                     error: function () {

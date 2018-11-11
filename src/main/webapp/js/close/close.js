@@ -9,8 +9,8 @@ function showNetworkErrorTip() {
 }
 
 //显示服务端错误提示
-function showCustomErrorTip(errorMessage) {
-    $(".weui_warn").text(errorMessage).show().delay(2000).hide(0);
+function showCustomErrorTip(message) {
+    $(".weui_warn").text(message).show().delay(2000).hide(0);
 }
 
 //提交删除账号请求
@@ -41,7 +41,7 @@ function postCloseRequest() {
                     });
                 }
                 else {
-                    showCustomErrorTip(result.errorMessage);
+                    showCustomErrorTip(result.message);
                 }
             },
             error: function () {

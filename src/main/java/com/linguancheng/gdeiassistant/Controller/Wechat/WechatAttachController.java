@@ -3,7 +3,7 @@ package com.linguancheng.gdeiassistant.Controller.Wechat;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
@@ -116,19 +116,19 @@ public class WechatAttachController {
 
     @RequestMapping(value = "/wechat/userattach", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult WechatUserAttach(HttpServletRequest request, HttpServletResponse response
+    public JsonResult WechatUserAttach(HttpServletRequest request, HttpServletResponse response
             , @Validated(value = UserLoginValidGroup.class) User user
             , boolean relink, BindingResult bindingResult) throws ServletException, IOException {
-        BaseJsonResult result = new BaseJsonResult();
+        JsonResult result = new JsonResult();
         if (bindingResult.hasErrors()) {
             result.setSuccess(false);
-            result.setErrorMessage("请求参数异常");
+            result.setMessage("请求参数异常");
             return result;
         }
         String wechatUserID = (String) request.getSession().getAttribute("wechatUserID");
         if (StringUtils.isBlank(wechatUserID)) {
             result.setSuccess(false);
-            result.setErrorMessage("用户授权已过期，请重新登录并授权");
+            result.setMessage("用户授权已过期，请重新登录并授权");
             return result;
         }
         //清除已登录用户的用户凭证记录
@@ -137,7 +137,7 @@ public class WechatAttachController {
         switch (userLoginResult.getResultType()) {
             case PASSWORD_ERROR:
                 result.setSuccess(false);
-                result.setErrorMessage("用户账户或密码错误，请检查并重试");
+                result.setMessage("用户账户或密码错误，请检查并重试");
                 break;
 
             case TIME_OUT:
@@ -146,13 +146,13 @@ public class WechatAttachController {
                     request.getRequestDispatcher("/wechat/userattach?relink=true").forward(request, response);
                 } else {
                     result.setSuccess(false);
-                    result.setErrorMessage("网络连接超时，请重试");
+                    result.setMessage("网络连接超时，请重试");
                 }
                 break;
 
             case SERVER_ERROR:
                 result.setSuccess(false);
-                result.setErrorMessage("教务系统维护中，请稍候再试");
+                result.setMessage("教务系统维护中，请稍候再试");
                 break;
 
             case LOGIN_SUCCESS:
@@ -172,7 +172,7 @@ public class WechatAttachController {
                     }
                 } catch (TransactionException e) {
                     result.setSuccess(false);
-                    result.setErrorMessage("学院系统维护中，请稍候再试");
+                    result.setMessage("学院系统维护中，请稍候再试");
                 }
                 break;
         }

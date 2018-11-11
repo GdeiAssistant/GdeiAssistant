@@ -1,6 +1,7 @@
 package com.linguancheng.gdeiassistant.Controller.ScheduleQuery;
 
 import com.linguancheng.gdeiassistant.Annotation.QueryLog;
+import com.linguancheng.gdeiassistant.Annotation.RestAuthentication;
 import com.linguancheng.gdeiassistant.Annotation.RestQueryLog;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Query.QueryMethodEnum;
@@ -39,128 +40,41 @@ public class ScheduleQueryController {
      * 课表查询Rest接口
      *
      * @param request
-     * @param user
+     * @param token
      * @param week
      * @param method
-     * @param bindingResult
      * @return
      */
     @RequestMapping(value = "/rest/schedulequery", method = RequestMethod.POST)
+    @RestAuthentication
     @RestQueryLog
     @ResponseBody
     public ScheduleQueryJsonResult ScheduleQuery(HttpServletRequest request
-            , @ModelAttribute("user") @Validated(value = UserLoginValidGroup.class) User user
-            , BindingResult bindingResult, Integer week, @RequestParam(name = "method", required = false
+            , String token, Integer week, @RequestParam(name = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) {
         ScheduleQueryJsonResult result = new ScheduleQueryJsonResult();
-        if (bindingResult.hasErrors()) {
+        if ((week != null && (week < 0 || week > 20)) || method == null) {
             result.setSuccess(false);
-            result.setErrorMessage("API接口已更新，请更新应用至最新版本");
-        } else if ((week != null && (week < 0 || week > 20)) || method == null) {
-            result.setSuccess(false);
-            result.setErrorMessage("请求参数不合法");
+            result.setMessage("请求参数不合法");
         } else {
-            //校验用户账号身份
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request
-                    , user, true);
+            User user = (User) request.getAttribute("user");
             ScheduleQueryResult scheduleQueryResult = null;
-            switch (userLoginResult.getResultType()) {
-                case LOGIN_SUCCESS:
-                    switch (method) {
-                        case CACHE_FIRST:
-                            //优先查询缓存数据
-                            scheduleQueryResult = scheduleQueryService.GetScheduleDocument(user.getUsername(), week);
-                            switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
-                                case SUCCESS:
-                                    //查询成功
-                                    result.setSuccess(true);
-                                    result.setScheduleList(scheduleQueryResult.getScheduleList());
-                                    result.setSelectedWeek(scheduleQueryResult.getSelectedWeek());
-                                    break;
-
-                                case EMPTY_RESULT:
-                                    //缓存中没有数据
-                                case SERVER_ERROR:
-                                    //缓存查询异常
-                                    scheduleQueryResult = scheduleQueryService
-                                            .QueryScheduleData(request, user);
-                                    switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
-                                        case SUCCESS:
-                                            //查询成功
-                                            result.setSuccess(true);
-                                            if (week == null) {
-                                                //无指定查询周数，则默认返回当前周数课表
-                                                result.setScheduleList(scheduleQueryService
-                                                        .GetSpecifiedWeekSchedule(scheduleQueryResult.getScheduleList()
-                                                                , scheduleQueryService.GetCurrentWeek()));
-                                                result.setSelectedWeek(scheduleQueryService.GetCurrentWeek());
-                                            } else if (week.equals(0)) {
-                                                //若周数指定为0，则返回所有周数的课表
-                                                result.setScheduleList(scheduleQueryResult.getScheduleList());
-                                                result.setSelectedWeek(0);
-                                            } else {
-                                                //返回指定周数的课表
-                                                result.setScheduleList(scheduleQueryService
-                                                        .GetSpecifiedWeekSchedule(scheduleQueryResult
-                                                                .getScheduleList(), week));
-                                                result.setSelectedWeek(week);
-                                            }
-                                            break;
-
-                                        case TIME_OUT:
-                                            //网络连接超时
-                                            result.setSuccess(false);
-                                            result.setErrorMessage("网络连接超时，请重试");
-                                            break;
-
-                                        case PASSWORD_INCORRECT:
-                                            //密码错误
-                                            result.setSuccess(false);
-                                            result.setErrorMessage("密码已更新，请重新登录");
-                                            break;
-
-                                        case TIMESTAMP_INVALID:
-                                            //时间戳失效
-                                            result.setSuccess(false);
-                                            result.setErrorMessage("时间戳校验失败，请尝试重新登录");
-                                            break;
-
-                                        default:
-                                        case SERVER_ERROR:
-                                            //教务系统异常
-                                            result.setSuccess(false);
-                                            result.setErrorMessage("教务系统异常，请稍后再试");
-                                            break;
-                                    }
-                                    break;
-                            }
+            switch (method) {
+                case CACHE_FIRST:
+                    //优先查询缓存数据
+                    scheduleQueryResult = scheduleQueryService.GetScheduleDocument(user.getUsername(), week);
+                    switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
+                        case SUCCESS:
+                            //查询成功
+                            result.setSuccess(true);
+                            result.setScheduleList(scheduleQueryResult.getScheduleList());
+                            result.setSelectedWeek(scheduleQueryResult.getSelectedWeek());
                             break;
 
-                        case CACHE_ONLY:
-                            scheduleQueryResult = scheduleQueryService.GetScheduleDocument(user.getUsername(), week);
-                            switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
-                                case SUCCESS:
-                                    //查询成功
-                                    result.setSuccess(true);
-                                    result.setScheduleList(scheduleQueryResult.getScheduleList());
-                                    result.setSelectedWeek(scheduleQueryResult.getSelectedWeek());
-                                    break;
-
-                                case EMPTY_RESULT:
-                                    //缓存中没有数据
-                                    result.setSuccess(false);
-                                    result.setErrorMessage("用户课表信息未同步，请稍后再试");
-                                    break;
-
-                                case SERVER_ERROR:
-                                    //缓存查询异常
-                                    result.setSuccess(false);
-                                    result.setErrorMessage("教务系统异常，请稍后再试");
-                                    break;
-                            }
-                            break;
-
-                        case QUERY_ONLY:
+                        case EMPTY_RESULT:
+                            //缓存中没有数据
+                        case SERVER_ERROR:
+                            //缓存查询异常
                             scheduleQueryResult = scheduleQueryService
                                     .QueryScheduleData(request, user);
                             switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
@@ -189,48 +103,107 @@ public class ScheduleQueryController {
                                 case TIME_OUT:
                                     //网络连接超时
                                     result.setSuccess(false);
-                                    result.setErrorMessage("网络连接超时，请重试");
+                                    result.setMessage("网络连接超时，请重试");
                                     break;
 
                                 case PASSWORD_INCORRECT:
                                     //密码错误
                                     result.setSuccess(false);
-                                    result.setErrorMessage("密码已更新，请重新登录");
+                                    result.setMessage("密码已更新，请重新登录");
                                     break;
 
                                 case TIMESTAMP_INVALID:
                                     //时间戳失效
                                     result.setSuccess(false);
-                                    result.setErrorMessage("时间戳校验失败，请尝试重新登录");
+                                    result.setMessage("时间戳校验失败，请尝试重新登录");
                                     break;
 
                                 default:
                                 case SERVER_ERROR:
                                     //教务系统异常
                                     result.setSuccess(false);
-                                    result.setErrorMessage("教务系统异常，请稍后再试");
+                                    result.setMessage("教务系统异常，请稍后再试");
                                     break;
                             }
                             break;
                     }
                     break;
 
-                case TIME_OUT:
-                    //网络连接超时
-                    result.setSuccess(false);
-                    result.setErrorMessage("网络连接超时，请重试");
+                case CACHE_ONLY:
+                    scheduleQueryResult = scheduleQueryService.GetScheduleDocument(user.getUsername(), week);
+                    switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
+                        case SUCCESS:
+                            //查询成功
+                            result.setSuccess(true);
+                            result.setScheduleList(scheduleQueryResult.getScheduleList());
+                            result.setSelectedWeek(scheduleQueryResult.getSelectedWeek());
+                            break;
+
+                        case EMPTY_RESULT:
+                            //缓存中没有数据
+                            result.setSuccess(false);
+                            result.setMessage("用户课表信息未同步，请稍后再试");
+                            break;
+
+                        case SERVER_ERROR:
+                            //缓存查询异常
+                            result.setSuccess(false);
+                            result.setMessage("教务系统异常，请稍后再试");
+                            break;
+                    }
                     break;
 
-                case SERVER_ERROR:
-                    //教务系统异常
-                    result.setSuccess(false);
-                    result.setErrorMessage("教务系统异常，请稍后再试");
-                    break;
+                case QUERY_ONLY:
+                    scheduleQueryResult = scheduleQueryService
+                            .QueryScheduleData(request, user);
+                    switch (scheduleQueryResult.getScheduleServiceResultEnum()) {
+                        case SUCCESS:
+                            //查询成功
+                            result.setSuccess(true);
+                            if (week == null) {
+                                //无指定查询周数，则默认返回当前周数课表
+                                result.setScheduleList(scheduleQueryService
+                                        .GetSpecifiedWeekSchedule(scheduleQueryResult.getScheduleList()
+                                                , scheduleQueryService.GetCurrentWeek()));
+                                result.setSelectedWeek(scheduleQueryService.GetCurrentWeek());
+                            } else if (week.equals(0)) {
+                                //若周数指定为0，则返回所有周数的课表
+                                result.setScheduleList(scheduleQueryResult.getScheduleList());
+                                result.setSelectedWeek(0);
+                            } else {
+                                //返回指定周数的课表
+                                result.setScheduleList(scheduleQueryService
+                                        .GetSpecifiedWeekSchedule(scheduleQueryResult
+                                                .getScheduleList(), week));
+                                result.setSelectedWeek(week);
+                            }
+                            break;
 
-                case PASSWORD_ERROR:
-                    //密码错误
-                    result.setSuccess(false);
-                    result.setErrorMessage("密码已更新，请重新登录");
+                        case TIME_OUT:
+                            //网络连接超时
+                            result.setSuccess(false);
+                            result.setMessage("网络连接超时，请重试");
+                            break;
+
+                        case PASSWORD_INCORRECT:
+                            //密码错误
+                            result.setSuccess(false);
+                            result.setMessage("密码已更新，请重新登录");
+                            break;
+
+                        case TIMESTAMP_INVALID:
+                            //时间戳失效
+                            result.setSuccess(false);
+                            result.setMessage("时间戳校验失败，请尝试重新登录");
+                            break;
+
+                        default:
+                        case SERVER_ERROR:
+                            //教务系统异常
+                            result.setSuccess(false);
+                            result.setMessage("教务系统异常，请稍后再试");
+                            break;
+                    }
                     break;
             }
         }
@@ -254,7 +227,7 @@ public class ScheduleQueryController {
         ScheduleQueryJsonResult result = new ScheduleQueryJsonResult();
         if ((week != null && (week < 0 || week > 20)) || method == null) {
             result.setSuccess(false);
-            result.setErrorMessage("查询的周数不合法");
+            result.setMessage("查询的周数不合法");
             return result;
         }
         String username = (String) request.getSession().getAttribute("username");
@@ -303,26 +276,26 @@ public class ScheduleQueryController {
                             case TIMESTAMP_INVALID:
                                 //时间戳失效
                                 result.setSuccess(false);
-                                result.setErrorMessage("时间戳校验失败，请尝试重新登录");
+                                result.setMessage("时间戳校验失败，请尝试重新登录");
                                 break;
 
                             case TIME_OUT:
                                 //网络连接超时
                                 result.setSuccess(false);
-                                result.setErrorMessage("网络连接超时，请重试");
+                                result.setMessage("网络连接超时，请重试");
                                 break;
 
                             case PASSWORD_INCORRECT:
                                 //密码错误
                                 result.setSuccess(false);
-                                result.setErrorMessage("密码已更新，请重新登录");
+                                result.setMessage("密码已更新，请重新登录");
                                 break;
 
                             case SERVER_ERROR:
                             default:
                                 //教务系统异常
                                 result.setSuccess(false);
-                                result.setErrorMessage("教务系统异常，请稍后再试");
+                                result.setMessage("教务系统异常，请稍后再试");
                                 break;
                         }
                         break;
@@ -342,13 +315,13 @@ public class ScheduleQueryController {
                     case EMPTY_RESULT:
                         //缓存中没有数据
                         result.setSuccess(false);
-                        result.setErrorMessage("用户课表信息未同步，请稍后再试");
+                        result.setMessage("用户课表信息未同步，请稍后再试");
                         break;
 
                     case SERVER_ERROR:
                         //缓存查询异常
                         result.setSuccess(false);
-                        result.setErrorMessage("教务系统异常，请稍后再试");
+                        result.setMessage("教务系统异常，请稍后再试");
                         break;
                 }
                 break;
@@ -382,26 +355,26 @@ public class ScheduleQueryController {
                     case TIME_OUT:
                         //网络连接超时
                         result.setSuccess(false);
-                        result.setErrorMessage("网络连接超时，请重试");
+                        result.setMessage("网络连接超时，请重试");
                         break;
 
                     case TIMESTAMP_INVALID:
                         //时间戳失效
                         result.setSuccess(false);
-                        result.setErrorMessage("时间戳校验失败，请尝试重新登录");
+                        result.setMessage("时间戳校验失败，请尝试重新登录");
                         break;
 
                     case PASSWORD_INCORRECT:
                         //密码错误
                         result.setSuccess(false);
-                        result.setErrorMessage("密码已更新，请重新登录");
+                        result.setMessage("密码已更新，请重新登录");
                         break;
 
                     case SERVER_ERROR:
                     default:
                         //教务系统异常
                         result.setSuccess(false);
-                        result.setErrorMessage("教务系统异常，请稍后再试");
+                        result.setMessage("教务系统异常，请稍后再试");
                         break;
                 }
                 break;

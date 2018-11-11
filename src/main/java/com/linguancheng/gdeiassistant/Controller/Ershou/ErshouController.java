@@ -4,9 +4,9 @@ import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Service.Ershou.ErshouService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -295,7 +295,7 @@ public class ErshouController {
 
             case ERROR:
                 result.setSuccess(false);
-                result.setErrorMessage("服务器异常，请稍候再试");
+                result.setMessage("服务器异常，请稍候再试");
                 break;
 
             case EMPTY_RESULT:
@@ -318,17 +318,17 @@ public class ErshouController {
      */
     @RequestMapping(value = "/ershou/info", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult AddErshouInfo(HttpServletRequest request
+    public JsonResult AddErshouInfo(HttpServletRequest request
             , @Validated ErshouItem ershouItem, MultipartFile image1
             , MultipartFile image2, MultipartFile image3, MultipartFile image4
             , BindingResult bindingResult) throws IOException {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+        JsonResult jsonResult = new JsonResult();
         if (bindingResult.hasErrors() || ershouItem.getPrice() <= 0 || ershouItem.getPrice() > 9999.99) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else if (image1 == null || image1.getSize() <= 0 || image1.getSize() >= MAX_PICTURE_SIZE) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("不合法的图片文件");
+            jsonResult.setMessage("不合法的图片文件");
         } else {
             String username = (String) request.getSession().getAttribute("username");
             BaseResult<ErshouItem, BoolResultEnum> result = ershouService.AddErshouInfo(ershouItem, username);
@@ -351,7 +351,7 @@ public class ErshouController {
                 case ERROR:
                     //服务器内部异常
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                    jsonResult.setMessage("服务器异常，请稍候再试");
                     break;
             }
         }
@@ -383,7 +383,7 @@ public class ErshouController {
 
             case ERROR:
                 result.setSuccess(false);
-                result.setErrorMessage("服务器异常，请稍候再试");
+                result.setMessage("服务器异常，请稍候再试");
                 break;
         }
         return result;
@@ -424,7 +424,7 @@ public class ErshouController {
         DataJsonResult<List<ErshouItem>> result = new DataJsonResult<>();
         if (type < 0 || type > 11) {
             result.setSuccess(false);
-            result.setErrorMessage("请求参数不合法");
+            result.setMessage("请求参数不合法");
         } else {
             BaseResult<List<ErshouItem>, DataBaseResultEnum> queryResult = ershouService.QueryErshouItemByType(type, start);
             switch (queryResult.getResultType()) {
@@ -435,7 +435,7 @@ public class ErshouController {
 
                 case ERROR:
                     result.setSuccess(false);
-                    result.setErrorMessage("服务器异常，请稍候再试");
+                    result.setMessage("服务器异常，请稍候再试");
                     break;
 
                 case EMPTY_RESULT:
@@ -456,17 +456,17 @@ public class ErshouController {
      */
     @RequestMapping(value = "/ershou/info/id/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateErshouItem(HttpServletRequest request, @Validated ErshouItem ershouItem
+    public JsonResult UpdateErshouItem(HttpServletRequest request, @Validated ErshouItem ershouItem
             , @PathVariable("id") int id, BindingResult bindingResult) {
-        BaseJsonResult result = new BaseJsonResult();
+        JsonResult result = new JsonResult();
         if (bindingResult.hasErrors() || ershouItem.getPrice() <= 0 || ershouItem.getPrice() > 9999.99) {
             result.setSuccess(false);
-            result.setErrorMessage("请求参数不合法");
+            result.setMessage("请求参数不合法");
         } else {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 result.setSuccess(false);
-                result.setErrorMessage("用户身份凭证过期，请稍候再试");
+                result.setMessage("用户身份凭证过期，请稍候再试");
             } else {
                 BaseResult<ErshouItem, DataBaseResultEnum> queryResult = ershouService.QueryErshouItemByID(id);
                 switch (queryResult.getResultType()) {
@@ -480,23 +480,23 @@ public class ErshouController {
 
                                 case ERROR:
                                     result.setSuccess(false);
-                                    result.setErrorMessage("服务器异常，请稍候再试");
+                                    result.setMessage("服务器异常，请稍候再试");
                                     break;
                             }
                         } else {
                             result.setSuccess(false);
-                            result.setErrorMessage("用户身份凭证过期，请稍候再试");
+                            result.setMessage("用户身份凭证过期，请稍候再试");
                         }
                         break;
 
                     case EMPTY_RESULT:
                         result.setSuccess(false);
-                        result.setErrorMessage("该二手交易信息不存在");
+                        result.setMessage("该二手交易信息不存在");
                         break;
 
                     case ERROR:
                         result.setSuccess(false);
-                        result.setErrorMessage("服务器异常，请稍候再试");
+                        result.setMessage("服务器异常，请稍候再试");
                         break;
                 }
             }
@@ -514,11 +514,11 @@ public class ErshouController {
      */
     @RequestMapping(value = "/ershou/info/state/id/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateErshouItemState(HttpServletRequest request, @PathVariable("id") int id, int state) {
-        BaseJsonResult result = new BaseJsonResult();
+    public JsonResult UpdateErshouItemState(HttpServletRequest request, @PathVariable("id") int id, int state) {
+        JsonResult result = new JsonResult();
         if (state < 0 || state > 2) {
             result.setSuccess(false);
-            result.setErrorMessage("请求参数不合法");
+            result.setMessage("请求参数不合法");
         } else {
             BaseResult<ErshouItem, DataBaseResultEnum> queryResult = ershouService.QueryErshouItemByID(id);
             switch (queryResult.getResultType()) {
@@ -529,7 +529,7 @@ public class ErshouController {
                         if (ershouItem.getState() == 2) {
                             //已出售状态的商品不能修改状态
                             result.setSuccess(false);
-                            result.setErrorMessage("商品已出售，不能修改");
+                            result.setMessage("商品已出售，不能修改");
                         } else {
                             BoolResultEnum resultEnum = ershouService.UpdateErshouItemState(id, state);
                             switch (resultEnum) {
@@ -539,24 +539,24 @@ public class ErshouController {
 
                                 case ERROR:
                                     result.setSuccess(false);
-                                    result.setErrorMessage("服务器异常，请稍候再试");
+                                    result.setMessage("服务器异常，请稍候再试");
                                     break;
                             }
                         }
                     } else {
                         result.setSuccess(false);
-                        result.setErrorMessage("你没有权限修改该二手交易信息");
+                        result.setMessage("你没有权限修改该二手交易信息");
                     }
                     break;
 
                 case EMPTY_RESULT:
                     result.setSuccess(false);
-                    result.setErrorMessage("二手交易信息不存在");
+                    result.setMessage("二手交易信息不存在");
                     break;
 
                 case ERROR:
                     result.setSuccess(false);
-                    result.setErrorMessage("服务器异常，请稍候再试");
+                    result.setMessage("服务器异常，请稍候再试");
                     break;
             }
         }

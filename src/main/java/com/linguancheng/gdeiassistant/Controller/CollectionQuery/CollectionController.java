@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletResponse;
-
 @Controller
 public class CollectionController {
 
@@ -34,24 +32,24 @@ public class CollectionController {
         DataJsonResult<CollectionDetail> jsonResult = new DataJsonResult<>();
         if (bindingResult.hasErrors()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else {
             CollectionDetailQueryResult result = collectionQueryService
                     .CollectionDetailQuery(collectionDetailQuery);
             switch (result.getCollectionDetailQueryResultEnum()) {
                 case SERVER_ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("移动图书馆系统维护中,请稍候再试");
+                    jsonResult.setMessage("移动图书馆系统维护中,请稍候再试");
                     break;
 
                 case TIME_OUT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("网络连接超时，请重试");
+                    jsonResult.setMessage("网络连接超时，请重试");
                     break;
 
                 case EMPTY_RESULT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("该图书暂无馆藏信息");
+                    jsonResult.setMessage("该图书暂无馆藏信息");
                     break;
 
                 case SUCCESS:
@@ -157,21 +155,21 @@ public class CollectionController {
         CollectionQueryJsonResult collectionQueryJsonResult = new CollectionQueryJsonResult();
         if (bindingResult.hasErrors()) {
             collectionQueryJsonResult.setSuccess(false);
-            collectionQueryJsonResult.setErrorMessage("请求参数不合法");
+            collectionQueryJsonResult.setMessage("请求参数不合法");
         } else {
             CollectionQueryResult collectionQueryResult = collectionQueryService.CollectionQuery(collectionQuery.getPage(), collectionQuery.getBookname());
             switch (collectionQueryResult.getCollectionQueryResultEnum()) {
                 case EMPTY_RESULT:
                     //查询结果为空
                     collectionQueryJsonResult.setSuccess(false);
-                    collectionQueryJsonResult.setErrorMessage("查询结果为空");
+                    collectionQueryJsonResult.setMessage("查询结果为空");
                     break;
 
                 case SERVER_ERROR:
                 case TIME_OUT:
                     //服务器异常
                     collectionQueryJsonResult.setSuccess(false);
-                    collectionQueryJsonResult.setErrorMessage("移动图书馆系统维护中,暂不可用");
+                    collectionQueryJsonResult.setMessage("移动图书馆系统维护中,暂不可用");
                     break;
 
                 case SUCCESS:

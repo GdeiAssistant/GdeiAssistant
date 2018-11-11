@@ -28,7 +28,7 @@ function postQueryForm() {
                 }
             }
             else {
-                $.toptip(result.errorMessage, 'error');
+                $.toptip(result.message, 'error');
             }
         },
         error: function () {

@@ -4,9 +4,9 @@ import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.DatingMessage;
 import com.linguancheng.gdeiassistant.Pojo.Entity.DatingPick;
 import com.linguancheng.gdeiassistant.Pojo.Entity.DatingProfile;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Service.Dating.DatingService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,13 +125,13 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/pick/id/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateDatingPickState(HttpServletRequest request
+    public JsonResult UpdateDatingPickState(HttpServletRequest request
             , @PathVariable("id") Integer id, Integer state) {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+        JsonResult jsonResult = new JsonResult();
         String username = (String) request.getSession().getAttribute("username");
         if (!state.equals(-1) && !state.equals(1)) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else {
             BaseResult<DatingPick, DataBaseResultEnum> result = datingService.QueryDatingPickById(id);
             switch (result.getResultType()) {
@@ -147,27 +147,27 @@ public class DatingController {
 
                                 case ERROR:
                                     jsonResult.setSuccess(false);
-                                    jsonResult.setErrorMessage("系统异常，请稍后再试");
+                                    jsonResult.setMessage("系统异常，请稍后再试");
                                     break;
                             }
                         } else {
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("你没有权限操作该撩一下记录");
+                            jsonResult.setMessage("你没有权限操作该撩一下记录");
                         }
                     } else {
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("该撩一下记录已处理，请勿重复提交");
+                        jsonResult.setMessage("该撩一下记录已处理，请勿重复提交");
                     }
                     break;
 
                 case ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("系统异常，请稍后再试");
+                    jsonResult.setMessage("系统异常，请稍后再试");
                     break;
 
                 case EMPTY_RESULT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("该撩一下记录不存在");
+                    jsonResult.setMessage("该撩一下记录不存在");
                     break;
             }
         }
@@ -250,15 +250,15 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/profile", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult AddDatingProfile(HttpServletRequest request, @Validated DatingProfile datingProfile
+    public JsonResult AddDatingProfile(HttpServletRequest request, @Validated DatingProfile datingProfile
             , MultipartFile image, BindingResult bindingResult) throws IOException {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+        JsonResult jsonResult = new JsonResult();
         if (image == null || image.getSize() <= 0 || image.getSize() >= MAX_PICTURE_SIZE) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("不合法的图片文件");
+            jsonResult.setMessage("不合法的图片文件");
         } else if (bindingResult.hasErrors()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else {
             String username = (String) request.getSession().getAttribute("username");
             BaseResult<Integer, DataBaseResultEnum> result = datingService.AddDatingProfile(username, datingProfile);
@@ -270,7 +270,7 @@ public class DatingController {
 
                 case ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("系统异常，请稍候再试");
+                    jsonResult.setMessage("系统异常，请稍候再试");
                     break;
             }
         }
@@ -286,19 +286,19 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/pick", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult AddDatingPick(HttpServletRequest request, DatingPick datingPick, Integer profileId) {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+    public JsonResult AddDatingPick(HttpServletRequest request, DatingPick datingPick, Integer profileId) {
+        JsonResult jsonResult = new JsonResult();
         DatingProfile datingProfile = new DatingProfile();
         datingProfile.setProfileId(profileId);
         datingPick.setDatingProfile(datingProfile);
         if (datingPick.getDatingProfile().getProfileId() == null) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
             return jsonResult;
         }
         if (datingPick.getContent().length() > 50) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("文本内容超过限制");
+            jsonResult.setMessage("文本内容超过限制");
             return jsonResult;
         }
         String username = (String) request.getSession().getAttribute("username");
@@ -309,7 +309,7 @@ public class DatingController {
                 //对方未拒绝前，不能发起多次撩一下请求
                 if (!result.getResultData().getState().equals(-1)) {
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("你已发送了撩一下请求，请耐心等待对方回复");
+                    jsonResult.setMessage("你已发送了撩一下请求，请耐心等待对方回复");
                 } else {
                     //对方已拒绝，可以再次发起撩一下请求
                     BaseResult<DatingProfile, DataBaseResultEnum> datingProfileResult = datingService
@@ -318,7 +318,7 @@ public class DatingController {
                         case SUCCESS:
                             if (datingProfileResult.getResultData().getUsername().equals(username)) {
                                 jsonResult.setSuccess(false);
-                                jsonResult.setErrorMessage("不能向自己发布的卖室友信息发送撩一下请求");
+                                jsonResult.setMessage("不能向自己发布的卖室友信息发送撩一下请求");
                             } else {
                                 DataBaseResultEnum dataBaseResultEnum = datingService.AddDatingPick(username, datingPick);
                                 switch (dataBaseResultEnum) {
@@ -328,7 +328,7 @@ public class DatingController {
 
                                     case ERROR:
                                         jsonResult.setSuccess(false);
-                                        jsonResult.setErrorMessage("系统异常，请稍后再试");
+                                        jsonResult.setMessage("系统异常，请稍后再试");
                                         break;
                                 }
                             }
@@ -336,12 +336,12 @@ public class DatingController {
 
                         case ERROR:
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("系统异常，请稍后再试");
+                            jsonResult.setMessage("系统异常，请稍后再试");
                             break;
 
                         case EMPTY_RESULT:
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("卖室友信息不存在，撩一下请求失败");
+                            jsonResult.setMessage("卖室友信息不存在，撩一下请求失败");
                             break;
                     }
                 }
@@ -349,7 +349,7 @@ public class DatingController {
 
             case ERROR:
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("系统异常，请稍后再试");
+                jsonResult.setMessage("系统异常，请稍后再试");
                 break;
 
             case EMPTY_RESULT:
@@ -359,7 +359,7 @@ public class DatingController {
                     case SUCCESS:
                         if (datingProfileResult.getResultData().getUsername().equals(username)) {
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("不能向自己发布的卖室友信息发送撩一下请求");
+                            jsonResult.setMessage("不能向自己发布的卖室友信息发送撩一下请求");
                         } else {
                             DataBaseResultEnum dataBaseResultEnum = datingService.AddDatingPick(username, datingPick);
                             switch (dataBaseResultEnum) {
@@ -369,7 +369,7 @@ public class DatingController {
 
                                 case ERROR:
                                     jsonResult.setSuccess(false);
-                                    jsonResult.setErrorMessage("系统异常，请稍后再试");
+                                    jsonResult.setMessage("系统异常，请稍后再试");
                                     break;
                             }
                         }
@@ -377,12 +377,12 @@ public class DatingController {
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("系统异常，请稍后再试");
+                        jsonResult.setMessage("系统异常，请稍后再试");
                         break;
 
                     case EMPTY_RESULT:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("卖室友信息不存在，撩一下请求失败");
+                        jsonResult.setMessage("卖室友信息不存在，撩一下请求失败");
                         break;
                 }
                 break;
@@ -413,7 +413,7 @@ public class DatingController {
 
             case ERROR:
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("系统异常，请稍后再试");
+                jsonResult.setMessage("系统异常，请稍后再试");
                 break;
 
             case EMPTY_RESULT:
@@ -445,7 +445,7 @@ public class DatingController {
 
             case ERROR:
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("系统异常，请稍后再试");
+                jsonResult.setMessage("系统异常，请稍后再试");
                 break;
 
             case EMPTY_RESULT:
@@ -463,8 +463,8 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/message/id/{id}/read", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult ReadDatingMessage(@PathVariable("id") Integer id) {
-        BaseJsonResult result = new BaseJsonResult();
+    public JsonResult ReadDatingMessage(@PathVariable("id") Integer id) {
+        JsonResult result = new JsonResult();
         DataBaseResultEnum dataBaseResultEnum = datingService.UpdateDatingMessageState(id, 1);
         switch (dataBaseResultEnum) {
             case SUCCESS:
@@ -473,7 +473,7 @@ public class DatingController {
 
             case ERROR:
                 result.setSuccess(false);
-                result.setErrorMessage("系统异常，请稍后再试");
+                result.setMessage("系统异常，请稍后再试");
                 break;
         }
         return result;

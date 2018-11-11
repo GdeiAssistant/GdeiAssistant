@@ -118,7 +118,7 @@
                 window.window.location.reload();
             }
             else {
-                $(".weui_warn").text(data.errorMessage).show().delay(2000).hide(0);
+                $(".weui_warn").text(data.message).show().delay(2000).hide(0);
             }
         }, "json");
     });

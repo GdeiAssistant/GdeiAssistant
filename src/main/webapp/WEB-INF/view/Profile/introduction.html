@@ -58,7 +58,7 @@
                         }
                     }
                     else {
-                        showCustomErrorTip(result.errorMessage);
+                        showCustomErrorTip(result.message);
                     }
                 },
                 error: function () {
@@ -73,8 +73,8 @@
         }
 
         //显示服务端错误提示
-        function showCustomErrorTip(errorMessage) {
-            $(".weui_warn").text(errorMessage).show().delay(2000).hide(0);
+        function showCustomErrorTip(message) {
+            $(".weui_warn").text(message).show().delay(2000).hide(0);
         }
 
         //修改个人简介
@@ -94,7 +94,7 @@
                             getIntroduction();
                         }
                         else {
-                            showCustomErrorTip(result.errorMessage);
+                            showCustomErrorTip(result.message);
                         }
                     },
                     error: function () {

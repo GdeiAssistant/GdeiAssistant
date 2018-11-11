@@ -1,7 +1,7 @@
 package com.linguancheng.gdeiassistant.Controller.CloseAccount;
 
 import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Service.CloseAccount.CloseAccountService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * 广东二师助手团队 林冠成 版权所有
@@ -46,8 +44,8 @@ public class CloseAccountController {
      */
     @RequestMapping(value = "/close/submit", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult CloseAccount(HttpServletRequest request, String password) {
-        BaseJsonResult baseJsonResult = new BaseJsonResult();
+    public JsonResult CloseAccount(HttpServletRequest request, String password) {
+        JsonResult baseJsonResult = new JsonResult();
         String username = (String) request.getSession().getAttribute("username");
         if (StringUtils.isNotBlank(username)) {
             try {
@@ -55,11 +53,11 @@ public class CloseAccountController {
                 baseJsonResult.setSuccess(true);
             } catch (TransactionException e) {
                 baseJsonResult.setSuccess(false);
-                baseJsonResult.setErrorMessage(e.getMessage());
+                baseJsonResult.setMessage(e.getMessage());
             }
         } else {
             baseJsonResult.setSuccess(false);
-            baseJsonResult.setErrorMessage("登录凭证已过期，请重新登录");
+            baseJsonResult.setMessage("登录凭证已过期，请重新登录");
         }
         return baseJsonResult;
     }

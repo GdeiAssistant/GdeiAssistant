@@ -21,7 +21,6 @@ import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.YiBanUser.Y
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Close.CloseMapper;
 import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
-import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,14 +153,14 @@ public class CloseAccountService {
             userProfileService.DeleteAvatar(username);
             //删除用户账号信息
             Integer count = userMapper.selectDeletedUserCount("del_"
-                    + StringEncryptUtils.SHA1MapString(username).substring(0, 15));
+                    + StringEncryptUtils.SHA1HexString(username).substring(0, 15));
             count = count == null ? 0 : count;
-            userMapper.closeUser("del_" + StringEncryptUtils.SHA1MapString(username)
+            userMapper.closeUser("del_" + StringEncryptUtils.SHA1HexString(username)
                     .substring(0, 15) + "_" + count, StringEncryptUtils.encryptString(username));
             //记录账号关闭日志
             CloseLog closeLog = new CloseLog();
             closeLog.setUsername(username);
-            closeLog.setResetname("del_" + StringEncryptUtils.SHA1MapString(username)
+            closeLog.setResetname("del_" + StringEncryptUtils.SHA1HexString(username)
                     .substring(0, 15) + "_" + count);
             closeLog.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             closeMapper.insertCloseLog(closeLog);

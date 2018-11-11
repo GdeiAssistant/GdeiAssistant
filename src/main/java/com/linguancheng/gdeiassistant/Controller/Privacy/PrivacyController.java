@@ -45,7 +45,7 @@ public class PrivacyController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             result.setSuccess(false);
-            result.setErrorMessage("用户身份凭证过期，请稍候再试");
+            result.setMessage("用户身份凭证过期，请稍候再试");
         } else {
             BaseResult<Privacy, DataBaseResultEnum> queryResult = privacyService.GetPrivacySetting(username);
             switch (queryResult.getResultType()) {
@@ -56,12 +56,12 @@ public class PrivacyController {
 
                 case EMPTY_RESULT:
                     result.setSuccess(false);
-                    result.setErrorMessage("用户隐私设置未初始化，请重新登录系统");
+                    result.setMessage("用户隐私设置未初始化，请重新登录系统");
                     break;
 
                 case ERROR:
                     result.setSuccess(false);
-                    result.setErrorMessage("服务器异常，请稍候再试");
+                    result.setMessage("服务器异常，请稍候再试");
                     break;
             }
         }
@@ -83,7 +83,7 @@ public class PrivacyController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             result.setSuccess(false);
-            result.setErrorMessage("用户身份凭证过期，请稍候再试");
+            result.setMessage("用户身份凭证过期，请稍候再试");
         } else {
             switch (index) {
                 case 0:
@@ -92,7 +92,7 @@ public class PrivacyController {
                         result.setSuccess(true);
                     } else {
                         result.setSuccess(false);
-                        result.setErrorMessage("服务器异常，请稍候再试");
+                        result.setMessage("服务器异常，请稍候再试");
                     }
                     break;
 
@@ -102,7 +102,7 @@ public class PrivacyController {
                         result.setSuccess(true);
                     } else {
                         result.setSuccess(false);
-                        result.setErrorMessage("服务器异常，请稍候再试");
+                        result.setMessage("服务器异常，请稍候再试");
                     }
                     break;
 
@@ -112,7 +112,7 @@ public class PrivacyController {
                         result.setSuccess(true);
                     } else {
                         result.setSuccess(false);
-                        result.setErrorMessage("服务器异常，请稍后再试");
+                        result.setMessage("服务器异常，请稍后再试");
                     }
                     break;
 
@@ -122,7 +122,7 @@ public class PrivacyController {
                         result.setSuccess(true);
                     } else {
                         result.setSuccess(false);
-                        result.setErrorMessage("服务器异常，请稍后再试");
+                        result.setMessage("服务器异常，请稍后再试");
                     }
                     break;
 
@@ -132,7 +132,7 @@ public class PrivacyController {
                         result.setSuccess(true);
                     } else {
                         result.setSuccess(false);
-                        result.setErrorMessage("服务器异常，请稍候再试");
+                        result.setMessage("服务器异常，请稍候再试");
                     }
                     break;
 
@@ -142,7 +142,7 @@ public class PrivacyController {
                         result.setSuccess(true);
                     } else {
                         result.setSuccess(false);
-                        result.setErrorMessage("服务器异常，请稍候再试");
+                        result.setMessage("服务器异常，请稍候再试");
                     }
                     break;
 
@@ -152,13 +152,13 @@ public class PrivacyController {
                         result.setSuccess(true);
                     } else {
                         result.setSuccess(false);
-                        result.setErrorMessage("服务器异常，请稍候再试");
+                        result.setMessage("服务器异常，请稍候再试");
                     }
                     break;
 
                 default:
                     result.setSuccess(false);
-                    result.setErrorMessage("请求参数不合法");
+                    result.setMessage("请求参数不合法");
                     break;
             }
         }

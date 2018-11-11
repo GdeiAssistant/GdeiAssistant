@@ -262,7 +262,7 @@
                                 //隐藏进度条
                                 $("#loadingToast, .weui_mask").hide();
                                 //显示错误提示
-                                weui.alert(cetQueryResultEnum.errorMessage, {
+                                weui.alert(cetQueryResultEnum.message, {
                                     title: '错误提示',
                                     buttons: [{
                                         label: '确定',

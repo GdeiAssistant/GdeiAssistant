@@ -2,9 +2,9 @@ package com.linguancheng.gdeiassistant.Controller.Secret;
 
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Secret;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Service.Secret.SecretService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -143,7 +143,7 @@ public class SecretController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             result.setSuccess(false);
-            result.setErrorMessage("用户凭证已过期，请重新登录");
+            result.setMessage("用户凭证已过期，请重新登录");
         } else {
             BaseResult<List<Secret>, DataBaseResultEnum> queryResult = secretService.GetSecretInfo(start, 10, username);
             switch (queryResult.getResultType()) {
@@ -158,7 +158,7 @@ public class SecretController {
 
                 case ERROR:
                     result.setSuccess(false);
-                    result.setErrorMessage("服务器异常，请稍候再试");
+                    result.setMessage("服务器异常，请稍候再试");
                     break;
             }
         }
@@ -174,25 +174,25 @@ public class SecretController {
      */
     @RequestMapping(value = "/rest/secret/info", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret
+    public JsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret
             , BindingResult bindingResult) {
-        BaseJsonResult result = new BaseJsonResult();
+        JsonResult result = new JsonResult();
         if (bindingResult.hasErrors()) {
             result.setSuccess(false);
-            result.setErrorMessage("请求参数不合法");
+            result.setMessage("请求参数不合法");
             return result;
         }
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             result.setSuccess(false);
-            result.setErrorMessage("用户凭证已过期，请重新登录");
+            result.setMessage("用户凭证已过期，请重新登录");
         } else {
             boolean addSecretResult = secretService.AddSecretInfo(username, secret);
             if (addSecretResult) {
                 result.setSuccess(true);
             } else {
                 result.setSuccess(false);
-                result.setErrorMessage("服务器异常，请稍候再试");
+                result.setMessage("服务器异常，请稍候再试");
             }
         }
         return result;
@@ -208,27 +208,27 @@ public class SecretController {
      */
     @RequestMapping(value = "/rest/secret/id/{id}/comment", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult AddSecretComment(HttpServletRequest request, @PathVariable("id") int id, String comment) {
-        BaseJsonResult result = new BaseJsonResult();
+    public JsonResult AddSecretComment(HttpServletRequest request, @PathVariable("id") int id, String comment) {
+        JsonResult result = new JsonResult();
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {
             result.setSuccess(false);
-            result.setErrorMessage("请求参数不合法");
+            result.setMessage("请求参数不合法");
             return result;
         }
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             result.setSuccess(false);
-            result.setErrorMessage("用户凭证已过期，请重新登录");
+            result.setMessage("用户凭证已过期，请重新登录");
         } else {
             if (!secretService.CheckSecretInfoExist(id)) {
                 result.setSuccess(false);
-                result.setErrorMessage("该树洞消息不存在");
+                result.setMessage("该树洞消息不存在");
             } else {
                 if (secretService.AddSecretComment(id, username, comment)) {
                     result.setSuccess(true);
                 } else {
                     result.setSuccess(false);
-                    result.setErrorMessage("服务器异常，请稍候再试");
+                    result.setMessage("服务器异常，请稍候再试");
                 }
             }
         }
@@ -245,13 +245,13 @@ public class SecretController {
      */
     @RequestMapping(value = "/rest/secret/id/{id}/like", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateSecretLikeState(HttpServletRequest request
+    public JsonResult UpdateSecretLikeState(HttpServletRequest request
             , @PathVariable("id") int id, int like) {
-        BaseJsonResult result = new BaseJsonResult();
+        JsonResult result = new JsonResult();
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             result.setSuccess(false);
-            result.setErrorMessage("用户凭证已过期，请重新登录");
+            result.setMessage("用户凭证已过期，请重新登录");
         } else {
             if (secretService.CheckSecretInfoExist(id)) {
                 switch (like) {
@@ -261,7 +261,7 @@ public class SecretController {
                             result.setSuccess(true);
                         } else {
                             result.setSuccess(false);
-                            result.setErrorMessage("服务器异常，请稍候再试");
+                            result.setMessage("服务器异常，请稍候再试");
                         }
                         break;
 
@@ -271,18 +271,18 @@ public class SecretController {
                             result.setSuccess(true);
                         } else {
                             result.setSuccess(false);
-                            result.setErrorMessage("服务器异常，请稍候再试");
+                            result.setMessage("服务器异常，请稍候再试");
                         }
                         break;
 
                     default:
                         result.setSuccess(false);
-                        result.setErrorMessage("请求参数不合法");
+                        result.setMessage("请求参数不合法");
                         break;
                 }
             } else {
                 result.setSuccess(false);
-                result.setErrorMessage("该树洞信息不存在");
+                result.setMessage("该树洞信息不存在");
             }
         }
         return result;

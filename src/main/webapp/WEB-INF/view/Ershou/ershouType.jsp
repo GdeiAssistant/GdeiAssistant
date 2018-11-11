@@ -44,8 +44,8 @@
         });
 
         //显示错误提示
-        function showErrorTip(errorMessage) {
-            $(".weui_warn").text(errorMessage).show().delay(2000).hide(0);
+        function showErrorTip(message) {
+            $(".weui_warn").text(message).show().delay(2000).hide(0);
         }
 
         //滚动到底部时加载更多数据
@@ -78,7 +78,7 @@
                         }
                     }
                     else {
-                        showErrorTip(result.errorMessage);
+                        showErrorTip(result.message);
                     }
                 },
                 error: function () {

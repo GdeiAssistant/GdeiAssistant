@@ -72,7 +72,7 @@ public class ChargeService {
     public VerifyClientKeyCodeResultEnum VerifyClientKeyCode(String clientKeycode, String timeStamp) {
         String realKeycode = "GdeiAssistant" + timeStamp;
         try {
-            if (clientKeycode.equals(StringEncryptUtils.SHA1MapString(StringEncryptUtils.encryptString(realKeycode)))) {
+            if (clientKeycode.equals(StringEncryptUtils.SHA1HexString(StringEncryptUtils.encryptString(realKeycode)))) {
                 return VerifyClientKeyCodeResultEnum.VERIFY_SUCCESS;
             } else {
                 return VerifyClientKeyCodeResultEnum.VERIFY_FAILURE;
@@ -147,7 +147,7 @@ public class ChargeService {
         if (securityVersion.equals("1.1")) {
             //1.1版本的安全校验
             String text = user.getUsername() + user.getPassword() + amount + "GdeiAssistant" + timeStamp;
-            return StringEncryptUtils.SHA1MapString(StringEncryptUtils.encryptString(text));
+            return StringEncryptUtils.SHA1HexString(StringEncryptUtils.encryptString(text));
         }
         throw new UnsupportSecurityVersionException();
     }

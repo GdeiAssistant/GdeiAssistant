@@ -40,7 +40,7 @@ function importNumber() {
                 }
             }
             else {
-                $(".weui_warn").text(result.errorMessage).show().delay(2000).hide(0);
+                $(".weui_warn").text(result.message).show().delay(2000).hide(0);
             }
         },
         error: function () {
@@ -106,7 +106,7 @@ function postQueryForm() {
                 }
                 else {
                     updateCheckCode();
-                    $(".weui_warn").text(result.errorMessage).show().delay(2000).hide(0);
+                    $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                 }
             },
             error: function () {

@@ -5,9 +5,9 @@ import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.*;
 import com.linguancheng.gdeiassistant.Pojo.Profile.*;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Service.Privacy.PrivacyService;
 import com.linguancheng.gdeiassistant.Service.Profile.RealNameService;
@@ -221,7 +221,7 @@ public class ProfileController {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+            jsonResult.setMessage("用户身份凭证过期，请稍候再试");
         } else {
             String url = userProfileService.GetUserAvatar(username);
             if (url == null || url.trim().isEmpty()) {
@@ -250,7 +250,7 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+            jsonResult.setMessage("用户身份凭证过期，请稍候再试");
         } else {
             String url = userProfileService.GetUserAvatar(username);
             if (url == null || url.trim().isEmpty()) {
@@ -276,17 +276,17 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/avatar", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateUserAvatar(HttpServletRequest request
+    public JsonResult UpdateUserAvatar(HttpServletRequest request
             , @RequestParam("avatar") MultipartFile file) throws IOException {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+        JsonResult jsonResult = new JsonResult();
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+            jsonResult.setMessage("用户身份凭证过期，请稍候再试");
         } else {
             if (file == null || file.getSize() <= 0 || file.getSize() >= 1024 * 1024 * 2) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("上传的图片文件不合法");
+                jsonResult.setMessage("上传的图片文件不合法");
             } else {
                 userProfileService.UpdateAvatar(username, file.getInputStream());
                 jsonResult.setSuccess(true);
@@ -348,29 +348,29 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("请求参数异常");
+                        jsonResult.setMessage("请求参数异常");
                         break;
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("加载个人资料失败");
+                        jsonResult.setMessage("加载个人资料失败");
                         break;
                 }
                 break;
 
             case SERVER_ERROR:
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("服务器维护中，请稍后再试");
+                jsonResult.setMessage("服务器维护中，请稍后再试");
                 break;
 
             case TIME_OUT:
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("网络连接超时，请重试");
+                jsonResult.setMessage("网络连接超时，请重试");
                 break;
 
             case PASSWORD_ERROR:
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("密码已更新，请重新登录");
+                jsonResult.setMessage("密码已更新，请重新登录");
                 break;
         }
         return jsonResult;
@@ -390,7 +390,7 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+            jsonResult.setMessage("用户身份凭证过期，请稍候再试");
         } else {
             BaseResult<Profile, DataBaseResultEnum> result = userProfileService.GetUserProfile(username);
             switch (result.getResultType()) {
@@ -430,12 +430,12 @@ public class ProfileController {
 
                 case INCORRECT_USERNAME:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("请求参数异常");
+                    jsonResult.setMessage("请求参数异常");
                     break;
 
                 case ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("加载个人资料失败");
+                    jsonResult.setMessage("加载个人资料失败");
                     break;
             }
         }
@@ -452,13 +452,12 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/introduction", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateIntroduction(HttpServletRequest request, String introduction) throws
-            UnsupportedEncodingException {
-        BaseJsonResult updateIntroductionJsonResult = new BaseJsonResult();
+    public DataJsonResult UpdateIntroduction(HttpServletRequest request, String introduction) {
+        DataJsonResult updateIntroductionJsonResult = new DataJsonResult();
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             updateIntroductionJsonResult.setSuccess(false);
-            updateIntroductionJsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+            updateIntroductionJsonResult.setMessage("用户身份凭证过期，请稍候再试");
         } else {
             if (introduction != null && introduction.length() <= 80) {
                 if (introduction.equals("")) {
@@ -472,17 +471,17 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         updateIntroductionJsonResult.setSuccess(false);
-                        updateIntroductionJsonResult.setErrorMessage("请求参数不合法");
+                        updateIntroductionJsonResult.setMessage("请求参数不合法");
                         break;
 
                     case ERROR:
                         updateIntroductionJsonResult.setSuccess(false);
-                        updateIntroductionJsonResult.setErrorMessage("服务器异常，请稍候再试");
+                        updateIntroductionJsonResult.setMessage("服务器异常，请稍候再试");
                         break;
                 }
             } else {
                 updateIntroductionJsonResult.setSuccess(false);
-                updateIntroductionJsonResult.setErrorMessage("请求参数不合法");
+                updateIntroductionJsonResult.setMessage("请求参数不合法");
             }
         }
         return updateIntroductionJsonResult;
@@ -501,7 +500,7 @@ public class ProfileController {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+            jsonResult.setMessage("用户身份凭证过期，请稍候再试");
         } else {
             BaseResult<String, DataBaseResultEnum> result = userProfileService.GetUserIntroduction(username);
             switch (result.getResultType()) {
@@ -512,12 +511,12 @@ public class ProfileController {
 
                 case INCORRECT_USERNAME:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("请求参数不合法");
+                    jsonResult.setMessage("请求参数不合法");
                     break;
 
                 case ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("加载个人简介失败");
+                    jsonResult.setMessage("加载个人简介失败");
                     break;
 
                 case EMPTY_RESULT:
@@ -535,7 +534,7 @@ public class ProfileController {
         DataJsonResult<List<Region>> jsonResult = new DataJsonResult<>();
         if (regionMap == null || regionMap.isEmpty()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("加载国家/地区列表失败，请稍候再试");
+            jsonResult.setMessage("加载国家/地区列表失败，请稍候再试");
         } else {
             List<Region> regionList = new ArrayList<>(regionMap.values());
             regionList.sort(new RegionComparator());
@@ -554,16 +553,16 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/profile/gender", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateGender(HttpServletRequest request, int gender, String customGenderName) {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+    public JsonResult UpdateGender(HttpServletRequest request, int gender, String customGenderName) {
+        JsonResult jsonResult = new JsonResult();
         if (gender < 0 || gender > UserProfileService.getGenderMap().size() + 1 || (gender == 3 && StringUtils.isBlank(customGenderName))) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                jsonResult.setMessage("用户身份凭证过期，请稍候再试");
             } else {
                 DataBaseResultEnum updateProfileResultEnum = userProfileService.UpdateGender(username, gender, customGenderName);
                 switch (updateProfileResultEnum) {
@@ -573,12 +572,12 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                        jsonResult.setMessage("用户身份凭证过期，请稍候再试");
                         break;
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                        jsonResult.setMessage("服务器异常，请稍候再试");
                         break;
                 }
             }
@@ -595,13 +594,13 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/profile/genderOrientation", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateGenderOrientation(HttpServletRequest request, int genderOrientation) {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+    public JsonResult UpdateGenderOrientation(HttpServletRequest request, int genderOrientation) {
+        JsonResult jsonResult = new JsonResult();
         if (genderOrientation >= 0 && genderOrientation <= UserProfileService.getGenderOrientationMap().size() + 1) {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                jsonResult.setMessage("用户身份凭证过期，请稍候再试");
             } else {
                 DataBaseResultEnum updateProfileResultEnum = userProfileService.UpdateGenderOrientation(username, genderOrientation);
                 switch (updateProfileResultEnum) {
@@ -611,18 +610,18 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                        jsonResult.setMessage("用户身份凭证过期，请稍候再试");
                         break;
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                        jsonResult.setMessage("服务器异常，请稍候再试");
                         break;
                 }
             }
         } else {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数异常");
+            jsonResult.setMessage("请求参数异常");
         }
         return jsonResult;
     }
@@ -636,13 +635,13 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/profile/faculty", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateFaculty(HttpServletRequest request, int faculty) {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+    public JsonResult UpdateFaculty(HttpServletRequest request, int faculty) {
+        JsonResult jsonResult = new JsonResult();
         if (faculty >= 0 && faculty <= UserProfileService.getFacultyMap().size() + 1) {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                jsonResult.setMessage("用户身份凭证过期，请稍候再试");
             } else {
                 DataBaseResultEnum updateProfileResultEnum = userProfileService
                         .UpdateFaculty(username, faculty);
@@ -653,18 +652,18 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                        jsonResult.setMessage("用户身份凭证过期，请稍候再试");
                         break;
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                        jsonResult.setMessage("服务器异常，请稍候再试");
                         break;
                 }
             }
         } else {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数异常");
+            jsonResult.setMessage("请求参数异常");
         }
         return jsonResult;
     }
@@ -678,14 +677,14 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/profile/location", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateRegion(HttpServletRequest request, String region
+    public JsonResult UpdateRegion(HttpServletRequest request, String region
             , String state, String city) {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+        JsonResult jsonResult = new JsonResult();
         if (region != null && !region.trim().isEmpty()) {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                jsonResult.setMessage("用户身份凭证过期，请稍候再试");
             } else {
                 DataBaseResultEnum updateProfileResultEnum = null;
                 //判断国家/地区代码是否合法
@@ -707,17 +706,17 @@ public class ProfileController {
                                     updateProfileResultEnum = userProfileService.UpdateRegion(username, region, state, city);
                                 } else {
                                     jsonResult.setSuccess(false);
-                                    jsonResult.setErrorMessage("不合法的市/直辖市代码");
+                                    jsonResult.setMessage("不合法的市/直辖市代码");
                                 }
                             }
                         } else {
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("不合法的省/州代码");
+                            jsonResult.setMessage("不合法的省/州代码");
                         }
                     }
                 } else {
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("不合法的国家/地区代码");
+                    jsonResult.setMessage("不合法的国家/地区代码");
                 }
                 if (updateProfileResultEnum != null) {
                     switch (updateProfileResultEnum) {
@@ -727,19 +726,19 @@ public class ProfileController {
 
                         case INCORRECT_USERNAME:
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                            jsonResult.setMessage("用户身份凭证过期，请稍候再试");
                             break;
 
                         case ERROR:
                             jsonResult.setSuccess(false);
-                            jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                            jsonResult.setMessage("服务器异常，请稍候再试");
                             break;
                     }
                 }
             }
         } else {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数异常");
+            jsonResult.setMessage("请求参数异常");
         }
         return jsonResult;
     }
@@ -755,13 +754,13 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/profile/major", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateMajor(HttpServletRequest request, String major) throws UnsupportedEncodingException {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+    public JsonResult UpdateMajor(HttpServletRequest request, String major) throws UnsupportedEncodingException {
+        JsonResult jsonResult = new JsonResult();
         if (StringUtils.isNotBlank(major) && major.getBytes("GB2312").length <= 20) {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                jsonResult.setMessage("用户身份凭证过期，请稍候再试");
             } else {
                 DataBaseResultEnum updateProfileResultEnum = userProfileService
                         .UpdateMajor(username, major);
@@ -772,18 +771,18 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                        jsonResult.setMessage("用户身份凭证过期，请稍候再试");
                         break;
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                        jsonResult.setMessage("服务器异常，请稍候再试");
                         break;
                 }
             }
         } else {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数异常");
+            jsonResult.setMessage("请求参数异常");
         }
         return jsonResult;
     }
@@ -798,13 +797,13 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/profile/kickname", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateKickname(HttpServletRequest request, String kickname) throws UnsupportedEncodingException {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+    public JsonResult UpdateKickname(HttpServletRequest request, String kickname) throws UnsupportedEncodingException {
+        JsonResult jsonResult = new JsonResult();
         if (kickname != null && !kickname.trim().isEmpty() && kickname.getBytes("GB2312").length <= 24) {
             String username = (String) request.getSession().getAttribute("username");
             if (username == null || username.trim().isEmpty()) {
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                jsonResult.setMessage("用户身份凭证过期，请稍候再试");
             } else {
                 DataBaseResultEnum updateProfileResultEnum = userProfileService.UpdateKickname(username, kickname);
                 switch (updateProfileResultEnum) {
@@ -814,18 +813,18 @@ public class ProfileController {
 
                     case INCORRECT_USERNAME:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("用户身份凭证过期，请稍候再试");
+                        jsonResult.setMessage("用户身份凭证过期，请稍候再试");
                         break;
 
                     case ERROR:
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                        jsonResult.setMessage("服务器异常，请稍候再试");
                         break;
                 }
             }
         } else {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数异常");
+            jsonResult.setMessage("请求参数异常");
         }
         return jsonResult;
     }
@@ -846,7 +845,7 @@ public class ProfileController {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
         if (bindingResult.hasErrors()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else {
             BaseResult<String, BoolResultEnum> result = realNameService
                     .GetUserRealName(request, user.getUsername(), user.getPassword());
@@ -858,7 +857,7 @@ public class ProfileController {
 
                 case ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("获取真实姓名失败，请稍后再试");
+                    jsonResult.setMessage("获取真实姓名失败，请稍后再试");
                     break;
             }
         }

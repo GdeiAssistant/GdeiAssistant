@@ -47,17 +47,17 @@ public class BookQueryController {
 
                 case TIME_OUT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("网络连接超时，请重试");
+                    jsonResult.setMessage("网络连接超时，请重试");
                     break;
 
                 case SERVER_ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("移动图书馆系统异常，请稍后再试");
+                    jsonResult.setMessage("移动图书馆系统异常，请稍后再试");
                     break;
             }
         } else {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证已过期，请重新登录");
+            jsonResult.setMessage("用户身份凭证已过期，请重新登录");
         }
         return jsonResult;
     }
@@ -77,27 +77,27 @@ public class BookQueryController {
 
                 case PASSWORD_INCORRECT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("借阅证密码错误");
+                    jsonResult.setMessage("借阅证密码错误");
                     break;
 
                 case SERVER_ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("移动图书馆系统异常，请稍后再试");
+                    jsonResult.setMessage("移动图书馆系统异常，请稍后再试");
                     break;
 
                 case TIME_OUT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("网络连接超时，请重试");
+                    jsonResult.setMessage("网络连接超时，请重试");
                     break;
 
                 case EMPTY_RESULT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("没有借阅任何图书");
+                    jsonResult.setMessage("没有借阅任何图书");
                     break;
             }
         } else {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证已过期，请重新登录");
+            jsonResult.setMessage("用户身份凭证已过期，请重新登录");
         }
         return jsonResult;
     }

@@ -4,9 +4,9 @@ import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Service.LostAndFound.LostAndFoundService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -343,7 +343,7 @@ public class LostAndFoundController {
         String username = (String) request.getSession().getAttribute("username");
         if (StringUtils.isBlank(username)) {
             result.setSuccess(false);
-            result.setErrorMessage("用户身份凭证已过期，请重新登录");
+            result.setMessage("用户身份凭证已过期，请重新登录");
         } else {
             BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> queryResult = lostAndFoundService
                     .QueryLostItem(start);
@@ -355,7 +355,7 @@ public class LostAndFoundController {
 
                 case ERROR:
                     result.setSuccess(false);
-                    result.setErrorMessage("服务器异常，请稍候再试");
+                    result.setMessage("服务器异常，请稍候再试");
                     break;
 
                 case EMPTY_RESULT:
@@ -381,7 +381,7 @@ public class LostAndFoundController {
         String username = (String) request.getSession().getAttribute("username");
         if (StringUtils.isBlank(username)) {
             result.setSuccess(false);
-            result.setErrorMessage("用户身份凭证已过期，请重新登录");
+            result.setMessage("用户身份凭证已过期，请重新登录");
         } else {
             BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> queryResult = lostAndFoundService
                     .QueryFoundItem(start);
@@ -393,7 +393,7 @@ public class LostAndFoundController {
 
                 case ERROR:
                     result.setSuccess(false);
-                    result.setErrorMessage("服务器异常，请稍候再试");
+                    result.setMessage("服务器异常，请稍候再试");
                     break;
 
                 case EMPTY_RESULT:
@@ -419,7 +419,7 @@ public class LostAndFoundController {
         DataJsonResult<List<LostAndFoundItem>> jsonResult = new DataJsonResult<>();
         if (lostType < 0 || lostType > 1 || keywords.length() < 1 || keywords.length() > 50) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else {
             BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> result = null;
             if (lostType.equals(0)) {
@@ -439,7 +439,7 @@ public class LostAndFoundController {
 
                 case ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("服务器维护中，请稍后再试");
+                    jsonResult.setMessage("服务器维护中，请稍后再试");
                     break;
             }
         }
@@ -461,7 +461,7 @@ public class LostAndFoundController {
         String username = (String) request.getSession().getAttribute("username");
         if (StringUtils.isBlank(username)) {
             result.setSuccess(false);
-            result.setErrorMessage("用户身份凭证已过期，请重新登录");
+            result.setMessage("用户身份凭证已过期，请重新登录");
         } else {
             List<String> list = lostAndFoundService.GetLostAndFoundItemPictureURL(username, id);
             if (list != null && !list.isEmpty()) {
@@ -501,7 +501,7 @@ public class LostAndFoundController {
 
             case ERROR:
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("服务器出现异常，请稍候再试");
+                jsonResult.setMessage("服务器出现异常，请稍候再试");
                 break;
         }
         return jsonResult;
@@ -533,7 +533,7 @@ public class LostAndFoundController {
 
             case ERROR:
                 jsonResult.setSuccess(false);
-                jsonResult.setErrorMessage("服务器出现异常，请稍候再试");
+                jsonResult.setMessage("服务器出现异常，请稍候再试");
                 break;
         }
         return jsonResult;
@@ -548,12 +548,12 @@ public class LostAndFoundController {
      */
     @RequestMapping(value = "/rest/lostandfound/info/id/{id}/didfound", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult DidFoundItem(HttpServletRequest request, @PathVariable("id") Integer id) {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+    public JsonResult DidFoundItem(HttpServletRequest request, @PathVariable("id") Integer id) {
+        JsonResult jsonResult = new JsonResult();
         String username = (String) request.getSession().getAttribute("username");
         if (StringUtils.isBlank(username)) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("用户身份凭证过期，请重新登录");
+            jsonResult.setMessage("用户身份凭证过期，请重新登录");
         } else {
             BaseResult<LostAndFoundItem, DataBaseResultEnum> result = lostAndFoundService
                     .QueryLostAndFoundItemByID(id);
@@ -568,23 +568,23 @@ public class LostAndFoundController {
 
                             case ERROR:
                                 jsonResult.setSuccess(false);
-                                jsonResult.setErrorMessage("服务器异常，请稍后再试");
+                                jsonResult.setMessage("服务器异常，请稍后再试");
                                 break;
                         }
                     } else {
                         jsonResult.setSuccess(false);
-                        jsonResult.setErrorMessage("你没有操作该信息的权限");
+                        jsonResult.setMessage("你没有操作该信息的权限");
                     }
                     break;
 
                 case ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("服务器异常，请稍后再试");
+                    jsonResult.setMessage("服务器异常，请稍后再试");
                     break;
 
                 case EMPTY_RESULT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("该失物招领信息不存在");
+                    jsonResult.setMessage("该失物招领信息不存在");
                     break;
             }
         }
@@ -601,12 +601,12 @@ public class LostAndFoundController {
      */
     @RequestMapping(value = "/rest/lostandfound/info/id/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult UpdateLostAndFoundInfo(@PathVariable("id") Integer id
+    public JsonResult UpdateLostAndFoundInfo(@PathVariable("id") Integer id
             , @Validated LostAndFoundItem lostAndFoundItem, BindingResult bindingResult) {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+        JsonResult jsonResult = new JsonResult();
         if (bindingResult.hasErrors() || !lostAndFoundItem.containsContactInfo()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else {
             BoolResultEnum boolResultEnum = lostAndFoundService.UpdateLostAndFoundItem(lostAndFoundItem, id);
             switch (boolResultEnum) {
@@ -617,7 +617,7 @@ public class LostAndFoundController {
                 case ERROR:
                     //服务器内部异常
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                    jsonResult.setMessage("服务器异常，请稍候再试");
                     break;
             }
         }
@@ -639,17 +639,17 @@ public class LostAndFoundController {
      */
     @RequestMapping(value = "/rest/lostandfound/info", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult AddLostAndFoundInfo(HttpServletRequest request
+    public JsonResult AddLostAndFoundInfo(HttpServletRequest request
             , @Validated LostAndFoundItem lostAndFoundItem, MultipartFile image1
             , MultipartFile image2, MultipartFile image3, MultipartFile image4
             , BindingResult bindingResult) throws IOException {
-        BaseJsonResult jsonResult = new BaseJsonResult();
+        JsonResult jsonResult = new JsonResult();
         if (bindingResult.hasErrors() || !lostAndFoundItem.containsContactInfo()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else if (image1 == null || image1.getSize() <= 0 || image1.getSize() >= MAX_PICTURE_SIZE) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("不合法的图片文件");
+            jsonResult.setMessage("不合法的图片文件");
         } else {
             String username = (String) request.getSession().getAttribute("username");
             BaseResult<LostAndFoundItem, BoolResultEnum> result = lostAndFoundService
@@ -673,7 +673,7 @@ public class LostAndFoundController {
                 case ERROR:
                     //服务器内部异常
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("服务器异常，请稍候再试");
+                    jsonResult.setMessage("服务器异常，请稍候再试");
                     break;
             }
         }

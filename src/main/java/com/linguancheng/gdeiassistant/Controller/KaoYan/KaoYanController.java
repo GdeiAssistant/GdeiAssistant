@@ -32,7 +32,7 @@ public class KaoYanController {
         DataJsonResult<KaoYan> jsonResult = new DataJsonResult<>();
         if (bindingResult.hasErrors()) {
             jsonResult.setSuccess(false);
-            jsonResult.setErrorMessage("请求参数不合法");
+            jsonResult.setMessage("请求参数不合法");
         } else {
             BaseResult<KaoYan, ServiceResultEnum> result = kaoYanService.KaoYanScoreQuery(kaoYanQuery.getName(), kaoYanQuery.getExamNumber(), kaoYanQuery.getIdNumber());
             switch (result.getResultType()) {
@@ -43,22 +43,22 @@ public class KaoYanController {
 
                 case SERVER_ERROR:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("研招网查询系统维护中，请稍后再试");
+                    jsonResult.setMessage("研招网查询系统维护中，请稍后再试");
                     break;
 
                 case TIME_OUT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("网络连接超时，请重试");
+                    jsonResult.setMessage("网络连接超时，请重试");
                     break;
 
                 case ERROR_CONDITION:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("提交的考生信息有误，请检查");
+                    jsonResult.setMessage("提交的考生信息有误，请检查");
                     break;
 
                 case EMPTY_RESULT:
                     jsonResult.setSuccess(false);
-                    jsonResult.setErrorMessage("无查询结果，请确认招生单位已开通初试成绩查询功能");
+                    jsonResult.setMessage("无查询结果，请确认招生单位已开通初试成绩查询功能");
                     break;
             }
         }

@@ -3,11 +3,9 @@ package com.linguancheng.gdeiassistant.Pojo.Result;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
-
 @Component
 @Scope("prototype")
-public class DataJsonResult<T> extends BaseJsonResult {
+public class DataJsonResult<T> extends JsonResult {
 
     private T data;
 

@@ -22,5 +22,7 @@ src/main/resources/config/oss/
 src/main/resources/config/version/
 src/main/resources/config/wechat/
 src/main/resources/config/yiban
+src/main/resources/config/api/
+src/main/resources/config/jwt/
 src/main/resources/config/education/cache.properties
 src/test/

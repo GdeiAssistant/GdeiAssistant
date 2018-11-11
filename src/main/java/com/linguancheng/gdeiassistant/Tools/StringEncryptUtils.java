@@ -53,12 +53,22 @@ public class StringEncryptUtils {
     }
 
     /**
-     * SHA1映射字符串,返回映射后的结果
+     * SHA1哈希映射字符串，返回映射后的结果
      *
      * @param text
      * @return
      */
-    public static String SHA1MapString(String text) {
+    public static String SHA1HexString(String text) {
         return DigestUtils.sha1Hex(text);
+    }
+
+    /**
+     * SHA256哈希映射字符串，返回映射后的结果
+     *
+     * @param text
+     * @return
+     */
+    public static String SHA256MapString(String text) {
+        return DigestUtils.sha256Hex(text);
     }
 }

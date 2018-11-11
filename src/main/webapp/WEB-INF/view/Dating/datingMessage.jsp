@@ -55,7 +55,7 @@
                             window.location.href = '/dating/profile/id/' + profileId;
                         }
                         else {
-                            $(".weui_warn").text(result.errorMessage).show().delay(2000).hide(0);
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
                     },
                     error: function () {
@@ -78,7 +78,7 @@
                             window.location.href = '/dating/pick/id/' + pickId;
                         }
                         else {
-                            $(".weui_warn").text(result.errorMessage).show().delay(2000).hide(0);
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
                     },
                     error: function () {
@@ -150,7 +150,7 @@
                             }
                         }
                         else {
-                            $(".weui_warn").text(result.errorMessage).show().delay(2000).hide(0);
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
                     },
                     error: function () {

@@ -65,7 +65,7 @@ function postQueryForm(year) {
                     handleGradeInfo(gradeQueryResult);
                 }
                 else {
-                    showCustomErrorTip(gradeQueryResult.errorMessage);
+                    showCustomErrorTip(gradeQueryResult.message);
                 }
             },
             error: function () {
@@ -88,7 +88,7 @@ function postQueryForm(year) {
                     handleGradeInfo(gradeQueryResult);
                 }
                 else {
-                    showCustomErrorTip(gradeQueryResult.errorMessage);
+                    showCustomErrorTip(gradeQueryResult.message);
                 }
             },
             error: function () {
@@ -112,8 +112,8 @@ function showNetworkErrorTip() {
 }
 
 //显示自定义错误提示
-function showCustomErrorTip(errorMessage) {
-    weui.alert(errorMessage, {
+function showCustomErrorTip(message) {
+    weui.alert(message, {
         title: '错误提示',
         buttons: [{
             label: '确定',

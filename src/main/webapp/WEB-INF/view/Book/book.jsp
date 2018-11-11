@@ -17,10 +17,10 @@
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <!-- 如果使用双核浏览器，强制使用webkit来进行页面渲�? -->
+    <!-- 如果使用双核浏览器，强制使用webkit来进行页面渲染 -->
     <meta name="renderer" content="webkit"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <!-- 不缓存页�? -->
+    <!-- 不缓存页面 -->
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
@@ -45,7 +45,7 @@
 </head>
 <body>
 
-<%-- 不缓存页�? --%>
+<%-- 不缓存页面 --%>
 <%
     response.setHeader("Pragma", "No-cache");
     response.setHeader("Cache-Control", "no-cache");
@@ -54,7 +54,7 @@
     response.setHeader("Cache-Control", "must-revalidate");
 %>
 
-<%-- 获取错误信息并提�? --%>
+<%-- 获取错误信息并提示 --%>
 <c:if test="${QueryErrorMessage!=null}">
     <script type="text/javascript">
         $(document).ready(function () {
@@ -65,7 +65,7 @@
 
 <div class="weui_cells_title" onclick="backToIndex()">返回主页</div>
 
-<%-- 如果有返回结�?,显示结果页面;否则显示用户填写信息的页�? --%>
+<%-- 如果有返回结果,显示结果页面;否则显示用户填写信息的页面 --%>
 <c:choose>
 
     <c:when test="${QueryResult!=null}">
@@ -86,7 +86,7 @@
                                 <p>${book.name}</p>
                             </div>
                             <div class="weui_cell_ft" style="margin-left: 15px">
-                                借阅时间�?${book.borrowDate}<br>应还时间�?${book.returnDate}
+                                借阅时间：${book.borrowDate}<br>应还时间：${book.returnDate}
                             </div>
                         </div>
 
@@ -101,7 +101,7 @@
                 <div class="weui_msg">
                     <div class="weui_text_area">
                         <div class="weui_icon_area"><i class="weui_icon_info weui_icon_msg"></i></div>
-                        <h2 class="weui_msg_title">无�?�阅图书</h2>
+                        <h2 class="weui_msg_title">无借阅图书</h2>
                         <p class="weui_msg_desc">下一个学霸就是你!</p>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                 <div class="weui_msg">
 
                     <div class="weui_extra_area">
-                        <p>广东二师助手团队 林冠�? 版权�?�?</p>
+                        <p>广东二师助手团队 版权所有</p>
                         <p>All rights reserved © 2016 - 2018</p>
                     </div>
 
@@ -127,7 +127,7 @@
         <script type="text/javascript">
             function postQueryForm() {
                 if ($("#number").val() === "" || $("#password").val() === "") {
-                    $(".weui_warn").text("请将信息填写完整�?").show().delay(2000).hide(0);
+                    $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
                 }
                 else {
                     $("#loadingToast, .weui_mask").show();
@@ -142,10 +142,10 @@
 
             <div class="hd">
                 <h1 class="page_title">图书借阅查询</h1>
-                <p class="page_desc">广东第二师范学院移动图书�?</p>
+                <p class="page_desc">广东第二师范学院移动图书馆</p>
             </div>
 
-            <!-- 提交的查询信息表�? -->
+            <!-- 提交的查询信息表单 -->
             <div class="weui_cells weui_cells_form">
                 <form action="/bookquery" method="post">
                     <div class="weui_cell">
@@ -154,7 +154,7 @@
                         </div>
                         <div class="weui_cell_bd weui_cell_primary">
                             <input id="number" class="weui_input" type="tel" maxlength="11" name="number"
-                                   value="${BookQueryNumber}" placeholder="请输入�?�阅证学�?">
+                                   value="${BookQueryNumber}" placeholder="请输入借阅证学号">
                         </div>
                     </div>
                     <div class="weui_cell">
@@ -163,7 +163,7 @@
                         </div>
                         <div class="weui_cell_bd weui_cell_primary">
                             <input id="password" class="weui_input" type="password" maxlength="35" name="password"
-                                   value="${BookQueryPassword}" placeholder="请输入�?�阅证密�?">
+                                   value="${BookQueryPassword}" placeholder="请输入借阅证密码">
                         </div>
                     </div>
                 </form>
@@ -174,7 +174,7 @@
                 <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postQueryForm()">查询</a>
             </div>
 
-            <!-- 查询中弹�? -->
+            <!-- 查询中弹框 -->
             <div class="weui_mask" style="display: none"></div>
             <div id="loadingToast" class="weui_loading_toast" style="display: none">
                 <div class="weui_mask_transparent"></div>
@@ -193,11 +193,11 @@
                         <div class="weui_loading_leaf weui_loading_leaf_10"></div>
                         <div class="weui_loading_leaf weui_loading_leaf_11"></div>
                     </div>
-                    <p class="weui_toast_content">查询�?</p>
+                    <p class="weui_toast_content">查询中</p>
                 </div>
             </div>
 
-            <!-- 错误提示，显示时�?$.show();隐藏时用$.hide(); -->
+            <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
             <div class="weui_toptips weui_warn js_tooltips"></div>
 
             <p class="page_desc" style="margin-top: 25px">初始借阅证密码与学号相同</p>

@@ -117,7 +117,7 @@ public class WechatService {
                                 }
                                 //查询校园卡基本信息失败
                                 return new WechatTextMessage(wechatBaseMessage
-                                        , "查询失败，错误信息为：" + cardInfoQueryJsonResult.getErrorMessage());
+                                        , "查询失败，错误信息为：" + cardInfoQueryJsonResult.getMessage());
 
                             case GRADE:
                                 //查询成绩信息
@@ -182,7 +182,7 @@ public class WechatService {
                                 }
                                 //查询成绩信息失败
                                 return new WechatTextMessage(wechatBaseMessage
-                                        , "查询失败，错误信息为：" + gradeQueryJsonResult.getErrorMessage());
+                                        , "查询失败，错误信息为：" + gradeQueryJsonResult.getMessage());
 
                             case TODAY_SCHEDULE:
                                 //查询今日课表信息
@@ -222,7 +222,7 @@ public class WechatService {
                                 }
                                 //查询课表信息失败
                                 return new WechatTextMessage(wechatBaseMessage
-                                        , "查询失败，错误信息为：" + scheduleQueryJsonResult.getErrorMessage());
+                                        , "查询失败，错误信息为：" + scheduleQueryJsonResult.getMessage());
 
                             case ATTACH:
                                 //更改绑定账号

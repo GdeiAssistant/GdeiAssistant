@@ -44,7 +44,7 @@ public class TeacherQueryController {
         DataJsonResult<List<TeacherSchedule>> result = new DataJsonResult<>();
         if (bindingResult.hasErrors()) {
             result.setSuccess(false);
-            result.setErrorMessage("请求参数不合法");
+            result.setMessage("请求参数不合法");
         } else {
             BaseResult<List<TeacherSchedule>, ServiceResultEnum> queryResult = teacherQueryService.TeacherScheduleQuery(request
                     , teacher.getUsername(), teacher.getPassword(), year, term, teacherName);
@@ -56,17 +56,17 @@ public class TeacherQueryController {
 
                 case SERVER_ERROR:
                     result.setSuccess(false);
-                    result.setErrorMessage("教务系统异常，请稍后再试");
+                    result.setMessage("教务系统异常，请稍后再试");
                     break;
 
                 case TIME_OUT:
                     result.setSuccess(false);
-                    result.setErrorMessage("网络连接超时，请重试");
+                    result.setMessage("网络连接超时，请重试");
                     break;
 
                 case PASSWORD_INCORRECT:
                     result.setSuccess(false);
-                    result.setErrorMessage("账号密码错误，请检查并重试");
+                    result.setMessage("账号密码错误，请检查并重试");
                     break;
             }
         }

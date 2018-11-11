@@ -6,7 +6,7 @@ public class CetQueryJsonResult {
 
     private boolean success;
 
-    private String errorMessage;
+    private String message;
 
     private Cet cet;
 
@@ -18,12 +18,12 @@ public class CetQueryJsonResult {
         this.cet = cet;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public boolean isSuccess() {

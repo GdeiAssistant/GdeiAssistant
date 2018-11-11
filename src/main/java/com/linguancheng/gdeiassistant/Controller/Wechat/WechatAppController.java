@@ -4,6 +4,7 @@ import com.gdeiassistant.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.WechatUser;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.DataJsonResult;
+import com.gdeiassistant.gdeiassistant.Pojo.Result.JsonResult;
 import com.gdeiassistant.gdeiassistant.Service.Wechat.WechatAppService;
 import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -13,7 +13,7 @@ public class CardQueryJsonResult {
 
     private boolean success;
 
-    private String errorMessage;
+    private String message;
 
     private CardInfo cardInfo;
 
@@ -35,12 +35,12 @@ public class CardQueryJsonResult {
         this.cardList = cardList;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public boolean isSuccess() {

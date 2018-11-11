@@ -1,15 +1,14 @@
 package com.gdeiassistant.gdeiassistant.Controller.CetQuery;
 
-import com.gdeiassistant.gdeiassistant.Annotation.RestQueryLog;
 import com.gdeiassistant.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.gdeiassistant.gdeiassistant.Pojo.CetQuery.CetQuery;
 import com.gdeiassistant.gdeiassistant.Pojo.CetQuery.CetQueryJsonResult;
 import com.gdeiassistant.gdeiassistant.Pojo.CetQuery.CetQueryResult;
-import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseJsonResult;
-import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.DataJsonResult;
+import com.gdeiassistant.gdeiassistant.Pojo.Result.JsonResult;
+import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Service.CetQuery.CetQueryService;
 import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +51,12 @@ public class CetQueryController {
 
             case SERVER_ERROR:
                 dataJsonResult.setSuccess(false);
-                dataJsonResult.setErrorMessage("学信网系统异常，获取验证码失败");
+                dataJsonResult.setMessage("学信网系统异常，获取验证码失败");
                 break;
 
             case TIME_OUT:
                 dataJsonResult.setSuccess(false);
-                dataJsonResult.setErrorMessage("网络连接超时，获取验证码失败");
+                dataJsonResult.setMessage("网络连接超时，获取验证码失败");
                 break;
         }
         return dataJsonResult;
@@ -88,7 +87,7 @@ public class CetQueryController {
         String username = (String) WebUtils.getSessionAttribute(request, "username");
         if (StringUtils.isBlank(username)) {
             dataJsonResult.setSuccess(false);
-            dataJsonResult.setErrorMessage("用户身份凭证已过期，请重新登录");
+            dataJsonResult.setMessage("用户身份凭证已过期，请重新登录");
         } else {
             BaseResult<Long, DataBaseResultEnum> queryResult = cetQueryService.getCetNumber(username);
             switch (queryResult.getResultType()) {
@@ -99,7 +98,7 @@ public class CetQueryController {
 
                 case ERROR:
                     dataJsonResult.setSuccess(false);
-                    dataJsonResult.setErrorMessage("系统维护中，请稍候再试");
+                    dataJsonResult.setMessage("系统维护中，请稍候再试");
                     break;
 
                 case EMPTY_RESULT:
@@ -113,12 +112,12 @@ public class CetQueryController {
 
     @RequestMapping(value = "/cet/number", method = RequestMethod.POST)
     @ResponseBody
-    public BaseJsonResult SaveCetNumber(HttpServletRequest request, Long number) {
-        BaseJsonResult baseJsonResult = new BaseJsonResult();
+    public JsonResult SaveCetNumber(HttpServletRequest request, Long number) {
+        JsonResult baseJsonResult = new JsonResult();
         String username = (String) WebUtils.getSessionAttribute(request, "username");
         if (StringUtils.isBlank(username)) {
             baseJsonResult.setSuccess(false);
-            baseJsonResult.setErrorMessage("用户身份凭证已过期，请重新登录");
+            baseJsonResult.setMessage("用户身份凭证已过期，请重新登录");
         } else {
             BoolResultEnum resultEnum = cetQueryService.saveCetNumber(username, number);
             switch (resultEnum) {
@@ -128,7 +127,7 @@ public class CetQueryController {
 
                 case ERROR:
                     baseJsonResult.setSuccess(false);
-                    baseJsonResult.setErrorMessage("系统维护中，请稍候再试");
+                    baseJsonResult.setMessage("系统维护中，请稍候再试");
                     break;
             }
         }
@@ -141,28 +140,28 @@ public class CetQueryController {
         CetQueryJsonResult cetQueryJsonResult = new CetQueryJsonResult();
         if (bindingResult.hasErrors()) {
             cetQueryJsonResult.setSuccess(false);
-            cetQueryJsonResult.setErrorMessage("姓名或准考证号不合法");
+            cetQueryJsonResult.setMessage("姓名或准考证号不合法");
         } else {
             CetQueryResult cetQueryResult = cetQueryService.CetQuery(request, cetQuery);
             switch (cetQueryResult.getCetQueryResultEnum()) {
                 case SERVER_ERROR:
                     cetQueryJsonResult.setSuccess(false);
-                    cetQueryJsonResult.setErrorMessage("四六级查询系统维护中,请稍候再试");
+                    cetQueryJsonResult.setMessage("四六级查询系统维护中,请稍候再试");
                     break;
 
                 case ERROR_CONDITION:
                     cetQueryJsonResult.setSuccess(false);
-                    cetQueryJsonResult.setErrorMessage("验证码信息错误，请重新输入");
+                    cetQueryJsonResult.setMessage("验证码信息错误，请重新输入");
                     break;
 
                 case PASSWORD_INCORRECT:
                     cetQueryJsonResult.setSuccess(false);
-                    cetQueryJsonResult.setErrorMessage("无法找到对应的分数，请确认您输入的准考证号及姓名无误");
+                    cetQueryJsonResult.setMessage("无法找到对应的分数，请确认您输入的准考证号及姓名无误");
                     break;
 
                 case TIME_OUT:
                     cetQueryJsonResult.setSuccess(false);
-                    cetQueryJsonResult.setErrorMessage("网络连接超时,请稍候再试");
+                    cetQueryJsonResult.setMessage("网络连接超时,请稍候再试");
                     break;
 
                 case SUCCESS:

@@ -16,14 +16,14 @@ public class ScheduleQueryJsonResult {
 
     private boolean success;
 
-    private String errorMessage;
+    private String message;
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public boolean isSuccess() {

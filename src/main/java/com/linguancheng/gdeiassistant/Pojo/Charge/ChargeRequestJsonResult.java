@@ -12,7 +12,7 @@ public class ChargeRequestJsonResult {
 
     private boolean success;
 
-    private String errorMessage;
+    private String message;
 
     private Charge charge;
 
@@ -24,12 +24,12 @@ public class ChargeRequestJsonResult {
         this.success = success;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Charge getCharge() {

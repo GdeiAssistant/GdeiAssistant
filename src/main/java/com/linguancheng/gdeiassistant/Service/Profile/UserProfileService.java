@@ -454,7 +454,7 @@ public class UserProfileService {
                                 if (result.getBody().isSuccess()) {
                                     profileMapper.updateRealName(decryptUser.getUsername(), result.getBody().getData());
                                 } else {
-                                    log.error("同步用户个人资料真实姓名异常：" + result.getBody().getErrorMessage());
+                                    log.error("同步用户个人资料真实姓名异常：" + result.getBody().getMessage());
                                 }
                             } catch (Exception e) {
                                 log.error("同步用户个人资料真实姓名异常：", e);

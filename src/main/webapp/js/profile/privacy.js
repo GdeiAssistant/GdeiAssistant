@@ -33,7 +33,7 @@ $(function () {
                     }
                 }
                 else {
-                    $.toptip(result.errorMessage, 'error');
+                    $.toptip(result.message, 'error');
                 }
             },
             error: function () {
@@ -64,7 +64,7 @@ function changePrivacySetting(index) {
                 else {
                     $("input:eq(" + index + ")").prop("checked", true);
                 }
-                $.toptip(result.errorMessage, 'error');
+                $.toptip(result.message, 'error');
             }
         },
         error: function () {

@@ -37,7 +37,7 @@
                     }
                     else {
                         //显示绑定失败信息提示
-                        $(".weui_warn").text(yibanAttachResult.errorMessage).show().delay(2000).hide(0);
+                        $(".weui_warn").text(yibanAttachResult.message).show().delay(2000).hide(0);
                     }
                 },
                 error: function () {

@@ -7,7 +7,6 @@ import com.gdeiassistant.gdeiassistant.Exception.CommonException.PasswordIncorre
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import com.gdeiassistant.gdeiassistant.Factory.HttpClientFactory;
-import com.gdeiassistant.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.Cet.CetMapper;
 import com.gdeiassistant.gdeiassistant.Pojo.CetQuery.CetNumberQueryResult;
 import com.gdeiassistant.gdeiassistant.Pojo.CetQuery.CetQuery;
@@ -16,9 +15,6 @@ import com.gdeiassistant.gdeiassistant.Pojo.Entity.Cet;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Tools.ImageEncodeUtils;
 import com.gdeiassistant.gdeiassistant.Tools.StringEncryptUtils;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -36,7 +32,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by gdeiassistant on 2017/7/21.

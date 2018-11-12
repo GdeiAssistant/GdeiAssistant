@@ -1,10 +1,10 @@
 package com.gdeiassistant.gdeiassistant.Converter;
 
-import com.gdeiassistant.gdeiassistant.Enum.Query.QueryMethodEnum;
+import com.gdeiassistant.gdeiassistant.Enum.Base.QueryMethodEnum;
 import org.springframework.core.convert.converter.Converter;
 
 /**
- * 将String字符串类型转换为LoginMethodEnum枚举类型
+ * 将String字符串类型转换为QueryMethodEnum枚举类型
  */
 public class StringToQueryMethodEnumConverter implements
         Converter<String, QueryMethodEnum> {

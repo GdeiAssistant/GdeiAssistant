@@ -55,8 +55,9 @@ public class CardController {
     @RestAuthentication
     @RestQueryLog
     @ResponseBody
-    public CardQueryJsonResult CardQuery(HttpServletRequest request, String token
-            , @Validated CardQuery cardQuery, BindingResult bindingResult) {
+    public CardQueryJsonResult CardQuery(HttpServletRequest request
+            , @RequestParam("token") String token, @Validated CardQuery cardQuery
+            , BindingResult bindingResult) {
         CardQueryJsonResult cardQueryJsonResult = new CardQueryJsonResult();
         if (bindingResult.hasErrors()) {
             cardQueryJsonResult.setSuccess(false);
@@ -182,7 +183,8 @@ public class CardController {
     @RequestMapping(value = "/rest/cardinfo", method = RequestMethod.POST)
     @RestAuthentication
     @ResponseBody
-    public CardInfoQueryJsonResult CardInfoQuery(HttpServletRequest request, String token) {
+    public CardInfoQueryJsonResult CardInfoQuery(HttpServletRequest request
+            , @RequestParam("token") String token) {
         CardInfoQueryJsonResult cardInfoQueryJsonResult = new CardInfoQueryJsonResult();
         User user = (User) request.getAttribute("user");
         BaseResult<CardInfo, ServiceResultEnum> result = cardQueryService.CardInfoQuery(request
@@ -226,7 +228,8 @@ public class CardController {
     @RequestMapping(value = "/rest/cardlost", method = RequestMethod.POST)
     @RestAuthentication
     @ResponseBody
-    public JsonResult CardLost(HttpServletRequest request, String token, String cardPassword) {
+    public JsonResult CardLost(HttpServletRequest request, @RequestParam("token") String token
+            , String cardPassword) {
         JsonResult jsonResult = new JsonResult();
         User user = (User) request.getAttribute("user");
         if (StringUtils.isNotBlank(cardPassword) && cardPassword.length() == 6

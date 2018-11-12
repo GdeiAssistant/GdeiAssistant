@@ -15,7 +15,7 @@ import javax.validation.ConstraintViolationException;
 public class GlobalControllerAdvice {
 
     /**
-     * 处理HTTP请求400错误
+     * 澶勭悊HTTP璇锋眰400閿欒
      *
      * @return
      */
@@ -26,7 +26,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * 处理数据校验异常
+     * 澶勭悊鏁版嵁鏍￠獙寮傚父
      *
      * @return
      */

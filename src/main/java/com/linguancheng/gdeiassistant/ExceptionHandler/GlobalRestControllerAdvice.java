@@ -14,24 +14,24 @@ import javax.validation.ConstraintViolationException;
 public class GlobalRestControllerAdvice {
 
     /**
-     * ´¦ÀíHTTPÇëÇó400´íÎó
+     * å¤„ç†HTTPè¯·æ±‚400é”™è¯¯
      *
      * @return
      */
     @ExceptionHandler({MissingServletRequestParameterException.class, TypeMismatchException.class})
     public JsonResult HandleBadRequestException() {
-        return new JsonResult(false, "ÇëÇó²ÎÊı²»ºÏ·¨");
+        return new JsonResult(false, "è¯·æ±‚å‚æ•°ä¸åˆæ³•");
     }
 
     /**
-     * ´¦ÀíÊı¾İĞ£ÑéÒì³£
+     * å¤„ç†æ•°æ®æ ¡éªŒå¼‚å¸¸
      *
      * @return
      */
     @ExceptionHandler({ConstraintViolationException.class
             , MethodArgumentNotValidException.class})
     public JsonResult HandleConstraintViolationException() {
-        return new JsonResult(false, "ÇëÇó²ÎÊı²»ºÏ·¨");
+        return new JsonResult(false, "è¯·æ±‚å‚æ•°ä¸åˆæ³•");
     }
 
 

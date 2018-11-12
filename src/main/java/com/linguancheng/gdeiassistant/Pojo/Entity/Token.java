@@ -24,16 +24,6 @@ public class Token implements Serializable {
     private String signature;
 
     /**
-     * 设备唯一识别ID
-     */
-    private String unionId;
-
-    /**
-     * 请求的IP地址
-     */
-    private String ip;
-
-    /**
      * 创建时间戳
      */
     private Long createTime;
@@ -67,23 +57,19 @@ public class Token implements Serializable {
         this.expireTime = expireTime;
     }
 
-    public String getUnionId() {
-        return unionId;
-    }
-
-    public void setUnionId(String unionId) {
-        this.unionId = unionId;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
     public Token() {
 
+    }
+
+    public Token(AccessToken accessToken) {
+        this.signature = accessToken.getSignature();
+        this.createTime = accessToken.getCreateTime();
+        this.expireTime = accessToken.getExpireTime();
+    }
+
+    public Token(RefreshToken refreshToken) {
+        this.signature = refreshToken.getSignature();
+        this.createTime = refreshToken.getCreateTime();
+        this.expireTime = refreshToken.getExpireTime();
     }
 }

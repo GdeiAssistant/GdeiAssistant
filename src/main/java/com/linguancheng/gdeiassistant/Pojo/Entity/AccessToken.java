@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccessToken extends Token {
+public class AccessToken extends SimpleToken {
 
     /**
      * 用户名

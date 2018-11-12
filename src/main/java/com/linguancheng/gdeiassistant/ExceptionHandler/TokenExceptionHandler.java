@@ -6,6 +6,8 @@ import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenNotMatc
 import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenServerException;
 import com.linguancheng.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -19,22 +21,26 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class TokenExceptionHandler {
 
     @ExceptionHandler(TokenExpiredException.class)
-    public JsonResult HandleTokenExpiredException() {
-        return new JsonResult(ConstantUtils.TOKEN_EXPIRED_EXCEPTION, false, "权限令牌已过期，请重新登录");
+    public ResponseEntity HandleTokenExpiredException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JsonResult(ConstantUtils.TOKEN_EXPIRED_EXCEPTION
+                , false, "权限令牌已过期，请重新登录"));
     }
 
     @ExceptionHandler(UnusualLocationException.class)
-    public JsonResult HandleUnusualLocationException() {
-        return new JsonResult(ConstantUtils.UNUSUAL_LOCATION_EXCEPTION, false, "登录地点异常，请进行身份验证");
+    public ResponseEntity HandleUnusualLocationException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JsonResult(ConstantUtils.UNUSUAL_LOCATION_EXCEPTION
+                , false, "登录地点异常，请进行身份验证"));
     }
 
     @ExceptionHandler(TokenNotMatchingException.class)
-    public JsonResult HandleTokenNotMatchingException() {
-        return new JsonResult(ConstantUtils.TOKEN_NOT_MATCHING, false, "令牌信息不匹配");
+    public ResponseEntity HandleTokenNotMatchingException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JsonResult(ConstantUtils.TOKEN_NOT_MATCHING
+                , false, "令牌信息不匹配"));
     }
 
     @ExceptionHandler(TokenServerException.class)
-    public JsonResult HandleTokenServerException() {
-        return new JsonResult(ConstantUtils.TOKEN_SERVER_ERROR, false, "令牌校验服务异常");
+    public ResponseEntity HandleTokenServerException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JsonResult(ConstantUtils.TOKEN_SERVER_ERROR
+                , false, "令牌校验服务异常"));
     }
 }

@@ -42,7 +42,7 @@ public class CetQueryController {
     @ResponseBody
     public DataJsonResult<String> GetCheckCodeImage(HttpServletRequest request) {
         DataJsonResult<String> dataJsonResult = new DataJsonResult<>();
-        BaseResult<String, ServiceResultEnum> result = cetQueryService.CetIndex(request);
+        BaseResult<String, ServiceResultEnum> result = cetQueryService.CetIndex(request.getSession().getId());
         switch (result.getResultType()) {
             case SUCCESS:
                 dataJsonResult.setData(result.getResultData());
@@ -142,7 +142,7 @@ public class CetQueryController {
             cetQueryJsonResult.setSuccess(false);
             cetQueryJsonResult.setMessage("姓名或准考证号不合法");
         } else {
-            CetQueryResult cetQueryResult = cetQueryService.CetQuery(request, cetQuery);
+            CetQueryResult cetQueryResult = cetQueryService.CetQuery(request.getSession().getId(), cetQuery);
             switch (cetQueryResult.getCetQueryResultEnum()) {
                 case SERVER_ERROR:
                     cetQueryJsonResult.setSuccess(false);

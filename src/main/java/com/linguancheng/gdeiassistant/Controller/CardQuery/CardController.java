@@ -64,8 +64,8 @@ public class CardController {
             cardQueryJsonResult.setMessage("请求参数不合法");
         } else {
             User user = (User) request.getAttribute("user");
-            CardQueryResult cardQueryResult = cardQueryService.CardQuery(request, user.getUsername()
-                    , user.getPassword(), cardQuery);
+            CardQueryResult cardQueryResult = cardQueryService.CardQuery(request.getSession().getId()
+                    , user.getUsername(), user.getPassword(), cardQuery);
             switch (cardQueryResult.getCardServiceResultEnum()) {
                 case PASSWORD_INCORRECT:
                     //用户名或密码错误
@@ -105,7 +105,8 @@ public class CardController {
         } else {
             String username = (String) request.getSession().getAttribute("username");
             String password = (String) request.getSession().getAttribute("password");
-            CardQueryResult cardQueryResult = cardQueryService.CardQuery(request, username, password, cardQuery);
+            CardQueryResult cardQueryResult = cardQueryService.CardQuery(request.getSession().getId()
+                    , username, password, cardQuery);
             switch (cardQueryResult.getCardServiceResultEnum()) {
                 case SUCCESS:
                     //查询成功
@@ -149,7 +150,8 @@ public class CardController {
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) request.getSession().getAttribute("password");
         if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
-            BaseResult<CardInfo, ServiceResultEnum> queryResult = cardQueryService.CardInfoQuery(request, username, password);
+            BaseResult<CardInfo, ServiceResultEnum> queryResult = cardQueryService
+                    .CardInfoQuery(request.getSession().getId(), username, password);
             switch (queryResult.getResultType()) {
                 case SUCCESS:
                     jsonResult.setSuccess(true);
@@ -187,8 +189,8 @@ public class CardController {
             , @RequestParam("token") String token) {
         CardInfoQueryJsonResult cardInfoQueryJsonResult = new CardInfoQueryJsonResult();
         User user = (User) request.getAttribute("user");
-        BaseResult<CardInfo, ServiceResultEnum> result = cardQueryService.CardInfoQuery(request
-                , user.getUsername(), user.getPassword());
+        BaseResult<CardInfo, ServiceResultEnum> result = cardQueryService
+                .CardInfoQuery(request.getSession().getId(), user.getUsername(), user.getPassword());
         switch (result.getResultType()) {
             case PASSWORD_INCORRECT:
                 //用户名或密码错误
@@ -235,7 +237,8 @@ public class CardController {
         if (StringUtils.isNotBlank(cardPassword) && cardPassword.length() == 6
                 && cardPassword.matches("^[0-9]*$")) {
             BaseResult<String, ServiceResultEnum> cardLostResult = cardQueryService
-                    .CardLost(request, user.getUsername(), user.getPassword(), cardPassword);
+                    .CardLost(request.getSession().getId(), user.getUsername()
+                            , user.getPassword(), cardPassword);
             switch (cardLostResult.getResultType()) {
                 case SUCCESS:
                     jsonResult.setSuccess(true);
@@ -283,7 +286,8 @@ public class CardController {
             if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)
                     && StringUtils.isNotBlank(cardPassword) && cardPassword.length() == 6
                     && cardPassword.matches("^[0-9]*$")) {
-                BaseResult<String, ServiceResultEnum> cardLostResult = cardQueryService.CardLost(request, username, password, cardPassword);
+                BaseResult<String, ServiceResultEnum> cardLostResult = cardQueryService
+                        .CardLost(request.getSession().getId(), username, password, cardPassword);
                 switch (cardLostResult.getResultType()) {
                     case SUCCESS:
                         jsonResult.setSuccess(true);

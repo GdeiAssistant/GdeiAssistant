@@ -1,6 +1,5 @@
 package com.gdeiassistant.gdeiassistant.Controller.ChargeRequest;
 
-import com.gdeiassistant.gdeiassistant.Cookie.HttpClientCookieManager;
 import com.gdeiassistant.gdeiassistant.Enum.Charge.ChargeRequestResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Charge.GetServerKeyCodeResultEnum;
 import com.gdeiassistant.gdeiassistant.Pojo.Charge.*;
@@ -8,6 +7,7 @@ import com.gdeiassistant.gdeiassistant.Pojo.Entity.Charge;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Service.ChargeQuery.ChargeService;
+import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,9 +24,6 @@ public class ChargeRequestController {
 
     @Autowired
     private ChargeService chargeService;
-
-    @Autowired
-    private HttpClientCookieManager httpClientCookieManager;
 
     @RequestMapping(value = "/rest/charge", method = RequestMethod.POST)
     @ResponseBody
@@ -76,7 +73,9 @@ public class ChargeRequestController {
                         return chargeRequestJsonResult;
                 }
             }
-            BaseResult<Charge, ChargeRequestResultEnum> result = chargeService.ChargeRequest(request, user.getUsername(), user.getPassword(), chargeRequest.getAmount());
+            BaseResult<Charge, ChargeRequestResultEnum> result = chargeService
+                    .ChargeRequest(request.getSession().getId(), user.getUsername(), user.getPassword()
+                            , chargeRequest.getAmount());
             switch (result.getResultType()) {
                 case SERVER_ERROR:
                     //服务器异常
@@ -141,7 +140,7 @@ public class ChargeRequestController {
                         chargeRequestJsonResult.setCharge(result.getResultData());
                     }
                     //清除请求缓存的Cookie
-                    httpClientCookieManager.clearCookie(request);
+                    HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
                     break;
             }
             return chargeRequestJsonResult;

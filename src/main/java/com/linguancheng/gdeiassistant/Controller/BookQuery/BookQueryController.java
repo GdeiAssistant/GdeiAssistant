@@ -38,7 +38,8 @@ public class BookQueryController {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
         String number = (String) request.getSession().getAttribute("number");
         if (!StringUtils.isBlank(number)) {
-            BaseResult<String, ServiceResultEnum> renewResult = bookQueryService.BookRenew(request, url);
+            BaseResult<String, ServiceResultEnum> renewResult = bookQueryService
+                    .BookRenew(request.getSession().getId(), url);
             switch (renewResult.getResultType()) {
                 case SUCCESS:
                     jsonResult.setData(renewResult.getResultData());
@@ -69,7 +70,8 @@ public class BookQueryController {
         DataJsonResult<List<Book>> jsonResult = new DataJsonResult<>();
         String number = (String) request.getSession().getAttribute("number");
         if (!StringUtils.isBlank(number)) {
-            BaseResult<List<Book>, ServiceResultEnum> queryResult = bookQueryService.BookQuery(request, number, password);
+            BaseResult<List<Book>, ServiceResultEnum> queryResult = bookQueryService
+                    .BookQuery(request.getSession().getId(), number, password);
             switch (queryResult.getResultType()) {
                 case SUCCESS:
                     jsonResult.setSuccess(true);

@@ -307,7 +307,8 @@ public class ProfileController {
     public DataJsonResult<Profile> GetUserProfile(HttpServletRequest request
             , @Validated(value = UserLoginValidGroup.class) User user) {
         DataJsonResult<Profile> jsonResult = new DataJsonResult<>();
-        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request, user, true);
+        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+                .UserLogin(request.getSession().getId(), user, true);
         switch (userLoginResult.getResultType()) {
             case LOGIN_SUCCESS:
                 BaseResult<Profile, DataBaseResultEnum> result = userProfileService.GetUserProfile(user.getUsername());
@@ -848,7 +849,7 @@ public class ProfileController {
             jsonResult.setMessage("请求参数不合法");
         } else {
             BaseResult<String, BoolResultEnum> result = realNameService
-                    .GetUserRealName(request, user.getUsername(), user.getPassword());
+                    .GetUserRealName(request.getSession().getId(), user.getUsername(), user.getPassword());
             switch (result.getResultType()) {
                 case SUCCESS:
                     jsonResult.setSuccess(true);

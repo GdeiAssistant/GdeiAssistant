@@ -6,7 +6,8 @@ import com.gdeiassistant.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
-import com.gdeiassistant.gdeiassistant.Factory.HttpClientFactory;
+import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.Cet.CetMapper;
 import com.gdeiassistant.gdeiassistant.Pojo.CetQuery.CetNumberQueryResult;
 import com.gdeiassistant.gdeiassistant.Pojo.CetQuery.CetQuery;
@@ -18,6 +19,7 @@ import com.gdeiassistant.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -43,9 +45,6 @@ public class CetQueryService {
     @Resource(name = "cetMapper")
     private CetMapper cetMapper;
 
-    @Autowired
-    private HttpClientFactory httpClientFactory;
-
     private Log log = LogFactory.getLog(CetQueryService.class);
 
     private int timeout;
@@ -58,13 +57,17 @@ public class CetQueryService {
     /**
      * 进入学信网四六级成绩查询页面，获取验证码
      *
+     * @param sessionId
      * @return
      */
-    public BaseResult<String, ServiceResultEnum> CetIndex(HttpServletRequest request) {
+    public BaseResult<String, ServiceResultEnum> CetIndex(String sessionId) {
         BaseResult<String, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("http://www.chsi.com.cn/cet/");
             httpGet.setHeader("Referer", "http://www.chsi.com.cn/cet/");
             httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
@@ -82,7 +85,7 @@ public class CetQueryService {
                 }
                 throw new ServerErrorException("获取学信网验证码图片异常");
             }
-            throw new ServerErrorException("访问学信网异常");
+            throw new ServerErrorException("访问学信网异�?");
         } catch (ServerErrorException e) {
             log.error("查询四六级成绩异常：", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
@@ -100,21 +103,28 @@ public class CetQueryService {
                     e.printStackTrace();
                 }
             }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
         return result;
     }
 
     /**
-     * 查询四六级考试成绩
+     * 查询四六级�?�试成绩
      *
+     * @param sessionId
      * @param cetQuery
      * @return
      */
-    public CetQueryResult CetQuery(HttpServletRequest request, CetQuery cetQuery) {
+    public CetQueryResult CetQuery(String sessionId, CetQuery cetQuery) {
         CetQueryResult cetQueryResult = new CetQueryResult();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             //查询CET成绩信息
             HttpGet httpGet = new HttpGet("http://www.chsi.com.cn/cet/query?zkzh=" + cetQuery.getNumber() + "&xm=" + cetQuery.getName() + "&yzm=" + cetQuery.getCheckcode());
             httpGet.setHeader("Referer", "http://www.chsi.com.cn/cet/");
@@ -124,34 +134,34 @@ public class CetQueryService {
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 if (document.getElementsByClass("cetTable").size() == 0) {
                     if (document.getElementsByClass("error alignC marginT20").size() != 0) {
-                        //准考证号或姓名错误
-                        throw new PasswordIncorrectException("四六级查询信息错误");
+                        //准�?�证号或姓名错误
+                        throw new PasswordIncorrectException("四六级查询信息错�?");
                     }
                     if (document.getElementsByClass("error alignC").size() != 0) {
-                        //验证码错误
-                        throw new ErrorQueryConditionException("验证码信息错误");
+                        //验证码错�?
+                        throw new ErrorQueryConditionException("验证码信息错�?");
                     }
-                    throw new ServerErrorException("四六级查询系统异常");
+                    throw new ServerErrorException("四六级查询系统异�?");
                 }
                 //信息输入正确,进行信息解析
-                //获取存放成绩的表格
+                //获取存放成绩的表�?
                 Element element = document.getElementsByClass("cetTable").get(0);
-                //得到所有的行
+                //得到�?有的�?
                 Elements trs = element.getElementsByTag("tr");
                 //获取信息
                 String name = trs.get(0).getElementsByTag("td").text();
                 String school = trs.get(1).getElementsByTag("td").text();
                 String type = trs.get(2).getElementsByTag("td").text();
                 String admissionCard = trs.get(4).getElementsByTag("td").text();
-                //获取总分信息,总分信息含有空格,需要将字符串中的空格删除,听力/阅读/写作与翻译的分数数据同理
+                //获取总分信息,总分信息含有空格,�?要将字符串中的空格删�?,听力/阅读/写作与翻译的分数数据同理
                 String totalScore = trs.get(5).getElementsByClass("colorRed").get(0).text().replace(" ", "");
                 //获取听力分数
                 String listeningScore = trs.get(6).select("td").get(1).text().replace(" ", "");
                 //获取阅读分数
                 String readingScore = trs.get(7).select("td").get(1).text().replace(" ", "");
-                //获取写作与翻译分数
+                //获取写作与翻译分�?
                 String writingAndTranslatingScore = trs.get(8).select("td").get(1).text().replace(" ", "");
-                //保存查询成绩结果并返回
+                //保存查询成绩结果并返�?
                 Cet cet = new Cet();
                 cet.setName(name);
                 cet.setSchool(school);
@@ -165,7 +175,7 @@ public class CetQueryService {
                 cetQueryResult.setCetQueryResultEnum(ServiceResultEnum.SUCCESS);
                 return cetQueryResult;
             }
-            throw new ServerErrorException("学信网系统异常");
+            throw new ServerErrorException("学信网系统异�?");
         } catch (ServerErrorException e) {
             log.error("查询四六级成绩异常：", e);
             cetQueryResult.setCetQueryResultEnum(ServiceResultEnum.SERVER_ERROR);
@@ -181,12 +191,23 @@ public class CetQueryService {
         } catch (Exception e) {
             log.error("查询四六级成绩异常：", e);
             cetQueryResult.setCetQueryResultEnum(ServiceResultEnum.SERVER_ERROR);
+        } finally {
+            if (httpClient != null) {
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
         return cetQueryResult;
     }
 
     /**
-     * 查询保存的四六级准考证号
+     * 查询保存的四六级准�?�证�?
      *
      * @param username
      * @return
@@ -209,7 +230,7 @@ public class CetQueryService {
     }
 
     /**
-     * 保存四六级准考证号
+     * 保存四六级准考证�?
      *
      * @param username
      * @param number

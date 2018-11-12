@@ -1,6 +1,7 @@
 package com.gdeiassistant.gdeiassistant.Controller.UserLogin;
 
 import com.gdeiassistant.gdeiassistant.Enum.Base.DataBaseResultEnum;
+import com.gdeiassistant.gdeiassistant.Enum.Base.LoginMethodEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.TokenValidResultEnum;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.TransactionException;
@@ -16,6 +17,7 @@ import com.gdeiassistant.gdeiassistant.Service.IPAddress.IPService;
 import com.gdeiassistant.gdeiassistant.Service.Profile.UserProfileService;
 import com.gdeiassistant.gdeiassistant.Service.Token.LoginTokenService;
 import com.gdeiassistant.gdeiassistant.Service.UserData.UserDataService;
+import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.Tools.StringEncryptUtils;
 import com.gdeiassistant.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
@@ -163,23 +165,31 @@ public class UserLoginController {
      *
      * @param request
      * @param user
+     * @param unionId
+     * @param method
      * @param bindingResult
      * @return
      */
     @RequestMapping(value = "/rest/userlogin", method = RequestMethod.POST)
     @ResponseBody
     public UserLoginJsonResult UserLogin(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user
-            , @RequestParam("unionId") String unionId, Boolean quickLogin, BindingResult bindingResult) {
+            , @RequestParam("unionId") String unionId, @RequestParam(value = "method"
+            , required = false, defaultValue = "0") LoginMethodEnum method, BindingResult bindingResult) {
         UserLoginJsonResult userLoginJsonResult = new UserLoginJsonResult();
         if (bindingResult.hasErrors()) {
             userLoginJsonResult.setSuccess(false);
             userLoginJsonResult.setMessage("请求参数不合法");
         } else {
-            if (quickLogin == null) {
-                quickLogin = true;
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = null;
+            switch (method) {
+                case QUICK_LOGIN:
+                    userLoginResult = userLoginService.UserLogin(request.getSession().getId(), user, true);
+                    break;
+
+                case CAS_LOGIN:
+                    userLoginResult = userLoginService.UserLogin(request.getSession().getId(), user, false);
+                    break;
             }
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                    .UserLogin(request, user, quickLogin);
             switch (userLoginResult.getResultType()) {
                 case PASSWORD_ERROR:
                     //用户名或密码错误
@@ -276,8 +286,9 @@ public class UserLoginController {
             modelAndView.setViewName("redirect:/login");
         } else {
             //清除已登录用户的用户凭证记录
-            userLoginService.ClearUserLoginCredentials(request);
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request, user, true);
+            HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+                    .UserLogin(request.getSession().getId(), user, true);
             switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
                     //登录成功

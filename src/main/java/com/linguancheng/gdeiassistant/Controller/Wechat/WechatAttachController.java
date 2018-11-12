@@ -10,6 +10,7 @@ import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Service.Wechat.WechatService;
 import com.linguancheng.gdeiassistant.Service.Wechat.WechatUserDataService;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,8 +133,9 @@ public class WechatAttachController {
             return result;
         }
         //清除已登录用户的用户凭证记录
-        userLoginService.ClearUserLoginCredentials(request);
-        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request, user, true);
+        HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
+        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+                .UserLogin(request.getSession().getId(), user, true);
         switch (userLoginResult.getResultType()) {
             case PASSWORD_ERROR:
                 result.setSuccess(false);

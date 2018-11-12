@@ -7,6 +7,7 @@ import com.linguancheng.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.Service.UserLogin.AutoLoginService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
@@ -72,10 +73,11 @@ public class DispatcherController {
             cookieUsername = StringEncryptUtils.decryptString(cookieUsername);
             cookiePassword = StringEncryptUtils.decryptString(cookiePassword);
             //清除已登录用户的用户凭证记录
-            userLoginService.ClearUserLoginCredentials(request);
+            HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
             //进行用户登录
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request
-                    , new User(cookieUsername, cookiePassword), true);
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+                    .UserLogin(request.getSession().getId()
+                            , new User(cookieUsername, cookiePassword), true);
             switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
                     //登录成功

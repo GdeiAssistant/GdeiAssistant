@@ -5,18 +5,20 @@ import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
-import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
+import com.linguancheng.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -67,10 +69,7 @@ public class UserLoginService {
     private AsyncRestTemplate asyncRestTemplate;
 
     @Autowired
-    private HttpClientFactory httpClientFactory;
-
-    @Autowired
-    private UserDao userDao;
+    private UserCertificateDao userCertificateDao;
 
     @Value("#{propertiesReader['education.system.url']}")
     public void setUrl(String url) {
@@ -81,15 +80,6 @@ public class UserLoginService {
     @Value("#{propertiesReader['timeout.userlogin']}")
     public void setTimeout(int timeout) {
         this.timeout = timeout;
-    }
-
-    /**
-     * 清除登录用户的登录记录凭证
-     *
-     * @param request
-     */
-    public void ClearUserLoginCredentials(HttpServletRequest request) {
-        httpClientFactory.ClearCookies(request.getSession());
     }
 
     /**
@@ -118,12 +108,12 @@ public class UserLoginService {
     /**
      * 用户登录学院系统业务的接口
      *
-     * @param request
+     * @param sessionId
      * @param user
      * @param quickLogin
      * @return
      */
-    public BaseResult<UserCertificate, LoginResultEnum> UserLogin(HttpServletRequest request, User user, boolean quickLogin) {
+    public BaseResult<UserCertificate, LoginResultEnum> UserLogin(String sessionId, User user, boolean quickLogin) {
         BaseResult<UserCertificate, LoginResultEnum> userLoginResult = new BaseResult<>();
         //查询数据库,若账号密码相同,则直接通过登录校验
         if (quickLogin) {
@@ -151,6 +141,7 @@ public class UserLoginService {
         }
         //用户不存在或与数据库的数据信息不匹配,进行普通登录
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         if (StringUtils.isBlank(user.getPassword())) {
             try {
                 //若用户未填入密码，则通过加密值和学号从数据库查询密码值
@@ -177,7 +168,10 @@ public class UserLoginService {
             }
         }
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
+                    , false, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
@@ -241,6 +235,9 @@ public class UserLoginService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
         return userLoginResult;
@@ -348,14 +345,14 @@ public class UserLoginService {
         HttpSession httpSession = request.getSession();
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) httpSession.getAttribute("password");
-        UserCertificate userCertificate = userDao.queryUserCertificate(username);
+        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(username);
         if (userCertificate == null) {
             User user = new User(username, password);
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = UserLogin(request
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = UserLogin(request.getSession().getId()
                     , user, false);
             switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
-                    userDao.saveUserCertificate(userLoginResult.getResultData());
+                    userCertificateDao.saveUserCertificate(userLoginResult.getResultData());
                     return ServiceResultEnum.SUCCESS;
 
                 case PASSWORD_ERROR:
@@ -381,14 +378,14 @@ public class UserLoginService {
         HttpSession httpSession = request.getSession();
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) httpSession.getAttribute("password");
-        UserCertificate userCertificate = userDao.queryUserCertificate(username);
+        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(username);
         if (userCertificate == null) {
             User user = new User(username, password);
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = UserLogin(request,
+            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = UserLogin(request.getSession().getId(),
                     user, false);
             switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
-                    userDao.saveUserCertificate(userLoginResult.getResultData());
+                    userCertificateDao.saveUserCertificate(userLoginResult.getResultData());
                     break;
 
                 default:

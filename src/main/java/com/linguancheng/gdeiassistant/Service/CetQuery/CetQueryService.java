@@ -6,7 +6,8 @@ import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Cet.CetMapper;
 import com.linguancheng.gdeiassistant.Pojo.CetQuery.CetNumberQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.CetQuery.CetQuery;
@@ -18,6 +19,7 @@ import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -43,9 +45,6 @@ public class CetQueryService {
     @Resource(name = "cetMapper")
     private CetMapper cetMapper;
 
-    @Autowired
-    private HttpClientFactory httpClientFactory;
-
     private Log log = LogFactory.getLog(CetQueryService.class);
 
     private int timeout;
@@ -58,13 +57,17 @@ public class CetQueryService {
     /**
      * 进入学信网四六级成绩查询页面，获取验证码
      *
+     * @param sessionId
      * @return
      */
-    public BaseResult<String, ServiceResultEnum> CetIndex(HttpServletRequest request) {
+    public BaseResult<String, ServiceResultEnum> CetIndex(String sessionId) {
         BaseResult<String, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("http://www.chsi.com.cn/cet/");
             httpGet.setHeader("Referer", "http://www.chsi.com.cn/cet/");
             httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
@@ -100,6 +103,9 @@ public class CetQueryService {
                     e.printStackTrace();
                 }
             }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
         return result;
     }
@@ -107,14 +113,18 @@ public class CetQueryService {
     /**
      * 查询四六级考试成绩
      *
+     * @param sessionId
      * @param cetQuery
      * @return
      */
-    public CetQueryResult CetQuery(HttpServletRequest request, CetQuery cetQuery) {
+    public CetQueryResult CetQuery(String sessionId, CetQuery cetQuery) {
         CetQueryResult cetQueryResult = new CetQueryResult();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             //查询CET成绩信息
             HttpGet httpGet = new HttpGet("http://www.chsi.com.cn/cet/query?zkzh=" + cetQuery.getNumber() + "&xm=" + cetQuery.getName() + "&yzm=" + cetQuery.getCheckcode());
             httpGet.setHeader("Referer", "http://www.chsi.com.cn/cet/");
@@ -181,6 +191,17 @@ public class CetQueryService {
         } catch (Exception e) {
             log.error("查询四六级成绩异常：", e);
             cetQueryResult.setCetQueryResultEnum(ServiceResultEnum.SERVER_ERROR);
+        } finally {
+            if (httpClient != null) {
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
         return cetQueryResult;
     }

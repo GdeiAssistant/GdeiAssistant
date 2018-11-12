@@ -6,18 +6,20 @@ import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrec
 import com.linguancheng.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.Entity.SpareRoom;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.SpareRoomQuery.SpareRoomQuery;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
+import com.linguancheng.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -44,10 +46,7 @@ public class SpareRoomService {
     private String url;
 
     @Autowired
-    private HttpClientFactory httpClientFactory;
-
-    @Autowired
-    private UserDao userDao;
+    private UserCertificateDao userCertificateDao;
 
     @Autowired
     private UserLoginService userLoginService;
@@ -69,18 +68,22 @@ public class SpareRoomService {
     /**
      * 查询空课室信息
      *
-     * @param request
+     * @param sessionId
      * @param username
      * @param keycode
      * @param number
      * @return
      */
-    private BaseResult<List<SpareRoom>, ServiceResultEnum> QuerySpareRoom(HttpServletRequest request
+    private BaseResult<List<SpareRoom>, ServiceResultEnum> QuerySpareRoom(String sessionId
             , String username, String keycode, String number, Long timestamp, SpareRoomQuery spareRoomQuery) {
         BaseResult<List<SpareRoom>, ServiceResultEnum> baseResult = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
+                    , false, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
                     + keycode + "&timestamp=" + timestamp);
             HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -342,6 +345,9 @@ public class SpareRoomService {
                     e.printStackTrace();
                 }
             }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
         return baseResult;
     }
@@ -349,20 +355,20 @@ public class SpareRoomService {
     /**
      * 与教务系统进行会话同步并查询空教室信息
      *
-     * @param request
+     * @param sessionId
      * @param user
      * @param spareRoomQuery
      * @return
      */
-    public BaseResult<List<SpareRoom>, ServiceResultEnum> SyncSessionAndQuerySpareRoom(HttpServletRequest request
+    public BaseResult<List<SpareRoom>, ServiceResultEnum> SyncSessionAndQuerySpareRoom(String sessionId
             , User user, SpareRoomQuery spareRoomQuery) {
         BaseResult<List<SpareRoom>, ServiceResultEnum> result = new BaseResult<>();
-        UserCertificate userCertificate = userDao.queryUserCertificate(user.getUsername());
+        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
         //检测是否已与教务系统进行会话同步
         if (userCertificate == null) {
             //进行会话同步
             BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                    .UserLogin(request, user, false);
+                    .UserLogin(sessionId, user, false);
             switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
                     Long timestamp = userLoginResult.getResultData().getTimestamp();
@@ -375,8 +381,8 @@ public class SpareRoomService {
                     userCertificate = new UserCertificate();
                     userCertificate.setUser(user);
                     userCertificate.setTimestamp(timestamp);
-                    userDao.saveUserCertificate(userCertificate);
-                    return QuerySpareRoom(request, user.getUsername()
+                    userCertificateDao.saveUserCertificate(userCertificate);
+                    return QuerySpareRoom(sessionId, user.getUsername()
                             , user.getKeycode(), user.getNumber(), timestamp, spareRoomQuery);
 
                 case TIME_OUT:
@@ -393,7 +399,7 @@ public class SpareRoomService {
             }
             return result;
         }
-        return QuerySpareRoom(request, user.getUsername(), user.getKeycode(), user.getNumber()
+        return QuerySpareRoom(sessionId, user.getUsername(), user.getKeycode(), user.getNumber()
                 , userCertificate.getTimestamp(), spareRoomQuery);
     }
 }

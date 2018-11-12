@@ -1,15 +1,16 @@
 package com.linguancheng.gdeiassistant.Service.BookQuery;
 
-import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Book;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -37,9 +38,6 @@ import java.util.List;
 @Service
 public class BookQueryService {
 
-    @Autowired
-    private HttpClientFactory httpClientFactory;
-
     private Log log = LogFactory.getLog(BookQueryService.class);
 
     private int timeout;
@@ -52,15 +50,18 @@ public class BookQueryService {
     /**
      * 续借图书
      *
-     * @param request
+     * @param sessionId
      * @param url
      * @return
      */
-    public BaseResult<String, ServiceResultEnum> BookRenew(HttpServletRequest request, String url) {
+    public BaseResult<String, ServiceResultEnum> BookRenew(String sessionId, String url) {
         BaseResult<String, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             HttpPost httpPost = new HttpPost("http://lib2.gdei.edu.cn:8080/sms/opac/user/" + url);
             HttpResponse httpResponse = httpClient.execute(httpPost);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -85,6 +86,9 @@ public class BookQueryService {
                     e.printStackTrace();
                 }
             }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
         return result;
     }
@@ -92,17 +96,20 @@ public class BookQueryService {
     /**
      * 查询借阅图书
      *
-     * @param request
+     * @param sessionId
      * @param number
      * @param password
      * @return
      */
-    public BaseResult<List<Book>, ServiceResultEnum> BookQuery(HttpServletRequest request
+    public BaseResult<List<Book>, ServiceResultEnum> BookQuery(String sessionId
             , String number, String password) {
         BaseResult<List<Book>, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             //进入移动图书馆主页
             HttpGet httpGet = new HttpGet("http://m.5read.com/705");
             HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -201,6 +208,9 @@ public class BookQueryService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
         return result;

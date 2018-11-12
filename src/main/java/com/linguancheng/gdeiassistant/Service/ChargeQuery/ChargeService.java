@@ -1,13 +1,13 @@
 package com.linguancheng.gdeiassistant.Service.ChargeQuery;
 
-import com.linguancheng.gdeiassistant.Cookie.HttpClientCookieManager;
 import com.linguancheng.gdeiassistant.Enum.Charge.ChargeRequestResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Charge.GetServerKeyCodeResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Charge.VerifyClientKeyCodeResultEnum;
 import com.linguancheng.gdeiassistant.Exception.ChargeException.*;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Charge.ChargeMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.CardInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Charge;
@@ -19,6 +19,7 @@ import com.taobao.wsgsvr.WsgException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -35,7 +36,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.HttpSessionRequiredException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -45,13 +45,7 @@ import java.util.*;
 public class ChargeService {
 
     @Autowired
-    private HttpClientFactory httpClientFactory;
-
-    @Autowired
     private ChargeMapper chargeMapper;
-
-    @Autowired
-    private HttpClientCookieManager httpClientCookieManager;
 
     private Log log = LogFactory.getLog(ChargeService.class);
 
@@ -155,24 +149,30 @@ public class ChargeService {
     /**
      * 提交校园卡充值请求并自动确认,返回支付宝URL和Cookie列表
      *
-     * @param request
+     * @param sessionId
+     * @param username
+     * @param password
      * @param amount
      * @return
      */
-    public BaseResult<Charge, ChargeRequestResultEnum> ChargeRequest(HttpServletRequest request, String username, String password, int amount) {
+    public BaseResult<Charge, ChargeRequestResultEnum> ChargeRequest(String sessionId, String username
+            , String password, int amount) {
         BaseResult<Charge, ChargeRequestResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
             if (amount <= 0 || amount > 500) {
                 throw new AccountNotAvailableException("充值金额超过范围");
             }
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
             CardInfo cardInfo = LoginCardSystem(httpClient, username, password);
             //发送充值请求
             Map<String, String> ecardDataMap = SendChargeRequest(httpClient, cardInfo.getName(), amount);
             //确认充值请求
-            Charge charge = ConfirmChargeRequest(httpClient, request, ecardDataMap);
+            Charge charge = ConfirmChargeRequest(sessionId, httpClient, ecardDataMap);
             result.setResultData(charge);
             result.setResultType(ChargeRequestResultEnum.REQUEST_SUCCESS);
             return result;
@@ -192,6 +192,9 @@ public class ChargeService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
         return result;
@@ -396,15 +399,16 @@ public class ChargeService {
     /**
      * 确认充值请求
      *
+     * @param sessionId
      * @param httpClient
-     * @param request
+     * @param ecardDataMap
      * @return
      * @throws IOException
      * @throws ServerErrorException
      * @throws RequestExpiredException
+     * @throws HttpSessionRequiredException
      */
-
-    private Charge ConfirmChargeRequest(CloseableHttpClient httpClient, HttpServletRequest request, Map<String, String> ecardDataMap) throws IOException, ServerErrorException, RequestExpiredException, HttpSessionRequiredException {
+    private Charge ConfirmChargeRequest(String sessionId, CloseableHttpClient httpClient, Map<String, String> ecardDataMap) throws Exception {
         Charge charge = new Charge();
         List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
         for (Map.Entry<String, String> entry : ecardDataMap.entrySet()) {
@@ -440,7 +444,7 @@ public class ChargeService {
                         httpGet = new HttpGet(url);
                         httpClient.execute(httpGet);
                         //获取Cookies
-                        List<Cookie> cookieList = httpClientCookieManager.getCookieList(request);
+                        List<Cookie> cookieList = HttpClientUtils.GetHttpClientCookieStore(sessionId);
                         //保存支付宝充值接口URL和Cookies信息
                         charge.setCookieList(cookieList);
                         charge.setAlipayURL(url);

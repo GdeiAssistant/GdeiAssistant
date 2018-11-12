@@ -1,9 +1,10 @@
 package com.linguancheng.gdeiassistant.Service.Profile;
 
+import com.aliyun.oss.common.utils.HttpUtil;
 import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
-import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.Entity.CardInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
@@ -11,6 +12,7 @@ import com.linguancheng.gdeiassistant.Service.CardQuery.CardQueryService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -23,7 +25,6 @@ import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.HttpSessionRequiredException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -35,9 +36,6 @@ import java.util.List;
 public class RealNameService {
 
     private String url;
-
-    @Autowired
-    private HttpClientFactory httpClientFactory;
 
     @Autowired
     private CardQueryService cardQueryService;
@@ -59,16 +57,19 @@ public class RealNameService {
     /**
      * 获取用户真实姓名（弃用）
      *
-     * @param request
+     * @param sessionId
      * @param user
      * @return
      */
     @Deprecated
-    public BaseResult<String, BoolResultEnum> GetUserRealName(HttpServletRequest request, User user) {
+    public BaseResult<String, BoolResultEnum> GetUserRealName(String sessionId, User user) {
         BaseResult<String, BoolResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + user.getUsername() + "&k=" + user.getKeycode());
             HttpResponse httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -128,6 +129,9 @@ public class RealNameService {
                     e.printStackTrace();
                 }
             }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
         return result;
     }
@@ -136,16 +140,19 @@ public class RealNameService {
      * 获取用户真实姓名（新方法）
      * 该方法调用校园卡基本信息查询的模块获取姓名信息
      *
-     * @param request
+     * @param sessionId
      * @param username
      * @param password
      * @return
      */
-    public BaseResult<String, BoolResultEnum> GetUserRealName(HttpServletRequest request, String username, String password) {
+    public BaseResult<String, BoolResultEnum> GetUserRealName(String sessionId, String username, String password) {
         BaseResult<String, BoolResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
             cardQueryService.LoginCardSystem(httpClient, username, password);
             //获取校园卡基本信息
@@ -162,6 +169,9 @@ public class RealNameService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
         return result;

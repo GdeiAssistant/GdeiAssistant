@@ -46,8 +46,9 @@ public class TeacherQueryController {
             result.setSuccess(false);
             result.setMessage("请求参数不合法");
         } else {
-            BaseResult<List<TeacherSchedule>, ServiceResultEnum> queryResult = teacherQueryService.TeacherScheduleQuery(request
-                    , teacher.getUsername(), teacher.getPassword(), year, term, teacherName);
+            BaseResult<List<TeacherSchedule>, ServiceResultEnum> queryResult = teacherQueryService
+                    .TeacherScheduleQuery(request.getSession().getId(), teacher.getUsername()
+                            , teacher.getPassword(), year, term, teacherName);
             switch (queryResult.getResultType()) {
                 case SUCCESS:
                     result.setSuccess(true);

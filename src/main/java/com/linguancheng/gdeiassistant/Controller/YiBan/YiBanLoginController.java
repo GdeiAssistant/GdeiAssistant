@@ -17,6 +17,7 @@ import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Service.YiBan.YiBanLoginService;
 import com.linguancheng.gdeiassistant.Service.YiBan.YiBanUserDataService;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,8 +75,9 @@ public class YiBanLoginController {
             return modelAndView;
         }
         //清除已登录用户的用户凭证记录
-        yiBanLoginService.ClearUserLoginCredentials(request);
-        BaseResult<User, LoginResultEnum> yiBanQuickLoginResult = yiBanLoginService.YiBanQuickLogin(request, username);
+        HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
+        BaseResult<User, LoginResultEnum> yiBanQuickLoginResult = yiBanLoginService
+                .YiBanQuickLogin(request.getSession().getId(), username);
         switch (yiBanQuickLoginResult.getResultType()) {
             case LOGIN_SUCCESS:
                 User resultUser = yiBanQuickLoginResult.getResultData();

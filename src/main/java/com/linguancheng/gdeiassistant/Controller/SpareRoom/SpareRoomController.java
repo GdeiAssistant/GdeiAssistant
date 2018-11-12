@@ -81,7 +81,8 @@ public class SpareRoomController {
             String username = (String) WebUtils.getSessionAttribute(request, "username");
             String password = (String) WebUtils.getSessionAttribute(request, "password");
             BaseResult<List<SpareRoom>, ServiceResultEnum> baseResult = spareRoomService
-                    .SyncSessionAndQuerySpareRoom(request, new User(username, password), spareRoomQuery);
+                    .SyncSessionAndQuerySpareRoom(request.getSession().getId()
+                            , new User(username, password), spareRoomQuery);
             switch (baseResult.getResultType()) {
                 case SUCCESS:
                     jsonResult.setSuccess(true);

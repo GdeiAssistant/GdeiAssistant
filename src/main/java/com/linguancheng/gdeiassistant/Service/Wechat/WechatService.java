@@ -326,8 +326,8 @@ public class WechatService {
             if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)
                     && username.length() <= 20 && password.length() <= 35) {
                 //进行用户登录
-                BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService.UserLogin(request
-                        , new User(username, password), true);
+                BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+                        .UserLogin(request.getSession().getId(), new User(username, password), true);
                 switch (userLoginResult.getResultType()) {
                     case LOGIN_SUCCESS:
                         //登录成功，进行微信账号绑定

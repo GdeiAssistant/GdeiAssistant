@@ -5,16 +5,18 @@ import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.EvaluateException.NotAvailableTimeException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
+import com.linguancheng.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -41,13 +43,10 @@ public class EvaluateService {
     private String url;
 
     @Autowired
-    private HttpClientFactory httpClientFactory;
-
-    @Autowired
     private UserLoginService userLoginService;
 
     @Autowired
-    private UserDao userDao;
+    private UserCertificateDao userCertificateDao;
 
     @Value("#{propertiesReader['education.system.url']}")
     public void setUrl(String url) {
@@ -228,16 +227,19 @@ public class EvaluateService {
     /**
      * 一键评教接口
      *
-     * @param request
+     * @param sessionId
      * @param username
      * @param keycode
      * @param number
      */
-    private ServiceResultEnum TeacherEvaluate(HttpServletRequest request
+    private ServiceResultEnum TeacherEvaluate(String sessionId
             , String username, String keycode, String number, Long timestamp, boolean directlySubmit) {
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             return TeacherEvaluate(httpClient, username, keycode, number, timestamp, directlySubmit);
         } catch (IOException e) {
             log.error("一键评教异常：", e);
@@ -259,25 +261,28 @@ public class EvaluateService {
                     e.printStackTrace();
                 }
             }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
     }
 
     /**
      * 与教务系统进行会话同步，并进行一键评教
      *
-     * @param request
+     * @param sessionId
      * @param user
      * @param directlySubmit
      * @return
      */
-    public ServiceResultEnum SyncSessionAndEvaluate(HttpServletRequest request, User user
+    public ServiceResultEnum SyncSessionAndEvaluate(String sessionId, User user
             , boolean directlySubmit) {
-        UserCertificate userCertificate = userDao.queryUserCertificate(user.getUsername());
+        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
         //检测是否已与教务系统进行会话同步
         if (userCertificate == null) {
             //进行会话同步
             BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                    .UserLogin(request, user, false);
+                    .UserLogin(sessionId, user, false);
             switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
                     Long timestamp = userLoginResult.getResultData().getTimestamp();
@@ -290,8 +295,8 @@ public class EvaluateService {
                     userCertificate = new UserCertificate();
                     userCertificate.setUser(user);
                     userCertificate.setTimestamp(timestamp);
-                    userDao.saveUserCertificate(userCertificate);
-                    return TeacherEvaluate(request, user.getUsername()
+                    userCertificateDao.saveUserCertificate(userCertificate);
+                    return TeacherEvaluate(sessionId, user.getUsername()
                             , user.getKeycode(), user.getNumber(), timestamp, directlySubmit);
 
                 case TIME_OUT:
@@ -304,7 +309,7 @@ public class EvaluateService {
                     return ServiceResultEnum.SERVER_ERROR;
             }
         }
-        return TeacherEvaluate(request, userCertificate.getUser().getUsername()
+        return TeacherEvaluate(sessionId, userCertificate.getUser().getUsername()
                 , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
                 , userCertificate.getTimestamp(), directlySubmit);
     }

@@ -5,7 +5,8 @@ import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.CardQuery.CardQuery;
 import com.linguancheng.gdeiassistant.Pojo.CardQuery.CardQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Card;
@@ -16,6 +17,7 @@ import com.linguancheng.gdeiassistant.Tools.ImageEncodeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -41,9 +43,6 @@ import java.util.*;
 public class CardQueryService {
 
     @Autowired
-    private HttpClientFactory httpClientFactory;
-
-    @Autowired
     private RecognitionService recognitionService;
 
     private Log log = LogFactory.getLog(CardQueryService.class);
@@ -58,16 +57,19 @@ public class CardQueryService {
     /**
      * 查询饭卡基本信息
      *
-     * @param request
+     * @param sessionId
      * @param username
      * @param password
      * @return
      */
-    public BaseResult<CardInfo, ServiceResultEnum> CardInfoQuery(HttpServletRequest request, String username, String password) {
+    public BaseResult<CardInfo, ServiceResultEnum> CardInfoQuery(String sessionId, String username, String password) {
         BaseResult<CardInfo, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
             LoginCardSystem(httpClient, username, password);
             //获取饭卡基本信息
@@ -94,6 +96,9 @@ public class CardQueryService {
                     e.printStackTrace();
                 }
             }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
         return result;
     }
@@ -101,15 +106,18 @@ public class CardQueryService {
     /**
      * 查询消费流水
      *
-     * @param request
+     * @param sessionId
      * @param cardQuery
      * @return
      */
-    public CardQueryResult CardQuery(HttpServletRequest request, String username, String password, CardQuery cardQuery) {
+    public CardQueryResult CardQuery(String sessionId, String username, String password, CardQuery cardQuery) {
         CardQueryResult cardQueryResult = new CardQueryResult();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
             LoginCardSystem(httpClient, username, password);
             //获取饭卡基本信息
@@ -140,6 +148,9 @@ public class CardQueryService {
                     e.printStackTrace();
                 }
             }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
         }
         return cardQueryResult;
     }
@@ -147,17 +158,20 @@ public class CardQueryService {
     /**
      * 校园卡挂失
      *
-     * @param request
+     * @param sessionId
      * @param username
      * @param password
      * @param cardPassword
      * @return
      */
-    public BaseResult<String, ServiceResultEnum> CardLost(HttpServletRequest request, String username, String password, String cardPassword) {
+    public BaseResult<String, ServiceResultEnum> CardLost(String sessionId, String username, String password, String cardPassword) {
         BaseResult<String, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
             LoginCardSystem(httpClient, username, password);
             BaseResult<String, BoolResultEnum> submitResult = SubmitCardLostRequest(httpClient, cardPassword);
@@ -187,6 +201,9 @@ public class CardQueryService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
         return result;

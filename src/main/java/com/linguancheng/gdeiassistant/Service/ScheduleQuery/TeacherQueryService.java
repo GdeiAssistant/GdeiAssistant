@@ -4,7 +4,8 @@ import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.Entity.TeacherSchedule;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Service.UserLogin.TeacherLoginService;
@@ -13,6 +14,7 @@ import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -39,9 +41,6 @@ public class TeacherQueryService {
     private String url;
 
     @Autowired
-    private HttpClientFactory httpClientFactory;
-
-    @Autowired
     private TeacherLoginService teacherLoginService;
 
     @Value("#{propertiesReader['education.system.url']}")
@@ -61,7 +60,7 @@ public class TeacherQueryService {
     /**
      * 查询教师个人课表
      *
-     * @param request
+     * @param sessionId
      * @param username
      * @param password
      * @param year
@@ -69,12 +68,16 @@ public class TeacherQueryService {
      * @param teacherName
      * @return
      */
-    public BaseResult<List<TeacherSchedule>, ServiceResultEnum> TeacherScheduleQuery(HttpServletRequest request
+    public BaseResult<List<TeacherSchedule>, ServiceResultEnum> TeacherScheduleQuery(String sessionId
             , String username, String password, String year, String term, String teacherName) {
         BaseResult<List<TeacherSchedule>, ServiceResultEnum> result = new BaseResult<>();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
+                    , true, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet(url + "js_main.aspx?xh=" + username);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -82,7 +85,8 @@ public class TeacherQueryService {
                 boolean reLogin = false;
                 if (document.title().equals("欢迎使用正方教务管理系统！请登录")) {
                     //登录凭证过期，重新登录
-                    LoginResultEnum loginResultEnum = teacherLoginService.TeacherLogin(request, username, password);
+                    LoginResultEnum loginResultEnum = teacherLoginService
+                            .TeacherLogin(sessionId, username, password);
                     switch (loginResultEnum) {
                         case TIME_OUT:
                             throw new IOException("登录教务系统超时");
@@ -275,6 +279,9 @@ public class TeacherQueryService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
         return result;

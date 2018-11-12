@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
@@ -34,19 +34,7 @@ public class YiBanLoginService {
     @Autowired
     private UserLoginService userLoginService;
 
-    @Autowired
-    private HttpClientFactory httpClientFactory;
-
     private Log log = LogFactory.getLog(YiBanLoginService.class);
-
-    /**
-     * 清除登录用户的登录记录凭证
-     *
-     * @param request
-     */
-    public void ClearUserLoginCredentials(HttpServletRequest request) {
-        httpClientFactory.ClearCookies(request.getSession());
-    }
 
     /**
      * 通过Token获取用户UserID
@@ -70,10 +58,11 @@ public class YiBanLoginService {
     /**
      * 易班已绑定教务系统账号的用户通过用户名快速登入教务系统
      *
+     * @param sessionId
      * @param username
      * @return
      */
-    public BaseResult<User, LoginResultEnum> YiBanQuickLogin(HttpServletRequest request, String username) {
+    public BaseResult<User, LoginResultEnum> YiBanQuickLogin(String sessionId, String username) {
         BaseResult<User, LoginResultEnum> result = new BaseResult<>();
         try {
             User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
@@ -81,7 +70,7 @@ public class YiBanLoginService {
                 String decryptedUsername = StringEncryptUtils.decryptString(user.getUsername());
                 String decryptedPassword = StringEncryptUtils.decryptString(user.getPassword());
                 BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                        .UserLogin(request, new User(decryptedUsername, decryptedPassword), true);
+                        .UserLogin(sessionId, new User(decryptedUsername, decryptedPassword), true);
                 switch (userLoginResult.getResultType()) {
                     case LOGIN_SUCCESS:
                         result.setResultType(LoginResultEnum.LOGIN_SUCCESS);

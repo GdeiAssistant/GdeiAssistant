@@ -3,21 +3,13 @@ package com.linguancheng.gdeiassistant.Controller.GradeQuery;
 import com.linguancheng.gdeiassistant.Annotation.QueryLog;
 import com.linguancheng.gdeiassistant.Annotation.RestAuthentication;
 import com.linguancheng.gdeiassistant.Annotation.RestQueryLog;
-import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Query.QueryMethodEnum;
+import com.linguancheng.gdeiassistant.Enum.Base.QueryMethodEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import com.linguancheng.gdeiassistant.Service.GradeQuery.GradeCacheService;
 import com.linguancheng.gdeiassistant.Service.GradeQuery.GradeQueryService;
-import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
-import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -81,7 +73,7 @@ public class GradeQueryController {
 
                         case EMPTY_RESULT:
                             //缓存无数据，获取教务系统成绩数据
-                            gradeQueryResult = gradeQueryService.QueryGradeData(request
+                            gradeQueryResult = gradeQueryService.QueryGradeData(request.getSession().getId()
                                     , user, year);
                             switch (gradeQueryResult.getGradeServiceResultEnum()) {
                                 case SUCCESS:
@@ -178,7 +170,7 @@ public class GradeQueryController {
 
                 case QUERY_ONLY:
                     //只查询教务系统
-                    gradeQueryResult = gradeQueryService.QueryGradeData(request, user
+                    gradeQueryResult = gradeQueryService.QueryGradeData(request.getSession().getId(), user
                             , year);
                     switch (gradeQueryResult.getGradeServiceResultEnum()) {
                         case SUCCESS:
@@ -276,7 +268,7 @@ public class GradeQueryController {
 
                         case EMPTY_RESULT:
                             //缓存无数据，获取教务系统成绩数据
-                            gradeQueryResult = gradeQueryService.QueryGradeData(request
+                            gradeQueryResult = gradeQueryService.QueryGradeData(request.getSession().getId()
                                     , new User(username, password), year);
                             switch (gradeQueryResult.getGradeServiceResultEnum()) {
                                 case SUCCESS:
@@ -371,7 +363,7 @@ public class GradeQueryController {
 
                 case QUERY_ONLY:
                     //只查询教务系统
-                    gradeQueryResult = gradeQueryService.QueryGradeData(request
+                    gradeQueryResult = gradeQueryService.QueryGradeData(request.getSession().getId()
                             , new User(username, password), year);
                     switch (gradeQueryResult.getGradeServiceResultEnum()) {
                         case SUCCESS:

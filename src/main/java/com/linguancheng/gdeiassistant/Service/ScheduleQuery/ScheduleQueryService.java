@@ -5,20 +5,22 @@ import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
-import com.linguancheng.gdeiassistant.Factory.HttpClientFactory;
+import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.Document.ScheduleDocument;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import com.linguancheng.gdeiassistant.Repository.Redis.User.UserDao;
+import com.linguancheng.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.ScheduleColorUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -71,7 +73,7 @@ public class ScheduleQueryService {
     private ScheduleCacheService scheduleCacheService;
 
     @Autowired
-    private UserDao userDao;
+    private UserCertificateDao userCertificateDao;
 
     @Value("#{propertiesReader['schedule.start.date']}")
 
@@ -109,9 +111,6 @@ public class ScheduleQueryService {
         this.timeout = timeout;
     }
 
-    @Autowired
-    private HttpClientFactory httpClientFactory;
-
     private Log log = LogFactory.getLog(ScheduleQueryService.class);
 
     /**
@@ -124,11 +123,11 @@ public class ScheduleQueryService {
     public ScheduleQueryResult QueryScheduleData(HttpServletRequest request, User user) {
         ScheduleQueryResult result = new ScheduleQueryResult();
         //检测是否已与教务系统进行会话同步
-        UserCertificate userCertificate = userDao.queryUserCertificate(user.getUsername());
+        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
         if (userCertificate == null) {
             //进行会话同步
             BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                    .UserLogin(request, user, false);
+                    .UserLogin(request.getSession().getId(), user, false);
             switch (userLoginResult.getResultType()) {
                 case LOGIN_SUCCESS:
                     Long timestamp = userLoginResult.getResultData().getTimestamp();
@@ -141,8 +140,8 @@ public class ScheduleQueryService {
                     userCertificate = new UserCertificate();
                     userCertificate.setUser(user);
                     userCertificate.setTimestamp(timestamp);
-                    userDao.saveUserCertificate(userCertificate);
-                    return ScheduleQuery(request, user.getUsername()
+                    userCertificateDao.saveUserCertificate(userCertificate);
+                    return ScheduleQuery(request.getSession().getId(), user.getUsername()
                             , user.getKeycode(), user.getNumber(), timestamp);
 
                 case TIME_OUT:
@@ -159,7 +158,7 @@ public class ScheduleQueryService {
             }
             return result;
         }
-        return ScheduleQuery(request, userCertificate.getUser().getUsername()
+        return ScheduleQuery(request.getSession().getId(), userCertificate.getUser().getUsername()
                 , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
                 , userCertificate.getTimestamp());
     }
@@ -249,15 +248,23 @@ public class ScheduleQueryService {
     /**
      * 查询课表信息
      *
-     * @param request
+     * @param sessionId
+     * @param username
+     * @param keycode
+     * @param number
+     * @param timestamp
      * @return
      */
-    private ScheduleQueryResult ScheduleQuery(HttpServletRequest request
-            , String username, String keycode, String number, Long timestamp) {
+    private ScheduleQueryResult ScheduleQuery(String sessionId, String username, String keycode
+            , String number, Long timestamp) {
         ScheduleQueryResult result = new ScheduleQueryResult();
         CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
         try {
-            httpClient = httpClientFactory.getHttpClient(request.getSession(), false, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
+                    , false, timeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
                     + keycode + "&timestamp=" + timestamp);
             HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -501,6 +508,9 @@ public class ScheduleQueryService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
         return result;

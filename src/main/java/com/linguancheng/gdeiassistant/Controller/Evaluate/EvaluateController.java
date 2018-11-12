@@ -63,7 +63,7 @@ public class EvaluateController {
                     return baseJsonResult;
             }
         }
-        ServiceResultEnum resultEnum = evaluateService.SyncSessionAndEvaluate(request
+        ServiceResultEnum resultEnum = evaluateService.SyncSessionAndEvaluate(request.getSession().getId()
                 , new User(username, password), directlySubmit);
         switch (resultEnum) {
             case SUCCESS:
@@ -100,7 +100,8 @@ public class EvaluateController {
             , boolean directlySubmit) {
         JsonResult baseJsonResult = new JsonResult();
         User user = (User) request.getAttribute("user");
-        ServiceResultEnum resultEnum = evaluateService.SyncSessionAndEvaluate(request, user, directlySubmit);
+        ServiceResultEnum resultEnum = evaluateService.SyncSessionAndEvaluate(request.getSession().getId()
+                , user, directlySubmit);
         switch (resultEnum) {
             case SUCCESS:
                 baseJsonResult.setSuccess(true);

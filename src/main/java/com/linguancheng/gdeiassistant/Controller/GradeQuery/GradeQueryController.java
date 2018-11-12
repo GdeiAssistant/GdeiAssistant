@@ -52,7 +52,7 @@ public class GradeQueryController {
     @RestAuthentication
     @ResponseBody
     public GradeQueryJsonResult GradeQuery(HttpServletRequest request
-            , String token, Integer year, @RequestParam(value = "method", required = false
+            , @RequestParam("token") String token, Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) {
         GradeQueryJsonResult result = new GradeQueryJsonResult();
         if ((year != null && (year < 0 || year > 3)) || method == null) {

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
@@ -95,7 +96,8 @@ public class EvaluateController {
     @RequestMapping(value = "/rest/evaluate", method = RequestMethod.POST)
     @RestAuthentication
     @ResponseBody
-    public JsonResult StartEvaluate(HttpServletRequest request, String token, boolean directlySubmit) {
+    public JsonResult StartEvaluate(HttpServletRequest request, @RequestParam("token") String token
+            , boolean directlySubmit) {
         JsonResult baseJsonResult = new JsonResult();
         User user = (User) request.getAttribute("user");
         ServiceResultEnum resultEnum = evaluateService.SyncSessionAndEvaluate(request, user, directlySubmit);

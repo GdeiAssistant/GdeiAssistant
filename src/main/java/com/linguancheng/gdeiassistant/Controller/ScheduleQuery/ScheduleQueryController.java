@@ -50,7 +50,8 @@ public class ScheduleQueryController {
     @RestQueryLog
     @ResponseBody
     public ScheduleQueryJsonResult ScheduleQuery(HttpServletRequest request
-            , String token, Integer week, @RequestParam(name = "method", required = false
+            , @RequestParam("token") String token, Integer week
+            , @RequestParam(name = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) {
         ScheduleQueryJsonResult result = new ScheduleQueryJsonResult();
         if ((week != null && (week < 0 || week > 20)) || method == null) {

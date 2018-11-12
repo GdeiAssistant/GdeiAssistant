@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RefreshToken extends Token {
+public class RefreshToken extends SimpleToken {
 
     /**
      * 该刷新令牌对应的令牌签名

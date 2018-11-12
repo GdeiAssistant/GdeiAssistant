@@ -1,4 +1,4 @@
-package com.linguancheng.gdeiassistant.Repository.Redis.User;
+package com.linguancheng.gdeiassistant.Repository.Redis.UserCertificate;
 
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Repository
-public class UserDaoImpl implements UserDao {
+public class UserCertificateDaoImpl implements UserCertificateDao {
 
     @Autowired
     private RedisTemplate<String, Map<String, String>> redisTemplate;

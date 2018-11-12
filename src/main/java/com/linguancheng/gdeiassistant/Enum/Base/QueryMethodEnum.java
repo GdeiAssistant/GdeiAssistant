@@ -1,4 +1,4 @@
-package com.linguancheng.gdeiassistant.Enum.Query;
+package com.linguancheng.gdeiassistant.Enum.Base;
 
 public enum QueryMethodEnum {
 

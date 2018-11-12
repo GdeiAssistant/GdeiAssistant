@@ -4,7 +4,7 @@ import org.springframework.core.convert.converter.Converter;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginMethodEnum;
 
 /**
- * 将String字符串类型转换为LoginMethodEnum枚举类型
+ * 灏哠tring瀛楃涓茬被鍨嬭浆鎹负LoginMethodEnum鏋氫妇绫诲瀷
  */
 public class StringToLoginMethodEnumConverter implements Converter<String, LoginMethodEnum> {
 

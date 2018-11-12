@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.ExceptionHandler;
 
+import org.apache.http.MethodNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,18 @@ public class GlobalControllerAdvice {
             , TypeMismatchException.class, HttpMessageNotReadableException.class})
     public void HandleBadRequestException(HttpServletResponse response) throws IOException {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        response.getWriter().close();
+    }
+
+    /**
+     * 处理HTTP请求405错误
+     *
+     * @param response
+     * @throws IOException
+     */
+    @ExceptionHandler(MethodNotSupportedException.class)
+    public void HandleMethodNotSupportedException(HttpServletResponse response) throws IOException {
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         response.getWriter().close();
     }
 

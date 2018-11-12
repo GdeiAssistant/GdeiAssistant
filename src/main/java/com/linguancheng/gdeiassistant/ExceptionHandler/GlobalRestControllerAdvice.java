@@ -2,6 +2,7 @@ package com.linguancheng.gdeiassistant.ExceptionHandler;
 
 import com.linguancheng.gdeiassistant.Constant.ConstantUtils;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import org.apache.http.MethodNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,17 @@ public class GlobalRestControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
                         , "请求参数不合法"));
+    }
+
+    /**
+     * 处理HTTP请求405错误
+     *
+     * @return
+     */
+    @ExceptionHandler(MethodNotSupportedException.class)
+    public ResponseEntity HandleMethodNotSupportedException() {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(new JsonResult(false, "请求方法不支持"));
     }
 
     /**

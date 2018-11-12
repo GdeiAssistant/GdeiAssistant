@@ -99,6 +99,10 @@ public class UserLoginController {
                 jsonResult.setSuccess(true);
                 break;
 
+            case NOT_MATCH:
+                jsonResult.setSuccess(false);
+                jsonResult.setMessage("令牌信息不存在");
+
             case ERROR:
                 jsonResult.setSuccess(false);
                 jsonResult.setMessage("主动过期令牌出现错误");

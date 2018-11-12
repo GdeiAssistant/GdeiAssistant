@@ -127,8 +127,8 @@ public class UserLoginController {
             case SUCCESS:
                 //刷新令牌成功
                 result.setSuccess(true);
-                result.setAccessToken(tokenRefreshResult.getAccessToken().getSignature());
-                result.setRefreshToken(tokenRefreshResult.getRefreshToken().getSignature());
+                result.setAccessToken(new Token(tokenRefreshResult.getAccessToken()));
+                result.setRefreshToken(new Token(tokenRefreshResult.getRefreshToken()));
                 break;
 
             case ERROR:
@@ -217,8 +217,8 @@ public class UserLoginController {
                                     case SUCCESS:
                                         userLoginJsonResult.setSuccess(true);
                                         userLoginJsonResult.setUser(resultUser);
-                                        userLoginJsonResult.setAccessToken(getAccessTokenResult.getResultData().getSignature());
-                                        userLoginJsonResult.setRefreshToken(getRefreshTokenResult.getResultData().getSignature());
+                                        userLoginJsonResult.setAccessToken(new Token(getAccessTokenResult.getResultData()));
+                                        userLoginJsonResult.setRefreshToken(new Token(getRefreshTokenResult.getResultData()));
                                         break;
 
                                     case ERROR:

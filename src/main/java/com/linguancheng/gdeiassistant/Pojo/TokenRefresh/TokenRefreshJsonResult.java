@@ -11,23 +11,23 @@ import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
  */
 public class TokenRefreshJsonResult extends JsonResult {
 
-    private String accessToken;
+    private Token accessToken;
 
-    private String refreshToken;
+    private Token refreshToken;
 
-    public String getAccessToken() {
+    public Token getAccessToken() {
         return accessToken;
     }
 
-    public void setAccessToken(String accessToken) {
+    public void setAccessToken(Token accessToken) {
         this.accessToken = accessToken;
     }
 
-    public String getRefreshToken() {
+    public Token getRefreshToken() {
         return refreshToken;
     }
 
-    public void setRefreshToken(String refreshToken) {
+    public void setRefreshToken(Token refreshToken) {
         this.refreshToken = refreshToken;
     }
 }

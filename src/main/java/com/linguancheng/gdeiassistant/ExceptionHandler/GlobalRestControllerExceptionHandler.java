@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice(annotations = RestController.class)
-public class GlobalRestControllerAdvice {
+public class GlobalRestControllerExceptionHandler {
 
     /**
      * 处理HTTP请求400错误
@@ -53,6 +53,12 @@ public class GlobalRestControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
                         , "请求参数不合法"));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity HandleException() {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new JsonResult(false, "系统异常，请联系管理员"));
     }
 
 

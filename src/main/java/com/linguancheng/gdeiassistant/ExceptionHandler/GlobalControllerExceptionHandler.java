@@ -1,7 +1,10 @@
 package com.linguancheng.gdeiassistant.ExceptionHandler;
 
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.http.MethodNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,7 +17,7 @@ import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 
 @ControllerAdvice(annotations = Controller.class)
-public class GlobalControllerAdvice {
+public class GlobalControllerExceptionHandler {
 
     /**
      * 处理HTTP请求400错误
@@ -50,5 +53,11 @@ public class GlobalControllerAdvice {
     public void HandleConstraintViolationException(HttpServletResponse response) throws IOException {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         response.getWriter().close();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity HandleException() {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new JsonResult(false, "系统异常，请联系管理员"));
     }
 }

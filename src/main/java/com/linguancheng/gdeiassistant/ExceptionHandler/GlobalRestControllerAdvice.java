@@ -1,7 +1,11 @@
 package com.linguancheng.gdeiassistant.ExceptionHandler;
 
+import com.linguancheng.gdeiassistant.Constant.ConstantUtils;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,9 +22,12 @@ public class GlobalRestControllerAdvice {
      *
      * @return
      */
-    @ExceptionHandler({MissingServletRequestParameterException.class, TypeMismatchException.class})
-    public JsonResult HandleBadRequestException() {
-        return new JsonResult(false, "请求参数不合法");
+    @ExceptionHandler({MissingServletRequestParameterException.class, TypeMismatchException.class
+            , HttpMessageNotReadableException.class})
+    public ResponseEntity HandleBadRequestException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
+                        , "请求参数不合法"));
     }
 
     /**
@@ -30,8 +37,10 @@ public class GlobalRestControllerAdvice {
      */
     @ExceptionHandler({ConstraintViolationException.class
             , MethodArgumentNotValidException.class})
-    public JsonResult HandleConstraintViolationException() {
-        return new JsonResult(false, "请求参数不合法");
+    public ResponseEntity HandleConstraintViolationException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
+                        , "请求参数不合法"));
     }
 
 

@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 public class SimpleToken extends Token {
 
     /**
-     * 设备唯一识别ID
+     * 璁惧鍞竴ID
      */
     private String unionId;
 
     /**
-     * 请求的IP地址
+     * 璇锋眰IP
      */
     private String ip;
 

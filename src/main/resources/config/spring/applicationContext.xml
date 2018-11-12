@@ -132,6 +132,9 @@
         </property>
     </bean>
 
+    <!-- 注册方法级别验证后处理器 -->
+    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
+
     <!-- 配置异步任务执行器和定时任务调度器 -->
     <task:annotation-driven scheduler="scheduler" executor="executor"/>
 

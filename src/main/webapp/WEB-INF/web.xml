@@ -83,15 +83,20 @@
         <param-value>GdeiAssistant</param-value>
     </context-param>
 
+    <!-- 发生400和405错误时跳转的页面 -->
+    <error-page>
+        <error-code>400</error-code>
+        <location>/WEB-INF/error/badRequestError.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>405</error-code>
+        <location>/WEB-INF/error/badRequestError.jsp</location>
+    </error-page>
+
     <!-- 发生404错误时跳转的页面 -->
     <error-page>
         <error-code>404</error-code>
-        <location>/WEB-INF/error/notFoundError.jsp</location>
-    </error-page>
-
-    <!-- 发生405错误时跳转的页面 -->
-    <error-page>
-        <error-code>405</error-code>
         <location>/WEB-INF/error/notFoundError.jsp</location>
     </error-page>
 

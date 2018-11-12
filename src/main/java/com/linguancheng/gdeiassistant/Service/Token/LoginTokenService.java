@@ -10,7 +10,7 @@ import com.gdeiassistant.gdeiassistant.Enum.Base.TokenValidResultEnum;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.*;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
-import com.gdeiassistant.gdeiassistant.Repository.Redis.Token.LoginTokenDao;
+import com.gdeiassistant.gdeiassistant.Repository.Redis.LoginToken.LoginTokenDao;
 import com.gdeiassistant.gdeiassistant.Service.IPAddress.IPService;
 import com.gdeiassistant.gdeiassistant.Tools.StringEncryptUtils;
 import com.gdeiassistant.gdeiassistant.Tools.StringUtils;

@@ -1,4 +1,4 @@
-package com.gdeiassistant.gdeiassistant.Repository.Redis.Token;
+package com.gdeiassistant.gdeiassistant.Repository.Redis.LoginToken;
 
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.AccessToken;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.RefreshToken;

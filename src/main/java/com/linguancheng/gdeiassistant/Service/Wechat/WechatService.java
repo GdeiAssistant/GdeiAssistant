@@ -4,6 +4,7 @@ import com.linguancheng.gdeiassistant.Enum.Base.AttachResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Wechat.RequestTypeEnum;
+import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Pojo.CardQuery.CardInfoQueryJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Entity.CardInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Grade;
@@ -325,26 +326,18 @@ public class WechatService {
             }
             if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)
                     && username.length() <= 20 && password.length() <= 35) {
-                //进行用户登录
-                BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                        .UserLogin(request.getSession().getId(), new User(username, password), true);
-                switch (userLoginResult.getResultType()) {
-                    case LOGIN_SUCCESS:
-                        //登录成功，进行微信账号绑定
-                        if (wechatUserDataService.SyncWechatUserData(username, wechatId)) {
-                            return new WechatTextMessage(wechatBaseMessage, "绑定微信账号成功");
-                        }
-                        return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
-
-                    case PASSWORD_ERROR:
-                        //密码错误
-                        return new WechatTextMessage(wechatBaseMessage, "账号密码错误，请检查并重试");
-
-                    case SERVER_ERROR:
-                    case TIME_OUT:
-                    default:
-                        //服务器异常
-                        return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
+                try {
+                    //进行用户登录
+                    userLoginService.UserLogin(request.getSession().getId(), new User(username, password), true);
+                    //登录成功，进行微信账号绑定
+                    wechatUserDataService.SyncWechatUserData(username, wechatId);
+                    return new WechatTextMessage(wechatBaseMessage, "绑定微信账号成功");
+                } catch (PasswordIncorrectException e) {
+                    //密码错误
+                    return new WechatTextMessage(wechatBaseMessage, "账号密码错误，请检查并重试");
+                } catch (Exception e) {
+                    //服务器异常
+                    return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
                 }
             }
         }

@@ -34,21 +34,13 @@ public class PrivacyService {
      * @param username
      * @return
      */
-    public BaseResult<Privacy, DataBaseResultEnum> GetPrivacySetting(String username) {
-        BaseResult<Privacy, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            Privacy privacy = privacyMapper.selectPrivacy(StringEncryptUtils.encryptString(username));
-            if (privacy == null) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                result.setResultData(privacy);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("获取用户隐私配置异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public Privacy GetPrivacySetting(String username) throws Exception {
+        Privacy privacy = privacyMapper.selectPrivacy(StringEncryptUtils
+                .encryptString(username));
+        if (privacy != null) {
+            return privacy;
         }
-        return result;
+        return null;
     }
 
     /**

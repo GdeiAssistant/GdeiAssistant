@@ -113,8 +113,7 @@ public class UserLoginService {
      * @param quickLogin
      * @return
      */
-    public BaseResult<UserCertificate, LoginResultEnum> UserLogin(String sessionId, User user, boolean quickLogin) {
-        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = new BaseResult<>();
+    public UserCertificate UserLogin(String sessionId, User user, boolean quickLogin) throws Exception {
         //查询数据库,若账号密码相同,则直接通过登录校验
         if (quickLogin) {
             try {
@@ -128,9 +127,7 @@ public class UserLoginService {
                             //登录成功,缓存并返回用户信息
                             UserCertificate userCertificate = new UserCertificate();
                             userCertificate.setUser(queryUser.decryptUser());
-                            userLoginResult.setResultData(userCertificate);
-                            userLoginResult.setResultType(LoginResultEnum.LOGIN_SUCCESS);
-                            return userLoginResult;
+                            return userCertificate;
                         }
                     }
                 }
@@ -142,31 +139,6 @@ public class UserLoginService {
         //用户不存在或与数据库的数据信息不匹配,进行普通登录
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
-        if (StringUtils.isBlank(user.getPassword())) {
-            try {
-                //若用户未填入密码，则通过加密值和学号从数据库查询密码值
-                User queryUser = userMapper.selectUser(StringEncryptUtils
-                        .encryptString(user.getUsername()));
-                if (queryUser != null && !queryUser.getState().equals(-1)) {
-                    queryUser = queryUser.decryptUser();
-                    if (queryUser.getUsername().equals(user.getUsername())
-                            && queryUser.getKeycode().equals(user.getKeycode())
-                            && queryUser.getNumber().equals(user.getNumber())) {
-                        //数据库校验通过，填入数据库中保存的密码值
-                        user.setPassword(queryUser.getPassword());
-                    } else {
-                        //数据库校验不通过，提示用户重新登录
-                        userLoginResult.setResultType(LoginResultEnum.PASSWORD_ERROR);
-                        return userLoginResult;
-                    }
-                }
-            } catch (Exception e) {
-                //获取密码值失败
-                log.error("用户登录数据库校验异常：", e);
-                userLoginResult.setResultType(LoginResultEnum.SERVER_ERROR);
-                return userLoginResult;
-            }
-        }
         try {
             HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
                     , false, timeout);
@@ -218,16 +190,16 @@ public class UserLoginService {
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {
             log.error("用户登录异常：", e);
-            userLoginResult.setResultType(LoginResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("教务系统异常");
         } catch (PasswordIncorrectException e) {
             log.error("用户登录异常：", e);
-            userLoginResult.setResultType(LoginResultEnum.PASSWORD_ERROR);
+            throw new PasswordIncorrectException("用户密码错误");
         } catch (IOException e) {
             log.error("用户登录异常：", e);
-            userLoginResult.setResultType(LoginResultEnum.TIME_OUT);
+            throw new IOException("网络连接超时");
         } catch (Exception e) {
             log.error("用户登录异常：", e);
-            userLoginResult.setResultType(LoginResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -240,7 +212,6 @@ public class UserLoginService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return userLoginResult;
     }
 
     /**
@@ -252,7 +223,7 @@ public class UserLoginService {
      * @throws IOException
      * @throws ServerErrorException
      */
-    private BaseResult<UserCertificate, LoginResultEnum> LoginCasSystem(CloseableHttpClient httpClient, User user) throws Exception {
+    private UserCertificate LoginCasSystem(CloseableHttpClient httpClient, User user) throws Exception {
         HttpGet httpGet = new HttpGet(url + "login_cas.aspx");
         HttpResponse httpResponse = httpClient.execute(httpGet);
         if (httpResponse.getStatusLine().getStatusCode() == 302
@@ -297,9 +268,8 @@ public class UserLoginService {
      * @throws IOException
      * @throws ServerErrorException
      */
-    private BaseResult<UserCertificate, LoginResultEnum> CasVerify(CloseableHttpClient httpClient, String username
-            , String password, String keycode, String number, Long timestamp) throws IOException, ServerErrorException {
-        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = new BaseResult<>();
+    private UserCertificate CasVerify(CloseableHttpClient httpClient, String username
+            , String password, String keycode, String number, Long timestamp) throws Exception {
         HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
                 + keycode + "&timestamp=" + timestamp);
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
@@ -324,9 +294,7 @@ public class UserLoginService {
                     UserCertificate userCertificate = new UserCertificate();
                     userCertificate.setUser(user);
                     userCertificate.setTimestamp(timestamp);
-                    userLoginResult.setResultData(userCertificate);
-                    userLoginResult.setResultType(LoginResultEnum.LOGIN_SUCCESS);
-                    return userLoginResult;
+                    return userCertificate;
                 }
                 throw new ServerErrorException("教务系统异常");
             }
@@ -341,31 +309,16 @@ public class UserLoginService {
      * @param request
      * @return
      */
-    public ServiceResultEnum SyncUpdateSession(HttpServletRequest request) {
+    public void SyncUpdateSession(HttpServletRequest request) throws Exception {
         HttpSession httpSession = request.getSession();
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) httpSession.getAttribute("password");
         UserCertificate userCertificate = userCertificateDao.queryUserCertificate(username);
         if (userCertificate == null) {
             User user = new User(username, password);
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = UserLogin(request.getSession().getId()
-                    , user, false);
-            switch (userLoginResult.getResultType()) {
-                case LOGIN_SUCCESS:
-                    userCertificateDao.saveUserCertificate(userLoginResult.getResultData());
-                    return ServiceResultEnum.SUCCESS;
-
-                case PASSWORD_ERROR:
-                    return ServiceResultEnum.PASSWORD_INCORRECT;
-
-                case TIME_OUT:
-                    return ServiceResultEnum.TIME_OUT;
-
-                case SERVER_ERROR:
-                    return ServiceResultEnum.SERVER_ERROR;
-            }
+            userCertificate = UserLogin(request.getSession().getId(), user, false);
+            userCertificateDao.saveUserCertificate(userCertificate);
         }
-        return ServiceResultEnum.SUCCESS;
     }
 
     /**
@@ -374,25 +327,8 @@ public class UserLoginService {
      * @param request
      */
     @Async
-    public void AsyncUpdateSession(HttpServletRequest request) {
-        HttpSession httpSession = request.getSession();
-        String username = (String) request.getSession().getAttribute("username");
-        String password = (String) httpSession.getAttribute("password");
-        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(username);
-        if (userCertificate == null) {
-            User user = new User(username, password);
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = UserLogin(request.getSession().getId(),
-                    user, false);
-            switch (userLoginResult.getResultType()) {
-                case LOGIN_SUCCESS:
-                    userCertificateDao.saveUserCertificate(userLoginResult.getResultData());
-                    break;
-
-                default:
-                    //同步会话失败
-                    break;
-            }
-        }
+    public void AsyncUpdateSession(HttpServletRequest request) throws Exception {
+        SyncUpdateSession(request);
     }
 
     /**

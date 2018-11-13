@@ -361,43 +361,25 @@ public class SpareRoomService {
      * @return
      */
     public BaseResult<List<SpareRoom>, ServiceResultEnum> SyncSessionAndQuerySpareRoom(String sessionId
-            , User user, SpareRoomQuery spareRoomQuery) {
-        BaseResult<List<SpareRoom>, ServiceResultEnum> result = new BaseResult<>();
+            , User user, SpareRoomQuery spareRoomQuery) throws Exception {
         UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
         //检测是否已与教务系统进行会话同步
         if (userCertificate == null) {
             //进行会话同步
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                    .UserLogin(sessionId, user, false);
-            switch (userLoginResult.getResultType()) {
-                case LOGIN_SUCCESS:
-                    Long timestamp = userLoginResult.getResultData().getTimestamp();
-                    if (StringUtils.isBlank(user.getKeycode())) {
-                        user.setKeycode(userLoginResult.getResultData().getUser().getKeycode());
-                    }
-                    if (StringUtils.isBlank(user.getNumber())) {
-                        user.setNumber(userLoginResult.getResultData().getUser().getNumber());
-                    }
-                    userCertificate = new UserCertificate();
-                    userCertificate.setUser(user);
-                    userCertificate.setTimestamp(timestamp);
-                    userCertificateDao.saveUserCertificate(userCertificate);
-                    return QuerySpareRoom(sessionId, user.getUsername()
-                            , user.getKeycode(), user.getNumber(), timestamp, spareRoomQuery);
-
-                case TIME_OUT:
-                    result.setResultType(ServiceResultEnum.TIME_OUT);
-                    break;
-
-                case PASSWORD_ERROR:
-                    result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
-                    break;
-
-                case SERVER_ERROR:
-                    result.setResultType(ServiceResultEnum.SERVER_ERROR);
-                    break;
+            userCertificate = userLoginService.UserLogin(sessionId, user, false);
+            Long timestamp = userCertificate.getTimestamp();
+            if (StringUtils.isBlank(user.getKeycode())) {
+                user.setKeycode(userCertificate.getUser().getKeycode());
             }
-            return result;
+            if (StringUtils.isBlank(user.getNumber())) {
+                user.setNumber(userCertificate.getUser().getNumber());
+            }
+            userCertificate = new UserCertificate();
+            userCertificate.setUser(user);
+            userCertificate.setTimestamp(timestamp);
+            userCertificateDao.saveUserCertificate(userCertificate);
+            return QuerySpareRoom(sessionId, user.getUsername()
+                    , user.getKeycode(), user.getNumber(), timestamp, spareRoomQuery);
         }
         return QuerySpareRoom(sessionId, user.getUsername(), user.getKeycode(), user.getNumber()
                 , userCertificate.getTimestamp(), spareRoomQuery);

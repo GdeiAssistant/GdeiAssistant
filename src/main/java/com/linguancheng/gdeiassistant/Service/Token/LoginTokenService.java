@@ -7,6 +7,9 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.linguancheng.gdeiassistant.Enum.Base.TokenValidResultEnum;
+import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
+import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenServerException;
+import com.linguancheng.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.*;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
@@ -51,18 +54,12 @@ public class LoginTokenService {
      * @param signature
      * @return
      */
-    public TokenValidResultEnum ExpireToken(String signature) {
-        try {
-            if (StringUtils.isBlank(loginTokenDao.QueryToken(signature))) {
-                return TokenValidResultEnum.NOT_MATCH;
-            }
-            if (loginTokenDao.DeleteToken(signature)) {
-                return TokenValidResultEnum.SUCCESS;
-            }
-            return TokenValidResultEnum.ERROR;
-        } catch (Exception e) {
-            log.error("删除令牌信息异常：", e);
-            return TokenValidResultEnum.ERROR;
+    public void ExpireToken(String signature) throws Exception {
+        if (StringUtils.isBlank(loginTokenDao.QueryToken(signature))) {
+            throw new TokenNotMatchingException("令牌信息不存在");
+        }
+        if (!loginTokenDao.DeleteToken(signature)) {
+            throw new TokenServerException("令牌服务系统异常");
         }
     }
 
@@ -73,75 +70,45 @@ public class LoginTokenService {
      * @param ip
      * @return
      */
-    public TokenRefreshResult RefreshToken(String refreshTokenSignature, String ip) {
+    public TokenRefreshResult RefreshToken(String refreshTokenSignature, String ip) throws Exception {
         TokenRefreshResult result = new TokenRefreshResult();
-        try {
-            //从Redis缓存中查找权限令牌签名
-            String accessTokenSignature = loginTokenDao.QueryToken(refreshTokenSignature);
-            if (StringUtils.isBlank(accessTokenSignature)) {
-                //没有对应的权限令牌
-                result.setTokenValidResultEnum(TokenValidResultEnum.NOT_MATCH);
-                return result;
-            }
-            //校验AccessToken信息
-            TokenValidResultEnum validResultEnum = ValidToken(accessTokenSignature, ip);
-            switch (validResultEnum) {
-                case SUCCESS:
-                case EXPIRED:
-                    //解析AccessToken
-                    Map<String, Claim> claimMap = ParseToken(accessTokenSignature);
-                    String username = claimMap.get("username").asString();
-                    String unionId = claimMap.get("unionId").asString();
-                    //从Redis缓存中移除令牌信息
-                    loginTokenDao.DeleteToken(accessTokenSignature);
-                    loginTokenDao.DeleteToken(refreshTokenSignature);
-                    //生成新的权限令牌和刷新令牌
-                    BaseResult<AccessToken, TokenValidResultEnum> getAccessTokenResult =
-                            GetAccessToken(username, ip, unionId);
-                    switch (getAccessTokenResult.getResultType()) {
-                        case SUCCESS:
-                            BaseResult<RefreshToken, TokenValidResultEnum> getRefreshTokenResult =
-                                    GetRefreshToken(getAccessTokenResult.getResultData());
-                            switch (getRefreshTokenResult.getResultType()) {
-                                case SUCCESS:
-                                    //刷新令牌成功
-                                    result.setTokenValidResultEnum(TokenValidResultEnum.SUCCESS);
-                                    result.setAccessToken(getAccessTokenResult.getResultData());
-                                    result.setRefreshToken(getRefreshTokenResult.getResultData());
-                                    break;
-
-                                case ERROR:
-                                default:
-                                    //系统异常
-                                    result.setTokenValidResultEnum(TokenValidResultEnum.ERROR);
-                                    break;
-                            }
-                            break;
-
-                        case ERROR:
-                        default:
-                            //系统异常
-                            result.setTokenValidResultEnum(TokenValidResultEnum.ERROR);
-                            break;
-                    }
-                    break;
-
-                case ERROR:
-                    result.setTokenValidResultEnum(TokenValidResultEnum.ERROR);
-                    break;
-
-                case NOT_MATCH:
-                    result.setTokenValidResultEnum(TokenValidResultEnum.NOT_MATCH);
-                    break;
-
-                case UNUSUAL_LOCATION:
-                    result.setTokenValidResultEnum(TokenValidResultEnum.UNUSUAL_LOCATION);
-                    break;
-            }
-        } catch (Exception e) {
-            result.setTokenValidResultEnum(TokenValidResultEnum.ERROR);
+        //从Redis缓存中查找权限令牌签名
+        String accessTokenSignature = loginTokenDao
+                .QueryToken(refreshTokenSignature);
+        if (StringUtils.isBlank(accessTokenSignature)) {
+            //没有对应的权限令牌
+            throw new TokenNotMatchingException("没有对应的权限令牌");
         }
-        return result;
+        //校验AccessToken信息
+        TokenValidResultEnum validResultEnum = ValidToken(accessTokenSignature, ip);
+        switch (validResultEnum) {
+            case SUCCESS:
+            case EXPIRED:
+                //解析AccessToken
+                Map<String, Claim> claimMap = ParseToken(accessTokenSignature);
+                String username = claimMap.get("username").asString();
+                String unionId = claimMap.get("unionId").asString();
+                //从Redis缓存中移除令牌信息
+                loginTokenDao.DeleteToken(accessTokenSignature);
+                loginTokenDao.DeleteToken(refreshTokenSignature);
+                //生成新的权限令牌和刷新令牌
+                AccessToken accessToken = GetAccessToken(username, ip, unionId);
+                RefreshToken refreshToken = GetRefreshToken(accessToken);
+                //刷新令牌成功
+                result.setAccessToken(accessToken);
+                result.setRefreshToken(refreshToken);
+                return result;
+
+            case NOT_MATCH:
+                throw new TokenNotMatchingException("令牌信息不匹配");
+
+            case UNUSUAL_LOCATION:
+                throw new UnusualLocationException("非常用地点登录");
+
+            case ERROR:
+            default:
+                throw new TokenServerException("令牌服务系统异常");
+        }
     }
 
     /**
@@ -150,31 +117,23 @@ public class LoginTokenService {
      * @param accessToken
      * @return
      */
-    public BaseResult<RefreshToken, TokenValidResultEnum> GetRefreshToken(AccessToken accessToken) {
-        BaseResult<RefreshToken, TokenValidResultEnum> result = new BaseResult<>();
-        try {
-            LocalDateTime createTime = LocalDateTime.now();
-            LocalDateTime expireTime = createTime.plusDays(30);
-            //生成RefreshToken签名
-            String token = StringEncryptUtils.SHA256MapString(accessToken.getSignature());
-            //生成RefreshToken
-            RefreshToken refreshToken = new RefreshToken();
-            refreshToken.setSignature(token);
-            refreshToken.setTokenSignature(accessToken.getSignature());
-            refreshToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-            refreshToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-            refreshToken.setUnionId(accessToken.getUnionId());
-            refreshToken.setIp(accessToken.getIp());
-            if (loginTokenDao.SaveRefreshToken(refreshToken)) {
-                result.setResultData(refreshToken);
-                result.setResultType(TokenValidResultEnum.SUCCESS);
-            } else {
-                result.setResultType(TokenValidResultEnum.ERROR);
-            }
-        } catch (Exception e) {
-            result.setResultType(TokenValidResultEnum.ERROR);
+    public RefreshToken GetRefreshToken(AccessToken accessToken) throws Exception {
+        LocalDateTime createTime = LocalDateTime.now();
+        LocalDateTime expireTime = createTime.plusDays(30);
+        //生成RefreshToken签名
+        String token = StringEncryptUtils.SHA256MapString(accessToken.getSignature());
+        //生成RefreshToken
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setSignature(token);
+        refreshToken.setTokenSignature(accessToken.getSignature());
+        refreshToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        refreshToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        refreshToken.setUnionId(accessToken.getUnionId());
+        refreshToken.setIp(accessToken.getIp());
+        if (loginTokenDao.SaveRefreshToken(refreshToken)) {
+            return refreshToken;
         }
-        return result;
+        throw new TokenServerException("令牌服务系统异常");
     }
 
     /**
@@ -185,36 +144,27 @@ public class LoginTokenService {
      * @param unionId
      * @return
      */
-    public BaseResult<AccessToken, TokenValidResultEnum> GetAccessToken(String username
-            , String ip, String unionId) {
-        BaseResult<AccessToken, TokenValidResultEnum> result = new BaseResult<>();
-        try {
-            LocalDateTime createTime = LocalDateTime.now();
-            LocalDateTime expireTime = createTime.plusDays(7);
-            //生成AccessToken签名
-            String token = JWT.create().withIssuer("gdeiassistant")
-                    .withClaim("username", username).withClaim("unionId", unionId)
-                    .withClaim("createTime"
-                            , createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-                    .withClaim("expireTime", expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-                    .sign(Algorithm.HMAC256(secret));
-            AccessToken accessToken = new AccessToken();
-            accessToken.setUsername(username);
-            accessToken.setIp(ip);
-            accessToken.setUnionId(unionId);
-            accessToken.setSignature(token);
-            accessToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-            accessToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-            if (loginTokenDao.SaveAccessToken(accessToken)) {
-                result.setResultData(accessToken);
-                result.setResultType(TokenValidResultEnum.SUCCESS);
-            } else {
-                result.setResultType(TokenValidResultEnum.ERROR);
-            }
-        } catch (Exception e) {
-            result.setResultType(TokenValidResultEnum.ERROR);
+    public AccessToken GetAccessToken(String username, String ip, String unionId) throws Exception {
+        LocalDateTime createTime = LocalDateTime.now();
+        LocalDateTime expireTime = createTime.plusDays(7);
+        //生成AccessToken签名
+        String token = JWT.create().withIssuer("gdeiassistant")
+                .withClaim("username", username).withClaim("unionId", unionId)
+                .withClaim("createTime"
+                        , createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .withClaim("expireTime", expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .sign(Algorithm.HMAC256(secret));
+        AccessToken accessToken = new AccessToken();
+        accessToken.setUsername(username);
+        accessToken.setIp(ip);
+        accessToken.setUnionId(unionId);
+        accessToken.setSignature(token);
+        accessToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        accessToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        if (loginTokenDao.SaveAccessToken(accessToken)) {
+            return accessToken;
         }
-        return result;
+        throw new TokenServerException("令牌服务系统异常");
     }
 
     /**

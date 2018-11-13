@@ -72,18 +72,12 @@ public class WechatUserDataService {
      * @param wechatUserID
      * @return
      */
-    public boolean SyncWechatUserData(String username, String wechatUserID) {
-        try {
-            if (wechatUserMapper.selectUsername(wechatUserID) != null) {
-                //更新微信账号绑定的教务系统账号
-                wechatUserMapper.updateWechatUser(wechatUserID, StringEncryptUtils.encryptString(username));
-            } else {
-                wechatUserMapper.insertWechatUser(wechatUserID, StringEncryptUtils.encryptString(username));
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+    public void SyncWechatUserData(String username, String wechatUserID) throws Exception {
+        if (wechatUserMapper.selectUsername(wechatUserID) != null) {
+            //更新微信账号绑定的教务系统账号
+            wechatUserMapper.updateWechatUser(wechatUserID, StringEncryptUtils.encryptString(username));
+        } else {
+            wechatUserMapper.insertWechatUser(wechatUserID, StringEncryptUtils.encryptString(username));
         }
     }
 }

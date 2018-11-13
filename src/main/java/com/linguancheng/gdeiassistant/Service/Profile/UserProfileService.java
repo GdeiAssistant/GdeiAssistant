@@ -14,6 +14,7 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
+import com.taobao.wsgsvr.WsgException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,30 +127,19 @@ public class UserProfileService {
      * @param username
      * @return
      */
-    public BaseResult<Profile, DataBaseResultEnum> GetUserProfile(String username) {
-        BaseResult<Profile, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-            if (!user.getState().equals(-1)) {
-                Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
-                if (profile != null) {
-                    if (profile.getGender() != null && profile.getGender().equals(3)) {
-                        profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
-                    }
-                    result.setResultType(DataBaseResultEnum.SUCCESS);
-                    profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
-                    result.setResultData(profile);
-                } else {
-                    result.setResultType(DataBaseResultEnum.INCORRECT_USERNAME);
+    public Profile GetUserProfile(String username) throws Exception {
+        User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+        if (user != null && !user.getState().equals(-1)) {
+            Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+            if (profile != null) {
+                if (profile.getGender() != null && profile.getGender().equals(3)) {
+                    profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
                 }
-            } else {
-                result.setResultType(DataBaseResultEnum.INCORRECT_USERNAME);
+                profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
+                return profile;
             }
-        } catch (Exception e) {
-            log.error("获取用户个人资料异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
         }
-        return result;
+        return null;
     }
 
     /**
@@ -158,26 +148,13 @@ public class UserProfileService {
      * @param username
      * @return
      */
-    public BaseResult<String, DataBaseResultEnum> GetUserIntroduction(String username) {
-        BaseResult<String, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils.encryptString(username));
-            if (introduction == null) {
-                profileMapper.initUserIntroduction(StringEncryptUtils.encryptString(username));
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                if (StringUtils.isBlank(introduction.getIntroductionContent())) {
-                    result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-                } else {
-                    result.setResultData(introduction.getIntroductionContent());
-                    result.setResultType(DataBaseResultEnum.SUCCESS);
-                }
-            }
-        } catch (Exception e) {
-            log.error("获取用户个人简介异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public Introduction GetUserIntroduction(String username) throws Exception {
+        Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils
+                .encryptString(username));
+        if (introduction != null) {
+            return introduction;
         }
-        return result;
+        return null;
     }
 
     /**

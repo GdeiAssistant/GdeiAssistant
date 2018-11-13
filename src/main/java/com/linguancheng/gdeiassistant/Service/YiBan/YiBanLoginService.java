@@ -62,39 +62,13 @@ public class YiBanLoginService {
      * @param username
      * @return
      */
-    public BaseResult<User, LoginResultEnum> YiBanQuickLogin(String sessionId, String username) {
-        BaseResult<User, LoginResultEnum> result = new BaseResult<>();
-        try {
-            User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-            if (user != null) {
-                String decryptedUsername = StringEncryptUtils.decryptString(user.getUsername());
-                String decryptedPassword = StringEncryptUtils.decryptString(user.getPassword());
-                BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                        .UserLogin(sessionId, new User(decryptedUsername, decryptedPassword), true);
-                switch (userLoginResult.getResultType()) {
-                    case LOGIN_SUCCESS:
-                        result.setResultType(LoginResultEnum.LOGIN_SUCCESS);
-                        result.setResultData(userLoginResult.getResultData().getUser());
-                        break;
-
-                    case PASSWORD_ERROR:
-                        result.setResultType(LoginResultEnum.PASSWORD_ERROR);
-                        break;
-
-                    case TIME_OUT:
-                        result.setResultType(LoginResultEnum.TIME_OUT);
-                        break;
-
-                    default:
-                        throw new ServerErrorException();
-                }
-                return result;
-            }
-            throw new ServerErrorException();
-        } catch (Exception e) {
-            log.error("易班登录异常：", e);
-            result.setResultType(LoginResultEnum.SERVER_ERROR);
+    public User YiBanQuickLogin(String sessionId, String username) throws Exception {
+        User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+        if (user != null) {
+            user = user.decryptUser();
+            UserCertificate userCertificate = userLoginService.UserLogin(sessionId, user, true);
+            return userCertificate.getUser();
         }
-        return result;
+        return null;
     }
 }

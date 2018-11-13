@@ -100,7 +100,7 @@
                 }
             });
             $.ajax({
-                url: '/rest/introduction',
+                url: '/api/introduction',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {

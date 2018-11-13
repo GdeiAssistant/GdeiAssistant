@@ -2,6 +2,7 @@ package com.linguancheng.gdeiassistant.Pojo.GradeQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Grade;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +11,9 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties
-public class GradeQueryJsonResult {
+public class GradeQueryJsonResult extends JsonResult {
 
-    private Integer queryYear;
+    private Integer year;
 
     private Double firstTermGPA;
 
@@ -26,18 +27,12 @@ public class GradeQueryJsonResult {
 
     private List<Grade> secondTermGradeList;
 
-    private boolean success;
-
-    private boolean empty;
-
-    private String message;
-
-    public Integer getQueryYear() {
-        return queryYear;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setQueryYear(Integer queryYear) {
-        this.queryYear = queryYear;
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Double getFirstTermGPA() {
@@ -86,29 +81,5 @@ public class GradeQueryJsonResult {
 
     public void setSecondTermGradeList(List<Grade> secondTermGradeList) {
         this.secondTermGradeList = secondTermGradeList;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public boolean isEmpty() {
-        return empty;
-    }
-
-    public void setEmpty(boolean empty) {
-        this.empty = empty;
     }
 }

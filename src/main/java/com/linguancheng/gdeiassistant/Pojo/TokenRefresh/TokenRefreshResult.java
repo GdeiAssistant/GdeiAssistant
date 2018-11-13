@@ -12,19 +12,9 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.RefreshToken;
  */
 public class TokenRefreshResult {
 
-    private TokenValidResultEnum tokenValidResultEnum;
-
     private AccessToken accessToken;
 
     private RefreshToken refreshToken;
-
-    public TokenValidResultEnum getTokenValidResultEnum() {
-        return tokenValidResultEnum;
-    }
-
-    public void setTokenValidResultEnum(TokenValidResultEnum tokenValidResultEnum) {
-        this.tokenValidResultEnum = tokenValidResultEnum;
-    }
 
     public AccessToken getAccessToken() {
         return accessToken;

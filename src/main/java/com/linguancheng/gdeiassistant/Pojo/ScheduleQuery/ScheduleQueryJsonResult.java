@@ -1,38 +1,15 @@
 package com.linguancheng.gdeiassistant.Pojo.ScheduleQuery;
 
 import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 
 import java.util.List;
 
-@Component
-@Scope("prototype")
-public class ScheduleQueryJsonResult {
+public class ScheduleQueryJsonResult extends JsonResult {
 
     private List<Schedule> scheduleList;
 
-    private int selectedWeek;
-
-    private boolean success;
-
-    private String message;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
+    private Integer week;
 
     public List<Schedule> getScheduleList() {
         return scheduleList;
@@ -42,11 +19,11 @@ public class ScheduleQueryJsonResult {
         this.scheduleList = scheduleList;
     }
 
-    public int getSelectedWeek() {
-        return selectedWeek;
+    public Integer getWeek() {
+        return week;
     }
 
-    public void setSelectedWeek(int selectedWeek) {
-        this.selectedWeek = selectedWeek;
+    public void setWeek(Integer week) {
+        this.week = week;
     }
 }

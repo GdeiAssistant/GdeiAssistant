@@ -11,13 +11,9 @@ import java.util.List;
  * Created by linguancheng on 2017/7/22.
  */
 
-@Component
-@Scope("prototype")
 public class GradeQueryResult {
 
-    private ServiceResultEnum gradeServiceResultEnum;
-
-    private Integer queryYear;
+    private Integer year;
 
     private Double firstTermGPA;
 
@@ -31,20 +27,12 @@ public class GradeQueryResult {
 
     private List<Grade> secondTermGradeList;
 
-    public ServiceResultEnum getGradeServiceResultEnum() {
-        return gradeServiceResultEnum;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setGradeServiceResultEnum(ServiceResultEnum gradeServiceResultEnum) {
-        this.gradeServiceResultEnum = gradeServiceResultEnum;
-    }
-
-    public Integer getQueryYear() {
-        return queryYear;
-    }
-
-    public void setQueryYear(Integer queryYear) {
-        this.queryYear = queryYear;
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Double getFirstTermGPA() {

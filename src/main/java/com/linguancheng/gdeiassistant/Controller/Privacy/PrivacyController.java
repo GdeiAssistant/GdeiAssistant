@@ -40,31 +40,15 @@ public class PrivacyController {
      */
     @RequestMapping(value = "/rest/privacy", method = RequestMethod.GET)
     @ResponseBody
-    public DataJsonResult<Privacy> GetUserPrivacySetting(HttpServletRequest request) {
+    public DataJsonResult<Privacy> GetUserPrivacySetting(HttpServletRequest request) throws Exception {
         DataJsonResult<Privacy> result = new DataJsonResult<>();
         String username = (String) request.getSession().getAttribute("username");
-        if (username == null || username.trim().isEmpty()) {
-            result.setSuccess(false);
-            result.setMessage("用户身份凭证过期，请稍候再试");
-        } else {
-            BaseResult<Privacy, DataBaseResultEnum> queryResult = privacyService.GetPrivacySetting(username);
-            switch (queryResult.getResultType()) {
-                case SUCCESS:
-                    result.setSuccess(true);
-                    result.setData(queryResult.getResultData());
-                    break;
-
-                case EMPTY_RESULT:
-                    result.setSuccess(false);
-                    result.setMessage("用户隐私设置未初始化，请重新登录系统");
-                    break;
-
-                case ERROR:
-                    result.setSuccess(false);
-                    result.setMessage("服务器异常，请稍候再试");
-                    break;
-            }
+        Privacy privacy = privacyService.GetPrivacySetting(username);
+        if (privacy != null) {
+            result.setData(privacy);
+            result.setSuccess(true);
         }
+
         return result;
     }
 

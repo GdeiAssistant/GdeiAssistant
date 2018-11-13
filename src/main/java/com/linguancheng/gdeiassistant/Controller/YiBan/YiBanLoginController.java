@@ -60,13 +60,10 @@ public class YiBanLoginController {
      * 通过易班帐号绑定的教务系统帐号登录系统
      *
      * @param request
-     * @param relink
-     * @param redirectAttributes
      * @return
      */
     @RequestMapping("/yiban/userlogin")
-    public ModelAndView YiBanUserLogin(HttpServletRequest request, boolean relink
-            , RedirectAttributes redirectAttributes, RedirectInfo redirectInfo) {
+    public ModelAndView YiBanUserLogin(HttpServletRequest request, RedirectInfo redirectInfo) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         String username = (String) request.getSession().getAttribute("username");
         if (username == null || username.trim().isEmpty()) {
@@ -76,50 +73,17 @@ public class YiBanLoginController {
         }
         //清除已登录用户的用户凭证记录
         HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
-        BaseResult<User, LoginResultEnum> yiBanQuickLoginResult = yiBanLoginService
-                .YiBanQuickLogin(request.getSession().getId(), username);
-        switch (yiBanQuickLoginResult.getResultType()) {
-            case LOGIN_SUCCESS:
-                User resultUser = yiBanQuickLoginResult.getResultData();
-                //同步数据库用户数据
-                try {
-                    userDataService.SyncUserData(resultUser);
-                    //将用户信息数据写入Session
-                    request.getSession().setAttribute("username", resultUser.getUsername());
-                    request.getSession().setAttribute("password", resultUser.getPassword());
-                    userLoginService.AsyncUpdateSession(request);
-                    if (redirectInfo.needToRedirect()) {
-                        modelAndView.setViewName("redirect:/" + redirectInfo.getRedirect_url());
-                    } else {
-                        modelAndView.setViewName("redirect:/index");
-                    }
-                } catch (TransactionException e) {
-                    modelAndView.addObject("ErrorMessage", "学院系统维护中，请稍候再试");
-                    modelAndView.setViewName("YiBan/yibanError");
-                }
-                break;
-
-            case PASSWORD_ERROR:
-                //账号密码已更新
-                redirectAttributes.addFlashAttribute("ErrorMessage", "教务系统账号密码已更新,请重新绑定");
-                modelAndView.setViewName("redirect:/yiban/attach");
-                break;
-
-            case TIME_OUT:
-                //连接超时
-                if (!relink) {
-                    //如果第一次连接失败,则重新尝试一次
-                    modelAndView.setViewName("forward:/yiban/userlogin?relink=true");
-                } else {
-                    modelAndView.addObject("ErrorMessage", "教务系统维护中，请稍候再试");
-                    modelAndView.setViewName("YiBan/yibanError");
-                }
-                break;
-
-            default:
-                modelAndView.addObject("ErrorMessage", "教务系统维护中，请稍候再试");
-                modelAndView.setViewName("YiBan/yibanError");
-                break;
+        User user = yiBanLoginService.YiBanQuickLogin(request.getSession().getId(), username);
+        //同步数据库用户数据
+        userDataService.SyncUserData(user);
+        //将用户信息数据写入Session
+        request.getSession().setAttribute("username", user.getUsername());
+        request.getSession().setAttribute("password", user.getPassword());
+        userLoginService.AsyncUpdateSession(request);
+        if (redirectInfo.needToRedirect()) {
+            modelAndView.setViewName("redirect:/" + redirectInfo.getRedirect_url());
+        } else {
+            modelAndView.setViewName("redirect:/index");
         }
         return modelAndView;
     }

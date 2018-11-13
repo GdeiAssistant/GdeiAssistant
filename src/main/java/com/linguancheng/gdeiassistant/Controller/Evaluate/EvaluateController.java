@@ -5,7 +5,6 @@ import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Service.Evaluate.EvaluateService;
-import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +22,6 @@ public class EvaluateController {
     @Autowired
     private EvaluateService evaluateService;
 
-    @Autowired
-    private UserLoginService userLoginService;
-
     @RequestMapping(value = "/evaluate", method = RequestMethod.GET)
     public ModelAndView ResolveTeacherEvaluatePage() {
         return new ModelAndView("Evaluate/evaluate");
@@ -33,36 +29,10 @@ public class EvaluateController {
 
     @RequestMapping(value = "/evaluate", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult StartEvaluate(HttpServletRequest request, boolean directlySubmit) {
+    public JsonResult StartEvaluate(HttpServletRequest request, boolean directlySubmit) throws Exception {
         JsonResult baseJsonResult = new JsonResult();
         String username = (String) WebUtils.getSessionAttribute(request, "username");
         String password = (String) WebUtils.getSessionAttribute(request, "password");
-        //检测是否已与教务系统进行会话同步
-        if (request.getSession().getAttribute("timestamp") == null) {
-            //进行会话同步
-            switch (userLoginService.SyncUpdateSession(request)) {
-                case SUCCESS:
-                    break;
-
-                case TIME_OUT:
-                    //连接超时
-                    baseJsonResult.setSuccess(false);
-                    baseJsonResult.setMessage("网络连接超时，请重试");
-                    return baseJsonResult;
-
-                case PASSWORD_INCORRECT:
-                    //身份凭证异常
-                    baseJsonResult.setSuccess(false);
-                    baseJsonResult.setMessage("用户凭证已过期，请重新登录");
-                    return baseJsonResult;
-
-                default:
-                    //服务器异常
-                    baseJsonResult.setSuccess(false);
-                    baseJsonResult.setMessage("学院教务系统维护中，暂不可用");
-                    return baseJsonResult;
-            }
-        }
         ServiceResultEnum resultEnum = evaluateService.SyncSessionAndEvaluate(request.getSession().getId()
                 , new User(username, password), directlySubmit);
         switch (resultEnum) {
@@ -97,7 +67,7 @@ public class EvaluateController {
     @RestAuthentication
     @ResponseBody
     public JsonResult StartEvaluate(HttpServletRequest request, @RequestParam("token") String token
-            , boolean directlySubmit) {
+            , boolean directlySubmit) throws Exception {
         JsonResult baseJsonResult = new JsonResult();
         User user = (User) request.getAttribute("user");
         ServiceResultEnum resultEnum = evaluateService.SyncSessionAndEvaluate(request.getSession().getId()

@@ -11,6 +11,7 @@ import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Service.YiBan.YiBanUserDataService;
 import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
+import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,67 +56,28 @@ public class YiBanUserAttachController {
 
     @RequestMapping("/yiban/userattach")
     @ResponseBody
-    public JsonResult YiBanUserAttach(HttpServletRequest request, HttpServletResponse response
-            , @Validated(value = UserLoginValidGroup.class) User user
-            , boolean relink, BindingResult bindingResult) throws ServletException, IOException {
+    public JsonResult YiBanUserAttach(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user) throws Exception {
         JsonResult result = new JsonResult();
-        if (bindingResult.hasErrors()) {
-            result.setSuccess(false);
-            result.setMessage("请求参数异常");
-            return result;
-        }
         String yiBanUserID = (String) request.getSession().getAttribute("yiBanUserID");
-        if (yiBanUserID == null || yiBanUserID.trim().isEmpty()) {
-            result.setSuccess(false);
-            result.setMessage("用户授权已过期，请重新登录并授权");
-            return result;
+        if (StringUtils.isBlank(yiBanUserID)) {
+            return new JsonResult(false, "用户授权已过期，请重新登录并授权");
         }
         //清除已登录用户的用户凭证记录
         HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
-        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
+        UserCertificate userCertificate = userLoginService
                 .UserLogin(request.getSession().getId(), user, true);
-        switch (userLoginResult.getResultType()) {
-            case PASSWORD_ERROR:
-                result.setSuccess(false);
-                result.setMessage("用户账户或密码错误，请检查并重试");
-                break;
-
-            case TIME_OUT:
-                if (!relink) {
-                    //如果第一次连接失败,则重新尝试一次
-                    request.getRequestDispatcher("/yiban/userattach?relink=true").forward(request, response);
-                } else {
-                    result.setSuccess(false);
-                    result.setMessage("网络连接超时，请重试");
-                }
-                break;
-
-            case SERVER_ERROR:
-                result.setSuccess(false);
-                result.setMessage("教务系统维护中，请稍候再试");
-                break;
-
-            case LOGIN_SUCCESS:
-                //同步用户教务系统账号信息到数据库
-                User resultUser = userLoginResult.getResultData().getUser();
-                //同步用户数据
-                try {
-                    userDataService.SyncUserData(resultUser);
-                    //同步易班数据
-                    if (yiBanUserDataService.SyncYiBanUserData(resultUser.getUsername(), yiBanUserID)) {
-                        //将用户信息数据写入Session
-                        request.getSession().setAttribute("username", resultUser.getUsername());
-                        request.getSession().setAttribute("password", resultUser.getPassword());
-                        userLoginService.AsyncUpdateSession(request);
-                        result.setSuccess(true);
-                        return result;
-                    }
-                } catch (TransactionException e) {
-                    result.setSuccess(false);
-                    result.setMessage("学院系统维护中，请稍候再试");
-                }
-                break;
-        }
+        //同步用户教务系统账号信息到数据库
+        User resultUser = userCertificate.getUser();
+        //同步用户数据
+        userDataService.SyncUserData(resultUser);
+        //同步易班数据
+        yiBanUserDataService.SyncYiBanUserData(resultUser.getUsername(), yiBanUserID);
+        //将用户信息数据写入Session
+        request.getSession().setAttribute("username", resultUser.getUsername());
+        request.getSession().setAttribute("password", resultUser.getPassword());
+        //异步同步教务系统会话
+        userLoginService.AsyncUpdateSession(request);
+        result.setSuccess(true);
         return result;
     }
 }

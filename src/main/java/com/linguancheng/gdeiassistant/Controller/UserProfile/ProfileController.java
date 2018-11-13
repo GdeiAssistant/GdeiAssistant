@@ -1,14 +1,13 @@
 package com.linguancheng.gdeiassistant.Controller.UserProfile;
 
+import com.linguancheng.gdeiassistant.Annotation.RestAuthentication;
 import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.*;
 import com.linguancheng.gdeiassistant.Pojo.Profile.*;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Service.Privacy.PrivacyService;
 import com.linguancheng.gdeiassistant.Service.Profile.RealNameService;
 import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
@@ -106,105 +105,73 @@ public class ProfileController {
      * @return
      */
     @RequestMapping(value = {"/profile/user/{username}"})
-    public ModelAndView ResolvePublicProfilePage(@PathVariable("username") String username) {
+    public ModelAndView ResolvePublicProfilePage(@PathVariable("username") String username) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        BaseResult<Profile, DataBaseResultEnum> profileResult = userProfileService.GetUserProfile(username);
-        switch (profileResult.getResultType()) {
-            case SUCCESS:
-                BaseResult<Privacy, DataBaseResultEnum> privacyResult = privacyService.GetPrivacySetting(username);
-                switch (privacyResult.getResultType()) {
-                    case SUCCESS:
-                        Profile profile = profileResult.getResultData();
-                        Privacy privacy = privacyResult.getResultData();
-                        modelAndView.setViewName("Profile/publicProfile");
-                        modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(username));
-                        modelAndView.addObject("KickName", profile.getKickname());
-                        boolean containProfile = false;
-                        if (privacy.isGender()) {
-                            if (profile.getGender() != null && profile.getGender() != 0) {
-                                if (profile.getGender() == 3) {
-                                    modelAndView.addObject("Gender", profile.getCustomGenderName());
-                                } else {
-                                    modelAndView.addObject("Gender", UserProfileService.getGenderMap().get(profile.getGender()));
-                                }
-                                containProfile = true;
-                            }
-                        }
-                        if (privacy.isGenderOrientation()) {
-                            if (profile.getGenderOrientation() != null && !profile.getGenderOrientation().equals(0)) {
-                                modelAndView.addObject("GenderOrientation", UserProfileService.getGenderOrientationMap().get(profile.getGenderOrientation()));
-                                containProfile = true;
-                            }
-                        }
-                        if (privacy.isFaculty()) {
-                            if (profile.getFaculty() != null && !profile.getFaculty().equals(0)) {
-                                modelAndView.addObject("Faculty", UserProfileService.getFacultyMap().get(profile.getFaculty()));
-                                containProfile = true;
-                            }
-                        }
-                        if (privacy.isMajor()) {
-                            if (StringUtils.isNotBlank(profile.getMajor())) {
-                                modelAndView.addObject("Major", profile.getMajor());
-                                containProfile = true;
-                            }
-                        }
-                        if (privacy.isRegion()) {
-                            StringBuilder location = new StringBuilder("");
-                            Region region = regionMap.get(profile.getRegion());
-                            if (region != null) {
-                                location.append(region.getName().substring(4, region.getName().length()));
-                                State state = region.getStateMap().get(profile.getState());
-                                if (state != null) {
-                                    if (!state.getName().equals(region.getName().substring(4, region.getName().length()))) {
-                                        location.append(state.getName());
-                                    }
-                                    City city = state.getCityMap().get(profile.getCity());
-                                    if (city != null && !city.getName().equals(state.getName())) {
-                                        location.append(city.getName());
-                                    }
-                                }
-                                modelAndView.addObject("Location", location.toString());
-                                containProfile = true;
-                            }
-                        }
-                        if (privacy.isIntroduction()) {
-                            BaseResult<String, DataBaseResultEnum> introductionResult = userProfileService.GetUserIntroduction(username);
-                            switch (introductionResult.getResultType()) {
-                                case SUCCESS:
-                                    modelAndView.addObject("Introduction", introductionResult.getResultData());
-                                    break;
-
-                                case ERROR:
-                                case INCORRECT_USERNAME:
-                                    modelAndView.addObject("Introduction", "加载个人简介失败");
-                                    break;
-
-                                case EMPTY_RESULT:
-                                    break;
-                            }
-                        }
-                        modelAndView.addObject("ContainProfile", containProfile);
-                        break;
-
-                    default:
-                        modelAndView.setViewName("Error/commonError");
-                        modelAndView.addObject("ErrorTitle", "错误提示");
-                        modelAndView.addObject("ErrorMessage", "该用户不存在");
-                        break;
+        Profile profile = userProfileService.GetUserProfile(username);
+        if (profile != null) {
+            Privacy privacy = privacyService.GetPrivacySetting(username);
+            modelAndView.setViewName("Profile/publicProfile");
+            modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(username));
+            modelAndView.addObject("KickName", profile.getKickname());
+            boolean containProfile = false;
+            if (privacy.isGender()) {
+                if (profile.getGender() != null && profile.getGender() != 0) {
+                    if (profile.getGender() == 3) {
+                        modelAndView.addObject("Gender", profile.getCustomGenderName());
+                    } else {
+                        modelAndView.addObject("Gender", UserProfileService.getGenderMap().get(profile.getGender()));
+                    }
+                    containProfile = true;
                 }
-                break;
-
-            case INCORRECT_USERNAME:
-                modelAndView.setViewName("Error/commonError");
-                modelAndView.addObject("ErrorTitle", "错误提示");
-                modelAndView.addObject("ErrorMessage", "该用户不存在或已自主注销");
-                break;
-
-            case ERROR:
-                modelAndView.setViewName("Error/commonError");
-                modelAndView.addObject("ErrorTitle", "错误提示");
-                modelAndView.addObject("ErrorMessage", "服务器异常，请稍候再试");
-                break;
+            }
+            if (privacy.isGenderOrientation()) {
+                if (profile.getGenderOrientation() != null && !profile.getGenderOrientation().equals(0)) {
+                    modelAndView.addObject("GenderOrientation", UserProfileService.getGenderOrientationMap().get(profile.getGenderOrientation()));
+                    containProfile = true;
+                }
+            }
+            if (privacy.isFaculty()) {
+                if (profile.getFaculty() != null && !profile.getFaculty().equals(0)) {
+                    modelAndView.addObject("Faculty", UserProfileService.getFacultyMap().get(profile.getFaculty()));
+                    containProfile = true;
+                }
+            }
+            if (privacy.isMajor()) {
+                if (StringUtils.isNotBlank(profile.getMajor())) {
+                    modelAndView.addObject("Major", profile.getMajor());
+                    containProfile = true;
+                }
+            }
+            if (privacy.isRegion()) {
+                StringBuilder location = new StringBuilder("");
+                Region region = regionMap.get(profile.getRegion());
+                if (region != null) {
+                    location.append(region.getName().substring(4, region.getName().length()));
+                    State state = region.getStateMap().get(profile.getState());
+                    if (state != null) {
+                        if (!state.getName().equals(region.getName().substring(4, region.getName().length()))) {
+                            location.append(state.getName());
+                        }
+                        City city = state.getCityMap().get(profile.getCity());
+                        if (city != null && !city.getName().equals(state.getName())) {
+                            location.append(city.getName());
+                        }
+                    }
+                    modelAndView.addObject("Location", location.toString());
+                    containProfile = true;
+                }
+            }
+            if (privacy.isIntroduction()) {
+                Introduction introduction = userProfileService.GetUserIntroduction(username);
+                if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
+                    modelAndView.addObject("Introduction", introduction);
+                }
+            }
+            modelAndView.addObject("ContainProfile", containProfile);
+        } else {
+            modelAndView.setViewName("Error/commonError");
+            modelAndView.addObject("ErrorTitle", "错误提示");
+            modelAndView.addObject("ErrorMessage", "该用户不存在或已自主注销");
         }
         return modelAndView;
     }
@@ -299,84 +266,53 @@ public class ProfileController {
      * 获取用户个人资料Rest接口
      *
      * @param request
-     * @param user
      * @return
      */
     @RequestMapping(value = "/rest/profile", method = RequestMethod.POST)
+    @RestAuthentication
     @ResponseBody
     public DataJsonResult<Profile> GetUserProfile(HttpServletRequest request
-            , @Validated(value = UserLoginValidGroup.class) User user) {
+            , @RequestParam("token") String token) throws Exception {
         DataJsonResult<Profile> jsonResult = new DataJsonResult<>();
-        BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                .UserLogin(request.getSession().getId(), user, true);
-        switch (userLoginResult.getResultType()) {
-            case LOGIN_SUCCESS:
-                BaseResult<Profile, DataBaseResultEnum> result = userProfileService.GetUserProfile(user.getUsername());
-                switch (result.getResultType()) {
-                    case SUCCESS:
-                        Profile profile = result.getResultData();
-                        if (!regionMap.containsKey(profile.getRegion())) {
-                            profile.setRegion(null);
+        User user = (User) request.getAttribute("user");
+        Profile profile = userProfileService.GetUserProfile(user.getUsername());
+        if (profile != null) {
+            if (!regionMap.containsKey(profile.getRegion())) {
+                profile.setRegion(null);
+            } else {
+                //获取国家/地区信息
+                Region region = regionMap.get(profile.getRegion());
+                if (region == null) {
+                    profile.setRegion(null);
+                    profile.setState(null);
+                    profile.setCity(null);
+                } else {
+                    profile.setRegion(region.getName().substring(4));
+                    //获取省/州信息
+                    State state = region.getStateMap().get(profile.getState());
+                    if (state == null) {
+                        profile.setState(null);
+                        profile.setCity(null);
+                    } else {
+                        profile.setState(state.getName());
+                        //获取市/直辖市
+                        City city = state.getCityMap().get(profile.getCity());
+                        if (city == null) {
+                            profile.setCity(null);
                         } else {
-                            //获取国家/地区信息
-                            Region region = regionMap.get(profile.getRegion());
-                            if (region == null) {
-                                profile.setRegion(null);
-                                profile.setState(null);
-                                profile.setCity(null);
-                            } else {
-                                profile.setRegion(region.getName().substring(4, region.getName().length()));
-                                //获取省/州信息
-                                State state = region.getStateMap().get(profile.getState());
-                                if (state == null) {
-                                    profile.setState(null);
-                                    profile.setCity(null);
-                                } else {
-                                    profile.setState(state.getName());
-                                    //获取市/直辖市
-                                    City city = state.getCityMap().get(profile.getCity());
-                                    if (city == null) {
-                                        profile.setCity(null);
-                                    } else {
-                                        profile.setCity(city.getName());
-                                    }
-                                }
-                            }
+                            profile.setCity(city.getName());
                         }
-                        jsonResult.setSuccess(true);
-                        jsonResult.setData(profile);
-                        break;
-
-                    case INCORRECT_USERNAME:
-                        jsonResult.setSuccess(false);
-                        jsonResult.setMessage("请求参数异常");
-                        break;
-
-                    case ERROR:
-                        jsonResult.setSuccess(false);
-                        jsonResult.setMessage("加载个人资料失败");
-                        break;
+                    }
                 }
-                break;
-
-            case SERVER_ERROR:
-                jsonResult.setSuccess(false);
-                jsonResult.setMessage("服务器维护中，请稍后再试");
-                break;
-
-            case TIME_OUT:
-                jsonResult.setSuccess(false);
-                jsonResult.setMessage("网络连接超时，请重试");
-                break;
-
-            case PASSWORD_ERROR:
-                jsonResult.setSuccess(false);
-                jsonResult.setMessage("密码已更新，请重新登录");
-                break;
+            }
+            jsonResult.setSuccess(true);
+            jsonResult.setData(profile);
+        } else {
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage("请求参数异常");
         }
         return jsonResult;
     }
-
 
     /**
      * 获取用户个人资料
@@ -386,58 +322,48 @@ public class ProfileController {
      */
     @RequestMapping(value = "/rest/profile", method = RequestMethod.GET)
     @ResponseBody
-    public DataJsonResult<Profile> GetUserProfile(HttpServletRequest request) {
+    public DataJsonResult<Profile> GetUserProfile(HttpServletRequest request) throws Exception {
         DataJsonResult<Profile> jsonResult = new DataJsonResult<>();
         String username = (String) request.getSession().getAttribute("username");
-        if (username == null || username.trim().isEmpty()) {
+        if (StringUtils.isBlank(username)) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("用户身份凭证过期，请稍候再试");
         } else {
-            BaseResult<Profile, DataBaseResultEnum> result = userProfileService.GetUserProfile(username);
-            switch (result.getResultType()) {
-                case SUCCESS:
-                    Profile profile = result.getResultData();
-                    if (!regionMap.containsKey(profile.getRegion())) {
+            Profile profile = userProfileService.GetUserProfile(username);
+            if (profile != null) {
+                if (!regionMap.containsKey(profile.getRegion())) {
+                    profile.setRegion("未选择");
+                } else {
+                    //获取国家/地区信息
+                    Region region = regionMap.get(profile.getRegion());
+                    if (region == null) {
                         profile.setRegion("未选择");
+                        profile.setState("");
+                        profile.setCity("");
                     } else {
-                        //获取国家/地区信息
-                        Region region = regionMap.get(profile.getRegion());
-                        if (region == null) {
-                            profile.setRegion("未选择");
+                        profile.setRegion(region.getName().substring(4));
+                        //获取省/州信息
+                        State state = region.getStateMap().get(profile.getState());
+                        if (state == null) {
                             profile.setState("");
                             profile.setCity("");
                         } else {
-                            profile.setRegion(region.getName().substring(4, region.getName().length()));
-                            //获取省/州信息
-                            State state = region.getStateMap().get(profile.getState());
-                            if (state == null) {
-                                profile.setState("");
+                            profile.setState(state.getName());
+                            //获取市/直辖市
+                            City city = state.getCityMap().get(profile.getCity());
+                            if (city == null) {
                                 profile.setCity("");
                             } else {
-                                profile.setState(state.getName());
-                                //获取市/直辖市
-                                City city = state.getCityMap().get(profile.getCity());
-                                if (city == null) {
-                                    profile.setCity("");
-                                } else {
-                                    profile.setCity(city.getName());
-                                }
+                                profile.setCity(city.getName());
                             }
                         }
                     }
-                    jsonResult.setSuccess(true);
-                    jsonResult.setData(profile);
-                    break;
-
-                case INCORRECT_USERNAME:
-                    jsonResult.setSuccess(false);
-                    jsonResult.setMessage("请求参数异常");
-                    break;
-
-                case ERROR:
-                    jsonResult.setSuccess(false);
-                    jsonResult.setMessage("加载个人资料失败");
-                    break;
+                }
+                jsonResult.setSuccess(true);
+                jsonResult.setData(profile);
+            } else {
+                jsonResult.setSuccess(false);
+                jsonResult.setMessage("请求参数异常");
             }
         }
         return jsonResult;
@@ -451,7 +377,7 @@ public class ProfileController {
      * @return
      * @throws UnsupportedEncodingException
      */
-    @RequestMapping(value = "/rest/introduction", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/introduction", method = RequestMethod.POST)
     @ResponseBody
     public DataJsonResult UpdateIntroduction(HttpServletRequest request, String introduction) {
         DataJsonResult updateIntroductionJsonResult = new DataJsonResult();
@@ -494,39 +420,20 @@ public class ProfileController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/rest/introduction", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/introduction", method = RequestMethod.GET)
     @ResponseBody
-    public DataJsonResult<String> GetUserIntroduction(HttpServletRequest request) {
-        DataJsonResult<String> jsonResult = new DataJsonResult<>();
+    public DataJsonResult<String> GetUserIntroduction(HttpServletRequest request) throws Exception {
+        DataJsonResult<String> result = new DataJsonResult<>();
         String username = (String) request.getSession().getAttribute("username");
-        if (username == null || username.trim().isEmpty()) {
-            jsonResult.setSuccess(false);
-            jsonResult.setMessage("用户身份凭证过期，请稍候再试");
+        Introduction introduction = userProfileService.GetUserIntroduction(username);
+        if (introduction != null) {
+            result.setSuccess(true);
+            result.setData(StringUtils.isBlank(introduction.getIntroductionContent()) ? "" : introduction.getIntroductionContent());
         } else {
-            BaseResult<String, DataBaseResultEnum> result = userProfileService.GetUserIntroduction(username);
-            switch (result.getResultType()) {
-                case SUCCESS:
-                    jsonResult.setSuccess(true);
-                    jsonResult.setData(result.getResultData());
-                    break;
-
-                case INCORRECT_USERNAME:
-                    jsonResult.setSuccess(false);
-                    jsonResult.setMessage("请求参数不合法");
-                    break;
-
-                case ERROR:
-                    jsonResult.setSuccess(false);
-                    jsonResult.setMessage("加载个人简介失败");
-                    break;
-
-                case EMPTY_RESULT:
-                    jsonResult.setSuccess(true);
-                    jsonResult.setData("");
-                    break;
-            }
+            result.setSuccess(true);
+            result.setData("");
         }
-        return jsonResult;
+        return result;
     }
 
     @RequestMapping(value = "/rest/regionList", method = RequestMethod.GET)

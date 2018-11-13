@@ -276,38 +276,25 @@ public class EvaluateService {
      * @return
      */
     public ServiceResultEnum SyncSessionAndEvaluate(String sessionId, User user
-            , boolean directlySubmit) {
+            , boolean directlySubmit) throws Exception {
         UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
         //检测是否已与教务系统进行会话同步
         if (userCertificate == null) {
             //进行会话同步
-            BaseResult<UserCertificate, LoginResultEnum> userLoginResult = userLoginService
-                    .UserLogin(sessionId, user, false);
-            switch (userLoginResult.getResultType()) {
-                case LOGIN_SUCCESS:
-                    Long timestamp = userLoginResult.getResultData().getTimestamp();
-                    if (StringUtils.isBlank(user.getKeycode())) {
-                        user.setKeycode(userLoginResult.getResultData().getUser().getKeycode());
-                    }
-                    if (StringUtils.isBlank(user.getNumber())) {
-                        user.setNumber(userLoginResult.getResultData().getUser().getNumber());
-                    }
-                    userCertificate = new UserCertificate();
-                    userCertificate.setUser(user);
-                    userCertificate.setTimestamp(timestamp);
-                    userCertificateDao.saveUserCertificate(userCertificate);
-                    return TeacherEvaluate(sessionId, user.getUsername()
-                            , user.getKeycode(), user.getNumber(), timestamp, directlySubmit);
-
-                case TIME_OUT:
-                    return ServiceResultEnum.TIME_OUT;
-
-                case PASSWORD_ERROR:
-                    return ServiceResultEnum.PASSWORD_INCORRECT;
-
-                case SERVER_ERROR:
-                    return ServiceResultEnum.SERVER_ERROR;
+            userCertificate = userLoginService.UserLogin(sessionId, user, false);
+            Long timestamp = userCertificate.getTimestamp();
+            if (StringUtils.isBlank(user.getKeycode())) {
+                user.setKeycode(userCertificate.getUser().getKeycode());
             }
+            if (StringUtils.isBlank(user.getNumber())) {
+                user.setNumber(userCertificate.getUser().getNumber());
+            }
+            userCertificate = new UserCertificate();
+            userCertificate.setUser(user);
+            userCertificate.setTimestamp(timestamp);
+            userCertificateDao.saveUserCertificate(userCertificate);
+            return TeacherEvaluate(sessionId, user.getUsername()
+                    , user.getKeycode(), user.getNumber(), timestamp, directlySubmit);
         }
         return TeacherEvaluate(sessionId, userCertificate.getUser().getUsername()
                 , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()

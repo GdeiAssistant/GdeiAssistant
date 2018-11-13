@@ -25,19 +25,13 @@ public class YiBanUserDataService {
      * @param userID
      * @return
      */
-    public boolean SyncYiBanUserData(String username, String userID) {
-        try {
-            int id = Integer.valueOf(userID);
-            if (yiBanUserMapper.selectUsername(id) != null) {
-                //更新易班账号绑定的教务系统账号
-                yiBanUserMapper.updateYiBanUser(id, StringEncryptUtils.encryptString(username));
-            } else {
-                yiBanUserMapper.insertYiBanUser(id, StringEncryptUtils.encryptString(username));
-            }
-            return true;
-        } catch (Exception e) {
-            log.error("同步易班绑定账号异常：" , e);
-            return false;
+    public void SyncYiBanUserData(String username, String userID) throws Exception {
+        int id = Integer.valueOf(userID);
+        if (yiBanUserMapper.selectUsername(id) != null) {
+            //更新易班账号绑定的教务系统账号
+            yiBanUserMapper.updateYiBanUser(id, StringEncryptUtils.encryptString(username));
+        } else {
+            yiBanUserMapper.insertYiBanUser(id, StringEncryptUtils.encryptString(username));
         }
     }
 
@@ -61,7 +55,7 @@ public class YiBanUserDataService {
                 result.setResultType(AttachResultEnum.ATTACHED);
             }
         } catch (Exception e) {
-            log.error("检查易班绑定账号状态异常：" , e);
+            log.error("检查易班绑定账号状态异常：", e);
             result.setResultType(AttachResultEnum.SERVER_ERROR);
         }
         return result;

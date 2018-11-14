@@ -4,7 +4,7 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.Region;
 
 import java.util.Comparator;
 
-public class RegionComparator implements Comparator {
+public class LocationComparator implements Comparator {
 
     @Override
     public int compare(Object o1, Object o2) {

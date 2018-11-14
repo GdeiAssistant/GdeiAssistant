@@ -25,8 +25,7 @@ public class AutoLoginService {
      */
     public int CheckAutoLogin(HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
-        if (httpSession != null && httpSession.getAttribute("username") != null && httpSession.getAttribute("password") != null
-                && httpSession.getAttribute("keycode") != null && httpSession.getAttribute("number") != null) {
+        if (httpSession != null && httpSession.getAttribute("username") != null && httpSession.getAttribute("password") != null) {
             return AUTOLOGIN_SESSION;
         } else {
             Cookie cookie[] = request.getCookies();

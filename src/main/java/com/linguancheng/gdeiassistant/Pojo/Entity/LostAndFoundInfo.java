@@ -11,7 +11,7 @@ public class LostAndFoundInfo implements Serializable {
 
     private LostAndFoundItem lostAndFoundItem;
 
-    private AuthorProfile authorProfile;
+    private Profile profile;
 
     public LostAndFoundItem getLostAndFoundItem() {
         return lostAndFoundItem;
@@ -21,11 +21,11 @@ public class LostAndFoundInfo implements Serializable {
         this.lostAndFoundItem = lostAndFoundItem;
     }
 
-    public AuthorProfile getAuthorProfile() {
-        return authorProfile;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public void setAuthorProfile(AuthorProfile authorProfile) {
-        this.authorProfile = authorProfile;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 }

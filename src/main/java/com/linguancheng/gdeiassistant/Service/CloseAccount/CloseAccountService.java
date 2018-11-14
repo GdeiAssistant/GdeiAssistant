@@ -3,7 +3,6 @@ package com.linguancheng.gdeiassistant.Service.CloseAccount;
 import com.linguancheng.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
 import com.linguancheng.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
-import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
 import com.linguancheng.gdeiassistant.Pojo.CetQuery.CetNumberQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.Entity.*;
 import com.linguancheng.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
@@ -21,8 +20,6 @@ import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.YiBanUser.Y
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Close.CloseMapper;
 import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +36,6 @@ import java.util.List;
  */
 @Service
 public class CloseAccountService {
-
-    private Log log = LogFactory.getLog(CloseAccountService.class);
 
     @Autowired
     private UserProfileService userProfileService;
@@ -89,96 +84,78 @@ public class CloseAccountService {
      *
      * @param username
      * @param password
-     * @throws TransactionException
+     * @throws Exception
      */
     @Transactional
-    public void CloseAccount(String username, String password)
-            throws TransactionException {
-        try {
-            //检查用户账号状态
-            User user = userMapper.selectUser(StringEncryptUtils.encryptString(username)).decryptUser();
-            if (user == null || !user.getState().equals(0)) {
-                //若账号状态异常，则抛出异常
-                throw new UserStateErrorException("用户账号状态异常");
-            }
-            if (!user.getPassword().equals(password)) {
-                //账号密码错误
-                throw new PasswordIncorrectException("用户账号密码不匹配");
-            }
-            //检查有无待处理的社区功能信息
-            List<ErshouItem> ershouItemList = ershouMapper
-                    .selectItemByUsername(StringEncryptUtils.encryptString(username));
-            for (ErshouItem ershouItem : ershouItemList) {
-                if (ershouItem.getState().equals(1)) {
-                    throw new ItemAvailableException("用户有待处理的社区功能信息");
-                }
-            }
-            List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                    .selectItemByUsername(StringEncryptUtils.encryptString(username));
-            for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-                if (lostAndFoundItem.getState().equals(1)) {
-                    throw new ItemAvailableException("用户有待处理的社区功能信息");
-                }
-            }
-            List<DatingProfile> datingProfileList = datingMapper
-                    .selectDatingProfileByUsername(StringEncryptUtils.encryptString(username));
-            for (DatingProfile datingProfile : datingProfileList) {
-                if (datingProfile.getState().equals(1)) {
-                    throw new ItemAvailableException("用户有待处理的社区功能信息");
-                }
-            }
-
-            //开始进行账号关闭事务
-
-            //删除四六级准考证号
-            CetNumberQueryResult cetNumberQueryResult = cetMapper
-                    .selectNumber(StringEncryptUtils.encryptString(username));
-            if (cetNumberQueryResult != null) {
-                cetMapper.updateNumber(StringEncryptUtils.encryptString(username), null);
-            }
-            //删除自定义性别
-            genderMapper.deleteCustomGender(StringEncryptUtils.encryptString(username));
-            //删除教务缓存信息
-            gradeDao.removeGrade(username);
-            scheduleDao.removeSchedule(username);
-            //移除易班和微信绑定状态
-            wechatUserMapper.resetWechatUser(StringEncryptUtils.encryptString(username));
-            yiBanUserMapper.resetYiBanUser(StringEncryptUtils.encryptString(username));
-            //删除用户资料信息
-            profileMapper.resetUserProfile(StringEncryptUtils.encryptString(username), "广东二师助手用户");
-            profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(username));
-            //重置用户隐私配置
-            privacyMapper.resetPrivacy(StringEncryptUtils.encryptString(username));
-            //删除用户头像
-            userProfileService.DeleteAvatar(username);
-            //删除用户账号信息
-            Integer count = userMapper.selectDeletedUserCount("del_"
-                    + StringEncryptUtils.SHA1HexString(username).substring(0, 15));
-            count = count == null ? 0 : count;
-            userMapper.closeUser("del_" + StringEncryptUtils.SHA1HexString(username)
-                    .substring(0, 15) + "_" + count, StringEncryptUtils.encryptString(username));
-            //记录账号关闭日志
-            CloseLog closeLog = new CloseLog();
-            closeLog.setUsername(username);
-            closeLog.setResetname("del_" + StringEncryptUtils.SHA1HexString(username)
-                    .substring(0, 15) + "_" + count);
-            closeLog.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-            closeMapper.insertCloseLog(closeLog);
-
-            //完成账号关闭事务
-
-        } catch (UserStateErrorException e) {
-            log.error("关闭用户账号异常：", e);
-            throw new TransactionException("用户账号状态异常，请联系管理员");
-        } catch (PasswordIncorrectException e) {
-            log.error("关闭用户账号异常：", e);
-            throw new TransactionException("用户账号密码不匹配，请重试");
-        } catch (ItemAvailableException e) {
-            log.error("关闭用户账号异常：", e);
-            throw new TransactionException("用户有待处理的社区功能信息，不满足注销条件");
-        } catch (Exception e) {
-            log.error("关闭用户账号异常：", e);
-            throw new TransactionException("关闭用户账号异常，请联系管理员");
+    public void CloseAccount(String username, String password) throws Exception {
+        //检查用户账号状态
+        User user = userMapper.selectUser(StringEncryptUtils.encryptString(username)).decryptUser();
+        if (user == null || !user.getState().equals(0)) {
+            //若账号状态异常，则抛出异常
+            throw new UserStateErrorException("用户账号状态异常");
         }
+        if (!user.getPassword().equals(password)) {
+            //账号密码错误
+            throw new PasswordIncorrectException("用户账号密码不匹配");
+        }
+        //检查有无待处理的社区功能信息
+        List<ErshouItem> ershouItemList = ershouMapper
+                .selectItemsByUsername(StringEncryptUtils.encryptString(username));
+        for (ErshouItem ershouItem : ershouItemList) {
+            if (ershouItem.getState().equals(1)) {
+                throw new ItemAvailableException("用户有待处理的社区功能信息");
+            }
+        }
+        List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
+                .selectItemByUsername(StringEncryptUtils.encryptString(username));
+        for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+            if (lostAndFoundItem.getState().equals(1)) {
+                throw new ItemAvailableException("用户有待处理的社区功能信息");
+            }
+        }
+        List<DatingProfile> datingProfileList = datingMapper
+                .selectDatingProfileByUsername(StringEncryptUtils.encryptString(username));
+        for (DatingProfile datingProfile : datingProfileList) {
+            if (datingProfile.getState().equals(1)) {
+                throw new ItemAvailableException("用户有待处理的社区功能信息");
+            }
+        }
+
+        //开始进行账号关闭事务
+
+        //删除四六级准考证号
+        CetNumberQueryResult cetNumberQueryResult = cetMapper
+                .selectNumber(StringEncryptUtils.encryptString(username));
+        if (cetNumberQueryResult != null) {
+            cetMapper.updateNumber(StringEncryptUtils.encryptString(username), null);
+        }
+        //删除自定义性别
+        genderMapper.deleteCustomGender(StringEncryptUtils.encryptString(username));
+        //删除教务缓存信息
+        gradeDao.removeGrade(username);
+        scheduleDao.removeSchedule(username);
+        //移除易班和微信绑定状态
+        wechatUserMapper.resetWechatUser(StringEncryptUtils.encryptString(username));
+        yiBanUserMapper.resetYiBanUser(StringEncryptUtils.encryptString(username));
+        //删除用户资料信息
+        profileMapper.resetUserProfile(StringEncryptUtils.encryptString(username), "广东二师助手用户");
+        profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(username));
+        //重置用户隐私配置
+        privacyMapper.resetPrivacy(StringEncryptUtils.encryptString(username));
+        //删除用户头像
+        userProfileService.DeleteAvatar(username);
+        //删除用户账号信息
+        Integer count = userMapper.selectDeletedUserCount("del_"
+                + StringEncryptUtils.SHA1HexString(username).substring(0, 15));
+        count = count == null ? 0 : count;
+        userMapper.closeUser("del_" + StringEncryptUtils.SHA1HexString(username)
+                .substring(0, 15) + "_" + count, StringEncryptUtils.encryptString(username));
+        //记录账号关闭日志
+        CloseLog closeLog = new CloseLog();
+        closeLog.setUsername(username);
+        closeLog.setResetname("del_" + StringEncryptUtils.SHA1HexString(username)
+                .substring(0, 15) + "_" + count);
+        closeLog.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        closeMapper.insertCloseLog(closeLog);
     }
 }

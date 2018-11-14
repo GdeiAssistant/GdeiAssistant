@@ -1,18 +1,13 @@
 package com.linguancheng.gdeiassistant.Service.Ershou;
 
 import com.aliyun.oss.OSSClient;
-import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Ershou.ErshouMapper;
-import com.linguancheng.gdeiassistant.Pojo.Entity.AuthorProfile;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
-import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +20,6 @@ import java.util.List;
 
 @Service
 public class ErshouService {
-
-    @Autowired
-    private UserProfileService userProfileService;
 
     @Resource(name = "ershouMapper")
     private ErshouMapper ershouMapper;
@@ -60,69 +52,19 @@ public class ErshouService {
      *
      * @return
      */
-    public BaseResult<ErshouItem, DataBaseResultEnum> QueryErshouItemByID(int id) {
-        BaseResult<ErshouItem, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            ErshouItem ershouItem = ershouMapper.selectItemByID(id);
-            if (ershouItem == null) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                //获取二手交易商品图片URL
-                String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
-                int itemId = ershouItem.getId();
-                List<String> pictureURL = GetErshouItemPictureURL(itemId);
-                ershouItem.setUsername(username);
-                ershouItem.setPictureURL(pictureURL);
-                result.setResultData(ershouItem);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("ID查询二手商品信息异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public ErshouInfo QueryErshouInfoByID(int id) throws Exception {
+        ErshouInfo ershouInfo = ershouMapper.selectInfoByID(id);
+        if (ershouInfo == null || ershouInfo.getErshouItem() == null) {
+            throw new DataNotExistException("二手交易商品不存在");
         }
-        return result;
-    }
-
-    /**
-     * 查询指定ID的二手交易商品详细信息
-     *
-     * @param id
-     * @return
-     */
-    public BaseResult<ErshouInfo, DataBaseResultEnum> QueryErshouItemDetailInfo(int id) {
-        BaseResult<ErshouInfo, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            ErshouItem ershouItem = ershouMapper.selectItemByID(id);
-            if (ershouItem == null) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                //获取二手交易商品图片URL
-                String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
-                int itemId = ershouItem.getId();
-                List<String> pictureURL = GetErshouItemPictureURL(itemId);
-                ershouItem.setPictureURL(pictureURL);
-                //获取发布者用户个人资料
-                BaseResult<AuthorProfile, DataBaseResultEnum> queryProfileResult = userProfileService.GetUserAuthorProfile(username);
-                switch (queryProfileResult.getResultType()) {
-                    case SUCCESS:
-                        AuthorProfile authorProfile = queryProfileResult.getResultData();
-                        ErshouInfo ershouInfo = new ErshouInfo();
-                        ershouInfo.setErshouItem(ershouItem);
-                        ershouInfo.setAuthorProfile(authorProfile);
-                        result.setResultType(DataBaseResultEnum.SUCCESS);
-                        result.setResultData(ershouInfo);
-                        break;
-
-                    default:
-                        result.setResultType(DataBaseResultEnum.ERROR);
-                        break;
-                }
-            }
-        } catch (Exception e) {
-            log.error("ID查询二手商品详细信息异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
-        }
-        return result;
+        //获取二手交易商品图片URL
+        String username = StringEncryptUtils.decryptString(ershouInfo.getErshouItem().getUsername());
+        int itemId = ershouInfo.getErshouItem().getId();
+        List<String> pictureURL = GetErshouItemPictureURL(itemId);
+        ershouInfo.getErshouItem().setUsername(username);
+        ershouInfo.getProfile().setUsername(username);
+        ershouInfo.getErshouItem().setPictureURL(pictureURL);
+        return ershouInfo;
     }
 
     /**
@@ -130,24 +72,15 @@ public class ErshouService {
      *
      * @return
      */
-    public BaseResult<List<ErshouItem>, DataBaseResultEnum> QueryPersonalErShouItem(String username) {
-        BaseResult<List<ErshouItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<ErshouItem> ershouItemList = ershouMapper.selectItemByUsername(StringEncryptUtils.encryptString(username));
-            if (ershouItemList == null || ershouItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (ErshouItem ershouItem : ershouItemList) {
-                    ershouItem.setUsername(username);
-                }
-                result.setResultData(ershouItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("查询个人二手商品信息异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<ErshouItem> QueryPersonalErShouItems(String username) throws Exception {
+        List<ErshouItem> ershouItemList = ershouMapper.selectItemsByUsername(StringEncryptUtils.encryptString(username));
+        if (ershouItemList == null || ershouItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (ErshouItem ershouItem : ershouItemList) {
+            ershouItem.setUsername(username);
+        }
+        return ershouItemList;
     }
 
     /**
@@ -156,25 +89,16 @@ public class ErshouService {
      * @param start
      * @return
      */
-    public BaseResult<List<ErshouItem>, DataBaseResultEnum> QueryErshouItem(int start) {
-        BaseResult<List<ErshouItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<ErshouItem> ershouItemList = ershouMapper.selectAvailableItem(start, 10);
-            if (ershouItemList == null || ershouItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (ErshouItem ershouItem : ershouItemList) {
-                    String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
-                    ershouItem.setUsername(username);
-                }
-                result.setResultData(ershouItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("分页查询二手商品信息异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<ErshouItem> QueryErshouItems(int start) throws Exception {
+        List<ErshouItem> ershouItemList = ershouMapper.selectAvailableItems(start, 10);
+        if (ershouItemList == null || ershouItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (ErshouItem ershouItem : ershouItemList) {
+            String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
+            ershouItem.setUsername(username);
+        }
+        return ershouItemList;
     }
 
     /**
@@ -184,25 +108,16 @@ public class ErshouService {
      * @param start
      * @return
      */
-    public BaseResult<List<ErshouItem>, DataBaseResultEnum> QueryErshouItemWithKeyword(String keyword, int start) {
-        BaseResult<List<ErshouItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<ErshouItem> ershouItemList = ershouMapper.selectItemWithKeyword(start, 10, keyword);
-            if (ershouItemList == null || ershouItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (ErshouItem ershouItem : ershouItemList) {
-                    String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
-                    ershouItem.setUsername(username);
-                }
-                result.setResultData(ershouItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("关键词查询二手商品信息异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<ErshouItem> QueryErshouItemsWithKeyword(String keyword, int start) throws Exception {
+        List<ErshouItem> ershouItemList = ershouMapper.selectItemsWithKeyword(start, 10, keyword);
+        if (ershouItemList == null || ershouItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (ErshouItem ershouItem : ershouItemList) {
+            String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
+            ershouItem.setUsername(username);
+        }
+        return ershouItemList;
     }
 
     /**
@@ -212,25 +127,16 @@ public class ErshouService {
      * @param start
      * @return
      */
-    public BaseResult<List<ErshouItem>, DataBaseResultEnum> QueryErshouItemByType(int type, int start) {
-        BaseResult<List<ErshouItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<ErshouItem> ershouItemList = ershouMapper.selectItemByType(start, 10, type);
-            if (ershouItemList == null || ershouItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (ErshouItem ershouItem : ershouItemList) {
-                    String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
-                    ershouItem.setUsername(username);
-                }
-                result.setResultData(ershouItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("指定类型查询二手商品信息异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<ErshouItem> QueryErshouItemByType(int type, int start) throws Exception {
+        List<ErshouItem> ershouItemList = ershouMapper.selectItemByType(start, 10, type);
+        if (ershouItemList == null || ershouItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (ErshouItem ershouItem : ershouItemList) {
+            String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
+            ershouItem.setUsername(username);
+        }
+        return ershouItemList;
     }
 
     /**
@@ -239,22 +145,14 @@ public class ErshouService {
      * @param ershouItem
      * @return
      */
-    public BaseResult<ErshouItem, BoolResultEnum> AddErshouInfo(ErshouItem ershouItem, String username) {
-        BaseResult<ErshouItem, BoolResultEnum> result = new BaseResult<>();
-        try {
-            //金额价格保留两位小数点
-            ershouItem.setPrice((float) (Math.round(ershouItem.getPrice() * 100)) / 100);
-            ershouItem.setUsername(StringEncryptUtils.encryptString(username));
-            //使用24小时制显示发布时间
-            ershouItem.setPublishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-            ershouMapper.insertItem(ershouItem);
-            result.setResultData(ershouItem);
-            result.setResultType(BoolResultEnum.SUCCESS);
-        } catch (Exception e) {
-            log.error("保存二手商品信息异常：" , e);
-            result.setResultType(BoolResultEnum.ERROR);
-        }
-        return result;
+    public ErshouItem AddErshouItem(ErshouItem ershouItem, String username) throws Exception {
+        //金额价格保留两位小数点
+        ershouItem.setPrice((float) (Math.round(ershouItem.getPrice() * 100)) / 100);
+        ershouItem.setUsername(StringEncryptUtils.encryptString(username));
+        //使用24小时制显示发布时间
+        ershouItem.setPublishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        ershouMapper.insertItem(ershouItem);
+        return ershouItem;
     }
 
     /**
@@ -264,15 +162,9 @@ public class ErshouService {
      * @param id
      * @return
      */
-    public BoolResultEnum UpdateErshouInfo(ErshouItem ershouItem, int id) {
-        try {
-            ershouItem.setId(id);
-            ershouMapper.updateItemInfo(ershouItem);
-            return BoolResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("更新二手商品信息异常：" , e);
-            return BoolResultEnum.ERROR;
-        }
+    public void UpdateErshouItem(ErshouItem ershouItem, int id) throws Exception {
+        ershouItem.setId(id);
+        ershouMapper.updateItem(ershouItem);
     }
 
     /**
@@ -282,14 +174,8 @@ public class ErshouService {
      * @param state
      * @return
      */
-    public BoolResultEnum UpdateErshouItemState(int id, int state) {
-        try {
-            ershouMapper.updateItemState(id, state);
-            return BoolResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("更新二手商品信息状态异常：" , e);
-            return BoolResultEnum.ERROR;
-        }
+    public void UpdateErshouItemState(int id, int state) throws Exception {
+        ershouMapper.updateItemState(id, state);
     }
 
     /**

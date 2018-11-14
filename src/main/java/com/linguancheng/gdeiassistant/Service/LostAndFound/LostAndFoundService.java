@@ -3,7 +3,7 @@ package com.linguancheng.gdeiassistant.Service.LostAndFound;
 import com.aliyun.oss.OSSClient;
 import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
-import com.linguancheng.gdeiassistant.Pojo.Entity.AuthorProfile;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem;
@@ -61,70 +61,18 @@ public class LostAndFoundService {
      * @param id
      * @return
      */
-    public BaseResult<LostAndFoundItem, DataBaseResultEnum> QueryLostAndFoundItemByID(int id) {
-        BaseResult<LostAndFoundItem, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            LostAndFoundItem lostAndFoundItem = lostAndFoundMapper.selectItemByID(id);
-            if (lostAndFoundItem == null) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                //获取二手交易商品图片URL
-                String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
-                int itemId = lostAndFoundItem.getId();
-                List<String> pictureURL = GetLostAndFoundItemPictureURL(username, itemId);
-                lostAndFoundItem.setUsername(username);
-                lostAndFoundItem.setPictureURL(pictureURL);
-                result.setResultData(lostAndFoundItem);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("ID查询失物招领物品异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public LostAndFoundInfo QueryLostAndFoundInfoByID(int id) throws Exception {
+        LostAndFoundInfo lostAndFoundInfo = lostAndFoundMapper.selectInfoByID(id);
+        if (lostAndFoundInfo == null || lostAndFoundInfo.getLostAndFoundItem() == null) {
+            throw new DataNotExistException("失物招领信息不存在");
         }
-        return result;
-    }
-
-    /**
-     * 查询指定ID的失物招领物品详细信息
-     *
-     * @return
-     */
-    public BaseResult<LostAndFoundInfo, DataBaseResultEnum> QueryLostAndFoundInfoByID(int id) {
-        BaseResult<LostAndFoundInfo, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            LostAndFoundItem lostAndFoundItem = lostAndFoundMapper.selectItemByID(id);
-            if (lostAndFoundItem == null) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                //获取二手交易商品图片URL
-                String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
-                int itemId = lostAndFoundItem.getId();
-                List<String> pictureURL = GetLostAndFoundItemPictureURL(username, itemId);
-                lostAndFoundItem.setUsername(username);
-                lostAndFoundItem.setPictureURL(pictureURL);
-                //获取发布者用户个人资料
-                BaseResult<AuthorProfile, DataBaseResultEnum> queryProfileResult = userProfileService
-                        .GetUserAuthorProfile(username);
-                switch (queryProfileResult.getResultType()) {
-                    case SUCCESS:
-                        AuthorProfile authorProfile = queryProfileResult.getResultData();
-                        LostAndFoundInfo lostAndFoundInfo = new LostAndFoundInfo();
-                        lostAndFoundInfo.setLostAndFoundItem(lostAndFoundItem);
-                        lostAndFoundInfo.setAuthorProfile(authorProfile);
-                        result.setResultType(DataBaseResultEnum.SUCCESS);
-                        result.setResultData(lostAndFoundInfo);
-                        break;
-
-                    default:
-                        result.setResultType(DataBaseResultEnum.ERROR);
-                        break;
-                }
-            }
-        } catch (Exception e) {
-            log.error("ID查询失物招领物品异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
-        }
-        return result;
+        //获取二手交易商品图片URL
+        String username = StringEncryptUtils.decryptString(lostAndFoundInfo.getLostAndFoundItem().getUsername());
+        int itemId = lostAndFoundInfo.getLostAndFoundItem().getId();
+        List<String> pictureURL = GetLostAndFoundItemPictureURL(itemId);
+        lostAndFoundInfo.getLostAndFoundItem().setUsername(username);
+        lostAndFoundInfo.getLostAndFoundItem().setPictureURL(pictureURL);
+        return lostAndFoundInfo;
     }
 
     /**
@@ -132,25 +80,16 @@ public class LostAndFoundService {
      *
      * @return
      */
-    public BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> QueryPersonalLostAndFoundItem(String username) {
-        BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                    .selectItemByUsername(StringEncryptUtils.encryptString(username));
-            if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-                    lostAndFoundItem.setUsername(username);
-                }
-                result.setResultData(lostAndFoundItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("查询个人失物招领物品异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<LostAndFoundItem> QueryPersonalLostAndFoundItems(String username) throws Exception {
+        List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
+                .selectItemByUsername(StringEncryptUtils.encryptString(username));
+        if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+            lostAndFoundItem.setUsername(username);
+        }
+        return lostAndFoundItemList;
     }
 
     /**
@@ -159,25 +98,16 @@ public class LostAndFoundService {
      * @param start
      * @return
      */
-    public BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> QueryLostItem(int start) {
-        BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper.selectAvailableItem(0, start, 10);
-            if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-                    String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
-                    lostAndFoundItem.setUsername(username);
-                }
-                result.setResultData(lostAndFoundItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("分页查询失物物品异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<LostAndFoundItem> QueryLostItems(int start) throws Exception {
+        List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper.selectAvailableItem(0, start, 10);
+        if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            lostAndFoundItem.setUsername(username);
+        }
+        return lostAndFoundItemList;
     }
 
     /**
@@ -186,25 +116,16 @@ public class LostAndFoundService {
      * @param start
      * @return
      */
-    public BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> QueryFoundItem(int start) {
-        BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper.selectAvailableItem(1, start, 10);
-            if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-                    String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
-                    lostAndFoundItem.setUsername(username);
-                }
-                result.setResultData(lostAndFoundItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("分页查询招领物品异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<LostAndFoundItem> QueryFoundItems(int start) throws Exception {
+        List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper.selectAvailableItem(1, start, 10);
+        if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            lostAndFoundItem.setUsername(username);
+        }
+        return lostAndFoundItemList;
     }
 
     /**
@@ -214,26 +135,17 @@ public class LostAndFoundService {
      * @param start
      * @return
      */
-    public BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> QueryLostItemWithKeyword(String keyword, int start) {
-        BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                    .selectItemWithKeyword(0, keyword, start, 10);
-            if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-                    String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
-                    lostAndFoundItem.setUsername(username);
-                }
-                result.setResultData(lostAndFoundItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("关键词查询失物物品异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<LostAndFoundItem> QueryLostItemsWithKeyword(String keyword, int start) throws Exception {
+        List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
+                .selectItemWithKeyword(0, keyword, start, 10);
+        if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            lostAndFoundItem.setUsername(username);
+        }
+        return lostAndFoundItemList;
     }
 
     /**
@@ -243,26 +155,17 @@ public class LostAndFoundService {
      * @param start
      * @return
      */
-    public BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> QueryFoundItemWithKeyword(String keyword, int start) {
-        BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                    .selectItemWithKeyword(1, keyword, start, 10);
-            if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-                    String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
-                    lostAndFoundItem.setUsername(username);
-                }
-                result.setResultData(lostAndFoundItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("关键词查询招领物品异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<LostAndFoundItem> QueryFoundItemsWithKeyword(String keyword, int start) throws Exception {
+        List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
+                .selectItemWithKeyword(1, keyword, start, 10);
+        if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            lostAndFoundItem.setUsername(username);
+        }
+        return lostAndFoundItemList;
     }
 
     /**
@@ -272,26 +175,17 @@ public class LostAndFoundService {
      * @param start
      * @return
      */
-    public BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> QueryLostItemByType(int type, int start) {
-        BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                    .selectItemByItemType(1, type, start, 10);
-            if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-                    String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
-                    lostAndFoundItem.setUsername(username);
-                }
-                result.setResultData(lostAndFoundItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("指定类型查询失物物品异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<LostAndFoundItem> QueryLostItemsByType(int type, int start) throws Exception {
+        List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
+                .selectItemByItemType(1, type, start, 10);
+        if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            lostAndFoundItem.setUsername(username);
+        }
+        return lostAndFoundItemList;
     }
 
     /**
@@ -301,26 +195,17 @@ public class LostAndFoundService {
      * @param start
      * @return
      */
-    public BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> QueryFoundItemByType(int type, int start) {
-        BaseResult<List<LostAndFoundItem>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                    .selectItemByItemType(1, type, start, 10);
-            if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-                    String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
-                    lostAndFoundItem.setUsername(username);
-                }
-                result.setResultData(lostAndFoundItemList);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("指定类型查询招领物品异常：" , e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<LostAndFoundItem> QueryFoundItemsByType(int type, int start) throws Exception {
+        List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
+                .selectItemByItemType(1, type, start, 10);
+        if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return result;
+        for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            lostAndFoundItem.setUsername(username);
+        }
+        return lostAndFoundItemList;
     }
 
     /**
@@ -329,20 +214,12 @@ public class LostAndFoundService {
      * @param lostAndFoundItem
      * @return
      */
-    public BaseResult<LostAndFoundItem, BoolResultEnum> AddLostAndFoundItem(LostAndFoundItem lostAndFoundItem, String username) {
-        BaseResult<LostAndFoundItem, BoolResultEnum> result = new BaseResult<>();
-        try {
-            lostAndFoundItem.setUsername(StringEncryptUtils.encryptString(username));
-            //使用24小时制显示发布时间
-            lostAndFoundItem.setPublishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-            lostAndFoundMapper.insertItem(lostAndFoundItem);
-            result.setResultData(lostAndFoundItem);
-            result.setResultType(BoolResultEnum.SUCCESS);
-        } catch (Exception e) {
-            log.error("保存失物招领物品异常：" , e);
-            result.setResultType(BoolResultEnum.ERROR);
-        }
-        return result;
+    public LostAndFoundItem AddLostAndFoundItem(LostAndFoundItem lostAndFoundItem, String username) throws Exception {
+        lostAndFoundItem.setUsername(StringEncryptUtils.encryptString(username));
+        //使用24小时制显示发布时间
+        lostAndFoundItem.setPublishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        lostAndFoundMapper.insertItem(lostAndFoundItem);
+        return lostAndFoundItem;
     }
 
     /**
@@ -352,15 +229,9 @@ public class LostAndFoundService {
      * @param id
      * @return
      */
-    public BoolResultEnum UpdateLostAndFoundItem(LostAndFoundItem lostAndFoundItem, int id) {
-        try {
-            lostAndFoundItem.setId(id);
-            lostAndFoundMapper.updateItemInfo(lostAndFoundItem);
-            return BoolResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("更新失物招领物品异常：" , e);
-            return BoolResultEnum.ERROR;
-        }
+    public void UpdateLostAndFoundItem(LostAndFoundItem lostAndFoundItem, int id) throws Exception {
+        lostAndFoundItem.setId(id);
+        lostAndFoundMapper.updateItemItem(lostAndFoundItem);
     }
 
     /**
@@ -370,14 +241,8 @@ public class LostAndFoundService {
      * @param state
      * @return
      */
-    public BoolResultEnum UpdateLostAndFoundItemState(int id, int state) {
-        try {
-            lostAndFoundMapper.updateItemState(id, state);
-            return BoolResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("更新失物招领物品状态异常：" , e);
-            return BoolResultEnum.ERROR;
-        }
+    public void UpdateLostAndFoundItemState(int id, int state) throws Exception {
+        lostAndFoundMapper.updateItemState(id, state);
     }
 
     /**
@@ -399,11 +264,10 @@ public class LostAndFoundService {
     /**
      * 获取失物招领物品图片
      *
-     * @param username
      * @param id
      * @return
      */
-    public List<String> GetLostAndFoundItemPictureURL(String username, int id) {
+    public List<String> GetLostAndFoundItemPictureURL(int id) {
         // 创建OSSClient实例
         OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
         List<String> pictureURL = new ArrayList<>();

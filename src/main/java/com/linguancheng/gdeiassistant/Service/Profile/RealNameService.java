@@ -145,8 +145,7 @@ public class RealNameService {
      * @param password
      * @return
      */
-    public BaseResult<String, BoolResultEnum> GetUserRealName(String sessionId, String username, String password) {
-        BaseResult<String, BoolResultEnum> result = new BaseResult<>();
+    public String GetUserRealName(String sessionId, String username, String password) throws ServerErrorException {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -157,11 +156,10 @@ public class RealNameService {
             cardQueryService.LoginCardSystem(httpClient, username, password);
             //获取校园卡基本信息
             CardInfo cardInfo = cardQueryService.QueryCardInformation(httpClient);
-            result.setResultData(cardInfo.getName());
-            result.setResultType(BoolResultEnum.SUCCESS);
+            return cardInfo.getName();
         } catch (Exception e) {
             log.error("获取用户真实姓名异常：", e);
-            result.setResultType(BoolResultEnum.ERROR);
+            throw new ServerErrorException("获取真实姓名异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -174,6 +172,5 @@ public class RealNameService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return result;
     }
 }

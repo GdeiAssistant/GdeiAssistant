@@ -1,33 +1,22 @@
 package com.linguancheng.gdeiassistant.Service.Profile;
 
 import com.aliyun.oss.OSSClient;
-import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
-import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
-import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Gender.GenderMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
-import com.linguancheng.gdeiassistant.Pojo.Entity.AuthorProfile;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Introduction;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Profile;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
-import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import com.taobao.wsgsvr.WsgException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.client.AsyncRestTemplate;
 
 import javax.annotation.Resource;
@@ -39,6 +28,9 @@ import java.util.concurrent.Semaphore;
 
 @Service
 public class UserProfileService {
+
+    @Autowired
+    private RealNameService realNameService;
 
     @Resource(name = "profileMapper")
     private ProfileMapper profileMapper;
@@ -97,28 +89,18 @@ public class UserProfileService {
     private Log log = LogFactory.getLog(UserProfileService.class);
 
     /**
-     * 获取用户的作者简要资料
+     * 获取用户的简要资料
      *
      * @param username
      * @return
      */
-    public BaseResult<AuthorProfile, DataBaseResultEnum> GetUserAuthorProfile(String username) {
-        BaseResult<AuthorProfile, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            AuthorProfile authorProfile = profileMapper.selectAuthorProfile(StringEncryptUtils.encryptString(username));
-            if (authorProfile != null) {
-                authorProfile.setAvatarURL(GetUserAvatar(username));
-                authorProfile.setUsername(username);
-                result.setResultData(authorProfile);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            } else {
-                result.setResultType(DataBaseResultEnum.INCORRECT_USERNAME);
-            }
-        } catch (Exception e) {
-            log.error("获取用户作者简要资料异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public Profile GetUserBaseProfile(String username) throws Exception {
+        Profile baseProfile = profileMapper.selectBaseProfile(StringEncryptUtils.encryptString(username));
+        if (baseProfile != null) {
+            baseProfile.setUsername(username);
+            return baseProfile;
         }
-        return result;
+        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -128,18 +110,15 @@ public class UserProfileService {
      * @return
      */
     public Profile GetUserProfile(String username) throws Exception {
-        User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-        if (user != null && !user.getState().equals(-1)) {
-            Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
-            if (profile != null) {
-                if (profile.getGender() != null && profile.getGender().equals(3)) {
-                    profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
-                }
-                profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
-                return profile;
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            if (profile.getGender() != null && profile.getGender().equals(3)) {
+                profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
             }
+            profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
+            return profile;
         }
-        return null;
+        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -154,7 +133,7 @@ public class UserProfileService {
         if (introduction != null) {
             return introduction;
         }
-        return null;
+        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -214,21 +193,15 @@ public class UserProfileService {
      * @param introductionContent
      * @return
      */
-    public DataBaseResultEnum UpdateIntroduction(String username, String introductionContent) {
-        try {
-            Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils.encryptString(username));
-            if (introduction != null) {
-                profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(username), introductionContent);
-                return DataBaseResultEnum.SUCCESS;
-            } else {
-                profileMapper.initUserIntroduction(StringEncryptUtils.encryptString(username));
-                profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(username), introductionContent);
-            }
-            return DataBaseResultEnum.INCORRECT_USERNAME;
-        } catch (Exception e) {
-            log.error("更新用户个人简介异常：", e);
-            return DataBaseResultEnum.ERROR;
+    public void UpdateIntroduction(String username, String introductionContent) throws Exception {
+        Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils.encryptString(username));
+        if (introduction != null) {
+            profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(username), introductionContent);
+        } else {
+            profileMapper.initUserIntroduction(StringEncryptUtils.encryptString(username));
+            profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(username), introductionContent);
         }
+        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -240,24 +213,15 @@ public class UserProfileService {
      * @param city
      * @return
      */
-    public DataBaseResultEnum UpdateRegion(String username, String region
-            , String state, String city) {
-        try {
-            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-            if (queryUser != null) {
-                Profile profile = new Profile();
-                profile.setRegion(region);
-                profile.setState(state);
-                profile.setCity(city);
-                profile.setUsername(StringEncryptUtils.encryptString(username));
-                profileMapper.updateUserLocation(profile);
-                return DataBaseResultEnum.SUCCESS;
-            }
-            return DataBaseResultEnum.INCORRECT_USERNAME;
-        } catch (Exception e) {
-            log.error("更新用户所在地异常：", e);
-            return DataBaseResultEnum.ERROR;
+    public void UpdateRegion(String username, String region, String state, String city) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setRegion(region);
+            profile.setState(state);
+            profile.setCity(city);
+            profileMapper.updateUserProfile(profile);
         }
+        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -268,34 +232,26 @@ public class UserProfileService {
      * @return
      */
     @Transactional
-    public DataBaseResultEnum UpdateGender(String username, int gender, String customGenderName) {
-        try {
-            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-            if (queryUser != null) {
-                //若选择传统性别，则清除自定义性别表记录
-                if (gender != 3) {
-                    if (genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)) != null) {
-                        genderMapper.deleteCustomGender(StringEncryptUtils.encryptString(username));
-                    }
-                } else {
-                    //保存自定义性别
-                    if (genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)) != null) {
-                        genderMapper.updateCustomGender(StringEncryptUtils.encryptString(username), customGenderName);
-                    } else {
-                        genderMapper.insertCustomGender(StringEncryptUtils.encryptString(username), customGenderName);
-                    }
+    public void UpdateGender(String username, int gender, String customGenderName) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            //若选择传统性别，则清除自定义性别表记录
+            if (gender != 3) {
+                if (genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)) != null) {
+                    genderMapper.deleteCustomGender(StringEncryptUtils.encryptString(username));
                 }
-                Profile profile = new Profile();
-                profile.setGender(gender);
-                profile.setUsername(StringEncryptUtils.encryptString(username));
-                profileMapper.updateUserProfile(profile);
-                return DataBaseResultEnum.SUCCESS;
+            } else {
+                //保存自定义性别
+                if (genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)) != null) {
+                    genderMapper.updateCustomGender(StringEncryptUtils.encryptString(username), customGenderName);
+                } else {
+                    genderMapper.insertCustomGender(StringEncryptUtils.encryptString(username), customGenderName);
+                }
             }
-            return DataBaseResultEnum.INCORRECT_USERNAME;
-        } catch (Exception e) {
-            log.error("更新用户性别异常：", e);
-            throw new TransactionException("更新用户性别异常，进行事务回滚");
+            profile.setGender(gender);
+            profileMapper.updateUserProfile(profile);
         }
+        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -305,21 +261,15 @@ public class UserProfileService {
      * @param genderOrientation
      * @return
      */
-    public DataBaseResultEnum UpdateGenderOrientation(String username, int genderOrientation) {
-        try {
-            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-            if (queryUser != null) {
-                Profile profile = new Profile();
-                profile.setGenderOrientation(genderOrientation);
-                profile.setUsername(StringEncryptUtils.encryptString(username));
-                profileMapper.updateUserProfile(profile);
-                return DataBaseResultEnum.SUCCESS;
-            }
-            return DataBaseResultEnum.INCORRECT_USERNAME;
-        } catch (Exception e) {
-            log.error("更新用户性取向异常：", e);
-            return DataBaseResultEnum.ERROR;
+    public void UpdateGenderOrientation(String username, int genderOrientation) throws Exception {
+        User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+        if (queryUser != null) {
+            Profile profile = new Profile();
+            profile.setGenderOrientation(genderOrientation);
+            profile.setUsername(StringEncryptUtils.encryptString(username));
+            profileMapper.updateUserProfile(profile);
         }
+        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -329,21 +279,13 @@ public class UserProfileService {
      * @param faculty
      * @return
      */
-    public DataBaseResultEnum UpdateFaculty(String username, int faculty) {
-        try {
-            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-            if (queryUser != null) {
-                Profile profile = new Profile();
-                profile.setFaculty(faculty);
-                profile.setUsername(StringEncryptUtils.encryptString(username));
-                profileMapper.updateUserProfile(profile);
-                return DataBaseResultEnum.SUCCESS;
-            }
-            return DataBaseResultEnum.INCORRECT_USERNAME;
-        } catch (Exception e) {
-            log.error("更新用户院系异常：", e);
-            return DataBaseResultEnum.ERROR;
+    public void UpdateFaculty(String username, int faculty) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setFaculty(faculty);
+            profileMapper.updateUserProfile(profile);
         }
+        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -353,21 +295,13 @@ public class UserProfileService {
      * @param major
      * @return
      */
-    public DataBaseResultEnum UpdateMajor(String username, String major) {
-        try {
-            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-            if (queryUser != null) {
-                Profile profile = new Profile();
-                profile.setMajor(major);
-                profile.setUsername(StringEncryptUtils.encryptString(username));
-                profileMapper.updateUserProfile(profile);
-                return DataBaseResultEnum.SUCCESS;
-            }
-            return DataBaseResultEnum.INCORRECT_USERNAME;
-        } catch (Exception e) {
-            log.error("更新用户专业异常：", e);
-            return DataBaseResultEnum.ERROR;
+    public void UpdateMajor(String username, String major) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setMajor(major);
+            profileMapper.updateUserProfile(profile);
         }
+        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -377,20 +311,31 @@ public class UserProfileService {
      * @param kickname
      * @return
      */
-    public DataBaseResultEnum UpdateKickname(String username, String kickname) {
+    public void UpdateKickname(String username, String kickname) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setKickname(kickname);
+            profileMapper.updateUserProfile(profile);
+        }
+        throw new DataNotExistException("查询的用户不存在");
+    }
+
+    /**
+     * 进行用户实名认证
+     *
+     * @param user
+     * @param semaphore
+     */
+    @Async
+    public void UserAuthenticate(User user, Semaphore semaphore) {
         try {
-            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-            if (queryUser != null) {
-                Profile profile = new Profile();
-                profile.setKickname(kickname);
-                profile.setUsername(StringEncryptUtils.encryptString(username));
-                profileMapper.updateUserProfile(profile);
-                return DataBaseResultEnum.SUCCESS;
-            }
-            return DataBaseResultEnum.INCORRECT_USERNAME;
+            semaphore.acquire();
+            String realName = realNameService.GetUserRealName(null, user.getUsername(), user.getPassword());
+            profileMapper.updateRealName(StringEncryptUtils.encryptString(user.getUsername()), realName);
         } catch (Exception e) {
-            log.error("更新用户昵称异常：", e);
-            return DataBaseResultEnum.ERROR;
+            e.printStackTrace();
+        } finally {
+            semaphore.release();
         }
     }
 
@@ -398,52 +343,12 @@ public class UserProfileService {
      * 定时同步用户个人资料真实姓名
      */
     @Scheduled(cron = "0 0 6 * * ?")
-    public void InitUserRealName() {
-        try {
-            List<User> list = profileMapper.selectUninitializedUsername();
-            //设置线程信号量，限制最大同时查询的线程数为10
-            Semaphore semaphore = new Semaphore(10);
-            for (User user : list) {
-                if (!user.getState().equals(-1)) {
-                    User decryptUser = user.decryptUser();
-                    HttpHeaders httpHeaders = new HttpHeaders();
-                    httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-                    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-                    params.add("username", user.getUsername());
-                    params.add("password", user.getPassword());
-                    semaphore.acquire();
-                    ListenableFuture<ResponseEntity<DataJsonResult<String>>> future = asyncRestTemplate
-                            .exchange("https://www.gdeiassistant.cn/rest/api/profile/realname"
-                                    , HttpMethod.POST, new HttpEntity<>(params, httpHeaders)
-                                    , new ParameterizedTypeReference<DataJsonResult<String>>() {
-                                    });
-                    future.addCallback(new ListenableFutureCallback<ResponseEntity<DataJsonResult<String>>>() {
-
-                        @Override
-                        public void onFailure(Throwable ex) {
-                            log.error("同步用户个人资料真实姓名异常：", ex);
-                            semaphore.release();
-                        }
-
-                        @Override
-                        public void onSuccess(ResponseEntity<DataJsonResult<String>> result) {
-                            try {
-                                if (result.getBody().isSuccess()) {
-                                    profileMapper.updateRealName(decryptUser.getUsername(), result.getBody().getData());
-                                } else {
-                                    log.error("同步用户个人资料真实姓名异常：" + result.getBody().getMessage());
-                                }
-                            } catch (Exception e) {
-                                log.error("同步用户个人资料真实姓名异常：", e);
-                            } finally {
-                                semaphore.release();
-                            }
-                        }
-                    });
-                }
-            }
-        } catch (Exception e) {
-            log.error("同步用户个人资料真实姓名异常：", e);
+    public void UserAuthenticateTask() throws Exception {
+        List<User> list = profileMapper.selectUnauthenticatedUser();
+        //设置线程信号量，限制最大同时查询的线程数为10
+        Semaphore semaphore = new Semaphore(10);
+        for (User user : list) {
+            UserAuthenticate(user.decryptUser(), semaphore);
         }
     }
 

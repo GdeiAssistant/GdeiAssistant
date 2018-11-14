@@ -1,14 +1,11 @@
 package com.linguancheng.gdeiassistant.Service.UserData;
 
-import com.linguancheng.gdeiassistant.Exception.CommonException.TransactionException;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Privacy.PrivacyMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Privacy;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Profile;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +23,6 @@ public class UserDataService {
     @Resource(name = "privacyMapper")
     private PrivacyMapper privacyMapper;
 
-    private Log log = LogFactory.getLog(UserDataService.class);
-
     /**
      * 同步用户数据
      *
@@ -35,35 +30,29 @@ public class UserDataService {
      * @return
      */
     @Transactional
-    public void SyncUserData(User user) throws TransactionException {
-        try {
-            User encryptUser = user.encryptUser();
-            //检测数据库中有无该用户记录
-            User queryUser = userMapper.selectUser(encryptUser.getUsername());
-            if (queryUser != null) {
-                //该用户已经存在,检查是否需要更新用户数据
-                queryUser = queryUser.decryptUser();
-                if (!queryUser.getUsername().equals(user.getUsername())
-                        || !queryUser.getPassword().equals(user.getPassword())) {
-                    userMapper.updateUser(encryptUser);
-                }
-            } else {
-                //用户不存在,向数据库写入该用户数据
-                userMapper.insertUser(encryptUser);
+    public void SyncUserData(User user) throws Exception {
+        User encryptUser = user.encryptUser();
+        //检测数据库中有无该用户记录
+        User queryUser = userMapper.selectUser(encryptUser.getUsername());
+        if (queryUser != null) {
+            //该用户已经存在,检查是否需要更新用户数据
+            queryUser = queryUser.decryptUser();
+            if (!queryUser.getUsername().equals(user.getUsername())
+                    || !queryUser.getPassword().equals(user.getPassword())) {
+                userMapper.updateUser(encryptUser);
             }
-            //个人资料初始化
-            Profile profile = profileMapper.selectUserProfile(encryptUser.getUsername());
-            if (profile == null) {
-                profileMapper.initUserProfile(encryptUser.getUsername(), user.getUsername());
-            }
-            Privacy privacy = privacyMapper.selectPrivacy(encryptUser.getUsername());
-            if (privacy == null) {
-                privacyMapper.initPrivacy(encryptUser.getUsername());
-            }
-        } catch (Exception e) {
-            log.error("同步用户数据异常：", e);
-            //抛出异常进行事务回滚
-            throw new TransactionException("同步用户数据异常，进行回滚");
+        } else {
+            //用户不存在,向数据库写入该用户数据
+            userMapper.insertUser(encryptUser);
+        }
+        //个人资料初始化
+        Profile profile = profileMapper.selectUserProfile(encryptUser.getUsername());
+        if (profile == null) {
+            profileMapper.initUserProfile(encryptUser.getUsername(), user.getUsername());
+        }
+        Privacy privacy = privacyMapper.selectPrivacy(encryptUser.getUsername());
+        if (privacy == null) {
+            privacyMapper.initPrivacy(encryptUser.getUsername());
         }
     }
 }

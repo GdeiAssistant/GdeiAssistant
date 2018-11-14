@@ -40,6 +40,11 @@ public class JsonResult implements Serializable {
     }
 
     public JsonResult() {
+
+    }
+
+    public JsonResult(boolean success) {
+        this.success = success;
     }
 
     public JsonResult(boolean success, String message) {

@@ -11,16 +11,16 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ErshouInfo implements Serializable {
 
-    private AuthorProfile authorProfile;
+    private Profile profile;
 
     private ErshouItem ershouItem;
 
-    public AuthorProfile getAuthorProfile() {
-        return authorProfile;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public void setAuthorProfile(AuthorProfile authorProfile) {
-        this.authorProfile = authorProfile;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public ErshouItem getErshouItem() {

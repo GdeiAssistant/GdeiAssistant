@@ -72,7 +72,7 @@
         //加载用户昵称和头像
         $(function () {
             $.ajax({
-                url: '/rest/avatar',
+                url: '/api/avatar',
                 async: true,
                 type: 'get',
                 success: function (result) {
@@ -84,7 +84,7 @@
                 }
             });
             $.ajax({
-                url: '/rest/profile',
+                url: '/api/profile',
                 async: true,
                 type: 'get',
                 success: function (result) {
@@ -129,7 +129,7 @@
         //获取预览图片
         function getPreviewPicture(id) {
             $.ajax({
-                url: '/rest/lostandfound/info/id/' + id + '/preview',
+                url: '/api/lostandfound/item/id/' + id + '/preview',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {
@@ -151,7 +151,7 @@
                     type: 'primary',
                     onClick: function () {
                         $.ajax({
-                            url: '/rest/lostandfound/info/id/' + id + '/didfound',
+                            url: '/api/lostandfound/item/id/' + id + '/didfound',
                             type: 'post',
                             success: function (result) {
                                 if (result.success === true) {

@@ -28,7 +28,7 @@
     //加载个人姓名信息和头像地址
     $(function () {
         $.ajax({
-            url: '/rest/profile',
+            url: '/api/profile',
             async: true,
             type: 'get',
             success: function (result) {
@@ -39,7 +39,7 @@
             }
         });
         $.ajax({
-            url: '/rest/avatar',
+            url: '/api/avatar',
             async: true,
             type: 'get',
             success: function (result) {

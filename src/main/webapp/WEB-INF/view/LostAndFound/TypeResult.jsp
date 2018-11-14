@@ -61,10 +61,10 @@
         function loadLostAndFoundInfo(start) {
             var url;
             if ($("#lostType") == 0) {
-                url = '/rest/lostandfound/lostinfo/type/' + $("#itemType").val() + '/start/' + start;
+                url = '/api/lostandfound/lostitem/type/' + $("#itemType").val() + '/start/' + start;
             }
             else {
-                url = '/rest/lostandfound/foundinfo/type/' + $("#itemType").val() + '/start/' + start;
+                url = '/api/lostandfound/founditem/type/' + $("#itemType").val() + '/start/' + start;
             }
             $.ajax({
                 url: url,
@@ -97,7 +97,7 @@
         //获取预览图片
         function getPreviewPicture(id) {
             $.ajax({
-                url: '/rest/lostandfound/info/id/' + id + '/preview',
+                url: '/api/lostandfound/item/id/' + id + '/preview',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {

@@ -172,7 +172,7 @@
                         var loading = weui.loading('提交中');
 
                         $.ajax({
-                            url: '/rest/lostandfound/info',
+                            url: '/api/lostandfound/item',
                             type: 'post',
                             data: formData,
                             processData: false,

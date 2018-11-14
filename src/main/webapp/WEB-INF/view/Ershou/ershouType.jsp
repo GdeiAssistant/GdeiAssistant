@@ -60,7 +60,7 @@
         //加载更多数据
         function loadErshouInfo(start) {
             $.ajax({
-                url: '/ershou/info/type/' + $("#type_number").val() + "/start/" + start,
+                url: '/ershou/item/type/' + $("#type_number").val() + "/start/" + start,
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {
@@ -90,7 +90,7 @@
         //获取预览图片
         function getPreviewPicture(id) {
             $.ajax({
-                url: '/ershou/info/id/' + id + '/preview',
+                url: '/ershou/item/id/' + id + '/preview',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {
@@ -149,7 +149,7 @@
             </div>
             <script>
                 $.ajax({
-                    url: '/ershou/info/id/${ErshouItem.id}/preview',
+                    url: '/ershou/item/id/${ErshouItem.id}/preview',
                     type: 'get',
                     success: function (result) {
                         if (result.success === true) {

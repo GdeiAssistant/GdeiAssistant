@@ -72,7 +72,7 @@
         //加载用户昵称和头像
         $(function () {
             $.ajax({
-                url: '/rest/avatar',
+                url: '/api/avatar',
                 async: true,
                 type: 'get',
                 success: function (result) {
@@ -84,7 +84,7 @@
                 }
             });
             $.ajax({
-                url: '/rest/profile',
+                url: '/api/profile',
                 async: true,
                 type: 'get',
                 success: function (result) {
@@ -134,7 +134,7 @@
         //上架商品
         function onSaleItem(id) {
             $.ajax({
-                url: '/ershou/info/state/id/' + id,
+                url: '/ershou/item/state/id/' + id,
                 data: {
                     state: 1
                 },
@@ -156,7 +156,7 @@
         //下架商品
         function offSaleItem(id) {
             $.ajax({
-                url: '/ershou/info/state/id/' + id,
+                url: '/ershou/item/state/id/' + id,
                 data: {
                     state: 0
                 },
@@ -187,7 +187,7 @@
                     type: 'primary',
                     onClick: function () {
                         $.ajax({
-                            url: '/ershou/info/state/id/' + id,
+                            url: '/ershou/item/state/id/' + id,
                             data: {
                                 state: 2
                             },
@@ -261,7 +261,7 @@
                     </div>
                     <script>
                         $.ajax({
-                            url: '/ershou/info/id/${ErshouItem.id}/preview',
+                            url: '/ershou/item/id/${ErshouItem.id}/preview',
                             type: 'get',
                             success: function (result) {
                                 if (result.success === true) {
@@ -294,7 +294,7 @@
                     </div>
                     <script>
                         $.ajax({
-                            url: '/ershou/info/id/${ErshouItem.id}/preview',
+                            url: '/ershou/item/id/${ErshouItem.id}/preview',
                             type: 'get',
                             success: function (result) {
                                 if (result.success === true) {
@@ -323,7 +323,7 @@
                     </div>
                     <script>
                         $.ajax({
-                            url: '/ershou/info/id/${ErshouItem.id}/preview',
+                            url: '/ershou/item/id/${ErshouItem.id}/preview',
                             type: 'get',
                             success: function (result) {
                                 if (result.success === true) {

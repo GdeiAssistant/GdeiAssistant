@@ -32,7 +32,7 @@
     //加载所在地代码映射表
     function loadRegionMap() {
         $.ajax({
-            url: '/rest/regionList',
+            url: '/api/locationList',
             type: 'get',
             success: function (result) {
                 if (result.success === true) {
@@ -189,7 +189,7 @@
     //加载头像
     function loadAvatar() {
         $.ajax({
-            url: '/rest/avatar',
+            url: '/api/avatar',
             type: 'get',
             success: function (result) {
                 if (result.success === true) {
@@ -304,7 +304,7 @@
 
         //上传头像到服务器
         $.ajax({
-            url: "/rest/avatar",
+            url: "/api/avatar",
             type: "post",
             data: formData,
             processData: false,
@@ -349,7 +349,7 @@
                 container: 'body',
                 onConfirm: function (result) {
                     $.ajax({
-                        url: '/rest/profile/location',
+                        url: '/api/profile/location',
                         type: 'post',
                         data: {
                             region: result[0].value,
@@ -400,7 +400,7 @@
         if ($("#kickname").val().length > 0) {
             $.closePopup();
             $.ajax({
-                url: "/rest/profile/kickname",
+                url: "/api/profile/kickname",
                 data: {
                     kickname: $("#kickname").val()
                 },
@@ -425,7 +425,7 @@
         if ($("#customGenderName").val().length > 0) {
             $.closePopup();
             $.ajax({
-                url: "/rest/profile/gender",
+                url: "/api/profile/gender",
                 data: {
                     gender: 3,
                     customGenderName: $("#customGenderName").val()
@@ -463,7 +463,7 @@
                 }
                 else {
                     $.ajax({
-                        url: "/rest/profile/gender",
+                        url: "/api/profile/gender",
                         data: {
                             gender: gender[0].value
                         },
@@ -498,7 +498,7 @@
             defaultValue: [0],
             onConfirm: function (genderOrientation) {
                 $.ajax({
-                    url: "/rest/profile/genderOrientation",
+                    url: "/api/profile/genderOrientation",
                     data: {
                         genderOrientation: genderOrientation[0].value
                     },
@@ -532,7 +532,7 @@
             defaultValue: [0],
             onConfirm: function (faculty) {
                 $.ajax({
-                    url: "/rest/profile/faculty",
+                    url: "/api/profile/faculty",
                     data: {
                         faculty: faculty[0].value
                     },
@@ -558,7 +558,7 @@
         if ($("#major").val().length > 0 && $("#major").val().length <= 20) {
             $.closePopup();
             $.ajax({
-                url: "/rest/profile/major",
+                url: "/api/profile/major",
                 data: {
                     major: $("#major").val()
                 },

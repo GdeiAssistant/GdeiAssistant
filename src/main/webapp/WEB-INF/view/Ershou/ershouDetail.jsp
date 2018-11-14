@@ -93,18 +93,18 @@
 <section class="userinfo">
 
     <!-- 用户信息 -->
-    <a class="user" onclick="window.location.href='/profile/user/${ErshouInfo.authorProfile.username}'">
+    <a class="user" onclick="window.location.href='/profile/user/${ErshouInfo.profile.username}'">
         <i class="avt">
             <c:choose>
-                <c:when test="${ErshouInfo.authorProfile.avatarURL!=''}">
-                    <img src="${ErshouInfo.authorProfile.avatarURL}">
+                <c:when test="${ErshouInfo.profile.avatarURL!=''}">
+                    <img src="${ErshouInfo.profile.avatarURL}">
                 </c:when>
                 <c:otherwise>
                     <img src="/img/avatar/default.png">
                 </c:otherwise>
             </c:choose>
         </i>
-        <span class="nm">发布者：${ErshouInfo.authorProfile.kickname}</span>
+        <span class="nm">发布者：${ErshouInfo.profile.kickname}</span>
     </a>
 
     <!-- 二手交易商品交易描述 -->

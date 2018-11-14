@@ -18,7 +18,7 @@ function postCloseRequest() {
     if ($("#password").val().length > 0 && $("#password").val().length <= 35) {
         $("#loadingToast, .weui_mask").show();
         $.ajax({
-            url: '/close/submit',
+            url: '/api/close/submit',
             method: 'post',
             data: {
                 password: $("#password").val()

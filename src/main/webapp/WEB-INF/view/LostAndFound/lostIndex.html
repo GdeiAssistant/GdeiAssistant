@@ -65,7 +65,7 @@
         function loadInfo(start) {
             var loading = weui.loading('加载中');
             $.ajax({
-                url: '/rest/lostandfound/lostinfo/start/' + start,
+                url: '/api/lostandfound/lostitem/start/' + start,
                 type: 'get',
                 success: function (result) {
                     loading.hide();
@@ -99,7 +99,7 @@
         //获取预览图片
         function getPreviewPicture(id) {
             $.ajax({
-                url: '/rest/lostandfound/info/id/' + id + '/preview',
+                url: '/api/lostandfound/item/id/' + id + '/preview',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {

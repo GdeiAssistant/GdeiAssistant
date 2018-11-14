@@ -60,7 +60,7 @@
         //加载更多数据
         function loadLostAndFoundInfo(start) {
             $.ajax({
-                url: '/rest/lostandfound/lostinfo/type/' + $("#type").val() + '/start/' + start,
+                url: '/api/lostandfound/lostitem/type/' + $("#type").val() + '/start/' + start,
                 type: 'post',
                 data: {
                     "keyword": $("#keyword").val()
@@ -93,7 +93,7 @@
         //获取预览图片
         function getPreviewPicture(id) {
             $.ajax({
-                url: '/rest/lostandfound/info/id/' + id + '/preview',
+                url: '/api/lostandfound/item/id/' + id + '/preview',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {

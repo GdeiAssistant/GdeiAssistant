@@ -105,18 +105,18 @@
 <section class="userinfo">
 
     <!-- 用户信息 -->
-    <a class="user" onclick="window.location.href='/profile/user/${LostAndFoundInfo.authorProfile.username}'">
+    <a class="user" onclick="window.location.href='/profile/user/${LostAndFoundInfo.profile.username}'">
         <i class="avt">
             <c:choose>
-                <c:when test="${LostAndFoundInfo.authorProfile.avatarURL!=''}">
-                    <img src="${LostAndFoundInfo.authorProfile.avatarURL}">
+                <c:when test="${LostAndFoundInfo.profile.avatarURL!=''}">
+                    <img src="${LostAndFoundInfo.profile.avatarURL}">
                 </c:when>
                 <c:otherwise>
                     <img src="/img/avatar/default.png">
                 </c:otherwise>
             </c:choose>
         </i>
-        <span class="nm">发布者：${LostAndFoundInfo.authorProfile.kickname}</span>
+        <span class="nm">发布者：${LostAndFoundInfo.profile.kickname}</span>
     </a>
 
     <!-- 二手交易商品交易描述 -->

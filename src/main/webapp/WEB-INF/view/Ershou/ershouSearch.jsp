@@ -90,7 +90,7 @@
         //获取预览图片
         function getPreviewPicture(id) {
             $.ajax({
-                url: '/ershou/info/id/' + id + '/preview',
+                url: '/ershou/item/id/' + id + '/preview',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {

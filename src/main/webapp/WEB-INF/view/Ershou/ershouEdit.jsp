@@ -131,7 +131,7 @@
                             var loading = weui.loading('提交中');
 
                             $.ajax({
-                                url: '/ershou/info/id/' + ${ErshouItemID},
+                                url: '/ershou/item/id/' + ${ErshouItemID},
                                 type: 'post',
                                 data: formData,
                                 timeout: 3000,

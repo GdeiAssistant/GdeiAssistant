@@ -136,7 +136,7 @@
                         var loading = weui.loading('提交中');
 
                         $.ajax({
-                            url: '/rest/lostandfound/info/id/' + ${LostAndFoundItemID},
+                            url: '/api/lostandfound/item/id/' + ${LostAndFoundItemID},
                             type: 'post',
                             data: formData,
                             processData: false,

@@ -164,7 +164,7 @@
                             var loading = weui.loading('提交中');
 
                             $.ajax({
-                                url: '/ershou/info',
+                                url: '/ershou/item',
                                 type: 'post',
                                 data: formData,
                                 processData: false,

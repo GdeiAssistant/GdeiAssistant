@@ -20,9 +20,23 @@
         <result property="publishTime" column="publishTime"/>
     </resultMap>
 
+    <resultMap id="LostAndFoundInfo" type="com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo">
+        <id property="id" column="id"/>
+        <result property="profile.username" column="username"/>
+        <result property="lostAndFoundItem.username" column="username"/>
+        <result property="lostAndFoundItem.kickname" column="kickname"/>
+        <result property="lostAndFoundItem.name" column="name"/>
+        <result property="lostAndFoundItem.description" column="description"/>
+        <result property="lostAndFoundItem.location" column="location"/>
+        <result property="lostAndFoundItem.itemType" column="itemType"/>
+        <result property="lostAndFoundItem.lostType" column="lostType"/>
+        <result property="lostAndFoundItem.state" column="state"/>
+        <result property="lostAndFoundItem.publishTime" column="publishTime"/>
+    </resultMap>
+
     <select id="selectItemByID" parameterType="java.lang.Integer"
             resultMap="LostAndFoundItem">
-        select * from lostandfound where id=#{id} limit 1
+        select * from lostandfound join profile using (username) where id=#{id} limit 1
     </select>
 
     <select id="selectItemByUsername" parameterType="java.lang.String"
@@ -53,7 +67,7 @@
         ,#{qq},#{wechat},#{phone},'0',#{publishTime})
     </insert>
 
-    <update id="updateItemInfo">
+    <update id="updateItemItem">
         update lostandfound set name=#{name},description=#{description},location=#{location},
         itemType=#{itemType},lostType=#{lostType},qq=#{qq},wechat=#{wechat},phone=#{phone} where id=#{id}
     </update>

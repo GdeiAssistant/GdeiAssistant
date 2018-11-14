@@ -19,9 +19,9 @@
         <result property="city" column="city"/>
     </resultMap>
 
-    <select id="selectUninitializedUser" resultType="java.lang.String">
-        select user.username,user.password,user.keycode,user.number,user.state from profile
-         join user using (username) where profile.realname is null
+    <select id="selectUnauthenticatedUser" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
+        select user.username,user.password from profile
+         join user using (username) where profile.realname is null and user.state != -1
     </select>
 
     <select id="selectUserProfile" parameterType="java.lang.String"
@@ -39,9 +39,9 @@
         select * from introduction where username=#{username} limit 1
     </select>
 
-    <select id="selectAuthorProfile" parameterType="java.lang.String"
-            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.AuthorProfile">
-        select * from profile where username=#{username} limit 1
+    <select id="selectBaseProfile" parameterType="java.lang.String"
+            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.Profile">
+        select username,kickname from profile where username=#{username} limit 1
     </select>
 
     <insert id="initUserProfile">
@@ -74,12 +74,17 @@
             <if test='major!=null'>
                 major=#{major}
             </if>
+            <if test="region!=null'">
+                region=#{region}
+            </if>
+            <if test="state!=null'">
+                state=#{state}
+            </if>
+            <if test="city!=null'">
+                city=#{city}
+            </if>
         </set>
         where username=#{username}
-    </update>
-
-    <update id="updateUserLocation" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.Profile">
-        update profile set region=#{region},state=#{state},city=#{city} where username=#{username}
     </update>
 
     <update id="resetUserProfile">

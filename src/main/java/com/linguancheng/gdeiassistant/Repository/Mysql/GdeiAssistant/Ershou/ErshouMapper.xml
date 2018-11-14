@@ -8,9 +8,22 @@
     <!-- 开启ErshouMapper namespace下的二级缓存 -->
     <cache/>
 
-    <select id="selectItemByID" parameterType="java.lang.Integer"
-            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
-        select * from ershou where id=#{id} limit 1
+    <resultMap id="ErshouInfo" type="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouInfo">
+        <result property="ershouItem.id" column="id"/>
+        <result property="ershouItem.username" column="username"/>
+        <result property="ershouItem.name" column="name"/>
+        <result property="ershouItem.description" column="description"/>
+        <result property="ershouItem.price" column="price"/>
+        <result property="ershouItem.location" column="location"/>
+        <result property="ershouItem.type" column="type"/>
+        <result property="ershouItem.qq" column="qq"/>
+        <result property="ershouItem.phone" column="phone"/>
+        <result property="ershouItem.state" column="state"/>
+        <result property="ershouItem.publishTime" column="publishTime"/>
+    </resultMap>
+
+    <select id="selectInfoByID" parameterType="java.lang.Integer" resultMap="ErshouInfo">
+        select * from ershou join profile using (username) where id=#{id} limit 1
     </select>
 
     <select id="selectItemByUsername" parameterType="java.lang.String"
@@ -37,7 +50,7 @@
          values (#{username},#{name},#{description},#{price},#{location},#{type},#{qq},#{phone},'1',#{publishTime})
     </insert>
 
-    <update id="updateItemInfo">
+    <update id="updateItem">
         update ershou set name=#{name},description=#{description},price=#{price},location=#{location},
         type=#{type},qq=#{qq},phone=#{phone} where id=#{id}
     </update>

@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound;
 
+import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem;
 import org.apache.ibatis.annotations.Param;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 public interface LostAndFoundMapper {
 
-    public LostAndFoundItem selectItemByID(Integer id) throws Exception;
+    public LostAndFoundInfo selectInfoByID(Integer id) throws Exception;
 
     public List<LostAndFoundItem> selectItemByUsername(String username) throws Exception;
 
@@ -24,7 +25,7 @@ public interface LostAndFoundMapper {
 
     public void insertItem(LostAndFoundItem lostAndFoundItem) throws Exception;
 
-    public void updateItemInfo(LostAndFoundItem lostAndFoundItem) throws Exception;
+    public void updateItemItem(LostAndFoundItem lostAndFoundItem) throws Exception;
 
     public void updateItemState(@Param("id") Integer id, @Param("state") Integer state) throws Exception;
 }

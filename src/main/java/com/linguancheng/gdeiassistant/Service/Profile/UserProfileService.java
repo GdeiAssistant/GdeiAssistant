@@ -9,8 +9,6 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.Introduction;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Profile;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -84,23 +82,6 @@ public class UserProfileService {
     @Value("#{propertiesReader['oss.endpoint']}")
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
-    }
-
-    private Log log = LogFactory.getLog(UserProfileService.class);
-
-    /**
-     * 获取用户的简要资料
-     *
-     * @param username
-     * @return
-     */
-    public Profile GetUserBaseProfile(String username) throws Exception {
-        Profile baseProfile = profileMapper.selectBaseProfile(StringEncryptUtils.encryptString(username));
-        if (baseProfile != null) {
-            baseProfile.setUsername(username);
-            return baseProfile;
-        }
-        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**

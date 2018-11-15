@@ -19,39 +19,78 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ErshouItem implements Serializable {
 
+    /**
+     * 商品图片
+     */
     private List<String> pictureURL;
 
+    /**
+     * 商品ID
+     */
     private Integer id;
 
+    /**
+     * 发布者用户名
+     */
     private String username;
 
-    @NotBlank(message = "商品名词不能为空")
+    /**
+     * 商品名称
+     */
+    @NotBlank(message = "商品名称不能为空")
     @Length(max = 25)
     private String name;
 
+    /**
+     * 商品描述
+     */
     @NotBlank(message = "商品描述不能为空")
     @Length(max = 100)
     private String description;
 
+    /**
+     * 商品价格
+     */
     private Float price;
 
+    /**
+     * 交易地点
+     */
     @NotBlank(message = "交易地点不能为空")
     @Length(max = 30)
     private String location;
 
+    /**
+     * 商品类型
+     */
     @Min(0)
     @Max(11)
     private Integer type;
 
+    /**
+     * QQ号
+     */
     @NotBlank(message = "QQ不能为空")
     @Length(max = 20)
     private String qq;
 
+    /**
+     * 手机号
+     */
     @Length(max = 11)
     private String phone;
 
+    /**
+     * 商品状态
+     * 0为下架
+     * 1为待出售
+     * 2为已出售
+     */
     private Integer state;
 
+    /**
+     * 发布时间
+     */
     private Date publishTime;
 
     public Integer getId() {

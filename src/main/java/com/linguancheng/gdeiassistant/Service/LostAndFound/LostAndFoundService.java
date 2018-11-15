@@ -1,18 +1,12 @@
 package com.linguancheng.gdeiassistant.Service.LostAndFound;
 
 import com.aliyun.oss.OSSClient;
-import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
-import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +22,6 @@ public class LostAndFoundService {
 
     @Resource(name = "lostAndFoundMapper")
     private LostAndFoundMapper lostAndFoundMapper;
-
-    @Autowired
-    private UserProfileService userProfileService;
 
     private String accessKeyID;
 
@@ -53,8 +44,6 @@ public class LostAndFoundService {
         this.endpoint = endpoint;
     }
 
-    private Log log = LogFactory.getLog(LostAndFoundService.class);
-
     /**
      * 查询指定ID的失物招领物品信息
      *
@@ -63,8 +52,11 @@ public class LostAndFoundService {
      */
     public LostAndFoundInfo QueryLostAndFoundInfoByID(int id) throws Exception {
         LostAndFoundInfo lostAndFoundInfo = lostAndFoundMapper.selectInfoByID(id);
-        if (lostAndFoundInfo == null || lostAndFoundInfo.getLostAndFoundItem() == null) {
+        if (lostAndFoundInfo == null) {
             throw new DataNotExistException("失物招领信息不存在");
+        }
+        if (lostAndFoundInfo.getLostAndFoundItem().getState().equals(1)) {
+            throw new ConfirmedStateException("物品已确认寻回，不可再次编辑和查看");
         }
         //获取二手交易商品图片URL
         String username = StringEncryptUtils.decryptString(lostAndFoundInfo.getLostAndFoundItem().getUsername());
@@ -231,7 +223,15 @@ public class LostAndFoundService {
      */
     public void UpdateLostAndFoundItem(LostAndFoundItem lostAndFoundItem, int id) throws Exception {
         lostAndFoundItem.setId(id);
-        lostAndFoundMapper.updateItemItem(lostAndFoundItem);
+        LostAndFoundInfo lostAndFoundInfo = lostAndFoundMapper.selectInfoByID(id);
+        if (lostAndFoundInfo == null) {
+            throw new DataNotExistException("查找的失物招领信息不存在");
+        }
+        if (!lostAndFoundInfo.getLostAndFoundItem().getState().equals(1)) {
+            lostAndFoundMapper.updateItemItem(lostAndFoundItem);
+            return;
+        }
+        throw new ConfirmedStateException("物品已确认寻回，不可再次编辑");
     }
 
     /**
@@ -242,7 +242,15 @@ public class LostAndFoundService {
      * @return
      */
     public void UpdateLostAndFoundItemState(int id, int state) throws Exception {
-        lostAndFoundMapper.updateItemState(id, state);
+        LostAndFoundInfo lostAndFoundInfo = lostAndFoundMapper.selectInfoByID(id);
+        if (lostAndFoundInfo == null) {
+            throw new DataNotExistException("查找的失物招领信息不存在");
+        }
+        if (!lostAndFoundInfo.getLostAndFoundItem().getState().equals(1)) {
+            lostAndFoundMapper.updateItemState(id, state);
+            return;
+        }
+        throw new ConfirmedStateException("物品已确认寻回，不可再次编辑");
     }
 
     /**

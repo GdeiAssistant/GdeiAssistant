@@ -2,6 +2,7 @@ package com.linguancheng.gdeiassistant.Controller.UserProfile;
 
 import com.linguancheng.gdeiassistant.Annotation.RestAuthentication;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.*;
 import com.linguancheng.gdeiassistant.Pojo.Profile.LocationComparator;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -14,9 +15,11 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -35,6 +38,12 @@ public class ProfileRestController {
     private RealNameService realNameService;
 
     private final int AVATAR_MAX_SIZE = 1024 * 1024 * 2;
+
+    @ExceptionHandler(DataNotExistException.class)
+    public ResponseEntity ShowDataNotExistExceptionTip() {
+        return ResponseEntity.ok(new JsonResult(false
+                , "查询的用户不存在，请尝试重新登录"));
+    }
 
     /**
      * 获取头像URL信息

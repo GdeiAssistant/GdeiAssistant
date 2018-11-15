@@ -1,13 +1,12 @@
 package com.linguancheng.gdeiassistant.Service.Ershou;
 
 import com.aliyun.oss.OSSClient;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Ershou.ErshouMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +44,6 @@ public class ErshouService {
         this.endpoint = endpoint;
     }
 
-    private Log log = LogFactory.getLog(ErshouService.class);
-
     /**
      * 查询指定ID的二手交易商品信息
      *
@@ -54,7 +51,7 @@ public class ErshouService {
      */
     public ErshouInfo QueryErshouInfoByID(int id) throws Exception {
         ErshouInfo ershouInfo = ershouMapper.selectInfoByID(id);
-        if (ershouInfo == null || ershouInfo.getErshouItem() == null) {
+        if (ershouInfo == null) {
             throw new DataNotExistException("二手交易商品不存在");
         }
         //获取二手交易商品图片URL
@@ -164,7 +161,15 @@ public class ErshouService {
      */
     public void UpdateErshouItem(ErshouItem ershouItem, int id) throws Exception {
         ershouItem.setId(id);
-        ershouMapper.updateItem(ershouItem);
+        ErshouInfo ershouInfo = ershouMapper.selectInfoByID(id);
+        if (ershouInfo == null) {
+            throw new DataNotExistException("查找的二手交易信息不存在");
+        }
+        if(!ershouInfo.getErshouItem().getState().equals(2)){
+            ershouMapper.updateItem(ershouItem);
+            return;
+        }
+        throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
     }
 
     /**
@@ -175,7 +180,15 @@ public class ErshouService {
      * @return
      */
     public void UpdateErshouItemState(int id, int state) throws Exception {
-        ershouMapper.updateItemState(id, state);
+        ErshouInfo ershouInfo = ershouMapper.selectInfoByID(id);
+        if (ershouInfo == null) {
+            throw new DataNotExistException("查找的二手交易信息不存在");
+        }
+        if (!ershouInfo.getErshouItem().getState().equals(2)) {
+            ershouMapper.updateItemState(id, state);
+            return;
+        }
+        throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
     }
 
     /**

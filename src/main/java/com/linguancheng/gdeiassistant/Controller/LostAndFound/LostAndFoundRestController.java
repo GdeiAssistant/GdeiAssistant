@@ -1,6 +1,8 @@
 package com.linguancheng.gdeiassistant.Controller.LostAndFound;
 
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.NoAccessException;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -10,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +28,24 @@ public class LostAndFoundRestController {
     private LostAndFoundService lostAndFoundService;
 
     private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
+
+    @ExceptionHandler(DataNotExistException.class)
+    public ResponseEntity ShowDataNotExistExceptionTip() {
+        return ResponseEntity.ok(new JsonResult(false
+                , "查询的失物招领信息不存在，"));
+    }
+
+    @ExceptionHandler(NoAccessException.class)
+    public ResponseEntity ShowNoAccessExceptionTip() {
+        return ResponseEntity.ok(new JsonResult(false
+                , "你没有权限编辑该失物招领信息"));
+    }
+
+    @ExceptionHandler(ConfirmedStateException.class)
+    public ResponseEntity ShowUnmodifiableStateExceptionTip() {
+        return ResponseEntity.ok(new JsonResult(false
+                , "该失物招领信息已确认寻回，不能再次编辑和查看"));
+    }
 
     /**
      * 分页查询失物信息

@@ -1,28 +1,21 @@
 package com.linguancheng.gdeiassistant.Controller.LostAndFound;
 
-import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.NoAccessException;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem;
-import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Service.LostAndFound.LostAndFoundService;
-import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +29,33 @@ public class LostAndFoundController {
             , "银行卡", "书", "钥匙"
             , "包包", "衣帽", "校园代步"
             , "运动健身", "数码配件", "其他"};
+
+    @ExceptionHandler(DataNotExistException.class)
+    public ModelAndView ShowDataNotExistExceptionTip() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Error/commonError");
+        modelAndView.addObject("ErrorTitle", "失物招领信息不存在");
+        modelAndView.addObject("ErrorMessage", "查询的失物招领信息不存在");
+        return modelAndView;
+    }
+
+    @ExceptionHandler(NoAccessException.class)
+    public ModelAndView ShowNoAccessExceptionTip() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Error/commonError");
+        modelAndView.addObject("ErrorTitle", "当前用户没有权限");
+        modelAndView.addObject("ErrorMessage", "你没有权限编辑该失物招领信息");
+        return modelAndView;
+    }
+
+    @ExceptionHandler(ConfirmedStateException.class)
+    public ModelAndView ShowUnmodifiableStateException() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Error/commonError");
+        modelAndView.addObject("ErrorTitle", "物品已确认寻回");
+        modelAndView.addObject("ErrorMessage", "该失物招领信息已确认寻回，不可再次查看和编辑");
+        return modelAndView;
+    }
 
     /**
      * 进入失物主页
@@ -176,20 +196,8 @@ public class LostAndFoundController {
     public ModelAndView GetLostAndFoundItemDetailInfo(@PathVariable("id") Integer id) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         LostAndFoundInfo lostAndFoundInfo = lostAndFoundService.QueryLostAndFoundInfoByID(id);
-        if (lostAndFoundInfo.getLostAndFoundItem().getState() == 1) {
-            //物品已经找回
-            modelAndView.addObject("ErrorTitle", "广东第二师范学院二手交易-错误");
-            modelAndView.addObject("ErrorMessage", "该失物招领物品已经找回");
-            modelAndView.setViewName("Error/commonError");
-        } else if (lostAndFoundInfo.getLostAndFoundItem().getState() == 2) {
-            //信息被管理员屏蔽
-            modelAndView.addObject("ErrorTitle", "广东第二师范学院二手交易-错误");
-            modelAndView.addObject("ErrorMessage", "该失物招领信息因违规被管理员删除");
-            modelAndView.setViewName("Error/commonError");
-        } else {
-            modelAndView.addObject("LostAndFoundInfo", lostAndFoundInfo);
-            modelAndView.setViewName("LostAndFound/ItemDetail");
-        }
+        modelAndView.addObject("LostAndFoundInfo", lostAndFoundInfo);
+        modelAndView.setViewName("LostAndFound/ItemDetail");
         return modelAndView;
     }
 

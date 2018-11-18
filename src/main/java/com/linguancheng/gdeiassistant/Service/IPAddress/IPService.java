@@ -57,7 +57,6 @@ public class IPService {
     public Location GetLocationInfoByIPAddress(String ip) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Authorization", "APPCODE " + appcode);
-        ip = "219.136.198.242";
         ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(host + path + "?ip=" + ip, HttpMethod.GET
                 , new HttpEntity<>(httpHeaders), JSONObject.class);
         JSONObject jsonObject = responseEntity.getBody();

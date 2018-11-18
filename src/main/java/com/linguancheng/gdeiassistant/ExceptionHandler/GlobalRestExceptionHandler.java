@@ -2,6 +2,8 @@ package com.linguancheng.gdeiassistant.ExceptionHandler;
 
 import com.linguancheng.gdeiassistant.Constant.ConstantUtils;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,8 @@ import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice(annotations = RestController.class)
 public class GlobalRestExceptionHandler {
+
+    private Log log = LogFactory.getLog(GlobalRestExceptionHandler.class);
 
     /**
      * 处理HTTP请求400错误
@@ -56,7 +60,8 @@ public class GlobalRestExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity HandleException() {
+    public ResponseEntity HandleException(Exception e) {
+        log.error("系统异常：", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new JsonResult(false, "系统异常，请联系管理员"));
     }

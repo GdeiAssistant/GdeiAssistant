@@ -1,6 +1,5 @@
 package com.linguancheng.gdeiassistant.Service.GradeQuery;
 
-import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.NotAvailableConditionException;
@@ -270,11 +269,11 @@ public class GradeQueryService {
      * @param year
      * @return
      */
-    public GradeQueryResult GetUserGradeDocument(String username, Integer year) throws Exception {
+    public GradeQueryResult QueryUserGradeFromDocument(String username, Integer year) throws Exception {
         GradeQueryResult gradeQueryResult = new GradeQueryResult();
         GradeDocument gradeDocument = gradeCacheService.ReadGrade(username);
         if (gradeDocument != null) {
-            List<GradeDocument.GradeList> gradeLists = gradeDocument.getGradeList();
+            List<List<Grade>> gradeLists = gradeDocument.getGradeList();
             if (year == null) {
                 year = gradeLists.size() - 1;
             }
@@ -284,8 +283,7 @@ public class GradeQueryService {
             if (year >= gradeLists.size()) {
                 throw new ErrorQueryConditionException("查询条件不可用");
             }
-            List<Grade> gradeList = gradeDocument.getGradeList().get(year)
-                    .getGradeList();
+            List<Grade> gradeList = gradeDocument.getGradeList().get(year);
             List<Grade> firstTermGradeList = new ArrayList<>();
             List<Grade> secondTermGradeList = new ArrayList<>();
             for (Grade grade : gradeList) {
@@ -319,7 +317,7 @@ public class GradeQueryService {
      * @param year
      * @return
      */
-    public GradeQueryResult QueryGradeData(String sessionId, User user, Integer year) throws Exception {
+    public GradeQueryResult QueryGradeFromSystem(String sessionId, User user, Integer year) throws Exception {
         if (year == null) {
             //若没有指定查询的学年，则进行默认学年查询
             year = -1;
@@ -358,13 +356,13 @@ public class GradeQueryService {
      */
     public GradeQueryResult QueryGrade(String sessionId, User user, Integer year) throws Exception {
         try {
-            GradeQueryResult gradeQueryResult = GetUserGradeDocument(user.getUsername(), year);
+            GradeQueryResult gradeQueryResult = QueryUserGradeFromDocument(user.getUsername(), year);
             if (gradeQueryResult == null) {
-                return QueryGradeData(sessionId, user, year);
+                return QueryGradeFromSystem(sessionId, user, year);
             }
             return gradeQueryResult;
         } catch (Exception e) {
-            return QueryGradeData(sessionId, user, year);
+            return QueryGradeFromSystem(sessionId, user, year);
         }
     }
 }

@@ -10,37 +10,6 @@ import java.util.List;
 @Document
 public class GradeDocument {
 
-    public static class GradeList implements Comparable<GradeList> {
-
-        private List<Grade> gradeList;
-
-        public GradeList() {
-
-        }
-
-        public GradeList(List<Grade> gradeList) {
-            this.gradeList = gradeList;
-        }
-
-        public List<Grade> getGradeList() {
-            return gradeList;
-        }
-
-        public void setGradeList(List<Grade> gradeList) {
-            this.gradeList = gradeList;
-        }
-
-        @Override
-        public int compareTo(GradeList gradeList) {
-
-            if (Integer.valueOf((gradeList.getGradeList().get(0).getGrade_year().split("-"))[0]) >=
-                    Integer.valueOf(this.gradeList.get(0).getGrade_year().split("-")[0])) {
-                return -1;
-            }
-            return 1;
-        }
-    }
-
     /**
      * 主键ID
      */
@@ -55,7 +24,7 @@ public class GradeDocument {
     /**
      * 成绩信息列表
      */
-    private List<GradeList> gradeLists;
+    private List<List<Grade>> gradeLists;
 
     /**
      * 第一学期GPA列表
@@ -138,11 +107,11 @@ public class GradeDocument {
         this.updateDateTime = updateDateTime;
     }
 
-    public List<GradeList> getGradeList() {
+    public List<List<Grade>> getGradeList() {
         return gradeLists;
     }
 
-    public void setGradeList(List<GradeList> gradeLists) {
+    public void setGradeList(List<List<Grade>> gradeLists) {
         this.gradeLists = gradeLists;
     }
 }

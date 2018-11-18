@@ -1,6 +1,5 @@
 package com.linguancheng.gdeiassistant.Service.ScheduleQuery;
 
-import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
@@ -122,13 +121,13 @@ public class ScheduleQueryService {
     public ScheduleQueryResult QuerySchedule(String sessionId, User user, Integer week) throws Exception {
         ScheduleQueryResult scheduleQueryResult = null;
         try {
-            scheduleQueryResult = GetScheduleDocument(user.getUsername(), week);
+            scheduleQueryResult = QueryScheduleFromDocument(user.getUsername(), week);
             if (scheduleQueryResult == null) {
-                return QueryScheduleData(sessionId, user, week);
+                return QueryScheduleFromSystem(sessionId, user, week);
             }
             return scheduleQueryResult;
         } catch (Exception e) {
-            return QueryScheduleData(sessionId, user, week);
+            return QueryScheduleFromSystem(sessionId, user, week);
         }
     }
 
@@ -140,7 +139,7 @@ public class ScheduleQueryService {
      * @param week
      * @return
      */
-    public ScheduleQueryResult QueryScheduleData(String sessionId, User user, Integer week) throws Exception {
+    public ScheduleQueryResult QueryScheduleFromSystem(String sessionId, User user, Integer week) throws Exception {
         ScheduleQueryResult scheduleQueryResult = null;
         //检测是否已与教务系统进行会话同步
         UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
@@ -190,7 +189,7 @@ public class ScheduleQueryService {
      * @param week
      * @return
      */
-    public ScheduleQueryResult GetScheduleDocument(String username, Integer week) throws Exception {
+    public ScheduleQueryResult QueryScheduleFromDocument(String username, Integer week) throws Exception {
         ScheduleDocument scheduleDocument = scheduleCacheService.ReadSchedule(username);
         if (scheduleDocument != null) {
             //若未指定查询周数，则查询当前周数课表
@@ -208,7 +207,7 @@ public class ScheduleQueryService {
      *
      * @return
      */
-    public int GetCurrentWeek() {
+    private int GetCurrentWeek() {
         //当前日期
         LocalDate current = LocalDate.now();
         //开学日期
@@ -231,7 +230,7 @@ public class ScheduleQueryService {
      * @param week
      * @return
      */
-    public List<Schedule> GetSpecifiedWeekSchedule(List<Schedule> scheduleList, int week) {
+    private List<Schedule> GetSpecifiedWeekSchedule(List<Schedule> scheduleList, int week) {
         List<Schedule> list = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
             String scheduleWeek = schedule.getScheduleWeek();
@@ -254,7 +253,6 @@ public class ScheduleQueryService {
         }
         return list;
     }
-
 
     /**
      * 查询课表信息

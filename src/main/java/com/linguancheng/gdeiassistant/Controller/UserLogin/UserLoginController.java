@@ -1,10 +1,7 @@
 package com.gdeiassistant.gdeiassistant.Controller.UserLogin;
 
-import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.gdeiassistant.gdeiassistant.Exception.CommonException.TransactionException;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.*;
 import com.gdeiassistant.gdeiassistant.Pojo.Redirect.RedirectInfo;
-import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.gdeiassistant.gdeiassistant.Service.UserData.UserDataService;
 import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;

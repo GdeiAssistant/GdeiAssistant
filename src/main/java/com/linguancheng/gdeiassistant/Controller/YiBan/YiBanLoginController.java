@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.gdeiassistant.gdeiassistant.Enum.Base.AttachResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.gdeiassistant.gdeiassistant.Exception.CommonException.TransactionException;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanUser;

@@ -1,11 +1,8 @@
 package com.gdeiassistant.gdeiassistant.Controller.YiBan;
 
-import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.gdeiassistant.gdeiassistant.Exception.CommonException.TransactionException;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.JsonResult;
-import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.gdeiassistant.gdeiassistant.Service.UserData.UserDataService;
 import com.gdeiassistant.gdeiassistant.Service.UserLogin.UserLoginService;
@@ -15,16 +12,12 @@ import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
 import com.gdeiassistant.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Controller
 public class YiBanUserAttachController {

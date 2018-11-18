@@ -1,13 +1,8 @@
 package com.gdeiassistant.gdeiassistant.Controller.Wechat;
 
-import com.gdeiassistant.gdeiassistant.Enum.Base.AttachResultEnum;
-import com.gdeiassistant.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Wechat.RequestTypeEnum;
-import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
-import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Wechat.*;
 import com.gdeiassistant.gdeiassistant.Service.Wechat.WechatService;
-import com.gdeiassistant.gdeiassistant.Service.Wechat.WechatUserDataService;
 import com.gdeiassistant.gdeiassistant.Tools.XMLParseUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;

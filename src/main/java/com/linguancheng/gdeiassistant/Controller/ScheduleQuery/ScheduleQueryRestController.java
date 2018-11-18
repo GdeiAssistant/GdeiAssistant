@@ -55,14 +55,14 @@ public class ScheduleQueryRestController {
 
             case CACHE_ONLY:
                 //只查询缓存数据
-                scheduleQueryResult = scheduleQueryService.GetScheduleDocument(username, week);
+                scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(username, week);
                 result.setSuccess(true);
                 result.setScheduleList(scheduleQueryResult == null ? new ArrayList<>() : scheduleQueryResult.getScheduleList());
                 result.setWeek(scheduleQueryResult == null ? 0 : scheduleQueryResult.getWeek());
                 break;
 
             case QUERY_ONLY:
-                scheduleQueryResult = scheduleQueryService.QueryScheduleData(request.getSession().getId()
+                scheduleQueryResult = scheduleQueryService.QueryScheduleFromSystem(request.getSession().getId()
                         , new User(username, password), week);
                 result.setSuccess(true);
                 result.setScheduleList(scheduleQueryResult.getScheduleList());
@@ -107,14 +107,14 @@ public class ScheduleQueryRestController {
                     break;
 
                 case CACHE_ONLY:
-                    scheduleQueryResult = scheduleQueryService.GetScheduleDocument(user.getUsername(), week);
+                    scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(user.getUsername(), week);
                     result.setSuccess(true);
                     result.setScheduleList(scheduleQueryResult == null ? new ArrayList<>() : scheduleQueryResult.getScheduleList());
                     result.setWeek(scheduleQueryResult == null ? 0 : scheduleQueryResult.getWeek());
                     break;
 
                 case QUERY_ONLY:
-                    scheduleQueryResult = scheduleQueryService.QueryScheduleData(request.getSession().getId(), user, week);
+                    scheduleQueryResult = scheduleQueryService.QueryScheduleFromSystem(request.getSession().getId(), user, week);
                     result.setSuccess(true);
                     result.setScheduleList(scheduleQueryResult.getScheduleList());
                     result.setWeek(scheduleQueryResult.getWeek());

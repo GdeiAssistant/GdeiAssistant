@@ -103,7 +103,7 @@ public class GradeQueryRestController {
 
             case CACHE_ONLY:
                 //只查询缓存
-                gradeQueryResult = gradeQueryService.GetUserGradeDocument(user.getUsername(), year);
+                gradeQueryResult = gradeQueryService.QueryUserGradeFromDocument(user.getUsername(), year);
                 result.setSuccess(true);
                 result.setFirstTermGPA(gradeQueryResult == null ? 0 : gradeQueryResult.getFirstTermGPA());
                 result.setFirstTermIGP(gradeQueryResult == null ? 0 : gradeQueryResult.getFirstTermIGP());
@@ -116,7 +116,7 @@ public class GradeQueryRestController {
 
             case QUERY_ONLY:
                 //只查询教务系统
-                gradeQueryResult = gradeQueryService.QueryGradeData(sessionId, user, year);
+                gradeQueryResult = gradeQueryService.QueryGradeFromSystem(sessionId, user, year);
                 //查询成功
                 result.setSuccess(true);
                 result.setFirstTermGPA(gradeQueryResult.getFirstTermGPA());

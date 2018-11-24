@@ -1,6 +1,8 @@
 package com.linguancheng.gdeiassistant.Interceptor;
 
+import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
+import net.sf.json.JSONObject;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,6 +34,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             }
         }
 
+        //校验用户登录状态
         HttpSession httpSession = request.getSession();
         String username = (String) httpSession.getAttribute("username");
         String password = (String) httpSession.getAttribute("password");
@@ -40,7 +43,18 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        //跳转到用户登录页面
+        //若用户访问的URL是API接口，校验不通过则返回JSON字符串
+        if (uri.startsWith("/api")) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().print(JSONObject.fromObject(new JsonResult(false
+                    , "用户登录凭证过期，请重新登录")).toString());
+            response.getWriter().flush();
+            response.getWriter().close();
+            return false;
+        }
+
+        //若是普通页面，校验不通过则返回到登录页面
         response.sendRedirect(request.getContextPath() + "/?redirect_url=" + uri);
         return false;
     }

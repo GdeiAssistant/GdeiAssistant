@@ -33,39 +33,22 @@
 
 <!-- 树洞信息列表 -->
 <div id="list">
-    <c:if test="${SecretList!=null}">
-        <c:forEach var="Secret" items="${SecretList}">
-            <div class="secret theme${Secret.theme}" id="${Secret.id}">
-                <a href="/secret/detail/id/${Secret.id}">
-                    <section>${Secret.content}</section>
-                </a>
-                <footer>
-                    <div>
-                        <c:choose>
-                            <c:when test="${Secret.liked==1}">
-                                <i class="good"></i>
-                            </c:when>
-                            <c:otherwise>
-                                <i class="pregood"></i>
-                            </c:otherwise>
-                        </c:choose>
-                        <span>${Secret.likeCount}</span>
-                    </div>
-                    <a href="/secret/detail/id/${Secret.id}">
-                        <div><i class="comment"></i><span>${Secret.commentCount}</span></div>
-                    </a>
-                </footer>
-            </div>
-        </c:forEach>
-    </c:if>
+
 </div>
 
 <footer id="loadmore" style="text-align: center; line-height: 3rem; color:#999;margin-top:-1rem; font-size:1rem;"
-        onclick="loadMoreSecretInfo()">点击加载更多
+        onclick="loadSecretInfo()">点击加载更多
 </footer>
+
+<!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
+<div class="weui_toptips weui_warn js_tooltips"></div>
 
 <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
+
+    $(function () {
+        loadSecretInfo();
+    });
 
     var hasMore = true;
 
@@ -80,34 +63,57 @@
     //更改点赞状态
     $("body").on("click", ".pregood", function () {
         $e = $(this);
-        $.post("/rest/secret/id/" + $(this).closest(".secret").attr("id") + "/like", {"like": "1"}, function (data) {
+        $.post("/api/secret/id/" + $(this).closest(".secret").attr("id") + "/like", {"like": "1"}, function (data) {
             if (data.success === true) {
                 $e.removeClass("pregood").addClass("good").next("span").text(parseInt($e.next("span").text()) + 1);
             }
         }, "json");
     }).on("click", ".good", function () {
         $e = $(this);
-        $.post("/rest/secret/id/" + $(this).closest(".secret").attr("id") + "/like", {"like": "0"}, function (data) {
+        $.post("/api/secret/id/" + $(this).closest(".secret").attr("id") + "/like", {"like": "0"}, function (data) {
             if (data.success === true) {
                 $e.removeClass("good").addClass("pregood").next("span").text(parseInt($e.next("span").text()) - 1);
             }
         }, "json");
     });
 
-    //加载更多树洞信息
-    function loadMoreSecretInfo() {
+    //查看树洞详细信息
+    function showSecretDetailInfo(id) {
+        sessionStorage.setItem('size', $("#list").children("div").length);
+        sessionStorage.setItem('anchor', id);
+        window.location.href = '/secret/detail/id/' + id;
+    }
+
+    //加载树洞信息
+    function loadSecretInfo() {
 
         if (hasMore === true) {
 
             var loading = weui.loading('加载中');
 
-            $.get("/rest/secret/info/start/" + $("#list").children("div").length, function (result) {
+            var url;
+
+            var size = sessionStorage.getItem('size');
+
+            if (size) {
+                url = "/api/secret/info/start/" + $("#list").children("div").length + "/size/" + size;
+                sessionStorage.removeItem('size');
+            }
+            else {
+                url = "/api/secret/info/start/" + $("#list").children("div").length + "/size/10";
+            }
+
+            $.get(url, function (result) {
 
                     loading.hide();
 
                     if (result.success === true) {
 
-                        if (result.data !== null) {
+                        if (size) {
+                            sessionStorage.removeItem('size');
+                        }
+
+                        if (result.data !== null || result.data.length === 0) {
 
                             for (var i = 0; i < result.data.length; i++) {
 
@@ -117,7 +123,7 @@
                                 }
 
                                 $("#list").append("<div class='secret theme" + result.data[i].theme + "' id='" + result.data[i].id + "'>" +
-                                    "<a href='/secret/detail/id/" + result.data[i].id + "'>" +
+                                    "<a id='" + result.data[i].id + "' href='javascript:;' onclick='showSecretDetailInfo(" + result.data[i].id + ")'>" +
                                     "<section>" + result.data[i].content + "</section>" + "</a>" +
                                     "<footer><div><i class='" + liked + "'></i>" + "<span>"
                                     + result.data[i].likeCount + "</span>" + "</div>"
@@ -130,6 +136,16 @@
                             $("#loadmore").text("没有更多信息");
                             hasMore = false;
                         }
+                    }
+                    else {
+                        $(".weui_warn").text(message).show().delay(2000).hide(0);
+                    }
+
+                    //若用户查看过树洞详细消息并返回，跳转到瞄点的位置
+                    var anchor = sessionStorage.getItem('anchor');
+                    if (anchor) {
+                        window.location.href = "#" + anchor;
+                        sessionStorage.removeItem('anchor');
                     }
                 }
             );

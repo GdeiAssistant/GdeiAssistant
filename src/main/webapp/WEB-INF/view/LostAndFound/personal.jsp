@@ -179,7 +179,9 @@
 <section class="profile" onclick="window.location.href='/profile'">
     <i class="avt"><img id="avatar" src="/img/avatar/default.png"></i>
     <span id="kickname" class="nm"></span>
-    <span class="introduction"><p id="introduction"></p></span>
+    <span class="introduction">
+        <p style="overflow: hidden;text-overflow: ellipsis;" id="introduction"></p>
+    </span>
 </section>
 
 <!-- 个人二手交易信息 -->

@@ -91,14 +91,14 @@
     //点赞或取消点赞
     $("body").on("click", ".pregood", function () {
         $e = $(this);
-        $.post("/rest/secret/id/" + $(this).closest(".secret").attr("id") + "/like", {"like": "1"}, function (data) {
+        $.post("/api/secret/id/" + $(this).closest(".secret").attr("id") + "/like", {"like": "1"}, function (data) {
             if (data.success === true) {
                 $e.removeClass("pregood").addClass("good").next("span").text(parseInt($e.next("span").text()) + 1);
             }
         }, "json");
     }).on("click", ".good", function () {
         $e = $(this);
-        $.post("/rest/secret/id/" + $(this).closest(".secret").attr("id") + "/like", {"like": "0"}, function (data) {
+        $.post("/api/secret/id/" + $(this).closest(".secret").attr("id") + "/like", {"like": "0"}, function (data) {
             if (data.success === true) {
                 $e.removeClass("good").addClass("pregood").next("span").text(parseInt($e.next("span").text()) - 1);
             }
@@ -111,7 +111,7 @@
             $(".weui_warn").text("评论内容不能超过50字").show().delay(2000).hide(0);
             return false;
         }
-        $.post("/rest/secret/id/${Secret.id}/comment", {
+        $.post("/api/secret/id/${Secret.id}/comment", {
             "comment": $("input[name='comment']").val()
         }, function (data) {
             if (data.success === true) {

@@ -42,7 +42,7 @@
         //获取个人简介内容
         function getIntroduction() {
             $.ajax({
-                url: '/rest/introduction',
+                url: '/api/introduction',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {
@@ -84,7 +84,7 @@
             $.closePopup();
             if (introductionInput !== introductionCache) {
                 $.ajax({
-                    url: '/rest/introduction',
+                    url: '/api/introduction',
                     data: {
                         introduction: introductionInput
                     },

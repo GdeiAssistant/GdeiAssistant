@@ -14,7 +14,7 @@ public interface ErshouMapper {
 
     public List<ErshouItem> selectAvailableItems(@Param("start") int start, @Param("size") int size) throws Exception;
 
-    public List<ErshouItem> selectItemByType(@Param("start") int start, @Param("size") int size, @Param("type") int type) throws Exception;
+    public List<ErshouItem> selectItemsByType(@Param("start") int start, @Param("size") int size, @Param("type") int type) throws Exception;
 
     public List<ErshouItem> selectItemsWithKeyword(@Param("start") int start, @Param("size") int size, @Param("keyword") String keyword) throws Exception;
 

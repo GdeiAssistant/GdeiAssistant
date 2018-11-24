@@ -1,18 +1,16 @@
 package com.linguancheng.gdeiassistant.ExceptionHandler;
 
-import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
@@ -60,9 +58,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity HandleException(Exception e) {
+    public ModelAndView HandleException(Exception e) {
         log.error("系统异常：", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new JsonResult(false, "系统异常，请联系管理员"));
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Error/commonError");
+        modelAndView.addObject("ErrorTitle", "服务暂不可用");
+        modelAndView.addObject("ErrorMessage", "系统异常，请联系管理员");
+        return modelAndView;
     }
 }

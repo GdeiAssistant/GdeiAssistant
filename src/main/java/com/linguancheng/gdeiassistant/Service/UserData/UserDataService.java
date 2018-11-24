@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Service.UserData;
 
+import com.linguancheng.gdeiassistant.Pojo.Entity.Introduction;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Privacy.PrivacyMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
@@ -49,6 +50,10 @@ public class UserDataService {
         Profile profile = profileMapper.selectUserProfile(encryptUser.getUsername());
         if (profile == null) {
             profileMapper.initUserProfile(encryptUser.getUsername(), user.getUsername());
+        }
+        Introduction introduction = profileMapper.selectUserIntroduction(encryptUser.getUsername());
+        if (introduction == null) {
+            profileMapper.initUserIntroduction(encryptUser.getUsername());
         }
         Privacy privacy = privacyMapper.selectPrivacy(encryptUser.getUsername());
         if (privacy == null) {

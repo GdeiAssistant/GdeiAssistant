@@ -6,7 +6,9 @@ import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistEx
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Ershou.ErshouMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem;
+import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ public class ErshouService {
 
     @Resource(name = "ershouMapper")
     private ErshouMapper ershouMapper;
+
+    @Autowired
+    private UserProfileService userProfileService;
 
     private String accessKeyID;
 
@@ -59,8 +64,10 @@ public class ErshouService {
         int itemId = ershouInfo.getErshouItem().getId();
         List<String> pictureURL = GetErshouItemPictureURL(itemId);
         ershouInfo.getErshouItem().setUsername(username);
-        ershouInfo.getProfile().setUsername(username);
         ershouInfo.getErshouItem().setPictureURL(pictureURL);
+        //获取用户资料和头像信息
+        ershouInfo.getProfile().setUsername(username);
+        ershouInfo.getProfile().setAvatarURL(userProfileService.GetUserAvatar(username));
         return ershouInfo;
     }
 
@@ -125,7 +132,7 @@ public class ErshouService {
      * @return
      */
     public List<ErshouItem> QueryErshouItemByType(int type, int start) throws Exception {
-        List<ErshouItem> ershouItemList = ershouMapper.selectItemByType(start, 10, type);
+        List<ErshouItem> ershouItemList = ershouMapper.selectItemsByType(start, 10, type);
         if (ershouItemList == null || ershouItemList.isEmpty()) {
             return new ArrayList<>();
         }
@@ -165,7 +172,7 @@ public class ErshouService {
         if (ershouInfo == null) {
             throw new DataNotExistException("查找的二手交易信息不存在");
         }
-        if(!ershouInfo.getErshouItem().getState().equals(2)){
+        if (!ershouInfo.getErshouItem().getState().equals(2)) {
             ershouMapper.updateItem(ershouItem);
             return;
         }

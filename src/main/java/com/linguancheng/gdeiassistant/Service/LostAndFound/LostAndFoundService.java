@@ -6,7 +6,9 @@ import com.linguancheng.gdeiassistant.Exception.DatabaseException.ConfirmedState
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem;
+import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ public class LostAndFoundService {
 
     @Resource(name = "lostAndFoundMapper")
     private LostAndFoundMapper lostAndFoundMapper;
+
+    @Autowired
+    private UserProfileService userProfileService;
 
     private String accessKeyID;
 
@@ -64,6 +69,9 @@ public class LostAndFoundService {
         List<String> pictureURL = GetLostAndFoundItemPictureURL(itemId);
         lostAndFoundInfo.getLostAndFoundItem().setUsername(username);
         lostAndFoundInfo.getLostAndFoundItem().setPictureURL(pictureURL);
+        //获取用户资料和头像信息
+        lostAndFoundInfo.getProfile().setUsername(username);
+        lostAndFoundInfo.getProfile().setAvatarURL(userProfileService.GetUserAvatar(username));
         return lostAndFoundInfo;
     }
 

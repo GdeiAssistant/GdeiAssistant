@@ -6,7 +6,9 @@ import com.gdeiassistant.gdeiassistant.Exception.DatabaseException.ConfirmedStat
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.LostAndFoundItem;
+import com.gdeiassistant.gdeiassistant.Service.Profile.UserProfileService;
 import com.gdeiassistant.gdeiassistant.Tools.StringEncryptUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ public class LostAndFoundService {
 
     @Resource(name = "lostAndFoundMapper")
     private LostAndFoundMapper lostAndFoundMapper;
+
+    @Autowired
+    private UserProfileService userProfileService;
 
     private String accessKeyID;
 
@@ -45,7 +50,7 @@ public class LostAndFoundService {
     }
 
     /**
-     * 查询指定ID的失物招领物品信�?
+     * 查询指定ID的失物招领物品信息
      *
      * @param id
      * @return
@@ -53,10 +58,10 @@ public class LostAndFoundService {
     public LostAndFoundInfo QueryLostAndFoundInfoByID(int id) throws Exception {
         LostAndFoundInfo lostAndFoundInfo = lostAndFoundMapper.selectInfoByID(id);
         if (lostAndFoundInfo == null) {
-            throw new DataNotExistException("失物招领信息不存�?");
+            throw new DataNotExistException("失物招领信息不存在");
         }
         if (lostAndFoundInfo.getLostAndFoundItem().getState().equals(1)) {
-            throw new ConfirmedStateException("物品已确认寻回，不可再次编辑和查�?");
+            throw new ConfirmedStateException("物品已确认寻回，不可再次编辑和查看");
         }
         //获取二手交易商品图片URL
         String username = StringEncryptUtils.decryptString(lostAndFoundInfo.getLostAndFoundItem().getUsername());
@@ -64,11 +69,14 @@ public class LostAndFoundService {
         List<String> pictureURL = GetLostAndFoundItemPictureURL(itemId);
         lostAndFoundInfo.getLostAndFoundItem().setUsername(username);
         lostAndFoundInfo.getLostAndFoundItem().setPictureURL(pictureURL);
+        //获取用户资料和头像信息
+        lostAndFoundInfo.getProfile().setUsername(username);
+        lostAndFoundInfo.getProfile().setAvatarURL(userProfileService.GetUserAvatar(username));
         return lostAndFoundInfo;
     }
 
     /**
-     * 查询个人发布的失物招领物品信�?
+     * 查询个人发布的失物招领物品信息
      *
      * @return
      */
@@ -161,7 +169,7 @@ public class LostAndFoundService {
     }
 
     /**
-     * 查询指定类型的失物信�?
+     * 查询指定类型的失物信息
      *
      * @param type
      * @param start
@@ -181,7 +189,7 @@ public class LostAndFoundService {
     }
 
     /**
-     * 查询指定类型的招领信�?
+     * 查询指定类型的招领信息
      *
      * @param type
      * @param start
@@ -208,7 +216,7 @@ public class LostAndFoundService {
      */
     public LostAndFoundItem AddLostAndFoundItem(LostAndFoundItem lostAndFoundItem, String username) throws Exception {
         lostAndFoundItem.setUsername(StringEncryptUtils.encryptString(username));
-        //使用24小时制显示发布时�?
+        //使用24小时制显示发布时间
         lostAndFoundItem.setPublishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         lostAndFoundMapper.insertItem(lostAndFoundItem);
         return lostAndFoundItem;
@@ -235,7 +243,7 @@ public class LostAndFoundService {
     }
 
     /**
-     * 更新失物招领物品状�??
+     * 更新失物招领物品状态
      *
      * @param id
      * @param state
@@ -279,7 +287,7 @@ public class LostAndFoundService {
         // 创建OSSClient实例
         OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
         List<String> pictureURL = new ArrayList<>();
-        //�?查图片是否存�?
+        //检查图片是否存在
         for (int i = 1; i <= 4; i++) {
             if (ossClient.doesObjectExist("gdeiassistant-userdata", "lostandfound/" + id + "_" + i + ".jpg")) {
                 //设置过期时间30分钟

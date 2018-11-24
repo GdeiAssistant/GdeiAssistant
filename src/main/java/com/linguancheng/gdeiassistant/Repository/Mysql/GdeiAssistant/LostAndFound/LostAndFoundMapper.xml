@@ -23,6 +23,7 @@
     <resultMap id="LostAndFoundInfo" type="com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo">
         <id property="id" column="id"/>
         <result property="profile.username" column="username"/>
+        <result property="profile.kickname" column="kickname"/>
         <result property="lostAndFoundItem.username" column="username"/>
         <result property="lostAndFoundItem.kickname" column="kickname"/>
         <result property="lostAndFoundItem.name" column="name"/>

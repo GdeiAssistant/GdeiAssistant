@@ -20,26 +20,28 @@
         <result property="ershouItem.phone" column="phone"/>
         <result property="ershouItem.state" column="state"/>
         <result property="ershouItem.publishTime" column="publishTime"/>
+        <result property="profile.username" column="username"/>
+        <result property="profile.kickname" column="kickname"/>
     </resultMap>
 
     <select id="selectInfoByID" parameterType="java.lang.Integer" resultMap="ErshouInfo">
         select * from ershou join profile using (username) where id=#{id} limit 1
     </select>
 
-    <select id="selectItemByUsername" parameterType="java.lang.String"
+    <select id="selectItemsByUsername" parameterType="java.lang.String"
             resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
         select * from ershou where username=#{username} order by id desc
     </select>
 
-    <select id="selectAvailableItem" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
+    <select id="selectAvailableItems" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
         select * from ershou where state='1' order by id desc limit #{start},#{size}
     </select>
 
-    <select id="selectItemByType" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
+    <select id="selectItemsByType" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
         select * from ershou where type=#{type} and state='1' order by id desc limit #{start},#{size}
     </select>
 
-    <select id="selectItemWithKeyword" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
+    <select id="selectItemsWithKeyword" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
         select distinct * from ershou where state='1' and (name like '%${keyword}%'
          or description like '%${keyword}%' or location like '%${keyword}%') order by id desc limit #{start},#{size}
     </select>

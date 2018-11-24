@@ -72,16 +72,16 @@
                 faculty=#{faculty},
             </if>
             <if test='major!=null'>
-                major=#{major}
+                major=#{major},
             </if>
-            <if test="region!=null'">
-                region=#{region}
+            <if test='region!=null'>
+                region=#{region},
             </if>
-            <if test="state!=null'">
-                state=#{state}
+            <if test='state!=null'>
+                state=#{state},
             </if>
-            <if test="city!=null'">
-                city=#{city}
+            <if test='city!=null'>
+                city=#{city},
             </if>
         </set>
         where username=#{username}

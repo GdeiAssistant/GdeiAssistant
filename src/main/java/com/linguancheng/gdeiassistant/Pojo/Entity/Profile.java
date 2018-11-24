@@ -12,6 +12,8 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Profile implements Serializable {
 
+    private String avatarURL;
+
     private String username;
 
     private String kickname;
@@ -120,5 +122,13 @@ public class Profile implements Serializable {
 
     public void setFaculty(Integer faculty) {
         this.faculty = faculty;
+    }
+
+    public String getAvatarURL() {
+        return avatarURL;
+    }
+
+    public void setAvatarURL(String avatarURL) {
+        this.avatarURL = avatarURL;
     }
 }

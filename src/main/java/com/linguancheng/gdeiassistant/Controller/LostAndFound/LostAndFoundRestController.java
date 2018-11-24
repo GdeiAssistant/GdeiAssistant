@@ -32,7 +32,7 @@ public class LostAndFoundRestController {
     @ExceptionHandler(DataNotExistException.class)
     public ResponseEntity ShowDataNotExistExceptionTip() {
         return ResponseEntity.ok(new JsonResult(false
-                , "查询的失物招领信息不存在，"));
+                , "查询的失物招领信息不存在"));
     }
 
     @ExceptionHandler(NoAccessException.class)
@@ -53,7 +53,7 @@ public class LostAndFoundRestController {
      * @param start
      * @return
      */
-    @RequestMapping(value = "/api/lostandfound/lostinfo/start/{start}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/lostandfound/lostitem/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<LostAndFoundItem>> GetLostItem(@PathVariable("start") int start) throws Exception {
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundService
                 .QueryLostItems(start);

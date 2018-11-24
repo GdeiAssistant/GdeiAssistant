@@ -133,7 +133,7 @@
         </c:forEach>
 
         $.ajax({
-            url: "/rest/profile",
+            url: "/api/profile",
             type: 'get',
             success: function (result) {
                 if (result.success === true) {

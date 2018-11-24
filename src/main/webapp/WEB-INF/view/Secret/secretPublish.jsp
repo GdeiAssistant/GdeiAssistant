@@ -135,7 +135,7 @@
             $(".weui_warn").text("树洞内容长度超过限制！").show().delay(2000).hide(0);
             return false;
         }
-        $.post("/rest/secret/info", $("form").serialize() + "&theme=" + rand, function (data) {
+        $.post("/api/secret/info", $("form").serialize() + "&theme=" + rand, function (data) {
             if (data.success === true) {
                 window.location.href = "/secret";
             } else {

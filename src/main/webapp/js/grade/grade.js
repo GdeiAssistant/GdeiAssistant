@@ -61,7 +61,7 @@ function postQueryForm(year) {
                 $("#loadingToast, .weui_mask").hide();
                 clearGradeInfo();
                 if (gradeQueryResult.success === true) {
-                    changeYearSelectedClass(gradeQueryResult.queryYear);
+                    changeYearSelectedClass(gradeQueryResult.year);
                     handleGradeInfo(gradeQueryResult);
                 }
                 else {

@@ -174,6 +174,7 @@ public class UserProfileService {
      * @param introductionContent
      * @return
      */
+    @Transactional
     public void UpdateIntroduction(String username, String introductionContent) throws Exception {
         Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils.encryptString(username));
         if (introduction != null) {
@@ -182,7 +183,6 @@ public class UserProfileService {
             profileMapper.initUserIntroduction(StringEncryptUtils.encryptString(username));
             profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(username), introductionContent);
         }
-        throw new DataNotExistException("查询的用户不存在");
     }
 
     /**
@@ -201,6 +201,7 @@ public class UserProfileService {
             profile.setState(state);
             profile.setCity(city);
             profileMapper.updateUserProfile(profile);
+            return;
         }
         throw new DataNotExistException("查询的用户不存在");
     }
@@ -231,6 +232,7 @@ public class UserProfileService {
             }
             profile.setGender(gender);
             profileMapper.updateUserProfile(profile);
+            return;
         }
         throw new DataNotExistException("查询的用户不存在");
     }
@@ -243,12 +245,11 @@ public class UserProfileService {
      * @return
      */
     public void UpdateGenderOrientation(String username, int genderOrientation) throws Exception {
-        User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-        if (queryUser != null) {
-            Profile profile = new Profile();
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
             profile.setGenderOrientation(genderOrientation);
-            profile.setUsername(StringEncryptUtils.encryptString(username));
             profileMapper.updateUserProfile(profile);
+            return;
         }
         throw new DataNotExistException("查询的用户不存在");
     }
@@ -265,6 +266,7 @@ public class UserProfileService {
         if (profile != null) {
             profile.setFaculty(faculty);
             profileMapper.updateUserProfile(profile);
+            return;
         }
         throw new DataNotExistException("查询的用户不存在");
     }
@@ -281,6 +283,7 @@ public class UserProfileService {
         if (profile != null) {
             profile.setMajor(major);
             profileMapper.updateUserProfile(profile);
+            return;
         }
         throw new DataNotExistException("查询的用户不存在");
     }
@@ -297,6 +300,7 @@ public class UserProfileService {
         if (profile != null) {
             profile.setKickname(kickname);
             profileMapper.updateUserProfile(profile);
+            return;
         }
         throw new DataNotExistException("查询的用户不存在");
     }

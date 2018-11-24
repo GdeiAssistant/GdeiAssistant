@@ -263,7 +263,7 @@
                         <!-- 移动端的 Restful API -->
                         <value>/rest</value>
                         <!-- 应用内的 WEB API -->
-                        <value>/api</value>
+                        <!-- <value>/api</value> -->
                         <!-- 微信接口 -->
                         <value>/wechat</value>
                         <!-- 易班接口 -->

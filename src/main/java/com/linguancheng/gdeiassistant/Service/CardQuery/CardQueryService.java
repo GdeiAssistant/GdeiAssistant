@@ -225,17 +225,14 @@ public class CardQueryService {
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院中央认证服务－登录")) {
             //封装需要提交的数据
-            BasicNameValuePair basicNameValuePair_1 = new BasicNameValuePair("imageField.x", "0");
-            BasicNameValuePair basicNameValuePair_2 = new BasicNameValuePair("imageField.y", "0");
-            BasicNameValuePair basicNameValuePair_3 = new BasicNameValuePair("username", username);
-            BasicNameValuePair basicNameValuePair_4 = new BasicNameValuePair("password", password);
-            BasicNameValuePair basicNameValuePair_5 = new BasicNameValuePair("service", "http%3A%2F%2Fecard.gdei.edu.cn%3A8050%2FLoginCas.aspx");
             List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
-            basicNameValuePairs.add(basicNameValuePair_1);
-            basicNameValuePairs.add(basicNameValuePair_2);
-            basicNameValuePairs.add(basicNameValuePair_3);
-            basicNameValuePairs.add(basicNameValuePair_4);
-            basicNameValuePairs.add(basicNameValuePair_5);
+            basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
+            basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
+            basicNameValuePairs.add(new BasicNameValuePair("username", username));
+            basicNameValuePairs.add(new BasicNameValuePair("password", password));
+            basicNameValuePairs.add(new BasicNameValuePair("service", "http://ecard.gdei.edu.cn:8050/LoginCas.aspx"));
+            basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
+            basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
             HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login?service=http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
             //绑定表单参数
             httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));

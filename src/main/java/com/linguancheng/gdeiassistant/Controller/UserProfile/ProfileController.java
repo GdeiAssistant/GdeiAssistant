@@ -105,7 +105,7 @@ public class ProfileController {
             if (privacy.isIntroduction()) {
                 Introduction introduction = userProfileService.GetUserIntroduction(username);
                 if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
-                    modelAndView.addObject("Introduction", introduction);
+                    modelAndView.addObject("Introduction", introduction.getIntroductionContent());
                 }
             }
             modelAndView.addObject("ContainProfile", containProfile);

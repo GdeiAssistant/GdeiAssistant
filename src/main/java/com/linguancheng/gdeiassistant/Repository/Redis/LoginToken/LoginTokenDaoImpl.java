@@ -47,13 +47,13 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     }
 
     /**
-     * 保存权限令牌信息
+     * 插入权限令牌信息
      *
      * @param token
      * @return
      */
     @Override
-    public Boolean SaveAccessToken(AccessToken token) {
+    public Boolean InsertAccessToken(AccessToken token) {
         try {
             //保存权限令牌，设置有效期为7天
             redisTemplate.opsForValue().set(StringEncryptUtils
@@ -68,19 +68,31 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     }
 
     /**
-     * 保存刷新令牌信息
+     * 插入刷新令牌信息
      *
      * @param token
      * @return
      */
     @Override
-    public Boolean SaveRefreshToken(RefreshToken token) {
+    public Boolean InsertRefreshToken(RefreshToken token) {
         try {
             //保存刷新令牌，设置有效期为30天
             redisTemplate.opsForValue().set(StringEncryptUtils.SHA256MapString(token.getSignature())
                     , token.getTokenSignature());
             redisTemplate.expire(StringEncryptUtils.SHA256MapString(token.getSignature())
                     , 30, TimeUnit.DAYS);
+            return true;
+        } catch (Exception e) {
+            log.error("保存刷新令牌信息失败", e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean UpdateAccessToken(AccessToken token) {
+        try {
+            //更新权限令牌信息，但不重新设置有效期
+            redisTemplate.opsForValue().set(StringEncryptUtils.SHA256MapString(token.getSignature()), token.getIp());
             return true;
         } catch (Exception e) {
             log.error("保存刷新令牌信息失败", e);

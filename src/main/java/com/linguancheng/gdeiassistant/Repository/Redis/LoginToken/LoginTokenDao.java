@@ -13,9 +13,11 @@ public interface LoginTokenDao {
 
     public String QueryToken(String signature);
 
-    public Boolean SaveAccessToken(AccessToken token);
+    public Boolean InsertAccessToken(AccessToken token);
 
-    public Boolean SaveRefreshToken(RefreshToken token);
+    public Boolean InsertRefreshToken(RefreshToken token);
+
+    public Boolean UpdateAccessToken(AccessToken token);
 
     public Boolean DeleteToken(String signature);
 }

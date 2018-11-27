@@ -11,7 +11,6 @@ import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenNotMatc
 import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenServerException;
 import com.linguancheng.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.*;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
 import com.linguancheng.gdeiassistant.Repository.Redis.LoginToken.LoginTokenDao;
 import com.linguancheng.gdeiassistant.Service.IPAddress.IPService;
@@ -130,7 +129,7 @@ public class LoginTokenService {
         refreshToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         refreshToken.setUnionId(accessToken.getUnionId());
         refreshToken.setIp(accessToken.getIp());
-        if (loginTokenDao.SaveRefreshToken(refreshToken)) {
+        if (loginTokenDao.InsertRefreshToken(refreshToken)) {
             return refreshToken;
         }
         throw new TokenServerException("令牌服务系统异常");
@@ -161,7 +160,7 @@ public class LoginTokenService {
         accessToken.setSignature(token);
         accessToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         accessToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        if (loginTokenDao.SaveAccessToken(accessToken)) {
+        if (loginTokenDao.InsertAccessToken(accessToken)) {
             return accessToken;
         }
         throw new TokenServerException("令牌服务系统异常");
@@ -194,23 +193,31 @@ public class LoginTokenService {
             if (expireTime <= LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
                 //若过期时间为小于等于当前时间的时间戳，则认为权限令牌已过期
                 return TokenValidResultEnum.EXPIRED;
-            } else {
-                //获取令牌信息记录的IP地址
-                String tokenIP = loginTokenDao.QueryToken(signature);
-                if (StringUtils.isBlank(tokenIP)) {
-                    //若没有找到对应的令牌信息记录
-                    return TokenValidResultEnum.NOT_MATCH;
-                }
-                //检测IP地址是否为同一省份
-                Location currentLocation = ipService.GetLocationInfoByIPAddress(ip);
-                Location tokenLocation = ipService.GetLocationInfoByIPAddress(tokenIP);
-                if (currentLocation.getRegion().equals(tokenLocation.getRegion())) {
-                    //IP校验通过
-                    return TokenValidResultEnum.SUCCESS;
-                } else {
-                    return TokenValidResultEnum.UNUSUAL_LOCATION;
-                }
             }
+            //获取令牌信息记录的IP地址
+            String tokenIP = loginTokenDao.QueryToken(signature);
+            if (StringUtils.isBlank(tokenIP)) {
+                //若没有找到对应的令牌信息记录
+                return TokenValidResultEnum.NOT_MATCH;
+            }
+            //若IP地址相同，则不需要重复校验
+            if (tokenIP.equals(ip)) {
+                return TokenValidResultEnum.SUCCESS;
+            }
+            //检测IP地址是否为同一省份
+            Location currentLocation = ipService.GetLocationInfoByIPAddress(ip);
+            Location tokenLocation = ipService.GetLocationInfoByIPAddress(tokenIP);
+            if (currentLocation.getRegion().equals(tokenLocation.getRegion())) {
+                //IP校验通过，更新令牌的IP地址
+                AccessToken accessToken = new AccessToken();
+                accessToken.setSignature(signature);
+                accessToken.setIp(ip);
+                if (loginTokenDao.UpdateAccessToken(accessToken)) {
+                    return TokenValidResultEnum.SUCCESS;
+                }
+                return TokenValidResultEnum.ERROR;
+            }
+            return TokenValidResultEnum.UNUSUAL_LOCATION;
         } catch (JWTVerificationException e) {
             //签名验证不通过
             return TokenValidResultEnum.NOT_MATCH;

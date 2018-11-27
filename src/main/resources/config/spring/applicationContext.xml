@@ -257,7 +257,7 @@
                         <!-- 用户登录页面 -->
                         <value>/login</value>
                         <!-- 用户登录接口 -->
-                        <value>/userlogin</value>
+                        <value>/api/userlogin</value>
                         <!-- 使用协议 -->
                         <value>/agreement</value>
                         <!-- 移动端的 Restful API -->

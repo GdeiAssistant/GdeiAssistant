@@ -6,11 +6,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
-
 <head>
     <title>广东二师助手—广东第二师范学院必备校园服务应用</title>
     <meta charset="UTF-8">
@@ -41,30 +39,42 @@
         function postLoginForm() {
             if ($("#username").val() === "" || $("#password").val() === "") {
                 $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
-            }
-            else {
+            } else {
                 $("#loadingToast, .weui_mask").show();
-                $("form").submit();
+                $.ajax({
+                    url: '/api/userlogin',
+                    method: 'POST',
+                    data: {
+                        username: $("#username").val(),
+                        password: $("#password").val()
+                    },
+                    success: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.data.success) {
+                            if ($("#redirect").val() != '') {
+                                window.location.href = $("#redirect").val();
+                            } else {
+                                window.location.href = '/index';
+                            }
+                        } else {
+                            $(".weui_warn").text(result.data.message).show().delay(2000).hide(0);
+                        }
+                    },
+                    error: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result) {
+                            $(".weui_warn").text(result.data.message).show().delay(2000).hide(0);
+                        } else {
+                            $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
+                        }
+                    }
+                });
             }
-        }
-
-        //显示用户协议
-        function showAgreement() {
-            window.location.href = '/agreement';
         }
     </script>
 </head>
 
 <body>
-
-<%-- 获取错误信息并提示 --%>
-<c:if test="${LoginErrorMessage!=null}">
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $(".weui_warn").text("${LoginErrorMessage}").show().delay(2000).hide(0);
-        });
-    </script>
-</c:if>
 
 <div class="hd">
     <h1 class="page_title">广东二师助手</h1>
@@ -73,15 +83,15 @@
 
 <!-- 提交的用户信息表单 -->
 <div class="weui_cells weui_cells_form">
-    <form action="/userlogin" method="post">
-        <input type="hidden" id="RedirectURL" name="redirect_url" value="${RedirectURL}">
+    <form>
+        <input type="hidden" id="redirect" name="redirect" value="${RedirectURL}">
         <div class="weui_cell">
             <div class="weui_cell_hd">
                 <label class="weui_label">账号</label>
             </div>
             <div class="weui_cell_bd weui_cell_primary">
                 <input id="username" class="weui_input" type="text" maxlength="20" name="username"
-                       value="${LoginUsername}" placeholder="请输入你的教务系统账号">
+                       placeholder="请输入你的教务系统账号">
             </div>
         </div>
         <div class="weui_cell">
@@ -90,7 +100,7 @@
             </div>
             <div class="weui_cell_bd weui_cell_primary">
                 <input id="password" class="weui_input" type="password" maxlength="35" name="password"
-                       value="${LoginPassword}" placeholder="请输入你的教务系统密码">
+                       placeholder="请输入你的教务系统密码">
             </div>
         </div>
     </form>
@@ -101,7 +111,8 @@
     <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postLoginForm()">登录</a>
 </div>
 
-<p class="page_desc" style="margin-top: 25px">点击登录按钮表示你已阅读并同意<a class="page_desc" onclick="showAgreement()"
+<p class="page_desc" style="margin-top: 25px">点击登录按钮表示你已阅读并同意<a class="page_desc"
+                                                                onclick="window.location.href = '/agreement'"
                                                                 style="color: #3cc51f;">《用户协议》</a></p>
 
 <!-- 登录中弹框 -->

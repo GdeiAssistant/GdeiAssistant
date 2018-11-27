@@ -4,7 +4,7 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
@@ -36,11 +36,12 @@ public class QueryLogAspect {
 
     }
 
-    @After("RestQueryAction()")
+    @AfterReturning("RestQueryAction()")
     public void RestSaveQueryLog(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
-        String username = ((User) request.getAttribute("user")).getUsername();
+        String username = (Optional.ofNullable((User) request.getAttribute("user"))
+                .orElse(new User("unknown"))).getUsername();
         String dateTime = dateFormat.format(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         String functionName = joinPoint.getSignature().getName();
         switch (functionName) {
@@ -61,11 +62,11 @@ public class QueryLogAspect {
         }
     }
 
-    @After("QueryAction()")
+    @AfterReturning("QueryAction()")
     public void SaveQueryLog(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        String username = Optional.ofNullable(String.valueOf(WebUtils.getSessionAttribute((HttpServletRequest) args[0]
-                , "username"))).orElse("unknown");
+        String username = Optional.ofNullable((String) WebUtils.getSessionAttribute((HttpServletRequest) args[0]
+                , "username")).orElse("unknown");
         String dateTime = dateFormat.format(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         String functionName = joinPoint.getSignature().getName();
         switch (functionName) {

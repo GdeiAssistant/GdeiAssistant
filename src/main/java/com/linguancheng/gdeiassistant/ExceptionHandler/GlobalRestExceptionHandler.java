@@ -1,6 +1,7 @@
 package com.linguancheng.gdeiassistant.ExceptionHandler;
 
 import com.linguancheng.gdeiassistant.Constant.ConstantUtils;
+import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,11 +60,28 @@ public class GlobalRestExceptionHandler {
                         , "请求参数不合法"));
     }
 
+    /**
+     * 处理网络连接超时异常
+     *
+     * @return
+     */
+    @ExceptionHandler(NetWorkTimeoutException.class)
+    public ResponseEntity HandleNetWorkTimeoutException() {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(new JsonResult(ConstantUtils.NETWORK_TIMEOUT, false, "网络连接超时，请重试"));
+    }
+
+    /**
+     * 处理系统异常
+     *
+     * @param e
+     * @return
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity HandleException(Exception e) {
         log.error("系统异常：", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new JsonResult(false, "系统异常，请联系管理员"));
+                .body(new JsonResult(ConstantUtils.INTERNAL_SERVER_ERROR, false, "系统异常，请联系管理员"));
     }
 
 

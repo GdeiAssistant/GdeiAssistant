@@ -1,9 +1,6 @@
 package com.linguancheng.gdeiassistant.Controller.Ershou;
 
-import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.NoAccessException;
-import com.linguancheng.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
-import com.linguancheng.gdeiassistant.Exception.DatabaseException.NotAvailableStateException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -11,9 +8,11 @@ import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Service.Ershou.ErshouService;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,26 +25,6 @@ public class ErshouRestController {
     private ErshouService ershouService;
 
     private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
-
-    @ExceptionHandler(DataNotExistException.class)
-    public ResponseEntity ShowDataNotExistExceptionTip() {
-        return ResponseEntity.ok(new JsonResult(false, "查询的二手交易信息不存在"));
-    }
-
-    @ExceptionHandler(NoAccessException.class)
-    public ResponseEntity ShowNoAccessExceptionTip() {
-        return ResponseEntity.ok(new JsonResult(false, "你没有权限编辑该二手交易信息"));
-    }
-
-    @ExceptionHandler(ConfirmedStateException.class)
-    public ResponseEntity ShowUnmodifiableStateExceptionTip() {
-        return ResponseEntity.ok(new JsonResult(false, "已确认售出的商品不能再次编辑和查看"));
-    }
-
-    @ExceptionHandler(NotAvailableStateException.class)
-    public ResponseEntity ShowNotAvailableStateExceptionTip() {
-        return ResponseEntity.ok(new JsonResult(false, "已下架的商品暂不能查看"));
-    }
 
     /**
      * 分页查询二手交易信息

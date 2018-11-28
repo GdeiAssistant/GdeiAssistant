@@ -1,8 +1,6 @@
 package com.linguancheng.gdeiassistant.Controller.LostAndFound;
 
-import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.NoAccessException;
-import com.linguancheng.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem;
 import com.linguancheng.gdeiassistant.Service.LostAndFound.LostAndFoundService;
@@ -12,7 +10,10 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,33 +30,6 @@ public class LostAndFoundController {
             , "银行卡", "书", "钥匙"
             , "包包", "衣帽", "校园代步"
             , "运动健身", "数码配件", "其他"};
-
-    @ExceptionHandler(DataNotExistException.class)
-    public ModelAndView ShowDataNotExistExceptionTip() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("Error/commonError");
-        modelAndView.addObject("ErrorTitle", "失物招领信息不存在");
-        modelAndView.addObject("ErrorMessage", "查询的失物招领信息不存在");
-        return modelAndView;
-    }
-
-    @ExceptionHandler(NoAccessException.class)
-    public ModelAndView ShowNoAccessExceptionTip() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("Error/commonError");
-        modelAndView.addObject("ErrorTitle", "当前用户没有权限");
-        modelAndView.addObject("ErrorMessage", "你没有权限编辑该失物招领信息");
-        return modelAndView;
-    }
-
-    @ExceptionHandler(ConfirmedStateException.class)
-    public ModelAndView ShowUnmodifiableStateException() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("Error/commonError");
-        modelAndView.addObject("ErrorTitle", "物品已确认寻回");
-        modelAndView.addObject("ErrorMessage", "该失物招领信息已确认寻回，不可再次查看和编辑");
-        return modelAndView;
-    }
 
     /**
      * 进入失物主页

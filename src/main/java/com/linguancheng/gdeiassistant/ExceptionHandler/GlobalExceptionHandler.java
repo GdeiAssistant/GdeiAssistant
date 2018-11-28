@@ -57,6 +57,12 @@ public class GlobalExceptionHandler {
         response.getWriter().close();
     }
 
+    /**
+     * 处理系统异常
+     *
+     * @param e
+     * @return
+     */
     @ExceptionHandler(Exception.class)
     public ModelAndView HandleException(Exception e) {
         log.error("系统异常：", e);

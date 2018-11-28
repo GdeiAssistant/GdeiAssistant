@@ -1,6 +1,5 @@
 package com.linguancheng.gdeiassistant.Controller.UserProfile;
 
-import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.*;
 import com.linguancheng.gdeiassistant.Service.Privacy.PrivacyService;
 import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
@@ -8,7 +7,9 @@ import com.linguancheng.gdeiassistant.Tools.LocationUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -19,15 +20,6 @@ public class ProfileController {
 
     @Autowired
     private PrivacyService privacyService;
-
-    @ExceptionHandler(DataNotExistException.class)
-    public ModelAndView ShowDataNotExistExceptionTip() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("Error/commonError");
-        modelAndView.addObject("ErrorTitle", "用户不存在");
-        modelAndView.addObject("ErrorMessage", "该用户不存在或已自主注销");
-        return modelAndView;
-    }
 
     @RequestMapping(value = {"/introduction"})
     public ModelAndView ResolveUserIntroductionPage() {

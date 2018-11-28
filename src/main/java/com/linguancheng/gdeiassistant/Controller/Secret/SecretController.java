@@ -1,11 +1,9 @@
 package com.linguancheng.gdeiassistant.Controller.Secret;
 
-import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Secret;
 import com.linguancheng.gdeiassistant.Service.Secret.SecretService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,15 +17,6 @@ public class SecretController {
 
     @Autowired
     private SecretService secretService;
-
-    @ExceptionHandler(DataNotExistException.class)
-    public ModelAndView ShowDataNotExistExceptionTip() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("Error/commonError");
-        modelAndView.addObject("ErrorTitle", "树洞信息不存在");
-        modelAndView.addObject("ErrorMessage", "查询的树洞信息不存在");
-        return modelAndView;
-    }
 
     /**
      * 进入校园树洞应用首页

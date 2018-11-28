@@ -69,7 +69,7 @@
                 success: function (result) {
                     loading.hide();
                     if (result.success === true) {
-                        if (result.data !== null) {
+                        if (result.data !== null && result.data.length !== 0) {
                             for (var i = 0; i < result.data.length; i++) {
                                 $(".lists").append("<div class='list' onload='getPreviewPicture(result.data[i].id)'>" +
                                     "<a href='/lostandfound/detail/id/" + result.data[i].id + "'>" +
@@ -78,13 +78,11 @@
                                     "<p class='summary'>" + result.data[i].description + "</p>" + "</a></div>");
                                 $(".lists").append("<script>getPreviewPicture('" + result.data[i].id + "')<\/script>");
                             }
-                        }
-                        else {
+                        } else {
                             $("#loadmore").text("没有更多信息");
                             hasMore = false;
                         }
-                    }
-                    else {
+                    } else {
                         showErrorTip(result.message);
                     }
                 },

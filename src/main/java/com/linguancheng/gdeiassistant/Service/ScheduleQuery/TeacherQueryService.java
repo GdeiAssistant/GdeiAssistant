@@ -2,6 +2,7 @@ package com.gdeiassistant.gdeiassistant.Service.ScheduleQuery;
 
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.ServiceResultEnum;
+import com.gdeiassistant.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
@@ -84,12 +85,12 @@ public class TeacherQueryService {
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 boolean reLogin = false;
                 if (document.title().equals("欢迎使用正方教务管理系统！请登录")) {
-                    //登录凭证过期，重新登录
+                    //登录凭证过期，重新登�?
                     LoginResultEnum loginResultEnum = teacherLoginService
                             .TeacherLogin(sessionId, username, password);
                     switch (loginResultEnum) {
                         case TIME_OUT:
-                            throw new IOException("登录教务系统超时");
+                            throw new NetWorkTimeoutException("登录教务系统超时");
 
                         case SERVER_ERROR:
                             throw new ServerErrorException("教务系统异常");
@@ -129,56 +130,56 @@ public class TeacherQueryService {
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         }
                         if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                            //获取存放课表信息的表格
+                            //获取存放课表信息的表�?
                             Element table = document.getElementById("Table6");
-                            //获取表格中的所有行
+                            //获取表格中的�?有行
                             Elements trs = table.select("tr");
-                            //特殊的空课程,用于标记当前单元格被上边的课程信息占用,即上边同列课程的课程时长大于1
+                            //特殊的空课程,用于标记当前单元格被上边的课程信息占�?,即上边同列课程的课程时长大于1
                             TeacherSchedule specialEmptySchedule = new TeacherSchedule();
-                            //存放课表信息的数组,包含特殊的空课程对象
+                            //存放课表信息的数�?,包含特殊的空课程对象
                             TeacherSchedule[] schedulesWithSpecialEmptySchedule = new TeacherSchedule[84];
-                            //存放课表信息的列表,过滤特殊的空课程对象后添加入该列表
+                            //存放课表信息的列�?,过滤特殊的空课程对象后添加入该列�?
                             List<TeacherSchedule> schedulesWithoutSpecialEmptySchedule = new ArrayList<>();
-                            //当前单元格位置position值
+                            //当前单元格位置position�?
                             int currentPosition = 0;
-                            //当前行最大位置position值
+                            //当前行最大位置position�?
                             int currentRowMaxPosition = 0;
-                            //前两行为行列信息,从第三行开始获取信息
+                            //前两行为行列信息,从第三行�?始获取信�?
                             for (int row = 2; row < trs.size(); row++) {
                                 //获取该行内所有列
                                 Elements tds = trs.get(row).select("td");
-                                //记录当前访问列数据的游标,若当前为第3行或第8行或第13行,初始列游标值为2,否则初始值为1
-                                //因为特殊行里面的第一列包含上午/下午的信息提示
+                                //记录当前访问列数据的游标,若当前为�?3行或�?8行或�?13�?,初始列游标�?�为2,否则初始值为1
+                                //因为特殊行里面的第一列包含上�?/下午的信息提�?
                                 int currentColumnIndexInThisRow;
                                 if (row == 2 || row == 7 || row == 11) {
                                     currentColumnIndexInThisRow = 2;
                                 } else {
                                     currentColumnIndexInThisRow = 1;
                                 }
-                                //当前行的列最大游标
+                                //当前行的列最大游�?
                                 int maxColumnIndex;
                                 if (tds.size() < 7) {
                                     maxColumnIndex = tds.size() - 1;
                                 } else {
                                     maxColumnIndex = 6;
                                 }
-                                //遍历当前行,获取课表信息
+                                //遍历当前�?,获取课表信息
                                 for (currentRowMaxPosition = currentRowMaxPosition + 7; currentPosition < currentRowMaxPosition; currentPosition++) {
                                     if (schedulesWithSpecialEmptySchedule[currentPosition] == specialEmptySchedule) {
-                                        //当前position指向特殊空Schedule对象,跳过当前单元格
+                                        //当前position指向特殊空Schedule对象,跳过当前单元�?
                                     } else {
                                         //判断当前行是否已经遍历完
                                         if (currentPosition % 7 <= maxColumnIndex) {
-                                            //判断当前position的课程信息是否为空课表信息
-                                            //下面的字符非空格而是一个特殊的Unicode字符
+                                            //判断当前position的课程信息是否为空课表信�?
+                                            //下面的字符非空格而是�?个特殊的Unicode字符
                                             if (tds.get(currentColumnIndexInThisRow).text().equals(" ")) {
-                                                //不存在课表信息
+                                                //不存在课表信�?
                                             } else {
-                                                //当前td标签属性,代表课程时长
+                                                //当前td标签属�??,代表课程时长
                                                 int rowspan;
-                                                //判断td标签有无rowspan属性,该属性代表课程时长
+                                                //判断td标签有无rowspan属�??,该属性代表课程时�?
                                                 if (tds.get(currentColumnIndexInThisRow).hasAttr("rowspan")) {
-                                                    //通过rowspan属性得到课程时长
+                                                    //通过rowspan属�?�得到课程时�?
                                                     rowspan = Integer.parseInt(tds.get(currentColumnIndexInThisRow).attr("rowspan"));
                                                     //将当前单元格下方对应的原单元格的课程信息标记为特殊空课程
                                                     switch (rowspan) {
@@ -198,17 +199,17 @@ public class TeacherQueryService {
                                                             break;
                                                     }
                                                 } else {
-                                                    //如果td标签没有rowspan属性,则该课程课程时长为默认的1
+                                                    //如果td标签没有rowspan属�??,则该课程课程时长为默认的1
                                                     rowspan = 1;
                                                 }
                                                 //将单元格里的课表信息按独立行进行分割单独处理
                                                 String string[] = tds.get(currentColumnIndexInThisRow).text().split(" ");
-                                                //记录单元格中的独立课表信息下标
+                                                //记录单元格中的独立课表信息下�?
                                                 for (int j = 0; j < string.length; j++) {
                                                     if (string.length == 0) {
                                                         schedulesWithSpecialEmptySchedule[currentPosition] = specialEmptySchedule;
                                                     } else if (string[j].isEmpty() || string[j].substring(0, 1).equals("<") || string[j].equals(" ") || string[j].substring(0, 1).equals("(")) {
-                                                        //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
+                                                        //不是有效的课表头信息,跳过并查询下�?个独立行的信�?,直到得到有效的课表头信息
                                                     } else {
                                                         //有效的课表头信息,进行信息处理
                                                         String scheduleName = string[j];
@@ -261,16 +262,16 @@ public class TeacherQueryService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
-            log.error("教师个人课表查询异常：", e);
+            log.error("教师个人课表查询异常�?", e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (ServerErrorException e) {
-            log.error("教师个人课表查询异常：", e);
+            log.error("教师个人课表查询异常�?", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } catch (PasswordIncorrectException e) {
-            log.error("教师个人课表查询异常：", e);
+            log.error("教师个人课表查询异常�?", e);
             result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
         } catch (Exception e) {
-            log.error("教师个人课表查询异常：", e);
+            log.error("教师个人课表查询异常�?", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } finally {
             if (httpClient != null) {

@@ -327,19 +327,9 @@ public class GradeQueryService {
         UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
         if (userCertificate == null) {
             //进行会话同步
-            userCertificate = userLoginService.UserLogin(sessionId, user, false);
-            Long timestamp = userCertificate.getTimestamp();
-            if (StringUtils.isBlank(user.getKeycode())) {
-                user.setKeycode(userCertificate.getUser().getKeycode());
-            }
-            if (StringUtils.isBlank(user.getNumber())) {
-                user.setNumber(userCertificate.getUser().getNumber());
-            }
-            userCertificate.setUser(user);
-            userCertificate.setTimestamp(timestamp);
-            userCertificateDao.saveUserCertificate(userCertificate);
+            userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
             return GradeQuery(sessionId, user.getUsername()
-                    , user.getKeycode(), user.getNumber(), timestamp, year);
+                    , user.getKeycode(), user.getNumber(), userCertificate.getTimestamp(), year);
         }
         return GradeQuery(sessionId, userCertificate.getUser().getUsername()
                 , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()

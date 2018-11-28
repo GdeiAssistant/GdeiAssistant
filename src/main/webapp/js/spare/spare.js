@@ -26,15 +26,19 @@ function postQueryForm() {
                         + "<div class='weui-cell__bd'><p>" + result.data[i].zone + "-" + result.data[i].type + "</p></div>"
                         + "<div class='weui-cell__ft'>" + result.data[i].name + "</div></div>");
                 }
-            }
-            else {
+            } else {
                 $.toptip(result.message, 'error');
             }
         },
-        error: function () {
+        error: function (result) {
             $(".weui_btn").attr("disabled", false);
             $("#loadingToast, .weui_mask").hide();
-            $.toptip('网络连接异常，请重试', 'error');
+            if (result.status == 503) {
+                //网络连接超时
+                $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+            } else {
+                $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+            }
         }
     })
 }

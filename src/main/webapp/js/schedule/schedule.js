@@ -105,8 +105,7 @@ function selectQueryWeek() {
 function reQuerySchedule() {
     if ($("#currentWeek").val() === '0') {
         postQueryForm();
-    }
-    else {
+    } else {
         postQueryForm($("#currentWeek").val());
     }
 }
@@ -116,7 +115,7 @@ function postQueryForm(week) {
     //显示进度条
     $("#loadingToast, .weui_mask").show();
     //判断是否查询指定周数
-    if (typeof week === "undefined") {
+    if (week) {
         //异步请求查询课表
         $.ajax({
             url: "/schedulequery",
@@ -127,17 +126,20 @@ function postQueryForm(week) {
                 if (scheduleQueryResult.success === true) {
                     changeCurrentWeek(scheduleQueryResult.week);
                     handleScheduleQueryResult(scheduleQueryResult);
-                }
-                else {
+                } else {
                     showCustomErrorTip(scheduleQueryResult.message);
                 }
             },
-            error: function () {
-                showNetworkErrorTip();
+            error: function (result) {
+                if (result.status == 503) {
+                    //网络连接超时
+                    showCustomErrorTip(result.responseJSON.message);
+                } else {
+                    showNetworkErrorTip();
+                }
             }
         });
-    }
-    else {
+    } else {
         //异步请求查询指定周数课表
         $.ajax({
             url: "/schedulequery",
@@ -148,12 +150,16 @@ function postQueryForm(week) {
                 $("#loadingToast, .weui_mask").hide();
                 if (scheduleQueryResult.success === true) {
                     handleScheduleQueryResult(scheduleQueryResult);
-                }
-                else {
+                } else {
                     showCustomErrorTip(scheduleQueryResult.message);
                 }
             },
-            error: function () {
+            error: function (result) {
+                $("#loadingToast, .weui_mask").hide();
+                if (result.status == 503) {
+                    //网络连接超时
+                    showCustomErrorTip(result.responseJSON.message);
+                }
                 showNetworkErrorTip();
             }
         });
@@ -211,7 +217,7 @@ function updateTableSchedule(row, column, name, type, lesson, week, teacher, reg
 
 //显示网络错误提示
 function showNetworkErrorTip() {
-    weui.confirm('查询课表信息失败,请检查网络连接', {
+    weui.confirm('查询课表信息失败，请检查网络连接', {
         title: '错误提示',
         buttons: [{
             label: '返回主页',

@@ -10,8 +10,7 @@ function inputLengthCheck(str, maxLen) {
         var c = str.value.charCodeAt(i);
         if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
             w++;
-        }
-        else {
+        } else {
             w += 2;
         }
         if (w > maxLen) {
@@ -26,8 +25,7 @@ function postCardLostRequest() {
     var password = $("#password").val();
     if (password.length === 0 || password.length > 6) {
         $(".weui_warn").text("请输入6位的校园卡查询密码").show().delay(2000).hide(0);
-    }
-    else {
+    } else {
         $("#loadingToast, .weui_mask").show();
         $.ajax({
             url: '/cardlost',
@@ -45,14 +43,18 @@ function postCardLostRequest() {
                             type: 'primary'
                         }]
                     });
-                }
-                else {
+                } else {
                     $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                 }
             },
-            error: function () {
+            error: function (result) {
                 $("#loadingToast, .weui_mask").hide();
-                $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                if (result.status == 503) {
+                    //网络连接超时
+                    $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                } else {
+                    $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                }
             }
         })
     }

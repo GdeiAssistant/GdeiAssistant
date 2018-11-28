@@ -15,14 +15,11 @@ function postQueryForm() {
     if (name !== "" && examNumber !== "" && idNumber !== "") {
         if (name.length < 1 || name.length > 15) {
             $(".weui_warn").text("姓名长度不合法").show().delay(2000).hide(0);
-        }
-        else if (examNumber.length !== 15 || !examNumberRegExp.test(examNumber)) {
+        } else if (examNumber.length !== 15 || !examNumberRegExp.test(examNumber)) {
             $(".weui_warn").text("考号格式不合法").show().delay(2000).hide(0);
-        }
-        else if (idNumber.length !== 18 || !idNumberRegExp.test(idNumber)) {
+        } else if (idNumber.length !== 18 || !idNumberRegExp.test(idNumber)) {
             $(".weui_warn").text("证件号格式不合法").show().delay(2000).hide(0);
-        }
-        else {
+        } else {
             $("#loadingToast, .weui_mask").show();
             $.ajax({
                 url: '/rest/kaoyanquery',
@@ -45,19 +42,22 @@ function postQueryForm() {
                         $("#result_secondScore").text(result.data.secondScore);
                         $("#result_thirdScore").text(result.data.thirdScore);
                         $("#result_fourthScore").text(result.data.fourthScore);
-                    }
-                    else {
+                    } else {
                         $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                     }
                 },
-                error: function () {
+                error: function (result) {
                     $("#loadingToast, .weui_mask").hide();
-                    $(".weui_warn").text("网络连接失败，请检查网络连接").show().delay(2000).hide(0);
+                    if (result.status == 503) {
+                        //网络连接超时
+                        $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                    } else {
+                        $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                    }
                 }
             })
         }
-    }
-    else {
+    } else {
         $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
     }
 }

@@ -50,14 +50,14 @@
                     },
                     success: function (result) {
                         $("#loadingToast, .weui_mask").hide();
-                        if (result.data.success) {
+                        if (result.success) {
                             if ($("#redirect").val() != '') {
                                 window.location.href = $("#redirect").val();
                             } else {
                                 window.location.href = '/index';
                             }
                         } else {
-                            $(".weui_warn").text(result.data.message).show().delay(2000).hide(0);
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
                     },
                     error: function (result) {

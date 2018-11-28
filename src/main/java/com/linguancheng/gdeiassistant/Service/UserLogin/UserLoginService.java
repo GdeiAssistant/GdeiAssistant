@@ -106,7 +106,7 @@ public class UserLoginService {
     }
 
     /**
-     * 用户登录学院系统业务的接口
+     * 用户登录学院系统业务的接�?
      *
      * @param sessionId
      * @param user
@@ -114,17 +114,17 @@ public class UserLoginService {
      * @return
      */
     public UserCertificate UserLogin(String sessionId, User user, boolean quickLogin) throws Exception {
-        //查询数据库,若账号密码相同,则直接通过登录校验
+        //查询数据�?,若账号密码相�?,则直接�?�过登录校验
         if (quickLogin) {
             try {
                 User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(user.getUsername()));
                 if (queryUser != null && !queryUser.getState().equals(-1)) {
-                    //将数据库查询的用户数据与用户提交的用户信息进行对比
+                    //将数据库查询的用户数据与用户提交的用户信息进行对�?
                     User decryptUser = queryUser.decryptUser();
                     if (StringUtils.isNotBlank(user.getPassword())) {
                         if (decryptUser.getUsername().equals(user.getUsername())
                                 && decryptUser.getPassword().equals(user.getPassword())) {
-                            //登录成功,缓存并返回用户信息
+                            //登录成功,缓存并返回用户信�?
                             UserCertificate userCertificate = new UserCertificate();
                             userCertificate.setUser(queryUser.decryptUser());
                             return userCertificate;
@@ -136,7 +136,7 @@ public class UserLoginService {
                 log.error("用户登录数据库校验异常：", e);
             }
         }
-        //用户不存在或与数据库的数据信息不匹配,进行普通登录
+        //用户不存在或与数据库的数据信息不匹配,进行普�?�登�?
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -146,59 +146,56 @@ public class UserLoginService {
             cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
             HttpResponse httpResponse = httpClient.execute(httpGet);
+            Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login?service=http://my.gdei.edu.cn:8002/index/index.jsp");
-                //封装身份认证需要POST发送的相关数据
-                BasicNameValuePair basicNameValuePair_1 = new BasicNameValuePair("username", user.getUsername());
-                BasicNameValuePair basicNameValuePair_2 = new BasicNameValuePair("password", user.getPassword());
-                BasicNameValuePair basicNameValuePair_3 = new BasicNameValuePair("service", "http://my.gdei.edu.cn:8002/index/index.jsp");
-                BasicNameValuePair basicNameValuePair_4 = new BasicNameValuePair("imageField.x", "0");
-                BasicNameValuePair basicNameValuePair_5 = new BasicNameValuePair("imageField.y", "0");
+                HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
+                //封装身份认证�?要POST发�?�的相关数据
                 List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
-                //将BasicNameValuePair对象添加到ArrayList中
-                basicNameValuePairs.add(basicNameValuePair_1);
-                basicNameValuePairs.add(basicNameValuePair_2);
-                basicNameValuePairs.add(basicNameValuePair_3);
-                basicNameValuePairs.add(basicNameValuePair_4);
-                basicNameValuePairs.add(basicNameValuePair_5);
+                basicNameValuePairs.add(new BasicNameValuePair("username", user.getUsername()));
+                basicNameValuePairs.add(new BasicNameValuePair("password", user.getPassword()));
+                basicNameValuePairs.add(new BasicNameValuePair("service", "http://portal.gdei.edu.cn:8000/Login"));
+                basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
+                basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
+                basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
+                basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
                 //绑定表单参数
                 httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
                 httpResponse = httpClient.execute(httpPost);
-                Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                    //服务器异常
+                    //服务器异�?
                     throw new ServerErrorException("教务系统异常");
                 }
                 if (!document.select("body").get(0).hasAttr("bgcolor")) {
-                    //认证失败,提示账号或密码错误
-                    throw new PasswordIncorrectException("登录账号密码不正确");
+                    //认证失败,提示账号或密码错�?
+                    throw new PasswordIncorrectException("登录账号密码不正�?");
                 }
                 httpGet = new HttpGet(document.select("a").first().attr("href"));
                 httpResponse = httpClient.execute(httpGet);
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                    //连接到教务系统
+                    //连接到教务系�?
                     return LoginCasSystem(httpClient, user);
                 }
                 throw new ServerErrorException("教务系统异常");
             } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
                 if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
-                    //已经通过了认证
+                    //已经通过了认�?
                     return LoginCasSystem(httpClient, user);
                 }
             }
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {
-            log.error("用户登录异常：", e);
+            log.error("用户登录异常�?", e);
             throw new ServerErrorException("教务系统异常");
         } catch (PasswordIncorrectException e) {
-            log.error("用户登录异常：", e);
+            log.error("用户登录异常�?", e);
             throw new PasswordIncorrectException("用户密码错误");
         } catch (IOException e) {
-            log.error("用户登录异常：", e);
+            log.error("用户登录异常�?", e);
             throw new IOException("网络连接超时");
         } catch (Exception e) {
-            log.error("用户登录异常：", e);
+            log.error("用户登录异常�?", e);
             throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {
@@ -215,7 +212,7 @@ public class UserLoginService {
     }
 
     /**
-     * 登录教务系统,UserLoginService内部调用的模块方法
+     * 登录教务系统,UserLoginService内部调用的模块方�?
      *
      * @param httpClient
      * @param user
@@ -239,7 +236,7 @@ public class UserLoginService {
             httpGet = new HttpGet(url + document.select("a").attr("href"));
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            //获取学生的教务系统信息
+            //获取学生的教务系统信�?
             String script = document.select("script").first().data();
             String username = user.getUsername();
             String password = user.getPassword();
@@ -255,8 +252,8 @@ public class UserLoginService {
     }
 
     /**
-     * 进行教务系统身份校验,在普通登录教务系统后最终调用或通过KeyCode快速连接直接调用
-     * UserLoginService内部调用的模块方法
+     * 进行教务系统身份校验,在普通登录教务系统后�?终调用或通过KeyCode快�?�连接直接调�?
+     * UserLoginService内部调用的模块方�?
      *
      * @param httpClient
      * @param username
@@ -281,11 +278,11 @@ public class UserLoginService {
             if (httpResponse.getStatusLine().getStatusCode() == 200
                     && "正方教务管理系统".equals(new String(document.title()
                     .getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8))) {
-                //获取学生的身份证号
+                //获取学生的身份证�?
                 httpGet = new HttpGet(url + "xsgrxx.aspx?xh=" + number);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                    //缓存学生的信息
+                    //缓存学生的信�?
                     User user = new User();
                     user.setUsername(username);
                     user.setPassword(password);
@@ -338,7 +335,7 @@ public class UserLoginService {
     public void UpdateUserData() {
         try {
             List<User> userList = userMapper.selectAllUser();
-            //设置线程信号量，限制最大同时更新的线程数为10
+            //设置线程信号量，限制�?大同时更新的线程数为10
             Semaphore semaphore = new Semaphore(10);
             for (User user : userList) {
                 user = user.decryptUser();
@@ -358,7 +355,7 @@ public class UserLoginService {
 
                     @Override
                     public void onFailure(Throwable ex) {
-                        log.error("定时更新用户账号信息异常：", ex);
+                        log.error("定时更新用户账号信息异常�?", ex);
                         semaphore.release();
                     }
 
@@ -369,7 +366,7 @@ public class UserLoginService {
                 });
             }
         } catch (Exception e) {
-            log.error("定时更新用户账号信息异常：", e);
+            log.error("定时更新用户账号信息异常�?", e);
         }
     }
 }

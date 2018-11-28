@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,6 +18,7 @@ import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 
 @ControllerAdvice(annotations = Controller.class)
+@Order
 public class GlobalExceptionHandler {
 
     private Log log = LogFactory.getLog(GlobalExceptionHandler.class);

@@ -149,6 +149,7 @@ function postQueryForm(week) {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
                 if (scheduleQueryResult.success === true) {
+                    changeCurrentWeek(scheduleQueryResult.week);
                     handleScheduleQueryResult(scheduleQueryResult);
                 } else {
                     showCustomErrorTip(scheduleQueryResult.message);

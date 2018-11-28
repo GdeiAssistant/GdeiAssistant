@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="/css/common/jquery-weui.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
-    <script type="text/javascript" src="/js/spare/spare.js"></script>
+    <script>document.write("<script type='text/javascript' src='/js/spare/spare.js?time=" + Date.now() + "'><\/script>");</script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
 </head>
 <body>

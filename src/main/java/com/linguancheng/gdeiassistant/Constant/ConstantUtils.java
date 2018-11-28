@@ -23,4 +23,10 @@ public class ConstantUtils {
     //令牌校验服务异常
     public static final int TOKEN_SERVER_ERROR = 40104;
 
+    //服务器内部异常
+    public static final int INTERNAL_SERVER_ERROR = 50000;
+
+    //网络连接超时
+    public static final int NETWORK_TIMEOUT = 50300;
+
 }

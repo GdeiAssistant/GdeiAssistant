@@ -115,7 +115,7 @@ function postQueryForm(week) {
     //显示进度条
     $("#loadingToast, .weui_mask").show();
     //判断是否查询指定周数
-    if (week) {
+    if (!week) {
         //异步请求查询课表
         $.ajax({
             url: "/schedulequery",

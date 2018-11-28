@@ -52,7 +52,7 @@ function postQueryForm(year) {
     //显示进度条
     changeYearSelectedClass(year);
     $("#loadingToast, .weui_mask").show();
-    if (year) {
+    if (!year) {
         $.ajax({
             url: "/api/gradequery",
             type: 'post',

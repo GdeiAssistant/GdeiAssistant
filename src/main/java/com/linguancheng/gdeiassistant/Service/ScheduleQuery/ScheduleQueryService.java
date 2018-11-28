@@ -146,20 +146,9 @@ public class ScheduleQueryService {
         UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
         if (userCertificate == null) {
             //进行会话同步
-            userCertificate = userLoginService.UserLogin(sessionId, user, false);
-            Long timestamp = userCertificate.getTimestamp();
-            if (StringUtils.isBlank(user.getKeycode())) {
-                user.setKeycode(userCertificate.getUser().getKeycode());
-            }
-            if (StringUtils.isBlank(user.getNumber())) {
-                user.setNumber(userCertificate.getUser().getNumber());
-            }
-            userCertificate = new UserCertificate();
-            userCertificate.setUser(user);
-            userCertificate.setTimestamp(timestamp);
-            userCertificateDao.saveUserCertificate(userCertificate);
+            userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
             scheduleQueryResult = ScheduleQuery(sessionId, user.getUsername()
-                    , user.getKeycode(), user.getNumber(), timestamp);
+                    , user.getKeycode(), user.getNumber(), userCertificate.getTimestamp());
         } else {
             scheduleQueryResult = ScheduleQuery(sessionId, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()

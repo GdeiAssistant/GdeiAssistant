@@ -302,21 +302,27 @@ public class UserLoginService {
     }
 
     /**
-     * 同步地与教务系统会话同步
+     * 同步地与教务系统会话进行同步
      *
-     * @param request
+     * @param sessionId
+     * @param user
      * @return
+     * @throws Exception
      */
-    public void SyncUpdateSession(HttpServletRequest request) throws Exception {
-        HttpSession httpSession = request.getSession();
-        String username = (String) request.getSession().getAttribute("username");
-        String password = (String) httpSession.getAttribute("password");
-        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(username);
-        if (userCertificate == null) {
-            User user = new User(username, password);
-            userCertificate = UserLogin(request.getSession().getId(), user, false);
-            userCertificateDao.saveUserCertificate(userCertificate);
+    public UserCertificate SyncUpdateSession(String sessionId, User user) throws Exception {
+        UserCertificate userCertificate = UserLogin(sessionId, user, false);
+        Long timestamp = userCertificate.getTimestamp();
+        if (StringUtils.isBlank(user.getKeycode())) {
+            user.setKeycode(userCertificate.getUser().getKeycode());
         }
+        if (StringUtils.isBlank(user.getNumber())) {
+            user.setNumber(userCertificate.getUser().getNumber());
+        }
+        userCertificate = new UserCertificate();
+        userCertificate.setUser(user);
+        userCertificate.setTimestamp(timestamp);
+        userCertificateDao.saveUserCertificate(userCertificate);
+        return userCertificate;
     }
 
     /**
@@ -326,7 +332,15 @@ public class UserLoginService {
      */
     @Async
     public void AsyncUpdateSession(HttpServletRequest request) throws Exception {
-        SyncUpdateSession(request);
+        HttpSession httpSession = request.getSession();
+        String username = (String) httpSession.getAttribute("username");
+        String password = (String) httpSession.getAttribute("password");
+        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(username);
+        if (userCertificate == null) {
+            User user = new User(username, password);
+            userCertificate = UserLogin(request.getSession().getId(), user, false);
+            userCertificateDao.saveUserCertificate(userCertificate);
+        }
     }
 
     /**

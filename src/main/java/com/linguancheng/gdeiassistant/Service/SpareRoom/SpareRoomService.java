@@ -366,20 +366,9 @@ public class SpareRoomService {
         //检测是否已与教务系统进行会话同步
         if (userCertificate == null) {
             //进行会话同步
-            userCertificate = userLoginService.UserLogin(sessionId, user, false);
-            Long timestamp = userCertificate.getTimestamp();
-            if (StringUtils.isBlank(user.getKeycode())) {
-                user.setKeycode(userCertificate.getUser().getKeycode());
-            }
-            if (StringUtils.isBlank(user.getNumber())) {
-                user.setNumber(userCertificate.getUser().getNumber());
-            }
-            userCertificate = new UserCertificate();
-            userCertificate.setUser(user);
-            userCertificate.setTimestamp(timestamp);
-            userCertificateDao.saveUserCertificate(userCertificate);
+            userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
             return QuerySpareRoom(sessionId, user.getUsername()
-                    , user.getKeycode(), user.getNumber(), timestamp, spareRoomQuery);
+                    , user.getKeycode(), user.getNumber(), userCertificate.getTimestamp(), spareRoomQuery);
         }
         return QuerySpareRoom(sessionId, user.getUsername(), user.getKeycode(), user.getNumber()
                 , userCertificate.getTimestamp(), spareRoomQuery);

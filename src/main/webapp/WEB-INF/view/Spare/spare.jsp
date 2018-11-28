@@ -248,6 +248,9 @@
         <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postQueryForm()">查询</a>
     </div>
 
+    <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
+    <div class="weui_toptips weui_warn js_tooltips"></div>
+
 </div>
 
 <div id="result" style="display: none">

@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Service.GradeQuery;
 
+import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.NotAvailableConditionException;
@@ -244,7 +245,7 @@ public class GradeQueryService {
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
             log.error("课程成绩查询异常：", e);
-            throw new IOException("网络连接超时");
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             log.error("课程成绩查询异常：", e);
             throw new ServerErrorException("教务系统异常");

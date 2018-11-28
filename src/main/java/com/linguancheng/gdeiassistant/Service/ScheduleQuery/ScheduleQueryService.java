@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Service.ScheduleQuery;
 
+import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
@@ -504,7 +505,7 @@ public class ScheduleQueryService {
             throw new TimeStampIncorrectException("时间戳校验失败");
         } catch (IOException e) {
             log.error("查询课表异常：", e);
-            throw new IOException("网络连接超时");
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             log.error("查询课表异常：", e);
             throw new ServerErrorException("教务系统异常");

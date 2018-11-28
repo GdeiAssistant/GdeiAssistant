@@ -2,6 +2,7 @@ package com.linguancheng.gdeiassistant.Service.ScheduleQuery;
 
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
+import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
@@ -89,7 +90,7 @@ public class TeacherQueryService {
                             .TeacherLogin(sessionId, username, password);
                     switch (loginResultEnum) {
                         case TIME_OUT:
-                            throw new IOException("登录教务系统超时");
+                            throw new NetWorkTimeoutException("登录教务系统超时");
 
                         case SERVER_ERROR:
                             throw new ServerErrorException("教务系统异常");

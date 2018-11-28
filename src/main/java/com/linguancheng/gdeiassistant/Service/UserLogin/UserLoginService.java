@@ -3,6 +3,7 @@ package com.linguancheng.gdeiassistant.Service.UserLogin;
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
+import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
@@ -193,7 +194,7 @@ public class UserLoginService {
             throw new PasswordIncorrectException("用户密码错误");
         } catch (IOException e) {
             log.error("用户登录异常：", e);
-            throw new IOException("网络连接超时");
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             log.error("用户登录异常：", e);
             throw new ServerErrorException("教务系统异常");

@@ -9,9 +9,11 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -28,12 +30,6 @@ public class SecretRestController {
 
     @Autowired
     private SecretService secretService;
-
-    @ExceptionHandler(DataNotExistException.class)
-    public ResponseEntity ShowDataNotExistExceptionTip() {
-        return ResponseEntity.ok(new JsonResult(false
-                , "查询的校园树洞信息不存在"));
-    }
 
     /**
      * 获取更多的树洞消息

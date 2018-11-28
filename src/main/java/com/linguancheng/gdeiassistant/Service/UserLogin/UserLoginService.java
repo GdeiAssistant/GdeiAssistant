@@ -146,25 +146,22 @@ public class UserLoginService {
             cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
             HttpResponse httpResponse = httpClient.execute(httpGet);
+            Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login?service=http://my.gdei.edu.cn:8002/index/index.jsp");
+                HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
                 //封装身份认证需要POST发送的相关数据
-                BasicNameValuePair basicNameValuePair_1 = new BasicNameValuePair("username", user.getUsername());
-                BasicNameValuePair basicNameValuePair_2 = new BasicNameValuePair("password", user.getPassword());
-                BasicNameValuePair basicNameValuePair_3 = new BasicNameValuePair("service", "http://my.gdei.edu.cn:8002/index/index.jsp");
-                BasicNameValuePair basicNameValuePair_4 = new BasicNameValuePair("imageField.x", "0");
-                BasicNameValuePair basicNameValuePair_5 = new BasicNameValuePair("imageField.y", "0");
                 List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
-                //将BasicNameValuePair对象添加到ArrayList中
-                basicNameValuePairs.add(basicNameValuePair_1);
-                basicNameValuePairs.add(basicNameValuePair_2);
-                basicNameValuePairs.add(basicNameValuePair_3);
-                basicNameValuePairs.add(basicNameValuePair_4);
-                basicNameValuePairs.add(basicNameValuePair_5);
+                basicNameValuePairs.add(new BasicNameValuePair("username", user.getUsername()));
+                basicNameValuePairs.add(new BasicNameValuePair("password", user.getPassword()));
+                basicNameValuePairs.add(new BasicNameValuePair("service", "http://portal.gdei.edu.cn:8000/Login"));
+                basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
+                basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
+                basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
+                basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
                 //绑定表单参数
                 httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
                 httpResponse = httpClient.execute(httpPost);
-                Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
                     //服务器异常
                     throw new ServerErrorException("教务系统异常");

@@ -52,7 +52,7 @@ function postQueryForm(year) {
     //显示进度条
     changeYearSelectedClass(year);
     $("#loadingToast, .weui_mask").show();
-    if (typeof year === "undefined") {
+    if (year) {
         $.ajax({
             url: "/api/gradequery",
             type: 'post',
@@ -63,19 +63,22 @@ function postQueryForm(year) {
                 if (gradeQueryResult.success === true) {
                     changeYearSelectedClass(gradeQueryResult.year);
                     handleGradeInfo(gradeQueryResult);
-                }
-                else {
+                } else {
                     showCustomErrorTip(gradeQueryResult.message);
                 }
             },
             error: function () {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
-                showNetworkErrorTip();
+                if (result.status == 503) {
+                    //网络连接超时
+                    showCustomErrorTip(result.responseJSON.message);
+                } else {
+                    showNetworkErrorTip();
+                }
             }
         });
-    }
-    else {
+    } else {
         $.ajax({
             url: "/api/gradequery",
             data: {year: year},
@@ -86,15 +89,19 @@ function postQueryForm(year) {
                 clearGradeInfo();
                 if (gradeQueryResult.success === true) {
                     handleGradeInfo(gradeQueryResult);
-                }
-                else {
+                } else {
                     showCustomErrorTip(gradeQueryResult.message);
                 }
             },
-            error: function () {
+            error: function (result) {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
-                showNetworkErrorTip();
+                if (result.status == 503) {
+                    //网络连接超时
+                    showCustomErrorTip(result.responseJSON.message);
+                } else {
+                    showNetworkErrorTip();
+                }
             }
         });
     }
@@ -102,7 +109,7 @@ function postQueryForm(year) {
 
 //显示网络错误提示
 function showNetworkErrorTip() {
-    weui.alert('请求成绩信息失败,请检查网络连接', {
+    weui.alert('请求成绩信息失败，请检查网络连接', {
         title: '错误提示',
         buttons: [{
             label: '确定',

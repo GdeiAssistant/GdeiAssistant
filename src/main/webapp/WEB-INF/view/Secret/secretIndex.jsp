@@ -98,8 +98,7 @@
             if (size) {
                 url = "/api/secret/info/start/" + $("#list").children("div").length + "/size/" + size;
                 sessionStorage.removeItem('size');
-            }
-            else {
+            } else {
                 url = "/api/secret/info/start/" + $("#list").children("div").length + "/size/10";
             }
 
@@ -127,17 +126,15 @@
                                     "<section>" + result.data[i].content + "</section>" + "</a>" +
                                     "<footer><div><i class='" + liked + "'></i>" + "<span>"
                                     + result.data[i].likeCount + "</span>" + "</div>"
-                                    + "<a href='/secret/detail/id" + result.data[i].id + "'>" +
+                                    + "<a href='/secret/detail/id/" + result.data[i].id + "'>" +
                                     "<div><i class='comment'></i>" + "<span>" + result.data[i].commentCount + "</span></div></a>" + "</footer>" +
                                     "</div>");
                             }
-                        }
-                        else {
+                        } else {
                             $("#loadmore").text("没有更多信息");
                             hasMore = false;
                         }
-                    }
-                    else {
+                    } else {
                         $(".weui_warn").text(message).show().delay(2000).hide(0);
                     }
 

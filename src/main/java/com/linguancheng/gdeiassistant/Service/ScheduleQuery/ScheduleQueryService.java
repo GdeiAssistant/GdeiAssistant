@@ -4,17 +4,18 @@ import com.gdeiassistant.gdeiassistant.Exception.CommonException.NetWorkTimeoutE
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
-import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
+import com.gdeiassistant.gdeiassistant.Pojo.Document.CustomScheduleDocument;
 import com.gdeiassistant.gdeiassistant.Pojo.Document.ScheduleDocument;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.Schedule;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
+import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import com.gdeiassistant.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserCertificate;
+import com.gdeiassistant.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import com.gdeiassistant.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import com.gdeiassistant.gdeiassistant.Service.UserLogin.UserLoginService;
+import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.Tools.ScheduleColorUtils;
-import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -67,7 +68,7 @@ public class ScheduleQueryService {
     private UserLoginService userLoginService;
 
     @Autowired
-    private ScheduleCacheService scheduleCacheService;
+    private ScheduleDao scheduleDao;
 
     @Autowired
     private UserCertificateDao userCertificateDao;
@@ -109,6 +110,26 @@ public class ScheduleQueryService {
     }
 
     private Log log = LogFactory.getLog(ScheduleQueryService.class);
+
+    /**
+     * 添加自定义课程信息
+     *
+     * @param username
+     * @param schedule
+     */
+    public void AddCustomSchedule(String username, Schedule schedule) {
+        scheduleDao.addCustomSchedule(username, schedule);
+    }
+
+    /**
+     * 删除自定义课程信息
+     *
+     * @param username
+     * @param id
+     */
+    public void DeleteCustomSchedule(String username, String id) {
+        scheduleDao.deleteCustomSchedule(username, id);
+    }
 
     /**
      * 优先查询缓存，若缓存查询失败或为空，再通过教务系统获取
@@ -154,6 +175,11 @@ public class ScheduleQueryService {
                     , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
                     , userCertificate.getTimestamp());
         }
+        //获取自定义课表信息
+        CustomScheduleDocument customScheduleDocument = scheduleDao.queryCustomSchedule(user.getUsername());
+        if (customScheduleDocument != null) {
+            scheduleQueryResult.getScheduleList().addAll(new ArrayList<>(customScheduleDocument.getScheduleMap().values()));
+        }
         if (week == null) {
             //无指定查询周数，则默认返回当前周数课表
             scheduleQueryResult.setScheduleList(GetSpecifiedWeekSchedule
@@ -180,13 +206,19 @@ public class ScheduleQueryService {
      * @return
      */
     public ScheduleQueryResult QueryScheduleFromDocument(String username, Integer week) throws Exception {
-        ScheduleDocument scheduleDocument = scheduleCacheService.ReadSchedule(username);
+        ScheduleDocument scheduleDocument = scheduleDao.querySchedule(username);
         if (scheduleDocument != null) {
             //若未指定查询周数，则查询当前周数课表
             if (week == null) {
                 week = GetCurrentWeek();
             }
-            return new ScheduleQueryResult(scheduleDocument.getScheduleList(), week);
+            List<Schedule> scheduleList = new ArrayList<>(scheduleDocument.getScheduleList());
+            //获取自定义课表信息
+            CustomScheduleDocument customScheduleDocument = scheduleDao.queryCustomSchedule(username);
+            if (customScheduleDocument != null) {
+                scheduleList.addAll(new ArrayList<>(customScheduleDocument.getScheduleMap().values()));
+            }
+            return new ScheduleQueryResult(GetSpecifiedWeekSchedule(scheduleList, week), week);
         }
         //缓存中没有数据
         return null;

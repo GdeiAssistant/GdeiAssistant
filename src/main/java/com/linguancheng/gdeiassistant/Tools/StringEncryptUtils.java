@@ -68,7 +68,7 @@ public class StringEncryptUtils {
      * @param text
      * @return
      */
-    public static String SHA256MapString(String text) {
+    public static String SHA256HexString(String text) {
         return DigestUtils.sha256Hex(text);
     }
 }

@@ -120,7 +120,7 @@ public class LoginTokenService {
         LocalDateTime createTime = LocalDateTime.now();
         LocalDateTime expireTime = createTime.plusDays(30);
         //生成RefreshToken签名
-        String token = StringEncryptUtils.SHA256MapString(accessToken.getSignature());
+        String token = StringEncryptUtils.SHA256HexString(accessToken.getSignature());
         //生成RefreshToken
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setSignature(token);

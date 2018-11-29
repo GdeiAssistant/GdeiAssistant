@@ -36,7 +36,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     public String QueryToken(String signature) {
         try {
             String value = redisTemplate.opsForValue().get(StringEncryptUtils
-                    .SHA256MapString(signature));
+                    .SHA256HexString(signature));
             if (value != null) {
                 return value;
             }
@@ -57,9 +57,9 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
         try {
             //保存权限令牌，设置有效期为7天
             redisTemplate.opsForValue().set(StringEncryptUtils
-                    .SHA256MapString(token.getSignature()), token.getIp());
+                    .SHA256HexString(token.getSignature()), token.getIp());
             redisTemplate.expire(StringEncryptUtils
-                    .SHA256MapString(token.getSignature()), 7, TimeUnit.DAYS);
+                    .SHA256HexString(token.getSignature()), 7, TimeUnit.DAYS);
             return true;
         } catch (Exception e) {
             log.error("保存权限令牌信息失败", e);
@@ -77,9 +77,9 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     public Boolean InsertRefreshToken(RefreshToken token) {
         try {
             //保存刷新令牌，设置有效期为30天
-            redisTemplate.opsForValue().set(StringEncryptUtils.SHA256MapString(token.getSignature())
+            redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(token.getSignature())
                     , token.getTokenSignature());
-            redisTemplate.expire(StringEncryptUtils.SHA256MapString(token.getSignature())
+            redisTemplate.expire(StringEncryptUtils.SHA256HexString(token.getSignature())
                     , 30, TimeUnit.DAYS);
             return true;
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     public Boolean UpdateAccessToken(AccessToken token) {
         try {
             //更新权限令牌信息，但不重新设置有效期
-            redisTemplate.opsForValue().set(StringEncryptUtils.SHA256MapString(token.getSignature()), token.getIp());
+            redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(token.getSignature()), token.getIp());
             return true;
         } catch (Exception e) {
             log.error("保存刷新令牌信息失败", e);
@@ -109,7 +109,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     @Override
     public Boolean DeleteToken(String signature) {
         try {
-            return redisTemplate.expire(StringEncryptUtils.SHA256MapString(signature)
+            return redisTemplate.expire(StringEncryptUtils.SHA256HexString(signature)
                     , 5, TimeUnit.MINUTES);
         } catch (Exception e) {
             log.error("删除令牌信息失败", e);

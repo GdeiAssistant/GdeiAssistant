@@ -53,15 +53,6 @@ public class ScheduleCacheService {
     }
 
     /**
-     * 查询用户保存的课表信息
-     *
-     * @return
-     */
-    public ScheduleDocument ReadSchedule(String username) {
-        return scheduleDao.queryScheduleByUsername(username);
-    }
-
-    /**
      * 异步获取教务系统课表信息任务
      *
      * @param semaphore
@@ -99,7 +90,7 @@ public class ScheduleCacheService {
             for (User user : userList) {
                 Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
                 if (privacy.isCache()) {
-                    ScheduleDocument scheduleDocument = scheduleDao.queryScheduleByUsername(StringEncryptUtils
+                    ScheduleDocument scheduleDocument = scheduleDao.querySchedule(StringEncryptUtils
                             .decryptString(user.getUsername()));
                     //如果最后更新日期距今已超过3天，则进行更新
                     if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()

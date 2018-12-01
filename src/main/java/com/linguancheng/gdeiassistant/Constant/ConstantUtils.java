@@ -23,6 +23,9 @@ public class ConstantUtils {
     //令牌校验服务异常
     public static final int TOKEN_SERVER_ERROR = 40104;
 
+    //自定义课程数量超过限制
+    public static final int CUSTOM_SCHEDULE_OVER_LIMIT = 40301;
+
     //服务器内部异常
     public static final int INTERNAL_SERVER_ERROR = 50000;
 

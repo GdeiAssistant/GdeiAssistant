@@ -47,7 +47,7 @@ table td {
     /*border-image: url(img/border.png) 30 30 round;*/
     height: 3.5rem;
     color: #fff;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     position: relative;
     background: #ECF0F1;
 }
@@ -186,4 +186,12 @@ nav .on {
 .ok {
     background: #0E8EE7;
     color: #fff;
+}
+
+.weui-cell__bd a {
+    color: gray;
+}
+
+.modal-content .weui-form-preview {
+    margin-top: 0.5rem;
 }

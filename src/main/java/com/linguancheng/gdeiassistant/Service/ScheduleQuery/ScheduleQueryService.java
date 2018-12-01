@@ -3,9 +3,12 @@ package com.linguancheng.gdeiassistant.Service.ScheduleQuery;
 import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
+import com.linguancheng.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
+import com.linguancheng.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import com.linguancheng.gdeiassistant.Pojo.Document.CustomScheduleDocument;
 import com.linguancheng.gdeiassistant.Pojo.Document.ScheduleDocument;
+import com.linguancheng.gdeiassistant.Pojo.Entity.CustomSchedule;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
@@ -15,7 +18,7 @@ import com.linguancheng.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import com.linguancheng.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
-import com.linguancheng.gdeiassistant.Tools.ScheduleColorUtils;
+import com.linguancheng.gdeiassistant.Tools.ScheduleUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -115,10 +118,12 @@ public class ScheduleQueryService {
      * 添加自定义课程信息
      *
      * @param username
-     * @param schedule
+     * @param customSchedule
+     * @throws GenerateScheduleException
+     * @throws CountOverLimitException
      */
-    public void AddCustomSchedule(String username, Schedule schedule) {
-        scheduleDao.addCustomSchedule(username, schedule);
+    public void AddCustomSchedule(String username, CustomSchedule customSchedule) throws GenerateScheduleException, CountOverLimitException {
+        scheduleDao.addCustomSchedule(username, customSchedule);
     }
 
     /**
@@ -255,20 +260,8 @@ public class ScheduleQueryService {
     private List<Schedule> GetSpecifiedWeekSchedule(List<Schedule> scheduleList, int week) {
         List<Schedule> list = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
-            String scheduleWeek = schedule.getScheduleWeek();
-            String weekString[] = scheduleWeek.split("-");
-            int minWeekNumber;
-            int maxWeekNumber;
-            if (weekString[1].contains("|")) {
-                String s1[] = weekString[1].split("\\|");
-                minWeekNumber = Integer.valueOf(weekString[0].substring(1, weekString[0].length()));
-                maxWeekNumber = Integer.valueOf(s1[0].substring(0, s1[0].length() - 1));
-            } else {
-                minWeekNumber = Integer.valueOf(weekString[0].substring(1, weekString[0].length()));
-                maxWeekNumber = Integer.valueOf(weekString[1].substring(0, weekString[1].length() - 1));
-            }
             //判断当前周是否在此课表信息的周数范围内
-            if (week >= minWeekNumber && week <= maxWeekNumber) {
+            if (week >= schedule.getMinScheduleWeek() && week <= schedule.getMaxScheduleWeek()) {
                 //当前周数在课表周数范围内,则显示当前课表
                 list.add(schedule);
             }
@@ -468,7 +461,19 @@ public class ScheduleQueryService {
                                                             schedule.setScheduleName(name);
                                                             schedule.setScheduleType(type);
                                                             schedule.setScheduleLesson(lesson);
-                                                            schedule.setScheduleWeek(week);
+                                                            String weekString[] = week.split("-");
+                                                            int minWeekNumber;
+                                                            int maxWeekNumber;
+                                                            if (weekString[1].contains("|")) {
+                                                                String s1[] = weekString[1].split("\\|");
+                                                                minWeekNumber = Integer.valueOf(weekString[0].substring(1, weekString[0].length()));
+                                                                maxWeekNumber = Integer.valueOf(s1[0].substring(0, s1[0].length() - 1));
+                                                            } else {
+                                                                minWeekNumber = Integer.valueOf(weekString[0].substring(1, weekString[0].length()));
+                                                                maxWeekNumber = Integer.valueOf(weekString[1].substring(0, weekString[1].length() - 1));
+                                                            }
+                                                            schedule.setMinScheduleWeek(minWeekNumber);
+                                                            schedule.setMaxScheduleWeek(maxWeekNumber);
                                                             schedule.setScheduleTeacher(teacher);
                                                             schedule.setScheduleLocation(location);
                                                             schedule.setRow(row - 2);
@@ -477,7 +482,7 @@ public class ScheduleQueryService {
                                                             } else {
                                                                 schedule.setColumn(currentColumnIndexInThisRow - 1);
                                                             }
-                                                            schedule.setColorCode(ScheduleColorUtils.getScheduleColor(currentPosition));
+                                                            schedule.setColorCode(ScheduleUtils.getScheduleColor(currentPosition));
                                                             schedulesWithSpecialEmptySchedule[currentPosition][n] = schedule;
                                                             n++;
                                                             j = j + 4;

@@ -70,7 +70,7 @@ function postQueryForm(year) {
             error: function () {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
-                if (result.status == 503) {
+                if (result.status) {
                     //网络连接超时
                     showCustomErrorTip(result.responseJSON.message);
                 } else {
@@ -97,7 +97,7 @@ function postQueryForm(year) {
             error: function (result) {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
-                if (result.status == 503) {
+                if (result.status) {
                     //网络连接超时
                     showCustomErrorTip(result.responseJSON.message);
                 } else {

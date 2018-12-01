@@ -10,7 +10,7 @@ import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Pojo.Entity.TeacherSchedule;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Service.UserLogin.TeacherLoginService;
-import com.linguancheng.gdeiassistant.Tools.ScheduleColorUtils;
+import com.linguancheng.gdeiassistant.Tools.ScheduleUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -234,7 +233,7 @@ public class TeacherQueryService {
                                                         } else {
                                                             teacherSchedule.setColumn(currentColumnIndexInThisRow - 1);
                                                         }
-                                                        teacherSchedule.setColorCode(ScheduleColorUtils.getScheduleColor(currentPosition));
+                                                        teacherSchedule.setColorCode(ScheduleUtils.getScheduleColor(currentPosition));
                                                         schedulesWithSpecialEmptySchedule[currentPosition] = teacherSchedule;
                                                         j = j + 5;
                                                     }

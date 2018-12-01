@@ -1,6 +1,72 @@
 package com.linguancheng.gdeiassistant.Tools;
 
-public class ScheduleColorUtils {
+import com.linguancheng.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
+import com.linguancheng.gdeiassistant.Pojo.Entity.CustomSchedule;
+import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
+
+public class ScheduleUtils {
+
+    private static final String[] COLUMNS = {"一", "二", "三", "四", "五", "六", "日"};
+
+    /**
+     * 生成自定义课程信息
+     *
+     * @param customSchedule
+     * @return
+     * @throws GenerateScheduleException
+     */
+    public static Schedule GenerateCustomSchedule(CustomSchedule customSchedule) throws GenerateScheduleException {
+        //进行数据合法性校验
+        if (customSchedule.getMinScheduleWeek() > customSchedule.getMaxScheduleWeek()) {
+            throw new GenerateScheduleException("自定义课程数据不合法");
+        }
+        Schedule schedule = new Schedule();
+        //配置行列属性
+        schedule.setPosition(customSchedule.getPosition());
+        schedule.setRow(schedule.getPosition() / 7);
+        schedule.setColumn(schedule.getPosition() % 7);
+        //配置基本信息
+        schedule.setScheduleLength(customSchedule.getScheduleLength());
+        schedule.setScheduleName(customSchedule.getScheduleName());
+        schedule.setScheduleLocation(customSchedule.getScheduleLocation());
+        //根据行列属性和课程长度生成课程节数
+        schedule.setScheduleLesson(ScheduleUtils.GenerateScheduleLesson(schedule.getRow()
+                , schedule.getColumn(), schedule.getScheduleLength()));
+        //配置最小和最大周数
+        schedule.setMinScheduleWeek(customSchedule.getMinScheduleWeek());
+        schedule.setMaxScheduleWeek(customSchedule.getMaxScheduleWeek());
+        //生成课程颜色
+        schedule.setColorCode(ScheduleUtils.getScheduleColor(schedule.getPosition()));
+        //生成课程编号
+        schedule.setId(StringEncryptUtils.SHA1HexString(
+                schedule.getPosition() +
+                        schedule.getScheduleLength() +
+                        schedule.getScheduleName() +
+                        schedule.getScheduleLocation() +
+                        schedule.getMinScheduleWeek() +
+                        schedule.getMaxScheduleWeek()));
+        return schedule;
+    }
+
+    /**
+     * 通过行、列和课程长度属性生成课程节数属性
+     *
+     * @param row
+     * @param column
+     * @param length
+     * @return
+     */
+    private static String GenerateScheduleLesson(Integer row, Integer column, Integer length) {
+        StringBuilder stringBuilder = new StringBuilder("周");
+        stringBuilder.append(COLUMNS[column]).append("第").append(row + 1);
+        if (length > 1) {
+            for (int i = row + 1; i <= length + row; i++) {
+                stringBuilder.append(",").append(i);
+            }
+        }
+        stringBuilder.append("节");
+        return stringBuilder.toString();
+    }
 
     /**
      * 通过单元格位置计算赋予课程的成绩背景颜色

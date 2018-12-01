@@ -11,11 +11,11 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Schedule implements Serializable {
 
-    //课程在单元格中所在的位置
-    private int position;
+    //课程编号
+    private String id;
 
     //课程长度
-    private int scheduleLength;
+    private Integer scheduleLength;
 
     //课程名称
     private String scheduleName;
@@ -35,28 +35,46 @@ public class Schedule implements Serializable {
     //该单元格位置的背景颜色
     private String colorCode;
 
+    /**
+     * 单元格位置Position、行Row、列Columm的关系
+     * Position = Row * 7 + Column
+     * Row = Position / 7
+     * Column = Position % 7
+     */
+
+    //课程在单元格中所在的位置
+    //顺序从上到下，从左到右，数值从0开始计算
+    private Integer position;
+
     //单元格所在的行,从0开始计算
-    private int row;
+    //数值也代表课程的节数
+    //第n节：n = row + 1
+    private Integer row;
 
     //单元格所在的列,从0开始计算
-    private int column;
+    //数值也代表星期几
+    //星期几：n = colum + 1
+    private Integer column;
 
-    //课程周数
-    private String scheduleWeek;
+    //最小的课程周数
+    private Integer minScheduleWeek;
 
-    public int getPosition() {
+    //最大的课程周数
+    private Integer maxScheduleWeek;
+
+    public Integer getPosition() {
         return position;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 
-    public int getScheduleLength() {
+    public Integer getScheduleLength() {
         return scheduleLength;
     }
 
-    public void setScheduleLength(int scheduleLength) {
+    public void setScheduleLength(Integer scheduleLength) {
         this.scheduleLength = scheduleLength;
     }
 
@@ -100,14 +118,6 @@ public class Schedule implements Serializable {
         this.scheduleLocation = scheduleLocation;
     }
 
-    public String getScheduleWeek() {
-        return scheduleWeek;
-    }
-
-    public void setScheduleWeek(String scheduleWeek) {
-        this.scheduleWeek = scheduleWeek;
-    }
-
     public String getColorCode() {
         return colorCode;
     }
@@ -116,19 +126,43 @@ public class Schedule implements Serializable {
         this.colorCode = colorCode;
     }
 
-    public int getRow() {
+    public Integer getRow() {
         return row;
     }
 
-    public void setRow(int row) {
+    public void setRow(Integer row) {
         this.row = row;
     }
 
-    public int getColumn() {
+    public Integer getColumn() {
         return column;
     }
 
-    public void setColumn(int column) {
+    public void setColumn(Integer column) {
         this.column = column;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Integer getMaxScheduleWeek() {
+        return maxScheduleWeek;
+    }
+
+    public void setMaxScheduleWeek(Integer maxScheduleWeek) {
+        this.maxScheduleWeek = maxScheduleWeek;
+    }
+
+    public Integer getMinScheduleWeek() {
+        return minScheduleWeek;
+    }
+
+    public void setMinScheduleWeek(Integer minScheduleWeek) {
+        this.minScheduleWeek = minScheduleWeek;
     }
 }

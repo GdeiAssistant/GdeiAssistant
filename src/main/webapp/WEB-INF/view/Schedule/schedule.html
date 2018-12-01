@@ -10,11 +10,13 @@
     <!-- 如果使用双核浏览器，强制使用webkit来进行页面渲染 -->
     <meta name="renderer" content="webkit"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <link rel="stylesheet" href="/css/schedule/schedule.css">
+    <script>document.write("<link rel='stylesheet' href='/css/schedule/schedule.css?time=" + Date.now() + "'><\/>");</script>
     <link rel="stylesheet" href="/css/common/common.css">
     <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" href="/css/common/jquery-weui.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script>document.write("<script type='text/javascript' src='/js/schedule/schedule.js?time=" + Date.now() + "'><\/script>");</script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
@@ -22,24 +24,23 @@
 <body>
 
 <div>
-    <div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+    <div class="weui_cells_title" style="float: left;" onclick="history.go(-1)">返回</div>
+    <div class="weui_cells_title" style="float: right" onclick="showAddCustomScheduleDialog()">添加自定义课程</div>
     <div class="hd">
-        <h1 class="page_title">我的课程表</h1>
+        <h1 class="page_title" style="clear:both;margin-top: 35px">我的课程表</h1>
     </div>
 </div>
 
 <!-- 选择查询的周数 -->
 <div onclick="selectQueryWeek()" style="width:100%;height:auto;box-sizing: border-box;margin-bottom:10px;">
     <div style="height:3rem;width:100%;line-height: 3rem;text-align: center;position:relative">
-        <p id="currentWeekText">选择周数</p>
+        <p id="currentWeek">选择周数</p>
         <span style="margin-left:35px;position: absolute;top: 0;display: inline-block;width:1rem;height:100%">
             <img style="width:0.7rem;margin-top: 1.18rem;"
                  src="/img/schedule/select.png">
         </span>
     </div>
 </div>
-
-<input type="hidden" id="currentWeek" name="currentWeek" value="0">
 
 <table>
     <tr>
@@ -154,6 +155,77 @@
     </tr>
 </table>
 
+<!-- 添加自定义课程窗口 -->
+<div id="addCustomScheduleDialog" class="weui-popup__container">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <a href="javascript:" style="left:0" class="picker-button close-popup"
+                   onclick="isDialogOpen=false">取消</a>
+                <h1 class="title">添加自定义课程</h1>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div id="error" style="display: none;color: red;" class="weui-cells__title"></div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">课程名称</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input id="scheduleName" class="weui-input" type="text" maxlength="50"
+                               placeholder="请填写课程名称，不超过50字" onkeyup="inputLengthCheck(this,50)">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">上课地点</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input id="scheduleLocation" class="weui-input" type="text" maxlength="25"
+                               placeholder="请填写上课地点，不超过25字" onkeyup="inputLengthCheck(this,25)">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">上课时间</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input type="hidden" id="row" value="">
+                        <input type="hidden" id="column" value="">
+                        <a id="timeSelector" href="javascript:" onclick="selectScheduleTime()">点击选择上课时间</a>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">上课时长</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input type="hidden" id="length" value="">
+                        <a id="lengthSelector" href="javascript:" onclick="selectScheduleLength()">点击选择上课时长</a>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">上课周数</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input type="hidden" id="min_week" value="">
+                        <input type="hidden" id="max_week" value="">
+                        <a id="weekSelector" href="javascript:" onclick="selectScheduleWeek()">点击选择上课周数</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 提交按钮 -->
+            <div class="weui_btn_area">
+                <a id="submit" class="weui_btn weui_btn_primary" href="javascript:" onclick="addCustomSchedule()">提交</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 加载中提示框 -->
 <div id="loadingToast" class="weui_loading_toast" style="display: none">
     <div class="weui_mask_transparent"></div>
     <div class="weui_toast">
@@ -181,6 +253,259 @@
     <div class="weui_toast">
         <i class="weui_icon_toast"></i>
         <p class="weui_toast_content">加载课表成功</p>
+    </div>
+</div>
+
+<!-- 普通课程详细信息窗口 -->
+<div id="scheduleDetailDialog" class="weui-popup__container">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <a href="javascript:" style="left:0" class="picker-button" onclick="closeScheduleDetailDialog()">关闭</a>
+                <h1 class="title">课程详细信息</h1>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class='weui-form-preview'>
+                <div class='weui-form-preview__hd'>
+                    <label class='weui-form-preview__label'
+                           style='max-width: 12rem;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'></label>
+                    <em class='weui-form-preview__value'></em>
+                </div>
+                <div class='weui-form-preview__bd'>
+                    <div class='weui-form-preview__item'><label class='weui-form-preview__label'>课程长度</label><span
+                            class='weui-form-preview__value'></span></div>
+                    <div class='weui-form-preview__item'><label class='weui-form-preview__label'>上课节数</label><span
+                            class='weui-form-preview__value'></span></div>
+                    <div class='weui-form-preview__item'><label class='weui-form-preview__label'>任课教师</label><span
+                            class='weui-form-preview__value'></span></div>
+                    <div class='weui-form-preview__item'><label class='weui-form-preview__label'>上课地点</label><span
+                            class='weui-form-preview__value'></span></div>
+                    <div class='weui-form-preview__item'><label class='weui-form-preview__label'>上课周数</label><span
+                            class='weui-form-preview__value'></span>
+                    </div>
+                </div>
+                <div style="display: none" class='weui-form-preview__ft'>
+                    <button type='submit' class='weui-form-preview__btn weui-form-preview__btn_primary'
+                            href='javascript:'>删除自定义课程
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 自定义课程详细信息窗口 -->
+<div id="customScheduleDetailDialog" class="weui-popup__container">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <a href="javascript:" style="left:0" class="picker-button" onclick="closeCustomScheduleDetailDialog()">关闭</a>
+                <h1 class="title">课程详细信息</h1>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class='weui-form-preview'>
+                <input type="hidden" name="id">
+                <input type="hidden" name="index">
+                <div class='weui-form-preview__hd'>
+                    <label class='weui-form-preview__label'
+                           style='max-width: 10rem;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'>
+                    </label>
+                    <em class='weui-form-preview__value'>自定义课程</em>
+                </div>
+                <div class='weui-form-preview__bd'>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>课程长度</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课节数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课地点</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课周数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                </div>
+                <div class='weui-form-preview__ft'>
+                    <button type='submit' class='weui-form-preview__btn weui-form-preview__btn_primary'
+                            href='javascript:'>删除自定义课程
+                    </button>
+                </div>
+            </div>
+            <div class='weui-form-preview'>
+                <input type="hidden" name="id">
+                <input type="hidden" name="index">
+                <div class='weui-form-preview__hd'>
+                    <label class='weui-form-preview__label'
+                           style='max-width: 10rem;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'>
+                    </label>
+                    <em class='weui-form-preview__value'>自定义课程</em>
+                </div>
+                <div class='weui-form-preview__bd'>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>课程长度</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课节数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课地点</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课周数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                </div>
+                <div class='weui-form-preview__ft'>
+                    <button type='submit' class='weui-form-preview__btn weui-form-preview__btn_primary'
+                            href='javascript:'>删除自定义课程
+                    </button>
+                </div>
+            </div>
+            <div class='weui-form-preview'>
+                <input type="hidden" name="id">
+                <input type="hidden" name="index">
+                <div class='weui-form-preview__hd'>
+                    <label class='weui-form-preview__label'
+                           style='max-width: 10rem;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'>
+                    </label>
+                    <em class='weui-form-preview__value'>自定义课程</em>
+                </div>
+                <div class='weui-form-preview__bd'>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>课程长度</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课节数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课地点</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课周数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                </div>
+                <div class='weui-form-preview__ft'>
+                    <button type='submit' class='weui-form-preview__btn weui-form-preview__btn_primary'
+                            href='javascript:'>删除自定义课程
+                    </button>
+                </div>
+            </div>
+            <div class='weui-form-preview'>
+                <input type="hidden" name="id">
+                <input type="hidden" name="index">
+                <div class='weui-form-preview__hd'>
+                    <label class='weui-form-preview__label'
+                           style='max-width: 10rem;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'>
+                    </label>
+                    <em class='weui-form-preview__value'>自定义课程</em>
+                </div>
+                <div class='weui-form-preview__bd'>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>课程长度</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课节数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课地点</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课周数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                </div>
+                <div class='weui-form-preview__ft'>
+                    <button type='submit' class='weui-form-preview__btn weui-form-preview__btn_primary'
+                            href='javascript:'>删除自定义课程
+                    </button>
+                </div>
+            </div>
+            <div class='weui-form-preview'>
+                <input type="hidden" name="id">
+                <input type="hidden" name="index">
+                <div class='weui-form-preview__hd'>
+                    <label class='weui-form-preview__label'
+                           style='max-width: 10rem;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'>
+                    </label>
+                    <em class='weui-form-preview__value'>自定义课程</em>
+                </div>
+                <div class='weui-form-preview__bd'>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>课程长度</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课节数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课地点</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课周数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                </div>
+                <div class='weui-form-preview__ft'>
+                    <button type='submit' class='weui-form-preview__btn weui-form-preview__btn_primary'
+                            href='javascript:'>删除自定义课程
+                    </button>
+                </div>
+            </div>
+            <div class='weui-form-preview'>
+                <input type="hidden" name="id">
+                <input type="hidden" name="index">
+                <div class='weui-form-preview__hd'>
+                    <label class='weui-form-preview__label'
+                           style='max-width: 10rem;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'>
+                    </label>
+                    <em class='weui-form-preview__value'>自定义课程</em>
+                </div>
+                <div class='weui-form-preview__bd'>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>课程长度</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课节数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课地点</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                    <div class='weui-form-preview__item'>
+                        <label class='weui-form-preview__label'>上课周数</label>
+                        <span class='weui-form-preview__value'></span>
+                    </div>
+                </div>
+                <div class='weui-form-preview__ft'>
+                    <button type='submit' class='weui-form-preview__btn weui-form-preview__btn_primary'
+                            href='javascript:'>删除自定义课程
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

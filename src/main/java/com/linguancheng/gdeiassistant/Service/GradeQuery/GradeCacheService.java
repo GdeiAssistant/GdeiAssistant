@@ -5,7 +5,6 @@ import com.gdeiassistant.gdeiassistant.Pojo.Entity.Grade;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.Privacy;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.GradeQuery.GradeCacheResult;
-import com.gdeiassistant.gdeiassistant.Pojo.GradeQuery.GradeQueryJsonResult;
 import com.gdeiassistant.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import com.gdeiassistant.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.Privacy.PrivacyMapper;
@@ -15,24 +14,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
-import org.springframework.web.client.AsyncRestTemplate;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
@@ -147,7 +141,7 @@ public class GradeCacheService {
             Semaphore semaphore = new Semaphore(5);
             for (User user : userList) {
                 Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
-                if (privacy.isCache()) {
+                if (privacy != null && privacy.isCache()) {
                     GradeDocument gradeDocument = gradeDao.queryGradeByUsername(StringEncryptUtils
                             .decryptString(user.getUsername()));
                     //如果最后更新日期距今已超过7天，则进行更新

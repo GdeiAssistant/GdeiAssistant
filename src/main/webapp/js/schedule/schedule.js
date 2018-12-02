@@ -194,6 +194,8 @@ if (window.history && window.history.pushState) {
             let hash = window.location.hash;
             if (hash === '') {
                 if (isDialogOpen) {
+                    isDialogOpen = false;
+                    window.history.pushState('forward', null, './schedule');
                     $.closePopup();
                 } else {
                     sessionStorage.removeItem("scheduleWeek");
@@ -214,11 +216,13 @@ $(function () {
 //选择查询的周数
 function selectQueryWeek() {
     weui.picker(weekPicker, {
-        defaultValue: [$("#currentWeek").val()],
+        defaultValue: [parseInt(sessionStorage.getItem("scheduleWeek") ? sessionStorage.getItem("scheduleWeek") : 1)],
         onConfirm: function (result) {
             //更新当前选中周数
             sessionStorage.setItem("scheduleWeek", result[0].value);
-            window.location.reload();
+            setTimeout(function () {
+                window.location.reload();
+            }, 100);
         }
     });
 }
@@ -447,6 +451,7 @@ function postQueryForm() {
             }
         });
     } else {
+        $("#currentWeek").text("第" + week + "周");
         //异步请求查询指定周数课表
         $.ajax({
             url: "/schedulequery",
@@ -541,6 +546,7 @@ function handleScheduleQueryResult(scheduleQueryResult) {
     }
     //配置课程单元格点击响应事件
     $("td[data-index]").click(function () {
+        isDialogOpen = true;
         if (dataList[$(this).attr("data-index")].merged) {
             showCustomScheduleDetail($(this).attr("data-index"));
             $("#customScheduleDetailDialog").popup();
@@ -548,7 +554,6 @@ function handleScheduleQueryResult(scheduleQueryResult) {
             showScheduleDetail($(this).attr("data-index"));
             $("#scheduleDetailDialog").popup();
         }
-        isDialogOpen = true;
     });
     //显示查询成功提示
     $("#toast").show().delay(1000).hide(0);

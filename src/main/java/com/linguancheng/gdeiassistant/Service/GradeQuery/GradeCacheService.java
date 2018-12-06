@@ -70,7 +70,7 @@ public class GradeCacheService {
     public ListenableFuture<GradeQueryResult> QueryGradeYearData(CountDownLatch countDownLatch
             , User user, int year) {
         try {
-            return AsyncResult.forValue(gradeQueryService.QueryGradeFromSystem(null, user, year));
+            return AsyncResult.forValue(gradeQueryService.QueryGradeFromSystem(null, user.decryptUser(), year));
         } catch (Exception e) {
             log.error("定时查询保存成绩信息异常：", e);
         } finally {

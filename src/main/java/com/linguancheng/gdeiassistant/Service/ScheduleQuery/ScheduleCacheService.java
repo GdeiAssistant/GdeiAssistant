@@ -63,7 +63,7 @@ public class ScheduleCacheService {
         try {
             semaphore.acquire();
             return AsyncResult.forValue(scheduleQueryService
-                    .QueryScheduleFromSystem(null, user, 0));
+                    .QueryScheduleFromSystem(null, user.decryptUser(), 0));
         } catch (Exception e) {
             log.error("定时查询保存课表信息异常：", e);
         } finally {

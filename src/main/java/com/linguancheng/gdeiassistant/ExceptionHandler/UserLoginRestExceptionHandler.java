@@ -3,11 +3,13 @@ package com.linguancheng.gdeiassistant.ExceptionHandler;
 import com.linguancheng.gdeiassistant.Controller.UserLogin.UserLoginRestController;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = UserLoginRestController.class)
+@Order(value = 0)
 public class UserLoginRestExceptionHandler {
 
     @ExceptionHandler(PasswordIncorrectException.class)

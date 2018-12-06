@@ -2,6 +2,7 @@ package com.linguancheng.gdeiassistant.ExceptionHandler;
 
 import com.linguancheng.gdeiassistant.Constant.ConstantUtils;
 import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice(annotations = RestController.class)
-@Order(value = Integer.MIN_VALUE)
+@Order(value = 1)
 public class GlobalRestExceptionHandler {
 
     private Log log = LogFactory.getLog(GlobalRestExceptionHandler.class);
@@ -60,6 +61,17 @@ public class GlobalRestExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
                         , "请求参数不合法"));
+    }
+
+    /**
+     * 处理查询数据不存在的异常
+     *
+     * @return
+     */
+    @ExceptionHandler(DataNotExistException.class)
+    public ResponseEntity HandleDataNotExistException() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new JsonResult(ConstantUtils.DATA_NOT_EXIST, false
+                , "没有找到查询数据，请检查输入条件是否有误"));
     }
 
     /**

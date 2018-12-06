@@ -124,7 +124,7 @@ public class HttpClientUtils {
         requestConfigBuilder.setSocketTimeout(timeOut).setConnectTimeout(timeOut)
                 .setConnectionRequestTimeout(timeOut);
         //自动检测StaleConnection
-        requestConfigBuilder.setStaleConnectionCheckEnabled(automaticRedirect);
+        requestConfigBuilder.setStaleConnectionCheckEnabled(true);
         //配置默认请求配置
         httpClientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
         //设置连接管理器

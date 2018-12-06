@@ -21,9 +21,10 @@
                 <!-- JDBC配置参数 -->
                 <value>classpath:config/mysql/app-jdbc.properties</value>
                 <value>classpath:config/mysql/log-jdbc.properties</value>
+                <value>classpath:config/mysql/data-jdbc.properties</value>
                 <value>classpath:config/redis/redis.properties</value>
                 <value>classpath:config/mongodb/mongodb-config.properties</value>
-                <!-- 易班轻应用配置参数 -->
+                <!-- 易班轻应用配置参�? -->
                 <value>classpath:config/yiban/userlogin.properties</value>
                 <value>classpath:config/yiban/ershou.properties</value>
                 <value>classpath:config/yiban/lostandfound.properties</value>
@@ -44,7 +45,7 @@
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
           p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.pass}" p:pool-config-ref="poolConfig"/>
 
-    <!-- 配置Redis的操作模板 -->
+    <!-- 配置Redis的操作模�? -->
     <bean id="redisTemplete" class="org.springframework.data.redis.core.RedisTemplate">
         <property name="connectionFactory" ref="connectionFactory"/>
     </bean>
@@ -96,6 +97,17 @@
         <property name="maxIdleTime" value="${log.jdbc.maxIdleTime}"/>
     </bean>
 
+    <!-- 设置数据数据源c3p0 -->
+    <bean id="dataDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${data.jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${data.jdbc.url}"/>
+        <property name="user" value="${data.jdbc.username}"/>
+        <property name="password" value="${data.jdbc.password}"/>
+        <property name="maxPoolSize" value="${data.jdbc.maxPoolSize}"/>
+        <property name="minPoolSize" value="${data.jdbc.minPoolSize}"/>
+        <property name="maxIdleTime" value="${data.jdbc.maxIdleTime}"/>
+    </bean>
+
     <!-- 应用数据库的SQLSessionFactory -->
     <bean id="appSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>
@@ -108,24 +120,30 @@
         <property name="dataSource" ref="logDataSource"/>
     </bean>
 
-    <!-- 应用数据源事务管理 -->
+    <!-- 数据数据库的SQLSessionFactory -->
+    <bean id="dataSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>
+        <property name="dataSource" ref="dataDataSource"/>
+    </bean>
+
+    <!-- 应用数据源事务管�? -->
     <bean id="appTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="appDataSource"/>
     </bean>
 
-    <!-- 日志数据源事务管理 -->
+    <!-- 日志数据源事务管�? -->
     <bean id="logTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="logDataSource"/>
     </bean>
 
-    <!-- 控制器映射器和控制器适配器 -->
+    <!-- 控制器映射器和控制器适配�? -->
     <mvc:annotation-driven conversion-service="conversionService"/>
 
-    <!-- 类型转换器 -->
+    <!-- 类型转换�? -->
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <!-- 请求接口和登录接口的Method属性自动转换为枚举类型 -->
+                <!-- 请求接口和登录接口的Method属�?�自动转换为枚举类型 -->
                 <bean class="com.gdeiassistant.gdeiassistant.Converter.StringToQueryMethodEnumConverter"/>
                 <bean class="com.gdeiassistant.gdeiassistant.Converter.StringToLoginMethodEnumConverter"/>
             </set>
@@ -135,13 +153,13 @@
     <!-- 注册方法级别验证后处理器 -->
     <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
 
-    <!-- 配置异步任务执行器和定时任务调度器 -->
+    <!-- 配置异步任务执行器和定时任务调度�? -->
     <task:annotation-driven scheduler="scheduler" executor="executor"/>
 
-    <!-- 定时任务使用多线程 -->
+    <!-- 定时任务使用多线�? -->
     <task:scheduler id="scheduler" pool-size="5"/>
 
-    <!-- 异步任务执行器 -->
+    <!-- 异步任务执行�? -->
     <task:executor id="executor" pool-size="5-50" queue-capacity="10"/>
 
     <!-- 校园新闻系统地址 -->
@@ -152,18 +170,18 @@
         <value>http://web.gdei.edu.cn/gdei/hqserv/ggxx</value>
         <!-- 选课工作 -->
         <value>http://web.gdei.edu.cn/jwc/jwtz/xkgz</value>
-        <!-- 调停课通知 -->
+        <!-- 调停课�?�知 -->
         <value>http://web.gdei.edu.cn/jwc/jwtz/tktz</value>
         <!-- 等级竞赛通知 -->
         <value>http://web.gdei.edu.cn/jwc/jwtz/kwtz</value>
     </util:list>
 
-    <!-- 文件上传配置的MultipartResolver处理器 -->
+    <!-- 文件上传配置的MultipartResolver处理�? -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="utf-8"/>
     </bean>
 
-    <!-- 配置FreeMarker的模板路径 -->
+    <!-- 配置FreeMarker的模板路�? -->
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/WEB-INF/view/"/>
         <property name="defaultEncoding" value="UTF-8"/>
@@ -178,7 +196,7 @@
         </property>
     </bean>
 
-    <!-- HTML视图渲染器 -->
+    <!-- HTML视图渲染�? -->
     <bean id="htmlViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
         <property name="contentType" value="text/html; charset=UTF-8"/>
@@ -191,7 +209,7 @@
         <property name="order" value="0"/>
     </bean>
 
-    <!-- JSP视图渲染器 -->
+    <!-- JSP视图渲染�? -->
     <bean id="jspViewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/view/"/>
@@ -206,29 +224,29 @@
             <list>
                 <!-- 读取字符串加密解密器密钥 -->
                 <value>classpath:/config/jaq/encryptor.properties</value>
-                <!-- 读取校历开学日期和学期数 -->
+                <!-- 读取校历�?学日期和学期�? -->
                 <value>classpath:/config/schedule/schedule.properties</value>
                 <!-- 读取安卓APP更新版本信息 -->
                 <value>classpath:/config/version/android.properties</value>
                 <!-- 读取对象存储访问控制安全令牌信息 -->
                 <value>classpath:/config/oss/token.properties</value>
-                <!-- 读取对象存储访问控制的区域信息 -->
+                <!-- 读取对象存储访问控制的区域信�? -->
                 <value>classpath:/config/oss/api.properties</value>
-                <!-- 读取微信公众号配置信息 -->
+                <!-- 读取微信公众号配置信�? -->
                 <value>classpath:/config/wechat/account.properties</value>
-                <!-- 读取微信小程序配置信息 -->
+                <!-- 读取微信小程序配置信�? -->
                 <value>classpath:/config/wechat/app.properties</value>
-                <!-- 读取OSS管理对象存储服务的权限密钥信息 -->
+                <!-- 读取OSS管理对象存储服务的权限密钥信�? -->
                 <value>classpath:/config/oss/oss.properties</value>
                 <!-- 读取阿里云API权限令牌信息 -->
                 <value>classpath:/config/face/face.properties</value>
-                <!-- 读取百度云秘钥 -->
+                <!-- 读取百度云秘�? -->
                 <value>classpath:/config/baidu/token.properties</value>
                 <!-- 读取教务系统配置信息 -->
                 <value>classpath:/config/education/system.properties</value>
                 <!-- 读取网络代理配置信息 -->
                 <value>classpath:/config/network/proxy.properties</value>
-                <!-- 读取阿里云市场身份认证信息 -->
+                <!-- 读取阿里云市场身份认证信�? -->
                 <value>classpath:/config/aliyun/appcode.properties</value>
                 <!-- 读取网络超时配置信息 -->
                 <value>classpath:/config/network/timeout.properties</value>
@@ -243,9 +261,9 @@
         <property name="fileEncoding" value="UTF-8"/>
     </bean>
 
-    <!-- 拦截器 -->
+    <!-- 拦截�? -->
     <mvc:interceptors>
-        <!-- 用户登录状态校验拦截器 -->
+        <!-- 用户登录状�?�校验拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <bean class="com.gdeiassistant.gdeiassistant.Interceptor.LoginInterceptor">
@@ -268,7 +286,7 @@
                         <value>/wechat</value>
                         <!-- 易班接口 -->
                         <value>/yiban</value>
-                        <!-- 客户端下载 -->
+                        <!-- 客户端下�? -->
                         <value>/download</value>
                     </list>
                 </property>
@@ -286,7 +304,7 @@
 
     </util:map>
 
-    <!-- 易班轻应用授权信息 -->
+    <!-- 易班轻应用授权信�? -->
     <util:map id="yiBanLightAppAuthorizeMap" scope="singleton">
         <entry key="userlogin">
             <bean class="com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
@@ -327,48 +345,48 @@
 
     <!-- 配置个人资料性别字典 -->
     <util:map id="genderMap" key-type="java.lang.Integer" value-type="java.lang.String">
-        <entry key="0" value="未选择"/>
-        <entry key="1" value="男"/>
-        <entry key="2" value="女"/>
-        <entry key="3" value="自定义"/>
+        <entry key="0" value="未�?�择"/>
+        <entry key="1" value="�?"/>
+        <entry key="2" value="�?"/>
+        <entry key="3" value="自定�?"/>
     </util:map>
 
-    <!-- 配置个人资料性取向字典 -->
+    <!-- 配置个人资料性取向字�? -->
     <util:map id="genderOrientationMap" key-type="java.lang.Integer" value-type="java.lang.String">
-        <entry key="0" value="未选择"/>
-        <entry key="1" value="异性恋"/>
-        <entry key="2" value="同性恋"/>
-        <entry key="3" value="双性恋"/>
-        <entry key="4" value="无性恋"/>
-        <entry key="5" value="泛性恋"/>
+        <entry key="0" value="未�?�择"/>
+        <entry key="1" value="异�?�恋"/>
+        <entry key="2" value="同�?�恋"/>
+        <entry key="3" value="双�?�恋"/>
+        <entry key="4" value="无�?�恋"/>
+        <entry key="5" value="泛�?�恋"/>
         <entry key="6" value="其他"/>
     </util:map>
 
     <!-- 配置院系字典 -->
     <util:map id="facultyMap" key-type="java.lang.Integer" value-type="java.lang.String">
-        <entry key="0" value="未选择"/>
+        <entry key="0" value="未�?�择"/>
         <entry key="1" value="教育学院"/>
-        <entry key="2" value="政法系"/>
-        <entry key="3" value="中文系"/>
-        <entry key="4" value="数学系"/>
-        <entry key="5" value="外语系"/>
+        <entry key="2" value="政法�?"/>
+        <entry key="3" value="中文�?"/>
+        <entry key="4" value="数学�?"/>
+        <entry key="5" value="外语�?"/>
         <entry key="6" value="物理与信息工程系"/>
-        <entry key="7" value="化学系"/>
-        <entry key="8" value="生物与食品工程学院"/>
+        <entry key="7" value="化学�?"/>
+        <entry key="8" value="生物与食品工程学�?"/>
         <entry key="9" value="体育学院"/>
         <entry key="10" value="美术学院"/>
         <entry key="11" value="计算机科学系"/>
-        <entry key="12" value="音乐系"/>
+        <entry key="12" value="音乐�?"/>
         <entry key="13" value="教师研修学院"/>
         <entry key="14" value="成人教育学院"/>
         <entry key="15" value="网络教育学院"/>
-        <entry key="16" value="马克思主义学院"/>
+        <entry key="16" value="马克思主义学�?"/>
     </util:map>
 
-    <!-- 配置Rest服务客户端 -->
+    <!-- 配置Rest服务客户�? -->
     <bean class="org.springframework.web.client.RestTemplate"/>
 
-    <!-- 配置异步Rest服务客户端 -->
+    <!-- 配置异步Rest服务客户�? -->
     <bean class="org.springframework.web.client.AsyncRestTemplate"/>
 
     <!-- 自动扫描组件 -->
@@ -386,7 +404,13 @@
         <property name="sqlSessionFactoryBeanName" value="logSqlSessionFactory"/>
     </bean>
 
-    <!-- 启动对AspectJ注解的支持 -->
+    <!-- 自动扫描mapper接口，并注入数据SqlSessionFactory -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistantData"/>
+        <property name="sqlSessionFactoryBeanName" value="dataSqlSessionFactory"/>
+    </bean>
+
+    <!-- 启动对AspectJ注解的支�? -->
     <aop:aspectj-autoproxy/>
 
 </beans>

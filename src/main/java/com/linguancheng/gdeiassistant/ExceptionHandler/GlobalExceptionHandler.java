@@ -18,7 +18,7 @@ import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 
 @ControllerAdvice(annotations = Controller.class)
-@Order
+@Order(value = 2)
 public class GlobalExceptionHandler {
 
     private Log log = LogFactory.getLog(GlobalExceptionHandler.class);

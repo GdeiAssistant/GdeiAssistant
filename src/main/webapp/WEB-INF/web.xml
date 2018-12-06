@@ -34,6 +34,17 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <!-- 过滤用户提交的表单信息，防止XSS攻击 -->
+    <filter>
+        <filter-name>XSSFilter</filter-name>
+        <filter-class>com.linguancheng.gdeiassistant.Filter.XSSFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>XSSFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <!-- 激活Tomcat的defaultServlet来处理静态文件 -->
     <servlet-mapping>
         <servlet-name>default</servlet-name>

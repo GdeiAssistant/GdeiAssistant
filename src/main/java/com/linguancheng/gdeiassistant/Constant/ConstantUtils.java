@@ -26,10 +26,13 @@ public class ConstantUtils {
     //自定义课程数量超过限制
     public static final int CUSTOM_SCHEDULE_OVER_LIMIT = 40301;
 
+    //查询的数据不存在
+    public static final int DATA_NOT_EXIST = 40401;
+
     //服务器内部异常
-    public static final int INTERNAL_SERVER_ERROR = 50000;
+    public static final int INTERNAL_SERVER_ERROR = 50001;
 
     //网络连接超时
-    public static final int NETWORK_TIMEOUT = 50300;
+    public static final int NETWORK_TIMEOUT = 50301;
 
 }

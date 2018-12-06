@@ -67,7 +67,7 @@ function postQueryForm(year) {
                     showCustomErrorTip(gradeQueryResult.message);
                 }
             },
-            error: function () {
+            error: function (result) {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
                 if (result.status) {

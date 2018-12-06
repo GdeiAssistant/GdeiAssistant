@@ -2,20 +2,19 @@ package com.gdeiassistant.gdeiassistant.Service.GradeQuery;
 
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
+import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import com.gdeiassistant.gdeiassistant.Exception.QueryException.NotAvailableConditionException;
-import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
-import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.Pojo.Document.GradeDocument;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.Grade;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
+import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.gdeiassistant.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import com.gdeiassistant.gdeiassistant.Service.UserLogin.UserLoginService;
-import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
+import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -130,24 +129,17 @@ public class GradeQueryService {
                                 year = yearList.size() - 1;
                             }
                             gradeQueryResult.setYear(year);
-                            String ddlXN = yearList.get(year);
-                            //获取ViewState的值
-                            String viewState = document.select("input[name=__VIEWSTATE]").val();
                             //封装查询成绩发送的数据
-                            BasicNameValuePair basicNameValuePair_1 = new BasicNameValuePair("__VIEWSTATE", viewState);
-                            BasicNameValuePair basicNameValuePair_2 = new BasicNameValuePair("Button5", "%B0%B4%D1%A7%C4%EA%B2%E9%D1%AF");
-                            BasicNameValuePair basicNameValuePair_3 = new BasicNameValuePair("ddlXN", ddlXN);
-                            BasicNameValuePair basicNameValuePair_4 = new BasicNameValuePair("ddlXQ", "");
                             List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
-                            basicNameValuePairs.add(basicNameValuePair_1);
-                            basicNameValuePairs.add(basicNameValuePair_2);
-                            basicNameValuePairs.add(basicNameValuePair_3);
-                            basicNameValuePairs.add(basicNameValuePair_4);
+                            basicNameValuePairs.add(new BasicNameValuePair("__VIEWSTATE", document.select("input[name=__VIEWSTATE]").val()));
+                            basicNameValuePairs.add(new BasicNameValuePair("Button5", "按学年查询"));
+                            basicNameValuePairs.add(new BasicNameValuePair("ddlXN", yearList.get(year)));
+                            basicNameValuePairs.add(new BasicNameValuePair("ddlXQ", ""));
                             HttpPost httpPost = new HttpPost(url + "xscj_gc.aspx?xh=" + number);
                             httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
                             httpResponse = httpClient.execute(httpPost);
-                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                             if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                                 //获取存放成绩的表格
                                 Element element = document.getElementsByClass("datelist").first();
                                 //得到所有的行

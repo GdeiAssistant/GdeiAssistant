@@ -354,7 +354,7 @@ function deleteCustomSchedule(id, dataListIndex, detailListIndex) {
             loading.hide();
             $("button[type='submit']").attr("disabeled", false);
             if (result.status) {
-                $.toptip(result.message, 'error');
+                $.toptip(result.responseJSON.message, 'error');
             } else {
                 $.toptip('网络连接异常，请检查并重试', 'error');
             }
@@ -410,7 +410,7 @@ function addCustomSchedule() {
                 loading.hide();
                 $("#submit").attr("disabled", false);
                 if (result.status) {
-                    $.toptip(result.message, 'error');
+                    $.toptip(result.responseJSON.message, 'error');
                 } else {
                     $.toptip('网络连接异常，请检查并重试', 'error');
                 }

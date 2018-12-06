@@ -1,19 +1,17 @@
 package com.gdeiassistant.gdeiassistant.Service.UserLogin;
 
 import com.gdeiassistant.gdeiassistant.Enum.Base.DataBaseResultEnum;
-import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
-import com.gdeiassistant.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
+import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.gdeiassistant.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
-import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
+import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.Tools.StringEncryptUtils;
 import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
@@ -154,7 +152,7 @@ public class UserLoginService {
                 List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
                 basicNameValuePairs.add(new BasicNameValuePair("username", user.getUsername()));
                 basicNameValuePairs.add(new BasicNameValuePair("password", user.getPassword()));
-                basicNameValuePairs.add(new BasicNameValuePair("service", "http://portal.gdei.edu.cn:8000/Login"));
+                basicNameValuePairs.add(new BasicNameValuePair("service", "http://portal.gdei.edu.cn:8001/Login"));
                 basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
                 basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
                 basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
@@ -174,16 +172,21 @@ public class UserLoginService {
                 httpGet = new HttpGet(document.select("a").first().attr("href"));
                 httpResponse = httpClient.execute(httpGet);
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                    //连接到教务系统
-                    return LoginCasSystem(httpClient, user);
+                if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                    if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
+                        //已经通过了认证
+                        return LoginCasSystem(httpClient, user);
+                    } else {
+                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                        httpResponse = httpClient.execute(httpGet);
+                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("我的门户")) {
+                            //登录我的门户成功
+                            return LoginCasSystem(httpClient, user);
+                        }
+                    }
                 }
                 throw new ServerErrorException("教务系统异常");
-            } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
-                    //已经通过了认证
-                    return LoginCasSystem(httpClient, user);
-                }
             }
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {

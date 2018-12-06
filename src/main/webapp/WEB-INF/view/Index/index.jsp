@@ -101,6 +101,10 @@
             <i style="background: url(/img/function/calendar.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>学期校历</p>
         </div>
+        <div onclick="window.location.href='/data'">
+            <i style="background: url(/img/function/data.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>信息查询</p>
+        </div>
         <div onclick="window.location.href='/download'">
             <i style="background: url(/img/function/download.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>客户端下载</p>

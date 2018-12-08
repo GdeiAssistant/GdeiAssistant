@@ -278,6 +278,7 @@
                         <value>/api/userlogin</value>
                         <!-- 使用协议 -->
                         <value>/agreement</value>
+                        <value>/policy</value>
                         <!-- 移动端的 Restful API -->
                         <value>/rest</value>
                         <!-- 应用内的 WEB API -->

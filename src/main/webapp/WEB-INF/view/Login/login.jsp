@@ -111,9 +111,17 @@
     <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postLoginForm()">登录</a>
 </div>
 
-<p class="page_desc" style="margin-top: 25px">点击登录按钮表示你已阅读并同意<a class="page_desc"
-                                                                onclick="window.location.href = '/agreement'"
-                                                                style="color: #3cc51f;">《用户协议》</a></p>
+<p class="page_desc" style="margin-top: 25px">点击登录按钮表示你已阅读并同意
+    <br>
+    <a class="page_desc"
+       onclick="window.location.href = '/agreement'"
+       style="color: #3cc51f;">《用户协议》
+    </a>和
+    <a class="page_desc"
+       onclick="window.location.href = '/policy'"
+       style="color: #3cc51f;">《隐私政策》
+    </a>
+</p>
 
 <!-- 登录中弹框 -->
 <div class="weui_mask" style="display: none"></div>

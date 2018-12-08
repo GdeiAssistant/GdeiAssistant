@@ -90,7 +90,14 @@
 <div class="weui_toptips weui_warn js_tooltips"></div>
 
 <p class="page_desc" style="margin-top: 25px">点击登录按钮表示你已阅读并同意
-    <a class="page_desc" onclick="window.location.href = '/agreement'" style="color: #3cc51f;">《用户协议》
+    <br>
+    <a class="page_desc"
+       onclick="window.location.href = '/agreement'"
+       style="color: #3cc51f;">《用户协议》
+    </a>和
+    <a class="page_desc"
+       onclick="window.location.href = '/policy'"
+       style="color: #3cc51f;">《隐私政策》
     </a>
 </p>
 

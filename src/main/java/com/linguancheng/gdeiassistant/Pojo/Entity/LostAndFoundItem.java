@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -188,13 +186,12 @@ public class LostAndFoundItem implements Serializable {
         this.state = state;
     }
 
-    public String getPublishTime() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(publishTime);
+    public Date getPublishTime() {
+        return publishTime;
     }
 
-    public void setPublishTime(String publishTime) throws ParseException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        this.publishTime = simpleDateFormat.parse(publishTime);
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
     }
 
     public String getWechat() {

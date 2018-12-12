@@ -1,11 +1,11 @@
 package com.linguancheng.gdeiassistant.Service.LostAndFound;
 
 import com.aliyun.oss.OSSClient;
-import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
-import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem;
+import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -217,7 +216,7 @@ public class LostAndFoundService {
     public LostAndFoundItem AddLostAndFoundItem(LostAndFoundItem lostAndFoundItem, String username) throws Exception {
         lostAndFoundItem.setUsername(StringEncryptUtils.encryptString(username));
         //使用24小时制显示发布时间
-        lostAndFoundItem.setPublishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        lostAndFoundItem.setPublishTime(new Date());
         lostAndFoundMapper.insertItem(lostAndFoundItem);
         return lostAndFoundItem;
     }

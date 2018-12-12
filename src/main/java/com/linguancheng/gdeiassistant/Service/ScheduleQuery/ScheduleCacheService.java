@@ -89,7 +89,7 @@ public class ScheduleCacheService {
             Semaphore semaphore = new Semaphore(5);
             for (User user : userList) {
                 Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
-                if (privacy != null && privacy.isCache()) {
+                if (privacy != null && privacy.isCacheAllow()) {
                     ScheduleDocument scheduleDocument = scheduleDao.querySchedule(StringEncryptUtils
                             .decryptString(user.getUsername()));
                     //如果最后更新日期距今已超过3天，则进行更新

@@ -11,73 +11,83 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Privacy implements Serializable {
 
-    private Boolean gender;
+    private String username;
 
-    private Boolean genderOrientation;
+    private Boolean genderOpen;
 
-    private Boolean region;
+    private Boolean genderOrientationOpen;
 
-    private Boolean introduction;
+    private Boolean regionOpen;
 
-    private Boolean faculty;
+    private Boolean introductionOpen;
 
-    private Boolean major;
+    private Boolean facultyOpen;
 
-    private Boolean cache;
+    private Boolean majorOpen;
 
-    public Boolean isGender() {
-        return gender;
+    private Boolean cacheAllow;
+
+    public String isUsername() {
+        return username;
     }
 
-    public void setGender(Boolean gender) {
-        this.gender = gender;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Boolean isGenderOrientation() {
-        return genderOrientation;
+    public Boolean isGenderOpen() {
+        return genderOpen;
     }
 
-    public void setGenderOrientation(Boolean genderOrientation) {
-        this.genderOrientation = genderOrientation;
+    public void setGenderOpen(Boolean genderOpen) {
+        this.genderOpen = genderOpen;
     }
 
-    public Boolean isRegion() {
-        return region;
+    public Boolean isGenderOrientationOpen() {
+        return genderOrientationOpen;
     }
 
-    public void setRegion(Boolean region) {
-        this.region = region;
+    public void setGenderOrientationOpen(Boolean genderOrientationOpen) {
+        this.genderOrientationOpen = genderOrientationOpen;
     }
 
-    public Boolean isIntroduction() {
-        return introduction;
+    public Boolean isRegionOpen() {
+        return regionOpen;
     }
 
-    public void setIntroduction(Boolean introduction) {
-        this.introduction = introduction;
+    public void setRegionOpen(Boolean regionOpen) {
+        this.regionOpen = regionOpen;
     }
 
-    public Boolean isCache() {
-        return cache;
+    public Boolean isIntroductionOpen() {
+        return introductionOpen;
     }
 
-    public void setCache(Boolean cache) {
-        this.cache = cache;
+    public void setIntroductionOpen(Boolean introductionOpen) {
+        this.introductionOpen = introductionOpen;
     }
 
-    public Boolean isFaculty() {
-        return faculty;
+    public Boolean isFacultyOpen() {
+        return facultyOpen;
     }
 
-    public void setFaculty(Boolean faculty) {
-        this.faculty = faculty;
+    public void setFacultyOpen(Boolean facultyOpen) {
+        this.facultyOpen = facultyOpen;
     }
 
-    public Boolean isMajor() {
-        return major;
+    public Boolean isMajorOpen() {
+        return majorOpen;
     }
 
-    public void setMajor(Boolean major) {
-        this.major = major;
+    public void setMajorOpen(Boolean majorOpen) {
+        this.majorOpen = majorOpen;
+    }
+
+    public Boolean isCacheAllow() {
+        return cacheAllow;
+    }
+
+    public void setCacheAllow(Boolean cacheAllow) {
+        this.cacheAllow = cacheAllow;
     }
 }

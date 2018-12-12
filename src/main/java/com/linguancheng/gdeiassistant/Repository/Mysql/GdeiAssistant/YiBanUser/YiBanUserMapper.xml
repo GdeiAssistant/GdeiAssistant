@@ -9,19 +9,19 @@
     <cache/>
 
     <select id="selectUsername" parameterType="java.lang.Integer" resultType="java.lang.String">
-        select username from yibanUser where userid=#{userid} limit 1
+        select username from yiban_user where user_id=#{userid} limit 1
     </select>
 
     <insert id="insertYiBanUser">
-        insert into yibanUser (userid,username) values (#{userid},#{username})
+        insert into yiban_user (user_id,username) values (#{userid},#{username})
     </insert>
 
     <update id="updateYiBanUser">
-        update yibanUser set username=#{username} where userid=#{userid}
+        update yiban_user set username=#{username} where user_id=#{userid}
     </update>
 
     <delete id="resetYiBanUser">
-        delete from yibanUser where username=#{username}
+        delete from yiban_user where username=#{username}
     </delete>
 
 </mapper>

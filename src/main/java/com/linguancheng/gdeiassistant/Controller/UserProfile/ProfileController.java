@@ -47,7 +47,7 @@ public class ProfileController {
             modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(username));
             modelAndView.addObject("KickName", profile.getKickname());
             boolean containProfile = false;
-            if (privacy.isGender()) {
+            if (privacy.isGenderOpen()) {
                 if (profile.getGender() != null && profile.getGender() != 0) {
                     if (profile.getGender() == 3) {
                         modelAndView.addObject("Gender", profile.getCustomGenderName());
@@ -57,25 +57,25 @@ public class ProfileController {
                     containProfile = true;
                 }
             }
-            if (privacy.isGenderOrientation()) {
+            if (privacy.isGenderOrientationOpen()) {
                 if (profile.getGenderOrientation() != null && !profile.getGenderOrientation().equals(0)) {
                     modelAndView.addObject("GenderOrientation", UserProfileService.getGenderOrientationMap().get(profile.getGenderOrientation()));
                     containProfile = true;
                 }
             }
-            if (privacy.isFaculty()) {
+            if (privacy.isFacultyOpen()) {
                 if (profile.getFaculty() != null && !profile.getFaculty().equals(0)) {
                     modelAndView.addObject("Faculty", UserProfileService.getFacultyMap().get(profile.getFaculty()));
                     containProfile = true;
                 }
             }
-            if (privacy.isMajor()) {
+            if (privacy.isMajorOpen()) {
                 if (StringUtils.isNotBlank(profile.getMajor())) {
                     modelAndView.addObject("Major", profile.getMajor());
                     containProfile = true;
                 }
             }
-            if (privacy.isRegion()) {
+            if (privacy.isRegionOpen()) {
                 StringBuilder location = new StringBuilder("");
                 Region region = LocationUtils.getRegionMap().get(profile.getRegion());
                 if (region != null) {
@@ -94,7 +94,7 @@ public class ProfileController {
                     containProfile = true;
                 }
             }
-            if (privacy.isIntroduction()) {
+            if (privacy.isIntroductionOpen()) {
                 Introduction introduction = userProfileService.GetUserIntroduction(username);
                 if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
                     modelAndView.addObject("Introduction", introduction.getIntroductionContent());

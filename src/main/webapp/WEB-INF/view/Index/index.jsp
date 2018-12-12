@@ -27,10 +27,13 @@
 
 <div class="phone">
 
-    <div onclick="window.location.href='/profile'" style="margin-top:10px;float: right">
+    <div onclick="window.location.href='/profile'" class="weui-cell__hd" style="margin-top:10px;float: right">
         <p id="right_name" style="margin-left:5px;margin-right:5px;color: #888;display: block;float: right"></p>
         <img id="right_avatar" style="float:right;border-radius: 50%;width: 25px;height: 25px;"
              src="/img/avatar/default.png"/>
+        <!-- 小红点提示，中间文字内容 -->
+        <span id="messagesBadge" class="weui-badge"
+              style="display: none;float:right;margin-right: -5px;margin-top: -5px">1</span>
     </div>
 
     <header style="margin-top:45px;clear: both">
@@ -82,15 +85,18 @@
             <p>考研查询</p>
         </div>
         <div onclick="window.location.href='/ershou'">
-            <i style="background: url(/img/function/ershou.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <i style="background: url(/img/function/ershou.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
+            </i>
             <p>二手交易</p>
         </div>
         <div onclick="window.location.href='/lostandfound'">
-            <i style="background: url(/img/function/lostandfound.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <i style="background: url(/img/function/lostandfound.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
+            </i>
             <p>失物招领</p>
         </div>
         <div onclick="window.location.href='/secret'">
-            <i style="background: url(/img/function/secret.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <i style="background: url(/img/function/secret.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
+            </i>
             <p>校园树洞</p>
         </div>
         <div onclick="window.location.href='/dating'">

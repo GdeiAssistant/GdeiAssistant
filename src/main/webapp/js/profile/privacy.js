@@ -3,6 +3,13 @@ $(function () {
     FastClick.attach(document.body);
 });
 
+//配置个人资料页隐私小红点图标显示配置
+$(function () {
+    if (!localStorage.getItem("privacyBadge")) {
+        localStorage.setItem("privacyBadge", 1);
+    }
+});
+
 //获取用户隐私设置
 $(function () {
     $.ajax({
@@ -31,8 +38,7 @@ $(function () {
                     if (result.data.cache === true) {
                         $("#cache").prop("checked", true);
                     }
-                }
-                else {
+                } else {
                     $.toptip(result.message, 'error');
                 }
             },
@@ -56,12 +62,10 @@ function changePrivacySetting(index) {
         success: function (result) {
             if (result.success === true) {
                 $.toptip("更新成功", 'success');
-            }
-            else {
+            } else {
                 if (state === true) {
                     $("input:eq(" + index + ")").prop("checked", false);
-                }
-                else {
+                } else {
                     $("input:eq(" + index + ")").prop("checked", true);
                 }
                 $.toptip(result.message, 'error');
@@ -70,8 +74,7 @@ function changePrivacySetting(index) {
         error: function () {
             if (state === true) {
                 $("input:eq(" + index + ")").prop("checked", false);
-            }
-            else {
+            } else {
                 $("input:eq(" + index + ")").prop("checked", true);
             }
             $.toptip('网络连接失败，请检查网络连接', 'error');

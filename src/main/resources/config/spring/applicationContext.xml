@@ -143,9 +143,10 @@
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <!-- 请求接口和登录接口的Method属性自动转换为枚举类型 -->
+                <!-- String类型属性自动转换为枚举类型 -->
                 <bean class="com.linguancheng.gdeiassistant.Converter.StringToQueryMethodEnumConverter"/>
                 <bean class="com.linguancheng.gdeiassistant.Converter.StringToLoginMethodEnumConverter"/>
+                <bean class="com.linguancheng.gdeiassistant.Converter.StringToAuthenticationTypeEnumConverter"/>
             </set>
         </property>
     </bean>

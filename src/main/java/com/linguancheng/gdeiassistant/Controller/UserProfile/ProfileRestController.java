@@ -1,12 +1,10 @@
 package com.gdeiassistant.gdeiassistant.Controller.UserProfile;
 
 import com.gdeiassistant.gdeiassistant.Annotation.RestAuthentication;
-import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.*;
 import com.gdeiassistant.gdeiassistant.Pojo.Profile.LocationComparator;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.JsonResult;
-import com.gdeiassistant.gdeiassistant.Service.Profile.RealNameService;
 import com.gdeiassistant.gdeiassistant.Service.Profile.UserProfileService;
 import com.gdeiassistant.gdeiassistant.Tools.LocationUtils;
 import com.gdeiassistant.gdeiassistant.Tools.StringUtils;
@@ -30,9 +28,6 @@ public class ProfileRestController {
 
     @Autowired
     private UserProfileService userProfileService;
-
-    @Autowired
-    private RealNameService realNameService;
 
     private final int AVATAR_MAX_SIZE = 1024 * 1024 * 2;
 
@@ -365,22 +360,5 @@ public class ProfileRestController {
             jsonResult.setData(url);
         }
         return jsonResult;
-    }
-
-    /**
-     * 获取用户真实姓名
-     *
-     * @param request
-     * @param token
-     * @return
-     */
-    @RequestMapping(value = "/rest/profile/realname", method = RequestMethod.POST)
-    @RestAuthentication
-    public DataJsonResult<String> getUserRealName(HttpServletRequest request
-            , @RequestParam("token") String token) throws ServerErrorException {
-        User user = (User) request.getAttribute("user");
-        String realName = realNameService.GetUserRealName(request.getSession().getId()
-                , user.getUsername(), user.getPassword());
-        return new DataJsonResult<>(true, realName);
     }
 }

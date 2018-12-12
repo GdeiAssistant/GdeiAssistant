@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>广东第二师范学院失物招领</title>
@@ -81,7 +82,7 @@
     <!-- 二手交易商品基本信息 -->
     <div class="info">
         <h5 class="tit">${LostAndFoundInfo.lostAndFoundItem.name}</h5>
-        <p class="tm">发布时间：<b>${LostAndFoundInfo.lostAndFoundItem.publishTime}</b></p>
+        <p class="tm">发布时间：<b><fmt:formatDate value="${LostAndFoundInfo.lostAndFoundItem.publishTime}" pattern="yyyy-MM-dd HH:mm:ss"/></b></p>
     </div>
 
     <!-- 二手交易商品交易地点 -->

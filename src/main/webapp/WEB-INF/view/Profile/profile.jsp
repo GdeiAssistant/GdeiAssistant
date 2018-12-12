@@ -70,12 +70,6 @@
         </div>
         <div id="kickname_text" class="weui-cell__ft"></div>
     </div>
-    <div class="weui-cell" href="javascript:">
-        <div class="weui-cell__bd">
-            <p>姓名</p>
-        </div>
-        <div id="realname" class="weui-cell__ft"></div>
-    </div>
     <div class="weui-cell" href="javascript:" onclick="changeGender()">
         <div class="weui-cell__bd">
             <p>性别</p>
@@ -125,11 +119,31 @@
 
 <div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/authentication'">
+        <div class="weui-cell__bd">
+            <p>实名认证</p>
+        </div>
+        <div class="weui-cell__ft">
+            <div style="display: none" id="unauthenticated">
+                未认证
+                <span id="authenticationBadge" class="weui-badge weui-badge_dot"
+                      style="margin-left: 5px;margin-right: 5px;"></span>
+            </div>
+            <div style="display: none" id="authenticated">
+                已认证
+            </div>
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/privacy'">
         <div class="weui-cell__bd">
             <p>隐私设置</p>
         </div>
         <div class="weui-cell__ft">
+            <span id="privacyBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
         </div>
     </a>
 </div>

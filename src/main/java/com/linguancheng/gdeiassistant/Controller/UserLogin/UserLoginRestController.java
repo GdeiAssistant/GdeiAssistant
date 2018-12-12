@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @RestController
 public class UserLoginRestController {
@@ -69,9 +68,6 @@ public class UserLoginRestController {
         User resultUser = userCertificate.getUser();
         //同步数据库用户数据
         userDataService.SyncUserData(resultUser);
-        //获取用户真实姓名
-        Profile profile = userProfileService.GetUserProfile(user.getUsername());
-        resultUser.setRealname(Optional.ofNullable(profile).map(Profile::getRealname).orElse(""));
         //获取权限令牌和刷新令牌
         AccessToken accessToken = loginTokenService.GetAccessToken(user.getUsername(), ipService.GetRequestRealIPAddress(request), unionId);
         RefreshToken refreshToken = loginTokenService.GetRefreshToken(accessToken);

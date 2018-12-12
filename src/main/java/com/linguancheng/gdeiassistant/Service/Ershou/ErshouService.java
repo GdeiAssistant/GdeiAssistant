@@ -3,9 +3,9 @@ package com.gdeiassistant.gdeiassistant.Service.Ershou;
 import com.aliyun.oss.OSSClient;
 import com.gdeiassistant.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import com.gdeiassistant.gdeiassistant.Exception.DatabaseException.DataNotExistException;
-import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.Ershou.ErshouMapper;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.ErshouInfo;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.ErshouItem;
+import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant.Ershou.ErshouMapper;
 import com.gdeiassistant.gdeiassistant.Service.Profile.UserProfileService;
 import com.gdeiassistant.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -154,7 +153,7 @@ public class ErshouService {
         ershouItem.setPrice((float) (Math.round(ershouItem.getPrice() * 100)) / 100);
         ershouItem.setUsername(StringEncryptUtils.encryptString(username));
         //使用24小时制显示发布时间
-        ershouItem.setPublishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        ershouItem.setPublishTime(new Date());
         ershouMapper.insertItem(ershouItem);
         return ershouItem;
     }

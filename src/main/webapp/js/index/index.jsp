@@ -33,8 +33,7 @@
             type: 'get',
             success: function (result) {
                 if (result.success === true) {
-                    let realname = result.data.realname == null ? "暂未录入" : result.data.realname;
-                    $("#right_name").text(realname);
+                    $("#right_name").text(result.data.kickname);
                 }
             }
         });
@@ -60,8 +59,7 @@
             if (!$("[class='links']").find("div").eq(i).is(":hidden")) {
                 if ((j + 1) % 1 == 0) {
                     $("[class='links']").find("div").eq(i).css("border-right", "1px solid #E2E0E3")
-                }
-                else if ((j + 1) % 2 == 0) {
+                } else if ((j + 1) % 2 == 0) {
                     $("[class='links']").find("div").eq(i).css("border-right", "1px solid #E2E0E3")
                 }
                 if ((j + 1) % 3 == 0) {
@@ -76,8 +74,7 @@
     function linkToPFTSystem() {
         if (wechatUser) {
             window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa2d196aa4b8a7600&redirect_uri=http%3A%2F%2F5itsn.com%2FWeixin%2FOAuth2%2FUserInfoCallback&response_type=code&scope=snsapi_userinfo&state=TestUrlTestResult&connect_redirect=1#wechat_redirect';
-        }
-        else {
+        } else {
             weui.alert('请关注微信公众号广东二师助手使用体测查询功能', {
                 title: '请使用微信客户端进行登录',
                 buttons: [{
@@ -104,8 +101,7 @@
                     }
                 }]
             });
-        }
-        else {
+        } else {
             weui.alert('请使用易班客户端进行登录', {
                 title: '错误提示',
                 buttons: [{
@@ -132,8 +128,7 @@
                     }
                 }]
             });
-        }
-        else {
+        } else {
             weui.alert('易班客户端不支持账号退出，你可以重新绑定易班账号', {
                 title: '错误提示',
                 buttons: [{

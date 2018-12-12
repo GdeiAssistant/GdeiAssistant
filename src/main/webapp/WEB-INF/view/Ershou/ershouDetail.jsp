@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>广东第二师范学院二手交易</title>
@@ -82,7 +83,7 @@
     <div class="info">
         <em class="price"><b>￥</b>${ErshouInfo.ershouItem.price}</em>
         <h5 class="tit">${ErshouInfo.ershouItem.name}</h5>
-        <p class="tm">发布时间：<b>${ErshouInfo.ershouItem.publishTime}</b></p>
+        <p class="tm">发布时间：<b> <fmt:formatDate value="${ErshouInfo.ershouItem.publishTime}" pattern="yyyy-MM-dd HH:mm:ss"/></b></p>
     </div>
 
     <!-- 二手交易商品交易地点 -->

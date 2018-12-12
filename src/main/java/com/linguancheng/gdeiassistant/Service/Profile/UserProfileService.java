@@ -2,17 +2,15 @@ package com.linguancheng.gdeiassistant.Service.Profile;
 
 import com.aliyun.oss.OSSClient;
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import com.linguancheng.gdeiassistant.Pojo.Entity.Introduction;
+import com.linguancheng.gdeiassistant.Pojo.Entity.Profile;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Gender.GenderMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
-import com.linguancheng.gdeiassistant.Pojo.Entity.Introduction;
-import com.linguancheng.gdeiassistant.Pojo.Entity.Profile;
-import com.linguancheng.gdeiassistant.Pojo.Entity.User;
+import com.linguancheng.gdeiassistant.Service.Authenticate.AuthenticateService;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.AsyncRestTemplate;
@@ -20,15 +18,13 @@ import org.springframework.web.client.AsyncRestTemplate;
 import javax.annotation.Resource;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 
 @Service
 public class UserProfileService {
 
     @Autowired
-    private RealNameService realNameService;
+    private AuthenticateService authenticateService;
 
     @Resource(name = "profileMapper")
     private ProfileMapper profileMapper;
@@ -303,38 +299,6 @@ public class UserProfileService {
             return;
         }
         throw new DataNotExistException("查询的用户不存在");
-    }
-
-    /**
-     * 进行用户实名认证
-     *
-     * @param user
-     * @param semaphore
-     */
-    @Async
-    public void UserAuthenticate(User user, Semaphore semaphore) {
-        try {
-            semaphore.acquire();
-            String realName = realNameService.GetUserRealName(null, user.getUsername(), user.getPassword());
-            profileMapper.updateRealName(StringEncryptUtils.encryptString(user.getUsername()), realName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            semaphore.release();
-        }
-    }
-
-    /**
-     * 定时同步用户个人资料真实姓名
-     */
-    @Scheduled(cron = "0 0 6 * * ?")
-    public void UserAuthenticateTask() throws Exception {
-        List<User> list = profileMapper.selectUnauthenticatedUser();
-        //设置线程信号量，限制最大同时查询的线程数为10
-        Semaphore semaphore = new Semaphore(10);
-        for (User user : list) {
-            UserAuthenticate(user.decryptUser(), semaphore);
-        }
     }
 
     /**

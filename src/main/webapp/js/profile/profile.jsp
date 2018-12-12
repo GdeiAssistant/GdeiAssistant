@@ -8,6 +8,13 @@
         FastClick.attach(document.body);
     });
 
+    //获取个人资料页隐私小红点图标显示配置，显示或隐藏小红点图标
+    $(function () {
+        if (!localStorage.getItem("privacyBadge")) {
+            $("#privacyBadge").show();
+        }
+    });
+
     // 压缩后的图片
     var image = new Image();
 
@@ -25,6 +32,7 @@
 
     $(function () {
         loadProfile();
+        loadAuthenticationState();
         loadAvatar();
         loadRegionMap();
     });
@@ -60,8 +68,7 @@
                                         value: stateKey,
                                         children: cityPickerItems
                                     }
-                                }
-                                else {
+                                } else {
                                     statePickerItems[j] = {
                                         label: stateMap[stateKey].name,
                                         value: stateKey,
@@ -80,8 +87,7 @@
                                 };
                                 j++;
                             }
-                        }
-                        else {
+                        } else {
                             locationPickerItems[i] = {
                                 label: locationData[i].name,
                                 value: locationData[i].code,
@@ -100,13 +106,44 @@
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     showCustomErrorTip(result.message);
                 }
             },
-            error: function () {
-                showNetworkErrorTip();
+            error: function (result) {
+                if (result.status) {
+                    showCustomErrorTip(result.responseJSON.message);
+                } else {
+                    showNetworkErrorTip();
+                }
+            }
+        });
+    }
+
+    //加载实名认证状态
+    function loadAuthenticationState() {
+        $.ajax({
+            url: "/api/authentication",
+            method: "GET",
+            success: function (result) {
+                if (result.success) {
+                    if (result.data) {
+                        $("#authenticated").show();
+                        $("#unauthenticated").hide();
+                    } else {
+                        $("#unauthenticated").show();
+                        $("#authenticated").hide();
+                    }
+                } else {
+                    showCustomErrorTip(result.message);
+                }
+            },
+            error: function (result) {
+                if (result.status) {
+                    showCustomErrorTip(result.responseJSON.message);
+                } else {
+                    showNetworkErrorTip();
+                }
             }
         });
     }
@@ -141,16 +178,12 @@
                     $("#kickname_text").text(result.data.kickname);
                     $("#kickname_val").val(result.data.kickname);
                     $("#kickname").val(result.data.kickname);
-                    //姓名
-                    let realname = result.data.realname == null ? "暂未录入" : result.data.realname;
-                    $("#realname").text(realname);
                     //性别
                     let gender = result.data.gender == null ? 0 : result.data.gender;
                     if (gender == 3) {
                         $("#gender").text(result.data.customGenderName);
                         $("#gender_val").val(result.data.customGenderName);
-                    }
-                    else {
+                    } else {
                         $("#gender").text(genderMap[gender]);
                     }
                     //性取向
@@ -165,8 +198,7 @@
                             location = location + result.data.city;
                         }
                         $("#location").text(location);
-                    }
-                    else {
+                    } else {
                         $("#location").text("未选择");
                     }
                     //院系
@@ -175,13 +207,16 @@
                     //专业
                     $("#major_text").text(result.data.major == null ? "未填写" : result.data.major);
                     $("#major_val").val(result.data.major == null ? "" : result.data.major);
-                }
-                else {
+                } else {
                     showCustomErrorTip(result.message);
                 }
             },
-            error: function () {
-                showNetworkErrorTip();
+            error: function (result) {
+                if (result.status) {
+                    showCustomErrorTip(result.responseJSON.message);
+                } else {
+                    showNetworkErrorTip();
+                }
             }
         });
     }
@@ -312,13 +347,16 @@
             success: function (result) {
                 if (result.success === true) {
                     window.location.reload();
-                }
-                else {
+                } else {
                     showCustomErrorTip(result.message);
                 }
             },
-            error: function () {
-                showNetworkErrorTip();
+            error: function (result) {
+                if (result.status) {
+                    showCustomErrorTip(result.responseJSON.message);
+                } else {
+                    showNetworkErrorTip();
+                }
             }
         });
     }
@@ -330,8 +368,7 @@
             var c = str.value.charCodeAt(i);
             if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
                 w++;
-            }
-            else {
+            } else {
                 w += 2;
             }
             if (w > maxLen) {
@@ -359,13 +396,16 @@
                         success: function (updateResult) {
                             if (updateResult.success === true) {
                                 loadProfile();
-                            }
-                            else {
+                            } else {
                                 showCustomErrorTip(updateResult.message);
                             }
                         },
-                        error: function () {
-                            showNetworkErrorTip();
+                        error: function (result) {
+                            if (result.status) {
+                                showCustomErrorTip(result.responseJSON.message);
+                            } else {
+                                showNetworkErrorTip();
+                            }
                         }
                     });
                 }
@@ -408,13 +448,16 @@
                 success: function (updateResult) {
                     if (updateResult.success === true) {
                         loadProfile();
-                    }
-                    else {
+                    } else {
                         showCustomErrorTip(updateResult.message);
                     }
                 },
-                error: function () {
-                    showNetworkErrorTip();
+                error: function (result) {
+                    if (result.status) {
+                        showCustomErrorTip(result.responseJSON.message);
+                    } else {
+                        showNetworkErrorTip();
+                    }
                 }
             });
         }
@@ -434,13 +477,16 @@
                 success: function (updateResult) {
                     if (updateResult.success === true) {
                         loadProfile();
-                    }
-                    else {
+                    } else {
                         showCustomErrorTip(updateResult.message);
                     }
                 },
-                error: function () {
-                    showNetworkErrorTip();
+                error: function (result) {
+                    if (result.status) {
+                        showCustomErrorTip(result.responseJSON.message);
+                    } else {
+                        showNetworkErrorTip();
+                    }
                 }
             });
         }
@@ -460,8 +506,7 @@
             onConfirm: function (gender) {
                 if (gender == 3) {
                     showCustomGenderDialog();
-                }
-                else {
+                } else {
                     $.ajax({
                         url: "/api/profile/gender",
                         data: {
@@ -471,13 +516,16 @@
                         success: function (updateResult) {
                             if (updateResult.success === true) {
                                 loadProfile();
-                            }
-                            else {
+                            } else {
                                 showCustomErrorTip(updateResult.message);
                             }
                         },
-                        error: function () {
-                            showNetworkErrorTip();
+                        error: function (result) {
+                            if (result.status) {
+                                showCustomErrorTip(result.responseJSON.message);
+                            } else {
+                                showNetworkErrorTip();
+                            }
                         }
                     });
                 }
@@ -506,13 +554,16 @@
                     success: function (updateResult) {
                         if (updateResult.success === true) {
                             loadProfile();
-                        }
-                        else {
+                        } else {
                             showCustomErrorTip(updateResult.message);
                         }
                     },
-                    error: function () {
-                        showNetworkErrorTip();
+                    error: function (result) {
+                        if (result.status) {
+                            showCustomErrorTip(result.responseJSON.message);
+                        } else {
+                            showNetworkErrorTip();
+                        }
                     }
                 });
             }
@@ -540,13 +591,16 @@
                     success: function (updateResult) {
                         if (updateResult.success === true) {
                             loadProfile();
-                        }
-                        else {
+                        } else {
                             showCustomErrorTip(updateResult.message);
                         }
                     },
-                    error: function () {
-                        showNetworkErrorTip();
+                    error: function (result) {
+                        if (result.status) {
+                            showCustomErrorTip(result.responseJSON.message);
+                        } else {
+                            showNetworkErrorTip();
+                        }
                     }
                 });
             }
@@ -566,13 +620,16 @@
                 success: function (updateResult) {
                     if (updateResult.success === true) {
                         loadProfile();
-                    }
-                    else {
+                    } else {
                         showCustomErrorTip(updateResult.message);
                     }
                 },
-                error: function () {
-                    showNetworkErrorTip();
+                error: function (result) {
+                    if (result.status) {
+                        showCustomErrorTip(result.responseJSON.message);
+                    } else {
+                        showNetworkErrorTip();
+                    }
                 }
             });
         }

@@ -36,9 +36,6 @@ public class User implements Serializable {
     //教务系统账号学号
     private String number;
 
-    //用户真实姓名
-    private String realname;
-
     /**
      * 账号状态
      * 0为正常，-1为用户自主注销
@@ -77,14 +74,6 @@ public class User implements Serializable {
         this.number = number;
     }
 
-       public String getRealname() {
-        return realname;
-    }
-
-    public void setRealname(String realname) {
-        this.realname = realname;
-    }
-
     public User decryptUser() {
         User decryptUser = new User();
         try {
@@ -99,9 +88,6 @@ public class User implements Serializable {
             }
             if (number != null) {
                 decryptUser.setNumber(StringEncryptUtils.decryptString(number));
-            }
-            if (realname != null) {
-                decryptUser.setRealname(realname);
             }
             if (state != null) {
                 decryptUser.setState(state);
@@ -126,9 +112,6 @@ public class User implements Serializable {
             }
             if (number != null) {
                 encryptUser.setNumber(StringEncryptUtils.encryptString(number));
-            }
-            if (realname != null) {
-                encryptUser.setRealname(realname);
             }
             if (state != null) {
                 encryptUser.setState(state);

@@ -8,29 +8,40 @@
     <!-- 开启PrivacyMapper namespace下的二级缓存 -->
     <cache/>
 
-    <select id="selectPrivacy" parameterType="java.lang.String"
-            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.Privacy">
+    <resultMap id="PrivacyResultMap" type="com.linguancheng.gdeiassistant.Pojo.Entity.Privacy">
+        <result property="username" column="username"/>
+        <result property="genderOpen" column="is_gender_open"/>
+        <result property="genderOrientationOpen" column="is_gender_orientation_open"/>
+        <result property="regionOpen" column="is_region_open"/>
+        <result property="introductionOpen" column="is_introduction_open"/>
+        <result property="facultyOpen" column="is_faculty_open"/>
+        <result property="majorOpen" column="is_major_open"/>
+        <result property="cacheAllow" column="is_cache_allow"/>
+    </resultMap>
+
+    <select id="selectPrivacy" parameterType="java.lang.String" resultMap="PrivacyResultMap">
         select * from privacy where username=#{username}
     </select>
 
     <insert id="initPrivacy">
-        insert into privacy (username,gender,genderOrientation,faculty,major,region,introduction,cache)
+        insert into privacy (username,is_gender_open,is_gender_orientation_open,is_faculty_open
+        ,is_major_open,is_region_open,is_introduction_open,is_cache_allow)
          values(#{username},true,true,true,true,true,true,true)
     </insert>
 
     <update id="resetPrivacy">
-        update privacy set gender=1,genderOrientation=1,faculty=1,major=1,region=1
-        ,introduction=1,cache=1 where username=#{username}
+        update privacy set is_gender_open=1,is_gender_orientation_open=1,is_faculty_open=1,is_major_open=1,is_region_open=1
+        ,is_introduction_open=1,is_cache_allow=1 where username=#{username}
     </update>
 
     <update id="updateGender">
         update privacy
         <choose>
-            <when test="gender">
-                set gender='1'
+            <when test="genderOpen">
+                set is_gender_open='1'
             </when>
             <otherwise>
-                set gender='0'
+                set is_gender_open='0'
             </otherwise>
         </choose>
         where username=#{username}
@@ -39,11 +50,11 @@
     <update id="updateGenderOrientation">
         update privacy
         <choose>
-            <when test="genderOrientation">
-                set genderOrientation='1'
+            <when test="genderOrientationOpen">
+                set is_gender_orientation_open='1'
             </when>
             <otherwise>
-                set genderOrientation='0'
+                set is_gender_orientation_open='0'
             </otherwise>
         </choose>
         where username=#{username}
@@ -52,11 +63,11 @@
     <update id="updateFaculty">
         update privacy
         <choose>
-            <when test="faculty">
-                set faculty='1'
+            <when test="facultyOpen">
+                set is_faculty_open='1'
             </when>
             <otherwise>
-                set faculty='0'
+                set is_faculty_open='0'
             </otherwise>
         </choose>
         where username=#{username}
@@ -65,11 +76,11 @@
     <update id="updateMajor">
         update privacy
         <choose>
-            <when test="major">
-                set major='1'
+            <when test="majorOpen">
+                set is_major_open='1'
             </when>
             <otherwise>
-                set faculty='0'
+                set is_major_open='0'
             </otherwise>
         </choose>
         where username=#{username}
@@ -78,11 +89,11 @@
     <update id="updateRegion">
         update privacy
         <choose>
-            <when test="region">
-                set region='1'
+            <when test="regionOpen">
+                set is_region_open='1'
             </when>
             <otherwise>
-                set region='0'
+                set is_region_open='0'
             </otherwise>
         </choose>
         where username=#{username}
@@ -91,11 +102,11 @@
     <update id="updateIntroduction">
         update privacy
         <choose>
-            <when test="introduction">
-                set introduction='1'
+            <when test="introductionOpen">
+                set is_introduction_open='1'
             </when>
             <otherwise>
-                set introduction='0'
+                set is_introduction_open='0'
             </otherwise>
         </choose>
         where username=#{username}
@@ -104,11 +115,11 @@
     <update id="updateCache">
         update privacy
         <choose>
-            <when test="cache">
-                set cache='1'
+            <when test="cacheAllow">
+                set is_cache_allow='1'
             </when>
             <otherwise>
-                set cache='0'
+                set is_cache_allow='0'
             </otherwise>
         </choose>
         where username=#{username}

@@ -8,6 +8,20 @@
     <!-- 开启DatingMapper namespace下的二级缓存 -->
     <cache/>
 
+    <resultMap id="DatingProfile" type="com.linguancheng.gdeiassistant.Pojo.Entity.DatingProfile">
+        <id property="profileId" column="profile_id"/>
+        <result property="username" column="username"/>
+        <result property="kickname" column="kickname"/>
+        <result property="grade" column="grade"/>
+        <result property="faculty" column="faculty"/>
+        <result property="hometown" column="hometown"/>
+        <result property="content" column="content"/>
+        <result property="qq" column="qq"/>
+        <result property="wechat" column="wechat"/>
+        <result property="area" column="area"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
     <resultMap id="DatingProfileResultMap" type="com.linguancheng.gdeiassistant.Pojo.Entity.DatingProfile">
         <id property="profileId" column="datingProfileProfileId"/>
         <result property="username" column="datingProfileUsername"/>
@@ -38,70 +52,70 @@
         <association property="datingPick" resultMap="DatingPickResultMap"/>
     </resultMap>
 
-    <select id="selectDatingProfilePage" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.DatingProfile">
-        select * from datingProfile where state=1 and area=#{area} limit #{start},#{size}
+    <select id="selectDatingProfilePage" resultMap="DatingProfile">
+        select * from dating_profile where state=1 and area=#{area} limit #{start},#{size}
     </select>
 
-    <select id="selectDatingProfileById" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.DatingProfile">
-        select * from datingProfile where profileId=#{profileId} limit 1
+    <select id="selectDatingProfileById" resultMap="DatingProfile">
+        select * from dating_profile where profile_id=#{profileId} limit 1
     </select>
 
-    <select id="selectDatingProfileByUsername" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.DatingProfile">
-        select * from datingProfile where username=#{username}
+    <select id="selectDatingProfileByUsername" resultMap="DatingProfile">
+        select * from dating_profile where username=#{username}
     </select>
 
     <update id="updateDatingProfile">
-        update datingProfile set kickname=#{kickname},grade=#{grade},faculty=#{faculty},hometown=#{hometown}
-        ,condition=#{condition},qq=#{qq},wechat=#{wechat} where profileId=#{profileId}
+        update dating_profile set kickname=#{kickname},grade=#{grade},faculty=#{faculty},hometown=#{hometown}
+        ,condition=#{condition},qq=#{qq},wechat=#{wechat} where profile_id=#{profileId}
     </update>
 
     <update id="updateDatingProfileState">
-        update datingProfile set state=#{state} where profileId=#{profileId}
+        update dating_profile set state=#{state} where profile_id=#{profileId}
     </update>
 
-    <insert id="insertDatingProfile" useGeneratedKeys="true" keyProperty="profileId">
-        insert into datingProfile (username,kickname,area,grade,faculty,hometown,content,qq,wechat,state)
+    <insert id="insertDatingProfile" useGeneratedKeys="true" keyProperty="profile_id">
+        insert into dating_profile (username,kickname,area,grade,faculty,hometown,content,qq,wechat,state)
          values (#{username},#{kickname},#{area},#{grade},#{faculty},#{hometown},#{content},#{qq},#{wechat},1)
     </insert>
 
     <select id="selectDatingPick" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.DatingPick">
-        select * from datingPick where username=#{username} and profileId=#{profileId} order by pickId desc limit 1
+        select * from dating_pick where username=#{username} and profile_id=#{profileId} order by pick_id desc limit 1
     </select>
 
     <select id="selectDatingPickById" resultMap="DatingPickResultMap">
-        select datingPick.pickId as datingPickPickId,datingProfile.profileId as datingProfileProfileId,
-        datingPick.username as datingPickUsername,datingPick.content as datingPickContent,
-        datingPick.state as datingPickState,datingProfile.username as datingProfileUsername
-        from datingPick,datingProfile where datingPick.profileId=datingProfile.profileId and pickId=#{pickId} limit 1
+        select dating_pick.pick_id as datingPickPickId,dating_profile.profile_id as datingProfileProfileId,
+        dating_pick.username as datingPickUsername,dating_pick.content as datingPickContent,
+        dating_pick.state as datingPickState,dating_profile.username as datingProfileUsername
+        from dating_pick,dating_profile where dating_pick.profile_id=dating_profile.profile_id and pick_id=#{pickId} limit 1
     </select>
 
-    <insert id="insertDatingPick" keyProperty="pickId" useGeneratedKeys="true">
-        insert into datingPick (profileId,username,content,state) values (#{datingProfile.profileId},#{username},#{content},0)
+    <insert id="insertDatingPick" keyProperty="pick_id" useGeneratedKeys="true">
+        insert into dating_pick (profile_id,username,content,state) values (#{datingProfile.profileId},#{username},#{content},0)
     </insert>
 
     <update id="updateDatingPickState">
-        update datingPick set state=#{state} where pickId=#{pickId}
+        update dating_pick set state=#{state} where pick_id=#{pickId}
     </update>
 
     <select id="selectUserDatingMessagePage" resultMap="DatingMessageResultMap">
-        select messageId as datingMessageMessageId,datingMessage.username as datingMessageUsername,type as datingMessageType,datingMessage.state as datingMessageState,
-        datingPick.pickId as datingPickPickId,datingPick.username as datingPickUsername,datingPick.content as datingPickContent,datingPick.state as datingPickState,
-        datingProfile.username as datingProfileUsername,datingProfile.kickname as datingProfileKickname,datingProfile.profileId as datingProfileProfileId
-        from datingMessage,datingPick,datingProfile
-        where datingMessage.pickId=datingPick.pickId and datingPick.profileId=datingProfile.profileId
-         and datingMessage.username=#{username} limit #{start},#{size}
+        select message_id as datingMessageMessageId,dating_message.username as datingMessageUsername,type as datingMessageType,dating_message.state as datingMessageState,
+        dating_pick.pick_id as datingPickPickId,dating_pick.username as datingPickUsername,dating_pick.content as datingPickContent,dating_pick.state as datingPickState,
+        dating_profile.username as datingProfileUsername,dating_profile.kickname as datingProfileKickname,dating_Profile.profile_id as datingProfileProfileId
+        from dating_message,dating_pick,dating_profile
+        where dating_message.pick_id=dating_pick.pick_id and dating_pick.profile_id=dating_profile.profile_id
+         and dating_message.username=#{username} limit #{start},#{size}
     </select>
 
     <select id="selectUserUnReadDatingMessageCount" resultType="java.lang.Integer">
-        select count(messageId) from datingMessage where username=#{username} and state=0
+        select count(message_id) from dating_message where username=#{username} and state=0
     </select>
 
     <insert id="insertDatingMessage">
-        insert into datingMessage (username,pickid,type,state) values(#{username},#{datingPick.pickId},#{type},#{state})
+        insert into dating_message (username,pick_id,type,state) values(#{username},#{datingPick.pickId},#{type},#{state})
     </insert>
 
     <update id="updateDatingMessageState">
-        update datingMessage set state=#{state} where messageId=#{messageId}
+        update dating_message set state=#{state} where message_id=#{messageId}
     </update>
 
 </mapper>

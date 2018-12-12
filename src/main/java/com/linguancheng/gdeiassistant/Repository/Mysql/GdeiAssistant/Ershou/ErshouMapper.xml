@@ -8,6 +8,20 @@
     <!-- 开启ErshouMapper namespace下的二级缓存 -->
     <cache/>
 
+    <resultMap id="ErshouItem" type="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="price" column="price"/>
+        <result property="location" column="location"/>
+        <result property="type" column="type"/>
+        <result property="qq" column="qq"/>
+        <result property="phone" column="phone"/>
+        <result property="state" column="state"/>
+        <result property="publishTime" column="publish_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
     <resultMap id="ErshouInfo" type="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouInfo">
         <result property="ershouItem.id" column="id"/>
         <result property="ershouItem.username" column="username"/>
@@ -19,7 +33,7 @@
         <result property="ershouItem.qq" column="qq"/>
         <result property="ershouItem.phone" column="phone"/>
         <result property="ershouItem.state" column="state"/>
-        <result property="ershouItem.publishTime" column="publishTime"/>
+        <result property="ershouItem.publishTime" column="publish_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
         <result property="profile.username" column="username"/>
         <result property="profile.kickname" column="kickname"/>
     </resultMap>
@@ -29,26 +43,26 @@
     </select>
 
     <select id="selectItemsByUsername" parameterType="java.lang.String"
-            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
+            resultMap="ErshouItem">
         select * from ershou where username=#{username} order by id desc
     </select>
 
-    <select id="selectAvailableItems" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
+    <select id="selectAvailableItems" resultMap="ErshouItem">
         select * from ershou where state='1' order by id desc limit #{start},#{size}
     </select>
 
-    <select id="selectItemsByType" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
+    <select id="selectItemsByType" resultMap="ErshouItem">
         select * from ershou where type=#{type} and state='1' order by id desc limit #{start},#{size}
     </select>
 
-    <select id="selectItemsWithKeyword" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
+    <select id="selectItemsWithKeyword" resultMap="ErshouItem">
         select distinct * from ershou where state='1' and (name like '%${keyword}%'
          or description like '%${keyword}%' or location like '%${keyword}%') order by id desc limit #{start},#{size}
     </select>
 
     <insert id="insertItem" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.ErshouItem">
-        insert into ershou (username,name,description,price,location,type,qq,phone,state,publishTime)
+        insert into ershou (username,name,description,price,location,type,qq,phone,state,publish_time)
          values (#{username},#{name},#{description},#{price},#{location},#{type},#{qq},#{phone},'1',#{publishTime})
     </insert>
 

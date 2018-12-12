@@ -17,22 +17,22 @@
         <result property="itemType" column="itemType"/>
         <result property="lostType" column="lostType"/>
         <result property="state" column="state"/>
-        <result property="publishTime" column="publishTime"/>
+        <result property="publishTime" column="publish_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <resultMap id="LostAndFoundInfo" type="com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundInfo">
-        <id property="id" column="id"/>
-        <result property="profile.username" column="username"/>
-        <result property="profile.kickname" column="kickname"/>
+        <id property="lostAndFoundItem.id" column="id"/>
         <result property="lostAndFoundItem.username" column="username"/>
         <result property="lostAndFoundItem.kickname" column="kickname"/>
         <result property="lostAndFoundItem.name" column="name"/>
         <result property="lostAndFoundItem.description" column="description"/>
         <result property="lostAndFoundItem.location" column="location"/>
-        <result property="lostAndFoundItem.itemType" column="itemType"/>
-        <result property="lostAndFoundItem.lostType" column="lostType"/>
+        <result property="lostAndFoundItem.itemType" column="item_type"/>
+        <result property="lostAndFoundItem.lostType" column="lost_type"/>
         <result property="lostAndFoundItem.state" column="state"/>
-        <result property="lostAndFoundItem.publishTime" column="publishTime"/>
+        <result property="lostAndFoundItem.publishTime" column="publish_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result property="profile.username" column="username"/>
+        <result property="profile.kickname" column="kickname"/>
     </resultMap>
 
     <select id="selectItemByID" parameterType="java.lang.Integer"
@@ -46,31 +46,31 @@
     </select>
 
     <select id="selectAvailableItem" resultMap="LostAndFoundItem">
-        select * from lostandfound where lostType=#{lostType} and state='0'
+        select * from lostandfound where lost_type=#{lostType} and state='0'
          order by id desc limit #{start},#{size}
     </select>
 
     <select id="selectItemByItemType" resultMap="LostAndFoundItem">
-        select * from lostandfound where lostType=#{lostType} and itemType=#{itemType} and state='0'
+        select * from lostandfound where lost_type=#{lostType} and item_type=#{itemType} and state='0'
          order by id desc limit #{start},#{size}
     </select>
 
     <select id="selectItemWithKeyword" resultMap="LostAndFoundItem">
-        select distinct * from lostandfound where state='0' and lostType=#{lostType} and (name like '%${keyword}%'
+        select distinct * from lostandfound where state='0' and lost_type=#{lostType} and (name like '%${keyword}%'
          or description like '%${keyword}%' or location like '%${keyword}%')
          order by id desc limit #{start},#{size}
     </select>
 
     <insert id="insertItem" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.LostAndFoundItem">
-        insert into lostandfound (username,name,description,location,itemType,lostType,qq,wechat,phone,state,publishTime)
+        insert into lostandfound (username,name,description,location,item_type,lost_type,qq,wechat,phone,state,publish_time)
         values (#{username},#{name},#{description},#{location},#{itemType},#{lostType}
         ,#{qq},#{wechat},#{phone},'0',#{publishTime})
     </insert>
 
     <update id="updateItemItem">
         update lostandfound set name=#{name},description=#{description},location=#{location},
-        itemType=#{itemType},lostType=#{lostType},qq=#{qq},wechat=#{wechat},phone=#{phone} where id=#{id}
+        item_type=#{itemType},lost_type=#{lostType},qq=#{qq},wechat=#{wechat},phone=#{phone} where id=#{id}
     </update>
 
     <update id="updateItemState">

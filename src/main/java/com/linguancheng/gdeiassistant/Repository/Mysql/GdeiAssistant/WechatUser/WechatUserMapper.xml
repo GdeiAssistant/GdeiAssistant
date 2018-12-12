@@ -9,19 +9,19 @@
     <cache/>
 
     <select id="selectUsername" parameterType="java.lang.String" resultType="java.lang.String">
-        select username from wechatUser where wechatId=#{wechatId} limit 1
+        select username from wechat_user where wechat_id=#{wechatId} limit 1
     </select>
 
     <insert id="insertWechatUser">
-        insert into wechatUser (wechatId,username) values (#{wechatId},#{username})
+        insert into wechat_user (wechat_id,username) values (#{wechatId},#{username})
     </insert>
 
     <update id="updateWechatUser">
-        update wechatUser set username=#{username} where wechatId=#{wechatId}
+        update wechat_user set username=#{username} where wechat_id=#{wechatId}
     </update>
 
     <delete id="resetWechatUser">
-        delete from wechatUser where username=#{username}
+        delete from wechat_user where username=#{username}
     </delete>
 
 </mapper>

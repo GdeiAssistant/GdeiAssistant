@@ -6,7 +6,7 @@
 <mapper namespace="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Charge.ChargeMapper">
 
     <insert id="insertChargeLog" keyProperty="id" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.ChargeLog">
-        insert into chargeLogs (username,amount,time) values(#{username},#{amount},#{time})
+        insert into charge_log (username,amount,time) values(#{username},#{amount},#{time})
     </insert>
 
 </mapper>

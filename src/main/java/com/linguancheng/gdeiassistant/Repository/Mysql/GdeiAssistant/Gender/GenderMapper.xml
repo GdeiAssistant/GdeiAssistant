@@ -9,15 +9,15 @@
     <cache/>
 
     <select id="selectCustomGender" resultType="java.lang.String">
-        select customGender from gender where username=#{username}
+        select gender from gender where username=#{username}
     </select>
 
     <insert id="insertCustomGender">
-        insert into gender (username,customGender) values(#{username},#{customGender})
+        insert into gender (username,gender) values(#{username},#{customGender})
     </insert>
 
     <update id="updateCustomGender">
-        update gender set customGender=#{customGender} where username=#{username}
+        update gender set gender=#{customGender} where username=#{username}
     </update>
 
     <delete id="deleteCustomGender">

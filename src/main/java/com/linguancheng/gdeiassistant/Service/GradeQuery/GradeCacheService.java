@@ -141,7 +141,7 @@ public class GradeCacheService {
             Semaphore semaphore = new Semaphore(5);
             for (User user : userList) {
                 Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
-                if (privacy != null && privacy.isCache()) {
+                if (privacy != null && privacy.isCacheAllow()) {
                     GradeDocument gradeDocument = gradeDao.queryGradeByUsername(StringEncryptUtils
                             .decryptString(user.getUsername()));
                     //如果最后更新日期距今已超过7天，则进行更新

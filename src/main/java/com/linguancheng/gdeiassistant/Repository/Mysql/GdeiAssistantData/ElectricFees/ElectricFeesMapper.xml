@@ -15,9 +15,9 @@
     </select>
 
     <insert id="insertElectricFeesBatch">
-        insert into electricFees (year,buildingNumber,roomNumber,peopleNumber
-        ,department,number,name,usedElectricAmount,freeElectricAmount
-        ,feeBasedElectricAmount,electricPrice,totalElectricBill,averageElectricBill) values
+        insert into electricFees (year,building_number,room_number,people_number
+        ,department,number,name,used_electric_amount,free_electric_amount
+        ,fee_based_electric_amount,electric_price,total_electric_bill,average_electric_bill) values
         <foreach collection="list" item="electricFees" index="index" separator=",">
             (#{electricFees.year},#{electricFees.buildingNumber},#{electricFees.roomNumber}
             ,#{electricFees.peopleNumber},#{electricFees.department}

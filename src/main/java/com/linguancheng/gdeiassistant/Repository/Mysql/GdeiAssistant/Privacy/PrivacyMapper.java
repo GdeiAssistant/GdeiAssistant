@@ -11,23 +11,23 @@ public interface PrivacyMapper {
 
     public void resetPrivacy(String username) throws Exception;
 
-    public void updateGender(@Param("gender") boolean gender, @Param("username") String username) throws Exception;
+    public void updateGender(@Param("genderOpen") boolean gender, @Param("username") String username) throws Exception;
 
-    public void updateGenderOrientation(@Param("genderOrientation") boolean genderOrientation
+    public void updateGenderOrientation(@Param("genderOrientationOpen") boolean genderOrientation
             , @Param("username") String username) throws Exception;
 
-    public void updateFaculty(@Param("faculty") boolean faculty
+    public void updateFaculty(@Param("facultyOpen") boolean faculty
             , @Param("username") String username) throws Exception;
 
-    public void updateMajor(@Param("major") boolean major
+    public void updateMajor(@Param("majorOpen") boolean major
             , @Param("username") String username) throws Exception;
 
-    public void updateRegion(@Param("region") boolean region
+    public void updateRegion(@Param("regionOpen") boolean region
             , @Param("username") String username) throws Exception;
 
-    public void updateIntroduction(@Param("introduction") boolean introduction
+    public void updateIntroduction(@Param("introductionOpen") boolean introduction
             , @Param("username") String username) throws Exception;
 
-    public void updateCache(@Param("cache") boolean cache, @Param("username") String username)
+    public void updateCache(@Param("cacheAllow") boolean cache, @Param("username") String username)
             throws Exception;
 }

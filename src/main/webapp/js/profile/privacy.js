@@ -17,25 +17,25 @@ $(function () {
             type: 'get',
             success: function (result) {
                 if (result.success === true) {
-                    if (result.data.gender === true) {
+                    if (result.data.genderOpen === true) {
                         $("#gender").prop("checked", true);
                     }
-                    if (result.data.genderOrientation === true) {
+                    if (result.data.genderOrientationOpen === true) {
                         $("#genderOrientation").prop("checked", true);
                     }
-                    if (result.data.faculty === true) {
+                    if (result.data.facultyOpen === true) {
                         $("#faculty").prop("checked", true);
                     }
-                    if (result.data.major === true) {
+                    if (result.data.majorOpen === true) {
                         $("#major").prop("checked", true);
                     }
-                    if (result.data.region === true) {
+                    if (result.data.regionOpen === true) {
                         $("#region").prop("checked", true);
                     }
-                    if (result.data.introduction === true) {
+                    if (result.data.introductionOpen === true) {
                         $("#introduction").prop("checked", true);
                     }
-                    if (result.data.cache === true) {
+                    if (result.data.cacheAllow === true) {
                         $("#cache").prop("checked", true);
                     }
                 } else {

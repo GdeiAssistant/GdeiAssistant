@@ -53,9 +53,10 @@ public class AuthenticateDataService {
         }
         if (authentication.getRealname().length() > 2) {
             StringBuilder stringBuilder = new StringBuilder(authentication.getRealname().substring(0, 1));
-            for (int i = 1; i < authentication.getRealname().length(); i++) {
+            for (int i = 1; i < authentication.getRealname().length()-1; i++) {
                 stringBuilder.append("*");
             }
+            stringBuilder.append(authentication.getRealname().substring(authentication.getRealname().length()-1));
             authentication.setRealname(stringBuilder.toString());
         }
         //隐藏身份证号

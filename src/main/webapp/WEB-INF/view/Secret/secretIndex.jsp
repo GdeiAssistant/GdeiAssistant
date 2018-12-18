@@ -52,13 +52,7 @@
 
     var hasMore = true;
 
-    //适配屏幕大小
-    var height = $(".secret").width() * 0.8;
-    var width = $(".secret").width();
-    var style = "<style>.secret{height:" + height + "px;}" +
-        ".secret section{width: " + width + "px; height: " + (height - 42) + "px;}" +
-        "</style>";
-    $("body").append(style);
+    $(".secret").height($(".secret").width() * 0.8);
 
     //更改点赞状态
     $("body").on("click", ".pregood", function () {
@@ -121,14 +115,36 @@
                                     liked = 'good';
                                 }
 
-                                $("#list").append("<div class='secret theme" + result.data[i].theme + "' id='" + result.data[i].id + "'>" +
-                                    "<a id='" + result.data[i].id + "' href='javascript:;' onclick='showSecretDetailInfo(" + result.data[i].id + ")'>" +
-                                    "<section>" + result.data[i].content + "</section>" + "</a>" +
-                                    "<footer><div><i class='" + liked + "'></i>" + "<span>"
-                                    + result.data[i].likeCount + "</span>" + "</div>"
-                                    + "<a href='/secret/detail/id/" + result.data[i].id + "'>" +
-                                    "<div><i class='comment'></i>" + "<span>" + result.data[i].commentCount + "</span></div></a>" + "</footer>" +
-                                    "</div>");
+                                if (result.data[i].type === 0) {
+                                    $("#list").append("<div class='secret theme" + result.data[i].theme + "' id='" + result.data[i].id + "'>" +
+                                        "<a id='" + result.data[i].id + "' href='javascript:;' onclick='showSecretDetailInfo(" + result.data[i].id + ")'>" +
+                                        "<section>" + result.data[i].content + "</section>" + "</a>" +
+                                        "<footer><div><i class='" + liked + "'></i>" + "<span>"
+                                        + result.data[i].likeCount + "</span>" + "</div>"
+                                        + "<a href='/secret/detail/id/" + result.data[i].id + "'>" +
+                                        "<div><i class='comment'></i>" + "<span>" + result.data[i].commentCount + "</span></div></a>" + "</footer>" +
+                                        "</div>");
+                                } else if (result.data[i].type === 1) {
+                                    if (result.data[i].theme === 1) {
+                                        $("#list").append("<div class='secret theme" + result.data[i].theme + "' id='" + result.data[i].id + "'>" +
+                                            "<a id='" + result.data[i].id + "' href='javascript:;' onclick='showSecretDetailInfo(" + result.data[i].id + ")'>" +
+                                            "<section><img id='record' width='50px' height='50px' src='/img/secret/voice_normal_white.png'></section>" + "</a>" +
+                                            "<footer><div><i class='" + liked + "'></i>" + "<span>"
+                                            + result.data[i].likeCount + "</span>" + "</div>"
+                                            + "<a href='/secret/detail/id/" + result.data[i].id + "'>" +
+                                            "<div><i class='comment'></i>" + "<span>" + result.data[i].commentCount + "</span></div></a>" + "</footer>" +
+                                            "</div>");
+                                    } else {
+                                        $("#list").append("<div class='secret theme" + result.data[i].theme + "' id='" + result.data[i].id + "'>" +
+                                            "<a id='" + result.data[i].id + "' href='javascript:;' onclick='showSecretDetailInfo(" + result.data[i].id + ")'>" +
+                                            "<section><img id='record' width='50px' height='50px' src='/img/secret/voice_normal.png'></section>" + "</a>" +
+                                            "<footer><div><i class='" + liked + "'></i>" + "<span>"
+                                            + result.data[i].likeCount + "</span>" + "</div>"
+                                            + "<a href='/secret/detail/id/" + result.data[i].id + "'>" +
+                                            "<div><i class='comment'></i>" + "<span>" + result.data[i].commentCount + "</span></div></a>" + "</footer>" +
+                                            "</div>");
+                                    }
+                                }
                             }
                         } else {
                             $("#loadmore").text("没有更多信息");

@@ -1,7 +1,6 @@
 package com.linguancheng.gdeiassistant.Pojo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -16,37 +15,42 @@ import java.util.List;
 @JsonIgnoreProperties(value = {"handler", "secretCommentList"}, ignoreUnknown = true)
 public class Secret implements Serializable {
 
-    private int id;
+    private String voiceURL;
+
+    private Integer id;
 
     @Min(1)
     @Max(12)
-    private int theme;
+    private Integer theme;
 
-    @NotBlank
-    @Size(min = 1, max = 100)
+    @Size(max = 100)
     private String content;
+
+    @Min(0)
+    @Max(1)
+    private Integer type;
 
     private List<SecretComment> secretCommentList;
 
-    private int commentCount;
+    private Integer commentCount;
 
-    private int likeCount;
+    private Integer likeCount;
 
-    private int liked;
+    private Integer liked;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getTheme() {
+    public Integer getTheme() {
         return theme;
     }
 
-    public void setTheme(int theme) {
+    public void setTheme(Integer theme) {
         this.theme = theme;
     }
 
@@ -70,23 +74,39 @@ public class Secret implements Serializable {
         return commentCount;
     }
 
-    public void setCommentCount(int commentCount) {
+    public void setCommentCount(Integer commentCount) {
         this.commentCount = commentCount;
     }
 
-    public int getLikeCount() {
+    public Integer getLikeCount() {
         return likeCount;
     }
 
-    public void setLikeCount(int likeCount) {
+    public void setLikeCount(Integer likeCount) {
         this.likeCount = likeCount;
     }
 
-    public int getLiked() {
+    public Integer getLiked() {
         return liked;
     }
 
     public void setLiked(int liked) {
         this.liked = liked;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getVoiceURL() {
+        return voiceURL;
+    }
+
+    public void setVoiceURL(String voiceURL) {
+        this.voiceURL = voiceURL;
     }
 }

@@ -16,6 +16,7 @@ public class SecretContent extends Secret {
     public SecretContent(Secret secret, String username) {
         this.setContent(secret.getContent());
         this.setTheme(secret.getTheme());
+        this.setType(secret.getType());
         this.setUsername(username);
     }
 

@@ -1,16 +1,17 @@
 package com.linguancheng.gdeiassistant.Service.Secret;
 
+import com.aliyun.oss.OSSClient;
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
-import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Secret.SecretMapper;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Secret;
 import com.linguancheng.gdeiassistant.Pojo.Entity.SecretComment;
 import com.linguancheng.gdeiassistant.Pojo.Entity.SecretContent;
+import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.Secret.SecretMapper;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +22,27 @@ public class SecretService {
 
     @Resource(name = "secretMapper")
     private SecretMapper secretMapper;
+
+    private String accessKeyID;
+
+    private String accessKeySecret;
+
+    private String endpoint;
+
+    @Value("#{propertiesReader['oss.accessKeySecret']}")
+    public void setAccessKeySecret(String accessKeySecret) {
+        this.accessKeySecret = accessKeySecret;
+    }
+
+    @Value("#{propertiesReader['oss.accessKeyID']}")
+    public void setAccessKeyID(String accessKeyID) {
+        this.accessKeyID = accessKeyID;
+    }
+
+    @Value("#{propertiesReader['oss.endpoint']}")
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
 
     /**
      * 获取树洞消息
@@ -69,6 +91,41 @@ public class SecretService {
     }
 
     /**
+     * 获取校园树洞语音音频文件地址
+     *
+     * @param id
+     * @return
+     */
+    public String GetSecretVoiceURL(int id) {
+        // 创建OSSClient实例
+        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        String url = null;
+        //检查树洞语音音频是否存在
+        if (ossClient.doesObjectExist("gdeiassistant-userdata", "secret/voice/" + id + ".mp3")) {
+            //设置过期时间30分钟
+            Date expiration = new Date(new Date().getTime() + 1000 * 60 * 30);
+            // 生成URL
+            url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", expiration).toString().replace("http", "https");
+        }
+        ossClient.shutdown();
+        return url;
+    }
+
+    /**
+     * 上传语音树洞录音对象
+     *
+     * @param id
+     * @param inputStream
+     */
+    public void UploadVoiceSecret(int id, InputStream inputStream) {
+        // 创建OSSClient实例
+        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        //上传文件
+        ossClient.putObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", inputStream);
+        ossClient.shutdown();
+    }
+
+    /**
      * 获取树洞消息详细信息
      *
      * @param id
@@ -77,6 +134,10 @@ public class SecretService {
     public Secret GetSecretDetailInfo(int id, String username) throws Exception {
         Secret secret = secretMapper.selectSecretByID(id);
         if (secret != null) {
+            if (secret.getType() == 1) {
+                //获取语音音频文件地址
+                secret.setVoiceURL(GetSecretVoiceURL(secret.getId()));
+            }
             //加载关联的评论数据
             secret.getSecretCommentList();
             //加载点赞数量/评论数量/点赞状态
@@ -95,9 +156,10 @@ public class SecretService {
      * @param secret
      * @return
      */
-    public void AddSecretInfo(String username, Secret secret) throws Exception {
+    public Integer AddSecretInfo(String username, Secret secret) throws Exception {
         SecretContent secretContent = new SecretContent(secret, StringEncryptUtils.encryptString(username));
         secretMapper.insertSecret(secretContent);
+        return secretContent.getId();
     }
 
     /**

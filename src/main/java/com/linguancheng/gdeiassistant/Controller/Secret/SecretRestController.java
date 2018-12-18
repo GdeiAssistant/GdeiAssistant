@@ -5,17 +5,17 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.Secret;
 import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Service.Secret.SecretService;
+import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -27,6 +27,8 @@ import java.util.List;
 
 @RestController
 public class SecretRestController {
+
+    private final int MAX_VOICE_SIZE = 1024 * 1024 * 1;
 
     @Autowired
     private SecretService secretService;
@@ -50,13 +52,36 @@ public class SecretRestController {
      *
      * @param request
      * @param secret
+     * @param file
      * @return
      */
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
-    public JsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret) throws Exception {
+    public JsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret
+            , @NotNull @RequestParam("voice") MultipartFile file) throws Exception {
+        if (secret.getType() == 0 && StringUtils.isBlank(secret.getContent())) {
+            return new JsonResult(false, "树洞信息不能为空");
+        }
         String username = (String) request.getSession().getAttribute("username");
-        secretService.AddSecretInfo(username, secret);
-        return new JsonResult(true);
+        if (secret.getType() == 0) {
+            //文字树洞信息
+            secretService.AddSecretInfo(username, secret);
+            return new JsonResult(true);
+        } else if (secret.getType() == 1) {
+            //语音树洞信息
+            if (file == null || file.isEmpty() || file.getSize() == 0) {
+                return new JsonResult(false, "语音内容不能为空");
+            } else if (file.getSize() > MAX_VOICE_SIZE) {
+                return new JsonResult(false, "语音文件大小过大");
+            } else {
+                //插入树洞信息记录
+                Integer id = secretService.AddSecretInfo(username, secret);
+                //上传录音文件
+                secretService.UploadVoiceSecret(id, file.getInputStream());
+                return new JsonResult(true);
+            }
+        } else {
+            return new JsonResult(false, "树洞信息类型不合法");
+        }
     }
 
     /**

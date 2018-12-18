@@ -48,14 +48,9 @@ public class Authentication implements Serializable {
     private Date updateTime;
 
     /**
-     *
+     * 实名认证方式
      */
     private Integer method;
-
-    /**
-     * 实名认证信息是否已删除
-     */
-    private Boolean deleted;
 
     public String getIdentityCode() {
         return identityCode;
@@ -112,15 +107,6 @@ public class Authentication implements Serializable {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
-
     public Integer getMethod() {
         return method;
     }

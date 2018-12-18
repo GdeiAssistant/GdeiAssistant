@@ -14,23 +14,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="/css/secret/secret-detail.css">
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script>
+
+        let audio = document.createElement("AUDIO");
+
         //消除iOS点击延迟
         $(function () {
             FastClick.attach(document.body);
         });
+
+        //播放音频文件
+        function playAudio() {
+            if (audio.src) {
+                if (audio.paused) {
+                    $("#voice").attr("src", "/img/secret/voice_pressed.png");
+                    audio.play();
+                    audio.onended = function () {
+                        <c:choose>
+                        <c:when test="${Secret.theme==1}">
+                        $("#voice").attr("src", "/img/secret/voice_normal_white.png");
+                        </c:when>
+                        <c:otherwise>
+                        $("#voice").attr("src", "/img/secret/voice_normal.png");
+                        </c:otherwise>
+                        </c:choose>
+                    };
+                }
+            }
+        }
+
     </script>
 </head>
 <body>
 
-<div class="weui_cells_title" onclick="javascript:window.location.href='/secret'">返回</div>
+<div class="weui_cells_title" onclick="window.location.href='/secret'">返回</div>
 
 <div class="all">
 
     <!-- 树洞信息 -->
     <div id="${Secret.id}" class="secret theme${Secret.theme}">
-        <section>${Secret.content}</section>
+        <section onclick="playAudio()">
+            <c:choose>
+                <c:when test="${Secret.type==0}">
+                    ${Secret.content}
+                </c:when>
+                <c:otherwise>
+                    <c:choose>
+                        <c:when test="${Secret.theme==1}">
+                            <img id="voice" width="50px" height="50px" src="/img/secret/voice_normal_white.png">
+                        </c:when>
+                        <c:otherwise>
+                            <img id="voice" width="50px" height="50px" src="/img/secret/voice_normal.png">
+                        </c:otherwise>
+                    </c:choose>
+                    <script>
+                        $(function () {
+                            audio.src = "${Secret.voiceURL}";
+                            audio.load();
+                        });
+                    </script>
+                </c:otherwise>
+            </c:choose>
+        </section>
         <footer>
             <div>
                 <c:choose>
@@ -116,8 +163,7 @@
         }, function (data) {
             if (data.success === true) {
                 window.window.location.reload();
-            }
-            else {
+            } else {
                 $(".weui_warn").text(data.message).show().delay(2000).hide(0);
             }
         }, "json");

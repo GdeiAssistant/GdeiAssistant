@@ -15,7 +15,7 @@ public interface SecretMapper {
 
     public List<Secret> selectSecret(@Param("start") int start, @Param("size") int size) throws Exception;
 
-    public void insertSecret(SecretContent secretContent) throws Exception;
+    public Integer insertSecret(SecretContent secretContent) throws Exception;
 
     public int selectSecretCommentCount(int id) throws Exception;
 

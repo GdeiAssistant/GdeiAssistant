@@ -9,8 +9,27 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 public class RSAUtils {
+
+    private static byte[] privateKey;
+
+    private static byte[] publicKey;
+
+    static {
+        try {
+            KeyPair keyPair = GenerateRSAKeyPair();
+            privateKey = keyPair.getPrivate().getEncoded();
+            publicKey = keyPair.getPublic().getEncoded();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String GetPublicKey() {
+        return Base64.getEncoder().encodeToString(publicKey);
+    }
 
     /**
      * 生成RSA密钥对
@@ -18,7 +37,7 @@ public class RSAUtils {
      * @return
      * @throws NoSuchAlgorithmException
      */
-    public KeyPair GenerateRSAKeyPair() throws NoSuchAlgorithmException {
+    public static KeyPair GenerateRSAKeyPair() throws NoSuchAlgorithmException {
         //使用RSA算法获得密钥对生成器对象KeyPairGenerator
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         //设置密钥长度为2048
@@ -39,7 +58,7 @@ public class RSAUtils {
      * @throws BadPaddingException
      * @throws IllegalBlockSizeException
      */
-    public byte[] EncryptByte(byte[] publicKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidKeySpecException {
+    public static byte[] EncryptByte(byte[] publicKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidKeySpecException {
         //将私钥字节数组转换为PublicKey
         KeyFactory kf = KeyFactory.getInstance("RSA");
         PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyByte));
@@ -64,7 +83,7 @@ public class RSAUtils {
      * @throws BadPaddingException
      * @throws IllegalBlockSizeException
      */
-    public byte[] DecryptByte(byte[] privateKeyBytes, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidKeySpecException {
+    public static byte[] DecryptByte(byte[] privateKeyBytes, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidKeySpecException {
         //将私钥字节数组转换为PrivateKey
         KeyFactory kf = KeyFactory.getInstance("RSA");
         PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));

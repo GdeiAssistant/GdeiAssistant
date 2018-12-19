@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: linguancheng
@@ -7,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -100,7 +101,8 @@
             <img src="/img/avatar/${SecretComment.avatarTheme}.png" alt="">
             <div class="info">
                 <p>${SecretComment.comment}</p>
-                <span>${status.index+1}楼 ${SecretComment.publishTime}</span>
+                <span>${status.index+1}楼 <fmt:formatDate value="${SecretComment.publishTime}"
+                                                         pattern="yyyy-MM-dd HH:mm:ss"/></span>
             </div>
         </div>
     </c:forEach>

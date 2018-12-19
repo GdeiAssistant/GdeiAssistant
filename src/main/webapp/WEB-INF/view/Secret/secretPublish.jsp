@@ -140,8 +140,9 @@
     $(function () {
         record.open(function () {
             //授权麦克风权限成功
-        }, function () {
+        }, function (errMsg) {
             //未授权或不支持
+            console.log(errMsg);
             $(".weui_warn").text("用户拒绝了麦克风权限或你的浏览器不支持相关API").show().delay(2000).hide(0);
         });
     });
@@ -151,8 +152,15 @@
         return false
     };
 
+    //禁用长按弹出菜单
+    window.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    });
+
+    //录音音频对象
     let voice;
 
+    //录音实时音量
     let volume = 0;
 
     let record = Recorder({
@@ -207,8 +215,9 @@
                 remainTime = remainTime - 1;
                 $("#voice_state").text("正在录音，还剩" + remainTime + "秒");
             }, 1000);
-        }, function () {
+        }, function (errMsg) {
             //未授权或不支持
+            console.log(errMsg);
             $(".weui_warn").text("用户拒绝了麦克风权限或你的浏览器不支持相关API").show().delay(2000).hide(0);
         });
     }
@@ -245,6 +254,8 @@
                 $("#voice_state").text("播放录音");
             }
         }, function (msg) {
+            loading.hide();
+            $(".btn").attr("disabled", false);
             if (msg === '未开始录音') {
                 $(".weui_warn").text("录音时间太短，请重试").show().delay(2000).hide(0);
             } else if (msg === '未采集到录音') {

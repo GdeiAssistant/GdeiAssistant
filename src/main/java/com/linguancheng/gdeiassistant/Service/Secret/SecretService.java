@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -176,7 +175,6 @@ public class SecretService {
         secretComment.setUsername(StringEncryptUtils.encryptString(username));
         secretComment.setComment(comment);
         secretComment.setAvatarTheme((int) (Math.random() * 50));
-        secretComment.setPublishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         secretMapper.insertSecretComment(secretComment);
     }
 

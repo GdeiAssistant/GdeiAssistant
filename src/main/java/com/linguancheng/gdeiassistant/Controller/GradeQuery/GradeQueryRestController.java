@@ -1,8 +1,8 @@
 package com.gdeiassistant.gdeiassistant.Controller.GradeQuery;
 
-import com.gdeiassistant.gdeiassistant.Annotation.QueryLog;
+import com.gdeiassistant.gdeiassistant.Annotation.QueryLogPersistence;
 import com.gdeiassistant.gdeiassistant.Annotation.RestAuthentication;
-import com.gdeiassistant.gdeiassistant.Annotation.RestQueryLog;
+import com.gdeiassistant.gdeiassistant.Annotation.RestQueryLogPersistence;
 import com.gdeiassistant.gdeiassistant.Enum.Base.QueryMethodEnum;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.GradeQuery.GradeQueryJsonResult;
@@ -29,7 +29,7 @@ public class GradeQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/gradequery", method = RequestMethod.POST)
-    @QueryLog
+    @QueryLogPersistence
     @ResponseBody
     public GradeQueryJsonResult GradeQuery(HttpServletRequest request
             , Integer year, @RequestParam(value = "method", required = false
@@ -57,7 +57,7 @@ public class GradeQueryRestController {
      * @return
      */
     @RequestMapping(value = "/rest/gradequery", method = RequestMethod.POST)
-    @RestQueryLog
+    @RestQueryLogPersistence
     @RestAuthentication
     @ResponseBody
     public GradeQueryJsonResult GradeQuery(HttpServletRequest request

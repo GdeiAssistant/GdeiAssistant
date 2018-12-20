@@ -1,6 +1,6 @@
 package com.gdeiassistant.gdeiassistant.Controller.SpareRoom;
 
-import com.gdeiassistant.gdeiassistant.Annotation.QueryLog;
+import com.gdeiassistant.gdeiassistant.Annotation.QueryLogPersistence;
 import com.gdeiassistant.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.SpareRoom;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
@@ -32,7 +32,7 @@ public class SpareRoomRestController {
      * @return
      */
     @RequestMapping(value = "/sparequery", method = RequestMethod.POST)
-    @QueryLog
+    @QueryLogPersistence
     public DataJsonResult<List<SpareRoom>> QuerySpareRoomList(HttpServletRequest request
             , @Validated SpareRoomQuery spareRoomQuery) throws Exception {
         DataJsonResult<List<SpareRoom>> jsonResult = new DataJsonResult<>();

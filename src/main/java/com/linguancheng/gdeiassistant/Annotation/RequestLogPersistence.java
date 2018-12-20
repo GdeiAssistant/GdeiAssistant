@@ -1,4 +1,6 @@
 package com.gdeiassistant.gdeiassistant.Annotation;
 
-public @interface QueryLog {
+public @interface RequestLogPersistence {
+
+    
 }

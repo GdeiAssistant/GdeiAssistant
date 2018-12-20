@@ -26,12 +26,12 @@ public class QueryLogAspect {
 
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    @Pointcut("@annotation(com.gdeiassistant.gdeiassistant.Annotation.QueryLog)")
+    @Pointcut("@annotation(com.gdeiassistant.gdeiassistant.Annotation.QueryLogPersistence)")
     public void QueryAction() {
 
     }
 
-    @Pointcut("@annotation(com.gdeiassistant.gdeiassistant.Annotation.RestQueryLog)")
+    @Pointcut("@annotation(com.gdeiassistant.gdeiassistant.Annotation.RestQueryLogPersistence)")
     public void RestQueryAction() {
 
     }

@@ -257,6 +257,8 @@
                 <value>classpath:/config/jwt/secret.properties</value>
                 <!-- 第三方API配置参数 -->
                 <value>classpath:/config/api/ipaddress.properties</value>
+                <!-- 读取请求校验令牌配置参数 -->
+                <value>classpath:/config/validate/token.properties</value>
             </list>
         </property>
         <property name="fileEncoding" value="UTF-8"/>

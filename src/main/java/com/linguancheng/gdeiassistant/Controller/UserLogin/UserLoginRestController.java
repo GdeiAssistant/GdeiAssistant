@@ -1,12 +1,16 @@
 package com.linguancheng.gdeiassistant.Controller.UserLogin;
 
+import com.linguancheng.gdeiassistant.Annotation.ReplayAttacksProtection;
+import com.linguancheng.gdeiassistant.Annotation.RequestLogPersistence;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginMethodEnum;
-import com.linguancheng.gdeiassistant.Pojo.Entity.*;
+import com.linguancheng.gdeiassistant.Pojo.Entity.AccessToken;
+import com.linguancheng.gdeiassistant.Pojo.Entity.RefreshToken;
+import com.linguancheng.gdeiassistant.Pojo.Entity.Token;
+import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginJsonResult;
 import com.linguancheng.gdeiassistant.Service.IPAddress.IPService;
-import com.linguancheng.gdeiassistant.Service.Profile.UserProfileService;
 import com.linguancheng.gdeiassistant.Service.Token.LoginTokenService;
 import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
@@ -16,7 +20,10 @@ import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +39,6 @@ public class UserLoginRestController {
     private UserDataService userDataService;
 
     @Autowired
-    private UserProfileService userProfileService;
-
-    @Autowired
     private LoginTokenService loginTokenService;
 
     @Autowired
@@ -45,15 +49,21 @@ public class UserLoginRestController {
      *
      * @param request
      * @param user
-     * @param unionId
+     * @param unionid
      * @param method
+     * @param nonce
+     * @param timestamp
      * @return
      */
     @RequestMapping(value = "/rest/userlogin", method = RequestMethod.POST)
-    @ResponseBody
+    @RequestLogPersistence
+    @ReplayAttacksProtection
     public UserLoginJsonResult UserLogin(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user
-            , @RequestParam("unionId") String unionId, @RequestParam(value = "method"
-            , required = false, defaultValue = "0") LoginMethodEnum method) throws Exception {
+            , @RequestParam(value = "unionid") String unionid
+            , @RequestParam(value = "method", required = false, defaultValue = "0") LoginMethodEnum method
+            , @RequestParam(value = "nonce") String nonce
+            , @RequestParam(value = "timestamp") Long timestamp
+            , @RequestParam(value = "signature") String signature) throws Exception {
         UserLoginJsonResult result = new UserLoginJsonResult();
         UserCertificate userCertificate = null;
         switch (method) {
@@ -69,7 +79,7 @@ public class UserLoginRestController {
         //同步数据库用户数据
         userDataService.SyncUserData(resultUser);
         //获取权限令牌和刷新令牌
-        AccessToken accessToken = loginTokenService.GetAccessToken(user.getUsername(), ipService.GetRequestRealIPAddress(request), unionId);
+        AccessToken accessToken = loginTokenService.GetAccessToken(user.getUsername(), ipService.GetRequestRealIPAddress(request), unionid);
         RefreshToken refreshToken = loginTokenService.GetRefreshToken(accessToken);
         result.setSuccess(true);
         result.setUser(resultUser);

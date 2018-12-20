@@ -12,7 +12,7 @@ public class SimpleToken extends Token {
     /**
      * 设备唯一ID
      */
-    private String unionId;
+    private String unionid;
 
     /**
      * 请求IP
@@ -27,11 +27,11 @@ public class SimpleToken extends Token {
         this.ip = ip;
     }
 
-    public String getUnionId() {
-        return unionId;
+    public String getUnionid() {
+        return unionid;
     }
 
-    public void setUnionId(String unionId) {
-        this.unionId = unionId;
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
     }
 }

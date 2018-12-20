@@ -86,12 +86,12 @@ public class LoginTokenService {
                 //解析AccessToken
                 Map<String, Claim> claimMap = ParseToken(accessTokenSignature);
                 String username = claimMap.get("username").asString();
-                String unionId = claimMap.get("unionId").asString();
+                String unionid = claimMap.get("unionid").asString();
                 //从Redis缓存中移除令牌信息
                 loginTokenDao.DeleteToken(accessTokenSignature);
                 loginTokenDao.DeleteToken(refreshTokenSignature);
                 //生成新的权限令牌和刷新令牌
-                AccessToken accessToken = GetAccessToken(username, ip, unionId);
+                AccessToken accessToken = GetAccessToken(username, ip, unionid);
                 RefreshToken refreshToken = GetRefreshToken(accessToken);
                 //刷新令牌成功
                 result.setAccessToken(accessToken);
@@ -127,7 +127,7 @@ public class LoginTokenService {
         refreshToken.setTokenSignature(accessToken.getSignature());
         refreshToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         refreshToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        refreshToken.setUnionId(accessToken.getUnionId());
+        refreshToken.setUnionid(accessToken.getUnionid());
         refreshToken.setIp(accessToken.getIp());
         if (loginTokenDao.InsertRefreshToken(refreshToken)) {
             return refreshToken;
@@ -140,15 +140,15 @@ public class LoginTokenService {
      *
      * @param username
      * @param ip
-     * @param unionId
+     * @param unionid
      * @return
      */
-    public AccessToken GetAccessToken(String username, String ip, String unionId) throws Exception {
+    public AccessToken GetAccessToken(String username, String ip, String unionid) throws Exception {
         LocalDateTime createTime = LocalDateTime.now();
         LocalDateTime expireTime = createTime.plusDays(7);
         //生成AccessToken签名
         String token = JWT.create().withIssuer("gdeiassistant")
-                .withClaim("username", username).withClaim("unionId", unionId)
+                .withClaim("username", username).withClaim("unionid", unionid)
                 .withClaim("createTime"
                         , createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .withClaim("expireTime", expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
@@ -156,7 +156,7 @@ public class LoginTokenService {
         AccessToken accessToken = new AccessToken();
         accessToken.setUsername(username);
         accessToken.setIp(ip);
-        accessToken.setUnionId(unionId);
+        accessToken.setUnionid(unionid);
         accessToken.setSignature(token);
         accessToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         accessToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());

@@ -1,8 +1,8 @@
 package com.linguancheng.gdeiassistant.Controller.CardQuery;
 
-import com.linguancheng.gdeiassistant.Annotation.QueryLog;
+import com.linguancheng.gdeiassistant.Annotation.QueryLogPersistence;
 import com.linguancheng.gdeiassistant.Annotation.RestAuthentication;
-import com.linguancheng.gdeiassistant.Annotation.RestQueryLog;
+import com.linguancheng.gdeiassistant.Annotation.RestQueryLogPersistence;
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.CardQuery.*;
 import com.linguancheng.gdeiassistant.Pojo.Entity.CardInfo;
@@ -53,7 +53,7 @@ public class CardController {
      */
     @RequestMapping(value = "/rest/cardquery", method = RequestMethod.POST)
     @RestAuthentication
-    @RestQueryLog
+    @RestQueryLogPersistence
     @ResponseBody
     public CardQueryJsonResult CardQuery(HttpServletRequest request
             , @RequestParam("token") String token, @Validated CardQuery cardQuery
@@ -94,7 +94,7 @@ public class CardController {
     }
 
     @RequestMapping(value = "/cardquery", method = RequestMethod.POST)
-    @QueryLog
+    @QueryLogPersistence
     @ResponseBody
     public DataJsonResult<CardQueryResult> CardQuery(HttpServletRequest request, @Validated CardQuery cardQuery
             , BindingResult bindingResult) {
@@ -143,7 +143,7 @@ public class CardController {
      * @return
      */
     @RequestMapping(value = "/cardinfoquery", method = RequestMethod.POST)
-    @QueryLog
+    @QueryLogPersistence
     @ResponseBody
     public DataJsonResult<CardInfo> CardInfoQuery(HttpServletRequest request) {
         DataJsonResult<CardInfo> jsonResult = new DataJsonResult<>();

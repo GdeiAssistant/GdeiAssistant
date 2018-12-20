@@ -1,8 +1,8 @@
 package com.linguancheng.gdeiassistant.Controller.GradeQuery;
 
-import com.linguancheng.gdeiassistant.Annotation.QueryLog;
+import com.linguancheng.gdeiassistant.Annotation.QueryLogPersistence;
 import com.linguancheng.gdeiassistant.Annotation.RestAuthentication;
-import com.linguancheng.gdeiassistant.Annotation.RestQueryLog;
+import com.linguancheng.gdeiassistant.Annotation.RestQueryLogPersistence;
 import com.linguancheng.gdeiassistant.Enum.Base.QueryMethodEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryJsonResult;
@@ -29,7 +29,7 @@ public class GradeQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/gradequery", method = RequestMethod.POST)
-    @QueryLog
+    @QueryLogPersistence
     @ResponseBody
     public GradeQueryJsonResult GradeQuery(HttpServletRequest request
             , Integer year, @RequestParam(value = "method", required = false
@@ -57,7 +57,7 @@ public class GradeQueryRestController {
      * @return
      */
     @RequestMapping(value = "/rest/gradequery", method = RequestMethod.POST)
-    @RestQueryLog
+    @RestQueryLogPersistence
     @RestAuthentication
     @ResponseBody
     public GradeQueryJsonResult GradeQuery(HttpServletRequest request

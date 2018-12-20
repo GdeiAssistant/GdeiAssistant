@@ -1,19 +1,17 @@
 package com.linguancheng.gdeiassistant.Controller.ScheduleQuery;
 
-import com.linguancheng.gdeiassistant.Annotation.QueryLog;
+import com.linguancheng.gdeiassistant.Annotation.QueryLogPersistence;
 import com.linguancheng.gdeiassistant.Annotation.RestAuthentication;
-import com.linguancheng.gdeiassistant.Annotation.RestQueryLog;
+import com.linguancheng.gdeiassistant.Annotation.RestQueryLogPersistence;
 import com.linguancheng.gdeiassistant.Enum.Base.QueryMethodEnum;
 import com.linguancheng.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import com.linguancheng.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.CustomSchedule;
-import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import com.linguancheng.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +64,7 @@ public class ScheduleQueryRestController {
      * @return
      */
     @RequestMapping(value = "/schedulequery", method = RequestMethod.POST)
-    @QueryLog
+    @QueryLogPersistence
     public ScheduleQueryJsonResult ScheduleQuery(HttpServletRequest request
             , Integer week, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -120,7 +118,7 @@ public class ScheduleQueryRestController {
      */
     @RequestMapping(value = "/rest/schedulequery", method = RequestMethod.POST)
     @RestAuthentication
-    @RestQueryLog
+    @RestQueryLogPersistence
     public ScheduleQueryJsonResult ScheduleQuery(HttpServletRequest request
             , @RequestParam("token") String token, Integer week
             , @RequestParam(name = "method", required = false

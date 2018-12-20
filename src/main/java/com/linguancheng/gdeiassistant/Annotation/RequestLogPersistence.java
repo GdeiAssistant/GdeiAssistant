@@ -1,6 +1,6 @@
 package com.linguancheng.gdeiassistant.Annotation;
 
-public @interface RequestLog {
+public @interface RequestLogPersistence {
 
     
 }

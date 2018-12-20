@@ -16,7 +16,7 @@ public class RequestLogAspect {
 
     private Log log = LogFactory.getLog(RequestLogAspect.class);
 
-    @Pointcut("@annotation(com.linguancheng.gdeiassistant.Annotation.RequestLog)")
+    @Pointcut("@annotation(com.linguancheng.gdeiassistant.Annotation.RequestLogPersistence)")
     public void RequestAction() {
 
     }

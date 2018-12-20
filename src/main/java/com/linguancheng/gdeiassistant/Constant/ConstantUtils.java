@@ -11,6 +11,15 @@ public class ConstantUtils {
     //请求参数不合法
     public static final int INCORRECT_REQUEST_PARAM = 40001;
 
+    //请求数据摘要不匹配
+    public static final int REQUEST_SIGN_INVALID = 40002;
+
+    //请求时间戳校验失败
+    public static final int REQUEST_TIMESTAMP_INVALID = 40003;
+
+    //重复提交的请求
+    public static final int REPLAY_REQUEST = 40004;
+
     //权限令牌过期
     public static final int TOKEN_EXPIRED_EXCEPTION = 40101;
 

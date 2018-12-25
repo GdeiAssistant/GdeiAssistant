@@ -49,4 +49,11 @@
         }
     }
 
+    //弹出Cookie政策提示
+    $(function () {
+        if (!localStorage.getItem("cookiePolicy")) {
+            $("#rnw_cookies_banner").show();
+        }
+    });
+
 </script>

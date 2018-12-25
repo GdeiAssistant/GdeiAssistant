@@ -24,6 +24,7 @@
     <meta name="renderer" content="webkit"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <link rel="stylesheet" href="/css/common/common.css">
+    <link rel="stylesheet" href="/css/login/login.css">
     <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
@@ -71,6 +72,14 @@
                 });
             }
         }
+
+        //弹出Cookie政策提示
+        $(function () {
+            if (!localStorage.getItem("cookiePolicy")) {
+                $("#rnw_cookies_banner").show();
+            }
+        });
+
     </script>
 </head>
 
@@ -118,7 +127,7 @@
        style="color: #3cc51f;">《用户协议》
     </a>和
     <a class="page_desc"
-       onclick="window.location.href = '/policy'"
+       onclick="window.location.href = '/policy/privacy'"
        style="color: #3cc51f;">《隐私政策》
     </a>
 </p>
@@ -156,6 +165,15 @@
         <p>All rights reserved © 2016 - 2018</p>
     </div>
 
+</div>
+
+<div id="rnw_cookies_banner" style="display: none">
+    <a class="spritefont-close" id="rnw_cookies_banner_button_close" title="关闭"
+       onclick="$('#rnw_cookies_banner').hide();localStorage.setItem('cookiePolicy',1);" href="javascript:">×</a>
+    <div id="rnw_cookies_banner_text">
+        本网站使用Cookie的目的是为您提供更加简捷和个性化的上网体验。Cookie将有用的信息存储在您的电脑上，可帮助我们改善您浏览我们网站的效率以及对您的实用性。在某些情况下，它们是网站正常运行所必不可少的。如果您访问本网站，即表示您同意我们使用Cookie。
+        请点击<a href="/policy/cookie" id="rnw_cookies_banner_button_more">Cookie政策</a>了解更多信息。
+    </div>
 </div>
 
 </body>

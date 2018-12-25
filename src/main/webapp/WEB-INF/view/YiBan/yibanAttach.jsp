@@ -96,7 +96,7 @@
        style="color: #3cc51f;">《用户协议》
     </a>和
     <a class="page_desc"
-       onclick="window.location.href = '/policy'"
+       onclick="window.location.href = '/policy/privacy'"
        style="color: #3cc51f;">《隐私政策》
     </a>
 </p>

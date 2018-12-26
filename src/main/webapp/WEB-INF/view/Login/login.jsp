@@ -120,7 +120,14 @@
     <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postLoginForm()">登录</a>
 </div>
 
-<p class="page_desc" style="margin-top: 25px">点击登录按钮表示你已阅读并同意
+<p class="page_desc" style="margin-top: 25px">关于登录账户请阅读
+    <a class="page_desc"
+       onclick="window.location.href = 'https://mp.weixin.qq.com/s/HulW3f86rcX5II4SX0tkSw'"
+       style="color: #3cc51f;">《教务系统账号说明》
+    </a>
+</p>
+
+<p class="page_desc">点击登录按钮表示你已阅读并同意
     <br>
     <a class="page_desc"
        onclick="window.location.href = '/agreement'"

@@ -1,10 +1,18 @@
 package com.linguancheng.gdeiassistant.Pojo.Charge;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-public class ChargeRequest {
+@Component
+@Scope("prototype")
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ChargeRequest implements Serializable {
 
     @NotNull
     @Min(1)

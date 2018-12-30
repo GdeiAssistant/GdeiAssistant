@@ -1,6 +1,7 @@
 package com.linguancheng.gdeiassistant.Service.KaoYan;
 
 import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
+import com.linguancheng.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.KaoYan;
@@ -58,7 +59,7 @@ public class KaoYanService {
                     InputStream inputStream = response.body().byteStream();
                     String base64 = ImageEncodeUtils.ConvertToBase64(inputStream);
                     checkcode = recognitionService.CheckCodeRecognize(base64
-                            , RecognitionService.CheckCodeTypeEnum.NUMBER,4);
+                            , CheckCodeTypeEnum.NUMBER, 4);
                 } else {
                     throw new ServerErrorException("查询系统异常");
                 }
@@ -108,16 +109,16 @@ public class KaoYanService {
             }
             throw new ServerErrorException("查询系统异常");
         } catch (IOException e) {
-            log.error("查询考研成绩异常：" , e);
+            log.error("查询考研成绩异常：", e);
             result.setResultType(ServiceResultEnum.TIME_OUT);
         } catch (ServerErrorException e) {
-            log.error("查询考研成绩异常：" , e);
+            log.error("查询考研成绩异常：", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         } catch (ErrorQueryConditionException e) {
-            log.error("查询考研成绩异常：" , e);
+            log.error("查询考研成绩异常：", e);
             result.setResultType(ServiceResultEnum.ERROR_CONDITION);
         } catch (Exception e) {
-            log.error("查询考研成绩异常：" , e);
+            log.error("查询考研成绩异常：", e);
             result.setResultType(ServiceResultEnum.SERVER_ERROR);
         }
         return result;

@@ -1,8 +1,9 @@
-package com.gdeiassistant.gdeiassistant.Controller.RealNameAuthenticate;
+package com.gdeiassistant.gdeiassistant.Controller.Authenticate;
 
 import com.gdeiassistant.gdeiassistant.Enum.Authentication.AuthenticationTypeEnum;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.Authentication;
+import com.gdeiassistant.gdeiassistant.Pojo.Entity.Identity;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.JsonResult;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
 public class AuthenticateRestController {
+
+    private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
 
     @Autowired
     private AuthenticateService authenticateService;
@@ -48,21 +52,36 @@ public class AuthenticateRestController {
      */
     @RequestMapping(value = "/api/authentication", method = RequestMethod.POST)
     public JsonResult RealNameAuthenticate(HttpServletRequest request
+            , @RequestParam(value = "image", required = false) MultipartFile file
             , @RequestParam("method") AuthenticationTypeEnum authenticationTypeEnum) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) request.getSession().getAttribute("password");
         switch (authenticationTypeEnum) {
+            //与教务系统进行同步
             case AUTHENTICATE_WITH_CAS_SYSTEM:
                 //获取用户真实姓名
                 Map<String, String> infoMap = authenticateService.GetUserRealNameAndSchoolNumber(request.getSession().getId(), username, password);
                 String name = infoMap.get("name");
                 String number = infoMap.get("number");
                 String identityNumber = authenticateService.GetUserIdentityNumber(request.getSession().getId(), new User(username, password));
+                //保存用户实名信息
                 authenticateDataService.SaveSystemAuthenticationData(username, name, number, identityNumber);
                 return new JsonResult(true);
 
+            //上传身份证照片认证
             case AUTHENTICATE_WITH_UPLOAD_IDENTITY_CARD:
-                return new JsonResult(false, "暂不支持当前实名认证方法");
+                if (file == null || file.isEmpty() || file.getSize() == 0) {
+                    return new JsonResult(false, "上传的身份证照片不能为空");
+                }
+                if (file.getSize() > MAX_PICTURE_SIZE) {
+                    return new JsonResult(false, "上传的身份证照片大小超过限制");
+                }
+                Identity identity = authenticateService.ParseIdentityCardInfo(file.getInputStream());
+                name = identity.getName();
+                identityNumber = identity.getCode();
+                //保存用户实名信息
+                authenticateDataService.SaveSystemAuthenticationData(username, name, null, identityNumber);
+                return new JsonResult(true);
 
             default:
                 return new JsonResult(false, "暂不支持当前实名认证方法");

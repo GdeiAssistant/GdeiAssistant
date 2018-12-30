@@ -166,14 +166,14 @@ public class GradeQueryService {
                                     String grade_gpa = tds.get(7).text();
                                     String grade_score = tds.get(8).text();
                                     Grade grade = new Grade();
-                                    grade.setGrade_year(grade_year);
-                                    grade.setGrade_term(grade_term);
-                                    grade.setGrade_id(grade_id);
-                                    grade.setGrade_name(grade_name);
-                                    grade.setGrade_type(grade_type);
-                                    grade.setGrade_credit(grade_credit);
-                                    grade.setGrade_gpa(grade_gpa);
-                                    grade.setGrade_score(grade_score);
+                                    grade.setGradeYear(grade_year);
+                                    grade.setGradeTerm(grade_term);
+                                    grade.setGradeId(grade_id);
+                                    grade.setGradeName(grade_name);
+                                    grade.setGradeType(grade_type);
+                                    grade.setGradeCredit(grade_credit);
+                                    grade.setGradeGpa(grade_gpa);
+                                    grade.setGradeScore(grade_score);
                                     if (grade_term.equals("1")) {
                                         //计算第一学期IGP
                                         firstTermIGP = firstTermIGP + (Double.parseDouble(grade_credit) * Double.parseDouble(grade_gpa));
@@ -280,7 +280,7 @@ public class GradeQueryService {
             List<Grade> firstTermGradeList = new ArrayList<>();
             List<Grade> secondTermGradeList = new ArrayList<>();
             for (Grade grade : gradeList) {
-                if (grade.getGrade_term().equals("1")) {
+                if (grade.getGradeTerm().equals("1")) {
                     firstTermGradeList.add(grade);
                 } else {
                     secondTermGradeList.add(grade);

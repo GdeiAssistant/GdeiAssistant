@@ -1,4 +1,4 @@
-package com.gdeiassistant.gdeiassistant.Controller.RealNameAuthenticate;
+package com.gdeiassistant.gdeiassistant.Controller.Authenticate;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

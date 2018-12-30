@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Base64;
+
 @RestController
 public class RSAEncryptionRestController {
 
@@ -16,8 +18,7 @@ public class RSAEncryptionRestController {
      */
     @RequestMapping(value = "/rest/encryption/rsa/publickey", method = RequestMethod.GET)
     public DataJsonResult<String> GetRSAPublicKey() {
-        return new DataJsonResult<>(true, RSAUtils.GetPublicKey());
+        return new DataJsonResult<>(true, Base64.getEncoder().encodeToString(RSAUtils.GetPublicKey()));
     }
-
 
 }

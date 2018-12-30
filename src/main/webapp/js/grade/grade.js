@@ -28,9 +28,9 @@ function handleGradeInfo(gradeQueryResult) {
     //第一学期成绩列表
     var firstTermGradeList = gradeQueryResult.firstTermGradeList;
     for (var i = 0; i < firstTermGradeList.length; i++) {
-        var gradeName = firstTermGradeList[i].grade_name;
-        var gradeCredit = firstTermGradeList[i].grade_credit;
-        var gradeScore = firstTermGradeList[i].grade_score;
+        var gradeName = firstTermGradeList[i].gradeName;
+        var gradeCredit = firstTermGradeList[i].gradeCredit;
+        var gradeScore = firstTermGradeList[i].gradeScore;
         $("tbody:eq(0)").append("<tr><td style='width='65%;'>"
             + gradeName + "</td><td>"
             + gradeCredit + "</td><td>" + gradeScore + "</td></tr>");
@@ -38,9 +38,9 @@ function handleGradeInfo(gradeQueryResult) {
     //第二学期成绩列表
     var secondTermGradeList = gradeQueryResult.secondTermGradeList;
     for (var j = 0; j < secondTermGradeList.length; j++) {
-        var gradeName = secondTermGradeList[j].grade_name;
-        var gradeCredit = secondTermGradeList[j].grade_credit;
-        var gradeScore = secondTermGradeList[j].grade_score;
+        var gradeName = secondTermGradeList[j].gradeName;
+        var gradeCredit = secondTermGradeList[j].gradeCredit;
+        var gradeScore = secondTermGradeList[j].gradeScore;
         $("tbody:eq(1)").append("<tr><td style='width='65%;'>"
             + gradeName + "</td><td>"
             + gradeCredit + "</td><td>" + gradeScore + "</td></tr>");

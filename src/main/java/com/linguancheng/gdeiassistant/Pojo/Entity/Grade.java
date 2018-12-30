@@ -16,83 +16,90 @@ import java.io.Serializable;
 public class Grade implements Serializable {
 
     //课程学年
-    private String grade_year;
+    private String gradeYear;
+
     //课程学期
-    private String grade_term;
+    private String gradeTerm;
+
     //课程编号
-    private String grade_id;
+    private String gradeId;
+
     //课程名称
-    private String grade_name;
+    private String gradeName;
+
     //课程学分
-    private String grade_credit;
+    private String gradeCredit;
+
     //课程类型
-    private String grade_type;
+    private String gradeType;
+
     //课程绩点
-    private String grade_gpa;
+    private String gradeGpa;
+
     //课程成绩
-    private String grade_score;
+    private String gradeScore;
 
-    public String getGrade_year() {
-        return grade_year;
+    public String getGradeYear() {
+        return gradeYear;
     }
 
-    public void setGrade_year(String grade_year) {
-        this.grade_year = grade_year;
+    public void setGradeYear(String gradeYear) {
+        this.gradeYear = gradeYear;
     }
 
-    public String getGrade_term() {
-        return grade_term;
+    public String getGradeTerm() {
+        return gradeTerm;
     }
 
-    public void setGrade_term(String grade_term) {
-        this.grade_term = grade_term;
+    public void setGradeTerm(String gradeTerm) {
+        this.gradeTerm = gradeTerm;
     }
 
-    public String getGrade_id() {
-        return grade_id;
+    public String getGradeId() {
+        return gradeId;
     }
 
-    public void setGrade_id(String grade_id) {
-        this.grade_id = grade_id;
+    public void setGradeId(String gradeId) {
+        this.gradeId = gradeId;
     }
 
-    public String getGrade_name() {
-        return grade_name;
+    public String getGradeName() {
+        return gradeName;
     }
 
-    public void setGrade_name(String grade_name) {
-        this.grade_name = grade_name;
+    public void setGradeName(String gradeName) {
+        this.gradeName = gradeName;
     }
 
-    public String getGrade_credit() {
-        return grade_credit;
+    public String getGradeCredit() {
+        return gradeCredit;
     }
 
-    public void setGrade_credit(String grade_credit) {
-        this.grade_credit = grade_credit;
+    public void setGradeCredit(String gradeCredit) {
+        this.gradeCredit = gradeCredit;
     }
 
-    public String getGrade_type() {
-        return grade_type;
+    public String getGradeType() {
+        return gradeType;
     }
 
-    public void setGrade_type(String grade_type) {
-        this.grade_type = grade_type;
+    public void setGradeType(String gradeType) {
+        this.gradeType = gradeType;
     }
 
-    public String getGrade_gpa() {
-        return grade_gpa;
+    public String getGradeGpa() {
+        return gradeGpa;
     }
 
-    public void setGrade_gpa(String grade_gpa) {
-        this.grade_gpa = grade_gpa;
+    public void setGradeGpa(String gradeGpa) {
+        this.gradeGpa = gradeGpa;
     }
 
-    public String getGrade_score() {
-        return grade_score;
+    public String getGradeScore() {
+        return gradeScore;
     }
 
-    public void setGrade_score(String grade_score) {
-        this.grade_score = grade_score;
+    public void setGradeScore(String gradeScore) {
+        this.gradeScore = gradeScore;
     }
 }

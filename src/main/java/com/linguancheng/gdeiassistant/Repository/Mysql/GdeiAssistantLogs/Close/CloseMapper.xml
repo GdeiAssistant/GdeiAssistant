@@ -6,7 +6,7 @@
 <mapper namespace="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Close.CloseMapper">
 
     <insert id="insertCloseLog" keyProperty="id" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.CloseLog">
-        insert into close_log (username,resetname,time) values(#{username},#{resetname},#{time})
+        insert into close_log (username,resetname,time) values(#{username},#{resetname},now())
     </insert>
 
 </mapper>

@@ -5,13 +5,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Aspect
+@Component
+@Order(3)
 public class RequestLogAspect {
 
     private Log log = LogFactory.getLog(RequestLogAspect.class);
@@ -39,7 +45,7 @@ public class RequestLogAspect {
         //记录非敏感请求参数信息
         stringBuilder.append(". RequestParameters: ");
         for (int i = 1; i < args.length; i++) {
-            if (args[i] != null && !parameterName[i].contains("password")) {
+            if (args[i] != null && !(parameterName[i].contains("password") || parameterName[i].contains("token"))) {
                 if (i != 1) {
                     stringBuilder.append(" , ");
                 }

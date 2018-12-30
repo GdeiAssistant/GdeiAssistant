@@ -1,12 +1,13 @@
 package com.gdeiassistant.gdeiassistant.Service.UserLogin;
 
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginResultEnum;
+import com.gdeiassistant.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.gdeiassistant.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.Service.Recognition.RecognitionService;
+import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.Tools.ImageEncodeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -78,7 +78,7 @@ public class TeacherLoginService {
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     InputStream checkCodeImage = httpResponse.getEntity().getContent();
                     String checkCode = recognitionService.CheckCodeRecognize(ImageEncodeUtils.ConvertToBase64(checkCodeImage)
-                            , RecognitionService.CheckCodeTypeEnum.ENGLISH_WITH_NUMBER, 4);
+                            , CheckCodeTypeEnum.ENGLISH_WITH_NUMBER, 4);
                     HttpPost httpPost = new HttpPost(url + "default2.aspx");
                     List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
                     basicNameValuePairList.add(new BasicNameValuePair("__VIEWSTATE", document

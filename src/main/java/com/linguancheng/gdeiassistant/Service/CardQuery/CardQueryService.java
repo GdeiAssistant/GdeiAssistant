@@ -2,17 +2,18 @@ package com.gdeiassistant.gdeiassistant.Service.CardQuery;
 
 import com.gdeiassistant.gdeiassistant.Enum.Base.BoolResultEnum;
 import com.gdeiassistant.gdeiassistant.Enum.Base.ServiceResultEnum;
-import com.gdeiassistant.gdeiassistant.Exception.RecognitionException.RecognitionException;
+import com.gdeiassistant.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
-import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
+import com.gdeiassistant.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import com.gdeiassistant.gdeiassistant.Pojo.CardQuery.CardQuery;
 import com.gdeiassistant.gdeiassistant.Pojo.CardQuery.CardQueryResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.Card;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.CardInfo;
+import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
 import com.gdeiassistant.gdeiassistant.Service.Recognition.RecognitionService;
+import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import com.gdeiassistant.gdeiassistant.Tools.ImageEncodeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -348,7 +348,7 @@ public class CardQueryService {
                             //将验证码图片输入流转换为base64编码
                             String checkCode = recognitionService.CheckCodeRecognize(ImageEncodeUtils
                                             .ConvertToBase64(checkCodeImage, ImageEncodeUtils.ImageFormTypeEnum.PNG)
-                                    , RecognitionService.CheckCodeTypeEnum.NUMBER, 4);
+                                    , CheckCodeTypeEnum.NUMBER, 4);
                             if (checkCode.length() != 4 || !checkCode.matches("^[0-9]*$")) {
                                 j++;
                                 continue;

@@ -9,7 +9,6 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 
 public class RSAUtils {
 
@@ -27,8 +26,12 @@ public class RSAUtils {
         }
     }
 
-    public static String GetPublicKey() {
-        return Base64.getEncoder().encodeToString(publicKey);
+    public static byte[] GetPublicKey() {
+        return publicKey;
+    }
+
+    public static byte[] GetPrivateKey() {
+        return privateKey;
     }
 
     /**

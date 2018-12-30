@@ -24,8 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -155,7 +153,6 @@ public class CloseAccountService {
         closeLog.setUsername(username);
         closeLog.setResetname("del_" + StringEncryptUtils.SHA1HexString(username)
                 .substring(0, 15) + "_" + count);
-        closeLog.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         closeMapper.insertCloseLog(closeLog);
     }
 }

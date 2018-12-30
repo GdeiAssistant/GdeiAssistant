@@ -3,10 +3,7 @@ package com.linguancheng.gdeiassistant.Controller.UserLogin;
 import com.linguancheng.gdeiassistant.Annotation.ReplayAttacksProtection;
 import com.linguancheng.gdeiassistant.Annotation.RequestLogPersistence;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginMethodEnum;
-import com.linguancheng.gdeiassistant.Pojo.Entity.AccessToken;
-import com.linguancheng.gdeiassistant.Pojo.Entity.RefreshToken;
-import com.linguancheng.gdeiassistant.Pojo.Entity.Token;
-import com.linguancheng.gdeiassistant.Pojo.Entity.User;
+import com.linguancheng.gdeiassistant.Pojo.Entity.*;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginJsonResult;
@@ -51,8 +48,7 @@ public class UserLoginRestController {
      * @param user
      * @param unionid
      * @param method
-     * @param nonce
-     * @param timestamp
+     * @param requestValidation
      * @return
      */
     @RequestMapping(value = "/rest/userlogin", method = RequestMethod.POST)
@@ -61,9 +57,7 @@ public class UserLoginRestController {
     public UserLoginJsonResult UserLogin(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user
             , @RequestParam(value = "unionid") String unionid
             , @RequestParam(value = "method", required = false, defaultValue = "0") LoginMethodEnum method
-            , @RequestParam(value = "nonce") String nonce
-            , @RequestParam(value = "timestamp") Long timestamp
-            , @RequestParam(value = "signature") String signature) throws Exception {
+            , @Validated RequestValidation requestValidation) throws Exception {
         UserLoginJsonResult result = new UserLoginJsonResult();
         UserCertificate userCertificate = null;
         switch (method) {

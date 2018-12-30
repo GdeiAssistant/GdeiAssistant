@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
@@ -26,11 +24,11 @@ public class Log implements Serializable {
         this.id = id;
     }
 
-    public String getTime() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
+    public Date getTime() {
+        return time;
     }
 
-    public void setTime(String time) throws ParseException {
-        this.time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
+    public void setTime(Date time) {
+        this.time = time;
     }
 }

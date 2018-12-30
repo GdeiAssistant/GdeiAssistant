@@ -40,14 +40,14 @@
         </header>
         <div class="edit" style="text-align: center">
             <!-- 语音树洞 -->
-            <div id="voice">
+            <div id="voice" style="display: none;">
                 <!-- 语音图标 -->
                 <img id="record" width="50px" height="50px" src="/img/secret/voice_normal.png">
                 <br>
                 <text id="voice_tip">长按开始录音，最长不超过60秒</text>
             </div>
             <!-- 文字树洞 -->
-            <div id="word" style="display: none;">
+            <div id="word">
                 <!-- 文本输入框 -->
                 <textarea name="content" id="text" maxlength="100" autofocus placeholder="说个小秘密" v-align="center"
                           max-lenght="100"></textarea>
@@ -60,13 +60,14 @@
 
 <div class="bar">
     <div onclick="replayRecord()">
-        <img id="voice_button" width="20px" height="20px" style="margin-right:3px;margin-top: 3px;float: left"
+        <img id="voice_button" width="20px" height="20px"
+             style="display:none;margin-right:3px;margin-top: 3px;float: left"
              src="/img/secret/init.png"/>
-        <p id="voice_state" style="display: block;float: left">未录音</p>
+        <p id="voice_state" style="display: none;float: left">未录音</p>
     </div>
     <i style="float: right"></i>
     <div id="voice_volume"
-         style="height:20px;margin-top:3px;margin-left:15px;margin-right:15px;width:100px;background:#cdcdcd;float: right">
+         style="display:none;height:20px;margin-top:3px;margin-left:15px;margin-right:15px;width:100px;background:#cdcdcd;float: right">
         <div id="volume" style="width:0"></div>
     </div>
 </div>
@@ -92,13 +93,13 @@
 <div class="attach"></div>
 
 <!-- 切换到文字树洞 -->
-<div id="switchToWord" style="margin-top: 1rem;color:grey;text-align:center;display: block">
+<div id="switchToWord" style="margin-top: 1rem;color:grey;text-align:center;display: none">
     切换到<p style="display:inline;color: deepskyblue" onclick="switchToWord()">文字树洞</p>
     ，用文字分享你的小秘密
 </div>
 
 <!-- 切换到语音树洞 -->
-<div id="switchToVoice" style="display:none;margin-top: 1rem;color:grey;text-align:center">
+<div id="switchToVoice" style="display:block;margin-top: 1rem;color:grey;text-align:center">
     切换到<p style="display:inline;color: deepskyblue" onclick="switchToVoice()">语音树洞</p>
     ，用语音分享你的小秘密
 </div>
@@ -111,7 +112,7 @@
 <script type="text/javascript">
 
     //树洞信息类型，0为文字树洞，1为语音树洞
-    let type = 1;
+    let type = 0;
 
     //切换到文字树洞
     function switchToWord() {
@@ -135,9 +136,7 @@
         $("#voice_state").show();
         $("#voice_volume").show();
         type = 1;
-    }
-
-    $(function () {
+        //获取麦克风权限
         record.open(function () {
             //授权麦克风权限成功
         }, function (errMsg) {
@@ -145,7 +144,7 @@
             console.log(errMsg);
             $(".weui_warn").text("用户拒绝了麦克风权限或你的浏览器不支持相关API").show().delay(2000).hide(0);
         });
-    });
+    }
 
     //禁止鼠标点击右键
     document.oncontextmenu = function () {

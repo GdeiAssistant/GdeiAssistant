@@ -1,21 +1,15 @@
 package com.gdeiassistant.gdeiassistant.Service.ChargeQuery;
 
-import com.gdeiassistant.gdeiassistant.Enum.Charge.ChargeRequestResultEnum;
-import com.gdeiassistant.gdeiassistant.Enum.Charge.GetServerKeyCodeResultEnum;
-import com.gdeiassistant.gdeiassistant.Enum.Charge.VerifyClientKeyCodeResultEnum;
-import com.gdeiassistant.gdeiassistant.Exception.ChargeException.*;
-import com.gdeiassistant.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
+import com.gdeiassistant.gdeiassistant.Exception.ChargeException.AmountNotAvailableException;
+import com.gdeiassistant.gdeiassistant.Exception.ChargeException.RequestExpiredException;
+import com.gdeiassistant.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.ServerErrorException;
-import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
-import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Charge.ChargeMapper;
-import com.gdeiassistant.gdeiassistant.Pojo.Entity.CardInfo;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.Charge;
 import com.gdeiassistant.gdeiassistant.Pojo.Entity.ChargeLog;
-import com.gdeiassistant.gdeiassistant.Pojo.Entity.User;
-import com.gdeiassistant.gdeiassistant.Pojo.Result.BaseResult;
-import com.gdeiassistant.gdeiassistant.Tools.StringEncryptUtils;
-import com.taobao.wsgsvr.WsgException;
+import com.gdeiassistant.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Charge.ChargeMapper;
+import com.gdeiassistant.gdeiassistant.Service.CardQuery.CardQueryService;
+import com.gdeiassistant.gdeiassistant.Tools.HttpClientUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -33,23 +27,28 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.HttpSessionRequiredException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChargeService {
+
+    private int timeout;
+
+    @Autowired
+    private CardQueryService cardQueryService;
 
     @Autowired
     private ChargeMapper chargeMapper;
 
     private Log log = LogFactory.getLog(ChargeService.class);
-
-    private int timeout;
 
     @Value("#{propertiesReader['timeout.charge']}")
     public void setTimeout(int timeout) {
@@ -57,97 +56,7 @@ public class ChargeService {
     }
 
     /**
-     * 校验客户端真实�??
-     *
-     * @param clientKeycode
-     * @param timeStamp
-     * @return
-     */
-    public VerifyClientKeyCodeResultEnum VerifyClientKeyCode(String clientKeycode, String timeStamp) {
-        String realKeycode = "GdeiAssistant" + timeStamp;
-        try {
-            if (clientKeycode.equals(StringEncryptUtils.SHA1HexString(StringEncryptUtils.encryptString(realKeycode)))) {
-                return VerifyClientKeyCodeResultEnum.VERIFY_SUCCESS;
-            } else {
-                return VerifyClientKeyCodeResultEnum.VERIFY_FAILURE;
-            }
-        } catch (WsgException e) {
-            log.error("校园卡充值校验客户端异常�?", e);
-            return VerifyClientKeyCodeResultEnum.VERIFY_EXCEPTION;
-        }
-    }
-
-    /**
-     * 保存用户充�?�记录日�?
-     *
-     * @param username
-     * @param amount
-     */
-    public void SaveChargeLog(String username, Integer amount) {
-        try {
-            ChargeLog chargeLog = new ChargeLog();
-            chargeLog.setUsername(username);
-            chargeLog.setAmount(amount);
-            chargeLog.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-            chargeMapper.insertChargeLog(chargeLog);
-        } catch (Exception e) {
-            log.error("保存用户校园卡充值记录异常：", e);
-        }
-    }
-
-    /**
-     * 返回供客户端校验的服务端Keycode
-     *
-     * @param user
-     * @param securityVersion
-     * @param clientType
-     * @param timeStamp
-     * @param amount
-     * @return
-     */
-    public BaseResult<String, GetServerKeyCodeResultEnum> GetServerKeycode(User user, String securityVersion, String clientType, String timeStamp, int amount) {
-        BaseResult<String, GetServerKeyCodeResultEnum> result = new BaseResult<>();
-        try {
-            if (clientType.equals("Android")) {
-                String androidServerKeycode = GetAndroidServerKeycode(user, securityVersion, timeStamp, amount);
-                result.setResultType(GetServerKeyCodeResultEnum.GETKEYCODE_SUCCESS);
-                result.setResultData(androidServerKeycode);
-                return result;
-            }
-            throw new UnsupportClientTypeException();
-        } catch (UnsupportSecurityVersionException e) {
-            log.error("校园卡充值生成服务端校验码异常：", e);
-            result.setResultType(GetServerKeyCodeResultEnum.UNSUPPORT_SECURITYVERSION);
-        } catch (UnsupportClientTypeException e) {
-            log.error("校园卡充值生成服务端校验码异常：", e);
-            result.setResultType(GetServerKeyCodeResultEnum.UNSUPPORT_CLIENTTYPE);
-        } catch (WsgException e) {
-            log.error("校园卡充值生成服务端校验码异常：", e);
-            result.setResultType(GetServerKeyCodeResultEnum.INCORRECT_USERINFORMATION);
-        }
-        return result;
-    }
-
-    /**
-     * 返回供安卓客户端校验的服务端Keycode
-     *
-     * @param user
-     * @param securityVersion
-     * @param timeStamp
-     * @param amount
-     * @return
-     */
-    private String GetAndroidServerKeycode(User user, String securityVersion, String timeStamp, int amount) throws UnsupportSecurityVersionException, WsgException {
-        if (securityVersion.equals("1.1")) {
-            //1.1版本的安全校�?
-            String text = user.getUsername() + user.getPassword() + amount + "GdeiAssistant" + timeStamp;
-            return StringEncryptUtils.SHA1HexString(StringEncryptUtils.encryptString(text));
-        }
-        throw new UnsupportSecurityVersionException();
-    }
-
-    /**
-     * 提交校园卡充值请求并自动确认,返回支付宝URL和Cookie列表
+     * 提交校园卡充值请求并自动确认，返回支付宝URL和Cookie列表
      *
      * @param sessionId
      * @param username
@@ -155,36 +64,31 @@ public class ChargeService {
      * @param amount
      * @return
      */
-    public BaseResult<Charge, ChargeRequestResultEnum> ChargeRequest(String sessionId, String username
-            , String password, int amount) {
-        BaseResult<Charge, ChargeRequestResultEnum> result = new BaseResult<>();
+    public Charge ChargeRequest(String sessionId, String username, String password, int amount) throws Exception {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
             if (amount <= 0 || amount > 500) {
-                throw new AccountNotAvailableException("充�?�金额超过范�?");
+                throw new AmountNotAvailableException("充值金额超过范围");
             }
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, timeout);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            CardInfo cardInfo = LoginCardSystem(httpClient, username, password);
-            //发�?�充值请�?
-            Map<String, String> ecardDataMap = SendChargeRequest(httpClient, cardInfo.getName(), amount);
-            //确认充�?�请�?
-            Charge charge = ConfirmChargeRequest(sessionId, httpClient, ecardDataMap);
-            result.setResultData(charge);
-            result.setResultType(ChargeRequestResultEnum.REQUEST_SUCCESS);
-            return result;
-        } catch (AccountNotAvailableException e) {
+            cardQueryService.LoginCardSystem(httpClient, username, password);
+            //发送充值请求
+            Map<String, String> ecardDataMap = SendChargeRequest(httpClient, amount);
+            //确认充值请求
+            return ConfirmChargeRequest(sessionId, httpClient, ecardDataMap);
+        } catch (AmountNotAvailableException e) {
             log.error("校园卡充值异常：", e);
-            result.setResultType(ChargeRequestResultEnum.ACCOUNT_NOT_AVAILABLE);
-        } catch (InconsistentInformationException e) {
+            throw new AmountNotAvailableException("用户充值金额超过范围");
+        } catch (IOException e) {
             log.error("校园卡充值异常：", e);
-            result.setResultType(ChargeRequestResultEnum.INCONSISTENT_INFORMATION);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             log.error("校园卡充值异常：", e);
-            result.setResultType(ChargeRequestResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("支付管理系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -197,124 +101,21 @@ public class ChargeService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return result;
     }
 
     /**
-     * 登录支付管理平台
+     * 发送充值请求
      *
      * @param httpClient
-     * @param username
-     * @param password
-     * @throws IOException
-     * @throws ServerErrorException
-     * @throws PasswordIncorrectException
-     */
-    private CardInfo LoginCardSystem(CloseableHttpClient httpClient, String username, String password) throws
-            IOException, ServerErrorException, PasswordIncorrectException {
-        HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login?service=http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
-        HttpResponse httpResponse = httpClient.execute(httpGet);
-        Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院中央认证服务－登�?")) {
-            //封装�?要提交的数据
-            BasicNameValuePair basicNameValuePair_1 = new BasicNameValuePair("imageField.x", "0");
-            BasicNameValuePair basicNameValuePair_2 = new BasicNameValuePair("imageField.y", "0");
-            BasicNameValuePair basicNameValuePair_3 = new BasicNameValuePair("username", username);
-            BasicNameValuePair basicNameValuePair_4 = new BasicNameValuePair("password", password);
-            BasicNameValuePair basicNameValuePair_5 = new BasicNameValuePair("service", "http%3A%2F%2Fecard.gdei.edu.cn%3A8050%2FLoginCas.aspx");
-            List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
-            basicNameValuePairs.add(basicNameValuePair_1);
-            basicNameValuePairs.add(basicNameValuePair_2);
-            basicNameValuePairs.add(basicNameValuePair_3);
-            basicNameValuePairs.add(basicNameValuePair_4);
-            basicNameValuePairs.add(basicNameValuePair_5);
-            HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login?service=http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
-            //绑定表单参数
-            httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
-            httpResponse = httpClient.execute(httpPost);
-            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                if (document.title().equals("广东第二师范学院中央认证服务－登�?")) {
-                    throw new PasswordIncorrectException("用户名或密码错误");
-                }
-                //获取html页面中的首个URL地址,进入支付系统页面
-                httpGet = new HttpGet(document.select("a").first().attr("href"));
-                //请求�?,若账号正确会进行两次302重定�?,进入支付系统主页
-                httpResponse = httpClient.execute(httpGet);
-                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                //通过标题判断是否成功跳转至支付平台页�?
-                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院支付平台")) {
-                    httpGet = new HttpGet("http://ecard.gdei.edu.cn/CardManage/CardInfo/Transfer");
-                    httpResponse = httpClient.execute(httpGet);
-                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                        Element first_Jbinfo = document.getElementsByClass("Jbinfo").first();
-                        Element second_Jbinfo = document.getElementsByClass("Jbinfo").get(1);
-                        String chargedName = first_Jbinfo.select("em").first().text();
-                        String chargeNumber = first_Jbinfo.select("em").get(1).text();
-                        String chargeBalance = second_Jbinfo.select("em").first().text();
-                        CardInfo cardInfo = new CardInfo();
-                        //缓存校园卡基本信�?
-                        cardInfo.setName(chargedName);
-                        cardInfo.setNumber(chargeNumber);
-                        cardInfo.setCardBalance(chargeBalance);
-                        //登录成功
-                        return cardInfo;
-                    }
-                    throw new ServerErrorException("支付管理平台异常");
-                }
-                throw new ServerErrorException("支付管理平台异常");
-            }
-            throw new ServerErrorException("支付管理平台异常");
-        } else if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            //自动登录
-            httpGet = new HttpGet(document.select("a").first().attr("href"));
-            //请求�?,若账号正确会进行两次302重定�?,进入支付系统主页
-            httpResponse = httpClient.execute(httpGet);
-            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            //通过标题判断是否成功跳转至支付平台页�?
-            if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院支付平台")) {
-                httpGet = new HttpGet("http://ecard.gdei.edu.cn/CardManage/CardInfo/Transfer");
-                httpResponse = httpClient.execute(httpGet);
-                if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    Element first_Jbinfo = document.getElementsByClass("Jbinfo").first();
-                    Element second_Jbinfo = document.getElementsByClass("Jbinfo").get(1);
-                    String chargedName = first_Jbinfo.select("em").first().text();
-                    String chargeNumber = first_Jbinfo.select("em").get(1).text();
-                    String chargeBalance = second_Jbinfo.select("em").first().text();
-                    CardInfo cardInfo = new CardInfo();
-                    //缓存校园卡基本信�?
-                    cardInfo.setName(chargedName);
-                    cardInfo.setNumber(chargeNumber);
-                    cardInfo.setCardBalance(chargeBalance);
-                    //登录成功
-                    return cardInfo;
-                }
-                throw new ServerErrorException("支付管理平台异常");
-            }
-            throw new ServerErrorException("支付管理平台异常");
-        }
-        throw new ServerErrorException("支付管理平台异常");
-    }
-
-    /**
-     * 发�?�充值请�?
-     *
-     * @param httpClient
-     * @param chargeXm
      * @param amount
-     * @throws AccountNotAvailableException
-     * @throws IOException
-     * @throws RequestExpiredException
-     * @throws InconsistentInformationException
-     * @throws ServerErrorException
+     * @throws Exception
      */
-    private Map<String, String> SendChargeRequest(CloseableHttpClient httpClient, String chargeXm, int amount) throws IOException, RequestExpiredException, InconsistentInformationException, ServerErrorException {
+    private Map<String, String> SendChargeRequest(CloseableHttpClient httpClient, int amount)
+            throws Exception {
         HttpPost httpPost = new HttpPost("http://ecard.gdei.edu.cn/CardManage/CardInfo/DoPay");
         BasicNameValuePair basicNameValuePair1 = new BasicNameValuePair("fbankno", "epay");
         BasicNameValuePair basicNameValuePair2 = new BasicNameValuePair("tobankno", "card");
-        BasicNameValuePair basicNameValuePair3 = new BasicNameValuePair("Amount", amount + "");
+        BasicNameValuePair basicNameValuePair3 = new BasicNameValuePair("Amount", String.valueOf(amount));
         BasicNameValuePair basicNameValuePair4 = new BasicNameValuePair("password", "");
         BasicNameValuePair basicNameValuePair5 = new BasicNameValuePair("checkXieYi", "on");
         List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
@@ -328,7 +129,7 @@ public class ChargeService {
         HttpResponse httpResponse = httpClient.execute(httpPost);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         if (httpResponse.getStatusLine().getStatusCode() == 200 && (document.title().equals("Error")) || document.title().equals("广东第二师范学院支付平台")) {
-            //身份凭证过期，重新连�?
+            //身份凭证过期，重新连接
             throw new RequestExpiredException("身份凭证过期");
         } else {
             if (httpResponse.getStatusLine().getStatusCode() == 302) {
@@ -352,27 +153,27 @@ public class ChargeService {
                     httpResponse = httpClient.execute(httpPost);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院支付平台")) {
-                        //成功提交请求,�?查支付平台实际预留的信息是否�?�?
+                        //成功提交请求,检查支付平台实际预留的信息是否一致
                         Element bd = document.getElementsByClass("bd").first();
                         String name = bd.select("h3").first().text();
 //                        if (!name.equals(chargeXm)) {
 //                            //信息不一致，中止交易
-//                            throw new InconsistentInformationException("用户信息不一�?");
+//                            throw new InconsistentInformationException("用户信息不一致");
 //                        }
                         httpGet = new HttpGet("https://epay.gdei.edu.cn:8443/synpay/web/disOrderInfo");
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院支付平台")) {
-                            //获取存放充�?�信息的DIV
+                            //获取存放充值信息的DIV
                             Element main_hd = document.getElementsByClass("main_hd").first();
                             String confirmNumber = main_hd.select("span").get(0).text();
                             String confirmName = main_hd.select("span").get(1).text();
                             String confirmAmount;
-                            if (Integer.valueOf(amount) <= 100) {
-                                //小数额交�?
+                            if (amount <= 100) {
+                                //小数额交易
                                 confirmAmount = document.getElementsByClass("pri smallnum").first().text().substring(1);
                             } else {
-                                //大数额交�?
+                                //大数额交易
                                 confirmAmount = document.getElementsByClass("pri").first().text().substring(1);
                             }
                             Map<String, String> ecardDataMap = new HashMap<>();
@@ -381,32 +182,25 @@ public class ChargeService {
                                 ecardDataMap.put(ecardData.attr("name"), ecardData.attr("value"));
                             }
                             return ecardDataMap;
-                        } else {
-                            throw new ServerErrorException();
                         }
-                    } else {
                         throw new ServerErrorException();
                     }
-                } else {
                     throw new ServerErrorException();
                 }
-            } else {
                 throw new ServerErrorException();
             }
+            throw new ServerErrorException();
         }
     }
 
     /**
-     * 确认充�?�请�?
+     * 确认充值请求
      *
      * @param sessionId
      * @param httpClient
      * @param ecardDataMap
      * @return
-     * @throws IOException
-     * @throws ServerErrorException
-     * @throws RequestExpiredException
-     * @throws HttpSessionRequiredException
+     * @throws Exception
      */
     private Charge ConfirmChargeRequest(String sessionId, CloseableHttpClient httpClient, Map<String, String> ecardDataMap) throws Exception {
         Charge charge = new Charge();
@@ -439,7 +233,7 @@ public class ChargeService {
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     String J_orderId = document.getElementById("J_orderId").attr("value");
                     if (J_orderId != null && !J_orderId.isEmpty()) {
-                        //提交确认充�?�请求成�?
+                        //提交确认充值请求成功
                         String url = "https://excashier.alipay.com/standard/auth.htm?payOrderId=" + J_orderId;
                         httpGet = new HttpGet(url);
                         httpClient.execute(httpGet);
@@ -449,20 +243,30 @@ public class ChargeService {
                         charge.setCookieList(cookieList);
                         charge.setAlipayURL(url);
                         return charge;
-                    } else {
-                        throw new ServerErrorException();
                     }
-                } else {
                     throw new ServerErrorException();
                 }
-            } else {
                 throw new ServerErrorException();
             }
+            throw new ServerErrorException();
         } else if (httpResponse.getStatusLine().getStatusCode() == 200) {
             //会话超时关闭
             throw new RequestExpiredException("会话超时关闭");
-        } else {
-            throw new ServerErrorException();
         }
+        throw new ServerErrorException();
+    }
+
+    /**
+     * 保存用户充值记录日志
+     *
+     * @param username
+     * @param amount
+     */
+    @Async
+    public void SaveChargeLog(String username, int amount) throws Exception {
+        ChargeLog chargeLog = new ChargeLog();
+        chargeLog.setUsername(username);
+        chargeLog.setAmount(amount);
+        chargeMapper.insertChargeLog(chargeLog);
     }
 }

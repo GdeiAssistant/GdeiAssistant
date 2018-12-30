@@ -2,7 +2,10 @@ package com.linguancheng.gdeiassistant.Aspect;
 
 import com.linguancheng.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.TokenValidResultEnum;
-import com.linguancheng.gdeiassistant.Exception.TokenValidException.*;
+import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
+import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
+import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenServerException;
+import com.linguancheng.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Service.IPAddress.IPService;
@@ -13,6 +16,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Aspect
 @Component
+@Order(1)
 public class LoginTokenAspect {
 
     @Autowired

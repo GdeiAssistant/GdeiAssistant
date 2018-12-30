@@ -7,6 +7,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @Aspect
 @Component
+@Order(4)
 public class QueryLogAspect {
 
     private Log log = LogFactory.getLog(QueryLogAspect.class);

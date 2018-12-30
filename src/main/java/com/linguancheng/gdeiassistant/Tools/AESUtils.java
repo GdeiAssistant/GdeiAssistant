@@ -13,7 +13,7 @@ public class AESUtils {
      * @return
      * @throws NoSuchAlgorithmException
      */
-    public byte[] GenerateSecretKey() throws NoSuchAlgorithmException {
+    public static byte[] GenerateSecretKey() throws NoSuchAlgorithmException {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         kgen.init(256);
         return kgen.generateKey().getEncoded();
@@ -31,7 +31,7 @@ public class AESUtils {
      * @throws BadPaddingException
      * @throws IllegalBlockSizeException
      */
-    public byte[] EncryptByte(byte[] secretKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public static byte[] EncryptByte(byte[] secretKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         //通过secretKeyByte生成SecretKeySpec
         SecretKeySpec key = new SecretKeySpec(secretKeyByte, "AES");
         //Cipher对象实际完成加密操作
@@ -54,7 +54,7 @@ public class AESUtils {
      * @throws BadPaddingException
      * @throws IllegalBlockSizeException
      */
-    public byte[] DecryptByte(byte[] secretKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public static byte[] DecryptByte(byte[] secretKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         //通过secretKeyByte生成SecretKeySpec
         SecretKeySpec key = new SecretKeySpec(secretKeyByte, "AES");
         //Cipher对象实际完成加密操作

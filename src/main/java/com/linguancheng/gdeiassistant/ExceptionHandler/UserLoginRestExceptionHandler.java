@@ -8,7 +8,6 @@ import com.linguancheng.gdeiassistant.Exception.RequestValidException.SignInvali
 import com.linguancheng.gdeiassistant.Exception.RequestValidException.TimestampInvalidException;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,7 +33,7 @@ public class UserLoginRestExceptionHandler {
      */
     @ExceptionHandler(SignInvalidException.class)
     public ResponseEntity ShowSignInvalidExceptionTip() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new JsonResult(ConstantUtils.REQUEST_SIGN_INVALID
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.REQUEST_SIGN_INVALID
                 , false, "请求的摘要签名不匹配"));
     }
 
@@ -45,7 +44,7 @@ public class UserLoginRestExceptionHandler {
      */
     @ExceptionHandler(TimestampInvalidException.class)
     public ResponseEntity ShowTimestampInvalidExceptionTip() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new JsonResult(ConstantUtils.REQUEST_TIMESTAMP_INVALID
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.REQUEST_TIMESTAMP_INVALID
                 , false, "请求时间戳校验失败"));
     }
 
@@ -56,7 +55,7 @@ public class UserLoginRestExceptionHandler {
      */
     @ExceptionHandler(NonceInvalidException.class)
     public ResponseEntity ShowNonceInvalidExceptionTip() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new JsonResult(ConstantUtils.REPLAY_REQUEST
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.REPLAY_REQUEST
                 , false, "重复提交的请求"));
     }
 }

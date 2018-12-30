@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,8 +33,7 @@ public class GlobalRestExceptionHandler {
     @ExceptionHandler({MissingServletRequestParameterException.class, TypeMismatchException.class
             , HttpMessageNotReadableException.class})
     public ResponseEntity HandleBadRequestException() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
                         , "请求参数不合法"));
     }
 
@@ -46,8 +44,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(MethodNotSupportedException.class)
     public ResponseEntity HandleMethodNotSupportedException() {
-        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(new JsonResult(false, "请求方法不支持"));
+        return ResponseEntity.ok(new JsonResult(false, "请求方法不支持"));
     }
 
     /**
@@ -58,8 +55,7 @@ public class GlobalRestExceptionHandler {
     @ExceptionHandler({ConstraintViolationException.class
             , MethodArgumentNotValidException.class})
     public ResponseEntity HandleConstraintViolationException() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
                         , "请求参数不合法"));
     }
 
@@ -70,7 +66,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ResponseEntity HandleDataNotExistException() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new JsonResult(ConstantUtils.DATA_NOT_EXIST, false
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.DATA_NOT_EXIST, false
                 , "没有找到查询数据，请检查输入条件是否有误"));
     }
 
@@ -81,8 +77,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(NetWorkTimeoutException.class)
     public ResponseEntity HandleNetWorkTimeoutException() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(new JsonResult(ConstantUtils.NETWORK_TIMEOUT, false, "网络连接超时，请重试"));
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.NETWORK_TIMEOUT, false, "网络连接超时，请重试"));
     }
 
     /**
@@ -94,8 +89,7 @@ public class GlobalRestExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity HandleException(Exception e) {
         log.error("系统异常：", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new JsonResult(ConstantUtils.INTERNAL_SERVER_ERROR, false, "系统异常，请联系管理员"));
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.INTERNAL_SERVER_ERROR, false, "系统异常，请联系管理员"));
     }
 
 

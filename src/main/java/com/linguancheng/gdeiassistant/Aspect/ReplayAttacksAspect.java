@@ -56,7 +56,7 @@ public class ReplayAttacksAspect {
                 && requestValidation.getSignature().equals(StringEncryptUtils.SHA1HexString(requestValidation.getTimestamp()
                 + requestValidation.getNonce() + token))) {
             //校验时间戳，请求时间戳与当前时间戳不超过60s
-            if (requestValidation.getTimestamp() != null && Duration.between(Instant.ofEpochMilli(requestValidation.getTimestamp()), Instant.now()).getSeconds() > 0
+            if (requestValidation.getTimestamp() != null && Duration.between(Instant.ofEpochMilli(requestValidation.getTimestamp()), Instant.now()).getSeconds() >= -5
                     && Duration.between(Instant.now(), Instant.ofEpochMilli(requestValidation.getTimestamp())).getSeconds() <= 60) {
                 if (StringUtils.isNotBlank(requestValidation.getNonce()) && StringUtils.isBlank(requestDao.QueryRequest(requestValidation.getNonce()))) {
                     //请求防重放攻击校验通过，保存随机值到缓存中

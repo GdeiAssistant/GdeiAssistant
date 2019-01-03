@@ -4,9 +4,10 @@ import com.linguancheng.gdeiassistant.Annotation.ReplayAttacksProtection;
 import com.linguancheng.gdeiassistant.Annotation.RequestLogPersistence;
 import com.linguancheng.gdeiassistant.Enum.Base.LoginMethodEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.*;
+import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginJsonResult;
+import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserLoginResult;
 import com.linguancheng.gdeiassistant.Service.IPAddress.IPService;
 import com.linguancheng.gdeiassistant.Service.Token.LoginTokenService;
 import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
@@ -54,11 +55,10 @@ public class UserLoginRestController {
     @RequestMapping(value = "/rest/userlogin", method = RequestMethod.POST)
     @RequestLogPersistence
     @ReplayAttacksProtection
-    public UserLoginJsonResult UserLogin(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user
+    public DataJsonResult<UserLoginResult> UserLogin(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user
             , @RequestParam(value = "unionid") String unionid
             , @RequestParam(value = "method", required = false, defaultValue = "0") LoginMethodEnum method
             , @Validated RequestValidation requestValidation) throws Exception {
-        UserLoginJsonResult result = new UserLoginJsonResult();
         UserCertificate userCertificate = null;
         switch (method) {
             case QUICK_LOGIN:
@@ -75,11 +75,11 @@ public class UserLoginRestController {
         //获取权限令牌和刷新令牌
         AccessToken accessToken = loginTokenService.GetAccessToken(user.getUsername(), ipService.GetRequestRealIPAddress(request), unionid);
         RefreshToken refreshToken = loginTokenService.GetRefreshToken(accessToken);
-        result.setSuccess(true);
-        result.setUser(resultUser);
-        result.setAccessToken(new Token(accessToken));
-        result.setRefreshToken(new Token(refreshToken));
-        return result;
+        UserLoginResult userLoginResult = new UserLoginResult();
+        userLoginResult.setUser(resultUser);
+        userLoginResult.setAccessToken(new Token(accessToken));
+        userLoginResult.setRefreshToken(new Token(refreshToken));
+        return new DataJsonResult<>(true, userLoginResult);
     }
 
     /**

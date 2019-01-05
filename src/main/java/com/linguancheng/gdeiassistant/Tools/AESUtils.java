@@ -1,9 +1,12 @@
 package com.linguancheng.gdeiassistant.Tools;
 
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class AESUtils {
 
@@ -31,13 +34,14 @@ public class AESUtils {
      * @throws BadPaddingException
      * @throws IllegalBlockSizeException
      */
-    public static byte[] EncryptByte(byte[] secretKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public static byte[] EncryptByte(byte[] secretKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
         //通过secretKeyByte生成SecretKeySpec
         SecretKeySpec key = new SecretKeySpec(secretKeyByte, "AES");
         //Cipher对象实际完成加密操作
-        Cipher cipher = Cipher.getInstance("AES");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         //用密匙初始化Cipher对象
-        cipher.init(Cipher.ENCRYPT_MODE, key);
+        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(Base64.getEncoder()
+                .encodeToString(secretKeyByte).substring(0, 16).getBytes()));
         //执行加密操作
         return cipher.doFinal(content);
     }
@@ -54,13 +58,14 @@ public class AESUtils {
      * @throws BadPaddingException
      * @throws IllegalBlockSizeException
      */
-    public static byte[] DecryptByte(byte[] secretKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public static byte[] DecryptByte(byte[] secretKeyByte, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
         //通过secretKeyByte生成SecretKeySpec
         SecretKeySpec key = new SecretKeySpec(secretKeyByte, "AES");
         //Cipher对象实际完成加密操作
-        Cipher cipher = Cipher.getInstance("AES");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         //用密匙初始化Cipher对象
-        cipher.init(Cipher.DECRYPT_MODE, key);
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Base64.getEncoder()
+                .encodeToString(secretKeyByte).substring(0, 16).getBytes()));
         //执行加密操作
         return cipher.doFinal(content);
     }

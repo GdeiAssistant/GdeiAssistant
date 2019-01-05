@@ -10,7 +10,6 @@ import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -23,7 +22,6 @@ import org.springframework.web.HttpSessionRequiredException;
 
 import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  * Created by linguancheng on 2017/7/17.
@@ -89,14 +87,6 @@ public class HttpClientUtils {
      */
     public static void SyncHttpClientCookieStore(String sessionId, CookieStore cookieStore) {
         cookieStoreDao.SaveCookieStore(sessionId, cookieStore);
-    }
-
-    public static List<Cookie> GetHttpClientCookieStore(String sessionId) throws Exception {
-        CookieStore cookieStore = cookieStoreDao.QueryCookieStore(sessionId);
-        if (cookieStore == null) {
-            throw new HttpSessionRequiredException("用户禁用了Cookie");
-        }
-        return cookieStore.getCookies();
     }
 
     /**

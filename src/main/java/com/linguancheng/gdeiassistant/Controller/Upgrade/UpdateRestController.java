@@ -1,21 +1,22 @@
 package com.gdeiassistant.gdeiassistant.Controller.Upgrade;
 
+import com.gdeiassistant.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.gdeiassistant.gdeiassistant.Pojo.Update.Android.AndroidUpdateInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-public class UpdateController {
+@RestController
+public class UpdateRestController {
 
     @Autowired
     private AndroidUpdateInfo androidUpdateInfo;
 
     @RequestMapping(value = "/rest/update/android", method = RequestMethod.GET)
     @ResponseBody
-    public AndroidUpdateInfo GetAndroidUpdateInformation() {
-        return androidUpdateInfo;
+    public DataJsonResult<AndroidUpdateInfo> GetAndroidUpdateInformation() {
+        return new DataJsonResult<>(true, androidUpdateInfo);
     }
 }

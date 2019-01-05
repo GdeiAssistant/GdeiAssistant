@@ -4,6 +4,7 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.ProtocolType;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
 import com.linguancheng.gdeiassistant.Pojo.OssToken.OssFederationToken;
+import com.linguancheng.gdeiassistant.Pojo.Result.DataJsonResult;
 import com.linguancheng.gdeiassistant.Service.OssToken.OssFederationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,26 +84,18 @@ public class OssFederationTokenController {
 
     @RequestMapping("/rest/osstoken")
     @ResponseBody
-    public OssFederationToken ObtainOssFederationToken() {
+    public DataJsonResult<OssFederationToken> ObtainOssFederationToken() throws ClientException {
         String roleSessionName = "GdeiAssistant";
         ProtocolType protocolType = ProtocolType.HTTPS;
         OssFederationToken ossFederationToken = new OssFederationToken();
-        try {
-            AssumeRoleResponse assumeRoleResponse = ossFederationTokenService.AssumeRole(accessKeyID
-                    , accessKeySecret, roleArn, roleSessionName, policy
-                    , protocolType, tokenExpireTime);
-            ossFederationToken.setStatus("200");
-            ossFederationToken.setAccessKeyId(assumeRoleResponse.getCredentials().getAccessKeyId());
-            ossFederationToken.setAccessKeySecret(assumeRoleResponse.getCredentials().getAccessKeySecret());
-            ossFederationToken.setSecurityToken(assumeRoleResponse.getCredentials().getSecurityToken());
-            ossFederationToken.setExpiration(assumeRoleResponse.getCredentials().getExpiration());
-        } catch (ClientException e) {
-            ossFederationToken.setStatus(e.getErrCode());
-            ossFederationToken.setAccessKeyId("");
-            ossFederationToken.setAccessKeySecret("");
-            ossFederationToken.setSecurityToken("");
-            ossFederationToken.setExpiration("");
-        }
-        return ossFederationToken;
+        AssumeRoleResponse assumeRoleResponse = ossFederationTokenService.AssumeRole(accessKeyID
+                , accessKeySecret, roleArn, roleSessionName, policy
+                , protocolType, tokenExpireTime);
+        ossFederationToken.setStatus("200");
+        ossFederationToken.setAccessKeyId(assumeRoleResponse.getCredentials().getAccessKeyId());
+        ossFederationToken.setAccessKeySecret(assumeRoleResponse.getCredentials().getAccessKeySecret());
+        ossFederationToken.setSecurityToken(assumeRoleResponse.getCredentials().getSecurityToken());
+        ossFederationToken.setExpiration(assumeRoleResponse.getCredentials().getExpiration());
+        return new DataJsonResult<>(true, ossFederationToken);
     }
 }

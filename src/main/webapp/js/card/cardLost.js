@@ -28,7 +28,7 @@ function postCardLostRequest() {
     } else {
         $("#loadingToast, .weui_mask").show();
         $.ajax({
-            url: '/cardlost',
+            url: '/api/cardlost',
             type: 'post',
             data: {
                 cardPassword: password

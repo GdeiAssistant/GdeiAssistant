@@ -35,7 +35,7 @@ function postQueryForm() {
     } else {
         $("#loadingToast, .weui_mask").show();
         $.ajax({
-            url: '/cardquery',
+            url: '/api/cardquery',
             method: 'post',
             data: {
                 'year': $("#year").val(),

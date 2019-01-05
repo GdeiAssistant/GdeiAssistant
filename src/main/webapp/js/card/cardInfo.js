@@ -9,7 +9,7 @@ $(function () {
 function queryCardInfo() {
     $("#loadingToast, .weui_mask").show();
     $.ajax({
-        url: '/cardinfoquery',
+        url: '/api/cardinfoquery',
         type: 'post',
         success: function (result) {
             $("#loadingToast, .weui_mask").hide();

@@ -18,7 +18,7 @@ public class RSAEncryptionRestController {
      */
     @RequestMapping(value = "/rest/encryption/rsa/publickey", method = RequestMethod.GET)
     public DataJsonResult<String> GetRSAPublicKey() {
-        return new DataJsonResult<>(true, Base64.getEncoder().encodeToString(RSAUtils.GetPublicKey()));
+        return new DataJsonResult<>(true, Base64.getEncoder().encodeToString(RSAUtils.getPublicKey()));
     }
 
 }

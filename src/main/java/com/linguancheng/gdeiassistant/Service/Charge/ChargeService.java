@@ -1,11 +1,11 @@
-package com.linguancheng.gdeiassistant.Service.ChargeQuery;
+package com.linguancheng.gdeiassistant.Service.Charge;
 
 import com.linguancheng.gdeiassistant.Exception.ChargeException.AmountNotAvailableException;
-import com.linguancheng.gdeiassistant.Exception.ChargeException.RequestExpiredException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Charge;
 import com.linguancheng.gdeiassistant.Pojo.Entity.ChargeLog;
+import com.linguancheng.gdeiassistant.Pojo.Entity.Cookie;
 import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Charge.ChargeMapper;
 import com.linguancheng.gdeiassistant.Service.CardQuery.CardQueryService;
@@ -17,7 +17,6 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -75,11 +74,11 @@ public class ChargeService {
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            cardQueryService.LoginCardSystem(httpClient, username, password);
+            cardQueryService.LoginCardSystem(httpClient, username, password, false);
             //发送充值请求
             Map<String, String> ecardDataMap = SendChargeRequest(httpClient, amount);
             //确认充值请求
-            return ConfirmChargeRequest(sessionId, httpClient, ecardDataMap);
+            return ConfirmChargeRequest(sessionId, httpClient, cookieStore, ecardDataMap);
         } catch (AmountNotAvailableException e) {
             log.error("校园卡充值异常：", e);
             throw new AmountNotAvailableException("用户充值金额超过范围");
@@ -128,62 +127,56 @@ public class ChargeService {
         httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
         HttpResponse httpResponse = httpClient.execute(httpPost);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-        if (httpResponse.getStatusLine().getStatusCode() == 200 && (document.title().equals("Error")) || document.title().equals("广东第二师范学院支付平台")) {
-            //身份凭证过期，重新连接
-            throw new RequestExpiredException("身份凭证过期");
-        } else {
-            if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                HttpGet httpGet = new HttpGet("http://ecard.gdei.edu.cn/SynPay/Pay");
-                httpResponse = httpClient.execute(httpGet);
-                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("服务平台-提交支付请求")) {
-                    //进入提交支付请求页面，获取请求参数，并模拟JS进行表单提交
-                    List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
-                    Elements inputs = document.getElementsByTag("input");
-                    for (Element element : inputs) {
-                        String name = element.attr("name");
-                        String value = element.attr("value");
-                        if (!name.isEmpty()) {
-                            basicNameValuePairList.add(new BasicNameValuePair(name, value));
-                        }
+        if (httpResponse.getStatusLine().getStatusCode() == 302) {
+            HttpGet httpGet = new HttpGet("http://ecard.gdei.edu.cn/SynPay/Pay");
+            httpResponse = httpClient.execute(httpGet);
+            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                //进入提交支付请求页面，获取请求参数，并模拟JS进行表单提交
+                List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
+                Elements inputs = document.getElementsByTag("input");
+                for (Element element : inputs) {
+                    String name = element.attr("name");
+                    String value = element.attr("value");
+                    if (!name.isEmpty()) {
+                        basicNameValuePairList.add(new BasicNameValuePair(name, value));
                     }
-                    httpPost = new HttpPost("https://epay.gdei.edu.cn:8443/synpay/web/doPay");
-                    //绑定表单参数
-                    httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairList, StandardCharsets.UTF_8));
-                    httpResponse = httpClient.execute(httpPost);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院支付平台")) {
-                        //成功提交请求,检查支付平台实际预留的信息是否一致
-                        Element bd = document.getElementsByClass("bd").first();
-                        String name = bd.select("h3").first().text();
+                }
+                httpPost = new HttpPost("https://epay.gdei.edu.cn:8443/synpay/web/doPay");
+                //绑定表单参数
+                httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairList, StandardCharsets.UTF_8));
+                httpResponse = httpClient.execute(httpPost);
+                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                    //成功提交请求,检查支付平台实际预留的信息是否一致
+//                    Element bd = document.getElementsByClass("bd").first();
+//                    String name = bd.select("h3").first().text();
 //                        if (!name.equals(chargeXm)) {
 //                            //信息不一致，中止交易
 //                            throw new InconsistentInformationException("用户信息不一致");
 //                        }
-                        httpGet = new HttpGet("https://epay.gdei.edu.cn:8443/synpay/web/disOrderInfo");
-                        httpResponse = httpClient.execute(httpGet);
-                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院支付平台")) {
-                            //获取存放充值信息的DIV
-                            Element main_hd = document.getElementsByClass("main_hd").first();
-                            String confirmNumber = main_hd.select("span").get(0).text();
-                            String confirmName = main_hd.select("span").get(1).text();
-                            String confirmAmount;
-                            if (amount <= 100) {
-                                //小数额交易
-                                confirmAmount = document.getElementsByClass("pri smallnum").first().text().substring(1);
-                            } else {
-                                //大数额交易
-                                confirmAmount = document.getElementsByClass("pri").first().text().substring(1);
-                            }
-                            Map<String, String> ecardDataMap = new HashMap<>();
-                            Elements ecardDatas = document.getElementsByTag("input");
-                            for (Element ecardData : ecardDatas) {
-                                ecardDataMap.put(ecardData.attr("name"), ecardData.attr("value"));
-                            }
-                            return ecardDataMap;
+                    httpGet = new HttpGet("https://epay.gdei.edu.cn:8443/synpay/web/disOrderInfo");
+                    httpResponse = httpClient.execute(httpGet);
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                        //获取存放充值信息的DIV
+                        Element main_hd = document.getElementsByClass("main_hd").first();
+                        String confirmNumber = main_hd.select("span").get(0).text();
+                        String confirmName = main_hd.select("span").get(1).text();
+                        String confirmAmount;
+                        if (amount <= 100) {
+                            //小数额交易
+                            confirmAmount = document.getElementsByClass("pri smallnum").first().text().substring(1);
+                        } else {
+                            //大数额交易
+                            confirmAmount = document.getElementsByClass("pri").first().text().substring(1);
                         }
-                        throw new ServerErrorException();
+                        Map<String, String> ecardDataMap = new HashMap<>();
+                        Elements ecardDatas = document.getElementsByTag("input");
+                        for (Element ecardData : ecardDatas) {
+                            ecardDataMap.put(ecardData.attr("name"), ecardData.attr("value"));
+                        }
+                        return ecardDataMap;
                     }
                     throw new ServerErrorException();
                 }
@@ -191,6 +184,7 @@ public class ChargeService {
             }
             throw new ServerErrorException();
         }
+        throw new ServerErrorException();
     }
 
     /**
@@ -202,7 +196,8 @@ public class ChargeService {
      * @return
      * @throws Exception
      */
-    private Charge ConfirmChargeRequest(String sessionId, CloseableHttpClient httpClient, Map<String, String> ecardDataMap) throws Exception {
+    private Charge ConfirmChargeRequest(String sessionId, CloseableHttpClient httpClient, CookieStore cookieStore
+            , Map<String, String> ecardDataMap) throws Exception {
         Charge charge = new Charge();
         List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
         for (Map.Entry<String, String> entry : ecardDataMap.entrySet()) {
@@ -213,7 +208,7 @@ public class ChargeService {
         httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
         HttpResponse httpResponse = httpClient.execute(httpPost);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院支付平台")) {
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
             Elements inputs = document.getElementsByTag("input");
             List<BasicNameValuePair> mapiDataList = new ArrayList<>();
             for (Element input : inputs) {
@@ -224,34 +219,32 @@ public class ChargeService {
             httpPost = new HttpPost("https://mapi.alipay.com/gateway.do?_input_charset=utf-8");
             //绑定表单参数
             httpPost.setEntity(new UrlEncodedFormEntity(mapiDataList, StandardCharsets.UTF_8));
+            //设置头信息
+            httpPost.setHeader("Referer", "https://epay.gdei.edu.cn:8443/synpay/web/forwardPayTool");
+            httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
+            httpPost.setHeader("Upgrade-Insecure-Requests", "1");
             httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() == 302) {
                 HttpGet httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
                 httpResponse = httpClient.execute(httpGet);
-                if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                    //获取订单支付URL
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    String J_orderId = document.getElementById("J_orderId").attr("value");
-                    if (J_orderId != null && !J_orderId.isEmpty()) {
-                        //提交确认充值请求成功
-                        String url = "https://excashier.alipay.com/standard/auth.htm?payOrderId=" + J_orderId;
-                        httpGet = new HttpGet(url);
-                        httpClient.execute(httpGet);
+                if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                    //获取支付宝充值接口URL地址
+                    String url = httpResponse.getFirstHeader("Location").getValue();
+                    httpGet = new HttpGet(url);
+                    httpResponse = httpClient.execute(httpGet);
+                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         //获取Cookies
-                        List<Cookie> cookieList = HttpClientUtils.GetHttpClientCookieStore(sessionId);
+                        List<Cookie> cookieList = new ArrayList<>();
+                        for (org.apache.http.cookie.Cookie cookie : cookieStore.getCookies()) {
+                            cookieList.add(new Cookie(cookie.getName(), cookie.getValue(), cookie.getDomain()));
+                        }
                         //保存支付宝充值接口URL和Cookies信息
                         charge.setCookieList(cookieList);
                         charge.setAlipayURL(url);
                         return charge;
                     }
-                    throw new ServerErrorException();
                 }
-                throw new ServerErrorException();
             }
-            throw new ServerErrorException();
-        } else if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            //会话超时关闭
-            throw new RequestExpiredException("会话超时关闭");
         }
         throw new ServerErrorException();
     }

@@ -1,7 +1,6 @@
 package com.linguancheng.gdeiassistant.Pojo.Charge;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.linguancheng.gdeiassistant.Annotation.EncryptData;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Charge;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -10,7 +9,6 @@ import java.io.Serializable;
 
 @Component
 @Scope("prototype")
-@EncryptData()
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChargeResult implements Serializable {
 

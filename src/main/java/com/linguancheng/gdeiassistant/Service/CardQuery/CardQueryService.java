@@ -1,8 +1,7 @@
 package com.linguancheng.gdeiassistant.Service.CardQuery;
 
-import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
+import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Exception.RecognitionException.RecognitionException;
@@ -11,7 +10,6 @@ import com.linguancheng.gdeiassistant.Pojo.CardQuery.CardQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Card;
 import com.linguancheng.gdeiassistant.Pojo.Entity.CardInfo;
 import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Service.Recognition.RecognitionService;
 import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Tools.ImageEncodeUtils;
@@ -62,8 +60,7 @@ public class CardQueryService {
      * @param password
      * @return
      */
-    public BaseResult<CardInfo, ServiceResultEnum> CardInfoQuery(String sessionId, String username, String password) {
-        BaseResult<CardInfo, ServiceResultEnum> result = new BaseResult<>();
+    public CardInfo CardInfoQuery(String sessionId, String username, String password) throws Exception {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -71,23 +68,21 @@ public class CardQueryService {
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            LoginCardSystem(httpClient, username, password);
+            LoginCardSystem(httpClient, username, password, true);
             //获取饭卡基本信息
-            result.setResultData(QueryCardInformation(httpClient));
-            result.setResultType(ServiceResultEnum.SUCCESS);
-            return result;
+            return QueryCardInformation(httpClient);
         } catch (PasswordIncorrectException e) {
             log.error("查询饭卡基本信息异常：", e);
-            result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
+            throw new PasswordIncorrectException("账户密码不正确");
         } catch (ServerErrorException e) {
             log.error("查询饭卡基本信息异常：", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("支付管理系统异常");
         } catch (IOException e) {
             log.error("查询饭卡基本信息异常：", e);
-            result.setResultType(ServiceResultEnum.TIME_OUT);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             log.error("查询饭卡基本信息异常", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("支付管理系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -100,7 +95,6 @@ public class CardQueryService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return result;
     }
 
     /**
@@ -110,8 +104,7 @@ public class CardQueryService {
      * @param cardQuery
      * @return
      */
-    public CardQueryResult CardQuery(String sessionId, String username, String password, CardQuery cardQuery) {
-        CardQueryResult cardQueryResult = new CardQueryResult();
+    public CardQueryResult CardQuery(String sessionId, String username, String password, CardQuery cardQuery) throws Exception {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -119,27 +112,26 @@ public class CardQueryService {
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            LoginCardSystem(httpClient, username, password);
+            LoginCardSystem(httpClient, username, password, true);
             //获取饭卡基本信息
-            cardQueryResult.setCardInfo(QueryCardInformation(httpClient));
+            CardInfo cardInfo = QueryCardInformation(httpClient);
             //获取消费记录流水
-            cardQueryResult.setCardList(QueryCardList(httpClient, cardQuery));
+            List<Card> cardList = QueryCardList(httpClient, cardQuery);
             //查询成功
+            CardQueryResult cardQueryResult = new CardQueryResult();
+            cardQueryResult.setCardInfo(cardInfo);
+            cardQueryResult.setCardList(cardList);
             cardQueryResult.setCardQuery(cardQuery);
-            cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.SUCCESS);
             return cardQueryResult;
         } catch (PasswordIncorrectException e) {
             log.error("查询消费流水异常：", e);
-            cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.PASSWORD_INCORRECT);
-        } catch (ServerErrorException e) {
-            log.error("查询消费流水异常：", e);
-            cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
+            throw new PasswordIncorrectException("账户密码不正确");
         } catch (IOException e) {
             log.error("查询消费流水异常：", e);
-            cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.TIME_OUT);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             log.error("查询消费流水异常：", e);
-            cardQueryResult.setCardServiceResultEnum(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("支付管理系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -152,7 +144,6 @@ public class CardQueryService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return cardQueryResult;
     }
 
     /**
@@ -164,8 +155,7 @@ public class CardQueryService {
      * @param cardPassword
      * @return
      */
-    public BaseResult<String, ServiceResultEnum> CardLost(String sessionId, String username, String password, String cardPassword) {
-        BaseResult<String, ServiceResultEnum> result = new BaseResult<>();
+    public void CardLost(String sessionId, String username, String password, String cardPassword) throws Exception {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -173,27 +163,18 @@ public class CardQueryService {
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            LoginCardSystem(httpClient, username, password);
-            BaseResult<String, BoolResultEnum> submitResult = SubmitCardLostRequest(httpClient, cardPassword);
-            switch (submitResult.getResultType()) {
-                case SUCCESS:
-                    result.setResultType(ServiceResultEnum.SUCCESS);
-                    break;
-
-                case ERROR:
-                    result.setResultType(ServiceResultEnum.ERROR_CONDITION);
-                    result.setResultData(submitResult.getResultData());
-                    break;
-            }
+            LoginCardSystem(httpClient, username, password, true);
+            //提交校园卡挂失请求
+            SubmitCardLostRequest(httpClient, cardPassword);
         } catch (PasswordIncorrectException e) {
             log.error("校园卡挂失异常：", e);
-            result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
+            throw new PasswordIncorrectException("账户密码不正确");
         } catch (IOException e) {
             log.error("校园卡挂失异常：", e);
-            result.setResultType(ServiceResultEnum.TIME_OUT);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             log.error("校园卡挂失异常：", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("支付管理系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -206,7 +187,6 @@ public class CardQueryService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return result;
     }
 
     /**
@@ -219,11 +199,11 @@ public class CardQueryService {
      * @throws ServerErrorException
      * @throws PasswordIncorrectException
      */
-    public void LoginCardSystem(CloseableHttpClient httpClient, String username, String password) throws IOException, ServerErrorException, PasswordIncorrectException {
-        HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login?service=http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+    public void LoginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws IOException, ServerErrorException, PasswordIncorrectException {
+        HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
         HttpResponse httpResponse = httpClient.execute(httpGet);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院中央认证服务－登录")) {
+        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.getElementsByClass("pcclient").size() > 0) {
             //封装需要提交的数据
             List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
             basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
@@ -233,13 +213,13 @@ public class CardQueryService {
             basicNameValuePairs.add(new BasicNameValuePair("service", "http://ecard.gdei.edu.cn:8050/LoginCas.aspx"));
             basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
             basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
-            HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login?service=http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+            HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
             //绑定表单参数
             httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
             httpResponse = httpClient.execute(httpPost);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                if (document.title().equals("广东第二师范学院中央认证服务－登录")) {
+                if (document.getElementsByClass("pcclient").size() > 0) {
                     throw new PasswordIncorrectException("用户名或密码错误");
                 }
                 //获取html页面中的首个URL地址,进入支付系统页面
@@ -247,24 +227,85 @@ public class CardQueryService {
                 //请求后,若账号正确会进行两次302重定向,进入支付系统主页
                 httpResponse = httpClient.execute(httpGet);
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                //通过标题判断是否成功跳转至支付平台页面
-                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院支付平台")) {
-                    return;
+                if (autoRedirect) {
+                    //判断是否成功跳转至支付平台页面
+                    if (httpResponse.getStatusLine().getStatusCode() == 200
+                            && document.getElementsByClass("clear main").size() > 0) {
+                        return;
+                    }
+                } else {
+                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                        httpResponse = httpClient.execute(httpGet);
+                        if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                            httpResponse = httpClient.execute(httpGet);
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                            //判断是否成功跳转至支付平台页面
+                            if (httpResponse.getStatusLine().getStatusCode() == 200
+                                    && document.getElementsByClass("clear main").size() > 0) {
+                                return;
+                            }
+                        }
+                    }
                 }
-                throw new ServerErrorException("支付管理平台异常");
             }
-            throw new ServerErrorException("支付管理平台异常");
-        } else if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            //自动登录
-            httpGet = new HttpGet(document.select("a").first().attr("href"));
-            //请求后,若账号正确会进行两次302重定向,进入支付系统主页
-            httpResponse = httpClient.execute(httpGet);
-            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            //通过标题判断是否成功跳转至支付平台页面
-            if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("广东第二师范学院支付平台")) {
-                return;
+        } else {
+            if (autoRedirect) {
+                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.select("span[class='style2']").size() > 0) {
+                    //开启自动重定向时的自动登录
+                    httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                    httpResponse = httpClient.execute(httpGet);
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    if (httpResponse.getStatusLine().getStatusCode() == 200
+                            && document.getElementsByClass("main clear").size() > 0) {
+                        if (document.select("div[class='right menu_a'] span em").size() > 0) {
+                            return;
+                        }
+                        httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login?service=http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                        httpResponse = httpClient.execute(httpGet);
+                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                            httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                            httpResponse = httpClient.execute(httpGet);
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                            if (httpResponse.getStatusLine().getStatusCode() == 200
+                                    && document.select("span[class='style2']").size() > 0) {
+                                return;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                    //未开启自动重定向时的自动登录
+                    httpGet = new HttpGet("https://security.gdei.edu.cn/cas/" + httpResponse.getFirstHeader("Location").getValue());
+                    httpResponse = httpClient.execute(httpGet);
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    if (httpResponse.getStatusLine().getStatusCode() == 200
+                            && document.select("span[class='style2']").size() > 0) {
+                        httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                        httpResponse = httpClient.execute(httpGet);
+                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                        if (httpResponse.getStatusLine().getStatusCode() == 200
+                                && document.getElementsByClass("main clear").size() > 0) {
+                            if (document.select("div[class='right menu_a'] span em").size() > 0) {
+                                return;
+                            }
+                            httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login?service=http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                            httpResponse = httpClient.execute(httpGet);
+                            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                                httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                                httpResponse = httpClient.execute(httpGet);
+                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                                if (httpResponse.getStatusLine().getStatusCode() == 200
+                                        && document.select("span[class='style2']").size() > 0) {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            throw new ServerErrorException("支付管理平台异常");
         }
         throw new ServerErrorException("支付管理平台异常");
     }
@@ -311,10 +352,11 @@ public class CardQueryService {
      * @param httpClient
      * @return
      * @throws ServerErrorException
+     * @throws RecognitionException
      * @throws IOException
      */
-    private BaseResult<String, BoolResultEnum> SubmitCardLostRequest(CloseableHttpClient httpClient, String cardPassword) throws ServerErrorException, RecognitionException, IOException {
-        BaseResult<String, BoolResultEnum> result = new BaseResult<>();
+    private void SubmitCardLostRequest(CloseableHttpClient httpClient, String cardPassword) throws ServerErrorException
+            , RecognitionException, IOException {
         HttpPost httpPost = new HttpPost("http://ecard.gdei.edu.cn/CardManage/CardInfo/LossCard");
         List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
         basicNameValuePairList.add(new BasicNameValuePair("needHeader", "false"));
@@ -379,18 +421,13 @@ public class CardQueryService {
                                 JSONObject jsonObject = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
                                 if (jsonObject.has("ret") && jsonObject.has("msg")) {
                                     if (jsonObject.getBoolean("ret")) {
-                                        result.setResultType(BoolResultEnum.SUCCESS);
-                                        return result;
-                                    } else {
-                                        String message = jsonObject.getString("msg");
-                                        if ("验证码不正确".equals(message)) {
-                                            throw new RecognitionException("识别验证码图片失败");
-                                        } else {
-                                            result.setResultType(BoolResultEnum.ERROR);
-                                            result.setResultData(message);
-                                            return result;
-                                        }
+                                        return;
                                     }
+                                    String message = jsonObject.getString("msg");
+                                    if ("验证码不正确".equals(message)) {
+                                        throw new RecognitionException("识别验证码图片失败");
+                                    }
+                                    throw new ServerErrorException("支付管理平台系统异常");
                                 }
                                 throw new ServerErrorException("支付管理平台系统异常");
                             }

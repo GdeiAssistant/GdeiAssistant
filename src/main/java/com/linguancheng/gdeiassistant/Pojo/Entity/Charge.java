@@ -1,7 +1,7 @@
 package com.linguancheng.gdeiassistant.Pojo.Entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.http.cookie.Cookie;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +13,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Charge implements Serializable {
 
+    @JSONField(ordinal = 1)
     private String alipayURL;
 
+    @JSONField(ordinal = 2)
     private List<Cookie> cookieList;
 
     public List<Cookie> getCookieList() {

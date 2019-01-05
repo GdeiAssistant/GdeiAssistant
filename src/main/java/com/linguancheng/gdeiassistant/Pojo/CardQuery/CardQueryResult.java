@@ -1,6 +1,5 @@
 package com.linguancheng.gdeiassistant.Pojo.CardQuery;
 
-import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Card;
 import com.linguancheng.gdeiassistant.Pojo.Entity.CardInfo;
 import org.springframework.context.annotation.Scope;
@@ -13,8 +12,6 @@ import java.util.List;
 public class CardQueryResult {
 
     private CardQuery cardQuery;
-
-    private ServiceResultEnum cardServiceResultEnum;
 
     private CardInfo cardInfo;
 
@@ -34,14 +31,6 @@ public class CardQueryResult {
 
     public void setCardInfo(CardInfo cardInfo) {
         this.cardInfo = cardInfo;
-    }
-
-    public ServiceResultEnum getCardServiceResultEnum() {
-        return cardServiceResultEnum;
-    }
-
-    public void setCardServiceResultEnum(ServiceResultEnum cardServiceResultEnum) {
-        this.cardServiceResultEnum = cardServiceResultEnum;
     }
 
     public List<Card> getCardList() {

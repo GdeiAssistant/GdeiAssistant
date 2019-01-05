@@ -2,8 +2,7 @@
 $(function () {
     if (document.body.clientWidth > 500) {
         $("#desktop").show();
-    }
-    else {
+    } else {
         $("#phone").show();
     }
 });
@@ -34,8 +33,7 @@ function isWechat() {
 function androidDownload() {
     if (isWechat()) {
         $(".wxtip").show();
-    }
-    else {
+    } else {
         if ($("#android_url").val() !== '#') {
             window.location.href = $("#android_url").val();
         }
@@ -45,8 +43,7 @@ function androidDownload() {
 function androidGooglePlayDownload() {
     if (isWechat()) {
         $(".wxtip").show();
-    }
-    else {
+    } else {
         if ($("#android_google_play_url").val() !== '#') {
             window.location.href = $("#android_google_play_url").val();
         }
@@ -65,7 +62,7 @@ function WechatApp() {
     $.photoBrowser({
         items: [
             {
-                image: "/img/download/qrcode.jpg",
+                image: "/img/download/wechat_qrcode.jpg",
             }
         ]
     }).open();

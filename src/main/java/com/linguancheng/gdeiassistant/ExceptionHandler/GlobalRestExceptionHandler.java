@@ -1,6 +1,7 @@
 package com.gdeiassistant.gdeiassistant.ExceptionHandler;
 
 import com.gdeiassistant.gdeiassistant.Constant.ConstantUtils;
+import com.gdeiassistant.gdeiassistant.Exception.ChargeException.SecurityInvalidException;
 import com.gdeiassistant.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.gdeiassistant.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.gdeiassistant.gdeiassistant.Pojo.Result.JsonResult;
@@ -11,6 +12,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,7 +36,7 @@ public class GlobalRestExceptionHandler {
             , HttpMessageNotReadableException.class})
     public ResponseEntity HandleBadRequestException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
-                        , "请求参数不合法"));
+                , "请求参数不合法"));
     }
 
     /**
@@ -52,11 +54,10 @@ public class GlobalRestExceptionHandler {
      *
      * @return
      */
-    @ExceptionHandler({ConstraintViolationException.class
-            , MethodArgumentNotValidException.class})
+    @ExceptionHandler({ConstraintViolationException.class, BindException.class, MethodArgumentNotValidException.class})
     public ResponseEntity HandleConstraintViolationException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.INCORRECT_REQUEST_PARAM, false
-                        , "请求参数不合法"));
+                , "请求参数不合法"));
     }
 
     /**
@@ -78,6 +79,17 @@ public class GlobalRestExceptionHandler {
     @ExceptionHandler(NetWorkTimeoutException.class)
     public ResponseEntity HandleNetWorkTimeoutException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.NETWORK_TIMEOUT, false, "网络连接超时，请重试"));
+    }
+
+    /**
+     * 处理安全校验不通过异常
+     *
+     * @return
+     */
+    @ExceptionHandler(SecurityInvalidException.class)
+    public ResponseEntity HandleSecurityInvalidException() {
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.CHARGE_SECURITY_INVALID
+                , false, "充值安全校验不通过"));
     }
 
     /**

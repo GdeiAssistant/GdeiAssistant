@@ -428,7 +428,7 @@ function postQueryForm() {
     if (!week) {
         //异步请求查询课表
         $.ajax({
-            url: "/schedulequery",
+            url: "/api/schedulequery",
             type: 'post',
             success: function (scheduleQueryResult) {
                 //隐藏进度条
@@ -454,7 +454,7 @@ function postQueryForm() {
         $("#currentWeek").text("第" + week + "周");
         //异步请求查询指定周数课表
         $.ajax({
-            url: "/schedulequery",
+            url: "/api/schedulequery",
             data: {week: week},
             type: 'post',
             success: function (scheduleQueryResult) {

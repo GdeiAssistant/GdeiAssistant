@@ -56,15 +56,15 @@ function postQueryForm(year) {
         $.ajax({
             url: "/api/gradequery",
             type: 'post',
-            success: function (gradeQueryResult) {
+            success: function (result) {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
                 clearGradeInfo();
-                if (gradeQueryResult.success === true) {
-                    changeYearSelectedClass(gradeQueryResult.year);
-                    handleGradeInfo(gradeQueryResult);
+                if (result.success === true) {
+                    changeYearSelectedClass(result.data.year);
+                    handleGradeInfo(result.data);
                 } else {
-                    showCustomErrorTip(gradeQueryResult.message);
+                    showCustomErrorTip(result.message);
                 }
             },
             error: function (result) {
@@ -83,15 +83,15 @@ function postQueryForm(year) {
             url: "/api/gradequery",
             data: {year: year},
             type: 'post',
-            success: function (gradeQueryResult) {
+            success: function (result) {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
                 clearGradeInfo();
-                if (gradeQueryResult.success === true) {
-                    changeYearSelectedClass(gradeQueryResult.year);
-                    handleGradeInfo(gradeQueryResult);
+                if (result.success === true) {
+                    changeYearSelectedClass(result.data.year);
+                    handleGradeInfo(result.data);
                 } else {
-                    showCustomErrorTip(gradeQueryResult.message);
+                    showCustomErrorTip(result.message);
                 }
             },
             error: function (result) {

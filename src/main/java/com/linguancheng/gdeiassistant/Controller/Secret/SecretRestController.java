@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -57,7 +56,7 @@ public class SecretRestController {
      */
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
     public JsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret
-            , @NotNull @RequestParam("voice") MultipartFile file) throws Exception {
+            , @RequestParam(value = "voice", required = false) MultipartFile file) throws Exception {
         if (secret.getType() == 0 && StringUtils.isBlank(secret.getContent())) {
             return new JsonResult(false, "树洞信息不能为空");
         }

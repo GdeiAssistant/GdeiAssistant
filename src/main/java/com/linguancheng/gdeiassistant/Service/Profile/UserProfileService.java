@@ -124,11 +124,11 @@ public class UserProfileService {
         OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
         String url = "";
         //检查自定义头像图片是否存在
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/common/" + username + ".jpg")) {
+        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + ".jpg")) {
             //设置过期时间10分钟
             Date expiration = new Date(new Date().getTime() + 1000 * 60 * 30);
             // 生成URL
-            url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "avatar/common/" + username + ".jpg", expiration).toString().replace("http", "https");
+            url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "avatar/" + username + ".jpg", expiration).toString().replace("http", "https");
         }
         ossClient.shutdown();
         return url;
@@ -145,7 +145,7 @@ public class UserProfileService {
         // 创建OSSClient实例
         OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
         //上传文件
-        ossClient.putObject("gdeiassistant-userdata", "avatar/common/" + username + ".jpg", inputStream);
+        ossClient.putObject("gdeiassistant-userdata", "avatar/" + username + ".jpg", inputStream);
         ossClient.shutdown();
     }
 
@@ -156,9 +156,9 @@ public class UserProfileService {
      */
     public void DeleteAvatar(String username) {
         OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/common/" + username + ".jpg")) {
+        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + ".jpg")) {
             //删除文件
-            ossClient.deleteObject("gdeiassistant-userdata", "avatar/common/" + username + ".jpg");
+            ossClient.deleteObject("gdeiassistant-userdata", "avatar/" + username + ".jpg");
         }
         ossClient.shutdown();
     }

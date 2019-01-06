@@ -430,16 +430,16 @@ function postQueryForm() {
         $.ajax({
             url: "/api/schedulequery",
             type: 'post',
-            success: function (scheduleQueryResult) {
+            success: function (result) {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
-                if (scheduleQueryResult.success === true) {
+                if (result.success === true) {
                     //更新当前选中周数
-                    sessionStorage.setItem("scheduleWeek", scheduleQueryResult.week);
-                    $("#currentWeek").text("第" + scheduleQueryResult.week + "周");
-                    handleScheduleQueryResult(scheduleQueryResult);
+                    sessionStorage.setItem("scheduleWeek", result.data.week);
+                    $("#currentWeek").text("第" + result.data.week + "周");
+                    handleScheduleQueryResult(result.data);
                 } else {
-                    showCustomErrorTip(scheduleQueryResult.message);
+                    showCustomErrorTip(result.message);
                 }
             },
             error: function (result) {
@@ -457,16 +457,16 @@ function postQueryForm() {
             url: "/api/schedulequery",
             data: {week: week},
             type: 'post',
-            success: function (scheduleQueryResult) {
+            success: function (result) {
                 //隐藏进度条
                 $("#loadingToast, .weui_mask").hide();
-                if (scheduleQueryResult.success === true) {
+                if (result.success === true) {
                     //更新当前选中周数
-                    sessionStorage.setItem("scheduleWeek", scheduleQueryResult.week);
-                    $("#currentWeek").text("第" + scheduleQueryResult.week + "周");
-                    handleScheduleQueryResult(scheduleQueryResult);
+                    sessionStorage.setItem("scheduleWeek", result.data.week);
+                    $("#currentWeek").text("第" + result.data.week + "周");
+                    handleScheduleQueryResult(result.data);
                 } else {
-                    showCustomErrorTip(scheduleQueryResult.message);
+                    showCustomErrorTip(result.message);
                 }
             },
             error: function (result) {

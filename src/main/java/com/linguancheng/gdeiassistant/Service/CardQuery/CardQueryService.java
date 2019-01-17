@@ -356,7 +356,7 @@ public class CardQueryService {
      * @throws IOException
      */
     private void SubmitCardLostRequest(CloseableHttpClient httpClient, String cardPassword) throws ServerErrorException
-            , RecognitionException, IOException {
+            , RecognitionException, IOException, PasswordIncorrectException {
         HttpPost httpPost = new HttpPost("http://ecard.gdei.edu.cn/CardManage/CardInfo/LossCard");
         List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
         basicNameValuePairList.add(new BasicNameValuePair("needHeader", "false"));
@@ -426,6 +426,8 @@ public class CardQueryService {
                                     String message = jsonObject.getString("msg");
                                     if ("验证码不正确".equals(message)) {
                                         throw new RecognitionException("识别验证码图片失败");
+                                    } else if ("查询密码错误".equals(message)) {
+                                        throw new PasswordIncorrectException("校园卡密码错误");
                                     }
                                     throw new ServerErrorException("支付管理平台系统异常");
                                 }

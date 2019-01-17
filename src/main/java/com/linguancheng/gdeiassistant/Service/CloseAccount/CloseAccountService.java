@@ -3,7 +3,7 @@ package com.linguancheng.gdeiassistant.Service.CloseAccount;
 import com.linguancheng.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
 import com.linguancheng.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
-import com.linguancheng.gdeiassistant.Pojo.CetQuery.CetNumberQueryResult;
+import com.linguancheng.gdeiassistant.Pojo.Entity.CetNumber;
 import com.linguancheng.gdeiassistant.Pojo.Entity.*;
 import com.linguancheng.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import com.linguancheng.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
@@ -122,9 +122,9 @@ public class CloseAccountService {
         //开始进行账号关闭事务
 
         //删除四六级准考证号
-        CetNumberQueryResult cetNumberQueryResult = cetMapper
+        CetNumber cetNumber = cetMapper
                 .selectNumber(StringEncryptUtils.encryptString(username));
-        if (cetNumberQueryResult != null) {
+        if (cetNumber != null) {
             cetMapper.updateNumber(StringEncryptUtils.encryptString(username), null);
         }
         //删除自定义性别

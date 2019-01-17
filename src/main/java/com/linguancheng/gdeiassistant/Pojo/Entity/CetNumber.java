@@ -1,5 +1,6 @@
-package com.linguancheng.gdeiassistant.Pojo.CetQuery;
+package com.linguancheng.gdeiassistant.Pojo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -7,7 +8,8 @@ import java.io.Serializable;
 
 @Component
 @Scope("prototype")
-public class CetNumberQueryResult implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CetNumber implements Serializable {
 
     private String username;
 

@@ -9,7 +9,7 @@
     <cache/>
 
     <select id="selectNumber" parameterType="java.lang.String"
-            resultType="com.linguancheng.gdeiassistant.Pojo.CetQuery.CetNumberQueryResult">
+            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.CetNumber">
         select * from cet where username=#{username}
     </select>
 

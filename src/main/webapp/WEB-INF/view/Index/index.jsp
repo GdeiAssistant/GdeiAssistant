@@ -84,6 +84,14 @@
             <i style="background: url(/img/function/kaoyan.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>考研查询</p>
         </div>
+        <div onclick="window.location.href='/data'">
+            <i style="background: url(/img/function/data.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>信息查询</p>
+        </div>
+        <div onclick="linkToPFTSystem()">
+            <i style="background: url(/img/function/sport.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>体测查询</p>
+        </div>
         <div onclick="window.location.href='/ershou'">
             <i style="background: url(/img/function/ershou.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
             </i>
@@ -107,22 +115,6 @@
             <i style="background: url(/img/function/calendar.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>学期校历</p>
         </div>
-        <div onclick="window.location.href='/data'">
-            <i style="background: url(/img/function/data.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-            <p>信息查询</p>
-        </div>
-        <div onclick="window.location.href='/download'">
-            <i style="background: url(/img/function/download.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-            <p>客户端下载</p>
-        </div>
-        <div onclick="linkToPFTSystem()">
-            <i style="background: url(/img/function/sport.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-            <p>体测查询</p>
-        </div>
-        <div onclick="window.location.href='https://github.com/MorningCatty/GdeiAssistant-WebApp'">
-            <i style="background: url(/img/function/github.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-            <p>代码开源</p>
-        </div>
         <div onclick="window.location.href = 'https://mp.weixin.qq.com/s/oCY_FNisckiw8y0C0a2tmg'">
             <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>绑定微信</p>
@@ -130,6 +122,10 @@
         <div onclick="showYibanAttachConfirm()">
             <i style="background: url(/img/function/yiban.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>绑定易班</p>
+        </div>
+        <div onclick="window.location.href='/about'">
+            <i style="background: url(/img/function/about.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>关于应用</p>
         </div>
         <div onclick="showLogoutConfirm()">
             <i style="background: url(/img/function/exit.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>

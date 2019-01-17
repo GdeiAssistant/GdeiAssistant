@@ -8,8 +8,14 @@
     <!-- 开启UserMapper namespace下的二级缓存 -->
     <cache/>
 
-    <select id="selectUser" parameterType="java.lang.String"
-            resultType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
+    <resultMap id="UserResultMap" type="com.linguancheng.gdeiassistant.Pojo.Entity.User">
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="state" column="state"/>
+        <result property="group" column="user_group"/>
+    </resultMap>
+
+    <select id="selectUser" parameterType="java.lang.String" resultMap="UserResultMap">
         select * from user where username=#{username} limit 1
     </select>
 
@@ -18,7 +24,7 @@
         select count(username) from user where username like concat(concat('%',#{username}),'%')
     </select>
 
-    <select id="selectUserList" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
+    <select id="selectUserList" resultMap="UserResultMap">
         select * from user where state!=-1 order by username limit #{start},#{size}
     </select>
 
@@ -26,12 +32,12 @@
         select count(username) from user where state!=-1;
     </select>
 
-    <select id="selectAllUser" resultType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
+    <select id="selectAllUser" resultMap="UserResultMap">
         select * from user where state!=-1;
     </select>
 
     <insert id="insertUser" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.User">
-        insert into user (username,password,state) values (#{username},#{password},0)
+        insert into user (username,password,state,user_group) values (#{username},#{password},0,1)
     </insert>
 
     <update id="updateUser" parameterType="com.linguancheng.gdeiassistant.Pojo.Entity.User">

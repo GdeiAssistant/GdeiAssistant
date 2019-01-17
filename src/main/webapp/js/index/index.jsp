@@ -75,7 +75,7 @@
         if (wechatUser) {
             window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa2d196aa4b8a7600&redirect_uri=http%3A%2F%2F5itsn.com%2FWeixin%2FOAuth2%2FUserInfoCallback&response_type=code&scope=snsapi_userinfo&state=TestUrlTestResult&connect_redirect=1#wechat_redirect';
         } else {
-            weui.alert('请关注微信公众号广东二师助手使用体测查询功能', {
+            weui.alert('请关注微信公众号易小助使用体测查询功能', {
                 title: '请使用微信客户端进行登录',
                 buttons: [{
                     label: '确定',

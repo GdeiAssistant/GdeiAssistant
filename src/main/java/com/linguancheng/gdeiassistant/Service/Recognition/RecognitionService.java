@@ -65,6 +65,17 @@ public class RecognitionService {
     }
 
     /**
+     * OCR高精度识别验证码图片的文字，返回文本串
+     *
+     * @param image
+     * @return
+     * @throws RecognitionException
+     */
+    public String AccurateCharacterRecognize(String image) throws RecognitionException {
+        return baiduYunService.AccurateCharacterRecognize(image);
+    }
+
+    /**
      * 识别身份证图片的文字，解析身份证照片信息
      *
      * @param image

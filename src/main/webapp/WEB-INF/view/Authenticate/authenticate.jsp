@@ -330,6 +330,14 @@
                 <h1 class="page_title">拍照并上传</h1>
                 <p class="page_desc">请拍摄并上传居民身份证个人信息面图片</p>
             </div>
+            <div class="weui-msg" style="padding-top:10px">
+                <div class="weui-msg__text-area">
+                    <p class="weui-msg__desc">注意事项：</p>
+                    <p class="weui-msg__desc">1、证件的信息需完整且清晰可辨，无反光、遮挡、水印、证件套、LOGO等，不缺边角</p>
+                    <p class="weui-msg__desc">2、证件必须真实拍摄，不能使用复印件，不能对镜</p>
+                    <p class="weui-msg__desc">3、仅支持中华人民共和国第二代居民身份证，不支持临时身份证和其他类型证件</p>
+                </div>
+            </div>
             <video id="camera" width="80%" autoplay muted></video>
             <!-- 认证中弹框 -->
             <div class="weui_mask" style="display: none"></div>

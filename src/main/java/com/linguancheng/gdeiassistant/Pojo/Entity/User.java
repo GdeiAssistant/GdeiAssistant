@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Pojo.Entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import com.linguancheng.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
@@ -27,6 +28,7 @@ public class User implements Serializable {
 
     @NotBlank(message = "密码不能为空", groups = {UserLoginValidGroup.class})
     @Size(min = 1, max = 35, message = "密码长度超过限制", groups = {UserLoginValidGroup.class})
+    @JSONField(serialize = false)
     //教务系统账号密码
     private String password;
 

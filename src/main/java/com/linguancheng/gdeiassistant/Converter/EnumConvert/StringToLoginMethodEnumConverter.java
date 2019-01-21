@@ -1,4 +1,4 @@
-package com.gdeiassistant.gdeiassistant.Converter;
+package com.gdeiassistant.gdeiassistant.Converter.EnumConvert;
 
 import org.springframework.core.convert.converter.Converter;
 import com.gdeiassistant.gdeiassistant.Enum.Base.LoginMethodEnum;

@@ -15,24 +15,7 @@
        http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
     <!-- 获取配置参数 -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <!-- JDBC配置参数 -->
-                <value>classpath:config/mysql/app-jdbc.properties</value>
-                <value>classpath:config/mysql/log-jdbc.properties</value>
-                <value>classpath:config/mysql/data-jdbc.properties</value>
-                <value>classpath:config/redis/redis.properties</value>
-                <value>classpath:config/mongodb/mongodb-config.properties</value>
-                <!-- 易班轻应用配置参�? -->
-                <value>classpath:config/yiban/userlogin.properties</value>
-                <value>classpath:config/yiban/ershou.properties</value>
-                <value>classpath:config/yiban/lostandfound.properties</value>
-                <value>classpath:config/yiban/secret.properties</value>
-                <value>classpath:config/yiban/dating.properties</value>
-            </list>
-        </property>
-    </bean>
+    <context:property-placeholder location="classpath*:config/**/*.properties"/>
 
     <!-- 配置Redis参数 -->
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
@@ -223,42 +206,7 @@
     <bean id="propertiesReader" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <!-- 读取字符串加密解密器密钥 -->
-                <value>classpath:/config/jaq/encryptor.properties</value>
-                <!-- 读取校历�?学日期和学期�? -->
-                <value>classpath:/config/schedule/schedule.properties</value>
-                <!-- 读取安卓APP更新版本信息 -->
-                <value>classpath:/config/version/android.properties</value>
-                <!-- 读取对象存储访问控制安全令牌信息 -->
-                <value>classpath:/config/oss/token.properties</value>
-                <!-- 读取对象存储访问控制的区域信�? -->
-                <value>classpath:/config/oss/api.properties</value>
-                <!-- 读取微信公众号配置信�? -->
-                <value>classpath:/config/wechat/account.properties</value>
-                <!-- 读取微信小程序配置信�? -->
-                <value>classpath:/config/wechat/app.properties</value>
-                <!-- 读取OSS管理对象存储服务的权限密钥信�? -->
-                <value>classpath:/config/oss/oss.properties</value>
-                <!-- 读取阿里云API权限令牌信息 -->
-                <value>classpath:/config/face/face.properties</value>
-                <!-- 读取百度云秘�? -->
-                <value>classpath:/config/baidu/token.properties</value>
-                <!-- 读取教务系统配置信息 -->
-                <value>classpath:/config/education/system.properties</value>
-                <!-- 读取网络代理配置信息 -->
-                <value>classpath:/config/network/proxy.properties</value>
-                <!-- 读取阿里云市场身份认证信�? -->
-                <value>classpath:/config/aliyun/appcode.properties</value>
-                <!-- 读取网络超时配置信息 -->
-                <value>classpath:/config/network/timeout.properties</value>
-                <!-- 读取教务缓存时间间隔配置信息 -->
-                <value>classpath:/config/education/cache.properties</value>
-                <!-- 读取JWT秘钥信息 -->
-                <value>classpath:/config/jwt/secret.properties</value>
-                <!-- 第三方API配置参数 -->
-                <value>classpath:/config/api/ipaddress.properties</value>
-                <!-- 读取请求校验令牌配置参数 -->
-                <value>classpath:/config/validate/token.properties</value>
+                <value>classpath*:config/**/*.properties</value>
             </list>
         </property>
         <property name="fileEncoding" value="UTF-8"/>

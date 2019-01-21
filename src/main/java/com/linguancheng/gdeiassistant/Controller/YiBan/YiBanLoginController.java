@@ -5,7 +5,6 @@ import cn.yiban.open.FrameUtil;
 import com.google.gson.Gson;
 import com.linguancheng.gdeiassistant.Enum.Base.AttachResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.YiBanUser;
@@ -14,7 +13,7 @@ import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Pojo.YiBan.YiBanTokenJsonResult;
 import com.linguancheng.gdeiassistant.Service.UserData.UserDataService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
-import com.linguancheng.gdeiassistant.Service.YiBan.YiBanLoginService;
+import com.linguancheng.gdeiassistant.Service.YiBan.YiBanAPIService;
 import com.linguancheng.gdeiassistant.Service.YiBan.YiBanUserDataService;
 import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +33,7 @@ import java.util.Map;
 public class YiBanLoginController {
 
     @Autowired
-    private YiBanLoginService yiBanLoginService;
+    private YiBanAPIService yiBanAPIService;
 
     @Autowired
     private UserLoginService userLoginService;
@@ -72,7 +70,7 @@ public class YiBanLoginController {
         }
         //清除已登录用户的用户凭证记录
         HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
-        User user = yiBanLoginService.YiBanQuickLogin(request.getSession().getId(), username);
+        User user = yiBanAPIService.YiBanQuickLogin(request.getSession().getId(), username);
         //同步数据库用户数据
         userDataService.SyncUserData(user);
         //将用户信息数据写入Session
@@ -160,7 +158,7 @@ public class YiBanLoginController {
             request.getSession().setAttribute("yiBanAccessTokenExpires", Integer.valueOf(yiBanTokenJsonResult.getExpires()));
         }
         //通过易班Token登录广二师助手系统
-        BaseResult<YiBanUser, BoolResultEnum> getYiBanUserInfoResult = yiBanLoginService.getYiBanUserInfo(token);
+        BaseResult<YiBanUser, BoolResultEnum> getYiBanUserInfoResult = yiBanAPIService.getYiBanUserInfo(token);
         switch (getYiBanUserInfoResult.getResultType()) {
             case SUCCESS:
                 //保存用户UserID到Session中
@@ -229,10 +227,13 @@ public class YiBanLoginController {
         FrameUtil frameUtil = new FrameUtil(request, response, yiBanAuthorizeInfo.getAppID()
                 , yiBanAuthorizeInfo.getAppSecret(), yiBanAuthorizeInfo.getCallbackURL());
         String yiBanUserID = (String) request.getSession().getAttribute("yiBanUserID");
-        if (yiBanUserID == null || yiBanUserID.trim().isEmpty()) {
+        String yiBanAccessToken = (String) request.getSession().getAttribute("yiBanAccessToken");
+        if (StringUtils.isBlank(yiBanUserID) || StringUtils.isBlank(yiBanAccessToken)) {
             boolean result = frameUtil.perform();
             if (result) {
                 yiBanUserID = frameUtil.getUserId();
+                yiBanAccessToken = frameUtil.getAccessToken();
+                request.getSession().setAttribute("yiBanAccessToken", yiBanAccessToken);
                 request.getSession().setAttribute("yiBanUserID", yiBanUserID);
             } else {
                 //跳转到易班用户授权页面
@@ -243,7 +244,8 @@ public class YiBanLoginController {
             }
         }
         //检查账号绑定情况
-        BaseResult<String, AttachResultEnum> checkYiBanAttachStateResult = yiBanUserDataService.CheckYiBanAttachState(yiBanUserID);
+        BaseResult<String, AttachResultEnum> checkYiBanAttachStateResult = yiBanUserDataService
+                .CheckYiBanAttachState(yiBanUserID);
         switch (checkYiBanAttachStateResult.getResultType()) {
             case ATTACHED:
                 //账号已绑定

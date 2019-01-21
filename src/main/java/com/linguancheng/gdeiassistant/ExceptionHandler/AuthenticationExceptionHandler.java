@@ -4,11 +4,13 @@ import com.linguancheng.gdeiassistant.Constant.ConstantUtils;
 import com.linguancheng.gdeiassistant.Controller.Authenticate.AuthenticateRestController;
 import com.linguancheng.gdeiassistant.Exception.AuthenticationException.*;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = AuthenticateRestController.class)
+@Order(Integer.MIN_VALUE)
 public class AuthenticationExceptionHandler {
 
     @ExceptionHandler(IDCardBlurredException.class)

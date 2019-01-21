@@ -1,16 +1,11 @@
 package com.linguancheng.gdeiassistant.Service.IPAddress;
 
 import com.linguancheng.gdeiassistant.Pojo.Entity.Location;
-import net.sf.json.JSONObject;
+import com.linguancheng.gdeiassistant.Service.CloudAPI.AliYunService;
+import com.linguancheng.gdeiassistant.Service.CloudAPI.JiSuAPIService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,28 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 public class IPService {
 
     @Autowired
-    private RestTemplate restTemplate;
+    private AliYunService aliYunService;
 
-    private String host;
-
-    private String path;
-
-    private String appcode;
-
-    @Value("#{propertiesReader['api.ipaddress.host']}")
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    @Value("#{propertiesReader['api.ipaddress.path']}")
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    @Value("#{propertiesReader['api.ipaddress.appcode']}")
-    public void setAppcode(String appcode) {
-        this.appcode = appcode;
-    }
+    @Autowired
+    private JiSuAPIService jiSuAPIService;
 
     /**
      * 根据IP地址查询IP地址归属地
@@ -55,20 +32,7 @@ public class IPService {
      * @return
      */
     public Location GetLocationInfoByIPAddress(String ip) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", "APPCODE " + appcode);
-        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(host + path + "?ip=" + ip, HttpMethod.GET
-                , new HttpEntity<>(httpHeaders), JSONObject.class);
-        JSONObject jsonObject = responseEntity.getBody();
-        if (jsonObject.has("ret") && jsonObject.getInt("ret") == 200) {
-            Location location = new Location();
-            location.setArea(jsonObject.getJSONObject("data").getString("area"));
-            location.setCity(jsonObject.getJSONObject("data").getString("city"));
-            location.setCountry(jsonObject.getJSONObject("data").getString("country"));
-            location.setRegion(jsonObject.getJSONObject("data").getString("region"));
-            return location;
-        }
-        return null;
+        return jiSuAPIService.GetLocationInfoByIPAddress(ip);
     }
 
     /**

@@ -1,15 +1,14 @@
 package com.linguancheng.gdeiassistant.Service.CloudAPI;
 
-import com.linguancheng.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
-import com.linguancheng.gdeiassistant.Exception.RecognitionException.RecognitionException;
+import com.linguancheng.gdeiassistant.Pojo.Entity.Location;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -18,33 +17,47 @@ public class AliYunService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private String aliyun_appcode;
+    private String host;
 
-    @Value("#{propertiesReader['aliyun.appcode']}")
-    public void setAliyun_appcode(String aliyun_appcode) {
-        this.aliyun_appcode = aliyun_appcode;
+    private String path;
+
+    private String appcode;
+
+    @Value("#{propertiesReader['api.aliyun.ipaddress.host']}")
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    @Value("#{propertiesReader['api.aliyun.ipaddress.path']}")
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    @Value("#{propertiesReader['api.aliyun.ipaddress.appcode']}")
+    public void setAppcode(String appcode) {
+        this.appcode = appcode;
     }
 
     /**
-     * 神经网络识别验证码图片，返回验证码
+     * 根据IP地址查询IP地址归属地
      *
-     * @param image
-     * @param checkCodeTypeEnum
-     * @param length
+     * @param ip
      * @return
      */
-    public String CheckCodeRecognize(String image, CheckCodeTypeEnum checkCodeTypeEnum, int length) throws RecognitionException {
-        LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    public Location GetLocationInfoByIPAddress(String ip) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        httpHeaders.add("Authorization", "APPCODE " + aliyun_appcode);
-        params.add("pic", image);
-        params.add("type", checkCodeTypeEnum.getType() + length);
-        JSONObject jsonObject = JSONObject.fromObject(restTemplate.postForObject("http://jisuyzmsb.market.alicloudapi.com/captcha/recognize"
-                , new HttpEntity<>(params, httpHeaders), String.class));
-        if (jsonObject.getString("status").equals("0")) {
-            return jsonObject.getJSONObject("result").getString("code");
+        httpHeaders.set("Authorization", "APPCODE " + appcode);
+        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(host + path + "?ip=" + ip, HttpMethod.GET
+                , new HttpEntity<>(httpHeaders), JSONObject.class);
+        JSONObject jsonObject = responseEntity.getBody();
+        if (jsonObject.has("ret") && jsonObject.getInt("ret") == 200) {
+            Location location = new Location();
+            location.setArea(jsonObject.getJSONObject("data").getString("area"));
+            location.setCity(jsonObject.getJSONObject("data").getString("city"));
+            location.setCountry(jsonObject.getJSONObject("data").getString("country"));
+            location.setRegion(jsonObject.getJSONObject("data").getString("region"));
+            return location;
         }
-        throw new RecognitionException("识别验证码图片失败");
+        return null;
     }
 }

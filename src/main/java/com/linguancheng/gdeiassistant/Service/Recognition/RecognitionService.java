@@ -6,6 +6,7 @@ import com.linguancheng.gdeiassistant.Exception.RecognitionException.Recognition
 import com.linguancheng.gdeiassistant.Pojo.Entity.Identity;
 import com.linguancheng.gdeiassistant.Service.CloudAPI.AliYunService;
 import com.linguancheng.gdeiassistant.Service.CloudAPI.BaiduYunService;
+import com.linguancheng.gdeiassistant.Service.CloudAPI.JiSuAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class RecognitionService {
 
     @Autowired
     private BaiduYunService baiduYunService;
+
+    @Autowired
+    private JiSuAPIService jiSuAPIService;
 
     /**
      * 注册人脸库信息
@@ -51,7 +55,7 @@ public class RecognitionService {
      * @return
      */
     public String CheckCodeRecognize(String image, CheckCodeTypeEnum checkCodeTypeEnum, int length) throws RecognitionException {
-        return aliyunService.CheckCodeRecognize(image, checkCodeTypeEnum, length);
+        return jiSuAPIService.CheckCodeRecognize(image, checkCodeTypeEnum, length);
     }
 
     /**

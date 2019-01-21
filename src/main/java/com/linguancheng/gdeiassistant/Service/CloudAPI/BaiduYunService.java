@@ -19,25 +19,25 @@ public class BaiduYunService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private String baidu_grant_type;
+    private String grantType;
 
-    private String baidu_client_id;
+    private String clientId;
 
-    private String baidu_client_secret;
+    private String clientSecret;
 
-    @Value("#{propertiesReader['baidu.type']}")
-    public void setBaidu_grant_type(String baidu_grant_type) {
-        this.baidu_grant_type = baidu_grant_type;
+    @Value("#{propertiesReader['baidu.grant.type']}")
+    public void setGrantType(String grantType) {
+        this.grantType = grantType;
     }
 
-    @Value("#{propertiesReader['baidu.id']}")
-    public void setBaidu_client_id(String baidu_client_id) {
-        this.baidu_client_id = baidu_client_id;
+    @Value("#{propertiesReader['baidu.client.id']}")
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    @Value("#{propertiesReader['baidu.secret']}")
-    public void setBaidu_client_secret(String baidu_client_secret) {
-        this.baidu_client_secret = baidu_client_secret;
+    @Value("#{propertiesReader['baidu.client.secret']}")
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
     }
 
     /**
@@ -48,9 +48,9 @@ public class BaiduYunService {
      */
     private String GetBaiduAccessToken() throws RecognitionException {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", baidu_grant_type);
-        params.add("client_id", baidu_client_id);
-        params.add("client_secret", baidu_client_secret);
+        params.add("grant_type", grantType);
+        params.add("client_id", clientId);
+        params.add("client_secret", clientSecret);
         JSONObject jsonObject = restTemplate
                 .postForObject("https://aip.baidubce.com/oauth/2.0/token", params, JSONObject.class);
         if (jsonObject.has("access_token")) {

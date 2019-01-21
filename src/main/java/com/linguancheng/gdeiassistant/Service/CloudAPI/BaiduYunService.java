@@ -198,6 +198,33 @@ public class BaiduYunService {
     }
 
     /**
+     * 高精度识别验证码图片中的文字，返回文本串
+     *
+     * @param image
+     * @return
+     * @throws RecognitionException
+     */
+    public String AccurateCharacterRecognize(String image) throws RecognitionException {
+        String token = GetBaiduAccessToken();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("image", image);
+        params.add("detect_direction", "false");
+        params.add("probability", "false");
+        JSONObject jsonObject = restTemplate.postForObject("https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token="
+                + token, params, JSONObject.class);
+        if (jsonObject.has("log_id") && jsonObject.has("words_result")) {
+            JSONArray jsonArray = jsonObject.getJSONArray("words_result");
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                String words = jsonArray.getJSONObject(i).getString("words");
+                stringBuilder.append(words);
+            }
+            return stringBuilder.toString();
+        }
+        throw new RecognitionException("OCR识别失败");
+    }
+
+    /**
      * OCR识别图片中的数字，返回数字文本串
      *
      * @param image

@@ -3,13 +3,17 @@ package com.linguancheng.gdeiassistant.Service.Authenticate;
 import com.linguancheng.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import com.linguancheng.gdeiassistant.Exception.CommonException.ServerErrorException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.CardInfo;
+import com.linguancheng.gdeiassistant.Pojo.Entity.Identity;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import com.linguancheng.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import com.linguancheng.gdeiassistant.Service.CardQuery.CardQueryService;
+import com.linguancheng.gdeiassistant.Service.Recognition.RecognitionService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
+import com.linguancheng.gdeiassistant.Service.YiBan.YiBanAPIService;
 import com.linguancheng.gdeiassistant.Tools.HttpClientUtils;
+import com.linguancheng.gdeiassistant.Tools.ImageEncodeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -24,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +44,13 @@ public class AuthenticateService {
     private UserLoginService userLoginService;
 
     @Autowired
+    private RecognitionService recognitionService;
+
+    @Autowired
     private CardQueryService cardQueryService;
+
+    @Autowired
+    private YiBanAPIService yiBanAPIService;
 
     @Value("#{propertiesReader['education.system.url']}")
     public void setUrl(String url) {
@@ -85,7 +96,7 @@ public class AuthenticateService {
      * @param password
      * @return
      */
-    public Map<String, String> GetUserRealNameAndSchoolNumber(String sessionId, String username, String password) throws ServerErrorException {
+    public Map<String, String> GetAuthenticationInfoBySystem(String sessionId, String username, String password) throws ServerErrorException {
         Map<String, String> resultMap = new HashMap<>();
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
@@ -94,7 +105,7 @@ public class AuthenticateService {
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            cardQueryService.LoginCardSystem(httpClient, username, password);
+            cardQueryService.LoginCardSystem(httpClient, username, password, true);
             //获取校园卡基本信息
             CardInfo cardInfo = cardQueryService.QueryCardInformation(httpClient);
             resultMap.put("name", cardInfo.getName());
@@ -177,5 +188,24 @@ public class AuthenticateService {
         }
     }
 
+    /**
+     * 获取易班用户校方认证信息
+     *
+     * @param accessToken
+     * @return
+     * @throws ServerErrorException
+     */
+    public Map<String, String> GetAuthenticationInfoByYiBan(String accessToken) throws ServerErrorException {
+        return yiBanAPIService.getYiBanVerifyInfo(accessToken);
+    }
 
+    /**
+     * 解析身份证图片，获取用户实名信息
+     *
+     * @param inputStream
+     * @return
+     */
+    public Identity ParseIdentityCardInfo(InputStream inputStream) throws Exception {
+        return recognitionService.ParseIdentityCardInfo(ImageEncodeUtils.ConvertToBase64(inputStream));
+    }
 }

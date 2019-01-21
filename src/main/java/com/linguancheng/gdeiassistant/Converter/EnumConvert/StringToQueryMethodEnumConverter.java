@@ -1,4 +1,4 @@
-package com.linguancheng.gdeiassistant.Converter;
+package com.linguancheng.gdeiassistant.Converter.EnumConvert;
 
 import com.linguancheng.gdeiassistant.Enum.Base.QueryMethodEnum;
 import org.springframework.core.convert.converter.Converter;

@@ -144,9 +144,9 @@
         <property name="converters">
             <set>
                 <!-- String类型属性自动转换为枚举类型 -->
-                <bean class="com.linguancheng.gdeiassistant.Converter.StringToQueryMethodEnumConverter"/>
-                <bean class="com.linguancheng.gdeiassistant.Converter.StringToLoginMethodEnumConverter"/>
-                <bean class="com.linguancheng.gdeiassistant.Converter.StringToAuthenticationTypeEnumConverter"/>
+                <bean class="com.linguancheng.gdeiassistant.Converter.EnumConvert.StringToQueryMethodEnumConverter"/>
+                <bean class="com.linguancheng.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter"/>
+                <bean class="com.linguancheng.gdeiassistant.Converter.EnumConvert.StringToAuthenticationTypeEnumConverter"/>
             </set>
         </property>
     </bean>
@@ -386,12 +386,6 @@
         <entry key="15" value="网络教育学院"/>
         <entry key="16" value="马克思主义学院"/>
     </util:map>
-
-    <!-- 配置Rest服务客户端 -->
-    <bean class="org.springframework.web.client.RestTemplate"/>
-
-    <!-- 配置异步Rest服务客户端 -->
-    <bean class="org.springframework.web.client.AsyncRestTemplate"/>
 
     <!-- 自动扫描组件 -->
     <context:component-scan base-package="com.linguancheng.gdeiassistant"/>

@@ -2,7 +2,7 @@ package com.linguancheng.gdeiassistant.Enum.Recognition;
 
 public enum CheckCodeTypeEnum {
 
-    NUMBER("n"), ENGLISH_WITH_NUMBER("en");
+    NUMBER("n"), ENGLISH_WITH_NUMBER("en"), ENGLISH("e"), CHINESE("c");
 
     CheckCodeTypeEnum(String type) {
         this.type = type;

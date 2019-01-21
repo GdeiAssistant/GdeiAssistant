@@ -7,6 +7,8 @@ import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AuthenticateDataService {
 
@@ -45,7 +47,8 @@ public class AuthenticateDataService {
         authentication.setSchoolNumber(schoolNumber);
         authentication.setIdentityNumber(identityNumber);
         authentication.setIdentityCode(StringEncryptUtils.SHA1HexString(realname + "."
-                + schoolNumber + "." + identityNumber));
+                + Optional.ofNullable(schoolNumber).orElse("") + "."
+                + Optional.ofNullable(identityNumber).orElse("")));
         //隐藏姓名信息
         if (authentication.getRealname().length() == 2) {
             authentication.setRealname(authentication.getRealname().replaceFirst(authentication
@@ -53,28 +56,32 @@ public class AuthenticateDataService {
         }
         if (authentication.getRealname().length() > 2) {
             StringBuilder stringBuilder = new StringBuilder(authentication.getRealname().substring(0, 1));
-            for (int i = 1; i < authentication.getRealname().length()-1; i++) {
+            for (int i = 1; i < authentication.getRealname().length() - 1; i++) {
                 stringBuilder.append("*");
             }
-            stringBuilder.append(authentication.getRealname().substring(authentication.getRealname().length()-1));
+            stringBuilder.append(authentication.getRealname().substring(authentication.getRealname().length() - 1));
             authentication.setRealname(stringBuilder.toString());
         }
         //隐藏身份证号
-        StringBuilder identityNumberStringBuilder = new StringBuilder(authentication.getIdentityNumber().substring(0, 3));
-        for (int i = 4; i < authentication.getIdentityNumber().length() - 3; i++) {
-            identityNumberStringBuilder.append("*");
+        if (authentication.getIdentityNumber() != null) {
+            StringBuilder identityNumberStringBuilder = new StringBuilder(authentication.getIdentityNumber().substring(0, 3));
+            for (int i = 4; i < authentication.getIdentityNumber().length() - 3; i++) {
+                identityNumberStringBuilder.append("*");
+            }
+            identityNumberStringBuilder.append(authentication.getIdentityNumber()
+                    .substring(authentication.getIdentityNumber().length() - 4));
+            authentication.setIdentityNumber(identityNumberStringBuilder.toString());
         }
-        identityNumberStringBuilder.append(authentication.getIdentityNumber()
-                .substring(authentication.getIdentityNumber().length() - 4));
-        authentication.setIdentityNumber(identityNumberStringBuilder.toString());
         //隐藏学号
-        StringBuilder schoolNumberStringBuilder = new StringBuilder(authentication.getSchoolNumber().substring(0, 2));
-        for (int i = 3; i < authentication.getSchoolNumber().length() - 1; i++) {
-            schoolNumberStringBuilder.append("*");
+        if (authentication.getSchoolNumber() != null) {
+            StringBuilder schoolNumberStringBuilder = new StringBuilder(authentication.getSchoolNumber().substring(0, 2));
+            for (int i = 3; i < authentication.getSchoolNumber().length() - 1; i++) {
+                schoolNumberStringBuilder.append("*");
+            }
+            schoolNumberStringBuilder.append(authentication.getSchoolNumber()
+                    .substring(authentication.getSchoolNumber().length() - 2));
+            authentication.setSchoolNumber(schoolNumberStringBuilder.toString());
         }
-        schoolNumberStringBuilder.append(authentication.getSchoolNumber()
-                .substring(authentication.getSchoolNumber().length() - 2));
-        authentication.setSchoolNumber(schoolNumberStringBuilder.toString());
         authentication.setMethod(Integer.valueOf(AuthenticationTypeEnum.AUTHENTICATE_WITH_CAS_SYSTEM.getType()));
         if (authenticationMapper.selectAuthentication(StringEncryptUtils.encryptString(username)) == null) {
             authenticationMapper.insertAuthentication(authentication);

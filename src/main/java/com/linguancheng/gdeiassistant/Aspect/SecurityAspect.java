@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.Base64;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -72,7 +72,7 @@ public class SecurityAspect {
         //校验用户请求安全参数的数字签名
         if (requestParams != null && requestValidation != null && requestSecurity != null) {
             //使用请求参数和请求随机值、时间戳生成消息摘要，与客户端提供的数字签名进行校验
-            Map<String, Object> objectMap = new HashMap<>();
+            Map<String, Object> objectMap = new LinkedHashMap<>();
             Field[] fields = requestParams.getClass().getDeclaredFields();
             for (Field field : fields) {
                 field.setAccessible(true);

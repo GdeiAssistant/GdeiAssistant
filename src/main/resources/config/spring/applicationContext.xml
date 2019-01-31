@@ -227,9 +227,12 @@
                         <value>/login</value>
                         <!-- 用户登录接口 -->
                         <value>/api/userlogin</value>
-                        <!-- 使用协议 -->
+                        <!-- 协议与政�? -->
                         <value>/agreement</value>
                         <value>/policy</value>
+                        <value>/license</value>
+                        <!-- 软件说明 -->
+                        <value>/about</value>
                         <!-- 移动端的 Restful API -->
                         <value>/rest</value>
                         <!-- 应用内的 WEB API -->

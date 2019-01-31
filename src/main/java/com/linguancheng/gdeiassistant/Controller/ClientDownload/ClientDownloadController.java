@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +16,8 @@ public class ClientDownloadController {
 
     private String androidGooglePlayDownloadURL;
 
+    private String androidAmazonDownloadURL;
+
     @Value("#{propertiesReader['update.android.gooleplayURL']}")
     public void setAndroidGooglePlayDownloadURL(String androidGooglePlayDownloadURL) {
         this.androidGooglePlayDownloadURL = androidGooglePlayDownloadURL;
@@ -27,11 +28,9 @@ public class ClientDownloadController {
         this.androidDownloadURL = androidDownloadURL;
     }
 
-    @RequestMapping("/download")
-    public ModelAndView ResolveClientDownloadPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("Download/download");
-        return modelAndView;
+    @Value("#{propertiesReader['update.android.amazonURL']}")
+    public void setAndroidAmazonDownloadURL(String androidAmazonDownloadURL) {
+        this.androidAmazonDownloadURL = androidAmazonDownloadURL;
     }
 
     @RequestMapping(value = "/download/android", method = RequestMethod.GET)
@@ -47,6 +46,14 @@ public class ClientDownloadController {
     public Map<String, String> GetAndroidGooglePlayDownloadURL() {
         Map<String, String> map = new HashMap<>();
         map.put("url", androidGooglePlayDownloadURL);
+        return map;
+    }
+
+    @RequestMapping(value = "/download/android/amazon", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, String> GetAndroidAmazonDownloadURL() {
+        Map<String, String> map = new HashMap<>();
+        map.put("url", androidAmazonDownloadURL);
         return map;
     }
 }

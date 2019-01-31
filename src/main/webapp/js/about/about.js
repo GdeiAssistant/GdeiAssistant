@@ -23,6 +23,13 @@ $(function () {
             $("#android_google_play_url").val(result.url);
         }
     });
+    $.ajax({
+        url: '/download/android/amazon',
+        type: 'get',
+        success: function (result) {
+            $("#android_amazon_url").val(result.url);
+        }
+    })
 });
 
 //用户使用微信浏览器打开时，提示用户使用系统浏览器打开下载链接
@@ -41,12 +48,14 @@ function androidDownload() {
 }
 
 function androidGooglePlayDownload() {
-    if (isWechat()) {
-        $(".wxtip").show();
-    } else {
-        if ($("#android_google_play_url").val() !== '#') {
-            window.location.href = $("#android_google_play_url").val();
-        }
+    if ($("#android_google_play_url").val() !== '#') {
+        window.location.href = $("#android_google_play_url").val();
+    }
+}
+
+function androidAmazonDownload() {
+    if ($("#android_amazon_url").val() !== '#') {
+        window.location.href = $("#android_amazon_url").val();
     }
 }
 
@@ -58,12 +67,19 @@ function UWPDownload() {
     alert("暂无UWP版本");
 }
 
+function QuickApp() {
+    alert("暂无快应用版本");
+}
+
 function WechatApp() {
     $.photoBrowser({
         items: [
             {
                 image: "/img/download/wechat_qrcode.jpg",
             }
-        ]
+        ],
+        onOpen: function () {
+            $(".photo-container img").width($(window).width());
+        }
     }).open();
 }

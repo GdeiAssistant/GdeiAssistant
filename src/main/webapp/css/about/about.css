@@ -1,0 +1,601 @@
+.download {
+    width: 95%;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.android_download {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/android_icon.png) no-repeat 30px center;
+}
+
+.amazon_download {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/amazon_icon.png) no-repeat 30px center;
+}
+
+.google_play_download {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/google_play_icon.png) no-repeat 30px center;
+}
+
+.ios_download {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/ios_icon.png) no-repeat 30px center;
+}
+
+.uwp_download {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/uwp_icon.png) no-repeat 30px center;
+}
+
+.wechat_app {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/wechat_icon.png) no-repeat 30px center;
+}
+
+.quick_app {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/quick_app_icon.png) no-repeat 30px center;
+}
+
+.web {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/chrome_icon.png) no-repeat 30px center;
+}
+
+.download h2 {
+    height: 25px;
+    font-size: 100%
+}
+
+.download strong {
+    float: left;
+    font-size: 12px;
+}
+
+.download strong a {
+    color: #333;
+    text-decoration: none;
+}
+
+@charset "utf-8";
+/* 禁用iPhone中Safari的字号自动调整 */
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+/* 去除iPhone中默认的input样式 */
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input, textarea {
+
+    resize: none;
+}
+
+/* 取消链接高亮  */
+body,
+div,
+ul,
+li,
+ol,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+textarea,
+select,
+p,
+dl,
+dt,
+dd,
+a,
+img,
+button,
+form,
+table,
+th,
+tr,
+td,
+tbody,
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* 设置HTML5元素为块 */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+/* 图片自适应 */
+img {
+    height: auto;
+    width: auto \9;
+    /* ie8 */
+    -ms-interpolation-mode: bicubic;
+    vertical-align: middle;
+    /*为了照顾ie图片缩放失真*/
+}
+
+/* 初始化 */
+body,
+div,
+ul,
+li,
+ol,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+textarea,
+p,
+dl,
+dt,
+dd,
+a,
+img,
+button,
+form,
+table,
+th,
+tr,
+td,
+tbody,
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section, b {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+b {
+    display: inline;
+}
+
+em,
+i {
+    font-style: normal;
+}
+
+a:hover {
+    color: #3593ff;
+    text-decoration: none;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 100%;
+    font-family: "宋体", Arial;
+}
+
+img {
+    border: 0 none;
+}
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input, .label, .dropdown-menu, .well, .progress, .table-bordered, .alert {
+    border-radius: 0px !important;
+}
+
+.btn, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input, select {
+    box-shadow: none !important;
+}
+
+body {
+    color: #333;
+}
+
+a {
+    color: #333;
+}
+
+.margin-bottom60 {
+    margin-bottom: 40px !important;
+}
+
+.banxin {
+    max-width: 1070px;
+    margin: 0 auto;
+    width: 80%;
+}
+
+.header {
+    height: 70px;
+    width: 100%;
+    background: #·f6f6f6;
+    border-bottom: 1px solid #dadada;
+}
+
+.header .container > * {
+    height: 70px;
+    line-height: 70px;
+}
+
+.header h1 {
+    font-family: "微软雅黑";
+    font-size: 22px;
+}
+
+.app_logo {
+    display: block;
+    margin: 0 auto;
+    width: 120px;
+}
+
+.app_logo img {
+    border: 1px solid #dadada;
+    border-radius: 21px;
+}
+
+.models {
+    width: 382px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.models img {
+    min-width: 180px;
+    max-width: 180px;
+}
+
+.models .col-xs-6 {
+    padding: 0;
+}
+
+h2 {
+    font-size: 26px;
+    margin-bottom: 26px;
+    font-family: "微软雅黑";
+}
+
+h3 {
+    line-height: 24px;
+}
+
+.dsp section {
+    line-height: 24px;
+    margin-bottom: 18px;
+}
+
+.table-responsive {
+    border: none;
+    overflow: auto;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table td {
+    width: 230px !important;
+    overflow: hidden;
+}
+
+.table td > div {
+    width: 230px !important;
+    overflow: hidden;
+}
+
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > thead > tr > th {
+    border: 0 none;
+}
+
+.table td img {
+    width: 230px;
+}
+
+.footer {
+    height: 60px;
+    line-height: 60px;
+    background: #ebebeb;
+    margin-top: 188px;
+}
+
+.footer a {
+    color: #0f7fff;
+}
+
+@media screen and (max-width: 448px) {
+    .models {
+        width: 180px;
+    }
+
+    .models .col-xs-6 {
+        width: 100% !important;
+    }
+
+    .models img:last-of-type {
+        margin-top: 20px;
+    }
+}
+
+.cool-content {
+    background: #ebebeb;
+    padding-top: 4px;
+    overflow: visible;
+    height: 482px;
+}
+
+.cool-content-left {
+    width: 50%;
+    position: relative;
+    float: left;
+    height: 482px;
+}
+
+.app-detail {
+    width: 120px;
+}
+
+.cool-content-left img {
+    float: right;
+}
+
+.app-detail {
+    text-align: center;
+    color: #fff;
+    position: absolute;
+    right: 114px;
+    top: 157px;
+    width: 120px;
+}
+
+.app-detail img {
+    margin-bottom: 30px;
+}
+
+.app-detail h1 {
+    font-size: 26px;
+    font-family: "微软雅黑";
+    margin-bottom: 18px;
+}
+
+.app-detail p {
+    font-size: 12px;
+    line-height: 18px;
+    font-family: "宋体";
+}
+
+.cool-content-right {
+    width: 50%;
+    float: right;
+    padding-top: 122px;
+    padding-left: 86px;
+}
+
+.cool-content-right > div {
+    width: 180px;
+    text-align: center;
+}
+
+.cool-content-right img {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 17px;
+}
+
+.cool-content-right .btn_group {
+    margin-bottom: 47px;
+}
+
+.qr-content img {
+    margin-bottom: 14px;
+}
+
+@media screen and (max-width: 900px) {
+    .cool-content {
+        height: auto;
+        overflow: hidden;
+    }
+
+    .cool-content-left > img {
+        display: none;
+    }
+
+    .cool-content-left {
+        height: auto;
+        padding-top: 30px;
+    }
+
+    .app-detail {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin: 0 auto;
+        color: #333;
+    }
+
+    .cool-content-left,
+    .cool-content-right {
+        width: 100%;
+    }
+
+    .cool-content-right {
+        padding-left: 0;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .cool-content-right > div {
+        margin: 0 auto;
+    }
+}
+
+.table .heng {
+    width: 407px !important;
+}
+
+.table .heng > div, .table .heng img {
+    width: 407px !important;
+}
+
+div h2 {
+    font-size: 1.3rem;
+}
+
+.wxtip {
+    background: rgba(0, 0, 0, 0.8);
+    text-align: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 998;
+    display: none;
+}
+
+.wxtip-icon {
+    width: 52px;
+    height: 67px;
+    background: url("../../img/download/wechat_tip.png") no-repeat;
+    display: block;
+    position: absolute;
+    right: 30px;
+    top: 20px;
+}
+
+.wxtip-txt {
+    padding-top: 107px;
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.foot {
+    color: #ccc;
+    font-size: 0.6rem;
+    margin: 0 0 2rem 0;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.foot p {
+    margin-top: 0.2rem;
+    margin-bottom: 0;
+}
+
+.foot .beian_p {
+    margin-top: 0.4rem;
+}
+
+.foot .beian {
+    margin-top: 0.2rem;
+    color: #bbb;
+}
+
+.dropdown-menu .dropdown-item {
+    font-size: 0.7rem;
+}
+
+/*# sourceMappingURL=download-base.css.map */

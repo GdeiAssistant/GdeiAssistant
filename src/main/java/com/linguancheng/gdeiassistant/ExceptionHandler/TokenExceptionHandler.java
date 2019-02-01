@@ -18,33 +18,30 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * Date:2018/11/11
  */
 @RestControllerAdvice
+@Order(value = Integer.MIN_VALUE)
 public class TokenExceptionHandler {
 
     @ExceptionHandler(TokenExpiredException.class)
-    @Order(value = Integer.MIN_VALUE)
     public ResponseEntity HandleTokenExpiredException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.TOKEN_EXPIRED_EXCEPTION
-                , false, "权限令牌已过期，请重新登录"));
+                , false, "登录凭证已过期，请重新登录"));
     }
 
     @ExceptionHandler(UnusualLocationException.class)
-    @Order(value = Integer.MIN_VALUE)
     public ResponseEntity HandleUnusualLocationException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.UNUSUAL_LOCATION_EXCEPTION
                 , false, "登录地点异常，请进行身份验证"));
     }
 
     @ExceptionHandler(TokenNotMatchingException.class)
-    @Order(value = Integer.MIN_VALUE)
     public ResponseEntity HandleTokenNotMatchingException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.TOKEN_NOT_MATCHING
-                , false, "令牌信息不匹配"));
+                , false, "没有对应的登录凭证记录，请尝试重新登录"));
     }
 
     @ExceptionHandler(TokenServerException.class)
-    @Order(value = Integer.MIN_VALUE)
     public ResponseEntity HandleTokenServerException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.TOKEN_SERVER_ERROR
-                , false, "令牌校验服务异常"));
+                , false, "登录凭证校验服务异常，请联系管理员"));
     }
 }

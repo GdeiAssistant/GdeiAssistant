@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class AboutController {
 
-    @RequestMapping(value = {"/about", "/download"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/about"}, method = RequestMethod.GET)
     public ModelAndView ResolveAboutPage() {
         return new ModelAndView("About/index");
     }

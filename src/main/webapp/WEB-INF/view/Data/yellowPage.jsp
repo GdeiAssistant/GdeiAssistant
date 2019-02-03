@@ -18,8 +18,9 @@
     <link rel="stylesheet" href="/css/common/jquery-weui.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
-    <script>document.write("<script type='text/javascript' src='/js/data/yellowPage.js?time=" + Date.now() + "'><\/script>");</script>
+    <script type="text/javascript" src="/js/common/yiban.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
+    <jsp:include page="/js/data/yellowPage.jsp"/>
 </head>
 <body>
 

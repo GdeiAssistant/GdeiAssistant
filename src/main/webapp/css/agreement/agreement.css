@@ -2,7 +2,8 @@ h3 {
     text-align: center;
 }
 
-pre {
+p {
+    font-size: 1rem;
     white-space: pre-wrap;
     word-wrap: break-word;
 }

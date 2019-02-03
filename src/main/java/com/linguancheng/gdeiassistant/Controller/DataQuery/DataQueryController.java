@@ -13,7 +13,12 @@ public class DataQueryController {
     }
 
     @RequestMapping("/data/fees/electricity")
-    public ModelAndView ResolveElectricityFeesData() {
+    public ModelAndView ResolveElectricityFeesDataPage() {
         return new ModelAndView("Data/electricityFees");
+    }
+
+    @RequestMapping("/data/yellowpage")
+    public ModelAndView ResolveYellowPageDataPage() {
+        return new ModelAndView("Data/yellowPage");
     }
 }

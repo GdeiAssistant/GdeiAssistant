@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.ExceptionHandler;
 
+import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
@@ -57,6 +58,21 @@ public class GlobalExceptionHandler {
     public void HandleConstraintViolationException(HttpServletResponse response) throws IOException {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         response.getWriter().close();
+    }
+
+    /**
+     * 处理查询数据不存在的异常
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(DataNotExistException.class)
+    public ModelAndView HandleDataNotExistException(DataNotExistException e) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Error/commonError");
+        modelAndView.addObject("ErrorTitle", "查询的数据不存在");
+        modelAndView.addObject("ErrorMessage", e.getMessage());
+        return modelAndView;
     }
 
     /**

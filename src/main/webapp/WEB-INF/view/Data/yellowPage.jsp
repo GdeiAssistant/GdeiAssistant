@@ -91,28 +91,28 @@
                          style="padding-left:1rem;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
                 </div>
                 <div class="weui-cell" href="javascript:"
-                     onclick="phoneCall($(this.getElementsByClassName('weui-cell__ft')).text())">
+                     onclick="showPhoneActionSheet($(this.getElementsByClassName('weui-cell__ft')).text())">
                     <div class="weui-cell__bd">
                         <p>主要电话</p>
                     </div>
                     <div class="weui-cell__ft"></div>
                 </div>
                 <div class="weui-cell" href="javascript:"
-                     onclick="phoneCall($(this.getElementsByClassName('weui-cell__ft')).text())">
+                     onclick="showPhoneActionSheet($(this.getElementsByClassName('weui-cell__ft')).text())">
                     <div class="weui-cell__bd">
                         <p>次要电话</p>
                     </div>
                     <div class="weui-cell__ft"></div>
                 </div>
                 <div class="weui-cell" href="javascript:"
-                     onclick="copyDetailInfo($(this.getElementsByClassName('weui-cell__ft')).text())">
+                     onclick="showCopyConfirmActionSheet($(this.getElementsByClassName('weui-cell__ft')).text())">
                     <div class="weui-cell__bd">
                         <p>地址</p>
                     </div>
                     <div class="weui-cell__ft"></div>
                 </div>
                 <div class="weui-cell" href="javascript:"
-                     onclick="sendEmail($(this.getElementsByClassName('weui-cell__ft')).text())">
+                     onclick="showEmailActionSheet($(this.getElementsByClassName('weui-cell__ft')).text())">
                     <div class="weui-cell__bd">
                         <p>邮箱</p>
                     </div>
@@ -120,7 +120,7 @@
                          style="padding-left:1rem;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
                 </div>
                 <div class="weui-cell" href="javascript:"
-                     onclick="switchWebSite($(this.getElementsByClassName('weui-cell__ft')).text())">
+                     onclick="showWebsiteActionSheet($(this.getElementsByClassName('weui-cell__ft')).text())">
                     <div class="weui-cell__bd" style="margin-right: 1rem">
                         <p>网站</p>
                     </div>

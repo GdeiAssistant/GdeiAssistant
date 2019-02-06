@@ -18,6 +18,7 @@
     <div class="weui-tab__panel">
 
         <div class="hd">
+            <div class="weui_cells_title" onclick="history.go(-1)">返回</div>
             <h1 class="page_title">新闻通知</h1>
         </div>
 

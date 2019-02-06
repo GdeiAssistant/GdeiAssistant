@@ -10,11 +10,17 @@ public class SchoolNewsUtils {
      * @return
      */
     public static String CreatePdfDownloadTag(String title, String href) {
-        return "<p style=\"margin:0pt;line-height:150%;text-indent:0pt;-ms-text-autospace:ideograph-numeric;" +
-                "mso-para-margin-right:0.0000gd;mso-para-margin-left:0.0000gd;mso-char-indent-count:0.0000;" +
-                "mso-pagination:none;\"><span style=\"color:#000000;line-height:150%;font-family:宋体;" +
-                "font-size:12pt;mso-spacerun:\"yes\";mso-font-kerning:1.0000pt;\">" +
-                "<a href=\"http://web.gdei.edu.cn/" + href + "\" target=\"_blank\">" +
-                title + ".pdf</a>&nbsp;</span></p>";
+        return "<p style=\"text-align:center;margin-top:1rem;color:#bfbfbf;padding-left:1rem;padding-right:1rem\" onclick=\"window.location.href='http://web.gdei.edu.cn" + href + "'\">点击查看：" + title + ".pdf</p>";
+    }
+
+    /**
+     * 构造需要下载查看的Office文件下载标签
+     *
+     * @param title
+     * @param href
+     * @return
+     */
+    public static String CreateOfficeDownloadTag(String title, String href) {
+        return "<p onclick=\"downloadFile('http://web.gdei.edu.cn" + href + "')\" style=\"text-align:center;margin-top:1rem;color:#bfbfbf;padding-left:1rem;padding-right:1rem\" onclick=\"window.location.href='" + href + "'\">点击查看：" + title + "." + href.split("\\.")[1] + "</p>";
     }
 }

@@ -154,10 +154,8 @@ public class SchoolNewsService {
                                                 //替换下载链接
                                                 Elements download = document1.getElementsByClass("detail_text").first().getElementsByAttributeValue("style", "padding-bottom:20px;").first().getElementsByAttributeValue("target", "_blank");
                                                 for (Element element : download) {
-                                                    if (!element.attr("href").endsWith("pdf")) {
-                                                        element.attr("onclick", "downloadFile('" + urls.get(type).get(newIndex) + "/" + element.attr("href") + "')");
-                                                        element.attr("href", "javascript:");
-                                                    }
+                                                    element.attr("onclick", "downloadFile('" + urls.get(type).get(newIndex) + "/" + element.attr("href") + "')");
+                                                    element.attr("href", "javascript:");
                                                 }
                                                 content = document1.getElementsByClass("detail_text").first()
                                                         .getElementsByAttributeValue("style", "padding-bottom:20px;")
@@ -167,10 +165,8 @@ public class SchoolNewsService {
                                                 //替换下载链接
                                                 Elements download = document1.getElementsByClass("inside-content").first().getElementsByAttributeValue("target", "_blank");
                                                 for (Element element : download) {
-                                                    if (!element.attr("href").endsWith("pdf")) {
-                                                        element.attr("onclick", "downloadFile('" + urls.get(type).get(newIndex) + "/" + element.attr("href") + "')");
-                                                        element.attr("href", "javascript:");
-                                                    }
+                                                    element.attr("onclick", "downloadFile('" + urls.get(type).get(newIndex) + "/" + element.attr("href") + "')");
+                                                    element.attr("href", "javascript:");
                                                 }
                                                 content = document1.getElementsByClass("inside-content").first().toString().replace("href=\"resource/", "href=\"" + urls.get(type).get(newIndex) + "/resource/")
                                                         .replace("src=\"resource/", "src=\"" + urls.get(type).get(newIndex) + "/resource/");
@@ -213,7 +209,7 @@ public class SchoolNewsService {
                                     newInfo.setTitle(title);
                                     newInfo.setPublishDate(new SimpleDateFormat("yyyy-MM-dd").parse(publishDate));
                                     newInfo.setType(type);
-                                    newInfo.setContent(SchoolNewsUtils.CreatePdfDownloadTag(a.text(), a.attr("href")));
+                                    newInfo.setContent(SchoolNewsUtils.CreateDownloadTag(a.text(), a.attr("href")));
                                     newInfoList.add(newInfo);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -232,7 +228,7 @@ public class SchoolNewsService {
                                     newInfo.setTitle(title);
                                     newInfo.setPublishDate(new SimpleDateFormat("yyyy-MM-dd").parse(publishDate));
                                     newInfo.setType(type);
-                                    newInfo.setContent(SchoolNewsUtils.CreateOfficeDownloadTag(a.text(), a.attr("href")));
+                                    newInfo.setContent(SchoolNewsUtils.CreateDownloadTag(a.text(), a.attr("href")));
                                     newInfoList.add(newInfo);
                                 } catch (Exception e) {
                                     e.printStackTrace();

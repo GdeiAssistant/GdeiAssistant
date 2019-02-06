@@ -146,20 +146,6 @@
     <!-- 异步任务执行�? -->
     <task:executor id="executor" pool-size="5-50" queue-capacity="10"/>
 
-    <!-- 校园新闻系统地址 -->
-    <util:list id="schoolNewsUrlList" value-type="java.lang.String">
-        <!-- 学生工作 -->
-        <value>http://web.gdei.edu.cn/gdei/stuwork/stuadmin</value>
-        <!-- 后勤工作 -->
-        <value>http://web.gdei.edu.cn/gdei/hqserv/ggxx</value>
-        <!-- 选课工作 -->
-        <value>http://web.gdei.edu.cn/jwc/jwtz/xkgz</value>
-        <!-- 调停课�?�知 -->
-        <value>http://web.gdei.edu.cn/jwc/jwtz/tktz</value>
-        <!-- 等级竞赛通知 -->
-        <value>http://web.gdei.edu.cn/jwc/jwtz/kwtz</value>
-    </util:list>
-
     <!-- 文件上传配置的MultipartResolver处理�? -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="utf-8"/>
@@ -219,32 +205,7 @@
             <mvc:mapping path="/**"/>
             <bean class="com.gdeiassistant.gdeiassistant.Interceptor.LoginInterceptor">
                 <!-- 不进行拦截的地址列表 -->
-                <property name="exceptionList">
-                    <list>
-                        <!-- 用户注销 -->
-                        <value>/logout</value>
-                        <!-- 用户登录页面 -->
-                        <value>/login</value>
-                        <!-- 用户登录接口 -->
-                        <value>/api/userlogin</value>
-                        <!-- 协议与政�? -->
-                        <value>/agreement</value>
-                        <value>/policy</value>
-                        <value>/license</value>
-                        <!-- 软件说明 -->
-                        <value>/about</value>
-                        <!-- 移动端的 Restful API -->
-                        <value>/rest</value>
-                        <!-- 应用内的 WEB API -->
-                        <!-- <value>/api</value> -->
-                        <!-- 微信接口 -->
-                        <value>/wechat</value>
-                        <!-- 易班接口 -->
-                        <value>/yiban</value>
-                        <!-- 客户端下�? -->
-                        <value>/download</value>
-                    </list>
-                </property>
+                <property name="exceptionList" ref="loginInterceptorExceptionList"/>
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>
@@ -296,46 +257,6 @@
                 <property name="callbackURL" value="${yiban.dating.callbackURL}"/>
             </bean>
         </entry>
-    </util:map>
-
-    <!-- 配置个人资料性别字典 -->
-    <util:map id="genderMap" key-type="java.lang.Integer" value-type="java.lang.String">
-        <entry key="0" value="未�?�择"/>
-        <entry key="1" value="�?"/>
-        <entry key="2" value="�?"/>
-        <entry key="3" value="自定�?"/>
-    </util:map>
-
-    <!-- 配置个人资料性取向字�? -->
-    <util:map id="genderOrientationMap" key-type="java.lang.Integer" value-type="java.lang.String">
-        <entry key="0" value="未�?�择"/>
-        <entry key="1" value="异�?�恋"/>
-        <entry key="2" value="同�?�恋"/>
-        <entry key="3" value="双�?�恋"/>
-        <entry key="4" value="无�?�恋"/>
-        <entry key="5" value="泛�?�恋"/>
-        <entry key="6" value="其他"/>
-    </util:map>
-
-    <!-- 配置院系字典 -->
-    <util:map id="facultyMap" key-type="java.lang.Integer" value-type="java.lang.String">
-        <entry key="0" value="未�?�择"/>
-        <entry key="1" value="教育学院"/>
-        <entry key="2" value="政法�?"/>
-        <entry key="3" value="中文�?"/>
-        <entry key="4" value="数学�?"/>
-        <entry key="5" value="外语�?"/>
-        <entry key="6" value="物理与信息工程系"/>
-        <entry key="7" value="化学�?"/>
-        <entry key="8" value="生物与食品工程学�?"/>
-        <entry key="9" value="体育学院"/>
-        <entry key="10" value="美术学院"/>
-        <entry key="11" value="计算机科学系"/>
-        <entry key="12" value="音乐�?"/>
-        <entry key="13" value="教师研修学院"/>
-        <entry key="14" value="成人教育学院"/>
-        <entry key="15" value="网络教育学院"/>
-        <entry key="16" value="马克思主义学�?"/>
     </util:map>
 
     <!-- 自动扫描组件 -->

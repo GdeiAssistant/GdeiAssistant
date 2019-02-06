@@ -108,7 +108,7 @@
     //发送短信
     function sendSMS(content) {
         if (${sessionScope.yiBanUserID!=null}) {
-            $.toptip('易班客户端暂不支持直接发送短信，你可以选择复制并自行发送', 'warn');
+            $.toptip('易班客户端暂不支持直接发送短信，你可选择复制电话号码', 'warning');
         } else {
             window.location.href = 'sms:' + content;
         }
@@ -119,7 +119,7 @@
         if (${sessionScope.yiBanUserID!=null}) {
             phone_fun(content, function (errorInfo) {
                 if (errorInfo == '手机号格式错误') {
-                    $.toptip('该电话号码不支持直接拨打，你可以选择复制并自行拨号', 'warn');
+                    $.toptip('该电话号码不支持直接拨打，你可选择复制电话号码', 'warning');
                 } else if (errorInfo == '该终端类型暂不支持使用') {
                     $.toptip('当前设备不支持电话通话功能', 'error');
                 }
@@ -134,7 +134,7 @@
         if (${sessionScope.yiBanUserID!=null}) {
             mail_fun(content, function (errorInfo) {
                 if (errorInfo == '邮箱地址格式错误') {
-                    $.toptip('该邮箱地址不支持直接发送，你可以尝试复制该邮箱地址', 'warn');
+                    $.toptip('该邮箱地址不支持直接发送，你可选择复制该邮箱地址', 'warning');
                 } else if (errorInfo == '该终端类型暂不支持使用') {
                     $.toptip('当前设备不支持电子邮箱功能', 'error');
                 }

@@ -55,6 +55,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         loginInterceptorExceptionList.add("/login");
         //用户登录接口
         loginInterceptorExceptionList.add("/api/userlogin");
+        //下载接口
+        loginInterceptorExceptionList.add("/download");
         //协议与政策
         loginInterceptorExceptionList.add("/agreement");
         loginInterceptorExceptionList.add("/policy");

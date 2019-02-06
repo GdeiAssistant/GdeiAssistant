@@ -63,12 +63,12 @@ public class GlobalRestExceptionHandler {
     /**
      * 处理查询数据不存在的异常
      *
+     * @param e
      * @return
      */
     @ExceptionHandler(DataNotExistException.class)
-    public ResponseEntity HandleDataNotExistException() {
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.DATA_NOT_EXIST, false
-                , "没有找到查询数据，请检查输入条件是否有误"));
+    public ResponseEntity HandleDataNotExistException(DataNotExistException e) {
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.DATA_NOT_EXIST, false, e.getMessage()));
     }
 
     /**

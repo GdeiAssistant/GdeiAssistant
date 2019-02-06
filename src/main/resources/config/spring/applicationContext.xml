@@ -257,6 +257,13 @@
                 <property name="callbackURL" value="${yiban.dating.callbackURL}"/>
             </bean>
         </entry>
+        <entry key="news">
+            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+                <property name="appID" value="${yiban.news.appId}"/>
+                <property name="appSecret" value="${yiban.news.appSecret}"/>
+                <property name="callbackURL" value="${yiban.news.callbackURL}"/>
+            </bean>
+        </entry>
     </util:map>
 
     <!-- 自动扫描组件 -->

@@ -10,7 +10,9 @@ import com.linguancheng.gdeiassistant.Enum.Base.TokenValidResultEnum;
 import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
 import com.linguancheng.gdeiassistant.Exception.TokenValidException.TokenServerException;
 import com.linguancheng.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
-import com.linguancheng.gdeiassistant.Pojo.Entity.*;
+import com.linguancheng.gdeiassistant.Pojo.Entity.AccessToken;
+import com.linguancheng.gdeiassistant.Pojo.Entity.Location;
+import com.linguancheng.gdeiassistant.Pojo.Entity.RefreshToken;
 import com.linguancheng.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
 import com.linguancheng.gdeiassistant.Repository.Redis.LoginToken.LoginTokenDao;
 import com.linguancheng.gdeiassistant.Service.IPAddress.IPService;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 广东二师助手团队 林冠成 版权所有
@@ -207,7 +210,8 @@ public class LoginTokenService {
             //检测IP地址是否为同一省份
             Location currentLocation = ipService.GetLocationInfoByIPAddress(ip);
             Location tokenLocation = ipService.GetLocationInfoByIPAddress(tokenIP);
-            if (currentLocation.getRegion().equals(tokenLocation.getRegion())) {
+            if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
+                    && Objects.equals(currentLocation.getRegion(), tokenLocation.getRegion())) {
                 //IP校验通过，更新令牌的IP地址
                 AccessToken accessToken = new AccessToken();
                 accessToken.setSignature(signature);

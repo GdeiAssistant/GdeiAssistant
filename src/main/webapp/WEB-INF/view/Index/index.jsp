@@ -12,9 +12,6 @@
     <title>广东二师助手</title>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-    <meta name="keywords" content="二师助手,广二师助手,广东二师助手,广东第二师范学院">
-    <meta name="description"
-          content="广东二师助手是为广东第二师范学院专属打造的校园服务应用，不仅提供了课表查询、成绩查询、四六级考试成绩查询、空课室查询、图书借阅查询、馆藏图书查询、校园卡充值、校园卡挂失、消费查询等综合性的教务功能，还提供了二手交易、失物招领、校园树洞、恋爱交友、表白墙、全民快递、话题等社区交流平台。为广东第二师范学院的校友们带来便携的教务、社交服务，给学生们提供最快最便捷获取校园生活、社团、信息的方式。四年时光，广东二师助手陪你一起走过。">
     <link rel="stylesheet" href="/css/index/index.css">
     <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
@@ -91,6 +88,10 @@
         <div onclick="linkToPFTSystem()">
             <i style="background: url(/img/function/sport.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>体测查询</p>
+        </div>
+        <div onclick="window.location.href='/news'">
+            <i style="background: url(/img/function/news.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>新闻通知</p>
         </div>
         <div onclick="window.location.href='/ershou'">
             <i style="background: url(/img/function/ershou.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">

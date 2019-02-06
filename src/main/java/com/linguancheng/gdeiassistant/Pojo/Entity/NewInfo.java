@@ -1,35 +1,47 @@
 package com.linguancheng.gdeiassistant.Pojo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Document(collection = "new")
 public class NewInfo implements Serializable {
 
-    private int id;
+    @Id
+    private String id;
 
-    private int type;
+    private Integer type;
 
     private String title;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date publishDate;
 
     private String content;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public String getTitle() {
@@ -40,12 +52,12 @@ public class NewInfo implements Serializable {
         this.title = title;
     }
 
-    public String getPublishDate() {
-        return new SimpleDateFormat("yyyy-MM-dd").format(publishDate);
+    public Date getPublishDate() {
+        return publishDate;
     }
 
-    public void setPublishDate(String publishTime) throws ParseException {
-        this.publishDate = new SimpleDateFormat("yyyy-MM-dd").parse(publishTime);
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
     }
 
     public String getContent() {
@@ -54,13 +66,5 @@ public class NewInfo implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 }

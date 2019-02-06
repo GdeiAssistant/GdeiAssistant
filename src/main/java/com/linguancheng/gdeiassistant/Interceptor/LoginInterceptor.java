@@ -3,8 +3,6 @@ package com.linguancheng.gdeiassistant.Interceptor;
 import com.google.gson.Gson;
 import com.linguancheng.gdeiassistant.Pojo.Result.JsonResult;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -56,7 +54,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         //若是普通页面，校验不通过则返回到登录页面
-        response.sendRedirect(request.getContextPath() + "/?redirect_url=" + uri);
+        response.sendRedirect(request.getContextPath() + "/login?redirect_url=" + uri);
         return false;
     }
 

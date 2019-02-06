@@ -4,15 +4,14 @@
 
     let list;
 
-    //消除iOS点击延迟
     $(function () {
+        //消除iOS点击延迟
         FastClick.attach(document.body);
-    });
-
-    $(function () {
+        //加载黄页信息
         queryYellowPageInfo();
     });
 
+    //显示黄页详细信息
     function showDetailInfo(id) {
         $("#detail .page_title").text(list[id].section);
         $("#detail .weui-cell__ft:eq(0)").text(list[id].typeName);
@@ -25,62 +24,143 @@
         $("#detail").popup();
     }
 
+    //显示复制地址确认ActionSheet
+    function showCopyConfirmActionSheet(content) {
+        if (content != '无') {
+            $.actions({
+                actions: [{
+                    text: "复制地址",
+                    onClick: function () {
+                        copyDetailInfo(content);
+                    }
+                }]
+            });
+        }
+    }
+
+    //显示电话号码确认ActionSheet
+    function showPhoneActionSheet(content) {
+        if (content != '无') {
+            $.actions({
+                actions: [{
+                    text: "拨打电话",
+                    onClick: function () {
+                        phoneCall(content);
+                    }
+                }, {
+                    text: "发送短信",
+                    onClick: function () {
+                        sendSMS(content);
+                    }
+                }, {
+                    text: "复制号码",
+                    onClick: function () {
+                        copyDetailInfo(content);
+                    }
+                }]
+            });
+        }
+    }
+
+    //显示发送邮件确认ActionSheet
+    function showEmailActionSheet(content) {
+        if (content != '无') {
+            $.actions({
+                actions: [{
+                    text: "发送电子邮件",
+                    onClick: function () {
+                        sendEmail(content);
+                    }
+                }, {
+                    text: "复制邮箱地址",
+                    onClick: function () {
+                        copyDetailInfo(content);
+                    }
+                }]
+            });
+        }
+    }
+
+    //显示网址确认ActionSheet
+    function showWebsiteActionSheet(content) {
+        if (content != '无') {
+            $.actions({
+                actions: [{
+                    text: "跳转网站",
+                    onClick: function () {
+                        switchWebSite(content);
+                    }
+                }, {
+                    text: "复制网址",
+                    onClick: function () {
+                        copyDetailInfo(content);
+                    }
+                }]
+            });
+        }
+    }
+
+    //跳转到网站地址
     function switchWebSite(content) {
-        if (content != '无') {
-            window.location.href = content;
+        window.location.href = content;
+    }
+
+    //发送短信
+    function sendSMS(content) {
+        if (${sessionScope.yiBanUserID!=null}) {
+            $.toptip('易班客户端暂不支持直接发送短信，你可以选择复制并自行发送', 'warn');
+        } else {
+            window.location.href = 'sms:' + content;
         }
     }
 
+    //拨打电话
     function phoneCall(content) {
-        if (content != '无') {
-            if (${sessionScope.yiBanUserID!=null}) {
-                phone_fun(content, function (errorInfo) {
-                    if (errorInfo == '手机号格式错误') {
-                        copyDetailInfo(content);
-                    } else if (errorInfo == '该终端类型暂不支持使用') {
-                        $.toptip('当前设备不支持电话通话功能', 'error');
-                    }
-                });
-            } else {
-                window.location.href = 'sms:' + content;
-            }
+        if (${sessionScope.yiBanUserID!=null}) {
+            phone_fun(content, function (errorInfo) {
+                if (errorInfo == '手机号格式错误') {
+                    $.toptip('该电话号码不支持直接拨打，你可以选择复制并自行拨号', 'warn');
+                } else if (errorInfo == '该终端类型暂不支持使用') {
+                    $.toptip('当前设备不支持电话通话功能', 'error');
+                }
+            });
+        } else {
+            window.location.href = 'tel:' + content;
         }
     }
 
+    //发送邮件
     function sendEmail(content) {
-        if (content != '无') {
-            if (${sessionScope.yiBanUserID!=null}) {
-                mail_fun(content, function (errorInfo) {
-                    if (errorInfo == '邮箱地址格式错误') {
-                        copyDetailInfo(content);
-                    } else if (errorInfo == '该终端类型暂不支持使用') {
-                        $.toptip('当前设备不支持电子邮箱功能', 'error');
-                    }
-                });
-            } else {
-                window.location.href = 'mailto:' + content;
-            }
+        if (${sessionScope.yiBanUserID!=null}) {
+            mail_fun(content, function (errorInfo) {
+                if (errorInfo == '邮箱地址格式错误') {
+                    $.toptip('该邮箱地址不支持直接发送，你可以尝试复制该邮箱地址', 'warn');
+                } else if (errorInfo == '该终端类型暂不支持使用') {
+                    $.toptip('当前设备不支持电子邮箱功能', 'error');
+                }
+            });
+        } else {
+            window.location.href = 'mailto:' + content;
         }
     }
 
+    //复制信息
     function copyDetailInfo(content) {
-        if (content != '无') {
-            const input = document.createElement('input');
-            input.setAttribute('readonly', 'readonly');
-            input.setAttribute('value', content);
-            document.body.appendChild(input);
-            input.select();
-            if (document.execCommand('copy')) {
-                document.execCommand('copy');
-                $.toptip('复制成功', 'success');
-            } else {
-                $.toptip('当前浏览器不支持复制操作', 'error');
-            }
-            document.body.removeChild(input);
+        const input = document.createElement('input');
+        input.setAttribute('readonly', 'readonly');
+        input.setAttribute('value', content);
+        document.body.appendChild(input);
+        input.select();
+        if (document.execCommand('copy')) {
+            document.execCommand('copy');
+            $.toptip('复制成功', 'success');
+        } else {
+            $.toptip('当前浏览器不支持复制操作', 'error');
         }
+        document.body.removeChild(input);
     }
 
-
+    //加载黄页信息
     function queryYellowPageInfo() {
         $("#loadingToast, .weui_mask").show();
         $.ajax({

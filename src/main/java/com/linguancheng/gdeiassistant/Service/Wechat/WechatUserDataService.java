@@ -1,12 +1,10 @@
 package com.linguancheng.gdeiassistant.Service.Wechat;
 
-import com.linguancheng.gdeiassistant.Enum.Base.AttachResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
+import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant.WechatUser.WechatUserMapper;
-import com.linguancheng.gdeiassistant.Pojo.Entity.User;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
 import com.linguancheng.gdeiassistant.Tools.StringEncryptUtils;
+import com.linguancheng.gdeiassistant.Tools.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,26 +19,17 @@ public class WechatUserDataService {
     private WechatUserMapper wechatUserMapper;
 
     /**
-     * 检查微信账号绑定教务系统账号
+     * 查询微信账号绑定教务系统账号用户名
      *
      * @param wechatID
      * @return
      */
-    public BaseResult<String, AttachResultEnum> CheckWechatAttachState(String wechatID) {
-        BaseResult<String, AttachResultEnum> checkWechatAttachStateResult = new BaseResult<>();
-        try {
-            String username = wechatUserMapper.selectUsername(wechatID);
-            if (username != null && !username.trim().isEmpty()) {
-                checkWechatAttachStateResult.setResultData(StringEncryptUtils.decryptString(username));
-                checkWechatAttachStateResult.setResultType(AttachResultEnum.ATTACHED);
-                return checkWechatAttachStateResult;
-            }
-            checkWechatAttachStateResult.setResultType(AttachResultEnum.NOT_ATTACHED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            checkWechatAttachStateResult.setResultType(AttachResultEnum.SERVER_ERROR);
+    public String QueryWechatAttachUsername(String wechatID) throws Exception {
+        String username = wechatUserMapper.selectUsername(wechatID);
+        if (StringUtils.isBlank(username)) {
+            return StringEncryptUtils.decryptString(username);
         }
-        return checkWechatAttachStateResult;
+        return null;
     }
 
     /**
@@ -49,20 +38,12 @@ public class WechatUserDataService {
      * @param username
      * @return
      */
-    public BaseResult<User, BoolResultEnum> QueryWechatUserData(String username) {
-        BaseResult<User, BoolResultEnum> result = new BaseResult<>();
-        try {
-            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username)).decryptUser();
-            if (queryUser != null) {
-                result.setResultData(queryUser);
-                result.setResultType(BoolResultEnum.SUCCESS);
-                return result;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.setResultType(BoolResultEnum.ERROR);
+    public User QueryWechatUserData(String username) throws Exception {
+        User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username)).decryptUser();
+        if (queryUser != null) {
+            return queryUser.decryptUser();
         }
-        return result;
+        return null;
     }
 
     /**

@@ -1,7 +1,10 @@
 package com.linguancheng.gdeiassistant.Controller.Wechat;
 
 import com.linguancheng.gdeiassistant.Enum.Wechat.RequestTypeEnum;
-import com.linguancheng.gdeiassistant.Pojo.Wechat.*;
+import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
+import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatImageTextMessage;
+import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatSignature;
+import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import com.linguancheng.gdeiassistant.Service.Wechat.WechatService;
 import com.linguancheng.gdeiassistant.Tools.XMLParseUtils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -91,9 +94,14 @@ public class WechatController {
         //获取用户发送的文本信息
         String content = requestMap.get("Content");
         //转发到对应的事务处理器进行处理，返回处理结果
-        WechatBaseMessage resultMessage = wechatService.HandleUserRequest(request, wechatBaseMessage
-                , RequestTypeEnum.getRequestTypeEnumByFunctionName(content.split("-")[0])
-                , content, fromUserName);
+        WechatBaseMessage resultMessage = null;
+        try {
+            resultMessage = wechatService.HandleUserRequest(request, wechatBaseMessage
+                    , RequestTypeEnum.getRequestTypeEnumByFunctionName(content.split("-")[0])
+                    , content, fromUserName);
+        } catch (Exception e) {
+            resultMessage = new WechatTextMessage(wechatBaseMessage, "系统异常，请联系管理员");
+        }
         if (resultMessage instanceof WechatTextMessage) {
             responseText = XMLParseUtils.ParseWechatTextMessageToXML((WechatTextMessage) resultMessage);
         } else {

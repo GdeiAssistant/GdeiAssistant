@@ -1,31 +1,26 @@
 package com.linguancheng.gdeiassistant.Service.Wechat;
 
-import com.linguancheng.gdeiassistant.Enum.Base.AttachResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Base.BoolResultEnum;
-import com.linguancheng.gdeiassistant.Enum.Base.LoginResultEnum;
 import com.linguancheng.gdeiassistant.Enum.Wechat.RequestTypeEnum;
 import com.linguancheng.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
-import com.linguancheng.gdeiassistant.Pojo.CardQuery.CardInfoQueryJsonResult;
 import com.linguancheng.gdeiassistant.Pojo.Entity.CardInfo;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Grade;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
-import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.Result.BaseResult;
-import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryJsonResult;
-import com.linguancheng.gdeiassistant.Pojo.UserLogin.UserCertificate;
+import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
+import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatArticle;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatImageTextMessage;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatTextMessage;
+import com.linguancheng.gdeiassistant.Service.CardQuery.CardQueryService;
+import com.linguancheng.gdeiassistant.Service.GradeQuery.GradeQueryService;
+import com.linguancheng.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
 import com.linguancheng.gdeiassistant.Service.UserLogin.UserLoginService;
 import com.linguancheng.gdeiassistant.Tools.StringUtils;
-import net.sf.json.JSONObject;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,9 +37,6 @@ public class WechatService {
 
     private String appsecret;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
     @Value("#{propertiesReader['wechat.account.appid']}")
     public void setAppid(String appid) {
         this.appid = appid;
@@ -56,10 +48,22 @@ public class WechatService {
     }
 
     @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
     private UserLoginService userLoginService;
 
     @Autowired
     private WechatUserDataService wechatUserDataService;
+
+    @Autowired
+    private GradeQueryService gradeQueryService;
+
+    @Autowired
+    private ScheduleQueryService scheduleQueryService;
+
+    @Autowired
+    private CardQueryService cardQueryService;
 
     /**
      * 处理微信用户请求
@@ -72,189 +76,39 @@ public class WechatService {
      * @return
      */
     public WechatBaseMessage HandleUserRequest(HttpServletRequest request, WechatBaseMessage wechatBaseMessage
-            , RequestTypeEnum requestTypeEnum, String contentText, String wechatId) {
-        BaseResult<String, AttachResultEnum> checkWechatAttachStateResult = wechatUserDataService
-                .CheckWechatAttachState(wechatId);
-        switch (checkWechatAttachStateResult.getResultType()) {
-            case ATTACHED:
-                //已绑定微信账号，获取微信ID绑定的用户账号
-                BaseResult<User, BoolResultEnum> queryWechatUserDataResult = wechatUserDataService
-                        .QueryWechatUserData(checkWechatAttachStateResult.getResultData());
-                switch (queryWechatUserDataResult.getResultType()) {
-                    case SUCCESS:
-                        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-                        params.add("username", queryWechatUserDataResult.getResultData().getUsername());
-                        params.add("password", queryWechatUserDataResult.getResultData().getPassword());
-                        params.add("method", String.valueOf(2));
-                        switch (requestTypeEnum) {
-                            case CARD:
-                                //查询校园卡基本信息
-                                CardInfoQueryJsonResult cardInfoQueryJsonResult = restTemplate
-                                        .postForObject("https://www.gdeiassistant.cn/rest/cardinfo"
-                                                , params, CardInfoQueryJsonResult.class);
-                                if (cardInfoQueryJsonResult.isSuccess()) {
-                                    CardInfo cardInfo = cardInfoQueryJsonResult.getCardInfo();
-                                    WechatArticle scheduleArticle = new WechatArticle();
-                                    scheduleArticle.setTitle("校园卡信息查询结果");
-                                    String stringBuilder = "基本信息：\n" +
-                                            "姓名：" + cardInfo.getName() + "\n" +
-                                            "学号：" + cardInfo.getNumber() + "\n" +
-                                            "卡号：" + cardInfo.getCardNumber() + "\n" +
-                                            "\n余额信息：\n" +
-                                            "余额：" + cardInfo.getCardBalance() + "元\n" +
-                                            "过渡余额：" + cardInfo.getCardInterimBalance() + "元\n" +
-                                            "\n状态信息：\n" +
-                                            "冻结状态：" + cardInfo.getCardFreezeState() + "\n" +
-                                            "挂失状态：" + cardInfo.getCardLostState();
-                                    scheduleArticle.setDescription(stringBuilder);
-                                    scheduleArticle.setPicUrl("");
-                                    scheduleArticle.setUrl("https://www.gdeiassistant.cn/cardinfo");
-                                    List<WechatArticle> wechatArticleList = new ArrayList<>();
-                                    wechatArticleList.add(scheduleArticle);
-                                    WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
-                                    wechatImageTextMessage.setArticleCount(1);
-                                    wechatImageTextMessage.setArticles(wechatArticleList);
-                                    return wechatImageTextMessage;
-                                }
-                                //查询校园卡基本信息失败
-                                return new WechatTextMessage(wechatBaseMessage
-                                        , "查询失败，错误信息为：" + cardInfoQueryJsonResult.getMessage());
-
-                            case GRADE:
-                                //查询成绩信息
-                                GradeQueryJsonResult gradeQueryJsonResult = restTemplate
-                                        .postForObject("https://www.gdeiassistant.cn/rest/gradequery"
-                                                , params, GradeQueryJsonResult.class);
-                                if (gradeQueryJsonResult.isSuccess()) {
-                                    int term = gradeQueryJsonResult.getSecondTermGradeList().size() == 0 ? 1 : 2;
-                                    if (term == 1) {
-                                        if (!gradeQueryJsonResult.getFirstTermGradeList().isEmpty()) {
-                                            StringBuilder sb = new StringBuilder();
-                                            int gradesCount = 0;
-                                            for (Grade grade : gradeQueryJsonResult.getFirstTermGradeList()) {
-                                                gradesCount++;
-                                                sb.append(grade.getGrade_name()).append("  ").append(grade.getGrade_score()).append("\n");
-                                            }
-                                            if (gradesCount != 0) {
-                                                WechatArticle gradeArticle = new WechatArticle();
-                                                gradeArticle.setTitle(gradeQueryJsonResult.getFirstTermGradeList()
-                                                        .get(0).getGrade_year() + "学年第一学期成绩查询结果");
-                                                gradeArticle.setDescription(sb.toString());
-                                                gradeArticle.setPicUrl("");
-                                                gradeArticle.setUrl("https://www.gdeiassistant.cn/grade");
-                                                List<WechatArticle> wechatArticleList = new ArrayList<>();
-                                                wechatArticleList.add(gradeArticle);
-                                                WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
-                                                wechatImageTextMessage.setArticleCount(1);
-                                                wechatImageTextMessage.setArticles(wechatArticleList);
-                                                return wechatImageTextMessage;
-                                            }
-                                        }
-                                        WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
-                                        wechatTextMessage.setContent("当前学期没有成绩信息");
-                                        return wechatTextMessage;
-                                    } else {
-                                        if (!gradeQueryJsonResult.getSecondTermGradeList().isEmpty()) {
-                                            StringBuilder sb = new StringBuilder();
-                                            int gradesCount = 0;
-                                            for (Grade grade : gradeQueryJsonResult.getSecondTermGradeList()) {
-                                                gradesCount++;
-                                                sb.append(grade.getGrade_name()).append("  ").append(grade.getGrade_score()).append("\n");
-                                            }
-                                            if (gradesCount != 0) {
-                                                WechatArticle gradeArticle = new WechatArticle();
-                                                gradeArticle.setTitle(gradeQueryJsonResult.getSecondTermGradeList()
-                                                        .get(0).getGrade_year() + "学年第二学期成绩查询结果");
-                                                gradeArticle.setDescription(sb.toString());
-                                                gradeArticle.setPicUrl("");
-                                                gradeArticle.setUrl("https://www.gdeiassistant.cn/grade");
-                                                List<WechatArticle> wechatArticleList = new ArrayList<>();
-                                                wechatArticleList.add(gradeArticle);
-                                                WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
-                                                wechatImageTextMessage.setArticleCount(1);
-                                                wechatImageTextMessage.setArticles(wechatArticleList);
-                                                return wechatImageTextMessage;
-                                            }
-                                        }
-                                        WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
-                                        wechatTextMessage.setContent("当前学期没有成绩信息");
-                                        return wechatTextMessage;
-                                    }
-                                }
-                                //查询成绩信息失败
-                                return new WechatTextMessage(wechatBaseMessage
-                                        , "查询失败，错误信息为：" + gradeQueryJsonResult.getMessage());
-
-                            case TODAY_SCHEDULE:
-                                //查询今日课表信息
-                                ScheduleQueryJsonResult scheduleQueryJsonResult = restTemplate
-                                        .postForObject("https://www.gdeiassistant.cn/rest/schedulequery"
-                                                , params, ScheduleQueryJsonResult.class);
-                                if (scheduleQueryJsonResult.isSuccess()) {
-                                    List<Schedule> scheduleList = scheduleQueryJsonResult.getScheduleList();
-                                    int dayOfWeek = LocalDate.now().getDayOfWeek().getValue();
-                                    StringBuilder sb = new StringBuilder("今日的课表：\n");
-                                    if (!scheduleList.isEmpty()) {
-                                        int schedulesCount = 0;
-                                        for (Schedule schedule : scheduleList) {
-                                            if (schedule.getColumn() + 1 == dayOfWeek) {
-                                                schedulesCount++;
-                                                sb.append(schedule.getScheduleLesson()).append("  ").append(schedule.getScheduleName())
-                                                        .append("  ").append(schedule.getScheduleLocation()).append("\n");
-                                            }
-                                        }
-                                        if (schedulesCount != 0) {
-                                            WechatArticle scheduleArticle = new WechatArticle();
-                                            scheduleArticle.setTitle("今日课表查询结果");
-                                            scheduleArticle.setDescription(sb.toString());
-                                            scheduleArticle.setPicUrl("");
-                                            scheduleArticle.setUrl("https://www.gdeiassistant.cn/schedule");
-                                            List<WechatArticle> wechatArticleList = new ArrayList<>();
-                                            wechatArticleList.add(scheduleArticle);
-                                            WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
-                                            wechatImageTextMessage.setArticleCount(1);
-                                            wechatImageTextMessage.setArticles(wechatArticleList);
-                                            return wechatImageTextMessage;
-                                        }
-                                    }
-                                    WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
-                                    wechatTextMessage.setContent("今天没有课程");
-                                    return wechatTextMessage;
-                                }
-                                //查询课表信息失败
-                                return new WechatTextMessage(wechatBaseMessage
-                                        , "查询失败，错误信息为：" + scheduleQueryJsonResult.getMessage());
-
-                            case ATTACH:
-                                //更改绑定账号
-                                return HandleAttachRequest(request, wechatId, contentText, wechatBaseMessage);
-
-                            default:
-                                //其他请求
-                                return new WechatTextMessage(wechatBaseMessage, "不支持的服务请求");
-                        }
-
-                    case ERROR:
-                    default:
-                        return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
-                }
-
-            case NOT_ATTACHED:
-                //未绑定微信账号
+            , RequestTypeEnum requestTypeEnum, String contentText, String wechatId) throws Exception {
+        String username = wechatUserDataService.QueryWechatAttachUsername(wechatId);
+        if (StringUtils.isNotBlank(username)) {
+            //已绑定微信账号，获取微信ID绑定的用户账号
+            User user = wechatUserDataService.QueryWechatUserData(username);
+            if (user != null) {
                 switch (requestTypeEnum) {
+                    case CARD:
+                        //查询校园卡基本信息
+                        return HandleCardInfoQueryRequest(request, wechatBaseMessage, user);
+
+                    case GRADE:
+                        //查询学期成绩信息
+                        return HandleGradeQueryRequest(wechatBaseMessage, user);
+
+                    case TODAY_SCHEDULE:
+                        //查询今日课表信息
+                        return HandleTodayScheduleRequest(wechatBaseMessage, user);
+
                     case ATTACH:
+                        //更改绑定账号
                         return HandleAttachRequest(request, wechatId, contentText, wechatBaseMessage);
 
                     default:
-                        return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发送如下格式文本" +
-                                "进行绑定：绑定账号-教务系统账号用户名-教务系统账号密码。例：绑定账号-lisiyi-123456");
+                        //不支持的请求
+                        return new WechatTextMessage(wechatBaseMessage, "不支持的服务请求");
                 }
-
-            case SERVER_ERROR:
-            default:
-                return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
+            }
+            return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发送如下格式文本" +
+                    "进行绑定：绑定账号-教务系统账号用户名-教务系统账号密码。例：绑定账号-lisiyi-123456");
         }
-
+        return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发送如下格式文本" +
+                "进行绑定：绑定账号-教务系统账号用户名-教务系统账号密码。例：绑定账号-lisiyi-123456");
     }
 
     /**
@@ -296,6 +150,146 @@ public class WechatService {
     }
 
     /**
+     * 处理校园卡信息查询请求
+     *
+     * @param request
+     * @param user
+     * @return
+     */
+    private WechatBaseMessage HandleCardInfoQueryRequest(HttpServletRequest request, WechatBaseMessage wechatBaseMessage, User user) throws Exception {
+        CardInfo cardInfo = cardQueryService.CardInfoQuery(request.getSession().getId(), user.getUsername(), user.getPassword());
+        WechatArticle cardArticle = new WechatArticle();
+        cardArticle.setTitle("校园卡信息查询结果");
+        String stringBuilder = "基本信息：\n" +
+                "姓名：" + cardInfo.getName() + "\n" +
+                "学号：" + cardInfo.getNumber() + "\n" +
+                "卡号：" + cardInfo.getCardNumber() + "\n" +
+                "\n余额信息：\n" +
+                "余额：" + cardInfo.getCardBalance() + "元\n" +
+                "过渡余额：" + cardInfo.getCardInterimBalance() + "元\n" +
+                "\n状态信息：\n" +
+                "冻结状态：" + cardInfo.getCardFreezeState() + "\n" +
+                "挂失状态：" + cardInfo.getCardLostState();
+        cardArticle.setDescription(stringBuilder);
+        cardArticle.setPicUrl("");
+        cardArticle.setUrl("https://gdeiassistant.cn/cardinfo");
+        List<WechatArticle> wechatArticleList = new ArrayList<>();
+        wechatArticleList.add(cardArticle);
+        WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
+        wechatImageTextMessage.setArticleCount(1);
+        wechatImageTextMessage.setArticles(wechatArticleList);
+        return wechatImageTextMessage;
+    }
+
+    /**
+     * 处理成绩查询请求
+     *
+     * @param wechatBaseMessage
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    private WechatBaseMessage HandleGradeQueryRequest(WechatBaseMessage wechatBaseMessage, User user) throws Exception {
+        GradeQueryResult gradeQueryResult = gradeQueryService.QueryUserGradeFromDocument(user.getUsername(), null);
+        if (gradeQueryResult != null) {
+            int term = gradeQueryResult.getSecondTermGradeList().size() == 0 ? 1 : 2;
+            if (term == 1) {
+                if (!gradeQueryResult.getFirstTermGradeList().isEmpty()) {
+                    StringBuilder sb = new StringBuilder();
+                    int gradesCount = 0;
+                    for (Grade grade : gradeQueryResult.getFirstTermGradeList()) {
+                        gradesCount++;
+                        sb.append(grade.getGradeName()).append("  ").append(grade.getGradeScore()).append("\n");
+                    }
+                    if (gradesCount != 0) {
+                        WechatArticle gradeArticle = new WechatArticle();
+                        gradeArticle.setTitle(gradeQueryResult.getFirstTermGradeList()
+                                .get(0).getGradeYear() + "学年第一学期成绩查询结果");
+                        gradeArticle.setDescription(sb.toString());
+                        gradeArticle.setPicUrl("");
+                        gradeArticle.setUrl("https://gdeiassistant.cn/grade");
+                        List<WechatArticle> wechatArticleList = new ArrayList<>();
+                        wechatArticleList.add(gradeArticle);
+                        WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
+                        wechatImageTextMessage.setArticleCount(1);
+                        wechatImageTextMessage.setArticles(wechatArticleList);
+                        return wechatImageTextMessage;
+                    }
+                }
+                return new WechatTextMessage(wechatBaseMessage
+                        , "当前学期没有成绩信息");
+            } else {
+                if (!gradeQueryResult.getSecondTermGradeList().isEmpty()) {
+                    StringBuilder sb = new StringBuilder();
+                    int gradesCount = 0;
+                    for (Grade grade : gradeQueryResult.getSecondTermGradeList()) {
+                        gradesCount++;
+                        sb.append(grade.getGradeName()).append("  ").append(grade.getGradeScore()).append("\n");
+                    }
+                    if (gradesCount != 0) {
+                        WechatArticle gradeArticle = new WechatArticle();
+                        gradeArticle.setTitle(gradeQueryResult.getSecondTermGradeList()
+                                .get(0).getGradeYear() + "学年第二学期成绩查询结果");
+                        gradeArticle.setDescription(sb.toString());
+                        gradeArticle.setPicUrl("");
+                        gradeArticle.setUrl("https://gdeiassistant.cn/grade");
+                        List<WechatArticle> wechatArticleList = new ArrayList<>();
+                        wechatArticleList.add(gradeArticle);
+                        WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
+                        wechatImageTextMessage.setArticleCount(1);
+                        wechatImageTextMessage.setArticles(wechatArticleList);
+                        return wechatImageTextMessage;
+                    }
+                }
+                return new WechatTextMessage(wechatBaseMessage
+                        , "当前学期没有成绩信息");
+            }
+        }
+        return new WechatTextMessage(wechatBaseMessage
+                , "当前学期没有成绩信息");
+    }
+
+    /**
+     * 处理今日课表查询请求
+     *
+     * @param wechatBaseMessage
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    private WechatBaseMessage HandleTodayScheduleRequest(WechatBaseMessage wechatBaseMessage, User user) throws Exception {
+        ScheduleQueryResult scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(user.getUsername(), null);
+        List<Schedule> scheduleList = scheduleQueryResult.getScheduleList();
+        int dayOfWeek = LocalDate.now().getDayOfWeek().getValue();
+        StringBuilder sb = new StringBuilder("今日的课表：\n");
+        if (!scheduleList.isEmpty()) {
+            int schedulesCount = 0;
+            for (Schedule schedule : scheduleList) {
+                if (schedule.getColumn() + 1 == dayOfWeek) {
+                    schedulesCount++;
+                    sb.append(schedule.getScheduleLesson()).append("  ").append(schedule.getScheduleName())
+                            .append("  ").append(schedule.getScheduleLocation()).append("\n");
+                }
+            }
+            if (schedulesCount != 0) {
+                WechatArticle scheduleArticle = new WechatArticle();
+                scheduleArticle.setTitle("今日课表查询结果");
+                scheduleArticle.setDescription(sb.toString());
+                scheduleArticle.setPicUrl("");
+                scheduleArticle.setUrl("https://www.gdeiassistant.cn/schedule");
+                List<WechatArticle> wechatArticleList = new ArrayList<>();
+                wechatArticleList.add(scheduleArticle);
+                WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
+                wechatImageTextMessage.setArticleCount(1);
+                wechatImageTextMessage.setArticles(wechatArticleList);
+                return wechatImageTextMessage;
+            }
+        }
+        return new WechatTextMessage(wechatBaseMessage
+                , "今天没有课程");
+    }
+
+    /**
      * 处理绑定账号请求
      *
      * @param request
@@ -311,7 +305,7 @@ public class WechatService {
             String username = contentText.split("-")[1];
             String password = null;
             if (contentText.split("-").length > 3) {
-                String arrays[] = contentText.split("-");
+                String[] arrays = contentText.split("-");
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 2; i < arrays.length; i++) {
                     if (i != arrays.length - 1) {

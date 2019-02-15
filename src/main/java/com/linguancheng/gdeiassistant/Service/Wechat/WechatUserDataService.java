@@ -26,7 +26,7 @@ public class WechatUserDataService {
      */
     public String QueryWechatAttachUsername(String wechatID) throws Exception {
         String username = wechatUserMapper.selectUsername(wechatID);
-        if (StringUtils.isBlank(username)) {
+        if (StringUtils.isNotBlank(username)) {
             return StringEncryptUtils.decryptString(username);
         }
         return null;
@@ -39,7 +39,7 @@ public class WechatUserDataService {
      * @return
      */
     public User QueryWechatUserData(String username) throws Exception {
-        User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username)).decryptUser();
+        User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
         if (queryUser != null) {
             return queryUser.decryptUser();
         }

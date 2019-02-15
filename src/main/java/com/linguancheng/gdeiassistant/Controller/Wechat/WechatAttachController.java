@@ -48,7 +48,7 @@ public class WechatAttachController {
                 request.getSession().setAttribute("wechatUUID", uuid);
                 modelAndView.setViewName("redirect:https://open.weixin.qq.com/connect/oauth2/authorize?appid="
                         + appid + "&redirect_uri=" + URLEncoder.encode("https://www.gdeiassistant.cn/wechat/attach"
-                        , StandardCharsets.UTF_8) + "&response_type=code&scope=snsapi_userinfo&state=" + uuid + "#wechat_redirect");
+                        , StandardCharsets.UTF_8.displayName()) + "&response_type=code&scope=snsapi_userinfo&state=" + uuid + "#wechat_redirect");
                 return modelAndView;
             }
             //用户拒绝授权

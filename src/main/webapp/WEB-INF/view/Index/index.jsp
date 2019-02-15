@@ -116,7 +116,7 @@
             <i style="background: url(/img/function/calendar.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>学期校历</p>
         </div>
-        <div onclick="window.location.href = 'https://mp.weixin.qq.com/s/oCY_FNisckiw8y0C0a2tmg'">
+        <div onclick="window.location.href = '/about/wechat'">
             <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
             <p>绑定微信</p>
         </div>

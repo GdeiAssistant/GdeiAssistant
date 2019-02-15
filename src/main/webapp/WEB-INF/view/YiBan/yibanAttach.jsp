@@ -92,7 +92,7 @@
 
 <p class="page_desc" style="margin-top: 25px">关于登录账户请阅读
     <a class="page_desc"
-       onclick="window.location.href = 'https://mp.weixin.qq.com/s/HulW3f86rcX5II4SX0tkSw'"
+       onclick="window.location.href = '/about/account'"
        style="color: #3cc51f;">《教务系统账号说明》
     </a>
 </p>

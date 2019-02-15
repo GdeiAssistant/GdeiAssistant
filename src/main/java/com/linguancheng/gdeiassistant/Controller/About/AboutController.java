@@ -18,6 +18,16 @@ public class AboutController {
         return new ModelAndView("About/security");
     }
 
+    @RequestMapping(value = "/about/account", method = RequestMethod.GET)
+    public ModelAndView ResolveAboutAccountPage() {
+        return new ModelAndView("About/account");
+    }
+
+    @RequestMapping(value = "/about/wechat", method = RequestMethod.GET)
+    public ModelAndView ResolveAboutWechatPage() {
+        return new ModelAndView("About/wechat");
+    }
+
     @RequestMapping(value = "/license", method = RequestMethod.GET)
     public ModelAndView ResolveLicensePage() {
         return new ModelAndView("About/license");

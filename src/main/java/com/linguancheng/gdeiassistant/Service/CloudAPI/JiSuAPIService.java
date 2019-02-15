@@ -63,9 +63,9 @@ public class JiSuAPIService {
                 , new HttpEntity<>(params, httpHeaders), JSONObject.class);
         if (jsonObject.has("status") && jsonObject.getString("status").equals("0")) {
             Location location = new Location();
-            location.setCountry(jsonObject.getJSONObject("data").has("country") ? jsonObject.getJSONObject("data").getString("country") : null);
-            location.setRegion(jsonObject.getJSONObject("data").has("region") ? jsonObject.getJSONObject("data").getString("region") : null);
-            location.setCity(jsonObject.getJSONObject("data").has("city") ? jsonObject.getJSONObject("data").getString("city") : null);
+            location.setCountry(jsonObject.getJSONObject("result").has("country") ? jsonObject.getJSONObject("result").getString("country") : null);
+            location.setRegion(jsonObject.getJSONObject("result").has("region") ? jsonObject.getJSONObject("result").getString("region") : null);
+            location.setCity(jsonObject.getJSONObject("result").has("city") ? jsonObject.getJSONObject("result").getString("city") : null);
             return location;
         }
         return null;

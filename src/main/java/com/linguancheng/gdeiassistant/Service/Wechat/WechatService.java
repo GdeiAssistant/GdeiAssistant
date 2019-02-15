@@ -8,9 +8,7 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.Schedule;
 import com.linguancheng.gdeiassistant.Pojo.Entity.User;
 import com.linguancheng.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import com.linguancheng.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
-import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatArticle;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
-import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatImageTextMessage;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import com.linguancheng.gdeiassistant.Service.CardQuery.CardQueryService;
 import com.linguancheng.gdeiassistant.Service.GradeQuery.GradeQueryService;
@@ -25,7 +23,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,10 +102,14 @@ public class WechatService {
                 }
             }
             return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发送如下格式文本" +
-                    "进行绑定：绑定账号-教务系统账号用户名-教务系统账号密码。例：绑定账号-lisiyi-123456");
+                    "进行绑定：绑定账号-用户名-密码。例：绑定账号-lisiyi-123456");
+        }
+        if (requestTypeEnum == RequestTypeEnum.ATTACH) {
+            //绑定账号
+            return HandleAttachRequest(request, wechatId, contentText, wechatBaseMessage);
         }
         return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发送如下格式文本" +
-                "进行绑定：绑定账号-教务系统账号用户名-教务系统账号密码。例：绑定账号-lisiyi-123456");
+                "进行绑定：绑定账号-用户名-密码。例：绑定账号-lisiyi-123456");
     }
 
     /**
@@ -158,6 +159,19 @@ public class WechatService {
      */
     private WechatBaseMessage HandleCardInfoQueryRequest(HttpServletRequest request, WechatBaseMessage wechatBaseMessage, User user) throws Exception {
         CardInfo cardInfo = cardQueryService.CardInfoQuery(request.getSession().getId(), user.getUsername(), user.getPassword());
+        WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+        String content = "基本信息：\n" +
+                "姓名：" + cardInfo.getName() + "\n" +
+                "学号：" + cardInfo.getNumber() + "\n" +
+                "卡号：" + cardInfo.getCardNumber() + "\n" +
+                "\n余额信息：\n" +
+                "余额：" + cardInfo.getCardBalance() + "元\n" +
+                "过渡余额：" + cardInfo.getCardInterimBalance() + "元\n" +
+                "\n状态信息：\n" +
+                "冻结状态：" + cardInfo.getCardFreezeState() + "\n" +
+                "挂失状态：" + cardInfo.getCardLostState();
+        wechatTextMessage.setContent(content);
+        /*wechatTextMessage.setContent(stringBuilder);
         WechatArticle cardArticle = new WechatArticle();
         cardArticle.setTitle("校园卡信息查询结果");
         String stringBuilder = "基本信息：\n" +
@@ -177,8 +191,8 @@ public class WechatService {
         wechatArticleList.add(cardArticle);
         WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
         wechatImageTextMessage.setArticleCount(1);
-        wechatImageTextMessage.setArticles(wechatArticleList);
-        return wechatImageTextMessage;
+        wechatImageTextMessage.setArticles(wechatArticleList);*/
+        return wechatTextMessage;
     }
 
     /**
@@ -202,7 +216,9 @@ public class WechatService {
                         sb.append(grade.getGradeName()).append("  ").append(grade.getGradeScore()).append("\n");
                     }
                     if (gradesCount != 0) {
-                        WechatArticle gradeArticle = new WechatArticle();
+                        WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+                        wechatTextMessage.setContent(sb.toString());
+                        /*WechatArticle gradeArticle = new WechatArticle();
                         gradeArticle.setTitle(gradeQueryResult.getFirstTermGradeList()
                                 .get(0).getGradeYear() + "学年第一学期成绩查询结果");
                         gradeArticle.setDescription(sb.toString());
@@ -212,8 +228,8 @@ public class WechatService {
                         wechatArticleList.add(gradeArticle);
                         WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
                         wechatImageTextMessage.setArticleCount(1);
-                        wechatImageTextMessage.setArticles(wechatArticleList);
-                        return wechatImageTextMessage;
+                        wechatImageTextMessage.setArticles(wechatArticleList);*/
+                        return wechatTextMessage;
                     }
                 }
                 return new WechatTextMessage(wechatBaseMessage
@@ -227,7 +243,9 @@ public class WechatService {
                         sb.append(grade.getGradeName()).append("  ").append(grade.getGradeScore()).append("\n");
                     }
                     if (gradesCount != 0) {
-                        WechatArticle gradeArticle = new WechatArticle();
+                        WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+                        wechatTextMessage.setContent(sb.toString());
+                        /*WechatArticle gradeArticle = new WechatArticle();
                         gradeArticle.setTitle(gradeQueryResult.getSecondTermGradeList()
                                 .get(0).getGradeYear() + "学年第二学期成绩查询结果");
                         gradeArticle.setDescription(sb.toString());
@@ -237,8 +255,8 @@ public class WechatService {
                         wechatArticleList.add(gradeArticle);
                         WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
                         wechatImageTextMessage.setArticleCount(1);
-                        wechatImageTextMessage.setArticles(wechatArticleList);
-                        return wechatImageTextMessage;
+                        wechatImageTextMessage.setArticles(wechatArticleList);*/
+                        return wechatTextMessage;
                     }
                 }
                 return new WechatTextMessage(wechatBaseMessage
@@ -272,7 +290,9 @@ public class WechatService {
                 }
             }
             if (schedulesCount != 0) {
-                WechatArticle scheduleArticle = new WechatArticle();
+                WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+                wechatTextMessage.setContent(sb.toString());
+                /*WechatArticle scheduleArticle = new WechatArticle();
                 scheduleArticle.setTitle("今日课表查询结果");
                 scheduleArticle.setDescription(sb.toString());
                 scheduleArticle.setPicUrl("");
@@ -281,8 +301,8 @@ public class WechatService {
                 wechatArticleList.add(scheduleArticle);
                 WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
                 wechatImageTextMessage.setArticleCount(1);
-                wechatImageTextMessage.setArticles(wechatArticleList);
-                return wechatImageTextMessage;
+                wechatImageTextMessage.setArticles(wechatArticleList);*/
+                return wechatTextMessage;
             }
         }
         return new WechatTextMessage(wechatBaseMessage
@@ -299,7 +319,7 @@ public class WechatService {
      * @return
      */
     private WechatBaseMessage HandleAttachRequest(HttpServletRequest request, String wechatId
-            , String contentText, WechatBaseMessage wechatBaseMessage) {
+            , String contentText, WechatBaseMessage wechatBaseMessage) throws Exception {
         //检测用户发送的文本内容合法性
         if (contentText.split("-").length >= 3) {
             String username = contentText.split("-")[1];
@@ -329,13 +349,10 @@ public class WechatService {
                 } catch (PasswordIncorrectException e) {
                     //密码错误
                     return new WechatTextMessage(wechatBaseMessage, "账号密码错误，请检查并重试");
-                } catch (Exception e) {
-                    //服务器异常
-                    return new WechatTextMessage(wechatBaseMessage, "服务器维护中，请稍候再试");
                 }
             }
         }
         return new WechatTextMessage(wechatBaseMessage, "发送的文本格式有误，请检查并重试！" +
-                "绑定账号文本格式：绑定账号-教务系统账号用户名-教务系统账号密码。例：绑定账号-lisiyi-123456");
+                "绑定账号文本格式：绑定账号-用户名-密码。例：绑定账号-lisiyi-123456");
     }
 }

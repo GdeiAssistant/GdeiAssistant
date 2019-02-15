@@ -8,6 +8,8 @@ import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import com.linguancheng.gdeiassistant.Service.Wechat.WechatService;
 import com.linguancheng.gdeiassistant.Tools.XMLParseUtils;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,8 @@ public class WechatController {
 
     @Autowired
     private WechatService wechatService;
+
+    private Log log = LogFactory.getLog(WechatController.class);
 
     /**
      * 验证消息来自微信服务器
@@ -100,6 +104,7 @@ public class WechatController {
                     , RequestTypeEnum.getRequestTypeEnumByFunctionName(content.split("-")[0])
                     , content, fromUserName);
         } catch (Exception e) {
+            log.error("微信消息对话服务异常：", e);
             resultMessage = new WechatTextMessage(wechatBaseMessage, "系统异常，请联系管理员");
         }
         if (resultMessage instanceof WechatTextMessage) {

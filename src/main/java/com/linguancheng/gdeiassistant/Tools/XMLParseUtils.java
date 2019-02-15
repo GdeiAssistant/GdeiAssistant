@@ -18,6 +18,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class XMLParseUtils {
 
@@ -35,7 +36,7 @@ public class XMLParseUtils {
             Element rootElement = document.getRootElement();
             List<Element> elementList = rootElement.elements();
             for (Element element : elementList) {
-                result.put(element.getName(), element.getText());
+                result.put(element.getName(), Pattern.compile("\\s*|\t|\r|\n").matcher(element.getText()).replaceAll("").trim());
             }
         } catch (Exception e) {
             e.printStackTrace();

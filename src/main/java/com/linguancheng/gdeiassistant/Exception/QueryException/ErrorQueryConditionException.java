@@ -1,10 +1,6 @@
 package com.gdeiassistant.gdeiassistant.Exception.QueryException;
 
 /**
- * Created by gdeiassistant on 2017/7/21.
- */
-
-/**
  * 查询条件异常类的基类
  */
 public class ErrorQueryConditionException extends Exception {

@@ -17,10 +17,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Created by gdeiassistant on 2017/7/16.
- */
-
 @Controller
 public class UserLoginController {
 

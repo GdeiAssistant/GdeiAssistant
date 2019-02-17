@@ -6,10 +6,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by gdeiassistant on 2017/7/17.
- */
-
 @Component
 public class StringEncryptUtils {
 

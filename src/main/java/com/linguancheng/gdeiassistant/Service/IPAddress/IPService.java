@@ -9,13 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * 广东二师助手团队 林冠成 版权所有
- * All rights reserved © 2016 - 2018
- * Author:林冠成
- * Date:2018/11/1
- */
-
 @Service
 public class IPService {
 

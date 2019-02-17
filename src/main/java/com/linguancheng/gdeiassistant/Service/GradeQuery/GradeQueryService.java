@@ -40,10 +40,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by gdeiassistant on 2017/7/22.
- */
-
 @Service
 public class GradeQueryService {
 

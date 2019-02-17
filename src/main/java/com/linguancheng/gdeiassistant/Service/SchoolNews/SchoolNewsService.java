@@ -2,8 +2,10 @@ package com.linguancheng.gdeiassistant.Service.SchoolNews;
 
 import com.linguancheng.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import com.linguancheng.gdeiassistant.Pojo.Entity.NewInfo;
+import com.linguancheng.gdeiassistant.Pojo.Entity.RSSNewInfo;
 import com.linguancheng.gdeiassistant.Repository.Mongodb.New.NewDao;
 import com.linguancheng.gdeiassistant.Tools.SchoolNewsUtils;
+import com.linguancheng.gdeiassistant.Tools.XMLParseUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -37,7 +39,10 @@ import java.util.concurrent.ExecutionException;
 public class SchoolNewsService {
 
     @Resource(name = "newsUrlsList")
-    private List<List<String>> urls;
+    private List<List<String>> newsUrlsList;
+
+    @Resource(name = "rssNewsUrlsList")
+    private List<String> rssNewsUrlsList;
 
     @Autowired
     private NewDao newDao;
@@ -118,14 +123,13 @@ public class SchoolNewsService {
         if (httpResponse.getStatusLine().getStatusCode() == 200) {
             httpGet = new HttpGet(document.select("a").first().attr("href"));
             httpResponse = httpAsyncClient.execute(httpGet, null).get();
-            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("学生工作_学校门户")) {
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 //进入学校新闻信息系统成功，异步获取新闻通知数据
                 //遍历每个新闻分区
-                for (int i = 0; i < urls.size(); i++) {
+                for (int i = 0; i < newsUrlsList.size(); i++) {
                     final int type = i;
-                    for (int j = 0; j < urls.get(i).size(); j++) {
-                        httpResponse = httpAsyncClient.execute(new HttpGet(urls.get(i).get(j)), null).get();
+                    for (int j = 0; j < newsUrlsList.get(i).size(); j++) {
+                        httpResponse = httpAsyncClient.execute(new HttpGet(newsUrlsList.get(i).get(j)), null).get();
                         if (httpResponse.getStatusLine().getStatusCode() != 200) {
                             continue;
                         }
@@ -154,22 +158,22 @@ public class SchoolNewsService {
                                                 //替换下载链接
                                                 Elements download = document1.getElementsByClass("detail_text").first().getElementsByAttributeValue("style", "padding-bottom:20px;").first().getElementsByAttributeValue("target", "_blank");
                                                 for (Element element : download) {
-                                                    element.attr("onclick", "downloadFile('" + urls.get(type).get(newIndex) + "/" + element.attr("href") + "')");
+                                                    element.attr("onclick", "downloadFile('" + newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href") + "')");
                                                     element.attr("href", "javascript:");
                                                 }
                                                 content = document1.getElementsByClass("detail_text").first()
                                                         .getElementsByAttributeValue("style", "padding-bottom:20px;")
-                                                        .first().toString().replace("href=\"resource/", "href=\"" + urls.get(type).get(newIndex) + "/resource/")
-                                                        .replace("src=\"resource/", "src=\"" + urls.get(type).get(newIndex) + "/resource/");
+                                                        .first().toString().replace("href=\"resource/", "href=\"" + newsUrlsList.get(type).get(newIndex) + "/resource/")
+                                                        .replace("src=\"resource/", "src=\"" + newsUrlsList.get(type).get(newIndex) + "/resource/");
                                             } else {
                                                 //替换下载链接
                                                 Elements download = document1.getElementsByClass("inside-content").first().getElementsByAttributeValue("target", "_blank");
                                                 for (Element element : download) {
-                                                    element.attr("onclick", "downloadFile('" + urls.get(type).get(newIndex) + "/" + element.attr("href") + "')");
+                                                    element.attr("onclick", "downloadFile('" + newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href") + "')");
                                                     element.attr("href", "javascript:");
                                                 }
-                                                content = document1.getElementsByClass("inside-content").first().toString().replace("href=\"resource/", "href=\"" + urls.get(type).get(newIndex) + "/resource/")
-                                                        .replace("src=\"resource/", "src=\"" + urls.get(type).get(newIndex) + "/resource/");
+                                                content = document1.getElementsByClass("inside-content").first().toString().replace("href=\"resource/", "href=\"" + newsUrlsList.get(type).get(newIndex) + "/resource/")
+                                                        .replace("src=\"resource/", "src=\"" + newsUrlsList.get(type).get(newIndex) + "/resource/");
                                             }
                                             NewInfo newInfo = new NewInfo();
                                             newInfo.setId(DigestUtils.sha1Hex(id));
@@ -236,6 +240,74 @@ public class SchoolNewsService {
                                     countDownLatch.countDown();
                                 }
                             }
+                        }
+                        countDownLatch.await();
+                    }
+                }
+                //加载RSS订阅新闻
+                for (int i = 0; i < rssNewsUrlsList.size(); i++) {
+                    httpResponse = httpAsyncClient.execute(new HttpGet(rssNewsUrlsList.get(i)), null).get();
+                    if (httpResponse.getStatusLine().getStatusCode() != 200) {
+                        continue;
+                    }
+                    //解析XML数据为新闻信息列表
+                    String result = EntityUtils.toString(httpResponse.getEntity());
+                    List<RSSNewInfo> rssNewInfoList = XMLParseUtils.ParseRSSNewsXML(result);
+                    if (!rssNewInfoList.isEmpty()) {
+                        //设置当前分区的新闻同步器，等待分区下的所有新闻都加载完毕后再读取下一分区
+                        CountDownLatch countDownLatch = new CountDownLatch(rssNewInfoList.size());
+                        for (RSSNewInfo rssNewInfo : rssNewInfoList) {
+                            int urlIndex = i;
+                            httpAsyncClient.execute(new HttpGet(rssNewInfo.getLink()), new FutureCallback<HttpResponse>() {
+                                @Override
+                                public void completed(HttpResponse result) {
+                                    try {
+                                        //生成新闻ID和内容
+                                        String[] split = rssNewInfo.getLink().split("/");
+                                        StringBuilder stringBuilder = new StringBuilder("/");
+                                        for (int i = 3; i < split.length; i++) {
+                                            stringBuilder.append(split[i]);
+                                            if (i + 1 != split.length) {
+                                                stringBuilder.append("/");
+                                            }
+                                        }
+                                        String id = stringBuilder.toString();
+                                        String content = null;
+                                        if (rssNewInfo.getLink().endsWith(".xhtml") || rssNewInfo.getLink().endsWith(".html")) {
+                                            Document page = Jsoup.parse(EntityUtils.toString(result.getEntity()));
+                                            //替换下载链接
+                                            Elements download = page.getElementsByClass("text").first().getElementsByAttributeValue("target", "_blank");
+                                            for (Element element : download) {
+                                                element.attr("onclick", "downloadFile('" + rssNewsUrlsList.get(urlIndex) + "/" + element.attr("href") + "')");
+                                                element.attr("href", "javascript:");
+                                            }
+                                            content = page.getElementsByClass("text").first().toString().replace("href=\"resource/", "href=\"" + rssNewsUrlsList.get(urlIndex) + "/resource/")
+                                                    .replace("src=\"resource/", "src=\"" + rssNewsUrlsList.get(urlIndex) + "/resource/");
+                                        } else {
+                                            content = SchoolNewsUtils.CreateDownloadTag(rssNewInfo.getTitle(), rssNewInfo.getLink());
+                                        }
+                                        rssNewInfo.setId(DigestUtils.sha1Hex(id));
+                                        rssNewInfo.setContent(content);
+                                        //新闻分类属于综合信息
+                                        rssNewInfo.setType(4);
+                                        newInfoList.add(rssNewInfo);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        countDownLatch.countDown();
+                                    }
+                                }
+
+                                @Override
+                                public void failed(Exception ex) {
+                                    countDownLatch.countDown();
+                                }
+
+                                @Override
+                                public void cancelled() {
+                                    countDownLatch.countDown();
+                                }
+                            });
                         }
                         countDownLatch.await();
                     }

@@ -1,5 +1,6 @@
 package com.linguancheng.gdeiassistant.Tools;
 
+import com.linguancheng.gdeiassistant.Pojo.Entity.RSSNewInfo;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatArticle;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatImageTextMessage;
 import com.linguancheng.gdeiassistant.Pojo.Wechat.WechatTextMessage;
@@ -9,12 +10,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +27,41 @@ import java.util.regex.Pattern;
 public class XMLParseUtils {
 
     /**
-     * 解析请求的XML数据转换为Map
+     * 解析RSS订阅新闻的XML数据，返回新闻信息列表
+     *
+     * @param xml
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static List<RSSNewInfo> ParseRSSNewsXML(String xml) {
+        List<RSSNewInfo> list = new ArrayList<>();
+        try {
+            Document document = DocumentHelper.parseText(xml);
+            List<Element> elementList = document.getRootElement().element("channel").elements("item");
+            for (Element element : elementList) {
+                RSSNewInfo rssNewInfo = new RSSNewInfo();
+                rssNewInfo.setTitle(element.elementText("title"));
+                rssNewInfo.setTitleImage(element.elementText("titleImage"));
+                rssNewInfo.setLink(element.elementText("link"));
+                rssNewInfo.setDescription(element.elementText("description"));
+                rssNewInfo.setAuthor(element.elementText("author"));
+                rssNewInfo.setPublishDate(new SimpleDateFormat("yyyy-MM-dd")
+                        .parse(element.elementText("pubDate")));
+                list.add(rssNewInfo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 解析微信请求的XML数据转换为Map
      *
      * @param request
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static Map<String, String> ParseRequestXMLToMap(HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         try (InputStream inputStream = request.getInputStream()) {
@@ -76,7 +110,6 @@ public class XMLParseUtils {
                 // 对所有xml节点的转换都增加CDATA标记
                 boolean cdata = true;
 
-                @SuppressWarnings("unchecked")
                 public void startNode(String name, Class clazz) {
                     super.startNode(name, clazz);
                 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.YellowPage.YellowPageMapper">
+
+    <!-- 开启DataMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <resultMap id="YellowPageResultMap" type="edu.gdei.gdeiassistant.Pojo.Entity.YellowPage">
+        <id property="id" column="id"/>
+        <result property="typeCode" column="type_code"/>
+        <result property="typeName" column="type_name"/>
+        <result property="section" column="section"/>
+        <result property="campus" column="campus"/>
+        <result property="majorPhone" column="major_phone"/>
+        <result property="minorPhone" column="minor_phone"/>
+        <result property="address" column="address"/>
+        <result property="email" column="email"/>
+        <result property="website" column="website"/>
+    </resultMap>
+
+    <resultMap id="YellowPageTypeResultMap" type="java.util.Map">
+        <id property="typeCode" column="type_code"/>
+        <result property="typeName" column="type_name"/>
+    </resultMap>
+
+    <select id="selectAllYellowPageList" resultMap="YellowPageResultMap">
+        select * from yellow_page join yellow_page_type on yellow_page.type_code = yellow_page_type.type_code;
+    </select>
+
+    <select id="selectYellowPageType" resultMap="YellowPageTypeResultMap">
+        select * from yellow_page_type;
+    </select>
+
+    <insert id="insertYellowPageBatch">
+        insert into yellow_page (type_code,section,campus,major_phone,minor_phone,address,email,website) values
+        <foreach collection="list" item="yellowPage" index="index" separator=",">
+            (#{yellowPage.typeCode},#{yellowPage.section},#{yellowPage.campus}
+            ,#{yellowPage.majorPhone},#{yellowPage.minorPhone}
+            ,#{yellowPage.address},#{yellowPage.email},#{yellowPage.website})
+        </foreach>
+    </insert>
+
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Cet.CetMapper">
+
+    <!-- 开启CetMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <select id="selectNumber" parameterType="java.lang.String"
+            resultType="edu.gdei.gdeiassistant.Pojo.Entity.CetNumber">
+        select * from cet where username=#{username}
+    </select>
+
+    <insert id="insertNumber">
+        insert into cet (username,number) values (#{username},#{number})
+    </insert>
+
+    <update id="updateNumber">
+        update cet set number=#{number} where username=#{username}
+    </update>
+
+</mapper>

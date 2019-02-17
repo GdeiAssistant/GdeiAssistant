@@ -28,7 +28,7 @@
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
           p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.pass}" p:pool-config-ref="poolConfig"/>
 
-    <!-- 配置Redis的操作模�? -->
+    <!-- 配置Redis的操作模板 -->
     <bean id="redisTemplete" class="org.springframework.data.redis.core.RedisTemplate">
         <property name="connectionFactory" ref="connectionFactory"/>
     </bean>
@@ -109,27 +109,27 @@
         <property name="dataSource" ref="dataDataSource"/>
     </bean>
 
-    <!-- 应用数据源事务管�? -->
+    <!-- 应用数据源事务管理 -->
     <bean id="appTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="appDataSource"/>
     </bean>
 
-    <!-- 日志数据源事务管�? -->
+    <!-- 日志数据源事务管理 -->
     <bean id="logTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="logDataSource"/>
     </bean>
 
-    <!-- 控制器映射器和控制器适配�? -->
+    <!-- 控制器映射器和控制器适配器 -->
     <mvc:annotation-driven conversion-service="conversionService"/>
 
-    <!-- 类型转换�? -->
+    <!-- 类型转换器 -->
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <!-- String类型属�?�自动转换为枚举类型 -->
-                <bean class="com.gdeiassistant.gdeiassistant.Converter.EnumConvert.StringToQueryMethodEnumConverter"/>
-                <bean class="com.gdeiassistant.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter"/>
-                <bean class="com.gdeiassistant.gdeiassistant.Converter.EnumConvert.StringToAuthenticationTypeEnumConverter"/>
+                <!-- String类型属性自动转换为枚举类型 -->
+                <bean class="edu.gdei.gdeiassistant.Converter.EnumConvert.StringToQueryMethodEnumConverter"/>
+                <bean class="edu.gdei.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter"/>
+                <bean class="edu.gdei.gdeiassistant.Converter.EnumConvert.StringToAuthenticationTypeEnumConverter"/>
             </set>
         </property>
     </bean>
@@ -137,21 +137,21 @@
     <!-- 注册方法级别验证后处理器 -->
     <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
 
-    <!-- 配置异步任务执行器和定时任务调度�? -->
+    <!-- 配置异步任务执行器和定时任务调度器 -->
     <task:annotation-driven scheduler="scheduler" executor="executor"/>
 
-    <!-- 定时任务使用多线�? -->
+    <!-- 定时任务使用多线程 -->
     <task:scheduler id="scheduler" pool-size="5"/>
 
-    <!-- 异步任务执行�? -->
+    <!-- 异步任务执行器 -->
     <task:executor id="executor" pool-size="5-50" queue-capacity="10"/>
 
-    <!-- 文件上传配置的MultipartResolver处理�? -->
+    <!-- 文件上传配置的MultipartResolver处理器 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="utf-8"/>
     </bean>
 
-    <!-- 配置FreeMarker的模板路�? -->
+    <!-- 配置FreeMarker的模板路径 -->
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/WEB-INF/view/"/>
         <property name="defaultEncoding" value="UTF-8"/>
@@ -166,7 +166,7 @@
         </property>
     </bean>
 
-    <!-- HTML视图渲染�? -->
+    <!-- HTML视图渲染器 -->
     <bean id="htmlViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
         <property name="contentType" value="text/html; charset=UTF-8"/>
@@ -179,7 +179,7 @@
         <property name="order" value="0"/>
     </bean>
 
-    <!-- JSP视图渲染�? -->
+    <!-- JSP视图渲染器 -->
     <bean id="jspViewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/view/"/>
@@ -198,12 +198,12 @@
         <property name="fileEncoding" value="UTF-8"/>
     </bean>
 
-    <!-- 拦截�? -->
+    <!-- 拦截器 -->
     <mvc:interceptors>
-        <!-- 用户登录状�?�校验拦截器 -->
+        <!-- 用户登录状态校验拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean class="com.gdeiassistant.gdeiassistant.Interceptor.LoginInterceptor">
+            <bean class="edu.gdei.gdeiassistant.Interceptor.LoginInterceptor">
                 <!-- 不进行拦截的地址列表 -->
                 <property name="exceptionList" ref="loginInterceptorExceptionList"/>
             </bean>
@@ -220,45 +220,45 @@
 
     </util:map>
 
-    <!-- 易班轻应用授权信�? -->
+    <!-- 易班轻应用授权信息 -->
     <util:map id="yiBanLightAppAuthorizeMap" scope="singleton">
         <entry key="userlogin">
-            <bean class="com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.userlogin.appId}"/>
                 <property name="appSecret" value="${yiban.userlogin.appSecret}"/>
                 <property name="callbackURL" value="${yiban.userlogin.callbackURL}"/>
             </bean>
         </entry>
         <entry key="secret">
-            <bean class="com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.secret.appId}"/>
                 <property name="appSecret" value="${yiban.secret.appSecret}"/>
                 <property name="callbackURL" value="${yiban.secret.callbackURL}"/>
             </bean>
         </entry>
         <entry key="ershou">
-            <bean class="com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.ershou.appId}"/>
                 <property name="appSecret" value="${yiban.ershou.appSecret}"/>
                 <property name="callbackURL" value="${yiban.ershou.callbackURL}"/>
             </bean>
         </entry>
         <entry key="lostandfound">
-            <bean class="com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.lostandfound.appId}"/>
                 <property name="appSecret" value="${yiban.lostandfound.appSecret}"/>
                 <property name="callbackURL" value="${yiban.lostandfound.callbackURL}"/>
             </bean>
         </entry>
         <entry key="dating">
-            <bean class="com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.dating.appId}"/>
                 <property name="appSecret" value="${yiban.dating.appSecret}"/>
                 <property name="callbackURL" value="${yiban.dating.callbackURL}"/>
             </bean>
         </entry>
         <entry key="news">
-            <bean class="com.gdeiassistant.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.news.appId}"/>
                 <property name="appSecret" value="${yiban.news.appSecret}"/>
                 <property name="callbackURL" value="${yiban.news.callbackURL}"/>
@@ -267,27 +267,27 @@
     </util:map>
 
     <!-- 自动扫描组件 -->
-    <context:component-scan base-package="com.gdeiassistant.gdeiassistant"/>
+    <context:component-scan base-package="edu.gdei.gdeiassistant"/>
 
     <!-- 自动扫描mapper接口，并注入应用SqlSessionFactory -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistant"/>
+        <property name="basePackage" value="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant"/>
         <property name="sqlSessionFactoryBeanName" value="appSqlSessionFactory"/>
     </bean>
 
     <!-- 自动扫描mapper接口，并注入日志SqlSessionFactory -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistantLogs"/>
+        <property name="basePackage" value="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantLogs"/>
         <property name="sqlSessionFactoryBeanName" value="logSqlSessionFactory"/>
     </bean>
 
     <!-- 自动扫描mapper接口，并注入数据SqlSessionFactory -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.gdeiassistant.gdeiassistant.Repository.Mysql.GdeiAssistantData"/>
+        <property name="basePackage" value="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData"/>
         <property name="sqlSessionFactoryBeanName" value="dataSqlSessionFactory"/>
     </bean>
 
-    <!-- 启动对AspectJ注解的支�? -->
+    <!-- 启动对AspectJ注解的支持 -->
     <aop:aspectj-autoproxy/>
 
 </beans>

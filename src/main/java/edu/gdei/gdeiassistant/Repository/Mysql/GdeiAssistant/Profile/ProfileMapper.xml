@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper">
+
+    <!-- 开启ProfileMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <resultMap id="profileResultMap" type="edu.gdei.gdeiassistant.Pojo.Entity.Profile">
+        <result property="username" column="username"/>
+        <result property="kickname" column="kickname"/>
+        <result property="gender" column="gender"/>
+        <result property="genderOrientation" column="gender_orientation"/>
+        <result property="region" column="region"/>
+        <result property="state" column="state"/>
+        <result property="city" column="city"/>
+    </resultMap>
+
+    <resultMap id="introductionResultMap" type="edu.gdei.gdeiassistant.Pojo.Entity.Introduction">
+        <result property="introductionContent" column="introduction"/>
+        <result property="username" column="username"/>
+    </resultMap>
+
+    <select id="selectUserProfile" parameterType="java.lang.String"
+            resultMap="profileResultMap">
+        select * from profile where username=#{username} limit 1
+    </select>
+
+    <select id="selectUserIntroduction" parameterType="java.lang.String"
+            resultMap="introductionResultMap">
+        select * from introduction where username=#{username} limit 1
+    </select>
+
+    <insert id="initUserProfile">
+        insert into profile (username,kickname) values (#{username},#{kickname})
+    </insert>
+
+    <insert id="initUserIntroduction" parameterType="java.lang.String">
+        insert into introduction (username) values (#{username})
+    </insert>
+
+    <update id="updateUserProfile" parameterType="edu.gdei.gdeiassistant.Pojo.Entity.Profile">
+        update profile
+        <set>
+            <if test='kickname!=null'>
+                kickname=#{kickname},
+            </if>
+            <if test='gender!=null'>
+                gender=#{gender},
+            </if>
+            <if test='genderOrientation!=null'>
+                gender_orientation=#{genderOrientation},
+            </if>
+            <if test='faculty!=null'>
+                faculty=#{faculty},
+            </if>
+            <if test='major!=null'>
+                major=#{major},
+            </if>
+            <if test='region!=null'>
+                region=#{region},
+            </if>
+            <if test='state!=null'>
+                state=#{state},
+            </if>
+            <if test='city!=null'>
+                city=#{city},
+            </if>
+        </set>
+        where username=#{username}
+    </update>
+
+    <update id="resetUserProfile">
+        update profile set kickname=#{kickname},gender=null,gender_orientation=null,
+        region=null,state=null,city=null where username=#{username}
+    </update>
+
+    <update id="resetUserIntroduction">
+        update introduction set introduction=null where username=#{username}
+    </update>
+
+    <update id="updateUserIntroduction">
+        update introduction set introduction=#{introduction} where username=#{username}
+    </update>
+
+</mapper>

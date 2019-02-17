@@ -90,12 +90,71 @@ CREATE TABLE `electricfees` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `yellow_page`
+--
+
+DROP TABLE IF EXISTS `yellow_page`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `yellow_page` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '黄页信息主键ID',
+  `type_code` int(11) NOT NULL COMMENT '类别',
+  `section` varchar(25) NOT NULL COMMENT '单位',
+  `campus` varchar(5) DEFAULT NULL COMMENT '校区',
+  `major_phone` varchar(15) DEFAULT NULL COMMENT '主要电话',
+  `minor_phone` varchar(15) DEFAULT NULL COMMENT '次要电话',
+  `address` varchar(45) DEFAULT NULL COMMENT '地址',
+  `email` varchar(35) DEFAULT NULL COMMENT '电子邮箱',
+  `website` varchar(85) DEFAULT NULL COMMENT '网站',
+  PRIMARY KEY (`id`),
+  KEY `yellowPageTypeForeignKey_idx` (`type_code`),
+  CONSTRAINT `yellowPageTypeForeignKey` FOREIGN KEY (`type_code`) REFERENCES `yellow_page_type` (`type_code`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=409 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='校园黄页信息';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `yellow_page_type`
+--
+
+DROP TABLE IF EXISTS `yellow_page_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `yellow_page_type` (
+  `type_code` int(11) NOT NULL AUTO_INCREMENT,
+  `type_name` varchar(15) COLLATE utf8mb4_bin NOT NULL,
+  PRIMARY KEY (`type_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Current Database: `gdeiassistant`
 --
 
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */;
 
 USE `gdeiassistant`;
+
+--
+-- Table structure for table `android_access`
+--
+
+DROP TABLE IF EXISTS `android_access`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `android_access` (
+  `id` tinyint(2) NOT NULL COMMENT '用户组ID',
+  `grade` tinyint(1) NOT NULL COMMENT '是否拥有成绩查询功能的权限',
+  `schedule` tinyint(1) NOT NULL COMMENT '是否拥有课表查询功能的权限',
+  `cet` tinyint(1) NOT NULL COMMENT '是否拥有四六级成绩查询功能的权限',
+  `evaluate` tinyint(1) NOT NULL COMMENT '是否拥有一键评教功能的权限',
+  `card` tinyint(1) NOT NULL COMMENT '是否拥有校园卡信息查询功能的权限',
+  `bill` tinyint(1) NOT NULL COMMENT '是否拥有校园卡消费查询功能的权限',
+  `lost` tinyint(1) NOT NULL COMMENT '是否拥有校园卡挂失功能的权限',
+  `charge` tinyint(1) NOT NULL COMMENT '是否拥有校园卡充值功能的权限',
+  PRIMARY KEY (`id`),
+  CONSTRAINT `androidAccessGroupId` FOREIGN KEY (`id`) REFERENCES `user_group` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `authentication`
@@ -116,7 +175,7 @@ CREATE TABLE `authentication` (
   `method` tinyint(1) DEFAULT NULL COMMENT '实名认证方法',
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '记录标记删除状态',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -353,6 +412,7 @@ CREATE TABLE `secret_content` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `content` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '校园树洞信息内容',
   `theme` tinyint(1) NOT NULL COMMENT '校园树洞信息主题',
+  `type` tinyint(1) NOT NULL COMMENT '校园树洞信息类型',
   PRIMARY KEY (`id`),
   KEY `secretContentUsername` (`username`),
   CONSTRAINT `secretContentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -386,9 +446,49 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `password` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '密码',
-  `state` tinyint(1) DEFAULT NULL COMMENT '账户状态',
-  PRIMARY KEY (`username`)
+  `state` tinyint(1) NOT NULL COMMENT '账户状态',
+  `user_group` tinyint(2) DEFAULT NULL COMMENT '账户所属的用户组',
+  PRIMARY KEY (`username`),
+  KEY `userGroupId_idx` (`user_group`),
+  CONSTRAINT `userGroupId` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_group`
+--
+
+DROP TABLE IF EXISTS `user_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `user_group` (
+  `id` tinyint(2) NOT NULL COMMENT '用户组ID',
+  `description` varchar(10) NOT NULL COMMENT '用户组描述',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wechat_access`
+--
+
+DROP TABLE IF EXISTS `wechat_access`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `wechat_access` (
+  `id` tinyint(2) NOT NULL,
+  `grade` tinyint(1) NOT NULL,
+  `schedule` tinyint(1) NOT NULL,
+  `cet` tinyint(1) NOT NULL,
+  `evaluate` tinyint(1) NOT NULL,
+  `card` tinyint(1) NOT NULL,
+  `bill` tinyint(1) NOT NULL,
+  `lost` tinyint(1) NOT NULL,
+  `charge` tinyint(1) NOT NULL,
+  `collection` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `wechatAccessGroupId` FOREIGN KEY (`id`) REFERENCES `user_group` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -432,4 +532,4 @@ CREATE TABLE `yiban_user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-11 20:35:06
+-- Dump completed on 2019-02-17 22:10:04

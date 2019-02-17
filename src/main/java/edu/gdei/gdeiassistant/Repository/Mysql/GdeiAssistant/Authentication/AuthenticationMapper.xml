@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Authentication.AuthenticationMapper">
+
+    <!-- 开启AuthenticationMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <resultMap id="authenticationResultMap" type="edu.gdei.gdeiassistant.Pojo.Entity.Authentication">
+        <result property="identityCode" column="identity_code"/>
+        <result property="username" column="username"/>
+        <result property="realname" column="realname"/>
+        <result property="identityNumber" column="identity_number"/>
+        <result property="schoolNumber" column="school_number"/>
+        <result property="method" column="method" jdbcType="TINYINT" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <select id="selectAuthentication" resultMap="authenticationResultMap">
+        select * from authentication where username=#{username} and is_deleted=0;
+    </select>
+
+    <insert id="insertAuthentication">
+        insert into authentication (identity_code,username,realname,identity_number,school_number
+        ,gmt_create,gmt_modified,method,is_deleted)
+        values (#{identityCode},#{username},#{realname},#{identityNumber},#{schoolNumber}
+        ,now(),now(),#{method},0)
+    </insert>
+
+    <update id="updateAuthentication">
+        update authentication set realname=#{realname},identity_number=#{identityNumber},school_number=#{schoolNumber}
+        ,gmt_modified=now(),method=#{method},is_deleted=0 where username=#{username}
+    </update>
+
+    <delete id="deleteAuthentication">
+        update authentication set identity_code=null,realname=null,identity_number=null,school_number=null,gmt_modified=now()
+        ,method=-1,is_deleted=1 where username=#{username}
+    </delete>
+
+</mapper>

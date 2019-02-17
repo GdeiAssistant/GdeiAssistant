@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Access.AccessMapper">
+
+    <!-- 开启AccessMapper namespace下的二级缓存 -->
+    <cache/>
+
+    <select id="selectAndroidAccess" resultType="edu.gdei.gdeiassistant.Pojo.Entity.Access">
+        select * from android_access where id=#{groupId}
+    </select>
+
+    <select id="selectWechatAccess" resultType="edu.gdei.gdeiassistant.Pojo.Entity.Access">
+        select * from wechat_access where id=#{groupId}
+    </select>
+
+</mapper>

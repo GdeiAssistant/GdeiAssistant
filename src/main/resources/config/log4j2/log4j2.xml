@@ -93,12 +93,12 @@
             <appender-ref ref="Error"/>
         </root>
 
-        <logger name="com.linguancheng.gdeiassistant.Aspect.QueryLogAspect" level="info" additivity="false">
+        <logger name="edu.gdei.gdeiassistant.Aspect.QueryLogAspect" level="info" additivity="false">
             <appender-ref ref="RestLog"/>
             <appender-ref ref="Console"/>
         </logger>
 
-        <logger name="com.linguancheng.gdeiassistant.Aspect.RequestLogAspect" level="info" additivity="false">
+        <logger name="edu.gdei.gdeiassistant.Aspect.RequestLogAspect" level="info" additivity="false">
             <appender-ref ref="RequestLog"/>
             <appender-ref ref="Console"/>
         </logger>

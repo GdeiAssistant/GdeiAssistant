@@ -1,5 +1,0 @@
-package com.linguancheng.gdeiassistant.Enum.Charge;
-
-public enum GetServerKeyCodeResultEnum {
-    GETKEYCODE_SUCCESS, UNSUPPORT_CLIENTTYPE, UNSUPPORT_SECURITYVERSION, NULL_USERINFORMATION, INCORRECT_USERINFORMATION
-}

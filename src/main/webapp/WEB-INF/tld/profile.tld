@@ -10,7 +10,7 @@
     <function>
         <description>获取性别字典</description>
         <name>getGenderMap</name>
-        <function-class>com.linguancheng.gdeiassistant.Service.Profile.UserProfileService</function-class>
+        <function-class>edu.gdei.gdeiassistant.Service.Profile.UserProfileService</function-class>
         <function-signature>java.util.Map getGenderMap()</function-signature>
         <example>${profile:getGenderMap()}</example>
     </function>
@@ -18,7 +18,7 @@
     <function>
         <description>获取性取向字典</description>
         <name>getGenderOrientationMap</name>
-        <function-class>com.linguancheng.gdeiassistant.Service.Profile.UserProfileService</function-class>
+        <function-class>edu.gdei.gdeiassistant.Service.Profile.UserProfileService</function-class>
         <function-signature>java.util.Map getGenderOrientationMap()</function-signature>
         <example>${profile:getGenderOrientationMap()}</example>
     </function>
@@ -26,7 +26,7 @@
     <function>
         <description>获取院系字典</description>
         <name>getFacultyMap</name>
-        <function-class>com.linguancheng.gdeiassistant.Service.Profile.UserProfileService</function-class>
+        <function-class>edu.gdei.gdeiassistant.Service.Profile.UserProfileService</function-class>
         <function-signature>java.util.Map getFacultyMap()</function-signature>
         <example>${profile:getFacultyMap()}</example>
     </function>

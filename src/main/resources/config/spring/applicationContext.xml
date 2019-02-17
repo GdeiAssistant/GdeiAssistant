@@ -127,9 +127,9 @@
         <property name="converters">
             <set>
                 <!-- String类型属性自动转换为枚举类型 -->
-                <bean class="com.linguancheng.gdeiassistant.Converter.EnumConvert.StringToQueryMethodEnumConverter"/>
-                <bean class="com.linguancheng.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter"/>
-                <bean class="com.linguancheng.gdeiassistant.Converter.EnumConvert.StringToAuthenticationTypeEnumConverter"/>
+                <bean class="edu.gdei.gdeiassistant.Converter.EnumConvert.StringToQueryMethodEnumConverter"/>
+                <bean class="edu.gdei.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter"/>
+                <bean class="edu.gdei.gdeiassistant.Converter.EnumConvert.StringToAuthenticationTypeEnumConverter"/>
             </set>
         </property>
     </bean>
@@ -203,7 +203,7 @@
         <!-- 用户登录状态校验拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean class="com.linguancheng.gdeiassistant.Interceptor.LoginInterceptor">
+            <bean class="edu.gdei.gdeiassistant.Interceptor.LoginInterceptor">
                 <!-- 不进行拦截的地址列表 -->
                 <property name="exceptionList" ref="loginInterceptorExceptionList"/>
             </bean>
@@ -223,42 +223,42 @@
     <!-- 易班轻应用授权信息 -->
     <util:map id="yiBanLightAppAuthorizeMap" scope="singleton">
         <entry key="userlogin">
-            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.userlogin.appId}"/>
                 <property name="appSecret" value="${yiban.userlogin.appSecret}"/>
                 <property name="callbackURL" value="${yiban.userlogin.callbackURL}"/>
             </bean>
         </entry>
         <entry key="secret">
-            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.secret.appId}"/>
                 <property name="appSecret" value="${yiban.secret.appSecret}"/>
                 <property name="callbackURL" value="${yiban.secret.callbackURL}"/>
             </bean>
         </entry>
         <entry key="ershou">
-            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.ershou.appId}"/>
                 <property name="appSecret" value="${yiban.ershou.appSecret}"/>
                 <property name="callbackURL" value="${yiban.ershou.callbackURL}"/>
             </bean>
         </entry>
         <entry key="lostandfound">
-            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.lostandfound.appId}"/>
                 <property name="appSecret" value="${yiban.lostandfound.appSecret}"/>
                 <property name="callbackURL" value="${yiban.lostandfound.callbackURL}"/>
             </bean>
         </entry>
         <entry key="dating">
-            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.dating.appId}"/>
                 <property name="appSecret" value="${yiban.dating.appSecret}"/>
                 <property name="callbackURL" value="${yiban.dating.callbackURL}"/>
             </bean>
         </entry>
         <entry key="news">
-            <bean class="com.linguancheng.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
+            <bean class="edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo">
                 <property name="appID" value="${yiban.news.appId}"/>
                 <property name="appSecret" value="${yiban.news.appSecret}"/>
                 <property name="callbackURL" value="${yiban.news.callbackURL}"/>
@@ -267,23 +267,23 @@
     </util:map>
 
     <!-- 自动扫描组件 -->
-    <context:component-scan base-package="com.linguancheng.gdeiassistant"/>
+    <context:component-scan base-package="edu.gdei.gdeiassistant"/>
 
     <!-- 自动扫描mapper接口，并注入应用SqlSessionFactory -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistant"/>
+        <property name="basePackage" value="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant"/>
         <property name="sqlSessionFactoryBeanName" value="appSqlSessionFactory"/>
     </bean>
 
     <!-- 自动扫描mapper接口，并注入日志SqlSessionFactory -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantLogs"/>
+        <property name="basePackage" value="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantLogs"/>
         <property name="sqlSessionFactoryBeanName" value="logSqlSessionFactory"/>
     </bean>
 
     <!-- 自动扫描mapper接口，并注入数据SqlSessionFactory -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.linguancheng.gdeiassistant.Repository.Mysql.GdeiAssistantData"/>
+        <property name="basePackage" value="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData"/>
         <property name="sqlSessionFactoryBeanName" value="dataSqlSessionFactory"/>
     </bean>
 

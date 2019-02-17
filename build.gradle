@@ -1,4 +1,4 @@
-group 'com.linguancheng'
+group 'edu.gdei'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'

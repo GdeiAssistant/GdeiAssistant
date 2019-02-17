@@ -37,7 +37,7 @@
     <!-- 过滤用户提交的表单信息，防止XSS攻击 -->
     <filter>
         <filter-name>XSSFilter</filter-name>
-        <filter-class>com.linguancheng.gdeiassistant.Filter.XSSFilter</filter-class>
+        <filter-class>edu.gdei.gdeiassistant.Filter.XSSFilter</filter-class>
     </filter>
 
     <filter-mapping>

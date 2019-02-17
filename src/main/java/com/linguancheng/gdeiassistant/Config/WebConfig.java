@@ -72,19 +72,24 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return loginInterceptorExceptionList;
     }
 
-//    <!-- 校园新闻系统地址 -->
-//    <util:list id="newsUrlsList" value-type="java.lang.String">
-//        <!-- 学生工作 -->
-//        <value>http://web.gdei.edu.cn/gdei/stuwork/stuadmin</value>
-//        <!-- 后勤工作 -->
-//        <value>http://web.gdei.edu.cn/gdei/hqserv/ggxx</value>
-//        <!-- 选课工作 -->
-//        <value>http://web.gdei.edu.cn/jwc/jwtz/xkgz</value>
-//        <!-- 调停课通知 -->
-//        <value>http://web.gdei.edu.cn/jwc/jwtz/tktz</value>
-//        <!-- 等级竞赛通知 -->
-//        <value>http://web.gdei.edu.cn/jwc/jwtz/kwtz</value>
-//    </util:list>
+    /**
+     * RSS订阅的校园新闻通知系统地址列表，新闻类型都属于综合信息
+     *
+     * @return
+     */
+    @Bean
+    public List<String> rssNewsUrlsList() {
+        List<String> rssNewsUrlsList = new ArrayList<>();
+        //公告
+        rssNewsUrlsList.add("http://www.gdei.edu.cn/www/gonggaoxinxi/inform/index.xml");
+        //通知
+        rssNewsUrlsList.add("http://www.gdei.edu.cn/www/gonggaoxinxi/tongzhi/index.xml");
+        //网络通知
+        rssNewsUrlsList.add("http://www.gdei.edu.cn/www/gonggaoxinxi/netinform/index.xml");
+        //学校新闻
+        rssNewsUrlsList.add("http://www.gdei.edu.cn/www/xueyuanxinwen/index.xml");
+        return rssNewsUrlsList;
+    }
 
     /**
      * 校园新闻通知系统地址列表

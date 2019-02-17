@@ -1,15 +1,8 @@
 package com.linguancheng.gdeiassistant.Pojo.CetQuery;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-
-/**
- * Created by linguancheng on 2017/7/21.
- */
 
 public class CetQuery {
 

@@ -31,10 +31,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by linguancheng on 2017/7/22.
- */
-
 @Service
 public class BookQueryService {
 

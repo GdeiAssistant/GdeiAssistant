@@ -1,15 +1,8 @@
 package com.linguancheng.gdeiassistant.Pojo.GradeQuery;
 
-import com.linguancheng.gdeiassistant.Enum.Base.ServiceResultEnum;
 import com.linguancheng.gdeiassistant.Pojo.Entity.Grade;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-/**
- * Created by linguancheng on 2017/7/22.
- */
 
 public class GradeQueryResult {
 

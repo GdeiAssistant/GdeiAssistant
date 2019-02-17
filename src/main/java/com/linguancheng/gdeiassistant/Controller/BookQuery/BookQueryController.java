@@ -17,10 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-/**
- * Created by linguancheng on 2017/7/22.
- */
-
 @Controller
 public class BookQueryController {
 

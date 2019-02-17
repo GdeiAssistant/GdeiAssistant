@@ -10,10 +10,6 @@ import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * Created by linguancheng on 2017/7/21.
- */
-
 @Controller
 public class CetQueryController {
 

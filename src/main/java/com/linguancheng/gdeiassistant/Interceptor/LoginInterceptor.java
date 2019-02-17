@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-/**
- * Created by linguancheng on 2017/7/20.
- */
 public class LoginInterceptor implements HandlerInterceptor {
 
     private List<String> exceptionList;

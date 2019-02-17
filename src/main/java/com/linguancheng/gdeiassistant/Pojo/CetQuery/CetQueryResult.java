@@ -5,10 +5,6 @@ import com.linguancheng.gdeiassistant.Pojo.Entity.Cet;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by linguancheng on 2017/7/21.
- */
-
 @Component
 @Scope("prototype")
 public class CetQueryResult {

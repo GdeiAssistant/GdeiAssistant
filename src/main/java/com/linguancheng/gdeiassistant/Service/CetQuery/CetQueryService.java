@@ -29,10 +29,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.IOException;
 
-/**
- * Created by linguancheng on 2017/7/21.
- */
-
 @Service
 public class CetQueryService {
 

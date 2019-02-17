@@ -48,10 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-/**
- * Created by linguancheng on 2017/7/16.
- */
-
 @Service
 public class UserLoginService {
 

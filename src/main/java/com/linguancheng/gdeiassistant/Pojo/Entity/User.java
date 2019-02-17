@@ -12,10 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-/**
- * Created by linguancheng on 2017/7/16.
- */
-
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)

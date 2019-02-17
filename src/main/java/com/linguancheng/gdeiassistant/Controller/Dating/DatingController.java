@@ -24,12 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * 广东二师助手团队 林冠成 版权所有
- * All rights reserved © 2016 - 2018
- * Author:林冠成
- * Date:2018/5/7
- */
 @Controller
 public class DatingController {
 

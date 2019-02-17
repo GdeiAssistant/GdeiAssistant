@@ -23,9 +23,6 @@ import org.springframework.web.HttpSessionRequiredException;
 import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpSession;
 
-/**
- * Created by linguancheng on 2017/7/17.
- */
 @Component
 public class HttpClientUtils {
 

@@ -6,10 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-/**
- * Created by linguancheng on 2017/7/22.
- */
-
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)

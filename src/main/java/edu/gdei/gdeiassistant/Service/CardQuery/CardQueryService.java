@@ -254,22 +254,17 @@ public class CardQueryService {
             if (autoRedirect) {
                 if (httpResponse.getStatusLine().getStatusCode() == 200 && document.select("span[class='style2']").size() > 0) {
                     //开启自动重定向时的自动登录
-                    httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                    httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200
-                            && document.getElementsByClass("main clear").size() > 0) {
-                        if (document.select("div[class='right menu_a'] span em").size() > 0) {
-                            return;
-                        }
-                        httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login?service=http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                        httpGet = new HttpGet(document.select("a").first().attr("href"));
                         httpResponse = httpClient.execute(httpGet);
                         if (httpResponse.getStatusLine().getStatusCode() == 200) {
                             httpGet = new HttpGet("http://ecard.gdei.edu.cn");
                             httpResponse = httpClient.execute(httpGet);
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                            if (httpResponse.getStatusLine().getStatusCode() == 200
-                                    && document.select("span[class='style2']").size() > 0) {
+                            if (document.select("div[class='right menu_a'] span em").size() > 0) {
                                 return;
                             }
                         }
@@ -291,15 +286,29 @@ public class CardQueryService {
                             if (document.select("div[class='right menu_a'] span em").size() > 0) {
                                 return;
                             }
-                            httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login?service=http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                            httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
                             httpResponse = httpClient.execute(httpGet);
-                            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                                httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                            if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                                httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
                                 httpResponse = httpClient.execute(httpGet);
-                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                                if (httpResponse.getStatusLine().getStatusCode() == 200
-                                        && document.select("span[class='style2']").size() > 0) {
-                                    return;
+                                if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                                    httpGet = new HttpGet(document.select("a").first().attr("href"));
+                                    httpResponse = httpClient.execute(httpGet);
+                                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                                        httpResponse = httpClient.execute(httpGet);
+                                        if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                                            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                                            httpResponse = httpClient.execute(httpGet);
+                                            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                                                if (document.select("div[class='right menu_a'] span em").size() > 0) {
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

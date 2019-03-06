@@ -19,12 +19,12 @@ public class LogoutController {
         HttpSession httpSession = request.getSession();
         httpSession.invalidate();
         //清除Cookie
-        Cookie cookies[] = request.getCookies();
+        Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             cookie.setMaxAge(0);
             cookie.setPath(request.getContextPath() + "/");
             response.addCookie(cookie);
         }
-        response.sendRedirect(request.getContextPath() + "/");
+        response.sendRedirect(request.getContextPath() + "/login");
     }
 }

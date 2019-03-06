@@ -29,6 +29,13 @@ $(function () {
         success: function (result) {
             $("#android_amazon_url").val(result.url);
         }
+    });
+    $.ajax({
+        url: '/download/uwp',
+        type: 'get',
+        success: function (result) {
+            $("#uwp_url").val(result.url);
+        }
     })
 });
 
@@ -64,18 +71,37 @@ function iOSDownload() {
 }
 
 function UWPDownload() {
-    alert("暂无UWP版本");
+    if ($("#uwp_url").val() !== '#') {
+        window.location.href = $("#uwp_url").val();
+    }
 }
 
 function QuickApp() {
     alert("暂无快应用版本");
 }
 
-function WechatApp() {
+function AlipayApp() {
+    alert("暂无支付宝小程序版本");
+}
+
+function Wechat() {
     $.photoBrowser({
         items: [
             {
                 image: "/img/download/wechat_qrcode.jpg",
+            }
+        ],
+        onOpen: function () {
+            $(".photo-container img").width($(window).width());
+        }
+    }).open();
+}
+
+function WechatApp() {
+    $.photoBrowser({
+        items: [
+            {
+                image: "/img/download/wechatapp_qrcode.jpg",
             }
         ],
         onOpen: function () {

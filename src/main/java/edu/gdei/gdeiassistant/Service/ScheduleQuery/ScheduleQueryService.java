@@ -468,6 +468,7 @@ public class ScheduleQueryService {
                                                             }
                                                             schedule.setMinScheduleWeek(minWeekNumber);
                                                             schedule.setMaxScheduleWeek(maxWeekNumber);
+                                                            schedule.setScheduleWeek("第" + minWeekNumber + "周至第" + maxWeekNumber + "周");
                                                             schedule.setScheduleTeacher(teacher);
                                                             schedule.setScheduleLocation(location);
                                                             schedule.setRow(row - 2);

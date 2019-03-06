@@ -8,12 +8,8 @@
     <!-- 开启AccessMapper namespace下的二级缓存 -->
     <cache/>
 
-    <select id="selectAndroidAccess" resultType="edu.gdei.gdeiassistant.Pojo.Entity.Access">
-        select * from android_access where id=#{groupId}
-    </select>
-
-    <select id="selectWechatAccess" resultType="edu.gdei.gdeiassistant.Pojo.Entity.Access">
-        select * from wechat_access where id=#{groupId}
+    <select id="selectAccess" resultType="edu.gdei.gdeiassistant.Pojo.Entity.Access">
+        select * from access where id=#{groupId}
     </select>
 
 </mapper>

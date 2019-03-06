@@ -68,6 +68,18 @@
     background: transparent url(/img/download/uwp_icon.png) no-repeat 30px center;
 }
 
+.wechat {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/wechat_icon.png) no-repeat 30px center;
+}
+
 .wechat_app {
     margin-bottom: 10px;
     width: 300px;
@@ -78,6 +90,18 @@
     height: 68px;
     padding: 28px 0 0 85px;
     background: transparent url(/img/download/wechat_icon.png) no-repeat 30px center;
+}
+
+.alipay_app {
+    margin-bottom: 10px;
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 15px;
+    height: 68px;
+    padding: 28px 0 0 85px;
+    background: transparent url(/img/download/alipay_icon.png) no-repeat 30px center;
 }
 
 .quick_app {

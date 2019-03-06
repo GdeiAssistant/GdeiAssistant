@@ -75,7 +75,7 @@ public class CardRestController {
     @RequestMapping(value = "/rest/cardlost", method = RequestMethod.POST)
     @RestAuthentication
     public JsonResult CardLost(HttpServletRequest request, @RequestParam("token") String token
-            , @Validated @NotBlank @Pattern(regexp = "^[0-9]*$") String cardPassword) throws Exception {
+            , @Validated @NotBlank @Pattern(regexp = "^[0-9]*$") @RequestParam("cardPassword") String cardPassword) throws Exception {
         User user = (User) request.getAttribute("user");
         cardQueryService.CardLost(request.getSession().getId(), user.getUsername()
                 , user.getPassword(), cardPassword);

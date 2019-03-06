@@ -69,6 +69,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         loginInterceptorExceptionList.add("/wechat");
         //易班API接口
         loginInterceptorExceptionList.add("/yiban");
+        //支付宝API接口
+        loginInterceptorExceptionList.add("/alipay");
         return loginInterceptorExceptionList;
     }
 

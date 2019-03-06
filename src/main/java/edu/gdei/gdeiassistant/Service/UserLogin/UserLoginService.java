@@ -183,6 +183,11 @@ public class UserLoginService {
                     }
                 }
                 throw new ServerErrorException("教务系统异常");
+            } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
+                    //已经通过了认证
+                    return LoginCasSystem(httpClient, user);
+                }
             }
             throw new ServerErrorException("教务系统异常");
         } catch (ServerErrorException e) {
@@ -223,11 +228,8 @@ public class UserLoginService {
     private UserCertificate LoginCasSystem(CloseableHttpClient httpClient, User user) throws Exception {
         HttpGet httpGet = new HttpGet(url + "login_cas.aspx");
         HttpResponse httpResponse = httpClient.execute(httpGet);
-        if (httpResponse.getStatusLine().getStatusCode() == 302
-                && ("https://security.gdei.edu.cn/cas/login" +
-                "?service=http://jwgl.gdei.edu.cn/login_cas.aspx")
-                .equals(httpResponse.getFirstHeader("Location").getValue())) {
-            httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login?service=http://jwgl.gdei.edu.cn/login_cas.aspx");
+        if (httpResponse.getStatusLine().getStatusCode() == 302) {
+            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
             httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             httpGet = new HttpGet(document.select("a").first().attr("href"));

@@ -19,19 +19,11 @@ public class AccessRestController {
     @Autowired
     private AccessService accessService;
 
-    @RequestMapping(value = "/rest/access/android", method = RequestMethod.POST)
+    @RequestMapping(value = {"/rest/access", "/rest/access/android", "/rest/access/wechat", "/rest/access/miniapp"}, method = RequestMethod.POST)
     @RestAuthentication
-    public DataJsonResult<Access> GetUserAndroidAccess(HttpServletRequest request, @RequestParam("token") String token) throws Exception {
+    public DataJsonResult<Access> GetUserAccess(HttpServletRequest request, @RequestParam("token") String token) throws Exception {
         User user = (User) request.getAttribute("user");
-        Access access = accessService.GetUserAndroidAccess(user.getGroup());
-        return new DataJsonResult<>(true, access);
-    }
-
-    @RequestMapping(value = "/rest/access/wechat", method = RequestMethod.POST)
-    @RestAuthentication
-    public DataJsonResult<Access> GetUserWechatAccess(HttpServletRequest request, @RequestParam("token") String token) throws Exception {
-        User user = (User) request.getAttribute("user");
-        Access access = accessService.GetUserWechatAccess(user.getGroup());
+        Access access = accessService.GetUserAccess(user.getGroup());
         return new DataJsonResult<>(true, access);
     }
 }

@@ -35,6 +35,8 @@ public class ScheduleUtils {
         //配置最小和最大周数
         schedule.setMinScheduleWeek(customSchedule.getMinScheduleWeek());
         schedule.setMaxScheduleWeek(customSchedule.getMaxScheduleWeek());
+        //配置课程周数
+        schedule.setScheduleWeek("第" + schedule.getMinScheduleWeek() + "周至第" + schedule.getMaxScheduleWeek() + "周");
         //生成课程颜色
         schedule.setColorCode(ScheduleUtils.getScheduleColor(schedule.getPosition()));
         //生成课程编号

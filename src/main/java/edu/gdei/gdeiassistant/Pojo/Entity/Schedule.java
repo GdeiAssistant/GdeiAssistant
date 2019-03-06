@@ -62,6 +62,9 @@ public class Schedule implements Serializable {
     //最大的课程周数
     private Integer maxScheduleWeek;
 
+    //课程周数
+    private String scheduleWeek;
+
     public Integer getPosition() {
         return position;
     }
@@ -164,5 +167,13 @@ public class Schedule implements Serializable {
 
     public void setMinScheduleWeek(Integer minScheduleWeek) {
         this.minScheduleWeek = minScheduleWeek;
+    }
+
+    public String getScheduleWeek() {
+        return scheduleWeek;
+    }
+
+    public void setScheduleWeek(String scheduleWeek) {
+        this.scheduleWeek = scheduleWeek;
     }
 }

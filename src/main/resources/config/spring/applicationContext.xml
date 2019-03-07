@@ -58,67 +58,6 @@
     <!-- Spring提供的MongoDB操作模板 -->
     <mongo:template id="mongoTemplate" db-factory-ref="mongoDbFactory" write-concern="NORMAL"/>
 
-    <!-- 设置应用数据源c3p0 -->
-    <bean id="appDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${app.jdbc.driverClassName}"/>
-        <property name="jdbcUrl" value="${app.jdbc.url}"/>
-        <property name="user" value="${app.jdbc.username}"/>
-        <property name="password" value="${app.jdbc.password}"/>
-        <property name="maxPoolSize" value="${app.jdbc.maxPoolSize}"/>
-        <property name="minPoolSize" value="${app.jdbc.minPoolSize}"/>
-        <property name="maxIdleTime" value="${app.jdbc.maxIdleTime}"/>
-    </bean>
-
-    <!-- 设置日志数据源c3p0 -->
-    <bean id="logDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${log.jdbc.driverClassName}"/>
-        <property name="jdbcUrl" value="${log.jdbc.url}"/>
-        <property name="user" value="${log.jdbc.username}"/>
-        <property name="password" value="${log.jdbc.password}"/>
-        <property name="maxPoolSize" value="${log.jdbc.maxPoolSize}"/>
-        <property name="minPoolSize" value="${log.jdbc.minPoolSize}"/>
-        <property name="maxIdleTime" value="${log.jdbc.maxIdleTime}"/>
-    </bean>
-
-    <!-- 设置数据数据源c3p0 -->
-    <bean id="dataDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${data.jdbc.driverClassName}"/>
-        <property name="jdbcUrl" value="${data.jdbc.url}"/>
-        <property name="user" value="${data.jdbc.username}"/>
-        <property name="password" value="${data.jdbc.password}"/>
-        <property name="maxPoolSize" value="${data.jdbc.maxPoolSize}"/>
-        <property name="minPoolSize" value="${data.jdbc.minPoolSize}"/>
-        <property name="maxIdleTime" value="${data.jdbc.maxIdleTime}"/>
-    </bean>
-
-    <!-- 应用数据库的SQLSessionFactory -->
-    <bean id="appSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>
-        <property name="dataSource" ref="appDataSource"/>
-    </bean>
-
-    <!-- 日志数据库的SQLSessionFactory -->
-    <bean id="logSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>
-        <property name="dataSource" ref="logDataSource"/>
-    </bean>
-
-    <!-- 数据数据库的SQLSessionFactory -->
-    <bean id="dataSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="configLocation" value="classpath:config/mysql/mybatis-config.xml"/>
-        <property name="dataSource" ref="dataDataSource"/>
-    </bean>
-
-    <!-- 应用数据源事务管理 -->
-    <bean id="appTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="appDataSource"/>
-    </bean>
-
-    <!-- 日志数据源事务管理 -->
-    <bean id="logTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="logDataSource"/>
-    </bean>
-
     <!-- 控制器映射器和控制器适配器 -->
     <mvc:annotation-driven conversion-service="conversionService"/>
 
@@ -268,24 +207,6 @@
 
     <!-- 自动扫描组件 -->
     <context:component-scan base-package="edu.gdei.gdeiassistant"/>
-
-    <!-- 自动扫描mapper接口，并注入应用SqlSessionFactory -->
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant"/>
-        <property name="sqlSessionFactoryBeanName" value="appSqlSessionFactory"/>
-    </bean>
-
-    <!-- 自动扫描mapper接口，并注入日志SqlSessionFactory -->
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantLogs"/>
-        <property name="sqlSessionFactoryBeanName" value="logSqlSessionFactory"/>
-    </bean>
-
-    <!-- 自动扫描mapper接口，并注入数据SqlSessionFactory -->
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData"/>
-        <property name="sqlSessionFactoryBeanName" value="dataSqlSessionFactory"/>
-    </bean>
 
     <!-- 启动对AspectJ注解的支持 -->
     <aop:aspectj-autoproxy/>

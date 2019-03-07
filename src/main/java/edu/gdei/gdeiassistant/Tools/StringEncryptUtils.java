@@ -2,25 +2,20 @@ package edu.gdei.gdeiassistant.Tools;
 
 import com.taobao.wsgsvr.EncryptWithCfg;
 import com.taobao.wsgsvr.WsgException;
+import edu.gdei.gdeiassistant.Pojo.Entity.StringEncryptConfig;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class StringEncryptUtils {
 
-    private static String appkey;
+    private static StringEncryptConfig stringEncryptConfig;
 
-    private static String configLocation;
-
-    @Value("#{propertiesReader['encryptor.appkey']}")
-    public void setAppkey(String appkey) {
-        StringEncryptUtils.appkey = appkey;
-    }
-
-    @Value("#{propertiesReader['encryptor.config.location']}")
-    public void setConfigLocation(String configLocation) {
-        StringEncryptUtils.configLocation = configLocation;
+    @Resource(name = "stringEncryptConfig")
+    public void setStringEncryptConfig(StringEncryptConfig stringEncryptConfig) {
+        StringEncryptUtils.stringEncryptConfig = stringEncryptConfig;
     }
 
     /**
@@ -31,7 +26,7 @@ public class StringEncryptUtils {
      * @throws WsgException
      */
     public static String encryptString(String data) throws WsgException {
-        return new EncryptWithCfg(configLocation).encryptString(appkey, data);
+        return new EncryptWithCfg(stringEncryptConfig.getConfigLocation()).encryptString(stringEncryptConfig.getAppkey(), data);
     }
 
     /**
@@ -42,7 +37,7 @@ public class StringEncryptUtils {
      * @throws WsgException
      */
     public static String decryptString(String data) throws WsgException {
-        return new EncryptWithCfg(configLocation).decryptString(appkey, data);
+        return new EncryptWithCfg(stringEncryptConfig.getConfigLocation()).decryptString(stringEncryptConfig.getAppkey(), data);
     }
 
     /**

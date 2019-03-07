@@ -75,6 +75,10 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath*:config/spring/applicationContext.xml</param-value>
         </init-param>
+        <init-param>
+            <param-name>spring.profiles.default</param-name>
+            <param-value>production</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 

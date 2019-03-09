@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.13, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.15, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gdeiassistant_log
 -- ------------------------------------------------------
--- Server version	8.0.13
+-- Server version	8.0.15
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -54,6 +54,10 @@ CREATE TABLE `close_log` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping events for database 'gdeiassistant_log'
+--
 
 --
 -- Current Database: `gdeiassistant_data`
@@ -127,6 +131,10 @@ CREATE TABLE `yellow_page_type` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping events for database 'gdeiassistant_data'
+--
+
+--
 -- Current Database: `gdeiassistant`
 --
 
@@ -135,13 +143,13 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant` /*!40100 DEFAULT CHARAC
 USE `gdeiassistant`;
 
 --
--- Table structure for table `android_access`
+-- Table structure for table `access`
 --
 
-DROP TABLE IF EXISTS `android_access`;
+DROP TABLE IF EXISTS `access`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `android_access` (
+CREATE TABLE `access` (
   `id` tinyint(2) NOT NULL COMMENT '用户组ID',
   `grade` tinyint(1) NOT NULL COMMENT '是否拥有成绩查询功能的权限',
   `schedule` tinyint(1) NOT NULL COMMENT '是否拥有课表查询功能的权限',
@@ -469,29 +477,6 @@ CREATE TABLE `user_group` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `wechat_access`
---
-
-DROP TABLE IF EXISTS `wechat_access`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `wechat_access` (
-  `id` tinyint(2) NOT NULL,
-  `grade` tinyint(1) NOT NULL,
-  `schedule` tinyint(1) NOT NULL,
-  `cet` tinyint(1) NOT NULL,
-  `evaluate` tinyint(1) NOT NULL,
-  `card` tinyint(1) NOT NULL,
-  `bill` tinyint(1) NOT NULL,
-  `lost` tinyint(1) NOT NULL,
-  `charge` tinyint(1) NOT NULL,
-  `collection` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `wechatAccessGroupId` FOREIGN KEY (`id`) REFERENCES `user_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `wechat_user`
 --
 
@@ -522,6 +507,10 @@ CREATE TABLE `yiban_user` (
   CONSTRAINT `yibanUserUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping events for database 'gdeiassistant'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -532,4 +521,4 @@ CREATE TABLE `yiban_user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-17 22:10:04
+-- Dump completed on 2019-03-09  9:04:41

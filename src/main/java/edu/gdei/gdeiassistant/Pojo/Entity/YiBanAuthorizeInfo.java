@@ -40,4 +40,14 @@ public class YiBanAuthorizeInfo implements Serializable {
     public void setCallbackURL(String callbackURL) {
         this.callbackURL = callbackURL;
     }
+
+    public YiBanAuthorizeInfo() {
+
+    }
+
+    public YiBanAuthorizeInfo(String appID, String appSecret, String callbackURL) {
+        this.appID = appID;
+        this.appSecret = appSecret;
+        this.callbackURL = callbackURL;
+    }
 }

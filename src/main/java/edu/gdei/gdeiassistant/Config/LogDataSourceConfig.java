@@ -13,17 +13,15 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
+import java.util.Objects;
 
 @Configuration
-@EnableWebMvc
 @MapperScan(basePackages = "edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantLogs", sqlSessionFactoryRef = "logSqlSessionFactory")
 @PropertySource("classpath:/config/mysql/log-jdbc.properties")
-public class LogDataSourceConfig extends WebMvcConfigurerAdapter implements EnvironmentAware {
+public class LogDataSourceConfig implements EnvironmentAware {
 
     @Autowired
     private Environment environment;
@@ -40,9 +38,9 @@ public class LogDataSourceConfig extends WebMvcConfigurerAdapter implements Envi
         ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
         comboPooledDataSource.setDriverClass(environment.getProperty("log.jdbc.driverClass"));
         comboPooledDataSource.setJdbcUrl(environment.getProperty("log.jdbc.jdbcUrl"));
-        comboPooledDataSource.setMinPoolSize(Integer.parseInt(environment.getProperty("log.jdbc.minPoolSize")));
-        comboPooledDataSource.setMaxPoolSize(Integer.parseInt(environment.getProperty("log.jdbc.maxPoolSize")));
-        comboPooledDataSource.setMaxIdleTime(Integer.parseInt(environment.getProperty("log.jdbc.maxIdleTime")));
+        comboPooledDataSource.setMinPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("log.jdbc.minPoolSize"))));
+        comboPooledDataSource.setMaxPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("log.jdbc.maxPoolSize"))));
+        comboPooledDataSource.setMaxIdleTime(Integer.parseInt(Objects.requireNonNull(environment.getProperty("log.jdbc.maxIdleTime"))));
         comboPooledDataSource.setUser(environment.getProperty("log.jdbc.dev.username"));
         comboPooledDataSource.setPassword(environment.getProperty("log.jdbc.dev.password"));
         return comboPooledDataSource;
@@ -61,9 +59,9 @@ public class LogDataSourceConfig extends WebMvcConfigurerAdapter implements Envi
         ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
         comboPooledDataSource.setDriverClass(environment.getProperty("log.jdbc.driverClass"));
         comboPooledDataSource.setJdbcUrl(environment.getProperty("log.jdbc.jdbcUrl"));
-        comboPooledDataSource.setMinPoolSize(Integer.parseInt(environment.getProperty("log.jdbc.minPoolSize")));
-        comboPooledDataSource.setMaxPoolSize(Integer.parseInt(environment.getProperty("log.jdbc.maxPoolSize")));
-        comboPooledDataSource.setMaxIdleTime(Integer.parseInt(environment.getProperty("log.jdbc.maxIdleTime")));
+        comboPooledDataSource.setMinPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("log.jdbc.minPoolSize"))));
+        comboPooledDataSource.setMaxPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("log.jdbc.maxPoolSize"))));
+        comboPooledDataSource.setMaxIdleTime(Integer.parseInt(Objects.requireNonNull(environment.getProperty("log.jdbc.maxIdleTime"))));
         comboPooledDataSource.setUser(environment.getProperty("log.jdbc.pro.username"));
         comboPooledDataSource.setPassword(environment.getProperty("log.jdbc.pro.password"));
         return comboPooledDataSource;

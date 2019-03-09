@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="index" uri="/WEB-INF/tld/index.tld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -28,8 +29,8 @@
 
     <header style="margin-top:45px;clear: both">
         <div>
-            <h1>广东二师助手</h1>
-            <h2>四年时光，广东二师助手陪你一起走过。</h2>
+            <h1>${index:getWelcomeTitle()}</h1>
+            <h2>${index:getWelcomeContent()}</h2>
         </div>
     </header>
 

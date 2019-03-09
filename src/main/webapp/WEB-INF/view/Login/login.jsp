@@ -114,20 +114,17 @@
 
 <p class="page_desc" style="margin-top: 25px">关于登录账户请阅读
     <a class="page_desc"
-       onclick="window.location.href = '/about/account'"
-       style="color: #3cc51f;">《教务系统账号说明》
+       onclick="window.location.href = '/about/account'">《教务系统账号说明》
     </a>
 </p>
 
 <p class="page_desc">点击登录按钮表示你已阅读并同意
     <br>
     <a class="page_desc"
-       onclick="window.location.href = '/agreement'"
-       style="color: #3cc51f;">《用户协议》
+       onclick="window.location.href = '/agreement'">《用户协议》
     </a>和
     <a class="page_desc"
-       onclick="window.location.href = '/policy/privacy'"
-       style="color: #3cc51f;">《隐私政策》
+       onclick="window.location.href = '/policy/privacy'">《隐私政策》
     </a>
 </p>
 

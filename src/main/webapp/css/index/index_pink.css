@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #FBF9FE;
+    max-width: 480px;
+    margin: 0 auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.phone {
+    border: solid #E2E0E3;
+    border-width: 1px 0 0;
+    overflow: hidden;
+}
+
+.phone header h1 {
+    color: pink;
+    /*font-weight: bolder;*/
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 30px;
+    font-weight: normal;
+}
+
+.phone header h2 {
+    color: #838383;
+    text-align: center;
+    margin: .5rem auto 1.5rem;
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.phone .links {
+    border-top: 1px solid #E2E0E3;
+    position: relative;
+}
+
+.phone .links > div {
+    box-sizing: border-box;
+    text-align: center;
+    width: 33.3%;
+    padding: 10px 0;
+    border-bottom: 1px solid #E2E0E3;
+    position: relative;
+    float: left;
+    cursor: pointer;
+}
+
+.phone .links > div:not(:nth-of-type(3n)) {
+    border-right: 1px solid #E2E0E3;
+}
+
+.phone .links > div i {
+    width: 32px;
+    height: 32px;
+    margin: 3px 0;
+    display: inline-block;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #FBF9FE;
+    max-width: 480px;
+    margin: 0 auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.phone {
+    border: solid #E2E0E3;
+    border-width: 1px 0 0;
+    overflow: hidden;
+}
+
+.phone header h1 {
+    color: pink;
+    /*font-weight: bolder;*/
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 30px;
+    font-weight: normal;
+}
+
+.phone header h2 {
+    color: #838383;
+    text-align: center;
+    margin: .5rem auto 1.5rem;
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.phone .links {
+    border-top: 1px solid #E2E0E3;
+    position: relative;
+}
+
+.phone .links > div {
+    box-sizing: border-box;
+    text-align: center;
+    width: 33.3%;
+    padding: 10px 0;
+    border-bottom: 1px solid #E2E0E3;
+    position: relative;
+    float: left;
+    cursor: pointer;
+}
+
+.phone .links > div:not(:nth-of-type(3n)) {
+    border-right: 1px solid #E2E0E3;
+}
+
+.phone .links > div i {
+    width: 32px;
+    height: 32px;
+    margin: 3px 0;
+    display: inline-block;
+}

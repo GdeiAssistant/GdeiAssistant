@@ -28,8 +28,7 @@
         function postLoginForm() {
             if ($("#username").val() === "" || $("#password").val() === "") {
                 $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
-            }
-            else {
+            } else {
                 $("#loadingToast, .weui_mask").show();
                 $.ajax({
                     url: '/wechat/userattach',
@@ -51,8 +50,7 @@
                                     }
                                 }]
                             });
-                        }
-                        else {
+                        } else {
                             $("#loadingToast, .weui_mask").hide();
                             $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
@@ -129,8 +127,7 @@
 <div class="weui_toptips weui_warn js_tooltips"></div>
 
 <p class="page_desc" style="margin-top: 25px">点击登录按钮表示你已阅读并同意
-    <a class="page_desc" onclick="window.location.href = '/agreement'" style="color: #3cc51f;">《用户协议》
-    </a>
+    <a class="page_desc" onclick="window.location.href = '/agreement'">《用户协议》</a>
 </p>
 
 </body>

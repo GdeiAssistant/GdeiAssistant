@@ -170,7 +170,7 @@ public class UserProfileService {
      * @param introductionContent
      * @return
      */
-    @Transactional
+    @Transactional("appTransactionManager")
     public void UpdateIntroduction(String username, String introductionContent) throws Exception {
         Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils.encryptString(username));
         if (introduction != null) {
@@ -209,7 +209,7 @@ public class UserProfileService {
      * @param gender
      * @return
      */
-    @Transactional
+    @Transactional("appTransactionManager")
     public void UpdateGender(String username, int gender, String customGenderName) throws Exception {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {

@@ -77,7 +77,7 @@ public class CloseAccountService {
      * @param password
      * @throws Exception
      */
-    @Transactional
+    @Transactional("appTransactionManager")
     public void CloseAccount(String username, String password) throws Exception {
         //检查用户账号状态
         User user = userMapper.selectUser(StringEncryptUtils.encryptString(username)).decryptUser();
@@ -141,7 +141,17 @@ public class CloseAccountService {
         count = count == null ? 0 : count;
         userMapper.closeUser("del_" + StringEncryptUtils.SHA1HexString(username)
                 .substring(0, 15) + "_" + count, StringEncryptUtils.encryptString(username));
-        //记录账号关闭日志
+        //保存注销日志
+        SaveCloseLog(username, count);
+    }
+
+    /**
+     * 记录账号关闭日志
+     *
+     * @param username
+     * @param count
+     */
+    private void SaveCloseLog(String username, int count) {
         CloseLog closeLog = new CloseLog();
         closeLog.setUsername(username);
         closeLog.setResetname("del_" + StringEncryptUtils.SHA1HexString(username)

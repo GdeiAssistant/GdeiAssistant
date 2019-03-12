@@ -1,7 +1,8 @@
 package edu.gdei.gdeiassistant.Config;
 
 import edu.gdei.gdeiassistant.Filter.XSSFilter;
-import org.apache.logging.log4j.web.Log4jServletContextListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -12,6 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
@@ -44,10 +46,10 @@ public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
         //设置WebRootKey
         servletContext.setInitParameter("webAppRootKey", "GdeiAssistant");
 
-        //配置Log4j路径
-        servletContext.setInitParameter("log4jConfiguration", "classpath:config/log4j2/log4j2.xml");
-        //添加Log4j监听器
-        servletContext.addListener(Log4jServletContextListener.class);
+        //配置Log4j
+        LoggerContext context = (LoggerContext) LogManager.getContext(false);
+        context.setConfigLocation(URI.create("classpath:/config/log4j2/log4j2.xml"));
+        context.reconfigure();
 
         //配置DispatcherServlet
         AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();

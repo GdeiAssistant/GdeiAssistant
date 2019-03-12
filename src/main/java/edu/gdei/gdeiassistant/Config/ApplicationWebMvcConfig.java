@@ -7,9 +7,9 @@ import edu.gdei.gdeiassistant.Interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
@@ -139,10 +139,24 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
     /**
      * 将对于静态资源的请求转发到DefaultServlet进行处理
      *
+     * 由于此项与DispatcherServlet的ThrowExceptionIfNoHandlerFound冲突，改为使用静态资源处理器来访问静态资源
+     *
      * @param configurer
      */
-    @Override
+    /*@Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
+    }*/
+
+    /**
+     * 添加静态资源处理器
+     *
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+        registry.addResourceHandler("/image/**").addResourceLocations("/img/");
     }
 }

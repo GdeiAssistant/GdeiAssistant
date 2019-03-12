@@ -30,7 +30,7 @@ public class UserDataService {
      * @param user
      * @return
      */
-    @Transactional
+    @Transactional("appTransactionManager")
     public void SyncUserData(User user) throws Exception {
         User encryptUser = user.encryptUser();
         //检测数据库中有无该用户记录

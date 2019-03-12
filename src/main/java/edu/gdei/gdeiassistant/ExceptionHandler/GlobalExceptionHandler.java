@@ -14,7 +14,6 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
@@ -36,19 +35,6 @@ public class GlobalExceptionHandler {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         modelAndView.setViewName("Error/badRequestError");
-        return modelAndView;
-    }
-
-    /**
-     * 处理HTTP请求404错误
-     *
-     * @return
-     */
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ModelAndView HandleNoHandlerFoundException() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setStatus(HttpStatus.NOT_FOUND);
-        modelAndView.setViewName("Error/notFoundError");
         return modelAndView;
     }
 

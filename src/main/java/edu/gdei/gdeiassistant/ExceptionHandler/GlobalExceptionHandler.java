@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 
@@ -31,21 +32,37 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({MissingServletRequestParameterException.class
             , TypeMismatchException.class, HttpMessageNotReadableException.class})
-    public void HandleBadRequestException(HttpServletResponse response) throws IOException {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        response.getWriter().close();
+    public ModelAndView HandleBadRequestException() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        modelAndView.setViewName("Error/badRequestError");
+        return modelAndView;
+    }
+
+    /**
+     * 处理HTTP请求404错误
+     *
+     * @return
+     */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ModelAndView HandleNoHandlerFoundException() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setStatus(HttpStatus.NOT_FOUND);
+        modelAndView.setViewName("Error/notFoundError");
+        return modelAndView;
     }
 
     /**
      * 处理HTTP请求405错误
      *
-     * @param response
      * @throws IOException
      */
     @ExceptionHandler(MethodNotSupportedException.class)
-    public void HandleMethodNotSupportedException(HttpServletResponse response) throws IOException {
-        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-        response.getWriter().close();
+    public ModelAndView HandleMethodNotSupportedException() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setStatus(HttpStatus.METHOD_NOT_ALLOWED);
+        modelAndView.setViewName("Error/methodNotAllowError");
+        return modelAndView;
     }
 
     /**
@@ -55,9 +72,11 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({ConstraintViolationException.class
             , MethodArgumentNotValidException.class})
-    public void HandleConstraintViolationException(HttpServletResponse response) throws IOException {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        response.getWriter().close();
+    public ModelAndView HandleConstraintViolationException() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        modelAndView.setViewName("Error/badRequestError");
+        return modelAndView;
     }
 
     /**

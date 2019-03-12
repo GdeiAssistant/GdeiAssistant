@@ -1,21 +1,31 @@
 package edu.gdei.gdeiassistant.Config;
 
 import edu.gdei.gdeiassistant.Converter.HttpMessageConvert.WeChatMappingJackson2HttpMessageConverter;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.support.ResourcePatternUtils;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
-@EnableWebMvc
-public class WebConfig extends WebMvcConfigurerAdapter {
+@ComponentScan(basePackages = "edu.gdei.gdeiassistant")
+@EnableAspectJAutoProxy
+@EnableAsync
+@EnableTransactionManagement
+public class ApplicationContextConfig {
 
     /**
      * RestTemplate
@@ -42,36 +52,39 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * 登录拦截器不进行拦截的URL列表
+     * Properties配置文件读取器
      *
      * @return
      */
     @Bean
-    public List<String> loginInterceptorExceptionList() {
-        List<String> loginInterceptorExceptionList = new ArrayList<>();
-        //退出账号
-        loginInterceptorExceptionList.add("/logout");
-        //登录账号
-        loginInterceptorExceptionList.add("/login");
-        //用户登录接口
-        loginInterceptorExceptionList.add("/api/userlogin");
-        //下载接口
-        loginInterceptorExceptionList.add("/download");
-        //协议与政策
-        loginInterceptorExceptionList.add("/agreement");
-        loginInterceptorExceptionList.add("/policy");
-        loginInterceptorExceptionList.add("/license");
-        //软件说明
-        loginInterceptorExceptionList.add("/about");
-        //Restful API
-        loginInterceptorExceptionList.add("/rest");
-        //微信API接口
-        loginInterceptorExceptionList.add("/wechat");
-        //易班API接口
-        loginInterceptorExceptionList.add("/yiban");
-        //支付宝API接口
-        loginInterceptorExceptionList.add("/alipay");
-        return loginInterceptorExceptionList;
+    public PropertiesFactoryBean propertiesReader() throws IOException {
+        PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
+        propertiesFactoryBean.setFileEncoding(StandardCharsets.UTF_8.displayName());
+        propertiesFactoryBean.setLocations(ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader())
+                .getResources("classpath*:/config/**/*.properties"));
+        return propertiesFactoryBean;
+    }
+
+    /**
+     * 注册方法级别验证后处理器
+     *
+     * @return
+     */
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
+    }
+
+    /**
+     * 文件上传配置的MultipartResolver处理器
+     *
+     * @return
+     */
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        commonsMultipartResolver.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
+        return commonsMultipartResolver;
     }
 
     /**
@@ -153,66 +166,5 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         list.add(adminNewsUrlList);
         list.add(schoolNewsUrlList);
         return list;
-    }
-
-    /**
-     * 个人资料性别字典
-     *
-     * @return
-     */
-    @Bean
-    public Map<Integer, String> genderMap() {
-        Map<Integer, String> genderMap = new HashMap<>();
-        genderMap.put(0, "未选择");
-        genderMap.put(1, "男");
-        genderMap.put(2, "女");
-        genderMap.put(3, "自定义");
-        return genderMap;
-    }
-
-    /**
-     * 个人资料性取向字典
-     *
-     * @return
-     */
-    @Bean
-    public Map<Integer, String> genderOrientationMap() {
-        Map<Integer, String> genderOrientationMap = new HashMap<>();
-        genderOrientationMap.put(0, "未选择");
-        genderOrientationMap.put(1, "异性恋");
-        genderOrientationMap.put(2, "同性恋");
-        genderOrientationMap.put(3, "双性恋");
-        genderOrientationMap.put(4, "无性恋");
-        genderOrientationMap.put(5, "泛性恋");
-        genderOrientationMap.put(6, "其他");
-        return genderOrientationMap;
-    }
-
-    /**
-     * 院系字典
-     *
-     * @return
-     */
-    @Bean
-    public Map<Integer, String> facultyMap() {
-        Map<Integer, String> facultyMap = new HashMap<>();
-        facultyMap.put(0, "未选择");
-        facultyMap.put(1, "教育学院");
-        facultyMap.put(2, "政法系");
-        facultyMap.put(3, "中文系");
-        facultyMap.put(4, "数学系");
-        facultyMap.put(5, "外语系");
-        facultyMap.put(6, "物理与信息工程系");
-        facultyMap.put(7, "化学系");
-        facultyMap.put(8, "生物与食品工程学院");
-        facultyMap.put(9, "体育学院");
-        facultyMap.put(10, "美术学院");
-        facultyMap.put(11, "计算机科学系");
-        facultyMap.put(12, "音乐系");
-        facultyMap.put(13, "教师研修学院");
-        facultyMap.put(14, "成人教育学院");
-        facultyMap.put(15, "网络教育学院");
-        facultyMap.put(16, "马克思主义学院");
-        return facultyMap;
     }
 }

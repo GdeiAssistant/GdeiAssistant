@@ -32,7 +32,7 @@ public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
         FilterRegistration.Dynamic xssFilter = servletContext.addFilter("XSSFilter", new XSSFilter());
         xssFilter.addMappingForUrlPatterns(null, true, "/*");
 
-        //配置Profile环境变量
+        //配置默认Profile环境变量
         servletContext.setInitParameter("spring.profiles.default", "production");
 
         //设置超时时间为2小时
@@ -54,8 +54,10 @@ public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
         //配置DispatcherServlet
         AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
         applicationContext.register(ApplicationContextConfig.class);
-        ServletRegistration.Dynamic dispatcherServlet = servletContext.addServlet("DispatcherServlet",
-                new DispatcherServlet(applicationContext));
+        DispatcherServlet dispatcher = new DispatcherServlet(applicationContext);
+        //发生404错误时抛出异常
+        dispatcher.setThrowExceptionIfNoHandlerFound(true);
+        ServletRegistration.Dynamic dispatcherServlet = servletContext.addServlet("DispatcherServlet", dispatcher);
         //启动顺序
         dispatcherServlet.setLoadOnStartup(1);
         //支持异步

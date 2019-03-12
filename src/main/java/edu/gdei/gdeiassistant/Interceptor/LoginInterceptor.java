@@ -15,7 +15,11 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     private List<String> exceptionList;
 
-    public void setExceptionList(List<String> exceptionList) {
+    public LoginInterceptor() {
+
+    }
+
+    public LoginInterceptor(List<String> exceptionList) {
         this.exceptionList = exceptionList;
     }
 

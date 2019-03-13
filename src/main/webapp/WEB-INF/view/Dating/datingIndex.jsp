@@ -13,8 +13,11 @@
     <!-- 如果使用双核浏览器，强制使用webkit来进行页面渲染 -->
     <meta name="renderer" content="webkit"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" href="/css/dating/global.css">
     <link rel="stylesheet" href="/css/dating/layout.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
@@ -103,10 +106,10 @@
 
                                         case 2:
                                             $(".cardsBox").eq(index).append("<li onclick='showDetailInfo(" + result.data[i].profileId + ")'><div class='Peopleimg'>" +
-                                            "<a class='click' href='javascript:'><img id='" + result.data[i].profileId + "' /></a></div>" +
-                                            "<h1 class='P-title'><a class='click' href='javascript:'></a></h1>" +
-                                            "<div class='p-info'>" + result.data[i].faculty
-                                            + " 大二学生</div>" + "<div class='p-info'>来自" + result.data[i].hometown + "</div></li>");
+                                                "<a class='click' href='javascript:'><img id='" + result.data[i].profileId + "' /></a></div>" +
+                                                "<h1 class='P-title'><a class='click' href='javascript:'></a></h1>" +
+                                                "<div class='p-info'>" + result.data[i].faculty
+                                                + " 大二学生</div>" + "<div class='p-info'>来自" + result.data[i].hometown + "</div></li>");
                                             $(".cardsBox").append("<script>getPicture(" + result.data[i].profileId + ") <\/script>");
                                             break;
 
@@ -138,8 +141,7 @@
                                         male_index = male_index + result.data.length;
                                         break;
                                 }
-                            }
-                            else {
+                            } else {
                                 switch (index) {
                                     case 0:
                                         female_hasMore = false;
@@ -152,8 +154,7 @@
                                         break;
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
                     },

@@ -8,6 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="MobileOptimized" content="320">
     <meta name="format-detection" content="telephone=no"/>
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min.css">
     <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" type="text/css" href="/css/lostandfound/base.css">

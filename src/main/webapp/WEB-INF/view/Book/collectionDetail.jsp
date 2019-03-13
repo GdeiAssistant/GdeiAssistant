@@ -16,9 +16,12 @@
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" href="/css/common/common.css">
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script>
         //消除iOS点击延迟

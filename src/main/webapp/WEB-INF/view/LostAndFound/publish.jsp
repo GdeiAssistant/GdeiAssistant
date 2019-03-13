@@ -7,8 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="MobileOptimized" content="320">
     <meta name="format-detection" content="telephone=no"/>
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" type="text/css" href="/css/lostandfound/publish.css">
     <title>广东第二师范学院失物招领</title>
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
@@ -94,32 +97,23 @@
                     //检查输入内容合法性
                     else if (parseInt($("input[name='lostType']:checked").val()) < 0 || parseInt($("input[name='lostType']:checked").val()) > 1) {
                         showErrorTip("不合法的寻找类型");
-                    }
-                    else if ($("#name").val() == '' && $("#name").val().length > 25) {
+                    } else if ($("#name").val() == '' && $("#name").val().length > 25) {
                         showErrorTip("物品名称长度不合法");
-                    }
-                    else if ($("#description").val() == '' && $("#description").val().length > 100) {
+                    } else if ($("#description").val() == '' && $("#description").val().length > 100) {
                         showErrorTip("物品描述长度不合法");
-                    }
-                    else if ($("#location").val() == '' && $("#location").val().length > 30) {
+                    } else if ($("#location").val() == '' && $("#location").val().length > 30) {
                         showErrorTip("地点长度不合法");
-                    }
-                    else if (parseInt($("#itemType").val()) < 0 || parseInt($("#itemType").val()) > 11) {
+                    } else if (parseInt($("#itemType").val()) < 0 || parseInt($("#itemType").val()) > 11) {
                         showErrorTip("不合法的物品分类")
-                    }
-                    else if ($("#qq").val() == '' && $("#wechat").val() == '' && $("#phone").val() == '') {
+                    } else if ($("#qq").val() == '' && $("#wechat").val() == '' && $("#phone").val() == '') {
                         showErrorTip("联系方式至少需要填写一项");
-                    }
-                    else if ($("#qq").val().length > 20) {
+                    } else if ($("#qq").val().length > 20) {
                         showErrorTip("不合法的QQ号码");
-                    }
-                    else if ($("#wechat").val().length > 20) {
+                    } else if ($("#wechat").val().length > 20) {
                         showErrorTip("不合法的微信号");
-                    }
-                    else if ($("#phone").val().length > 11) {
+                    } else if ($("#phone").val().length > 11) {
                         showErrorTip("不合法的手机号码");
-                    }
-                    else {
+                    } else {
 
                         var formData = new FormData();
 
@@ -174,12 +168,10 @@
                                 if (result.success === true) {
                                     if (parseInt($("#lostType").val()) == 0) {
                                         window.location.href = '/lostandfound/lost';
-                                    }
-                                    else {
+                                    } else {
                                         window.location.href = '/lostandfound/found';
                                     }
-                                }
-                                else {
+                                } else {
                                     $(".submit").attr("disabled", false);
                                     loading.hide();
                                     showErrorTip(result.message);
@@ -244,8 +236,7 @@
 
                     if ($(".upimg").length >= 4) {
                         showErrorTip("最多只能选择四张图片！");
-                    }
-                    else {
+                    } else {
 
                         reader.readAsDataURL(file);
 

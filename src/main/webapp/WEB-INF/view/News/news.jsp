@@ -1,12 +1,16 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>新闻通知</title>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" href="/css/common/common.css">
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script type="text/javascript" src="/js/news/news.js"></script>

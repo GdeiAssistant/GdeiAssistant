@@ -8,8 +8,8 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
-    <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <link rel="stylesheet" href="/css/common/weui-0.2.2.min${themecolor}.css">
+    <link rel="stylesheet" href="/css/common/weui-1.1.1.min${themecolor}.css">
     <link rel="stylesheet" href="/css/secret/secret-publish.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>

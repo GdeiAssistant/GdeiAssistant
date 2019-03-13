@@ -342,7 +342,7 @@ input.weui_btn_mini {
 
 .weui_btn_primary:not(.weui_btn_disabled):active {
     color: rgba(255, 255, 255, 0.4);
-    background-color: #FFB6C1;
+    background-color: lightpink;
 }
 
 .weui_btn_warn {

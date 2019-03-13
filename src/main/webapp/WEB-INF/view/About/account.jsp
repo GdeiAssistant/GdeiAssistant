@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -7,13 +8,15 @@
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <title>教务系统账号说明</title>
+
 </head>
 <body>
 
 <div style="max-width: 677px;margin-left: auto;margin-right: auto">
     <p style="text-align:center">《广东二师助手教务系统账号说明》</p>
     <p style="text-align:center">更新日期：2019年2月14日</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;广东第二师范学院的同学们，欢迎使用易小助系统。<span style="color: rgb(255, 0, 0);">若你为新生或首次使用本系统，建议你先阅读本使用说明</span>。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;广东第二师范学院的同学们，欢迎使用易小助系统。<span style="color: rgb(255, 0, 0);">若你为新生或首次使用本系统，建议你先阅读本使用说明</span>。
+    </p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用本系统，需要使用教务系统的账号与密码进行登录。<span style="color: rgb(255, 0, 0);">值得注意的是，教务系统的账号并不是学号</span>。此外，<span
             style="color: rgb(255, 0, 0);">新生一般需要一周的时间等待网络中心激活学院应用信息系统账号，若你无法登录系统，建议暂时耐心等待</span>。</p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询教务系统的账号的方式如下：</p>

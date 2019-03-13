@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -9,8 +9,8 @@
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <title>安全技术规格说明</title>
 </head>
-
 <body>
+
 <div>
     <p style="text-align:center">《广东二师助手安全技术规格说明》</p>
     <p style="text-align:center">更新日期：2019年2月18日</p>
@@ -145,6 +145,6 @@
         应用使用了检查Referer字段、添加校验Token等技术手段，能有效抵御常见的CSRF攻击。
     </p>
 </div>
-</body>
 
+</body>
 </html>

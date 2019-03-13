@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
 <head>
     <title>删除账号</title>
     <meta charset="UTF-8">
@@ -13,7 +14,6 @@
     <script>document.write("<script type='text/javascript' src='/js/close/close.js?time=" + Date.now() + "'><\/script>");</script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
 </head>
-
 <body>
 
 <div class="weui_cells_title" onclick="history.go(-1)">返回</div>
@@ -81,4 +81,5 @@
 
 </body>
 
+</body>
 </html>

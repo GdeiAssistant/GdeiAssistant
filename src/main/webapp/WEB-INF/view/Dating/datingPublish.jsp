@@ -12,8 +12,11 @@
     <!-- 如果使用双核浏览器，强制使用webkit来进行页面渲染 -->
     <meta name="renderer" content="webkit"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" href="/css/dating/global.css">
     <link rel="stylesheet" href="/css/dating/layout.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
@@ -60,8 +63,7 @@
                 if (file.size > maxSize) {
                     showErrorTip("图片文件不能超过5MB", "文件过大");
                     return;
-                }
-                else {
+                } else {
                     reader.readAsDataURL(file);
                     reader.onload = function (e) {
                         var img = new Image();
@@ -96,37 +98,27 @@
 
         //发布卖室友信息
         function publishDating() {
-            if (typeof(imageBase64) == 'undefined') {
+            if (typeof (imageBase64) == 'undefined') {
                 showErrorTip("上传一张美美的照片吧");
-            }
-            else if ($("#kickname").val().length == 0 || $("#kickname").val().length > 15) {
+            } else if ($("#kickname").val().length == 0 || $("#kickname").val().length > 15) {
                 showErrorTip("昵称长度不合法");
-            }
-            else if ($("#grade_value").val() == '') {
+            } else if ($("#grade_value").val() == '') {
                 showErrorTip("年级未选择");
-            }
-            else if ($("#area_value").val() == '') {
+            } else if ($("#area_value").val() == '') {
                 showErrorTip("性别未选择");
-            }
-            else if ($("#faculty").val().length == 0 || $("#faculty").val().length > 12) {
+            } else if ($("#faculty").val().length == 0 || $("#faculty").val().length > 12) {
                 showErrorTip("专业长度不合法");
-            }
-            else if ($("#hometown").val().length == 0 || $("#hometown").val().length > 10) {
+            } else if ($("#hometown").val().length == 0 || $("#hometown").val().length > 10) {
                 showErrorTip("家乡长度不合法");
-            }
-            else if ($("#qq").val().length == 0 && $("#wechat").val().length == 0) {
+            } else if ($("#qq").val().length == 0 && $("#wechat").val().length == 0) {
                 showErrorTip("QQ号码和微信至少填写一个");
-            }
-            else if ($("#qq").val().length > 15 || $("#wechat").val().length > 20) {
+            } else if ($("#qq").val().length > 15 || $("#wechat").val().length > 20) {
                 showErrorTip("联系方式长度不合法");
-            }
-            else if ($("#content").val().length == 0) {
+            } else if ($("#content").val().length == 0) {
                 showErrorTip("填一下你心目中的那个TA吧");
-            }
-            else if ($("#content").val().length > 100) {
+            } else if ($("#content").val().length > 100) {
                 showErrorTip("心动条件长度不合法");
-            }
-            else {
+            } else {
                 var formData = new FormData();
                 var canvas = document.createElement('canvas');
                 var ctx = canvas.getContext('2d');
@@ -173,8 +165,7 @@
                         loading.hide();
                         if (result.success === true) {
                             window.location.href = '/dating';
-                        }
-                        else {
+                        } else {
                             $(".circleBtn").attr("disabled", false);
                             showErrorTip(result.message);
                         }

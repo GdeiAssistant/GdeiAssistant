@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
     <title>广东第二师范学院树洞</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" href="/css/secret/secret-detail.css">
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>

@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <title>广东第二师范学院树洞</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" href="/css/secret/secret-profile.css">
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script>

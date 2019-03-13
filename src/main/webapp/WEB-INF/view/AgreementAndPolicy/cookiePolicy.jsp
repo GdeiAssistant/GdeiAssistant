@@ -7,6 +7,9 @@
     <meta content="telephone=no" name="format-detection">
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <title>Cookie政策</title>
 </head>
 <body>

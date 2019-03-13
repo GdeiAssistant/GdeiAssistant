@@ -6,9 +6,12 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <!-- 引入CSS样式 -->
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" href="/css/common/common.css">
+    <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script>document.write("<script type='text/javascript' src='/js/close/close.js?time=" + Date.now() + "'><\/script>");</script>

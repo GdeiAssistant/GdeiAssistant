@@ -13,8 +13,11 @@
     <!-- 如果使用双核浏览器，强制使用webkit来进行页面渲染 -->
     <meta name="renderer" content="webkit"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" href="/css/dating/global.css">
     <link rel="stylesheet" href="/css/dating/layout.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
@@ -31,11 +34,9 @@
         function submitPickInfo() {
             if ($("#content").val().length > 50) {
                 $(".weui_warn").text("撩一下输入的内容太长了").show().delay(2000).hide(0);
-            }
-            else if ($("#content").val().length == 0) {
+            } else if ($("#content").val().length == 0) {
                 $(".weui_warn").text("请输入撩一下的留言信息").show().delay(2000).hide(0);
-            }
-            else {
+            } else {
                 $.ajax({
                     url: '/dating/pick',
                     method: 'post',
@@ -47,8 +48,7 @@
                         if (result.success) {
                             $("#toast").show().delay(1000).hide(0);
                             $("#content").val("");
-                        }
-                        else {
+                        } else {
                             $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
                     },

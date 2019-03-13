@@ -22,6 +22,9 @@
     <meta name="browsermode" content="application">
     <meta name="x5-page-mode" content="app">
     <meta name="msapplication-tap-highlight" content="no">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" type="text/css" href="/css/about/about.css">
     <link rel="stylesheet" type="text/css" href="/css/common/common.css">
     <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min.css">

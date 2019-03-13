@@ -10,6 +10,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="MobileOptimized" content="320">
     <meta name="format-detection" content="telephone=no"/>
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" type="text/css" href="/css/ershou/ershou-base.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/yxMobileSlider.js"></script>
@@ -76,7 +79,8 @@
     <div class="info">
         <em class="price"><b>￥</b>${ErshouInfo.ershouItem.price}</em>
         <h5 class="tit">${ErshouInfo.ershouItem.name}</h5>
-        <p class="tm">发布时间：<b> <fmt:formatDate value="${ErshouInfo.ershouItem.publishTime}" pattern="yyyy-MM-dd HH:mm:ss"/></b></p>
+        <p class="tm">发布时间：<b> <fmt:formatDate value="${ErshouInfo.ershouItem.publishTime}"
+                                               pattern="yyyy-MM-dd HH:mm:ss"/></b></p>
     </div>
 
     <!-- 二手交易商品交易地点 -->

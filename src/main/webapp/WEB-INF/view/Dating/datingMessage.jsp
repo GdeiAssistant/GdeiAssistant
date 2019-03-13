@@ -13,8 +13,11 @@
     <!-- 如果使用双核浏览器，强制使用webkit来进行页面渲染 -->
     <meta name="renderer" content="webkit"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min.css">
     <link rel="stylesheet" href="/css/dating/global.css">
     <link rel="stylesheet" href="/css/dating/layout.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
@@ -36,18 +39,16 @@
         });
 
         function showProfile(profileId, messageId) {
-            if (typeof(messageId) == "undefined") {
+            if (typeof (messageId) == "undefined") {
                 window.location.href = '/dating/profile/id/' + profileId;
-            }
-            else {
+            } else {
                 $.ajax({
                     url: '/dating/message/id/' + messageId + '/read',
                     method: 'post',
                     success: function (result) {
                         if (result.success) {
                             window.location.href = '/dating/profile/id/' + profileId;
-                        }
-                        else {
+                        } else {
                             $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
                     },
@@ -59,18 +60,16 @@
         }
 
         function showPick(pickId, messageId) {
-            if (typeof(messageId) == "undefined") {
+            if (typeof (messageId) == "undefined") {
                 window.location.href = '/dating/pick/id/' + pickId;
-            }
-            else {
+            } else {
                 $.ajax({
                     url: '/dating/message/id/' + messageId + '/read',
                     method: 'post',
                     success: function (result) {
                         if (result.success) {
                             window.location.href = '/dating/pick/id/' + pickId;
-                        }
-                        else {
+                        } else {
                             $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
                     },
@@ -93,8 +92,7 @@
                             if (result.data.length == 0) {
                                 hasMore = false;
                                 $("#loadMore").text("没有更多消息了");
-                            }
-                            else {
+                            } else {
                                 messageIndex = messageIndex + result.data.length;
                                 for (var i = 0; i < result.data.length; i++) {
                                     if (result.data[i].type == 0) {
@@ -103,14 +101,12 @@
                                             $(".record").eq(0).append("<div onclick='showPick(" + result.data[i].datingPick.pickId + "," + result.data[i].messageId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                 "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div class='movieName'>[未读]被撩通知" + "</div>" +
                                                 "<div class='Message'>你被用户" + result.data[i].datingPick.username + "撩了一下，点击查看</div></div>");
-                                        }
-                                        else {
+                                        } else {
                                             $(".record").eq(0).append("<div onclick='showPick(" + result.data[i].datingPick.pickId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                 "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div class='movieName'>被撩通知" + "</div>" +
                                                 "<div class='Message'>你被用户" + result.data[i].datingPick.username + "撩了一下，点击查看</div></div>");
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         //撩一下处理通知
                                         if (result.data[i].datingPick.state == -1) {
                                             //被拒绝通知
@@ -118,21 +114,18 @@
                                                 $(".record").eq(0).append("<div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + "," + result.data[i].messageId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                     "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div class='movieName'>[未读]撩一下请求被拒绝</div>" +
                                                     "<div class='Message'>" + result.data[i].datingPick.datingProfile.kickname + "拒绝了你的撩一下请求</div></div>");
-                                            }
-                                            else {
+                                            } else {
                                                 $(".record").eq(0).append("<div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                     "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div class='movieName'>撩一下请求被拒绝</div>"
                                                     + "<div class='Message'>" + result.data[i].datingPick.datingProfile.kickname + "拒绝了你的撩一下请求</div></div>");
                                             }
-                                        }
-                                        else {
+                                        } else {
                                             //被接受通知
                                             if (result.data[i].state == 0) {
                                                 $(".record").eq(0).append("<div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                     "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + "," + result.data[i].messageId + ")' class='movieName'>[未读]撩一下请求被接受</div>" +
                                                     "<div class='Message'>" + result.data[i].datingPick.datingProfile.kickname + "接受了你的撩一下请求</div></div>");
-                                            }
-                                            else {
+                                            } else {
                                                 $(".record").eq(0).append("<div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                     "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + ")' class='movieName'>撩一下请求被接受</div>" +
                                                     "<div class='Message'>" + result.data[i].datingPick.datingProfile.kickname + "接受了你的撩一下请求</div></div>");
@@ -141,8 +134,7 @@
                                     }
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                         }
                     },

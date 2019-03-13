@@ -9,6 +9,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="MobileOptimized" content="320">
     <meta name="format-detection" content="telephone=no"/>
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" type="text/css" href="/css/lostandfound/base.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>

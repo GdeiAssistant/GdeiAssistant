@@ -17,9 +17,12 @@
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <c:if test="${applicationScope.get('grayscale')}">
+        <link rel="stylesheet" href="/css/common/grayscale.css">
+    </c:if>
     <link rel="stylesheet" href="/css/common/common.css">
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>

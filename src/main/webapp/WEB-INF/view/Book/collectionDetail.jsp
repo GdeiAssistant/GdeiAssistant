@@ -19,9 +19,9 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
-    <link rel="stylesheet" href="/css/common/common.css">
-    <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <link rel="stylesheet" href="/css/common/common${themecolor}.css">
+    <link rel="stylesheet" href="/css/common/weui-0.2.2.min${themecolor}.css">
+    <link rel="stylesheet" href="/css/common/weui-1.1.1.min${themecolor}.css">
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script>
         //消除iOS点击延迟

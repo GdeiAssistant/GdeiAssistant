@@ -30,6 +30,18 @@ public class ThemeOptionConfig implements EnvironmentAware {
         }
     }
 
+    /**
+     * 设置主题颜色，默认主题为绿色
+     */
+    @Bean
+    public void SetUpThemeColor() {
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("theme.pink"))).equals(1)) {
+            servletContext.setAttribute("themecolor", "_pink");
+        } else if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("theme.blue"))).equals(1)) {
+            servletContext.setAttribute("themecolor", "_blue");
+        }
+    }
+
     @Override
     public void setEnvironment(Environment environment) {
         this.environment = environment;

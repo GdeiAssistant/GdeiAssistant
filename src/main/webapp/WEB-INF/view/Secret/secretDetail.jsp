@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
     <link rel="stylesheet" href="/css/secret/secret-detail.css">
-    <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link rel="stylesheet" href="/css/common/weui-0.2.2.min${themecolor}.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script>

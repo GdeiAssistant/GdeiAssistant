@@ -6,7 +6,7 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <link rel="stylesheet" href="/css/common/weui-1.1.1.min${themecolor}.css">
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <meta content="yes" name="apple-mobile-web-app-capable">

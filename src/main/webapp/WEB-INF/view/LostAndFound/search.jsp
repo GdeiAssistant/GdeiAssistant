@@ -1,4 +1,5 @@
-<!DOCTYPE HTML>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,8 +17,8 @@
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="text/javascript" src="/js/common/fastclick.js"></script>
 </head>
-
 <body>
+
 <form action="/lostandfound/search" method="post" onsubmit="return checkLostTypeCheckedState()">
     <div class="input">
         <input type="text" name="keywords" placeholder="搜索时请选择寻物或寻主" autofocus>
@@ -43,5 +44,6 @@
         </div>
     </div>
 </form>
+
 </body>
 </html>

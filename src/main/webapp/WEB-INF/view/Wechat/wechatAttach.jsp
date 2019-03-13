@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
 <head>
     <meta charset="UTF-8">
     <title>微信-绑定教务系统账号</title>
-    <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
@@ -17,52 +17,7 @@
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
-    <script type="text/javascript">
-
-        //消除iOS点击延迟
-        $(function () {
-            FastClick.attach(document.body);
-        });
-
-        //发送登录请求
-        function postLoginForm() {
-            if ($("#username").val() === "" || $("#password").val() === "") {
-                $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
-            } else {
-                $("#loadingToast, .weui_mask").show();
-                $.ajax({
-                    url: '/wechat/userattach',
-                    method: 'post',
-                    data: {
-                        username: $("#username").val(),
-                        password: $("#password").val()
-                    },
-                    success: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
-                        if (result.success) {
-                            weui.alert('绑定教务系统账号成功', {
-                                title: '绑定成功',
-                                buttons: [{
-                                    label: '进入功能主页',
-                                    type: 'primary',
-                                    onClick: function () {
-                                        window.location.href = '/index';
-                                    }
-                                }]
-                            });
-                        } else {
-                            $("#loadingToast, .weui_mask").hide();
-                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
-                        }
-                    },
-                    error: function () {
-                        $(".weui_warn").text("网络连接失败，请检查网络连接！").show().delay(2000).hide(0);
-                    }
-                })
-            }
-        }
-
-    </script>
+    <script type="text/javascript" src="/js/wechat/attach.js"></script>
 </head>
 <body>
 

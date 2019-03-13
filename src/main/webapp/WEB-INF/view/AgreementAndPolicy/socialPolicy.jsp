@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -9,8 +9,8 @@
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <title>社区准则</title>
 </head>
-
 <body>
+
 <div>
     <p style="text-align:center">《广东二师助手社区准则》</p>
     <p style="text-align:center">更新日期：2019年2月18日</p>
@@ -74,6 +74,6 @@
     <p style="text-indent:28px">（3）恐吓、威胁他人，对他人造成现实生活威胁，侵害他人合法权益</p>
     <p style="text-indent:28px">（4）散布他人现实生活信息，侵犯他人隐私</p>
 </div>
-</body>
 
+</body>
 </html>

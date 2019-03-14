@@ -53,6 +53,15 @@ public class ScheduleCacheService {
     }
 
     /**
+     * 清空缓存的课表信息
+     *
+     * @param username
+     */
+    public void ClearSchedule(String username) {
+        scheduleDao.removeSchedule(username);
+    }
+
+    /**
      * 异步获取教务系统课表信息任务
      *
      * @param semaphore

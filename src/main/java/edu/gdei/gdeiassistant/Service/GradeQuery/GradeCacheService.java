@@ -66,6 +66,15 @@ public class GradeCacheService {
         return gradeDao.queryGradeByUsername(username);
     }
 
+    /**
+     * 清空用户保存的成绩信息
+     *
+     * @param username
+     */
+    public void ClearGrade(String username) {
+        gradeDao.removeGrade(username);
+    }
+
     @Async
     public ListenableFuture<GradeQueryResult> QueryGradeYearData(CountDownLatch countDownLatch
             , User user, int year) {

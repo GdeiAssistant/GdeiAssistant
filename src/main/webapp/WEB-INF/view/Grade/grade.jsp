@@ -30,11 +30,10 @@
 
 <div>
 
-    <div>
-        <div class="weui_cells_title" onclick="history.go(-1)">返回</div>
-        <div class="hd">
-            <h1 class="page_title" style="margin-top: 15px">我的成绩单</h1>
-        </div>
+    <div class="weui_cells_title" style="float: left" onclick="history.go(-1)">返回</div>
+    <div class="weui_cells_title" style="float: right" onclick="showOptionMenu()">更多</div>
+    <div class="hd">
+        <h1 class="page_title" style="clear:both;margin-top: 35px">我的成绩单</h1>
     </div>
 
     <div class="outter">

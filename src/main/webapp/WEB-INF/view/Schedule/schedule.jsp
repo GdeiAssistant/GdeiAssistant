@@ -31,8 +31,8 @@
 <body>
 
 <div>
-    <div class="weui_cells_title" style="float: left;" onclick="history.go(-1)">返回</div>
-    <div class="weui_cells_title" style="float: right" onclick="showAddCustomScheduleDialog()">添加自定义课程</div>
+    <div class="weui_cells_title" style="float: left" onclick="history.go(-1)">返回</div>
+    <div class="weui_cells_title" style="float: right" onclick="showOptionMenu()">更多</div>
     <div class="hd">
         <h1 class="page_title" style="clear:both;margin-top: 35px">我的课程表</h1>
     </div>

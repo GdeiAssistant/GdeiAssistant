@@ -8,7 +8,7 @@
 }
 
 html:root {
-    color: #979797;
+    color: #222;
 }
 
 html {
@@ -194,4 +194,8 @@ nav .on {
 
 .modal-content .weui-form-preview {
     margin-top: 0.5rem;
+}
+
+#currentWeek {
+    color: #979797;
 }

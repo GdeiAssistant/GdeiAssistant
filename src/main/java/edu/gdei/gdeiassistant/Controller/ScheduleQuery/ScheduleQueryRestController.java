@@ -11,6 +11,7 @@ import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
+import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleCacheService;
 import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,22 @@ public class ScheduleQueryRestController {
 
     @Autowired
     private ScheduleQueryService scheduleQueryService;
+
+    @Autowired
+    private ScheduleCacheService scheduleCacheService;
+
+    /**
+     * 清空缓存课表信息
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/api/refreshschedule", method = RequestMethod.POST)
+    public JsonResult RefreshGradeData(HttpServletRequest request) {
+        String username = (String) request.getSession().getAttribute("username");
+        scheduleCacheService.ClearSchedule(username);
+        return new JsonResult(true);
+    }
 
     /**
      * 添加自定义课程

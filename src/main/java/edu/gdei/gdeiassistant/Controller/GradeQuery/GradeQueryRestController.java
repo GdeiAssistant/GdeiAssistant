@@ -8,6 +8,7 @@ import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import edu.gdei.gdeiassistant.Service.GradeQuery.GradeCacheService;
 import edu.gdei.gdeiassistant.Service.GradeQuery.GradeQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,22 @@ public class GradeQueryRestController {
 
     @Autowired
     private GradeQueryService gradeQueryService;
+
+    @Autowired
+    private GradeCacheService gradeCacheService;
+
+    /**
+     * 清空缓存成绩信息
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/api/refreshgrade", method = RequestMethod.POST)
+    public JsonResult RefreshGradeData(HttpServletRequest request) {
+        String username = (String) request.getSession().getAttribute("username");
+        gradeCacheService.ClearGrade(username);
+        return new JsonResult(true);
+    }
 
     /**
      * 成绩查询
@@ -80,7 +97,6 @@ public class GradeQueryRestController {
      */
     private GradeQueryResult HandleGradeQuery(String sessionId, User user, Integer year
             , QueryMethodEnum method) throws Exception {
-        GradeQueryResult gradeQueryResult = null;
         switch (method) {
             case CACHE_ONLY:
                 //只查询缓存

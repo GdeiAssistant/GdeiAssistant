@@ -7,6 +7,8 @@
     <meta content="telephone=no" name="format-detection">
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
+    <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <title>安全技术规格说明</title>
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">

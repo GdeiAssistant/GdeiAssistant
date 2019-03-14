@@ -3,6 +3,8 @@
 <html>
 <head>
     <title>易班帐号授权</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
+    <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>

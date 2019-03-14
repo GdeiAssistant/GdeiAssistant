@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <title>广东第二师范学院树洞</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
+    <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>

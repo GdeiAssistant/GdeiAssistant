@@ -22,6 +22,8 @@
     <meta name="browsermode" content="application">
     <meta name="x5-page-mode" content="app">
     <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
+    <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>

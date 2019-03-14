@@ -11,6 +11,8 @@
     <!-- 如果使用双核浏览器，强制使用webkit来进行页面渲染 -->
     <meta name="renderer" content="webkit"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
+    <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>

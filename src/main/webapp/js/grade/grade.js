@@ -151,3 +151,54 @@ function changeYearSelectedClass(region) {
             break;
     }
 }
+
+//更新实时成绩数据
+function refreshGradeData() {
+    $("#loadingToast, .weui_mask").show();
+    $.ajax({
+        url: '/api/refreshgrade',
+        method: 'POST',
+        success: function (result) {
+            $("#loadingToast, .weui_mask").hide();
+            if (result.success) {
+                postQueryForm();
+            } else {
+                showCustomErrorTip(result.message);
+            }
+        },
+        error: function (result) {
+            //隐藏进度条
+            $("#loadingToast, .weui_mask").hide();
+            if (result.status) {
+                //网络连接超时
+                showCustomErrorTip(result.responseJSON.message);
+            } else {
+                showNetworkErrorTip();
+            }
+        }
+    })
+}
+
+//显示更多设置
+function showOptionMenu() {
+    weui.actionSheet([
+        {
+            label: '管理缓存配置',
+            onClick: function () {
+                window.location.href = '/privacy';
+            }
+        }, {
+            label: '更新实时数据',
+            onClick: function () {
+                refreshGradeData();
+            }
+        }
+    ], [
+        {
+            label: '取消',
+            onClick: function () {
+
+            }
+        }
+    ]);
+}

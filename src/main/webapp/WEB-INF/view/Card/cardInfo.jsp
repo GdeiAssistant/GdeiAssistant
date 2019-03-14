@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="/css/common/weui-0.2.2.min${themecolor}.css">
     <link rel="stylesheet" href="/css/common/weui-1.1.1.min${themecolor}.css">
     <link rel="stylesheet" href="/css/common/jquery-weui.min${themecolor}.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
+    <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>

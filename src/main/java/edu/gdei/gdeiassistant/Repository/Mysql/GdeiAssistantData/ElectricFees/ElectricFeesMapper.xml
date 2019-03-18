@@ -8,7 +8,23 @@
     <!-- 开启DataMapper namespace下的二级缓存 -->
     <cache/>
 
-    <select id="selectElectricFees" resultType="edu.gdei.gdeiassistant.Pojo.Entity.ElectricFees">
+    <resultMap id="ElectricFeesResultMap" type="edu.gdei.gdeiassistant.Pojo.Entity.ElectricFees">
+        <result column="year" property="year"/>
+        <result column="building_number" property="buildingNumber"/>
+        <result column="room_number" property="roomNumber"/>
+        <result column="people_number" property="peopleNumber"/>
+        <result column="department" property="department"/>
+        <result column="number" property="number"/>
+        <result column="name" property="name"/>
+        <result column="used_electric_amount" property="usedElectricAmount"/>
+        <result column="free_electric_amount" property="freeElectricAmount"/>
+        <result column="fee_based_electric_amount" property="feeBasedElectricAmount"/>
+        <result column="electric_price" property="electricPrice"/>
+        <result column="total_electric_bill" property="totalElectricBill"/>
+        <result column="average_electric_bill" property="averageElectricBill"/>
+    </resultMap>
+
+    <select id="selectElectricFees" resultMap="ElectricFeesResultMap">
         select *
         from electricFees
         where name = #{name} and number = #{number} and year = #{year}

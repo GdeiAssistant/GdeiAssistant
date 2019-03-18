@@ -34,7 +34,7 @@ public class DataQueryRestController {
      * @return
      * @throws DataNotExistException
      */
-    @RequestMapping(value = "/api/data/electricfees", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/data/electricfees", method = RequestMethod.POST)
     public DataJsonResult<ElectricFees> QueryElectricFeesData(@Validated @NotBlank @Length(max = 5) String name
             , @Validated @NotBlank Long number, @Validated @NotNull @Range(min = 2016, max = 2050) Integer year) throws DataNotExistException {
         ElectricFees electricFees = dataQueryService.QueryElectricFees(name, number, year);

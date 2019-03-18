@@ -8,7 +8,7 @@ function postEvaluateForm() {
     $("#loadingToast, .weui_mask").show();
     let checked = $("#directlySubmit").prop("checked");
     $.ajax({
-        url: '/evaluate',
+        url: '/api/evaluate',
         type: 'post',
         data: {
             directlySubmit: checked

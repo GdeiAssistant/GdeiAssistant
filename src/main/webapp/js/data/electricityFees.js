@@ -32,7 +32,7 @@ function postQueryForm() {
         $("#loadingToast, .weui_mask").show();
         $.ajax({
             url: '/api/data/electricfees',
-            method: 'GET',
+            method: 'POST',
             data: {
                 name: $("#name").val(),
                 number: $("#number").val(),

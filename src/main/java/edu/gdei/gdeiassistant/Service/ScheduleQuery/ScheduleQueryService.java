@@ -19,6 +19,7 @@ import edu.gdei.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDa
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.ScheduleUtils;
+import edu.gdei.gdeiassistant.Tools.WeekUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -39,8 +40,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,12 +47,6 @@ import java.util.List;
 public class ScheduleQueryService {
 
     private String url;
-
-    private int startYear;
-
-    private int startMonth;
-
-    private int startDate;
 
     private int year;
 
@@ -69,22 +62,6 @@ public class ScheduleQueryService {
 
     @Autowired
     private UserCertificateDao userCertificateDao;
-
-    @Value("#{propertiesReader['schedule.start.date']}")
-
-    public void setStartDate(int startDate) {
-        this.startDate = startDate;
-    }
-
-    @Value("#{propertiesReader['schedule.start.month']}")
-    public void setStartMonth(int startMonth) {
-        this.startMonth = startMonth;
-    }
-
-    @Value("#{propertiesReader['schedule.start.year']}")
-    public void setStartYear(int startYear) {
-        this.startYear = startYear;
-    }
 
     @Value("#{propertiesReader['schedule.year']}")
     public void setYear(int year) {
@@ -182,8 +159,8 @@ public class ScheduleQueryService {
         if (week == null) {
             //无指定查询周数，则默认返回当前周数课表
             scheduleQueryResult.setScheduleList(GetSpecifiedWeekSchedule
-                    (scheduleQueryResult.getScheduleList(), GetCurrentWeek()));
-            scheduleQueryResult.setWeek(GetCurrentWeek());
+                    (scheduleQueryResult.getScheduleList(), WeekUtils.GetCurrentWeek()));
+            scheduleQueryResult.setWeek(WeekUtils.GetCurrentWeek());
         } else if (week.equals(0)) {
             //若周数指定为0，则返回所有周数的课表
             scheduleQueryResult.setScheduleList(scheduleQueryResult.getScheduleList());
@@ -209,7 +186,7 @@ public class ScheduleQueryService {
         if (scheduleDocument != null) {
             //若未指定查询周数，则查询当前周数课表
             if (week == null) {
-                week = GetCurrentWeek();
+                week = WeekUtils.GetCurrentWeek();
             }
             List<Schedule> scheduleList = new ArrayList<>(scheduleDocument.getScheduleList());
             //获取自定义课表信息
@@ -221,27 +198,6 @@ public class ScheduleQueryService {
         }
         //缓存中没有数据
         return null;
-    }
-
-    /**
-     * 获取当前周数
-     *
-     * @return
-     */
-    private int GetCurrentWeek() {
-        //当前日期
-        LocalDate current = LocalDate.now();
-        //开学日期
-        LocalDate start = LocalDate.of(startYear, startMonth, startDate);
-        //计算当前周数
-        int result = (int) (start.until(current, ChronoUnit.WEEKS) + 1);
-        if (result < 1) {
-            return 1;
-        }
-        if (result > 20) {
-            return 20;
-        }
-        return result;
     }
 
     /**

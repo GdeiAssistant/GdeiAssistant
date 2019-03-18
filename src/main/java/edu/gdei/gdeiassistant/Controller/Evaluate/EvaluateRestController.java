@@ -17,7 +17,7 @@ public class EvaluateRestController {
     @Autowired
     private EvaluateService evaluateService;
 
-    @RequestMapping(value = "/evaluate", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/evaluate", method = RequestMethod.POST)
     public JsonResult StartEvaluate(HttpServletRequest request, boolean directlySubmit) throws Exception {
         JsonResult baseJsonResult = new JsonResult();
         String username = (String) WebUtils.getSessionAttribute(request, "username");

@@ -31,7 +31,7 @@ public class SpareRoomRestController {
      * @param spareRoomQuery
      * @return
      */
-    @RequestMapping(value = "/sparequery", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/sparequery", method = RequestMethod.POST)
     @QueryLogPersistence
     public DataJsonResult<List<SpareRoom>> QuerySpareRoomList(HttpServletRequest request
             , @Validated SpareRoomQuery spareRoomQuery) throws Exception {

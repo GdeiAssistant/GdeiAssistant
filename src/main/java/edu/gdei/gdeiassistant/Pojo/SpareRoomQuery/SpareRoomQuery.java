@@ -29,21 +29,27 @@ public class SpareRoomQuery implements Serializable {
 
     //起始时间
     @NotNull
-    @Min(0)
-    @Max(15)
+    @Min(1)
+    @Max(20)
     private Integer startTime;
 
     //结束时间
     @NotNull
-    @Min(0)
-    @Max(15)
+    @Min(1)
+    @Max(20)
     private Integer endTime;
 
-    //星期几
+    //最小星期数
     @NotNull
     @Min(0)
     @Max(6)
-    private Integer week;
+    private Integer minWeek;
+
+    //最大星期数
+    @NotNull
+    @Min(0)
+    @Max(6)
+    private Integer maxWeek;
 
     //单双周
     @NotNull
@@ -105,12 +111,20 @@ public class SpareRoomQuery implements Serializable {
         this.endTime = endTime;
     }
 
-    public Integer getWeek() {
-        return week;
+    public Integer getMinWeek() {
+        return minWeek;
     }
 
-    public void setWeek(Integer week) {
-        this.week = week;
+    public void setMinWeek(Integer minWeek) {
+        this.minWeek = minWeek;
+    }
+
+    public Integer getMaxWeek() {
+        return maxWeek;
+    }
+
+    public void setMaxWeek(Integer maxWeek) {
+        this.maxWeek = maxWeek;
     }
 
     public Integer getWeekType() {

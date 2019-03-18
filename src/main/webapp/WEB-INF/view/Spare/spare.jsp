@@ -138,9 +138,8 @@
             </div>
             <div class="weui-cell__bd">
                 <select class="weui-select" id="startTime" name="startTime">
-                    <c:forEach var="date" items="${DateList}" varStatus="status">
-                        <fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateString"/>
-                        <option value="${status.index}">${dateString}</option>
+                    <c:forEach var="week" items="${WeekList}" varStatus="status">
+                        <option value="${week}">第${week}周</option>
                     </c:forEach>
                 </select>
             </div>
@@ -153,23 +152,40 @@
             </div>
             <div class="weui-cell__bd">
                 <select class="weui-select" id="endTime" name="endTime">
-                    <c:forEach var="date" items="${DateList}" varStatus="status">
-                        <fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateString"/>
-                        <option value="${status.index}">${dateString}</option>
+                    <c:forEach var="week" items="${WeekList}" varStatus="status">
+                        <option value="${week}">第${week}周</option>
                     </c:forEach>
                 </select>
             </div>
         </div>
 
-        <!-- 星期 -->
+        <!-- 最小星期数 -->
         <div class="weui-cell weui-cell_select weui-cell_select-after">
             <div class="weui-cell__hd">
-                <label class="weui-label">星期</label>
+                <label class="weui-label">从星期</label>
             </div>
             <div class="weui-cell__bd">
-                <select class="weui-select" id="week" name="week">
+                <select class="weui-select" id="minWeek" name="minWeek">
                     <option value="0" select="selected">一</option>
                     <option value="1">二</option>
+                    <option value="2">三</option>
+                    <option value="3">四</option>
+                    <option value="4">五</option>
+                    <option value="5">六</option>
+                    <option value="6">日</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 最大星期数 -->
+        <div class="weui-cell weui-cell_select weui-cell_select-after">
+            <div class="weui-cell__hd">
+                <label class="weui-label">到星期</label>
+            </div>
+            <div class="weui-cell__bd">
+                <select class="weui-select" id="maxWeek" name="maxWeek">
+                    <option value="0">一</option>
+                    <option value="1" select="selected">二</option>
                     <option value="2">三</option>
                     <option value="3">四</option>
                     <option value="4">五</option>

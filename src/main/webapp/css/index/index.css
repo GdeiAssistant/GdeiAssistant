@@ -25,14 +25,6 @@ body {
     font-weight: normal;
 }
 
-.phone header h2 {
-    color: #838383;
-    text-align: center;
-    margin: .5rem auto 1.5rem;
-    font-size: 1rem;
-    font-weight: normal;
-}
-
 .phone .links {
     border-top: 1px solid #E2E0E3;
     position: relative;
@@ -91,7 +83,7 @@ body {
     color: #838383;
     text-align: center;
     margin: .5rem auto 1.5rem;
-    font-size: 1rem;
+    font-size: 0.7rem;
     font-weight: normal;
 }
 
@@ -120,4 +112,8 @@ body {
     height: 32px;
     margin: 3px 0;
     display: inline-block;
+}
+
+img {
+    max-width: 100%;
 }

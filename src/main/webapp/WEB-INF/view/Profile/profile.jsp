@@ -1,41 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="profile" uri="/WEB-INF/tld/profile.tld" %>
-<html>
-<head>
-    <title>修改个人资料</title>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-    <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
-    <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
-    <c:if test="${applicationScope.get('grayscale')}">
-        <link rel="stylesheet" href="/css/common/grayscale.css">
-    </c:if>
-    <link rel="stylesheet" href="/css/common/common${themecolor}.css">
-    <link rel="stylesheet" href="/css/common/weui-0.2.2.min${themecolor}.css">
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min${themecolor}.css">
-    <link rel="stylesheet" href="/css/common/jquery-weui.min${themecolor}.css">
-    <link rel="stylesheet" href="/css/common/cropper.min.css">
-    <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="/js/common/weui.min.js"></script>
-    <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
-    <script type="text/javascript" src="/js/common/cropper.min.js"></script>
-    <script type="text/javascript" src="/js/common/exif.js"></script>
-    <script type="application/javascript" src="/js/common/fastclick.js"></script>
-    <jsp:include page="/js/profile/profile.jsp"/>
-    <style>
-        img {
-            max-width: 100%;
-        }
-    </style>
-</head>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
-<body>
-
-<div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+<jsp:include page="/js/profile/profile.jsp"/>
 
 <div class="hd">
-    <h1 class="page_title">个人资料</h1>
+    <h1 class="page_title">个人中心</h1>
 </div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
@@ -157,6 +125,8 @@
     </a>
 </div>
 
+<br>
+
 <!-- 裁剪头像弹窗 -->
 <div id="drawImageDialog" class="weui-popup__container">
     <div class="weui-popup__overlay"></div>
@@ -262,6 +232,3 @@
         </div>
     </div>
 </div>
-
-</body>
-</html>

@@ -3,11 +3,6 @@
 <%@ taglib prefix="profile" uri="/WEB-INF/tld/profile.tld" %>
 <script>
 
-    //消除iOS点击延迟
-    $(function () {
-        FastClick.attach(document.body);
-    });
-
     //获取个人资料页隐私小红点图标显示配置，显示或隐藏小红点图标
     $(function () {
         if (!localStorage.getItem("privacyBadge")) {

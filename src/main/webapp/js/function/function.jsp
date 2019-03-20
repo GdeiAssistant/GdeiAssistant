@@ -1,5 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>
 
     //用户是否为微信浏览器
@@ -75,68 +75,48 @@
         if (wechatUser) {
             window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa2d196aa4b8a7600&redirect_uri=http%3A%2F%2F5itsn.com%2FWeixin%2FOAuth2%2FUserInfoCallback&response_type=code&scope=snsapi_userinfo&state=TestUrlTestResult&connect_redirect=1#wechat_redirect';
         } else {
-            weui.alert('请关注微信公众号易小助使用体测查询功能', {
-                title: '请使用微信客户端进行登录',
-                buttons: [{
-                    label: '确定',
-                    type: 'primary'
-                }]
-            });
+            $.alert("请关注微信公众号易小助使用体测查询功能", "请使用微信客户端进行登录");
         }
     }
 
     //弹出重新绑定易班确认框
     function showYibanAttachConfirm() {
         if (yibanUser) {
-            weui.confirm('重新绑定易班账号将退出当前账号，你确定吗？', {
+            $.confirm({
                 title: '重新绑定易班',
-                buttons: [{
-                    label: '取消',
-                    type: 'default'
-                }, {
-                    label: '确定',
-                    type: 'primary',
-                    onClick: function () {
-                        window.location.href = '/yiban/attach';
-                    }
-                }]
+                text: '重新绑定易班账号将退出当前账号，你确定吗？',
+                onOK: function () {
+                    window.location.href = '/yiban/attach';
+                }
             });
         } else {
-            weui.alert('请使用易班客户端进行登录', {
-                title: '错误提示',
-                buttons: [{
-                    label: '确定',
-                    type: 'primary'
-                }]
-            });
+            $.alert("请使用易班客户端进行登录", "错误提示");
         }
     }
 
     //弹出退出确认框
     function showLogoutConfirm() {
         if (!yibanUser) {
-            weui.confirm('你确定退出当前账号并清除账号缓存吗？', {
+            $.confirm({
                 title: '退出当前账号',
-                buttons: [{
-                    label: '取消',
-                    type: 'default'
-                }, {
-                    label: '退出',
-                    type: 'primary',
-                    onClick: function () {
-                        window.location.href = '/logout';
-                    }
-                }]
+                text: '你确定退出当前账号并清除账号缓存吗？',
+                onOK: function () {
+                    window.location.href = '/logout';
+                }
             });
         } else {
-            weui.alert('易班客户端不支持账号退出，你可以重新绑定易班账号', {
-                title: '错误提示',
-                buttons: [{
-                    label: '确定',
-                    type: 'primary'
-                }]
-            });
+            $.alert("易班客户端不支持账号退出，你可以重新绑定易班账号", "错误提示");
         }
+    }
+
+    //切换TabPanel
+    function switchTabPanel(index) {
+        for (let i = 0; i < $(".weui-tabbar a").length; i++) {
+            $(".weui-tabbar a:eq(" + i + ")").removeClass("weui-bar__item_on");
+            $(".tabPanelItem:eq(" + i + ")").hide();
+        }
+        $(".weui-tabbar a:eq(" + index + ")").addClass("weui-bar__item_on");
+        $(".tabPanelItem:eq(" + index + ")").show();
     }
 
 </script>

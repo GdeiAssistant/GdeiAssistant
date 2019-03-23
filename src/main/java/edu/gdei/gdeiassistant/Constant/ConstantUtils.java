@@ -44,6 +44,9 @@ public class ConstantUtils {
     //实名认证上传的非第二代居民身份证
     public static final int OTHER_TYPE_CARD = 40014;
 
+    //用户账号密码错误
+    public static final int PASSWORD_INCORRECT = 40015;
+
     //权限令牌过期
     public static final int TOKEN_EXPIRED_EXCEPTION = 40101;
 

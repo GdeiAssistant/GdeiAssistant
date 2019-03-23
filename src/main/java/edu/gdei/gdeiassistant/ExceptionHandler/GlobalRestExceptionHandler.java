@@ -3,6 +3,7 @@ package edu.gdei.gdeiassistant.ExceptionHandler;
 import edu.gdei.gdeiassistant.Constant.ConstantUtils;
 import edu.gdei.gdeiassistant.Exception.ChargeException.SecurityInvalidException;
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
+import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
@@ -91,6 +92,18 @@ public class GlobalRestExceptionHandler {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.CHARGE_SECURITY_INVALID
                 , false, "充值安全校验不通过"));
     }
+
+    /**
+     * 处理用户账号密码错误的异常
+     *
+     * @return
+     */
+    @ExceptionHandler(PasswordIncorrectException.class)
+    public ResponseEntity HandlePasswordIncorrectException() {
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.PASSWORD_INCORRECT
+                , false, "用户账号密码错误，请检查重试或重新登录"));
+    }
+
 
     /**
      * 处理系统异常

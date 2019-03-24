@@ -1,3 +1,4 @@
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -37,6 +38,8 @@
             </div>
 
             <div class="tabPanelItem" style="display: none">
+
+                <jsp:include page="/WEB-INF/view/Info/info.jsp"/>
 
             </div>
 

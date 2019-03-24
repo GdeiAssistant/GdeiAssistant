@@ -5,10 +5,12 @@ import edu.gdei.gdeiassistant.Exception.ChargeException.SecurityInvalidException
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import edu.gdei.gdeiassistant.Exception.UserAccessException.UserGroupNoAccessException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
 
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice(annotations = {RestController.class, Aspect.class})
 @Order(value = 1)
 public class GlobalRestExceptionHandler {
 
@@ -104,6 +106,16 @@ public class GlobalRestExceptionHandler {
                 , false, "用户账号密码错误，请检查重试或重新登录"));
     }
 
+    /**
+     * 处理用户组没有权限访问资源的异常
+     *
+     * @return
+     */
+    @ExceptionHandler(UserGroupNoAccessException.class)
+    public ResponseEntity HandleUserGroupNoAccessException() {
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.USER_GROUP_NO_ACCESS
+                , false, "当前用户组没有权限访问该资源"));
+    }
 
     /**
      * 处理系统异常

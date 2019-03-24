@@ -65,6 +65,9 @@ public class ConstantUtils {
     //用户所属用户组没有权限访问该资源
     public static final int USER_GROUP_NO_ACCESS = 40106;
 
+    //登录凭证过期
+    public static final int SESSION_INVALIDATED = 40107;
+
     //自定义课程数量超过限制
     public static final int CUSTOM_SCHEDULE_OVER_LIMIT = 40301;
 

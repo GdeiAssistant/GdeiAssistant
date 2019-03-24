@@ -1,6 +1,7 @@
 package edu.gdei.gdeiassistant.Interceptor;
 
 import com.google.gson.Gson;
+import edu.gdei.gdeiassistant.Constant.ConstantUtils;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -48,7 +49,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (uri.startsWith("/api")) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(new Gson().toJson(new JsonResult(false, "用户登录凭证过期，请重新登录")));
+            response.getWriter().print(new Gson().toJson(new JsonResult(ConstantUtils.SESSION_INVALIDATED, false, "用户登录凭证过期，请重新登录")));
             response.getWriter().flush();
             response.getWriter().close();
             return false;

@@ -25,7 +25,7 @@
         <i style="background: url(/img/function/collection.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>馆藏查询</p>
     </div>
-    <div onclick="window.location.href='http://www.ytzhihui.com/wap/index.html'">
+    <div onclick="window.location.href='/book'">
         <i style="background: url(/img/function/library.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>我的图书馆</p>
     </div>

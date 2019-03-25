@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Pojo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -11,23 +12,55 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Book implements Serializable {
 
-    //借阅时间
-    private String borrowDate;
-
-    //归还时间
-    private String returnDate;
-
-    //题名/著者
-    private String name;
-
-    //图书类型
-    private String type;
-
-    //登录号
+    //条形码
     private String id;
 
-    //续借地址
-    private String renewUrl;
+    //续借的SN号
+    private String sn;
+
+    //续借的Code号
+    private String code;
+
+    //书名
+    private String name;
+
+    //作者
+    private String author;
+
+    //借阅时间
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    private String borrowDate;
+
+    //应还时间
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    private String returnDate;
+
+    //续借次数
+    private Integer renewTime;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     public String getBorrowDate() {
         return borrowDate;
@@ -45,35 +78,27 @@ public class Book implements Serializable {
         this.returnDate = returnDate;
     }
 
-    public String getName() {
-        return name;
+    public Integer getRenewTime() {
+        return renewTime;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRenewTime(Integer renewTime) {
+        this.renewTime = renewTime;
     }
 
-    public String getType() {
-        return type;
+    public String getSn() {
+        return sn;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
-    public String getId() {
-        return id;
+    public String getCode() {
+        return code;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getRenewUrl() {
-        return renewUrl;
-    }
-
-    public void setRenewUrl(String renewUrl) {
-        this.renewUrl = renewUrl;
+    public void setCode(String code) {
+        this.code = code;
     }
 }

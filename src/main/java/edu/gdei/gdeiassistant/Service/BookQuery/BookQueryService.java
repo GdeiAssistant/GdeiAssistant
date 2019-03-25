@@ -1,12 +1,17 @@
 package edu.gdei.gdeiassistant.Service.BookQuery;
 
-import edu.gdei.gdeiassistant.Enum.Base.ServiceResultEnum;
+import edu.gdei.gdeiassistant.Exception.BookRenewException.BookRenewOvertimeException;
+import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
-import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.Book;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
+import edu.gdei.gdeiassistant.Pojo.Entity.User;
+import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import edu.gdei.gdeiassistant.Pojo.UserLogin.UserCertificate;
+import edu.gdei.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
+import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
+import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
+import net.sf.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -21,6 +26,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +38,12 @@ import java.util.List;
 @Service
 public class BookQueryService {
 
+    @Autowired
+    private UserCertificateDao userCertificateDao;
+
+    @Autowired
+    private UserLoginService userLoginService;
+
     private Log log = LogFactory.getLog(BookQueryService.class);
 
     private int timeout;
@@ -42,36 +54,62 @@ public class BookQueryService {
     }
 
     /**
+     * 同步教务系统会话，获取用户手机号
+     *
+     * @param sessionId
+     * @param username
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    public String UpdateSessionAndGetUserNumber(String sessionId, String username, String password) throws Exception {
+        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(username);
+        if (userCertificate == null) {
+            userCertificate = userLoginService.SyncUpdateSession(sessionId, new User(username, password));
+        }
+        return userCertificate.getUser().getNumber();
+    }
+
+    /**
      * 续借图书
      *
      * @param sessionId
-     * @param url
-     * @return
+     * @param sn
+     * @param code
+     * @throws NetWorkTimeoutException
+     * @throws ServerErrorException
      */
-    public BaseResult<String, ServiceResultEnum> BookRenew(String sessionId, String url) {
-        BaseResult<String, ServiceResultEnum> result = new BaseResult<>();
+    public void BookRenew(String sessionId, String sn, String code) throws NetWorkTimeoutException, ServerErrorException, BookRenewOvertimeException {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
             HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            HttpPost httpPost = new HttpPost("http://lib2.gdei.edu.cn:8080/sms/opac/user/" + url);
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-            Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("个人借阅信息")) {
-                String message = document.getElementsByClass("sheet").first().select("font").first().text();
-                result.setResultData(message);
-                result.setResultType(ServiceResultEnum.SUCCESS);
-                return result;
+            HttpGet httpGet = new HttpGet("http://agentdockingopac.featurelib.libsou.com/showhome/searchrenew/opacSearchRenew?&check=1&sn="
+                    + sn + "&code=" + code + "&schoolId=705");
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                JSONObject jsonObject = JSONObject.fromObject(EntityUtils.toString(httpResponse.getEntity()));
+                int result = jsonObject.getInt("result");
+                String message = jsonObject.getString("msg");
+                if (result == 1) {
+                    if (message.equals("超过最大续借次数:1！")) {
+                        throw new BookRenewOvertimeException("图书续借超过次数限制");
+                    }
+                    return;
+                }
             }
             throw new ServerErrorException("图书馆系统异常");
         } catch (IOException e) {
             log.error("续借图书异常:", e);
-            result.setResultType(ServiceResultEnum.TIME_OUT);
+            throw new NetWorkTimeoutException("网络连接超时");
+        } catch (BookRenewOvertimeException e) {
+            log.error("续借图书异常:", e);
+            throw new BookRenewOvertimeException("图书续借超过次数限制");
         } catch (Exception e) {
             log.error("续借图书异常", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("图书馆系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -84,7 +122,6 @@ public class BookQueryService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return result;
     }
 
     /**
@@ -94,10 +131,11 @@ public class BookQueryService {
      * @param number
      * @param password
      * @return
+     * @throws NetWorkTimeoutException
+     * @throws ServerErrorException
+     * @throws PasswordIncorrectException
      */
-    public BaseResult<List<Book>, ServiceResultEnum> BookQuery(String sessionId
-            , String number, String password) {
-        BaseResult<List<Book>, ServiceResultEnum> result = new BaseResult<>();
+    public List<Book> BookQuery(String sessionId, String number, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -109,7 +147,7 @@ public class BookQueryService {
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 //进入移动图书馆登录界面
-                httpGet = new HttpGet("http://mc.m.5read.com/user/uc/showUserCenter.jspx");
+                httpGet = new HttpGet("http://mc.m.5read.com/user/login/showLogin.jspx?backurl=/user/uc/showUserCenter.jspx");
                 httpResponse = httpClient.execute(httpGet);
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (httpResponse.getStatusLine().getStatusCode() == 200
@@ -124,77 +162,66 @@ public class BookQueryService {
                     basicNameValuePairList.add(new BasicNameValuePair("password", password));
                     httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairList, StandardCharsets.UTF_8));
                     httpResponse = httpClient.execute(httpPost);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("移动图书馆服务登录")) {
-                        //登录失败，检查失败原因
-                        String error = document.getElementsByClass("uinfo").first().select("em").first().text();
-                        switch (error) {
-                            case "您的口令与证号相同，请先修改口令!":
-                                //初始密码未修改
-                                break;
-
-                            case "口令错误!":
-                                throw new PasswordIncorrectException("借阅证密码不正确");
-
-                            default:
-                                throw new ServerErrorException("图书馆系统异常");
-                        }
-                    } else if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("个人中心")) {
-                        //登录成功，查询借阅的图书信息
-                        httpGet = new HttpGet("http://mc.m.5read.com/cmpt/opac/opacLink.jspx?stype=1");
+                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("个人借阅信息")) {
-                            Elements sheets = document.getElementsByClass("sheet");
-                            if (sheets.size() == 0) {
-                                result.setResultType(ServiceResultEnum.EMPTY_RESULT);
-                                return result;
+                        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("个人中心")) {
+                            httpGet = new HttpGet("http://mc.m.5read.com/cmpt/opac/opacLink.jspx?stype=1");
+                            httpResponse = httpClient.execute(httpGet);
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                                Elements books = document.getElementsByClass("tableLib");
+                                List<Book> bookList = new ArrayList<>();
+                                for (Element element : books) {
+                                    //解析SN号、Code号
+                                    String[] renew = element.getElementsByClass("tableCon").first().select("a")
+                                            .first().attr("onclick").split("','");
+                                    String sn = renew[0].split("renew\\('")[1];
+                                    String code = renew[1].split("', '")[0];
+                                    //获取条形码
+                                    element.select("td").first().select("a").remove();
+                                    String id = element.select("td").first().text();
+                                    //获取书名
+                                    String name = element.select("td").get(1).text();
+                                    //获取作者名
+                                    String author = element.select("td").get(2).text();
+                                    //获取借阅时间
+                                    String borrowTime = element.select("td").get(3).text();
+                                    //获取应还日期
+                                    String returnTime = element.select("td").get(4).text();
+                                    //获取续借次数
+                                    Integer renewTime = Integer.valueOf(element.select("td").get(5).text());
+                                    //构造Book对象
+                                    Book book = new Book();
+                                    book.setId(id);
+                                    book.setName(name);
+                                    book.setAuthor(author);
+                                    book.setBorrowDate(borrowTime);
+                                    book.setReturnDate(returnTime);
+                                    book.setRenewTime(renewTime);
+                                    book.setSn(sn);
+                                    book.setCode(code);
+                                    bookList.add(book);
+                                }
+                                return bookList;
                             }
-                            List<Book> bookList = new ArrayList<>();
-                            for (Element sheet : sheets) {
-                                //获取所有行
-                                Elements trs = sheet.select("tr");
-                                //获取图书名
-                                String name = trs.get(0).select("td").get(0).text();
-                                //获取登录号
-                                String id = trs.get(1).select("td").get(0).text();
-                                //获取借阅时间
-                                String borrowDate = trs.get(2).select("td").get(0).text();
-                                //获取归还时间
-                                String returnDate = trs.get(3).select("td").get(0).text();
-                                //获取图书类型
-                                String type = trs.get(4).select("td").get(0).text();
-                                //获取续借地址
-                                String renewUrl = sheet.select("form").first().attr("action");
-                                //保存图书信息到List中
-                                Book book = new Book();
-                                book.setName(name);
-                                book.setId(id);
-                                book.setBorrowDate(borrowDate);
-                                book.setReturnDate(returnDate);
-                                book.setType(type);
-                                book.setRenewUrl(renewUrl);
-                                bookList.add(book);
-                            }
-                            result.setResultData(bookList);
-                            result.setResultType(ServiceResultEnum.SUCCESS);
-                            return result;
+                        } else if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("移动图书馆服务登录")) {
+                            throw new PasswordIncorrectException("图书馆查询密码错误");
                         }
-                        throw new ServerErrorException("图书馆系统异常");
                     }
-                    throw new ServerErrorException("图书馆系统异常");
                 }
-                throw new ServerErrorException("图书馆系统异常");
             }
+            throw new ServerErrorException("图书馆系统异常");
         } catch (IOException e) {
             log.error("查询借阅图书异常：", e);
-            result.setResultType(ServiceResultEnum.TIME_OUT);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (PasswordIncorrectException e) {
             log.error("查询借阅图书异常：", e);
-            result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
+            throw new PasswordIncorrectException("图书馆查询密码错误");
         } catch (Exception e) {
             log.error("查询借阅图书异常：", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("图书馆系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -207,6 +234,5 @@ public class BookQueryService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return result;
     }
 }

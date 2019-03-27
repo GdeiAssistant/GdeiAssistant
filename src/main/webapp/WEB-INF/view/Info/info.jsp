@@ -38,3 +38,18 @@
         </section>
     </article>
 </div>
+
+<div class="recommendation">
+    <div class="hd">
+        <h1 class="page_title">专题阅读</h1>
+    </div>
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="/reading/id/1">
+            <div class="weui-cell__bd">
+                <p>【第一期】抑郁症、自杀与危机干预</p>
+                <p style="font-size: 13px;color: #999">这个世界虽然不完美，但我们仍然可以疗愈自己</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
+</div>

@@ -120,222 +120,222 @@
     </div>
 
     <div class="weui-cells">
-        <div class="weui-cell weui-cell_access" href="tel:400-1619995">
+        <a class="weui-cell weui-cell_access" href="tel:400-1619995">
             <div class="weui-cell__bd">
                 <p>生命教育与危机干预热线</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:4001619995">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:4001619995">
             <div class="weui-cell__bd">
                 <p>希望热线</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:010-82951332">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:010-82951332">
             <div class="weui-cell__bd">
                 <p>全国免费心理咨询</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:020-81899120">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:020-81899120">
             <div class="weui-cell__bd">
                 <p>广州市心理危机干预中心</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0755-25629459">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0755-25629459">
             <div class="weui-cell__bd">
                 <p>深圳市心理危机研究中心</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0755-88851085">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0755-88851085">
             <div class="weui-cell__bd">
                 <p>深圳市民情感护理中心</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:010-64851106">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:010-64851106">
             <div class="weui-cell__bd">
                 <p>中科院心理所咨询志愿者热线</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:010-82951332">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:010-82951332">
             <div class="weui-cell__bd">
                 <p>北京危机干预中心心理援助热线</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:010-82951332">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:010-82951332">
             <div class="weui-cell__bd">
                 <p>回龙观医院北京心理危机研究与干预中心</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:010-64033383">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:010-64033383">
             <div class="weui-cell__bd">
                 <p>北京红枫妇女热线</p>
             </div>
             <div class="weui-cell__ft">周一至周五9:00-18:00</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:400-1619995">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:400-1619995">
             <div class="weui-cell__bd">
                 <p>生命教育与危机干预热线</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:010-62716286">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:010-62716286">
             <div class="weui-cell__bd">
                 <p>心理健康热线</p>
             </div>
             <div class="weui-cell__ft">周一至周五18:00-23:00</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:010-66152236">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:010-66152236">
             <div class="weui-cell__bd">
                 <p>北京青少年法律与心理咨询中心</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:010-62314291">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:010-62314291">
             <div class="weui-cell__bd">
                 <p>北京惠源心理与教育研究中心救助热线</p>
             </div>
             <div class="weui-cell__ft">周一至周五19:00-22:00</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:010-65132928">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:010-65132928">
             <div class="weui-cell__bd">
                 <p>北京协和启迪心理咨询中心</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:023-66699199">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:023-66699199">
             <div class="weui-cell__bd">
                 <p>重庆生命救助热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:023-65372255">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:023-65372255">
             <div class="weui-cell__bd">
                 <p>重庆心理危机干预热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:023-67962002">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:023-67962002">
             <div class="weui-cell__bd">
                 <p>重庆市江北区心理危机干预热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:021-12320-5">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:021-12320-5">
             <div class="weui-cell__bd">
                 <p>上海市心理援助热线（上海市精神卫生中心主办）</p>
             </div>
             <div class="weui-cell__ft">每天8:00-22:00</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:12355">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:12355">
             <div class="weui-cell__bd">
                 <p>上海青少年心理危机干预专线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:021-51699291">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:021-51699291">
             <div class="weui-cell__bd">
                 <p>上海外服心理援助中心自杀干预热线</p>
             </div>
             <div class="weui-cell__ft">每天9:00-21:00</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:13601686318">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:13601686318">
             <div class="weui-cell__bd">
                 <p>上海“阳光老人”自杀干预热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:022-96051199">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:022-96051199">
             <div class="weui-cell__bd">
                 <p>天津自杀干预热线</p>
             </div>
             <div class="weui-cell__ft">每天17:00-次日7:00</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0311-88827732">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0311-88827732">
             <div class="weui-cell__bd">
                 <p>石家庄心理咨询心理治疗中心心理咨询热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:027-8584666">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:027-8584666">
             <div class="weui-cell__bd">
                 <p>武汉市精神卫生中心危机干预中心救助热线</p>
             </div>
             <div class="weui-cell__ft">每天18:30-21:30</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0532-85659516">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0532-85659516">
             <div class="weui-cell__bd">
                 <p>青岛市心理危机干预中心心理危机干预热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0532-85669120">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0532-85669120">
             <div class="weui-cell__bd">
                 <p>青岛市精神卫生中心</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0411-84689595">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0411-84689595">
             <div class="weui-cell__bd">
                 <p>大连市心理危机干预热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:024-23813000">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:024-23813000">
             <div class="weui-cell__bd">
                 <p>沈阳市精神卫生中心心理咨询热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:025-16896123">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:025-16896123">
             <div class="weui-cell__bd">
                 <p>南京自杀干预中心救助热线</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0592-5395159">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0592-5395159">
             <div class="weui-cell__bd">
                 <p>厦门市精神卫生中心心理危机干预</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0571-85029595">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0571-85029595">
             <div class="weui-cell__bd">
                 <p>杭州心理研究与干预中心救助热线</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0431-89685000">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0431-89685000">
             <div class="weui-cell__bd">
                 <p>长春市心理援助热线</p>
             </div>
             <div class="weui-cell__ft">全天24小时</div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0731-8909516">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0731-8909516">
             <div class="weui-cell__bd">
                 <p>长沙市心理学会自杀干预热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:029-85421802">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:029-85421802">
             <div class="weui-cell__bd">
                 <p>西安米兰心理咨询中心</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
-        <div class="weui-cell weui-cell_access" href="tel:0991-3200555">
+        </a>
+        <a class="weui-cell weui-cell_access" href="tel:0991-3200555">
             <div class="weui-cell__bd">
                 <p>新疆自杀干预中心“心理110”救助热线</p>
             </div>
             <div class="weui-cell__ft"></div>
-        </div>
+        </a>
     </div>
 </div>
 

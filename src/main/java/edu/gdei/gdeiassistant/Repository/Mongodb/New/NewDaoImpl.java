@@ -18,7 +18,9 @@ public class NewDaoImpl implements NewDao {
 
     @Override
     public void saveNewInfoList(List<NewInfo> newInfoList) {
-        mongoTemplate.insertAll(newInfoList);
+        for (NewInfo newInfo : newInfoList) {
+            mongoTemplate.insert(newInfo, "new");
+        }
     }
 
     @Override

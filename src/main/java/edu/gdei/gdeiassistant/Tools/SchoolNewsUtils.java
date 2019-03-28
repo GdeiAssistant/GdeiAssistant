@@ -14,6 +14,6 @@ public class SchoolNewsUtils {
             //PDF文件
             return "<p onclick=\"downloadFile('http://web.gdei.edu.cn" + href + "')\" style=\"text-align:center;margin-top:1rem;color:#bfbfbf;padding-left:1rem;padding-right:1rem\">点击查看：" + title + "." + href.split("\\.")[1] + "</p>";
         }
-        return "<p onclick=\"downloadFile('http://web.gdei.edu.cn" + href + "')\" style=\"text-align:center;margin-top:1rem;color:#bfbfbf;padding-left:1rem;padding-right:1rem\">点击下载：" + title + "." + href.split("\\.")[1] + "</p>";
+        return "<p onclick=\"downloadFile('" + href + "')\" style=\"text-align:center;margin-top:1rem;color:#bfbfbf;padding-left:1rem;padding-right:1rem\">点击下载：" + title + "." + href.split("\\.")[href.split("\\.").length - 1] + "</p>";
     }
 }

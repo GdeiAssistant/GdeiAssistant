@@ -155,25 +155,78 @@ public class SchoolNewsService {
                                             Document document1 = Jsoup.parse(EntityUtils.toString(result.getEntity()));
                                             String content = null;
                                             if (document1.getElementsByClass("inside-content").size() == 0) {
+                                                //调整图片尺寸
+                                                document1.select("img").attr("width", "100%");
+                                                document1.select("img").attr("height", "auto");
+                                                //调整网页格式
+                                                Elements p = document1.select("p");
+                                                for (Element element : p) {
+                                                    if (element.attr("style").contains("text-indent") && element.select("img").size() > 0) {
+                                                        element.attr("style", element.attr("style").replace("text-indent", ""));
+                                                    }
+                                                }
+                                                //补全资源引用地址
+                                                Elements hrefs = document1.getElementsByClass("detail_text").first()
+                                                        .getElementsByAttributeValue("style", "padding-bottom:20px;").first().getElementsByAttribute("href");
+                                                Elements sources = document1.getElementsByClass("detail_text").first()
+                                                        .getElementsByAttributeValue("style", "padding-bottom:20px;").first().getElementsByAttribute("src");
+                                                for (Element element : hrefs) {
+                                                    if (element.attr("href").contains("/cms/")) {
+                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                    } else {
+                                                        element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
+                                                    }
+                                                }
+                                                for (Element element : sources) {
+                                                    if (element.attr("src").contains("/cms/")) {
+                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                    } else {
+                                                        element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
+                                                    }
+                                                }
                                                 //替换下载链接
                                                 Elements download = document1.getElementsByClass("detail_text").first().getElementsByAttributeValue("style", "padding-bottom:20px;").first().getElementsByAttributeValue("target", "_blank");
                                                 for (Element element : download) {
-                                                    element.attr("onclick", "downloadFile('" + newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href") + "')");
+                                                    element.attr("onclick", "downloadFile('" + element.attr("href") + "')");
                                                     element.attr("href", "javascript:");
                                                 }
                                                 content = document1.getElementsByClass("detail_text").first()
-                                                        .getElementsByAttributeValue("style", "padding-bottom:20px;")
-                                                        .first().toString().replace("href=\"resource/", "href=\"" + newsUrlsList.get(type).get(newIndex) + "/resource/")
-                                                        .replace("src=\"resource/", "src=\"" + newsUrlsList.get(type).get(newIndex) + "/resource/");
+                                                        .getElementsByAttributeValue("style", "padding-bottom:20px;").first().toString();
                                             } else {
+                                                //补全资源引用地址
+                                                Elements hrefs = document1.getElementsByClass("inside-content").first().getElementsByAttribute("href");
+                                                Elements sources = document1.getElementsByClass("inside-content").first().getElementsByAttribute("src");
+                                                for (Element element : hrefs) {
+                                                    if (element.attr("href").contains("/cms/")) {
+                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                    } else {
+                                                        element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
+                                                    }
+                                                }
+                                                for (Element element : sources) {
+                                                    if (element.attr("src").contains("/cms/")) {
+                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                    } else {
+                                                        element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
+                                                    }
+                                                }
                                                 //替换下载链接
                                                 Elements download = document1.getElementsByClass("inside-content").first().getElementsByAttributeValue("target", "_blank");
                                                 for (Element element : download) {
-                                                    element.attr("onclick", "downloadFile('" + newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href") + "')");
+                                                    element.attr("onclick", "downloadFile('" + element.attr("href") + "')");
                                                     element.attr("href", "javascript:");
                                                 }
-                                                content = document1.getElementsByClass("inside-content").first().toString().replace("href=\"resource/", "href=\"" + newsUrlsList.get(type).get(newIndex) + "/resource/")
-                                                        .replace("src=\"resource/", "src=\"" + newsUrlsList.get(type).get(newIndex) + "/resource/");
+                                                //调整图片尺寸
+                                                document1.select("img").attr("width", "100%");
+                                                document1.select("img").attr("height", "auto");
+                                                //调整网页格式
+                                                Elements p = document1.select("p");
+                                                for (Element element : p) {
+                                                    if (element.attr("style").contains("text-indent") && element.select("img").size() > 0) {
+                                                        element.attr("style", element.attr("style").replace("text-indent", ""));
+                                                    }
+                                                }
+                                                content = document1.getElementsByClass("inside-content").first().toString();
                                             }
                                             NewInfo newInfo = new NewInfo();
                                             newInfo.setId(DigestUtils.sha1Hex(id));
@@ -275,14 +328,46 @@ public class SchoolNewsService {
                                         String content = null;
                                         if (rssNewInfo.getLink().endsWith(".xhtml") || rssNewInfo.getLink().endsWith(".html")) {
                                             Document page = Jsoup.parse(EntityUtils.toString(result.getEntity()));
+                                            //调整图片尺寸
+                                            page.select("img").attr("width", "100%");
+                                            page.select("img").attr("height", "auto");
+                                            //调整网页格式
+                                            Elements p = page.select("p");
+                                            for (Element element : p) {
+                                                if (element.attr("style").contains("text-indent") && element.select("img").size() > 0) {
+                                                    element.attr("style", element.attr("style").replace("text-indent", ""));
+                                                }
+                                            }
+                                            //获取图片URL前缀
+                                            String[] linkSplit = rssNewInfo.getLink().split("/");
+                                            StringBuilder url = new StringBuilder();
+                                            for (int i = 0; i < linkSplit.length - 1; i++) {
+                                                url.append(linkSplit[i]).append("/");
+                                            }
+                                            //补全资源引用地址
+                                            Elements hrefs = page.getElementsByClass("text").first().getElementsByAttribute("href");
+                                            Elements sources = page.getElementsByClass("text").first().getElementsByAttribute("src");
+                                            for (Element element : hrefs) {
+                                                if (element.attr("href").contains("/cms/")) {
+                                                    element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                } else {
+                                                    element.attr("href", url.toString() + "/" + element.attr("href"));
+                                                }
+                                            }
+                                            for (Element element : sources) {
+                                                if (element.attr("src").contains("/cms/")) {
+                                                    element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                } else {
+                                                    element.attr("src", url.toString() + "/" + element.attr("src"));
+                                                }
+                                            }
                                             //替换下载链接
                                             Elements download = page.getElementsByClass("text").first().getElementsByAttributeValue("target", "_blank");
                                             for (Element element : download) {
-                                                element.attr("onclick", "downloadFile('" + rssNewsUrlsList.get(urlIndex) + "/" + element.attr("href") + "')");
+                                                element.attr("onclick", "downloadFile('" + element.attr("href") + "')");
                                                 element.attr("href", "javascript:");
                                             }
-                                            content = page.getElementsByClass("text").first().toString().replace("href=\"resource/", "href=\"" + rssNewsUrlsList.get(urlIndex) + "/resource/")
-                                                    .replace("src=\"resource/", "src=\"" + rssNewsUrlsList.get(urlIndex) + "/resource/");
+                                            content = page.getElementsByClass("text").first().toString();
                                         } else {
                                             content = SchoolNewsUtils.CreateDownloadTag(rssNewInfo.getTitle(), rssNewInfo.getLink());
                                         }

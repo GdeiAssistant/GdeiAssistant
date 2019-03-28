@@ -6,7 +6,6 @@
 
 <c:set var="festival" scope="request" value="${info:getFestivalInfo()}"/>
 
-
 <c:if test="${festival!=null}">
 
     <div class="today">
@@ -48,6 +47,13 @@
             <div class="weui-cell__bd">
                 <p>【第一期】抑郁症、自杀与危机干预</p>
                 <p style="font-size: 13px;color: #999">这个世界虽然不完美，但我们仍然可以疗愈自己</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="/reading/id/2">
+            <div class="weui-cell__bd">
+                <p>【第二期】中国性少数群体生存状况报告</p>
+                <p style="font-size: 13px;color: #999">基于性倾向、性别认同及性别表达的社会态度调查报告</p>
             </div>
             <div class="weui-cell__ft"></div>
         </a>

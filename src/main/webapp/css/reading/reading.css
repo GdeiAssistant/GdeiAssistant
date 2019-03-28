@@ -1,0 +1,27 @@
+body {
+    background: white;
+}
+
+img {
+    max-width: 100%;
+    margin: .6em auto;
+    display: block;
+}
+
+h3 {
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+h5 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.page_title {
+    font-size: 25px;
+}
+
+a {
+    color: black;
+}

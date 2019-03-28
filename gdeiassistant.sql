@@ -40,6 +40,15 @@ CREATE TABLE `charge_log` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `charge_log`
+--
+
+LOCK TABLES `charge_log` WRITE;
+/*!40000 ALTER TABLE `charge_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `charge_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `close_log`
 --
 
@@ -54,6 +63,15 @@ CREATE TABLE `close_log` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `close_log`
+--
+
+LOCK TABLES `close_log` WRITE;
+/*!40000 ALTER TABLE `close_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `close_log` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Dumping events for database 'gdeiassistant_log'
@@ -94,6 +112,15 @@ CREATE TABLE `electricfees` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `electricfees`
+--
+
+LOCK TABLES `electricfees` WRITE;
+/*!40000 ALTER TABLE `electricfees` DISABLE KEYS */;
+/*!40000 ALTER TABLE `electricfees` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `yellow_page`
 --
 
@@ -117,6 +144,16 @@ CREATE TABLE `yellow_page` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `yellow_page`
+--
+
+LOCK TABLES `yellow_page` WRITE;
+/*!40000 ALTER TABLE `yellow_page` DISABLE KEYS */;
+INSERT INTO `yellow_page` VALUES (341,11,'消防报警','国家','119',NULL,NULL,NULL,NULL),(342,11,'医疗急救','国家','120',NULL,NULL,NULL,NULL),(343,11,'交通事故报警','国家','122',NULL,NULL,NULL,NULL),(344,11,'短信报警','国家','12110',NULL,NULL,NULL,NULL),(345,10,'中共中央纪律检查委员会纪检监察机关举报','党政','12388',NULL,'北京市西城区永定门内西街甲2号',NULL,'http://www.12388.gov.cn/'),(346,10,'中共中央组织部用人选拔问题举报','党政','12380',NULL,NULL,NULL,'http://www.12380.gov.cn/'),(347,10,'国家邮政局申诉','国家',NULL,NULL,NULL,NULL,'http://sswz.spb.gov.cn/'),(348,10,'国家工业和信息化部电信用户申诉','国家','12300',NULL,'北京市西城区月坛南街11号电信用户申诉受理中心','accept@chinatcc.gov.cn','http://www.chinatcc.gov.cn:8080/cms/shensus/'),(349,10,'国家教育部统一监督举报','国家','010-66092315',NULL,NULL,'12391@moe.edu.cn','http://www.moe.gov.cn/jyb_hygq/hygq_tsjb/201505/t20150520_184529.html'),(350,10,'国家信访局投诉和建议','国家','010—68015310',NULL,'北京市西城区月坛南街8号',NULL,'http://wsxf.gjxfj.gov.cn/zfp/webroot/index.html'),(351,10,'国家工商总局消费者维权申诉','国家','12315',NULL,NULL,NULL,'http://www.315.gov.cn'),(352,10,'广州市人民政府服务','市政','12345',NULL,NULL,NULL,'http://gz12345.gz.gov.cn/'),(353,1,'心理健康教育与辅导中心（海珠校区）','海珠','34114108',NULL,'田家炳大楼2楼',NULL,NULL),(354,1,'心理健康教育与辅导中心（花都校区）','花都','36967712',NULL,'花都校区实验楼205',NULL,NULL),(355,1,'心灵之约（海珠校区）','海珠','34113456',NULL,'学生宿舍4栋1楼，党员工作站内',NULL,NULL),(356,1,'心灵之约（花都校区）','花都','34113987',NULL,'学生宿舍4栋1楼，党员工作站内',NULL,NULL),(357,2,'宿舍管理科','海珠','34113723',NULL,'学生宿舍4栋007、008',NULL,NULL),(358,2,'物业服务中心','花都','18011902709',NULL,'学生宿舍1栋1楼',NULL,NULL),(359,3,'网络中心（海珠校区）','海珠','34113702',NULL,'综合楼B2203',NULL,'http://web.gdei.edu.cn/nic/'),(360,3,'网络中心（花都校区）','花都','36967722',NULL,'图书馆220',NULL,NULL),(361,4,'党代表工作室（海珠校区）','海珠','34113023',NULL,'综合楼18楼1806',NULL,NULL),(362,4,'党代表工作室（花都校区）','花都','36967719',NULL,'图书馆708',NULL,NULL),(363,4,'党政办公室','海珠','34113736',NULL,'综合楼15楼',NULL,'http://web.gdei.edu.cn/xyb/'),(364,5,'监控中心（紧急事务报告）','花都','36967733',NULL,NULL,NULL,NULL),(365,5,'物业安保24小时值班','花都','36967733',NULL,NULL,NULL,NULL),(366,5,'电梯应急救援（海珠校区）','海珠','96333',NULL,NULL,NULL,NULL),(367,5,'电梯应急救援','花都','18837490602','18837490597',NULL,NULL,NULL),(368,5,'医务室（海珠校区）','海珠','34113271',NULL,'学生宿舍',NULL,NULL),(369,5,'医务室（花都校区）','花都','36967710',NULL,'学生宿舍2栋1楼',NULL,NULL),(370,5,'医保办','海珠','34113511',NULL,NULL,NULL,NULL),(371,6,'水电中心值班处','海珠','34113363',NULL,NULL,NULL,NULL),(372,6,'卡务中心','花都','36967715',NULL,'学生宿舍1栋1楼',NULL,NULL),(373,6,'5栋宿舍楼送水','海珠','15920841618',NULL,'学生宿舍5栋',NULL,NULL),(374,6,'培训楼招待处','海珠','34113500',NULL,'培训楼',NULL,NULL),(375,6,'体育中心','海珠','34113643','34113232','体育中心',NULL,NULL),(376,7,'后勤基建处（海珠校区）','海珠','34113274',NULL,'综合楼9楼',NULL,'http://web.gdei.edu.cn/hqc/'),(377,7,'后勤基建处（花都校区）','花都','36967702',NULL,'图书馆705',NULL,'http://web.gdei.edu.cn/hqc/'),(378,7,'饭堂负责人（海珠校区）','海珠','13380052368',NULL,NULL,NULL,NULL),(379,7,'饭堂负责人（花都校区第一饭堂）','花都','13533936083',NULL,NULL,NULL,NULL),(380,7,'饭堂负责人（花都校区第二饭堂）','花都','15697632188',NULL,NULL,NULL,NULL),(381,7,'饭堂负责人（花都校区第三饭堂）','花都','13725408927',NULL,NULL,NULL,NULL),(382,7,'图书馆（海珠校区）','海珠','34113372',NULL,'图书馆大楼',NULL,'http://lib.gdei.edu.cn/'),(383,7,'图书馆（花都校区）','花都','39697731',NULL,'图书馆3楼大厅',NULL,'http://lib.gdei.edu.cn/'),(384,7,'教务处（海珠校区）','海珠','34113407','34113249','综合楼13楼','jwc@gdei.edu.cn','http://web.gdei.edu.cn/jwc/'),(385,7,'教务处（花都校区）','花都','36967708',NULL,'图书馆703',NULL,'http://web.gdei.edu.cn/jwc/'),(386,7,'财务处（海珠校区）','海珠','34113275',NULL,'综合楼14楼',NULL,'http://web.gdei.edu.cn/cwc/'),(387,7,'财务处（花都校区）','花都','36967721',NULL,'学生宿舍3栋1楼',NULL,'http://web.gdei.edu.cn/cwc/'),(388,7,'学生工作部（处）（海珠校区）','海珠','34113360',NULL,'综合楼12楼',NULL,'http://web.gdei.edu.cn/xsc/'),(389,7,'学生工作部（处）（花都校区）','花都','36967703',NULL,'图书馆702',NULL,'http://web.gdei.edu.cn/xsc/'),(390,7,'团委（海珠校区）','海珠','34113325',NULL,'综合楼12楼',NULL,'http://web.gdei.edu.cn/tw/'),(391,7,'团委（花都校区）','花都','36967703',NULL,'图书馆702',NULL,'http://web.gdei.edu.cn/tw/'),(392,8,'招生办公室','海珠','34113327',NULL,'综合楼12楼',NULL,'http://web.gdei.edu.cn/zsb/'),(393,8,'纪检监察处','海珠','34113624',NULL,'综合楼18楼','jj@gdei.edu.cn','http://web.gdei.edu.cn/jwb/'),(394,8,'就业指导中心','海珠','34114466',NULL,'综合楼12楼',NULL,'http://210.38.64.162:9000/job'),(395,9,'就业创业咨询预约（海珠校区）','海珠','34113716',NULL,'综合楼12楼1211室','jyzd@gdei.edu.cn',NULL),(396,9,'就业创业咨询预约（花都校区）','花都','36967716',NULL,'图书馆2楼216室','jyzd@gdei.edu.cn',NULL),(397,9,'教育学院','海珠','34113297',NULL,NULL,NULL,'http://web.gdei.edu.cn/jyx/'),(398,9,'物理与信息工程系','海珠','34113256',NULL,NULL,NULL,'http://web.gdei.edu.cn/wlx/'),(399,9,'生物与食品工程学院','海珠','34113257',NULL,NULL,NULL,'http://web.gdei.edu.cn/swx/'),(400,9,'体育学院','海珠','34113269',NULL,NULL,NULL,'http://web.gdei.edu.cn/tyx/'),(401,9,'中文系','花都','36967743',NULL,NULL,NULL,'http://web.gdei.edu.cn/zwx/'),(402,9,'政法系','花都','34113290','34113397',NULL,NULL,'http://web.gdei.edu.cn/zfx/'),(403,9,'外语系','花都','36967750','34113295','实验楼509',NULL,'http://web.gdei.edu.cn/wyx/'),(404,9,'数学系','花都','34113296','36967738',NULL,NULL,'http://web.gdei.edu.cn/sxx/'),(405,9,'化学系','花都','36967768','34113456',NULL,NULL,'http://web.gdei.edu.cn/hxx/'),(406,9,'计算机科学系','花都','34115714','36967761',NULL,NULL,'http://web.gdei.edu.cn/jsjx/'),(407,9,'音乐系','花都','36967776','34114436',NULL,NULL,'http://web.gdei.edu.cn/yyx/'),(408,9,'美术学院','花都','36967771','34113634',NULL,NULL,'http://web.gdei.edu.cn/msx/');
+/*!40000 ALTER TABLE `yellow_page` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `yellow_page_type`
 --
 
@@ -129,6 +166,16 @@ CREATE TABLE `yellow_page_type` (
   PRIMARY KEY (`type_code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `yellow_page_type`
+--
+
+LOCK TABLES `yellow_page_type` WRITE;
+/*!40000 ALTER TABLE `yellow_page_type` DISABLE KEYS */;
+INSERT INTO `yellow_page_type` VALUES (1,'倾听与倾诉'),(2,'故障保修'),(3,'网络'),(4,'党务'),(5,'医疗与救援'),(6,'生活与保障'),(7,'职能部门'),(8,'就业创业'),(9,'院系部门'),(10,'举报和申诉'),(11,'紧急求助');
+/*!40000 ALTER TABLE `yellow_page_type` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Dumping events for database 'gdeiassistant_data'
@@ -159,10 +206,21 @@ CREATE TABLE `access` (
   `bill` tinyint(1) NOT NULL COMMENT '是否拥有校园卡消费查询功能的权限',
   `lost` tinyint(1) NOT NULL COMMENT '是否拥有校园卡挂失功能的权限',
   `charge` tinyint(1) NOT NULL COMMENT '是否拥有校园卡充值功能的权限',
+  `collection` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `androidAccessGroupId` FOREIGN KEY (`id`) REFERENCES `user_group` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `access`
+--
+
+LOCK TABLES `access` WRITE;
+/*!40000 ALTER TABLE `access` DISABLE KEYS */;
+INSERT INTO `access` VALUES (0,1,1,1,1,1,1,1,1,1),(1,1,1,1,1,1,1,1,1,1),(2,1,1,0,1,1,1,1,0,1);
+/*!40000 ALTER TABLE `access` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `authentication`
@@ -183,8 +241,17 @@ CREATE TABLE `authentication` (
   `method` tinyint(1) DEFAULT NULL COMMENT '实名认证方法',
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '记录标记删除状态',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `authentication`
+--
+
+LOCK TABLES `authentication` WRITE;
+/*!40000 ALTER TABLE `authentication` DISABLE KEYS */;
+/*!40000 ALTER TABLE `authentication` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `cet`
@@ -200,6 +267,15 @@ CREATE TABLE `cet` (
   CONSTRAINT `cetUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cet`
+--
+
+LOCK TABLES `cet` WRITE;
+/*!40000 ALTER TABLE `cet` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cet` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `dating_message`
@@ -221,6 +297,15 @@ CREATE TABLE `dating_message` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `dating_message`
+--
+
+LOCK TABLES `dating_message` WRITE;
+/*!40000 ALTER TABLE `dating_message` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dating_message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `dating_pick`
 --
 
@@ -238,6 +323,15 @@ CREATE TABLE `dating_pick` (
   CONSTRAINT `datingPickUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dating_pick`
+--
+
+LOCK TABLES `dating_pick` WRITE;
+/*!40000 ALTER TABLE `dating_pick` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dating_pick` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `dating_profile`
@@ -261,8 +355,17 @@ CREATE TABLE `dating_profile` (
   PRIMARY KEY (`profile_id`) USING BTREE,
   KEY `datingProfileUsername` (`username`),
   CONSTRAINT `datingProfileUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dating_profile`
+--
+
+LOCK TABLES `dating_profile` WRITE;
+/*!40000 ALTER TABLE `dating_profile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dating_profile` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ershou`
@@ -290,6 +393,15 @@ CREATE TABLE `ershou` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `ershou`
+--
+
+LOCK TABLES `ershou` WRITE;
+/*!40000 ALTER TABLE `ershou` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ershou` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `gender`
 --
 
@@ -305,6 +417,15 @@ CREATE TABLE `gender` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `gender`
+--
+
+LOCK TABLES `gender` WRITE;
+/*!40000 ALTER TABLE `gender` DISABLE KEYS */;
+/*!40000 ALTER TABLE `gender` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `introduction`
 --
 
@@ -318,6 +439,15 @@ CREATE TABLE `introduction` (
   CONSTRAINT `introductionUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `introduction`
+--
+
+LOCK TABLES `introduction` WRITE;
+/*!40000 ALTER TABLE `introduction` DISABLE KEYS */;
+/*!40000 ALTER TABLE `introduction` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `lostandfound`
@@ -346,6 +476,15 @@ CREATE TABLE `lostandfound` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `lostandfound`
+--
+
+LOCK TABLES `lostandfound` WRITE;
+/*!40000 ALTER TABLE `lostandfound` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lostandfound` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `privacy`
 --
 
@@ -365,6 +504,15 @@ CREATE TABLE `privacy` (
   CONSTRAINT `privacyUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `privacy`
+--
+
+LOCK TABLES `privacy` WRITE;
+/*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
+/*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `profile`
@@ -389,6 +537,15 @@ CREATE TABLE `profile` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `profile`
+--
+
+LOCK TABLES `profile` WRITE;
+/*!40000 ALTER TABLE `profile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `profile` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `secret_comment`
 --
 
@@ -407,6 +564,15 @@ CREATE TABLE `secret_comment` (
   CONSTRAINT `secretCommentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `secret_comment`
+--
+
+LOCK TABLES `secret_comment` WRITE;
+/*!40000 ALTER TABLE `secret_comment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `secret_comment` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `secret_content`
@@ -428,6 +594,15 @@ CREATE TABLE `secret_content` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `secret_content`
+--
+
+LOCK TABLES `secret_content` WRITE;
+/*!40000 ALTER TABLE `secret_content` DISABLE KEYS */;
+/*!40000 ALTER TABLE `secret_content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `secret_like`
 --
 
@@ -443,6 +618,15 @@ CREATE TABLE `secret_like` (
   CONSTRAINT `secretLikeUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `secret_like`
+--
+
+LOCK TABLES `secret_like` WRITE;
+/*!40000 ALTER TABLE `secret_like` DISABLE KEYS */;
+/*!40000 ALTER TABLE `secret_like` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -463,6 +647,15 @@ CREATE TABLE `user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user_group`
 --
 
@@ -475,6 +668,16 @@ CREATE TABLE `user_group` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_group`
+--
+
+LOCK TABLES `user_group` WRITE;
+/*!40000 ALTER TABLE `user_group` DISABLE KEYS */;
+INSERT INTO `user_group` VALUES (0,'管理员'),(1,'学生用户'),(2,'测试用户'),(3,'教师用户'),(4,'客服');
+/*!40000 ALTER TABLE `user_group` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `wechat_user`
@@ -493,6 +696,15 @@ CREATE TABLE `wechat_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `wechat_user`
+--
+
+LOCK TABLES `wechat_user` WRITE;
+/*!40000 ALTER TABLE `wechat_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `wechat_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `yiban_user`
 --
 
@@ -509,6 +721,15 @@ CREATE TABLE `yiban_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `yiban_user`
+--
+
+LOCK TABLES `yiban_user` WRITE;
+/*!40000 ALTER TABLE `yiban_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `yiban_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping events for database 'gdeiassistant'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -521,4 +742,4 @@ CREATE TABLE `yiban_user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-09  9:04:41
+-- Dump completed on 2019-03-29  1:30:57

@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
+import edu.gdei.gdeiassistant.Exception.CommonException.ResourceNotFoundException;
 import org.apache.http.MethodNotSupportedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,7 +16,7 @@ public class ServletExceptionHandler {
      *
      * @return
      */
-    @ExceptionHandler(NoHandlerFoundException.class)
+    @ExceptionHandler({NoHandlerFoundException.class, ResourceNotFoundException.class})
     public ModelAndView HandleNoHandlerFoundException() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(HttpStatus.NOT_FOUND);

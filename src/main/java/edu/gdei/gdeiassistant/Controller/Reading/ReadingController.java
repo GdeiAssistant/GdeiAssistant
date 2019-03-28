@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.Reading;
 
+import edu.gdei.gdeiassistant.Exception.CommonException.ResourceNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,12 @@ public class ReadingController {
      * @return
      */
     @RequestMapping(value = "/reading/id/{id}", method = RequestMethod.GET)
-    public ModelAndView ResolveReadingPage(@PathVariable("id") Integer id) {
-        return new ModelAndView("/Reading/" + id);
+    public ModelAndView ResolveReadingPage(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/Reading/" + id);
+        if (modelAndView.hasView()) {
+            return modelAndView;
+        }
+        throw new ResourceNotFoundException("没有找到对应的视图资源");
     }
 }

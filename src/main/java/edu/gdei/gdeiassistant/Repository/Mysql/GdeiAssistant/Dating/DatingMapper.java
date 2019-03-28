@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Deprecated
 public interface DatingMapper {
 
     public List<DatingProfile> selectDatingProfilePage(@Param("start") Integer start

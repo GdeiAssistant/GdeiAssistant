@@ -73,7 +73,7 @@
         update dating_profile set state=#{state} where profile_id=#{profileId}
     </update>
 
-    <insert id="insertDatingProfile" useGeneratedKeys="true" keyProperty="profile_id">
+    <insert id="insertDatingProfile" useGeneratedKeys="true" keyProperty="profileId">
         insert into dating_profile (username,kickname,area,grade,faculty,hometown,content,qq,wechat,state)
          values (#{username},#{kickname},#{area},#{grade},#{faculty},#{hometown},#{content},#{qq},#{wechat},1)
     </insert>
@@ -89,7 +89,7 @@
         from dating_pick,dating_profile where dating_pick.profile_id=dating_profile.profile_id and pick_id=#{pickId} limit 1
     </select>
 
-    <insert id="insertDatingPick" keyProperty="pick_id" useGeneratedKeys="true">
+    <insert id="insertDatingPick" keyProperty="pickId" useGeneratedKeys="true">
         insert into dating_pick (profile_id,username,content,state) values (#{datingProfile.profileId},#{username},#{content},0)
     </insert>
 

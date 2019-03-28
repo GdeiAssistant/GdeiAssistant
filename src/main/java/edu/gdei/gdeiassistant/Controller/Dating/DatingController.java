@@ -4,13 +4,11 @@ import edu.gdei.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingMessage;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingPick;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingProfile;
+import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Service.Dating.DatingService;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,10 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
-@Controller
+@Deprecated
 public class DatingController {
 
-    @Autowired
     private DatingService datingService;
 
     private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;

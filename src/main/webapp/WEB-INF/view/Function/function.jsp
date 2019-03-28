@@ -76,10 +76,6 @@
         </i>
         <p>校园树洞</p>
     </div>
-    <div onclick="window.location.href='/dating'">
-        <i style="background: url(/img/function/dating.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>恋爱交友</p>
-    </div>
     <div onclick="window.location.href='http://msg.weixiao.qq.com/t/bca2e28bc30ce67907e032f483e82d7f'">
         <i style="background: url(/img/function/calendar.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>学期校历</p>

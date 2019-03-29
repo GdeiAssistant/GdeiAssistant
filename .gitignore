@@ -13,3 +13,5 @@ build/
 gradle/
 lib/
 classes/
+gdeiassistant-webapp.iml
+local.properties

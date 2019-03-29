@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.Service.SpareRoom;
 
-import edu.gdei.gdeiassistant.Enum.Base.ServiceResultEnum;
+import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
@@ -8,7 +8,6 @@ import edu.gdei.gdeiassistant.Exception.QueryException.TimeStampIncorrectExcepti
 import edu.gdei.gdeiassistant.Pojo.Entity.SpareRoom;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Pojo.SpareRoomQuery.SpareRoomQuery;
 import edu.gdei.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import edu.gdei.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
@@ -71,9 +70,7 @@ public class SpareRoomService {
      * @param number
      * @return
      */
-    private BaseResult<List<SpareRoom>, ServiceResultEnum> QuerySpareRoom(String sessionId
-            , String username, String keycode, String number, Long timestamp, SpareRoomQuery spareRoomQuery) {
-        BaseResult<List<SpareRoom>, ServiceResultEnum> baseResult = new BaseResult<>();
+    private List<SpareRoom> QuerySpareRoom(String sessionId, String username, String keycode, String number, Long timestamp, SpareRoomQuery spareRoomQuery) throws NetWorkTimeoutException, TimeStampIncorrectException, ServerErrorException, ErrorQueryConditionException {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -227,8 +224,7 @@ public class SpareRoomService {
                                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                                     Elements trs = document.select("table").first().select("tr");
                                     if (trs.size() <= 1) {
-                                        baseResult.setResultType(ServiceResultEnum.EMPTY_RESULT);
-                                        return baseResult;
+                                        return null;
                                     }
                                     if (pageIndex == 1) {
                                         maxIndex = Integer.valueOf(document.getElementById("dpDataGrid1_lblTotalPages").text());
@@ -270,9 +266,7 @@ public class SpareRoomService {
                                 }
                                 throw new ServerErrorException("教务系统异常");
                             }
-                            baseResult.setResultData(spareRoomList);
-                            baseResult.setResultType(ServiceResultEnum.SUCCESS);
-                            return baseResult;
+                            return spareRoomList;
                         }
                         throw new ServerErrorException("教务系统异常");
                     }
@@ -289,19 +283,16 @@ public class SpareRoomService {
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
             log.error("查询空课室异常：", e);
-            baseResult.setResultType(ServiceResultEnum.TIME_OUT);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (TimeStampIncorrectException e) {
             log.error("查询空课室异常：", e);
-            baseResult.setResultType(ServiceResultEnum.TIMESTAMP_INVALID);
-        } catch (ServerErrorException e) {
-            log.error("查询空课室异常：", e);
-            baseResult.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new TimeStampIncorrectException("时间戳校验失败");
         } catch (ErrorQueryConditionException e) {
             log.error("查询空课室异常：", e);
-            baseResult.setResultType(ServiceResultEnum.ERROR_CONDITION);
+            throw new ErrorQueryConditionException("查询条件错误");
         } catch (Exception e) {
             log.error("查询空课室异常：", e);
-            baseResult.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -314,7 +305,6 @@ public class SpareRoomService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return baseResult;
     }
 
     /**
@@ -325,8 +315,7 @@ public class SpareRoomService {
      * @param spareRoomQuery
      * @return
      */
-    public BaseResult<List<SpareRoom>, ServiceResultEnum> SyncSessionAndQuerySpareRoom(String sessionId
-            , User user, SpareRoomQuery spareRoomQuery) throws Exception {
+    public List<SpareRoom> SyncSessionAndQuerySpareRoom(String sessionId, User user, SpareRoomQuery spareRoomQuery) throws Exception {
         UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
         //检测是否已与教务系统进行会话同步
         if (userCertificate == null) {

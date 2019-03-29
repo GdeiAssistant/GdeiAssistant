@@ -1,15 +1,14 @@
 package edu.gdei.gdeiassistant.Controller.Dating;
 
-import edu.gdei.gdeiassistant.Enum.Base.DataBaseResultEnum;
+import com.taobao.wsgsvr.WsgException;
+import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingMessage;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingPick;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingProfile;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Service.Dating.DatingService;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,11 +35,11 @@ public class DatingController {
      * @return
      */
     @RequestMapping(value = "/dating", method = RequestMethod.GET)
-    public ModelAndView ResolveDatingIndexPage(HttpServletRequest request) {
+    public ModelAndView ResolveDatingIndexPage(HttpServletRequest request) throws WsgException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/Dating/datingIndex");
         String username = (String) request.getSession().getAttribute("username");
-        Integer unreadCount = datingService.QueryUserUnReadDatingMessageCount(username).getResultData();
+        Integer unreadCount = datingService.QueryUserUnReadDatingMessageCount(username);
         if (unreadCount != null && !unreadCount.equals(0)) {
             modelAndView.addObject("hasUnReadMessage", 1);
         }
@@ -75,34 +74,18 @@ public class DatingController {
      * @return
      */
     @RequestMapping(value = "/dating/pick/id/{id}", method = RequestMethod.GET)
-    public ModelAndView ResolveDatingPickPage(HttpServletRequest request, @PathVariable("id") Integer id) {
+    public ModelAndView ResolveDatingPickPage(HttpServletRequest request, @PathVariable("id") Integer id) throws WsgException {
         ModelAndView modelAndView = new ModelAndView();
         String username = (String) request.getSession().getAttribute("username");
-        BaseResult<DatingPick, DataBaseResultEnum> result = datingService.QueryDatingPickById(id);
-        switch (result.getResultType()) {
-            case SUCCESS:
-                if (result.getResultData().getDatingProfile().getUsername().equals(username)) {
-                    //只有自己可以查看该撩一下记录
-                    modelAndView.setViewName("Dating/datingPick");
-                    modelAndView.addObject("DatingPick", result.getResultData());
-                } else {
-                    modelAndView.addObject("ErrorTitle", "广东第二师范学院卖室友-错误");
-                    modelAndView.addObject("ErrorMessage", "你没有权限查看该撩一下记录信息");
-                    modelAndView.setViewName("Error/commonError");
-                }
-                break;
-
-            case EMPTY_RESULT:
-                modelAndView.addObject("ErrorTitle", "广东第二师范学院卖室友-错误");
-                modelAndView.addObject("ErrorMessage", "该撩一下记录不存在");
-                modelAndView.setViewName("Error/commonError");
-                break;
-
-            case ERROR:
-                modelAndView.addObject("ErrorTitle", "广东第二师范学院卖室友-错误");
-                modelAndView.addObject("ErrorMessage", "服务器出现异常，请稍候再试");
-                modelAndView.setViewName("Error/commonError");
-                break;
+        DatingPick datingPick = datingService.QueryDatingPickById(id);
+        if (datingPick.getDatingProfile().getUsername().equals(username)) {
+            //只有自己可以查看该撩一下记录
+            modelAndView.setViewName("Dating/datingPick");
+            modelAndView.addObject("DatingPick", datingPick);
+        } else {
+            modelAndView.addObject("ErrorTitle", "广东第二师范学院卖室友-错误");
+            modelAndView.addObject("ErrorMessage", "你没有权限查看该撩一下记录信息");
+            modelAndView.setViewName("Error/commonError");
         }
         return modelAndView;
     }
@@ -117,49 +100,25 @@ public class DatingController {
     @RequestMapping(value = "/dating/pick/id/{id}", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult UpdateDatingPickState(HttpServletRequest request
-            , @PathVariable("id") Integer id, Integer state) {
+            , @PathVariable("id") Integer id, Integer state) throws WsgException {
         JsonResult jsonResult = new JsonResult();
         String username = (String) request.getSession().getAttribute("username");
         if (!state.equals(-1) && !state.equals(1)) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("请求参数不合法");
         } else {
-            BaseResult<DatingPick, DataBaseResultEnum> result = datingService.QueryDatingPickById(id);
-            switch (result.getResultType()) {
-                case SUCCESS:
-                    if (result.getResultData().getState().equals(0)) {
-                        if (result.getResultData().getDatingProfile().getUsername().equals(username)) {
-                            DataBaseResultEnum dataBaseResultEnum = datingService
-                                    .UpdateDatingPickState(id, state);
-                            switch (dataBaseResultEnum) {
-                                case SUCCESS:
-                                    jsonResult.setSuccess(true);
-                                    break;
-
-                                case ERROR:
-                                    jsonResult.setSuccess(false);
-                                    jsonResult.setMessage("系统异常，请稍后再试");
-                                    break;
-                            }
-                        } else {
-                            jsonResult.setSuccess(false);
-                            jsonResult.setMessage("你没有权限操作该撩一下记录");
-                        }
-                    } else {
-                        jsonResult.setSuccess(false);
-                        jsonResult.setMessage("该撩一下记录已处理，请勿重复提交");
-                    }
-                    break;
-
-                case ERROR:
+            DatingPick datingPick = datingService.QueryDatingPickById(id);
+            if (datingPick.getState().equals(0)) {
+                if (datingPick.getDatingProfile().getUsername().equals(username)) {
+                    datingService.UpdateDatingPickState(id, state);
+                    jsonResult.setSuccess(true);
+                } else {
                     jsonResult.setSuccess(false);
-                    jsonResult.setMessage("系统异常，请稍后再试");
-                    break;
-
-                case EMPTY_RESULT:
-                    jsonResult.setSuccess(false);
-                    jsonResult.setMessage("该撩一下记录不存在");
-                    break;
+                    jsonResult.setMessage("你没有权限操作该撩一下记录");
+                }
+            } else {
+                jsonResult.setSuccess(false);
+                jsonResult.setMessage("该撩一下记录已处理，请勿重复提交");
             }
         }
         return jsonResult;
@@ -172,62 +131,34 @@ public class DatingController {
      * @return
      */
     @RequestMapping(value = "/dating/profile/id/{id}", method = RequestMethod.GET)
-    public ModelAndView ResolveDatingProfileDetailPage(HttpServletRequest request
-            , @PathVariable("id") Integer id) {
+    public ModelAndView ResolveDatingProfileDetailPage(HttpServletRequest request, @PathVariable("id") Integer id) throws WsgException, DataNotExistException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("ProfileID", id);
         String username = (String) request.getSession().getAttribute("username");
-        BaseResult<DatingProfile, DataBaseResultEnum> queryDatingProfileResult = datingService
-                .QueryDatingProfile(id);
-        switch (queryDatingProfileResult.getResultType()) {
-            case SUCCESS:
-                //获取图片地址
-                String url = datingService.GetDatingProfilePictureURL(id);
-                //查询浏览者对该卖室友信息的撩一下记录
-                BaseResult<DatingPick, DataBaseResultEnum> queryDatingPickResult = datingService
-                        .QueryDatingPick(id, username);
-                switch (queryDatingPickResult.getResultType()) {
-                    case SUCCESS:
-                        //如果对方已接受该撩一下请求，则隐藏撩一下界面，显示联系方式
-                        if (queryDatingPickResult.getResultData().getState().equals(1)) {
-                            modelAndView.addObject("isContactVisible", 1);
-                            modelAndView.addObject("isPickNotAvailable", 1);
-                        }
-                        modelAndView.addObject("DatingProfile", queryDatingProfileResult.getResultData());
-                        modelAndView.addObject("PictureURL", url);
-                        modelAndView.setViewName("Dating/datingDetail");
-                        break;
-
-                    case ERROR:
-                        modelAndView.addObject("ErrorTitle", "广东第二师范学院卖室友-错误");
-                        modelAndView.addObject("ErrorMessage", "服务器出现异常，请稍候再试");
-                        modelAndView.setViewName("Error/commonError");
-                        break;
-
-                    case EMPTY_RESULT:
-                        //当发布者与浏览者相同时，隐藏撩一下功能
-                        if (queryDatingProfileResult.getResultData().getUsername().equals(username)) {
-                            modelAndView.addObject("isContactVisible", 1);
-                            modelAndView.addObject("isPickNotAvailable", 1);
-                        }
-                        modelAndView.addObject("DatingProfile", queryDatingProfileResult.getResultData());
-                        modelAndView.addObject("PictureURL", url);
-                        modelAndView.setViewName("Dating/datingDetail");
-                        break;
-                }
-                break;
-
-            case EMPTY_RESULT:
-                modelAndView.addObject("ErrorTitle", "广东第二师范学院卖室友-错误");
-                modelAndView.addObject("ErrorMessage", "该卖室友信息不存在");
-                modelAndView.setViewName("Error/commonError");
-                break;
-
-            case ERROR:
-                modelAndView.addObject("ErrorTitle", "广东第二师范学院卖室友-错误");
-                modelAndView.addObject("ErrorMessage", "服务器出现异常，请稍候再试");
-                modelAndView.setViewName("Error/commonError");
-                break;
+        DatingProfile datingProfile = datingService.QueryDatingProfile(id);
+        //获取图片地址
+        String url = datingService.GetDatingProfilePictureURL(id);
+        //查询浏览者对该卖室友信息的撩一下记录
+        DatingPick datingPick = datingService
+                .QueryDatingPick(id, username);
+        if (datingPick != null) {
+            //如果对方已接受该撩一下请求，则隐藏撩一下界面，显示联系方式
+            if (datingPick.getState().equals(1)) {
+                modelAndView.addObject("isContactVisible", 1);
+                modelAndView.addObject("isPickNotAvailable", 1);
+            }
+            modelAndView.addObject("DatingProfile", datingProfile);
+            modelAndView.addObject("PictureURL", url);
+            modelAndView.setViewName("Dating/datingDetail");
+        } else {
+            //当发布者与浏览者相同时，隐藏撩一下功能
+            if (datingProfile.getUsername().equals(username)) {
+                modelAndView.addObject("isContactVisible", 1);
+                modelAndView.addObject("isPickNotAvailable", 1);
+            }
+            modelAndView.addObject("DatingProfile", datingProfile);
+            modelAndView.addObject("PictureURL", url);
+            modelAndView.setViewName("Dating/datingDetail");
         }
         return modelAndView;
     }
@@ -242,30 +173,15 @@ public class DatingController {
     @RequestMapping(value = "/dating/profile", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult AddDatingProfile(HttpServletRequest request, @Validated DatingProfile datingProfile
-            , MultipartFile image, BindingResult bindingResult) throws IOException {
-        JsonResult jsonResult = new JsonResult();
+            , MultipartFile image) throws IOException, WsgException {
         if (image == null || image.getSize() <= 0 || image.getSize() >= MAX_PICTURE_SIZE) {
-            jsonResult.setSuccess(false);
-            jsonResult.setMessage("不合法的图片文件");
-        } else if (bindingResult.hasErrors()) {
-            jsonResult.setSuccess(false);
-            jsonResult.setMessage("请求参数不合法");
+            return new JsonResult(false, "图片文件不能为空");
         } else {
             String username = (String) request.getSession().getAttribute("username");
-            BaseResult<Integer, DataBaseResultEnum> result = datingService.AddDatingProfile(username, datingProfile);
-            switch (result.getResultType()) {
-                case SUCCESS:
-                    datingService.UploadPicture(result.getResultData(), image.getInputStream());
-                    jsonResult.setSuccess(true);
-                    break;
-
-                case ERROR:
-                    jsonResult.setSuccess(false);
-                    jsonResult.setMessage("系统异常，请稍候再试");
-                    break;
-            }
+            Integer id = datingService.AddDatingProfile(username, datingProfile);
+            datingService.UploadPicture(id, image.getInputStream());
+            return new JsonResult(true);
         }
-        return jsonResult;
     }
 
     /**
@@ -277,108 +193,37 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/pick", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult AddDatingPick(HttpServletRequest request, DatingPick datingPick, Integer profileId) {
-        JsonResult jsonResult = new JsonResult();
+    public JsonResult AddDatingPick(HttpServletRequest request, DatingPick datingPick, Integer profileId) throws WsgException, DataNotExistException {
         DatingProfile datingProfile = new DatingProfile();
         datingProfile.setProfileId(profileId);
         datingPick.setDatingProfile(datingProfile);
         if (datingPick.getDatingProfile().getProfileId() == null) {
-            jsonResult.setSuccess(false);
-            jsonResult.setMessage("请求参数不合法");
-            return jsonResult;
+            return new JsonResult(false, "请求参数不合法");
         }
         if (datingPick.getContent().length() > 50) {
-            jsonResult.setSuccess(false);
-            jsonResult.setMessage("文本内容超过限制");
-            return jsonResult;
+            return new JsonResult(false, "文本内容超过限制");
         }
         String username = (String) request.getSession().getAttribute("username");
-        BaseResult<DatingPick, DataBaseResultEnum> result = datingService.QueryDatingPick(datingPick
-                .getDatingProfile().getProfileId(), username);
-        switch (result.getResultType()) {
-            case SUCCESS:
-                //对方未拒绝前，不能发起多次撩一下请求
-                if (!result.getResultData().getState().equals(-1)) {
-                    jsonResult.setSuccess(false);
-                    jsonResult.setMessage("你已发送了撩一下请求，请耐心等待对方回复");
-                } else {
-                    //对方已拒绝，可以再次发起撩一下请求
-                    BaseResult<DatingProfile, DataBaseResultEnum> datingProfileResult = datingService
-                            .QueryDatingProfile(datingPick.getDatingProfile().getProfileId());
-                    switch (datingProfileResult.getResultType()) {
-                        case SUCCESS:
-                            if (datingProfileResult.getResultData().getUsername().equals(username)) {
-                                jsonResult.setSuccess(false);
-                                jsonResult.setMessage("不能向自己发布的卖室友信息发送撩一下请求");
-                            } else {
-                                DataBaseResultEnum dataBaseResultEnum = datingService.AddDatingPick(username, datingPick);
-                                switch (dataBaseResultEnum) {
-                                    case SUCCESS:
-                                        jsonResult.setSuccess(true);
-                                        break;
-
-                                    case ERROR:
-                                        jsonResult.setSuccess(false);
-                                        jsonResult.setMessage("系统异常，请稍后再试");
-                                        break;
-                                }
-                            }
-                            break;
-
-                        case ERROR:
-                            jsonResult.setSuccess(false);
-                            jsonResult.setMessage("系统异常，请稍后再试");
-                            break;
-
-                        case EMPTY_RESULT:
-                            jsonResult.setSuccess(false);
-                            jsonResult.setMessage("卖室友信息不存在，撩一下请求失败");
-                            break;
-                    }
-                }
-                break;
-
-            case ERROR:
-                jsonResult.setSuccess(false);
-                jsonResult.setMessage("系统异常，请稍后再试");
-                break;
-
-            case EMPTY_RESULT:
-                BaseResult<DatingProfile, DataBaseResultEnum> datingProfileResult = datingService
-                        .QueryDatingProfile(datingPick.getDatingProfile().getProfileId());
-                switch (datingProfileResult.getResultType()) {
-                    case SUCCESS:
-                        if (datingProfileResult.getResultData().getUsername().equals(username)) {
-                            jsonResult.setSuccess(false);
-                            jsonResult.setMessage("不能向自己发布的卖室友信息发送撩一下请求");
-                        } else {
-                            DataBaseResultEnum dataBaseResultEnum = datingService.AddDatingPick(username, datingPick);
-                            switch (dataBaseResultEnum) {
-                                case SUCCESS:
-                                    jsonResult.setSuccess(true);
-                                    break;
-
-                                case ERROR:
-                                    jsonResult.setSuccess(false);
-                                    jsonResult.setMessage("系统异常，请稍后再试");
-                                    break;
-                            }
-                        }
-                        break;
-
-                    case ERROR:
-                        jsonResult.setSuccess(false);
-                        jsonResult.setMessage("系统异常，请稍后再试");
-                        break;
-
-                    case EMPTY_RESULT:
-                        jsonResult.setSuccess(false);
-                        jsonResult.setMessage("卖室友信息不存在，撩一下请求失败");
-                        break;
-                }
-                break;
+        DatingPick queryDatingPick = datingService.QueryDatingPick(datingPick.getDatingProfile().getProfileId(), username);
+        if (queryDatingPick != null) {
+            //对方未拒绝前，不能发起多次撩一下请求
+            if (!queryDatingPick.getState().equals(-1)) {
+                return new JsonResult(false, "你已发送了撩一下请求，请耐心等待对方回复");
+            }
+            //对方已拒绝，可以再次发起撩一下请求
+            DatingProfile queryDatingProfile = datingService.QueryDatingProfile(datingPick.getDatingProfile().getProfileId());
+            if (queryDatingProfile.getUsername().equals(username)) {
+                return new JsonResult(false, "不能向自己发布的卖室友信息发送撩一下请求");
+            }
+            datingService.AddDatingPick(username, datingPick);
+            return new JsonResult(true);
         }
-        return jsonResult;
+        DatingProfile queryDatingProfile = datingService.QueryDatingProfile(datingPick.getDatingProfile().getProfileId());
+        if (queryDatingProfile.getUsername().equals(username)) {
+            return new JsonResult(false, "不能向自己发布的卖室友信息发送撩一下请求");
+        }
+        datingService.AddDatingPick(username, datingPick);
+        return new JsonResult(true);
     }
 
     /**
@@ -390,28 +235,10 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/message/start/{start}", method = RequestMethod.GET)
     @ResponseBody
-    public DataJsonResult<List<DatingMessage>> QueryDatingMessage(HttpServletRequest request
-            , @PathVariable("start") Integer start) {
-        DataJsonResult<List<DatingMessage>> jsonResult = new DataJsonResult<>();
+    public DataJsonResult<List<DatingMessage>> QueryDatingMessage(HttpServletRequest request, @PathVariable("start") Integer start) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
-        BaseResult<List<DatingMessage>, DataBaseResultEnum> result = datingService
-                .QueryUserDatingMessage(username, start, 10);
-        switch (result.getResultType()) {
-            case SUCCESS:
-                jsonResult.setSuccess(true);
-                jsonResult.setData(result.getResultData());
-                break;
-
-            case ERROR:
-                jsonResult.setSuccess(false);
-                jsonResult.setMessage("系统异常，请稍后再试");
-                break;
-
-            case EMPTY_RESULT:
-                jsonResult.setSuccess(true);
-                break;
-        }
-        return jsonResult;
+        List<DatingMessage> datingMessageList = datingService.QueryUserDatingMessage(username, start, 10);
+        return new DataJsonResult<>(true, datingMessageList);
     }
 
     /**
@@ -423,27 +250,9 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/profile/area/{area}/start/{start}", method = RequestMethod.GET)
     @ResponseBody
-    public DataJsonResult<List<DatingProfile>> QueryDatingProfile(@PathVariable("start") Integer start
-            , @PathVariable("area") Integer area) {
-        DataJsonResult<List<DatingProfile>> jsonResult = new DataJsonResult<>();
-        BaseResult<List<DatingProfile>, DataBaseResultEnum> result = datingService
-                .QueryDatingProfile(start, 10, area);
-        switch (result.getResultType()) {
-            case SUCCESS:
-                jsonResult.setSuccess(true);
-                jsonResult.setData(result.getResultData());
-                break;
-
-            case ERROR:
-                jsonResult.setSuccess(false);
-                jsonResult.setMessage("系统异常，请稍后再试");
-                break;
-
-            case EMPTY_RESULT:
-                jsonResult.setSuccess(true);
-                break;
-        }
-        return jsonResult;
+    public DataJsonResult<List<DatingProfile>> QueryDatingProfile(@PathVariable("start") Integer start, @PathVariable("area") Integer area) throws WsgException {
+        List<DatingProfile> datingProfileList = datingService.QueryDatingProfile(start, 10, area);
+        return new DataJsonResult<>(true, datingProfileList);
     }
 
     /**
@@ -455,19 +264,8 @@ public class DatingController {
     @RequestMapping(value = "/dating/message/id/{id}/read", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult ReadDatingMessage(@PathVariable("id") Integer id) {
-        JsonResult result = new JsonResult();
-        DataBaseResultEnum dataBaseResultEnum = datingService.UpdateDatingMessageState(id, 1);
-        switch (dataBaseResultEnum) {
-            case SUCCESS:
-                result.setSuccess(true);
-                break;
-
-            case ERROR:
-                result.setSuccess(false);
-                result.setMessage("系统异常，请稍后再试");
-                break;
-        }
-        return result;
+        datingService.UpdateDatingMessageState(id, 1);
+        return new JsonResult(true);
     }
 
     /**
@@ -479,14 +277,10 @@ public class DatingController {
     @RequestMapping(value = "/dating/profile/id/{id}/picture", method = RequestMethod.GET)
     @ResponseBody
     public DataJsonResult<String> GetDatingProfilePicture(@PathVariable("id") Integer id) {
-        DataJsonResult<String> result = new DataJsonResult<>();
         String url = datingService.GetDatingProfilePictureURL(id);
         if (StringUtils.isNotBlank(url)) {
-            result.setSuccess(true);
-            result.setData(url);
-        } else {
-            result.setSuccess(false);
+            return new DataJsonResult<>(true, url);
         }
-        return result;
+        return new DataJsonResult<>(new JsonResult(false));
     }
 }

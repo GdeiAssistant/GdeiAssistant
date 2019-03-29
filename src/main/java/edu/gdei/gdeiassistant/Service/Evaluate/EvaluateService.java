@@ -1,15 +1,15 @@
 package edu.gdei.gdeiassistant.Service.Evaluate;
 
-import edu.gdei.gdeiassistant.Enum.Base.ServiceResultEnum;
-import edu.gdei.gdeiassistant.Exception.EvaluateException.NotAvailableTimeException;
+import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
+import edu.gdei.gdeiassistant.Exception.EvaluateException.NotAvailableTimeException;
 import edu.gdei.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
-import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
+import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import edu.gdei.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import edu.gdei.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
+import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -70,7 +70,7 @@ public class EvaluateService {
      * @throws ServerErrorException
      * @throws NotAvailableTimeException
      */
-    private ServiceResultEnum TeacherEvaluate(CloseableHttpClient httpClient, String username
+    private void TeacherEvaluate(CloseableHttpClient httpClient, String username
             , String keycode, String number, Long timestamp, boolean directlySubmit) throws IOException, ServerErrorException, NotAvailableTimeException, TimeStampIncorrectException {
         HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
                 + keycode + "&timestamp=" + timestamp);
@@ -193,11 +193,11 @@ public class EvaluateService {
                                             //最终提交评教请求
                                             httpResponse = httpClient.execute(httpPost);
                                             if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                                                return ServiceResultEnum.SUCCESS;
+                                                return;
                                             }
                                             throw new ServerErrorException("教务系统异常");
                                         }
-                                        return ServiceResultEnum.SUCCESS;
+                                        return;
                                     }
                                     throw new ServerErrorException("教务系统异常");
                                 }
@@ -228,27 +228,27 @@ public class EvaluateService {
      * @param keycode
      * @param number
      */
-    private ServiceResultEnum TeacherEvaluate(String sessionId
-            , String username, String keycode, String number, Long timestamp, boolean directlySubmit) {
+    private void TeacherEvaluate(String sessionId
+            , String username, String keycode, String number, Long timestamp, boolean directlySubmit) throws NetWorkTimeoutException, TimeStampIncorrectException, NotAvailableTimeException, ServerErrorException {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
             HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, timeout);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            return TeacherEvaluate(httpClient, username, keycode, number, timestamp, directlySubmit);
+            TeacherEvaluate(httpClient, username, keycode, number, timestamp, directlySubmit);
         } catch (IOException e) {
             log.error("一键评教异常：", e);
-            return ServiceResultEnum.TIME_OUT;
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (TimeStampIncorrectException e) {
             log.error("一键评教异常：", e);
-            return ServiceResultEnum.TIMESTAMP_INVALID;
+            throw new TimeStampIncorrectException("时间戳校验失败");
         } catch (NotAvailableTimeException e) {
             log.error("一键评教异常：", e);
-            return ServiceResultEnum.ERROR_CONDITION;
+            throw new NotAvailableTimeException("现在不是一键评教开放时间段");
         } catch (Exception e) {
             log.error("一键评教异常：", e);
-            return ServiceResultEnum.SERVER_ERROR;
+            throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -271,17 +271,17 @@ public class EvaluateService {
      * @param directlySubmit
      * @return
      */
-    public ServiceResultEnum SyncSessionAndEvaluate(String sessionId, User user
+    public void SyncSessionAndEvaluate(String sessionId, User user
             , boolean directlySubmit) throws Exception {
         UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
         //检测是否已与教务系统进行会话同步
         if (userCertificate == null) {
             //进行会话同步
             userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
-            return TeacherEvaluate(sessionId, user.getUsername()
+            TeacherEvaluate(sessionId, user.getUsername()
                     , user.getKeycode(), user.getNumber(), userCertificate.getTimestamp(), directlySubmit);
         }
-        return TeacherEvaluate(sessionId, userCertificate.getUser().getUsername()
+        TeacherEvaluate(sessionId, userCertificate.getUser().getUsername()
                 , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
                 , userCertificate.getTimestamp(), directlySubmit);
     }

@@ -3,7 +3,7 @@ package edu.gdei.gdeiassistant.Controller.ScheduleQuery;
 import edu.gdei.gdeiassistant.Annotation.QueryLogPersistence;
 import edu.gdei.gdeiassistant.Annotation.RestAuthentication;
 import edu.gdei.gdeiassistant.Annotation.RestQueryLogPersistence;
-import edu.gdei.gdeiassistant.Enum.Base.QueryMethodEnum;
+import edu.gdei.gdeiassistant.Enum.Method.QueryMethodEnum;
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
 import edu.gdei.gdeiassistant.Pojo.Entity.CustomSchedule;

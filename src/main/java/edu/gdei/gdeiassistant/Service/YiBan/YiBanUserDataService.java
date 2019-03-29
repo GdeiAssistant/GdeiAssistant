@@ -1,9 +1,8 @@
 package edu.gdei.gdeiassistant.Service.YiBan;
 
-import edu.gdei.gdeiassistant.Enum.Base.AttachResultEnum;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.YiBanUser.YiBanUserMapper;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
+import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -36,28 +35,19 @@ public class YiBanUserDataService {
     }
 
     /**
-     * 检查易班绑定教务系统的状态
+     * 检查易班用户ID绑定的教务系统的账号用户名
      *
      * @param userID
      * @return
      */
-    public BaseResult<String, AttachResultEnum> CheckYiBanAttachState(String userID) {
-        BaseResult<String, AttachResultEnum> result = new BaseResult<>();
-        try {
-            int id = Integer.valueOf(userID);
-            String encryptedUsername = yiBanUserMapper.selectUsername(id);
-            if (encryptedUsername == null || encryptedUsername.trim().isEmpty()) {
-                //账号未绑定教务系统
-                result.setResultType(AttachResultEnum.NOT_ATTACHED);
-            } else {
-                //账号已绑定教务系统
-                result.setResultData(StringEncryptUtils.decryptString(encryptedUsername));
-                result.setResultType(AttachResultEnum.ATTACHED);
-            }
-        } catch (Exception e) {
-            log.error("检查易班绑定账号状态异常：", e);
-            result.setResultType(AttachResultEnum.SERVER_ERROR);
+    public String GetYiBanAttachUsername(String userID) throws Exception {
+        int id = Integer.valueOf(userID);
+        String encryptedUsername = yiBanUserMapper.selectUsername(id);
+        if (StringUtils.isBlank(encryptedUsername)) {
+            //账号未绑定教务系统
+            return null;
         }
-        return result;
+        //账号已绑定教务系统
+        return StringEncryptUtils.decryptString(encryptedUsername);
     }
 }

@@ -3,7 +3,7 @@ package edu.gdei.gdeiassistant.Controller.GradeQuery;
 import edu.gdei.gdeiassistant.Annotation.QueryLogPersistence;
 import edu.gdei.gdeiassistant.Annotation.RestAuthentication;
 import edu.gdei.gdeiassistant.Annotation.RestQueryLogPersistence;
-import edu.gdei.gdeiassistant.Enum.Base.QueryMethodEnum;
+import edu.gdei.gdeiassistant.Enum.Method.QueryMethodEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;

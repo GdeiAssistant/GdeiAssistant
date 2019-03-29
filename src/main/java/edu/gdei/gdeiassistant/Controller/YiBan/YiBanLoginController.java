@@ -3,13 +3,10 @@ package edu.gdei.gdeiassistant.Controller.YiBan;
 import cn.yiban.open.Authorize;
 import cn.yiban.open.FrameUtil;
 import com.google.gson.Gson;
-import edu.gdei.gdeiassistant.Enum.Base.AttachResultEnum;
-import edu.gdei.gdeiassistant.Enum.Base.BoolResultEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo;
 import edu.gdei.gdeiassistant.Pojo.Entity.YiBanUser;
 import edu.gdei.gdeiassistant.Pojo.Redirect.RedirectInfo;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Pojo.YiBan.YiBanTokenJsonResult;
 import edu.gdei.gdeiassistant.Service.UserData.UserDataService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
@@ -113,7 +110,7 @@ public class YiBanLoginController {
      * @return
      */
     @RequestMapping({"/yiban/dispatch", "/yiban/dispatch/{app}"})
-    public ModelAndView YiBanDispatch(HttpServletRequest request, @PathVariable(value = "app", required = false) String redirect_url) {
+    public ModelAndView YiBanDispatch(HttpServletRequest request, @PathVariable(value = "app", required = false) String redirect_url) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         RedirectInfo redirectInfo = new RedirectInfo();
         if (!StringUtils.isBlank(redirect_url)) {
@@ -157,48 +154,28 @@ public class YiBanLoginController {
             request.getSession().setAttribute("yiBanAccessToken", token);
             request.getSession().setAttribute("yiBanAccessTokenExpires", Integer.valueOf(yiBanTokenJsonResult.getExpires()));
         }
-        //通过易班Token登录广二师助手系统
-        BaseResult<YiBanUser, BoolResultEnum> getYiBanUserInfoResult = yiBanAPIService.getYiBanUserInfo(token);
-        switch (getYiBanUserInfoResult.getResultType()) {
-            case SUCCESS:
-                //保存用户UserID到Session中
-                request.getSession().setAttribute("yiBanUserID", getYiBanUserInfoResult.getResultData().getUserID());
-                //检查账号绑定情况
-                BaseResult<String, AttachResultEnum> checkYiBanAttachStateResult = yiBanUserDataService.CheckYiBanAttachState(getYiBanUserInfoResult.getResultData().getUserID());
-                switch (checkYiBanAttachStateResult.getResultType()) {
-                    case ATTACHED:
-                        //账号已绑定
-                        String username = checkYiBanAttachStateResult.getResultData();
-                        request.getSession().setAttribute("username", username);
-                        if (redirectInfo.needToRedirect()) {
-                            //重定向到易班应用活动页面
-                            modelAndView.setViewName("redirect:/yiban/userlogin?redirect_url=" + redirectInfo.getRedirect_url());
-                        } else {
-                            modelAndView.setViewName("redirect:/yiban/userlogin?redirect_url=");
-                        }
-                        break;
-
-                    case NOT_ATTACHED:
-                        //账号未绑定
-                        if (redirectInfo.needToRedirect()) {
-                            modelAndView.setViewName("redirect:/yiban/attach?redirect_url=" + redirectInfo.getRedirect_url());
-                        } else {
-                            modelAndView.setViewName("redirect:/yiban/attach");
-                        }
-                        break;
-
-                    case SERVER_ERROR:
-                        //服务器异常
-                        modelAndView.addObject("ErrorMessage", "服务器内部错误，请稍候再试");
-                        modelAndView.setViewName("YiBan/yibanError");
-                        break;
-                }
-                break;
-
-            case ERROR:
-                modelAndView.addObject("ErrorMessage", "易班平台维护中，请稍候再试");
-                modelAndView.setViewName("YiBan/yibanError");
-                break;
+        //通过凭证令牌登录广东二师助手系统
+        YiBanUser yiBanUser = yiBanAPIService.getYiBanUserInfo(token);
+        //保存用户UserID到Session中
+        request.getSession().setAttribute("yiBanUserID", yiBanUser.getUserID());
+        //检查账号绑定情况
+        String yiBanAttachUsername = yiBanUserDataService.GetYiBanAttachUsername(yiBanUser.getUserID());
+        if (StringUtils.isBlank(yiBanAttachUsername)) {
+            //未绑定账号
+            if (redirectInfo.needToRedirect()) {
+                modelAndView.setViewName("redirect:/yiban/attach?redirect_url=" + redirectInfo.getRedirect_url());
+            } else {
+                modelAndView.setViewName("redirect:/yiban/attach");
+            }
+        } else {
+            //已绑定账号
+            request.getSession().setAttribute("username", yiBanAttachUsername);
+            if (redirectInfo.needToRedirect()) {
+                //重定向到易班应用活动页面
+                modelAndView.setViewName("redirect:/yiban/userlogin?redirect_url=" + redirectInfo.getRedirect_url());
+            } else {
+                modelAndView.setViewName("redirect:/yiban/userlogin?redirect_url=");
+            }
         }
         return modelAndView;
     }
@@ -243,36 +220,24 @@ public class YiBanLoginController {
                 return modelAndView;
             }
         }
-        //检查账号绑定情况
-        BaseResult<String, AttachResultEnum> checkYiBanAttachStateResult = yiBanUserDataService
-                .CheckYiBanAttachState(yiBanUserID);
-        switch (checkYiBanAttachStateResult.getResultType()) {
-            case ATTACHED:
-                //账号已绑定
-                String username = checkYiBanAttachStateResult.getResultData();
-                request.getSession().setAttribute("username", username);
-                if (!StringUtils.isBlank(redirect_url)) {
-                    //重定向到易班应用活动页面
-                    modelAndView.setViewName("redirect:/yiban/userlogin?redirect_url=" + redirect_url);
-                } else {
-                    modelAndView.setViewName("redirect:/yiban/userlogin");
-                }
-                break;
-
-            case NOT_ATTACHED:
-                //账号未绑定
-                if (!StringUtils.isBlank(redirect_url)) {
-                    modelAndView.setViewName("redirect:/yiban/attach?redirect_url=" + redirect_url);
-                } else {
-                    modelAndView.setViewName("redirect:/yiban/attach");
-                }
-                break;
-
-            case SERVER_ERROR:
-                //服务器异常
-                modelAndView.addObject("ErrorMessage", "服务器内部错误，请稍候再试");
-                modelAndView.setViewName("YiBan/yibanError");
-                break;
+        //检查账号绑定情况，获取用户名
+        String yiBanAttachUsername = yiBanUserDataService.GetYiBanAttachUsername(yiBanUserID);
+        if (StringUtils.isBlank(yiBanAttachUsername)) {
+            //未绑定账号
+            if (!StringUtils.isBlank(redirect_url)) {
+                modelAndView.setViewName("redirect:/yiban/attach?redirect_url=" + redirect_url);
+            } else {
+                modelAndView.setViewName("redirect:/yiban/attach");
+            }
+        } else {
+            //已绑定账号
+            request.getSession().setAttribute("username", yiBanAttachUsername);
+            if (!StringUtils.isBlank(redirect_url)) {
+                //重定向到易班应用活动页面
+                modelAndView.setViewName("redirect:/yiban/userlogin?redirect_url=" + redirect_url);
+            } else {
+                modelAndView.setViewName("redirect:/yiban/userlogin");
+            }
         }
         return modelAndView;
     }
@@ -314,35 +279,24 @@ public class YiBanLoginController {
                 return modelAndView;
             }
         }
-        //检查账号绑定情况
-        BaseResult<String, AttachResultEnum> checkYiBanAttachStateResult = yiBanUserDataService.CheckYiBanAttachState(yiBanUserID);
-        switch (checkYiBanAttachStateResult.getResultType()) {
-            case ATTACHED:
-                //账号已绑定
-                String username = checkYiBanAttachStateResult.getResultData();
-                request.getSession().setAttribute("username", username);
-                if (!StringUtils.isBlank(redirect_url)) {
-                    //重定向到易班应用活动页面
-                    modelAndView.setViewName("redirect:/yiban/userlogin?redirect_url=" + redirect_url);
-                } else {
-                    modelAndView.setViewName("redirect:/yiban/userlogin");
-                }
-                break;
-
-            case NOT_ATTACHED:
-                //账号未绑定
-                if (!StringUtils.isBlank(redirect_url)) {
-                    modelAndView.setViewName("redirect:/yiban/attach?redirect_url=" + redirect_url);
-                } else {
-                    modelAndView.setViewName("redirect:/yiban/attach");
-                }
-                break;
-
-            case SERVER_ERROR:
-                //服务器异常
-                modelAndView.addObject("ErrorMessage", "服务器内部错误，请稍候再试");
-                modelAndView.setViewName("YiBan/yibanError");
-                break;
+        //检查账号绑定情况，获取绑定的用户名
+        String yiBanAttachUsername = yiBanUserDataService.GetYiBanAttachUsername(yiBanUserID);
+        if (StringUtils.isBlank(yiBanAttachUsername)) {
+            //账号未绑定
+            if (!StringUtils.isBlank(redirect_url)) {
+                modelAndView.setViewName("redirect:/yiban/attach?redirect_url=" + redirect_url);
+            } else {
+                modelAndView.setViewName("redirect:/yiban/attach");
+            }
+        } else {
+            //账号已绑定
+            request.getSession().setAttribute("username", yiBanAttachUsername);
+            if (!StringUtils.isBlank(redirect_url)) {
+                //重定向到易班应用活动页面
+                modelAndView.setViewName("redirect:/yiban/userlogin?redirect_url=" + redirect_url);
+            } else {
+                modelAndView.setViewName("redirect:/yiban/userlogin");
+            }
         }
         return modelAndView;
     }

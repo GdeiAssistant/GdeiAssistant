@@ -29,7 +29,7 @@
 <body>
 
 <div>
-    <div class="weui_cells_title" onclick="window.location.href='/index'">返回主页</div>
+    <div class="weui_cells_title" onclick="history.go(-1)">返回</div>
     <div class="hd">
         <h1 class="page_title" style="margin-top: 15px">教学质量评价</h1>
     </div>

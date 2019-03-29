@@ -1,7 +1,6 @@
 package edu.gdei.gdeiassistant.Service.Recognition;
 
 import edu.gdei.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
-import edu.gdei.gdeiassistant.Enum.Recognition.RecognitionEnum;
 import edu.gdei.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Identity;
 import edu.gdei.gdeiassistant.Service.CloudAPI.AliYunService;
@@ -21,30 +20,6 @@ public class RecognitionService {
 
     @Autowired
     private JiSuAPIService jiSuAPIService;
-
-    /**
-     * 注册人脸库信息
-     *
-     * @param username
-     * @param image
-     * @return
-     * @throws RecognitionException
-     */
-    public RecognitionEnum FaceSetRegister(String username, String image) throws RecognitionException {
-        return baiduYunService.FaceSetRegister(username, image);
-    }
-
-    /**
-     * 人脸认证
-     *
-     * @param username
-     * @param image
-     * @return
-     * @throws RecognitionException
-     */
-    public RecognitionEnum FaceVerify(String username, String image) throws RecognitionException {
-        return baiduYunService.FaceVerify(username, image);
-    }
 
     /**
      * 神经网络识别验证码图片，返回验证码

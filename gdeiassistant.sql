@@ -86,6 +86,31 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_data` /*!40100 DEFAULT C
 USE `gdeiassistant_data`;
 
 --
+-- Table structure for table `announcement`
+--
+
+DROP TABLE IF EXISTS `announcement`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `announcement` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '通知公告ID',
+  `title` varchar(50) NOT NULL COMMENT '通知公告标题',
+  `content` varchar(250) NOT NULL COMMENT '通知公告内容',
+  `publish_time` datetime NOT NULL COMMENT '通知公告发布时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `announcement`
+--
+
+LOCK TABLES `announcement` WRITE;
+/*!40000 ALTER TABLE `announcement` DISABLE KEYS */;
+/*!40000 ALTER TABLE `announcement` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `electricfees`
 --
 
@@ -118,6 +143,31 @@ CREATE TABLE `electricfees` (
 LOCK TABLES `electricfees` WRITE;
 /*!40000 ALTER TABLE `electricfees` DISABLE KEYS */;
 /*!40000 ALTER TABLE `electricfees` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reading`
+--
+
+DROP TABLE IF EXISTS `reading`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `reading` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '专题阅读信息主键ID',
+  `title` varchar(50) NOT NULL COMMENT '专题阅读信息标题',
+  `description` varchar(100) NOT NULL COMMENT '专题阅读信息描述',
+  `link` varchar(100) NOT NULL COMMENT '专题阅读信息链接',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reading`
+--
+
+LOCK TABLES `reading` WRITE;
+/*!40000 ALTER TABLE `reading` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reading` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -742,4 +792,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-29  1:30:57
+-- Dump completed on 2019-03-29 18:08:43

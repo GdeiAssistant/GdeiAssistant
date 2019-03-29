@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.Service.Announcement;
 
 import edu.gdei.gdeiassistant.Pojo.Entity.Announcement;
-import edu.gdei.gdeiassistant.Repository.Mongodb.Announcement.AnnouncementDao;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Announcement.AnnouncementMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.Date;
 public class AnnouncementService {
 
     @Autowired
-    private AnnouncementDao announcementDao;
+    private AnnouncementMapper announcementMapper;
 
     /**
      * 保存通知公告信息
@@ -20,10 +20,10 @@ public class AnnouncementService {
      */
     public void SaveAnnouncement(Announcement announcement) {
         announcement.setPublishTime(new Date());
-        announcementDao.InsertAnnouncement(announcement);
+        announcementMapper.insertAnnouncement(announcement);
     }
 
     public Announcement QueryLatestAnnouncement() {
-        return announcementDao.QueryLatestAnnouncement();
+        return announcementMapper.queryLatestAnnouncement();
     }
 }

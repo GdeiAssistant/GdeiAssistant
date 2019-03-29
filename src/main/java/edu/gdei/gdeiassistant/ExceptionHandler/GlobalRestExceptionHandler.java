@@ -5,7 +5,6 @@ import edu.gdei.gdeiassistant.Exception.ChargeException.SecurityInvalidException
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
-import edu.gdei.gdeiassistant.Exception.UserAccessException.UserGroupNoAccessException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -104,17 +103,6 @@ public class GlobalRestExceptionHandler {
     public ResponseEntity HandlePasswordIncorrectException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.PASSWORD_INCORRECT
                 , false, "用户账号密码错误，请检查重试或重新登录"));
-    }
-
-    /**
-     * 处理用户组没有权限访问资源的异常
-     *
-     * @return
-     */
-    @ExceptionHandler(UserGroupNoAccessException.class)
-    public ResponseEntity HandleUserGroupNoAccessException() {
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.USER_GROUP_NO_ACCESS
-                , false, "当前用户组没有权限访问该资源"));
     }
 
     /**

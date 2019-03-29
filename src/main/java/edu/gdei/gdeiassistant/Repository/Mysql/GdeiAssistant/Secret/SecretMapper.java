@@ -17,7 +17,7 @@ public interface SecretMapper {
             @Result(property = "theme", column = "theme"),
             @Result(property = "content", column = "content"),
             @Result(property = "type", column = "type"),
-            @Result(property = "secretCommentList", column = "id", javaType = SecretComment.class
+            @Result(property = "secretCommentList", column = "id", javaType = List.class
                     , many = @Many(select = "selectSecretComment"))
     })
     public Secret selectSecretByID(int id) throws Exception;

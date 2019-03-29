@@ -47,6 +47,9 @@ public class ConstantUtils {
     //用户账号密码错误
     public static final int PASSWORD_INCORRECT = 40015;
 
+    //查询条件不合法
+    public static final int ERROR_QUERY_CONDITION = 40016;
+
     //权限令牌过期
     public static final int TOKEN_EXPIRED_EXCEPTION = 40101;
 
@@ -67,6 +70,9 @@ public class ConstantUtils {
 
     //登录凭证过期
     public static final int SESSION_INVALIDATED = 40107;
+
+    //教务系统会话时间戳校验失败
+    public static final int TIMESTAMP_INVALIDATED = 40108;
 
     //自定义课程数量超过限制
     public static final int CUSTOM_SCHEDULE_OVER_LIMIT = 40301;

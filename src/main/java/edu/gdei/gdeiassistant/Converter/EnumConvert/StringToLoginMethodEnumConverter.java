@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.Converter.EnumConvert;
 
-import edu.gdei.gdeiassistant.Enum.Base.LoginMethodEnum;
+import edu.gdei.gdeiassistant.Enum.Method.LoginMethodEnum;
 import org.springframework.core.convert.converter.Converter;
 
 /**

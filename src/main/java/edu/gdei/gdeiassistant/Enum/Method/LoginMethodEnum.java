@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Enum.Base;
+package edu.gdei.gdeiassistant.Enum.Method;
 
 public enum LoginMethodEnum {
 

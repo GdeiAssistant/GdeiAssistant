@@ -1,12 +1,10 @@
 package edu.gdei.gdeiassistant.Service.UserLogin;
 
-import edu.gdei.gdeiassistant.Enum.Base.DataBaseResultEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
@@ -83,21 +81,8 @@ public class UserLoginService {
      * @param username
      * @return
      */
-    public BaseResult<User, DataBaseResultEnum> GetUserByUsername(String username) {
-        BaseResult<User, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
-            if (user == null) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                result.setResultData(user.decryptUser());
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.setResultType(DataBaseResultEnum.ERROR);
-        }
-        return result;
+    public User GetUserByUsername(String username) throws Exception {
+        return userMapper.selectUser(StringEncryptUtils.encryptString(username));
     }
 
     /**

@@ -1,13 +1,6 @@
 package edu.gdei.gdeiassistant.Aspect;
 
-import edu.gdei.gdeiassistant.Enum.Base.DataBaseResultEnum;
-import edu.gdei.gdeiassistant.Enum.Base.TokenValidResultEnum;
-import edu.gdei.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
-import edu.gdei.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
-import edu.gdei.gdeiassistant.Exception.TokenValidException.TokenServerException;
-import edu.gdei.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Service.IPAddress.IPService;
 import edu.gdei.gdeiassistant.Service.Token.LoginTokenService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
@@ -49,51 +42,9 @@ public class LoginTokenAspect {
         //获取用户请求的IP地址
         String ip = ipService.GetRequestRealIPAddress(request);
         //校验令牌信息
-        TokenValidResultEnum tokenValidResultEnum = loginTokenService
-                .ValidToken(token, ip);
-        switch (tokenValidResultEnum) {
-            case SUCCESS:
-                //校验令牌通过
-                BaseResult<User, DataBaseResultEnum> result = userLoginService
-                        .GetUserByUsername(loginTokenService.ParseToken(token).get("username").asString());
-                switch (result.getResultType()) {
-                    case SUCCESS:
-                        //登录成功
-                        request.setAttribute("user", result.getResultData());
-                        break;
-
-                    case ERROR:
-                        //系统异常
-                        request.setAttribute("errorType", TokenServerException.class.getSimpleName());
-                        throw new TokenServerException("令牌校验服务出现异常");
-
-                    case EMPTY_RESULT:
-                        //没有找到用户名对应的用户账号
-                        request.setAttribute("errorType", TokenNotMatchingException.class.getSimpleName());
-                        throw new TokenNotMatchingException("令牌信息不匹配");
-                }
-                break;
-
-            case ERROR:
-                //系统异常
-                request.setAttribute("errorType", TokenServerException.class.getSimpleName());
-                throw new TokenServerException("令牌校验服务出现异常");
-
-            case EXPIRED:
-                //令牌过期
-                request.setAttribute("errorType", TokenExpiredException.class.getSimpleName());
-                throw new TokenExpiredException("令牌已过期，请重新获取");
-
-            case NOT_MATCH:
-                //令牌信息不匹配
-                request.setAttribute("errorType", TokenNotMatchingException.class.getSimpleName());
-                throw new TokenNotMatchingException("令牌信息不匹配");
-
-            case UNUSUAL_LOCATION:
-                //异常登录地
-                request.setAttribute("errorType", UnusualLocationException.class.getSimpleName());
-                throw new UnusualLocationException("异常登录地点，请重新验证用户身份");
-        }
+        loginTokenService.ValidToken(token, ip);
+        //校验令牌通过
+        User user = userLoginService.GetUserByUsername(loginTokenService.ParseToken(token).get("username").asString());
+        request.setAttribute("user", user);
     }
-
 }

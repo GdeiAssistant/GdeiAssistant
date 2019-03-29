@@ -1,11 +1,11 @@
 package edu.gdei.gdeiassistant.Service.Dating;
 
 import com.aliyun.oss.OSSClient;
-import edu.gdei.gdeiassistant.Enum.Base.DataBaseResultEnum;
+import com.taobao.wsgsvr.WsgException;
+import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingMessage;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingPick;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingProfile;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Dating.DatingMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
@@ -50,22 +50,13 @@ public class DatingService {
      * @param id
      * @return
      */
-    public BaseResult<DatingProfile, DataBaseResultEnum> QueryDatingProfile(Integer id) {
-        BaseResult<DatingProfile, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            DatingProfile datingProfile = datingMapper.selectDatingProfileById(id);
-            if (datingProfile != null) {
-                datingProfile.setUsername(StringEncryptUtils.decryptString(datingProfile.getUsername()));
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-                result.setResultData(datingProfile);
-            } else {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            }
-        } catch (Exception e) {
-            log.error("根据ID查询卖室友详细信息异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public DatingProfile QueryDatingProfile(Integer id) throws WsgException, DataNotExistException {
+        DatingProfile datingProfile = datingMapper.selectDatingProfileById(id);
+        if (datingProfile != null) {
+            datingProfile.setUsername(StringEncryptUtils.decryptString(datingProfile.getUsername()));
+            return datingProfile;
         }
-        return result;
+        throw new DataNotExistException("该卖室友信息不存在");
     }
 
     /**
@@ -75,23 +66,14 @@ public class DatingService {
      * @param size
      * @return
      */
-    public BaseResult<List<DatingProfile>, DataBaseResultEnum> QueryDatingProfile(Integer start, Integer size
-            , Integer area) {
-        BaseResult<List<DatingProfile>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<DatingProfile> list = datingMapper.selectDatingProfilePage(start, size, area);
-            for (DatingProfile datingProfile : list) {
-                datingProfile.setQq("请进入详情页查看");
-                datingProfile.setWechat("请进入详情页查看");
-                datingProfile.setUsername(StringEncryptUtils.decryptString(datingProfile.getUsername()));
-            }
-            result.setResultType(DataBaseResultEnum.SUCCESS);
-            result.setResultData(list);
-        } catch (Exception e) {
-            log.error("分页查询卖室友信息列表异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<DatingProfile> QueryDatingProfile(Integer start, Integer size, Integer area) throws WsgException {
+        List<DatingProfile> list = datingMapper.selectDatingProfilePage(start, size, area);
+        for (DatingProfile datingProfile : list) {
+            datingProfile.setQq("请进入详情页查看");
+            datingProfile.setWechat("请进入详情页查看");
+            datingProfile.setUsername(StringEncryptUtils.decryptString(datingProfile.getUsername()));
         }
-        return result;
+        return list;
     }
 
     /**
@@ -100,14 +82,8 @@ public class DatingService {
      * @param datingProfile
      * @return
      */
-    public DataBaseResultEnum UpdateDatingProfile(DatingProfile datingProfile) {
-        try {
-            datingMapper.updateDatingProfile(datingProfile);
-            return DataBaseResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("更新卖室友信息异常：", e);
-            return DataBaseResultEnum.ERROR;
-        }
+    public void UpdateDatingProfile(DatingProfile datingProfile) {
+        datingMapper.updateDatingProfile(datingProfile);
     }
 
     /**
@@ -117,14 +93,8 @@ public class DatingService {
      * @param state
      * @return
      */
-    public DataBaseResultEnum UpdateDatingProfileState(Integer id, Integer state) {
-        try {
-            datingMapper.updateDatingProfileState(id, state);
-            return DataBaseResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("更新卖室友信息状态异常：", e);
-            return DataBaseResultEnum.ERROR;
-        }
+    public void UpdateDatingProfileState(Integer id, Integer state) {
+        datingMapper.updateDatingProfileState(id, state);
     }
 
     /**
@@ -134,18 +104,10 @@ public class DatingService {
      * @param datingProfile
      * @return
      */
-    public BaseResult<Integer, DataBaseResultEnum> AddDatingProfile(String username, DatingProfile datingProfile) {
-        BaseResult<Integer, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            datingProfile.setUsername(StringEncryptUtils.encryptString(username));
-            datingMapper.insertDatingProfile(datingProfile);
-            result.setResultType(DataBaseResultEnum.SUCCESS);
-            result.setResultData(datingProfile.getProfileId());
-        } catch (Exception e) {
-            log.error("添加卖室友信息异常", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
-        }
-        return result;
+    public Integer AddDatingProfile(String username, DatingProfile datingProfile) throws WsgException {
+        datingProfile.setUsername(StringEncryptUtils.encryptString(username));
+        datingMapper.insertDatingProfile(datingProfile);
+        return datingProfile.getProfileId();
     }
 
     /**
@@ -169,24 +131,14 @@ public class DatingService {
      * @param username
      * @return
      */
-    public BaseResult<DatingPick, DataBaseResultEnum> QueryDatingPick(Integer profileId, String username) {
-        BaseResult<DatingPick, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            DatingPick datingPick = datingMapper.selectDatingPick(profileId
-                    , StringEncryptUtils.encryptString(username));
-            if (datingPick == null) {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            } else {
-                datingPick.setUsername(StringEncryptUtils
-                        .decryptString(datingPick.getUsername()));
-                result.setResultData(datingPick);
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-            }
-        } catch (Exception e) {
-            log.error("查找撩一下记录异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public DatingPick QueryDatingPick(Integer profileId, String username) throws WsgException {
+        DatingPick datingPick = datingMapper.selectDatingPick(profileId
+                , StringEncryptUtils.encryptString(username));
+        if (datingPick == null) {
+            return null;
         }
-        return result;
+        datingPick.setUsername(StringEncryptUtils.decryptString(datingPick.getUsername()));
+        return datingPick;
     }
 
     /**
@@ -195,24 +147,14 @@ public class DatingService {
      * @param id
      * @return
      */
-    public BaseResult<DatingPick, DataBaseResultEnum> QueryDatingPickById(Integer id) {
-        BaseResult<DatingPick, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            DatingPick datingPick = datingMapper.selectDatingPickById(id);
-            if (datingPick != null) {
-                datingPick.setUsername(StringEncryptUtils.decryptString(datingPick.getUsername()));
-                datingPick.getDatingProfile().setUsername(StringEncryptUtils
-                        .decryptString(datingPick.getDatingProfile().getUsername()));
-                result.setResultType(DataBaseResultEnum.SUCCESS);
-                result.setResultData(datingPick);
-            } else {
-                result.setResultType(DataBaseResultEnum.EMPTY_RESULT);
-            }
-        } catch (Exception e) {
-            log.error("根据ID查找撩一下记录异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public DatingPick QueryDatingPickById(Integer id) throws WsgException {
+        DatingPick datingPick = datingMapper.selectDatingPickById(id);
+        if (datingPick != null) {
+            datingPick.setUsername(StringEncryptUtils.decryptString(datingPick.getUsername()));
+            datingPick.getDatingProfile().setUsername(StringEncryptUtils.decryptString(datingPick.getDatingProfile().getUsername()));
+            return datingPick;
         }
-        return result;
+        return null;
     }
 
     /**
@@ -221,24 +163,18 @@ public class DatingService {
      * @param datingPick
      * @return
      */
-    public DataBaseResultEnum AddDatingPick(String username, DatingPick datingPick) {
-        try {
-            datingPick.setUsername(StringEncryptUtils.encryptString(username));
-            datingMapper.insertDatingPick(datingPick);
-            //创建卖室友通知
-            DatingProfile datingProfile = datingMapper.selectDatingProfileById(datingPick
-                    .getDatingProfile().getProfileId());
-            DatingMessage datingMessage = new DatingMessage();
-            datingMessage.setUsername(datingProfile.getUsername());
-            datingMessage.setDatingPick(datingPick);
-            datingMessage.setType(0);
-            datingMessage.setState(0);
-            datingMapper.insertDatingMessage(datingMessage);
-            return DataBaseResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("添加撩一下记录异常：", e);
-            return DataBaseResultEnum.ERROR;
-        }
+    public void AddDatingPick(String username, DatingPick datingPick) throws WsgException {
+        datingPick.setUsername(StringEncryptUtils.encryptString(username));
+        datingMapper.insertDatingPick(datingPick);
+        //创建卖室友通知
+        DatingProfile datingProfile = datingMapper.selectDatingProfileById(datingPick
+                .getDatingProfile().getProfileId());
+        DatingMessage datingMessage = new DatingMessage();
+        datingMessage.setUsername(datingProfile.getUsername());
+        datingMessage.setDatingPick(datingPick);
+        datingMessage.setType(0);
+        datingMessage.setState(0);
+        datingMapper.insertDatingMessage(datingMessage);
     }
 
     /**
@@ -251,21 +187,15 @@ public class DatingService {
      * @param state
      * @return
      */
-    public DataBaseResultEnum UpdateDatingPickState(Integer id, Integer state) {
-        try {
-            datingMapper.updateDatingPickState(id, state);
-            DatingPick datingPick = datingMapper.selectDatingPickById(id);
-            DatingMessage datingMessage = new DatingMessage();
-            datingMessage.setUsername(datingPick.getUsername());
-            datingMessage.setType(1);
-            datingMessage.setDatingPick(datingPick);
-            datingMessage.setState(0);
-            datingMapper.insertDatingMessage(datingMessage);
-            return DataBaseResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("更新撩一下状态异常：", e);
-            return DataBaseResultEnum.ERROR;
-        }
+    public void UpdateDatingPickState(Integer id, Integer state) {
+        datingMapper.updateDatingPickState(id, state);
+        DatingPick datingPick = datingMapper.selectDatingPickById(id);
+        DatingMessage datingMessage = new DatingMessage();
+        datingMessage.setUsername(datingPick.getUsername());
+        datingMessage.setType(1);
+        datingMessage.setDatingPick(datingPick);
+        datingMessage.setState(0);
+        datingMapper.insertDatingMessage(datingMessage);
     }
 
     /**
@@ -276,26 +206,14 @@ public class DatingService {
      * @param size
      * @return
      */
-    public BaseResult<List<DatingMessage>, DataBaseResultEnum> QueryUserDatingMessage(String username
-            , Integer start, Integer size) {
-        BaseResult<List<DatingMessage>, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            List<DatingMessage> list = datingMapper.selectUserDatingMessagePage(StringEncryptUtils
-                    .encryptString(username), start, size);
-            for (DatingMessage datingMessage : list) {
-                datingMessage.setUsername(StringEncryptUtils.decryptString(datingMessage.getUsername()));
-                datingMessage.getDatingPick().setUsername(StringEncryptUtils
-                        .decryptString(datingMessage.getDatingPick().getUsername()));
-                datingMessage.getDatingPick().getDatingProfile().setUsername(StringEncryptUtils
-                        .decryptString(datingMessage.getDatingPick().getDatingProfile().getUsername()));
-            }
-            result.setResultType(DataBaseResultEnum.SUCCESS);
-            result.setResultData(list);
-        } catch (Exception e) {
-            log.error("分页查找用户卖室友消息异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
+    public List<DatingMessage> QueryUserDatingMessage(String username, Integer start, Integer size) throws WsgException {
+        List<DatingMessage> list = datingMapper.selectUserDatingMessagePage(StringEncryptUtils.encryptString(username), start, size);
+        for (DatingMessage datingMessage : list) {
+            datingMessage.setUsername(StringEncryptUtils.decryptString(datingMessage.getUsername()));
+            datingMessage.getDatingPick().setUsername(StringEncryptUtils.decryptString(datingMessage.getDatingPick().getUsername()));
+            datingMessage.getDatingPick().getDatingProfile().setUsername(StringEncryptUtils.decryptString(datingMessage.getDatingPick().getDatingProfile().getUsername()));
         }
-        return result;
+        return list;
     }
 
     /**
@@ -304,18 +222,8 @@ public class DatingService {
      * @param username
      * @return
      */
-    public BaseResult<Integer, DataBaseResultEnum> QueryUserUnReadDatingMessageCount(String username) {
-        BaseResult<Integer, DataBaseResultEnum> result = new BaseResult<>();
-        try {
-            Integer count = datingMapper.selectUserUnReadDatingMessageCount(StringEncryptUtils
-                    .encryptString(username));
-            result.setResultType(DataBaseResultEnum.SUCCESS);
-            result.setResultData(count);
-        } catch (Exception e) {
-            log.error("查询用户卖室友未阅读消息数量异常：", e);
-            result.setResultType(DataBaseResultEnum.ERROR);
-        }
-        return result;
+    public Integer QueryUserUnReadDatingMessageCount(String username) throws WsgException {
+        return datingMapper.selectUserUnReadDatingMessageCount(StringEncryptUtils.encryptString(username));
     }
 
     /**
@@ -324,15 +232,9 @@ public class DatingService {
      * @param datingMessage
      * @return
      */
-    public DataBaseResultEnum AddDatingMessage(DatingMessage datingMessage) {
-        try {
-            datingMessage.setUsername(StringEncryptUtils.encryptString(datingMessage.getUsername()));
-            datingMapper.insertDatingMessage(datingMessage);
-            return DataBaseResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("添加卖室友通知消息异常：", e);
-            return DataBaseResultEnum.ERROR;
-        }
+    public void AddDatingMessage(DatingMessage datingMessage) throws WsgException {
+        datingMessage.setUsername(StringEncryptUtils.encryptString(datingMessage.getUsername()));
+        datingMapper.insertDatingMessage(datingMessage);
     }
 
     /**
@@ -342,14 +244,8 @@ public class DatingService {
      * @param state
      * @return
      */
-    public DataBaseResultEnum UpdateDatingMessageState(Integer id, Integer state) {
-        try {
-            datingMapper.updateDatingMessageState(id, state);
-            return DataBaseResultEnum.SUCCESS;
-        } catch (Exception e) {
-            log.error("更新卖室友通知消息阅读状态异常：", e);
-            return DataBaseResultEnum.ERROR;
-        }
+    public void UpdateDatingMessageState(Integer id, Integer state) {
+        datingMapper.updateDatingMessageState(id, state);
     }
 
     /**

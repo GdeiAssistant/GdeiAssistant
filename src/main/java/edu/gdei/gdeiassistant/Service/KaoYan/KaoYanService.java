@@ -1,11 +1,10 @@
 package edu.gdei.gdeiassistant.Service.KaoYan;
 
-import edu.gdei.gdeiassistant.Enum.Base.ServiceResultEnum;
 import edu.gdei.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
+import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import edu.gdei.gdeiassistant.Pojo.Entity.KaoYan;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Service.Recognition.RecognitionService;
 import edu.gdei.gdeiassistant.Tools.ImageEncodeUtils;
 import okhttp3.*;
@@ -38,8 +37,7 @@ public class KaoYanService {
      * @param idNumber
      * @return
      */
-    public BaseResult<KaoYan, ServiceResultEnum> KaoYanScoreQuery(String name, String examNumber, String idNumber) {
-        BaseResult<KaoYan, ServiceResultEnum> result = new BaseResult<>();
+    public KaoYan KaoYanScoreQuery(String name, String examNumber, String idNumber) throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException {
         try {
             OkHttpClient httpClient = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS)
                     .readTimeout(5, TimeUnit.SECONDS).writeTimeout(5, TimeUnit.SECONDS).build();
@@ -87,8 +85,7 @@ public class KaoYanService {
                     Element zx_no_answer = container_clearfix.getElementsByClass("zx-no-answer").first();
                     if (zx_no_answer != null) {
                         //无查询结果
-                        result.setResultType(ServiceResultEnum.EMPTY_RESULT);
-                        return result;
+                        return null;
                     } else {
                         Elements data = container_clearfix.getElementsByClass("cjxx-info").select("tr");
                         KaoYan kaoYan = new KaoYan();
@@ -100,9 +97,7 @@ public class KaoYanService {
                         kaoYan.setSecondScore(data.get(6).select("td").get(1).text().replace(" ", ""));
                         kaoYan.setThirdScore(data.get(6).select("td").get(1).text().replace(" ", ""));
                         kaoYan.setFourthScore(data.get(7).select("td").get(1).text().replace(" ", ""));
-                        result.setResultData(kaoYan);
-                        result.setResultType(ServiceResultEnum.SUCCESS);
-                        return result;
+                        return kaoYan;
                     }
                 }
                 throw new ServerErrorException("查询系统异常");
@@ -110,17 +105,13 @@ public class KaoYanService {
             throw new ServerErrorException("查询系统异常");
         } catch (IOException e) {
             log.error("查询考研成绩异常：", e);
-            result.setResultType(ServiceResultEnum.TIME_OUT);
-        } catch (ServerErrorException e) {
-            log.error("查询考研成绩异常：", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (ErrorQueryConditionException e) {
             log.error("查询考研成绩异常：", e);
-            result.setResultType(ServiceResultEnum.ERROR_CONDITION);
+            throw new ErrorQueryConditionException("查询条件错误");
         } catch (Exception e) {
             log.error("查询考研成绩异常：", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("教务系统异常");
         }
-        return result;
     }
 }

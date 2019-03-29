@@ -3,7 +3,7 @@ package edu.gdei.gdeiassistant.Controller.UserLogin;
 import com.taobao.wsgsvr.WsgException;
 import edu.gdei.gdeiassistant.Annotation.ReplayAttacksProtection;
 import edu.gdei.gdeiassistant.Annotation.RequestLogPersistence;
-import edu.gdei.gdeiassistant.Enum.Base.LoginMethodEnum;
+import edu.gdei.gdeiassistant.Enum.Method.LoginMethodEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.*;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;

@@ -82,7 +82,7 @@ public class ProfileController {
                     location.append(region.getName().substring(4));
                     State state = region.getStateMap().get(profile.getState());
                     if (state != null) {
-                        if (!state.getName().equals(region.getName().substring(4, region.getName().length()))) {
+                        if (!state.getName().equals(region.getName())) {
                             location.append(state.getName());
                         }
                         City city = state.getCityMap().get(profile.getCity());

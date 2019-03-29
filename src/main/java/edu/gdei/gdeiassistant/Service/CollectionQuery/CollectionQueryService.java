@@ -1,10 +1,9 @@
 package edu.gdei.gdeiassistant.Service.CollectionQuery;
 
-import edu.gdei.gdeiassistant.Enum.Base.ServiceResultEnum;
+import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import edu.gdei.gdeiassistant.Pojo.CollectionQuery.CollectionDetailQuery;
-import edu.gdei.gdeiassistant.Pojo.CollectionQuery.CollectionDetailQueryResult;
 import edu.gdei.gdeiassistant.Pojo.CollectionQuery.CollectionQueryResult;
 import edu.gdei.gdeiassistant.Pojo.Entity.Collection;
 import edu.gdei.gdeiassistant.Pojo.Entity.CollectionDetail;
@@ -37,7 +36,7 @@ public class CollectionQueryService {
      * @param keyword
      * @return
      */
-    public CollectionQueryResult CollectionQuery(Integer page, String keyword) {
+    public CollectionQueryResult CollectionQuery(Integer page, String keyword) throws NetWorkTimeoutException, ErrorQueryConditionException, ServerErrorException {
         CollectionQueryResult collectionQueryResult = new CollectionQueryResult();
         try {
             OkHttpClient okHttpClient = new OkHttpClient.Builder().
@@ -91,21 +90,19 @@ public class CollectionQueryService {
                 response.close();
                 //返回查询结果
                 collectionQueryResult.setCollectionList(collectionList);
-                collectionQueryResult.setCollectionQueryResultEnum(ServiceResultEnum.SUCCESS);
                 return collectionQueryResult;
             }
             throw new ServerErrorException("移动图书馆系统异常");
         } catch (IOException e) {
-            log.error("查询馆藏图书异常：" , e);
-            collectionQueryResult.setCollectionQueryResultEnum(ServiceResultEnum.TIME_OUT);
+            log.error("查询馆藏图书异常：", e);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (ErrorQueryConditionException e) {
-            log.error("查询馆藏图书异常：" , e);
-            collectionQueryResult.setCollectionQueryResultEnum(ServiceResultEnum.EMPTY_RESULT);
+            log.error("查询馆藏图书异常：", e);
+            throw new ErrorQueryConditionException("查询条件不合法");
         } catch (Exception e) {
-            log.error("查询馆藏图书异常：" , e);
-            collectionQueryResult.setCollectionQueryResultEnum(ServiceResultEnum.SERVER_ERROR);
+            log.error("查询馆藏图书异常：", e);
+            throw new ServerErrorException("图书馆系统异常");
         }
-        return collectionQueryResult;
     }
 
     /**
@@ -114,8 +111,7 @@ public class CollectionQueryService {
      * @param collectionDetailQuery
      * @return
      */
-    public CollectionDetailQueryResult CollectionDetailQuery(CollectionDetailQuery collectionDetailQuery) {
-        CollectionDetailQueryResult collectionDetailQueryResult = new CollectionDetailQueryResult();
+    public CollectionDetail CollectionDetailQuery(CollectionDetailQuery collectionDetailQuery) throws NetWorkTimeoutException, ServerErrorException {
         try {
             OkHttpClient okHttpClient = new OkHttpClient.Builder().
                     connectTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS).
@@ -130,8 +126,7 @@ public class CollectionQueryService {
                 CollectionDetail collectionDetail = new CollectionDetail();
                 Element tit = document.getElementsByClass("tit").first();
                 if (tit == null) {
-                    collectionDetailQueryResult.setCollectionDetailQueryResultEnum(ServiceResultEnum.EMPTY_RESULT);
-                    return collectionDetailQueryResult;
+                    return null;
                 }
                 Element catalog = document.getElementsByClass("catalog").first();
                 Elements tableLib = document.getElementsByClass("tableLib");
@@ -154,18 +149,15 @@ public class CollectionQueryService {
                     collectionDistributionList.add(collectionDistribution);
                 }
                 collectionDetail.setCollectionDistributionList(collectionDistributionList);
-                collectionDetailQueryResult.setCollectionDetailQueryResultEnum(ServiceResultEnum.SUCCESS);
-                collectionDetailQueryResult.setCollectionDetail(collectionDetail);
-                return collectionDetailQueryResult;
+                return collectionDetail;
             }
             throw new ServerErrorException("移动图书馆系统异常");
         } catch (IOException e) {
-            log.error("查询馆藏图书详细信息异常：" , e);
-            collectionDetailQueryResult.setCollectionDetailQueryResultEnum(ServiceResultEnum.TIME_OUT);
+            log.error("查询馆藏图书详细信息异常：", e);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("查询馆藏图书详细信息异常：" , e);
-            collectionDetailQueryResult.setCollectionDetailQueryResultEnum(ServiceResultEnum.SERVER_ERROR);
+            log.error("查询馆藏图书详细信息异常：", e);
+            throw new ServerErrorException("图书馆系统异常");
         }
-        return collectionDetailQueryResult;
     }
 }

@@ -1,11 +1,9 @@
 package edu.gdei.gdeiassistant.Service.YiBan;
 
 import com.google.gson.Gson;
-import edu.gdei.gdeiassistant.Enum.Base.BoolResultEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Entity.YiBanUser;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
 import edu.gdei.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
@@ -32,22 +30,17 @@ public class YiBanAPIService {
     private UserLoginService userLoginService;
 
     /**
-     * 通过Token获取用户UserID
+     * 通过凭证令牌获取易班用户信息
      *
      * @param accessToken
      * @return
      */
-    public BaseResult<YiBanUser, BoolResultEnum> getYiBanUserInfo(String accessToken) {
-        BaseResult<YiBanUser, BoolResultEnum> result = new BaseResult<>();
+    public YiBanUser getYiBanUserInfo(String accessToken) throws ServerErrorException {
         JSONObject jsonObject = restTemplate.getForObject("https://openapi.yiban.cn/user/me?access_token=" + accessToken, JSONObject.class);
         if (jsonObject.has("status") && jsonObject.getBoolean("status")) {
-            YiBanUser yibanUser = new Gson().fromJson(jsonObject.toString(), YiBanUser.class);
-            result.setResultData(yibanUser);
-            result.setResultType(BoolResultEnum.SUCCESS);
-        } else {
-            result.setResultType(BoolResultEnum.ERROR);
+            return new Gson().fromJson(jsonObject.toString(), YiBanUser.class);
         }
-        return result;
+        throw new ServerErrorException("易班网系统异常");
     }
 
     /**

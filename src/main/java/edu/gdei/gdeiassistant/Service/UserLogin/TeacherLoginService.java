@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.Service.UserLogin;
 
-import edu.gdei.gdeiassistant.Enum.Base.LoginResultEnum;
 import edu.gdei.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
+import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Exception.RecognitionException.RecognitionException;
@@ -61,7 +61,7 @@ public class TeacherLoginService {
      * @param password
      * @return
      */
-    public LoginResultEnum TeacherLogin(String sessionId, String username, String password) {
+    public void TeacherLogin(String sessionId, String username, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -100,7 +100,7 @@ public class TeacherLoginService {
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
-                            return LoginResultEnum.LOGIN_SUCCESS;
+                            return;
                         }
                         throw new ServerErrorException("进入教师主页失败");
                     } else if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("欢迎使用正方教务管理系统！请登录")) {
@@ -114,16 +114,16 @@ public class TeacherLoginService {
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
             log.error("教师登录异常：", e);
-            return LoginResultEnum.TIME_OUT;
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (ServerErrorException | RecognitionException e) {
             log.error("教师登录异常：", e);
-            return LoginResultEnum.SERVER_ERROR;
+            throw new ServerErrorException("教务系统异常");
         } catch (PasswordIncorrectException e) {
             log.error("教师登录异常：", e);
-            return LoginResultEnum.PASSWORD_ERROR;
+            throw new PasswordIncorrectException("用户账号密码错误");
         } catch (Exception e) {
             log.error("教师登录异常：", e);
-            return LoginResultEnum.SERVER_ERROR;
+            throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {
                 try {

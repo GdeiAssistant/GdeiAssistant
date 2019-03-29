@@ -1,15 +1,12 @@
 package edu.gdei.gdeiassistant.Service.ScheduleQuery;
 
-import edu.gdei.gdeiassistant.Enum.Base.LoginResultEnum;
-import edu.gdei.gdeiassistant.Enum.Base.ServiceResultEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
-import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.TeacherSchedule;
-import edu.gdei.gdeiassistant.Pojo.Result.BaseResult;
+import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import edu.gdei.gdeiassistant.Service.UserLogin.TeacherLoginService;
+import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.ScheduleUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
@@ -68,9 +65,8 @@ public class TeacherQueryService {
      * @param teacherName
      * @return
      */
-    public BaseResult<List<TeacherSchedule>, ServiceResultEnum> TeacherScheduleQuery(String sessionId
-            , String username, String password, String year, String term, String teacherName) {
-        BaseResult<List<TeacherSchedule>, ServiceResultEnum> result = new BaseResult<>();
+    public List<TeacherSchedule> TeacherScheduleQuery(String sessionId
+            , String username, String password, String year, String term, String teacherName) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -85,22 +81,8 @@ public class TeacherQueryService {
                 boolean reLogin = false;
                 if (document.title().equals("欢迎使用正方教务管理系统！请登录")) {
                     //登录凭证过期，重新登录
-                    LoginResultEnum loginResultEnum = teacherLoginService
-                            .TeacherLogin(sessionId, username, password);
-                    switch (loginResultEnum) {
-                        case TIME_OUT:
-                            throw new NetWorkTimeoutException("登录教务系统超时");
-
-                        case SERVER_ERROR:
-                            throw new ServerErrorException("教务系统异常");
-
-                        case PASSWORD_ERROR:
-                            throw new PasswordIncorrectException("账号密码错误");
-
-                        case LOGIN_SUCCESS:
-                            reLogin = true;
-                            break;
-                    }
+                    teacherLoginService.TeacherLogin(sessionId, username, password);
+                    reLogin = true;
                 }
                 if (document.title().equals("正方教务管理系统") || reLogin) {
                     //进入教师个人课表查询页面
@@ -249,9 +231,7 @@ public class TeacherQueryService {
                                     schedulesWithoutSpecialEmptySchedule.add(teacherSchedule);
                                 }
                             }
-                            result.setResultData(schedulesWithoutSpecialEmptySchedule);
-                            result.setResultType(ServiceResultEnum.SUCCESS);
-                            return result;
+                            return schedulesWithoutSpecialEmptySchedule;
                         }
                         throw new ServerErrorException("提交课表查询请求异常");
                     }
@@ -262,16 +242,16 @@ public class TeacherQueryService {
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
             log.error("教师个人课表查询异常：", e);
-            result.setResultType(ServiceResultEnum.TIME_OUT);
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (ServerErrorException e) {
             log.error("教师个人课表查询异常：", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("教务系统异常");
         } catch (PasswordIncorrectException e) {
             log.error("教师个人课表查询异常：", e);
-            result.setResultType(ServiceResultEnum.PASSWORD_INCORRECT);
+            throw new PasswordIncorrectException("用户账号密码错误");
         } catch (Exception e) {
             log.error("教师个人课表查询异常：", e);
-            result.setResultType(ServiceResultEnum.SERVER_ERROR);
+            throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {
                 try {
@@ -284,6 +264,5 @@ public class TeacherQueryService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-        return result;
     }
 }

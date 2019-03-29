@@ -1,37 +1,21 @@
 package edu.gdei.gdeiassistant.Pojo.CollectionQuery;
 
-import edu.gdei.gdeiassistant.Enum.Base.ServiceResultEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import edu.gdei.gdeiassistant.Pojo.Entity.Collection;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Component
 @Scope("prototype")
-public class CollectionQueryResult {
-
-    private ServiceResultEnum collectionQueryResultEnum;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CollectionQueryResult implements Serializable {
 
     private Integer sumPage;
 
     private List<Collection> collectionList;
-
-    public List<Collection> getCollectionList() {
-        return collectionList;
-    }
-
-    public void setCollectionList(List<Collection> collectionList) {
-        this.collectionList = collectionList;
-    }
-
-    public ServiceResultEnum getCollectionQueryResultEnum() {
-        return collectionQueryResultEnum;
-    }
-
-    public void setCollectionQueryResultEnum(ServiceResultEnum collectionQueryResultEnum) {
-        this.collectionQueryResultEnum = collectionQueryResultEnum;
-    }
 
     public Integer getSumPage() {
         return sumPage;
@@ -39,5 +23,13 @@ public class CollectionQueryResult {
 
     public void setSumPage(Integer sumPage) {
         this.sumPage = sumPage;
+    }
+
+    public List<Collection> getCollectionList() {
+        return collectionList;
+    }
+
+    public void setCollectionList(List<Collection> collectionList) {
+        this.collectionList = collectionList;
     }
 }

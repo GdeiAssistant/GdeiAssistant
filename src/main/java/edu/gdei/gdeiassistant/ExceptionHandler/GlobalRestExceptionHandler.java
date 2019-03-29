@@ -5,6 +5,8 @@ import edu.gdei.gdeiassistant.Exception.ChargeException.SecurityInvalidException
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import edu.gdei.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
+import edu.gdei.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,6 +83,26 @@ public class GlobalRestExceptionHandler {
     @ExceptionHandler(NetWorkTimeoutException.class)
     public ResponseEntity HandleNetWorkTimeoutException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.NETWORK_TIMEOUT, false, "网络连接超时，请重试"));
+    }
+
+    /**
+     * 处理查询条件不合法的异常
+     *
+     * @return
+     */
+    @ExceptionHandler(ErrorQueryConditionException.class)
+    public ResponseEntity HandleErrorQueryConditionException() {
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.ERROR_QUERY_CONDITION, false, "查询条件不合法，请重新填写"));
+    }
+
+    /**
+     * 处理时间戳校验失败的异常
+     *
+     * @return
+     */
+    @ExceptionHandler(TimeStampIncorrectException.class)
+    public ResponseEntity HandleTimeStampIncorrectException() {
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.TIMESTAMP_INVALIDATED, false, "时间戳校验失败，请尝试重新登录"));
     }
 
     /**

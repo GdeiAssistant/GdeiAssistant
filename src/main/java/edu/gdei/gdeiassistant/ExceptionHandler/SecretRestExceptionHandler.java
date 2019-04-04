@@ -3,11 +3,13 @@ package edu.gdei.gdeiassistant.ExceptionHandler;
 import edu.gdei.gdeiassistant.Controller.Secret.SecretRestController;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = SecretRestController.class)
+@Order(Integer.MIN_VALUE)
 public class SecretRestExceptionHandler {
 
     @ExceptionHandler(DataNotExistException.class)

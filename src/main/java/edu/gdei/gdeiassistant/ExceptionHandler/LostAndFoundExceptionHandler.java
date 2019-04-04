@@ -4,11 +4,13 @@ import edu.gdei.gdeiassistant.Controller.LostAndFound.LostAndFoundController;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice(basePackageClasses = LostAndFoundController.class)
+@Order(Integer.MIN_VALUE)
 public class LostAndFoundExceptionHandler {
 
     @ExceptionHandler(DataNotExistException.class)

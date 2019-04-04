@@ -6,11 +6,13 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NotAvailableStateException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = ErshouRestController.class)
+@Order(Integer.MIN_VALUE)
 public class ErshouRestExceptionHandler {
 
     @ExceptionHandler(DataNotExistException.class)

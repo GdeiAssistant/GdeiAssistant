@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice(annotations = {RestController.class, Aspect.class})
-@Order(value = 1)
+@Order(value = 2)
 public class GlobalRestExceptionHandler {
 
     private Log log = LogFactory.getLog(GlobalRestExceptionHandler.class);

@@ -291,7 +291,7 @@ CREATE TABLE `authentication` (
   `method` tinyint(1) DEFAULT NULL COMMENT '实名认证方法',
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '记录标记删除状态',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -415,6 +415,67 @@ CREATE TABLE `dating_profile` (
 LOCK TABLES `dating_profile` WRITE;
 /*!40000 ALTER TABLE `dating_profile` DISABLE KEYS */;
 /*!40000 ALTER TABLE `dating_profile` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `delivery_order`
+--
+
+DROP TABLE IF EXISTS `delivery_order`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `delivery_order` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '订单主键ID',
+  `username` varchar(24) COLLATE utf8mb4_bin NOT NULL COMMENT '下单者用户名',
+  `order_time` datetime NOT NULL COMMENT '下单时间',
+  `name` varchar(10) COLLATE utf8mb4_bin NOT NULL COMMENT '姓名',
+  `number` varchar(11) COLLATE utf8mb4_bin NOT NULL COMMENT '学号',
+  `phone` varchar(11) COLLATE utf8mb4_bin NOT NULL COMMENT '手机号码',
+  `price` float NOT NULL COMMENT '报酬',
+  `company` varchar(10) COLLATE utf8mb4_bin NOT NULL COMMENT '快递公司',
+  `address` varchar(50) COLLATE utf8mb4_bin NOT NULL COMMENT '地址',
+  `state` tinyint(1) NOT NULL COMMENT '订单状态',
+  `remarks` varchar(100) COLLATE utf8mb4_bin NOT NULL COMMENT '备注',
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `delivery_order`
+--
+
+LOCK TABLES `delivery_order` WRITE;
+/*!40000 ALTER TABLE `delivery_order` DISABLE KEYS */;
+/*!40000 ALTER TABLE `delivery_order` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `delivery_trade`
+--
+
+DROP TABLE IF EXISTS `delivery_trade`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `delivery_trade` (
+  `trade_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '交易主键ID',
+  `order_id` int(11) NOT NULL COMMENT '订单ID',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `username` varchar(24) NOT NULL COMMENT '接单者用户名',
+  `state` tinyint(1) NOT NULL COMMENT '状态',
+  PRIMARY KEY (`trade_id`),
+  UNIQUE KEY `order_id_UNIQUE` (`order_id`),
+  KEY `deliveryOrderId_idx` (`order_id`),
+  CONSTRAINT `deliveryOrderId` FOREIGN KEY (`order_id`) REFERENCES `delivery_order` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `delivery_trade`
+--
+
+LOCK TABLES `delivery_trade` WRITE;
+/*!40000 ALTER TABLE `delivery_trade` DISABLE KEYS */;
+/*!40000 ALTER TABLE `delivery_trade` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -792,4 +853,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-29 18:08:43
+-- Dump completed on 2019-04-05  0:00:02

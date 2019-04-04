@@ -76,9 +76,22 @@
         </i>
         <p>校园树洞</p>
     </div>
+    <div onclick="window.location.href='/delivery'">
+        <i style="background: url(/img/function/delivery.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
+        </i>
+        <p>全民快递</p>
+    </div>
     <div onclick="window.location.href='http://msg.weixiao.qq.com/t/bca2e28bc30ce67907e032f483e82d7f'">
         <i style="background: url(/img/function/calendar.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>学期校历</p>
+    </div>
+    <div onclick="window.location.href='http://www.gdzwfw.gov.cn/portal/personal/hot'">
+        <i style="background: url(/img/function/goverment.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+        <p>政务服务</p>
+    </div>
+    <div onclick="window.location.href='https://125cn.net/mobile'">
+        <i style="background: url(/img/function/volunteer.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+        <p>志愿活动</p>
     </div>
     <div onclick="window.location.href = '/about/wechat'">
         <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>

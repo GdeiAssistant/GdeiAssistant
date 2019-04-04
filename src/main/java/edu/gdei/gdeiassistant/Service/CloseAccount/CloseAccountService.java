@@ -7,7 +7,7 @@ import edu.gdei.gdeiassistant.Pojo.Entity.*;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Cet.CetMapper;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Dating.DatingMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Delivery.DeliveryMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Ershou.ErshouMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Gender.GenderMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound.LostAndFoundMapper;
@@ -32,6 +32,12 @@ public class CloseAccountService {
     private UserProfileService userProfileService;
 
     @Autowired
+    private GradeDao gradeDao;
+
+    @Autowired
+    private ScheduleDao scheduleDao;
+
+    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -41,19 +47,13 @@ public class CloseAccountService {
     private LostAndFoundMapper lostAndFoundMapper;
 
     @Autowired
-    private DatingMapper datingMapper;
+    private DeliveryMapper deliveryMapper;
 
     @Autowired
     private CetMapper cetMapper;
 
     @Autowired
     private GenderMapper genderMapper;
-
-    @Autowired
-    private GradeDao gradeDao;
-
-    @Autowired
-    private ScheduleDao scheduleDao;
 
     @Autowired
     private YiBanUserMapper yiBanUserMapper;
@@ -104,10 +104,26 @@ public class CloseAccountService {
                 throw new ItemAvailableException("用户有待处理的社区功能信息");
             }
         }
-        List<DatingProfile> datingProfileList = datingMapper
-                .selectDatingProfileByUsername(StringEncryptUtils.encryptString(username));
-        for (DatingProfile datingProfile : datingProfileList) {
-            if (datingProfile.getState().equals(1)) {
+        //检查有无待处理的全民快递订单和交易
+        List<DeliveryOrder> deliveryOrderList = deliveryMapper
+                .selectDeliveryOrderByUsername(StringEncryptUtils.encryptString(username));
+        for (DeliveryOrder deliveryOrder : deliveryOrderList) {
+            if (deliveryOrder.getState().equals(0)) {
+                //下单者有未删除的快递代收订单信息
+                throw new ItemAvailableException("用户有待处理的社区功能信息");
+            } else if (deliveryOrder.getState().equals(1)) {
+                //下单者有未确认交付的快递代收交易
+                DeliveryTrade deliveryTrade = deliveryMapper.selectDeliveryTradeByOrderId(deliveryOrder.getOrderId());
+                if (deliveryTrade != null && deliveryTrade.getState().equals(0)) {
+                    throw new ItemAvailableException("用户有待处理的社区功能信息");
+                }
+            }
+        }
+        List<DeliveryTrade> deliveryTradeList = deliveryMapper
+                .selectDeliveryTradeByUsername(StringEncryptUtils.encryptString(username));
+        for (DeliveryTrade deliveryTrade : deliveryTradeList) {
+            //接单者有未确认交付的快递代收交易
+            if (deliveryTrade.getState().equals(0)) {
                 throw new ItemAvailableException("用户有待处理的社区功能信息");
             }
         }

@@ -5,11 +5,13 @@ import edu.gdei.gdeiassistant.Controller.ScheduleQuery.ScheduleQueryRestControll
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = ScheduleQueryRestController.class)
+@Order(Integer.MIN_VALUE)
 public class CustomScheduleExceptionHandler {
 
     /**

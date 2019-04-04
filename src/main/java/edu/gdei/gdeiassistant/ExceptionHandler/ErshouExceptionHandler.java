@@ -5,11 +5,13 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.ConfirmedStateExceptio
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NotAvailableStateException;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice(basePackageClasses = ErshouController.class)
+@Order(Integer.MIN_VALUE)
 public class ErshouExceptionHandler {
 
     @ExceptionHandler(DataNotExistException.class)

@@ -5,11 +5,13 @@ import edu.gdei.gdeiassistant.Exception.CloseAccountException.ItemAvailableExcep
 import edu.gdei.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = CloseAccountController.class)
+@Order(Integer.MIN_VALUE)
 public class CloseAccountExceptionHandler {
 
     @ExceptionHandler(UserStateErrorException.class)

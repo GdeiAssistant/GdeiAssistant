@@ -2,6 +2,7 @@ package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Exception.CommonException.ResourceNotFoundException;
 import org.apache.http.MethodNotSupportedException;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +18,7 @@ public class ServletExceptionHandler {
      * @return
      */
     @ExceptionHandler({NoHandlerFoundException.class, ResourceNotFoundException.class})
+    @Order(value = 1)
     public ModelAndView HandleNoHandlerFoundException() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(HttpStatus.NOT_FOUND);
@@ -28,6 +30,7 @@ public class ServletExceptionHandler {
      * 处理HTTP请求405错误
      */
     @ExceptionHandler(MethodNotSupportedException.class)
+    @Order(value = 1)
     public ModelAndView HandleMethodNotSupportedException() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(HttpStatus.METHOD_NOT_ALLOWED);
@@ -41,6 +44,7 @@ public class ServletExceptionHandler {
      * @return
      */
     @ExceptionHandler(Exception.class)
+    @Order
     public ModelAndView HandleException() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);

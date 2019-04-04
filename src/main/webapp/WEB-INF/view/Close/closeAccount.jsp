@@ -35,7 +35,7 @@
         <p class="weui-msg__desc">注销账号需要满足以下条件：</p>
         <p class="weui-msg__desc">1、二手交易平台所有商品已出售或下架</p>
         <p class="weui-msg__desc">2、失物招领平台所有物品已确认寻回</p>
-        <p class="weui-msg__desc">3、恋爱交友平台已收回所有卖室友信息</p>
+        <p class="weui-msg__desc">3、全民快递平台无待接单的订单和未交付的交易</p>
         <p class="weui-msg__desc">4、近期无账号异常或被封禁的情况</p>
     </div>
 </div>

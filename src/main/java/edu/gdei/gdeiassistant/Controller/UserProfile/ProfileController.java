@@ -79,7 +79,7 @@ public class ProfileController {
                 StringBuilder location = new StringBuilder("");
                 Region region = LocationUtils.getRegionMap().get(profile.getRegion());
                 if (region != null) {
-                    location.append(region.getName().substring(4));
+                    location.append(region.getName());
                     State state = region.getStateMap().get(profile.getState());
                     if (state != null) {
                         if (!state.getName().equals(region.getName())) {

@@ -83,6 +83,9 @@ public class ConstantUtils {
     //服务器内部异常
     public static final int INTERNAL_SERVER_ERROR = 50001;
 
+    //一键评教未开放
+    public static final int EVALUATE_NOT_AVAILABLE = 50002;
+
     //网络连接超时
     public static final int NETWORK_TIMEOUT = 50301;
 

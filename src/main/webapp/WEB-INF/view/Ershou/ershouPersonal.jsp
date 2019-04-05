@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -250,7 +251,7 @@
                             </i>
                             <h5 class="tit">${ErshouItem.name}</h5>
                             <em class="price">￥${ErshouItem.price}</em>
-                            <p class="tm">${ErshouItem.publishTime}</p>
+                            <p class="tm"><fmt:formatDate value="${ErshouItem.publishTime}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                         </div>
                         <p class="btns">
                             <a class="btn" href="/ershou/edit/id/${ErshouItem.id}"><b>编辑</b></a>
@@ -285,7 +286,7 @@
                             </i>
                             <h5 class="tit">${ErshouItem.name}</h5>
                             <em class="price">￥${ErshouItem.price}</em>
-                            <p class="tm">${ErshouItem.publishTime}</p>
+                            <p class="tm"><fmt:formatDate value="${ErshouItem.publishTime}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                         </div>
                         <p class="btns">
                             <a class="btn" href="/ershou/edit/id/${ErshouItem.id}"><b>编辑</b></a>
@@ -318,7 +319,7 @@
                             </i>
                             <h5 class="tit">${ErshouItem.name}</h5>
                             <em class="price">￥${ErshouItem.price}</em>
-                            <p class="tm">${ErshouItem.publishTime}</p>
+                            <p class="tm"><fmt:formatDate value="${ErshouItem.publishTime}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                         </div>
                     </div>
                     <script>

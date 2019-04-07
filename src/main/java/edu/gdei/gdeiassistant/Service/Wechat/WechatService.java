@@ -1,24 +1,30 @@
 package edu.gdei.gdeiassistant.Service.Wechat;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import edu.gdei.gdeiassistant.Enum.Wechat.RequestTypeEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
-import edu.gdei.gdeiassistant.Pojo.Entity.CardInfo;
-import edu.gdei.gdeiassistant.Pojo.Entity.Grade;
-import edu.gdei.gdeiassistant.Pojo.Entity.Schedule;
-import edu.gdei.gdeiassistant.Pojo.Entity.User;
+import edu.gdei.gdeiassistant.Pojo.Entity.*;
 import edu.gdei.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import edu.gdei.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatTextMessage;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Reading.ReadingMapper;
+import edu.gdei.gdeiassistant.Repository.Redis.AccessToken.AccessTokenDao;
 import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
 import edu.gdei.gdeiassistant.Service.GradeQuery.GradeQueryService;
 import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
+import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +52,12 @@ public class WechatService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private AccessTokenDao accessTokenDao;
+
+    @Autowired
+    private ReadingMapper readingMapper;
 
     @Autowired
     private UserLoginService userLoginService;
@@ -113,7 +125,7 @@ public class WechatService {
     }
 
     /**
-     * 获取访问权限令牌和应用唯一标识
+     * 使用OAuth2.0授权码获取访问权限令牌和用户唯一标识
      *
      * @param code
      * @return
@@ -124,7 +136,7 @@ public class WechatService {
                 .getForObject("https://api.weixin.qq.com/sns/oauth2/access_token?appid="
                         + appid + "&secret=" + appsecret + "&code=" + code
                         + "&grant_type=authorization_code", JSONObject.class);
-        if (jsonObject.has("access_token")) {
+        if (jsonObject.containsKey("access_token")) {
             String access_token = jsonObject.getString("access_token");
             String openid = jsonObject.getString("access_token");
             map.put("access_token", access_token);
@@ -132,6 +144,72 @@ public class WechatService {
             return map;
         }
         return null;
+    }
+
+    /**
+     * 获取微信公众号AccessToken
+     *
+     * @return
+     */
+    private synchronized String GetWechatAccessToken() {
+        //检查Redis缓存中有无AccessToken
+        String accessToken = accessTokenDao.QueryWechatAccessToken();
+        //若缓存中没有AccessToken则调用API数据接口
+        if (StringUtils.isBlank(accessToken)) {
+            JSONObject jsonObject = restTemplate.getForObject("https://api.weixin.qq.com/cgi-bin/token?" +
+                    "grant_type=client_credential&appid=" + appid + "&secret=" + appsecret, JSONObject.class);
+            if (jsonObject.containsKey("access_token")) {
+                accessTokenDao.SaveWechatAccessToken(jsonObject.getString("access_token"));
+                return jsonObject.getString("access_token");
+            }
+        }
+        return accessToken;
+    }
+
+    /**
+     * 定时同步微信专题阅读素材
+     *
+     * @return
+     */
+    @Scheduled(cron = "0 9 * * * ?")
+    @Transactional("dataTransactionManager")
+    public void SyncWechatReadingItem() {
+        String accessToken = GetWechatAccessToken();
+        //获取专题阅读素材总数
+        JSONObject jsonObject = restTemplate.getForObject("https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=" + accessToken, JSONObject.class);
+        int count = 0;
+        if (jsonObject.containsKey("news_count")) {
+            count = jsonObject.getInteger("news_count");
+        }
+        int page = count % 20 == 0 ? (count / 20) : (count / 20 + 1);
+        for (int i = 0; i < page; i++) {
+            JSONObject params = new JSONObject();
+            params.put("type", "news");
+            params.put("offset", String.valueOf(i));
+            params.put("count", "20");
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            JSONObject result = restTemplate.postForObject("https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=" + accessToken
+                    , new HttpEntity<>(params, httpHeaders), JSONObject.class);
+            if (result.containsKey("item")) {
+                JSONArray items = result.getJSONArray("item");
+                for (int j = 0; j < items.size(); j++) {
+                    Reading reading = new Reading();
+                    reading.setId(StringEncryptUtils.SHA1HexString(items.getJSONObject(j).getJSONObject("content")
+                            .getJSONArray("news_item").getJSONObject(0).getString("title")));
+                    reading.setTitle(items.getJSONObject(j).getJSONObject("content")
+                            .getJSONArray("news_item").getJSONObject(0).getString("title"));
+                    reading.setDescription(items.getJSONObject(j).getJSONObject("content")
+                            .getJSONArray("news_item").getJSONObject(0).getString("digest"));
+                    reading.setLink(items.getJSONObject(j).getJSONObject("content")
+                            .getJSONArray("news_item").getJSONObject(0).getString("url"));
+                    if (readingMapper.selectReadingById(StringEncryptUtils.SHA1HexString(items.getJSONObject(j).getJSONObject("content")
+                            .getJSONArray("news_item").getJSONObject(0).getString("title"))) == null) {
+                        readingMapper.insertReading(reading);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -144,7 +222,7 @@ public class WechatService {
         JSONObject jsonObject = restTemplate
                 .getForObject("https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token
                         + "&openid=" + openid, JSONObject.class);
-        if (jsonObject.has("unionid")) {
+        if (jsonObject.containsKey("unionid")) {
             return jsonObject.getString("unionid");
         }
         return null;

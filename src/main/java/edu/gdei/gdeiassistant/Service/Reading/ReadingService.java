@@ -27,6 +27,6 @@ public class ReadingService {
      * @param reading
      */
     public void SaveReadingInfo(Reading reading) {
-        readingMapper.insertReadingList(reading);
+        readingMapper.insertReading(reading);
     }
 }

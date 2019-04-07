@@ -86,7 +86,7 @@
     </a>
     <a class="weui-cell weui-cell_access" href="javascript:" onclick="authenticateWithYiBan()">
         <div class="weui-cell__bd">
-            <p>与易班校方认证信息同步</p>
+            <p>与易班校方认证信息同步（暂不支持）</p>
         </div>
         <div class="weui-cell__ft"></div>
     </a>

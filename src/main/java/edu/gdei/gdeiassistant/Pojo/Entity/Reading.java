@@ -1,8 +1,6 @@
 package edu.gdei.gdeiassistant.Pojo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -13,25 +11,19 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Reading implements Serializable {
 
-    private Integer id;
+    private String id;
 
-    @NotBlank
-    @Length(min = 1, max = 50)
     private String title;
 
-    @NotBlank
-    @Length(min = 1, max = 100)
     private String description;
 
-    @NotBlank
-    @Length(min = 1, max = 100)
     private String link;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

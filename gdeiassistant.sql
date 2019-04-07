@@ -153,12 +153,12 @@ DROP TABLE IF EXISTS `reading`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `reading` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '专题阅读信息主键ID',
+  `id` varchar(40) NOT NULL COMMENT '专题阅读信息主键ID',
   `title` varchar(50) NOT NULL COMMENT '专题阅读信息标题',
   `description` varchar(100) NOT NULL COMMENT '专题阅读信息描述',
-  `link` varchar(100) NOT NULL COMMENT '专题阅读信息链接',
+  `link` varchar(250) NOT NULL COMMENT '专题阅读信息链接',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -853,4 +853,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-05  0:00:02
+-- Dump completed on 2019-04-08  7:08:42

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Component
 @Scope("prototype")
@@ -18,6 +19,8 @@ public class Reading implements Serializable {
     private String description;
 
     private String link;
+
+    private Date createTime;
 
     public String getId() {
         return id;
@@ -49,5 +52,13 @@ public class Reading implements Serializable {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

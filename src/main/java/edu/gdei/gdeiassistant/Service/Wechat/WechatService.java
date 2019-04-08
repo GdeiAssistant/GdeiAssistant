@@ -15,7 +15,6 @@ import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
 import edu.gdei.gdeiassistant.Service.GradeQuery.GradeQueryService;
 import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
-import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,7 +172,7 @@ public class WechatService {
      *
      * @return
      */
-    @Scheduled(cron = "0 9 * * * ?")
+    @Scheduled(cron = "0 18 * * * ?")
     @Transactional("dataTransactionManager")
     public void SyncWechatReadingItem() {
         String accessToken = GetWechatAccessToken();
@@ -195,16 +196,16 @@ public class WechatService {
                 JSONArray items = result.getJSONArray("item");
                 for (int j = 0; j < items.size(); j++) {
                     Reading reading = new Reading();
-                    reading.setId(StringEncryptUtils.SHA1HexString(items.getJSONObject(j).getJSONObject("content")
-                            .getJSONArray("news_item").getJSONObject(0).getString("title")));
+                    reading.setId(items.getJSONObject(j).getString("media_id"));
                     reading.setTitle(items.getJSONObject(j).getJSONObject("content")
                             .getJSONArray("news_item").getJSONObject(0).getString("title"));
                     reading.setDescription(items.getJSONObject(j).getJSONObject("content")
                             .getJSONArray("news_item").getJSONObject(0).getString("digest"));
                     reading.setLink(items.getJSONObject(j).getJSONObject("content")
                             .getJSONArray("news_item").getJSONObject(0).getString("url"));
-                    if (readingMapper.selectReadingById(StringEncryptUtils.SHA1HexString(items.getJSONObject(j).getJSONObject("content")
-                            .getJSONArray("news_item").getJSONObject(0).getString("title"))) == null) {
+                    reading.setCreateTime(Date.from(Instant.ofEpochSecond(items.getJSONObject(j).getJSONObject("content")
+                            .getLongValue("create_time"))));
+                    if (readingMapper.selectReadingById(items.getJSONObject(j).getString("media_id")) == null) {
                         readingMapper.insertReading(reading);
                     }
                 }

@@ -172,14 +172,18 @@ public class SchoolNewsService {
                                                         .getElementsByAttributeValue("style", "padding-bottom:20px;").first().getElementsByAttribute("src");
                                                 for (Element element : hrefs) {
                                                     if (element.attr("href").contains("/cms/")) {
-                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                        if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
+                                                            element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                        }
                                                     } else {
                                                         element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
                                                     }
                                                 }
                                                 for (Element element : sources) {
                                                     if (element.attr("src").contains("/cms/")) {
-                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                        if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
+                                                            element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                        }
                                                     } else {
                                                         element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
                                                     }
@@ -198,14 +202,18 @@ public class SchoolNewsService {
                                                 Elements sources = document1.getElementsByClass("inside-content").first().getElementsByAttribute("src");
                                                 for (Element element : hrefs) {
                                                     if (element.attr("href").contains("/cms/")) {
-                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                        if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
+                                                            element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                        }
                                                     } else {
                                                         element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
                                                     }
                                                 }
                                                 for (Element element : sources) {
                                                     if (element.attr("src").contains("/cms/")) {
-                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                        if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
+                                                            element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                        }
                                                     } else {
                                                         element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
                                                     }
@@ -349,14 +357,18 @@ public class SchoolNewsService {
                                             Elements sources = page.getElementsByClass("text").first().getElementsByAttribute("src");
                                             for (Element element : hrefs) {
                                                 if (element.attr("href").contains("/cms/")) {
-                                                    element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                    if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
+                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                    }
                                                 } else {
                                                     element.attr("href", url.toString() + "/" + element.attr("href"));
                                                 }
                                             }
                                             for (Element element : sources) {
                                                 if (element.attr("src").contains("/cms/")) {
-                                                    element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                    if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
+                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                    }
                                                 } else {
                                                     element.attr("src", url.toString() + "/" + element.attr("src"));
                                                 }

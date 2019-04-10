@@ -3,10 +3,13 @@
 <%@ taglib prefix="profile" uri="/WEB-INF/tld/profile.tld" %>
 <script>
 
-    //获取个人资料页隐私小红点图标显示配置，显示或隐藏小红点图标
+    //获取个人资料页隐私设置和功能管理小红点图标显示配置，显示或隐藏小红点图标
     $(function () {
         if (!localStorage.getItem("privacyBadge")) {
             $("#privacyBadge").show();
+        }
+        if (!localStorage.getItem("functionBadge")) {
+            $("#functionBadge").show();
         }
     });
 
@@ -40,7 +43,6 @@
             success: function (result) {
                 if (result.success === true) {
                     var locationData = result.data;
-                    localStorage.setItem("locationData", JSON.stringify(locationData));
                     for (var i = 0; i < locationData.length; i++) {
                         if (locationData[i].hasOwnProperty("stateMap") && Object.getOwnPropertyNames(locationData[i].stateMap).length > 0) {
                             var stateMap = locationData[i].stateMap;

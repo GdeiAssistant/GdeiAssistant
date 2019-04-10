@@ -25,4 +25,7 @@ public interface ReadingMapper {
 
     @Insert("insert into reading (id,title,description,link,create_time) values(#{id},#{title},#{description},#{link},#{createTime})")
     public void insertReading(Reading reading);
+
+    @Update("update reading set title=#{title},description=#{description},link=#{link},create_time=#{createTime} where id=#{id}")
+    public void updateReading(Reading reading);
 }

@@ -172,7 +172,7 @@ public class WechatService {
      *
      * @return
      */
-    @Scheduled(cron = "0 18 * * * ?")
+    @Scheduled(cron = "0 0 18 * * ?")
     @Transactional("dataTransactionManager")
     public void SyncWechatReadingItem() {
         String accessToken = GetWechatAccessToken();
@@ -207,6 +207,8 @@ public class WechatService {
                             .getLongValue("create_time"))));
                     if (readingMapper.selectReadingById(items.getJSONObject(j).getString("media_id")) == null) {
                         readingMapper.insertReading(reading);
+                    } else {
+                        readingMapper.updateReading(reading);
                     }
                 }
             }

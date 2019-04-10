@@ -98,7 +98,7 @@ public class SchoolNewsService {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    @Scheduled(cron = "0 7,12,17 * * * ?")
+    @Scheduled(cron = "0 0 7,12,17 * * ?")
     public void CollectNews() throws IOException, ExecutionException, InterruptedException {
         List<NewInfo> newInfoList = new ArrayList<>();
         IOReactorConfig ioReactorConfig = IOReactorConfig.custom().setSelectInterval(3000).setSoTimeout(3000).setConnectTimeout(3000).build();

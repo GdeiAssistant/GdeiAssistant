@@ -1,3 +1,5 @@
+let displaySetting = Object.create(null);
+
 $(function () {
     //消除iOS点击延迟
     FastClick.attach(document.body);
@@ -16,18 +18,15 @@ $(function () {
     }
 });
 
-//缓存的显示设置表
-let displaySetting = Object.create(null);
-
 //加载功能显示设置
 function loadFunctionDisplaySetting() {
     if (localStorage.getItem("functionDisplaySetting")) {
-        let setting = JSON.parse(localStorage.getItem("functionDisplaySetting"));
+        displaySetting = JSON.parse(localStorage.getItem("functionDisplaySetting"));
         for (let index = 0; index < $(".weui-switch").length; index++) {
-            if (Object.keys(setting).indexOf($(".weui-switch:eq(" + index + ")").attr("id")) == -1) {
+            if (Object.keys(displaySetting).indexOf($(".weui-switch:eq(" + index + ")").attr("id")) == -1) {
                 $(".weui-switch:eq(" + index + ")").prop("checked", true);
             } else {
-                $(".weui-switch:eq(" + index + ")").prop("checked", setting[$(".weui-switch:eq(" + index + ")").attr("id")]);
+                $(".weui-switch:eq(" + index + ")").prop("checked", displaySetting[$(".weui-switch:eq(" + index + ")").attr("id")]);
             }
         }
     } else {

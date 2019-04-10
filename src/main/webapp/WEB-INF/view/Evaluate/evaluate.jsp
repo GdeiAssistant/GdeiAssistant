@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>一键评教</title>
+    <title>教学评价</title>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <meta content="yes" name="apple-mobile-web-app-capable">
@@ -35,25 +35,25 @@
     </div>
 </div>
 
-<!-- 直接提交评教信息选项 -->
+<!-- 直接提交教学评价信息选项 -->
 <div class="weui-cells weui-cells_form">
     <div class="weui-cell weui-cell_switch">
-        <div class="weui-cell__bd">直接提交评教信息</div>
+        <div class="weui-cell__bd">直接提交教学评价信息</div>
         <div class="weui-cell__ft">
             <input id="directlySubmit" class="weui-switch" type="checkbox">
         </div>
     </div>
 </div>
 
-<!-- 一键评教按钮 -->
+<!-- 提交信息按钮 -->
 <div class="weui_btn_area">
     <a class="weui_btn weui_btn_primary" href="javascript:"
-       onclick="postEvaluateForm()">一键评教</a>
+       onclick="postEvaluateForm()">提交信息</a>
 </div>
 
-<p class="page_desc" style="margin-top: 25px">注意：评教信息提交后，将不能再作修改</p>
+<p class="page_desc" style="margin-top: 25px">注意：教学评价信息提交后，将不能再作修改</p>
 
-<!-- 评教中弹框 -->
+<!-- 提交中弹框 -->
 <div class="weui_mask" style="display: none"></div>
 <div id="loadingToast" class="weui_loading_toast" style="display: none">
     <div class="weui_mask_transparent"></div>
@@ -72,7 +72,7 @@
             <div class="weui_loading_leaf weui_loading_leaf_10"></div>
             <div class="weui_loading_leaf weui_loading_leaf_11"></div>
         </div>
-        <p class="weui_toast_content">评教中</p>
+        <p class="weui_toast_content">提交中</p>
     </div>
 </div>
 

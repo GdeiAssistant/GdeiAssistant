@@ -39,7 +39,7 @@
     </div>
     <div onclick="window.location.href='/evaluate'">
         <i style="background: url(/img/function/evaluate.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>一键评教</p>
+        <p>教学评价</p>
     </div>
     <div onclick="window.location.href='/spare'">
         <i style="background: url(/img/function/spare.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>

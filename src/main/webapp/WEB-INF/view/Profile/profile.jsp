@@ -116,6 +116,18 @@
 
 <div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/function'">
+        <div class="weui-cell__bd">
+            <p>功能管理</p>
+        </div>
+        <div class="weui-cell__ft">
+            <span id="functionBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/close'">
         <div class="weui-cell__bd">
             <p>删除账号</p>

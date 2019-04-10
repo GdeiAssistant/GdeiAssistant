@@ -51,8 +51,22 @@
         });
     });
 
-    //重新调整单元格边框属性
+    //加载显示设置，并重新调整单元格边框属性
     $(function () {
+        if (localStorage.getItem("functionDisplaySetting")) {
+            let setting = JSON.parse(localStorage.getItem("functionDisplaySetting"));
+            for (let index = 0; index < $(".links div").length; index++) {
+                if (Object.keys(setting).indexOf($(".links div:eq(" + index + ")").attr("id")) == -1) {
+                    $(".links div:eq(" + index + ")").show();
+                } else {
+                    if (setting[$(".links div:eq(" + index + ")").attr("id")] == true) {
+                        $(".links div:eq(" + index + ")").show();
+                    }
+                }
+            }
+        } else {
+            $(".links div").show();
+        }
         let functionSize = $("[class='links']").find("div").length;
         let j = 0;
         for (let i = 0; i < functionSize; i++) {
@@ -66,6 +80,13 @@
                     $("[class='links']").find("div").eq(i).css("border-right", "0px");
                 }
                 j++;
+            }
+        }
+        //如果显示的功能菜单不足三个，则隐藏第一行对应的上边框
+        if ($(".links div").filter(":visible").length < 3) {
+            $(".phone .links").css("border-top", "0px");
+            for (let index = 0; index < $(".links div").filter(":visible").length; index++) {
+                $(".links").find("div:visible").eq(index).css("border-top", "1px solid #E2E0E3");
             }
         }
     });

@@ -140,7 +140,6 @@
             //授权麦克风权限成功
         }, function (errMsg) {
             //未授权或不支持
-            console.log(errMsg);
             $(".weui_warn").text("用户拒绝了麦克风权限或你的浏览器不支持相关API").show().delay(2000).hide(0);
         });
     }
@@ -215,7 +214,6 @@
             }, 1000);
         }, function (errMsg) {
             //未授权或不支持
-            console.log(errMsg);
             $(".weui_warn").text("用户拒绝了麦克风权限或你的浏览器不支持相关API").show().delay(2000).hide(0);
         });
     }

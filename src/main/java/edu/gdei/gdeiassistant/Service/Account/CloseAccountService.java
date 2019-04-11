@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Service.CloseAccount;
+package edu.gdei.gdeiassistant.Service.Account;
 
 import edu.gdei.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
 import edu.gdei.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
@@ -10,6 +10,7 @@ import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Cet.CetMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Delivery.DeliveryMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Ershou.ErshouMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Gender.GenderMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Graduation.GraduationMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Privacy.PrivacyMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper;
@@ -63,6 +64,9 @@ public class CloseAccountService {
 
     @Autowired
     private ProfileMapper profileMapper;
+
+    @Autowired
+    private GraduationMapper graduationMapper;
 
     @Autowired
     private PrivacyMapper privacyMapper;
@@ -147,6 +151,8 @@ public class CloseAccountService {
         //删除用户资料信息
         profileMapper.resetUserProfile(StringEncryptUtils.encryptString(username), "广东二师助手用户");
         profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(username));
+        //重置毕业用户账号处理方案
+        graduationMapper.resetGraduation(StringEncryptUtils.encryptString(username));
         //重置用户隐私配置
         privacyMapper.resetPrivacy(StringEncryptUtils.encryptString(username));
         //删除用户头像

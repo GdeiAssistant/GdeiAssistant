@@ -8,6 +8,7 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import edu.gdei.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import edu.gdei.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
+import edu.gdei.gdeiassistant.Exception.UserLoginException.UserGraduatedException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -136,6 +137,17 @@ public class GlobalRestExceptionHandler {
     public ResponseEntity HandleUserNotExistException() {
         return ResponseEntity.ok(new JsonResult(ConstantUtils.USER_NOT_EXIST
                 , false, "当前用户不存在，请尝试重新登录"));
+    }
+
+    /**
+     * 处理用户账号已毕业注销的异常
+     *
+     * @return
+     */
+    @ExceptionHandler(UserGraduatedException.class)
+    public ResponseEntity HandleUserGraduatedException() {
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.ACCOUNT_GRADUATED
+                , false, "账号为毕业用户账号，无法使用教务查询功能"));
     }
 
     /**

@@ -24,7 +24,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @RestController
-public class ChargeRequestController {
+public class ChargeRequestRestController {
 
     @Autowired
     private ChargeService chargeService;

@@ -9,9 +9,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = SecretRestController.class)
-@Order(Integer.MIN_VALUE)
+@Order(value = 0)
 public class SecretRestExceptionHandler {
 
+    /**
+     * 处理校园树洞信息不存在的异常
+     *
+     * @return
+     */
     @ExceptionHandler(DataNotExistException.class)
     public ResponseEntity ShowDataNotExistExceptionTip() {
         return ResponseEntity.ok(new JsonResult(false

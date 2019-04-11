@@ -10,9 +10,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = BookQueryRestController.class)
-@Order(Integer.MIN_VALUE)
-public class BookQueryExceptionHandler {
+@Order(value = 0)
+public class BookQueryRestExceptionHandler {
 
+    /**
+     * 处理图书续借超过次数限制的异常
+     *
+     * @return
+     */
     @ExceptionHandler(BookRenewOvertimeException.class)
     public ResponseEntity HandleBookRenewOvertimeException() {
         return ResponseEntity.ok(new JsonResult(false, "图书续借超过次数限制"));

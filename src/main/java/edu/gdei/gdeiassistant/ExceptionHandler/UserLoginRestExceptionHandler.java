@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = UserLoginRestController.class)
-@Order(value = Integer.MIN_VALUE)
+@Order(value = 0)
 public class UserLoginRestExceptionHandler {
 
     /**

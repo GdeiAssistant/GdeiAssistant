@@ -10,9 +10,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice(basePackageClasses = LostAndFoundController.class)
-@Order(Integer.MIN_VALUE)
+@Order(value = 1)
 public class LostAndFoundExceptionHandler {
 
+    /**
+     * 处理失物招领信息不存在的异常
+     *
+     * @return
+     */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView ShowDataNotExistExceptionTip() {
         ModelAndView modelAndView = new ModelAndView();
@@ -22,6 +27,11 @@ public class LostAndFoundExceptionHandler {
         return modelAndView;
     }
 
+    /**
+     * 处理用户没有权限编辑的异常
+     *
+     * @return
+     */
     @ExceptionHandler(NoAccessException.class)
     public ModelAndView ShowNoAccessExceptionTip() {
         ModelAndView modelAndView = new ModelAndView();
@@ -31,6 +41,11 @@ public class LostAndFoundExceptionHandler {
         return modelAndView;
     }
 
+    /**
+     * 处理物品已确认寻回的异常
+     *
+     * @return
+     */
     @ExceptionHandler(ConfirmedStateException.class)
     public ModelAndView ShowUnmodifiableStateException() {
         ModelAndView modelAndView = new ModelAndView();

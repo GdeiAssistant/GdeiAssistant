@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
+import edu.gdei.gdeiassistant.Controller.Delivery.DeliveryRestController;
 import edu.gdei.gdeiassistant.Exception.DeliveryException.DeliveryOrderStateUpdatedException;
 import edu.gdei.gdeiassistant.Exception.DeliveryException.DeliveryOrderTakenException;
 import edu.gdei.gdeiassistant.Exception.DeliveryException.NoAccessUpdatingException;
@@ -7,12 +8,12 @@ import edu.gdei.gdeiassistant.Exception.DeliveryException.SelfTradingOrderExcept
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
-@Order(Integer.MIN_VALUE)
-public class DeliveryExceptionHandler {
+@RestControllerAdvice(basePackageClasses = DeliveryRestController.class)
+@Order(value = 0)
+public class DeliveryRestExceptionHandler {
 
     /**
      * 处理接单失败异常

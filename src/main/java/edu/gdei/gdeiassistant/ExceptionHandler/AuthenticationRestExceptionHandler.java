@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = AuthenticateRestController.class)
-@Order(Integer.MIN_VALUE)
-public class AuthenticationExceptionHandler {
+@Order(value = 0)
+public class AuthenticationRestExceptionHandler {
 
     @ExceptionHandler(IDCardBlurredException.class)
     public ResponseEntity HandleIDCardBlurredException() {

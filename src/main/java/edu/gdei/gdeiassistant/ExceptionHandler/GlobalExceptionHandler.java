@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ModelAndView HandleException(Exception e) {
-        log.error("系统异常：", e);
+        log.error(e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "服务暂不可用");

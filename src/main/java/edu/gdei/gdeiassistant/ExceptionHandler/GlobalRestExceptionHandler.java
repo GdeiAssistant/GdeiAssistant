@@ -5,13 +5,13 @@ import edu.gdei.gdeiassistant.Exception.ChargeException.SecurityInvalidException
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import edu.gdei.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import edu.gdei.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
-import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
 
-@RestControllerAdvice(annotations = {RestController.class, Aspect.class})
+@RestControllerAdvice(annotations = RestController.class)
 @Order(value = 2)
 public class GlobalRestExceptionHandler {
 
@@ -128,6 +128,17 @@ public class GlobalRestExceptionHandler {
     }
 
     /**
+     * 处理用户不存在的异常
+     *
+     * @return
+     */
+    @ExceptionHandler(UserNotExistException.class)
+    public ResponseEntity HandleUserNotExistException() {
+        return ResponseEntity.ok(new JsonResult(ConstantUtils.USER_NOT_EXIST
+                , false, "当前用户不存在，请尝试重新登录"));
+    }
+
+    /**
      * 处理系统异常
      *
      * @param e
@@ -135,9 +146,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity HandleException(Exception e) {
-        log.error("系统异常：", e);
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.INTERNAL_SERVER_ERROR, false, "系统异常，请联系管理员"));
     }
-
-
 }

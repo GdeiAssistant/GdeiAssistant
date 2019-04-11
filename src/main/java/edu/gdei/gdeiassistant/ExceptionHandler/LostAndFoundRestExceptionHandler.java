@@ -11,21 +11,36 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = LostAndFoundRestController.class)
-@Order(Integer.MIN_VALUE)
+@Order(value = 0)
 public class LostAndFoundRestExceptionHandler {
 
+    /**
+     * 处理失物招领信息不存在的异常
+     *
+     * @return
+     */
     @ExceptionHandler(DataNotExistException.class)
     public ResponseEntity ShowDataNotExistExceptionTip() {
         return ResponseEntity.ok(new JsonResult(false
                 , "查询的失物招领信息不存在"));
     }
 
+    /**
+     * 处理用户没有权限编辑的异常
+     *
+     * @return
+     */
     @ExceptionHandler(NoAccessException.class)
     public ResponseEntity ShowNoAccessExceptionTip() {
         return ResponseEntity.ok(new JsonResult(false
                 , "你没有权限编辑该失物招领信息"));
     }
 
+    /**
+     * 处理失物招领信息已确认寻回的异常
+     *
+     * @return
+     */
     @ExceptionHandler(ConfirmedStateException.class)
     public ResponseEntity ShowUnmodifiableStateExceptionTip() {
         return ResponseEntity.ok(new JsonResult(false

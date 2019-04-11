@@ -8,9 +8,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice(basePackageClasses = SecretController.class)
-@Order(Integer.MIN_VALUE)
+@Order(value = 1)
 public class SecretExceptionHandler {
 
+    /**
+     * 处理树洞信息不存在的异常
+     *
+     * @return
+     */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView ShowDataNotExistExceptionTip() {
         ModelAndView modelAndView = new ModelAndView();

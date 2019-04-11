@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = ScheduleQueryRestController.class)
-@Order(Integer.MIN_VALUE)
-public class CustomScheduleExceptionHandler {
+@Order(value = 0)
+public class CustomScheduleRestExceptionHandler {
 
     /**
      * 处理自定义课程数量超过限制的异常

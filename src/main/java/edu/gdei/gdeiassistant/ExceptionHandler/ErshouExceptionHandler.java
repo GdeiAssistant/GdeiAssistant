@@ -11,9 +11,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice(basePackageClasses = ErshouController.class)
-@Order(Integer.MIN_VALUE)
+@Order(value = 1)
 public class ErshouExceptionHandler {
 
+    /**
+     * 处理二手交易信息不存在的异常
+     *
+     * @return
+     */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView ShowDataNotExistExceptionTip() {
         ModelAndView modelAndView = new ModelAndView();
@@ -23,6 +28,11 @@ public class ErshouExceptionHandler {
         return modelAndView;
     }
 
+    /**
+     * 处理当前用户没有权限的异常
+     *
+     * @return
+     */
     @ExceptionHandler(NoAccessException.class)
     public ModelAndView ShowNoAccessExceptionTip() {
         ModelAndView modelAndView = new ModelAndView();
@@ -32,6 +42,11 @@ public class ErshouExceptionHandler {
         return modelAndView;
     }
 
+    /**
+     * 处理商品已确认售出的异常
+     *
+     * @return
+     */
     @ExceptionHandler(ConfirmedStateException.class)
     public ModelAndView ShowUnmodifiableStateException() {
         ModelAndView modelAndView = new ModelAndView();
@@ -41,6 +56,11 @@ public class ErshouExceptionHandler {
         return modelAndView;
     }
 
+    /**
+     * 处理商品已下架的异常
+     *
+     * @return
+     */
     @ExceptionHandler(NotAvailableStateException.class)
     public ModelAndView ShowNotAvailableStateException() {
         ModelAndView modelAndView = new ModelAndView();

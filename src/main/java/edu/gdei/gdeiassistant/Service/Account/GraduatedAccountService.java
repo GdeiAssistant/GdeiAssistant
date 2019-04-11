@@ -2,7 +2,7 @@ package edu.gdei.gdeiassistant.Service.Account;
 
 import com.taobao.wsgsvr.WsgException;
 import edu.gdei.gdeiassistant.Enum.Graduation.GraduationProgramTypeEnum;
-import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupTypeEnum;
+import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Exception.UserLoginException.UserGraduatedException;
 import edu.gdei.gdeiassistant.Pojo.Entity.CardInfo;
 import edu.gdei.gdeiassistant.Pojo.Entity.Graduation;
@@ -95,7 +95,7 @@ public class GraduatedAccountService {
         for (User user : userList) {
             User decryptedUser = user.decryptUser();
             try {
-                if (user.getGroup().equals(UserGroupTypeEnum.GRADUATED.getType())) {
+                if (user.getGroup().equals(UserGroupEnum.GRADUATED.getValue())) {
                     //若当前用户是毕业用户，则跳过检测
                     continue;
                 }
@@ -106,7 +106,7 @@ public class GraduatedAccountService {
                     if (graduation != null && graduation.getProgram().equals(GraduationProgramTypeEnum
                             .UPGRADE_TO_GRADUATED_ACCOUNT.getType())) {
                         //升级为毕业用户账号
-                        userMapper.updateUserGroup(user.getUsername(), UserGroupTypeEnum.GRADUATED.getType());
+                        userMapper.updateUserGroup(user.getUsername(), UserGroupEnum.GRADUATED.getValue());
                     } else {
                         //删除用户账号
                         closeAccountService.CloseAccount(decryptedUser.getUsername(), decryptedUser.getPassword());

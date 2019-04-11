@@ -52,4 +52,9 @@ public class AboutController {
     public ModelAndView ResolveSocialPolicyPage() {
         return new ModelAndView("AgreementAndPolicy/socialPolicy");
     }
+
+    @RequestMapping(value = "/policy/graduation", method = RequestMethod.GET)
+    public ModelAndView ResolveGraduationPage() {
+        return new ModelAndView("AgreementAndPolicy/graduationPolicy");
+    }
 }

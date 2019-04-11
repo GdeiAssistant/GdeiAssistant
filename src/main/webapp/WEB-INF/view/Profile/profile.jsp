@@ -85,6 +85,27 @@
 
 <div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/privacy'">
+        <div class="weui-cell__bd">
+            <p>隐私设置</p>
+        </div>
+        <div class="weui-cell__ft">
+            <span id="privacyBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
+        </div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/function'">
+        <div class="weui-cell__bd">
+            <p>功能管理</p>
+        </div>
+        <div class="weui-cell__ft">
+            <span id="functionBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/authentication'">
         <div class="weui-cell__bd">
             <p>实名认证</p>
@@ -100,37 +121,21 @@
             </div>
         </div>
     </a>
-</div>
-
-<div class="weui-cells">
-    <a class="weui-cell weui-cell_access" href="javascript:"
-       onclick="window.location.href = '/privacy'">
-        <div class="weui-cell__bd">
-            <p>隐私设置</p>
-        </div>
-        <div class="weui-cell__ft">
-            <span id="privacyBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
-        </div>
-    </a>
-</div>
-
-<div class="weui-cells">
-    <a class="weui-cell weui-cell_access" href="javascript:"
-       onclick="window.location.href = '/function'">
-        <div class="weui-cell__bd">
-            <p>功能管理</p>
-        </div>
-        <div class="weui-cell__ft">
-            <span id="functionBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
-        </div>
-    </a>
-</div>
-
-<div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/close'">
         <div class="weui-cell__bd">
             <p>删除账号</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/graduation'">
+        <div class="weui-cell__bd">
+            <p>毕业账号处理</p>
         </div>
         <div class="weui-cell__ft">
         </div>

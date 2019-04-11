@@ -4,6 +4,7 @@ import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
+import edu.gdei.gdeiassistant.Exception.UserLoginException.UserGraduatedException;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -180,15 +181,15 @@ public class UserLoginService {
                 }
             }
             throw new ServerErrorException("教务系统异常");
-        } catch (ServerErrorException e) {
-            log.error("用户登录异常：", e);
-            throw new ServerErrorException("教务系统异常");
         } catch (PasswordIncorrectException e) {
             log.error("用户登录异常：", e);
             throw new PasswordIncorrectException("用户密码错误");
         } catch (IOException e) {
             log.error("用户登录异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
+        } catch (UserGraduatedException e) {
+            log.error("用户登录异常：", e);
+            throw new UserGraduatedException("用户账号已毕业注销");
         } catch (Exception e) {
             log.error("用户登录异常：", e);
             throw new ServerErrorException("教务系统异常");
@@ -263,10 +264,15 @@ public class UserLoginService {
                 + keycode + "&timestamp=" + timestamp);
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
         if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+            if (document.select("script").size() > 0
+                    && document.select("script").text().equals("alert('用户【工号】在教务系统中不存在。！');")) {
+                throw new UserGraduatedException("该账号已毕业注销");
+            }
             httpResponse.close();
             httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number + "&type=1");
             httpResponse = httpClient.execute(httpGet);
-            Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200
                     && "正方教务管理系统".equals(new String(document.title()
                     .getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8))) {

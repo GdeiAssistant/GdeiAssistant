@@ -538,6 +538,30 @@ LOCK TABLES `gender` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `graduation`
+--
+
+DROP TABLE IF EXISTS `graduation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `graduation` (
+  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
+  `program` tinyint(1) DEFAULT NULL COMMENT '毕业用户账号处理方案',
+  PRIMARY KEY (`username`),
+  CONSTRAINT `graduationUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `graduation`
+--
+
+LOCK TABLES `graduation` WRITE;
+/*!40000 ALTER TABLE `graduation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `graduation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `introduction`
 --
 
@@ -787,7 +811,7 @@ CREATE TABLE `user_group` (
 
 LOCK TABLES `user_group` WRITE;
 /*!40000 ALTER TABLE `user_group` DISABLE KEYS */;
-INSERT INTO `user_group` VALUES (0,'管理员'),(1,'学生用户'),(2,'测试用户'),(3,'教师用户'),(4,'客服');
+INSERT INTO `user_group` VALUES (0,'管理员'),(1,'学生用户'),(2,'测试用户'),(3,'教师用户'),(4,'客服人员'),(5,'毕业账号');
 /*!40000 ALTER TABLE `user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -854,4 +878,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-08 17:36:19
+-- Dump completed on 2019-04-12  6:47:11

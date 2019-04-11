@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.Service.Profile;
 
 import com.aliyun.oss.OSSClient;
-import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Introduction;
 import edu.gdei.gdeiassistant.Pojo.Entity.Profile;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Gender.GenderMapper;
@@ -95,7 +95,7 @@ public class UserProfileService {
             profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
             return profile;
         }
-        throw new DataNotExistException("查询的用户不存在");
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**
@@ -110,7 +110,7 @@ public class UserProfileService {
         if (introduction != null) {
             return introduction;
         }
-        throw new DataNotExistException("查询的用户不存在");
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**
@@ -199,7 +199,7 @@ public class UserProfileService {
             profileMapper.updateUserProfile(profile);
             return;
         }
-        throw new DataNotExistException("查询的用户不存在");
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**
@@ -230,7 +230,7 @@ public class UserProfileService {
             profileMapper.updateUserProfile(profile);
             return;
         }
-        throw new DataNotExistException("查询的用户不存在");
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**
@@ -247,7 +247,7 @@ public class UserProfileService {
             profileMapper.updateUserProfile(profile);
             return;
         }
-        throw new DataNotExistException("查询的用户不存在");
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**
@@ -264,7 +264,7 @@ public class UserProfileService {
             profileMapper.updateUserProfile(profile);
             return;
         }
-        throw new DataNotExistException("查询的用户不存在");
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**
@@ -281,7 +281,7 @@ public class UserProfileService {
             profileMapper.updateUserProfile(profile);
             return;
         }
-        throw new DataNotExistException("查询的用户不存在");
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**
@@ -298,7 +298,7 @@ public class UserProfileService {
             profileMapper.updateUserProfile(profile);
             return;
         }
-        throw new DataNotExistException("查询的用户不存在");
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**

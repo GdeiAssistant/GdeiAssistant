@@ -1,7 +1,7 @@
-package edu.gdei.gdeiassistant.Controller.CloseAccount;
+package edu.gdei.gdeiassistant.Controller.Account;
 
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
-import edu.gdei.gdeiassistant.Service.CloseAccount.CloseAccountService;
+import edu.gdei.gdeiassistant.Service.Account.CloseAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

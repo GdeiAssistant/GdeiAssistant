@@ -80,6 +80,9 @@ public class ConstantUtils {
     //查询的数据不存在
     public static final int DATA_NOT_EXIST = 40401;
 
+    //查询的用户不存在
+    public static final int USER_NOT_EXIST = 40402;
+
     //服务器内部异常
     public static final int INTERNAL_SERVER_ERROR = 50001;
 

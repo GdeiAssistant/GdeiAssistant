@@ -40,4 +40,7 @@ public interface UserMapper {
 
     @Update("update user set username=#{resetname},password=null,keycode=null,number=null,state=-1 where username=#{username}")
     public void closeUser(@Param("resetname") String resetname, @Param("username") String username) throws Exception;
+
+    @Update("update user set group=#{group} where username=#{username}")
+    public void updateUserGroup(@Param("username") String username, @Param("group") Integer group);
 }

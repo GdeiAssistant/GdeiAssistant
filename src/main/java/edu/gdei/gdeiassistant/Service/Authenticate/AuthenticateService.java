@@ -89,6 +89,7 @@ public class AuthenticateService {
 
     /**
      * 获取用户真实姓名和学号
+     * <p>
      * 该方法调用校园卡基本信息查询的模块获取姓名和学号信息
      *
      * @param sessionId

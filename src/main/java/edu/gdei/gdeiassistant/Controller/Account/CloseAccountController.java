@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Controller.CloseAccount;
+package edu.gdei.gdeiassistant.Controller.Account;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +15,6 @@ public class CloseAccountController {
      */
     @RequestMapping(value = "/close", method = RequestMethod.GET)
     public ModelAndView ResolveClosePage() {
-        return new ModelAndView("Close/closeAccount");
+        return new ModelAndView("Account/closeAccount");
     }
 }

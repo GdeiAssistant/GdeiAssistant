@@ -3,6 +3,7 @@ package edu.gdei.gdeiassistant.Service.UserLogin;
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
+import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -82,7 +83,11 @@ public class UserLoginService {
      * @return
      */
     public User GetUserByUsername(String username) throws Exception {
-        return userMapper.selectUser(StringEncryptUtils.encryptString(username));
+        User user = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+        if (user != null) {
+            return user.decryptUser();
+        }
+        throw new UserNotExistException("当前用户不存在");
     }
 
     /**

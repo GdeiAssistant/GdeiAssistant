@@ -172,7 +172,7 @@ public class WechatService {
      *
      * @return
      */
-    @Scheduled(cron = "0 0 18 * * ?")
+    @Scheduled(cron = "0 0 9,12,15,18 * * ?")
     @Transactional("dataTransactionManager")
     public void SyncWechatReadingItem() {
         String accessToken = GetWechatAccessToken();

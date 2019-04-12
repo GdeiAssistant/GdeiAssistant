@@ -25,6 +25,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +37,11 @@ public class GraduatedAccountService {
     private Log log = LogFactory.getLog(GraduatedAccountService.class);
 
     private int timeout;
+
+    @Value("#{propertiesReader['timeout.graduation']}")
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 
     @Autowired
     private CloseAccountService closeAccountService;
@@ -49,11 +57,6 @@ public class GraduatedAccountService {
 
     @Autowired
     private GraduationMapper graduationMapper;
-
-    @Value("#{propertiesReader['timeout.graduation']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
 
     /**
      * 查询用户填写的毕业用户账号处理方案
@@ -91,6 +94,7 @@ public class GraduatedAccountService {
      */
     @Scheduled(cron = "0 0 0 1,15,30 7,8,9 ?")
     public void ProceedGraduationProgram() throws Exception {
+        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了执行毕业用户账号处理方案的任务");
         List<User> userList = userMapper.selectAllUser();
         for (User user : userList) {
             User decryptedUser = user.decryptUser();

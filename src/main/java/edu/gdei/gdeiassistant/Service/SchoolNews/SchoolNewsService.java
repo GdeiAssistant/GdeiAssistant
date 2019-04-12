@@ -7,6 +7,8 @@ import edu.gdei.gdeiassistant.Repository.Mongodb.New.NewDao;
 import edu.gdei.gdeiassistant.Tools.SchoolNewsUtils;
 import edu.gdei.gdeiassistant.Tools.XMLParseUtils;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -30,6 +32,9 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -37,6 +42,8 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 public class SchoolNewsService {
+
+    private Log log = LogFactory.getLog(SchoolNewsService.class);
 
     @Resource(name = "newsUrlsList")
     private List<List<String>> newsUrlsList;
@@ -100,6 +107,7 @@ public class SchoolNewsService {
      */
     @Scheduled(cron = "0 0 7,12,17 * * ?")
     public void CollectNews() throws IOException, ExecutionException, InterruptedException {
+        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了收集新闻通知信息的任务");
         List<NewInfo> newInfoList = new ArrayList<>();
         IOReactorConfig ioReactorConfig = IOReactorConfig.custom().setSelectInterval(3000).setSoTimeout(3000).setConnectTimeout(3000).build();
         CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.custom().setDefaultIOReactorConfig(ioReactorConfig).build();
@@ -143,8 +151,8 @@ public class SchoolNewsService {
                             if (!a.attr("href").startsWith("javascript:") && a.attr("href").endsWith(".xhtml")) {
                                 final String title = a.attr("title");
                                 final String publishDate = li.select("span").size() == 0
-                                        ? li.textNodes().get(0).text().substring(1, li.textNodes().get(0).text().length())
-                                        : li.select("span").first().text().substring(1, li.select("span").first().text().length());
+                                        ? li.textNodes().get(0).text().substring(1)
+                                        : li.select("span").first().text().substring(1);
                                 final String id = a.attr("href");
                                 final int newIndex = j;
                                 //获取新闻详细信息
@@ -267,8 +275,8 @@ public class SchoolNewsService {
                                     String id = a.attr("href");
                                     String title = a.text();
                                     String publishDate = li.select("span").size() == 0
-                                            ? li.textNodes().get(0).text().substring(1, li.textNodes().get(0).text().length())
-                                            : li.select("span").first().text().substring(1, li.select("span").first().text().length());
+                                            ? li.textNodes().get(0).text().substring(1)
+                                            : li.select("span").first().text().substring(1);
                                     NewInfo newInfo = new NewInfo();
                                     newInfo.setId(DigestUtils.sha1Hex(id));
                                     newInfo.setTitle(title);
@@ -286,8 +294,8 @@ public class SchoolNewsService {
                                     String id = a.attr("href");
                                     String title = a.text();
                                     String publishDate = li.select("span").size() == 0
-                                            ? li.textNodes().get(0).text().substring(1, li.textNodes().get(0).text().length())
-                                            : li.select("span").first().text().substring(1, li.select("span").first().text().length());
+                                            ? li.textNodes().get(0).text().substring(1)
+                                            : li.select("span").first().text().substring(1);
                                     NewInfo newInfo = new NewInfo();
                                     newInfo.setId(DigestUtils.sha1Hex(id));
                                     newInfo.setTitle(title);

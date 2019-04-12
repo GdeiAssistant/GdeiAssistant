@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Service.GradeQuery;
 
+import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Document.GradeDocument;
 import edu.gdei.gdeiassistant.Pojo.Entity.Grade;
 import edu.gdei.gdeiassistant.Pojo.Entity.Privacy;
@@ -24,6 +25,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +34,8 @@ import java.util.concurrent.Semaphore;
 
 @Service
 public class GradeCacheService {
+
+    private Log log = LogFactory.getLog(GradeCacheService.class);
 
     private int currentUserStart = 0;
 
@@ -48,8 +52,6 @@ public class GradeCacheService {
 
     @Autowired
     private PrivacyMapper privacyMapper;
-
-    private Log log = LogFactory.getLog(GradeCacheService.class);
 
     @Value("#{propertiesReader['education.cache.grade.interval']}")
     public void setGradeInterval(int gradeInterval) {
@@ -80,6 +82,8 @@ public class GradeCacheService {
             , User user, int year) {
         try {
             return AsyncResult.forValue(gradeQueryService.QueryGradeFromSystem(null, user.decryptUser(), year));
+        } catch (PasswordIncorrectException ignored) {
+
         } catch (Exception e) {
             log.error("定时查询保存成绩信息异常：", e);
         } finally {
@@ -136,8 +140,9 @@ public class GradeCacheService {
     /**
      * 定时查询并保存成绩信息
      */
-    @Scheduled(fixedDelay = 900000)
+    @Scheduled(fixedDelay = 7200000)
     public void SaveGrade() {
+        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了查询保存用户成绩信息的任务");
         try {
             Integer count = userMapper.selectUserCount();
             if (currentUserStart >= count) {

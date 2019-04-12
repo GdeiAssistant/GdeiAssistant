@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Service.ScheduleQuery;
 
+import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Document.ScheduleDocument;
 import edu.gdei.gdeiassistant.Pojo.Entity.Privacy;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
@@ -22,12 +23,15 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
 @Service
 public class ScheduleCacheService {
+
+    private Log log = LogFactory.getLog(ScheduleCacheService.class);
 
     private int currentUserStart = 0;
 
@@ -44,8 +48,6 @@ public class ScheduleCacheService {
 
     @Autowired
     private PrivacyMapper privacyMapper;
-
-    private Log log = LogFactory.getLog(ScheduleCacheService.class);
 
     @Value("#{propertiesReader['education.cache.schedule.interval']}")
     public void setScheduleInterval(int scheduleInterval) {
@@ -73,6 +75,8 @@ public class ScheduleCacheService {
             semaphore.acquire();
             return AsyncResult.forValue(scheduleQueryService
                     .QueryScheduleFromSystem(null, user.decryptUser(), 0));
+        } catch (PasswordIncorrectException ignored) {
+
         } catch (Exception e) {
             log.error("定时查询保存课表信息异常：", e);
         } finally {
@@ -84,8 +88,9 @@ public class ScheduleCacheService {
     /**
      * 定时查询并保存用户课表信息
      */
-    @Scheduled(fixedDelay = 900000)
+    @Scheduled(fixedDelay = 7200000)
     public void SaveSchedule() {
+        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了查询保存用户课表信息的任务");
         try {
             Integer count = userMapper.selectUserCount();
             if (currentUserStart >= count) {

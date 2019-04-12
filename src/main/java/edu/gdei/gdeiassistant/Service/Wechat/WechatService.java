@@ -16,6 +16,8 @@ import edu.gdei.gdeiassistant.Service.GradeQuery.GradeQueryService;
 import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -29,6 +31,9 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +41,8 @@ import java.util.Map;
 
 @Service
 public class WechatService {
+
+    private Log log = LogFactory.getLog(WechatService.class);
 
     private String appid;
 
@@ -172,9 +179,10 @@ public class WechatService {
      *
      * @return
      */
-    @Scheduled(cron = "0 0 9,12,15,18 * * ?")
+    @Scheduled(fixedDelay = 21600000)
     @Transactional("dataTransactionManager")
     public void SyncWechatReadingItem() {
+        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了同步微信专题阅读素材的任务");
         String accessToken = GetWechatAccessToken();
         //获取专题阅读素材总数
         JSONObject jsonObject = restTemplate.getForObject("https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=" + accessToken, JSONObject.class);

@@ -181,8 +181,7 @@ public class UserLoginService {
                 }
             }
             throw new ServerErrorException("教务系统异常");
-        } catch (PasswordIncorrectException e) {
-            log.error("用户登录异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("用户密码错误");
         } catch (IOException e) {
             log.error("用户登录异常：", e);

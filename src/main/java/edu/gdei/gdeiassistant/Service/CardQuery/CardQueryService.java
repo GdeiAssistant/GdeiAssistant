@@ -71,8 +71,7 @@ public class CardQueryService {
             LoginCardSystem(httpClient, username, password, true);
             //获取饭卡基本信息
             return QueryCardInformation(httpClient);
-        } catch (PasswordIncorrectException e) {
-            log.error("查询饭卡基本信息异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码不正确");
         } catch (ServerErrorException e) {
             log.error("查询饭卡基本信息异常：", e);
@@ -123,8 +122,7 @@ public class CardQueryService {
             cardQueryResult.setCardList(cardList);
             cardQueryResult.setCardQuery(cardQuery);
             return cardQueryResult;
-        } catch (PasswordIncorrectException e) {
-            log.error("查询消费流水异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码不正确");
         } catch (IOException e) {
             log.error("查询消费流水异常：", e);
@@ -166,8 +164,7 @@ public class CardQueryService {
             LoginCardSystem(httpClient, username, password, true);
             //提交校园卡挂失请求
             SubmitCardLostRequest(httpClient, cardPassword);
-        } catch (PasswordIncorrectException e) {
-            log.error("校园卡挂失异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码不正确");
         } catch (IOException e) {
             log.error("校园卡挂失异常：", e);
@@ -494,7 +491,7 @@ public class CardQueryService {
                 } else {
                     //获取记录总数,用于判断页数
                     String[] strings = trs.get(1).select("td").text().split(" ");
-                    int listsCount = Integer.valueOf(strings[2].substring(6, strings[2].length()));
+                    int listsCount = Integer.valueOf(strings[2].substring(6));
                     int pagesCount;
                     if (listsCount % 10 != 0) {
                         pagesCount = listsCount / 10 + 1;
@@ -555,7 +552,7 @@ public class CardQueryService {
                 } else {
                     //获取记录总数,用于判断页数
                     String[] strings = trs.get(1).select("td").text().split(" ");
-                    int listsCount = Integer.valueOf(strings[4].substring(6, strings[4].length()));
+                    int listsCount = Integer.valueOf(strings[4].substring(6));
                     int pagesCount;
                     if (listsCount % 10 != 0) {
                         pagesCount = listsCount / 10 + 1;

@@ -219,8 +219,7 @@ public class GradeQueryService {
                 throw new PasswordIncorrectException("账号密码错误");
             }
             throw new ServerErrorException("教务系统异常");
-        } catch (PasswordIncorrectException e) {
-            log.error("课程成绩查询异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("用户密码错误");
         } catch (TimeStampIncorrectException e) {
             log.error("课程成绩查询异常：", e);

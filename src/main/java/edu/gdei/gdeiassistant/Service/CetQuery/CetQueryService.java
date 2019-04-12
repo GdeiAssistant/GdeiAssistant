@@ -154,8 +154,7 @@ public class CetQueryService {
                 return cet;
             }
             throw new ServerErrorException("学信网系统异常");
-        } catch (PasswordIncorrectException e) {
-            log.error("查询四六级成绩异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码错误");
         } catch (ErrorQueryConditionException e) {
             log.error("查询四六级成绩异常：", e);

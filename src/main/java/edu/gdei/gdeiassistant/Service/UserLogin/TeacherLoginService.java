@@ -118,8 +118,7 @@ public class TeacherLoginService {
         } catch (ServerErrorException | RecognitionException e) {
             log.error("教师登录异常：", e);
             throw new ServerErrorException("教务系统异常");
-        } catch (PasswordIncorrectException e) {
-            log.error("教师登录异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("用户账号密码错误");
         } catch (Exception e) {
             log.error("教师登录异常：", e);

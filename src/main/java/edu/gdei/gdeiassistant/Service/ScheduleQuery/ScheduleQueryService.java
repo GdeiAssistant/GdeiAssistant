@@ -365,7 +365,7 @@ public class ScheduleQueryService {
                                                     rowspan = 1;
                                                 }
                                                 //将单元格里的课表信息按独立行进行分割单独处理
-                                                String string[] = tds.get(currentColumnIndexInThisRow).text().split("\\$info\\$");
+                                                String[] string = tds.get(currentColumnIndexInThisRow).text().split("\\$info\\$");
                                                 //记录单元格中的独立课表信息下标
                                                 int n = 0;
                                                 if (string.length == 0) {
@@ -376,7 +376,7 @@ public class ScheduleQueryService {
                                                             //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
                                                         } else {
                                                             //有效的课表头信息,进行信息处理
-                                                            String time[] = string[j + 2].split("[{]");
+                                                            String[] time = string[j + 2].split("[{]");
                                                             //课程周数
                                                             String week = null;
                                                             if (time.length < 2) {
@@ -399,7 +399,7 @@ public class ScheduleQueryService {
                                                                 location = "暂未安排";
                                                             } else {
                                                                 if (string[j + 4].contains("（")) {
-                                                                    String locations[] = string[j + 4].split("（");
+                                                                    String[] locations = string[j + 4].split("（");
                                                                     location = locations[0];
                                                                 } else {
                                                                     location = string[j + 4];
@@ -411,15 +411,15 @@ public class ScheduleQueryService {
                                                             schedule.setScheduleName(name);
                                                             schedule.setScheduleType(type);
                                                             schedule.setScheduleLesson(lesson);
-                                                            String weekString[] = week.split("-");
+                                                            String[] weekString = week.split("-");
                                                             int minWeekNumber;
                                                             int maxWeekNumber;
                                                             if (weekString[1].contains("|")) {
-                                                                String s1[] = weekString[1].split("\\|");
-                                                                minWeekNumber = Integer.valueOf(weekString[0].substring(1, weekString[0].length()));
+                                                                String[] s1 = weekString[1].split("\\|");
+                                                                minWeekNumber = Integer.valueOf(weekString[0].substring(1));
                                                                 maxWeekNumber = Integer.valueOf(s1[0].substring(0, s1[0].length() - 1));
                                                             } else {
-                                                                minWeekNumber = Integer.valueOf(weekString[0].substring(1, weekString[0].length()));
+                                                                minWeekNumber = Integer.valueOf(weekString[0].substring(1));
                                                                 maxWeekNumber = Integer.valueOf(weekString[1].substring(0, weekString[1].length() - 1));
                                                             }
                                                             schedule.setMinScheduleWeek(minWeekNumber);
@@ -474,8 +474,7 @@ public class ScheduleQueryService {
         } catch (ServerErrorException e) {
             log.error("查询课表异常：", e);
             throw new ServerErrorException("教务系统异常");
-        } catch (PasswordIncorrectException e) {
-            log.error("查询课表异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("用户密码错误");
         } catch (TimeStampIncorrectException e) {
             log.error("查询课表异常；", e);

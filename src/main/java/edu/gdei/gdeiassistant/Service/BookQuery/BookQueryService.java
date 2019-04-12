@@ -216,8 +216,7 @@ public class BookQueryService {
         } catch (IOException e) {
             log.error("查询借阅图书异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
-        } catch (PasswordIncorrectException e) {
-            log.error("查询借阅图书异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("图书馆查询密码错误");
         } catch (Exception e) {
             log.error("查询借阅图书异常：", e);

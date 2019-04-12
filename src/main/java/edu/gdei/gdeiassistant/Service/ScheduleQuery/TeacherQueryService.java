@@ -184,7 +184,7 @@ public class TeacherQueryService {
                                                     rowspan = 1;
                                                 }
                                                 //将单元格里的课表信息按独立行进行分割单独处理
-                                                String string[] = tds.get(currentColumnIndexInThisRow).text().split(" ");
+                                                String[] string = tds.get(currentColumnIndexInThisRow).text().split(" ");
                                                 //记录单元格中的独立课表信息下标
                                                 for (int j = 0; j < string.length; j++) {
                                                     if (string.length == 0) {
@@ -246,8 +246,7 @@ public class TeacherQueryService {
         } catch (ServerErrorException e) {
             log.error("教师个人课表查询异常：", e);
             throw new ServerErrorException("教务系统异常");
-        } catch (PasswordIncorrectException e) {
-            log.error("教师个人课表查询异常：", e);
+        } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("用户账号密码错误");
         } catch (Exception e) {
             log.error("教师个人课表查询异常：", e);

@@ -14,33 +14,33 @@ public interface UserMapper {
             @Result(property = "state", column = "state"),
             @Result(property = "group", column = "user_group")
     })
-    public User selectUser(String username) throws Exception;
+    User selectUser(String username) throws Exception;
 
     @Select("select count(username) from user where username like concat(concat('%',#{username}),'%')")
     @ResultType(Integer.class)
-    public Integer selectDeletedUserCount(String username) throws Exception;
+    Integer selectDeletedUserCount(String username) throws Exception;
 
     @Select("select * from user where state!=-1 order by username limit #{start},#{size}")
     @ResultMap("User")
-    public List<User> selectUserList(@Param("start") int start, @Param("size") int size) throws Exception;
+    List<User> selectUserList(@Param("start") int start, @Param("size") int size) throws Exception;
 
     @Select("select * from user where state!=-1")
     @ResultMap("User")
-    public List<User> selectAllUser() throws Exception;
+    List<User> selectAllUser() throws Exception;
 
     @Select("select count(username) from user where state!=-1;")
     @ResultType(Integer.class)
-    public Integer selectUserCount() throws Exception;
+    Integer selectUserCount() throws Exception;
 
     @Insert("insert into user (username,password,state,user_group) values (#{username},#{password},0,1)")
-    public void insertUser(User user) throws Exception;
+    void insertUser(User user) throws Exception;
 
     @Update("update user set password=#{password},state=0 where username=#{username}")
-    public void updateUser(User user) throws Exception;
+    void updateUser(User user) throws Exception;
 
     @Update("update user set username=#{resetname},password=null,keycode=null,number=null,state=-1 where username=#{username}")
-    public void closeUser(@Param("resetname") String resetname, @Param("username") String username) throws Exception;
+    void closeUser(@Param("resetname") String resetname, @Param("username") String username) throws Exception;
 
-    @Update("update user set group=#{group} where username=#{username}")
-    public void updateUserGroup(@Param("username") String username, @Param("group") Integer group);
+    @Update("update user set user_group=#{group} where username=#{username}")
+    void updateUserGroup(@Param("username") String username, @Param("group") Integer group);
 }

@@ -46,4 +46,8 @@
     <div class="weui-cells">
         <!-- 专题阅读内容 -->
     </div>
+    <p style="text-align:center;margin-top:0.5rem;font-size:13px;color:#999" onclick="window.location.href='/reading'">
+        点击查看所有专题阅读内容
+    </p>
+    <br>
 </div>

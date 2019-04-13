@@ -14,11 +14,15 @@ public class ReadingService {
     private ReadingMapper readingMapper;
 
     /**
-     * 获取专题阅读列表
+     * 获取最新的专题阅读列表
      *
      * @return
      */
-    public List<Reading> LoadingReadingList() {
+    public List<Reading> LoadingLatestReadingList() {
+        return readingMapper.selectLatestReadingList();
+    }
+
+    public List<Reading> LoadingAllReadingList(){
         return readingMapper.selectReadingList();
     }
 

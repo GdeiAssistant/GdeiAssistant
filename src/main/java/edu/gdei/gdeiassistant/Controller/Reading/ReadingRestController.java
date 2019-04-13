@@ -27,7 +27,7 @@ public class ReadingRestController {
      */
     @RequestMapping(value = "/api/reading", method = RequestMethod.GET)
     public DataJsonResult<List<Reading>> LoadReadingList() {
-        List<Reading> readingList = readingService.LoadingReadingList();
+        List<Reading> readingList = readingService.LoadingLatestReadingList();
         return new DataJsonResult<>(true, readingList);
     }
 

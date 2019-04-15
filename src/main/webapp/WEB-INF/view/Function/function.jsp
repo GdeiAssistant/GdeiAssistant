@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="index" uri="/WEB-INF/tld/index.tld" %>
 
 <jsp:include page="/js/function/function.jsp"/>
@@ -9,57 +10,59 @@
 </header>
 
 <div class="links">
-    <div id="grade" style="display: none" onclick="window.location.href='/grade'">
-        <i style="background: url(/img/function/grade.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>成绩查询</p>
-    </div>
-    <div id="schedule" style="display: none" onclick="window.location.href='/schedule'">
-        <i style="background: url(/img/function/schedule.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>课表查询</p>
-    </div>
-    <div id="cet" style="display: none" onclick="window.location.href='/cet'">
-        <i style="background: url(/img/function/cet.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>四六级查询</p>
-    </div>
-    <div id="collection" style="display: none" onclick="window.location.href='/collection'">
-        <i style="background: url(/img/function/collection.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>馆藏查询</p>
-    </div>
-    <div id="book" style="display: none" onclick="window.location.href='/book'">
-        <i style="background: url(/img/function/library.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>我的图书馆</p>
-    </div>
-    <div id="card" style="display: none" onclick="window.location.href='/card'">
-        <i style="background: url(/img/function/card.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>消费查询</p>
-    </div>
-    <div id="cardinfo" style="display: none" onclick="window.location.href='/cardinfo'">
-        <i style="background: url(/img/function/cardInfo.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>我的饭卡</p>
-    </div>
-    <div id="evaluate" style="display: none" onclick="window.location.href='/evaluate'">
-        <i style="background: url(/img/function/evaluate.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>教学评价</p>
-    </div>
-    <div id="spare" style="display: none" onclick="window.location.href='/spare'">
-        <i style="background: url(/img/function/spare.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>教室查询</p>
-    </div>
-    <div id="kaoyan" style="display: none" onclick="window.location.href='/kaoyan'">
-        <i style="background: url(/img/function/kaoyan.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>考研查询</p>
+    <c:if test="${sessionScope.group==1}">
+        <div id="grade" style="display: none" onclick="window.location.href='/grade'">
+            <i style="background: url(/img/function/grade.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>成绩查询</p>
+        </div>
+        <div id="schedule" style="display: none" onclick="window.location.href='/schedule'">
+            <i style="background: url(/img/function/schedule.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>课表查询</p>
+        </div>
+        <div id="cet" style="display: none" onclick="window.location.href='/cet'">
+            <i style="background: url(/img/function/cet.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>四六级查询</p>
+        </div>
+        <div id="collection" style="display: none" onclick="window.location.href='/collection'">
+            <i style="background: url(/img/function/collection.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>馆藏查询</p>
+        </div>
+        <div id="book" style="display: none" onclick="window.location.href='/book'">
+            <i style="background: url(/img/function/library.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>我的图书馆</p>
+        </div>
+        <div id="card" style="display: none" onclick="window.location.href='/card'">
+            <i style="background: url(/img/function/card.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>消费查询</p>
+        </div>
+        <div id="cardinfo" style="display: none" onclick="window.location.href='/cardinfo'">
+            <i style="background: url(/img/function/cardInfo.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>我的饭卡</p>
+        </div>
+        <div id="evaluate" style="display: none" onclick="window.location.href='/evaluate'">
+            <i style="background: url(/img/function/evaluate.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>教学评价</p>
+        </div>
+        <div id="spare" style="display: none" onclick="window.location.href='/spare'">
+            <i style="background: url(/img/function/spare.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>教室查询</p>
+        </div>
+        <div id="kaoyan" style="display: none" onclick="window.location.href='/kaoyan'">
+            <i style="background: url(/img/function/kaoyan.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>考研查询</p>
+        </div>
+        <div id="tice" style="display: none" onclick="linkToPFTSystem()">
+            <i style="background: url(/img/function/sport.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+            <p>体测查询</p>
+        </div>
+    </c:if>
+    <div id="news" style="display: none" onclick="window.location.href='/news'">
+        <i style="background: url(/img/function/news.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+        <p>新闻通知</p>
     </div>
     <div id="data" style="display: none" onclick="window.location.href='/data'">
         <i style="background: url(/img/function/data.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>信息查询</p>
-    </div>
-    <div id="tice" style="display: none" onclick="linkToPFTSystem()">
-        <i style="background: url(/img/function/sport.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>体测查询</p>
-    </div>
-    <div id="news" style="display: none" onclick="window.location.href='/news'">
-        <i style="background: url(/img/function/news.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>新闻通知</p>
     </div>
     <div id="ershou" style="display: none" onclick="window.location.href='/ershou'">
         <i style="background: url(/img/function/ershou.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">

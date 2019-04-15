@@ -102,6 +102,7 @@ public class UserLoginRestController {
         //将用户信息数据写入Session
         request.getSession().setAttribute("username", userCertificate.getUser().getUsername());
         request.getSession().setAttribute("password", userCertificate.getUser().getPassword());
+        request.getSession().setAttribute("group", userCertificate.getUser().getGroup());
         //同步教务系统会话
         userLoginService.AsyncUpdateSession(request);
         //将加密的用户信息保存到Cookie中

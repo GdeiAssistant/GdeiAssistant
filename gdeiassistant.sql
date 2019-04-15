@@ -662,6 +662,7 @@ CREATE TABLE `profile` (
   `kickname` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `gender` tinyint(1) DEFAULT NULL COMMENT '性别',
   `gender_orientation` tinyint(1) DEFAULT NULL COMMENT '性取向',
+  `degree` tinyint(1) DEFAULT NULL COMMENT '学历',
   `faculty` tinyint(1) DEFAULT NULL COMMENT '院系',
   `major` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '专业',
   `region` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家/地区',
@@ -878,4 +879,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-12  6:47:11
+-- Dump completed on 2019-04-16  3:38:01

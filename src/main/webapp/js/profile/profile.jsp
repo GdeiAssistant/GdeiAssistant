@@ -26,6 +26,8 @@
 
     var genderOrientationMap = [];
 
+    var degreeMap = [];
+
     var facultyMap = [];
 
     $(function () {
@@ -160,6 +162,12 @@
 
         </c:forEach>
 
+        <c:forEach items="${profile:getDegreeMap()}" var="degreeEntry">
+
+        degreeMap[${degreeEntry.key}] = "${degreeEntry.value}";
+
+        </c:forEach>
+
         <c:forEach items="${profile:getFacultyMap()}" var="facultyEntry">
 
         facultyMap[${facultyEntry.key}] = "${facultyEntry.value}";
@@ -198,6 +206,9 @@
                     } else {
                         $("#location").text("未选择");
                     }
+                    //学历
+                    var degree = result.data.degree == null ? 0 : result.data.degree;
+                    $("#degree").text(degreeMap[degree]);
                     //院系
                     var faculty = result.data.faculty == null ? 0 : result.data.faculty;
                     $("#faculty").text(facultyMap[faculty]);
@@ -546,6 +557,43 @@
                     url: "/api/profile/genderOrientation",
                     data: {
                         genderOrientation: genderOrientation[0].value
+                    },
+                    type: 'post',
+                    success: function (updateResult) {
+                        if (updateResult.success === true) {
+                            loadProfile();
+                        } else {
+                            showCustomErrorTip(updateResult.message);
+                        }
+                    },
+                    error: function (result) {
+                        if (result.status) {
+                            showCustomErrorTip(result.responseJSON.message);
+                        } else {
+                            showNetworkErrorTip();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    //修改学历
+    function changeDegree() {
+        var degreePicker = [];
+        for (var i = 0; i < degreeMap.length; i++) {
+            degreePicker[i] = {
+                label: degreeMap[i],
+                value: i
+            }
+        }
+        weui.picker(degreePicker, {
+            defaultValue: [0],
+            onConfirm: function (degree) {
+                $.ajax({
+                    url: "/api/profile/degree",
+                    data: {
+                        degree: degree[0].value
                     },
                     type: 'post',
                     success: function (updateResult) {

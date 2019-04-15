@@ -43,6 +43,26 @@ public class ProfileOptionConfig {
     }
 
     /**
+     * 学历字典
+     *
+     * @return
+     */
+    @Bean
+    public Map<Integer, String> degreeMap() {
+        Map<Integer, String> degreeMap = new HashMap<>();
+        degreeMap.put(0, "未选择");
+        degreeMap.put(1, "小学");
+        degreeMap.put(2, "初中");
+        degreeMap.put(3, "中专/职高/技校");
+        degreeMap.put(4, "高中");
+        degreeMap.put(5, "专科");
+        degreeMap.put(6, "本科");
+        degreeMap.put(7, "硕士");
+        degreeMap.put(8, "博士");
+        return degreeMap;
+    }
+
+    /**
      * 院系字典
      *
      * @return

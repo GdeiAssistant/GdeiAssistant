@@ -225,7 +225,7 @@ public class ProfileRestController {
      */
     @RequestMapping(value = "/api/profile/gender", method = RequestMethod.POST)
     public JsonResult UpdateGender(HttpServletRequest request, int gender, String customGenderName) throws Exception {
-        if (gender < 0 || gender >= UserProfileService.getGenderMap().size() + 1 || (gender == 3 && StringUtils.isBlank(customGenderName))) {
+        if (gender < 0 || gender >= UserProfileService.getGenderMap().size() || (gender == 3 && StringUtils.isBlank(customGenderName))) {
             return new JsonResult(false, "请求参数不合法");
         }
         String username = (String) request.getSession().getAttribute("username");
@@ -242,9 +242,25 @@ public class ProfileRestController {
      */
     @RequestMapping(value = "/api/profile/genderOrientation", method = RequestMethod.POST)
     public JsonResult UpdateGenderOrientation(HttpServletRequest request, int genderOrientation) throws Exception {
-        if (genderOrientation >= 0 && genderOrientation < UserProfileService.getGenderOrientationMap().size() + 1) {
+        if (genderOrientation >= 0 && genderOrientation < UserProfileService.getGenderOrientationMap().size()) {
             String username = (String) request.getSession().getAttribute("username");
             userProfileService.UpdateGenderOrientation(username, genderOrientation);
+            return new JsonResult(true);
+        }
+        return new JsonResult(false, "请求参数异常");
+    }
+
+    /**
+     * 更新用户学历信息
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/api/profile/degree", method = RequestMethod.POST)
+    public JsonResult UpdateDegree(HttpServletRequest request, int degree) throws Exception {
+        if (degree >= 0 && degree < UserProfileService.getDegreeMap().size()) {
+            String username = (String) request.getSession().getAttribute("username");
+            userProfileService.UpdateDegree(username, degree);
             return new JsonResult(true);
         }
         return new JsonResult(false, "请求参数异常");
@@ -259,7 +275,7 @@ public class ProfileRestController {
      */
     @RequestMapping(value = "/api/profile/faculty", method = RequestMethod.POST)
     public JsonResult UpdateFaculty(HttpServletRequest request, int faculty) throws Exception {
-        if (faculty >= 0 && faculty < UserProfileService.getFacultyMap().size() + 1) {
+        if (faculty >= 0 && faculty < UserProfileService.getFacultyMap().size()) {
             String username = (String) request.getSession().getAttribute("username");
             userProfileService.UpdateFaculty(username, faculty);
             return new JsonResult(true);

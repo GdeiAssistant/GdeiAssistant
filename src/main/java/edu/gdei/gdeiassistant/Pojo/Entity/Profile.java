@@ -21,6 +21,8 @@ public class Profile implements Serializable {
 
     private Integer genderOrientation;
 
+    private Integer degree;
+
     private Integer faculty;
 
     private String major;
@@ -119,5 +121,13 @@ public class Profile implements Serializable {
 
     public void setAvatarURL(String avatarURL) {
         this.avatarURL = avatarURL;
+    }
+
+    public Integer getDegree() {
+        return degree;
+    }
+
+    public void setDegree(Integer degree) {
+        this.degree = degree;
     }
 }

@@ -47,6 +47,8 @@ public class UserProfileService {
 
     private static Map<Integer, String> facultyMap;
 
+    private static Map<Integer, String> degreeMap;
+
     @Autowired
     public AsyncRestTemplate asyncRestTemplate;
 
@@ -58,6 +60,11 @@ public class UserProfileService {
     @Resource(name = "genderOrientationMap")
     public void setGenderOrientationMap(Map<Integer, String> genderOrientationMap) {
         UserProfileService.genderOrientationMap = genderOrientationMap;
+    }
+
+    @Resource(name = "degreeMap")
+    public void setDegreeMap(Map<Integer, String> degreeMap) {
+        UserProfileService.degreeMap = degreeMap;
     }
 
     @Resource(name = "facultyMap")
@@ -196,7 +203,7 @@ public class UserProfileService {
             profile.setRegion(region);
             profile.setState(state);
             profile.setCity(city);
-            profileMapper.updateUserProfile(profile);
+            profileMapper.updateLocation(profile);
             return;
         }
         throw new UserNotExistException("查询的用户不存在");
@@ -227,7 +234,7 @@ public class UserProfileService {
                 }
             }
             profile.setGender(gender);
-            profileMapper.updateUserProfile(profile);
+            profileMapper.updateGender(profile);
             return;
         }
         throw new UserNotExistException("查询的用户不存在");
@@ -244,7 +251,24 @@ public class UserProfileService {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {
             profile.setGenderOrientation(genderOrientation);
-            profileMapper.updateUserProfile(profile);
+            profileMapper.updateGenderOrientation(profile);
+            return;
+        }
+        throw new UserNotExistException("查询的用户不存在");
+    }
+
+    /**
+     * 更新学历信息
+     *
+     * @param username
+     * @param degree
+     * @throws Exception
+     */
+    public void UpdateDegree(String username, int degree) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setDegree(degree);
+            profileMapper.updateDegree(profile);
             return;
         }
         throw new UserNotExistException("查询的用户不存在");
@@ -261,7 +285,7 @@ public class UserProfileService {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {
             profile.setFaculty(faculty);
-            profileMapper.updateUserProfile(profile);
+            profileMapper.updateFaculty(profile);
             return;
         }
         throw new UserNotExistException("查询的用户不存在");
@@ -278,7 +302,7 @@ public class UserProfileService {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {
             profile.setMajor(major);
-            profileMapper.updateUserProfile(profile);
+            profileMapper.updateMajor(profile);
             return;
         }
         throw new UserNotExistException("查询的用户不存在");
@@ -295,7 +319,7 @@ public class UserProfileService {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {
             profile.setKickname(kickname);
-            profileMapper.updateUserProfile(profile);
+            profileMapper.updateKickname(profile);
             return;
         }
         throw new UserNotExistException("查询的用户不存在");
@@ -317,6 +341,15 @@ public class UserProfileService {
      */
     public static Map getGenderOrientationMap() {
         return genderOrientationMap;
+    }
+
+    /**
+     * 获取学历字典
+     *
+     * @return
+     */
+    public static Map getDegreeMap() {
+        return degreeMap;
     }
 
     /**

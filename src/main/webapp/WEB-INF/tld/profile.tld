@@ -24,6 +24,14 @@
     </function>
 
     <function>
+        <description>获取学历字典</description>
+        <name>getDegreeMap</name>
+        <function-class>edu.gdei.gdeiassistant.Service.Profile.UserProfileService</function-class>
+        <function-signature>java.util.Map getDegreeMap()</function-signature>
+        <example>${profile:getDegreeMap()}</example>
+    </function>
+
+    <function>
         <description>获取院系字典</description>
         <name>getFacultyMap</name>
         <function-class>edu.gdei.gdeiassistant.Service.Profile.UserProfileService</function-class>

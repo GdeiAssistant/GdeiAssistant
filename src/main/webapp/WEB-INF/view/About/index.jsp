@@ -239,7 +239,7 @@
     <div class="foot">
         <p>Copyright © 2016 - 2019 GdeiAssistant</p>
         <p>All rights reserved</p>
-        <p class="beian_p">ICP主体备案号：<a class="beian" href="http://www.miitbeian.gov.cn/">粤ICP备17087427号</a></p>
+        <p class="beian_p">ICP主体备案号：<a class="beian" href="http://www.beian.miit.gov.cn">粤ICP备17087427号</a></p>
     </div>
 
 </div>

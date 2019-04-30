@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -24,11 +23,6 @@ public class ProfileController {
     @RequestMapping(value = {"/introduction"})
     public ModelAndView ResolveUserIntroductionPage() {
         return new ModelAndView("Profile/introduction");
-    }
-
-    @RequestMapping(value = {"/profile"}, method = RequestMethod.GET)
-    public ModelAndView ResolveUserProfilePage() {
-        return new ModelAndView("Profile/profile");
     }
 
     /**
@@ -76,7 +70,7 @@ public class ProfileController {
                 }
             }
             if (privacy.isRegionOpen()) {
-                StringBuilder location = new StringBuilder("");
+                StringBuilder location = new StringBuilder();
                 Region region = LocationUtils.getRegionMap().get(profile.getRegion());
                 if (region != null) {
                     location.append(region.getName());

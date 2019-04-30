@@ -174,7 +174,7 @@
 <body>
 
 <!-- 个人资料 -->
-<section class="profile" onclick="window.location.href='/profile'">
+<section class="profile">
     <i class="avt"><img id="avatar" src="/img/avatar/default.png"></i>
     <span id="kickname" class="nm"></span>
     <span class="introduction">

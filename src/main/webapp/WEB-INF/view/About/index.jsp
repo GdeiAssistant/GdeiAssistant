@@ -97,6 +97,7 @@
                         <a class="dropdown-item"
                            href="http://www.moe.gov.cn/jyb_hygq/hygq_tsjb/201505/t20150520_184529.html">教育部统一监督举报</a>
                         <a class="dropdown-item" href="http://www.shdf.gov.cn/shdf/channels/740.html">儿童色情信息举报</a>
+                        <a class="dropdown-item" href="http://www.cyberpolice.cn/">网络违法犯罪举报</a>
                         <a class="dropdown-item" href="mailto:gdeiassistant@gmail.com">社区违规举报</a>
                     </div>
                 </li>
@@ -239,7 +240,12 @@
     <div class="foot">
         <p>Copyright © 2016 - 2019 GdeiAssistant</p>
         <p>All rights reserved</p>
-        <p class="beian_p">ICP主体备案号：<a class="beian" href="http://www.beian.miit.gov.cn">粤ICP备17087427号</a></p>
+        <div class="beian_area">
+            <p class="beian_p"><a class="beian" href="http://www.beian.miit.gov.cn">粤ICP备17087427号-1</a></p>
+            <p class="beian_p"><img src="/img/about/ghs.png">
+                <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44010502001297">粤公网安备44010502001297号</a>
+            </p>
+        </div>
     </div>
 
 </div>

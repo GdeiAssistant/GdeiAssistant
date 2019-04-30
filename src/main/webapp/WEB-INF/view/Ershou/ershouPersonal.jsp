@@ -120,11 +120,6 @@
             });
         });
 
-        //跳转到个人资料页面
-        function changeToProfilePage() {
-            window.location.href = '/profile';
-        }
-
         //显示错误提示
         function showErrorTip(message) {
             $(".weui_warn").text(message).show().delay(2000).hide(0);
@@ -221,7 +216,7 @@
 </c:if>
 
 <!-- 个人资料 -->
-<section class="profile" onclick="changeToProfilePage()">
+<section class="profile">
     <i class="avt"><img id="avatar" src="/img/avatar/default.png"></i>
     <span id="kickname" class="nm"></span>
     <span class="introduction">

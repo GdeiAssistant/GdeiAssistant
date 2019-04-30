@@ -609,13 +609,13 @@ div h2 {
     margin-bottom: 0;
 }
 
-.foot .beian_p {
-    margin-top: 0.4rem;
-}
-
 .foot .beian {
     margin-top: 0.2rem;
-    color: #bbb;
+    color: #ccc;
+}
+
+.beian_area {
+    margin-top: 0.6rem;
 }
 
 .dropdown-menu .dropdown-item {

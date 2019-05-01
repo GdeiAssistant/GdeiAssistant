@@ -1,6 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="access" uri="/WEB-INF/tld/access.tld" %>
 <script>
+
+    //权限表信息
+    var access = [];
 
     //用户是否为微信浏览器
     var wechatUser = false;
@@ -13,8 +17,32 @@
         FastClick.attach(document.body);
     });
 
+    //加载权限表信息
+    $(function () {
+
+        <c:set var="Access" scope="page" value="${access:loadAccessInfo()}" />
+
+        <c:forEach begin="0" end="${Access.size()-1}" step="1" varStatus="state">
+
+        access[${state.index}] = new Set();
+
+        </c:forEach>
+
+        <c:forEach items="${Access}" var="AccessList" varStatus="state">
+
+        <c:forEach items="${AccessList}" var="access">
+
+        access[${state.index}].add("${access}");
+
+        </c:forEach>
+
+        </c:forEach>
+
+    });
+
     //检查用户浏览器属性
     $(function () {
+
         <c:if test="${sessionScope.yiBanUserID!=null}">
         //易班登录
         yibanUser = true;
@@ -56,16 +84,26 @@
         if (localStorage.getItem("functionDisplaySetting")) {
             let setting = JSON.parse(localStorage.getItem("functionDisplaySetting"));
             for (let index = 0; index < $(".links div").length; index++) {
-                if (Object.keys(setting).indexOf($(".links div:eq(" + index + ")").attr("id")) == -1) {
-                    $(".links div:eq(" + index + ")").show();
-                } else {
-                    if (setting[$(".links div:eq(" + index + ")").attr("id")] == true) {
+                //检测当前用户组有无权限
+                if (access[${sessionScope.group}].has($(".links div:eq(" + index + ")").attr("id"))) {
+                    //检测功能管理是否设置为显示
+                    if (Object.keys(setting).indexOf($(".links div:eq(" + index + ")").attr("id")) == -1) {
                         $(".links div:eq(" + index + ")").show();
+                    } else {
+                        if (setting[$(".links div:eq(" + index + ")").attr("id")] == true) {
+                            $(".links div:eq(" + index + ")").show();
+                        }
                     }
                 }
             }
         } else {
-            $(".links div").show();
+            for (let index = 0; index < $(".links div").length; index++) {
+                //检测当前用户组有无权限
+                if (access[${sessionScope.group}].has($(".links div:eq(" + index + ")").attr("id"))) {
+                    //检测功能管理是否设置为显示
+                    $(".links div:eq(" + index + ")").show();
+                }
+            }
         }
         let functionSize = $("[class='links']").find("div").length;
         let j = 0;

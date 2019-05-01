@@ -11,93 +11,33 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Access implements Serializable {
 
-    private Boolean grade;
+    private Integer id;
 
-    private Boolean schedule;
+    private Integer group;
 
-    private Boolean cet;
+    private String name;
 
-    private Boolean evaluate;
-
-    private Boolean card;
-
-    private Boolean bill;
-
-    private Boolean lost;
-
-    private Boolean charge;
-
-    private Boolean collection;
-
-    public Boolean getGrade() {
-        return grade;
+    public Integer getId() {
+        return id;
     }
 
-    public void setGrade(Boolean grade) {
-        this.grade = grade;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Boolean getSchedule() {
-        return schedule;
+    public String getName() {
+        return name;
     }
 
-    public void setSchedule(Boolean schedule) {
-        this.schedule = schedule;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Boolean getCet() {
-        return cet;
+    public Integer getGroup() {
+        return group;
     }
 
-    public void setCet(Boolean cet) {
-        this.cet = cet;
-    }
-
-    public Boolean getEvaluate() {
-        return evaluate;
-    }
-
-    public void setEvaluate(Boolean evaluate) {
-        this.evaluate = evaluate;
-    }
-
-    public Boolean getCard() {
-        return card;
-    }
-
-    public void setCard(Boolean card) {
-        this.card = card;
-    }
-
-    public Boolean getBill() {
-        return bill;
-    }
-
-    public void setBill(Boolean bill) {
-        this.bill = bill;
-    }
-
-    public Boolean getLost() {
-        return lost;
-    }
-
-    public void setLost(Boolean lost) {
-        this.lost = lost;
-    }
-
-    public Boolean getCharge() {
-        return charge;
-    }
-
-    public void setCharge(Boolean charge) {
-        this.charge = charge;
-    }
-
-    public Boolean getCollection() {
-        return collection;
-    }
-
-    public void setCollection(Boolean collection) {
-        this.collection = collection;
+    public void setGroup(Integer group) {
+        this.group = group;
     }
 }

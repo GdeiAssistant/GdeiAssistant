@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Service.UserLogin;
 
+import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
@@ -285,6 +286,7 @@ public class UserLoginService {
                     user.setPassword(password);
                     user.setKeycode(keycode);
                     user.setNumber(number);
+                    user.setGroup(UserGroupEnum.STUDENT.getValue());
                     UserCertificate userCertificate = new UserCertificate();
                     userCertificate.setUser(user);
                     userCertificate.setTimestamp(timestamp);

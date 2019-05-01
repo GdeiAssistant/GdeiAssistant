@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class LoginTokenService {
@@ -130,7 +131,8 @@ public class LoginTokenService {
         LocalDateTime expireTime = createTime.plusDays(7);
         //生成AccessToken签名
         String token = JWT.create().withIssuer("gdeiassistant")
-                .withClaim("username", username).withClaim("unionid", unionid)
+                .withClaim("username", username).withClaim("unionid", unionid == null
+                        ? UUID.randomUUID().toString() : unionid)
                 .withClaim("createTime"
                         , createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .withClaim("expireTime", expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())

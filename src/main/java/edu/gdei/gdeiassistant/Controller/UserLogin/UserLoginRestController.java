@@ -56,9 +56,9 @@ public class UserLoginRestController {
     @RequestLogPersistence
     @ReplayAttacksProtection
     public DataJsonResult<UserLoginResult> UserLogin(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user
-            , @RequestParam(value = "unionid") String unionid
+            , @RequestParam(value = "unionid", required = false) String unionid
             , @RequestParam(value = "method", required = false, defaultValue = "0") LoginMethodEnum method
-            , @Validated RequestValidation requestValidation) throws Exception {
+            , RequestValidation requestValidation) throws Exception {
         UserCertificate userCertificate = null;
         switch (method) {
             case QUICK_LOGIN:
@@ -101,7 +101,6 @@ public class UserLoginRestController {
         userDataService.SyncUserData(userCertificate.getUser());
         //将用户信息数据写入Session
         request.getSession().setAttribute("username", userCertificate.getUser().getUsername());
-        request.getSession().setAttribute("password", userCertificate.getUser().getPassword());
         request.getSession().setAttribute("group", userCertificate.getUser().getGroup());
         //同步教务系统会话
         userLoginService.AsyncUpdateSession(request);

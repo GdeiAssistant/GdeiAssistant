@@ -20,6 +20,10 @@ public interface UserMapper {
     @ResultType(Integer.class)
     Integer selectDeletedUserCount(String username) throws Exception;
 
+    @Select("select count(id) from user_group")
+    @ResultType(Integer.class)
+    Integer selectUserGroupCount() throws Exception;
+
     @Select("select * from user where state!=-1 order by username limit #{start},#{size}")
     @ResultMap("User")
     List<User> selectUserList(@Param("start") int start, @Param("size") int size) throws Exception;

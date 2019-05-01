@@ -39,9 +39,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         //校验用户登录状态
         HttpSession httpSession = request.getSession();
         String username = (String) httpSession.getAttribute("username");
-        String password = (String) httpSession.getAttribute("password");
 
-        if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
+        if (!StringUtils.isBlank(username)) {
             return true;
         }
 

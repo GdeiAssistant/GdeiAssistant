@@ -67,6 +67,7 @@ public class YiBanUserAttachController {
         yiBanUserDataService.SyncYiBanUserData(resultUser.getUsername(), yiBanUserID);
         //将用户信息数据写入Session
         request.getSession().setAttribute("username", resultUser.getUsername());
+        request.getSession().setAttribute("password", resultUser.getPassword());
         request.getSession().setAttribute("group", resultUser.getGroup());
         //异步同步教务系统会话
         userLoginService.AsyncUpdateSession(request);

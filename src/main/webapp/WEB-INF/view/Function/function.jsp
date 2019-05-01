@@ -30,11 +30,11 @@
         <i style="background: url(/img/function/library.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>我的图书馆</p>
     </div>
-    <div id="card" style="display: none" onclick="window.location.href='/card'">
+    <div id="bill" style="display: none" onclick="window.location.href='/card'">
         <i style="background: url(/img/function/card.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>消费查询</p>
     </div>
-    <div id="cardinfo" style="display: none" onclick="window.location.href='/cardinfo'">
+    <div id="card" style="display: none" onclick="window.location.href='/cardinfo'">
         <i style="background: url(/img/function/cardInfo.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>我的饭卡</p>
     </div>

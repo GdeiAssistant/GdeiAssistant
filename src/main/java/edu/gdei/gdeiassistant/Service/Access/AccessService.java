@@ -5,13 +5,22 @@ import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Access.AccessMapper
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class AccessService {
 
     @Autowired
     private AccessMapper accessMapper;
 
-    public Access GetUserAccess(int id) throws Exception {
-        return accessMapper.selectAccess(id);
+    public Set<String> GetUserAccess(int id) throws Exception {
+        Set<String> set = new HashSet<>();
+        List<Access> accessList = accessMapper.selectAccess(id);
+        for (Access access : accessList) {
+            set.add(access.getName());
+        }
+        return set;
     }
 }

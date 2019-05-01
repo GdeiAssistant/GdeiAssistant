@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.15, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gdeiassistant_log
 -- ------------------------------------------------------
--- Server version	8.0.15
+-- Server version	8.0.16
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -19,7 +19,7 @@
 -- Current Database: `gdeiassistant_log`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_log` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_log` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `gdeiassistant_log`;
 
@@ -81,7 +81,7 @@ UNLOCK TABLES;
 -- Current Database: `gdeiassistant_data`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_data` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_data` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `gdeiassistant_data`;
 
@@ -236,7 +236,7 @@ UNLOCK TABLES;
 -- Current Database: `gdeiassistant`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `gdeiassistant`;
 
@@ -248,19 +248,13 @@ DROP TABLE IF EXISTS `access`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `access` (
-  `id` tinyint(2) NOT NULL COMMENT '用户组ID',
-  `grade` tinyint(1) NOT NULL COMMENT '是否拥有成绩查询功能的权限',
-  `schedule` tinyint(1) NOT NULL COMMENT '是否拥有课表查询功能的权限',
-  `cet` tinyint(1) NOT NULL COMMENT '是否拥有四六级成绩查询功能的权限',
-  `evaluate` tinyint(1) NOT NULL COMMENT '是否拥有一键评教功能的权限',
-  `card` tinyint(1) NOT NULL COMMENT '是否拥有校园卡信息查询功能的权限',
-  `bill` tinyint(1) NOT NULL COMMENT '是否拥有校园卡消费查询功能的权限',
-  `lost` tinyint(1) NOT NULL COMMENT '是否拥有校园卡挂失功能的权限',
-  `charge` tinyint(1) NOT NULL COMMENT '是否拥有校园卡充值功能的权限',
-  `collection` tinyint(1) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '权限表ID',
+  `user_group` tinyint(2) NOT NULL COMMENT '用户组ID',
+  `name` varchar(15) NOT NULL COMMENT '功能名称',
   PRIMARY KEY (`id`),
-  CONSTRAINT `androidAccessGroupId` FOREIGN KEY (`id`) REFERENCES `user_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `accessGroupId_idx` (`user_group`),
+  CONSTRAINT `accessGroupId` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -269,7 +263,7 @@ CREATE TABLE `access` (
 
 LOCK TABLES `access` WRITE;
 /*!40000 ALTER TABLE `access` DISABLE KEYS */;
-INSERT INTO `access` VALUES (0,1,1,1,1,1,1,1,1,1),(1,1,1,1,1,1,1,1,1,1),(2,1,1,0,1,1,1,1,0,1);
+INSERT INTO `access` VALUES (42,0,'grade'),(43,0,'schedule'),(44,0,'cet'),(45,0,'collection'),(46,0,'book'),(47,0,'card'),(48,0,'cardinfo'),(49,0,'evaluate'),(50,0,'spare'),(51,0,'kaoyan'),(52,0,'tice'),(53,0,'news'),(54,0,'data'),(55,0,'ershou'),(56,0,'lostandfound'),(57,0,'secret'),(58,0,'delivery'),(59,0,'calendar'),(60,0,'government'),(61,0,'volunteer'),(62,0,'wechat'),(63,0,'yiban'),(66,1,'grade'),(67,1,'schedule'),(68,1,'cet'),(69,1,'collection'),(70,1,'book'),(71,1,'card'),(72,1,'cardinfo'),(73,1,'evaluate'),(74,1,'spare'),(75,1,'kaoyan'),(76,1,'tice'),(77,1,'news'),(78,1,'data'),(79,1,'ershou'),(80,1,'lostandfound'),(81,1,'secret'),(82,1,'delivery'),(83,1,'calendar'),(84,1,'government'),(85,1,'volunteer'),(86,1,'wechat'),(87,1,'yiban'),(90,2,'grade'),(91,2,'schedule'),(93,2,'collection'),(94,2,'book'),(97,2,'evaluate'),(98,2,'spare'),(99,2,'kaoyan'),(100,2,'tice'),(101,2,'news'),(102,2,'data'),(103,2,'ershou'),(104,2,'lostandfound'),(105,2,'secret'),(106,2,'delivery'),(107,2,'calendar'),(108,2,'government'),(109,2,'volunteer'),(110,2,'wechat'),(111,2,'yiban'),(116,5,'cet'),(117,5,'collection'),(123,5,'kaoyan'),(125,5,'news'),(126,5,'data'),(127,5,'ershou'),(128,5,'lostandfound'),(129,5,'secret'),(130,5,'delivery'),(131,5,'calendar'),(132,5,'government'),(133,5,'volunteer'),(134,5,'wechat'),(135,5,'yiban');
 /*!40000 ALTER TABLE `access` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -879,4 +873,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-16  3:38:01
+-- Dump completed on 2019-05-01 15:21:11

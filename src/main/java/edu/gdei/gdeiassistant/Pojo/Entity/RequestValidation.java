@@ -1,11 +1,9 @@
 package edu.gdei.gdeiassistant.Pojo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Component
@@ -13,13 +11,10 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestValidation implements Serializable {
 
-    @NotBlank
     private String nonce;
 
-    @NotNull
     private Long timestamp;
 
-    @NotBlank
     private String signature;
 
     public String getNonce() {

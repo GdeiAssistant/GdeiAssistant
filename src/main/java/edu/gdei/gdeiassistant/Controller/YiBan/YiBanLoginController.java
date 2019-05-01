@@ -72,6 +72,7 @@ public class YiBanLoginController {
         userDataService.SyncUserData(user);
         //将用户信息数据写入Session
         request.getSession().setAttribute("username", user.getUsername());
+        request.getSession().setAttribute("password", user.getPassword());
         request.getSession().setAttribute("group", user.getGroup());
         userLoginService.AsyncUpdateSession(request);
         if (redirectInfo.needToRedirect()) {

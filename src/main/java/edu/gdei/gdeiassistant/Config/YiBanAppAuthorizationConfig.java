@@ -14,7 +14,8 @@ import java.util.Map;
 @Configuration
 @PropertySource({"classpath:/config/yiban/dating.properties", "classpath:/config/yiban/ershou.properties"
         , "classpath:/config/yiban/lostandfound.properties", "classpath:/config/yiban/news.properties"
-        , "classpath:/config/yiban/secret.properties", "classpath:/config/yiban/userlogin.properties"})
+        , "classpath:/config/yiban/secret.properties", "classpath:/config/yiban/userlogin.properties"
+        , "classpath:/config/yiban/delivery.properties"})
 public class YiBanAppAuthorizationConfig implements EnvironmentAware {
 
     @Autowired
@@ -62,6 +63,8 @@ public class YiBanAppAuthorizationConfig implements EnvironmentAware {
                 , environment.getProperty("yiban.dating.callbackURL")));
         map.put("news", new YiBanAuthorizeInfo(environment.getProperty("yiban.news.appId"), environment.getProperty("yiban.news.appSecret")
                 , environment.getProperty("yiban.news.callbackURL")));
+        map.put("delivery", new YiBanAuthorizeInfo(environment.getProperty("yiban.delivery.appId"), environment.getProperty("yiban.delivery.appSecret")
+                , environment.getProperty("yiban.delivery.callbackURL")));
         return map;
     }
 

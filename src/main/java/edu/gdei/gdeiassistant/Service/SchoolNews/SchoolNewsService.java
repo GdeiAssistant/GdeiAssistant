@@ -179,21 +179,21 @@ public class SchoolNewsService {
                                                 Elements sources = document1.getElementsByClass("detail_text").first()
                                                         .getElementsByAttributeValue("style", "padding-bottom:20px;").first().getElementsByAttribute("src");
                                                 for (Element element : hrefs) {
-                                                    if (element.attr("href").contains("/cms/")) {
-                                                        if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
-                                                            element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
-                                                        }
+                                                    if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
+                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
                                                     } else {
-                                                        element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
+                                                        if (element.attr("href").startsWith("resource")) {
+                                                            element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
+                                                        }
                                                     }
                                                 }
                                                 for (Element element : sources) {
-                                                    if (element.attr("src").contains("/cms/")) {
-                                                        if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
-                                                            element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
-                                                        }
+                                                    if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
+                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
                                                     } else {
-                                                        element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
+                                                        if (element.attr("src").startsWith("resource")) {
+                                                            element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
+                                                        }
                                                     }
                                                 }
                                                 //替换下载链接
@@ -209,21 +209,21 @@ public class SchoolNewsService {
                                                 Elements hrefs = document1.getElementsByClass("inside-content").first().getElementsByAttribute("href");
                                                 Elements sources = document1.getElementsByClass("inside-content").first().getElementsByAttribute("src");
                                                 for (Element element : hrefs) {
-                                                    if (element.attr("href").contains("/cms/")) {
-                                                        if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
-                                                            element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
-                                                        }
+                                                    if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
+                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
                                                     } else {
-                                                        element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
+                                                        if (element.attr("href").startsWith("resource")) {
+                                                            element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
+                                                        }
                                                     }
                                                 }
                                                 for (Element element : sources) {
-                                                    if (element.attr("src").contains("/cms/")) {
-                                                        if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
-                                                            element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
-                                                        }
+                                                    if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
+                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
                                                     } else {
-                                                        element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
+                                                        if (element.attr("src").startsWith("resource")) {
+                                                            element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
+                                                        }
                                                     }
                                                 }
                                                 //替换下载链接
@@ -252,7 +252,8 @@ public class SchoolNewsService {
                                             newInfo.setContent(content);
                                             //保存新闻信息
                                             newInfoList.add(newInfo);
-                                        } catch (Exception e) {
+                                        } catch (
+                                                Exception e) {
                                             e.printStackTrace();
                                         } finally {
                                             countDownLatch.countDown();
@@ -364,21 +365,21 @@ public class SchoolNewsService {
                                             Elements hrefs = page.getElementsByClass("text").first().getElementsByAttribute("href");
                                             Elements sources = page.getElementsByClass("text").first().getElementsByAttribute("src");
                                             for (Element element : hrefs) {
-                                                if (element.attr("href").contains("/cms/")) {
-                                                    if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
-                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
-                                                    }
+                                                if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
+                                                    element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
                                                 } else {
-                                                    element.attr("href", url.toString() + "/" + element.attr("href"));
+                                                    if (element.attr("href").startsWith("resource")) {
+                                                        element.attr("href", url.toString() + "/" + element.attr("href"));
+                                                    }
                                                 }
                                             }
                                             for (Element element : sources) {
-                                                if (element.attr("src").contains("/cms/")) {
-                                                    if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
-                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
-                                                    }
+                                                if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
+                                                    element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
                                                 } else {
-                                                    element.attr("src", url.toString() + "/" + element.attr("src"));
+                                                    if (element.attr("src").startsWith("resource")) {
+                                                        element.attr("src", url.toString() + "/" + element.attr("src"));
+                                                    }
                                                 }
                                             }
                                             //替换下载链接

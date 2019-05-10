@@ -115,16 +115,32 @@
   <img width="250" src="./github/screenshot_21.jpg">
 </p>
 
+## 授权范围
+
+本应用在中华人民共和国境内注册、发布和运营，目前仅面向广东第二师范学院在校师生开放注册使用。学生用户在毕业后，账号可以被升级为**毕业用户账号**，详情请查阅 [广东二师助手毕业用户账号处理方案说明](https://gdeiassistant.cn/policy/graduation)。
+
 ## 体验
+
+为便于非在校师生用户体验和测试应用，应用提供了体验用户账号。**体验用户账号**可以使用二手交易、失物招领、校园树洞等社交平台功能，而教务查询的功能将会返回固定的数据值，模拟网络爬虫获取数据的过程。
+
+对于生产环境，用户根据体验用户账号的用户名和密码，登录应用系统即可体验。
+
+对于开发环境，开发者将数据库gdeiassistant中的user表的user_group字段修改为user_group表中体验用户所对应的id主键参数值，即可将该行用户账号所属用户组修改为体验用户。
+
+目前提供的体验用户账号如下（用户名 - 密码）：
+
+- gdeiassistant - gdeiassistant
+
+## 网页版
 
 - [广东二师助手官网](https://gdeiassistant.cn)
 
 ## 客户端
 
-- [安卓客户端](https://github.com/SweetRadish/GdeiAssistant-Android)
-- [微信小程序](https://github.com/SweetRadish/GdeiAssistant-WechatApp)
-- [支付宝小程序](https://github.com/SweetRadish/GdeiAssistant-AlipayApp)
-- [通用Windows客户端](https://github.com/SweetRadish/GdeiAssistant-UWP)
+- [安卓客户端](https://github.com/PeachShrubFizz/GdeiAssistant-Android)
+- [微信小程序](https://github.com/PeachShrubFizz/GdeiAssistant-WechatApp)
+- [支付宝小程序](https://github.com/PeachShrubFizz/GdeiAssistant-AlipayApp)
+- [通用Windows客户端](https://github.com/PeachShrubFizz/GdeiAssistant-UWP)
 
 ## 公众号
 
@@ -171,7 +187,7 @@
 ### 克隆仓库
 
 ```bash
-$ git clone https://github.com/SweetRadish/GdeiAssistant.git
+$ git clone https://github.com/PeachShrubFizz/GdeiAssistant.git
 ```
 
 ### 导入数据库
@@ -208,15 +224,15 @@ Copyright (c) 2016 - 2019 GdeiAssistant
 
 ## 文档
 
-- 广东第二师范学院校园助手系统说明文档请参考 [Wiki](https://github.com/SweetRadish/GdeiAssistant/wiki)
+- 广东第二师范学院校园助手系统说明文档请参考 [Wiki](https://github.com/PeachShrubFizz/GdeiAssistant/wiki)
 
 ## 贡献
 
 - 若你喜欢本项目，欢迎Star本项目
 
-- 要贡献代码，欢迎Fork之后再提交[Pull Request](https://github.com/SweetRadish/GdeiAssistant-Android/pulls)
+- 要贡献代码，欢迎Fork之后再提交[Pull Request](https://github.com/PeachShrubFizz/GdeiAssistant-Android/pulls)
 
-- 如果你有好的意见或建议，欢迎给我们提交[Issue](https://github.com/SweetRadish/GdeiAssistant-Android/issues)
+- 如果你有好的意见或建议，欢迎给我们提交[Issue](https://github.com/PeachShrubFizz/GdeiAssistant-Android/issues)
 
 ## 联系
 

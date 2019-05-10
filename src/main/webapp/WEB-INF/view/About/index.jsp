@@ -102,7 +102,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/SweetRadish/GdeiAssistant-WebApp">程序源代码</a>
+                    <a class="nav-link" href="https://github.com/PeachShrubFizz/GdeiAssistant-WebApp">程序源代码</a>
                 </li>
             </ul>
         </div>

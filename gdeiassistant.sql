@@ -254,7 +254,7 @@ CREATE TABLE `access` (
   PRIMARY KEY (`id`),
   KEY `accessUserGroup_idx` (`user_group`),
   CONSTRAINT `accessUserGroup` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -263,7 +263,7 @@ CREATE TABLE `access` (
 
 LOCK TABLES `access` WRITE;
 /*!40000 ALTER TABLE `access` DISABLE KEYS */;
-INSERT INTO `access` VALUES (28,1,'grade'),(29,1,'schedule'),(30,1,'cet'),(31,1,'collection'),(32,1,'book'),(33,1,'bill'),(34,1,'card'),(35,1,'evaluate'),(36,1,'spare'),(37,1,'kaoyan'),(38,1,'tice'),(39,1,'news'),(40,1,'data'),(41,1,'ershou'),(42,1,'lostandfound'),(43,1,'secret'),(44,1,'delivery'),(45,1,'calendar'),(46,1,'government'),(47,1,'volunteer'),(48,1,'wechat'),(49,1,'yiban'),(52,2,'grade'),(53,2,'schedule'),(54,2,'cet'),(55,2,'collection'),(56,2,'book'),(57,2,'bill'),(58,2,'card'),(59,2,'evaluate'),(60,2,'spare'),(61,2,'kaoyan'),(62,2,'tice'),(63,2,'news'),(64,2,'data'),(65,2,'ershou'),(66,2,'lostandfound'),(67,2,'secret'),(68,2,'delivery'),(69,2,'calendar'),(70,2,'government'),(71,2,'volunteer'),(72,2,'wechat'),(73,2,'yiban'),(76,3,'grade'),(77,3,'schedule'),(79,3,'collection'),(80,3,'book'),(83,3,'evaluate'),(84,3,'spare'),(85,3,'kaoyan'),(86,3,'tice'),(87,3,'news'),(88,3,'data'),(89,3,'ershou'),(90,3,'lostandfound'),(91,3,'secret'),(92,3,'delivery'),(93,3,'calendar'),(94,3,'government'),(95,3,'volunteer'),(96,3,'wechat'),(97,3,'yiban'),(102,6,'cet'),(103,6,'collection'),(109,6,'kaoyan'),(111,6,'news'),(112,6,'data'),(113,6,'ershou'),(114,6,'lostandfound'),(115,6,'secret'),(116,6,'delivery'),(117,6,'calendar'),(118,6,'government'),(119,6,'volunteer'),(120,6,'wechat'),(121,6,'yiban'),(124,1,'lost'),(125,2,'lost'),(126,1,'charge'),(127,2,'charge');
+INSERT INTO `access` VALUES (28,1,'grade'),(29,1,'schedule'),(30,1,'cet'),(31,1,'collection'),(32,1,'book'),(33,1,'bill'),(34,1,'card'),(35,1,'evaluate'),(36,1,'spare'),(37,1,'kaoyan'),(38,1,'tice'),(39,1,'news'),(40,1,'data'),(41,1,'ershou'),(42,1,'lostandfound'),(43,1,'secret'),(44,1,'delivery'),(45,1,'calendar'),(46,1,'government'),(47,1,'volunteer'),(48,1,'wechat'),(49,1,'yiban'),(52,2,'grade'),(53,2,'schedule'),(54,2,'cet'),(55,2,'collection'),(56,2,'book'),(57,2,'bill'),(58,2,'card'),(59,2,'evaluate'),(60,2,'spare'),(61,2,'kaoyan'),(62,2,'tice'),(63,2,'news'),(64,2,'data'),(65,2,'ershou'),(66,2,'lostandfound'),(67,2,'secret'),(68,2,'delivery'),(69,2,'calendar'),(70,2,'government'),(71,2,'volunteer'),(72,2,'wechat'),(73,2,'yiban'),(76,3,'grade'),(77,3,'schedule'),(79,3,'collection'),(80,3,'book'),(83,3,'evaluate'),(84,3,'spare'),(85,3,'kaoyan'),(86,3,'tice'),(87,3,'news'),(88,3,'data'),(89,3,'ershou'),(90,3,'lostandfound'),(91,3,'secret'),(92,3,'delivery'),(93,3,'calendar'),(94,3,'government'),(95,3,'volunteer'),(96,3,'wechat'),(97,3,'yiban'),(102,6,'cet'),(103,6,'collection'),(109,6,'kaoyan'),(111,6,'news'),(112,6,'data'),(113,6,'ershou'),(114,6,'lostandfound'),(115,6,'secret'),(116,6,'delivery'),(117,6,'calendar'),(118,6,'government'),(119,6,'volunteer'),(120,6,'wechat'),(121,6,'yiban'),(124,1,'lost'),(125,2,'lost'),(126,1,'charge'),(127,2,'charge'),(128,7,'grade'),(129,7,'schedule'),(130,7,'cet'),(131,7,'collection'),(132,7,'book'),(133,7,'bill'),(134,7,'card'),(135,7,'evaluate'),(136,7,'spare'),(137,7,'kaoyan'),(138,7,'tice'),(139,7,'news'),(140,7,'data'),(141,7,'ershou'),(142,7,'lostandfound'),(143,7,'secret'),(144,7,'delivery'),(145,7,'calendar'),(146,7,'government'),(147,7,'volunteer'),(148,7,'wechat'),(149,7,'yiban');
 /*!40000 ALTER TABLE `access` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -873,4 +873,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-13  2:19:43
+-- Dump completed on 2019-05-13  2:32:26

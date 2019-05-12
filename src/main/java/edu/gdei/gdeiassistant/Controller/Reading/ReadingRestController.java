@@ -39,7 +39,7 @@ public class ReadingRestController {
      * @return
      */
     @RequestMapping(value = "/api/reading", method = RequestMethod.POST)
-    @UserGroupAccess(group = 0)
+    @UserGroupAccess(group = 1)
     public JsonResult SaveReadingInfo(HttpServletRequest request, @Validated Reading reading) {
         readingService.SaveReadingInfo(reading);
         return new JsonResult(true);

@@ -36,7 +36,7 @@ CREATE TABLE `charge_log` (
   `amount` int(11) NOT NULL COMMENT '充值金额',
   `time` datetime NOT NULL COMMENT '充值时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +98,7 @@ CREATE TABLE `announcement` (
   `content` varchar(250) NOT NULL COMMENT '通知公告内容',
   `publish_time` datetime NOT NULL COMMENT '通知公告发布时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -213,7 +213,7 @@ DROP TABLE IF EXISTS `yellow_page_type`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `yellow_page_type` (
   `type_code` int(11) NOT NULL AUTO_INCREMENT,
-  `type_name` varchar(15) COLLATE utf8mb4_bin NOT NULL,
+  `type_name` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (`type_code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -252,9 +252,9 @@ CREATE TABLE `access` (
   `user_group` tinyint(2) NOT NULL COMMENT '用户组ID',
   `name` varchar(15) NOT NULL COMMENT '功能名称',
   PRIMARY KEY (`id`),
-  KEY `accessGroupId_idx` (`user_group`),
-  CONSTRAINT `accessGroupId` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `accessUserGroup_idx` (`user_group`),
+  CONSTRAINT `accessUserGroup` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -263,7 +263,7 @@ CREATE TABLE `access` (
 
 LOCK TABLES `access` WRITE;
 /*!40000 ALTER TABLE `access` DISABLE KEYS */;
-INSERT INTO `access` VALUES (42,0,'grade'),(43,0,'schedule'),(44,0,'cet'),(45,0,'collection'),(46,0,'book'),(47,0,'bill'),(48,0,'card'),(49,0,'evaluate'),(50,0,'spare'),(51,0,'kaoyan'),(52,0,'tice'),(53,0,'news'),(54,0,'data'),(55,0,'ershou'),(56,0,'lostandfound'),(57,0,'secret'),(58,0,'delivery'),(59,0,'calendar'),(60,0,'government'),(61,0,'volunteer'),(62,0,'wechat'),(63,0,'yiban'),(66,1,'grade'),(67,1,'schedule'),(68,1,'cet'),(69,1,'collection'),(70,1,'book'),(71,1,'bill'),(72,1,'card'),(73,1,'evaluate'),(74,1,'spare'),(75,1,'kaoyan'),(76,1,'tice'),(77,1,'news'),(78,1,'data'),(79,1,'ershou'),(80,1,'lostandfound'),(81,1,'secret'),(82,1,'delivery'),(83,1,'calendar'),(84,1,'government'),(85,1,'volunteer'),(86,1,'wechat'),(87,1,'yiban'),(90,2,'grade'),(91,2,'schedule'),(93,2,'collection'),(94,2,'book'),(97,2,'evaluate'),(98,2,'spare'),(99,2,'kaoyan'),(100,2,'tice'),(101,2,'news'),(102,2,'data'),(103,2,'ershou'),(104,2,'lostandfound'),(105,2,'secret'),(106,2,'delivery'),(107,2,'calendar'),(108,2,'government'),(109,2,'volunteer'),(110,2,'wechat'),(111,2,'yiban'),(116,5,'cet'),(117,5,'collection'),(123,5,'kaoyan'),(125,5,'news'),(126,5,'data'),(127,5,'ershou'),(128,5,'lostandfound'),(129,5,'secret'),(130,5,'delivery'),(131,5,'calendar'),(132,5,'government'),(133,5,'volunteer'),(134,5,'wechat'),(135,5,'yiban'),(138,0,'lost'),(139,1,'lost'),(140,0,'charge'),(141,1,'charge');
+INSERT INTO `access` VALUES (28,1,'grade'),(29,1,'schedule'),(30,1,'cet'),(31,1,'collection'),(32,1,'book'),(33,1,'bill'),(34,1,'card'),(35,1,'evaluate'),(36,1,'spare'),(37,1,'kaoyan'),(38,1,'tice'),(39,1,'news'),(40,1,'data'),(41,1,'ershou'),(42,1,'lostandfound'),(43,1,'secret'),(44,1,'delivery'),(45,1,'calendar'),(46,1,'government'),(47,1,'volunteer'),(48,1,'wechat'),(49,1,'yiban'),(52,2,'grade'),(53,2,'schedule'),(54,2,'cet'),(55,2,'collection'),(56,2,'book'),(57,2,'bill'),(58,2,'card'),(59,2,'evaluate'),(60,2,'spare'),(61,2,'kaoyan'),(62,2,'tice'),(63,2,'news'),(64,2,'data'),(65,2,'ershou'),(66,2,'lostandfound'),(67,2,'secret'),(68,2,'delivery'),(69,2,'calendar'),(70,2,'government'),(71,2,'volunteer'),(72,2,'wechat'),(73,2,'yiban'),(76,3,'grade'),(77,3,'schedule'),(79,3,'collection'),(80,3,'book'),(83,3,'evaluate'),(84,3,'spare'),(85,3,'kaoyan'),(86,3,'tice'),(87,3,'news'),(88,3,'data'),(89,3,'ershou'),(90,3,'lostandfound'),(91,3,'secret'),(92,3,'delivery'),(93,3,'calendar'),(94,3,'government'),(95,3,'volunteer'),(96,3,'wechat'),(97,3,'yiban'),(102,6,'cet'),(103,6,'collection'),(109,6,'kaoyan'),(111,6,'news'),(112,6,'data'),(113,6,'ershou'),(114,6,'lostandfound'),(115,6,'secret'),(116,6,'delivery'),(117,6,'calendar'),(118,6,'government'),(119,6,'volunteer'),(120,6,'wechat'),(121,6,'yiban'),(124,1,'lost'),(125,2,'lost'),(126,1,'charge'),(127,2,'charge');
 /*!40000 ALTER TABLE `access` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -285,8 +285,8 @@ CREATE TABLE `authentication` (
   `gmt_modified` datetime DEFAULT NULL COMMENT '记录更新时间',
   `method` tinyint(1) DEFAULT NULL COMMENT '实名认证方法',
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '记录标记删除状态',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,7 +366,7 @@ CREATE TABLE `dating_pick` (
   PRIMARY KEY (`pick_id`) USING BTREE,
   KEY `datingPickUsername` (`username`),
   CONSTRAINT `datingPickUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -421,18 +421,18 @@ DROP TABLE IF EXISTS `delivery_order`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `delivery_order` (
   `order_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '订单主键ID',
-  `username` varchar(24) COLLATE utf8mb4_bin NOT NULL COMMENT '下单者用户名',
+  `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '下单者用户名',
   `order_time` datetime NOT NULL COMMENT '下单时间',
-  `name` varchar(10) COLLATE utf8mb4_bin NOT NULL COMMENT '姓名',
-  `number` varchar(11) COLLATE utf8mb4_bin NOT NULL COMMENT '学号',
-  `phone` varchar(11) COLLATE utf8mb4_bin NOT NULL COMMENT '手机号码',
+  `name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '姓名',
+  `number` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '学号',
+  `phone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '手机号码',
   `price` float NOT NULL COMMENT '报酬',
-  `company` varchar(10) COLLATE utf8mb4_bin NOT NULL COMMENT '快递公司',
-  `address` varchar(50) COLLATE utf8mb4_bin NOT NULL COMMENT '地址',
+  `company` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '快递公司',
+  `address` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '地址',
   `state` tinyint(1) NOT NULL COMMENT '订单状态',
-  `remarks` varchar(100) COLLATE utf8mb4_bin NOT NULL COMMENT '备注',
+  `remarks` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '备注',
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -458,7 +458,6 @@ CREATE TABLE `delivery_trade` (
   `username` varchar(24) NOT NULL COMMENT '接单者用户名',
   `state` tinyint(1) NOT NULL COMMENT '状态',
   PRIMARY KEY (`trade_id`),
-  UNIQUE KEY `order_id_UNIQUE` (`order_id`),
   KEY `deliveryOrderId_idx` (`order_id`),
   CONSTRAINT `deliveryOrderId` FOREIGN KEY (`order_id`) REFERENCES `delivery_order` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -495,7 +494,7 @@ CREATE TABLE `ershou` (
   PRIMARY KEY (`id`),
   KEY `ershouUsername` (`username`),
   CONSTRAINT `ershouUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -602,7 +601,7 @@ CREATE TABLE `lostandfound` (
   PRIMARY KEY (`id`),
   KEY `lostandfoundUsername` (`username`),
   CONSTRAINT `lostandfoundUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -630,9 +629,9 @@ CREATE TABLE `privacy` (
   `is_faculty_open` tinyint(1) NOT NULL COMMENT '公开院系',
   `is_major_open` tinyint(1) NOT NULL COMMENT '公开专业',
   `is_cache_allow` tinyint(1) NOT NULL COMMENT '使用教务缓存',
-  PRIMARY KEY (`username`),
+  PRIMARY KEY (`username`) USING BTREE,
   CONSTRAINT `privacyUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -715,13 +714,13 @@ DROP TABLE IF EXISTS `secret_content`;
 CREATE TABLE `secret_content` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '校园树洞信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `content` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '校园树洞信息内容',
+  `content` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '校园树洞信息内容',
   `theme` tinyint(1) NOT NULL COMMENT '校园树洞信息主题',
-  `type` tinyint(1) NOT NULL COMMENT '校园树洞信息类型',
+  `type` tinyint(1) NOT NULL COMMENT '校园树洞信息类型，0为文字树洞信息，1为语音树洞信息',
   PRIMARY KEY (`id`),
   KEY `secretContentUsername` (`username`),
   CONSTRAINT `secretContentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=218 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -770,10 +769,10 @@ CREATE TABLE `user` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `password` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '密码',
   `state` tinyint(1) NOT NULL COMMENT '账户状态',
-  `user_group` tinyint(2) DEFAULT NULL COMMENT '账户所属的用户组',
+  `user_group` tinyint(2) NOT NULL COMMENT '账户所属的用户组',
   PRIMARY KEY (`username`),
-  KEY `userGroupId_idx` (`user_group`),
-  CONSTRAINT `userGroupId` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`)
+  KEY `userUserGroup_idx` (`user_group`),
+  CONSTRAINT `userUserGroup` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -783,6 +782,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('NGpLxbsDgxX5JzDkyTT9qw==','NGpLxbsDgxX5JzDkyTT9qw==',1,7);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -794,10 +794,10 @@ DROP TABLE IF EXISTS `user_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `user_group` (
-  `id` tinyint(2) NOT NULL COMMENT '用户组ID',
+  `id` tinyint(2) NOT NULL AUTO_INCREMENT COMMENT '用户组ID',
   `description` varchar(10) NOT NULL COMMENT '用户组描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -806,7 +806,7 @@ CREATE TABLE `user_group` (
 
 LOCK TABLES `user_group` WRITE;
 /*!40000 ALTER TABLE `user_group` DISABLE KEYS */;
-INSERT INTO `user_group` VALUES (0,'管理员'),(1,'学生用户'),(2,'测试用户'),(3,'教师用户'),(4,'客服人员'),(5,'毕业账号');
+INSERT INTO `user_group` VALUES (1,'管理员'),(2,'学生用户'),(3,'测试用户'),(4,'教师用户'),(5,'客服人员'),(6,'毕业学生'),(7,'体验用户');
 /*!40000 ALTER TABLE `user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -873,4 +873,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-01 21:50:58
+-- Dump completed on 2019-05-13  2:19:43

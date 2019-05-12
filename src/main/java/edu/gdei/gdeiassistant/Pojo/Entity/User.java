@@ -36,7 +36,7 @@ public class User implements Serializable {
 
     /**
      * 账号状态
-     * 0为正常，-1为用户自主注销
+     * 1为正常，2为用户自主注销
      */
     private Integer state;
 

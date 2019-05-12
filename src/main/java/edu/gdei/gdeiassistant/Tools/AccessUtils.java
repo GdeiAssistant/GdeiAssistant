@@ -37,7 +37,7 @@ public class AccessUtils {
     public static List<Set<String>> LoadAccessInfo() throws Exception {
         List<Set<String>> info = new ArrayList<>();
         int count = userMapper.selectUserGroupCount();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i <= count; i++) {
             info.add(new HashSet<>());
         }
         //获取权限信息列表

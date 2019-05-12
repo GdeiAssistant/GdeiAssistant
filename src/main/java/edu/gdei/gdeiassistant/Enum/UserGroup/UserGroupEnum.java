@@ -2,7 +2,7 @@ package edu.gdei.gdeiassistant.Enum.UserGroup;
 
 public enum UserGroupEnum {
 
-    ADMIN(0), STUDENT(1), TEST(2), TEACHER(3), SERVICE(4), GRADUATED(5);
+    ADMIN(1), STUDENT(2), TEST(3), TEACHER(4), SERVICE(5), GRADUATED(6), TRIAL(7);
 
     private Integer value;
 

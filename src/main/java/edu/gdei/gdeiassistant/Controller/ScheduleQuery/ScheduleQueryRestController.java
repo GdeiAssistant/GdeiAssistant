@@ -3,6 +3,7 @@ package edu.gdei.gdeiassistant.Controller.ScheduleQuery;
 import edu.gdei.gdeiassistant.Annotation.QueryLogPersistence;
 import edu.gdei.gdeiassistant.Annotation.RestAuthentication;
 import edu.gdei.gdeiassistant.Annotation.RestQueryLogPersistence;
+import edu.gdei.gdeiassistant.Annotation.TrialData;
 import edu.gdei.gdeiassistant.Enum.Method.QueryMethodEnum;
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
@@ -81,6 +82,7 @@ public class ScheduleQueryRestController {
      */
     @RequestMapping(value = "/api/schedulequery", method = RequestMethod.POST)
     @QueryLogPersistence
+    @TrialData(value = "schedule")
     public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
             , Integer week, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -122,6 +124,7 @@ public class ScheduleQueryRestController {
     @RequestMapping(value = "/rest/schedulequery", method = RequestMethod.POST)
     @RestAuthentication
     @RestQueryLogPersistence
+    @TrialData(value = "schedule")
     public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
             , @RequestParam("token") String token, Integer week
             , @RequestParam(name = "method", required = false

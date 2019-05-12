@@ -26,7 +26,7 @@ public class AnnouncementController {
     }
 
     @RequestMapping(value = "/api/announcement", method = RequestMethod.POST)
-    @UserGroupAccess(group = 0)
+    @UserGroupAccess(group = 1)
     public JsonResult SaveAnnouncement(HttpServletRequest request, @Validated Announcement announcement) {
         announcementService.SaveAnnouncement(announcement);
         return new JsonResult(true);

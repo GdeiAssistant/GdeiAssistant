@@ -24,25 +24,25 @@ public interface UserMapper {
     @ResultType(Integer.class)
     Integer selectUserGroupCount() throws Exception;
 
-    @Select("select * from user where state!=-1 order by username limit #{start},#{size}")
+    @Select("select * from user where state!=2 order by username limit #{start},#{size}")
     @ResultMap("User")
     List<User> selectUserList(@Param("start") int start, @Param("size") int size) throws Exception;
 
-    @Select("select * from user where state!=-1")
+    @Select("select * from user where state!=2")
     @ResultMap("User")
     List<User> selectAllUser() throws Exception;
 
-    @Select("select count(username) from user where state!=-1;")
+    @Select("select count(username) from user where state!=2;")
     @ResultType(Integer.class)
     Integer selectUserCount() throws Exception;
 
-    @Insert("insert into user (username,password,state,user_group) values (#{username},#{password},0,1)")
+    @Insert("insert into user (username,password,state,user_group) values (#{username},#{password},1,1)")
     void insertUser(User user) throws Exception;
 
-    @Update("update user set password=#{password},state=0 where username=#{username}")
+    @Update("update user set password=#{password},state=1 where username=#{username}")
     void updateUser(User user) throws Exception;
 
-    @Update("update user set username=#{resetname},password=null,keycode=null,number=null,state=-1 where username=#{username}")
+    @Update("update user set username=#{resetname},password=null,keycode=null,number=null,state=2 where username=#{username}")
     void closeUser(@Param("resetname") String resetname, @Param("username") String username) throws Exception;
 
     @Update("update user set user_group=#{group} where username=#{username}")

@@ -105,7 +105,7 @@ public class UserLoginService {
         if (quickLogin) {
             try {
                 User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(user.getUsername()));
-                if (queryUser != null && !queryUser.getState().equals(-1)) {
+                if (queryUser != null && !queryUser.getState().equals(2)) {
                     //将数据库查询的用户数据与用户提交的用户信息进行对比
                     User decryptUser = queryUser.decryptUser();
                     if (StringUtils.isNotBlank(user.getPassword())) {

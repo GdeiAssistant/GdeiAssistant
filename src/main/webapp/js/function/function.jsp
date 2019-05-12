@@ -22,7 +22,7 @@
 
         <c:set var="Access" scope="page" value="${access:loadAccessInfo()}" />
 
-        <c:forEach begin="0" end="${Access.size()-1}" step="1" varStatus="state">
+        <c:forEach begin="0" end="${Access.size()}" step="1" varStatus="state">
 
         access[${state.index}] = new Set();
 

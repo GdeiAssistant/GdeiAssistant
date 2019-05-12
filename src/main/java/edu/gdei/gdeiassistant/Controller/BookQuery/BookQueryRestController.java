@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.BookQuery;
 
+import edu.gdei.gdeiassistant.Annotation.TrialData;
 import edu.gdei.gdeiassistant.Pojo.Entity.Book;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
@@ -30,6 +31,7 @@ public class BookQueryRestController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/bookquery", method = RequestMethod.POST)
+    @TrialData(value = "book")
     public DataJsonResult<List<Book>> BookQuery(HttpServletRequest request
             , @RequestParam(value = "password") String password) throws Exception {
         String number = bookQueryService.UpdateSessionAndGetUserNumber(request.getSession().getId()

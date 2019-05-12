@@ -3,6 +3,7 @@ package edu.gdei.gdeiassistant.Controller.CardQuery;
 import edu.gdei.gdeiassistant.Annotation.QueryLogPersistence;
 import edu.gdei.gdeiassistant.Annotation.RestAuthentication;
 import edu.gdei.gdeiassistant.Annotation.RestQueryLogPersistence;
+import edu.gdei.gdeiassistant.Annotation.TrialData;
 import edu.gdei.gdeiassistant.Pojo.CardQuery.CardQuery;
 import edu.gdei.gdeiassistant.Pojo.CardQuery.CardQueryResult;
 import edu.gdei.gdeiassistant.Pojo.Entity.CardInfo;
@@ -38,6 +39,7 @@ public class CardRestController {
     @RequestMapping(value = "/rest/cardquery", method = RequestMethod.POST)
     @RestAuthentication
     @RestQueryLogPersistence
+    @TrialData(value = "card")
     public DataJsonResult<CardQueryResult> CardQuery(HttpServletRequest request
             , @RequestParam("token") String token, @Validated CardQuery cardQuery) throws Exception {
         User user = (User) request.getAttribute("user");
@@ -56,6 +58,7 @@ public class CardRestController {
      */
     @RequestMapping(value = "/api/cardquery", method = RequestMethod.POST)
     @QueryLogPersistence
+    @TrialData(value = "card")
     public DataJsonResult<CardQueryResult> CardQuery(HttpServletRequest request, @Validated CardQuery cardQuery) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) request.getSession().getAttribute("password");
@@ -74,6 +77,7 @@ public class CardRestController {
      */
     @RequestMapping(value = "/rest/cardlost", method = RequestMethod.POST)
     @RestAuthentication
+    @TrialData(value = "cardlost")
     public JsonResult CardLost(HttpServletRequest request, @RequestParam("token") String token
             , @Validated @NotBlank @Pattern(regexp = "^[0-9]*$") @RequestParam("cardPassword") String cardPassword) throws Exception {
         User user = (User) request.getAttribute("user");
@@ -90,6 +94,7 @@ public class CardRestController {
      */
     @RequestMapping(value = "/api/cardinfoquery", method = RequestMethod.POST)
     @QueryLogPersistence
+    @TrialData(value = "cardinfo")
     public DataJsonResult<CardInfo> CardInfoQuery(HttpServletRequest request) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) request.getSession().getAttribute("password");
@@ -106,6 +111,7 @@ public class CardRestController {
      */
     @RequestMapping(value = "/rest/cardinfo", method = RequestMethod.POST)
     @RestAuthentication
+    @TrialData(value = "cardinfo")
     public DataJsonResult<CardInfo> CardInfoQuery(HttpServletRequest request, @RequestParam("token") String token) throws Exception {
         User user = (User) request.getAttribute("user");
         CardInfo cardInfo = cardQueryService.CardInfoQuery(request.getSession().getId(), user.getUsername(), user.getPassword());
@@ -120,6 +126,7 @@ public class CardRestController {
      * @return
      */
     @RequestMapping(value = "/api/cardlost", method = RequestMethod.POST)
+    @TrialData(value = "cardlost")
     public JsonResult CardLost(HttpServletRequest request, @Validated @NotBlank @Pattern(regexp = "^[0-9]*$") String cardPassword) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) request.getSession().getAttribute("password");

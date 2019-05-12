@@ -3,6 +3,7 @@ package edu.gdei.gdeiassistant.Controller.GradeQuery;
 import edu.gdei.gdeiassistant.Annotation.QueryLogPersistence;
 import edu.gdei.gdeiassistant.Annotation.RestAuthentication;
 import edu.gdei.gdeiassistant.Annotation.RestQueryLogPersistence;
+import edu.gdei.gdeiassistant.Annotation.TrialData;
 import edu.gdei.gdeiassistant.Enum.Method.QueryMethodEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
@@ -50,6 +51,7 @@ public class GradeQueryRestController {
      */
     @RequestMapping(value = "/api/gradequery", method = RequestMethod.POST)
     @QueryLogPersistence
+    @TrialData(value = "grade")
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
             , Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -75,6 +77,7 @@ public class GradeQueryRestController {
     @RequestMapping(value = "/rest/gradequery", method = RequestMethod.POST)
     @RestQueryLogPersistence
     @RestAuthentication
+    @TrialData("grade")
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
             , @RequestParam("token") String token, Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {

@@ -12,7 +12,6 @@ src/test/
 build/
 gradle/
 lib/
-classes/
 gdeiassistant-webapp.iml
 local.properties
 src/main/resources/rebel.xml

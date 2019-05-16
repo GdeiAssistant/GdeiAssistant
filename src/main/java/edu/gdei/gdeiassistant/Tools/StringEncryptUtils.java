@@ -26,7 +26,13 @@ public class StringEncryptUtils {
      * @throws WsgException
      */
     public static String encryptString(String data) throws WsgException {
-        return new EncryptWithCfg(stringEncryptConfig.getConfigLocation()).encryptString(stringEncryptConfig.getAppkey(), data);
+        if (SpringProfileUtils.CheckDevelopmentEnvironment()) {
+            //开发环境下不使用加密
+            return data;
+        }
+        //生产环境下使用阿里聚安全加密
+        return new EncryptWithCfg(stringEncryptConfig.getConfigLocation())
+                .encryptString(stringEncryptConfig.getAppkey(), data);
     }
 
     /**
@@ -37,7 +43,13 @@ public class StringEncryptUtils {
      * @throws WsgException
      */
     public static String decryptString(String data) throws WsgException {
-        return new EncryptWithCfg(stringEncryptConfig.getConfigLocation()).decryptString(stringEncryptConfig.getAppkey(), data);
+        if (SpringProfileUtils.CheckDevelopmentEnvironment()) {
+            //开发环境下不使用加密
+            return data;
+        }
+        //生产环境下使用阿里聚安全加密
+        return new EncryptWithCfg(stringEncryptConfig.getConfigLocation())
+                .decryptString(stringEncryptConfig.getAppkey(), data);
     }
 
     /**

@@ -33,7 +33,7 @@ public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
         xssFilter.addMappingForUrlPatterns(null, true, "/*");
 
         //配置默认Profile环境变量
-        servletContext.setInitParameter("spring.profiles.default", "production");
+        servletContext.setInitParameter("spring.profiles.default", "development");
 
         //设置超时时间为2小时
         servletContext.addListener(new HttpSessionListener() {

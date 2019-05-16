@@ -196,6 +196,91 @@ $ git clone https://github.com/PeachShrubFizz/GdeiAssistant.git
 $ mysql -u用户名 -p密码 < gdeiassistant.sql
 ```
 
+### 设置环境
+
+#### Spring Profile机制
+
+应用使用了Spring提供的Profile机制，分为开发环境和生产环境，分别使用development和production作为标记。
+
+在开发环境下，**防重放攻击校验保护**和**阿里聚安全加密**将被禁用，并使用测试环境的配置文件连接数据源。而在生产环境下，所有安全组件将被启用，并使用生产环境的配置文件连接数据源。
+
+若在系统中，开发者没有指定使用何种环境，则默认情况下使用开发环境的配置：
+
+```java
+package edu.gdei.gdeiassistant.Config;
+
+import ...
+
+public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
+    
+    @Override
+    public void onStartup(ServletContext servletContext) {
+        ...
+        //配置默认Profile环境变量
+        servletContext.setInitParameter("spring.profiles.default", "development");
+        ...
+    }
+}
+```
+
+#### 多环境配置
+
+开发者可以通过多种方式指定当前系统启用何种Profile环境：
+
+- 作为DispatcherServlet的初始化参数
+
+```java
+package edu.gdei.gdeiassistant.Config;
+
+import ...
+
+public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
+    
+    @Override
+    public void onStartup(ServletContext servletContext) {
+        ...
+        ServletRegistration.Dynamic dispatcherServlet = servletContext.addServlet("DispatcherServlet", dispatcher);
+        //激活生产环境
+        dispatcherServlet.setInitParameter("spring.profiles.active","production");
+        ...
+    }
+}
+```
+
+- 作为web应用的上下文参数
+
+```java
+package edu.gdei.gdeiassistant.Config;
+
+import ...
+
+public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
+    
+    @Override
+    public void onStartup(ServletContext servletContext) {
+        ...
+        servletContext.setInitParameter("spring.profiles.active","production");
+        ...
+    }
+}
+```
+
+- 设置环境变量
+
+```java
+System.setProperty("spring.profiles.active" , "production");
+```
+
+- 设置VM参数
+
+```bash
+-Dspring.profiles.active=production
+```
+
+- 在集成测试类上，使用@ActiveProfiles注解配置
+
+**一般情况下，开发者选择其中一种方式进行配置即可使Profile环境生效。若重复选择多种方式进行配置，可能会由于优先级导致产生预料之外的结果，具体请自行查阅相关文档。**
+
 ### 配置文件
 
 项目中使用了大量的第三方数据接口（如极速数据、百度云、阿里云等），这些数据接口一般都要求调用者提供对应的接口身份凭证（AppID/AppSecret/AppKey等）。在项目中，接口身份凭证或其他重要的配置参数都保存在resources/config目录下对应的*.properties文件中。为保证项目在生产环境的安全性，本项目已对部分关键的配置文件参数进行脱敏处理，这意味你需要自行前往对应的数据接口网站，申请或购买接口使用权限并获得接口身份凭证，并将配置参数填充到对应的配置文件中。若你不填写，则可能导致项目部分模块或整体不可用。
@@ -213,6 +298,21 @@ $ mysql -u用户名 -p密码 < gdeiassistant.sql
 5. **对象存储**：OSS对象存储是阿里云平台提供的海量、安全、低成本、高可靠的云存储服务。oss目录保存了服务端访问OSS服务和生成移动端临时令牌的配置参数。all_policy.txt、bucket_read_policy.txt和bucket_read_write_policy.txt是类JSON结构的RAM权限策略控制配置文件，分别表示允许所有动作、只读和读写。开发者可以使用阿里云平台提供的 [RAM Policy Editor](http://gosspublic.alicdn.com/ram-policy-editor/index.html) 生成授权策略。oss.properties保存的是服务端直接访问OSS服务的AccessKey和SecretKey身份凭证等信息，token.properties保存的是生成移动端临时令牌的RAM角色身份凭证、令牌过期时间和RAM权限策略控制配置文件路径等信息。
 
 6. **防重放攻击**：项目对重要的接口采取了防重放攻击保护，用户请求时，系统将会与随机值、时间戳和令牌值进行字符串拼接或直接与签名或缓存作校验，validate目录下的token.properties保存了令牌值，该值应该与移动端发起网络请求时提交的令牌值相同，才可以校验成功。
+
+7. **IP归属地**：IP归属地查询功能使用了极速数据平台的IP查询数据接口。该接口仅支持IPV4地址，因此需要设置对应的参数属性以激活使用IPV4，有多种方式来设置：
+
+- 设置环境变量
+
+```java
+System.setProperty("java.net.preferIPv4Stack" , "true");
+System.setProperty("java.net.preferIPv4Addresses" , "true");
+```
+
+- 设置VM参数
+
+```bash
+-Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+```
 
 ## 协议
 

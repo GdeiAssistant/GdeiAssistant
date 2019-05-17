@@ -5,6 +5,8 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.ConfirmedStateExceptio
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,13 +16,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class LostAndFoundRestExceptionHandler {
 
+    private Log log = LogFactory.getLog(LostAndFoundRestExceptionHandler.class);
+
     /**
      * 处理失物招领信息不存在的异常
      *
      * @return
      */
     @ExceptionHandler(DataNotExistException.class)
-    public ResponseEntity ShowDataNotExistExceptionTip() {
+    public ResponseEntity ShowDataNotExistExceptionTip(DataNotExistException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false
                 , "查询的失物招领信息不存在"));
     }
@@ -31,7 +36,8 @@ public class LostAndFoundRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(NoAccessException.class)
-    public ResponseEntity ShowNoAccessExceptionTip() {
+    public ResponseEntity ShowNoAccessExceptionTip(NoAccessException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false
                 , "你没有权限编辑该失物招领信息"));
     }
@@ -42,7 +48,8 @@ public class LostAndFoundRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(ConfirmedStateException.class)
-    public ResponseEntity ShowUnmodifiableStateExceptionTip() {
+    public ResponseEntity ShowUnmodifiableStateExceptionTip(ConfirmedStateException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false
                 , "该失物招领信息已确认寻回，不能再次编辑和查看"));
     }

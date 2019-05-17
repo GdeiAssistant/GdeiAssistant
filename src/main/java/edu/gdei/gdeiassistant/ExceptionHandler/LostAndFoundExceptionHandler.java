@@ -4,6 +4,8 @@ import edu.gdei.gdeiassistant.Controller.LostAndFound.LostAndFoundController;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,13 +15,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Order(value = 1)
 public class LostAndFoundExceptionHandler {
 
+    private Log log = LogFactory.getLog(LostAndFoundExceptionHandler.class);
+
     /**
      * 处理失物招领信息不存在的异常
      *
      * @return
      */
     @ExceptionHandler(DataNotExistException.class)
-    public ModelAndView ShowDataNotExistExceptionTip() {
+    public ModelAndView ShowDataNotExistExceptionTip(DataNotExistException e) {
+        log.error(e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "失物招领信息不存在");
@@ -33,7 +38,8 @@ public class LostAndFoundExceptionHandler {
      * @return
      */
     @ExceptionHandler(NoAccessException.class)
-    public ModelAndView ShowNoAccessExceptionTip() {
+    public ModelAndView ShowNoAccessExceptionTip(NoAccessException e) {
+        log.error(e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "当前用户没有权限");
@@ -47,7 +53,8 @@ public class LostAndFoundExceptionHandler {
      * @return
      */
     @ExceptionHandler(ConfirmedStateException.class)
-    public ModelAndView ShowUnmodifiableStateException() {
+    public ModelAndView ShowUnmodifiableStateException(ConfirmedStateException e) {
+        log.error(e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "物品已确认寻回");

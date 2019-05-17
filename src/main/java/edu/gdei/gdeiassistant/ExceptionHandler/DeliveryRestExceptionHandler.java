@@ -6,6 +6,8 @@ import edu.gdei.gdeiassistant.Exception.DeliveryException.DeliveryOrderTakenExce
 import edu.gdei.gdeiassistant.Exception.DeliveryException.NoAccessUpdatingException;
 import edu.gdei.gdeiassistant.Exception.DeliveryException.SelfTradingOrderException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,13 +17,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class DeliveryRestExceptionHandler {
 
+    private Log log = LogFactory.getLog(DeliveryRestExceptionHandler.class);
+
     /**
      * 处理接单失败异常
      *
      * @return
      */
     @ExceptionHandler(DeliveryOrderTakenException.class)
-    public ResponseEntity HandleAcceptOrderFailedException() {
+    public ResponseEntity HandleAcceptOrderFailedException(DeliveryOrderTakenException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false, "有其他用户抢先接了此单，接单失败"));
     }
 
@@ -31,7 +36,8 @@ public class DeliveryRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(SelfTradingOrderException.class)
-    public ResponseEntity HandleSelfTradingException() {
+    public ResponseEntity HandleSelfTradingException(SelfTradingOrderException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false, "你不可以接受自己下的订单"));
     }
 
@@ -41,7 +47,8 @@ public class DeliveryRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(NoAccessUpdatingException.class)
-    public ResponseEntity HandleNoAccessUpdatingStateException() {
+    public ResponseEntity HandleNoAccessUpdatingStateException(NoAccessUpdatingException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false, "当前用户没有权限修改该订单信息"));
     }
 
@@ -51,7 +58,8 @@ public class DeliveryRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(DeliveryOrderStateUpdatedException.class)
-    public ResponseEntity HandleDeliveryOrderStateUpdatedException() {
+    public ResponseEntity HandleDeliveryOrderStateUpdatedException(DeliveryOrderStateUpdatedException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false, "订单已被接单，请与接单者联系"));
     }
 }

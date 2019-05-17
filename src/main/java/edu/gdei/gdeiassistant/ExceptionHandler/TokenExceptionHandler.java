@@ -6,6 +6,8 @@ import edu.gdei.gdeiassistant.Exception.TokenValidException.TokenNotMatchingExce
 import edu.gdei.gdeiassistant.Exception.TokenValidException.TokenServerException;
 import edu.gdei.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +19,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class TokenExceptionHandler {
 
+    private Log log = LogFactory.getLog(TokenExceptionHandler.class);
+
     /**
      * 处理登录凭证已过期的异常
      *
      * @return
      */
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity HandleTokenExpiredException() {
+    public ResponseEntity HandleTokenExpiredException(TokenExpiredException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.TOKEN_EXPIRED_EXCEPTION
                 , false, "登录凭证已过期，请重新登录"));
     }
@@ -34,7 +39,8 @@ public class TokenExceptionHandler {
      * @return
      */
     @ExceptionHandler(UnusualLocationException.class)
-    public ResponseEntity HandleUnusualLocationException() {
+    public ResponseEntity HandleUnusualLocationException(UnusualLocationException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.UNUSUAL_LOCATION_EXCEPTION
                 , false, "登录地点异常，请进行身份验证"));
     }
@@ -45,7 +51,8 @@ public class TokenExceptionHandler {
      * @return
      */
     @ExceptionHandler(TokenNotMatchingException.class)
-    public ResponseEntity HandleTokenNotMatchingException() {
+    public ResponseEntity HandleTokenNotMatchingException(TokenNotMatchingException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.TOKEN_NOT_MATCHING
                 , false, "没有对应的登录凭证记录，请尝试重新登录"));
     }
@@ -56,7 +63,8 @@ public class TokenExceptionHandler {
      * @return
      */
     @ExceptionHandler(TokenServerException.class)
-    public ResponseEntity HandleTokenServerException() {
+    public ResponseEntity HandleTokenServerException(TokenServerException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.TOKEN_SERVER_ERROR
                 , false, "登录凭证校验服务异常，请联系管理员"));
     }

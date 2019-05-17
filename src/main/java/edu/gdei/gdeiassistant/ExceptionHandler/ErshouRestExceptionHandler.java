@@ -6,6 +6,8 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NotAvailableStateException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,13 +17,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class ErshouRestExceptionHandler {
 
+    private Log log = LogFactory.getLog(ErshouRestExceptionHandler.class);
+
     /**
      * 处理二手交易信息不存在的异常
      *
      * @return
      */
     @ExceptionHandler(DataNotExistException.class)
-    public ResponseEntity ShowDataNotExistExceptionTip() {
+    public ResponseEntity ShowDataNotExistExceptionTip(DataNotExistException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false, "查询的二手交易信息不存在"));
     }
 
@@ -31,7 +36,8 @@ public class ErshouRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(NoAccessException.class)
-    public ResponseEntity ShowNoAccessExceptionTip() {
+    public ResponseEntity ShowNoAccessExceptionTip(NoAccessException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false, "你没有权限编辑该二手交易信息"));
     }
 
@@ -41,7 +47,8 @@ public class ErshouRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(ConfirmedStateException.class)
-    public ResponseEntity ShowUnmodifiableStateExceptionTip() {
+    public ResponseEntity ShowUnmodifiableStateExceptionTip(ConfirmedStateException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false, "已确认售出的商品不能再次编辑和查看"));
     }
 
@@ -51,7 +58,8 @@ public class ErshouRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(NotAvailableStateException.class)
-    public ResponseEntity ShowNotAvailableStateExceptionTip() {
+    public ResponseEntity ShowNotAvailableStateExceptionTip(NotAvailableStateException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false, "已下架的商品暂不能查看"));
     }
 }

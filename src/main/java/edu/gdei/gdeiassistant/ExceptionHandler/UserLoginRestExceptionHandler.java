@@ -7,6 +7,8 @@ import edu.gdei.gdeiassistant.Exception.RequestValidException.NonceInvalidExcept
 import edu.gdei.gdeiassistant.Exception.RequestValidException.SignInvalidException;
 import edu.gdei.gdeiassistant.Exception.RequestValidException.TimestampInvalidException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,13 +18,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class UserLoginRestExceptionHandler {
 
+    private Log log = LogFactory.getLog(UserLoginRestExceptionHandler.class);
+
     /**
      * 处理账户密码错误异常
      *
      * @return
      */
     @ExceptionHandler(PasswordIncorrectException.class)
-    public ResponseEntity ShowPasswordIncorrectExceptionTip() {
+    public ResponseEntity ShowPasswordIncorrectExceptionTip(PasswordIncorrectException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(false, "用户名或密码错误，请重新输入"));
     }
 
@@ -32,7 +37,8 @@ public class UserLoginRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(SignInvalidException.class)
-    public ResponseEntity ShowSignInvalidExceptionTip() {
+    public ResponseEntity ShowSignInvalidExceptionTip(SignInvalidException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.REQUEST_SIGN_INVALID
                 , false, "请求的摘要签名不匹配"));
     }
@@ -43,7 +49,8 @@ public class UserLoginRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(TimestampInvalidException.class)
-    public ResponseEntity ShowTimestampInvalidExceptionTip() {
+    public ResponseEntity ShowTimestampInvalidExceptionTip(TimestampInvalidException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.REQUEST_TIMESTAMP_INVALID
                 , false, "请求时间戳校验失败"));
     }
@@ -54,7 +61,8 @@ public class UserLoginRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(NonceInvalidException.class)
-    public ResponseEntity ShowNonceInvalidExceptionTip() {
+    public ResponseEntity ShowNonceInvalidExceptionTip(NonceInvalidException e) {
+        log.error(e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.REPLAY_REQUEST
                 , false, "重复提交的请求"));
     }

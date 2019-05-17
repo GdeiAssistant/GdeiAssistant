@@ -1,6 +1,8 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Exception.CommonException.ResourceNotFoundException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @ControllerAdvice
 @Order(value = 4)
 public class ServletExceptionHandler {
+
+    private Log log = LogFactory.getLog(ServletExceptionHandler.class);
 
     /**
      * 处理HTTP请求404错误
@@ -43,7 +47,8 @@ public class ServletExceptionHandler {
      * @return
      */
     @ExceptionHandler(Exception.class)
-    public ModelAndView HandleException() {
+    public ModelAndView HandleException(Exception e) {
+        log.error(e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         modelAndView.setViewName("Error/serverError");

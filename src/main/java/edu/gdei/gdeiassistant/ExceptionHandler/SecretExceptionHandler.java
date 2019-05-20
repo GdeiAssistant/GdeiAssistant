@@ -22,7 +22,7 @@ public class SecretExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView ShowDataNotExistExceptionTip(DataNotExistException e) {
-        log.error(e);
+        log.error("SecretExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "树洞信息不存在");

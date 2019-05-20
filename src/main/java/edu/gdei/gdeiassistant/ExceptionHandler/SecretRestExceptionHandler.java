@@ -23,7 +23,7 @@ public class SecretRestExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ResponseEntity ShowDataNotExistExceptionTip(DataNotExistException e) {
-        log.error(e);
+        log.error("SecretRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false
                 , "查询的校园树洞信息不存在"));
     }

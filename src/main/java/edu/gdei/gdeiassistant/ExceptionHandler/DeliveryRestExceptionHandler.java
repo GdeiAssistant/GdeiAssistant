@@ -26,7 +26,7 @@ public class DeliveryRestExceptionHandler {
      */
     @ExceptionHandler(DeliveryOrderTakenException.class)
     public ResponseEntity HandleAcceptOrderFailedException(DeliveryOrderTakenException e) {
-        log.error(e);
+        log.error("DeliveryRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "有其他用户抢先接了此单，接单失败"));
     }
 
@@ -37,7 +37,7 @@ public class DeliveryRestExceptionHandler {
      */
     @ExceptionHandler(SelfTradingOrderException.class)
     public ResponseEntity HandleSelfTradingException(SelfTradingOrderException e) {
-        log.error(e);
+        log.error("DeliveryRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "你不可以接受自己下的订单"));
     }
 
@@ -48,7 +48,7 @@ public class DeliveryRestExceptionHandler {
      */
     @ExceptionHandler(NoAccessUpdatingException.class)
     public ResponseEntity HandleNoAccessUpdatingStateException(NoAccessUpdatingException e) {
-        log.error(e);
+        log.error("DeliveryRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "当前用户没有权限修改该订单信息"));
     }
 
@@ -59,7 +59,7 @@ public class DeliveryRestExceptionHandler {
      */
     @ExceptionHandler(DeliveryOrderStateUpdatedException.class)
     public ResponseEntity HandleDeliveryOrderStateUpdatedException(DeliveryOrderStateUpdatedException e) {
-        log.error(e);
+        log.error("DeliveryRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "订单已被接单，请与接单者联系"));
     }
 }

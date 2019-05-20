@@ -24,7 +24,7 @@ public class ChargeRestExceptionHandler {
      */
     @ExceptionHandler(AmountNotAvailableException.class)
     public ResponseEntity HandleAccountNotAvailableException(AmountNotAvailableException e) {
-        log.error(e);
+        log.error("ChargeRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.CHARGE_AMOUNT_NOT_AVAILABLE
                 , false, "充值金额不合法"));
     }

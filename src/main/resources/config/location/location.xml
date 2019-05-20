@@ -3569,7 +3569,7 @@
             <City Name="北屯" Code="95"/>
         </State>
     </Region>
-    <Region Name="🇭🇰中国香港" Code="HK">
+    <Region Name="🇭🇰香港" Code="HK">
         <State Name="香港特别行政区" Code="HK">
             <City Name="中西区" Code="HCW"/>
             <City Name="东区" Code="HEA"/>
@@ -3591,7 +3591,7 @@
             <City Name="元朗区" Code="NYL"/>
         </State>
     </Region>
-    <Region Name="🇲🇴中国澳门" Code="MO">
+    <Region Name="🇲🇴澳门" Code="MO">
         <State Name="澳门特别行政区" Code="MO">
             <City Name="花地玛堂区" Code="OLF"/>
             <City Name="圣安多尼堂区" Code="ANT"/>
@@ -3602,7 +3602,7 @@
             <City Name="路环" Code="CLN"/>
         </State>
     </Region>
-    <Region Name="🇹🇼中国台湾" Code="TW">
+    <Region Name="🇹🇼台湾" Code="TW">
         <State Name="台湾" Code="TW">
             <City Name="台北市" Code="1"/>
             <City Name="高雄市" Code="2"/>

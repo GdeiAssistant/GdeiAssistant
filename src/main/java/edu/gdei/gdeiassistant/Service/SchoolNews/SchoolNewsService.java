@@ -179,21 +179,25 @@ public class SchoolNewsService {
                                                 Elements sources = document1.getElementsByClass("detail_text").first()
                                                         .getElementsByAttributeValue("style", "padding-bottom:20px;").first().getElementsByAttribute("src");
                                                 for (Element element : hrefs) {
-                                                    if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
-                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                    if (element.attr("href").startsWith("resource")) {
+                                                        element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
+                                                    } else if (element.attr("href").startsWith("mailto:")
+                                                            || element.attr("href").startsWith("http://")
+                                                            || element.attr("href").startsWith("https://")) {
+                                                        //发送邮件前缀、完整的URL路径，不做补全转换
                                                     } else {
-                                                        if (element.attr("href").startsWith("resource")) {
-                                                            element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
-                                                        }
+                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
                                                     }
                                                 }
                                                 for (Element element : sources) {
-                                                    if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
-                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                    if (element.attr("src").startsWith("resource")) {
+                                                        element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
+                                                    } else if (element.attr("src").startsWith("mailto:")
+                                                            || element.attr("src").startsWith("http://")
+                                                            || element.attr("src").startsWith("https://")) {
+                                                        //发送邮件前缀、完整的URL路径，不做补全转换
                                                     } else {
-                                                        if (element.attr("src").startsWith("resource")) {
-                                                            element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
-                                                        }
+                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
                                                     }
                                                 }
                                                 //替换下载链接
@@ -209,21 +213,25 @@ public class SchoolNewsService {
                                                 Elements hrefs = document1.getElementsByClass("inside-content").first().getElementsByAttribute("href");
                                                 Elements sources = document1.getElementsByClass("inside-content").first().getElementsByAttribute("src");
                                                 for (Element element : hrefs) {
-                                                    if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
-                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
+                                                    if (element.attr("href").startsWith("resource")) {
+                                                        element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
+                                                    } else if (element.attr("href").startsWith("mailto:")
+                                                            || element.attr("href").startsWith("http://")
+                                                            || element.attr("href").startsWith("https://")) {
+                                                        //发送邮件前缀、完整的URL路径，不做补全转换
                                                     } else {
-                                                        if (element.attr("href").startsWith("resource")) {
-                                                            element.attr("href", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("href"));
-                                                        }
+                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
                                                     }
                                                 }
                                                 for (Element element : sources) {
-                                                    if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
-                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
+                                                    if (element.attr("src").startsWith("resource")) {
+                                                        element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
+                                                    } else if (element.attr("src").startsWith("mailto:")
+                                                            || element.attr("src").startsWith("http://")
+                                                            || element.attr("src").startsWith("https://")) {
+                                                        //发送邮件前缀、完整的URL路径，不做补全转换
                                                     } else {
-                                                        if (element.attr("src").startsWith("resource")) {
-                                                            element.attr("src", newsUrlsList.get(type).get(newIndex) + "/" + element.attr("src"));
-                                                        }
+                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
                                                     }
                                                 }
                                                 //替换下载链接
@@ -327,7 +335,6 @@ public class SchoolNewsService {
                         //设置当前分区的新闻同步器，等待分区下的所有新闻都加载完毕后再读取下一分区
                         CountDownLatch countDownLatch = new CountDownLatch(rssNewInfoList.size());
                         for (RSSNewInfo rssNewInfo : rssNewInfoList) {
-                            int urlIndex = i;
                             httpAsyncClient.execute(new HttpGet(rssNewInfo.getLink()), new FutureCallback<HttpResponse>() {
                                 @Override
                                 public void completed(HttpResponse result) {
@@ -366,19 +373,27 @@ public class SchoolNewsService {
                                             Elements sources = page.getElementsByClass("text").first().getElementsByAttribute("src");
                                             for (Element element : hrefs) {
                                                 if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
-                                                    element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
-                                                } else {
                                                     if (element.attr("href").startsWith("resource")) {
                                                         element.attr("href", url.toString() + "/" + element.attr("href"));
+                                                    } else if (element.attr("href").startsWith("mailto:")
+                                                            || element.attr("href").startsWith("http://")
+                                                            || element.attr("href").startsWith("https://")) {
+                                                        //发送邮件前缀、完整的URL路径，不做补全转换
+                                                    } else {
+                                                        element.attr("href", "http://web.gdei.edu.cn/" + element.attr("href"));
                                                     }
                                                 }
                                             }
                                             for (Element element : sources) {
                                                 if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
-                                                    element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
-                                                } else {
                                                     if (element.attr("src").startsWith("resource")) {
                                                         element.attr("src", url.toString() + "/" + element.attr("src"));
+                                                    } else if (element.attr("src").startsWith("mailto:")
+                                                            || element.attr("src").startsWith("http://")
+                                                            || element.attr("src").startsWith("https://")) {
+                                                        //发送邮件前缀、完整的URL路径，不做补全转换
+                                                    } else {
+                                                        element.attr("src", "http://web.gdei.edu.cn/" + element.attr("src"));
                                                     }
                                                 }
                                             }

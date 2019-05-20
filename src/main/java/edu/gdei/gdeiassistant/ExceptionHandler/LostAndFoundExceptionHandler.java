@@ -24,7 +24,7 @@ public class LostAndFoundExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView ShowDataNotExistExceptionTip(DataNotExistException e) {
-        log.error(e);
+        log.error("LostAndFoundExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "失物招领信息不存在");
@@ -39,7 +39,7 @@ public class LostAndFoundExceptionHandler {
      */
     @ExceptionHandler(NoAccessException.class)
     public ModelAndView ShowNoAccessExceptionTip(NoAccessException e) {
-        log.error(e);
+        log.error("LostAndFoundExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "当前用户没有权限");
@@ -54,7 +54,7 @@ public class LostAndFoundExceptionHandler {
      */
     @ExceptionHandler(ConfirmedStateException.class)
     public ModelAndView ShowUnmodifiableStateException(ConfirmedStateException e) {
-        log.error(e);
+        log.error("LostAndFoundExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "物品已确认寻回");

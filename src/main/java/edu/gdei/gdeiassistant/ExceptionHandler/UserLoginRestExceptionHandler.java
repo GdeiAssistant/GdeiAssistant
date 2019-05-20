@@ -27,7 +27,7 @@ public class UserLoginRestExceptionHandler {
      */
     @ExceptionHandler(PasswordIncorrectException.class)
     public ResponseEntity ShowPasswordIncorrectExceptionTip(PasswordIncorrectException e) {
-        log.error(e);
+        log.error("UserLoginRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "用户名或密码错误，请重新输入"));
     }
 
@@ -38,7 +38,7 @@ public class UserLoginRestExceptionHandler {
      */
     @ExceptionHandler(SignInvalidException.class)
     public ResponseEntity ShowSignInvalidExceptionTip(SignInvalidException e) {
-        log.error(e);
+        log.error("UserLoginRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.REQUEST_SIGN_INVALID
                 , false, "请求的摘要签名不匹配"));
     }
@@ -50,7 +50,7 @@ public class UserLoginRestExceptionHandler {
      */
     @ExceptionHandler(TimestampInvalidException.class)
     public ResponseEntity ShowTimestampInvalidExceptionTip(TimestampInvalidException e) {
-        log.error(e);
+        log.error("UserLoginRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.REQUEST_TIMESTAMP_INVALID
                 , false, "请求时间戳校验失败"));
     }
@@ -62,7 +62,7 @@ public class UserLoginRestExceptionHandler {
      */
     @ExceptionHandler(NonceInvalidException.class)
     public ResponseEntity ShowNonceInvalidExceptionTip(NonceInvalidException e) {
-        log.error(e);
+        log.error("UserLoginRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.REPLAY_REQUEST
                 , false, "重复提交的请求"));
     }

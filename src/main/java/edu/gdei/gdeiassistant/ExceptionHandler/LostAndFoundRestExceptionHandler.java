@@ -25,7 +25,7 @@ public class LostAndFoundRestExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ResponseEntity ShowDataNotExistExceptionTip(DataNotExistException e) {
-        log.error(e);
+        log.error("LostAndFoundRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false
                 , "查询的失物招领信息不存在"));
     }
@@ -37,7 +37,7 @@ public class LostAndFoundRestExceptionHandler {
      */
     @ExceptionHandler(NoAccessException.class)
     public ResponseEntity ShowNoAccessExceptionTip(NoAccessException e) {
-        log.error(e);
+        log.error("LostAndFoundRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false
                 , "你没有权限编辑该失物招领信息"));
     }
@@ -49,7 +49,7 @@ public class LostAndFoundRestExceptionHandler {
      */
     @ExceptionHandler(ConfirmedStateException.class)
     public ResponseEntity ShowUnmodifiableStateExceptionTip(ConfirmedStateException e) {
-        log.error(e);
+        log.error("LostAndFoundRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false
                 , "该失物招领信息已确认寻回，不能再次编辑和查看"));
     }

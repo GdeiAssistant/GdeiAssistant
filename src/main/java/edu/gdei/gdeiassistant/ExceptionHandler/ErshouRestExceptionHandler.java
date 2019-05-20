@@ -26,7 +26,7 @@ public class ErshouRestExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ResponseEntity ShowDataNotExistExceptionTip(DataNotExistException e) {
-        log.error(e);
+        log.error("ErshouRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "查询的二手交易信息不存在"));
     }
 
@@ -37,7 +37,7 @@ public class ErshouRestExceptionHandler {
      */
     @ExceptionHandler(NoAccessException.class)
     public ResponseEntity ShowNoAccessExceptionTip(NoAccessException e) {
-        log.error(e);
+        log.error("ErshouRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "你没有权限编辑该二手交易信息"));
     }
 
@@ -48,7 +48,7 @@ public class ErshouRestExceptionHandler {
      */
     @ExceptionHandler(ConfirmedStateException.class)
     public ResponseEntity ShowUnmodifiableStateExceptionTip(ConfirmedStateException e) {
-        log.error(e);
+        log.error("ErshouRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "已确认售出的商品不能再次编辑和查看"));
     }
 
@@ -59,7 +59,7 @@ public class ErshouRestExceptionHandler {
      */
     @ExceptionHandler(NotAvailableStateException.class)
     public ResponseEntity ShowNotAvailableStateExceptionTip(NotAvailableStateException e) {
-        log.error(e);
+        log.error("ErshouRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "已下架的商品暂不能查看"));
     }
 }

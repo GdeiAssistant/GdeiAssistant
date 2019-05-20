@@ -48,7 +48,7 @@ public class ServletExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ModelAndView HandleException(Exception e) {
-        log.error(e);
+        log.error("ServletExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         modelAndView.setViewName("Error/serverError");

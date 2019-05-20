@@ -25,7 +25,7 @@ public class ErshouExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView ShowDataNotExistExceptionTip(DataNotExistException e) {
-        log.error(e);
+        log.error("ErshouExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "二手交易信息不存在");
@@ -40,7 +40,7 @@ public class ErshouExceptionHandler {
      */
     @ExceptionHandler(NoAccessException.class)
     public ModelAndView ShowNoAccessExceptionTip(NoAccessException e) {
-        log.error(e);
+        log.error("ErshouExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "当前用户没有权限");
@@ -55,7 +55,7 @@ public class ErshouExceptionHandler {
      */
     @ExceptionHandler(ConfirmedStateException.class)
     public ModelAndView ShowUnmodifiableStateException(ConfirmedStateException e) {
-        log.error(e);
+        log.error("ErshouExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "商品已确认售出");
@@ -70,7 +70,7 @@ public class ErshouExceptionHandler {
      */
     @ExceptionHandler(NotAvailableStateException.class)
     public ModelAndView ShowNotAvailableStateException(NotAvailableStateException e) {
-        log.error(e);
+        log.error("ErshouExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "商品已下架");

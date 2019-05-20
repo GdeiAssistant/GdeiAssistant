@@ -24,7 +24,7 @@ public class BookQueryRestExceptionHandler {
      */
     @ExceptionHandler(BookRenewOvertimeException.class)
     public ResponseEntity HandleBookRenewOvertimeException(BookRenewOvertimeException e) {
-        log.error(e);
+        log.error("BookQueryRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "图书续借超过次数限制"));
     }
 
@@ -35,7 +35,7 @@ public class BookQueryRestExceptionHandler {
      */
     @ExceptionHandler(PasswordIncorrectException.class)
     public ResponseEntity HandlePasswordIncorrectException(PasswordIncorrectException e) {
-        log.error(e);
+        log.error("BookQueryRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "图书馆查询密码错误，请检查并重试"));
     }
 }

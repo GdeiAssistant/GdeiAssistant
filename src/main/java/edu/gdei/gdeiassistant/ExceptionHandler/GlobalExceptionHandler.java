@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView HandleDataNotExistException(DataNotExistException e) {
-        log.error(e);
+        log.error("GlobalExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "查询的数据不存在");
@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ModelAndView HandleException(Exception e) {
-        log.error(e);
+        log.error("GlobalExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "服务暂不可用");

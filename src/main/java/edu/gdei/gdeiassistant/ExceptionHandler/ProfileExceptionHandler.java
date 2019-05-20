@@ -22,7 +22,7 @@ public class ProfileExceptionHandler {
      */
     @ExceptionHandler(UserNotExistException.class)
     public ModelAndView ShowDataNotExistExceptionTip(UserNotExistException e) {
-        log.error(e);
+        log.error("ProfileExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "用户不存在");

@@ -19,7 +19,7 @@ public class EvaluateRestExceptionHandler {
 
     @ExceptionHandler(NotAvailableTimeException.class)
     public ResponseEntity HandleNotAvailableTimeException(NotAvailableTimeException e) {
-        log.error(e);
+        log.error("EvaluateRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ConstantUtils.EVALUATE_NOT_AVAILABLE
                 , false, "现在不是一键评教开放时间段"));
     }

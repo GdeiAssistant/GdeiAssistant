@@ -23,7 +23,7 @@ public class CardLostRestExceptionHandler {
      */
     @ExceptionHandler(PasswordIncorrectException.class)
     public ResponseEntity HandlePasswordIncorrectException(PasswordIncorrectException e) {
-        log.error(e);
+        log.error("CardLostRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "校园卡密码错误，请检查并重试"));
     }
 

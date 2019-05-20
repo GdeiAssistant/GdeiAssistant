@@ -25,7 +25,7 @@ public class CloseAccountRestExceptionHandler {
      */
     @ExceptionHandler(UserStateErrorException.class)
     public ResponseEntity HandleUserStateErrorException(UserStateErrorException e) {
-        log.error(e);
+        log.error("CloseAccountRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "用户账号状态异常，请联系管理员"));
     }
 
@@ -36,7 +36,7 @@ public class CloseAccountRestExceptionHandler {
      */
     @ExceptionHandler(PasswordIncorrectException.class)
     public ResponseEntity HandlePasswordIncorrectException(PasswordIncorrectException e) {
-        log.error(e);
+        log.error("CloseAccountRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "用户账号密码不匹配，请重试"));
     }
 
@@ -47,7 +47,7 @@ public class CloseAccountRestExceptionHandler {
      */
     @ExceptionHandler(ItemAvailableException.class)
     public ResponseEntity HandleItemAvailableException(ItemAvailableException e) {
-        log.error(e);
+        log.error("CloseAccountRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "用户有待处理的社区功能信息，不满足注销条件"));
     }
 

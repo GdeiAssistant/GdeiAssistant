@@ -40,7 +40,7 @@ import java.util.Map;
  */
 @Aspect
 @Component
-@Order(Integer.MIN_VALUE)
+@Order(1)
 public class SecurityAspect {
 
     @Pointcut("@annotation(edu.gdei.gdeiassistant.Annotation.RequireSecurity)")

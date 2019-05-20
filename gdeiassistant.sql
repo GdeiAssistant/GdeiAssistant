@@ -74,10 +74,6 @@ LOCK TABLES `close_log` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping events for database 'gdeiassistant_log'
---
-
---
 -- Current Database: `gdeiassistant_data`
 --
 
@@ -227,10 +223,6 @@ LOCK TABLES `yellow_page_type` WRITE;
 INSERT INTO `yellow_page_type` VALUES (1,'倾听与倾诉'),(2,'故障保修'),(3,'网络'),(4,'党务'),(5,'医疗与救援'),(6,'生活与保障'),(7,'职能部门'),(8,'就业创业'),(9,'院系部门'),(10,'举报和申诉'),(11,'紧急求助');
 /*!40000 ALTER TABLE `yellow_page_type` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping events for database 'gdeiassistant_data'
---
 
 --
 -- Current Database: `gdeiassistant`
@@ -575,6 +567,7 @@ CREATE TABLE `introduction` (
 
 LOCK TABLES `introduction` WRITE;
 /*!40000 ALTER TABLE `introduction` DISABLE KEYS */;
+INSERT INTO `introduction` VALUES ('gdeiassistant',NULL);
 /*!40000 ALTER TABLE `introduction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -640,6 +633,7 @@ CREATE TABLE `privacy` (
 
 LOCK TABLES `privacy` WRITE;
 /*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
+INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1);
 /*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -672,6 +666,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
+INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -782,7 +777,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('NGpLxbsDgxX5JzDkyTT9qw==','NGpLxbsDgxX5JzDkyTT9qw==',1,7);
+INSERT INTO `user` VALUES ('gdeiassistant','gdeiassistant',1,7);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -859,10 +854,6 @@ LOCK TABLES `yiban_user` WRITE;
 /*!40000 ALTER TABLE `yiban_user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `yiban_user` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping events for database 'gdeiassistant'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -873,4 +864,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-13  2:32:26
+-- Dump completed on 2019-05-21  1:07:36

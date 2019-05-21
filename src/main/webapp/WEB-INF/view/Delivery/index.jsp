@@ -57,7 +57,7 @@
 <div class="weui_cells_title" onclick="history.go(-1)">返回</div>
 
 <div class="avatarDiv">
-    <img class="avatar" src="${AvatarURL==null ? "/img/avatar/default.png" : AvatarURL}">
+    <img class="avatar" src="${empty AvatarURL ? "/img/avatar/default.png" : AvatarURL}">
 </div>
 
 <div class="kickname">

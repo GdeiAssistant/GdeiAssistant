@@ -4,8 +4,12 @@ import edu.gdei.gdeiassistant.Exception.CommonException.ResourceNotFoundExceptio
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,6 +20,20 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 public class ServletExceptionHandler {
 
     private Log log = LogFactory.getLog(ServletExceptionHandler.class);
+
+    /**
+     * 处理HTTP请求400错误
+     *
+     * @return
+     */
+    @ExceptionHandler({MissingServletRequestParameterException.class
+            , TypeMismatchException.class, HttpMessageNotReadableException.class})
+    public ModelAndView HandleBadRequestException() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        modelAndView.setViewName("Error/badRequestError");
+        return modelAndView;
+    }
 
     /**
      * 处理HTTP请求404错误
@@ -33,7 +51,7 @@ public class ServletExceptionHandler {
     /**
      * 处理HTTP请求405错误
      */
-    @ExceptionHandler(MethodNotSupportedException.class)
+    @ExceptionHandler({MethodNotSupportedException.class, HttpRequestMethodNotSupportedException.class})
     public ModelAndView HandleMethodNotSupportedException() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(HttpStatus.METHOD_NOT_ALLOWED);
@@ -54,6 +72,4 @@ public class ServletExceptionHandler {
         modelAndView.setViewName("Error/serverError");
         return modelAndView;
     }
-
-
 }

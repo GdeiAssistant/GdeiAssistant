@@ -20,11 +20,11 @@ public interface PrivacyMapper {
 
     @Insert("insert into privacy (username,is_gender_open,is_gender_orientation_open,is_faculty_open" +
             ",is_major_open,is_region_open,is_introduction_open,is_cache_allow) " +
-            "values(#{username},true,true,true,true,true,true,true)")
+            "values(#{username},true,true,true,true,true,true,false)")
     public void initPrivacy(String username) throws Exception;
 
     @Update("update privacy set is_gender_open=1,is_gender_orientation_open=1,is_faculty_open=1,is_major_open=1" +
-            ",is_region_open=1,is_introduction_open=1,is_cache_allow=1 where username=#{username}")
+            ",is_region_open=1,is_introduction_open=1,is_cache_allow=0 where username=#{username}")
     public void resetPrivacy(String username) throws Exception;
 
     @Update("update privacy" +

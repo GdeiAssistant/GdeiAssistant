@@ -28,7 +28,7 @@
     <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
     <div class="weui-msg__text-area">
         <h2 class="weui-msg__title">毕业账号处理</h2>
-        <p class="weui-msg__desc">点击查看<a href="/policy/graduation">毕业用户账号处理方案说明</a></p>
+        <p class="weui-msg__desc">点击查看<a href="/about/graduation">毕业用户账号处理方案说明</a></p>
     </div>
 </div>
 

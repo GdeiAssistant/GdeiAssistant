@@ -53,7 +53,7 @@ public class AboutController {
         return new ModelAndView("AgreementAndPolicy/socialPolicy");
     }
 
-    @RequestMapping(value = "/policy/graduation", method = RequestMethod.GET)
+    @RequestMapping(value = "/about/graduation", method = RequestMethod.GET)
     public ModelAndView ResolveGraduationPage() {
         return new ModelAndView("AgreementAndPolicy/graduationPolicy");
     }

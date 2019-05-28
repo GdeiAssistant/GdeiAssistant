@@ -26,6 +26,8 @@ function postCloseRequest() {
             success: function (result) {
                 $("#loadingToast, .weui_mask").hide();
                 if (result.success) {
+                    //清空本地缓存
+                    localStorage.clear();
                     var alert = weui.alert('删除账号成功，即将返回主页', function () {
                         return false;
                     }, {
@@ -39,8 +41,7 @@ function postCloseRequest() {
                             }
                         }]
                     });
-                }
-                else {
+                } else {
                     showCustomErrorTip(result.message);
                 }
             },
@@ -49,8 +50,7 @@ function postCloseRequest() {
                 showNetworkErrorTip();
             }
         })
-    }
-    else {
+    } else {
         showCustomErrorTip("账号密码长度不合法");
     }
 }

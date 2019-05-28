@@ -160,6 +160,8 @@
                 title: '退出当前账号',
                 text: '你确定退出当前账号并清除账号缓存吗？',
                 onOK: function () {
+                    //清空本地缓存
+                    localStorage.clear();
                     window.location.href = '/logout';
                 }
             });

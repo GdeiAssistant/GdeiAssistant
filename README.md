@@ -137,10 +137,10 @@
 
 ## 客户端
 
-- [安卓客户端](https://github.com/PeachShrubFizz/GdeiAssistant-Android)
-- [微信小程序](https://github.com/PeachShrubFizz/GdeiAssistant-WechatApp)
-- [支付宝小程序](https://github.com/PeachShrubFizz/GdeiAssistant-AlipayApp)
-- [通用Windows客户端](https://github.com/PeachShrubFizz/GdeiAssistant-UWP)
+- [安卓客户端](https://github.com/GdeiAssistant/GdeiAssistant-Android)
+- [微信小程序](https://github.com/GdeiAssistant/GdeiAssistant-WechatApp)
+- [支付宝小程序](https://github.com/GdeiAssistant/GdeiAssistant-AlipayApp)
+- [通用Windows客户端](https://github.com/GdeiAssistant/GdeiAssistant-UWP)
 
 ## 公众号
 
@@ -187,7 +187,7 @@
 ### 克隆仓库
 
 ```bash
-$ git clone https://github.com/PeachShrubFizz/GdeiAssistant.git
+$ git clone https://github.com/GdeiAssistant/GdeiAssistant.git
 ```
 
 ### 导入数据库
@@ -324,15 +324,15 @@ Copyright (c) 2016 - 2019 GdeiAssistant
 
 ## 文档
 
-- 广东第二师范学院校园助手系统说明文档请参考 [Wiki](https://github.com/PeachShrubFizz/GdeiAssistant/wiki)
+- 广东第二师范学院校园助手系统说明文档请参考 [Wiki](https://github.com/GdeiAssistant/GdeiAssistant/wiki)
 
 ## 贡献
 
 - 若你喜欢本项目，欢迎Star本项目
 
-- 要贡献代码，欢迎Fork之后再提交[Pull Request](https://github.com/PeachShrubFizz/GdeiAssistant-Android/pulls)
+- 要贡献代码，欢迎Fork之后再提交[Pull Request](https://github.com/GdeiAssistant/GdeiAssistant-Android/pulls)
 
-- 如果你有好的意见或建议，欢迎给我们提交[Issue](https://github.com/PeachShrubFizz/GdeiAssistant-Android/issues)
+- 如果你有好的意见或建议，欢迎给我们提交[Issue](https://github.com/GdeiAssistant/GdeiAssistant-Android/issues)
 
 ## 联系
 

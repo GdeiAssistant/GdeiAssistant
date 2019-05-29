@@ -103,7 +103,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/PeachShrubFizz/GdeiAssistant">程序源代码</a>
+                    <a class="nav-link" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
                 </li>
             </ul>
         </div>

@@ -353,7 +353,7 @@ public class WechatService {
             }
         }
         return new WechatTextMessage(wechatBaseMessage
-                , "当前学期没有成绩信息");
+                , "成绩缓存信息未同步，请确保已在个人中心的隐私设置中开启教务缓存功能");
     }
 
     /**
@@ -366,21 +366,22 @@ public class WechatService {
      */
     private WechatBaseMessage HandleTodayScheduleRequest(WechatBaseMessage wechatBaseMessage, User user) throws Exception {
         ScheduleQueryResult scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(user.getUsername(), null);
-        List<Schedule> scheduleList = scheduleQueryResult.getScheduleList();
-        int dayOfWeek = LocalDate.now().getDayOfWeek().getValue();
-        StringBuilder sb = new StringBuilder("今日的课表：\n");
-        if (!scheduleList.isEmpty()) {
-            int schedulesCount = 0;
-            for (Schedule schedule : scheduleList) {
-                if (schedule.getColumn() + 1 == dayOfWeek) {
-                    schedulesCount++;
-                    sb.append(schedule.getScheduleLesson()).append("  ").append(schedule.getScheduleName())
-                            .append("  ").append(schedule.getScheduleLocation()).append("\n");
+        if (scheduleQueryResult != null) {
+            List<Schedule> scheduleList = scheduleQueryResult.getScheduleList();
+            int dayOfWeek = LocalDate.now().getDayOfWeek().getValue();
+            StringBuilder sb = new StringBuilder("今日的课表：\n");
+            if (!scheduleList.isEmpty()) {
+                int schedulesCount = 0;
+                for (Schedule schedule : scheduleList) {
+                    if (schedule.getColumn() + 1 == dayOfWeek) {
+                        schedulesCount++;
+                        sb.append(schedule.getScheduleLesson()).append("  ").append(schedule.getScheduleName())
+                                .append("  ").append(schedule.getScheduleLocation()).append("\n");
+                    }
                 }
-            }
-            if (schedulesCount != 0) {
-                WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
-                wechatTextMessage.setContent(sb.toString());
+                if (schedulesCount != 0) {
+                    WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+                    wechatTextMessage.setContent(sb.toString());
                 /*WechatArticle scheduleArticle = new WechatArticle();
                 scheduleArticle.setTitle("今日课表查询结果");
                 scheduleArticle.setDescription(sb.toString());
@@ -391,11 +392,14 @@ public class WechatService {
                 WechatImageTextMessage wechatImageTextMessage = new WechatImageTextMessage(wechatBaseMessage);
                 wechatImageTextMessage.setArticleCount(1);
                 wechatImageTextMessage.setArticles(wechatArticleList);*/
-                return wechatTextMessage;
+                    return wechatTextMessage;
+                }
             }
+            return new WechatTextMessage(wechatBaseMessage
+                    , "今天没有课程");
         }
         return new WechatTextMessage(wechatBaseMessage
-                , "今天没有课程");
+                , "课表缓存信息未同步，请确保已在个人中心的隐私设置中开启教务缓存功能");
     }
 
     /**

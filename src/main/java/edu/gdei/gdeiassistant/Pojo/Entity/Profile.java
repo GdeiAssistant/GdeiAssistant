@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Component
 @Scope("prototype")
@@ -20,6 +21,8 @@ public class Profile implements Serializable {
     private Integer gender;
 
     private Integer genderOrientation;
+
+    private Date birthday;
 
     private Integer degree;
 
@@ -129,5 +132,13 @@ public class Profile implements Serializable {
 
     public void setDegree(Integer degree) {
         this.degree = degree;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 }

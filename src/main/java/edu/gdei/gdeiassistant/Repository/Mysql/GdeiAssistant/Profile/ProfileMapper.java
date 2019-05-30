@@ -3,6 +3,9 @@ package edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile;
 import edu.gdei.gdeiassistant.Pojo.Entity.Introduction;
 import edu.gdei.gdeiassistant.Pojo.Entity.Profile;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
+
+import java.util.Date;
 
 public interface ProfileMapper {
 
@@ -12,6 +15,7 @@ public interface ProfileMapper {
             @Result(property = "kickname", column = "kickname"),
             @Result(property = "gender", column = "gender"),
             @Result(property = "genderOrientation", column = "gender_orientation"),
+            @Result(property = "birthday", column = "birthday", javaType = Date.class, jdbcType = JdbcType.DATE),
             @Result(property = "degree", column = "degree"),
             @Result(property = "faculty", column = "faculty"),
             @Result(property = "major", column = "major"),
@@ -43,6 +47,9 @@ public interface ProfileMapper {
     @Update("update profile set gender_orientation=#{genderOrientation} where username=#{username}")
     void updateGenderOrientation(Profile profile);
 
+    @Update("update profile set birthday=#{birthday} where username=#{username}")
+    void updateBirthday(Profile profile);
+
     @Update("update profile set faculty=#{faculty} where username=#{username}")
     void updateFaculty(Profile profile);
 
@@ -55,7 +62,7 @@ public interface ProfileMapper {
     @Update("update profile set region=#{region},state=#{state},city=#{city} where username=#{username}")
     void updateLocation(Profile profile);
 
-    @Update("update profile set kickname=#{kickname},gender=null,gender_orientation=null,region=null,state=null,city=null where username=#{username}")
+    @Update("update profile set kickname=#{kickname},gender=null,gender_orientation=null,birthday=null,region=null,state=null,city=null where username=#{username}")
     void resetUserProfile(@Param("username") String username, @Param("kickname") String kickname) throws Exception;
 
     @Update("update introduction set introduction=null where username=#{username}")

@@ -206,6 +206,15 @@
                     } else {
                         $("#location").text("未选择");
                     }
+                    //年龄
+                    let birthday = result.data.birthday;
+                    if (birthday) {
+                        //根据出生时间和当前时间计算年龄
+                        let age = Math.ceil((new Date().getTime() - new Date(birthday).getTime()) / 31536000000);
+                        $("#age").text(age);
+                    } else {
+                        $("#age").text("未填写");
+                    }
                     //学历
                     var degree = result.data.degree == null ? 0 : result.data.degree;
                     $("#degree").text(degreeMap[degree]);
@@ -557,6 +566,40 @@
                     url: "/api/profile/genderOrientation",
                     data: {
                         genderOrientation: genderOrientation[0].value
+                    },
+                    type: 'post',
+                    success: function (updateResult) {
+                        if (updateResult.success === true) {
+                            loadProfile();
+                        } else {
+                            showCustomErrorTip(updateResult.message);
+                        }
+                    },
+                    error: function (result) {
+                        if (result.status) {
+                            showCustomErrorTip(result.responseJSON.message);
+                        } else {
+                            showNetworkErrorTip();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    //修改生日
+    function changeBirthday() {
+        weui.datePicker({
+            start: 1900,
+            end: new Date(),
+            defaultValue: [2000, 1, 1],
+            onConfirm: function (birthday) {
+                $.ajax({
+                    url: "/api/profile/birthday",
+                    data: {
+                        year: birthday[0].value,
+                        month: birthday[1].value,
+                        date: birthday[2].value
                     },
                     type: 'post',
                     success: function (updateResult) {

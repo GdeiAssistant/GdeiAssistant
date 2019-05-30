@@ -17,6 +17,8 @@ import org.springframework.web.client.AsyncRestTemplate;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 
@@ -252,6 +254,27 @@ public class UserProfileService {
         if (profile != null) {
             profile.setGenderOrientation(genderOrientation);
             profileMapper.updateGenderOrientation(profile);
+            return;
+        }
+        throw new UserNotExistException("查询的用户不存在");
+    }
+
+    /**
+     * 更新生日日期
+     *
+     * @param username
+     * @param year
+     * @param month
+     * @param date
+     * @return
+     */
+    public void UpdateBirthday(String username, int year, int month, int date) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            Date birthday = Date.from(LocalDate.of(year, month, date)
+                    .atStartOfDay(ZoneId.systemDefault()).toInstant());
+            profile.setBirthday(birthday);
+            profileMapper.updateBirthday(profile);
             return;
         }
         throw new UserNotExistException("查询的用户不存在");

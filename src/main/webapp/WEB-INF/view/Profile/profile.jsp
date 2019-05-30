@@ -48,6 +48,12 @@
         </div>
         <div id="genderOrientation" class="weui-cell__ft"></div>
     </div>
+    <div class="weui-cell" href="javascript:" onclick="changeBirthday()">
+        <div class="weui-cell__bd">
+            <p>年龄</p>
+        </div>
+        <div id="age" class="weui-cell__ft"></div>
+    </div>
     <div class="weui-cell" href="javascript:" onclick="changeDegree()">
         <div class="weui-cell__bd">
             <p>学历</p>

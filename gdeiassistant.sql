@@ -567,7 +567,6 @@ CREATE TABLE `introduction` (
 
 LOCK TABLES `introduction` WRITE;
 /*!40000 ALTER TABLE `introduction` DISABLE KEYS */;
-INSERT INTO `introduction` VALUES ('gdeiassistant',NULL);
 /*!40000 ALTER TABLE `introduction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -633,7 +632,6 @@ CREATE TABLE `privacy` (
 
 LOCK TABLES `privacy` WRITE;
 /*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
-INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1);
 /*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -649,6 +647,7 @@ CREATE TABLE `profile` (
   `kickname` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `gender` tinyint(1) DEFAULT NULL COMMENT '性别',
   `gender_orientation` tinyint(1) DEFAULT NULL COMMENT '性取向',
+  `birthday` date DEFAULT NULL COMMENT '生日',
   `degree` tinyint(1) DEFAULT NULL COMMENT '学历',
   `faculty` tinyint(1) DEFAULT NULL COMMENT '院系',
   `major` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '专业',
@@ -666,7 +665,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -864,4 +863,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-21  1:07:36
+-- Dump completed on 2019-05-30  9:07:26

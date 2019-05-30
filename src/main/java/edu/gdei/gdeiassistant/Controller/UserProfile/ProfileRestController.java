@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -248,6 +250,23 @@ public class ProfileRestController {
             return new JsonResult(true);
         }
         return new JsonResult(false, "请求参数异常");
+    }
+
+    /**
+     * 更新生日日期
+     *
+     * @param request
+     * @param year
+     * @param month
+     * @param date
+     * @return
+     */
+    @RequestMapping(value = "/api/profile/birthday", method = RequestMethod.POST)
+    public JsonResult UpdateBirthday(HttpServletRequest request, @Validated @Min(1900) @Max(2050) int year
+            , @Validated @Min(1) @Max(12) int month, @Validated @Min(1) @Max(31) int date) throws Exception {
+        String username = (String) request.getSession().getAttribute("username");
+        userProfileService.UpdateBirthday(username, year, month, date);
+        return new JsonResult(true);
     }
 
     /**

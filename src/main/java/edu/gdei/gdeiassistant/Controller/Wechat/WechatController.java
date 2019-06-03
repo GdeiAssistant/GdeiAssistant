@@ -1,6 +1,7 @@
 package edu.gdei.gdeiassistant.Controller.Wechat;
 
 import edu.gdei.gdeiassistant.Enum.Wechat.RequestTypeEnum;
+import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatImageTextMessage;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatSignature;
@@ -103,6 +104,8 @@ public class WechatController {
             resultMessage = wechatService.HandleUserRequest(request, wechatBaseMessage
                     , RequestTypeEnum.getRequestTypeEnumByFunctionName(content.split("-")[0])
                     , content, fromUserName);
+        } catch (PasswordIncorrectException e) {
+            resultMessage = new WechatTextMessage(wechatBaseMessage, "账号密码已更新，请尝试重新绑定账号");
         } catch (Exception e) {
             log.error("微信消息对话服务异常：", e);
             resultMessage = new WechatTextMessage(wechatBaseMessage, "系统异常，请联系管理员");

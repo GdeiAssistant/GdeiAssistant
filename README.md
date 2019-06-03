@@ -131,7 +131,7 @@
 
 - gdeiassistant - gdeiassistant
 
-## 网页版
+## 官网
 
 - [广东二师助手官网](https://gdeiassistant.cn)
 

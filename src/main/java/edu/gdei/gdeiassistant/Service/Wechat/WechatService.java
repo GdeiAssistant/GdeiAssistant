@@ -2,10 +2,14 @@ package edu.gdei.gdeiassistant.Service.Wechat;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Enum.Wechat.RequestTypeEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Entity.*;
 import edu.gdei.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
+import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatTextMessage;
@@ -20,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -57,6 +62,9 @@ public class WechatService {
     public void setAppsecret(String appsecret) {
         this.appsecret = appsecret;
     }
+
+    @Autowired
+    private Environment environment;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -247,8 +255,16 @@ public class WechatService {
      * @return
      */
     private WechatBaseMessage HandleCardInfoQueryRequest(HttpServletRequest request, WechatBaseMessage wechatBaseMessage, User user) throws Exception {
-        CardInfo cardInfo = cardQueryService.CardInfoQuery(request.getSession().getId(), user.getUsername(), user.getPassword());
         WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+        Integer group = userLoginService.GetUserByUsername(user.getUsername()).getGroup();
+        CardInfo cardInfo = null;
+        if (UserGroupEnum.TRIAL.getValue().equals(group)) {
+            cardInfo = new Gson().fromJson(environment.getProperty("trial.data.cardinfo")
+                    , new TypeToken<DataJsonResult<CardInfo>>() {
+                    }.getType());
+        } else {
+            cardInfo = cardQueryService.CardInfoQuery(request.getSession().getId(), user.getUsername(), user.getPassword());
+        }
         String content = "基本信息：\n" +
                 "姓名：" + cardInfo.getName() + "\n" +
                 "学号：" + cardInfo.getNumber() + "\n" +
@@ -293,6 +309,12 @@ public class WechatService {
      * @throws Exception
      */
     private WechatBaseMessage HandleGradeQueryRequest(WechatBaseMessage wechatBaseMessage, User user) throws Exception {
+        Integer group = userLoginService.GetUserByUsername(user.getUsername()).getGroup();
+        if (UserGroupEnum.TRIAL.getValue().equals(group)) {
+            WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+            wechatTextMessage.setContent(environment.getProperty("trial.data.grade"));
+            return wechatTextMessage;
+        }
         GradeQueryResult gradeQueryResult = gradeQueryService.QueryUserGradeFromDocument(user.getUsername(), null);
         if (gradeQueryResult != null) {
             int term = gradeQueryResult.getSecondTermGradeList().size() == 0 ? 1 : 2;
@@ -365,6 +387,12 @@ public class WechatService {
      * @throws Exception
      */
     private WechatBaseMessage HandleTodayScheduleRequest(WechatBaseMessage wechatBaseMessage, User user) throws Exception {
+        Integer group = userLoginService.GetUserByUsername(user.getUsername()).getGroup();
+        if (UserGroupEnum.TRIAL.getValue().equals(group)) {
+            WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+            wechatTextMessage.setContent(environment.getProperty("trial.data.schedule"));
+            return wechatTextMessage;
+        }
         ScheduleQueryResult scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(user.getUsername(), null);
         if (scheduleQueryResult != null) {
             List<Schedule> scheduleList = scheduleQueryResult.getScheduleList();

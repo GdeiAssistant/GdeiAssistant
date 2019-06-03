@@ -99,7 +99,7 @@
                            href="http://www.moe.gov.cn/jyb_hygq/hygq_tsjb/201505/t20150520_184529.html">教育部统一监督举报</a>
                         <a class="dropdown-item" href="http://www.shdf.gov.cn/shdf/channels/740.html">儿童色情信息举报</a>
                         <a class="dropdown-item" href="http://www.cyberpolice.cn/">网络违法犯罪举报</a>
-                        <a class="dropdown-item" href="mailto:gdeiassistant@gmail.com">社区违规举报</a>
+                        <a class="dropdown-item" href="mailto:report@gdeiassistant.cn">社区违规举报</a>
                     </div>
                 </li>
                 <li class="nav-item">

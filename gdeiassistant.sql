@@ -615,7 +615,6 @@ DROP TABLE IF EXISTS `privacy`;
 CREATE TABLE `privacy` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `is_gender_open` tinyint(1) NOT NULL COMMENT '公开性别',
-  `is_gender_orientation_open` tinyint(1) NOT NULL COMMENT '公开性取向',
   `is_region_open` tinyint(1) NOT NULL COMMENT '公开国家/地区',
   `is_introduction_open` tinyint(1) NOT NULL COMMENT '公开个人简介',
   `is_faculty_open` tinyint(1) NOT NULL COMMENT '公开院系',
@@ -646,7 +645,6 @@ CREATE TABLE `profile` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `kickname` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `gender` tinyint(1) DEFAULT NULL COMMENT '性别',
-  `gender_orientation` tinyint(1) DEFAULT NULL COMMENT '性取向',
   `birthday` date DEFAULT NULL COMMENT '生日',
   `degree` tinyint(1) DEFAULT NULL COMMENT '学历',
   `faculty` tinyint(1) DEFAULT NULL COMMENT '院系',

@@ -59,23 +59,6 @@ public class PrivacyService {
     }
 
     /**
-     * 更新性取向隐私设置
-     *
-     * @param state
-     * @param username
-     * @return
-     */
-    public boolean UpdateGenderOrientation(boolean state, String username) {
-        try {
-            privacyMapper.updateGenderOrientation(state, StringEncryptUtils.encryptString(username));
-            return true;
-        } catch (Exception e) {
-            log.error("更新性取向隐私配置异常：", e);
-            return false;
-        }
-    }
-
-    /**
      * 更新院系隐私设置
      *
      * @param state

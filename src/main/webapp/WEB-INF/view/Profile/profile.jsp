@@ -42,12 +42,6 @@
         </div>
         <div id="gender" class="weui-cell__ft"></div>
     </div>
-    <div class="weui-cell" href="javascript:" onclick="changeGenderOrientation()">
-        <div class="weui-cell__bd">
-            <p>性取向</p>
-        </div>
-        <div id="genderOrientation" class="weui-cell__ft"></div>
-    </div>
     <div class="weui-cell" href="javascript:" onclick="changeBirthday()">
         <div class="weui-cell__bd">
             <p>年龄</p>

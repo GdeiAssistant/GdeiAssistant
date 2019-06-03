@@ -25,24 +25,6 @@ public class ProfileOptionConfig {
     }
 
     /**
-     * 个人资料性取向字典
-     *
-     * @return
-     */
-    @Bean
-    public Map<Integer, String> genderOrientationMap() {
-        Map<Integer, String> genderOrientationMap = new HashMap<>();
-        genderOrientationMap.put(0, "未选择");
-        genderOrientationMap.put(1, "异性恋");
-        genderOrientationMap.put(2, "同性恋");
-        genderOrientationMap.put(3, "双性恋");
-        genderOrientationMap.put(4, "无性恋");
-        genderOrientationMap.put(5, "泛性恋");
-        genderOrientationMap.put(6, "其他");
-        return genderOrientationMap;
-    }
-
-    /**
      * 学历字典
      *
      * @return

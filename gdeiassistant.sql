@@ -151,7 +151,7 @@ DROP TABLE IF EXISTS `reading`;
 CREATE TABLE `reading` (
   `id` varchar(43) NOT NULL COMMENT '专题阅读信息主键ID',
   `title` varchar(50) NOT NULL COMMENT '专题阅读信息标题',
-  `description` varchar(100) NOT NULL COMMENT '专题阅读信息描述',
+  `description` varchar(150) NOT NULL COMMENT '专题阅读信息描述',
   `link` varchar(250) NOT NULL COMMENT '专题阅读信息链接',
   `create_time` datetime NOT NULL COMMENT '专题阅读信息创建时间',
   PRIMARY KEY (`id`)

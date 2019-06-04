@@ -259,23 +259,30 @@ public class WechatService {
         Integer group = userLoginService.GetUserByUsername(user.getUsername()).getGroup();
         CardInfo cardInfo = null;
         if (UserGroupEnum.TRIAL.getValue().equals(group)) {
-            cardInfo = new Gson().fromJson(environment.getProperty("trial.data.cardinfo")
+            DataJsonResult<CardInfo> result = new Gson().fromJson(environment.getProperty("trial.data.cardinfo")
                     , new TypeToken<DataJsonResult<CardInfo>>() {
                     }.getType());
+            if (result != null) {
+                cardInfo = result.getData();
+            }
         } else {
             cardInfo = cardQueryService.CardInfoQuery(request.getSession().getId(), user.getUsername(), user.getPassword());
         }
-        String content = "基本信息：\n" +
-                "姓名：" + cardInfo.getName() + "\n" +
-                "学号：" + cardInfo.getNumber() + "\n" +
-                "卡号：" + cardInfo.getCardNumber() + "\n" +
-                "\n余额信息：\n" +
-                "余额：" + cardInfo.getCardBalance() + "元\n" +
-                "过渡余额：" + cardInfo.getCardInterimBalance() + "元\n" +
-                "\n状态信息：\n" +
-                "冻结状态：" + cardInfo.getCardFreezeState() + "\n" +
-                "挂失状态：" + cardInfo.getCardLostState();
-        wechatTextMessage.setContent(content);
+        if (cardInfo != null) {
+            String content = "基本信息：\n" +
+                    "姓名：" + cardInfo.getName() + "\n" +
+                    "学号：" + cardInfo.getNumber() + "\n" +
+                    "卡号：" + cardInfo.getCardNumber() + "\n" +
+                    "\n余额信息：\n" +
+                    "余额：" + cardInfo.getCardBalance() + "元\n" +
+                    "过渡余额：" + cardInfo.getCardInterimBalance() + "元\n" +
+                    "\n状态信息：\n" +
+                    "冻结状态：" + cardInfo.getCardFreezeState() + "\n" +
+                    "挂失状态：" + cardInfo.getCardLostState();
+            wechatTextMessage.setContent(content);
+        } else {
+            wechatTextMessage.setContent("没有查询到校园卡信息");
+        }
         /*wechatTextMessage.setContent(stringBuilder);
         WechatArticle cardArticle = new WechatArticle();
         cardArticle.setTitle("校园卡信息查询结果");
@@ -312,8 +319,46 @@ public class WechatService {
         Integer group = userLoginService.GetUserByUsername(user.getUsername()).getGroup();
         if (UserGroupEnum.TRIAL.getValue().equals(group)) {
             WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
-            wechatTextMessage.setContent(environment.getProperty("trial.data.grade"));
-            return wechatTextMessage;
+            DataJsonResult<GradeQueryResult> result = new Gson().fromJson(environment.getProperty("trial.data.grade")
+                    , new TypeToken<DataJsonResult<GradeQueryResult>>() {
+                    }.getType());
+            if (result != null) {
+                GradeQueryResult gradeQueryResult = result.getData();
+                int term = gradeQueryResult.getSecondTermGradeList().size() == 0 ? 1 : 2;
+                if (term == 1) {
+                    if (!gradeQueryResult.getFirstTermGradeList().isEmpty()) {
+                        StringBuilder sb = new StringBuilder();
+                        int gradesCount = 0;
+                        for (Grade grade : gradeQueryResult.getFirstTermGradeList()) {
+                            gradesCount++;
+                            sb.append(grade.getGradeName()).append("  ").append(grade.getGradeScore()).append("\n");
+                        }
+                        if (gradesCount != 0) {
+                            wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+                            wechatTextMessage.setContent(sb.toString());
+                            return wechatTextMessage;
+                        }
+                    }
+                    return new WechatTextMessage(wechatBaseMessage
+                            , "当前学期没有成绩信息");
+                } else {
+                    if (!gradeQueryResult.getSecondTermGradeList().isEmpty()) {
+                        StringBuilder sb = new StringBuilder();
+                        int gradesCount = 0;
+                        for (Grade grade : gradeQueryResult.getSecondTermGradeList()) {
+                            gradesCount++;
+                            sb.append(grade.getGradeName()).append("  ").append(grade.getGradeScore()).append("\n");
+                        }
+                        if (gradesCount != 0) {
+                            wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
+                            wechatTextMessage.setContent(sb.toString());
+                            return wechatTextMessage;
+                        }
+                    }
+                    return new WechatTextMessage(wechatBaseMessage, "当前学期没有成绩信息");
+                }
+            }
+            return new WechatTextMessage(wechatBaseMessage, "没有查询到成绩信息");
         }
         GradeQueryResult gradeQueryResult = gradeQueryService.QueryUserGradeFromDocument(user.getUsername(), null);
         if (gradeQueryResult != null) {
@@ -390,8 +435,30 @@ public class WechatService {
         Integer group = userLoginService.GetUserByUsername(user.getUsername()).getGroup();
         if (UserGroupEnum.TRIAL.getValue().equals(group)) {
             WechatTextMessage wechatTextMessage = new WechatTextMessage(wechatBaseMessage);
-            wechatTextMessage.setContent(environment.getProperty("trial.data.schedule"));
-            return wechatTextMessage;
+            DataJsonResult<ScheduleQueryResult> result = new Gson().fromJson(environment.getProperty("trial.data.schedule")
+                    , new TypeToken<DataJsonResult<ScheduleQueryResult>>() {
+                    }.getType());
+            if (result != null) {
+                List<Schedule> scheduleList = result.getData().getScheduleList();
+                int dayOfWeek = LocalDate.now().getDayOfWeek().getValue();
+                StringBuilder sb = new StringBuilder("今日的课表：\n");
+                if (!scheduleList.isEmpty()) {
+                    int schedulesCount = 0;
+                    for (Schedule schedule : scheduleList) {
+                        if (schedule.getColumn() + 1 == dayOfWeek) {
+                            schedulesCount++;
+                            sb.append(schedule.getScheduleLesson()).append("  ").append(schedule.getScheduleName())
+                                    .append("  ").append(schedule.getScheduleLocation()).append("\n");
+                        }
+                    }
+                    if (schedulesCount != 0) {
+                        wechatTextMessage.setContent(sb.toString());
+                        return wechatTextMessage;
+                    }
+                }
+                return new WechatTextMessage(wechatBaseMessage, "今天没有课程");
+            }
+            return new WechatTextMessage(wechatBaseMessage, "没有查找到成绩信息");
         }
         ScheduleQueryResult scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(user.getUsername(), null);
         if (scheduleQueryResult != null) {

@@ -3,6 +3,7 @@ package edu.gdei.gdeiassistant.Controller.YiBan;
 import cn.yiban.open.Authorize;
 import cn.yiban.open.FrameUtil;
 import com.google.gson.Gson;
+import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Entity.YiBanAuthorizeInfo;
 import edu.gdei.gdeiassistant.Pojo.Entity.YiBanUser;
@@ -74,7 +75,11 @@ public class YiBanLoginController {
         request.getSession().setAttribute("username", user.getUsername());
         request.getSession().setAttribute("password", user.getPassword());
         request.getSession().setAttribute("group", user.getGroup());
-        userLoginService.AsyncUpdateSession(request);
+        if (user.getGroup().equals(UserGroupEnum.STUDENT.getValue())
+                || user.getGroup().equals(UserGroupEnum.TEST.getValue())) {
+            //若当前用户组为学生用户或测试用户，则异步地与教务系统会话进行同步
+            userLoginService.AsyncUpdateSession(request);
+        }
         if (redirectInfo.needToRedirect()) {
             modelAndView.setViewName("redirect:/" + redirectInfo.getRedirect_url());
         } else {

@@ -39,7 +39,7 @@
     </article>
 </div>
 
-<div class="recommendation">
+<div class="recommendation" style="display: none">
     <div class="hd">
         <h1 class="page_title">专题阅读</h1>
     </div>

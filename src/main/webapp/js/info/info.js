@@ -38,7 +38,7 @@ function loadingReadingInfo() {
         success: function (result) {
             if (result.success) {
                 if (result.data.length > 0) {
-                    $("#recommendation").show();
+                    $(".recommendation").show();
                     result.data.forEach(function (element) {
                         $(".recommendation:eq(0) .weui-cells:eq(0)")
                             .append("<a class='weui-cell weui-cell_access' href='" + element.link + "'>" +

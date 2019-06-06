@@ -95,6 +95,8 @@
 
     //与教务系统身份认证信息进行同步
     function authenticateWithSystem() {
+        <c:choose>
+        <c:when test="${sessionScope.group==2 || sessionScope.group==3}">
         $.confirm({
             text: '我们将依照《隐私政策》保护你的个人信息，若你点击确定按钮，将视为你已阅读并同意《隐私政策》',
             title: '授权广东二师助手登录你的教务系统并获取你的个人信息',
@@ -131,6 +133,14 @@
                 });
             }
         });
+        </c:when>
+        <c:otherwise>
+        $.alert({
+            text: '当前用户组不支持使用教务系统进行实名认证',
+            title: '错误提示'
+        });
+        </c:otherwise>
+        </c:choose>
     }
 
     //弹出调用摄像头拍照的提示

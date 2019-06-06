@@ -100,7 +100,11 @@ public class GraduatedAccountService {
             User decryptedUser = user.decryptUser();
             try {
                 if (user.getGroup().equals(UserGroupEnum.GRADUATED.getValue())) {
-                    //若当前用户是毕业用户，则跳过检测
+                    //若当前用户是毕业用户，则跳过
+                    continue;
+                } else if (!user.getGroup().equals(UserGroupEnum.STUDENT.getValue())
+                        && !user.getGroup().equals(UserGroupEnum.TEST.getValue())) {
+                    //若当前用户不是学生用户和测试用户，则不支持进行毕业账号处理
                     continue;
                 }
                 if ((CheckUserBelongToGraduated(UUID.randomUUID().toString(), decryptedUser.getUsername()

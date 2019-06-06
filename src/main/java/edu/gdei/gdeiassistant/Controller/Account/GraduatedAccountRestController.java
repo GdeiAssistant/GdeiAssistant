@@ -1,6 +1,7 @@
 package edu.gdei.gdeiassistant.Controller.Account;
 
 import com.taobao.wsgsvr.WsgException;
+import edu.gdei.gdeiassistant.Annotation.UserGroupAccess;
 import edu.gdei.gdeiassistant.Enum.Graduation.GraduationProgramTypeEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.Graduation;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -44,6 +45,7 @@ public class GraduatedAccountRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/graduation", method = RequestMethod.POST)
+    @UserGroupAccess(group = {2, 3})
     public JsonResult SaveGraduation(HttpServletRequest request, @Validated @NotNull Integer program) throws WsgException {
         if (program < 0 || program >= GraduationProgramTypeEnum.values().length) {
             return new JsonResult(false, "请求参数不合法");

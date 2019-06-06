@@ -1,6 +1,10 @@
+<%@ page import="edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>
+
+    <c:set value="<%= UserGroupEnum.STUDENT.getValue()%>" var="student"/>
+    <c:set value="<%= UserGroupEnum.TEST.getValue()%>" var="test"/>
 
     $(function () {
         //消除iOS点击延迟
@@ -37,7 +41,7 @@
     //保存毕业用户账号处理方案
     function saveGraduationProgram() {
         <c:choose>
-        <c:when test="${sessionScope.group==2 || sessionScope.group==3}">
+        <c:when test="${sessionScope.group==student || sessionScope.group==test}">
         $("#loadingToast, .weui_mask").show();
         $.ajax({
             url: '/api/graduation',

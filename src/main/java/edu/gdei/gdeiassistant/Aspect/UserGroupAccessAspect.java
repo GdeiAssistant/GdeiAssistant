@@ -35,10 +35,12 @@ public class UserGroupAccessAspect {
         String username = (String) request.getSession().getAttribute("username");
         User user = userLoginService.GetUserByUsername(username);
         //对比用户组值是否与资源要求的权限值相匹配
-        if (user.getGroup().equals(userGroupAccess.group())) {
-            return (JsonResult) proceedingJoinPoint.proceed(args);
+        for (int group : userGroupAccess.group()) {
+            if (user.getGroup().equals(group)) {
+                return (JsonResult) proceedingJoinPoint.proceed(args);
+            }
         }
-        //当前用户组没有权限访问该资源
-        return new JsonResult(ConstantUtils.USER_GROUP_NO_ACCESS, false, "当前用户组没有权限访问该资源");
+        //当前用户组没有权限访问该资源或执行操作
+        return new JsonResult(ConstantUtils.USER_GROUP_NO_ACCESS, false, "当前用户组没有权限访问该资源或执行操作");
     }
 }

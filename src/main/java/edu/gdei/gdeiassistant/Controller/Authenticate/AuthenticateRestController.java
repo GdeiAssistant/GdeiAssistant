@@ -1,6 +1,8 @@
 package edu.gdei.gdeiassistant.Controller.Authenticate;
 
+import edu.gdei.gdeiassistant.Annotation.UserGroupAccess;
 import edu.gdei.gdeiassistant.Enum.Authentication.AuthenticationTypeEnum;
+import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Authentication;
 import edu.gdei.gdeiassistant.Pojo.Entity.Identity;
@@ -52,31 +54,36 @@ public class AuthenticateRestController {
      * @throws ServerErrorException
      */
     @RequestMapping(value = "/api/authentication", method = RequestMethod.POST)
+    @UserGroupAccess(group = {2, 3, 6})
     public JsonResult RealNameAuthenticate(HttpServletRequest request
             , @RequestParam(value = "image", required = false) MultipartFile file
             , @RequestParam("method") AuthenticationTypeEnum authenticationTypeEnum) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) request.getSession().getAttribute("password");
+        Integer group = (Integer) request.getSession().getAttribute("group");
         switch (authenticationTypeEnum) {
             //与教务系统进行同步
             case AUTHENTICATE_WITH_CAS_SYSTEM:
                 //获取用户真实姓名
-                Map<String, String> infoMap = authenticateService.GetAuthenticationInfoBySystem(request.getSession().getId(), username, password);
-                String name = infoMap.get("name");
-                String number = infoMap.get("number");
-                String identityNumber = authenticateService.GetUserIdentityNumber(request.getSession().getId(), new User(username, password));
-                //保存用户实名信息
-                authenticateDataService.SaveSystemAuthenticationData(username, name, number, identityNumber);
-                return new JsonResult(true);
+                if (group.equals(UserGroupEnum.STUDENT.getValue()) || group.equals(UserGroupEnum.TEST.getValue())) {
+                    Map<String, String> infoMap = authenticateService.GetAuthenticationInfoBySystem(request.getSession().getId(), username, password);
+                    String name = infoMap.get("name");
+                    String number = infoMap.get("number");
+                    String identityNumber = authenticateService.GetUserIdentityNumber(request.getSession().getId(), new User(username, password));
+                    //保存用户实名信息
+                    authenticateDataService.SaveSystemAuthenticationData(username, name, number, identityNumber);
+                    return new JsonResult(true);
+                }
+                return new JsonResult(false, "当前用户组不支持使用教务系统进行实名认证");
 
             //与易班校方认证信息同步
             case AUTHENTICATE_WITH_YIBAN:
                 //获取用户真实姓名和学号
                 String yiBanAccessToken = (String) request.getSession().getAttribute("yiBanAccessToken");
                 if (StringUtils.isNotBlank(yiBanAccessToken)) {
-                    infoMap = authenticateService.GetAuthenticationInfoByYiBan(yiBanAccessToken);
-                    name = infoMap.get("name");
-                    number = infoMap.get("number");
+                    Map<String, String> infoMap = authenticateService.GetAuthenticationInfoByYiBan(yiBanAccessToken);
+                    String name = infoMap.get("name");
+                    String number = infoMap.get("number");
                     if (StringUtils.isBlank(number)) {
                         return new JsonResult(false, "你的易班账户暂不支持实名认证");
                     }
@@ -95,8 +102,8 @@ public class AuthenticateRestController {
                     return new JsonResult(false, "上传的身份证照片大小超过限制");
                 }
                 Identity identity = authenticateService.ParseIdentityCardInfo(file.getInputStream());
-                name = identity.getName();
-                identityNumber = identity.getCode();
+                String name = identity.getName();
+                String identityNumber = identity.getCode();
                 //保存用户实名信息
                 authenticateDataService.SaveSystemAuthenticationData(username, name, null, identityNumber);
                 return new JsonResult(true);

@@ -22,4 +22,14 @@ public @interface TrialData {
      * @return
      */
     boolean base() default false;
+
+
+    /**
+     * 若返回的JSON数据携带时间信息，如查询的学年、周数和日期
+     * <p>
+     * 则填写对应的时间信息属性字段名，默认为空，该时间信息属性将填充入返回用户的测试数据中
+     *
+     * @return
+     */
+    String time() default "";
 }

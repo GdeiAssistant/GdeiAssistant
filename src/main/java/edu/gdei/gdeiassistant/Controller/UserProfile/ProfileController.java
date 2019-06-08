@@ -51,12 +51,6 @@ public class ProfileController {
                     containProfile = true;
                 }
             }
-            if (privacy.isGenderOrientationOpen()) {
-                if (profile.getGenderOrientation() != null && !profile.getGenderOrientation().equals(0)) {
-                    modelAndView.addObject("GenderOrientation", UserProfileService.getGenderOrientationMap().get(profile.getGenderOrientation()));
-                    containProfile = true;
-                }
-            }
             if (privacy.isFacultyOpen()) {
                 if (profile.getFaculty() != null && !profile.getFaculty().equals(0)) {
                     modelAndView.addObject("Faculty", UserProfileService.getFacultyMap().get(profile.getFaculty()));

@@ -58,7 +58,7 @@ public class CollectionQueryService {
                 Element pagenum = document.getElementById("pagenum");
                 if (pagenum == null) {
                     //没有搜索结果
-                    throw new ErrorQueryConditionException("搜索结果为空");
+                    return null;
                 }
                 sumPage = Integer.valueOf(pagenum.select("option").first().text().split("/")[1]);
                 if (currentPage > sumPage) {
@@ -98,7 +98,7 @@ public class CollectionQueryService {
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (ErrorQueryConditionException e) {
             log.error("查询馆藏图书异常：", e);
-            throw new ErrorQueryConditionException("查询条件不合法");
+            throw e;
         } catch (Exception e) {
             log.error("查询馆藏图书异常：", e);
             throw new ServerErrorException("图书馆系统异常");

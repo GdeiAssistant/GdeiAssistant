@@ -18,7 +18,7 @@
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
-    <script>document.write("<script type='text/javascript' src='/js/account/graduation.js?time=" + Date.now() + "'><\/script>");</script>
+    <jsp:include page="/js/account/graduation.jsp"/>
 </head>
 <body>
 

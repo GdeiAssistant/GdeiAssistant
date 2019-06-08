@@ -76,19 +76,6 @@
 
         </c:if>
 
-        <c:if test="${GenderOrientation!=null}">
-
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    <p>性取向</p>
-                </div>
-                <div class="weui-cell__ft">
-                        ${GenderOrientation}
-                </div>
-            </div>
-
-        </c:if>
-
         <c:if test="${Faculty!=null}">
 
             <div class="weui-cell">

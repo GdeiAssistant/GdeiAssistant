@@ -20,8 +20,6 @@ public class Profile implements Serializable {
 
     private Integer gender;
 
-    private Integer genderOrientation;
-
     private Date birthday;
 
     private Integer degree;
@@ -52,14 +50,6 @@ public class Profile implements Serializable {
 
     public void setGender(Integer gender) {
         this.gender = gender;
-    }
-
-    public Integer getGenderOrientation() {
-        return genderOrientation;
-    }
-
-    public void setGenderOrientation(int genderOrientation) {
-        this.genderOrientation = genderOrientation;
     }
 
     public String getRegion() {

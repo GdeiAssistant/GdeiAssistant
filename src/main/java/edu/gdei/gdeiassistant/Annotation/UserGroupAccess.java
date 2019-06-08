@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UserGroupAccess {
 
-    int group();
+    int[] group();
 }

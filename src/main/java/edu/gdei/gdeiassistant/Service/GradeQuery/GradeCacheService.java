@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Service.GradeQuery;
 
+import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Document.GradeDocument;
 import edu.gdei.gdeiassistant.Pojo.Entity.Grade;
@@ -154,73 +155,76 @@ public class GradeCacheService {
             //设置线程信号量，限制最大同时查询的线程数为5
             Semaphore semaphore = new Semaphore(5);
             for (User user : userList) {
-                Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
-                if (privacy != null && privacy.isCacheAllow()) {
-                    GradeDocument gradeDocument = gradeDao.queryGradeByUsername(StringEncryptUtils
-                            .decryptString(user.getUsername()));
-                    //如果最后更新日期距今已超过7天，则进行更新
-                    if (gradeDocument == null || Duration.between(gradeDocument.getUpdateDateTime()
-                            .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= gradeInterval) {
-                        ListenableFuture<GradeCacheResult> future = QueryGradeData(semaphore, user);
-                        future.addCallback(new ListenableFutureCallback<GradeCacheResult>() {
+                if (user.getGroup().equals(UserGroupEnum.STUDENT.getValue())
+                        || user.getGroup().equals(UserGroupEnum.TEST.getValue())) {
+                    Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
+                    if (privacy != null && privacy.isCacheAllow()) {
+                        GradeDocument gradeDocument = gradeDao.queryGradeByUsername(StringEncryptUtils
+                                .decryptString(user.getUsername()));
+                        //如果最后更新日期距今已超过7天，则进行更新
+                        if (gradeDocument == null || Duration.between(gradeDocument.getUpdateDateTime()
+                                .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= gradeInterval) {
+                            ListenableFuture<GradeCacheResult> future = QueryGradeData(semaphore, user);
+                            future.addCallback(new ListenableFutureCallback<GradeCacheResult>() {
 
-                            @Override
-                            public void onFailure(Throwable ex) {
+                                @Override
+                                public void onFailure(Throwable ex) {
 
-                            }
-
-                            @Override
-                            public void onSuccess(GradeCacheResult result) {
-                                try {
-                                    if (result != null) {
-                                        GradeDocument document = new GradeDocument();
-                                        List<Double> firstTermGPAList = new ArrayList<>();
-                                        List<Double> secondTermGPAList = new ArrayList<>();
-                                        List<Double> firstTermIGPList = new ArrayList<>();
-                                        List<Double> secondTermIGPList = new ArrayList<>();
-                                        List<List<Grade>> gradeLists = new ArrayList<>();
-                                        for (Double firstTermGPA : result.getFirstTermGPAArray()) {
-                                            if (firstTermGPA != null) {
-                                                firstTermGPAList.add(firstTermGPA);
-                                            }
-                                        }
-                                        for (Double secondTermGPA : result.getSecondTermGPAArray()) {
-                                            if (secondTermGPA != null) {
-                                                secondTermGPAList.add(secondTermGPA);
-                                            }
-                                        }
-                                        for (Double firstTermIGP : result.getFirstTermIGPArray()) {
-                                            if (firstTermIGP != null) {
-                                                firstTermIGPList.add(firstTermIGP);
-                                            }
-                                        }
-                                        for (Double secondTermIGP : result.getSecondTermIGPArray()) {
-                                            if (secondTermIGP != null) {
-                                                secondTermIGPList.add(secondTermIGP);
-                                            }
-                                        }
-                                        for (List<Grade> gradeList : result.getGradeListArray()) {
-                                            if (gradeList != null) {
-                                                gradeLists.add(gradeList);
-                                            }
-                                        }
-                                        if (gradeDocument != null && gradeDocument.getId() != null) {
-                                            document.setId(gradeDocument.getId());
-                                        }
-                                        document.setUsername(StringEncryptUtils.decryptString(user.getUsername()));
-                                        document.setFirstTermGPAList(firstTermGPAList);
-                                        document.setFirstTermIGPList(firstTermIGPList);
-                                        document.setSecondTermGPAList(secondTermGPAList);
-                                        document.setSecondTermIGPList(secondTermIGPList);
-                                        document.setGradeList(gradeLists);
-                                        document.setUpdateDateTime(new Date());
-                                        gradeDao.saveGrade(document);
-                                    }
-                                } catch (Exception e) {
-                                    log.error("定时查询保存成绩信息异常：", e);
                                 }
-                            }
-                        });
+
+                                @Override
+                                public void onSuccess(GradeCacheResult result) {
+                                    try {
+                                        if (result != null) {
+                                            GradeDocument document = new GradeDocument();
+                                            List<Double> firstTermGPAList = new ArrayList<>();
+                                            List<Double> secondTermGPAList = new ArrayList<>();
+                                            List<Double> firstTermIGPList = new ArrayList<>();
+                                            List<Double> secondTermIGPList = new ArrayList<>();
+                                            List<List<Grade>> gradeLists = new ArrayList<>();
+                                            for (Double firstTermGPA : result.getFirstTermGPAArray()) {
+                                                if (firstTermGPA != null) {
+                                                    firstTermGPAList.add(firstTermGPA);
+                                                }
+                                            }
+                                            for (Double secondTermGPA : result.getSecondTermGPAArray()) {
+                                                if (secondTermGPA != null) {
+                                                    secondTermGPAList.add(secondTermGPA);
+                                                }
+                                            }
+                                            for (Double firstTermIGP : result.getFirstTermIGPArray()) {
+                                                if (firstTermIGP != null) {
+                                                    firstTermIGPList.add(firstTermIGP);
+                                                }
+                                            }
+                                            for (Double secondTermIGP : result.getSecondTermIGPArray()) {
+                                                if (secondTermIGP != null) {
+                                                    secondTermIGPList.add(secondTermIGP);
+                                                }
+                                            }
+                                            for (List<Grade> gradeList : result.getGradeListArray()) {
+                                                if (gradeList != null) {
+                                                    gradeLists.add(gradeList);
+                                                }
+                                            }
+                                            if (gradeDocument != null && gradeDocument.getId() != null) {
+                                                document.setId(gradeDocument.getId());
+                                            }
+                                            document.setUsername(StringEncryptUtils.decryptString(user.getUsername()));
+                                            document.setFirstTermGPAList(firstTermGPAList);
+                                            document.setFirstTermIGPList(firstTermIGPList);
+                                            document.setSecondTermGPAList(secondTermGPAList);
+                                            document.setSecondTermIGPList(secondTermIGPList);
+                                            document.setGradeList(gradeLists);
+                                            document.setUpdateDateTime(new Date());
+                                            gradeDao.saveGrade(document);
+                                        }
+                                    } catch (Exception e) {
+                                        log.error("定时查询保存成绩信息异常：", e);
+                                    }
+                                }
+                            });
+                        }
                     }
                 }
             }

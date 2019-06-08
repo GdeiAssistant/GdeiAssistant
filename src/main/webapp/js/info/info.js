@@ -37,13 +37,16 @@ function loadingReadingInfo() {
         method: 'GET',
         success: function (result) {
             if (result.success) {
-                result.data.forEach(function (element) {
-                    $(".recommendation:eq(0) .weui-cells:eq(0)")
-                        .append("<a class='weui-cell weui-cell_access' href='" + element.link + "'>" +
-                            "<div class='weui-cell__bd'><p>" + element.title + "</p>" +
-                            "<p style='font-size:13px;color:#999'>" + element.description + "</p></div> " +
-                            "<div class='weui-cell__ft'></div></a>")
-                });
+                if (result.data.length > 0) {
+                    $(".recommendation").show();
+                    result.data.forEach(function (element) {
+                        $(".recommendation:eq(0) .weui-cells:eq(0)")
+                            .append("<a class='weui-cell weui-cell_access' href='" + element.link + "'>" +
+                                "<div class='weui-cell__bd'><p>" + element.title + "</p>" +
+                                "<p style='font-size:13px;color:#999'>" + element.description + "</p></div> " +
+                                "<div class='weui-cell__ft'></div></a>")
+                    });
+                }
             } else {
                 $.toptip(result.message, 'error');
             }

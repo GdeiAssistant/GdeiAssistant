@@ -156,12 +156,6 @@
 
         </c:forEach>
 
-        <c:forEach items="${profile:getGenderOrientationMap()}" var="genderOrientationEntry">
-
-        genderOrientationMap[${genderOrientationEntry.key}] = "${genderOrientationEntry.value}";
-
-        </c:forEach>
-
         <c:forEach items="${profile:getDegreeMap()}" var="degreeEntry">
 
         degreeMap[${degreeEntry.key}] = "${degreeEntry.value}";
@@ -191,9 +185,6 @@
                     } else {
                         $("#gender").text(genderMap[gender]);
                     }
-                    //性取向
-                    var genderOrientation = result.data.genderOrientation == null ? 0 : result.data.genderOrientation;
-                    $("#genderOrientation").text(genderOrientationMap[genderOrientation]);
                     var location = result.data.region;
                     if (location != null) {
                         if (result.data.state != null && result.data.state != result.data.region) {
@@ -546,43 +537,6 @@
                         }
                     });
                 }
-            }
-        });
-    }
-
-    //修改性取向
-    function changeGenderOrientation() {
-        var genderOrientationPicker = [];
-        for (var i = 0; i < genderOrientationMap.length; i++) {
-            genderOrientationPicker[i] = {
-                label: genderOrientationMap[i],
-                value: i
-            }
-        }
-        weui.picker(genderOrientationPicker, {
-            defaultValue: [0],
-            onConfirm: function (genderOrientation) {
-                $.ajax({
-                    url: "/api/profile/genderOrientation",
-                    data: {
-                        genderOrientation: genderOrientation[0].value
-                    },
-                    type: 'post',
-                    success: function (updateResult) {
-                        if (updateResult.success === true) {
-                            loadProfile();
-                        } else {
-                            showCustomErrorTip(updateResult.message);
-                        }
-                    },
-                    error: function (result) {
-                        if (result.status) {
-                            showCustomErrorTip(result.responseJSON.message);
-                        } else {
-                            showNetworkErrorTip();
-                        }
-                    }
-                });
             }
         });
     }

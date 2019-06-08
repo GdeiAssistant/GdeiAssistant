@@ -236,23 +236,6 @@ public class ProfileRestController {
     }
 
     /**
-     * 更新用户性取向
-     *
-     * @param request
-     * @param genderOrientation
-     * @return
-     */
-    @RequestMapping(value = "/api/profile/genderOrientation", method = RequestMethod.POST)
-    public JsonResult UpdateGenderOrientation(HttpServletRequest request, int genderOrientation) throws Exception {
-        if (genderOrientation >= 0 && genderOrientation < UserProfileService.getGenderOrientationMap().size()) {
-            String username = (String) request.getSession().getAttribute("username");
-            userProfileService.UpdateGenderOrientation(username, genderOrientation);
-            return new JsonResult(true);
-        }
-        return new JsonResult(false, "请求参数异常");
-    }
-
-    /**
      * 更新生日日期
      *
      * @param request

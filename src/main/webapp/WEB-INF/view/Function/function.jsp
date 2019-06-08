@@ -100,10 +100,6 @@
         <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>绑定微信</p>
     </div>
-    <div id="yiban" style="display: none" onclick="showYibanAttachConfirm()">
-        <i style="background: url(/img/function/yiban.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>绑定易班</p>
-    </div>
     <div id="about" onclick="window.location.href='/about'">
         <i style="background: url(/img/function/about.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>关于应用</p>

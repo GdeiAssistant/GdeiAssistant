@@ -156,12 +156,6 @@
             <input id="wechat" class="weui-switch" type="checkbox">
         </div>
     </div>
-    <div class="weui-cell weui-cell_switch" style="display: none">
-        <div class="weui-cell__bd">绑定易班</div>
-        <div class="weui-cell__ft">
-            <input id="yiban" class="weui-switch" type="checkbox">
-        </div>
-    </div>
 </div>
 
 <!-- 重置按钮 -->

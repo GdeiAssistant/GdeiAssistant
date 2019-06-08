@@ -11,6 +11,33 @@ import java.util.List;
 public interface LostAndFoundMapper {
 
     @Select("select * from lostandfound join profile using (username) where id=#{id} limit 1")
+    @Results(id = "LostAndFoundInfo", value = {
+            @Result(property = "lostAndFoundItem.id", column = "id"),
+            @Result(property = "lostAndFoundItem.username", column = "username"),
+            @Result(property = "lostAndFoundItem.name", column = "name"),
+            @Result(property = "lostAndFoundItem.description", column = "description"),
+            @Result(property = "lostAndFoundItem.location", column = "location"),
+            @Result(property = "lostAndFoundItem.itemType", column = "item_type"),
+            @Result(property = "lostAndFoundItem.lostType", column = "lost_type"),
+            @Result(property = "lostAndFoundItem.qq", column = "qq"),
+            @Result(property = "lostAndFoundItem.wechat", column = "wechat"),
+            @Result(property = "lostAndFoundItem.phone", column = "phone"),
+            @Result(property = "lostAndFoundItem.state", column = "state"),
+            @Result(property = "lostAndFoundItem.publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP),
+            @Result(property = "profile.username", column = "username"),
+            @Result(property = "profile.kickname", column = "kickname"),
+            @Result(property = "profile.gender", column = "gender"),
+            @Result(property = "profile.birthday", column = "birthday"),
+            @Result(property = "profile.degree", column = "degree"),
+            @Result(property = "profile.faculty", column = "faculty"),
+            @Result(property = "profile.major", column = "major"),
+            @Result(property = "profile.region", column = "region"),
+            @Result(property = "profile.state", column = "state"),
+            @Result(property = "profile.city", column = "city"),
+    })
+    public LostAndFoundInfo selectInfoByID(Integer id) throws Exception;
+
+    @Select("select * from lostandfound where username=#{username} order by id desc")
     @Results(id = "LostAndFoundItem", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "username", column = "username"),
@@ -22,10 +49,6 @@ public interface LostAndFoundMapper {
             @Result(property = "state", column = "state"),
             @Result(property = "publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP)
     })
-    public LostAndFoundInfo selectInfoByID(Integer id) throws Exception;
-
-    @Select("select * from lostandfound where username=#{username} order by id desc")
-    @ResultMap("LostAndFoundItem")
     public List<LostAndFoundItem> selectItemByUsername(String username) throws Exception;
 
     @Select("select * from lostandfound where lost_type=#{lostType} and state='0' order by id desc limit #{start},#{size}")

@@ -22,15 +22,7 @@ public class ReadingService {
         return readingMapper.selectLatestReadingList();
     }
 
-    public List<Reading> LoadingAllReadingList(){
+    public List<Reading> LoadingAllReadingList() {
         return readingMapper.selectReadingList();
-    }
-
-    /**
-     * 保存专题阅读信息
-     * @param reading
-     */
-    public void SaveReadingInfo(Reading reading) {
-        readingMapper.insertReading(reading);
     }
 }

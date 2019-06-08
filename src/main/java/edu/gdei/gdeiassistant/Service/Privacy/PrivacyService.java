@@ -1,9 +1,10 @@
 package edu.gdei.gdeiassistant.Service.Privacy;
 
+import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
+import edu.gdei.gdeiassistant.Pojo.Entity.Privacy;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Privacy.PrivacyMapper;
-import edu.gdei.gdeiassistant.Pojo.Entity.Privacy;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,7 +39,7 @@ public class PrivacyService {
         if (privacy != null) {
             return privacy;
         }
-        return null;
+        throw new UserNotExistException("当前用户不存在");
     }
 
     /**
@@ -48,31 +49,8 @@ public class PrivacyService {
      * @param username
      * @return
      */
-    public boolean UpdateGender(boolean state, String username) {
-        try {
-            privacyMapper.updateGender(state, StringEncryptUtils.encryptString(username));
-            return true;
-        } catch (Exception e) {
-            log.error("更新性别隐私配置异常：", e);
-            return false;
-        }
-    }
-
-    /**
-     * 更新性取向隐私设置
-     *
-     * @param state
-     * @param username
-     * @return
-     */
-    public boolean UpdateGenderOrientation(boolean state, String username) {
-        try {
-            privacyMapper.updateGenderOrientation(state, StringEncryptUtils.encryptString(username));
-            return true;
-        } catch (Exception e) {
-            log.error("更新性取向隐私配置异常：", e);
-            return false;
-        }
+    public void UpdateGender(boolean state, String username) throws Exception {
+        privacyMapper.updateGender(state, StringEncryptUtils.encryptString(username));
     }
 
     /**
@@ -82,14 +60,8 @@ public class PrivacyService {
      * @param username
      * @return
      */
-    public boolean UpdateFaculty(boolean state, String username) {
-        try {
-            privacyMapper.updateFaculty(state, StringEncryptUtils.encryptString(username));
-            return true;
-        } catch (Exception e) {
-            log.error("更新院系隐私配置异常：", e);
-            return false;
-        }
+    public void UpdateFaculty(boolean state, String username) throws Exception {
+        privacyMapper.updateFaculty(state, StringEncryptUtils.encryptString(username));
     }
 
     /**
@@ -99,14 +71,8 @@ public class PrivacyService {
      * @param username
      * @return
      */
-    public boolean UpdateMajor(boolean state, String username) {
-        try {
-            privacyMapper.updateMajor(state, StringEncryptUtils.encryptString(username));
-            return true;
-        } catch (Exception e) {
-            log.error("更新专业隐私配置异常：", e);
-            return false;
-        }
+    public void UpdateMajor(boolean state, String username) throws Exception {
+        privacyMapper.updateMajor(state, StringEncryptUtils.encryptString(username));
     }
 
     /**
@@ -116,14 +82,8 @@ public class PrivacyService {
      * @param username
      * @return
      */
-    public boolean UpdateLocation(boolean state, String username) {
-        try {
-            privacyMapper.updateRegion(state, StringEncryptUtils.encryptString(username));
-            return true;
-        } catch (Exception e) {
-            log.error("更新国家和地区隐私配置异常：", e);
-            return false;
-        }
+    public void UpdateLocation(boolean state, String username) throws Exception {
+        privacyMapper.updateRegion(state, StringEncryptUtils.encryptString(username));
     }
 
     /**
@@ -133,14 +93,8 @@ public class PrivacyService {
      * @param username
      * @return
      */
-    public boolean UpdateIntroduction(boolean state, String username) {
-        try {
-            privacyMapper.updateIntroduction(state, StringEncryptUtils.encryptString(username));
-            return true;
-        } catch (Exception e) {
-            log.error("更新个人简介隐私配置异常：", e);
-            return false;
-        }
+    public void UpdateIntroduction(boolean state, String username) throws Exception {
+        privacyMapper.updateIntroduction(state, StringEncryptUtils.encryptString(username));
     }
 
     /**
@@ -150,15 +104,9 @@ public class PrivacyService {
      * @param username
      * @return
      */
-    public boolean UpdateCache(boolean state, String username) {
-        try {
-            privacyMapper.updateCache(state, StringEncryptUtils.encryptString(username));
-            gradeDao.removeGrade(username);
-            scheduleDao.removeSchedule(username);
-            return true;
-        } catch (Exception e) {
-            log.error("更新教务信息缓存隐私配置异常：", e);
-            return false;
-        }
+    public void UpdateCache(boolean state, String username) throws Exception {
+        privacyMapper.updateCache(state, StringEncryptUtils.encryptString(username));
+        gradeDao.removeGrade(username);
+        scheduleDao.removeSchedule(username);
     }
 }

@@ -131,7 +131,7 @@
 
 - gdeiassistant - gdeiassistant
 
-## 网页版
+## 官网
 
 - [广东二师助手官网](https://gdeiassistant.cn)
 
@@ -336,7 +336,11 @@ Copyright (c) 2016 - 2019 GdeiAssistant
 
 ## 联系
 
-- 邮箱：[gdeiassistant@gmail.com](mailto:gdeiassistant@gmail.com)
+- 技术支持和意见建议反馈：[gdeiassistant@gmail.com](mailto:gdeiassistant@gmail.com)
+
+- 用户客服和系统故障工单提交：[support@gdeiassistant.cn](mailto:support@gdeiassistant.cn)
+
+- 社区违法和不良信息举报邮箱：[report@gdeiassistant.cn](mailto:report@gdeiassistant.cn)
 
 ## 声明
 

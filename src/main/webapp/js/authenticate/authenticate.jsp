@@ -1,6 +1,11 @@
+<%@ page import="edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>
+
+    <c:set value="<%= UserGroupEnum.STUDENT.getValue()%>" var="student"/>
+    <c:set value="<%= UserGroupEnum.TEST.getValue()%>" var="test"/>
+
     $(function () {
         FastClick.attach(document.body);
         loadAuthenticationData();
@@ -95,6 +100,8 @@
 
     //与教务系统身份认证信息进行同步
     function authenticateWithSystem() {
+        <c:choose>
+        <c:when test="${sessionScope.group==student || sessionScope.group==test}">
         $.confirm({
             text: '我们将依照《隐私政策》保护你的个人信息，若你点击确定按钮，将视为你已阅读并同意《隐私政策》',
             title: '授权广东二师助手登录你的教务系统并获取你的个人信息',
@@ -131,6 +138,14 @@
                 });
             }
         });
+        </c:when>
+        <c:otherwise>
+        $.alert({
+            text: '当前用户组不支持使用教务系统进行实名认证',
+            title: '错误提示'
+        });
+        </c:otherwise>
+        </c:choose>
     }
 
     //弹出调用摄像头拍照的提示

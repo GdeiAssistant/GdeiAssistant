@@ -151,7 +151,7 @@ DROP TABLE IF EXISTS `reading`;
 CREATE TABLE `reading` (
   `id` varchar(43) NOT NULL COMMENT '专题阅读信息主键ID',
   `title` varchar(50) NOT NULL COMMENT '专题阅读信息标题',
-  `description` varchar(100) NOT NULL COMMENT '专题阅读信息描述',
+  `description` varchar(150) NOT NULL COMMENT '专题阅读信息描述',
   `link` varchar(250) NOT NULL COMMENT '专题阅读信息链接',
   `create_time` datetime NOT NULL COMMENT '专题阅读信息创建时间',
   PRIMARY KEY (`id`)
@@ -278,7 +278,7 @@ CREATE TABLE `authentication` (
   `method` tinyint(1) DEFAULT NULL COMMENT '实名认证方法',
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '记录标记删除状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -287,6 +287,7 @@ CREATE TABLE `authentication` (
 
 LOCK TABLES `authentication` WRITE;
 /*!40000 ALTER TABLE `authentication` DISABLE KEYS */;
+INSERT INTO `authentication` VALUES (13,'6376696892374389d5106ad04a7915ab76a68fb0','gdeiassistant','李*懿','440***********2826','14*******12','2019-06-06 05:41:16','2019-06-06 05:47:27',0,0);
 /*!40000 ALTER TABLE `authentication` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -567,6 +568,7 @@ CREATE TABLE `introduction` (
 
 LOCK TABLES `introduction` WRITE;
 /*!40000 ALTER TABLE `introduction` DISABLE KEYS */;
+INSERT INTO `introduction` VALUES ('gdeiassistant',NULL);
 /*!40000 ALTER TABLE `introduction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -615,7 +617,6 @@ DROP TABLE IF EXISTS `privacy`;
 CREATE TABLE `privacy` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `is_gender_open` tinyint(1) NOT NULL COMMENT '公开性别',
-  `is_gender_orientation_open` tinyint(1) NOT NULL COMMENT '公开性取向',
   `is_region_open` tinyint(1) NOT NULL COMMENT '公开国家/地区',
   `is_introduction_open` tinyint(1) NOT NULL COMMENT '公开个人简介',
   `is_faculty_open` tinyint(1) NOT NULL COMMENT '公开院系',
@@ -632,6 +633,7 @@ CREATE TABLE `privacy` (
 
 LOCK TABLES `privacy` WRITE;
 /*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
+INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,0);
 /*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -646,7 +648,6 @@ CREATE TABLE `profile` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `kickname` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `gender` tinyint(1) DEFAULT NULL COMMENT '性别',
-  `gender_orientation` tinyint(1) DEFAULT NULL COMMENT '性取向',
   `birthday` date DEFAULT NULL COMMENT '生日',
   `degree` tinyint(1) DEFAULT NULL COMMENT '学历',
   `faculty` tinyint(1) DEFAULT NULL COMMENT '院系',
@@ -665,7 +666,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -863,4 +864,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-30  9:07:26
+-- Dump completed on 2019-06-06 15:10:52

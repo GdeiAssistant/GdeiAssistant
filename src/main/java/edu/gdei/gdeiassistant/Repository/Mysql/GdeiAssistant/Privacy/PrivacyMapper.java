@@ -27,7 +27,8 @@ public interface PrivacyMapper {
             ",is_region_open=1,is_introduction_open=1,is_cache_allow=0 where username=#{username}")
     public void resetPrivacy(String username) throws Exception;
 
-    @Update("update privacy" +
+    @Update("<script>" +
+            "update privacy" +
             "        <choose>" +
             "            <when test='genderOpen'>" +
             "                set is_gender_open='1'" +
@@ -36,10 +37,12 @@ public interface PrivacyMapper {
             "                set is_gender_open='0'" +
             "            </otherwise>" +
             "        </choose>" +
-            "        where username=#{username}")
+            "        where username=#{username}" +
+            "</script>")
     public void updateGender(@Param("genderOpen") boolean gender, @Param("username") String username) throws Exception;
 
-    @Update("update privacy" +
+    @Update("<script>" +
+            "update privacy" +
             "        <choose>" +
             "            <when test='genderOrientationOpen'>" +
             "                set is_gender_orientation_open='1'" +
@@ -48,11 +51,13 @@ public interface PrivacyMapper {
             "                set is_gender_orientation_open='0'" +
             "            </otherwise>" +
             "        </choose>" +
-            "        where username=#{username}")
+            "        where username=#{username}" +
+            "</script>")
     public void updateGenderOrientation(@Param("genderOrientationOpen") boolean genderOrientation
             , @Param("username") String username) throws Exception;
 
-    @Update("update privacy" +
+    @Update("<script>" +
+            "update privacy" +
             "        <choose>" +
             "            <when test='facultyOpen'>" +
             "                set is_faculty_open='1'" +
@@ -61,11 +66,13 @@ public interface PrivacyMapper {
             "                set is_faculty_open='0'" +
             "            </otherwise>" +
             "        </choose>" +
-            "        where username=#{username}")
+            "        where username=#{username}" +
+            "</script>")
     public void updateFaculty(@Param("facultyOpen") boolean faculty
             , @Param("username") String username) throws Exception;
 
-    @Update("update privacy" +
+    @Update("<script>" +
+            "update privacy" +
             "        <choose>" +
             "            <when test='majorOpen'>" +
             "                set is_major_open='1'" +
@@ -74,11 +81,13 @@ public interface PrivacyMapper {
             "                set is_major_open='0'" +
             "            </otherwise>" +
             "        </choose>" +
-            "        where username=#{username}")
+            "        where username=#{username}" +
+            "</script>")
     public void updateMajor(@Param("majorOpen") boolean major
             , @Param("username") String username) throws Exception;
 
-    @Update("update privacy" +
+    @Update("<script>" +
+            "update privacy" +
             "        <choose>" +
             "            <when test='regionOpen'>" +
             "                set is_region_open='1'" +
@@ -87,11 +96,13 @@ public interface PrivacyMapper {
             "                set is_region_open='0'" +
             "            </otherwise>" +
             "        </choose>" +
-            "        where username=#{username}")
+            "        where username=#{username}"
+            + "</script>")
     public void updateRegion(@Param("regionOpen") boolean region
             , @Param("username") String username) throws Exception;
 
-    @Update("update privacy" +
+    @Update("<script>" +
+            "update privacy" +
             "        <choose>" +
             "            <when test='introductionOpen'>" +
             "                set is_introduction_open='1'" +
@@ -100,11 +111,13 @@ public interface PrivacyMapper {
             "                set is_introduction_open='0'" +
             "            </otherwise>" +
             "        </choose>" +
-            "        where username=#{username}")
+            "        where username=#{username}" +
+            "</script>")
     public void updateIntroduction(@Param("introductionOpen") boolean introduction
             , @Param("username") String username) throws Exception;
 
-    @Update("update privacy" +
+    @Update("<script>" +
+            "update privacy" +
             "        <choose>" +
             "            <when test='cacheAllow'>" +
             "                set is_cache_allow='1'" +
@@ -113,7 +126,8 @@ public interface PrivacyMapper {
             "                set is_cache_allow='0'" +
             "            </otherwise>" +
             "        </choose>" +
-            "        where username=#{username}")
+            "        where username=#{username}" +
+            "</script>")
     public void updateCache(@Param("cacheAllow") boolean cache, @Param("username") String username)
             throws Exception;
 }

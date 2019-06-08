@@ -82,7 +82,7 @@ public class ScheduleQueryRestController {
      */
     @RequestMapping(value = "/api/schedulequery", method = RequestMethod.POST)
     @QueryLogPersistence
-    @TrialData(value = "schedule")
+    @TrialData(value = "schedule", time = "week")
     public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
             , Integer week, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -124,7 +124,7 @@ public class ScheduleQueryRestController {
     @RequestMapping(value = "/rest/schedulequery", method = RequestMethod.POST)
     @RestAuthentication
     @RestQueryLogPersistence
-    @TrialData(value = "schedule")
+    @TrialData(value = "schedule", time = "week")
     public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
             , @RequestParam("token") String token, Integer week
             , @RequestParam(name = "method", required = false

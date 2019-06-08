@@ -13,4 +13,13 @@ public enum UserGroupEnum {
     UserGroupEnum(Integer value) {
         this.value = value;
     }
+
+    public static UserGroupEnum getEnumByName(String name) {
+        for (UserGroupEnum userGroupEnum : values()) {
+            if (userGroupEnum.name().equalsIgnoreCase(name)) {
+                return userGroupEnum;
+            }
+        }
+        return null;
+    }
 }

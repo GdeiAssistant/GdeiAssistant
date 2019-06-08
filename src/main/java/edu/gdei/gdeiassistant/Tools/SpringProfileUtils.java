@@ -20,6 +20,11 @@ public class SpringProfileUtils {
                 return true;
             }
         }
+        for (String profile : environment.getDefaultProfiles()) {
+            if (profile.equals("development")) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -31,6 +36,11 @@ public class SpringProfileUtils {
     public static boolean CheckProductionEnvironment() {
         for (String profile : environment.getActiveProfiles()) {
             if (profile.equals("production")) {
+                return true;
+            }
+        }
+        for (String profile : environment.getDefaultProfiles()) {
+            if (profile.equals("development")) {
                 return true;
             }
         }

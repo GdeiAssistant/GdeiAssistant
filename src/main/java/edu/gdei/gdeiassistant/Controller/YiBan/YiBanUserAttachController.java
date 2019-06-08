@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.YiBan;
 
+import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
@@ -59,18 +60,19 @@ public class YiBanUserAttachController {
         HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
         UserCertificate userCertificate = userLoginService
                 .UserLogin(request.getSession().getId(), user, true);
-        //同步用户教务系统账号信息到数据库
-        User resultUser = userCertificate.getUser();
         //同步用户数据
-        userDataService.SyncUserData(resultUser);
+        userDataService.SyncUserData(userCertificate.getUser());
         //同步易班数据
-        yiBanUserDataService.SyncYiBanUserData(resultUser.getUsername(), yiBanUserID);
+        yiBanUserDataService.SyncYiBanUserData(userCertificate.getUser().getUsername(), yiBanUserID);
         //将用户信息数据写入Session
-        request.getSession().setAttribute("username", resultUser.getUsername());
-        request.getSession().setAttribute("password", resultUser.getPassword());
-        request.getSession().setAttribute("group", resultUser.getGroup());
-        //异步同步教务系统会话
-        userLoginService.AsyncUpdateSession(request);
+        request.getSession().setAttribute("username", userCertificate.getUser().getUsername());
+        request.getSession().setAttribute("password", userCertificate.getUser().getPassword());
+        request.getSession().setAttribute("group", userCertificate.getUser().getGroup());
+        if (userCertificate.getUser().getGroup().equals(UserGroupEnum.STUDENT.getValue())
+                || userCertificate.getUser().getGroup().equals(UserGroupEnum.TEST.getValue())) {
+            //若当前用户组为学生用户或测试用户，则异步地与教务系统会话进行同步
+            userLoginService.AsyncUpdateSession(request);
+        }
         result.setSuccess(true);
         return result;
     }

@@ -10,7 +10,7 @@ $(function () {
 //获取用户隐私设置
 $(function () {
     $.ajax({
-            url: '/rest/privacy',
+            url: '/api/privacy',
             type: 'get',
             success: function (result) {
                 if (result.success === true) {
@@ -50,7 +50,7 @@ $(function () {
 function changePrivacySetting(index) {
     let state = $("input:eq(" + index + ")").prop("checked");
     $.ajax({
-        url: '/rest/privacy',
+        url: '/api/privacy',
         type: 'post',
         data: {
             index: index,

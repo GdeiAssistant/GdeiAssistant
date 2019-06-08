@@ -39,7 +39,7 @@ public class CardRestController {
     @RequestMapping(value = "/rest/cardquery", method = RequestMethod.POST)
     @RestAuthentication
     @RestQueryLogPersistence
-    @TrialData(value = "card")
+    @TrialData(value = "card", time = "cardQuery")
     public DataJsonResult<CardQueryResult> CardQuery(HttpServletRequest request
             , @RequestParam("token") String token, @Validated CardQuery cardQuery) throws Exception {
         User user = (User) request.getAttribute("user");
@@ -58,7 +58,7 @@ public class CardRestController {
      */
     @RequestMapping(value = "/api/cardquery", method = RequestMethod.POST)
     @QueryLogPersistence
-    @TrialData(value = "card")
+    @TrialData(value = "card", time = "cardQuery")
     public DataJsonResult<CardQueryResult> CardQuery(HttpServletRequest request, @Validated CardQuery cardQuery) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) request.getSession().getAttribute("password");

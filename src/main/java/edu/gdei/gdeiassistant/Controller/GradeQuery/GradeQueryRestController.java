@@ -51,7 +51,7 @@ public class GradeQueryRestController {
      */
     @RequestMapping(value = "/api/gradequery", method = RequestMethod.POST)
     @QueryLogPersistence
-    @TrialData(value = "grade")
+    @TrialData(value = "grade", time = "year")
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
             , Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -77,7 +77,7 @@ public class GradeQueryRestController {
     @RequestMapping(value = "/rest/gradequery", method = RequestMethod.POST)
     @RestQueryLogPersistence
     @RestAuthentication
-    @TrialData("grade")
+    @TrialData(value = "grade", time = "year")
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
             , @RequestParam("token") String token, Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {

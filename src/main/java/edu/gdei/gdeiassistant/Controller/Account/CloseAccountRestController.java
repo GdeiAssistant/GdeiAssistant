@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.Account;
 
+import edu.gdei.gdeiassistant.Annotation.UserGroupAccess;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Service.Account.CloseAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class CloseAccountRestController {
      * @return
      */
     @RequestMapping(value = "/api/close/submit", method = RequestMethod.POST)
+    @UserGroupAccess(group = {2, 3, 6})
     public JsonResult CloseAccount(HttpServletRequest request, String password) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         closeAccountService.CloseAccount(username, password);

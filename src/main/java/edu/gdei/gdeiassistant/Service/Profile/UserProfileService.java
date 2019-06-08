@@ -59,11 +59,6 @@ public class UserProfileService {
         UserProfileService.genderMap = genderMap;
     }
 
-    @Resource(name = "genderOrientationMap")
-    public void setGenderOrientationMap(Map<Integer, String> genderOrientationMap) {
-        UserProfileService.genderOrientationMap = genderOrientationMap;
-    }
-
     @Resource(name = "degreeMap")
     public void setDegreeMap(Map<Integer, String> degreeMap) {
         UserProfileService.degreeMap = degreeMap;
@@ -243,23 +238,6 @@ public class UserProfileService {
     }
 
     /**
-     * 更新性取向个人资料
-     *
-     * @param username
-     * @param genderOrientation
-     * @return
-     */
-    public void UpdateGenderOrientation(String username, int genderOrientation) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
-        if (profile != null) {
-            profile.setGenderOrientation(genderOrientation);
-            profileMapper.updateGenderOrientation(profile);
-            return;
-        }
-        throw new UserNotExistException("查询的用户不存在");
-    }
-
-    /**
      * 更新生日日期
      *
      * @param username
@@ -355,15 +333,6 @@ public class UserProfileService {
      */
     public static Map getGenderMap() {
         return genderMap;
-    }
-
-    /**
-     * 获取性取向字典
-     *
-     * @return
-     */
-    public static Map getGenderOrientationMap() {
-        return genderOrientationMap;
     }
 
     /**

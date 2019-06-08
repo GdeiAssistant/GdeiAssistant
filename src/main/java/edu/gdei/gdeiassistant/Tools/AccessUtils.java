@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Tools;
 
+import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.Access;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Access.AccessMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
@@ -26,6 +27,20 @@ public class AccessUtils {
     @Autowired
     public void setAccessMapper(AccessMapper accessMapper) {
         AccessUtils.accessMapper = accessMapper;
+    }
+
+    /**
+     * 根据用户组枚举名称获取对应的ID值
+     *
+     * @param name
+     * @return
+     */
+    public static int GetUserGroupIdByGroupEnumName(String name) {
+        UserGroupEnum userGroupEnum = UserGroupEnum.getEnumByName(name);
+        if (userGroupEnum == null) {
+            return -1;
+        }
+        return userGroupEnum.getValue();
     }
 
     /**

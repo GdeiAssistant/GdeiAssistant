@@ -19,6 +19,9 @@ public class SpringProfileUtils {
             if (profile.equals("development")) {
                 return true;
             }
+            if (profile.equals("production")) {
+                return false;
+            }
         }
         for (String profile : environment.getDefaultProfiles()) {
             if (profile.equals("development")) {
@@ -37,6 +40,9 @@ public class SpringProfileUtils {
         for (String profile : environment.getActiveProfiles()) {
             if (profile.equals("production")) {
                 return true;
+            }
+            if (profile.equals("development")) {
+                return false;
             }
         }
         for (String profile : environment.getDefaultProfiles()) {

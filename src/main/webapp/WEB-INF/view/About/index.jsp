@@ -93,13 +93,34 @@
                         违规举报
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="http://www.12377.cn/">违法和不良信息举报</a>
-                        <a class="dropdown-item" href="https://www.12321.cn/">网络不良与垃圾信息举报</a>
+                        <a class="dropdown-item" href="http://www.12377.cn">违法和不良信息举报</a>
+                        <a class="dropdown-item" href="https://www.12321.cn">网络不良与垃圾信息举报</a>
+                        <a class="dropdown-item" href="http://www.12389.gov.cn/clue_evilNotice.action">涉黑涉恶犯罪线索举报</a>
                         <a class="dropdown-item"
                            href="http://www.moe.gov.cn/jyb_hygq/hygq_tsjb/201505/t20150520_184529.html">教育部统一监督举报</a>
+                        <a class="dropdown-item" href="https://dxss.miit.gov.cn">工信部电信用户申诉</a>
+                        <a class="dropdown-item" href="http://sswz.spb.gov.cn/">邮政局消费者申诉</a>
                         <a class="dropdown-item" href="http://www.shdf.gov.cn/shdf/channels/740.html">儿童色情信息举报</a>
-                        <a class="dropdown-item" href="http://www.cyberpolice.cn/">网络违法犯罪举报</a>
-                        <a class="dropdown-item" href="mailto:report@gdeiassistant.cn">社区违规举报</a>
+                        <a class="dropdown-item" href="http://www.cyberpolice.cn">网络违法犯罪举报</a>
+                        <a class="dropdown-item" href="https://jubao.nifa.org.cn/ipnifa/index.html">非法校园借贷举报</a>
+                        <a class="dropdown-item" href="mailto:report@gdeiassistant.cn">社区用户违规举报</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="javascript:" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        友情链接
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="http://edu.gd.gov.cn">广东省教育厅</a>
+                        <a class="dropdown-item" href="http://www.cnki.net">中国知网平台</a>
+                        <a class="dropdown-item" href="http://www.gz.gov.cn">广州市人民政府</a>
+                        <a class="dropdown-item" href="http://www.gdei.edu.cn">广东第二师范学院</a>
+                        <a class="dropdown-item" href="https://www.scut.edu.cn">华南理工大学</a>
+                        <a class="dropdown-item" href="http://www.scnu.edu.cn">华南师范大学</a>
+                        <a class="dropdown-item" href="http://www.sysu.edu.cn">中山大学</a>
+                        <a class="dropdown-item" href="https://www.jnu.edu.cn">暨南大学</a>
                     </div>
                 </li>
                 <li class="nav-item">

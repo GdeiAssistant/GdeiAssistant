@@ -134,7 +134,14 @@
 <div class="banxin">
 
     <div class="app_logo margin-bottom60">
-        <img src="/img/download/logo.png" width="120" height="120">
+        <c:choose>
+            <c:when test="${applicationScope.get('pridetheme')}">
+                <img src="/img/download/logo_pride.png" width="120" height="120">
+            </c:when>
+            <c:otherwise>
+                <img src="/img/download/logo.png" width="120" height="120">
+            </c:otherwise>
+        </c:choose>
     </div>
 
     <div class="download">

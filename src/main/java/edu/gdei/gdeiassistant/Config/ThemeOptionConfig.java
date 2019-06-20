@@ -31,6 +31,16 @@ public class ThemeOptionConfig implements EnvironmentAware {
     }
 
     /**
+     * 检查是否使用Pride主题
+     */
+    @Bean
+    public void CheckUsingPrideTheme(){
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("theme.pride"))).equals(1)) {
+            servletContext.setAttribute("pridetheme", true);
+        }
+    }
+
+    /**
      * 设置主题颜色，默认主题为绿色
      */
     @Bean

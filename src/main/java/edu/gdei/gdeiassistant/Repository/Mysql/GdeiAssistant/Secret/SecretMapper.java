@@ -11,22 +11,29 @@ import java.util.List;
 
 public interface SecretMapper {
 
-    @Select("select * from secret_content where id=#{id} limit 1")
+    @Select("select * from secret_content where id=#{id} and state=0 limit 1")
     @Results(id = "SecretContent", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "theme", column = "theme"),
             @Result(property = "content", column = "content"),
             @Result(property = "type", column = "type"),
+            @Result(property = "timer", column = "timer"),
+            @Result(property = "state", column = "state"),
+            @Result(property = "publishTime", column = "publish_time"),
             @Result(property = "secretCommentList", column = "id", javaType = List.class
                     , many = @Many(select = "selectSecretComment"))
     })
     public Secret selectSecretByID(int id) throws Exception;
 
-    @Select("select * from secret_content where username=#{username} order by id desc")
+    @Select("select * from secret_content where username=#{username} and state=0 order by id desc")
     @ResultMap("SecretContent")
     public List<Secret> selectSecretByUsername(String username) throws Exception;
 
-    @Select("select * from secret_content order by id desc limit #{start},#{size}")
+    @Select("select * from secret_content where state=0 and timer=1")
+    @ResultMap("SecretContent")
+    public List<Secret> selectNotRemovedSecrets() throws Exception;
+
+    @Select("select * from secret_content where state=0 order by id desc limit #{start},#{size}")
     @ResultMap("SecretContent")
     public List<Secret> selectSecret(@Param("start") int start, @Param("size") int size) throws Exception;
 
@@ -52,7 +59,7 @@ public interface SecretMapper {
     @ResultType(Integer.class)
     public Integer selectSecretCommentCount(int id) throws Exception;
 
-    @Insert("insert into secret_content (username,content,theme,type) values(#{username},#{content},#{theme},#{type})")
+    @Insert("insert into secret_content (username,content,theme,type,timer,state,publish_time) values(#{username},#{content},#{theme},#{type},#{timer},0,now())")
     @Options(useGeneratedKeys = true)
     public void insertSecret(SecretContent secretContent) throws Exception;
 
@@ -61,6 +68,9 @@ public interface SecretMapper {
 
     @Insert("insert into secret_like (id,username) values(#{id},#{username})")
     public void insertSecretLike(@Param("id") int id, @Param("username") String username) throws Exception;
+
+    @Update("update secret_content set state=1 where id=#{id}")
+    public void deleteSecret(@Param("id") int id) throws Exception;
 
     @Delete("delete from secret_like where id=#{id} and username=#{username}")
     public void deleteSecretLike(@Param("id") int id, @Param("username") String username) throws Exception;

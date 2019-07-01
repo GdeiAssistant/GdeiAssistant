@@ -8,10 +8,16 @@ import edu.gdei.gdeiassistant.Pojo.Entity.SecretContent;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Secret.SecretMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -193,6 +199,25 @@ public class SecretService {
         } else {
             //取消点赞
             secretMapper.deleteSecretLike(id, StringEncryptUtils.encryptString(username));
+        }
+    }
+
+    /**
+     * 定时删除设置了定时删除的树洞消息
+     *
+     * @throws Exception
+     */
+    @Scheduled(fixedDelay = 3600)
+    @Transactional("appTransactionManager")
+    public void DeleteTimerSecretInfos() throws Exception {
+        List<Secret> secretList = secretMapper.selectNotRemovedSecrets();
+        for (Secret secret : secretList) {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime time = LocalDateTime.ofInstant(secret.getPublishTime().toInstant()
+                    , ZoneId.systemDefault());
+            if (ChronoUnit.HOURS.between(time, now) >= 24) {
+                secretMapper.deleteSecret(secret.getId());
+            }
         }
     }
 }

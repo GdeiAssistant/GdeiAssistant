@@ -58,16 +58,22 @@
 </div>
 
 <div class="bar">
-    <div onclick="replayRecord()">
-        <img id="voice_button" width="20px" height="20px"
-             style="display:none;margin-right:3px;margin-top: 3px;float: left"
-             src="/img/secret/init.png"/>
-        <p id="voice_state" style="display: none;float: left">未录音</p>
+    <div style="height:30px">
+        <div onclick="replayRecord()">
+            <img id="voice_button" width="20px" height="20px"
+                 style="position: relative;display:none;top:7px;float: left;"
+                 src="/img/secret/init.png"/>
+            <p id="voice_state" style="display:none;position:relative;top:5px;left:5px;width:150px;float:left;">未录音</p>
+        </div>
+        <i style="float: right;position:relative;top:5px"></i>
+        <div id="voice_volume"
+             style="display:none;position:relative;height:25px;margin-top:5px;
+             right:10px;width:85px;background:#cdcdcd;float: right">
+            <div id="volume" style="width:0"></div>
+        </div>
     </div>
-    <i style="float: right"></i>
-    <div id="voice_volume"
-         style="display:none;height:20px;margin-top:3px;margin-left:15px;margin-right:15px;width:100px;background:#cdcdcd;float: right">
-        <div id="volume" style="width:0"></div>
+    <div style="float:right;margin-top:15px">
+        <input id="timer" type="checkbox"> 24小时后删除</input>
     </div>
 </div>
 
@@ -406,10 +412,11 @@
             }
             let loading = weui.loading('提交中');
             $(".btn").attr("disabled", true);
+            let timer = $("#timer").attr("checked") ? 1 : 0;
             $.ajax({
                 url: "/api/secret/info",
                 type: "POST",
-                data: $("form").serialize() + "&theme=" + rand + "&type=" + 0,
+                data: $("form").serialize() + "&theme=" + rand + "&type=" + 0 + "&timer=" + timer,
                 success: function (result) {
                     if (result.success === true) {
                         window.location.href = "/secret";
@@ -438,6 +445,7 @@
                 formData.append('voice', voice);
                 formData.append('theme', rand);
                 formData.append('type', 1);
+                formData.append('timer', $("#timer").attr("checked") ? 1 : 0);
                 //上传音频和提交树洞信息
                 $.ajax({
                     url: "/api/secret/info",

@@ -17,6 +17,7 @@ public class SecretContent extends Secret {
         this.setContent(secret.getContent());
         this.setTheme(secret.getTheme());
         this.setType(secret.getType());
+        this.setTimer(secret.getTimer());
         this.setUsername(username);
     }
 

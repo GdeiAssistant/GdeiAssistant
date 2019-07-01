@@ -109,7 +109,13 @@ public class ProfileRestController {
                     profile.setState(null);
                     profile.setCity(null);
                 } else {
-                    profile.setState(state.getName());
+                    if (!state.getName().equals(region.getName())
+                            && (state.getName().equals("香港特别行政区")
+                            || state.getName().equals("澳门特别行政区"))) {
+                        profile.setState(region.getName().substring(4));
+                    } else {
+                        profile.setState(state.getName());
+                    }
                     //获取市/直辖市
                     City city = state.getCityMap().get(profile.getCity());
                     if (city == null) {
@@ -154,7 +160,13 @@ public class ProfileRestController {
                         profile.setState("");
                         profile.setCity("");
                     } else {
-                        profile.setState(state.getName());
+                        if (!state.getName().equals(region.getName())
+                                && (state.getName().equals("香港特别行政区")
+                                || state.getName().equals("澳门特别行政区"))) {
+                            profile.setState(region.getName().substring(4));
+                        } else {
+                            profile.setState(state.getName());
+                        }
                         //获取市/直辖市
                         City city = state.getCityMap().get(profile.getCity());
                         if (city == null) {

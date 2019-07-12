@@ -81,36 +81,9 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/agreement">用户协议</a>
                         <a class="dropdown-item" href="/policy/privacy">隐私政策</a>
-                        <a class="dropdown-item" href="/policy/cookie">Cookie政策</a>
                         <a class="dropdown-item" href="/policy/social">社区准则</a>
                         <a class="dropdown-item" href="/license">开源协议</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="javascript:" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        违规举报
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="http://www.12377.cn">违法和不良信息举报</a>
-                        <a class="dropdown-item" href="https://www.12321.cn">网络不良与垃圾信息举报</a>
-                        <a class="dropdown-item" href="http://www.12389.gov.cn/clue_evilNotice.action">涉黑涉恶犯罪线索举报</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="http://www.shdf.gov.cn/shdf/channels/740.html">儿童色情信息举报</a>
-                        <a class="dropdown-item" href="http://www.cyberpolice.cn">网络违法犯罪举报</a>
-                        <a class="dropdown-item" href="https://jubao.nifa.org.cn/ipnifa/index.html">非法校园借贷举报</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="http://www.moe.gov.cn/jyb_hygq/hygq_tsjb/201505/t20150520_184529.html">教育部统一监督举报</a>
-                        <a class="dropdown-item" href="https://dxss.miit.gov.cn">工信部电信用户申诉</a>
-                        <a class="dropdown-item" href="http://sswz.spb.gov.cn">邮政快递消费者申诉</a>
-                        <a class="dropdown-item" href="http://www.12315.cn">市场监督管理局申诉</a>
-                        <a class="dropdown-item" href="http://1.202.247.200/netreport/netreport/index">环境保护与污染举报</a>
-                        <a class="dropdown-item" href="http://www.12331.org.cn">食品药品监管局举报</a>
-                        <a class="dropdown-item" href="http://jbts.mct.gov.cn/12318">文化与娱乐市场举报</a>
-                        <a class="dropdown-item" href="http://www.sapprft.gov.cn/sapprft/channels/6979.shtml">互联网盗版侵权举报</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="mailto:report@gdeiassistant.cn">社区用户违规举报</a>
+                        <a class="dropdown-item" href="/policy/cookie">Cookie政策</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -120,16 +93,49 @@
                         友情链接
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="http://www.moe.gov.cn">教育部门户网</a>
                         <a class="dropdown-item" href="http://edu.gd.gov.cn">广东省教育厅</a>
+                        <a class="dropdown-item" href="http://www.gzedu.gov.cn">广州市教育局</a>
                         <a class="dropdown-item" href="http://www.cnki.net">中国知网平台</a>
-                        <a class="dropdown-item" href="http://www.gov.cn">中央人民政府</a>
-                        <a class="dropdown-item" href="http://www.gd.gov.cn">广东省人民政府</a>
-                        <a class="dropdown-item" href="http://www.gz.gov.cn">广州市人民政府</a>
-                        <a class="dropdown-item" href="http://www.gdei.edu.cn">广东第二师范学院</a>
-                        <a class="dropdown-item" href="https://www.scut.edu.cn">华南理工大学</a>
-                        <a class="dropdown-item" href="http://www.scnu.edu.cn">华南师范大学</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="http://www.sysu.edu.cn">中山大学</a>
                         <a class="dropdown-item" href="https://www.jnu.edu.cn">暨南大学</a>
+                        <a class="dropdown-item" href="https://www.scut.edu.cn">华南理工大学</a>
+                        <a class="dropdown-item" href="http://www.scnu.edu.cn">华南师范大学</a>
+                        <a class="dropdown-item" href="http://www.gdei.edu.cn">广东第二师范学院</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="http://www.gdsyzx.edu.cn">广东实验中学</a>
+                        <a class="dropdown-item" href="http://www.gyzx.edu.cn">广东广雅中学</a>
+                        <a class="dropdown-item" href="https://www.zhixinhs.cn">广州市执信中学</a>
+                        <a class="dropdown-item" href="https://www.gztlms.com">广州市真光中学</a>
+                        <a class="dropdown-item" href="http://www.gz41zx.com">广州市第四十一中学</a>
+                        <a class="dropdown-item" href="http://www.hsfz.net.cn">华南师范大学附属中学</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="mailto:report@gdeiassistant.cn">违规举报</a>
+                    <!-- 具体违规举报分类的下拉选择选项组件已弃用 -->
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="http://www.12377.cn">违法和不良信息举报</a>
+                        <a class="dropdown-item" href="https://www.12321.cn">网络不良与垃圾信息举报</a>
+                        <a class="dropdown-item" href="http://www.12389.gov.cn/clue_evilNotice.action">涉黑涉恶犯罪线索举报</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="http://www.shdf.gov.cn/shdf/channels/740.html">儿童色情信息举报</a>
+                        <a class="dropdown-item" href="http://www.cyberpolice.cn">网络违法犯罪举报</a>
+                        <a class="dropdown-item" href="https://jubao.nifa.org.cn/ipnifa/index.html">非法校园借贷举报</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item"
+                           href="http://www.moe.gov.cn/jyb_hygq/hygq_tsjb/201505/t20150520_184529.html">教育部统一监督举报</a>
+                        <a class="dropdown-item" href="https://dxss.miit.gov.cn">工信部电信用户申诉</a>
+                        <a class="dropdown-item" href="http://sswz.spb.gov.cn">邮政快递消费者申诉</a>
+                        <a class="dropdown-item" href="http://www.12315.cn">市场监督管理局申诉</a>
+                        <a class="dropdown-item" href="http://1.202.247.200/netreport/netreport/index">环境保护与污染举报</a>
+                        <a class="dropdown-item" href="http://www.12331.org.cn">食品药品监管局举报</a>
+                        <a class="dropdown-item" href="http://jbts.mct.gov.cn/12318">文化与娱乐市场举报</a>
+                        <a class="dropdown-item"
+                           href="http://www.sapprft.gov.cn/sapprft/channels/6979.shtml">互联网盗版侵权举报</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="mailto:report@gdeiassistant.cn">社区用户违规举报</a>
                     </div>
                 </li>
                 <li class="nav-item">

@@ -412,7 +412,7 @@
             }
             let loading = weui.loading('提交中');
             $(".btn").attr("disabled", true);
-            let timer = $("#timer").attr("checked") ? 1 : 0;
+            let timer = $("#timer").prop("checked") ? 1 : 0;
             $.ajax({
                 url: "/api/secret/info",
                 type: "POST",
@@ -445,7 +445,7 @@
                 formData.append('voice', voice);
                 formData.append('theme', rand);
                 formData.append('type', 1);
-                formData.append('timer', $("#timer").attr("checked") ? 1 : 0);
+                formData.append('timer', $("#timer").prop("checked") ? 1 : 0);
                 //上传音频和提交树洞信息
                 $.ajax({
                     url: "/api/secret/info",

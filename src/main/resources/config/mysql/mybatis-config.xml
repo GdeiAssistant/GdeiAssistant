@@ -11,7 +11,7 @@
         <setting name="cacheEnabled" value="false"/>
 
         <!-- 开启延迟加载的开关 -->
-        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="false"/>
 
         <!-- 按需加载 -->
         <setting name="aggressiveLazyLoading" value="false"/>

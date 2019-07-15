@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Location implements Serializable {
+public class Location implements Serializable, Entity {
 
     private String area;
 

@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Book implements Serializable {
+public class Book implements Serializable, Entity {
 
     //条形码
     private String id;

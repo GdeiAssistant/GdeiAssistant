@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestValidation implements Serializable {
+public class RequestValidation implements Serializable, Entity {
 
     private String nonce;
 

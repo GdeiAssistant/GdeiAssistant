@@ -10,7 +10,7 @@ import java.util.Date;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Profile implements Serializable {
+public class Profile implements Serializable, Entity {
 
     private String avatarURL;
 

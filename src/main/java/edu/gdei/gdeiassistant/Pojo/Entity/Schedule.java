@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Schedule implements Serializable {
+public class Schedule implements Serializable, Entity {
 
     //课程编号
     private String id;

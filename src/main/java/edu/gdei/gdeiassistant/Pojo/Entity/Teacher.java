@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Teacher implements Serializable{
+public class Teacher implements Serializable, Entity{
 
     @NotBlank(message = "用户名不能为空")
     @Size(min = 1, max = 20, message = "用户名长度超过限制")

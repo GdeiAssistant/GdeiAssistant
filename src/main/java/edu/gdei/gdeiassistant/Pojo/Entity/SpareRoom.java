@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SpareRoom implements Serializable {
+public class SpareRoom implements Serializable, Entity {
 
     //教室编号
     private String number;

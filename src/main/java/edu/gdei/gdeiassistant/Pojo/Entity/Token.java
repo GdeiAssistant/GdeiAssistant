@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Token implements Serializable {
+public class Token implements Serializable, Entity {
 
     /**
      * 令牌签名

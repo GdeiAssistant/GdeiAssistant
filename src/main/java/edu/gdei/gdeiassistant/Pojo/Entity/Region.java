@@ -10,7 +10,7 @@ import java.util.Map;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Region implements Serializable {
+public class Region implements Serializable, Entity {
 
     private String code;
 

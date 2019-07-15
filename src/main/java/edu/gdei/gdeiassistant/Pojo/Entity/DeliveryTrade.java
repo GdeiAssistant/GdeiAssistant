@@ -11,7 +11,7 @@ import java.util.Date;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DeliveryTrade implements Serializable {
+public class DeliveryTrade implements Serializable, Entity {
 
     //交易号
     private Integer tradeId;

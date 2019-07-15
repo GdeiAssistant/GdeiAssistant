@@ -32,6 +32,9 @@ $(function () {
                     if (result.data.cacheAllow === true) {
                         $("#cache").prop("checked", true);
                     }
+                    if (result.data.robotsIndexAllow === true) {
+                        $("#robots").prop("checked", true);
+                    }
                 } else {
                     $.toptip(result.message, 'error');
                 }

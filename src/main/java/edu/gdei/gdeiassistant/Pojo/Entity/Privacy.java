@@ -25,7 +25,9 @@ public class Privacy implements Serializable, Entity {
 
     private Boolean cacheAllow;
 
-    public String isUsername() {
+    private Boolean robotsIndexAllow;
+
+    public String getUsername() {
         return username;
     }
 
@@ -79,5 +81,13 @@ public class Privacy implements Serializable, Entity {
 
     public void setCacheAllow(Boolean cacheAllow) {
         this.cacheAllow = cacheAllow;
+    }
+
+    public Boolean isRobotsIndexAllow() {
+        return robotsIndexAllow;
+    }
+
+    public void setRobotsIndexAllow(Boolean robotsIndexAllow) {
+        this.robotsIndexAllow = robotsIndexAllow;
     }
 }

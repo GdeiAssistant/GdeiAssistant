@@ -71,8 +71,8 @@ public class ProfileController {
                     State state = region.getStateMap().get(profile.getState());
                     if (state != null) {
                         if (!state.getName().equals(region.getName())) {
-                            if(!state.getName().equals("香港特别行政区")
-                                    && !state.getName().equals("澳门特别行政区")){
+                            if (!state.getName().equals("香港特别行政区")
+                                    && !state.getName().equals("澳门特别行政区")) {
                                 location.append(state.getName());
                             }
                         }
@@ -90,6 +90,9 @@ public class ProfileController {
                 if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
                     modelAndView.addObject("Introduction", introduction.getIntroductionContent());
                 }
+            }
+            if (privacy.isRobotsIndexAllow()) {
+                modelAndView.addObject("RobotsNoIndex", true);
             }
             modelAndView.addObject("ContainProfile", containProfile);
         } else {

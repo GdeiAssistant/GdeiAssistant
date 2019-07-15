@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ElectricFees implements Serializable {
+public class ElectricFees implements Serializable, Entity {
 
     //年份
     private Integer year;

@@ -9,13 +9,11 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Privacy implements Serializable {
+public class Privacy implements Serializable, Entity {
 
     private String username;
 
     private Boolean genderOpen;
-
-    private Boolean genderOrientationOpen;
 
     private Boolean regionOpen;
 
@@ -41,14 +39,6 @@ public class Privacy implements Serializable {
 
     public void setGenderOpen(Boolean genderOpen) {
         this.genderOpen = genderOpen;
-    }
-
-    public Boolean isGenderOrientationOpen() {
-        return genderOrientationOpen;
-    }
-
-    public void setGenderOrientationOpen(Boolean genderOrientationOpen) {
-        this.genderOrientationOpen = genderOrientationOpen;
     }
 
     public Boolean isRegionOpen() {

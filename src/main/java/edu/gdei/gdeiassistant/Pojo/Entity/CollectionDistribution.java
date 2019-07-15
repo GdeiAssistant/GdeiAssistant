@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CollectionDistribution implements Serializable {
+public class CollectionDistribution implements Serializable, Entity {
 
     //馆藏地
     private String location;

@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TeacherSchedule implements Serializable {
+public class TeacherSchedule implements Serializable, Entity {
 
     //课程在单元格中所在的位置
     private int position;

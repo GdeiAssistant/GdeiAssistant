@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 @Scope("prototype")
-public class LostAndFoundItem implements Serializable {
+public class LostAndFoundItem implements Serializable, Entity {
 
     /**
      * 物品图片URL链接

@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class YellowPage implements Serializable {
+public class YellowPage implements Serializable, Entity {
 
     private Integer id;
 

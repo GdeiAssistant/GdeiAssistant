@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Festival implements Serializable {
+public class Festival implements Serializable, Entity {
 
     private String name;
 

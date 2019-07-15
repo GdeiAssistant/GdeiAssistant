@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("singleton")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StringEncryptConfig implements Serializable {
+public class StringEncryptConfig implements Serializable, Entity {
 
     private String appkey;
 

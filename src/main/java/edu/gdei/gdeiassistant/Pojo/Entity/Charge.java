@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Charge implements Serializable {
+public class Charge implements Serializable, Entity {
 
     @JSONField(ordinal = 1)
     private String alipayURL;

@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CollectionDetail implements Serializable {
+public class CollectionDetail implements Serializable, Entity {
 
     private List<CollectionDistribution> collectionDistributionList;
 

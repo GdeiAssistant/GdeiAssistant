@@ -10,7 +10,7 @@ import java.util.Date;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Log implements Serializable {
+public class Log implements Serializable, Entity {
 
     private Integer id;
 

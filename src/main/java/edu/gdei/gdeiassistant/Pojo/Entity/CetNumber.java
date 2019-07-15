@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CetNumber implements Serializable {
+public class CetNumber implements Serializable, Entity {
 
     private String username;
 

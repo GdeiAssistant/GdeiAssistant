@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class YiBanAuthorizeInfo implements Serializable {
+public class YiBanAuthorizeInfo implements Serializable, Entity {
 
     private String appID;
 

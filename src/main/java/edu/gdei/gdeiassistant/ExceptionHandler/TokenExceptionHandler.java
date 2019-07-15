@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Constant.ConstantUtils;
+import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
 import edu.gdei.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
 import edu.gdei.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
 import edu.gdei.gdeiassistant.Exception.TokenValidException.TokenServerException;
@@ -29,7 +29,7 @@ public class TokenExceptionHandler {
     @ExceptionHandler(TokenExpiredException.class)
     public ResponseEntity HandleTokenExpiredException(TokenExpiredException e) {
         log.error("TokenExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.TOKEN_EXPIRED_EXCEPTION
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.TOKEN_EXPIRED_EXCEPTION
                 , false, "登录凭证已过期，请重新登录"));
     }
 
@@ -41,7 +41,7 @@ public class TokenExceptionHandler {
     @ExceptionHandler(UnusualLocationException.class)
     public ResponseEntity HandleUnusualLocationException(UnusualLocationException e) {
         log.error("TokenExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.UNUSUAL_LOCATION_EXCEPTION
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.UNUSUAL_LOCATION_EXCEPTION
                 , false, "登录地点异常，请进行身份验证"));
     }
 
@@ -53,7 +53,7 @@ public class TokenExceptionHandler {
     @ExceptionHandler(TokenNotMatchingException.class)
     public ResponseEntity HandleTokenNotMatchingException(TokenNotMatchingException e) {
         log.error("TokenExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.TOKEN_NOT_MATCHING
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.TOKEN_NOT_MATCHING
                 , false, "没有对应的登录凭证记录，请尝试重新登录"));
     }
 
@@ -65,7 +65,7 @@ public class TokenExceptionHandler {
     @ExceptionHandler(TokenServerException.class)
     public ResponseEntity HandleTokenServerException(TokenServerException e) {
         log.error("TokenExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.TOKEN_SERVER_ERROR
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.TOKEN_SERVER_ERROR
                 , false, "登录凭证校验服务异常，请联系管理员"));
     }
 }

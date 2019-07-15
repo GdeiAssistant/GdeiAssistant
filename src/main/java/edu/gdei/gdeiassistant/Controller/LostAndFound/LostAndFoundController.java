@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.LostAndFound;
 
+import edu.gdei.gdeiassistant.Constant.ItemConstantUtils;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import edu.gdei.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import edu.gdei.gdeiassistant.Pojo.Entity.LostAndFoundItem;
@@ -25,11 +26,6 @@ public class LostAndFoundController {
 
     @Autowired
     private LostAndFoundService lostAndFoundService;
-
-    private final String[] LOSTANDFOUND_ITEM_TYPE = {"手机", "校园卡", "身份证"
-            , "银行卡", "书", "钥匙"
-            , "包包", "衣帽", "校园代步"
-            , "运动健身", "数码配件", "其他"};
 
     /**
      * 进入失物主页
@@ -125,7 +121,7 @@ public class LostAndFoundController {
             modelAndView.addObject("LostAndFoundItemDescription", lostAndFoundItem.getDescription());
             modelAndView.addObject("LostAndFoundItemLocation", lostAndFoundItem.getLocation());
             modelAndView.addObject("LostAndFoundItemLostType", lostAndFoundItem.getLostType());
-            modelAndView.addObject("LostAndFoundItemItemType", LOSTANDFOUND_ITEM_TYPE[lostAndFoundItem.getItemType()]);
+            modelAndView.addObject("LostAndFoundItemItemType", ItemConstantUtils.LOST_AND_FOUND_ITEM_TYPE[lostAndFoundItem.getItemType()]);
             modelAndView.addObject("LostAndFoundItemItemTypeValue", lostAndFoundItem.getItemType());
             modelAndView.addObject("LostAndFoundItemQQ", lostAndFoundItem.getQq());
             modelAndView.addObject("LostAndFoundItemWechat", lostAndFoundItem.getWechat());
@@ -189,7 +185,7 @@ public class LostAndFoundController {
         modelAndView.addObject("LostAndFoundItemList", lostAndFoundItemList);
         modelAndView.addObject("ItemType", type);
         modelAndView.addObject("LostType", 0);
-        modelAndView.addObject("KeyWord", LOSTANDFOUND_ITEM_TYPE[type]);
+        modelAndView.addObject("KeyWord", ItemConstantUtils.LOST_AND_FOUND_ITEM_TYPE[type]);
         return modelAndView;
     }
 
@@ -208,7 +204,7 @@ public class LostAndFoundController {
         modelAndView.addObject("LostAndFoundItemList", lostAndFoundItemList);
         modelAndView.addObject("ItemType", type);
         modelAndView.addObject("LostType", 1);
-        modelAndView.addObject("KeyWord", LOSTANDFOUND_ITEM_TYPE[type]);
+        modelAndView.addObject("KeyWord", ItemConstantUtils.LOST_AND_FOUND_ITEM_TYPE[type]);
         return modelAndView;
     }
 }

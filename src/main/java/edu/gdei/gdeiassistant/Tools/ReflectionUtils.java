@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Tools;
 
+import edu.gdei.gdeiassistant.Pojo.Entity.Entity;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -7,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReflectionUtils {
 
@@ -284,5 +287,30 @@ public class ReflectionUtils {
             return (RuntimeException) e;
         }
         return new RuntimeException("Unexpected Checked Exception.", e);
+    }
+
+    /**
+     * 解析JavaBean中含父类的所有的非空属性存入Map中
+     */
+    public static Map<String, Object> getAllNotNullObjectFields(Object object, Class clazz) {
+        Map<String, Object> map = new HashMap<>();
+        if (clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {
+            Map<String, Object> temp = getAllNotNullObjectFields(object, object.getClass().getSuperclass());
+            for (Map.Entry<String, Object> entry : temp.entrySet()) {
+                map.put(entry.getKey(), entry.getValue());
+            }
+        }
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            if (getFieldValue(object, field.getName()) != null) {
+                if (Entity.class.isAssignableFrom(field.getType())) {
+                    map.put(field.getName(), getAllNotNullObjectFields(getFieldValue(object, field.getName()), clazz));
+                } else {
+                    map.put(field.getName(), getFieldValue(object, field.getName()));
+                }
+            }
+        }
+        return map;
     }
 }

@@ -24,8 +24,6 @@
 
     var genderMap = [];
 
-    var genderOrientationMap = [];
-
     var degreeMap = [];
 
     var facultyMap = [];

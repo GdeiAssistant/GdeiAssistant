@@ -17,9 +17,6 @@ $(function () {
                     if (result.data.genderOpen === true) {
                         $("#gender").prop("checked", true);
                     }
-                    if (result.data.genderOrientationOpen === true) {
-                        $("#genderOrientation").prop("checked", true);
-                    }
                     if (result.data.facultyOpen === true) {
                         $("#faculty").prop("checked", true);
                     }

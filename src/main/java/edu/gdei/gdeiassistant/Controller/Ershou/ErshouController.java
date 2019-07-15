@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.Ershou;
 
+import edu.gdei.gdeiassistant.Constant.ItemConstantUtils;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NotAvailableStateException;
@@ -24,11 +25,6 @@ public class ErshouController {
 
     @Autowired
     private ErshouService ershouService;
-
-    private final String[] ERSHOU_ITEM_TYPE = {"校园代步", "手机", "电脑"
-            , "数码配件", "数码", "电器"
-            , "运动健身", "衣物伞帽", "图书教材"
-            , "租赁", "生活娱乐", "其他"};
 
     /**
      * 进入二手交易首页
@@ -69,7 +65,7 @@ public class ErshouController {
                 modelAndView.addObject("ErshouItemDescription", ershouInfo.getErshouItem().getDescription());
                 modelAndView.addObject("ErshouItemPrice", ershouInfo.getErshouItem().getPrice());
                 modelAndView.addObject("ErshouItemLocation", ershouInfo.getErshouItem().getLocation());
-                modelAndView.addObject("ErshouItemType", ERSHOU_ITEM_TYPE[ershouInfo.getErshouItem().getType()]);
+                modelAndView.addObject("ErshouItemType", ItemConstantUtils.ERSHOU_ITEM_TYPE[ershouInfo.getErshouItem().getType()]);
                 modelAndView.addObject("ErshouItemTypeValue", ershouInfo.getErshouItem().getType());
                 modelAndView.addObject("ErshouItemQQ", ershouInfo.getErshouItem().getQq());
                 modelAndView.addObject("ErshouItemPhone", ershouInfo.getErshouItem().getPhone());
@@ -146,7 +142,7 @@ public class ErshouController {
     public ModelAndView SearchErshouItemByType(@Validated @Range(min = 0, max = 11) @PathVariable("type") int type) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("TypeNumber", type);
-        modelAndView.addObject("TypeName", ERSHOU_ITEM_TYPE[type]);
+        modelAndView.addObject("TypeName", ItemConstantUtils.ERSHOU_ITEM_TYPE[type]);
         List<ErshouItem> ershouItemList = ershouService.QueryErshouItemByType(type, 0);
         modelAndView.addObject("ErshouItemList", ershouItemList);
         modelAndView.setViewName("Ershou/ershouType");

@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.Aspect;
 
 import edu.gdei.gdeiassistant.Annotation.UserGroupAccess;
-import edu.gdei.gdeiassistant.Constant.ConstantUtils;
+import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
@@ -41,6 +41,6 @@ public class UserGroupAccessAspect {
             }
         }
         //当前用户组没有权限访问该资源或执行操作
-        return new JsonResult(ConstantUtils.USER_GROUP_NO_ACCESS, false, "当前用户组没有权限访问该资源或执行操作");
+        return new JsonResult(ErrorConstantUtils.USER_GROUP_NO_ACCESS, false, "当前用户组没有权限访问该资源或执行操作");
     }
 }

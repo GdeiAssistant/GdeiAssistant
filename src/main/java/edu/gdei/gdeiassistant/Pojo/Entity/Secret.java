@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(value = {"handler", "secretCommentList"}, ignoreUnknown = true)
-public class Secret implements Serializable {
+public class Secret implements Serializable, Entity {
 
     /**
      * 语音类型树洞消息语音文件列表

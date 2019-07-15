@@ -14,7 +14,7 @@ import java.util.Date;
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(collection = "new")
-public class NewInfo implements Serializable {
+public class NewInfo implements Serializable, Entity {
 
     @Id
     private String id;

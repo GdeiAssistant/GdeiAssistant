@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WechatUser implements Serializable {
+public class WechatUser implements Serializable, Entity {
 
     private String openid;
 

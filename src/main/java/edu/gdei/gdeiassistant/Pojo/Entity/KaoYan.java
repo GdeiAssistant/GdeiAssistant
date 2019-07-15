@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Component
 @Scope("prototype")
-public class KaoYan implements Serializable {
+public class KaoYan implements Serializable, Entity {
 
     private String name;
 

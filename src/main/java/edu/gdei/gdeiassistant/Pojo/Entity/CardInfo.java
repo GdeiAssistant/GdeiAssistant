@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CardInfo implements Serializable {
+public class CardInfo implements Serializable, Entity {
 
     private String name;
 

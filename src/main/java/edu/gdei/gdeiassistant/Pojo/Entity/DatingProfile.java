@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DatingProfile implements Serializable {
+public class DatingProfile implements Serializable, Entity {
 
     /**
      * 卖室友信息主键ID

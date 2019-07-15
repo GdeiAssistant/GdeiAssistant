@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ErshouItem implements Serializable {
+public class ErshouItem implements Serializable, Entity {
 
     /**
      * 商品图片

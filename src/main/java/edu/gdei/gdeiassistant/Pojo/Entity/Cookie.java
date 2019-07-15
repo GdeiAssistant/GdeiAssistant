@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Cookie implements Serializable {
+public class Cookie implements Serializable, Entity {
 
     @JSONField(ordinal = 1)
     private String name;

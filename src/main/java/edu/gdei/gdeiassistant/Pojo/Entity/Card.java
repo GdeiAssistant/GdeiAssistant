@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Card implements Serializable {
+public class Card implements Serializable, Entity {
 
     //交易时间
     private String tradeTime;

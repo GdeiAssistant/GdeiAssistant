@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class YiBanUser implements Serializable {
+public class YiBanUser implements Serializable, Entity {
 
     @SerializedName("yb_userid")
     private String userID;

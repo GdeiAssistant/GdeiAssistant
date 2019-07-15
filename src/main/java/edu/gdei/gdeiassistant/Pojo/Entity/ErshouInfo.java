@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ErshouInfo implements Serializable {
+public class ErshouInfo implements Serializable, Entity {
 
     private Profile profile;
 

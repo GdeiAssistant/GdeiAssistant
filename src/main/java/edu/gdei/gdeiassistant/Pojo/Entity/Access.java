@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Access implements Serializable {
+public class Access implements Serializable, Entity {
 
     private Integer id;
 

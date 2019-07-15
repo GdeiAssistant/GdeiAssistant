@@ -10,7 +10,7 @@ import java.util.Date;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Authentication implements Serializable {
+public class Authentication implements Serializable, Entity {
 
     /**
      * 用户身份唯一标识

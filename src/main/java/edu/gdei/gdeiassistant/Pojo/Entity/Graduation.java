@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Graduation implements Serializable {
+public class Graduation implements Serializable, Entity {
 
     private String username;
 

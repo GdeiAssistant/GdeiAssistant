@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Announcement implements Serializable {
+public class Announcement implements Serializable, Entity {
 
     private String id;
 

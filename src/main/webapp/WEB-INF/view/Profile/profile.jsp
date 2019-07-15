@@ -2,6 +2,8 @@
 
 <jsp:include page="/js/profile/profile.jsp"/>
 
+<script type="text/javascript" src="/js/userdata/userdata.js"></script>
+
 <div class="hd">
     <h1 class="page_title">个人中心</h1>
 </div>
@@ -142,6 +144,16 @@
        onclick="window.location.href = '/graduation'">
         <div class="weui-cell__bd">
             <p>毕业账号处理</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:" onclick="exportUserData()">
+        <div class="weui-cell__bd">
+            <p>下载用户数据</p>
         </div>
         <div class="weui-cell__ft">
         </div>

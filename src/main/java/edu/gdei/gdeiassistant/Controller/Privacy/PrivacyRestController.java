@@ -72,6 +72,11 @@ public class PrivacyRestController {
                 privacyService.UpdateCache(state, username);
                 break;
 
+            case 6:
+                //搜索引擎收录
+                privacyService.UpdateRobotsIndex(state, username);
+                break;
+
             default:
                 return new JsonResult(false, "请求参数不合法");
         }

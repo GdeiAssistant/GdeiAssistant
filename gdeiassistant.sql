@@ -622,6 +622,7 @@ CREATE TABLE `privacy` (
   `is_faculty_open` tinyint(1) NOT NULL COMMENT '公开院系',
   `is_major_open` tinyint(1) NOT NULL COMMENT '公开专业',
   `is_cache_allow` tinyint(1) NOT NULL COMMENT '使用教务缓存',
+  `is_robots_index_allow` tinyint(1) NOT NULL COMMENT '允许搜索引擎编入索引收录',
   PRIMARY KEY (`username`) USING BTREE,
   CONSTRAINT `privacyUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;

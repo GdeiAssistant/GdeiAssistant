@@ -13,17 +13,18 @@ public interface PrivacyMapper {
             @Result(property = "introductionOpen", column = "is_introduction_open"),
             @Result(property = "facultyOpen", column = "is_faculty_open"),
             @Result(property = "majorOpen", column = "is_major_open"),
-            @Result(property = "cacheAllow", column = "is_cache_allow")
+            @Result(property = "cacheAllow", column = "is_cache_allow"),
+            @Result(property = "robotsIndexAllow", column = "is_robots_index_allow")
     })
     public Privacy selectPrivacy(String username) throws Exception;
 
     @Insert("insert into privacy (username,is_gender_open,is_faculty_open" +
-            ",is_major_open,is_region_open,is_introduction_open,is_cache_allow) " +
-            "values(#{username},true,true,true,true,true,true,false)")
+            ",is_major_open,is_region_open,is_introduction_open,is_cache_allow,is_robots_index_allow) " +
+            "values(#{username},true,true,true,true,true,true,false,true)")
     public void initPrivacy(String username) throws Exception;
 
     @Update("update privacy set is_gender_open=1,is_faculty_open=1,is_major_open=1" +
-            ",is_region_open=1,is_introduction_open=1,is_cache_allow=0 where username=#{username}")
+            ",is_region_open=1,is_introduction_open=1,is_cache_allow=0,is_robots_index_allow=1 where username=#{username}")
     public void resetPrivacy(String username) throws Exception;
 
     @Update("<script>" +
@@ -114,4 +115,18 @@ public interface PrivacyMapper {
             "</script>")
     public void updateCache(@Param("cacheAllow") boolean cache, @Param("username") String username)
             throws Exception;
+
+    @Update("<script>" +
+            "update privacy" +
+            "        <choose>" +
+            "            <when test='robotsIndexAllow'>" +
+            "                set is_robots_index_allow='1'" +
+            "            </when>" +
+            "            <otherwise>" +
+            "                set is_robots_index_allow='0'" +
+            "            </otherwise>" +
+            "        </choose>" +
+            "        where username=#{username}" +
+            "</script>")
+    public void updateRobotsIndex(@Param("robotsIndexAllow") boolean robotsIndex, @Param("username") String username) throws Exception;
 }

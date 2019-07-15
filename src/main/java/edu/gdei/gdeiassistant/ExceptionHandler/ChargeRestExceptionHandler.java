@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Constant.ConstantUtils;
+import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
 import edu.gdei.gdeiassistant.Controller.ChargeRequest.ChargeRequestRestController;
 import edu.gdei.gdeiassistant.Exception.ChargeException.AmountNotAvailableException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
@@ -25,7 +25,7 @@ public class ChargeRestExceptionHandler {
     @ExceptionHandler(AmountNotAvailableException.class)
     public ResponseEntity HandleAccountNotAvailableException(AmountNotAvailableException e) {
         log.error("ChargeRestExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.CHARGE_AMOUNT_NOT_AVAILABLE
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.CHARGE_AMOUNT_NOT_AVAILABLE
                 , false, "充值金额不合法"));
     }
 

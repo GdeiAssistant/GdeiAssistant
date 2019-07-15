@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Constant.ConstantUtils;
+import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
 import edu.gdei.gdeiassistant.Controller.UserLogin.UserLoginRestController;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.RequestValidException.NonceInvalidException;
@@ -39,7 +39,7 @@ public class UserLoginRestExceptionHandler {
     @ExceptionHandler(SignInvalidException.class)
     public ResponseEntity ShowSignInvalidExceptionTip(SignInvalidException e) {
         log.error("UserLoginRestExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.REQUEST_SIGN_INVALID
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.REQUEST_SIGN_INVALID
                 , false, "请求的摘要签名不匹配"));
     }
 
@@ -51,7 +51,7 @@ public class UserLoginRestExceptionHandler {
     @ExceptionHandler(TimestampInvalidException.class)
     public ResponseEntity ShowTimestampInvalidExceptionTip(TimestampInvalidException e) {
         log.error("UserLoginRestExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.REQUEST_TIMESTAMP_INVALID
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.REQUEST_TIMESTAMP_INVALID
                 , false, "请求时间戳校验失败"));
     }
 
@@ -63,7 +63,7 @@ public class UserLoginRestExceptionHandler {
     @ExceptionHandler(NonceInvalidException.class)
     public ResponseEntity ShowNonceInvalidExceptionTip(NonceInvalidException e) {
         log.error("UserLoginRestExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ConstantUtils.REPLAY_REQUEST
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.REPLAY_REQUEST
                 , false, "重复提交的请求"));
     }
 }

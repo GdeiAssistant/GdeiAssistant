@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.Constant;
 
-public class ConstantUtils {
+public class ErrorConstantUtils {
 
     //请求参数不合法
     public static final int INCORRECT_REQUEST_PARAM = 40001;

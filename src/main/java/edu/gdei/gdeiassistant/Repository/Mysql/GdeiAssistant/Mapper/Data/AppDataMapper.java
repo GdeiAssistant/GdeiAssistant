@@ -38,7 +38,8 @@ public interface AppDataMapper {
             @Result(property = "introductionOpen", column = "is_introduction_open"),
             @Result(property = "facultyOpen", column = "is_faculty_open"),
             @Result(property = "majorOpen", column = "is_major_open"),
-            @Result(property = "cacheAllow", column = "is_cache_allow")
+            @Result(property = "cacheAllow", column = "is_cache_allow"),
+            @Result(property = "robotsIndexAllow", column = "is_robots_index_allow")
     })
     public Privacy selectUserPrivacy(String username);
 

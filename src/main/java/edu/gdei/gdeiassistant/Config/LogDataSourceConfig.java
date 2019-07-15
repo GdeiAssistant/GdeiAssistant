@@ -19,7 +19,7 @@ import java.beans.PropertyVetoException;
 import java.util.Objects;
 
 @Configuration
-@MapperScan(basePackages = "edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantLogs", sqlSessionFactoryRef = "logSqlSessionFactory")
+@MapperScan(basePackages = "edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Mapper", sqlSessionFactoryRef = "logSqlSessionFactory")
 @PropertySource("classpath:/config/mysql/log-jdbc.properties")
 public class LogDataSourceConfig implements EnvironmentAware {
 

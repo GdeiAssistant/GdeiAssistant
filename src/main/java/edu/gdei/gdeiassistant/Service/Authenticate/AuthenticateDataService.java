@@ -2,7 +2,7 @@ package edu.gdei.gdeiassistant.Service.Authenticate;
 
 import edu.gdei.gdeiassistant.Enum.Authentication.AuthenticationTypeEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.Authentication;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Authentication.AuthenticationMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Authentication.AuthenticationMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,14 +89,4 @@ public class AuthenticateDataService {
             authenticationMapper.updateAuthentication(authentication);
         }
     }
-
-    /**
-     * 删除用户实名认证信息
-     *
-     * @param username
-     */
-    public void DeleteAuthenticationData(String username) throws Exception {
-        authenticationMapper.deleteAuthentication(StringEncryptUtils.encryptString(username));
-    }
-
 }

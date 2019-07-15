@@ -4,9 +4,9 @@ import com.aliyun.oss.OSSClient;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Introduction;
 import edu.gdei.gdeiassistant.Pojo.Entity.Profile;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Gender.GenderMapper;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Profile.ProfileMapper;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.User.UserMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Gender.GenderMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Profile.ProfileMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.User.UserMapper;
 import edu.gdei.gdeiassistant.Service.Authenticate.AuthenticateService;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +44,6 @@ public class UserProfileService {
     private String endpoint;
 
     private static Map<Integer, String> genderMap;
-
-    private static Map<Integer, String> genderOrientationMap;
 
     private static Map<Integer, String> facultyMap;
 

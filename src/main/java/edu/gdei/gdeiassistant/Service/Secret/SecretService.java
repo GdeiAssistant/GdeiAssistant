@@ -5,7 +5,7 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Secret;
 import edu.gdei.gdeiassistant.Pojo.Entity.SecretComment;
 import edu.gdei.gdeiassistant.Pojo.Entity.SecretContent;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Secret.SecretMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Secret.SecretMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -143,8 +142,6 @@ public class SecretService {
                 //获取语音音频文件地址
                 secret.setVoiceURL(GetSecretVoiceURL(secret.getId()));
             }
-            //加载关联的评论数据
-            secret.getSecretCommentList();
             //加载点赞数量/评论数量/点赞状态
             secret.setCommentCount(secretMapper.selectSecretCommentCount(secret.getId()));
             secret.setLikeCount(secretMapper.selectSecretLikeCount(secret.getId()));

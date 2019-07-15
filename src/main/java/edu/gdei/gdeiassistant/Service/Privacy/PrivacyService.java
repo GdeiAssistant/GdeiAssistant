@@ -4,7 +4,7 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Privacy;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Privacy.PrivacyMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Privacy.PrivacyMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

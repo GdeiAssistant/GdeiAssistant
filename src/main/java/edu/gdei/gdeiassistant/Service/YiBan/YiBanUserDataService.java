@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.Service.YiBan;
 
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.YiBanUser.YiBanUserMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.YiBanUser.YiBanUserMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;

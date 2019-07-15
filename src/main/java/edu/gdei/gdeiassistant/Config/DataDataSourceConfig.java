@@ -19,7 +19,7 @@ import java.beans.PropertyVetoException;
 import java.util.Objects;
 
 @Configuration
-@MapperScan(basePackages = "edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData", sqlSessionFactoryRef = "dataSqlSessionFactory")
+@MapperScan(basePackages = "edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Mapper", sqlSessionFactoryRef = "dataSqlSessionFactory")
 @PropertySource("classpath:/config/mysql/data-jdbc.properties")
 public class DataDataSourceConfig implements EnvironmentAware {
 

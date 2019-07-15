@@ -78,5 +78,17 @@
     </div>
 </div>
 
+
+<div class="weui-cells__title">搜索引擎</div>
+<div class="weui-cells weui-cells_form">
+    <div class="weui-cell weui-cell_switch">
+        <div class="weui-cell__bd">让搜索引擎链接到我的个人资料页</div>
+        <div class="weui-cell__ft">
+            <input id="robots" class="weui-switch" type="checkbox"
+                   onchange="changePrivacySetting(6)">
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

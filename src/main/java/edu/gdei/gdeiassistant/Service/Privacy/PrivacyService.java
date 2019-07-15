@@ -6,8 +6,6 @@ import edu.gdei.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Privacy.PrivacyMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +22,6 @@ public class PrivacyService {
 
     @Autowired
     private ScheduleDao scheduleDao;
-
-    private Log log = LogFactory.getLog(PrivacyService.class);
 
     /**
      * 获取用户隐私设置
@@ -108,5 +104,16 @@ public class PrivacyService {
         privacyMapper.updateCache(state, StringEncryptUtils.encryptString(username));
         gradeDao.removeGrade(username);
         scheduleDao.removeSchedule(username);
+    }
+
+    /**
+     * 更新个人主页搜索引擎收录设置
+     *
+     * @param state
+     * @param username
+     * @throws Exception
+     */
+    public void UpdateRobotsIndex(boolean state, String username) throws Exception {
+        privacyMapper.updateRobotsIndex(state, StringEncryptUtils.encryptString(username));
     }
 }

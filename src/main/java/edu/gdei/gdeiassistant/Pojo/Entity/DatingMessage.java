@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DatingMessage implements Serializable {
+public class DatingMessage implements Serializable, Entity {
 
     /**
      * 卖室友消息的主键ID

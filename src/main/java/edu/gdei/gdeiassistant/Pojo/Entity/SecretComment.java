@@ -10,7 +10,7 @@ import java.util.Date;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SecretComment implements Serializable {
+public class SecretComment implements Serializable, Entity {
 
     private int id;
 

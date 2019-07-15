@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestSecurity implements Serializable {
+public class RequestSecurity implements Serializable, Entity {
 
     /**
      * 客户端生成的RSA公钥，用于数字签名校验

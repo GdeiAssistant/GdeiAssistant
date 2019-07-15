@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CustomSchedule implements Serializable {
+public class CustomSchedule implements Serializable, Entity {
 
     //课程长度
     @NotNull

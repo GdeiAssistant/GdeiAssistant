@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Component
 @Scope("prototype")
-public class LostAndFoundInfo implements Serializable {
+public class LostAndFoundInfo implements Serializable, Entity {
 
     private LostAndFoundItem lostAndFoundItem;
 

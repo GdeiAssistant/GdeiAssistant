@@ -140,6 +140,7 @@
 - [安卓客户端](https://github.com/GdeiAssistant/GdeiAssistant-Android)
 - [微信小程序](https://github.com/GdeiAssistant/GdeiAssistant-WechatApp)
 - [支付宝小程序](https://github.com/GdeiAssistant/GdeiAssistant-AlipayApp)
+- [快应用客户端](https://github.com/GdeiAssistant/GdeiAssistant-QuickApp)
 - [通用Windows客户端](https://github.com/GdeiAssistant/GdeiAssistant-UWP)
 
 ## 公众号

@@ -41,7 +41,7 @@ public class ProfileController {
             modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(username));
             modelAndView.addObject("KickName", profile.getKickname());
             boolean containProfile = false;
-            if (privacy.isGenderOpen()) {
+            if (privacy.isGenderOpen().equals(Boolean.TRUE)) {
                 if (profile.getGender() != null && profile.getGender() != 0) {
                     if (profile.getGender() == 3) {
                         modelAndView.addObject("Gender", profile.getCustomGenderName());
@@ -51,19 +51,19 @@ public class ProfileController {
                     containProfile = true;
                 }
             }
-            if (privacy.isFacultyOpen()) {
+            if (privacy.isFacultyOpen().equals(Boolean.TRUE)) {
                 if (profile.getFaculty() != null && !profile.getFaculty().equals(0)) {
                     modelAndView.addObject("Faculty", UserProfileService.getFacultyMap().get(profile.getFaculty()));
                     containProfile = true;
                 }
             }
-            if (privacy.isMajorOpen()) {
+            if (privacy.isMajorOpen().equals(Boolean.TRUE)) {
                 if (StringUtils.isNotBlank(profile.getMajor())) {
                     modelAndView.addObject("Major", profile.getMajor());
                     containProfile = true;
                 }
             }
-            if (privacy.isRegionOpen()) {
+            if (privacy.isRegionOpen().equals(Boolean.TRUE)) {
                 StringBuilder location = new StringBuilder();
                 Region region = LocationUtils.getRegionMap().get(profile.getRegion());
                 if (region != null) {
@@ -85,13 +85,13 @@ public class ProfileController {
                     containProfile = true;
                 }
             }
-            if (privacy.isIntroductionOpen()) {
+            if (privacy.isIntroductionOpen().equals(Boolean.TRUE)) {
                 Introduction introduction = userProfileService.GetUserIntroduction(username);
                 if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
                     modelAndView.addObject("Introduction", introduction.getIntroductionContent());
                 }
             }
-            if (privacy.isRobotsIndexAllow()) {
+            if (privacy.isRobotsIndexAllow().equals(Boolean.FALSE)) {
                 modelAndView.addObject("RobotsNoIndex", true);
             }
             modelAndView.addObject("ContainProfile", containProfile);

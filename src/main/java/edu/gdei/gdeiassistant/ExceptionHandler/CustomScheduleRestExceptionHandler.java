@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
-import edu.gdei.gdeiassistant.Controller.ScheduleQuery.ScheduleQueryRestController;
+import edu.gdei.gdeiassistant.Controller.ScheduleQuery.RestController.ScheduleQueryRestController;
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;

@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Controller.UserProfile.ProfileController;
+import edu.gdei.gdeiassistant.Controller.UserProfile.Controller.ProfileController;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

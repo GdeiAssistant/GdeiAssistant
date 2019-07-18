@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
-import edu.gdei.gdeiassistant.Controller.UserLogin.UserLoginRestController;
+import edu.gdei.gdeiassistant.Controller.UserLogin.RestController.UserLoginRestController;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.RequestValidException.NonceInvalidException;
 import edu.gdei.gdeiassistant.Exception.RequestValidException.SignInvalidException;

@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Controller.LostAndFound.LostAndFoundController;
+import edu.gdei.gdeiassistant.Controller.LostAndFound.Controller.LostAndFoundController;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;

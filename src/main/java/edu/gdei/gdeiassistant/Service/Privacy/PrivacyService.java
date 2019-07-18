@@ -94,6 +94,45 @@ public class PrivacyService {
     }
 
     /**
+     * 更新入学年份隐私设置
+     *
+     * @param state
+     * @param username
+     * @throws Exception
+     */
+    public void UpdateEnrollment(boolean state, String username) throws Exception {
+        privacyMapper.updateEnrollment(state, StringEncryptUtils.encryptString(username));
+    }
+
+    /**
+     * 更新学校隐私设置
+     *
+     * @param state
+     * @param index
+     * @param username
+     * @throws Exception
+     */
+    public void UpdateSchool(boolean state, int index, String username) throws Exception {
+        switch (index) {
+            case 0:
+                //高中/职中
+                privacyMapper.updateHighSchool(state, StringEncryptUtils.encryptString(username));
+                break;
+
+            case 1:
+                //初中
+                privacyMapper.updateJuniorHighSchool(state, StringEncryptUtils.encryptString(username));
+                break;
+
+            case 2:
+            default:
+                //小学
+                privacyMapper.updatePrimarySchool(state, StringEncryptUtils.encryptString(username));
+                break;
+        }
+    }
+
+    /**
      * 更新教务信息缓存隐私配置
      *
      * @param state

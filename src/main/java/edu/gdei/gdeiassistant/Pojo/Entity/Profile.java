@@ -26,6 +26,8 @@ public class Profile implements Serializable, Entity {
 
     private Integer faculty;
 
+    private Integer enrollment;
+
     private String major;
 
     private String customGenderName;
@@ -35,6 +37,36 @@ public class Profile implements Serializable, Entity {
     private String state;
 
     private String city;
+
+    private String primarySchool;
+
+    private String juniorHighSchool;
+
+    private String highSchool;
+
+    public String getPrimarySchool() {
+        return primarySchool;
+    }
+
+    public void setPrimarySchool(String primarySchool) {
+        this.primarySchool = primarySchool;
+    }
+
+    public String getJuniorHighSchool() {
+        return juniorHighSchool;
+    }
+
+    public void setJuniorHighSchool(String juniorHighSchool) {
+        this.juniorHighSchool = juniorHighSchool;
+    }
+
+    public String getHighSchool() {
+        return highSchool;
+    }
+
+    public void setHighSchool(String highSchool) {
+        this.highSchool = highSchool;
+    }
 
     public String getKickname() {
         return kickname;
@@ -130,5 +162,13 @@ public class Profile implements Serializable, Entity {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    public Integer getEnrollment() {
+        return enrollment;
+    }
+
+    public void setEnrollment(Integer enrollment) {
+        this.enrollment = enrollment;
     }
 }

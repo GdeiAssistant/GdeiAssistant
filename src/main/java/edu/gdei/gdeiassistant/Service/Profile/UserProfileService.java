@@ -308,6 +308,23 @@ public class UserProfileService {
     }
 
     /**
+     * 更新入学年份
+     *
+     * @param username
+     * @param enrollment
+     * @throws Exception
+     */
+    public void UpdateEnrollment(String username, int enrollment) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setEnrollment(enrollment);
+            profileMapper.updateEnrollment(profile);
+            return;
+        }
+        throw new UserNotExistException("查询的用户不存在");
+    }
+
+    /**
      * 更新昵称个人资料
      *
      * @param username
@@ -319,6 +336,42 @@ public class UserProfileService {
         if (profile != null) {
             profile.setKickname(kickname);
             profileMapper.updateKickname(profile);
+            return;
+        }
+        throw new UserNotExistException("查询的用户不存在");
+    }
+
+    /**
+     * 更新学校信息
+     *
+     * @param username
+     * @param school
+     * @param index
+     * @throws Exception
+     */
+    public void UpdateSchool(String username, String school, int index) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            switch (index) {
+                case 0:
+                    //高中/职中
+                    profile.setHighSchool(school);
+                    profileMapper.updateHighSchool(profile);
+                    break;
+
+                case 1:
+                    //初中
+                    profile.setJuniorHighSchool(school);
+                    profileMapper.updateJuniorHighSchool(profile);
+                    break;
+
+                case 2:
+                default:
+                    //小学
+                    profile.setPrimarySchool(school);
+                    profileMapper.updatePrimarySchool(profile);
+                    break;
+            }
             return;
         }
         throw new UserNotExistException("查询的用户不存在");

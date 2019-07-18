@@ -23,6 +23,14 @@ public class Privacy implements Serializable, Entity {
 
     private Boolean majorOpen;
 
+    private Boolean enrollmentOpen;
+
+    private Boolean primarySchoolOpen;
+
+    private Boolean juniorHighSchoolOpen;
+
+    private Boolean highSchoolOpen;
+
     private Boolean cacheAllow;
 
     private Boolean robotsIndexAllow;
@@ -89,5 +97,37 @@ public class Privacy implements Serializable, Entity {
 
     public void setRobotsIndexAllow(Boolean robotsIndexAllow) {
         this.robotsIndexAllow = robotsIndexAllow;
+    }
+
+    public Boolean isEnrollmentOpen() {
+        return enrollmentOpen;
+    }
+
+    public void setEnrollmentOpen(Boolean enrollmentOpen) {
+        this.enrollmentOpen = enrollmentOpen;
+    }
+
+    public Boolean isPrimarySchoolOpen() {
+        return primarySchoolOpen;
+    }
+
+    public void setPrimarySchoolOpen(Boolean primarySchoolOpen) {
+        this.primarySchoolOpen = primarySchoolOpen;
+    }
+
+    public Boolean isJuniorHighSchoolOpen() {
+        return juniorHighSchoolOpen;
+    }
+
+    public void setJuniorHighSchoolOpen(Boolean juniorHighSchoolOpen) {
+        this.juniorHighSchoolOpen = juniorHighSchoolOpen;
+    }
+
+    public Boolean isHighSchoolOpen() {
+        return highSchoolOpen;
+    }
+
+    public void setHighSchoolOpen(Boolean highSchoolOpen) {
+        this.highSchoolOpen = highSchoolOpen;
     }
 }

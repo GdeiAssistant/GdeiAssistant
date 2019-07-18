@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
-import edu.gdei.gdeiassistant.Controller.Authenticate.AuthenticateRestController;
+import edu.gdei.gdeiassistant.Controller.Authenticate.RestController.AuthenticateRestController;
 import edu.gdei.gdeiassistant.Exception.AuthenticationException.*;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.springframework.core.annotation.Order;

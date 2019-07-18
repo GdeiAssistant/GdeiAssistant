@@ -68,11 +68,30 @@ public class PrivacyRestController {
                 break;
 
             case 5:
-                //教务数据
-                privacyService.UpdateCache(state, username);
+                //入学年份
+                privacyService.UpdateEnrollment(state, username);
                 break;
 
             case 6:
+                //高中/职中
+                privacyService.UpdateSchool(state, 0, username);
+
+            case 7:
+                //初中
+                privacyService.UpdateSchool(state, 1, username);
+                break;
+
+            case 8:
+                //小学
+                privacyService.UpdateSchool(state, 2, username);
+                break;
+
+            case 9:
+                //教务缓存
+                privacyService.UpdateCache(state, username);
+                break;
+
+            case 10:
                 //搜索引擎收录
                 privacyService.UpdateRobotsIndex(state, username);
                 break;

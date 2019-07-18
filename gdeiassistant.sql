@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: gdeiassistant_log
 -- ------------------------------------------------------
--- Server version	8.0.14
+-- Server version	8.0.16
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -19,7 +19,7 @@
 -- Current Database: `gdeiassistant_log`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_log` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_log` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `gdeiassistant_log`;
 
@@ -36,7 +36,7 @@ CREATE TABLE `charge_log` (
   `amount` int(11) NOT NULL COMMENT '充值金额',
   `time` datetime NOT NULL COMMENT '充值时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,7 +77,7 @@ UNLOCK TABLES;
 -- Current Database: `gdeiassistant_data`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_data` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_data` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `gdeiassistant_data`;
 
@@ -228,7 +228,7 @@ UNLOCK TABLES;
 -- Current Database: `gdeiassistant`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `gdeiassistant`;
 
@@ -278,7 +278,7 @@ CREATE TABLE `authentication` (
   `method` tinyint(1) DEFAULT NULL COMMENT '实名认证方法',
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '记录标记删除状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -287,7 +287,6 @@ CREATE TABLE `authentication` (
 
 LOCK TABLES `authentication` WRITE;
 /*!40000 ALTER TABLE `authentication` DISABLE KEYS */;
-INSERT INTO `authentication` VALUES (13,'6376696892374389d5106ad04a7915ab76a68fb0','gdeiassistant','李*懿','440***********2826','14*******12','2019-06-06 05:41:16','2019-06-06 05:47:27',0,0);
 /*!40000 ALTER TABLE `authentication` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -331,7 +330,7 @@ CREATE TABLE `dating_message` (
   PRIMARY KEY (`message_id`) USING BTREE,
   KEY `datingMessageUsername` (`username`),
   CONSTRAINT `datingMessageUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -359,7 +358,7 @@ CREATE TABLE `dating_pick` (
   PRIMARY KEY (`pick_id`) USING BTREE,
   KEY `datingPickUsername` (`username`),
   CONSTRAINT `datingPickUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -393,7 +392,7 @@ CREATE TABLE `dating_profile` (
   PRIMARY KEY (`profile_id`) USING BTREE,
   KEY `datingProfileUsername` (`username`),
   CONSTRAINT `datingProfileUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -425,7 +424,7 @@ CREATE TABLE `delivery_order` (
   `state` tinyint(1) NOT NULL COMMENT '订单状态',
   `remarks` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '备注',
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -453,7 +452,7 @@ CREATE TABLE `delivery_trade` (
   PRIMARY KEY (`trade_id`),
   KEY `deliveryOrderId_idx` (`order_id`),
   CONSTRAINT `deliveryOrderId` FOREIGN KEY (`order_id`) REFERENCES `delivery_order` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -487,7 +486,7 @@ CREATE TABLE `ershou` (
   PRIMARY KEY (`id`),
   KEY `ershouUsername` (`username`),
   CONSTRAINT `ershouUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -595,7 +594,7 @@ CREATE TABLE `lostandfound` (
   PRIMARY KEY (`id`),
   KEY `lostandfoundUsername` (`username`),
   CONSTRAINT `lostandfoundUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -621,8 +620,12 @@ CREATE TABLE `privacy` (
   `is_introduction_open` tinyint(1) NOT NULL COMMENT '公开个人简介',
   `is_faculty_open` tinyint(1) NOT NULL COMMENT '公开院系',
   `is_major_open` tinyint(1) NOT NULL COMMENT '公开专业',
+  `is_enrollment_open` tinyint(1) NOT NULL COMMENT '公开入学年份',
+  `is_primary_school_open` tinyint(1) NOT NULL COMMENT '公开小学',
+  `is_junior_high_school_open` tinyint(1) NOT NULL COMMENT '公开初中',
+  `is_high_school_open` tinyint(1) NOT NULL COMMENT '公开高中/职中',
   `is_cache_allow` tinyint(1) NOT NULL COMMENT '使用教务缓存',
-  `is_robots_index_allow` tinyint(1) NOT NULL COMMENT '允许搜索引擎编入索引收录',
+  `is_robots_index_allow` tinyint(1) NOT NULL COMMENT '允许搜索引擎收录',
   PRIMARY KEY (`username`) USING BTREE,
   CONSTRAINT `privacyUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
@@ -634,7 +637,7 @@ CREATE TABLE `privacy` (
 
 LOCK TABLES `privacy` WRITE;
 /*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
-INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,0);
+INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,0,1);
 /*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -656,6 +659,10 @@ CREATE TABLE `profile` (
   `region` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家/地区',
   `state` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '省份/州',
   `city` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '城市',
+  `enrollment` int(4) DEFAULT NULL COMMENT '入学年份',
+  `primary_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '小学',
+  `junior_high_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '初中',
+  `high_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '高中/职中',
   PRIMARY KEY (`username`),
   CONSTRAINT `profileUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -667,7 +674,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -719,7 +726,7 @@ CREATE TABLE `secret_content` (
   PRIMARY KEY (`id`),
   KEY `secretContentUsername` (`username`),
   CONSTRAINT `secretContentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=226 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -868,4 +875,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-01 11:58:40
+-- Dump completed on 2019-07-19  3:18:33

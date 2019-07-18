@@ -106,6 +106,19 @@
 
         </c:if>
 
+        <c:if test="${Enrollment!=null}">
+
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>入学年份</p>
+                </div>
+                <div class="weui-cell__ft">
+                        ${Enrollment}
+                </div>
+            </div>
+
+        </c:if>
+
         <c:if test="${Location!=null}">
 
             <div class="weui-cell">
@@ -113,6 +126,39 @@
                     <p>所在地</p>
                 </div>
                 <div class="weui-cell__ft">${Location}</div>
+            </div>
+
+        </c:if>
+
+        <c:if test="${HighSchool!=null}">
+
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>高中/职中</p>
+                </div>
+                <div class="weui-cell__ft">${HighSchool}</div>
+            </div>
+
+        </c:if>
+
+        <c:if test="${JuniorHighSchool!=null}">
+
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>初中</p>
+                </div>
+                <div class="weui-cell__ft">${JuniorHighSchool}</div>
+            </div>
+
+        </c:if>
+
+        <c:if test="${PrimarySchool!=null}">
+
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>小学</p>
+                </div>
+                <div class="weui-cell__ft">${PrimarySchool}</div>
             </div>
 
         </c:if>

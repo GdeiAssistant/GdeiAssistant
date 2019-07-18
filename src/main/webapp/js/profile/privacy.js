@@ -29,6 +29,18 @@ $(function () {
                     if (result.data.introductionOpen === true) {
                         $("#introduction").prop("checked", true);
                     }
+                    if (result.data.enrollmentOpen === true) {
+                        $("#enrollerment").prop("checked", true);
+                    }
+                    if (result.data.primarySchoolOpen === true) {
+                        $("#primary_school").prop("checked", true);
+                    }
+                    if (result.data.juniorHighSchoolOpen === true) {
+                        $("#junior_high_school").prop("checked", true);
+                    }
+                    if (result.data.highSchoolOpen === true) {
+                        $("#high_school").prop("checked", true);
+                    }
                     if (result.data.cacheAllow === true) {
                         $("#cache").prop("checked", true);
                     }

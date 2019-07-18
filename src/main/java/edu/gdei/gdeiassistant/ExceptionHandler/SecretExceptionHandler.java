@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Controller.Secret.SecretController;
+import edu.gdei.gdeiassistant.Controller.Secret.Controller.SecretController;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

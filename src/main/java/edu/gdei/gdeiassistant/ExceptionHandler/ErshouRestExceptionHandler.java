@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Controller.Ershou.ErshouRestController;
+import edu.gdei.gdeiassistant.Controller.Ershou.RestController.ErshouRestController;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;

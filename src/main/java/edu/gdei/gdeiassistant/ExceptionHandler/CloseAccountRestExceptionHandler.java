@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Controller.Account.CloseAccountRestController;
+import edu.gdei.gdeiassistant.Controller.Account.RestController.CloseAccountRestController;
 import edu.gdei.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
 import edu.gdei.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;

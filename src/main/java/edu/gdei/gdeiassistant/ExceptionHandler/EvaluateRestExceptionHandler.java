@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
-import edu.gdei.gdeiassistant.Controller.Evaluate.EvaluateRestController;
+import edu.gdei.gdeiassistant.Controller.Evaluate.RestController.EvaluateRestController;
 import edu.gdei.gdeiassistant.Exception.EvaluateException.NotAvailableTimeException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;

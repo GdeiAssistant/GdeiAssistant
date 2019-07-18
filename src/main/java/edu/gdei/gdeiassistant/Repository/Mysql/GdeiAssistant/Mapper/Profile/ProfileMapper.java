@@ -18,6 +18,10 @@ public interface ProfileMapper {
             @Result(property = "degree", column = "degree"),
             @Result(property = "faculty", column = "faculty"),
             @Result(property = "major", column = "major"),
+            @Result(property = "enrollment", column = "enrollment"),
+            @Result(property = "highSchool", column = "high_school"),
+            @Result(property = "juniorHighSchool", column = "junior_high_school"),
+            @Result(property = "primarySchool", column = "primary_school"),
             @Result(property = "region", column = "region"),
             @Result(property = "state", column = "state"),
             @Result(property = "city", column = "city")
@@ -55,10 +59,23 @@ public interface ProfileMapper {
     @Update("update profile set degree=#{degree} where username=#{username}")
     void updateDegree(Profile profile);
 
+    @Update("update profile set enrollment=#{enrollment} where username=#{username}")
+    void updateEnrollment(Profile profile);
+
     @Update("update profile set region=#{region},state=#{state},city=#{city} where username=#{username}")
     void updateLocation(Profile profile);
 
-    @Update("update profile set kickname=#{kickname},gender=null,gender_orientation=null,birthday=null,region=null,state=null,city=null where username=#{username}")
+    @Update("update profile set high_school=#{highSchool} where username=#{username}")
+    void updateHighSchool(Profile profile);
+
+    @Update("update profile set junior_high_school=#{juniorHighSchool} where username=#{username}")
+    void updateJuniorHighSchool(Profile profile);
+
+    @Update("update profile set primary_school=#{primarySchool} where username=#{username}")
+    void updatePrimarySchool(Profile profile);
+
+    @Update("update profile set kickname=#{kickname},gender=null,birthday=null,enrollment=null,region=null" +
+            ",state=null,city=null,high_school=null,junior_high_school=null,primary_school=null where username=#{username}")
     void resetUserProfile(@Param("username") String username, @Param("kickname") String kickname) throws Exception;
 
     @Update("update introduction set introduction=null where username=#{username}")

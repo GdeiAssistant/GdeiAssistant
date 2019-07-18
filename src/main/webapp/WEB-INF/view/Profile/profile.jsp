@@ -68,11 +68,22 @@
         </div>
         <div id="major_text" class="weui-cell__ft"></div>
     </div>
+    <div class="weui-cell" href="javascript:" onclick="showEnrollmentDialog()">
+        <div class="weui-cell__bd">
+            <p>入学年份</p>
+        </div>
+        <div id="enrollment_text" class="weui-cell__ft"></div>
+    </div>
 </div>
 
 <input type="hidden" id="kickname_val" name="kickname_val">
 <input type="hidden" id="gender_val" name="gender_val">
 <input type="hidden" id="major_val" name="major_val">
+
+<input type="hidden" id="school_index" name="school_index">
+<input type="hidden" id="high_school_val" name="high_school_val">
+<input type="hidden" id="junior_high_school_val" name="junior_high_school_val">
+<input type="hidden" id="primary_school_val" name="primary_school_val">
 
 <div class="weui-cells">
     <div class="weui-cell" href="javascript:" onclick="changeRegion()">
@@ -89,6 +100,27 @@
         <div class="weui-cell__ft">
         </div>
     </a>
+</div>
+
+<div class="weui-cells">
+    <div class="weui-cell" href="javascript:" onclick="showSchoolDialog(0)">
+        <div class="weui-cell__bd">
+            <p>高中/职中</p>
+        </div>
+        <div id="high_school" class="weui-cell__ft"></div>
+    </div>
+    <div class="weui-cell" href="javascript:" onclick="showSchoolDialog(1)">
+        <div class="weui-cell__bd">
+            <p>初中</p>
+        </div>
+        <div id="junior_high_school" class="weui-cell__ft"></div>
+    </div>
+    <div class="weui-cell" href="javascript:" onclick="showSchoolDialog(2)">
+        <div class="weui-cell__bd">
+            <p>小学</p>
+        </div>
+        <div id="primary_school" class="weui-cell__ft"></div>
+    </div>
 </div>
 
 <div class="weui-cells">
@@ -263,6 +295,35 @@
             <!-- 提交按钮 -->
             <div class="weui_btn_area">
                 <a class="weui_btn weui_btn_primary" href="javascript:" onclick="changeMajor()">确认</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 修改学校信息弹窗 -->
+<div id="changeSchool" class="weui-popup__container">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <a href="javascript:" style="left:0" class="picker-button close-popup">取消</a>
+                <h1 class="title">修改学校</h1>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">学校名称</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input id="school" class="weui-input" type="text" onkeyup="inputLengthCheck(this,45)">
+                    </div>
+                </div>
+            </div>
+            <!-- 提交按钮 -->
+            <div class="weui_btn_area">
+                <a class="weui_btn weui_btn_primary" href="javascript:" onclick="changeSchool()">确认</a>
             </div>
         </div>
     </div>

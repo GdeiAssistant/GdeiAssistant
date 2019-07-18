@@ -213,6 +213,15 @@
                     //专业
                     $("#major_text").text(result.data.major == null ? "未填写" : result.data.major);
                     $("#major_val").val(result.data.major == null ? "" : result.data.major);
+                    //入学年份
+                    $("#enrollment_text").text(result.data.enrollment == null ? "未选择" : result.data.enrollment + "年");
+                    //学校信息
+                    $("#high_school").text(result.data.highSchool == null ? "未填写" : result.data.highSchool);
+                    $("#high_school_val").val(result.data.highSchool == null ? "" : result.data.highSchool);
+                    $("#junior_high_school").text(result.data.juniorHighSchool == null ? "未填写" : result.data.juniorHighSchool);
+                    $("#junior_high_school_val").val(result.data.juniorHighSchool == null ? "" : result.data.juniorHighSchool);
+                    $("#primary_school").text(result.data.primarySchool == null ? "未填写" : result.data.primarySchool);
+                    $("#primary_school_val").val(result.data.primarySchool == null ? "" : result.data.primarySchool);
                 } else {
                     showCustomErrorTip(result.message);
                 }
@@ -441,6 +450,66 @@
         $("#changeMajor").popup();
     }
 
+    //弹出学校修改窗口
+    function showSchoolDialog(index) {
+        $("#school_index").val(index);
+        switch (index) {
+            case 0:
+                //高中/职中
+                $("#school").val($("#high_school_val").val());
+                break;
+
+            case 1:
+                //初中
+                $("#school").val($("#junior_high_school_val").val());
+                break;
+
+            case 2:
+            default:
+                //小学
+                $("#school").val($("#primary_school_val").val());
+                break;
+        }
+        $("#changeSchool").popup();
+    }
+
+    //修改入学年份
+    function showEnrollmentDialog() {
+        var enrollmentPicker = [];
+        for (var i = 0; i <= new Date().getFullYear() - 1955; i++) {
+            enrollmentPicker[i] = {
+                label: (i + 1955) + "年",
+                value: i + 1955
+            }
+        }
+        weui.picker(enrollmentPicker, {
+            defaultValue: [new Date().getFullYear()],
+            onConfirm: function (year) {
+                $.ajax({
+                    url: "/api/profile/enrollment",
+                    data: {
+                        year: year[0].value
+                    },
+                    type: 'post',
+                    success: function (updateResult) {
+                        if (updateResult.success === true) {
+                            loadProfile();
+                        } else {
+                            showCustomErrorTip(updateResult.message);
+                        }
+                    },
+                    error: function (result) {
+                        if (result.status) {
+                            showCustomErrorTip(result.responseJSON.message);
+                        } else {
+                            showNetworkErrorTip();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     //修改昵称
     function changeKickname() {
         if ($("#kickname").val().length > 0) {
@@ -657,6 +726,37 @@
                     major: $("#major").val()
                 },
                 type: 'post',
+                success: function (updateResult) {
+                    if (updateResult.success === true) {
+                        loadProfile();
+                    } else {
+                        showCustomErrorTip(updateResult.message);
+                    }
+                },
+                error: function (result) {
+                    if (result.status) {
+                        showCustomErrorTip(result.responseJSON.message);
+                    } else {
+                        showNetworkErrorTip();
+                    }
+                }
+            });
+        }
+    }
+
+    //修改学校信息
+    function changeSchool() {
+        if ($("#school").val().length > 0 && $("#school").val().length <= 45) {
+            var school = $("#school").val();
+            var index = $("#school_index").val();
+            $.closePopup();
+            $.ajax({
+                url: '/api/profile/school',
+                type: 'post',
+                data: {
+                    index: index,
+                    school: school
+                },
                 success: function (updateResult) {
                     if (updateResult.success === true) {
                         loadProfile();

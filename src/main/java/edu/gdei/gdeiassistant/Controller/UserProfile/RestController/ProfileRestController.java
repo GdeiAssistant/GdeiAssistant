@@ -19,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -344,6 +346,24 @@ public class ProfileRestController {
     }
 
     /**
+     * 更新入学年份
+     *
+     * @param request
+     * @param enrollment
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/api/profile/enrollment", method = RequestMethod.POST)
+    public JsonResult UpdateEnrollment(HttpServletRequest request, @Validated @NotNull @Min(1955) @RequestParam("year") Integer enrollment) throws Exception {
+        if (enrollment == null || enrollment > LocalDate.now().getYear()) {
+            return new JsonResult(false, "请求参数不合法");
+        }
+        String username = (String) request.getSession().getAttribute("username");
+        userProfileService.UpdateEnrollment(username, enrollment);
+        return new JsonResult(true);
+    }
+
+    /**
      * 更新用户昵称
      *
      * @param request
@@ -355,6 +375,23 @@ public class ProfileRestController {
     public JsonResult UpdateKickname(HttpServletRequest request, @Validated @NotBlank @Range(min = 1, max = 24) String kickname) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         userProfileService.UpdateKickname(username, kickname);
+        return new JsonResult(true);
+    }
+
+    /**
+     * 更新学校信息
+     *
+     * @param request
+     * @param index
+     * @param school
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/api/profile/school", method = RequestMethod.POST)
+    public JsonResult UpdateSchool(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(2) Integer index
+            , @Validated @NotBlank @Length(min = 1, max = 45) String school) throws Exception {
+        String username = (String) request.getSession().getAttribute("username");
+        userProfileService.UpdateSchool(username, school, index);
         return new JsonResult(true);
     }
 

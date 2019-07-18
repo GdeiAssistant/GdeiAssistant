@@ -63,6 +63,30 @@ public class ProfileController {
                     containProfile = true;
                 }
             }
+            if (privacy.isEnrollmentOpen().equals(Boolean.TRUE)) {
+                if (profile.getEnrollment() != null) {
+                    modelAndView.addObject("Enrollment", profile.getEnrollment());
+                    containProfile = true;
+                }
+            }
+            if (privacy.isHighSchoolOpen().equals(Boolean.TRUE)) {
+                if (StringUtils.isNotBlank(profile.getHighSchool())) {
+                    modelAndView.addObject("HighSchool", profile.getHighSchool());
+                    containProfile = true;
+                }
+            }
+            if (privacy.isJuniorHighSchoolOpen().equals(Boolean.TRUE)) {
+                if (StringUtils.isNotBlank(profile.getJuniorHighSchool())) {
+                    modelAndView.addObject("JuniorHighSchool", profile.getJuniorHighSchool());
+                    containProfile = true;
+                }
+            }
+            if (privacy.isPrimarySchoolOpen().equals(Boolean.TRUE)) {
+                if (StringUtils.isNotBlank(profile.getPrimarySchool())) {
+                    modelAndView.addObject("PrimarySchool", profile.getPrimarySchool());
+                    containProfile = true;
+                }
+            }
             if (privacy.isRegionOpen().equals(Boolean.TRUE)) {
                 StringBuilder location = new StringBuilder();
                 Region region = LocationUtils.getRegionMap().get(profile.getRegion());

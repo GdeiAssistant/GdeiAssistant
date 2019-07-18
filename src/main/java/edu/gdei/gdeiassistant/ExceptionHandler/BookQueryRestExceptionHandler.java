@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Controller.BookQuery.BookQueryRestController;
+import edu.gdei.gdeiassistant.Controller.BookQuery.RestController.BookQueryRestController;
 import edu.gdei.gdeiassistant.Exception.BookRenewException.BookRenewOvertimeException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;

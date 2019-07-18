@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
-import edu.gdei.gdeiassistant.Controller.Delivery.DeliveryRestController;
+import edu.gdei.gdeiassistant.Controller.Delivery.RestController.DeliveryRestController;
 import edu.gdei.gdeiassistant.Exception.DeliveryException.DeliveryOrderStateUpdatedException;
 import edu.gdei.gdeiassistant.Exception.DeliveryException.DeliveryOrderTakenException;
 import edu.gdei.gdeiassistant.Exception.DeliveryException.NoAccessUpdatingException;

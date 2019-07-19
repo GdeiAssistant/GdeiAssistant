@@ -11,7 +11,10 @@ import java.util.List;
 
 public interface SecretMapper {
 
-    @Select("select * from secret_content where id=#{id} and state=0 limit 1")
+    @Select("select sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state,sc.publish_time,count(scl.id) " +
+            "as like_count from secret_content sc left outer join secret_like scl using (id) " +
+            "where id=#{id} and state=0 group by sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state," +
+            "sc.publish_time,scl.id limit 1")
     @Results(id = "SecretContent", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "theme", column = "theme"),
@@ -19,6 +22,7 @@ public interface SecretMapper {
             @Result(property = "type", column = "type"),
             @Result(property = "timer", column = "timer"),
             @Result(property = "state", column = "state"),
+            @Result(property = "likeCount", column = "like_count"),
             @Result(property = "publishTime", column = "publish_time"),
             @Result(property = "secretCommentList", column = "id", javaType = List.class
                     , many = @Many(select = "selectSecretComment"))

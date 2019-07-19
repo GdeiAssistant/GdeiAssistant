@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 @RestController
 public class UserDataRestController {
@@ -44,7 +45,7 @@ public class UserDataRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/userdata/export", method = RequestMethod.POST)
-    public JsonResult ExportUserData(HttpServletRequest request) throws WsgException {
+    public JsonResult ExportUserData(HttpServletRequest request) throws WsgException, UnsupportedEncodingException {
         String username = (String) request.getSession().getAttribute("username");
         if (userDataService.CheckAlreadyExportUserData(username)) {
             return new JsonResult(false, "24小时内已导出过用户数据，请勿重复提交请求");

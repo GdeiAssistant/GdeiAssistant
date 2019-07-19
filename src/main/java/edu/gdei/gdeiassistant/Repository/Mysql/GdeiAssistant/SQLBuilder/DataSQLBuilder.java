@@ -8,6 +8,7 @@ public class DataSQLBuilder {
     public String selectUserProfile(String username) {
         return new SQL() {{
             SELECT("p.kickname,p.gender,p.birthday,p.degree,p.faculty,p.major,p.region,p.state,p.city");
+            SELECT("p.enrollment,p.primary_school,p.junior_high_school,p.high_school");
             SELECT("g.gender as custom_gender");
             FROM("profile p");
             LEFT_OUTER_JOIN("gender g on p.username = g.username");
@@ -26,6 +27,7 @@ public class DataSQLBuilder {
     public String selectUserPrivacy(String username) {
         return new SQL() {{
             SELECT("p.is_gender_open,p.is_region_open,p.is_introduction_open");
+            SELECT("p.is_enrollment_open,p.is_primary_school_open,p.is_junior_high_school_open,p.is_high_school_open");
             SELECT("p.is_faculty_open,p.is_major_open,p.is_cache_allow,p.is_robots_index_allow");
             FROM("privacy p");
             WHERE("username=#{username}");

@@ -27,6 +27,8 @@ import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -99,7 +101,7 @@ public class UserDataService {
      */
     @SuppressWarnings("unchecked")
     @Async
-    public void ExportUserData(String username) throws WsgException {
+    public void ExportUserData(String username) throws WsgException, UnsupportedEncodingException {
         //写入导出任务记录
         exportDataDao.SaveExportingDataToken(username, UUID.randomUUID().toString());
         InputStream inputStream = null;
@@ -260,7 +262,7 @@ public class UserDataService {
             exportDataDao.RemoveExportingDataToken(username);
             //转换为JSON文件并上传至OSS对象存储
             inputStream = new ByteArrayInputStream(JSON.toJSONStringWithDateFormat(map, "yyyy-MM-dd HH:mm:ss")
-                    .getBytes());
+                    .getBytes(StandardCharsets.UTF_8.displayName()));
             //创建OSSClient
             OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
             //上传文件

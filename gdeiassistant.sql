@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.16, for macos10.14 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gdeiassistant_log
 -- ------------------------------------------------------
@@ -278,7 +278,7 @@ CREATE TABLE `authentication` (
   `method` tinyint(1) DEFAULT NULL COMMENT '实名认证方法',
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '记录标记删除状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -287,6 +287,7 @@ CREATE TABLE `authentication` (
 
 LOCK TABLES `authentication` WRITE;
 /*!40000 ALTER TABLE `authentication` DISABLE KEYS */;
+INSERT INTO `authentication` VALUES (1,'6376696892374389d5106ad04a7915ab76a68fb0','gdeiassistant','李*懿','440***********2826','14*******12','2019-06-06 05:41:16','2019-06-06 05:47:27',0,0);
 /*!40000 ALTER TABLE `authentication` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -875,4 +876,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-19  3:18:33
+-- Dump completed on 2019-07-21  2:27:09

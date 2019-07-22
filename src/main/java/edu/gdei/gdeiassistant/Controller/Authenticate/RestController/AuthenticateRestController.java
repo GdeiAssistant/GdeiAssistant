@@ -104,7 +104,8 @@ public class AuthenticateRestController {
                 Identity identity = authenticateService.ParseIdentityCardInfo(file.getInputStream());
                 String name = identity.getName();
                 String identityNumber = identity.getCode();
-                //保存用户实名信息
+                //校验身份证信息
+                authenticateService.VerifyIdentityCard(name, identityNumber);
                 authenticateDataService.SaveSystemAuthenticationData(username, name, null, identityNumber);
                 return new JsonResult(true);
 

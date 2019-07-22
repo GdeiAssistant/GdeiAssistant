@@ -67,5 +67,9 @@ public class AuthenticationRestExceptionHandler {
                 , false, "目前仅支持使用中华人民共和国第二代居民身份证进行认证"));
     }
 
-
+    @ExceptionHandler(IDCardVerificationException.class)
+    public ResponseEntity HandleIDCardVerifiedException() {
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.ID_CARD_NOT_VERIFIED
+                , false, "身份证信息校验不通过，请联系客服"));
+    }
 }

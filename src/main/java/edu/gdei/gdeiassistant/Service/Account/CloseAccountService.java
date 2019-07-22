@@ -98,14 +98,14 @@ public class CloseAccountService {
                 .selectItemsByUsername(StringEncryptUtils.encryptString(username));
         for (ErshouItem ershouItem : ershouItemList) {
             if (ershouItem.getState().equals(1)) {
-                throw new ItemAvailableException("用户有待处理的社区功能信息");
+                throw new ItemAvailableException("请下架或确认出售账号下的所有二手交易物品");
             }
         }
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
                 .selectItemByUsername(StringEncryptUtils.encryptString(username));
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-            if (lostAndFoundItem.getState().equals(1)) {
-                throw new ItemAvailableException("用户有待处理的社区功能信息");
+            if (lostAndFoundItem.getState().equals(0)) {
+                throw new ItemAvailableException("请确认寻回账号下的所有失物招领物品");
             }
         }
         //检查有无待处理的全民快递订单和交易
@@ -114,12 +114,12 @@ public class CloseAccountService {
         for (DeliveryOrder deliveryOrder : deliveryOrderList) {
             if (deliveryOrder.getState().equals(0)) {
                 //下单者有未删除的快递代收订单信息
-                throw new ItemAvailableException("用户有待处理的社区功能信息");
+                throw new ItemAvailableException("请删除账号下的所有快递代收订单信息");
             } else if (deliveryOrder.getState().equals(1)) {
                 //下单者有未确认交付的快递代收交易
                 DeliveryTrade deliveryTrade = deliveryMapper.selectDeliveryTradeByOrderId(deliveryOrder.getOrderId());
                 if (deliveryTrade != null && deliveryTrade.getState().equals(0)) {
-                    throw new ItemAvailableException("用户有待处理的社区功能信息");
+                    throw new ItemAvailableException("请确认交付账号下的未交付的快递代收交易");
                 }
             }
         }
@@ -128,7 +128,7 @@ public class CloseAccountService {
         for (DeliveryTrade deliveryTrade : deliveryTradeList) {
             //接单者有未确认交付的快递代收交易
             if (deliveryTrade.getState().equals(0)) {
-                throw new ItemAvailableException("用户有待处理的社区功能信息");
+                throw new ItemAvailableException("你有未交付的快递代收交易，请联系下单者确认交付");
             }
         }
 

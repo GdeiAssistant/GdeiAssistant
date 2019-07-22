@@ -48,7 +48,7 @@ public class CloseAccountRestExceptionHandler {
     @ExceptionHandler(ItemAvailableException.class)
     public ResponseEntity HandleItemAvailableException(ItemAvailableException e) {
         log.error("CloseAccountRestExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(false, "用户有待处理的社区功能信息，不满足注销条件"));
+        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
     }
 
 }

@@ -25,11 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class UserDataService {
@@ -101,13 +103,24 @@ public class UserDataService {
      */
     @SuppressWarnings("unchecked")
     @Async
-    public void ExportUserData(String username) throws WsgException, UnsupportedEncodingException {
+    public void ExportUserData(String username) throws WsgException, IOException {
+
         //写入导出任务记录
         exportDataDao.SaveExportingDataToken(username, UUID.randomUUID().toString());
-        InputStream inputStream = null;
+
+        ByteArrayOutputStream byteArrayOutputStream = null;
+        ZipOutputStream zipOutputStream = null;
+        Map<String, InputStream> userDataInputStreamMap = new HashMap<>();
+        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+
         try {
             Map<String, Object> data = new HashMap<>();
             data.put("username", username);
+            //下载用户头像
+            if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + ".jpg")) {
+                InputStream avatar = ossClient.getObject("gdeiassistant-userdata", "avatar/" + username + ".jpg").getObjectContent();
+                userDataInputStreamMap.put("avatar.jpg", avatar);
+            }
             //获取个人资料信息
             Profile profile = appDataMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
             if (profile != null) {
@@ -152,11 +165,33 @@ public class UserDataService {
             List<ErshouItem> ershouItemList = appDataMapper.selectUserErshouItemList(StringEncryptUtils.encryptString(username));
             if (ershouItemList != null && !ershouItemList.isEmpty()) {
                 data.put("ershouItems", ershouItemList);
+                for (ErshouItem ershouItem : ershouItemList) {
+                    //下载二手交易图片
+                    for (int i = 0; i <= 3; i++) {
+                        if (ossClient.doesObjectExist("gdeiassistant-userdata", "ershou/" + ershouItem.getId() + "_" + i + ".jpg")) {
+                            InputStream image = ossClient.getObject("gdeiassistant-userdata", "ershou/" + ershouItem.getId() + "_" + i + ".jpg").getObjectContent();
+                            userDataInputStreamMap.put("ershou_" + ershouItem.getId() + "_" + i + ".jpg", image);
+                        } else {
+                            break;
+                        }
+                    }
+                }
             }
             //获取失物招领信息
             List<LostAndFoundItem> lostAndFoundItemList = appDataMapper.selectUserLostAndFoundItemList(StringEncryptUtils.encryptString(username));
             if (lostAndFoundItemList != null && !lostAndFoundItemList.isEmpty()) {
                 data.put("lostandfoundItems", lostAndFoundItemList);
+                for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+                    //下载失物招领图片
+                    for (int i = 0; i <= 3; i++) {
+                        if (ossClient.doesObjectExist("gdeiassistant-userdata", "lostandfound/" + lostAndFoundItem.getId() + "_" + i + ".jpg")) {
+                            InputStream image = ossClient.getObject("gdeiassistant-userdata", "lostandfound/" + lostAndFoundItem.getId() + "_" + i + ".jpg").getObjectContent();
+                            userDataInputStreamMap.put("lostandfound_" + lostAndFoundItem.getId() + "_" + i + ".jpg", image);
+                        } else {
+                            break;
+                        }
+                    }
+                }
             }
             //获取校园树洞信息
             List<Secret> secretList = appDataMapper.selectUserSecretItemList(StringEncryptUtils.encryptString(username));
@@ -172,6 +207,15 @@ public class UserDataService {
                     } else {
                         //设置评论数量
                         secret.setCommentCount(0);
+                    }
+                    if (secret.getType().equals(1)) {
+                        //下载语音信息
+                        if (ossClient.doesObjectExist("gdeiassistant-userdata", "secret/voice/" + secret.getId() + ".mp3")) {
+                            InputStream voice = ossClient.getObject("gdeiassistant-userdata", "secret/voice/" + secret.getId() + ".mp3").getObjectContent();
+                            userDataInputStreamMap.put("secret_voice_" + secret.getId() + ".mp3", voice);
+                        } else {
+                            break;
+                        }
                     }
                 }
                 data.put("secretItems", secretList);
@@ -261,27 +305,58 @@ public class UserDataService {
                     object.put("city", city);
                 }
             }
-            //导出用户数据成功，写入Redis记录
+
+            //生成JSON文件
+            userDataInputStreamMap.put("data", new ByteArrayInputStream(JSON.toJSONStringWithDateFormat(map, "yyyy-MM-dd HH:mm:ss")
+                    .getBytes(StandardCharsets.UTF_8.displayName())));
+
+            //生成UUID序列号
             String uuid = UUID.randomUUID().toString().replace("-", "");
+
+            //压缩打包所有用户数据
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+            for (Map.Entry<String, InputStream> entry : userDataInputStreamMap.entrySet()) {
+                zipOutputStream.putNextEntry(new ZipEntry(entry.getKey()));
+                int length;
+                byte[] buffer = new byte[1024];
+                while ((length = entry.getValue().read(buffer)) != -1) {
+                    zipOutputStream.write(buffer, 0, length);
+                }
+                zipOutputStream.closeEntry();
+                entry.getValue().close();
+            }
+            zipOutputStream.close();
+
+            //上传文件
+            ossClient.putObject("gdeiassistant-userdata", "export/" + uuid + ".zip", new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+
+            //导出用户数据成功，写入Redis记录
             exportDataDao.SaveExportDataToken(username, uuid);
             //移除导出任务记录
             exportDataDao.RemoveExportingDataToken(username);
-            //转换为JSON文件并上传至OSS对象存储
-            inputStream = new ByteArrayInputStream(JSON.toJSONStringWithDateFormat(map, "yyyy-MM-dd HH:mm:ss")
-                    .getBytes(StandardCharsets.UTF_8.displayName()));
-            //创建OSSClient
-            OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
-            //上传文件
-            ossClient.putObject("gdeiassistant-userdata", "export/" + uuid + ".json", inputStream);
-            ossClient.shutdown();
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (IOException ignored) {
 
+        } finally {
+            if (byteArrayOutputStream != null) {
+                byteArrayOutputStream.close();
             }
+            if (zipOutputStream != null) {
+                try {
+                    zipOutputStream.close();
+                } catch (IOException ignored) {
+
+                }
+            }
+            for (Map.Entry<String, InputStream> entry : userDataInputStreamMap.entrySet()) {
+                if (entry.getValue() != null) {
+                    try {
+                        entry.getValue().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            ossClient.shutdown();
         }
     }
 
@@ -298,12 +373,12 @@ public class UserDataService {
             // 创建OSSClient实例
             OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
             //检查用户数据是否存在
-            if (ossClient.doesObjectExist("gdeiassistant-userdata", "export/" + token + ".json")) {
+            if (ossClient.doesObjectExist("gdeiassistant-userdata", "export/" + token + ".zip")) {
                 //设置过期时间10分钟
                 Date expiration = new Date(new Date().getTime() + 1000 * 60 * 90);
                 // 生成URL
                 url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "export/" + token
-                        + ".json", expiration).toString().replace("http", "https");
+                        + ".zip", expiration).toString().replace("http", "https");
             }
             ossClient.shutdown();
         }

@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Service.Authenticate;
 
+import edu.gdei.gdeiassistant.Exception.AuthenticationException.IDCardVerificationException;
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Pojo.Entity.CardInfo;
@@ -9,6 +10,7 @@ import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import edu.gdei.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import edu.gdei.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
+import edu.gdei.gdeiassistant.Service.CloudAPI.AliYunService;
 import edu.gdei.gdeiassistant.Service.Recognition.RecognitionService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Service.YiBan.YiBanAPIService;
@@ -35,8 +37,6 @@ import java.util.Map;
 @Service
 public class AuthenticateService {
 
-    private String url;
-
     @Autowired
     private UserCertificateDao userCertificateDao;
 
@@ -52,18 +52,23 @@ public class AuthenticateService {
     @Autowired
     private YiBanAPIService yiBanAPIService;
 
-    @Value("#{propertiesReader['education.system.url']}")
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    @Autowired
+    private AliYunService aliYunService;
 
     private Log log = LogFactory.getLog(AuthenticateService.class);
+
+    private String url;
 
     private int timeout;
 
     @Value("#{propertiesReader['timeout.realname']}")
     public void setTimeout(int timeout) {
         this.timeout = timeout;
+    }
+
+    @Value("#{propertiesReader['education.system.url']}")
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     /**
@@ -208,5 +213,15 @@ public class AuthenticateService {
      */
     public Identity ParseIdentityCardInfo(InputStream inputStream) throws Exception {
         return recognitionService.ParseIdentityCardInfo(ImageEncodeUtils.ConvertToBase64(inputStream));
+    }
+
+    /**
+     * 校验身份证信息有效性
+     *
+     * @param name
+     * @param number
+     */
+    public void VerifyIdentityCard(String name, String number) throws IDCardVerificationException {
+        aliYunService.VerifyIdentityCard(name, number);
     }
 }

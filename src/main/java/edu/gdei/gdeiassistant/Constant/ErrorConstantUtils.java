@@ -44,11 +44,14 @@ public class ErrorConstantUtils {
     //实名认证上传的非第二代居民身份证
     public static final int OTHER_TYPE_CARD = 40014;
 
+    //实名认证的身份证信息校验不通过
+    public static final int ID_CARD_NOT_VERIFIED = 40015;
+
     //用户账号密码错误
-    public static final int PASSWORD_INCORRECT = 40015;
+    public static final int PASSWORD_INCORRECT = 40016;
 
     //查询条件不合法
-    public static final int ERROR_QUERY_CONDITION = 40016;
+    public static final int ERROR_QUERY_CONDITION = 40017;
 
     //权限令牌过期
     public static final int TOKEN_EXPIRED_EXCEPTION = 40101;

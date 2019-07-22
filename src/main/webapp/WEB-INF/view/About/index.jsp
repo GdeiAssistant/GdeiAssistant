@@ -205,21 +205,21 @@
         <div class="wechat" onclick="Wechat()">
             <h2>
                 <strong>
-                    <a>微信公众号</a>
+                    <a href="javascript:">微信公众号</a>
                 </strong>
             </h2>
         </div>
         <div class="wechat_app" onclick="WechatApp()">
             <h2>
                 <strong>
-                    <a>微信小程序</a>
+                    <a href="javascript:">微信小程序</a>
                 </strong>
             </h2>
         </div>
         <div class="alipay_app" onclick="AlipayApp()">
             <h2>
                 <strong>
-                    <a>支付宝小程序</a>
+                    <a href="javascript:">支付宝小程序</a>
                 </strong>
             </h2>
         </div>

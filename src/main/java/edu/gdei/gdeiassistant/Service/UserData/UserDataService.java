@@ -163,8 +163,14 @@ public class UserDataService {
             if (secretList != null && !secretList.isEmpty()) {
                 for (Secret secret : secretList) {
                     if (secret.getSecretCommentList() != null && !secret.getSecretCommentList().isEmpty()) {
+                        for (SecretComment secretComment : secret.getSecretCommentList()) {
+                            //隐藏树洞评论信息发布者的用户名
+                            secretComment.setUsername(null);
+                        }
+                        //设置评论数量
                         secret.setCommentCount(secret.getSecretCommentList().size());
                     } else {
+                        //设置评论数量
                         secret.setCommentCount(0);
                     }
                 }

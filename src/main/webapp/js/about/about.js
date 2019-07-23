@@ -84,11 +84,20 @@ function UWPDownload() {
 }
 
 function QuickApp() {
-    alert("暂无快应用版本");
+    alert("进入应用商店的快应用分类中搜索易小助即可使用");
 }
 
 function AlipayApp() {
-    alert("暂无支付宝小程序版本");
+    $.photoBrowser({
+        items: [
+            {
+                image: "/img/download/alipayapp_qrcode.jpg",
+            }
+        ],
+        onOpen: function () {
+            $(".photo-container img").css("margin", "0 auto");
+        }
+    }).open();
 }
 
 function Wechat() {
@@ -99,7 +108,7 @@ function Wechat() {
             }
         ],
         onOpen: function () {
-            $(".photo-container img").width($(window).width());
+            $(".photo-container img").css("margin", "0 auto");
         }
     }).open();
 }
@@ -112,7 +121,7 @@ function WechatApp() {
             }
         ],
         onOpen: function () {
-            $(".photo-container img").width($(window).width());
+            $(".photo-container img").css("margin", "0 auto");
         }
     }).open();
 }

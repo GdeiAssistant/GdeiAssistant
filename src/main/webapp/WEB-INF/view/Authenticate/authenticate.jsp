@@ -91,6 +91,12 @@
         </div>
         <div class="weui-cell__ft"></div>
     </a>
+    <a class="weui-cell weui-cell_access" href="javascript:" onclick="authenticateByCustomerService()">
+        <div class="weui-cell__bd">
+            <p>联系客服进行认证</p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
 </div>
 
 <div id="cameraPopup" class="weui-popup__container">

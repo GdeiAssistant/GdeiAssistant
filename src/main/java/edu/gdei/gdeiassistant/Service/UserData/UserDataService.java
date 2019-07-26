@@ -307,7 +307,7 @@ public class UserDataService {
             }
 
             //生成JSON文件
-            userDataInputStreamMap.put("data", new ByteArrayInputStream(JSON.toJSONStringWithDateFormat(map, "yyyy-MM-dd HH:mm:ss")
+            userDataInputStreamMap.put("data.json", new ByteArrayInputStream(JSON.toJSONStringWithDateFormat(map, "yyyy-MM-dd HH:mm:ss")
                     .getBytes(StandardCharsets.UTF_8.displayName())));
 
             //生成UUID序列号

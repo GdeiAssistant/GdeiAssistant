@@ -148,10 +148,21 @@
         </c:choose>
     }
 
+    //其他证件类型，联系客服进行认证
+    function authenticateByCustomerService() {
+        $.alert({
+            text: '当前认证方式仅限于使用护照、回乡证、台胞证、军官证等非居民身份证的证件类型或其余认证方式不可用时进行认证，否则你的认证申请可能会遭到拒绝。请你注意，若你持有港澳台居民居住证，可以直接使用上传身份证照片认证的认证方式进行认证。',
+            title: '注意事项',
+            onOK: function () {
+                window.location.href = "mailto:support@gdeiassistant.cn";
+            }
+        });
+    }
+
     //弹出调用摄像头拍照的提示
     function showCameraTip() {
         $.alert({
-            text: '请使用摄像头拍摄身份证个人信息页，并上传供广东二师助手进行实名认证',
+            text: '请使用摄像头拍摄身份证个人信息页，并上传供广东二师助手进行实名认证。注意，该方式仅支持中华人民共和国第二代居民身份证和港澳台居民居住证',
             title: '申请访问摄像头权限',
             onOK: function () {
                 getVideoMedia();

@@ -77,6 +77,9 @@ public class ErrorConstantUtils {
     //教务系统会话时间戳校验失败
     public static final int TIMESTAMP_INVALIDATED = 40108;
 
+    //实名认证未通过，禁止进行操作或访问资源
+    public static final int NOT_AUTHENTICATION = 40109;
+
     //自定义课程数量超过限制
     public static final int CUSTOM_SCHEDULE_OVER_LIMIT = 40301;
 

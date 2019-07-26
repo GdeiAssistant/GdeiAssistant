@@ -3,6 +3,7 @@ package edu.gdei.gdeiassistant.Config;
 import edu.gdei.gdeiassistant.Converter.EnumConvert.StringToAuthenticationTypeEnumConverter;
 import edu.gdei.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter;
 import edu.gdei.gdeiassistant.Converter.EnumConvert.StringToQueryMethodEnumConverter;
+import edu.gdei.gdeiassistant.Interceptor.AuthenticationInterceptor;
 import edu.gdei.gdeiassistant.Interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,30 +78,36 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public List<String> loginInterceptorExceptionList() {
-        List<String> loginInterceptorExceptionList = new ArrayList<>();
-        //退出账号
-        loginInterceptorExceptionList.add("/logout");
-        //登录账号
-        loginInterceptorExceptionList.add("/login");
-        //用户登录接口
-        loginInterceptorExceptionList.add("/api/userlogin");
-        //下载接口
-        loginInterceptorExceptionList.add("/download");
-        //协议与政策
-        loginInterceptorExceptionList.add("/agreement");
-        loginInterceptorExceptionList.add("/policy");
-        loginInterceptorExceptionList.add("/license");
-        //软件说明
-        loginInterceptorExceptionList.add("/about");
+        List<String> loginInterceptorExceptionList = new ArrayList<>(authenticationInterceptorExceptionList());
         //Restful API
         loginInterceptorExceptionList.add("/rest");
-        //微信API接口
-        loginInterceptorExceptionList.add("/wechat");
-        //易班API接口
-        loginInterceptorExceptionList.add("/yiban");
-        //支付宝API接口
-        loginInterceptorExceptionList.add("/alipay");
         return loginInterceptorExceptionList;
+    }
+
+    @Bean
+    public List<String> authenticationInterceptorExceptionList() {
+        List<String> authenticationInterceptorExceptionList = new ArrayList<>();
+        //退出账号
+        authenticationInterceptorExceptionList.add("/logout");
+        //登录账号
+        authenticationInterceptorExceptionList.add("/login");
+        //用户登录接口
+        authenticationInterceptorExceptionList.add("/api/userlogin");
+        //下载接口
+        authenticationInterceptorExceptionList.add("/download");
+        //协议与政策
+        authenticationInterceptorExceptionList.add("/agreement");
+        authenticationInterceptorExceptionList.add("/policy");
+        authenticationInterceptorExceptionList.add("/license");
+        //软件说明
+        authenticationInterceptorExceptionList.add("/about");
+        //微信API接口
+        authenticationInterceptorExceptionList.add("/wechat");
+        //易班API接口
+        authenticationInterceptorExceptionList.add("/yiban");
+        //支付宝API接口
+        authenticationInterceptorExceptionList.add("/alipay");
+        return authenticationInterceptorExceptionList;
     }
 
     /**
@@ -113,6 +120,11 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         return new LoginInterceptor(loginInterceptorExceptionList());
     }
 
+    @Bean
+    public AuthenticationInterceptor authenticationInterceptor() {
+        return new AuthenticationInterceptor(authenticationInterceptorExceptionList());
+    }
+
     /**
      * 添加拦截器
      *
@@ -121,6 +133,7 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor());
+        registry.addInterceptor(authenticationInterceptor());
     }
 
     /**

@@ -9,6 +9,16 @@ import org.springframework.web.servlet.ModelAndView;
 public class AuthenticateController {
 
     /**
+     * 进入强制实名认证提示页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "/authentication/tip", method = RequestMethod.GET)
+    public ModelAndView ResolveAuthenticationTipPage() {
+        return new ModelAndView("Authenticate/tip");
+    }
+
+    /**
      * 进入实名认证页面
      *
      * @return

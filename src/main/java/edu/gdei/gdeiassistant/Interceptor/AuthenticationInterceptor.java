@@ -3,8 +3,10 @@ package edu.gdei.gdeiassistant.Interceptor;
 import com.google.gson.Gson;
 import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.Authentication;
+import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Service.Authenticate.AuthenticateDataService;
+import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,13 +32,24 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
         String uri = request.getRequestURI();
         //若用户访问的URL在例外列表中,则放行
         for (String string : exceptionList) {
             if (uri.startsWith(string) || uri.equals("/")) {
                 return true;
             }
+        }
+        String username = null;
+        if (uri.startsWith("/rest")) {
+            User user = (User) request.getAttribute("user");
+            if (user != null) {
+                username = user.getUsername();
+            }
+        } else {
+            username = (String) request.getSession().getAttribute("username");
+        }
+        if (StringUtils.isBlank(username)) {
+            return true;
         }
         Authentication authentication = authenticateDataService.QueryAuthenticationData(username);
         if (authentication != null) {

@@ -113,6 +113,9 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         authenticationInterceptorExceptionList.add("/login");
         //用户登录接口
         authenticationInterceptorExceptionList.add("/api/userlogin");
+        authenticationInterceptorExceptionList.add("/rest/userlogin");
+        //权限令牌操作
+        authenticationInterceptorExceptionList.add("/rest/token");
         //实名认证页面和接口
         authenticationInterceptorExceptionList.add("/authentication");
         authenticationInterceptorExceptionList.add("/api/authentication");

@@ -78,9 +78,29 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public List<String> loginInterceptorExceptionList() {
-        List<String> loginInterceptorExceptionList = new ArrayList<>(authenticationInterceptorExceptionList());
+        List<String> loginInterceptorExceptionList = new ArrayList<>();
+        //退出账号
+        loginInterceptorExceptionList.add("/logout");
+        //登录账号
+        loginInterceptorExceptionList.add("/login");
+        //用户登录接口
+        loginInterceptorExceptionList.add("/api/userlogin");
+        //下载接口
+        loginInterceptorExceptionList.add("/download");
+        //协议与政策
+        loginInterceptorExceptionList.add("/agreement");
+        loginInterceptorExceptionList.add("/policy");
+        loginInterceptorExceptionList.add("/license");
+        //软件说明
+        loginInterceptorExceptionList.add("/about");
         //Restful API
         loginInterceptorExceptionList.add("/rest");
+        //微信API接口
+        loginInterceptorExceptionList.add("/wechat");
+        //易班API接口
+        loginInterceptorExceptionList.add("/yiban");
+        //支付宝API接口
+        loginInterceptorExceptionList.add("/alipay");
         return loginInterceptorExceptionList;
     }
 
@@ -93,6 +113,9 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         authenticationInterceptorExceptionList.add("/login");
         //用户登录接口
         authenticationInterceptorExceptionList.add("/api/userlogin");
+        //实名认证页面和接口
+        authenticationInterceptorExceptionList.add("/authentication");
+        authenticationInterceptorExceptionList.add("/api/authentication");
         //下载接口
         authenticationInterceptorExceptionList.add("/download");
         //协议与政策

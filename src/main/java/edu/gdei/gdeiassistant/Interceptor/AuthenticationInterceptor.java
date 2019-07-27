@@ -46,9 +46,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             //未通过实名认证
             if (request.getServletContext().getAttribute("authentication.force").equals(true)) {
                 //强制实名认证，跳转到实名认证提示页面或返回错误信息
-                if (uri.equals("/authentication/tip")) {
-                    return true;
-                }
                 //数据接口拒绝操作和访问资源，返回JSON提示信息
                 if (uri.startsWith("/api") || uri.startsWith("/rest")) {
                     response.setContentType("application/json");

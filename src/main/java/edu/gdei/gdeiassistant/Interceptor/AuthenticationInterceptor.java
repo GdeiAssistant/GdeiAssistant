@@ -3,9 +3,9 @@ package edu.gdei.gdeiassistant.Interceptor;
 import com.google.gson.Gson;
 import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.Authentication;
-import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Service.Authenticate.AuthenticateDataService;
+import edu.gdei.gdeiassistant.Service.Token.LoginTokenService;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,6 +19,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Autowired
     private AuthenticateDataService authenticateDataService;
+
+    @Autowired
+    private LoginTokenService loginTokenService;
 
     private List<String> exceptionList;
 
@@ -41,9 +44,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
         String username = null;
         if (uri.startsWith("/rest")) {
-            User user = (User) request.getAttribute("user");
-            if (user != null) {
-                username = user.getUsername();
+            String token = request.getParameter("token");
+            if (StringUtils.isNotBlank(token)) {
+                username = loginTokenService.ParseToken(token).get("username").asString();
             }
         } else {
             username = (String) request.getSession().getAttribute("username");

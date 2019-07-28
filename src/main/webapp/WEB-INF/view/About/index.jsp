@@ -96,7 +96,6 @@
                         <a class="dropdown-item" href="http://www.moe.gov.cn">教育部门户网</a>
                         <a class="dropdown-item" href="http://edu.gd.gov.cn">广东省教育厅</a>
                         <a class="dropdown-item" href="http://www.gzedu.gov.cn">广州市教育局</a>
-                        <a class="dropdown-item" href="http://www.cnki.net">中国知网平台</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="http://www.sysu.edu.cn">中山大学</a>
                         <a class="dropdown-item" href="https://www.jnu.edu.cn">暨南大学</a>

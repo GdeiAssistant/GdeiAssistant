@@ -36,7 +36,7 @@ public interface UserMapper {
     @ResultType(Integer.class)
     Integer selectUserCount() throws Exception;
 
-    @Insert("insert into user (username,password,state,user_group) values (#{username},#{password},1,1)")
+    @Insert("insert into user (username,password,state,user_group) values (#{username},#{password},1,2)")
     void insertUser(User user) throws Exception;
 
     @Update("update user set password=#{password},state=1 where username=#{username}")

@@ -104,8 +104,4 @@
         <i style="background: url(/img/function/about.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>关于应用</p>
     </div>
-    <div id="exit" onclick="showLogoutConfirm()">
-        <i style="background: url(/img/function/exit.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>安全退出</p>
-    </div>
 </div>

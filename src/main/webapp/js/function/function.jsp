@@ -153,23 +153,6 @@
         }
     }
 
-    //弹出退出确认框
-    function showLogoutConfirm() {
-        if (!yibanUser) {
-            $.confirm({
-                title: '退出当前账号',
-                text: '你确定退出当前账号并清除账号缓存吗？',
-                onOK: function () {
-                    //清空本地缓存
-                    localStorage.clear();
-                    window.location.href = '/logout';
-                }
-            });
-        } else {
-            $.alert("易班客户端不支持账号退出，你可以重新绑定易班账号", "错误提示");
-        }
-    }
-
     //切换TabPanel
     function switchTabPanel(index) {
         for (let i = 0; i < $(".weui-tabbar a").length; i++) {

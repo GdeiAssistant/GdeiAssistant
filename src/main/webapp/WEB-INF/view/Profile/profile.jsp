@@ -142,6 +142,15 @@
             <span id="functionBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
         </div>
     </a>
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/theme'">
+        <div class="weui-cell__bd">
+            <p>主题设置</p>
+        </div>
+        <div class="weui-cell__ft">
+            <span id="themeBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
+        </div>
+    </a>
 </div>
 
 <div class="weui-cells">
@@ -180,12 +189,20 @@
         <div class="weui-cell__ft">
         </div>
     </a>
-</div>
-
-<div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:" onclick="exportUserData()">
         <div class="weui-cell__bd">
             <p>下载用户数据</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="showLogoutConfirm()">
+        <div class="weui-cell__bd">
+            <p>退出账号</p>
         </div>
         <div class="weui-cell__ft">
         </div>

@@ -14,14 +14,19 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min${themecolor}.css">
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min${themecolor}.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_blue.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_blue.css">
     <link rel="stylesheet" type="text/css" href="/css/ershou/ershou-base.css">
     <link rel="stylesheet" type="text/css" href="/css/ershou/ershou-nav.css">
     <title>广东第二师范学院二手交易</title>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
+    <script type="application/javascript" src="/js/common/themeLoader.js"></script>
     <script type="text/javascript">
 
         //消除iOS点击延迟
@@ -89,8 +94,7 @@
                 success: function (result) {
                     if (result.success === true) {
                         $("#kickname").text(result.data.kickname);
-                    }
-                    else {
+                    } else {
                         showErrorTip(result.message);
                     }
                 },
@@ -105,12 +109,10 @@
                     if (result.success === true) {
                         if (result.data === '') {
                             $("#introduction").text('这个人很懒，什么都没写_(:3 」∠)_');
-                        }
-                        else {
+                        } else {
                             $("#introduction").text(result.data);
                         }
-                    }
-                    else {
+                    } else {
                         showErrorTip(result.message);
                     }
                 },
@@ -136,8 +138,7 @@
                 success: function (result) {
                     if (result.success === true) {
                         window.location.reload();
-                    }
-                    else {
+                    } else {
                         showErrorTip(result.message);
                     }
                 },
@@ -158,8 +159,7 @@
                 success: function (result) {
                     if (result.success === true) {
                         window.location.reload();
-                    }
-                    else {
+                    } else {
                         showErrorTip(result.message);
                     }
                 },
@@ -189,8 +189,7 @@
                             success: function (result) {
                                 if (result.success === true) {
                                     window.location.reload();
-                                }
-                                else {
+                                } else {
                                     showErrorTip(result.message);
                                 }
                             },
@@ -246,7 +245,8 @@
                             </i>
                             <h5 class="tit">${ErshouItem.name}</h5>
                             <em class="price">￥${ErshouItem.price}</em>
-                            <p class="tm"><fmt:formatDate value="${ErshouItem.publishTime}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+                            <p class="tm"><fmt:formatDate value="${ErshouItem.publishTime}"
+                                                          pattern="yyyy-MM-dd HH:mm:ss"/></p>
                         </div>
                         <p class="btns">
                             <a class="btn" href="/ershou/edit/id/${ErshouItem.id}"><b>编辑</b></a>
@@ -281,7 +281,8 @@
                             </i>
                             <h5 class="tit">${ErshouItem.name}</h5>
                             <em class="price">￥${ErshouItem.price}</em>
-                            <p class="tm"><fmt:formatDate value="${ErshouItem.publishTime}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+                            <p class="tm"><fmt:formatDate value="${ErshouItem.publishTime}"
+                                                          pattern="yyyy-MM-dd HH:mm:ss"/></p>
                         </div>
                         <p class="btns">
                             <a class="btn" href="/ershou/edit/id/${ErshouItem.id}"><b>编辑</b></a>
@@ -314,7 +315,8 @@
                             </i>
                             <h5 class="tit">${ErshouItem.name}</h5>
                             <em class="price">￥${ErshouItem.price}</em>
-                            <p class="tm"><fmt:formatDate value="${ErshouItem.publishTime}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+                            <p class="tm"><fmt:formatDate value="${ErshouItem.publishTime}"
+                                                          pattern="yyyy-MM-dd HH:mm:ss"/></p>
                         </div>
                     </div>
                     <script>

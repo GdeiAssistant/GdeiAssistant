@@ -37,6 +37,8 @@ function postCloseRequest() {
                             type: 'primary',
                             onClick: function () {
                                 alert.hide();
+                                //清空本地缓存
+                                localStorage.clear();
                                 window.location.href = '/logout';
                             }
                         }]

@@ -115,6 +115,12 @@
   <img width="250" src="./github/screenshot_21.jpg">
 </p>
 
+<p>
+  <img width="250" src="./github/screenshot_22.jpg">
+  <img width="250" src="./github/screenshot_23.jpg">
+  <img width="250" src="./github/screenshot_24.jpg">
+</p>
+
 ## 授权范围
 
 本应用在中华人民共和国境内注册、发布和运营，目前仅面向广东第二师范学院在校师生开放注册使用。学生用户在毕业后，账号可以被升级为**毕业用户账号**，详情请查阅 [广东二师助手毕业用户账号处理方案说明](https://gdeiassistant.cn/about/graduation)。

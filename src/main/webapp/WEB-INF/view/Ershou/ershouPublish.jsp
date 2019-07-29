@@ -12,13 +12,18 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min${themecolor}.css">
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min${themecolor}.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_blue.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_blue.css">
     <link rel="stylesheet" type="text/css" href="/css/ershou/ershou-base.css">
     <title>广东第二师范学院二手交易</title>
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
+    <script type="application/javascript" src="/js/common/themeLoader.js"></script>
     <script type="text/javascript">
 
         //消除iOS点击延迟
@@ -100,26 +105,19 @@
                     //检查输入内容合法性
                     if ($("#name").val().length > 25) {
                         showErrorTip("商品名称长度不合法");
-                    }
-                    else if ($("#description").val().length > 100) {
+                    } else if ($("#description").val().length > 100) {
                         showErrorTip("商品描述长度不合法");
-                    }
-                    else if (parseFloat($("#price").val()) <= 0 || parseFloat($("#price").val() > 9999.99)) {
+                    } else if (parseFloat($("#price").val()) <= 0 || parseFloat($("#price").val() > 9999.99)) {
                         showErrorTip("交易金额价格范围不合法");
-                    }
-                    else if ($("#location").val().length > 30) {
+                    } else if ($("#location").val().length > 30) {
                         showErrorTip("交易地点长度不合法");
-                    }
-                    else if (parseInt($("#type").val()) < 0 || parseInt($("#type").val()) > 11) {
+                    } else if (parseInt($("#type").val()) < 0 || parseInt($("#type").val()) > 11) {
                         showErrorTip("不合法的商品分类")
-                    }
-                    else if ($("#qq").length > 20) {
+                    } else if ($("#qq").length > 20) {
                         showErrorTip("不合法的QQ号码");
-                    }
-                    else if ($("#phone").length > 11) {
+                    } else if ($("#phone").length > 11) {
                         showErrorTip("不合法的手机号码");
-                    }
-                    else {
+                    } else {
 
                         if (available) {
 
@@ -170,8 +168,7 @@
                                 success: function (result) {
                                     if (result.success === true) {
                                         window.location.href = '/ershou';
-                                    }
-                                    else {
+                                    } else {
                                         $(".submit").attr("disabled", false);
                                         loading.hide();
                                         showErrorTip(result.message);
@@ -247,8 +244,7 @@
 
                 if ($(".upimg").length >= 4) {
                     showErrorTip("最多只能选择四张图片！");
-                }
-                else {
+                } else {
 
                     reader.readAsDataURL(file);
 

@@ -7,6 +7,10 @@
     font-family: "SimHei" arial helvetica;
 }
 
+html {
+    visibility: hidden;
+}
+
 html:root {
     color: #222;
 }

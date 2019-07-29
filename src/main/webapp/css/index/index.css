@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+html {
+    visibility: hidden;
+}
+
 body {
     background: #FBF9FE;
     max-width: 480px;

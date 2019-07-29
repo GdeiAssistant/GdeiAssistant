@@ -2,9 +2,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>405 Method Not Allow</title>
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min${themecolor}.css">
     <meta charset="UTF-8">
+    <title>405 Method Not Allow</title>
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_blue.css">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
@@ -18,10 +20,19 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
+    <script type="application/javascript" src="/js/common/fastclick.js"></script>
+    <script type="application/javascript" src="/js/common/themeLoader.js"></script>
     <script>
+
+        //消除iOS点击延迟
+        $(function () {
+            FastClick.attach(document.body);
+        });
+
         function backToIndex() {
             window.location.href = "/index";
         }
+
     </script>
 </head>
 <body>

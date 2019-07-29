@@ -17,15 +17,26 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
-    <link rel="stylesheet" href="/css/common/common${themecolor}.css">
-    <link rel="stylesheet" href="/css/index/index${themecolor}.css">
-    <link rel="stylesheet" href="/css/common/weui-0.2.2.min${themecolor}.css">
-    <link rel="stylesheet" href="/css/common/weui-1.1.1.min${themecolor}.css">
-    <link rel="stylesheet" href="/css/common/jquery-weui.min${themecolor}.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/index/index.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/index/index_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/index/index_blue.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/common_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/common_blue.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_blue.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_blue.css">
+    <link title="default" rel="stylesheet" href="/css/common/jquery-weui.min.css">
+    <link title="pink" rel="alternate stylesheet" href="/css/common/jquery-weui.min_pink.css">
+    <link title="blue" rel="alternate stylesheet" href="/css/common/jquery-weui.min_blue.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script>document.write("<script type='text/javascript' src='/js/delivery/delivery.js?time=" + Date.now() + "'><\/script>");</script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
+    <script type="application/javascript" src="/js/common/themeLoader.js"></script>
     <style>
         .avatar {
             width: 100%;

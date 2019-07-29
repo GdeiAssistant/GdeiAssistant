@@ -7,6 +7,10 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+html {
+    visibility: hidden;
+}
+
 html:root {
     color: #979797;
 }

@@ -27,16 +27,25 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
-    <link rel="stylesheet" type="text/css" href="/css/about/about.css">
-    <link rel="stylesheet" type="text/css" href="/css/common/common${themecolor}.css">
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-0.2.2.min${themecolor}.css">
-    <link rel="stylesheet" type="text/css" href="/css/common/weui-1.1.1.min${themecolor}.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/common_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/common_blue.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_blue.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_blue.css">
+    <link title="default" rel="stylesheet" href="/css/common/jquery-weui.min.css">
+    <link title="pink" rel="alternate stylesheet" href="/css/common/jquery-weui.min_pink.css">
+    <link title="blue" rel="alternate stylesheet" href="/css/common/jquery-weui.min_blue.css">
     <link rel="stylesheet" type="text/css" href="/css/common/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/common/jquery-weui.min${themecolor}.css">
+    <link rel="stylesheet" type="text/css" href="/css/about/about.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script type="text/javascript" src="/js/common/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/common/swiper.js"></script>
+    <script type="application/javascript" src="/js/common/themeLoader.js"></script>
     <script>document.write("<script type='text/javascript' src='/js/about/about.js?time=" + Date.now() + "'><\/script>");</script>
 </head>
 <body>
@@ -285,7 +294,9 @@
         <p>All rights reserved</p>
         <div class="beian_area">
             <p class="beian_p"><a class="beian" href="http://www.beian.miit.gov.cn">粤ICP备17087427号-1</a></p>
-            <p class="beian_p"><a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44010502001297">粤公网安备44010502001297号</a></p>
+            <p class="beian_p"><a class="beian"
+                                  href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44010502001297">粤公网安备44010502001297号</a>
+            </p>
         </div>
     </div>
 

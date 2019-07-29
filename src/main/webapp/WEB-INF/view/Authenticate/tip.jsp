@@ -37,6 +37,10 @@
             <a onclick="window.location.href='/index'" href="javascript:"
                class="weui-btn weui-btn_default">已完成实名认证</a>
         </p>
+        <p class="weui-btn-area">
+            <a onclick="localStorage.clear();window.location.href='/logout'" href="javascript:"
+               class="weui-btn weui-btn_default">退出当前账号</a>
+        </p>
     </div>
 </div>
 

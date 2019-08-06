@@ -74,6 +74,12 @@
         </div>
         <div id="enrollment_text" class="weui-cell__ft"></div>
     </div>
+    <div class="weui-cell" href="javascript:" onclick="showProfessionDialog()">
+        <div class="weui-cell__bd">
+            <p>职业</p>
+        </div>
+        <div id="profession_text" class="weui-cell__ft"></div>
+    </div>
 </div>
 
 <input type="hidden" id="kickname_val" name="kickname_val">

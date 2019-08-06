@@ -6,7 +6,6 @@ import edu.gdei.gdeiassistant.Pojo.Entity.Introduction;
 import edu.gdei.gdeiassistant.Pojo.Entity.Profile;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Gender.GenderMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Profile.ProfileMapper;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.User.UserMapper;
 import edu.gdei.gdeiassistant.Service.Authenticate.AuthenticateService;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ public class UserProfileService {
     @Resource(name = "profileMapper")
     private ProfileMapper profileMapper;
 
-    @Resource(name = "userMapper")
-    private UserMapper userMapper;
-
     @Resource(name = "genderMapper")
     private GenderMapper genderMapper;
 
@@ -45,6 +41,8 @@ public class UserProfileService {
 
     private static Map<Integer, String> genderMap;
 
+    private static Map<Integer, String> professionMap;
+
     private static Map<Integer, String> facultyMap;
 
     private static Map<Integer, String> degreeMap;
@@ -55,6 +53,15 @@ public class UserProfileService {
     @Resource(name = "genderMap")
     public void setGenderMap(Map<Integer, String> genderMap) {
         UserProfileService.genderMap = genderMap;
+    }
+
+    /**
+     * 获取职业字典
+     *
+     * @return
+     */
+    public static Map getProfessionMap() {
+        return professionMap;
     }
 
     @Resource(name = "degreeMap")
@@ -202,6 +209,11 @@ public class UserProfileService {
             return;
         }
         throw new UserNotExistException("查询的用户不存在");
+    }
+
+    @Resource(name = "professionMap")
+    public void setProfessionMap(Map<Integer, String> professionMap) {
+        UserProfileService.professionMap = professionMap;
     }
 
     /**
@@ -384,6 +396,23 @@ public class UserProfileService {
      */
     public static Map getGenderMap() {
         return genderMap;
+    }
+
+    /**
+     * 更新职业个人资料
+     *
+     * @param username
+     * @param profession
+     * @throws Exception
+     */
+    public void UpdateProfession(String username, int profession) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setProfession(profession);
+            profileMapper.updateProfession(profile);
+            return;
+        }
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**

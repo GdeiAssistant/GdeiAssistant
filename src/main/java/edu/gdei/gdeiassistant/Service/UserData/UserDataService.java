@@ -288,6 +288,10 @@ public class UserDataService {
                         object.put("gender", gender);
                     }
                 }
+                if (object.containsKey("profession")) {
+                    String profession = (String) UserProfileService.getProfessionMap().get(object.get("profession"));
+                    object.put("profession", profession);
+                }
                 if (object.containsKey("faculty")) {
                     String faculty = (String) UserProfileService.getFacultyMap().get(object.get("faculty"));
                     object.put("faculty", faculty);

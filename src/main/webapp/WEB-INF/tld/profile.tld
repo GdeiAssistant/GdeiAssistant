@@ -16,6 +16,14 @@
     </function>
 
     <function>
+        <description>获取职业字典</description>
+        <name>getProfessionMap</name>
+        <function-class>edu.gdei.gdeiassistant.Service.Profile.UserProfileService</function-class>
+        <function-signature>java.util.Map getProfessionMap()</function-signature>
+        <example>${profile:getProfessionMap()}</example>
+    </function>
+
+    <function>
         <description>获取学历字典</description>
         <name>getDegreeMap</name>
         <function-class>edu.gdei.gdeiassistant.Service.Profile.UserProfileService</function-class>

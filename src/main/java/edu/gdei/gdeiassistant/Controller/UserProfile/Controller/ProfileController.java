@@ -87,6 +87,13 @@ public class ProfileController {
                     containProfile = true;
                 }
             }
+            if (privacy.isProfessionOpen().equals(Boolean.TRUE)) {
+                if (profile.getProfession() != null) {
+                    modelAndView.addObject("Profession", UserProfileService.getProfessionMap()
+                            .get(profile.getProfession()));
+                    containProfile = true;
+                }
+            }
             if (privacy.isRegionOpen().equals(Boolean.TRUE)) {
                 StringBuilder location = new StringBuilder();
                 Region region = LocationUtils.getRegionMap().get(profile.getRegion());

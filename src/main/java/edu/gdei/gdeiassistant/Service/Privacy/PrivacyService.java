@@ -105,6 +105,17 @@ public class PrivacyService {
     }
 
     /**
+     * 更新职业隐私设置
+     *
+     * @param state
+     * @param username
+     * @throws Exception
+     */
+    public void UpdateProfession(boolean state, String username) throws Exception {
+        privacyMapper.updateProfession(state, StringEncryptUtils.encryptString(username));
+    }
+
+    /**
      * 更新学校隐私设置
      *
      * @param state

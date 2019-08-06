@@ -14,6 +14,7 @@ public interface PrivacyMapper {
             @Result(property = "facultyOpen", column = "is_faculty_open"),
             @Result(property = "majorOpen", column = "is_major_open"),
             @Result(property = "enrollmentOpen", column = "is_enrollment_open"),
+            @Result(property = "professionOpen", column = "is_profession_open"),
             @Result(property = "primarySchoolOpen", column = "is_primary_school_open"),
             @Result(property = "juniorHighSchoolOpen", column = "is_junior_high_school_open"),
             @Result(property = "highSchoolOpen", column = "is_high_school_open"),
@@ -23,9 +24,9 @@ public interface PrivacyMapper {
     public Privacy selectPrivacy(String username) throws Exception;
 
     @Insert("insert into privacy (username,is_gender_open,is_faculty_open" +
-            ",is_major_open,is_enrollment_open,is_primary_school_open,is_junior_high_school_open,is_high_school_open" +
+            ",is_major_open,is_enrollment_open,is_profession_open,is_primary_school_open,is_junior_high_school_open,is_high_school_open" +
             ",is_region_open,is_introduction_open,is_cache_allow,is_robots_index_allow) " +
-            "values(#{username},true,true,true,true,true,true,true,true,true,false,true)")
+            "values(#{username},true,true,true,true,true,true,true,true,true,true,false,true)")
     public void initPrivacy(String username) throws Exception;
 
     @Update("update privacy set is_gender_open=1,is_faculty_open=1,is_major_open=1,is_enrollment_open=1,is_primary_school_open=1" +
@@ -119,6 +120,20 @@ public interface PrivacyMapper {
             "        where username=#{username}" +
             "</script>")
     public void updateEnrollment(@Param("enrollment") boolean enrollment, @Param("username") String username) throws Exception;
+
+    @Update("<script>" +
+            "update privacy" +
+            "        <choose>" +
+            "            <when test='profession'>" +
+            "                set is_profession_open='1'" +
+            "            </when>" +
+            "            <otherwise>" +
+            "                set is_profession_open='0'" +
+            "            </otherwise>" +
+            "        </choose>" +
+            "        where username=#{username}" +
+            "</script>")
+    public void updateProfession(@Param("profession") boolean profession, @Param("username") String username) throws Exception;
 
     @Update("<script>" +
             "update privacy" +

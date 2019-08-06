@@ -414,7 +414,7 @@ public class UserDataService {
         //个人资料初始化
         Profile profile = profileMapper.selectUserProfile(encryptUser.getUsername());
         if (profile == null) {
-            profileMapper.initUserProfile(encryptUser.getUsername(), user.getUsername());
+            profileMapper.initUserProfile(encryptUser.getUsername(), UUID.randomUUID().toString().replace("-", ""));
         }
         Introduction introduction = profileMapper.selectUserIntroduction(encryptUser.getUsername());
         if (introduction == null) {

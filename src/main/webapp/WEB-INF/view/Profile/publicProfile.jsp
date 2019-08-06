@@ -126,6 +126,17 @@
 
         </c:if>
 
+        <c:if test="${Profession!=null}">
+
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>职业</p>
+                </div>
+                <div class="weui-cell__ft">${Profession}</div>
+            </div>
+
+        </c:if>
+
         <c:if test="${Location!=null}">
 
             <div class="weui-cell">

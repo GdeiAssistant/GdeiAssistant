@@ -19,6 +19,7 @@ public interface ProfileMapper {
             @Result(property = "faculty", column = "faculty"),
             @Result(property = "major", column = "major"),
             @Result(property = "enrollment", column = "enrollment"),
+            @Result(property = "profession", column = "profession"),
             @Result(property = "highSchool", column = "high_school"),
             @Result(property = "juniorHighSchool", column = "junior_high_school"),
             @Result(property = "primarySchool", column = "primary_school"),
@@ -62,6 +63,9 @@ public interface ProfileMapper {
     @Update("update profile set enrollment=#{enrollment} where username=#{username}")
     void updateEnrollment(Profile profile);
 
+    @Update("update profile set profession=#{profession} where username=#{username}")
+    void updateProfession(Profile profile);
+
     @Update("update profile set region=#{region},state=#{state},city=#{city} where username=#{username}")
     void updateLocation(Profile profile);
 
@@ -74,7 +78,7 @@ public interface ProfileMapper {
     @Update("update profile set primary_school=#{primarySchool} where username=#{username}")
     void updatePrimarySchool(Profile profile);
 
-    @Update("update profile set kickname=#{kickname},gender=null,birthday=null,enrollment=null,region=null" +
+    @Update("update profile set kickname=#{kickname},gender=null,birthday=null,enrollment=null,profession=null,region=null" +
             ",state=null,city=null,high_school=null,junior_high_school=null,primary_school=null where username=#{username}")
     void resetUserProfile(@Param("username") String username, @Param("kickname") String kickname) throws Exception;
 

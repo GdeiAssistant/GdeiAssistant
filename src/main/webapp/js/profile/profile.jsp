@@ -27,6 +27,8 @@
 
     var genderMap = [];
 
+    var professionMap = [];
+
     var degreeMap = [];
 
     var facultyMap = [];
@@ -157,6 +159,12 @@
 
         </c:forEach>
 
+        <c:forEach items="${profile:getProfessionMap()}" var="professionEntry">
+
+        professionMap[${professionEntry.key}] = "${professionEntry.value}";
+
+        </c:forEach>
+
         <c:forEach items="${profile:getDegreeMap()}" var="degreeEntry">
 
         degreeMap[${degreeEntry.key}] = "${degreeEntry.value}";
@@ -218,6 +226,9 @@
                     $("#major_val").val(result.data.major == null ? "" : result.data.major);
                     //入学年份
                     $("#enrollment_text").text(result.data.enrollment == null ? "未选择" : result.data.enrollment + "年");
+                    //职业信息
+                    var profession = result.data.profession == null ? 0 : result.data.profession;
+                    $("#profession_text").text(professionMap[profession]);
                     //学校信息
                     $("#high_school").text(result.data.highSchool == null ? "未填写" : result.data.highSchool);
                     $("#high_school_val").val(result.data.highSchool == null ? "" : result.data.highSchool);
@@ -492,6 +503,42 @@
                     url: "/api/profile/enrollment",
                     data: {
                         year: year[0].value
+                    },
+                    type: 'post',
+                    success: function (updateResult) {
+                        if (updateResult.success === true) {
+                            loadProfile();
+                        } else {
+                            showCustomErrorTip(updateResult.message);
+                        }
+                    },
+                    error: function (result) {
+                        if (result.status) {
+                            showCustomErrorTip(result.responseJSON.message);
+                        } else {
+                            showNetworkErrorTip();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    //修改职业信息
+    function showProfessionDialog() {
+        var professionPicker = [];
+        for (var i = 0; i < professionMap.length; i++) {
+            professionPicker[i] = {
+                label: professionMap[i],
+                value: i
+            }
+        }
+        weui.picker(professionPicker, {
+            onConfirm: function (profession) {
+                $.ajax({
+                    url: "/api/profile/profession",
+                    data: {
+                        profession: profession[0].value
                     },
                     type: 'post',
                     success: function (updateResult) {

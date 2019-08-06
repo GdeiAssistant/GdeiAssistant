@@ -25,6 +25,20 @@ public class ProfileOptionConfig {
     }
 
     /**
+     * 职业字典
+     *
+     * @return
+     */
+    @Bean
+    public Map<Integer, String> professionMap() {
+        Map<Integer, String> professionMap = new HashMap<>();
+        for (int i = 0; i < OptionConstantUtils.PROFESSION_OPTIONS.length; i++) {
+            professionMap.put(i, OptionConstantUtils.PROFESSION_OPTIONS[i]);
+        }
+        return professionMap;
+    }
+
+    /**
      * 学历字典
      *
      * @return

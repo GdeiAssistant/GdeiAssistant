@@ -44,6 +44,8 @@ public class Profile implements Serializable, Entity {
 
     private String highSchool;
 
+    private Integer profession;
+
     public String getPrimarySchool() {
         return primarySchool;
     }
@@ -170,5 +172,13 @@ public class Profile implements Serializable, Entity {
 
     public void setEnrollment(Integer enrollment) {
         this.enrollment = enrollment;
+    }
+
+    public Integer getProfession() {
+        return profession;
+    }
+
+    public void setProfession(Integer profession) {
+        this.profession = profession;
     }
 }

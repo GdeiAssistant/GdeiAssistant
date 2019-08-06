@@ -364,6 +364,24 @@ public class ProfileRestController {
     }
 
     /**
+     * 更新职业信息
+     *
+     * @param request
+     * @param profession
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/api/profile/profession", method = RequestMethod.POST)
+    public JsonResult UpdateProfession(HttpServletRequest request, @Validated @NotNull @Min(0) Integer profession) throws Exception {
+        if (profession == null || profession >= UserProfileService.getProfessionMap().size()) {
+            return new JsonResult(false, "请求参数不合法");
+        }
+        String username = (String) request.getSession().getAttribute("username");
+        userProfileService.UpdateProfession(username, profession);
+        return new JsonResult(true);
+    }
+
+    /**
      * 更新用户昵称
      *
      * @param request

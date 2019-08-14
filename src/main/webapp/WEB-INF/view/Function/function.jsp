@@ -92,6 +92,10 @@
         <i style="background: url(/img/function/goverment.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>政务服务</p>
     </div>
+    <div id="security" style="display: none" onclick="window.location.href='http://gdzaj.gd.gov.cn/gdza'">
+        <i style="background: url(/img/function/security.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+        <p>治安户政</p>
+    </div>
     <div id="volunteer" style="display: none" onclick="window.location.href='https://125cn.net/mobile'">
         <i style="background: url(/img/function/volunteer.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>志愿活动</p>

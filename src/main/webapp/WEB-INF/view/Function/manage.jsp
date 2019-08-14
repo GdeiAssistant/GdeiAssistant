@@ -154,6 +154,12 @@
         </div>
     </div>
     <div class="weui-cell weui-cell_switch" style="display: none">
+        <div class="weui-cell__bd">治安户政</div>
+        <div class="weui-cell__ft">
+            <input id="security" class="weui-switch" type="checkbox">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch" style="display: none">
         <div class="weui-cell__bd">志愿活动</div>
         <div class="weui-cell__ft">
             <input id="volunteer" class="weui-switch" type="checkbox">

@@ -168,75 +168,65 @@
     </div>
 
     <div class="download">
-        <div class="web" onclick="window.location.href='/login'">
-            <h2>
-                <strong>
-                    <a href="javascript:">网页版</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="window.location.href='/login'">
+            <img width="35px" height="35px" src="/img/download/chrome_icon.png">
+            <strong>
+                <a href="javascript:">网页版</a>
+            </strong>
         </div>
-        <div class="android_download" onclick="androidDownload()">
-            <h2>
-                <strong>
-                    <a href="javascript:">Android下载</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="androidDownload()">
+            <img width="35px" height="35px" src="/img/download/android_icon.png">
+            <strong>
+                <a href="javascript:">Android</a>
+            </strong>
         </div>
-        <div class="google_play_download" onclick="androidGooglePlayDownload()">
-            <h2>
-                <strong>
-                    <a href="javascript:">Google Play下载</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="iOSDownload()">
+            <img width="35px" height="35px" src="/img/download/ios_icon.png">
+            <strong>
+                <a href="javascript:">iOS</a>
+            </strong>
         </div>
-        <div class="amazon_download" onclick="androidAmazonDownload()">
-            <h2>
-                <strong>
-                    <a href="javascript:">Amazon下载</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="androidGooglePlayDownload()">
+            <img width="35px" height="35px" src="/img/download/google_play_icon.png">
+            <strong>
+                <a href="javascript:">Google Play</a>
+            </strong>
         </div>
-        <div class="ios_download" onclick="iOSDownload()">
-            <h2>
-                <strong>
-                    <a href="javascript:">App Store下载</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="androidAmazonDownload()">
+            <img width="35px" height="35px" src="/img/download/amazon_icon.png">
+            <strong>
+                <a href="javascript:">Amazon</a>
+            </strong>
         </div>
-        <div class="uwp_download" onclick="UWPDownload()">
-            <h2>
-                <strong>
-                    <a href="javascript:">Windows Store下载</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="UWPDownload()">
+            <img width="35px" height="35px" src="/img/download/uwp_icon.png">
+            <strong>
+                <a href="javascript:">Windows Store</a>
+            </strong>
         </div>
-        <div class="wechat" onclick="Wechat()">
-            <h2>
-                <strong>
-                    <a href="javascript:">微信公众号</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="Wechat()">
+            <img width="35px" height="35px" src="/img/download/wechat_icon.png">
+            <strong>
+                <a href="javascript:">微信公众号</a>
+            </strong>
         </div>
-        <div class="wechat_app" onclick="WechatApp()">
-            <h2>
-                <strong>
-                    <a href="javascript:">微信小程序</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="WechatApp()">
+            <img width="35px" height="35px" src="/img/download/wechat_app_icon.png">
+            <strong>
+                <a href="javascript:">微信小程序</a>
+            </strong>
         </div>
-        <div class="alipay_app" onclick="AlipayApp()">
-            <h2>
-                <strong>
-                    <a href="javascript:">支付宝小程序</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="AlipayApp()">
+            <img width="35px" height="35px" src="/img/download/alipay_icon.png">
+            <strong>
+                <a href="javascript:">支付宝小程序</a>
+            </strong>
         </div>
-        <div class="quick_app" onclick="QuickApp()">
-            <h2>
-                <strong>
-                    <a href="javascript:">快应用</a>
-                </strong>
-            </h2>
+        <div class="download_button" onclick="QuickApp()">
+            <img width="35px" height="35px" src="/img/download/quick_app_icon.png">
+            <strong>
+                <a href="javascript:">快应用</a>
+            </strong>
         </div>
     </div>
 

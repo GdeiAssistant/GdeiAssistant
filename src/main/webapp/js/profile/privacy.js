@@ -32,6 +32,12 @@ $(function () {
                     if (result.data.enrollmentOpen === true) {
                         $("#enrollerment").prop("checked", true);
                     }
+                    if (result.data.ageOpen === true) {
+                        $("#age").prop("checked", true);
+                    }
+                    if (result.data.degreeOpen === true) {
+                        $("#degree").prop("checked", true);
+                    }
                     if (result.data.professionOpen === true) {
                         $("#profession").prop("checked", true);
                     }

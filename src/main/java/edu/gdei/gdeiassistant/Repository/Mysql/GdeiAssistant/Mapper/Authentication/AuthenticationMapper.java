@@ -26,4 +26,7 @@ public interface AuthenticationMapper {
     @Update("update authentication set realname=#{realname},identity_number=#{identityNumber},school_number=#{schoolNumber}" +
             ",gmt_modified=now(),method=#{method},is_deleted=0 where username=#{username}")
     public void updateAuthentication(Authentication authentication);
+
+    @Delete("delete from authentication where username=#{username}")
+    public void deleteAuthentication(String username);
 }

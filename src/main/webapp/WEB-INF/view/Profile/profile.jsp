@@ -137,6 +137,17 @@
 
 <div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/profile/user'">
+        <div class="weui-cell__bd">
+            <p>查看我的个人资料页</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/privacy'">
         <div class="weui-cell__bd">
             <p>隐私设置</p>

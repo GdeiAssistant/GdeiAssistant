@@ -46,6 +46,25 @@ public class AuthenticateRestController {
     }
 
     /**
+     * 清除实名认证信息
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/api/authentication/remove", method = RequestMethod.POST)
+    @UserGroupAccess(group = {2, 3, 6})
+    public JsonResult RemoveAuthenticationData(HttpServletRequest request) throws Exception {
+        String username = (String) request.getSession().getAttribute("username");
+        Authentication authentication = authenticateDataService.QueryAuthenticationData(username);
+        if (authentication != null) {
+            authenticateDataService.RemoveAuthenticationData(username);
+            return new JsonResult(true);
+        }
+        return new JsonResult(false, "你未进行实名认证");
+    }
+
+    /**
      * 进行实名认证
      *
      * @param request

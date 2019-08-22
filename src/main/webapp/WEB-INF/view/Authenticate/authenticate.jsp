@@ -108,6 +108,21 @@
     </a>
 </div>
 
+<div id="removeAuthentication" style="display: none">
+
+    <div class="weui-cells__title">注销实名</div>
+
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="javascript:" onclick="removeAuthenticationData()">
+            <div class="weui-cell__bd">
+                <p>注销实名认证信息</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
+
+</div>
+
 <div id="cameraPopup" class="weui-popup__container">
     <div class="weui-popup__overlay"></div>
     <div class="weui-popup__modal" style="text-align:center">

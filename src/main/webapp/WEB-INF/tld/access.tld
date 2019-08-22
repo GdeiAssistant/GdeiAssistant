@@ -8,11 +8,27 @@
     <short-name>access</short-name>
 
     <function>
+        <description>根据用户组ID值获取对应的用户组名称</description>
+        <name>getUserGroupName</name>
+        <function-class>edu.gdei.gdeiassistant.Tools.AccessUtils</function-class>
+        <function-signature>java.lang.String GetUserGroupNameByGrounpId(int)</function-signature>
+        <example>${access:getUserGroupName(2)}</example>
+    </function>
+
+    <function>
         <description>根据用户组枚举名称获取对应的ID值</description>
         <name>getUserGroupId</name>
         <function-class>edu.gdei.gdeiassistant.Tools.AccessUtils</function-class>
         <function-signature>int GetUserGroupIdByGroupEnumName(java.lang.String)</function-signature>
         <example>${access:getUserGroupId("STUDENT")}</example>
+    </function>
+
+    <function>
+        <description>获取用户组信息</description>
+        <name>loadUserGroupInfo</name>
+        <function-class>edu.gdei.gdeiassistant.Tools.AccessUtils</function-class>
+        <function-signature>java.util.List LoadUserGroupInfo()</function-signature>
+        <example>${access:loadUserGroupInfo()}</example>
     </function>
 
     <function>

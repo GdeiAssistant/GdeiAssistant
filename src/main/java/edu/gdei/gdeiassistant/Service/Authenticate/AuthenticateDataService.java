@@ -32,6 +32,16 @@ public class AuthenticateDataService {
     }
 
     /**
+     * 清除用户实名认证信息
+     *
+     * @param username
+     * @throws Exception
+     */
+    public void RemoveAuthenticationData(String username) throws Exception {
+        authenticationMapper.deleteAuthentication(StringEncryptUtils.encryptString(username));
+    }
+
+    /**
      * 保存用户实名认证信息
      *
      * @param username

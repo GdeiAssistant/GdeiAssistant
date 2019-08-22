@@ -161,6 +161,14 @@
 
 <div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/password'">
+        <div class="weui-cell__bd">
+            <p>修改密码</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/authentication'">
         <div class="weui-cell__bd">
             <p>实名认证</p>

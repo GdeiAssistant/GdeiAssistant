@@ -198,6 +198,8 @@
                 if (result.success === true) {
                     //用户组
                     $("#user_group").text(userGroupMap[${sessionScope.group-1}]);
+                    //用户名
+                    $("#username").text(result.data.username);
                     //昵称
                     $("#kickname_text").text(result.data.kickname);
                     $("#kickname_val").val(result.data.kickname);

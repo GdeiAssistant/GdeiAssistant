@@ -4,10 +4,6 @@
 <head>
     <title>${KickName}的个人资料</title>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-    <c:if test="${RobotsNoIndex!=null && RobotsNoIndex==true}">
-        <!-- 指示搜索引擎不要在搜索结果中显示当前的网页 -->
-        <meta content="noindex" name="robots"/>
-    </c:if>
     <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
     <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <c:if test="${applicationScope.get('grayscale')}">
@@ -230,18 +226,16 @@
 
 </c:if>
 
-<c:if test="${Username==sessionScope.username}">
-    <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="javascript:"
-           onclick="window.location.href = '/profile/user'">
-            <div class="weui-cell__bd">
-                <p>查看个人资料页个人视角</p>
-            </div>
-            <div class="weui-cell__ft">
-            </div>
-        </a>
-    </div>
-</c:if>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/profile/user/${sessionScope.username}'">
+        <div class="weui-cell__bd">
+            <p>查看个人资料页访客视角</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+</div>
 
 </body>
 </html>

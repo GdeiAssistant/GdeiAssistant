@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="profile" uri="/WEB-INF/tld/profile.tld" %>
+<%@ taglib prefix="access" uri="/WEB-INF/tld/access.tld" %>
 <script>
 
     //获取个人资料页隐私设置和功能管理小红点图标显示配置，显示或隐藏小红点图标
@@ -33,12 +34,25 @@
 
     var facultyMap = [];
 
+    var userGroupMap = [];
+
     $(function () {
+        loadUserGroupMap();
         loadProfile();
         loadAuthenticationState();
         loadAvatar();
         loadRegionMap();
     });
+
+    //加载用户组映射表
+    function loadUserGroupMap() {
+
+        <c:forEach items="${access:loadUserGroupInfo()}" var="userGroup" varStatus="status">
+
+        userGroupMap[${status.index}] = "${userGroup}";
+
+        </c:forEach>
+    }
 
     //加载所在地代码映射表
     function loadRegionMap() {
@@ -182,6 +196,8 @@
             type: 'get',
             success: function (result) {
                 if (result.success === true) {
+                    //用户组
+                    $("#user_group").text(userGroupMap[${sessionScope.group-1}]);
                     //昵称
                     $("#kickname_text").text(result.data.kickname);
                     $("#kickname_val").val(result.data.kickname);

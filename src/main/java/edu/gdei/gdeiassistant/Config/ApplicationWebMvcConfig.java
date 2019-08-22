@@ -119,6 +119,9 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         //实名认证页面和接口
         authenticationInterceptorExceptionList.add("/authentication");
         authenticationInterceptorExceptionList.add("/api/authentication");
+        //注销页面和接口
+        authenticationInterceptorExceptionList.add("/close");
+        authenticationInterceptorExceptionList.add("/api/close");
         //下载接口
         authenticationInterceptorExceptionList.add("/download");
         //协议与政策

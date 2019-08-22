@@ -25,6 +25,10 @@ public class Privacy implements Serializable, Entity {
 
     private Boolean enrollmentOpen;
 
+    private Boolean ageOpen;
+
+    private Boolean degreeOpen;
+
     private Boolean primarySchoolOpen;
 
     private Boolean juniorHighSchoolOpen;
@@ -87,6 +91,22 @@ public class Privacy implements Serializable, Entity {
 
     public Boolean isCacheAllow() {
         return cacheAllow;
+    }
+
+    public Boolean isAgeOpen() {
+        return ageOpen;
+    }
+
+    public void setAgeOpen(Boolean ageOpen) {
+        this.ageOpen = ageOpen;
+    }
+
+    public Boolean isDegreeOpen() {
+        return degreeOpen;
+    }
+
+    public void setDegreeOpen(Boolean degreeOpen) {
+        this.degreeOpen = degreeOpen;
     }
 
     public void setCacheAllow(Boolean cacheAllow) {

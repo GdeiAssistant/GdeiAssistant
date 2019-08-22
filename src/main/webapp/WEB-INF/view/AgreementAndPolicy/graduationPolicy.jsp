@@ -17,7 +17,7 @@
 <body>
 
 <p style="text-align:center">《广东二师助手毕业用户账号处理方案说明》</p>
-<p style="text-align:center">更新日期：2019年4月12日</p>
+<p style="text-align:center">更新日期：2019年8月22日</p>
 <p style="text-indent:14px;line-height:150%">
 <p><strong>毕业用户</strong></p>
 <p style="text-indent:28px">
@@ -30,8 +30,7 @@
     毕业用户账号对比学生用户账号，具有以下的特性：<br>
     1、毕业用户账号将无法继续使用教务查询相关的功能<br>
     2、若用户删除了毕业用户账号，将无法以相同的用户名重新注册<br>
-    3、毕业用户账号无法修改账号密码，账号密码为最后一次登录广东二师助手时使用的账号密码<br>
-    4、学生用户账号升级为毕业用户账号后，用户可以继续使用二手交易、校园树洞等社交信息平台
+    3、学生用户账号升级为毕业用户账号后，用户可以继续使用二手交易、校园树洞等社交信息平台
 </p>
 <p style="text-indent:14px;line-height:150%">
 <p><strong>可选方案</strong></p>

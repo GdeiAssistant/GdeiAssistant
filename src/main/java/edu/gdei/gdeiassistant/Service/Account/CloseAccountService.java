@@ -6,6 +6,7 @@ import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectExcepti
 import edu.gdei.gdeiassistant.Pojo.Entity.*;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Authentication.AuthenticationMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Cet.CetMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Delivery.DeliveryMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Ershou.ErshouMapper;
@@ -64,6 +65,9 @@ public class CloseAccountService {
 
     @Autowired
     private ProfileMapper profileMapper;
+
+    @Autowired
+    private AuthenticationMapper authenticationMapper;
 
     @Autowired
     private GraduationMapper graduationMapper;
@@ -151,6 +155,11 @@ public class CloseAccountService {
         //删除用户资料信息
         profileMapper.resetUserProfile(StringEncryptUtils.encryptString(username), "广东二师助手用户");
         profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(username));
+        //清除实名认证信息
+        Authentication authentication = authenticationMapper.selectAuthentication(StringEncryptUtils.encryptString(username));
+        if (authentication != null) {
+            authenticationMapper.deleteAuthentication(StringEncryptUtils.encryptString(username));
+        }
         //重置毕业用户账号处理方案
         graduationMapper.resetGraduation(StringEncryptUtils.encryptString(username));
         //重置用户隐私配置

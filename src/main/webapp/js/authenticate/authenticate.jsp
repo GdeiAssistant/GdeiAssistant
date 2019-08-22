@@ -22,10 +22,12 @@
                         $("#name").text(result.data.realname);
                         $("#authenticateState").text("已认证");
                         $("#nameCell").show();
+                        $("#removeAuthentication").show();
                     } else {
                         $("#name").text("");
                         $("#authenticateState").text("未认证");
                         $("#nameCell").hide();
+                        $("#removeAuthentication").hide();
                         //弹出提示进行实名认证的弹窗
                         $.alert({
                             text: '根据《中华人民共和国网络安全法》第二十四条的规定要求，为保障你使用广东二师助手不受限制，' +
@@ -146,6 +148,43 @@
         });
         </c:otherwise>
         </c:choose>
+    }
+
+    //清除实名认证信息
+    function removeAuthenticationData() {
+        $.confirm({
+            text: '即将清除你的实名认证信息，你的账号将恢复为未实名认证状态，这可能导致你使用本应用功能受到限制',
+            title: '注销实名认证',
+            onOK: function () {
+                $("#loadingToast, .weui_mask").show();
+                $.ajax({
+                    url: '/api/authentication/remove',
+                    type: 'POST',
+                    success: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.success) {
+                            $.alert({
+                                text: '已清除实名认证信息',
+                                title: '注销实名认证成功',
+                                onOK: function () {
+                                    loadAuthenticationData();
+                                }
+                            });
+                        } else {
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                        }
+                    },
+                    error: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.status) {
+                            $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                        } else {
+                            $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     //其他证件类型，联系客服进行认证

@@ -105,6 +105,28 @@ public class PrivacyService {
     }
 
     /**
+     * 更新年龄隐私设置
+     *
+     * @param state
+     * @param username
+     * @throws Exception
+     */
+    public void UpdateAge(boolean state, String username) throws Exception {
+        privacyMapper.updateAge(state, StringEncryptUtils.encryptString(username));
+    }
+
+    /**
+     * 更新学历隐私设置
+     *
+     * @param state
+     * @param username
+     * @throws Exception
+     */
+    public void UpdateDegree(boolean state, String username) throws Exception {
+        privacyMapper.updateDegree(state, StringEncryptUtils.encryptString(username));
+    }
+
+    /**
      * 更新职业隐私设置
      *
      * @param state

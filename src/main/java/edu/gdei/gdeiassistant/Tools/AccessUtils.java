@@ -44,6 +44,34 @@ public class AccessUtils {
     }
 
     /**
+     * 根据用户组ID值获取用户组名称
+     *
+     * @param id
+     * @return
+     */
+    public static String GetUserGroupNameByGrounpId(int id) {
+        for (UserGroupEnum userGroupEnum : UserGroupEnum.values()) {
+            if (userGroupEnum.getValue().equals(id)) {
+                return userGroupEnum.getName();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 加载用户组信息
+     *
+     * @return
+     */
+    public static List<String> LoadUserGroupInfo() {
+        List<String> list = new ArrayList<>();
+        for (UserGroupEnum userGroupEnum : UserGroupEnum.values()) {
+            list.add(userGroupEnum.getName());
+        }
+        return list;
+    }
+
+    /**
      * 加载用户组权限信息
      *
      * @return

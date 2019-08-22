@@ -66,8 +66,14 @@
 
 <!-- 注销按钮 -->
 <div class="weui_btn_area">
-    <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postCloseRequest()">注销</a>
+    <a class="weui_btn weui_btn_warn" href="javascript:" onclick="postCloseRequest()">注销</a>
 </div>
+
+<p class="page_desc" style="margin-top: 15px">无法自助注销？点击
+    <a class="page_desc"
+       onclick="window.location.href = 'mailto:support@gdeiassistant.cn'">联系客服进行注销
+    </a>
+</p>
 
 <!-- 注销中弹框 -->
 <div class="weui_mask" style="display: none"></div>
@@ -94,5 +100,4 @@
 
 </body>
 
-</body>
 </html>

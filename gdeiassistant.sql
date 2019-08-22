@@ -624,6 +624,8 @@ CREATE TABLE `privacy` (
   `is_faculty_open` tinyint(1) NOT NULL COMMENT '公开院系',
   `is_major_open` tinyint(1) NOT NULL COMMENT '公开专业',
   `is_enrollment_open` tinyint(1) NOT NULL COMMENT '公开入学年份',
+  `is_age_open` tinyint(1) NOT NULL COMMENT '公开年龄',
+  `is_degree_open` tinyint(1) NOT NULL COMMENT '公开学历',
   `is_profession_open` tinyint(1) NOT NULL COMMENT '公开职业',
   `is_primary_school_open` tinyint(1) NOT NULL COMMENT '公开小学',
   `is_junior_high_school_open` tinyint(1) NOT NULL COMMENT '公开初中',
@@ -641,7 +643,7 @@ CREATE TABLE `privacy` (
 
 LOCK TABLES `privacy` WRITE;
 /*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
-INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,0,1);
+INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,1,1,0,1);
 /*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
 UNLOCK TABLES;
 

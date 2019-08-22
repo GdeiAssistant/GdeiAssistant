@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>未完成实名认证</title>
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/common_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/common_blue.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_pink.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_blue.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_pink.css">
     <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_blue.css">
@@ -20,6 +26,7 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.css">
     </c:if>
+    <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script type="application/javascript" src="/js/common/themeLoader.js"></script>
     <script>
@@ -55,6 +62,18 @@
         </p>
     </div>
 </div>
+
+<p class="page_desc">
+    若不再使用当前账号，可以
+    <a class="page_desc"
+       onclick="window.location.href='/close'">进行删除账号
+    </a>
+    <br>
+    使用遇到困难？点击
+    <a class="page_desc"
+       onclick="window.location.href='mailto:support@gdeiassistant.cn'">联系人工客服
+    </a>
+</p>
 
 </body>
 </html>

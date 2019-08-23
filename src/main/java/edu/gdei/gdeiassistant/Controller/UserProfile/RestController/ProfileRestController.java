@@ -62,20 +62,23 @@ public class ProfileRestController {
      * 更新用户头像图片
      *
      * @param request
-     * @param file
+     * @param avatar
+     * @param avatarHD
      * @return
      * @throws IOException
      */
     @RequestMapping(value = "/api/avatar", method = RequestMethod.POST)
     public JsonResult UpdateUserAvatar(HttpServletRequest request
-            , @RequestParam("avatar") MultipartFile file) throws IOException {
+            , @RequestParam("avatar") MultipartFile avatar, @RequestParam("avatar_hd") MultipartFile avatarHD) throws IOException {
         JsonResult jsonResult = new JsonResult();
         String username = (String) request.getSession().getAttribute("username");
-        if (file == null || file.getSize() <= 0 || file.getSize() >= AVATAR_MAX_SIZE) {
+        if (avatar == null || avatar.getSize() <= 0 || avatar.getSize() >= AVATAR_MAX_SIZE
+                || avatarHD == null || avatarHD.getSize() <= 0 || avatarHD.getSize() >= AVATAR_MAX_SIZE) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("上传的图片文件不合法");
         } else {
-            userProfileService.UpdateAvatar(username, file.getInputStream());
+            userProfileService.UpdateAvatar(username, avatar.getInputStream());
+            userProfileService.UpdateHighDefinitionAvatar(username, avatarHD.getInputStream());
             jsonResult.setSuccess(true);
         }
         return jsonResult;

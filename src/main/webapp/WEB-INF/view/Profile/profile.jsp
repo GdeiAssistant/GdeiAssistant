@@ -11,19 +11,8 @@
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
 <div class="weui_toptips weui_warn js_tooltips"></div>
 
-<!-- 头像文件上传表单 -->
-<form id="uploadForm" enctype="multipart/form-data">
-    <input id="avatarFileInput" name="avatar" accept="image/*" type="file" hidden="hidden">
-</form>
-
-<!-- 头像裁剪参数 -->
-<input id="x" type="hidden">
-<input id="y" type="hidden">
-<input id="width" type="hidden">
-<input id="height" type="hidden">
-
 <div class="weui-cells">
-    <div class="weui-cell" href="javascript:" onclick="selectAvatarImage()">
+    <div class="weui-cell" href="javascript:" onclick="window.location.href='/avatar'">
         <div class="weui-cell__bd">
             <p>头像</p>
         </div>
@@ -247,23 +236,6 @@
 </div>
 
 <br>
-
-<!-- 裁剪头像弹窗 -->
-<div id="drawImageDialog" class="weui-popup__container">
-    <div class="weui-popup__overlay"></div>
-    <div class="weui-popup__modal">
-        <div class="toolbar">
-            <div class="toolbar-inner">
-                <a href="javascript:" style="left:0" class="picker-button close-popup">取消</a>
-                <a href="javascript:" style="right:0" class="picker-button close-popup" onclick="drawImageAndUpload()">使用</a>
-                <h1 class="title">上传头像</h1>
-            </div>
-        </div>
-        <div class="modal-content img-container" style="text-align:center">
-            <img id="drawImage" style=" width:80% ; height: 60% ;margin-top:1.17647059em"/>
-        </div>
-    </div>
-</div>
 
 <!-- 修改昵称窗口 -->
 <div id="changeKickname" class="weui-popup__container">

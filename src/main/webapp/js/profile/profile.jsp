@@ -17,9 +17,6 @@
         }
     });
 
-    // 压缩后的图片
-    var image = new Image();
-
     // 所在地选择器
     var locationPicker;
 
@@ -283,131 +280,6 @@
         });
     }
 
-    //用户选择图片后的回调
-    $(function () {
-
-        // 允许上传的图片类型
-        var allowTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
-        // 图片最大大小为2MB
-        var maxSize = 1024 * 1024 * 2;
-        // 图片最大宽度
-        var maxWidth = 300;
-
-        $('#avatarFileInput').on('change', function (event) {
-
-            var files = event.target.files;
-
-            // 如果没有选中文件，直接返回
-            if (files.length === 0) {
-                return;
-            }
-
-            var file = files[0];
-            var reader = new FileReader();
-
-            // 如果类型不在允许的类型范围内
-            if (allowTypes.indexOf(file.type) === -1) {
-                $.alert("不合法的图片文件类型", "上传错误");
-                return;
-            }
-
-            if (file.size > maxSize) {
-                $.alert("图片文件不能超过2MB", "文件过大");
-                return;
-            }
-
-            reader.readAsDataURL(file);
-
-            reader.onload = function (e) {
-
-                var img = new Image();
-                img.src = e.target.result;
-                img.onload = function () {
-
-                    // 不要超出最大宽度
-                    var w = Math.min(maxWidth, img.width);
-                    // 高度按比例计算
-                    var h = img.height * (w / img.width);
-                    var canvas = document.createElement('canvas');
-                    var ctx = canvas.getContext('2d');
-                    // 设置 canvas 的宽度和高度
-                    canvas.width = w;
-                    canvas.height = h;
-                    ctx.drawImage(img, 0, 0, w, h);
-
-                    // 返回一个包含图片展示的 Data URI
-                    var base64 = canvas.toDataURL('image/jpeg', 0.8);
-
-                    image.src = base64;
-
-                    $("#drawImage").attr("src", "");
-                    $("#drawImage").removeAttr("src");
-                    $("#drawImage").attr("src", base64);
-
-                    //裁剪图片
-                    $("#drawImage").cropper({
-                        aspectRatio: 1,
-                        crop: function (e) {
-                            //保存裁剪图片结果参数
-                            $("#x").val(e.x);
-                            $("#y").val(e.y);
-                            $("#width").val(e.width);
-                            $("#height").val(e.height);
-                        }
-                    });
-                    $("#drawImage").cropper('replace', base64);
-
-                    //弹出裁剪预览窗口
-                    $("#drawImageDialog").popup();
-                };
-            };
-        });
-    });
-
-    // 裁剪图片后对图片进行处理和上传
-    function drawImageAndUpload() {
-        var canvas = $('<canvas width="' + $("#width").val() + '" height="' + $("#height").val() + '"></canvas>')[0];
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(image, $("#x").val(), $("#y").val(), $("#width").val()
-            , $("#height").val(), 0, 0, $("#width").val(), $("#height").val());
-        var base64 = canvas.toDataURL('image/jpeg', 1);
-
-        base64 = base64.split(',')[1];
-        base64 = window.atob(base64);
-        var ia = new Uint8Array(base64.length);
-        for (var i = 0; i < base64.length; i++) {
-            ia[i] = base64.charCodeAt(i);
-        }
-
-        var blob = new Blob([ia], {type: "image/jpg"});
-
-        var formData = new FormData();
-        formData.append('avatar', blob);
-
-        //上传头像到服务器
-        $.ajax({
-            url: "/api/avatar",
-            type: "post",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (result) {
-                if (result.success === true) {
-                    window.location.reload();
-                } else {
-                    showCustomErrorTip(result.message);
-                }
-            },
-            error: function (result) {
-                if (result.status) {
-                    showCustomErrorTip(result.responseJSON.message);
-                } else {
-                    showNetworkErrorTip();
-                }
-            }
-        });
-    }
-
     //检测Input文字长度是否超过限制
     function inputLengthCheck(str, maxLen) {
         var w = 0;
@@ -457,11 +329,6 @@
                     });
                 }
             });
-    }
-
-    //选择头像文件
-    function selectAvatarImage() {
-        $("#avatarFileInput").click();
     }
 
     //弹出昵称修改窗口

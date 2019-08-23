@@ -6,7 +6,6 @@ import edu.gdei.gdeiassistant.Pojo.Entity.Introduction;
 import edu.gdei.gdeiassistant.Pojo.Entity.Profile;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Gender.GenderMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Profile.ProfileMapper;
-import edu.gdei.gdeiassistant.Service.Authenticate.AuthenticateService;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +22,6 @@ import java.util.Map;
 
 @Service
 public class UserProfileService {
-
-    @Autowired
-    private AuthenticateService authenticateService;
 
     @Resource(name = "profileMapper")
     private ProfileMapper profileMapper;
@@ -144,6 +140,27 @@ public class UserProfileService {
     }
 
     /**
+     * 获取用户的头像高清图片URL
+     *
+     * @param username
+     * @return
+     */
+    public String GetUserHighDefinitionAvatar(String username) {
+        // 创建OSSClient实例
+        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        String url = "";
+        //检查自定义头像图片是否存在
+        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg")) {
+            //设置过期时间10分钟
+            Date expiration = new Date(new Date().getTime() + 1000 * 60 * 30);
+            // 生成URL
+            url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg", expiration).toString().replace("http", "https");
+        }
+        ossClient.shutdown();
+        return url;
+    }
+
+    /**
      * 更新用户头像
      *
      * @param username
@@ -155,6 +172,20 @@ public class UserProfileService {
         OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
         //上传文件
         ossClient.putObject("gdeiassistant-userdata", "avatar/" + username + ".jpg", inputStream);
+        ossClient.shutdown();
+    }
+
+    /**
+     * 更新用户高清头像
+     *
+     * @param username
+     * @param inputStream
+     */
+    public void UpdateHighDefinitionAvatar(String username, InputStream inputStream) {
+        // 创建OSSClient实例
+        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        //上传文件
+        ossClient.putObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg", inputStream);
         ossClient.shutdown();
     }
 

@@ -70,7 +70,7 @@ public class ProfileController {
                 modelAndView.addObject("Enrollment", profile.getEnrollment());
             }
             if (profile.getBirthday() != null) {
-                modelAndView.addObject("Age", ChronoUnit.DAYS.between(profile.getBirthday().toInstant()
+                modelAndView.addObject("Age", ChronoUnit.YEARS.between(profile.getBirthday().toInstant()
                         .atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()));
             }
             if (profile.getDegree() != null) {
@@ -163,7 +163,7 @@ public class ProfileController {
             }
             if (privacy.isAgeOpen().equals(Boolean.TRUE)) {
                 if (profile.getBirthday() != null) {
-                    modelAndView.addObject("Age", ChronoUnit.DAYS.between(profile.getBirthday().toInstant()
+                    modelAndView.addObject("Age", ChronoUnit.YEARS.between(profile.getBirthday().toInstant()
                             .atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()));
                 }
             }

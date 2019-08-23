@@ -36,7 +36,10 @@ public class ProfileController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Profile/avatar");
         String username = (String) request.getSession().getAttribute("username");
-        modelAndView.addObject("AvatarURL", userProfileService.GetUserHighDefinitionAvatar(username));
+        String avatarHDURL = userProfileService.GetUserHighDefinitionAvatar(username);
+        String avatarURL = userProfileService.GetUserAvatar(username);
+        modelAndView.addObject("AvatarURL", avatarURL);
+        modelAndView.addObject("AvatarHDURL", avatarHDURL);
         return modelAndView;
     }
 

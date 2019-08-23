@@ -39,9 +39,6 @@
 
 <div style="width: 200px;height: 200px;margin: 25px auto">
     <c:choose>
-        <c:when test="${AvatarHDURL!=null and AvatarHDURL!=''}">
-            <img style="width: 100%;height: 100%;border-radius: 50%" src="${AvatarHDURL}">
-        </c:when>
         <c:when test="${AvatarURL!=null and AvatarURL!=''}">
             <img style="width: 100%;height: 100%;border-radius: 50%" src="${AvatarURL}">
         </c:when>

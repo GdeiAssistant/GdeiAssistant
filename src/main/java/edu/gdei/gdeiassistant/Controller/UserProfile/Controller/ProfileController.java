@@ -26,9 +26,18 @@ public class ProfileController {
     @Autowired
     private PrivacyService privacyService;
 
-    @RequestMapping(value = {"/introduction"})
+    @RequestMapping(value = "/introduction", method = RequestMethod.GET)
     public ModelAndView ResolveUserIntroductionPage() {
         return new ModelAndView("Profile/introduction");
+    }
+
+    @RequestMapping(value = "/avatar", method = RequestMethod.GET)
+    public ModelAndView ResolveUserAvatarPage(HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Profile/avatar");
+        String username = (String) request.getSession().getAttribute("username");
+        modelAndView.addObject("AvatarURL", userProfileService.GetUserHighDefinitionAvatar(username));
+        return modelAndView;
     }
 
     @RequestMapping(value = "/profile/user", method = RequestMethod.GET)

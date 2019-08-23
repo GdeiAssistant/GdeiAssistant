@@ -39,6 +39,9 @@
 
 <div style="width: 200px;height: 200px;margin: 25px auto">
     <c:choose>
+        <c:when test="${AvatarHDURL!=null and AvatarHDURL!=''}">
+            <img style="width: 100%;height: 100%;border-radius: 50%" src="${AvatarHDURL}">
+        </c:when>
         <c:when test="${AvatarURL!=null and AvatarURL!=''}">
             <img style="width: 100%;height: 100%;border-radius: 50%" src="${AvatarURL}">
         </c:when>
@@ -53,9 +56,10 @@
         <a onclick="selectAvatarImage()" href="javascript:"
            class="weui-btn weui-btn_primary">上传新头像</a>
     </p>
-    <c:if test="${AvatarURL!=null && AvatarURL!=''}">
+    <c:if test="${AvatarHDURL!=null && AvatarHDURL!=''}">
     <p class="weui-btn-area">
-        <a onclick="window.location.href='${AvatarURL}'" href="javascript:" class="weui-btn weui-btn_default">查看高清头像</a>
+        <a onclick="window.location.href='${AvatarHDURL}'" href="javascript:"
+           class="weui-btn weui-btn_default">查看高清头像</a>
     </p>
     </c:if>
 

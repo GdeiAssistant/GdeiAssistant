@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>${KickName}的个人资料</title>
+    <title>${Username}的个人资料</title>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <c:if test="${RobotsNoIndex!=null && RobotsNoIndex==true}">
         <!-- 指示搜索引擎不要在搜索结果中显示当前的网页 -->

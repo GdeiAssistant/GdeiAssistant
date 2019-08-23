@@ -121,6 +121,11 @@ public class UserDataService {
                 InputStream avatar = ossClient.getObject("gdeiassistant-userdata", "avatar/" + username + ".jpg").getObjectContent();
                 userDataInputStreamMap.put("avatar.jpg", avatar);
             }
+            //下载用户高清头像
+            if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg")) {
+                InputStream avatar = ossClient.getObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg").getObjectContent();
+                userDataInputStreamMap.put("avatar_hd.jpg", avatar);
+            }
             //获取个人资料信息
             Profile profile = appDataMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
             if (profile != null) {

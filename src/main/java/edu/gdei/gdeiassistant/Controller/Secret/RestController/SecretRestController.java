@@ -5,6 +5,7 @@ import edu.gdei.gdeiassistant.Pojo.Entity.Secret;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Service.Secret.SecretService;
+import edu.gdei.gdeiassistant.Service.Wechat.WechatService;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -24,6 +26,9 @@ public class SecretRestController {
 
     @Autowired
     private SecretService secretService;
+
+    @Autowired
+    private WechatService wechatService;
 
     /**
      * 获取更多的树洞消息
@@ -44,21 +49,22 @@ public class SecretRestController {
      *
      * @param request
      * @param secret
+     * @param voiceId
      * @param file
      * @return
      */
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
-    public JsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret
+    public JsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret, String voiceId
             , @RequestParam(value = "voice", required = false) MultipartFile file) throws Exception {
         if (secret.getType() == 0 && StringUtils.isBlank(secret.getContent())) {
             return new JsonResult(false, "树洞信息不能为空");
         }
         String username = (String) request.getSession().getAttribute("username");
-        if (secret.getType() == 0) {
+        if (secret.getType().equals(0)) {
             //文字树洞信息
             secretService.AddSecretInfo(username, secret);
             return new JsonResult(true);
-        } else if (secret.getType() == 1) {
+        } else if (secret.getType().equals(1)) {
             //语音树洞信息
             if (file == null || file.isEmpty() || file.getSize() == 0) {
                 return new JsonResult(false, "语音内容不能为空");
@@ -71,6 +77,17 @@ public class SecretRestController {
                 secretService.UploadVoiceSecret(id, file.getInputStream());
                 return new JsonResult(true);
             }
+        } else if (secret.getType().equals(2)) {
+            //微信树洞信息
+            InputStream inputStream = wechatService.DownloadWechatVoiceRecord(voiceId);
+            if (inputStream != null) {
+                //插入树洞信息记录
+                Integer id = secretService.AddSecretInfo(username, secret);
+                //上传录音文件
+                secretService.UploadVoiceSecret(id, inputStream);
+                return new JsonResult(true);
+            }
+            return new JsonResult(false, "音频的服务器端ID无效");
         } else {
             return new JsonResult(false, "树洞信息类型不合法");
         }

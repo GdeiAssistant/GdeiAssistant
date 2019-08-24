@@ -40,10 +40,10 @@ public class Secret implements Serializable, Entity {
     private String content;
 
     /**
-     * 树洞消息类型，0为文本类型，1为语音类型
+     * 树洞消息类型，0为文本类型，1为语音类型，2为微信语音类型
      */
     @Min(0)
-    @Max(1)
+    @Max(2)
     private Integer type;
 
     /**

@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/css/secret/secret-publish.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
+    <script type="text/javascript" src="/js/common/jweixin-1.4.0.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script type="application/javascript" src="/js/common/themeLoader.js"></script>
     <script type="application/javascript" src="/js/common/recorder.mp3.min.js"></script>
@@ -124,6 +125,37 @@
     //树洞信息类型，0为文字树洞，1为语音树洞
     let type = 0;
 
+    $(function () {
+        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger") {
+            //微信登录，通过Config接口注入权限验证配置
+            wx.config({
+                debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                appId: 'wx46f938003afd63c0', // 必填，公众号的唯一标识
+                timestamp: '${JSSDKSignature.timestamp}', // 必填，生成签名的时间戳
+                nonceStr: '${JSSDKSignature.nonceStr}', // 必填，生成签名的随机串
+                signature: '${JSSDKSignature.signature}',// 必填，签名
+                jsApiList: ['startRecord', 'stopRecord', 'onVoiceRecordEnd', 'playVoice', 'pauseVoice', 'stopVoice', 'onVoicePlayEnd'
+                    , 'uploadVoice', 'downloadVoice'] // 必填，需要使用的JS接口列表
+            });
+            wx.ready(function () {
+                wx.onVoicePlayEnd({
+                    success: function () {
+                        $("#voice_button").attr("src", "/img/secret/play.png");
+                        $("#voice_state").text("播放录音");
+                        wechatVoicePlaying = false;
+                    }
+                });
+                wx.onVoiceRecordEnd({
+                    //录音时间超过一分钟没有停止的时候会执行complete回调
+                    complete: function (res) {
+                        voiceId = res.localId;
+                        stopRecordVoice();
+                    }
+                })
+            })
+        }
+    });
+
     //切换到文字树洞
     function switchToWord() {
         $("#switchToWord").hide();
@@ -145,14 +177,32 @@
         $("#voice_button").show();
         $("#voice_state").show();
         $("#voice_volume").show();
-        type = 1;
+        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger") {
+            type = 2;
+        } else {
+            type = 1;
+        }
         //获取麦克风权限
-        record.open(function () {
-            //授权麦克风权限成功
-        }, function (errMsg) {
-            //未授权或不支持
-            $(".weui_warn").text("用户拒绝了麦克风权限或你的浏览器不支持相关API").show().delay(2000).hide(0);
-        });
+        if (!(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger")) {
+            record.open(function () {
+                //授权麦克风权限成功
+            }, function (errMsg) {
+                //未授权或不支持
+                $(".weui_warn").text("用户拒绝了麦克风权限或你的浏览器不支持相关API").show().delay(2000).hide(0);
+            });
+        } else {
+            if (localStorage.getItem("wechatRecordPermission")) {
+                wx.startRecord({
+                    success: function () {
+                        localStorage.setItem("wechatRecordPermission", 1);
+                        wx.stopRecord();
+                    },
+                    fail: function () {
+                        $(".weui_warn").text("用户拒绝了麦克风权限").show().delay(2000).hide(0);
+                    }
+                });
+            }
+        }
     }
 
     //禁止鼠标点击右键
@@ -167,6 +217,12 @@
 
     //录音音频对象
     let voice;
+
+    //微信录音音频的本地ID
+    let voiceId;
+
+    //微信录音播放状态
+    let wechatVoicePlaying = false;
 
     //录音实时音量
     let volume = 0;
@@ -198,12 +254,11 @@
 
     //开始录音
     function startRecordVoice() {
-        //申请授权，开启录音功能
-        record.open(function () {
+        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger") {
             recording = recording + 1;
-            //授权成功，可以开始录音
-            audio.src = undefined;
-            record.start();
+            voiceId = undefined;
+            //微信登录，使用JSSDK录音
+            wx.startRecord();
             //显示录音音量
             if (volumeInterval) {
                 clearInterval(volumeInterval);
@@ -211,7 +266,6 @@
             volumeInterval = setInterval(function () {
                 $("#volume").css("width", volume + "%");
             }, 50);
-            //设置最长录制60秒
             recordTimeOut = setTimeout(stopRecordVoice, 60000);
             //显示录音状态，并提示剩余录音时间
             $("#voice_button").attr("src", "/img/secret/record.png");
@@ -223,80 +277,173 @@
                 remainTime = remainTime - 1;
                 $("#voice_state").text("正在录音，还剩" + remainTime + "秒");
             }, 1000);
-        }, function (errMsg) {
-            //未授权或不支持
-            $(".weui_warn").text("用户拒绝了麦克风权限或你的浏览器不支持相关API").show().delay(2000).hide(0);
-        });
+        } else {
+            //申请授权，开启录音功能
+            record.open(function () {
+                recording = recording + 1;
+                //授权成功，可以开始录音
+                audio.src = undefined;
+                record.start();
+                //显示录音音量
+                if (volumeInterval) {
+                    clearInterval(volumeInterval);
+                }
+                volumeInterval = setInterval(function () {
+                    $("#volume").css("width", volume + "%");
+                }, 50);
+                //设置最长录制60秒
+                recordTimeOut = setTimeout(stopRecordVoice, 60000);
+                //显示录音状态，并提示剩余录音时间
+                $("#voice_button").attr("src", "/img/secret/record.png");
+                let remainTime = 60;
+                if (remainTimeInterval) {
+                    clearInterval(remainTimeInterval);
+                }
+                remainTimeInterval = setInterval(function () {
+                    remainTime = remainTime - 1;
+                    $("#voice_state").text("正在录音，还剩" + remainTime + "秒");
+                }, 1000);
+            }, function (errMsg) {
+                //未授权或不支持
+                $(".weui_warn").text("用户拒绝了麦克风权限或你的浏览器不支持相关API").show().delay(2000).hide(0);
+            });
+        }
     }
 
     //停止录音
     function stopRecordVoice() {
         recording = recording - 1;
         //重置音量
-        clearInterval(volumeInterval);
+        if (volumeInterval) {
+            clearInterval(volumeInterval);
+        }
         $("#volume").css("width", "0");
         //重置剩余时间
-        clearInterval(remainTimeInterval);
-        clearTimeout(recordTimeOut);
+        if (remainTimeInterval) {
+            clearInterval(remainTimeInterval);
+        }
+        if (recordTimeOut) {
+            clearTimeout(recordTimeOut);
+        }
         //等待音频编码完成
         $("#voice_button").attr("src", "/img/secret/init.png");
         $("#voice_state").text("正在编码音频...");
         let loading = weui.loading("编码音频中");
         $(".btn").attr("disabled", true);
-        record.stop(function (blob, duration) {
-            loading.hide();
-            $(".btn").attr("disabled", false);
-            if (duration < 1000) {
-                $(".weui_warn").text("录音时间太短，请重试").show().delay(2000).hide(0);
-                //设置录音状态
-                $("#voice_button").attr("src", "/img/secret/init.png");
-                $("#voice_state").text("未录音");
-            } else {
-                //缓存录音对象
-                voice = blob;
-                audio.src = URL.createObjectURL(blob);
-                audio.load();
+        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger") {
+            if (voiceId) {
+                loading.hide();
+                $(".btn").attr("disabled", false);
                 //设置录音状态
                 $("#voice_button").attr("src", "/img/secret/play.png");
                 $("#voice_state").text("播放录音");
-            }
-        }, function (msg) {
-            loading.hide();
-            $(".btn").attr("disabled", false);
-            if (msg === '未开始录音') {
-                $(".weui_warn").text("录音时间太短，请重试").show().delay(2000).hide(0);
-            } else if (msg === '未采集到录音') {
-                $(".weui_warn").text("未采集到录音，请重试").show().delay(2000).hide(0);
             } else {
-                $(".weui_warn").text("录音失败，请确认你已授权麦克风相关权限").show().delay(2000).hide(0);
+                wx.stopRecord({
+                    success: function (res) {
+                        loading.hide();
+                        $(".btn").attr("disabled", false);
+                        //设置录音状态
+                        $("#voice_button").attr("src", "/img/secret/play.png");
+                        $("#voice_state").text("播放录音");
+                        voiceId = res.localId;
+                    },
+                    fail: function (error) {
+                        if (error.errMsg == 'stopRecord:tooshort') {
+                            $(".weui_warn").text("录音时间太短，请重试").show().delay(2000).hide(0);
+                        } else {
+                            $(".weui_warn").text("录音失败，错误信息为：" + error.errMsg).show().delay(2000).hide(0);
+                        }
+                        loading.hide();
+                        $(".btn").attr("disabled", false);
+                        //重置录音对象
+                        voiceId = undefined;
+                        //设置录音状态
+                        $("#voice_button").attr("src", "/img/secret/init.png");
+                        $("#voice_state").text("未录音");
+                    }
+                });
             }
-            //重置录音对象
-            voice = undefined;
-            audio.src = undefined;
-            audio.load();
-            //设置录音状态
-            $("#voice_button").attr("src", "/img/secret/init.png");
-            $("#voice_state").text("未录音");
-        });
+        } else {
+            record.stop(function (blob, duration) {
+                loading.hide();
+                $(".btn").attr("disabled", false);
+                if (duration < 1000) {
+                    $(".weui_warn").text("录音时间太短，请重试").show().delay(2000).hide(0);
+                    //设置录音状态
+                    $("#voice_button").attr("src", "/img/secret/init.png");
+                    $("#voice_state").text("未录音");
+                } else {
+                    //缓存录音对象
+                    voice = blob;
+                    audio.src = URL.createObjectURL(blob);
+                    audio.load();
+                    //设置录音状态
+                    $("#voice_button").attr("src", "/img/secret/play.png");
+                    $("#voice_state").text("播放录音");
+                }
+            }, function (msg) {
+                loading.hide();
+                $(".btn").attr("disabled", false);
+                if (msg === '未开始录音') {
+                    $(".weui_warn").text("录音时间太短，请重试").show().delay(2000).hide(0);
+                } else if (msg === '未采集到录音') {
+                    $(".weui_warn").text("未采集到录音，请重试").show().delay(2000).hide(0);
+                } else {
+                    $(".weui_warn").text("录音失败，请确认你已授权麦克风相关权限").show().delay(2000).hide(0);
+                }
+                //重置录音对象
+                voice = undefined;
+                audio.src = undefined;
+                audio.load();
+                //设置录音状态
+                $("#voice_button").attr("src", "/img/secret/init.png");
+                $("#voice_state").text("未录音");
+            });
+        }
     }
 
     //播放或暂停播放录音
     function replayRecord() {
-        if (audio.src) {
-            if (audio.paused) {
-                //播放音频
-                $("#voice_button").attr("src", "/img/secret/pause.png");
-                $("#voice_state").text("正在播放");
-                audio.play();
-                audio.onended = function () {
+        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger") {
+            if (voiceId) {
+                let loading = weui.loading("加载录音中");
+                if (!wechatVoicePlaying) {
+                    //播放音频
+                    $("#voice_button").attr("src", "/img/secret/pause.png");
+                    $("#voice_state").text("正在播放");
+                    wx.playVoice({
+                        localId: voiceId
+                    });
+                    loading.hide();
+                    wechatVoicePlaying = true;
+                } else {
+                    //暂停播放音频
                     $("#voice_button").attr("src", "/img/secret/play.png");
-                    $("#voice_state").text("播放录音");
-                };
-            } else {
-                //暂停播放音频
-                $("#voice_button").attr("src", "/img/secret/play.png");
-                $("#voice_state").text("暂停");
-                audio.pause();
+                    $("#voice_state").text("暂停");
+                    wx.pauseVoice({
+                        localId: voiceId
+                    });
+                    loading.hide();
+                    wechatVoicePlaying = false;
+                }
+            }
+        } else {
+            if (audio.src) {
+                if (audio.paused) {
+                    //播放音频
+                    $("#voice_button").attr("src", "/img/secret/pause.png");
+                    $("#voice_state").text("正在播放");
+                    audio.play();
+                    audio.onended = function () {
+                        $("#voice_button").attr("src", "/img/secret/play.png");
+                        $("#voice_state").text("播放录音");
+                    };
+                } else {
+                    //暂停播放音频
+                    $("#voice_button").attr("src", "/img/secret/play.png");
+                    $("#voice_state").text("暂停");
+                    audio.pause();
+                }
             }
         }
     }
@@ -480,8 +627,55 @@
             } else {
                 $(".weui_warn").text("未采集到任何录音信息").show().delay(2000).hide(0);
             }
+        } else if (type === 2) {
+            if (voiceId) {
+                //上传录音音频
+                wx.uploadVoice({
+                    localId: voiceId,
+                    isShowProgressTips: 1,
+                    success: function (res) {
+                        //返回音频的服务器端ID
+                        let serverId = res.serverId;
+                        let formData = new FormData();
+                        formData.append('voice', voice);
+                        formData.append('theme', rand);
+                        formData.append('type', 2);
+                        formData.append('voiceId', serverId);
+                        formData.append('timer', $("#timer").prop("checked") ? 1 : 0);
+                        //上传音频和提交树洞信息
+                        let loading = weui.loading('提交中');
+                        $(".btn").attr("disabled", true);
+                        $.ajax({
+                            url: "/api/secret/info",
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (result) {
+                                if (result.success) {
+                                    window.location.href = "/secret";
+                                } else {
+                                    $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                                }
+                                loading.hide();
+                                $(".btn").attr("disabled", false);
+                            },
+                            error: function (result) {
+                                loading.hide();
+                                $(".btn").attr("disabled", false);
+                                if (result.status) {
+                                    $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                                } else {
+                                    $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                $(".weui_warn").text("未采集到任何录音信息").show().delay(2000).hide(0);
+            }
         }
-
     });
 
 </script>

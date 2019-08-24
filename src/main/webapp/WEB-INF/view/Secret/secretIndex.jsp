@@ -125,7 +125,7 @@
                                         + "<a href='/secret/detail/id/" + result.data[i].id + "'>" +
                                         "<div><i class='comment'></i>" + "<span>" + result.data[i].commentCount + "</span></div></a>" + "</footer>" +
                                         "</div>");
-                                } else if (result.data[i].type === 1) {
+                                } else if (result.data[i].type === 1 || result.data[i].type === 2) {
                                     if (result.data[i].theme === 1) {
                                         $("#list").append("<div class='secret theme" + result.data[i].theme + "' id='" + result.data[i].id + "'>" +
                                             "<a id='" + result.data[i].id + "' href='javascript:;' onclick='showSecretDetailInfo(" + result.data[i].id + ")'>" +

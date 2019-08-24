@@ -9,6 +9,7 @@ import edu.gdei.gdeiassistant.Enum.Wechat.RequestTypeEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Entity.*;
 import edu.gdei.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
+import edu.gdei.gdeiassistant.Pojo.JSSDK.JSSDKSignature;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
@@ -19,30 +20,28 @@ import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
 import edu.gdei.gdeiassistant.Service.GradeQuery.GradeQueryService;
 import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
+import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class WechatService {
@@ -180,6 +179,60 @@ public class WechatService {
             }
         }
         return accessToken;
+    }
+
+
+    /**
+     * 获取微信JS接口的临时票据
+     *
+     * @param accessToken
+     * @return
+     */
+    private String GetWechatJSApiTicket(String accessToken) {
+        JSONObject jsonObject = restTemplate.getForObject("https://api.weixin.qq.com/cgi-bin/ticket/getticket?" +
+                "access_token=" + accessToken + "&type=jsapi", JSONObject.class);
+        if (jsonObject.containsKey("ticket")) {
+            return jsonObject.getString("ticket");
+        }
+        return null;
+    }
+
+    /**
+     * 生成JS-SDK权限验证的签名
+     *
+     * @param url
+     * @return
+     */
+    public JSSDKSignature SetUpJSSDKConfig(String url) {
+        String accessToken = GetWechatAccessToken();
+        String ticket = GetWechatJSApiTicket(accessToken);
+        //生成随机数
+        String nonce = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+        //获取时间戳
+        Long timestamp = LocalDateTime.now().atZone(ZoneId.systemDefault()).toEpochSecond();
+        String signature = StringEncryptUtils.SHA1HexString("jsapi_ticket=" + ticket + "&noncestr=" + nonce + "&timestamp=" + timestamp + "&url=" + url);
+        JSSDKSignature jssdkSignature = new JSSDKSignature();
+        jssdkSignature.setNonceStr(nonce);
+        jssdkSignature.setSignature(signature);
+        jssdkSignature.setTimestamp(timestamp);
+        return jssdkSignature;
+    }
+
+    /**
+     * 下载JSSDK上传的音频
+     *
+     * @param voiceId
+     * @return
+     */
+    public InputStream DownloadWechatVoiceRecord(String voiceId) {
+        String accessToken = GetWechatAccessToken();
+        ResponseEntity<byte[]> responseEntity = restTemplate.exchange("https://api.weixin.qq.com/cgi-bin/media/get/jssdk?" +
+                "access_token=" + accessToken + "&media_id=" + voiceId, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), byte[].class);
+        if (responseEntity.getHeaders().get("Content-Type").get(0).equals("voice/speex")) {
+            byte[] bytes = responseEntity.getBody();
+            return new ByteArrayInputStream(bytes);
+        }
+        return null;
     }
 
     /**

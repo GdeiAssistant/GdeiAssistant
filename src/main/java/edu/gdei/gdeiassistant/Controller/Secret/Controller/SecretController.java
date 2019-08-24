@@ -1,7 +1,9 @@
 package edu.gdei.gdeiassistant.Controller.Secret.Controller;
 
 import edu.gdei.gdeiassistant.Pojo.Entity.Secret;
+import edu.gdei.gdeiassistant.Pojo.JSSDK.JSSDKSignature;
 import edu.gdei.gdeiassistant.Service.Secret.SecretService;
+import edu.gdei.gdeiassistant.Service.Wechat.WechatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,9 @@ public class SecretController {
     @Autowired
     private SecretService secretService;
 
+    @Autowired
+    private WechatService wechatService;
+
     /**
      * 进入校园树洞应用首页
      *
@@ -33,12 +38,15 @@ public class SecretController {
     /**
      * 进入树洞信息发布界面
      *
+     * @param request
      * @return
      */
     @RequestMapping(value = {"/secret/publish"}, method = RequestMethod.GET)
-    public ModelAndView ResolveSecretPublishPage() {
+    public ModelAndView ResolveSecretPublishPage(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Secret/secretPublish");
+        JSSDKSignature jssdkSignature = wechatService.SetUpJSSDKConfig(request.getRequestURL().toString());
+        modelAndView.addObject("JSSDKSignature", jssdkSignature);
         return modelAndView;
     }
 

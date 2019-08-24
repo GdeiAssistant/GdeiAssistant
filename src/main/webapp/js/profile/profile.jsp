@@ -225,7 +225,7 @@
                     let birthday = result.data.birthday;
                     if (birthday) {
                         //根据出生时间和当前时间计算年龄
-                        let age = Math.ceil((new Date().getTime() - new Date(birthday).getTime()) / 31536000000);
+                        let age = Math.floor((new Date().getTime() - new Date(birthday).getTime()) / 31536000000);
                         $("#age").text(age);
                     } else {
                         $("#age").text("未填写");

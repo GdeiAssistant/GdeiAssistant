@@ -27,7 +27,7 @@
 <c:forEach var="Secret" items="${SecretList}">
     <div class="msg">
         <a href="/secret/detail/id/${Secret.id}">
-            <p>${Secret.content}</p>
+            <p>${Secret.type==0 ? Secret.content: "语音消息"}</p>
         </a>
         <i class="toggle"></i>
     </div>

@@ -72,13 +72,13 @@
     <div class="weui-cell weui-cell_switch" style="display: none">
         <div class="weui-cell__bd">消费查询</div>
         <div class="weui-cell__ft">
-            <input id="card" class="weui-switch" type="checkbox">
+            <input id="bill" class="weui-switch" type="checkbox">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch" style="display: none">
         <div class="weui-cell__bd">我的饭卡</div>
         <div class="weui-cell__ft">
-            <input id="cardinfo" class="weui-switch" type="checkbox">
+            <input id="card" class="weui-switch" type="checkbox">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch" style="display: none">

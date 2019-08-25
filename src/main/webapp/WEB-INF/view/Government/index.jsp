@@ -149,6 +149,13 @@
         </div>
         <div class="weui-cell__ft"></div>
     </a>
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = 'http://www.moe.gov.cn/jyb_hygq/hygq_tsjb/201505/t20150520_184529.html'">
+        <div class="weui-cell__bd">
+            <p>市场监督管理局申诉</p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
 </div>
 
 </body>

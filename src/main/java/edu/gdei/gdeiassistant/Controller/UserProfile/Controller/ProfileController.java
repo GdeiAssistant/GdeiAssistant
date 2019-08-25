@@ -39,6 +39,7 @@ public class ProfileController {
         String avatarHDURL = userProfileService.GetUserHighDefinitionAvatar(username);
         String avatarURL = userProfileService.GetUserAvatar(username);
         modelAndView.addObject("AvatarURL", avatarURL);
+        modelAndView.addObject("AvatarHDURL", avatarHDURL);
         return modelAndView;
     }
 

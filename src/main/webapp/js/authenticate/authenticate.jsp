@@ -1,7 +1,10 @@
 <%@ page import="edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="access" uri="/WEB-INF/tld/access.tld" %>
 <script>
+
+    var userGroupMap = [];
 
     <c:set value="<%= UserGroupEnum.STUDENT.getValue()%>" var="student"/>
     <c:set value="<%= UserGroupEnum.TEST.getValue()%>" var="test"/>
@@ -9,7 +12,18 @@
     $(function () {
         FastClick.attach(document.body);
         loadAuthenticationData();
+        loadUserGroupMap();
     });
+
+    //加载用户组映射表
+    function loadUserGroupMap() {
+
+        <c:forEach items="${access:loadUserGroupInfo()}" var="userGroup" varStatus="status">
+
+        userGroupMap[${status.index}] = "${userGroup}";
+
+        </c:forEach>
+    }
 
     //加载实名认证信息
     function loadAuthenticationData() {
@@ -101,7 +115,7 @@
     }
 
     //与教务系统身份认证信息进行同步
-    function authenticateWithSystem() {
+    function authenticateBySystem() {
         <c:choose>
         <c:when test="${sessionScope.group==student || sessionScope.group==test}">
         $.confirm({
@@ -187,24 +201,55 @@
         });
     }
 
-    //其他证件类型，联系客服进行认证
-    function authenticateByCustomerService() {
-        $.alert({
-            text: '当前认证方式仅限于使用护照、港澳居民来往内地通行证、台湾居民来往大陆通行证、军官证、外国人永久居留身份证等非大陆居民身份证的证件类型或其余认证方式不可用时进行认证，否则你的认证申请可能会遭到拒绝。',
-            title: '注意事项',
-            onOK: function () {
-                window.location.href = "mailto:support@gdeiassistant.cn";
-            }
-        });
-    }
-
-    //弹出调用摄像头拍照的提示
-    function showCameraTip() {
+    //使用大陆居民身份证进行认证，确认后弹出调用摄像头拍照的提示
+    function authenticateWithMainlandIDCard() {
         $.alert({
             text: '请使用摄像头拍摄身份证个人信息页，并上传供广东二师助手进行实名认证。注意，该方式仅支持使用中华人民共和国第二代居民身份证进行认证',
             title: '申请访问摄像头权限',
             onOK: function () {
                 getVideoMedia();
+            }
+        });
+    }
+
+    //使用大陆其他类型的证件联系客服认证
+    function authenticateWithMainlandDocuments() {
+        $.alert({
+            text: '当前认证方式仅限于中国大陆护照、军官证、士兵证、外国人永久居留证和港澳台居民证等非中华人民共和国第二代居民身份证件进行认证，否则你的认证申请可能会遭到拒绝。',
+            title: '注意事项',
+            onOK: function () {
+                window.location.href = "mailto:support@gdeiassistant.cn?subject=中国大陆证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传军官证、士兵证、外国人永久居留证等中国大陆证件基本身份信息面的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
+                    "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a证件类型：%0d%0a证件号/编号：";
+            }
+        });
+    }
+
+    //使用港澳身份证件联系客服认证
+    function authenticateWithHongKongAndMacaoIDCard() {
+        window.location.href = "mailto:support@gdeiassistant.cn?subject=香港澳门身份证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传香港澳门身份证基本身份信息面的扫描件或照片，一并发送到support@gdeiassistant.cn。此认证方式同时支持旧版和新版身份证。" +
+            "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a地区：（请填写香港或澳门）%0d%0a证件号：";
+    }
+
+    //使用港澳居民来往内地通行证件联系客服认证
+    function authenticateWithHongKongAndMacaoExitAndEntryPermit() {
+        window.location.href = "mailto:support@gdeiassistant.cn?subject=港澳居民来往内地通行证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传港澳居民来往内地通行证基本身份信息面的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
+            "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a地区：（请填写香港或澳门）%0d%0a证件号：";
+    }
+
+    //使用台湾居民来往大陆通行证认证件联系客服认证
+    function authenticateWithTaiwanExitAndEntryPermit() {
+        window.location.href = "mailto:support@gdeiassistant.cn?subject=台湾居民来往大陆通行证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传台湾居民来往大陆通行证基本身份信息面的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
+            "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a证件号：";
+    }
+
+    //使用护照证件联系客服认证
+    function authenticateWithPassport() {
+        $.alert({
+            text: '当前认证方式仅限于非中国大陆护照证件进行认证，否则你的认证申请可能会遭到拒绝。中国大陆护照证件请通过大陆居民认证的其他大陆证件类型认证方式进行认证。',
+            title: '注意事项',
+            onOK: function () {
+                window.location.href = "mailto:support@gdeiassistant.cn?subject=海外居民护照证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传海外护照基本身份信息页和入境盖章页的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
+                    "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a国籍（地区）：%0d%0a证件号：";
             }
         });
     }

@@ -84,25 +84,67 @@
     </div>
 </div>
 
-<div class="weui-cells__title">认证方式</div>
-
+<div class="weui-cells__title">快捷认证</div>
 <div class="weui-cells">
-    <a class="weui-cell weui-cell_access" href="javascript:" onclick="authenticateWithSystem()">
+    <a class="weui-cell weui-cell_access" href="javascript:" onclick="authenticateBySystem()">
         <div class="weui-cell__bd">
             <p>与教务系统个人信息同步</p>
         </div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="javascript:"
-       onclick="showCameraTip()">
+</div>
+
+<div class="weui-cells__title">大陆居民认证</div>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:" onclick="authenticateWithMainlandIDCard()">
         <div class="weui-cell__bd">
-            <p>上传身份证照片认证</p>
+            <p>上传居民身份证照片认证</p>
         </div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="javascript:" onclick="authenticateByCustomerService()">
+    <a class="weui-cell weui-cell_access" href="javascript:" onclick="authenticateWithMainlandDocuments()">
         <div class="weui-cell__bd">
-            <p>联系客服进行认证</p>
+            <p>其他大陆证件类型认证</p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+</div>
+
+<div class="weui-cells__title">港澳居民认证</div>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="authenticateWithHongKongAndMacaoIDCard()">
+        <div class="weui-cell__bd">
+            <p>香港澳门身份证认证</p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="authenticateWithHongKongAndMacaoExitAndEntryPermit()">
+        <div class="weui-cell__bd">
+            <p>港澳居民来往内地通行证认证</p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+</div>
+
+<div class="weui-cells__title">台湾居民认证</div>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="authenticateWithTaiwanExitAndEntryPermit()">
+        <div class="weui-cell__bd">
+            <p>台湾居民来往大陆通行证认证</p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+</div>
+
+<div class="weui-cells__title">海外居民认证</div>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="authenticateWithPassport()">
+        <div class="weui-cell__bd">
+            <p>护照认证</p>
         </div>
         <div class="weui-cell__ft"></div>
     </a>
@@ -122,6 +164,8 @@
     </div>
 
 </div>
+
+<br>
 
 <div id="cameraPopup" class="weui-popup__container">
     <div class="weui-popup__overlay"></div>

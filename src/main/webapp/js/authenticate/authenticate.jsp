@@ -258,7 +258,14 @@
     function getVideoMedia(reload) {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({video: {facingMode: "environment"}}).then(function (stream) {
+                //添加playsinline和controls标记以自动播放视频
                 $("#camera")[0].srcObject = stream;
+                $("#camera")[0].setAttribute("playsinline", true);
+                $("#camera")[0].setAttribute("controls", true);
+                setTimeout(() => {
+                    //自动播放视频后移除播放控件
+                    $("#camera")[0].removeAttribute("controls");
+                });
                 if (!reload) {
                     $("#cameraPopup").popup();
                 }
@@ -266,6 +273,8 @@
                 $.toptip('用户拒绝了摄像头权限或你的浏览器不支持相关API', 'error');
             });
             return true;
+        } else {
+            $.toptip('用户拒绝了摄像头权限或你的浏览器不支持相关API', 'error');
         }
         return false;
     }

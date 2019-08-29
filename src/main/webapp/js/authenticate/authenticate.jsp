@@ -275,7 +275,12 @@
             });
             return true;
         } else {
-            $.toptip('用户拒绝了摄像头权限或你的浏览器不支持相关API', 'error');
+            //iOS系统暂时仅支持在Safari浏览器中使用该API，弹出用户提示
+            if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger") {
+                $(".wxtip").show();
+            } else {
+                $.toptip('用户拒绝了摄像头权限或你的浏览器不支持相关API', 'error');
+            }
         }
         return false;
     }

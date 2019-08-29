@@ -23,6 +23,7 @@
     <link title="default" rel="stylesheet" href="/css/common/jquery-weui.min.css">
     <link title="pink" rel="alternate stylesheet" href="/css/common/jquery-weui.min_pink.css">
     <link title="blue" rel="alternate stylesheet" href="/css/common/jquery-weui.min_blue.css">
+    <link rel="stylesheet" href="/css/authentication/authentication.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
@@ -40,6 +41,12 @@
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
 <div class="weui_toptips weui_warn js_tooltips"></div>
+
+<!-- Safari浏览器打开提示 -->
+<div class="wxtip" id="JweixinTip">
+    <span class="wxtip-icon"></span>
+    <p class="wxtip-txt">iOS系统暂不支持微信端认证<br>点击右上角<br>选择在Safari浏览器中打开</p>
+</div>
 
 <!-- 加载中弹框 -->
 <div class="weui_mask" style="display: none"></div>

@@ -11,7 +11,6 @@ import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Service.Authenticate.AuthenticateDataService;
 import edu.gdei.gdeiassistant.Service.Authenticate.AuthenticateService;
-import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -82,38 +81,20 @@ public class AuthenticateRestController {
         Integer group = (Integer) request.getSession().getAttribute("group");
         switch (authenticationTypeEnum) {
             //与教务系统进行同步
-            case AUTHENTICATE_WITH_CAS_SYSTEM:
+            case CAS_SYSTEM:
                 //获取用户真实姓名
                 if (group.equals(UserGroupEnum.STUDENT.getValue()) || group.equals(UserGroupEnum.TEST.getValue())) {
                     Map<String, String> infoMap = authenticateService.GetAuthenticationInfoBySystem(request.getSession().getId(), username, password);
                     String name = infoMap.get("name");
-                    String number = infoMap.get("number");
                     String identityNumber = authenticateService.GetUserIdentityNumber(request.getSession().getId(), new User(username, password));
                     //保存用户实名信息
-                    authenticateDataService.SaveSystemAuthenticationData(username, name, number, identityNumber);
+                    authenticateDataService.SaveSystemAuthenticationData(username, name, identityNumber);
                     return new JsonResult(true);
                 }
                 return new JsonResult(false, "当前用户组不支持使用教务系统进行实名认证");
 
-            //与易班校方认证信息同步
-            case AUTHENTICATE_WITH_YIBAN:
-                //获取用户真实姓名和学号
-                String yiBanAccessToken = (String) request.getSession().getAttribute("yiBanAccessToken");
-                if (StringUtils.isNotBlank(yiBanAccessToken)) {
-                    Map<String, String> infoMap = authenticateService.GetAuthenticationInfoByYiBan(yiBanAccessToken);
-                    String name = infoMap.get("name");
-                    String number = infoMap.get("number");
-                    if (StringUtils.isBlank(number)) {
-                        return new JsonResult(false, "你的易班账户暂不支持实名认证");
-                    }
-                    //保存用户实名信息
-                    authenticateDataService.SaveSystemAuthenticationData(username, name, number, null);
-                    return new JsonResult(true);
-                }
-                return new JsonResult(false, "用户登录凭证过期，请重新登录");
-
             //上传身份证照片认证
-            case AUTHENTICATE_WITH_UPLOAD_IDENTITY_CARD:
+            case MAINLAND_IDENTITY_CARD:
                 if (file == null || file.isEmpty() || file.getSize() == 0) {
                     return new JsonResult(false, "上传的身份证照片不能为空");
                 }
@@ -125,7 +106,7 @@ public class AuthenticateRestController {
                 String identityNumber = identity.getCode();
                 //校验身份证信息
                 authenticateService.VerifyIdentityCard(name, identityNumber);
-                authenticateDataService.SaveSystemAuthenticationData(username, name, null, identityNumber);
+                authenticateDataService.SaveSystemAuthenticationData(username, name, identityNumber);
                 return new JsonResult(true);
 
             default:

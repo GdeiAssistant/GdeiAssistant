@@ -6,25 +6,19 @@ import org.apache.ibatis.type.JdbcType;
 
 public interface AuthenticationMapper {
 
-    @Select("select * from authentication where username=#{username} and is_deleted=0")
+    @Select("select identity_code,username,type from authentication where username=#{username}")
     @Results(id = "Authentication", value = {
             @Result(property = "identityCode", column = "identity_code"),
             @Result(property = "username", column = "username"),
-            @Result(property = "realname", column = "realname"),
-            @Result(property = "identityNumber", column = "identity_number"),
-            @Result(property = "schoolNumber", column = "school_number"),
-            @Result(property = "method", column = "method", jdbcType = JdbcType.TINYINT, javaType = Integer.class)
+            @Result(property = "type", column = "type", jdbcType = JdbcType.TINYINT, javaType = Integer.class)
     })
     public Authentication selectAuthentication(String username);
 
-    @Insert("insert into authentication (identity_code,username,realname,identity_number,school_number" +
-            ",gmt_create,gmt_modified,method,is_deleted)" +
-            " values (#{identityCode},#{username},#{realname},#{identityNumber},#{schoolNumber}" +
-            ",now(),now(),#{method},0)")
+    @Insert("insert into authentication (identity_code,salt,username,gmt_create,gmt_modified,type)" +
+            " values (#{identityCode},#{salt},#{username},now(),now(),#{type})")
     public void insertAuthentication(Authentication authentication);
 
-    @Update("update authentication set realname=#{realname},identity_number=#{identityNumber},school_number=#{schoolNumber}" +
-            ",gmt_modified=now(),method=#{method},is_deleted=0 where username=#{username}")
+    @Update("update authentication set identity_code=#{identityCode},salt=#{salt},gmt_modified=now(),type=#{type},where username=#{username}")
     public void updateAuthentication(Authentication authentication);
 
     @Delete("delete from authentication where username=#{username}")

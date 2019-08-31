@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gdeiassistant_log
 -- ------------------------------------------------------
--- Server version	8.0.16
+-- Server version	8.0.17
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
- SET NAMES utf8 ;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -29,7 +29,7 @@ USE `gdeiassistant_log`;
 
 DROP TABLE IF EXISTS `charge_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `charge_log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '校园卡充值记录编号ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
@@ -54,7 +54,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `close_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `close_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '注销账户记录编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户原账户用户名',
@@ -87,7 +87,7 @@ USE `gdeiassistant_data`;
 
 DROP TABLE IF EXISTS `announcement`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `announcement` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '通知公告ID',
   `title` varchar(50) NOT NULL COMMENT '通知公告标题',
@@ -112,7 +112,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `electricfees`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `electricfees` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '电费记录主键ID',
   `year` smallint(4) NOT NULL COMMENT '年份',
@@ -147,7 +147,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `reading`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reading` (
   `id` varchar(43) NOT NULL COMMENT '专题阅读信息主键ID',
   `title` varchar(50) NOT NULL COMMENT '专题阅读信息标题',
@@ -173,7 +173,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `yellow_page`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `yellow_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '黄页信息主键ID',
   `type_code` int(11) NOT NULL COMMENT '类别',
@@ -196,7 +196,7 @@ CREATE TABLE `yellow_page` (
 
 LOCK TABLES `yellow_page` WRITE;
 /*!40000 ALTER TABLE `yellow_page` DISABLE KEYS */;
-INSERT INTO `yellow_page` VALUES (341,11,'消防报警','国家','119',NULL,NULL,NULL,NULL),(342,11,'医疗急救','国家','120',NULL,NULL,NULL,NULL),(343,11,'交通事故报警','国家','122',NULL,NULL,NULL,NULL),(344,11,'短信报警','国家','12110',NULL,NULL,NULL,NULL),(345,10,'中共中央纪律检查委员会纪检监察机关举报','党政','12388',NULL,'北京市西城区永定门内西街甲2号',NULL,'http://www.12388.gov.cn/'),(346,10,'中共中央组织部用人选拔问题举报','党政','12380',NULL,NULL,NULL,'http://www.12380.gov.cn/'),(347,10,'国家邮政局申诉','国家',NULL,NULL,NULL,NULL,'http://sswz.spb.gov.cn/'),(348,10,'国家工业和信息化部电信用户申诉','国家','12300',NULL,'北京市西城区月坛南街11号电信用户申诉受理中心','accept@chinatcc.gov.cn','http://www.chinatcc.gov.cn:8080/cms/shensus/'),(349,10,'国家教育部统一监督举报','国家','010-66092315',NULL,NULL,'12391@moe.edu.cn','http://www.moe.gov.cn/jyb_hygq/hygq_tsjb/201505/t20150520_184529.html'),(350,10,'国家信访局投诉和建议','国家','010—68015310',NULL,'北京市西城区月坛南街8号',NULL,'http://wsxf.gjxfj.gov.cn/zfp/webroot/index.html'),(351,10,'国家工商总局消费者维权申诉','国家','12315',NULL,NULL,NULL,'http://www.315.gov.cn'),(352,10,'广州市人民政府服务','市政','12345',NULL,NULL,NULL,'http://gz12345.gz.gov.cn/'),(353,1,'心理健康教育与辅导中心（海珠校区）','海珠','34114108',NULL,'田家炳大楼2楼',NULL,NULL),(354,1,'心理健康教育与辅导中心（花都校区）','花都','36967712',NULL,'花都校区实验楼205',NULL,NULL),(355,1,'心灵之约（海珠校区）','海珠','34113456',NULL,'学生宿舍4栋1楼，党员工作站内',NULL,NULL),(356,1,'心灵之约（花都校区）','花都','34113987',NULL,'学生宿舍4栋1楼，党员工作站内',NULL,NULL),(357,2,'宿舍管理科','海珠','34113723',NULL,'学生宿舍4栋007、008',NULL,NULL),(358,2,'物业服务中心','花都','18011902709',NULL,'学生宿舍1栋1楼',NULL,NULL),(359,3,'网络中心（海珠校区）','海珠','34113702',NULL,'综合楼B2203',NULL,'http://web.gdei.edu.cn/nic/'),(360,3,'网络中心（花都校区）','花都','36967722',NULL,'图书馆220',NULL,NULL),(361,4,'党代表工作室（海珠校区）','海珠','34113023',NULL,'综合楼18楼1806',NULL,NULL),(362,4,'党代表工作室（花都校区）','花都','36967719',NULL,'图书馆708',NULL,NULL),(363,4,'党政办公室','海珠','34113736',NULL,'综合楼15楼',NULL,'http://web.gdei.edu.cn/xyb/'),(364,5,'监控中心（紧急事务报告）','花都','36967733',NULL,NULL,NULL,NULL),(365,5,'物业安保24小时值班','花都','36967733',NULL,NULL,NULL,NULL),(366,5,'电梯应急救援（海珠校区）','海珠','96333',NULL,NULL,NULL,NULL),(367,5,'电梯应急救援','花都','18837490602','18837490597',NULL,NULL,NULL),(368,5,'医务室（海珠校区）','海珠','34113271',NULL,'学生宿舍',NULL,NULL),(369,5,'医务室（花都校区）','花都','36967710',NULL,'学生宿舍2栋1楼',NULL,NULL),(370,5,'医保办','海珠','34113511',NULL,NULL,NULL,NULL),(371,6,'水电中心值班处','海珠','34113363',NULL,NULL,NULL,NULL),(372,6,'卡务中心','花都','36967715',NULL,'学生宿舍1栋1楼',NULL,NULL),(373,6,'5栋宿舍楼送水','海珠','15920841618',NULL,'学生宿舍5栋',NULL,NULL),(374,6,'培训楼招待处','海珠','34113500',NULL,'培训楼',NULL,NULL),(375,6,'体育中心','海珠','34113643','34113232','体育中心',NULL,NULL),(376,7,'后勤基建处（海珠校区）','海珠','34113274',NULL,'综合楼9楼',NULL,'http://web.gdei.edu.cn/hqc/'),(377,7,'后勤基建处（花都校区）','花都','36967702',NULL,'图书馆705',NULL,'http://web.gdei.edu.cn/hqc/'),(378,7,'饭堂负责人（海珠校区）','海珠','13380052368',NULL,NULL,NULL,NULL),(379,7,'饭堂负责人（花都校区第一饭堂）','花都','13533936083',NULL,NULL,NULL,NULL),(380,7,'饭堂负责人（花都校区第二饭堂）','花都','15697632188',NULL,NULL,NULL,NULL),(381,7,'饭堂负责人（花都校区第三饭堂）','花都','13725408927',NULL,NULL,NULL,NULL),(382,7,'图书馆（海珠校区）','海珠','34113372',NULL,'图书馆大楼',NULL,'http://lib.gdei.edu.cn/'),(383,7,'图书馆（花都校区）','花都','39697731',NULL,'图书馆3楼大厅',NULL,'http://lib.gdei.edu.cn/'),(384,7,'教务处（海珠校区）','海珠','34113407','34113249','综合楼13楼','jwc@gdei.edu.cn','http://web.gdei.edu.cn/jwc/'),(385,7,'教务处（花都校区）','花都','36967708',NULL,'图书馆703',NULL,'http://web.gdei.edu.cn/jwc/'),(386,7,'财务处（海珠校区）','海珠','34113275',NULL,'综合楼14楼',NULL,'http://web.gdei.edu.cn/cwc/'),(387,7,'财务处（花都校区）','花都','36967721',NULL,'学生宿舍3栋1楼',NULL,'http://web.gdei.edu.cn/cwc/'),(388,7,'学生工作部（处）（海珠校区）','海珠','34113360',NULL,'综合楼12楼',NULL,'http://web.gdei.edu.cn/xsc/'),(389,7,'学生工作部（处）（花都校区）','花都','36967703',NULL,'图书馆702',NULL,'http://web.gdei.edu.cn/xsc/'),(390,7,'团委（海珠校区）','海珠','34113325',NULL,'综合楼12楼',NULL,'http://web.gdei.edu.cn/tw/'),(391,7,'团委（花都校区）','花都','36967703',NULL,'图书馆702',NULL,'http://web.gdei.edu.cn/tw/'),(392,8,'招生办公室','海珠','34113327',NULL,'综合楼12楼',NULL,'http://web.gdei.edu.cn/zsb/'),(393,8,'纪检监察处','海珠','34113624',NULL,'综合楼18楼','jj@gdei.edu.cn','http://web.gdei.edu.cn/jwb/'),(394,8,'就业指导中心','海珠','34114466',NULL,'综合楼12楼',NULL,'http://210.38.64.162:9000/job'),(395,9,'就业创业咨询预约（海珠校区）','海珠','34113716',NULL,'综合楼12楼1211室','jyzd@gdei.edu.cn',NULL),(396,9,'就业创业咨询预约（花都校区）','花都','36967716',NULL,'图书馆2楼216室','jyzd@gdei.edu.cn',NULL),(397,9,'教育学院','海珠','34113297',NULL,NULL,NULL,'http://web.gdei.edu.cn/jyx/'),(398,9,'物理与信息工程系','海珠','34113256',NULL,NULL,NULL,'http://web.gdei.edu.cn/wlx/'),(399,9,'生物与食品工程学院','海珠','34113257',NULL,NULL,NULL,'http://web.gdei.edu.cn/swx/'),(400,9,'体育学院','海珠','34113269',NULL,NULL,NULL,'http://web.gdei.edu.cn/tyx/'),(401,9,'中文系','花都','36967743',NULL,NULL,NULL,'http://web.gdei.edu.cn/zwx/'),(402,9,'政法系','花都','34113290','34113397',NULL,NULL,'http://web.gdei.edu.cn/zfx/'),(403,9,'外语系','花都','36967750','34113295','实验楼509',NULL,'http://web.gdei.edu.cn/wyx/'),(404,9,'数学系','花都','34113296','36967738',NULL,NULL,'http://web.gdei.edu.cn/sxx/'),(405,9,'化学系','花都','36967768','34113456',NULL,NULL,'http://web.gdei.edu.cn/hxx/'),(406,9,'计算机科学系','花都','34115714','36967761',NULL,NULL,'http://web.gdei.edu.cn/jsjx/'),(407,9,'音乐系','花都','36967776','34114436',NULL,NULL,'http://web.gdei.edu.cn/yyx/'),(408,9,'美术学院','花都','36967771','34113634',NULL,NULL,'http://web.gdei.edu.cn/msx/');
+INSERT INTO `yellow_page` VALUES (341,11,'消防报警','国家','119',NULL,NULL,NULL,NULL),(342,11,'医疗急救','国家','120',NULL,NULL,NULL,NULL),(343,11,'交通事故报警','国家','122',NULL,NULL,NULL,NULL),(344,11,'短信报警','国家','12110',NULL,NULL,NULL,NULL),(347,10,'国家邮政局申诉','国家',NULL,NULL,NULL,NULL,'http://sswz.spb.gov.cn/'),(348,10,'国家工业和信息化部电信用户申诉','国家','12300',NULL,'北京市西城区月坛南街11号电信用户申诉受理中心','accept@chinatcc.gov.cn','http://www.chinatcc.gov.cn:8080/cms/shensus/'),(349,10,'国家教育部统一监督举报','国家','010-66092315',NULL,NULL,'12391@moe.edu.cn','http://www.moe.gov.cn/jyb_hygq/hygq_tsjb/201505/t20150520_184529.html'),(350,10,'国家信访局投诉和建议','国家','010—68015310',NULL,'北京市西城区月坛南街8号',NULL,'http://wsxf.gjxfj.gov.cn/zfp/webroot/index.html'),(351,10,'国家工商总局消费者维权申诉','国家','12315',NULL,NULL,NULL,'http://www.315.gov.cn'),(352,10,'广州市人民政府服务','市政','12345',NULL,NULL,NULL,'http://gz12345.gz.gov.cn/'),(353,1,'心理健康教育与辅导中心（海珠校区）','海珠','34114108',NULL,'田家炳大楼2楼',NULL,NULL),(354,1,'心理健康教育与辅导中心（花都校区）','花都','36967712',NULL,'花都校区实验楼205',NULL,NULL),(355,1,'心灵之约（海珠校区）','海珠','34113456',NULL,'学生宿舍4栋1楼，党员工作站内',NULL,NULL),(356,1,'心灵之约（花都校区）','花都','34113987',NULL,'学生宿舍4栋1楼，党员工作站内',NULL,NULL),(357,2,'宿舍管理科','海珠','34113723',NULL,'学生宿舍4栋007、008',NULL,NULL),(358,2,'物业服务中心','花都','18011902709',NULL,'学生宿舍1栋1楼',NULL,NULL),(359,3,'网络中心（海珠校区）','海珠','34113702',NULL,'综合楼B2203',NULL,'http://web.gdei.edu.cn/nic/'),(360,3,'网络中心（花都校区）','花都','36967722',NULL,'图书馆220',NULL,NULL),(361,4,'党代表工作室（海珠校区）','海珠','34113023',NULL,'综合楼18楼1806',NULL,NULL),(362,4,'党代表工作室（花都校区）','花都','36967719',NULL,'图书馆708',NULL,NULL),(363,4,'党政办公室','海珠','34113736',NULL,'综合楼15楼',NULL,'http://web.gdei.edu.cn/xyb/'),(364,5,'监控中心（紧急事务报告）','花都','36967733',NULL,NULL,NULL,NULL),(365,5,'物业安保24小时值班','花都','36967733',NULL,NULL,NULL,NULL),(366,5,'电梯应急救援（海珠校区）','海珠','96333',NULL,NULL,NULL,NULL),(367,5,'电梯应急救援','花都','18837490602','18837490597',NULL,NULL,NULL),(368,5,'医务室（海珠校区）','海珠','34113271',NULL,'学生宿舍',NULL,NULL),(369,5,'医务室（花都校区）','花都','36967710',NULL,'学生宿舍2栋1楼',NULL,NULL),(370,5,'医保办','海珠','34113511',NULL,NULL,NULL,NULL),(371,6,'水电中心值班处','海珠','34113363',NULL,NULL,NULL,NULL),(372,6,'卡务中心','花都','36967715',NULL,'学生宿舍1栋1楼',NULL,NULL),(373,6,'5栋宿舍楼送水','海珠','15920841618',NULL,'学生宿舍5栋',NULL,NULL),(374,6,'培训楼招待处','海珠','34113500',NULL,'培训楼',NULL,NULL),(375,6,'体育中心','海珠','34113643','34113232','体育中心',NULL,NULL),(376,7,'后勤基建处（海珠校区）','海珠','34113274',NULL,'综合楼9楼',NULL,'http://web.gdei.edu.cn/hqc/'),(377,7,'后勤基建处（花都校区）','花都','36967702',NULL,'图书馆705',NULL,'http://web.gdei.edu.cn/hqc/'),(378,7,'饭堂负责人（海珠校区）','海珠','13380052368',NULL,NULL,NULL,NULL),(379,7,'饭堂负责人（花都校区第一饭堂）','花都','13533936083',NULL,NULL,NULL,NULL),(380,7,'饭堂负责人（花都校区第二饭堂）','花都','15697632188',NULL,NULL,NULL,NULL),(381,7,'饭堂负责人（花都校区第三饭堂）','花都','13725408927',NULL,NULL,NULL,NULL),(382,7,'图书馆（海珠校区）','海珠','34113372',NULL,'图书馆大楼',NULL,'http://lib.gdei.edu.cn/'),(383,7,'图书馆（花都校区）','花都','39697731',NULL,'图书馆3楼大厅',NULL,'http://lib.gdei.edu.cn/'),(384,7,'教务处（海珠校区）','海珠','34113407','34113249','综合楼13楼','jwc@gdei.edu.cn','http://web.gdei.edu.cn/jwc/'),(385,7,'教务处（花都校区）','花都','36967708',NULL,'图书馆703',NULL,'http://web.gdei.edu.cn/jwc/'),(386,7,'财务处（海珠校区）','海珠','34113275',NULL,'综合楼14楼',NULL,'http://web.gdei.edu.cn/cwc/'),(387,7,'财务处（花都校区）','花都','36967721',NULL,'学生宿舍3栋1楼',NULL,'http://web.gdei.edu.cn/cwc/'),(388,7,'学生工作部（处）（海珠校区）','海珠','34113360',NULL,'综合楼12楼',NULL,'http://web.gdei.edu.cn/xsc/'),(389,7,'学生工作部（处）（花都校区）','花都','36967703',NULL,'图书馆702',NULL,'http://web.gdei.edu.cn/xsc/'),(390,7,'团委（海珠校区）','海珠','34113325',NULL,'综合楼12楼',NULL,'http://web.gdei.edu.cn/tw/'),(391,7,'团委（花都校区）','花都','36967703',NULL,'图书馆702',NULL,'http://web.gdei.edu.cn/tw/'),(392,8,'招生办公室','海珠','34113327',NULL,'综合楼12楼',NULL,'http://web.gdei.edu.cn/zsb/'),(393,8,'纪检监察处','海珠','34113624',NULL,'综合楼18楼','jj@gdei.edu.cn','http://web.gdei.edu.cn/jwb/'),(394,8,'就业指导中心','海珠','34114466',NULL,'综合楼12楼',NULL,'http://210.38.64.162:9000/job'),(395,9,'就业创业咨询预约（海珠校区）','海珠','34113716',NULL,'综合楼12楼1211室','jyzd@gdei.edu.cn',NULL),(396,9,'就业创业咨询预约（花都校区）','花都','36967716',NULL,'图书馆2楼216室','jyzd@gdei.edu.cn',NULL),(397,9,'教育学院','海珠','34113297',NULL,NULL,NULL,'http://web.gdei.edu.cn/jyx/'),(398,9,'物理与信息工程系','海珠','34113256',NULL,NULL,NULL,'http://web.gdei.edu.cn/wlx/'),(399,9,'生物与食品工程学院','海珠','34113257',NULL,NULL,NULL,'http://web.gdei.edu.cn/swx/'),(400,9,'体育学院','海珠','34113269',NULL,NULL,NULL,'http://web.gdei.edu.cn/tyx/'),(401,9,'中文系','花都','36967743',NULL,NULL,NULL,'http://web.gdei.edu.cn/zwx/'),(402,9,'政法系','花都','34113290','34113397',NULL,NULL,'http://web.gdei.edu.cn/zfx/'),(403,9,'外语系','花都','36967750','34113295','实验楼509',NULL,'http://web.gdei.edu.cn/wyx/'),(404,9,'数学系','花都','34113296','36967738',NULL,NULL,'http://web.gdei.edu.cn/sxx/'),(405,9,'化学系','花都','36967768','34113456',NULL,NULL,'http://web.gdei.edu.cn/hxx/'),(406,9,'计算机科学系','花都','34115714','36967761',NULL,NULL,'http://web.gdei.edu.cn/jsjx/'),(407,9,'音乐系','花都','36967776','34114436',NULL,NULL,'http://web.gdei.edu.cn/yyx/'),(408,9,'美术学院','花都','36967771','34113634',NULL,NULL,'http://web.gdei.edu.cn/msx/');
 /*!40000 ALTER TABLE `yellow_page` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +206,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `yellow_page_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `yellow_page_type` (
   `type_code` int(11) NOT NULL AUTO_INCREMENT,
   `type_name` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
@@ -238,7 +238,7 @@ USE `gdeiassistant`;
 
 DROP TABLE IF EXISTS `access`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `access` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '权限表ID',
   `user_group` tinyint(2) NOT NULL COMMENT '用户组ID',
@@ -246,7 +246,7 @@ CREATE TABLE `access` (
   PRIMARY KEY (`id`),
   KEY `accessUserGroup_idx` (`user_group`),
   CONSTRAINT `accessUserGroup` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=155 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,22 +265,20 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `authentication`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `authentication` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '实名认证记录编号ID',
-  `identity_code` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '实名人唯一标识ID',
+  `identity_code` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '实名人唯一标识ID',
+  `salt` varchar(6) COLLATE utf8mb4_bin NOT NULL COMMENT '盐值',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `realname` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '姓名',
-  `identity_number` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '身份证号',
-  `school_number` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '学号',
-  `gmt_create` datetime DEFAULT NULL COMMENT '记录创建时间',
-  `gmt_modified` datetime DEFAULT NULL COMMENT '记录更新时间',
-  `method` tinyint(1) DEFAULT NULL COMMENT '实名认证方法',
-  `is_deleted` tinyint(1) DEFAULT NULL COMMENT '记录标记删除状态',
+  `gmt_create` datetime NOT NULL COMMENT '记录创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '记录更新时间',
+  `type` tinyint(1) NOT NULL COMMENT '实名认证方式',
   PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `username_UNIQUE` (`username`),
   KEY `authenticationUsername_idx` (`username`),
   CONSTRAINT `authenticationUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -289,7 +287,7 @@ CREATE TABLE `authentication` (
 
 LOCK TABLES `authentication` WRITE;
 /*!40000 ALTER TABLE `authentication` DISABLE KEYS */;
-INSERT INTO `authentication` VALUES (1,'6376696892374389d5106ad04a7915ab76a68fb0','gdeiassistant','李*懿','440***********2826','14*******12','2019-06-06 05:41:16','2019-06-06 05:47:27',0,0);
+INSERT INTO `authentication` VALUES (2,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','gdeiassistant','2019-08-31 14:01:30','2019-08-31 14:01:30',0);
 /*!40000 ALTER TABLE `authentication` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -299,7 +297,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `cet`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cet` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `number` bigint(15) DEFAULT NULL COMMENT '四六级准考证号',
@@ -323,7 +321,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `dating_message`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dating_message` (
   `message_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '消息编号ID',
   `pick_id` int(11) NOT NULL COMMENT '撩一下编号ID',
@@ -351,7 +349,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `dating_pick`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dating_pick` (
   `pick_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '撩一下编号ID',
   `profile_id` int(11) NOT NULL COMMENT '卖室友信息编号ID',
@@ -379,7 +377,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `dating_profile`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dating_profile` (
   `profile_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '卖室友信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
@@ -413,7 +411,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `delivery_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `delivery_order` (
   `order_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '订单主键ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '下单者用户名',
@@ -445,7 +443,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `delivery_trade`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `delivery_trade` (
   `trade_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '交易主键ID',
   `order_id` int(11) NOT NULL COMMENT '订单ID',
@@ -473,7 +471,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ershou`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ershou` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '二手交易信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
@@ -507,7 +505,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `gender`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `gender` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `gender` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '自定义性别',
@@ -531,7 +529,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `graduation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `graduation` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `program` tinyint(1) DEFAULT NULL COMMENT '毕业用户账号处理方案',
@@ -555,7 +553,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `introduction`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `introduction` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `introduction` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '个人简介内容',
@@ -580,7 +578,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `lostandfound`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lostandfound` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '失物招领信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
@@ -615,7 +613,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `privacy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `privacy` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `is_gender_open` tinyint(1) NOT NULL COMMENT '公开性别',
@@ -653,7 +651,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `profile`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `profile` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `kickname` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
@@ -691,7 +689,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `secret_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `secret_comment` (
   `id` int(10) unsigned NOT NULL COMMENT '校园树洞评论编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
@@ -720,7 +718,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `secret_content`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `secret_content` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '校园树洞信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
@@ -751,7 +749,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `secret_like`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `secret_like` (
   `id` int(10) unsigned NOT NULL COMMENT '校园树洞信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
@@ -777,7 +775,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `password` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '密码',
@@ -805,7 +803,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_group` (
   `id` tinyint(2) NOT NULL AUTO_INCREMENT COMMENT '用户组ID',
   `description` varchar(10) NOT NULL COMMENT '用户组描述',
@@ -829,7 +827,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `wechat_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `wechat_user` (
   `wechat_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '微信唯一标识ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
@@ -854,7 +852,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `yiban_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `yiban_user` (
   `user_id` int(11) NOT NULL COMMENT '易班唯一标识ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
@@ -882,4 +880,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-23  4:03:38
+-- Dump completed on 2019-08-31 15:49:24

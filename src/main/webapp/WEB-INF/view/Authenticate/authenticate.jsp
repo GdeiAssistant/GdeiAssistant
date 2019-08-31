@@ -81,14 +81,6 @@
 
         </div>
     </div>
-    <div id="nameCell" class="weui-cell" style="display: none;" href="javascript:">
-        <div class="weui-cell__bd">
-            <p id="authenticationName">姓名</p>
-        </div>
-        <div id="name" class="weui-cell__ft">
-
-        </div>
-    </div>
 </div>
 
 <div class="weui-cells__title">快捷认证</div>

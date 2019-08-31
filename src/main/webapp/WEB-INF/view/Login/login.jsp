@@ -30,6 +30,7 @@
     <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_pink.css">
     <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_blue.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script type="application/javascript" src="/js/common/themeLoader.js"></script>
     <script type="text/javascript">
@@ -38,6 +39,18 @@
         $(function () {
             FastClick.attach(document.body);
         });
+
+        //请求教师账号
+        function requestTeacherAccount() {
+            $.confirm({
+                title: '申请教师账号',
+                text: '提供教师工作证等身份证明，即可申请教师账号。教师账号目前仅支持查询教师课表功能，后续将开放更多功能供教师用户使用。',
+                onOK: function () {
+                    window.location.href = "mailto:support@gdeiassistant.cn?subject=申请教师用户账号&body=请补全此模板邮件中的空缺信息，并通过附件上传教师工作证基本身份信息页的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
+                        "你提供的信息将被严格保密，并在申请教师账号审核完成后的48小时内进行删除。%0d%0a%0d%0a用户名：（教务系统中使用的用户名，若无则不需填写）%0d%0a姓名：%0d%0a证件编号：%0d%0a工作部门：%0d%0a入职时间：%0d%0a";
+                }
+            });
+        }
 
         //提交表单数据登录
         function postLoginForm() {
@@ -81,8 +94,10 @@
 
 <body>
 
+<div class="weui_cells_title" style="float: right" onclick="requestTeacherAccount()">申请教师账号</div>
+
 <div class="hd">
-    <h1 class="page_title">广东二师助手</h1>
+    <h1 class="page_title" style="clear:both;margin-top: 35px">广东二师助手</h1>
     <p class="page_desc">请登录教务系统</p>
 </div>
 

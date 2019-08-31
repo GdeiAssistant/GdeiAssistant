@@ -13,7 +13,12 @@ import java.util.Date;
 public class Authentication implements Serializable, Entity {
 
     /**
-     * 用户身份唯一标识
+     * 实名认证记录ID
+     */
+    private Integer id;
+
+    /**
+     * 用户身份唯一标识，由SHA512(用户证件号+盐值)得到
      */
     private String identityCode;
 
@@ -23,19 +28,9 @@ public class Authentication implements Serializable, Entity {
     private String username;
 
     /**
-     * 用户实名认证姓名
+     * SHA512哈希的盐值
      */
-    private String realname;
-
-    /**
-     * 用户18位身份证号码
-     */
-    private String identityNumber;
-
-    /**
-     * 学生校园学号
-     */
-    private String schoolNumber;
+    private String salt;
 
     /**
      * 实名认证信息创建时间
@@ -50,7 +45,7 @@ public class Authentication implements Serializable, Entity {
     /**
      * 实名认证方式
      */
-    private Integer method;
+    private Integer type;
 
     public String getIdentityCode() {
         return identityCode;
@@ -68,30 +63,6 @@ public class Authentication implements Serializable, Entity {
         this.username = username;
     }
 
-    public String getRealname() {
-        return realname;
-    }
-
-    public void setRealname(String realname) {
-        this.realname = realname;
-    }
-
-    public String getIdentityNumber() {
-        return identityNumber;
-    }
-
-    public void setIdentityNumber(String identityNumber) {
-        this.identityNumber = identityNumber;
-    }
-
-    public String getSchoolNumber() {
-        return schoolNumber;
-    }
-
-    public void setSchoolNumber(String schoolNumber) {
-        this.schoolNumber = schoolNumber;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -107,11 +78,28 @@ public class Authentication implements Serializable, Entity {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
-    public Integer getMethod() {
-        return method;
+
+    public String getSalt() {
+        return salt;
     }
 
-    public void setMethod(Integer method) {
-        this.method = method;
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

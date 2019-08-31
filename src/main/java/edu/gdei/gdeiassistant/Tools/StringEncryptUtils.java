@@ -71,4 +71,14 @@ public class StringEncryptUtils {
     public static String SHA256HexString(String text) {
         return DigestUtils.sha256Hex(text);
     }
+
+    /**
+     * SHA512哈希映射字符串，返回映射后的结果
+     *
+     * @param text
+     * @return
+     */
+    public static String SHA512HexString(String text) {
+        return DigestUtils.sha512Hex(text);
+    }
 }

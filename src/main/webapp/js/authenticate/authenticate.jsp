@@ -33,14 +33,10 @@
             success: function (result) {
                 if (result.success) {
                     if (result.data) {
-                        $("#name").text(result.data.realname);
                         $("#authenticateState").text("已认证");
-                        $("#nameCell").show();
                         $("#removeAuthentication").show();
                     } else {
-                        $("#name").text("");
                         $("#authenticateState").text("未认证");
-                        $("#nameCell").hide();
                         $("#removeAuthentication").hide();
                         //弹出提示进行实名认证的弹窗
                         $.alert({
@@ -61,57 +57,6 @@
                 }
             }
         })
-    }
-
-    //与易班校方认证信息进行同步
-    function authenticateWithYiBan() {
-        <c:choose>
-        <c:when test="${sessionScope.yiBanUserID!=null}">
-        //易班登录
-        $.confirm({
-            text: '我们将依照《隐私政策》保护你的个人信息，若你点击确定按钮，将视为你已阅读并同意《隐私政策》',
-            title: '授权广东二师助手获取你的易班用户信息',
-            onOK: function () {
-                $("#loadingToast, .weui_mask").show();
-                $.ajax({
-                    url: '/api/authentication',
-                    type: 'POST',
-                    data: {
-                        method: 2
-                    },
-                    success: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
-                        if (result.success) {
-                            $.alert({
-                                text: '已完成实名认证，你现在可以使用广东二师助手所有功能了',
-                                title: '实名认证成功',
-                                onOK: function () {
-                                    loadAuthenticationData();
-                                }
-                            });
-                        } else {
-                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
-                        }
-                    },
-                    error: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
-                        if (result.status) {
-                            $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
-                        } else {
-                            $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
-                        }
-                    }
-                });
-            }
-        });
-        </c:when>
-        <c:otherwise>
-        $.alert({
-            text: '请使用易班客户端登录并完成认证',
-            title: '错误提示'
-        });
-        </c:otherwise>
-        </c:choose>
     }
 
     //与教务系统身份认证信息进行同步

@@ -94,10 +94,8 @@
 
 <body>
 
-<div class="weui_cells_title" style="float: right" onclick="requestTeacherAccount()">申请教师账号</div>
-
 <div class="hd">
-    <h1 class="page_title" style="clear:both;margin-top: 35px">广东二师助手</h1>
+    <h1 class="page_title">广东二师助手</h1>
     <p class="page_desc">请登录教务系统</p>
 </div>
 
@@ -144,6 +142,14 @@
     </a>和
     <a class="page_desc"
        onclick="window.location.href = '/policy/privacy'">《隐私政策》
+    </a>
+</p>
+
+<br>
+
+<p class="page_desc">教师用户首次使用请点击
+    <a class="page_desc"
+       onclick="requestTeacherAccount()">申请教师账号
     </a>
 </p>
 

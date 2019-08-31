@@ -220,7 +220,7 @@
             title: '注意事项',
             onOK: function () {
                 window.location.href = "mailto:support@gdeiassistant.cn?subject=中国大陆证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传军官证、士兵证、外国人永久居留证等中国大陆证件基本身份信息面的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
-                    "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a证件类型：%0d%0a证件号/编号：";
+                    "你提供的信息将被严格保密，并在完成实名认证审核后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a证件类型：%0d%0a证件号/编号：";
             }
         });
     }
@@ -228,19 +228,19 @@
     //使用港澳身份证件联系客服认证
     function authenticateWithHongKongAndMacaoIDCard() {
         window.location.href = "mailto:support@gdeiassistant.cn?subject=香港澳门身份证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传香港澳门身份证基本身份信息面的扫描件或照片，一并发送到support@gdeiassistant.cn。此认证方式同时支持旧版和新版身份证。" +
-            "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a地区：（请填写香港或澳门）%0d%0a证件号：";
+            "你提供的信息将被严格保密，并在完成实名认证审核后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a地区：（请填写香港或澳门）%0d%0a证件号：";
     }
 
     //使用港澳居民来往内地通行证件联系客服认证
     function authenticateWithHongKongAndMacaoExitAndEntryPermit() {
         window.location.href = "mailto:support@gdeiassistant.cn?subject=港澳居民来往内地通行证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传港澳居民来往内地通行证基本身份信息面的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
-            "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a地区：（请填写香港或澳门）%0d%0a证件号：";
+            "你提供的信息将被严格保密，并在完成实名认证审核后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a地区：（请填写香港或澳门）%0d%0a证件号：";
     }
 
     //使用台湾居民来往大陆通行证认证件联系客服认证
     function authenticateWithTaiwanExitAndEntryPermit() {
         window.location.href = "mailto:support@gdeiassistant.cn?subject=台湾居民来往大陆通行证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传台湾居民来往大陆通行证基本身份信息面的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
-            "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a证件号：";
+            "你提供的信息将被严格保密，并在完成实名认证审核后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a证件号：";
     }
 
     //使用护照证件联系客服认证
@@ -250,7 +250,7 @@
             title: '注意事项',
             onOK: function () {
                 window.location.href = "mailto:support@gdeiassistant.cn?subject=海外居民护照证件实名认证&body=请补全此模板邮件中的空缺信息，并通过附件上传海外护照基本身份信息页和入境盖章页的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
-                    "你提供的信息将被严格保密，并在完成实名认证后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a国籍（地区）：%0d%0a证件号：";
+                    "你提供的信息将被严格保密，并在完成实名认证审核后的48小时内进行删除。%0d%0a%0d%0a用户名：${sessionScope.username}%0d%0a用户组：" + userGroupMap[${sessionScope.group-1}] + "%0d%0a姓名：%0d%0a国籍（地区）：%0d%0a证件号：";
             }
         });
     }

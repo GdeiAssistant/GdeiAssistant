@@ -8,6 +8,36 @@ function selectAvatarImage() {
     $("#avatarFileInput").click();
 }
 
+//删除头像文件
+function deleteAvatar() {
+    $.confirm({
+        title: '删除头像',
+        text: '将删除用户上传的头像，并恢复为系统默认头像',
+        onOK: function () {
+            $.ajax({
+                url: "/api/avatar/remove",
+                type: "post",
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    if (result.success === true) {
+                        window.location.reload();
+                    } else {
+                        $.toptip(result.message, 'error');
+                    }
+                },
+                error: function (result) {
+                    if (result.status) {
+                        $.toptip(result.responseJSON.message, 'error');
+                    } else {
+                        $.toptip('网络连接失败,请检查网络连接', 'error');
+                    }
+                }
+            });
+        }
+    });
+}
+
 //压缩后的图片
 var image = new Image();
 

@@ -59,6 +59,12 @@
            class="weui-btn weui-btn_default">查看高清头像</a>
     </p>
     </c:if>
+    <c:if test="${AvatarURL!=null && AvatarURL!=''}">
+    <p class="weui-btn-area">
+        <a onclick="deleteAvatar()" href="javascript:"
+           class="weui-btn weui-btn_default">删除头像</a>
+    </p>
+    </c:if>
 
     <!-- 头像文件上传表单 -->
     <form id="uploadForm" enctype="multipart/form-data">

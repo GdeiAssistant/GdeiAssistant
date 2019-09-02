@@ -59,6 +59,19 @@ public class ProfileRestController {
     }
 
     /**
+     * 删除用户头像图片
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/api/avatar/remove", method = RequestMethod.POST)
+    public JsonResult DeleteUserAvatar(HttpServletRequest request) {
+        String username = (String) request.getSession().getAttribute("username");
+        userProfileService.DeleteAvatar(username);
+        return new JsonResult(true);
+    }
+
+    /**
      * 更新用户头像图片
      *
      * @param request

@@ -300,6 +300,22 @@ public class UserProfileService {
     }
 
     /**
+     * 重置生日日期
+     *
+     * @param username
+     * @throws Exception
+     */
+    public void ResetBirthday(String username) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setBirthday(null);
+            profileMapper.updateBirthday(profile);
+            return;
+        }
+        throw new UserNotExistException("查询的用户不存在");
+    }
+
+    /**
      * 更新学历信息
      *
      * @param username
@@ -361,6 +377,22 @@ public class UserProfileService {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {
             profile.setEnrollment(enrollment);
+            profileMapper.updateEnrollment(profile);
+            return;
+        }
+        throw new UserNotExistException("查询的用户不存在");
+    }
+
+    /**
+     * 重置入学年份信息
+     *
+     * @param username
+     * @throws Exception
+     */
+    public void ResetEnrollment(String username) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setEnrollment(null);
             profileMapper.updateEnrollment(profile);
             return;
         }

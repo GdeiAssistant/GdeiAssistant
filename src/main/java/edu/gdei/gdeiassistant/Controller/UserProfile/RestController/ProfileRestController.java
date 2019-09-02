@@ -262,11 +262,18 @@ public class ProfileRestController {
      * @return
      */
     @RequestMapping(value = "/api/profile/birthday", method = RequestMethod.POST)
-    public JsonResult UpdateBirthday(HttpServletRequest request, @Validated @Min(1900) @Max(2050) int year
-            , @Validated @Min(1) @Max(12) int month, @Validated @Min(1) @Max(31) int date) throws Exception {
+    public JsonResult UpdateBirthday(HttpServletRequest request, @Validated @Min(1900) @Max(2050) Integer year
+            , @Validated @Min(1) @Max(12) Integer month, @Validated @Min(1) @Max(31) Integer date) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
-        userProfileService.UpdateBirthday(username, year, month, date);
-        return new JsonResult(true);
+        if (year == null && month == null && date == null) {
+            userProfileService.ResetBirthday(username);
+            return new JsonResult(true);
+        }
+        if (year != null && month != null && date != null) {
+            userProfileService.UpdateBirthday(username, year, month, date);
+            return new JsonResult(true);
+        }
+        return new JsonResult(false, "请求参数不合法");
     }
 
     /**
@@ -369,12 +376,16 @@ public class ProfileRestController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/profile/enrollment", method = RequestMethod.POST)
-    public JsonResult UpdateEnrollment(HttpServletRequest request, @Validated @NotNull @Min(1955) @RequestParam("year") Integer enrollment) throws Exception {
-        if (enrollment == null || enrollment > LocalDate.now().getYear()) {
+    public JsonResult UpdateEnrollment(HttpServletRequest request, @Validated @Min(1955) @RequestParam(value = "year", required = false) Integer enrollment) throws Exception {
+        if (enrollment != null && enrollment > LocalDate.now().getYear()) {
             return new JsonResult(false, "请求参数不合法");
         }
         String username = (String) request.getSession().getAttribute("username");
-        userProfileService.UpdateEnrollment(username, enrollment);
+        if (enrollment != null) {
+            userProfileService.UpdateEnrollment(username, enrollment);
+        } else {
+            userProfileService.ResetEnrollment(username);
+        }
         return new JsonResult(true);
     }
 

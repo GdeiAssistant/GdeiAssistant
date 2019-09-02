@@ -372,8 +372,8 @@
         $("#changeSchool").popup();
     }
 
-    //修改入学年份
-    function showEnrollmentDialog() {
+    //弹出入学年份选择框
+    function showEnrollmentPicker() {
         var enrollmentPicker = [];
         for (var i = 0; i <= new Date().getFullYear() - 1955; i++) {
             enrollmentPicker[i] = {
@@ -407,6 +407,44 @@
                 });
             }
         });
+    }
+
+    //修改入学年份
+    function showEnrollmentDialog() {
+        if ($("#enrollment_text").text() != '未选择') {
+            $.actions({
+                actions: [{
+                    text: "修改入学年份",
+                    onClick: function () {
+                        showEnrollmentPicker();
+                    }
+                }, {
+                    text: "清除入学年份",
+                    onClick: function () {
+                        $.ajax({
+                            url: "/api/profile/enrollment",
+                            type: 'post',
+                            success: function (updateResult) {
+                                if (updateResult.success === true) {
+                                    loadProfile();
+                                } else {
+                                    showCustomErrorTip(updateResult.message);
+                                }
+                            },
+                            error: function (result) {
+                                if (result.status) {
+                                    showCustomErrorTip(result.responseJSON.message);
+                                } else {
+                                    showNetworkErrorTip();
+                                }
+                            }
+                        });
+                    }
+                }]
+            });
+        } else {
+            showEnrollmentPicker();
+        }
     }
 
     //修改职业信息
@@ -543,8 +581,8 @@
         });
     }
 
-    //修改生日
-    function changeBirthday() {
+    //弹出生日信息选择框
+    function showBirthdayPicker() {
         weui.datePicker({
             start: 1900,
             end: new Date(),
@@ -575,6 +613,44 @@
                 });
             }
         });
+    }
+
+    //修改生日
+    function changeBirthday() {
+        if ($("#age").text() == '未填写') {
+            showBirthdayPicker();
+        } else {
+            $.actions({
+                actions: [{
+                    text: "修改出生日期",
+                    onClick: function () {
+                        showBirthdayPicker();
+                    }
+                }, {
+                    text: "清除出生日期",
+                    onClick: function () {
+                        $.ajax({
+                            url: "/api/profile/birthday",
+                            type: 'post',
+                            success: function (updateResult) {
+                                if (updateResult.success === true) {
+                                    loadProfile();
+                                } else {
+                                    showCustomErrorTip(updateResult.message);
+                                }
+                            },
+                            error: function (result) {
+                                if (result.status) {
+                                    showCustomErrorTip(result.responseJSON.message);
+                                } else {
+                                    showNetworkErrorTip();
+                                }
+                            }
+                        });
+                    }
+                }]
+            });
+        }
     }
 
     //修改学历

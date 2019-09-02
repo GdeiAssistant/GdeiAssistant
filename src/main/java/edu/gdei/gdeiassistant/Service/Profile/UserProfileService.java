@@ -197,8 +197,12 @@ public class UserProfileService {
     public void DeleteAvatar(String username) {
         OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
         if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + ".jpg")) {
-            //删除文件
+            //删除头像文件
             ossClient.deleteObject("gdeiassistant-userdata", "avatar/" + username + ".jpg");
+        }
+        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg")) {
+            //删除高清头像文件
+            ossClient.deleteObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg");
         }
         ossClient.shutdown();
     }

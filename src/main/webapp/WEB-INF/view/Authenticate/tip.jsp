@@ -45,7 +45,7 @@
     <div class="weui-msg__text-area">
         <h2 class="weui-msg__title">未完成实名认证</h2>
         <p class="weui-msg__desc">
-            根据《中华人民共和国网络安全法》第二十四条的规定要求，从2019年8月1日起，用户使用广东二师助手需要首先完成实名认证，完成实名认证后用户才可使用正常使用广东二师助手。</p>
+            根据《中华人民共和国网络安全法》第二十四条的规定要求，用户使用广东二师助手需要首先完成实名认证，完成实名认证后用户才可使用正常使用广东二师助手。</p>
     </div>
     <div class="weui-msg__opr-area">
         <p class="weui-btn-area">

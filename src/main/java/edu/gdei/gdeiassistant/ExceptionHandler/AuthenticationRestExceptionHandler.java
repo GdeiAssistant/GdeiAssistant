@@ -3,6 +3,7 @@ package edu.gdei.gdeiassistant.ExceptionHandler;
 import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
 import edu.gdei.gdeiassistant.Controller.Authenticate.RestController.AuthenticateRestController;
 import edu.gdei.gdeiassistant.Exception.AuthenticationException.*;
+import edu.gdei.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -71,5 +72,11 @@ public class AuthenticationRestExceptionHandler {
     public ResponseEntity HandleIDCardVerifiedException() {
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.ID_CARD_NOT_VERIFIED
                 , false, "身份证信息校验不通过，请联系客服"));
+    }
+
+    @ExceptionHandler(RecognitionException.class)
+    public ResponseEntity HandleRecognitionException() {
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.ID_CARD_RECOGNITION_FAILED
+                , false,"身份证图片识别失败，请确保照片符合上传规范"));
     }
 }

@@ -8,7 +8,7 @@ public class StringToAuthenticationTypeEnumConverter implements Converter<String
     @Override
     public AuthenticationTypeEnum convert(String source) {
         for (AuthenticationTypeEnum authenticationTypeEnum : AuthenticationTypeEnum.values()) {
-            if (authenticationTypeEnum.getType().equals(source)) {
+            if (authenticationTypeEnum.getType().equals(Integer.valueOf(source))) {
                 return authenticationTypeEnum;
             }
         }

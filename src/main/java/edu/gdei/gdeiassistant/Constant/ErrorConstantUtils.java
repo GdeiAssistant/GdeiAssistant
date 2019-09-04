@@ -47,11 +47,14 @@ public class ErrorConstantUtils {
     //实名认证的身份证信息校验不通过
     public static final int ID_CARD_NOT_VERIFIED = 40015;
 
+    //实名认证的身份证信息识别失败
+    public static final int ID_CARD_RECOGNITION_FAILED = 40016;
+
     //用户账号密码错误
-    public static final int PASSWORD_INCORRECT = 40016;
+    public static final int PASSWORD_INCORRECT = 40017;
 
     //查询条件不合法
-    public static final int ERROR_QUERY_CONDITION = 40017;
+    public static final int ERROR_QUERY_CONDITION = 40018;
 
     //权限令牌过期
     public static final int TOKEN_EXPIRED_EXCEPTION = 40101;

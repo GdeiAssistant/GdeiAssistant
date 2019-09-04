@@ -4,7 +4,6 @@ import edu.gdei.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import edu.gdei.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Identity;
 import edu.gdei.gdeiassistant.Service.CloudAPI.AliYunService;
-import edu.gdei.gdeiassistant.Service.CloudAPI.BaiduYunService;
 import edu.gdei.gdeiassistant.Service.CloudAPI.JiSuAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +13,6 @@ public class RecognitionService {
 
     @Autowired
     private AliYunService aliyunService;
-
-    @Autowired
-    private BaiduYunService baiduYunService;
 
     @Autowired
     private JiSuAPIService jiSuAPIService;
@@ -40,18 +36,7 @@ public class RecognitionService {
      * @return
      */
     public String CharacterNumberRecognize(String image) throws RecognitionException {
-        return baiduYunService.CharacterNumberRecognize(image);
-    }
-
-    /**
-     * OCR高精度识别验证码图片的文字，返回文本串
-     *
-     * @param image
-     * @return
-     * @throws RecognitionException
-     */
-    public String AccurateCharacterRecognize(String image) throws RecognitionException {
-        return baiduYunService.AccurateCharacterRecognize(image);
+        return aliyunService.CharacterNumberRecognize(image);
     }
 
     /**
@@ -62,6 +47,6 @@ public class RecognitionService {
      * @throws Exception
      */
     public Identity ParseIdentityCardInfo(String image) throws Exception {
-        return baiduYunService.ParseIdentityCard(image);
+        return aliyunService.ParseIdentityCard(image);
     }
 }

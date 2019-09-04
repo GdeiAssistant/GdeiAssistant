@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Service.CloudAPI;
 
+import edu.gdei.gdeiassistant.Exception.AuthenticationException.IDCardReversedSideException;
 import edu.gdei.gdeiassistant.Exception.AuthenticationException.IDCardVerificationException;
 import edu.gdei.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Identity;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -76,9 +79,8 @@ public class AliYunService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("configure", configure);
         jsonObject.put("image", image);
-        HttpEntity<String> httpEntity = new HttpEntity<>(jsonObject.toString(), httpHeaders);
-        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange("https://tysbgpu.market.alicloudapi.com/api/predict/ocr_general"
-                , HttpMethod.POST, httpEntity, JSONObject.class);
+        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange("http://tysbgpu.market.alicloudapi.com/api/predict/ocr_general"
+                , HttpMethod.POST, new HttpEntity<>(jsonObject, httpHeaders), JSONObject.class);
         JSONObject result = responseEntity.getBody();
         if (result.containsKey("success") && jsonObject.getBoolean("success")) {
             JSONArray jsonArray = jsonObject.getJSONArray("ret");
@@ -102,26 +104,27 @@ public class AliYunService {
     public Identity ParseIdentityCard(String image) throws Exception {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Authorization", "APPCODE " + official_appCode);
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        JSONObject configure = new JSONObject();
-        configure.put("side", "face");
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("configure", configure);
-        jsonObject.put("image", image);
-        HttpEntity<String> httpEntity = new HttpEntity<>(jsonObject.toString(), httpHeaders);
-        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange("https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json"
-                , HttpMethod.POST, httpEntity, JSONObject.class);
-        JSONObject result = responseEntity.getBody();
-        if (result.has("success") && result.getBoolean("success")) {
-            //身份证校验通过，进行解析信息
-            Identity identity = new Identity();
-            identity.setName(result.getString("name"));
-            identity.setCode(result.getString("num"));
-            identity.setSex(result.getString("sex"));
-            identity.setNation(result.getString("nationality"));
-            identity.setAddress(result.getString("address"));
-            identity.setBirthday(result.getString("birth"));
-            return identity;
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("image", "data:image/jpeg;base64," + image);
+        ResponseEntity<String> responseEntity = restTemplate.exchange("https://orcidcard.market.alicloudapi.com/idCardAuto"
+                , HttpMethod.POST, new HttpEntity<>(params, httpHeaders), String.class);
+        JSONObject result = JSONObject.fromObject(responseEntity.getBody());
+        if (result.has("code")) {
+            if (result.getString("code").equals("1")) {
+                //身份证校验通过，进行解析信息
+                Identity identity = new Identity();
+                identity.setName(result.getJSONObject("result").getString("name"));
+                identity.setCode(result.getJSONObject("result").getString("code"));
+                identity.setSex(result.getJSONObject("result").getString("sex"));
+                identity.setNation(result.getJSONObject("result").getString("nation"));
+                identity.setAddress(result.getJSONObject("result").getString("address"));
+                identity.setBirthday(result.getJSONObject("result").getString("birthday"));
+                return identity;
+            } else if (result.getString("code").equals("2")) {
+                //正反面颠倒
+                throw new IDCardReversedSideException("身份证正反面颠倒");
+            }
         }
         throw new RecognitionException("OCR识别失败");
     }

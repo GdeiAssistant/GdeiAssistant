@@ -1,6 +1,7 @@
 package edu.gdei.gdeiassistant.Config;
 
 import edu.gdei.gdeiassistant.Converter.HttpMessageConvert.WeChatMappingJackson2HttpMessageConverter;
+import edu.gdei.gdeiassistant.ErrorHandler.RestTemplateResponseErrorHandler;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -36,6 +37,7 @@ public class ApplicationContextConfig {
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new WeChatMappingJackson2HttpMessageConverter());
+        restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
         return restTemplate;
     }
 
@@ -48,6 +50,7 @@ public class ApplicationContextConfig {
     public AsyncRestTemplate asyncRestTemplate() {
         AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
         asyncRestTemplate.getMessageConverters().add(new WeChatMappingJackson2HttpMessageConverter());
+        asyncRestTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
         return asyncRestTemplate;
     }
 

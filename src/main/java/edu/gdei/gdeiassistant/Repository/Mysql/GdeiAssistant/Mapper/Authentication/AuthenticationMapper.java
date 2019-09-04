@@ -18,7 +18,7 @@ public interface AuthenticationMapper {
             " values (#{identityCode},#{salt},#{username},now(),now(),#{type})")
     public void insertAuthentication(Authentication authentication);
 
-    @Update("update authentication set identity_code=#{identityCode},salt=#{salt},gmt_modified=now(),type=#{type},where username=#{username}")
+    @Update("update authentication set identity_code=#{identityCode},salt=#{salt},gmt_modified=now(),type=#{type} where username=#{username}")
     public void updateAuthentication(Authentication authentication);
 
     @Delete("delete from authentication where username=#{username}")

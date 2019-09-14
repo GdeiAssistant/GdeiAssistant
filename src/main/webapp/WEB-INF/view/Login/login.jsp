@@ -40,18 +40,6 @@
             FastClick.attach(document.body);
         });
 
-        //请求教师账号
-        function requestTeacherAccount() {
-            $.confirm({
-                title: '申请教师账号',
-                text: '提供教师工作证等身份证明，即可申请教师账号。教师账号目前仅支持查询教师课表功能，后续将开放更多功能供教师用户使用。',
-                onOK: function () {
-                    window.location.href = "mailto:support@gdeiassistant.cn?subject=申请教师用户账号&body=请补全此模板邮件中的空缺信息，并通过附件上传教师工作证基本身份信息页的扫描件或照片，一并发送到support@gdeiassistant.cn。" +
-                        "你提供的信息将被严格保密，并在申请教师账号审核完成后的48小时内进行删除。%0d%0a%0d%0a用户名：（教务系统中使用的用户名，若无则不需填写）%0d%0a姓名：%0d%0a证件编号：%0d%0a工作部门：%0d%0a入职时间：%0d%0a";
-                }
-            });
-        }
-
         //提交表单数据登录
         function postLoginForm() {
             if ($("#username").val() === "" || $("#password").val() === "") {
@@ -146,12 +134,6 @@
 </p>
 
 <br>
-
-<p class="page_desc">教师用户首次使用请点击
-    <a class="page_desc"
-       onclick="requestTeacherAccount()">申请教师账号
-    </a>
-</p>
 
 <!-- 登录中弹框 -->
 <div class="weui_mask" style="display: none"></div>

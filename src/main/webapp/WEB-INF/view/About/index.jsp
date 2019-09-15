@@ -118,6 +118,9 @@
                         <a class="dropdown-item" href="https://www.gztlms.com">广州市真光中学</a>
                         <a class="dropdown-item" href="http://www.gz41zx.com">广州市第四十一中学</a>
                         <a class="dropdown-item" href="http://www.hsfz.net.cn">华南师范大学附属中学</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="https://carrotfairy.xyz">萝卜仙女姐姐的衣柜</a>
+                        <a class="dropdown-item" href="https://peachshrubfizz.github.io">站长的个人技术博客</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">

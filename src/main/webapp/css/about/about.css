@@ -2,6 +2,10 @@ body {
     font-size: 0.65rem;
 }
 
+html {
+    visibility: visible;
+}
+
 .download {
     margin: 0 auto;
     text-align: center;

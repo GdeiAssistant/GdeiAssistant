@@ -97,7 +97,7 @@
         <i style="background: url(/img/function/student.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>学信查询</p>
     </div>
-    <div id="volunteer" style="display: none" onclick="window.location.href='https://125cn.net/mobile'">
+    <div id="volunteer" style="display: none" onclick="window.location.href='/volunteer'">
         <i style="background: url(/img/function/volunteer.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>志愿活动</p>
     </div>

@@ -1,0 +1,236 @@
+<Attributions>
+    <Attribution Flag="🇦🇱" Name="阿尔巴尼亚" Code="355"/>
+    <Attribution Flag="🇩🇿" Name="阿尔及利亚" Code="213"/>
+    <Attribution Flag="🇦🇫" Name="阿富汗" Code="93"/>
+    <Attribution Flag="🇦🇷" Name="阿根廷" Code="54"/>
+    <Attribution Flag="🇦🇪" Name="阿拉伯联合酋长国" Code="971"/>
+    <Attribution Flag="🇦🇼" Name="阿鲁巴" Code="297"/>
+    <Attribution Flag="🇴🇲" Name="阿曼" Code="968"/>
+    <Attribution Flag="🇦🇿" Name="阿塞拜疆" Code="994"/>
+    <Attribution Flag="🇦🇨" Name="阿森松岛" Code="247"/>
+    <Attribution Flag="🇪🇬" Name="埃及" Code="20"/>
+    <Attribution Flag="🇪🇹" Name="埃塞俄比亚" Code="251"/>
+    <Attribution Flag="🇮🇪" Name="爱尔兰" Code="353"/>
+    <Attribution Flag="🇪🇪" Name="爱沙尼亚" Code="372"/>
+    <Attribution Flag="🇦🇩" Name="安道尔" Code="376"/>
+    <Attribution Flag="🇦🇴" Name="安哥拉" Code="244"/>
+    <Attribution Flag="🇦🇮" Name="安圭拉" Code="1"/>
+    <Attribution Flag="🇦🇬" Name="安提瓜和巴布尔" Code="1"/>
+    <Attribution Flag="🇦🇹" Name="奥地利" Code="43"/>
+    <Attribution Flag="🇦🇺" Name="澳大利亚" Code="61"/>
+    <Attribution Flag="🇲🇴" Name="中国澳门" Code="853"/>
+    <Attribution Flag="🇧🇧" Name="巴巴多斯" Code="1"/>
+    <Attribution Flag="🇵🇬" Name="巴布亚新几内亚" Code="675"/>
+    <Attribution Flag="🇧🇸" Name="巴哈马" Code="1"/>
+    <Attribution Flag="🇵🇰" Name="巴基斯坦" Code="92"/>
+    <Attribution Flag="🇵🇾" Name="巴拉圭" Code="595"/>
+    <Attribution Flag="🇵🇸" Name="巴勒斯坦" Code="970"/>
+    <Attribution Flag="🇧🇭" Name="巴林" Code="973"/>
+    <Attribution Flag="🇵🇦" Name="巴拿马" Code="507"/>
+    <Attribution Flag="🇧🇷" Name="巴西" Code="55"/>
+    <Attribution Flag="🇧🇾" Name="白俄罗斯" Code="375"/>
+    <Attribution Flag="🇧🇲" Name="百慕大" Code="1"/>
+    <Attribution Flag="🇧🇬" Name="保加利亚" Code="359"/>
+    <Attribution Flag="🇲🇵" Name="北马里亚纳群岛" Code="1"/>
+    <Attribution Flag="🇲🇰" Name="北马其顿" Code="389"/>
+    <Attribution Flag="🇧🇯" Name="贝宁" Code="229"/>
+    <Attribution Flag="🇧🇪" Name="比利时" Code="32"/>
+    <Attribution Flag="🇮🇸" Name="冰岛" Code="354"/>
+    <Attribution Flag="🇵🇷" Name="波多黎各" Code="1"/>
+    <Attribution Flag="🇵🇱" Name="波兰" Code="48"/>
+    <Attribution Flag="🇧🇦" Name="波斯尼亚和黑塞哥维那" Code="387"/>
+    <Attribution Flag="🇧🇴" Name="玻利维亚" Code="591"/>
+    <Attribution Flag="🇧🇿" Name="伯利兹" Code="501"/>
+    <Attribution Flag="🇧🇼" Name="博茨瓦纳" Code="267"/>
+    <Attribution Flag="🇧🇹" Name="不丹" Code="975"/>
+    <Attribution Flag="🇧🇫" Name="布基纳法索" Code="226"/>
+    <Attribution Flag="🇧🇮" Name="布隆迪" Code="257"/>
+    <Attribution Flag="🇰🇵" Name="朝鲜" Code="850"/>
+    <Attribution Flag="🇬🇶" Name="赤道几内亚" Code="240"/>
+    <Attribution Flag="🇩🇰" Name="丹麦" Code="45"/>
+    <Attribution Flag="🇩🇪" Name="德国" Code="49"/>
+    <Attribution Flag="🇹🇱" Name="东帝汶" Code="670"/>
+    <Attribution Flag="🇹🇬" Name="多哥" Code="228"/>
+    <Attribution Flag="🇩🇴" Name="多米尼加共和国" Code="1"/>
+    <Attribution Flag="🇩🇲" Name="多米尼克" Code="1"/>
+    <Attribution Flag="🇷🇺" Name="俄罗斯" Code="7"/>
+    <Attribution Flag="🇪🇨" Name="厄瓜多尔" Code="593"/>
+    <Attribution Flag="🇪🇷" Name="厄立特里亚" Code="291"/>
+    <Attribution Flag="🇫🇷" Name="法国" Code="33"/>
+    <Attribution Flag="🇫🇴" Name="法罗群岛" Code="298"/>
+    <Attribution Flag="🇵🇫" Name="法属波利尼西亚" Code="689"/>
+    <Attribution Flag="🇬🇫" Name="法属圭亚那" Code="594"/>
+    <Attribution Flag="🇲🇫" Name="法属圣马丁" Code="590"/>
+    <Attribution Flag="🇻🇦" Name="梵蒂冈" Code="39"/>
+    <Attribution Flag="🇵🇭" Name="菲律宾" Code="63"/>
+    <Attribution Flag="🇫🇯" Name="斐济" Code="679"/>
+    <Attribution Flag="🇫🇮" Name="芬兰" Code="358"/>
+    <Attribution Flag="🇨🇻" Name="佛得角" Code="238"/>
+    <Attribution Flag="🇫🇰" Name="福克兰群岛（马尔维纳斯群岛）" Code="500"/>
+    <Attribution Flag="🇬🇲" Name="冈比亚" Code="220"/>
+    <Attribution Flag="🇨🇬" Name="刚果（布）" Code="242"/>
+    <Attribution Flag="🇨🇩" Name="刚果（金）" Code="243"/>
+    <Attribution Flag="🇨🇴" Name="哥伦比亚" Code="57"/>
+    <Attribution Flag="🇨🇷" Name="哥斯达黎加" Code="506"/>
+    <Attribution Flag="🇬🇩" Name="格林纳达" Code="1"/>
+    <Attribution Flag="🇬🇱" Name="格陵兰" Code="299"/>
+    <Attribution Flag="🇬🇪" Name="格鲁吉亚" Code="995"/>
+    <Attribution Flag="🇨🇺" Name="古巴" Code="53"/>
+    <Attribution Flag="🇬🇵" Name="瓜德罗普" Code="590"/>
+    <Attribution Flag="🇬🇺" Name="关岛" Code="1"/>
+    <Attribution Flag="🇬🇫" Name="圭亚那" Code="592"/>
+    <Attribution Flag="🇰🇿" Name="哈萨克斯坦" Code="7"/>
+    <Attribution Flag="🇭🇹" Name="海地" Code="509"/>
+    <Attribution Flag="🇰🇷" Name="韩国" Code="82"/>
+    <Attribution Flag="🇳🇱" Name="荷兰" Code="31"/>
+    <Attribution Flag="🇧🇶" Name="荷属加勒比区" Code="599"/>
+    <Attribution Flag="🇸🇽" Name="荷属圣马丁" Code="1"/>
+    <Attribution Flag="🇲🇪" Name="黑山" Code="382"/>
+    <Attribution Flag="🇭🇳" Name="洪都拉斯" Code="504"/>
+    <Attribution Flag="🇰🇮" Name="基里巴斯" Code="686"/>
+    <Attribution Flag="🇩🇯" Name="吉布提" Code="253"/>
+    <Attribution Flag="🇰🇬" Name="吉尔吉斯斯坦" Code="996"/>
+    <Attribution Flag="🇬🇳" Name="几内亚" Code="224"/>
+    <Attribution Flag="🇬🇼" Name="几内亚比绍" Code="245"/>
+    <Attribution Flag="🇨🇦" Name="加拿大" Code="1"/>
+    <Attribution Flag="🇬🇭" Name="加纳" Code="233"/>
+    <Attribution Flag="🇬🇦" Name="加蓬" Code="241"/>
+    <Attribution Flag="🇰🇭" Name="柬埔寨" Code="855"/>
+    <Attribution Flag="🇨🇿" Name="捷克" Code="420"/>
+    <Attribution Flag="🇿🇼" Name="津巴布韦" Code="263"/>
+    <Attribution Flag="🇨🇲" Name="喀麦隆" Code="237"/>
+    <Attribution Flag="🇶🇦" Name="卡塔尔" Code="974"/>
+    <Attribution Flag="🇰🇾" Name="开曼群岛" Code="1"/>
+    <Attribution Flag="🇰🇲" Name="科摩罗" Code="269"/>
+    <Attribution Flag="🇽🇰" Name="科索沃" Code="383"/>
+    <Attribution Flag="🇨🇮" Name="科特迪瓦" Code="225"/>
+    <Attribution Flag="🇰🇼" Name="科威特" Code="965"/>
+    <Attribution Flag="🇭🇷" Name="克罗地亚" Code="385"/>
+    <Attribution Flag="🇰🇪" Name="肯尼亚" Code="254"/>
+    <Attribution Flag="🇨🇰" Name="库克群岛" Code="682"/>
+    <Attribution Flag="🇨🇼" Name="库拉索" Code="599"/>
+    <Attribution Flag="🇱🇻" Name="拉脱维亚" Code="371"/>
+    <Attribution Flag="🇱🇸" Name="莱索托" Code="266"/>
+    <Attribution Flag="🇱🇦" Name="老挝" Code="856"/>
+    <Attribution Flag="🇱🇧" Name="黎巴嫩" Code="961"/>
+    <Attribution Flag="🇱🇹" Name="立陶宛" Code="370"/>
+    <Attribution Flag="🇱🇷" Name="利比里亚" Code="231"/>
+    <Attribution Flag="🇱🇾" Name="利巴亚" Code="218"/>
+    <Attribution Flag="🇱🇮" Name="列支敦士登" Code="423"/>
+    <Attribution Flag="🇷🇪" Name="留尼汪" Code="262"/>
+    <Attribution Flag="🇱🇺" Name="卢森堡" Code="352"/>
+    <Attribution Flag="🇷🇼" Name="卢旺达" Code="250"/>
+    <Attribution Flag="🇷🇴" Name="罗马尼亚" Code="40"/>
+    <Attribution Flag="🇲🇬" Name="马达加斯加" Code="261"/>
+    <Attribution Flag="🇲🇻" Name="马尔代夫" Code="960"/>
+    <Attribution Flag="🇲🇹" Name="马耳他" Code="356"/>
+    <Attribution Flag="🇲🇼" Name="马拉维" Code="265"/>
+    <Attribution Flag="🇲🇾" Name="马来西亚" Code="60"/>
+    <Attribution Flag="🇲🇱" Name="马里" Code="223"/>
+    <Attribution Flag="🇲🇭" Name="马绍尔群岛" Code="692"/>
+    <Attribution Flag="🇲🇶" Name="马提尼克" Code="596"/>
+    <Attribution Flag="🇲🇺" Name="毛里求斯" Code="230"/>
+    <Attribution Flag="🇲🇷" Name="毛里塔尼亚" Code="222"/>
+    <Attribution Flag="🇺🇸" Name="美国" Code="1"/>
+    <Attribution Flag="🇦🇸" Name="美属萨摩亚" Code="1"/>
+    <Attribution Flag="🇻🇮" Name="美属维尔京群岛" Code="1"/>
+    <Attribution Flag="🇲🇳" Name="蒙古" Code="976"/>
+    <Attribution Flag="🇲🇸" Name="蒙特塞拉特" Code="1"/>
+    <Attribution Flag="🇧🇩" Name="孟加拉国" Code="880"/>
+    <Attribution Flag="🇵🇪" Name="秘鲁" Code="51"/>
+    <Attribution Flag="🇫🇲" Name="密克罗尼西亚" Code="691"/>
+    <Attribution Flag="🇲🇲" Name="缅甸" Code="95"/>
+    <Attribution Flag="🇲🇩" Name="摩尔多瓦" Code="373"/>
+    <Attribution Flag="🇲🇦" Name="摩洛哥" Code="212"/>
+    <Attribution Flag="🇲🇨" Name="摩纳哥" Code="377"/>
+    <Attribution Flag="🇲🇿" Name="莫桑比克" Code="258"/>
+    <Attribution Flag="🇲🇽" Name="墨西哥" Code="52"/>
+    <Attribution Flag="🇳🇦" Name="纳米比亚" Code="264"/>
+    <Attribution Flag="🇿🇦" Name="南非" Code="27"/>
+    <Attribution Flag="🇸🇸" Name="南苏丹" Code="211"/>
+    <Attribution Flag="🇳🇷" Name="瑙鲁" Code="674"/>
+    <Attribution Flag="🇳🇮" Name="尼加拉瓜" Code="505"/>
+    <Attribution Flag="🇳🇵" Name="尼泊尔" Code="977"/>
+    <Attribution Flag="🇳🇪" Name="尼日尔" Code="227"/>
+    <Attribution Flag="🇳🇬" Name="尼日利亚" Code="234"/>
+    <Attribution Flag="🇳🇺" Name="纽埃" Code="683"/>
+    <Attribution Flag="🇳🇴" Name="挪威" Code="47"/>
+    <Attribution Flag="🇳🇫" Name="诺福克岛" Code="672"/>
+    <Attribution Flag="🇵🇼" Name="帕劳" Code="680"/>
+    <Attribution Flag="🇵🇹" Name="葡萄牙" Code="351"/>
+    <Attribution Flag="🇯🇵" Name="日本" Code="81"/>
+    <Attribution Flag="🇸🇪" Name="瑞典" Code="46"/>
+    <Attribution Flag="🇨🇭" Name="瑞士" Code="41"/>
+    <Attribution Flag="🇸🇻" Name="萨尔瓦多" Code="503"/>
+    <Attribution Flag="🇼🇸" Name="萨摩亚" Code="685"/>
+    <Attribution Flag="🇷🇸" Name="塞尔维亚" Code="381"/>
+    <Attribution Flag="🇸🇱" Name="塞拉利昂" Code="232"/>
+    <Attribution Flag="🇸🇳" Name="塞内加尔" Code="221"/>
+    <Attribution Flag="🇨🇾" Name="塞浦路斯" Code="357"/>
+    <Attribution Flag="🇸🇨" Name="塞舌尔" Code="248"/>
+    <Attribution Flag="🇸🇦" Name="沙特阿拉伯" Code="966"/>
+    <Attribution Flag="🇧🇱" Name="圣巴泰勒米" Code="590"/>
+    <Attribution Flag="🇸🇹" Name="圣多美和普林西比" Code="239"/>
+    <Attribution Flag="🇸🇭" Name="圣赫勒拿" Code="290"/>
+    <Attribution Flag="🇰🇳" Name="圣基茨和尼维斯" Code="1"/>
+    <Attribution Flag="🇱🇨" Name="圣卢西亚" Code="1"/>
+    <Attribution Flag="🇸🇲" Name="圣马力诺" Code="378"/>
+    <Attribution Flag="🇵🇲" Name="圣皮埃尔和密克隆群岛" Code="508"/>
+    <Attribution Flag="🇻🇨" Name="圣文森特和格利纳丁斯" Code="1"/>
+    <Attribution Flag="🇱🇰" Name="斯里兰卡" Code="94"/>
+    <Attribution Flag="🇸🇰" Name="斯洛伐克" Code="421"/>
+    <Attribution Flag="🇸🇮" Name="斯洛文尼亚" Code="386"/>
+    <Attribution Flag="🇸🇿" Name="斯威士兰" Code="268"/>
+    <Attribution Flag="🇸🇩" Name="苏丹" Code="249"/>
+    <Attribution Flag="🇸🇷" Name="苏里南" Code="597"/>
+    <Attribution Flag="🇸🇧" Name="所罗门群岛" Code="677"/>
+    <Attribution Flag="🇸🇴" Name="索马里" Code="252"/>
+    <Attribution Flag="🇹🇯" Name="塔吉克斯坦" Code="992"/>
+    <Attribution Flag="🇹🇼" Name="中国台湾" Code="886"/>
+    <Attribution Flag="🇹🇭" Name="泰国" Code="66"/>
+    <Attribution Flag="🇹🇿" Name="坦桑尼亚" Code="255"/>
+    <Attribution Flag="🇹🇴" Name="汤加" Code="676"/>
+    <Attribution Flag="🇹🇨" Name="特克斯和凯科斯群岛" Code="1"/>
+    <Attribution Flag="🇹🇹" Name="特立尼达和多巴哥" Code="1"/>
+    <Attribution Flag="🇹🇳" Name="突尼斯" Code="216"/>
+    <Attribution Flag="🇹🇻" Name="图瓦卢" Code="688"/>
+    <Attribution Flag="🇹🇷" Name="土耳其" Code="90"/>
+    <Attribution Flag="🇹🇲" Name="土库曼斯坦" Code="993"/>
+    <Attribution Flag="🇹🇰" Name="托克劳" Code="690"/>
+    <Attribution Flag="🇼🇫" Name="瓦利斯和富图纳" Code="681"/>
+    <Attribution Flag="🇻🇺" Name="瓦努阿图" Code="678"/>
+    <Attribution Flag="🇬🇹" Name="危地马拉" Code="502"/>
+    <Attribution Flag="🇻🇪" Name="委内瑞拉" Code="58"/>
+    <Attribution Flag="🇧🇳" Name="文莱" Code="673"/>
+    <Attribution Flag="🇺🇬" Name="乌干达" Code="256"/>
+    <Attribution Flag="🇺🇦" Name="乌克兰" Code="380"/>
+    <Attribution Flag="🇺🇾" Name="乌拉圭" Code="598"/>
+    <Attribution Flag="🇺🇿" Name="乌兹别克斯坦" Code="998"/>
+    <Attribution Flag="🇪🇸" Name="西班牙" Code="34"/>
+    <Attribution Flag="🇬🇷" Name="希腊" Code="30"/>
+    <Attribution Flag="🇭🇰" Name="中国香港" Code="852"/>
+    <Attribution Flag="🇸🇬" Name="新加坡" Code="65"/>
+    <Attribution Flag="🇳🇨" Name="新喀里多尼亚" Code="687"/>
+    <Attribution Flag="🇳🇿" Name="新西兰" Code="64"/>
+    <Attribution Flag="🇭🇺" Name="匈牙利" Code="36"/>
+    <Attribution Flag="🇸🇾" Name="叙利亚" Code="963"/>
+    <Attribution Flag="🇯🇲" Name="牙买加" Code="1"/>
+    <Attribution Flag="🇦🇲" Name="亚美尼亚" Code="374"/>
+    <Attribution Flag="🇾🇪" Name="也门" Code="967"/>
+    <Attribution Flag="🇮🇶" Name="伊拉克" Code="964"/>
+    <Attribution Flag="🇮🇷" Name="伊朗" Code="98"/>
+    <Attribution Flag="🇮🇱" Name="以色列" Code="972"/>
+    <Attribution Flag="🇮🇹" Name="意大利" Code="39"/>
+    <Attribution Flag="🇮🇳" Name="印度" Code="91"/>
+    <Attribution Flag="🇮🇩" Name="印度尼西亚" Code="62"/>
+    <Attribution Flag="🇬🇧" Name="英国" Code="44"/>
+    <Attribution Flag="🇻🇬" Name="英属维尔京群岛" Code="1"/>
+    <Attribution Flag="🇯🇴" Name="约旦" Code="962"/>
+    <Attribution Flag="🇻🇳" Name="越南" Code="84"/>
+    <Attribution Flag="🇿🇲" Name="赞比亚" Code="260"/>
+    <Attribution Flag="🇹🇩" Name="乍得" Code="235"/>
+    <Attribution Flag="🇬🇮" Name="直布罗陀" Code="350"/>
+    <Attribution Flag="🇨🇱" Name="智利" Code="56"/>
+    <Attribution Flag="🇨🇫" Name="中非共和国" Code="236"/>
+    <Attribution Flag="🇨🇳" Name="中国" Code="86"/>
+</Attributions>

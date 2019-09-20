@@ -1,7 +1,15 @@
 package edu.gdei.gdeiassistant.Service.CloudAPI;
 
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
 import edu.gdei.gdeiassistant.Exception.AuthenticationException.IDCardReversedSideException;
 import edu.gdei.gdeiassistant.Exception.AuthenticationException.IDCardVerificationException;
+import edu.gdei.gdeiassistant.Exception.PhoneException.*;
 import edu.gdei.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Identity;
 import net.sf.json.JSONArray;
@@ -22,19 +30,31 @@ public class AliYunService {
 
     private String aliyunUserId;
 
+    private String aliyunAccessKeyId;
+
+    private String aliyunAccessKeySecret;
+
     private String aliyun_h5_verifyKey;
 
-    private String aliyun_h5_verifySecret;
-
-    private String aliyun_mini_verifyKey;
-
-    private String aliyun_mini_verifySecret;
-
     private String official_appCode;
+
+    private String aliyunSMSChinaTemplateCode;
+
+    private String aliyunSMSGlobalTemplateCode;
 
     @Value("#{propertiesReader['api.aliyun.userid']}")
     public void setAliyunUserId(String aliyunUserId) {
         this.aliyunUserId = aliyunUserId;
+    }
+
+    @Value("#{propertiesReader['api.aliyun.accesskey.id']}")
+    public void setAliyunAccessKeyId(String aliyunAccessKeyId) {
+        this.aliyunAccessKeyId = aliyunAccessKeyId;
+    }
+
+    @Value("#{propertiesReader['api.aliyun.accesskey.secret']}")
+    public void setAliyunAccessKeySecret(String aliyunAccessKeySecret) {
+        this.aliyunAccessKeySecret = aliyunAccessKeySecret;
     }
 
     @Value("#{propertiesReader['api.aliyun.h5.verifykey']}")
@@ -42,24 +62,19 @@ public class AliYunService {
         this.aliyun_h5_verifyKey = aliyun_h5_verifyKey;
     }
 
-    @Value("#{propertiesReader['api.aliyun.h5.verifysecret']}")
-    public void setAliyun_h5_verifySecret(String aliyun_h5_verifySecret) {
-        this.aliyun_h5_verifySecret = aliyun_h5_verifySecret;
-    }
-
-    @Value("#{propertiesReader['api.aliyun.mini.verifykey']}")
-    public void setAliyun_mini_verifyKey(String aliyun_mini_verifyKey) {
-        this.aliyun_mini_verifyKey = aliyun_mini_verifyKey;
-    }
-
-    @Value("#{propertiesReader['api.aliyun.mini.verifysecret']}")
-    public void setAliyun_mini_verifySecret(String aliyun_mini_verifySecret) {
-        this.aliyun_mini_verifySecret = aliyun_mini_verifySecret;
-    }
-
     @Value("#{propertiesReader['api.aliyun.official.appcode']}")
     public void setOfficial_appCode(String official_appCode) {
         this.official_appCode = official_appCode;
+    }
+
+    @Value("#{propertiesReader['api.aliyun.sms.china.templatecode']}")
+    public void setAliyunSMSChinaTemplateCode(String aliyunSMSChinaTemplateCode) {
+        this.aliyunSMSChinaTemplateCode = aliyunSMSChinaTemplateCode;
+    }
+
+    @Value("#{propertiesReader['api.aliyun.sms.global.templatecode']}")
+    public void setAliyunSMSGlobalTemplateCode(String aliyunSMSGlobalTemplateCode) {
+        this.aliyunSMSGlobalTemplateCode = aliyunSMSGlobalTemplateCode;
     }
 
     /**
@@ -194,5 +209,93 @@ public class AliYunService {
             return;
         }
         throw new IDCardVerificationException("身份证信息校验不通过");
+    }
+
+    /**
+     * 国内手机发送短信验证码
+     *
+     * @param code
+     * @param phone
+     */
+    public void SendChinaPhoneVerificationCodeSMS(int code, String phone) throws ClientException, SendSMSException {
+        DefaultProfile profile = DefaultProfile.getProfile("default", aliyunAccessKeyId, aliyunAccessKeySecret);
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", "default");
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", "易小助");
+        request.putQueryParameter("TemplateCode", aliyunSMSChinaTemplateCode);
+        request.putQueryParameter("TemplateParam", "{code:\"" + code + "\"}");
+        CommonResponse response = client.getCommonResponse(request);
+        JSONObject result = JSONObject.fromObject(response.getData());
+        if (result.containsKey("Code")) {
+            if (result.getString("Code").equals("OK")) {
+                //发送成功
+            } else if (result.getString("Code").equals("isv.MOBILE_NUMBER_ILLEGAL")) {
+                //不合法的手机号
+                throw new IllegalPhoneNumberException();
+            } else if (result.getString("Code").equals("VALVE:M_MC")) {
+                //分钟请求次数过多
+                throw new MinuteFrequencyLimitException();
+            } else if (result.getString("Code").equals("VALVE:H_MC")) {
+                //小时请求次数过多
+                throw new HourFrequencyLimitException();
+            } else if (result.getString("Code").equals("VALVE:D_MC")) {
+                //天请求次数过多
+                throw new DayFrequencyLimitException();
+            } else {
+                //其他错误
+                throw new SendSMSException();
+            }
+        }
+    }
+
+    /**
+     * 港澳台和国际手机发送短信验证码
+     *
+     * @param code
+     * @param areaCode
+     * @param phone
+     * @throws ClientException
+     */
+    public void SendGlobalPhoneVerificationCodeSMS(int code, int areaCode, String phone) throws ClientException, SendSMSException {
+        DefaultProfile profile = DefaultProfile.getProfile("default", aliyunAccessKeyId, aliyunAccessKeySecret);
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", "default");
+        request.putQueryParameter("PhoneNumbers", areaCode + phone);
+        request.putQueryParameter("SignName", "易小助");
+        request.putQueryParameter("TemplateCode", aliyunSMSGlobalTemplateCode);
+        request.putQueryParameter("TemplateParam", "{code:\"" + code + "\"}");
+        CommonResponse response = client.getCommonResponse(request);
+        JSONObject result = JSONObject.fromObject(response.getData());
+        if (result.containsKey("Code")) {
+            if (result.getString("Code").equals("OK")) {
+                //发送成功
+            } else if (result.getString("Code").equals("isv.MOBILE_NUMBER_ILLEGAL")) {
+                //不合法的手机号
+                throw new IllegalPhoneNumberException();
+            } else if (result.getString("Code").equals("VALVE:M_MC")) {
+                //分钟请求次数过多
+                throw new MinuteFrequencyLimitException();
+            } else if (result.getString("Code").equals("VALVE:H_MC")) {
+                //小时请求次数过多
+                throw new HourFrequencyLimitException();
+            } else if (result.getString("Code").equals("VALVE:D_MC")) {
+                //天请求次数过多
+                throw new DayFrequencyLimitException();
+            } else {
+                //其他错误
+                throw new SendSMSException();
+            }
+        }
     }
 }

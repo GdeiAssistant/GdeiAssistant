@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Tools;
 
+import edu.gdei.gdeiassistant.Pojo.Entity.Attribution;
 import edu.gdei.gdeiassistant.Pojo.Entity.City;
 import edu.gdei.gdeiassistant.Pojo.Entity.Region;
 import edu.gdei.gdeiassistant.Pojo.Entity.State;
@@ -21,8 +22,20 @@ public class LocationUtils {
         return regionMap;
     }
 
+    private static Map<Integer, Attribution> attributionMap;
+
     static {
         //加载地区信息
+        LoadLocationData();
+        //加载手机号归属地信息
+        LoadPhoneAttributionData();
+    }
+
+    public static Map<Integer, Attribution> getAttributionMap() {
+        return attributionMap;
+    }
+
+    private static void LoadLocationData() {
         Resource resource = new ClassPathResource("/config/location/location.xml");
         SAXReader saxReader = new SAXReader();
         Document document = null;
@@ -61,6 +74,30 @@ public class LocationUtils {
             }
             region.setStateMap(stateMap);
             LocationUtils.regionMap.put(regionCode, region);
+        }
+    }
+
+    private static void LoadPhoneAttributionData() {
+        Resource resource = new ClassPathResource("/config/location/phone.xml");
+        SAXReader saxReader = new SAXReader();
+        Document document = null;
+        try {
+            document = saxReader.read(resource.getInputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Element root = document.getRootElement();
+        List<Element> attributionElements = root.elements();
+        LocationUtils.attributionMap = new HashMap<>();
+        for (Element attributionElement : attributionElements) {
+            String name = attributionElement.attribute("Name").getValue();
+            Integer code = Integer.valueOf(attributionElement.attribute("Code").getValue());
+            String flag = attributionElement.attribute("Flag").getValue();
+            Attribution attribution = new Attribution();
+            attribution.setCode(code);
+            attribution.setFlag(flag);
+            attribution.setName(name);
+            LocationUtils.attributionMap.put(code, attribution);
         }
     }
 }

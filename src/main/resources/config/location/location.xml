@@ -4413,7 +4413,7 @@
             <City Name="中部区" Code="C"/>
         </State>
     </Region>
-    <Region Name="🇩🇲多米尼加" Code="DMA"/>
+    <Region Name="🇩🇲多米尼克" Code="DMA"/>
     <Region Name="🇩🇴多米尼加共和国" Code="DOM"/>
     <Region Name="🇷🇺俄罗斯" Code="RUS">
         <State Name="俄罗斯" Code="RUS">

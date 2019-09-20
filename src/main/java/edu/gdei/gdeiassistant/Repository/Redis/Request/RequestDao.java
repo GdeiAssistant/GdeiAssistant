@@ -4,5 +4,5 @@ public interface RequestDao {
 
     public String QueryRequest(String nonce);
 
-    public Boolean InsertRequest(String nonce, String timestamp);
+    public void InsertRequest(String nonce, String timestamp);
 }

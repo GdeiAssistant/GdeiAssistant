@@ -112,10 +112,8 @@ public class LoginTokenService {
         refreshToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         refreshToken.setUnionid(accessToken.getUnionid());
         refreshToken.setIp(accessToken.getIp());
-        if (loginTokenDao.InsertRefreshToken(refreshToken)) {
-            return refreshToken;
-        }
-        throw new TokenServerException("令牌服务系统异常");
+        loginTokenDao.InsertRefreshToken(refreshToken);
+        return refreshToken;
     }
 
     /**
@@ -144,10 +142,8 @@ public class LoginTokenService {
         accessToken.setSignature(token);
         accessToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         accessToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        if (loginTokenDao.InsertAccessToken(accessToken)) {
-            return accessToken;
-        }
-        throw new TokenServerException("令牌服务系统异常");
+        loginTokenDao.InsertAccessToken(accessToken);
+        return accessToken;
     }
 
     /**
@@ -197,10 +193,8 @@ public class LoginTokenService {
                 AccessToken accessToken = new AccessToken();
                 accessToken.setSignature(signature);
                 accessToken.setIp(ip);
-                if (loginTokenDao.UpdateAccessToken(accessToken)) {
-                    return;
-                }
-                throw new TokenServerException("更新权限令牌异常");
+                loginTokenDao.UpdateAccessToken(accessToken);
+                return;
             }
             throw new UnusualLocationException("用户在异常登录地使用");
         } catch (JWTVerificationException e) {

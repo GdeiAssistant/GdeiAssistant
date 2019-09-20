@@ -1,7 +1,6 @@
 package edu.gdei.gdeiassistant.Repository.Redis.CookieStore;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.apache.http.client.CookieStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @Repository
 public class CookieStoreDaoImpl implements CookieStoreDao {
 
-    private Log log = LogFactory.getLog(CookieStoreDao.class);
+    private final String PREFIX = "COOKIE_STORE_";
 
     @Autowired
     private RedisTemplate<String, Serializable> redisTemplate;
@@ -26,12 +25,9 @@ public class CookieStoreDaoImpl implements CookieStoreDao {
      */
     @Override
     public void SaveCookieStore(String sessionId, CookieStore cookieStore) {
-        try {
-            redisTemplate.opsForValue().set(sessionId, (Serializable) cookieStore);
-            redisTemplate.expire(sessionId, 1, TimeUnit.HOURS);
-        } catch (Exception e) {
-            log.error("存储CookieStore异常：", e);
-        }
+        redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(PREFIX + sessionId)
+                , (Serializable) cookieStore);
+        redisTemplate.expire(sessionId, 1, TimeUnit.HOURS);
     }
 
     /**
@@ -42,23 +38,12 @@ public class CookieStoreDaoImpl implements CookieStoreDao {
      */
     @Override
     public CookieStore QueryCookieStore(String sessionId) {
-        CookieStore cookieStore = null;
-        try {
-            cookieStore = (CookieStore) redisTemplate.opsForValue().get(sessionId);
-        } catch (Exception e) {
-            log.error("获取CookieStore异常：", e);
-        }
-        return cookieStore;
+        return (CookieStore) redisTemplate.opsForValue().get(StringEncryptUtils
+                .SHA256HexString(PREFIX + sessionId));
     }
 
     @Override
     public void ClearCookieStore(String sessionId) {
-        try {
-            redisTemplate.delete(sessionId);
-        } catch (Exception e) {
-            log.error("清除CookieStore异常：", e);
-        }
+        redisTemplate.delete(StringEncryptUtils.SHA256HexString(PREFIX + sessionId));
     }
-
-
 }

@@ -1,5 +1,7 @@
 package edu.gdei.gdeiassistant.Service.CardQuery;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import edu.gdei.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
@@ -23,7 +25,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -424,8 +425,8 @@ public class CardQueryService {
                             httpPost.setHeader("Referer", "http://ecard.gdei.edu.cn/");
                             httpResponse = httpClient.execute(httpPost);
                             if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                                JSONObject jsonObject = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
-                                if (jsonObject.has("ret") && jsonObject.has("msg")) {
+                                JSONObject jsonObject = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity()));
+                                if (jsonObject.containsKey("ret") && jsonObject.containsKey("msg")) {
                                     if (jsonObject.getBoolean("ret")) {
                                         return;
                                     }

@@ -6,11 +6,13 @@ import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Authentication;
 import edu.gdei.gdeiassistant.Pojo.Entity.Identity;
+import edu.gdei.gdeiassistant.Pojo.Entity.Phone;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Service.Authenticate.AuthenticateDataService;
 import edu.gdei.gdeiassistant.Service.Authenticate.AuthenticateService;
+import edu.gdei.gdeiassistant.Service.Phone.PhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +27,9 @@ import java.util.Map;
 public class AuthenticateRestController {
 
     private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
+
+    @Autowired
+    private PhoneService phoneService;
 
     @Autowired
     private AuthenticateService authenticateService;
@@ -88,7 +93,8 @@ public class AuthenticateRestController {
                     String name = infoMap.get("name");
                     String identityNumber = authenticateService.GetUserIdentityNumber(request.getSession().getId(), new User(username, password));
                     //保存用户实名信息
-                    authenticateDataService.SaveSystemAuthenticationData(username, name, identityNumber);
+                    authenticateDataService.SaveSystemAuthenticationData(username, name
+                            , identityNumber, AuthenticationTypeEnum.CAS_SYSTEM);
                     return new JsonResult(true);
                 }
                 return new JsonResult(false, "当前用户组不支持使用教务系统进行实名认证");
@@ -106,8 +112,17 @@ public class AuthenticateRestController {
                 String identityNumber = identity.getCode();
                 //校验身份证信息
                 authenticateService.VerifyIdentityCard(name, identityNumber);
-                authenticateDataService.SaveSystemAuthenticationData(username, name, identityNumber);
+                authenticateDataService.SaveSystemAuthenticationData(username, name
+                        , identityNumber, AuthenticationTypeEnum.MAINLAND_IDENTITY_CARD);
                 return new JsonResult(true);
+
+            case PHONE:
+                Phone phone = phoneService.QueryUserPhone(username);
+                if (phone != null) {
+                    authenticateDataService.SaveSystemAuthenticationData(username, phone);
+                    return new JsonResult(true);
+                }
+                return new JsonResult(false, "你未绑定手机号，请先前往个人中心绑定手机号");
 
             default:
                 return new JsonResult(false, "暂不支持当前实名认证方法");

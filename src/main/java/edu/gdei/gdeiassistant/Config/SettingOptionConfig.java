@@ -28,4 +28,24 @@ public class SettingOptionConfig {
             servletContext.setAttribute("authentication.force", true);
         }
     }
+
+    /**
+     * 检查是否使用黑白网页
+     */
+    @Bean
+    public void CheckUsingGrayScaleTheme() {
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("theme.grayscale"))).equals(1)) {
+            servletContext.setAttribute("grayscale", true);
+        }
+    }
+
+    /**
+     * 检查是否使用Pride主题
+     */
+    @Bean
+    public void CheckUsingPrideTheme(){
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("theme.pride"))).equals(1)) {
+            servletContext.setAttribute("pridetheme", true);
+        }
+    }
 }

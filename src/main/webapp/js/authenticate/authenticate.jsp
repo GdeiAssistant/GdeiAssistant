@@ -109,6 +109,46 @@
         </c:choose>
     }
 
+    //手机号快捷实名认证
+    function authenticateWithPhone() {
+        $.confirm({
+            text: '我们将依照《隐私政策》保护你的个人信息，若你点击确定按钮，将视为你已阅读并同意《隐私政策》',
+            title: '授权广东二师助手使用你的手机号进行实名认证',
+            onOK: function () {
+                $("#loadingToast, .weui_mask").show();
+                $.ajax({
+                    url: '/api/authentication',
+                    type: 'POST',
+                    data: {
+                        method: 11
+                    },
+                    success: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.success) {
+                            $.alert({
+                                text: '已完成实名认证，你现在可以使用广东二师助手所有功能了',
+                                title: '实名认证成功',
+                                onOK: function () {
+                                    loadAuthenticationData();
+                                }
+                            });
+                        } else {
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                        }
+                    },
+                    error: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.status) {
+                            $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                        } else {
+                            $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     //清除实名认证信息
     function removeAuthenticationData() {
         $.confirm({

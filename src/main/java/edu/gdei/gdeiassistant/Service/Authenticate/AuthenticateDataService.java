@@ -2,6 +2,7 @@ package edu.gdei.gdeiassistant.Service.Authenticate;
 
 import edu.gdei.gdeiassistant.Enum.Authentication.AuthenticationTypeEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.Authentication;
+import edu.gdei.gdeiassistant.Pojo.Entity.Phone;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Authentication.AuthenticationMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,15 +48,38 @@ public class AuthenticateDataService {
      * @param username
      * @param realname
      * @param identityNumber
+     * @param authenticationTypeEnum
      */
-    public void SaveSystemAuthenticationData(String username, String realname, String identityNumber) throws Exception {
+    public void SaveSystemAuthenticationData(String username, String realname
+            , String identityNumber, AuthenticationTypeEnum authenticationTypeEnum) throws Exception {
         Authentication authentication = new Authentication();
         authentication.setUsername(StringEncryptUtils.encryptString(username));
         String salt = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
         authentication.setIdentityCode(StringEncryptUtils.SHA512HexString(
                 StringEncryptUtils.encryptString(username + realname + identityNumber + salt)));
         authentication.setSalt(salt);
-        authentication.setType(AuthenticationTypeEnum.CAS_SYSTEM.getType());
+        authentication.setType(authenticationTypeEnum.getType());
+        if (authenticationMapper.selectAuthentication(StringEncryptUtils.encryptString(username)) == null) {
+            authenticationMapper.insertAuthentication(authentication);
+        } else {
+            authenticationMapper.updateAuthentication(authentication);
+        }
+    }
+
+    /**
+     * 保存用户实名认证信息
+     *
+     * @param phone
+     * @throws Exception
+     */
+    public void SaveSystemAuthenticationData(String username, Phone phone) throws Exception {
+        Authentication authentication = new Authentication();
+        authentication.setUsername(StringEncryptUtils.encryptString(username));
+        String salt = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+        authentication.setIdentityCode(StringEncryptUtils.SHA512HexString(
+                StringEncryptUtils.encryptString(username + phone.getCode() + phone.getPhone() + salt)));
+        authentication.setSalt(salt);
+        authentication.setType(AuthenticationTypeEnum.PHONE.getType());
         if (authenticationMapper.selectAuthentication(StringEncryptUtils.encryptString(username)) == null) {
             authenticationMapper.insertAuthentication(authentication);
         } else {

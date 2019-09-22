@@ -203,6 +203,17 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("About/index");
+        registry.addViewController("/about").setViewName("About/index");
+        registry.addViewController("/about/security").setViewName("About/security");
+        registry.addViewController("/about/account").setViewName("About/account");
+        registry.addViewController("/about/wechat").setViewName("About/wechat");
+        registry.addViewController("/license").setViewName("About/license");
+        registry.addViewController("/agreement").setViewName("AgreementAndPolicy/agreement");
+        registry.addViewController("/policy/cookie").setViewName("AgreementAndPolicy/cookiePolicy");
+        registry.addViewController("/policy/privacy").setViewName("AgreementAndPolicy/privacyPolicy");
+        registry.addViewController("/policy/social").setViewName("AgreementAndPolicy/socialPolicy");
+        registry.addViewController("/about/graduation").setViewName("AgreementAndPolicy/graduationPolicy");
         super.addViewControllers(registry);
     }
 }

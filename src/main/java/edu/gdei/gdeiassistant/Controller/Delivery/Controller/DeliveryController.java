@@ -1,6 +1,7 @@
 package edu.gdei.gdeiassistant.Controller.Delivery.Controller;
 
 import com.taobao.wsgsvr.WsgException;
+import edu.gdei.gdeiassistant.Annotation.CheckAuthentication;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.DeliveryOrder;
 import edu.gdei.gdeiassistant.Pojo.Entity.DeliveryTrade;
@@ -34,6 +35,7 @@ public class DeliveryController {
      * @throws Exception
      */
     @RequestMapping(value = "/delivery", method = RequestMethod.GET)
+    @CheckAuthentication(name = "delivery")
     public ModelAndView ResolveDeliveryIndexPage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         String username = (String) request.getSession().getAttribute("username");
@@ -60,6 +62,7 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(value = "/delivery/order/id/{id}", method = RequestMethod.GET)
+    @CheckAuthentication(name = "delivery")
     public ModelAndView ResolveDeliveryOrderDetailPage(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException, WsgException {
         String username = (String) request.getSession().getAttribute("username");
         ModelAndView modelAndView = new ModelAndView();
@@ -105,6 +108,7 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(value = "/delivery/trade/id/{id}", method = RequestMethod.GET)
+    @CheckAuthentication(name = "delivery")
     public ModelAndView ResolveDeliveryTradeDetailPage(HttpServletRequest request, @PathVariable("id") Integer tradeId) throws WsgException, DataNotExistException {
         String username = (String) request.getSession().getAttribute("username");
         ModelAndView modelAndView = new ModelAndView();
@@ -133,7 +137,8 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(value = "/delivery/order", method = RequestMethod.GET)
-    public ModelAndView ResolveDeliveryOrderPage() {
+    @CheckAuthentication(name = "delivery")
+    public ModelAndView ResolveDeliveryOrderPage(HttpServletRequest request) {
         return new ModelAndView("Delivery/order");
     }
 
@@ -143,7 +148,8 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(value = "/delivery/accept", method = RequestMethod.GET)
-    public ModelAndView ResolveDeliveryAcceptPage() {
+    @CheckAuthentication(name = "delivery")
+    public ModelAndView ResolveDeliveryAcceptPage(HttpServletRequest request) {
         return new ModelAndView("Delivery/accept");
     }
 
@@ -155,6 +161,7 @@ public class DeliveryController {
      * @throws WsgException
      */
     @RequestMapping(value = "/delivery/personal", method = RequestMethod.GET)
+    @CheckAuthentication(name = "delivery")
     public ModelAndView ResolveDeliveryPersonalPage(HttpServletRequest request) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
         ModelAndView modelAndView = new ModelAndView("Delivery/personal");

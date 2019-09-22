@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.Secret.Controller;
 
+import edu.gdei.gdeiassistant.Annotation.CheckAuthentication;
 import edu.gdei.gdeiassistant.Pojo.Entity.Secret;
 import edu.gdei.gdeiassistant.Pojo.JSSDK.JSSDKSignature;
 import edu.gdei.gdeiassistant.Service.Secret.SecretService;
@@ -29,7 +30,8 @@ public class SecretController {
      * @return
      */
     @RequestMapping(value = {"/secret"}, method = RequestMethod.GET)
-    public ModelAndView ResolveSecretIndexPage() {
+    @CheckAuthentication(name = "secret")
+    public ModelAndView ResolveSecretIndexPage(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Secret/secretIndex");
         return modelAndView;
@@ -42,6 +44,7 @@ public class SecretController {
      * @return
      */
     @RequestMapping(value = {"/secret/publish"}, method = RequestMethod.GET)
+    @CheckAuthentication(name = "secret")
     public ModelAndView ResolveSecretPublishPage(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Secret/secretPublish");
@@ -57,6 +60,7 @@ public class SecretController {
      * @return
      */
     @RequestMapping(value = {"/secret/profile"}, method = RequestMethod.GET)
+    @CheckAuthentication(name = "secret")
     public ModelAndView ResolveSecretProfilePage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         String username = (String) request.getSession().getAttribute("username");
@@ -73,6 +77,7 @@ public class SecretController {
      * @return
      */
     @RequestMapping(value = {"/secret/detail/id/{id}"}, method = RequestMethod.GET)
+    @CheckAuthentication(name = "secret")
     public ModelAndView ResolveSecretDetailPage(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         String username = (String) request.getSession().getAttribute("username");

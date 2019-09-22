@@ -40,12 +40,14 @@
 </head>
 <body>
 
+<div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+
 <div class="weui-msg">
     <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
     <div class="weui-msg__text-area">
         <h2 class="weui-msg__title">未完成实名认证</h2>
         <p class="weui-msg__desc">
-            根据《中华人民共和国网络安全法》第二十四条的规定要求，用户使用广东二师助手需要首先完成实名认证，完成实名认证后用户才可使用正常使用广东二师助手。</p>
+            根据《中华人民共和国网络安全法》第二十四条的规定要求，用户使用广东二师助手部分功能需要首先完成实名认证，完成实名认证后用户才可完整体验使用广东二师助手。</p>
     </div>
     <div class="weui-msg__opr-area">
         <p class="weui-btn-area">
@@ -66,7 +68,7 @@
 <p class="page_desc">
     若不再使用当前账号，可以
     <a class="page_desc"
-       onclick="window.location.href='/close'">进行删除账号
+       onclick="window.location.href='/close'">删除账号
     </a>
     <br>
     使用遇到困难？点击

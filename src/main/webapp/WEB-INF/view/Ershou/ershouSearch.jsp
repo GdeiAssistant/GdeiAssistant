@@ -58,7 +58,7 @@
         //加载更多数据
         function loadErshouInfo(start) {
             $.ajax({
-                url: '/ershou/keyword/' + $("#keyword").val() + '/start' + start,
+                url: '/api/ershou/keyword/' + $("#keyword").val() + '/start' + start,
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {
@@ -88,7 +88,7 @@
         //获取预览图片
         function getPreviewPicture(id) {
             $.ajax({
-                url: '/ershou/item/id/' + id + '/preview',
+                url: '/api/ershou/item/id/' + id + '/preview',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {

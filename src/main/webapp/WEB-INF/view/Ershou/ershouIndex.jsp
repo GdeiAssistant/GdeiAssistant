@@ -74,7 +74,7 @@
         function loadErshouInfo(start) {
             var loading = weui.loading('加载中');
             $.ajax({
-                url: '/ershou/item/start/' + start,
+                url: '/api/ershou/item/start/' + start,
                 type: 'get',
                 success: function (result) {
                     loading.hide();
@@ -107,7 +107,7 @@
         //获取预览图片
         function getPreviewPicture(id) {
             $.ajax({
-                url: '/ershou/item/id/' + id + '/preview',
+                url: '/api/ershou/item/id/' + id + '/preview',
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {

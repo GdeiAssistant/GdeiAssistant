@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.Secret.RestController;
 
+import edu.gdei.gdeiassistant.Annotation.RestCheckAuthentication;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Secret;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -37,6 +38,7 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/info/start/{start}/size/{size}", method = RequestMethod.GET)
+    @RestCheckAuthentication(name = "secret")
     public DataJsonResult<List<Secret>> GetMoreSecret(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
@@ -54,6 +56,7 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
+    @RestCheckAuthentication(name = "secret")
     public JsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret, String voiceId
             , @RequestParam(value = "voice", required = false) MultipartFile file) throws Exception {
         if (secret.getType() == 0 && StringUtils.isBlank(secret.getContent())) {
@@ -102,6 +105,7 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/id/{id}/comment", method = RequestMethod.POST)
+    @RestCheckAuthentication(name = "secret")
     public JsonResult AddSecretComment(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
@@ -121,6 +125,7 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/id/{id}/like", method = RequestMethod.POST)
+    @RestCheckAuthentication(name = "secret")
     public JsonResult UpdateSecretLikeState(HttpServletRequest request
             , @PathVariable("id") int id, @Validated @Range(min = 0, max = 1) int like) throws Exception {
         String username = (String) request.getSession().getAttribute("username");

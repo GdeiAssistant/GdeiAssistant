@@ -160,7 +160,7 @@
                             var loading = weui.loading('提交中');
 
                             $.ajax({
-                                url: '/ershou/item',
+                                url: '/api/ershou/item',
                                 type: 'post',
                                 data: formData,
                                 processData: false,

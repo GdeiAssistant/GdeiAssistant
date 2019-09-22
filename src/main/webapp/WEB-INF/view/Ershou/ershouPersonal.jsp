@@ -130,7 +130,7 @@
         //上架商品
         function onSaleItem(id) {
             $.ajax({
-                url: '/ershou/item/state/id/' + id,
+                url: '/api/ershou/item/state/id/' + id,
                 data: {
                     state: 1
                 },
@@ -151,7 +151,7 @@
         //下架商品
         function offSaleItem(id) {
             $.ajax({
-                url: '/ershou/item/state/id/' + id,
+                url: '/api/ershou/item/state/id/' + id,
                 data: {
                     state: 0
                 },
@@ -181,7 +181,7 @@
                     type: 'primary',
                     onClick: function () {
                         $.ajax({
-                            url: '/ershou/item/state/id/' + id,
+                            url: '/api/ershou/item/state/id/' + id,
                             data: {
                                 state: 2
                             },
@@ -257,7 +257,7 @@
                     </div>
                     <script>
                         $.ajax({
-                            url: '/ershou/item/id/${ErshouItem.id}/preview',
+                            url: '/api/ershou/item/id/${ErshouItem.id}/preview',
                             type: 'get',
                             success: function (result) {
                                 if (result.success === true) {
@@ -291,7 +291,7 @@
                     </div>
                     <script>
                         $.ajax({
-                            url: '/ershou/item/id/${ErshouItem.id}/preview',
+                            url: '/api/ershou/item/id/${ErshouItem.id}/preview',
                             type: 'get',
                             success: function (result) {
                                 if (result.success === true) {
@@ -321,7 +321,7 @@
                     </div>
                     <script>
                         $.ajax({
-                            url: '/ershou/item/id/${ErshouItem.id}/preview',
+                            url: '/api/ershou/item/id/${ErshouItem.id}/preview',
                             type: 'get',
                             success: function (result) {
                                 if (result.success === true) {

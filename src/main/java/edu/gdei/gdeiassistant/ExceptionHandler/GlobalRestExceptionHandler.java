@@ -1,7 +1,6 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
-import edu.gdei.gdeiassistant.Exception.ChargeException.SecurityInvalidException;
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
@@ -108,18 +107,6 @@ public class GlobalRestExceptionHandler {
     public ResponseEntity HandleTimeStampIncorrectException(TimeStampIncorrectException e) {
         log.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.TIMESTAMP_INVALIDATED, false, "时间戳校验失败，请尝试重新登录"));
-    }
-
-    /**
-     * 处理安全校验不通过异常
-     *
-     * @return
-     */
-    @ExceptionHandler(SecurityInvalidException.class)
-    public ResponseEntity HandleSecurityInvalidException(SecurityInvalidException e) {
-        log.error("GlobalRestExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.CHARGE_SECURITY_INVALID
-                , false, "充值安全校验不通过"));
     }
 
     /**

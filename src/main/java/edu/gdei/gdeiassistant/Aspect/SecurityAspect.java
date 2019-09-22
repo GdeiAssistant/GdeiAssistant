@@ -1,11 +1,12 @@
 package edu.gdei.gdeiassistant.Aspect;
 
 import com.alibaba.fastjson.JSON;
-import edu.gdei.gdeiassistant.Exception.ChargeException.SecurityInvalidException;
+import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.EncryptedData;
 import edu.gdei.gdeiassistant.Pojo.Entity.RequestSecurity;
 import edu.gdei.gdeiassistant.Pojo.Entity.RequestValidation;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
+import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Tools.AESUtils;
 import edu.gdei.gdeiassistant.Tools.RSAUtils;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
@@ -107,6 +108,7 @@ public class SecurityAspect {
                 }
             }
         }
-        throw new SecurityInvalidException("安全校验不通过");
+        return new DataJsonResult(new JsonResult(ErrorConstantUtils.CHARGE_SECURITY_INVALID
+                , false, "充值安全校验不通过"));
     }
 }

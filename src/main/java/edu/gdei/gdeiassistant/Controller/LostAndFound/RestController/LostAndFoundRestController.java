@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.LostAndFound.RestController;
 
+import edu.gdei.gdeiassistant.Annotation.RestCheckAuthentication;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import edu.gdei.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import edu.gdei.gdeiassistant.Pojo.Entity.LostAndFoundItem;
@@ -33,7 +34,8 @@ public class LostAndFoundRestController {
      * @return
      */
     @RequestMapping(value = "/api/lostandfound/lostitem/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<LostAndFoundItem>> GetLostItem(@PathVariable("start") int start) throws Exception {
+    @RestCheckAuthentication(name = "lostandfound")
+    public DataJsonResult<List<LostAndFoundItem>> GetLostItem(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundService
                 .QueryLostItems(start);
         return new DataJsonResult<>(true, lostAndFoundItemList);
@@ -46,7 +48,8 @@ public class LostAndFoundRestController {
      * @return
      */
     @RequestMapping(value = "/api/lostandfound/founditem/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<LostAndFoundItem>> GetFoundInfo(@PathVariable("start") int start) throws Exception {
+    @RestCheckAuthentication(name = "lostandfound")
+    public DataJsonResult<List<LostAndFoundItem>> GetFoundInfo(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundService.QueryFoundItems(start);
         return new DataJsonResult<>(true, lostAndFoundItemList);
     }
@@ -60,7 +63,8 @@ public class LostAndFoundRestController {
      * @return
      */
     @RequestMapping(value = "/api/lostandfound/lostitem/type/{type}/start/{start}", method = RequestMethod.POST)
-    public DataJsonResult<List<LostAndFoundItem>> SearchLostAndFoundInfo(@PathVariable("type") Integer lostType
+    @RestCheckAuthentication(name = "lostandfound")
+    public DataJsonResult<List<LostAndFoundItem>> SearchLostAndFoundInfo(HttpServletRequest request, @PathVariable("type") Integer lostType
             , @Validated @Range(min = 0, max = 1) @PathVariable("start") Integer start, @Validated @NotBlank @Length(min = 1, max = 50) @RequestParam("keyword") String keywords) throws Exception {
         List<LostAndFoundItem> lostAndFoundItemList = null;
         if (lostType.equals(0)) {
@@ -78,7 +82,8 @@ public class LostAndFoundRestController {
      * @return
      */
     @RequestMapping(value = "/api/lostandfound/item/id/{id}/preview", method = RequestMethod.GET)
-    public DataJsonResult<String> GetLostAndFoundItemPreviewImage(@PathVariable("id") int id) {
+    @RestCheckAuthentication(name = "lostandfound")
+    public DataJsonResult<String> GetLostAndFoundItemPreviewImage(HttpServletRequest request, @PathVariable("id") int id) {
         List<String> list = lostAndFoundService.GetLostAndFoundItemPictureURL(id);
         if (list != null && !list.isEmpty()) {
             String previewImageURl = list.get(0);
@@ -96,7 +101,8 @@ public class LostAndFoundRestController {
      * @return
      */
     @RequestMapping(value = "/api/lostandfound/founditem/type/{type}/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<LostAndFoundItem>> SearchFoundInfoByType(@PathVariable("type") Integer type
+    @RestCheckAuthentication(name = "lostandfound")
+    public DataJsonResult<List<LostAndFoundItem>> SearchFoundInfoByType(HttpServletRequest request, @PathVariable("type") Integer type
             , @PathVariable("start") Integer start) throws Exception {
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundService
                 .QueryFoundItemsByType(type, start);
@@ -111,6 +117,7 @@ public class LostAndFoundRestController {
      * @return
      */
     @RequestMapping(value = "/api/lostandfound/item/id/{id}/didfound", method = RequestMethod.POST)
+    @RestCheckAuthentication(name = "lostandfound")
     public JsonResult DidFoundItem(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         LostAndFoundInfo lostAndFoundInfo = lostAndFoundService.QueryLostAndFoundInfoByID(id);
@@ -129,7 +136,8 @@ public class LostAndFoundRestController {
      * @return
      */
     @RequestMapping(value = "/api/lostandfound/item/id/{id}", method = RequestMethod.POST)
-    public JsonResult UpdateLostAndFoundInfo(@PathVariable("id") Integer id
+    @RestCheckAuthentication(name = "lostandfound")
+    public JsonResult UpdateLostAndFoundInfo(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated LostAndFoundItem lostAndFoundItem) throws Exception {
         lostAndFoundService.UpdateLostAndFoundItem(lostAndFoundItem, id);
         return new JsonResult(true);
@@ -148,6 +156,7 @@ public class LostAndFoundRestController {
      * @throws IOException
      */
     @RequestMapping(value = "/api/lostandfound/item", method = RequestMethod.POST)
+    @RestCheckAuthentication(name = "lostandfound")
     public JsonResult AddLostAndFoundInfo(HttpServletRequest request
             , @Validated LostAndFoundItem lostAndFoundItem, MultipartFile image1
             , MultipartFile image2, MultipartFile image3, MultipartFile image4) throws Exception {

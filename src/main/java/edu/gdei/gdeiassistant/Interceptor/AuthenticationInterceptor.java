@@ -60,7 +60,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return true;
         } else {
             //未通过实名认证
-            if (request.getServletContext().getAttribute("authentication.force").equals(true)) {
+            if (Boolean.TRUE.equals(request.getServletContext().getAttribute("authentication.force"))) {
                 //强制实名认证，跳转到实名认证提示页面或返回错误信息
                 //数据接口拒绝操作和访问资源，返回JSON提示信息
                 if (uri.startsWith("/api") || uri.startsWith("/rest")) {

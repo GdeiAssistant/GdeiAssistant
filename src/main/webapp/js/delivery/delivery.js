@@ -16,37 +16,6 @@ function textAreaInputLengthCheck(str, maxLen) {
     $("#length").text(str.value.length);
 }
 
-//检查实名认证状态
-function loadAuthenticationState() {
-    $.ajax({
-        url: "/api/authentication",
-        method: "GET",
-        success: function (result) {
-            if (result.success) {
-                if (!result.data) {
-                    //未完成实名认证不可使用全民快递
-                    $.alert({
-                        title: '未完成实名认证',
-                        text: '你未完成实名认证，暂不可以使用全民快递功能，请先前往个人中心进行实名认证',
-                        onOK: function () {
-                            history.go(-1);
-                        }
-                    });
-                }
-            } else {
-                $(".weui_warn").text(result.message).show().delay(2000).hide(0);
-            }
-        },
-        error: function (result) {
-            if (result.status) {
-                $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
-            } else {
-                $(".weui_warn").text('网络连接失败,请检查网络连接').show().delay(2000).hide(0);
-            }
-        }
-    });
-}
-
 //检查下单属性并提交
 function submitForm() {
     if ($("#name").val() == '' || $("#name").val() > 10) {

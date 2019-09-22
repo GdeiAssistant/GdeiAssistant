@@ -24,7 +24,7 @@ public class SettingOptionConfig {
      */
     @Bean
     public void CheckForceAuthentication() {
-        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("setting.authentication.force"))).equals(1)) {
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.force"))).equals(1)) {
             servletContext.setAttribute("authentication.force", true);
         }
     }
@@ -43,9 +43,32 @@ public class SettingOptionConfig {
      * 检查是否使用Pride主题
      */
     @Bean
-    public void CheckUsingPrideTheme(){
+    public void CheckUsingPrideTheme() {
         if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("theme.pride"))).equals(1)) {
             servletContext.setAttribute("pridetheme", true);
+        }
+    }
+
+    /**
+     * 检查各功能模块是否启用实名认证
+     */
+    @Bean
+    public void CheckFunctionalAuthentication() {
+        //二手交易
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.ershou"))).equals(1)) {
+            servletContext.setAttribute("authentication.ershou", true);
+        }
+        //失物招领
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.lostandfound"))).equals(1)) {
+            servletContext.setAttribute("authentication.lostandfound", true);
+        }
+        //校园树洞
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.secret"))).equals(1)) {
+            servletContext.setAttribute("authentication.secret", true);
+        }
+        //全民快递
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.delivery"))).equals(1)) {
+            servletContext.setAttribute("authentication.delivery", true);
         }
     }
 }

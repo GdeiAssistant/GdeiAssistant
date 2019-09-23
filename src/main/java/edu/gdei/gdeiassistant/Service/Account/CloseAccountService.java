@@ -79,6 +79,42 @@ public class CloseAccountService {
     private CloseMapper closeMapper;
 
     /**
+     * 关闭待处理的社区功能信息
+     */
+    @Transactional("appTranscationManager")
+    public void CloseSocialDataState(String username) throws Exception {
+        List<ErshouItem> ershouItemList = ershouMapper
+                .selectItemsByUsername(StringEncryptUtils.encryptString(username));
+        for (ErshouItem ershouItem : ershouItemList) {
+            if (ershouItem.getState().equals(1)) {
+                ershouMapper.updateItemState(ershouItem.getId(), 3);
+            }
+        }
+        List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
+                .selectItemByUsername(StringEncryptUtils.encryptString(username));
+        for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
+            if (lostAndFoundItem.getState().equals(0)) {
+                lostAndFoundMapper.updateItemState(lostAndFoundItem.getId(), 2);
+            }
+        }
+        List<DeliveryOrder> deliveryOrderList = deliveryMapper
+                .selectDeliveryOrderByUsername(StringEncryptUtils.encryptString(username));
+        for (DeliveryOrder deliveryOrder : deliveryOrderList) {
+            if (deliveryOrder.getState().equals(0)) {
+                //下单者有未删除的快递代收订单信息
+                deliveryMapper.updateOrderState(deliveryOrder.getOrderId(), 3);
+            } else if (deliveryOrder.getState().equals(1)) {
+                //下单者有未确认交付的快递代收交易
+                DeliveryTrade deliveryTrade = deliveryMapper.selectDeliveryTradeByOrderId(deliveryOrder.getOrderId());
+                if (deliveryTrade != null && deliveryTrade.getState().equals(0)) {
+                    deliveryMapper.updateTradeState(deliveryTrade.getTradeId(), 2);
+                }
+            }
+        }
+    }
+
+
+    /**
      * 删除用户账号
      *
      * @param username
@@ -125,14 +161,6 @@ public class CloseAccountService {
                 if (deliveryTrade != null && deliveryTrade.getState().equals(0)) {
                     throw new ItemAvailableException("请确认交付账号下的未交付的快递代收交易");
                 }
-            }
-        }
-        List<DeliveryTrade> deliveryTradeList = deliveryMapper
-                .selectDeliveryTradeByUsername(StringEncryptUtils.encryptString(username));
-        for (DeliveryTrade deliveryTrade : deliveryTradeList) {
-            //接单者有未确认交付的快递代收交易
-            if (deliveryTrade.getState().equals(0)) {
-                throw new ItemAvailableException("你有未交付的快递代收交易，请联系下单者确认交付");
             }
         }
 

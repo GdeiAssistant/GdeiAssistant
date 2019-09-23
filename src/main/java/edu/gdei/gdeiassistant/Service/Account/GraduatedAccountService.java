@@ -90,9 +90,9 @@ public class GraduatedAccountService {
     }
 
     /**
-     * 从每年的七月开始至九月结束，每隔半个月执行毕业用户账号处理方案
+     * 每年的七月一日执行毕业用户账号处理方案
      */
-    @Scheduled(cron = "0 0 0 1,15,30 7,8,9 ?")
+    @Scheduled(cron = "0 0 0 1 7 ?")
     public void ProceedGraduationProgram() throws Exception {
         log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了执行毕业用户账号处理方案的任务");
         List<User> userList = userMapper.selectAllUser();
@@ -116,6 +116,8 @@ public class GraduatedAccountService {
                         //升级为毕业用户账号
                         userMapper.updateUserGroup(user.getUsername(), UserGroupEnum.GRADUATED.getValue());
                     } else {
+                        //关闭待处理的社区功能信息
+                        closeAccountService.CloseSocialDataState(decryptedUser.getUsername());
                         //删除用户账号
                         closeAccountService.CloseAccount(decryptedUser.getUsername(), decryptedUser.getPassword());
                     }

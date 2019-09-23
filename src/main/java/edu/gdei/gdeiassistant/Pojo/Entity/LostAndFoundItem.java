@@ -90,6 +90,7 @@ public class LostAndFoundItem implements Serializable, Entity {
      * 物品状态
      * 0为寻主/寻物中
      * 1为确认寻回
+     * 2为系统删除
      */
     private Integer state;
 

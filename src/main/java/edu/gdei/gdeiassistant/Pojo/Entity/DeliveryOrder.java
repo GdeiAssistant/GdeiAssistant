@@ -55,7 +55,7 @@ public class DeliveryOrder implements Serializable, Entity {
     @Length(min = 1, max = 50)
     private String address;
 
-    //状态，0为未被接单，1为已被接单，2为标记删除
+    //状态，0为未被接单，1为已被接单，2为用户自主删除，3为系统删除
     private Integer state;
 
     //备注信息

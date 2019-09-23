@@ -26,7 +26,7 @@ public class DeliveryTrade implements Serializable, Entity {
     //接单者用户名
     private String username;
 
-    //交易状态，0为等待完成，1为已完成
+    //交易状态，0为等待完成，1为已完成，2为系统删除
     private Integer state;
 
     public Integer getOrderId() {

@@ -83,6 +83,7 @@ public class ErshouItem implements Serializable, Entity {
      * 0为下架
      * 1为待出售
      * 2为已出售
+     * 3为系统删除
      */
     private Integer state;
 

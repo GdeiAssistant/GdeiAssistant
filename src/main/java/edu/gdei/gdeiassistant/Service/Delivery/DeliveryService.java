@@ -164,7 +164,7 @@ public class DeliveryService {
     @Transactional("appTransactionManager")
     public void UpdateOrderAndInsertTradeRecord(Integer orderId, String username) throws Exception {
         //设置排他锁更新订单状态，并发情况下只允许一个线程修改该订单ID的订单状态
-        int result = deliveryMapper.updateOrderState(orderId);
+        int result = deliveryMapper.updateOrderState(orderId, 1);
         if (result > 0) {
             //若影响行数大于0，则表示抢单成功
             DeliveryTrade deliveryTrade = new DeliveryTrade();

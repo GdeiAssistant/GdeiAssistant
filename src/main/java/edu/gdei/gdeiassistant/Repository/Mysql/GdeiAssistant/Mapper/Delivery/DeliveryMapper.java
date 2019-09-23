@@ -89,8 +89,8 @@ public interface DeliveryMapper {
     @Insert("insert into delivery_trade (order_id,create_time,username,state) values(#{orderId},now(),#{username},0)")
     public void insertTradeRecord(DeliveryTrade deliveryTrade);
 
-    @Update("update delivery_order set state=1 where order_id=#{id} and state=0")
-    public int updateOrderState(int id);
+    @Update("update delivery_order set state=#{state} where order_id=#{id} and state=0")
+    public int updateOrderState(@Param("id") int id, @Param("state") int state);
 
     @Update("update delivery_trade set state=#{state} where trade_id=#{tradeId}")
     public void updateTradeState(@Param("tradeId") Integer tradeId, @Param("state") Integer state);

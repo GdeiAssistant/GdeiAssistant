@@ -13,6 +13,7 @@ import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Ershou.Ersho
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Gender.GenderMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Graduation.GraduationMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.LostAndFound.LostAndFoundMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Phone.PhoneMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Privacy.PrivacyMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Profile.ProfileMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.User.UserMapper;
@@ -53,6 +54,9 @@ public class CloseAccountService {
 
     @Autowired
     private CetMapper cetMapper;
+
+    @Autowired
+    private PhoneMapper phoneMapper;
 
     @Autowired
     private GenderMapper genderMapper;
@@ -171,6 +175,11 @@ public class CloseAccountService {
                 .selectNumber(StringEncryptUtils.encryptString(username));
         if (cetNumber != null) {
             cetMapper.updateNumber(StringEncryptUtils.encryptString(username), null);
+        }
+        //删除绑定的手机号
+        Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(username));
+        if (phone != null) {
+            phoneMapper.deletePhone(StringEncryptUtils.encryptString(username));
         }
         //删除自定义性别
         genderMapper.deleteCustomGender(StringEncryptUtils.encryptString(username));

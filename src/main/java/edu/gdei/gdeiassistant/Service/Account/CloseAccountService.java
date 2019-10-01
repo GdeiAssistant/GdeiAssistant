@@ -190,7 +190,7 @@ public class CloseAccountService {
         wechatUserMapper.resetWechatUser(StringEncryptUtils.encryptString(username));
         yiBanUserMapper.resetYiBanUser(StringEncryptUtils.encryptString(username));
         //删除用户资料信息
-        profileMapper.resetUserProfile(StringEncryptUtils.encryptString(username), "广东二师助手用户");
+        profileMapper.resetUserProfile(StringEncryptUtils.encryptString(username), "已注销");
         profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(username));
         //清除实名认证信息
         Authentication authentication = authenticationMapper.selectAuthentication(StringEncryptUtils.encryptString(username));

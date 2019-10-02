@@ -77,7 +77,11 @@ public class AuthenticationAspect {
         Authentication authentication = authenticateDataService.QueryAuthenticationData(username);
         if (authentication != null) {
             //已经通过实名认证
-            return (DataJsonResult) proceedingJoinPoint.proceed(args);
+            Object result = proceedingJoinPoint.proceed(args);
+            if (result instanceof DataJsonResult) {
+                return (DataJsonResult) result;
+            }
+            return new DataJsonResult((JsonResult) result);
         }
         //未完成实名认证，检查当前访问的单元模块是否要求实名认证
         if (Boolean.TRUE.equals(request.getServletContext().getAttribute("authentication."
@@ -85,7 +89,11 @@ public class AuthenticationAspect {
             return new DataJsonResult(new JsonResult(ErrorConstantUtils.NOT_AUTHENTICATION, false
                     , "请前往个人中心完成实名认证后再使用此功能"));
         }
-        return (DataJsonResult) proceedingJoinPoint.proceed(args);
+        Object result = proceedingJoinPoint.proceed(args);
+        if (result instanceof DataJsonResult) {
+            return (DataJsonResult) result;
+        }
+        return new DataJsonResult((JsonResult) result);
     }
 
 }

@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
     <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <c:if test="${applicationScope.get('grayscale')}">
-        <link rel="stylesheet" href="/css/common/grayscale.css">
+        <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/authiframe.js"></script>

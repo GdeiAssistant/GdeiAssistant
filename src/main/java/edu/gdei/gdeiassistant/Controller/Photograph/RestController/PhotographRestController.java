@@ -103,7 +103,7 @@ public class PhotographRestController {
     @RequestMapping(value = "/api/photograph/id/{id}/comment", method = RequestMethod.GET)
     @RestCheckAuthentication(name = "photograph")
     public DataJsonResult<List<PhotographComment>> QueryPhotographCommentList(HttpServletRequest request
-            , @PathVariable("id") int id) {
+            , @PathVariable("id") int id) throws WsgException {
         List<PhotographComment> photographCommentList = photographService.QueryPhotographCommentList(id);
         return new DataJsonResult<>(true, photographCommentList);
     }
@@ -168,7 +168,7 @@ public class PhotographRestController {
      */
     @RequestMapping(value = "/api/photograph/id/{id}/like", method = RequestMethod.POST)
     @RestCheckAuthentication(name = "photograph")
-    public JsonResult LikePhotograph(HttpServletRequest request, @PathVariable("id") int id) {
+    public JsonResult LikePhotograph(HttpServletRequest request, @PathVariable("id") int id) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
         photographService.LikePhotograph(id, username);
         return new JsonResult(true);

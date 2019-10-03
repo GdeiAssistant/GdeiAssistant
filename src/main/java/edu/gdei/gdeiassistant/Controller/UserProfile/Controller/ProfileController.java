@@ -52,7 +52,7 @@ public class ProfileController {
             modelAndView.setViewName("Profile/personalProfile");
             modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(username));
             modelAndView.addObject("Username", username);
-            modelAndView.addObject("KickName", profile.getKickname());
+            modelAndView.addObject("NickName", profile.getNickname());
             if (profile.getGender() != null && profile.getGender() != 0) {
                 if (profile.getGender() == 3) {
                     modelAndView.addObject("Gender", profile.getCustomGenderName());
@@ -136,7 +136,7 @@ public class ProfileController {
             modelAndView.setViewName("Profile/publicProfile");
             modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(username));
             modelAndView.addObject("Username", username);
-            modelAndView.addObject("KickName", profile.getKickname());
+            modelAndView.addObject("NickName", profile.getNickname());
             if (privacy.isGenderOpen().equals(Boolean.TRUE)) {
                 if (profile.getGender() != null && profile.getGender() != 0) {
                     if (profile.getGender() == 3) {

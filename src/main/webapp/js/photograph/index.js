@@ -109,7 +109,7 @@ function loadCommentList(id) {
                             "<a href='/profile/user/" + result.data[i].username + "'><img id='comment-avatar-" + result.data[i].commentId + "' src='/img/avatar/default.png'" +
                             " class='am-comment-avatar' width='48' height='48'></a>" +
                             "<div class='am-comment-main'><header class='am-comment-hd'><div class='am-comment-meta'>" +
-                            "<a href='/profile/user/" + result.data[i].username + "' class='am-comment-author'><time datetime=''>" + result.data[i].createTime + "</time> " + result.data[i].kickname + "</a></div></header>" +
+                            "<a href='/profile/user/" + result.data[i].username + "' class='am-comment-author'><time datetime=''>" + result.data[i].createTime + "</time> " + result.data[i].nickname + "</a></div></header>" +
                             "<div class='am-comment-bd'>" + result.data[i].comment + "</div></div></article>" +
                             "<script>loadCommenterAvatar(" + result.data[i].commentId + ",'" + result.data[i].username + "')<\/script>");
                     }

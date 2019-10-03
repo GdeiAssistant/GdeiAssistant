@@ -24,7 +24,7 @@ public interface ErshouMapper {
             @Result(property = "ershouItem.state", column = "state"),
             @Result(property = "ershouItem.publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP),
             @Result(property = "profile.username", column = "username"),
-            @Result(property = "profile.kickname", column = "kickname")
+            @Result(property = "profile.nickname", column = "nickname")
     })
     public ErshouInfo selectInfoByID(int id) throws Exception;
 

@@ -381,7 +381,7 @@ DROP TABLE IF EXISTS `dating_profile`;
 CREATE TABLE `dating_profile` (
   `profile_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '卖室友信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `kickname` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
+  `nickname` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `area` tinyint(1) NOT NULL COMMENT '地区',
   `grade` tinyint(1) NOT NULL COMMENT '年级',
   `faculty` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '院系',
@@ -764,7 +764,7 @@ DROP TABLE IF EXISTS `profile`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `profile` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `kickname` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
+  `nickname` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `gender` tinyint(1) DEFAULT NULL COMMENT '性别',
   `birthday` date DEFAULT NULL COMMENT '生日',
   `degree` tinyint(1) DEFAULT NULL COMMENT '学历',

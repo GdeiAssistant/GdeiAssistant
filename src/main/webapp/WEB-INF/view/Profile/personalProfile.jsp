@@ -73,7 +73,7 @@
             <p>昵称</p>
         </div>
         <div class="weui-cell__ft">
-            ${KickName}
+            ${NickName}
         </div>
     </div>
 

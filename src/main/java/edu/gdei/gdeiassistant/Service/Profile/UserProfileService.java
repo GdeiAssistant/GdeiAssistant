@@ -407,14 +407,14 @@ public class UserProfileService {
      * 更新昵称个人资料
      *
      * @param username
-     * @param kickname
+     * @param nickname
      * @return
      */
-    public void UpdateKickname(String username, String kickname) throws Exception {
+    public void UpdateNickname(String username, String nickname) throws Exception {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {
-            profile.setKickname(kickname);
-            profileMapper.updateKickname(profile);
+            profile.setNickname(nickname);
+            profileMapper.updateNickname(profile);
             return;
         }
         throw new UserNotExistException("查询的用户不存在");

@@ -7,7 +7,7 @@ public class DataSQLBuilder {
 
     public String selectUserProfile(String username) {
         return new SQL() {{
-            SELECT("p.kickname,p.gender,p.birthday,p.degree,p.faculty,p.major,p.region,p.state,p.city");
+            SELECT("p.nickname,p.gender,p.birthday,p.degree,p.faculty,p.major,p.region,p.state,p.city");
             SELECT("p.enrollment,p.profession,p.primary_school,p.junior_high_school,p.high_school");
             SELECT("g.gender as custom_gender");
             FROM("profile p");

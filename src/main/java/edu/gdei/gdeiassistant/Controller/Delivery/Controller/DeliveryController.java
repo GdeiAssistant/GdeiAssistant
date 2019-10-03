@@ -41,10 +41,10 @@ public class DeliveryController {
         String username = (String) request.getSession().getAttribute("username");
         //获取头像地址
         String url = userProfileService.GetUserAvatar(username);
-        String kickname = userProfileService.GetUserProfile(username).getKickname();
+        String nickname = userProfileService.GetUserProfile(username).getNickname();
         modelAndView.setViewName("Delivery/index");
         modelAndView.addObject("AvatarURL", url);
-        modelAndView.addObject("KickName", kickname);
+        modelAndView.addObject("NickName", nickname);
         return modelAndView;
     }
 

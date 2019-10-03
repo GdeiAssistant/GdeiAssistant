@@ -82,7 +82,7 @@
 
         <div class="releaseBox">
             <input type="hidden" class="movieid" value="2"/>
-            <div class="releaseName">${DatingProfile.kickname}
+            <div class="releaseName">${DatingProfile.nickname}
                 <div class="yuan" style="top: -5.5px; left: -5.5px;"></div>
                 <div class="yuan" style="top: -5.5px; right: -5.5px;"></div>
                 <div class="yuan" style="top: -5.5px; left: 50%; margin-left: -5.5px;"></div>

@@ -73,7 +73,7 @@ $(function () {
         }
 
         if (file.size > maxSize) {
-            $.alert("图片文件不能超过2MB", "文件过大");
+            $.alert("图片文件不能超过5MB", "文件过大");
             return;
         }
 

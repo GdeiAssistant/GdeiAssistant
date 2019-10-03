@@ -120,22 +120,22 @@
                                             if (result.data[i].state == 0) {
                                                 $(".record").eq(0).append("<div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + "," + result.data[i].messageId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                     "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div class='movieName'>[未读]撩一下请求被拒绝</div>" +
-                                                    "<div class='Message'>" + result.data[i].datingPick.datingProfile.kickname + "拒绝了你的撩一下请求</div></div>");
+                                                    "<div class='Message'>" + result.data[i].datingPick.datingProfile.nickname + "拒绝了你的撩一下请求</div></div>");
                                             } else {
                                                 $(".record").eq(0).append("<div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                     "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div class='movieName'>撩一下请求被拒绝</div>"
-                                                    + "<div class='Message'>" + result.data[i].datingPick.datingProfile.kickname + "拒绝了你的撩一下请求</div></div>");
+                                                    + "<div class='Message'>" + result.data[i].datingPick.datingProfile.nickname + "拒绝了你的撩一下请求</div></div>");
                                             }
                                         } else {
                                             //被接受通知
                                             if (result.data[i].state == 0) {
                                                 $(".record").eq(0).append("<div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                     "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + "," + result.data[i].messageId + ")' class='movieName'>[未读]撩一下请求被接受</div>" +
-                                                    "<div class='Message'>" + result.data[i].datingPick.datingProfile.kickname + "接受了你的撩一下请求</div></div>");
+                                                    "<div class='Message'>" + result.data[i].datingPick.datingProfile.nickname + "接受了你的撩一下请求</div></div>");
                                             } else {
                                                 $(".record").eq(0).append("<div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + ")' class='MessageBox'><div class='yuan' style='top: -5.5px; left: -5.5px;'></div>" +
                                                     "<div class='yuan' style='top: -5.5px; right: -5.5px;'></div><div onclick='showProfile(" + result.data[i].datingPick.datingProfile.profileId + ")' class='movieName'>撩一下请求被接受</div>" +
-                                                    "<div class='Message'>" + result.data[i].datingPick.datingProfile.kickname + "接受了你的撩一下请求</div></div>");
+                                                    "<div class='Message'>" + result.data[i].datingPick.datingProfile.nickname + "接受了你的撩一下请求</div></div>");
                                             }
                                         }
                                     }

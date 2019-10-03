@@ -19,7 +19,7 @@ public class PhotographComment implements Serializable, Entity {
 
     private String username;
 
-    private String kickname;
+    private String nickname;
 
     private String comment;
 
@@ -66,11 +66,11 @@ public class PhotographComment implements Serializable, Entity {
         this.photoId = photoId;
     }
 
-    public String getKickname() {
-        return kickname;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setKickname(String kickname) {
-        this.kickname = kickname;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

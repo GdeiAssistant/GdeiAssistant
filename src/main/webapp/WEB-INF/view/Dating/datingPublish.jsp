@@ -108,7 +108,7 @@
         function publishDating() {
             if (typeof (imageBase64) == 'undefined') {
                 showErrorTip("上传一张美美的照片吧");
-            } else if ($("#kickname").val().length == 0 || $("#kickname").val().length > 15) {
+            } else if ($("#nickname").val().length == 0 || $("#nickname").val().length > 15) {
                 showErrorTip("昵称长度不合法");
             } else if ($("#grade_value").val() == '') {
                 showErrorTip("年级未选择");
@@ -144,7 +144,7 @@
                     ia[j] = base64.charCodeAt(j);
                 }
                 formData.append('image', new Blob([ia], {type: "image/jpg"}));
-                formData.append('kickname', $("#kickname").val());
+                formData.append('nickname', $("#nickname").val());
                 formData.append('grade', $("#grade_value").val());
                 formData.append('area', $("#area_value").val());
                 formData.append('faculty', $("#faculty").val());
@@ -270,7 +270,7 @@
                 </div>
 
                 <div class="formInput">
-                    <p><input type="text" class="inputBox" id="kickname" placeholder="请输入你的昵称"/></p>
+                    <p><input type="text" class="inputBox" id="nickname" placeholder="请输入你的昵称"/></p>
                     <p>
                         <input type="hidden" id="grade_value" value=""/>
                         <input type="text" readOnly="readOnly" class="inputBox" id="grade" placeholder="请选择你的年级"

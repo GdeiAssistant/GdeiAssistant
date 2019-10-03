@@ -16,7 +16,7 @@ public class Profile implements Serializable, Entity {
 
     private String username;
 
-    private String kickname;
+    private String nickname;
 
     private Integer gender;
 
@@ -68,14 +68,6 @@ public class Profile implements Serializable, Entity {
 
     public void setHighSchool(String highSchool) {
         this.highSchool = highSchool;
-    }
-
-    public String getKickname() {
-        return kickname;
-    }
-
-    public void setKickname(String kickname) {
-        this.kickname = kickname;
     }
 
     public Integer getGender() {
@@ -180,5 +172,13 @@ public class Profile implements Serializable, Entity {
 
     public void setProfession(Integer profession) {
         this.profession = profession;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

@@ -14,7 +14,7 @@ public interface DatingMapper {
     @Results(id = "DatingProfile", value = {
             @Result(property = "profileId", column = "profile_id"),
             @Result(property = "username", column = "username"),
-            @Result(property = "kickname", column = "kickname"),
+            @Result(property = "nickname", column = "nickname"),
             @Result(property = "grade", column = "grade"),
             @Result(property = "faculty", column = "faculty"),
             @Result(property = "hometown", column = "hometown"),
@@ -35,15 +35,15 @@ public interface DatingMapper {
     @ResultMap("DatingProfile")
     public List<DatingProfile> selectDatingProfileByUsername(String username);
 
-    @Update("update dating_profile set kickname=#{kickname},grade=#{grade},faculty=#{faculty},hometown=#{hometown}" +
+    @Update("update dating_profile set nickname=#{nickname},grade=#{grade},faculty=#{faculty},hometown=#{hometown}" +
             ",condition=#{condition},qq=#{qq},wechat=#{wechat} where profile_id=#{profileId}")
     public void updateDatingProfile(DatingProfile datingProfile);
 
     @Update("update dating_profile set state=#{state} where profile_id=#{profileId}")
     public void updateDatingProfileState(@Param("profileId") Integer profileId, @Param("state") Integer state);
 
-    @Update("insert into dating_profile (username,kickname,area,grade,faculty,hometown,content,qq,wechat,state)" +
-            "values (#{username},#{kickname},#{area},#{grade},#{faculty},#{hometown},#{content},#{qq},#{wechat},1)")
+    @Update("insert into dating_profile (username,nickname,area,grade,faculty,hometown,content,qq,wechat,state)" +
+            "values (#{username},#{nickname},#{area},#{grade},#{faculty},#{hometown},#{content},#{qq},#{wechat},1)")
     @Options(useGeneratedKeys = true, keyProperty = "profileId")
     public Integer insertDatingProfile(DatingProfile datingProfile);
 
@@ -58,7 +58,7 @@ public interface DatingMapper {
             @Result(property = "state", column = "datingPickState"),
             @Result(property = "datingProfile.profileId", column = "profile_id"),
             @Result(property = "datingProfile.username", column = "username"),
-            @Result(property = "datingProfile.kickname", column = "kickname"),
+            @Result(property = "datingProfile.nickname", column = "nickname"),
             @Result(property = "datingProfile.grade", column = "grade"),
             @Result(property = "datingProfile.faculty", column = "faculty"),
             @Result(property = "datingProfile.hometown", column = "hometown"),
@@ -83,7 +83,7 @@ public interface DatingMapper {
 
     @Select("select message_id as datingMessageMessageId,dating_message.username as datingMessageUsername,type as datingMessageType,dating_message.state as datingMessageState," +
             "dating_pick.pick_id as datingPickPickId,dating_pick.username as datingPickUsername,dating_pick.content as datingPickContent,dating_pick.state as datingPickState," +
-            "dating_profile.username as datingProfileUsername,dating_profile.kickname as datingProfileKickname,dating_Profile.profile_id as datingProfileProfileId " +
+            "dating_profile.username as datingProfileUsername,dating_profile.nickname as datingProfileNickname,dating_Profile.profile_id as datingProfileProfileId " +
             "from dating_message,dating_pick,dating_profile " +
             "where dating_message.pick_id=dating_pick.pick_id and dating_pick.profile_id=dating_profile.profile_id " +
             "and dating_message.username=#{username} limit #{start},#{size}")
@@ -98,7 +98,7 @@ public interface DatingMapper {
             @Result(property = "state", column = "datingPickState"),
             @Result(property = "datingPick.profileId", column = "profile_id"),
             @Result(property = "datingPick.username", column = "username"),
-            @Result(property = "datingPick.kickname", column = "kickname"),
+            @Result(property = "datingPick.nickname", column = "nickname"),
             @Result(property = "datingPick.grade", column = "grade"),
             @Result(property = "datingPick.faculty", column = "faculty"),
             @Result(property = "datingPick.hometown", column = "hometown"),

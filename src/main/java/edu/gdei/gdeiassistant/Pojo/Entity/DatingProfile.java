@@ -28,7 +28,7 @@ public class DatingProfile implements Serializable, Entity {
      * 昵称
      */
     @Length(min = 1, max = 15)
-    private String kickname;
+    private String nickname;
 
     /**
      * 年级，由1-4分别代表大一至大四
@@ -85,14 +85,6 @@ public class DatingProfile implements Serializable, Entity {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getKickname() {
-        return kickname;
-    }
-
-    public void setKickname(String kickname) {
-        this.kickname = kickname;
     }
 
     public Integer getGrade() {
@@ -165,5 +157,13 @@ public class DatingProfile implements Serializable, Entity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

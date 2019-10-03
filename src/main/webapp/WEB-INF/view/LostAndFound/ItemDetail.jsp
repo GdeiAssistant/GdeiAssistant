@@ -115,7 +115,7 @@
                 </c:otherwise>
             </c:choose>
         </i>
-        <span class="nm">发布者：${LostAndFoundInfo.profile.kickname}</span>
+        <span class="nm">发布者：${LostAndFoundInfo.profile.nickname}</span>
     </a>
 
     <!-- 二手交易商品交易描述 -->

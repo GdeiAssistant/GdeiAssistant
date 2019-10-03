@@ -246,7 +246,7 @@ CREATE TABLE `access` (
   PRIMARY KEY (`id`),
   KEY `accessUserGroup_idx` (`user_group`),
   CONSTRAINT `accessUserGroup` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=155 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=273 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,7 +255,7 @@ CREATE TABLE `access` (
 
 LOCK TABLES `access` WRITE;
 /*!40000 ALTER TABLE `access` DISABLE KEYS */;
-INSERT INTO `access` VALUES (28,1,'grade'),(29,1,'schedule'),(30,1,'cet'),(31,1,'collection'),(32,1,'book'),(33,1,'bill'),(34,1,'card'),(35,1,'evaluate'),(36,1,'spare'),(37,1,'kaoyan'),(38,1,'tice'),(39,1,'news'),(40,1,'data'),(41,1,'ershou'),(42,1,'lostandfound'),(43,1,'secret'),(44,1,'delivery'),(45,1,'calendar'),(46,1,'government'),(47,1,'volunteer'),(48,1,'wechat'),(49,1,'yiban'),(52,2,'grade'),(53,2,'schedule'),(54,2,'cet'),(55,2,'collection'),(56,2,'book'),(57,2,'bill'),(58,2,'card'),(59,2,'evaluate'),(60,2,'spare'),(61,2,'kaoyan'),(62,2,'tice'),(63,2,'news'),(64,2,'data'),(65,2,'ershou'),(66,2,'lostandfound'),(67,2,'secret'),(68,2,'delivery'),(69,2,'calendar'),(70,2,'government'),(71,2,'volunteer'),(72,2,'wechat'),(73,2,'yiban'),(76,3,'grade'),(77,3,'schedule'),(79,3,'collection'),(80,3,'book'),(83,3,'evaluate'),(84,3,'spare'),(85,3,'kaoyan'),(86,3,'tice'),(87,3,'news'),(88,3,'data'),(89,3,'ershou'),(90,3,'lostandfound'),(91,3,'secret'),(92,3,'delivery'),(93,3,'calendar'),(94,3,'government'),(95,3,'volunteer'),(96,3,'wechat'),(97,3,'yiban'),(102,6,'cet'),(103,6,'collection'),(109,6,'kaoyan'),(111,6,'news'),(112,6,'data'),(113,6,'ershou'),(114,6,'lostandfound'),(115,6,'secret'),(116,6,'delivery'),(117,6,'calendar'),(118,6,'government'),(119,6,'volunteer'),(120,6,'wechat'),(121,6,'yiban'),(124,1,'lost'),(125,2,'lost'),(126,1,'charge'),(127,2,'charge'),(128,7,'grade'),(129,7,'schedule'),(130,7,'cet'),(131,7,'collection'),(132,7,'book'),(133,7,'bill'),(134,7,'card'),(135,7,'evaluate'),(136,7,'spare'),(137,7,'kaoyan'),(138,7,'tice'),(139,7,'news'),(140,7,'data'),(141,7,'ershou'),(142,7,'lostandfound'),(143,7,'secret'),(144,7,'delivery'),(145,7,'calendar'),(146,7,'government'),(147,7,'volunteer'),(148,7,'wechat'),(149,7,'yiban'),(150,1,'student'),(151,2,'student'),(152,3,'student'),(153,6,'student'),(154,7,'student');
+INSERT INTO `access` VALUES (160,1,'grade'),(161,1,'schedule'),(162,1,'cet'),(163,1,'collection'),(164,1,'book'),(165,1,'bill'),(166,1,'card'),(167,1,'evaluate'),(168,1,'spare'),(169,1,'kaoyan'),(170,1,'tice'),(171,1,'news'),(172,1,'data'),(173,1,'ershou'),(174,1,'lostandfound'),(175,1,'secret'),(176,1,'delivery'),(177,1,'calendar'),(178,1,'government'),(179,1,'volunteer'),(180,1,'wechat'),(181,1,'yiban'),(182,2,'grade'),(183,2,'schedule'),(184,2,'cet'),(185,2,'collection'),(186,2,'book'),(187,2,'bill'),(188,2,'card'),(189,2,'evaluate'),(190,2,'spare'),(191,2,'kaoyan'),(192,2,'tice'),(193,2,'news'),(194,2,'data'),(195,2,'ershou'),(196,2,'lostandfound'),(197,2,'secret'),(198,2,'delivery'),(199,2,'calendar'),(200,2,'government'),(201,2,'volunteer'),(202,2,'wechat'),(203,2,'yiban'),(204,3,'grade'),(205,3,'schedule'),(206,3,'collection'),(207,3,'book'),(208,3,'evaluate'),(209,3,'spare'),(210,3,'kaoyan'),(211,3,'tice'),(212,3,'news'),(213,3,'data'),(214,3,'ershou'),(215,3,'lostandfound'),(216,3,'secret'),(217,3,'delivery'),(218,3,'calendar'),(219,3,'government'),(220,3,'volunteer'),(221,3,'wechat'),(222,3,'yiban'),(223,6,'cet'),(224,6,'collection'),(225,6,'kaoyan'),(226,6,'news'),(227,6,'data'),(228,6,'ershou'),(229,6,'lostandfound'),(230,6,'secret'),(231,6,'delivery'),(232,6,'calendar'),(233,6,'government'),(234,6,'volunteer'),(235,6,'wechat'),(236,6,'yiban'),(237,1,'lost'),(238,2,'lost'),(239,1,'charge'),(240,2,'charge'),(241,7,'grade'),(242,7,'schedule'),(243,7,'cet'),(244,7,'collection'),(245,7,'book'),(246,7,'bill'),(247,7,'card'),(248,7,'evaluate'),(249,7,'spare'),(250,7,'kaoyan'),(251,7,'tice'),(252,7,'news'),(253,7,'data'),(254,7,'ershou'),(255,7,'lostandfound'),(256,7,'secret'),(257,7,'delivery'),(258,7,'calendar'),(259,7,'government'),(260,7,'volunteer'),(261,7,'wechat'),(262,7,'yiban'),(263,1,'student'),(264,2,'student'),(265,3,'student'),(266,6,'student'),(267,7,'student'),(268,1,'photograph'),(269,2,'photograph'),(270,3,'photograph'),(271,6,'photograph'),(272,7,'photograph');
 /*!40000 ALTER TABLE `access` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -287,7 +287,7 @@ CREATE TABLE `authentication` (
 
 LOCK TABLES `authentication` WRITE;
 /*!40000 ALTER TABLE `authentication` DISABLE KEYS */;
-INSERT INTO `authentication` VALUES (2,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','gdeiassistant','2019-08-31 14:01:30','2019-08-31 14:01:30',0);
+INSERT INTO `authentication` VALUES (1,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','gdeiassistant','2019-08-31 14:01:30','2019-08-31 14:01:30',0);
 /*!40000 ALTER TABLE `authentication` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -568,7 +568,6 @@ CREATE TABLE `introduction` (
 
 LOCK TABLES `introduction` WRITE;
 /*!40000 ALTER TABLE `introduction` DISABLE KEYS */;
-INSERT INTO `introduction` VALUES ('gdeiassistant',NULL);
 /*!40000 ALTER TABLE `introduction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -605,6 +604,117 @@ CREATE TABLE `lostandfound` (
 LOCK TABLES `lostandfound` WRITE;
 /*!40000 ALTER TABLE `lostandfound` DISABLE KEYS */;
 /*!40000 ALTER TABLE `lostandfound` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `phone`
+--
+
+DROP TABLE IF EXISTS `phone`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `phone` (
+  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
+  `code` smallint(3) NOT NULL COMMENT '国际区号',
+  `phone` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号',
+  `gmt_create` datetime NOT NULL COMMENT '记录创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '记录更新时间',
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `phone`
+--
+
+LOCK TABLES `phone` WRITE;
+/*!40000 ALTER TABLE `phone` DISABLE KEYS */;
+/*!40000 ALTER TABLE `phone` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `photograph`
+--
+
+DROP TABLE IF EXISTS `photograph`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `photograph` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '照片信息ID',
+  `title` varchar(25) COLLATE utf8mb4_bin NOT NULL COMMENT '照片信息标题',
+  `count` tinyint(2) NOT NULL COMMENT '照片信息图片数量',
+  `content` varchar(150) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '照片信息描述内容',
+  `type` tinyint(1) NOT NULL COMMENT '照片信息类型',
+  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '发布者用户名',
+  `create_time` datetime NOT NULL COMMENT '照片信息发布时间',
+  PRIMARY KEY (`id`),
+  KEY `photographUsername_idx` (`username`),
+  CONSTRAINT `photographUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `photograph`
+--
+
+LOCK TABLES `photograph` WRITE;
+/*!40000 ALTER TABLE `photograph` DISABLE KEYS */;
+/*!40000 ALTER TABLE `photograph` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `photograph_comment`
+--
+
+DROP TABLE IF EXISTS `photograph_comment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `photograph_comment` (
+  `comment_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '照片评论ID',
+  `photo_id` int(11) NOT NULL COMMENT '照片信息ID',
+  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论者用户名',
+  `comment` varchar(50) COLLATE utf8mb4_bin NOT NULL COMMENT '评论内容',
+  `create_time` datetime NOT NULL COMMENT '评论信息发布时间',
+  PRIMARY KEY (`comment_id`),
+  KEY `photographCommentUsername_idx` (`username`),
+  CONSTRAINT `photographCommentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `photograph_comment`
+--
+
+LOCK TABLES `photograph_comment` WRITE;
+/*!40000 ALTER TABLE `photograph_comment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `photograph_comment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `photograph_like`
+--
+
+DROP TABLE IF EXISTS `photograph_like`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `photograph_like` (
+  `like_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '照片点赞记录ID',
+  `photo_id` int(11) NOT NULL COMMENT '照片信息ID',
+  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '点赞者用户名',
+  `create_time` datetime NOT NULL COMMENT '点赞时间',
+  PRIMARY KEY (`like_id`),
+  KEY `photographLikeUsername_idx` (`username`),
+  CONSTRAINT `photographLikeUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `photograph_like`
+--
+
+LOCK TABLES `photograph_like` WRITE;
+/*!40000 ALTER TABLE `photograph_like` DISABLE KEYS */;
+/*!40000 ALTER TABLE `photograph_like` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -880,4 +990,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-31 15:49:24
+-- Dump completed on 2019-10-03 22:15:47

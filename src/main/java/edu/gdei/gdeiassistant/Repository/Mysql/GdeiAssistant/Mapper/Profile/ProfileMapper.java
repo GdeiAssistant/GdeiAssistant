@@ -12,7 +12,7 @@ public interface ProfileMapper {
     @Select("select * from profile where username=#{username} limit 1")
     @Results(id = "Profile", value = {
             @Result(property = "username", column = "username"),
-            @Result(property = "kickname", column = "kickname"),
+            @Result(property = "nickname", column = "nickname"),
             @Result(property = "gender", column = "gender"),
             @Result(property = "birthday", column = "birthday", javaType = Date.class, jdbcType = JdbcType.DATE),
             @Result(property = "degree", column = "degree"),
@@ -36,14 +36,14 @@ public interface ProfileMapper {
     })
     Introduction selectUserIntroduction(String username) throws Exception;
 
-    @Insert("insert into profile (username,kickname) values (#{username},#{kickname})")
-    void initUserProfile(@Param("username") String username, @Param("kickname") String kickname) throws Exception;
+    @Insert("insert into profile (username,nickname) values (#{username},#{nickname})")
+    void initUserProfile(@Param("username") String username, @Param("nickname") String nickname) throws Exception;
 
     @Insert("insert into introduction (username) values (#{username})")
     void initUserIntroduction(String username) throws Exception;
 
-    @Update("update profile set kickname=#{kickname} where username=#{username}")
-    void updateKickname(Profile profile);
+    @Update("update profile set nickname=#{nickname} where username=#{username}")
+    void updateNickname(Profile profile);
 
     @Update("update profile set gender=#{gender} where username=#{username}")
     void updateGender(Profile profile);
@@ -78,9 +78,9 @@ public interface ProfileMapper {
     @Update("update profile set primary_school=#{primarySchool} where username=#{username}")
     void updatePrimarySchool(Profile profile);
 
-    @Update("update profile set kickname=#{kickname},gender=null,birthday=null,enrollment=null,profession=null,region=null" +
+    @Update("update profile set nickname=#{nickname},gender=null,birthday=null,enrollment=null,profession=null,region=null" +
             ",state=null,city=null,high_school=null,junior_high_school=null,primary_school=null where username=#{username}")
-    void resetUserProfile(@Param("username") String username, @Param("kickname") String kickname) throws Exception;
+    void resetUserProfile(@Param("username") String username, @Param("nickname") String nickname) throws Exception;
 
     @Update("update introduction set introduction=null where username=#{username}")
     void resetUserIntroduction(@Param("username") String username);

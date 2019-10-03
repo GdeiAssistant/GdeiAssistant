@@ -50,13 +50,13 @@
             margin: 25px auto
         }
 
-        .kickname {
+        .nickname {
             width: 60%;
             text-align: center;
             margin: 0 auto 1.5rem;
         }
 
-        .kickname h2 {
+        .nickname h2 {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -71,8 +71,8 @@
     <img class="avatar" src="${empty AvatarURL ? "/img/avatar/default.png" : AvatarURL}">
 </div>
 
-<div class="kickname">
-    <h2 class="weui-msg__title">${KickName}</h2>
+<div class="nickname">
+    <h2 class="weui-msg__title">${NickName}</h2>
 </div>
 
 <div class="phone">

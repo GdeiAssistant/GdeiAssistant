@@ -25,7 +25,7 @@ public interface LostAndFoundMapper {
             @Result(property = "lostAndFoundItem.state", column = "state"),
             @Result(property = "lostAndFoundItem.publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP),
             @Result(property = "profile.username", column = "username"),
-            @Result(property = "profile.kickname", column = "kickname"),
+            @Result(property = "profile.nickname", column = "nickname"),
             @Result(property = "profile.gender", column = "gender"),
             @Result(property = "profile.birthday", column = "birthday"),
             @Result(property = "profile.degree", column = "degree"),

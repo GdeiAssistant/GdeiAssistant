@@ -412,14 +412,14 @@ public class ProfileRestController {
      * 更新用户昵称
      *
      * @param request
-     * @param kickname
+     * @param nickname
      * @return
      * @throws UnsupportedEncodingException
      */
-    @RequestMapping(value = "/api/profile/kickname", method = RequestMethod.POST)
-    public JsonResult UpdateKickname(HttpServletRequest request, @Validated @NotBlank @Range(min = 1, max = 24) String kickname) throws Exception {
+    @RequestMapping(value = "/api/profile/nickname", method = RequestMethod.POST)
+    public JsonResult UpdateNickname(HttpServletRequest request, @Validated @NotBlank @Range(min = 1, max = 24) String nickname) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
-        userProfileService.UpdateKickname(username, kickname);
+        userProfileService.UpdateNickname(username, nickname);
         return new JsonResult(true);
     }
 

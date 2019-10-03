@@ -61,7 +61,7 @@
             type: 'get',
             success: function (result) {
                 if (result.success === true) {
-                    $("#right_name").text(result.data.kickname);
+                    $("#right_name").text(result.data.nickname);
                 }
             }
         });

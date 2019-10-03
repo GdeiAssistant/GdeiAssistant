@@ -93,7 +93,7 @@
                 type: 'get',
                 success: function (result) {
                     if (result.success === true) {
-                        $("#kickname").text(result.data.kickname);
+                        $("#nickname").text(result.data.nickname);
                     } else {
                         showErrorTip(result.message);
                     }
@@ -217,7 +217,7 @@
 <!-- 个人资料 -->
 <section class="profile">
     <i class="avt"><img id="avatar" src="/img/avatar/default.png"></i>
-    <span id="kickname" class="nm"></span>
+    <span id="nickname" class="nm"></span>
     <span class="introduction">
         <p style="overflow: hidden;text-overflow: ellipsis;" id="introduction"></p>
     </span>

@@ -19,7 +19,7 @@ public class YiBanUser implements Serializable, Entity {
     private String username;
 
     @SerializedName("yb_usernick")
-    private String kickname;
+    private String nickname;
 
     @SerializedName("yb_sex")
     private String gender;
@@ -56,14 +56,6 @@ public class YiBanUser implements Serializable, Entity {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getKickname() {
-        return kickname;
-    }
-
-    public void setKickname(String kickname) {
-        this.kickname = kickname;
     }
 
     public String getGender() {
@@ -120,5 +112,13 @@ public class YiBanUser implements Serializable, Entity {
 
     public void setRegisterTime(String registerTime) {
         this.registerTime = registerTime;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void getNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

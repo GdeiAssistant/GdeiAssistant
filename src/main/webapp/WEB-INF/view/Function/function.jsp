@@ -77,6 +77,11 @@
         </i>
         <p>校园树洞</p>
     </div>
+    <div id="photograph" style="display: none" onclick="window.location.href='/photograph'">
+        <i style="background: url(/img/function/photograph.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
+        </i>
+        <p>拍好校园</p>
+    </div>
     <div id="delivery" style="display: none" onclick="window.location.href='/delivery'">
         <i style="background: url(/img/function/delivery.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
         </i>

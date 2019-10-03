@@ -70,5 +70,9 @@ public class SettingOptionConfig {
         if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.delivery"))).equals(1)) {
             servletContext.setAttribute("authentication.delivery", true);
         }
+        //拍好校园
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.photograph"))).equals(1)) {
+            servletContext.setAttribute("authentication.photograph", true);
+        }
     }
 }

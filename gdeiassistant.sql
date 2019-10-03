@@ -568,6 +568,7 @@ CREATE TABLE `introduction` (
 
 LOCK TABLES `introduction` WRITE;
 /*!40000 ALTER TABLE `introduction` DISABLE KEYS */;
+INSERT INTO `introduction` VALUES ('gdeiassistant',NULL);
 /*!40000 ALTER TABLE `introduction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -677,6 +678,8 @@ CREATE TABLE `photograph_comment` (
   `create_time` datetime NOT NULL COMMENT '评论信息发布时间',
   PRIMARY KEY (`comment_id`),
   KEY `photographCommentUsername_idx` (`username`),
+  KEY `photographCommentId_idx` (`photo_id`),
+  CONSTRAINT `photographCommentId` FOREIGN KEY (`photo_id`) REFERENCES `photograph` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `photographCommentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -704,6 +707,8 @@ CREATE TABLE `photograph_like` (
   `create_time` datetime NOT NULL COMMENT '点赞时间',
   PRIMARY KEY (`like_id`),
   KEY `photographLikeUsername_idx` (`username`),
+  KEY `photographLikeId_idx` (`photo_id`),
+  CONSTRAINT `photographLikeId` FOREIGN KEY (`photo_id`) REFERENCES `photograph` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `photographLikeUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -990,4 +995,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-03 22:15:47
+-- Dump completed on 2019-10-04  1:12:08

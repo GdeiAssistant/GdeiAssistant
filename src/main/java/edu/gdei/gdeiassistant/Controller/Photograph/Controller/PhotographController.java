@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class PhotographController {
 
@@ -16,7 +18,7 @@ public class PhotographController {
      */
     @RequestMapping(value = "/photograph", method = RequestMethod.GET)
     @CheckAuthentication(name = "photograph")
-    public ModelAndView ResolveLifePhotographPage() {
+    public ModelAndView ResolveLifePhotographPage(HttpServletRequest request) {
         return new ModelAndView("Photograph/index");
     }
 
@@ -27,7 +29,7 @@ public class PhotographController {
      */
     @RequestMapping(value = "/photograph/upload", method = RequestMethod.GET)
     @CheckAuthentication(name = "photograph")
-    public ModelAndView ResolvePhotographPage() {
+    public ModelAndView ResolvePhotographPage(HttpServletRequest request) {
         return new ModelAndView("Photograph/upload");
     }
 }

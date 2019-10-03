@@ -1,0 +1,325 @@
+html, body {
+    background: #f8f8f8;
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    position: relative;
+    overflow-x: hidden;
+    margin: 0 auto;
+}
+
+html {
+    visibility: hidden;
+}
+
+@media screen and (min-width: 600px) {
+    header {
+        background-size: 600px;
+        background-position: left top;
+        background-repeat: no-repeat;
+    }
+}
+
+main {
+    padding-bottom: 80px;
+    box-shadow: 0 -5px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.am-input-group {
+    box-shadow: 0 -5px 3px 0 rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+}
+
+/* 底部样式 */
+#toolbar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 600px;
+    z-index: 999;
+}
+
+#toolbar a {
+    font-size: 14px;
+}
+
+#toolbar i {
+    font-size: 18px;
+}
+
+/* 卡片样式 */
+.card {
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 0;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .28);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .28);
+    width: 95%;
+    height: auto;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.card-img-tag img {
+    width: 100%;
+    height: auto;
+}
+
+.card-btn-group {
+    font-size: 20px;
+}
+
+.card-btn-group i {
+    margin-right: 10px;
+}
+
+body > main > div > div.card-img figure {
+    margin: 0 !important;
+}
+
+.card-img {
+    position: relative;
+}
+
+.card-img-hot {
+    margin: 0 !important;
+}
+
+.card-img-info {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.55);
+    font-size: 12px;
+    color: #fff;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    height: 19px;
+}
+
+.card-img-info div {
+    border-right: 1px solid #eee;
+}
+
+.card-img-info div p {
+    margin: 0 !important;
+    text-align: center;
+}
+
+.card-img-hot i, .card-img-beauty i {
+    margin-right: 4px;
+}
+
+.card-name {
+    margin: 10px;
+    font-size: 20px;
+    font-family: sans-serif;
+    clear: both;
+}
+
+.am-text-sm {
+    font-size: 15px;
+}
+
+.card-say {
+    margin: 10px;
+    font-size: 15px;
+}
+
+.tags {
+    float: right;
+    margin: 0 !important;
+    display: inline-flex;
+}
+
+.am-btn {
+    width: 100%;
+}
+
+.am-modal-hd {
+    font-size: 20px;
+}
+
+.am-modal-bd label {
+    font-size: 18px;
+}
+
+.am-modal-btn {
+    font-size: 15px;
+}
+
+.am-g {
+    margin-bottom: 10px;
+}
+
+.am-btn-primary, .am-btn-danger {
+    font-size: 16px;
+}
+
+.am-btn-photo {
+    font-size: 80%;
+}
+
+.am-btn-photo {
+    color: #fff;
+    background-color: #518379;
+    border-color: #ffffff;
+}
+
+.am-btn-photo:hover {
+    color: #FFEB3B !important;
+}
+
+#card-box > div > div.card-img figure {
+    margin: 0 !important;
+}
+
+.votes {
+    font-size: 18px;
+    color: #777;
+    font-style: italic;
+}
+
+.card-img-info .am-u-sm-4 {
+    padding-right: 0 !important;
+    padding-left: 2px !important;
+}
+
+@media screen and (max-width: 300px) {
+    .card-img-beauty, .card-img-hot {
+        color: #CDDC39;
+        text-shadow: 1px 1px 1px #33691E;
+    }
+}
+
+
+/* 卡片样式结束 */
+
+
+/* 图片上传 */
+
+#upload {
+    padding: 20px;
+
+}
+
+#main-photo-box {
+    height: 200px;
+}
+
+#second-photo-box-1, #second-photo-box-2, #second-photo-box-3 {
+    height: 120px;
+}
+
+#main-photo-box, #second-photo-box-1, #second-photo-box-2, #second-photo-box-3 {
+    text-align: center;
+    border: 2px dashed #00BCD4;
+    cursor: pointer;
+}
+
+#second-photo-box-1, #second-photo-box-2, #second-photo-box-3 {
+    border: 2px dashed #8BC34A;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+#clearSecondPicture {
+    width: 100%;
+}
+
+.am-comment-bd {
+    font-size: 16px;
+}
+
+#say-something {
+    margin-top: 20px;
+}
+
+#submit {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+}
+
+#picture-preview, #picture-preview img, #picture-preview-box {
+    height: 100%;
+}
+
+#analysis-div {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#picture-preview-box p {
+    margin: 0;
+    text-shadow: 2px 2px 2px #607D8B;
+    text-align: left;
+    color: #fff;
+}
+
+.preview-box {
+    height: 100%;
+}
+
+.hint {
+    font-size: 12px;
+    color: #777;
+}
+
+#detectFace {
+    width: 100%;
+}
+
+#picture-preview1, #picture-preview2, #picture-preview3 {
+    width: 100%;
+}
+
+#word-count {
+    float: right;
+    font-size: 14px;
+    color: #777;
+}
+
+#second-photo-box i {
+    color: #8ac24a;
+    font-size: 30px;
+}
+
+/* 图片上传结束 */
+
+
+/*  评论 */
+
+.am-comment {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.comment-hint {
+    text-align: center;
+    margin: 20px;
+}
+
+#statistics {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#statistics span {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    background: #05574f;
+    color: #fff;
+}
+
+#statistics #statistics-photos, #statistics #statistics-likes, #statistics #statistics-comments {
+    font-size: 24px;
+    font-weight: bold;
+    background: #009688;
+}
+
+.red-text {
+    color: red;
+    font-weight: bold;
+}

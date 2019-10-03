@@ -78,7 +78,8 @@ public class PhotographService {
      * @return
      */
     public List<Photograph> QueryPhotographList(int start, int size, int type, String username) throws WsgException {
-        List<Photograph> photographList = photographMapper.selectPhotograph(start, size, type, username);
+        List<Photograph> photographList = photographMapper.selectPhotograph(start, size, type
+                , StringEncryptUtils.encryptString(username));
         //清除空行
         photographList.removeIf(photograph -> photograph.getId() == null);
         for (Photograph photograph : photographList) {
@@ -93,8 +94,12 @@ public class PhotographService {
      * @param id
      * @return
      */
-    public List<PhotographComment> QueryPhotographCommentList(int id) {
-        return photographMapper.selectPhotographCommentByPhotoId(id);
+    public List<PhotographComment> QueryPhotographCommentList(int id) throws WsgException {
+        List<PhotographComment> commentList = photographMapper.selectPhotographCommentByPhotoId(id);
+        for (PhotographComment photographComment : commentList) {
+            photographComment.setUsername(StringEncryptUtils.decryptString(photographComment.getUsername()));
+        }
+        return commentList;
     }
 
     /**
@@ -176,10 +181,10 @@ public class PhotographService {
      * @param id
      * @param username
      */
-    public void LikePhotograph(int id, String username) {
-        int count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, username);
+    public void LikePhotograph(int id, String username) throws WsgException {
+        int count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, StringEncryptUtils.encryptString(username));
         if (count == 0) {
-            photographMapper.insertPhotographLike(id, username);
+            photographMapper.insertPhotographLike(id, StringEncryptUtils.encryptString(username));
         }
     }
 

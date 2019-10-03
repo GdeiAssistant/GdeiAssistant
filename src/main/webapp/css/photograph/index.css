@@ -296,6 +296,7 @@ body > main > div > div.card-img figure {
 }
 
 .comment-hint {
+    font-size: 16px;
     text-align: center;
     margin: 20px;
 }

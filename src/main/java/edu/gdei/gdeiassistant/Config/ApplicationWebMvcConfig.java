@@ -215,6 +215,7 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/policy/privacy").setViewName("AgreementAndPolicy/privacyPolicy");
         registry.addViewController("/policy/social").setViewName("AgreementAndPolicy/socialPolicy");
         registry.addViewController("/about/graduation").setViewName("AgreementAndPolicy/graduationPolicy");
+        registry.addViewController("/announcement/equalrights").setViewName("Announcement/equalrights");
         super.addViewControllers(registry);
     }
 }

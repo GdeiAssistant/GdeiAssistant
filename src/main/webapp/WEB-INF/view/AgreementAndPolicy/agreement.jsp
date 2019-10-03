@@ -11,7 +11,7 @@
     <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <title>广东二师助手用户协议</title>
     <c:if test="${applicationScope.get('grayscale')}">
-        <link rel="stylesheet" href="/css/common/grayscale.css">
+        <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
     <link rel="stylesheet" href="/css/agreement/agreement.css"/>
 </head>

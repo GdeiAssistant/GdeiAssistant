@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
     <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <c:if test="${applicationScope.get('grayscale')}">
-        <link rel="stylesheet" href="/css/common/grayscale.css">
+        <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
     <link rel="stylesheet" href="/css/secret/secret-detail.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">

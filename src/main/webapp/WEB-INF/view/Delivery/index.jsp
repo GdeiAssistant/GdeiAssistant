@@ -15,14 +15,14 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
     <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <c:if test="${applicationScope.get('grayscale')}">
-        <link rel="stylesheet" href="/css/common/grayscale.css">
+        <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
     <link title="default" type="text/css" rel="stylesheet" href="/css/index/index.css">
     <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/index/index_pink.css">
     <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/index/index_blue.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
-    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/common_pink.css">
-    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/common_blue.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
+    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/common_pink.min.css">
+    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/common_blue.min.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_pink.css">
     <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_blue.css">

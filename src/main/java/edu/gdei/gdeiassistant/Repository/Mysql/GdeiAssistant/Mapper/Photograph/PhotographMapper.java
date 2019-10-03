@@ -38,14 +38,14 @@ public interface PhotographMapper {
     @Options(useGeneratedKeys = true)
     public Integer insertPhotograph(Photograph photograph);
 
-    @Select("select pc.comment_id,pc.photo_id,pc.comment,pc.username,p.kickname,pc.create_time from photograph_comment pc" +
+    @Select("select pc.comment_id,pc.photo_id,pc.comment,pc.username,p.nickname,pc.create_time from photograph_comment pc" +
             " inner join profile p on pc.username=p.username where photo_id=#{id}")
     @Results(id = "PhotographComment", value = {
             @Result(property = "commentId", column = "comment_id"),
             @Result(property = "photoId", column = "photo_id"),
             @Result(property = "comment", column = "comment"),
             @Result(property = "username", column = "username"),
-            @Result(property = "kickname", column = "kickname"),
+            @Result(property = "nickname", column = "nickname"),
             @Result(property = "createTime", column = "create_time")
     })
     public List<PhotographComment> selectPhotographCommentByPhotoId(int id);

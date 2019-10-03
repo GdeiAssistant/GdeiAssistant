@@ -33,11 +33,11 @@
         </div>
         <div id="user_group" class="weui-cell__ft"></div>
     </div>
-    <div class="weui-cell" href="javascript:" onclick="showKicknameDialog()">
+    <div class="weui-cell" href="javascript:" onclick="showNicknameDialog()">
         <div class="weui-cell__bd">
             <p>昵称</p>
         </div>
-        <div id="kickname_text" class="weui-cell__ft"></div>
+        <div id="nickname_text" class="weui-cell__ft"></div>
     </div>
     <div class="weui-cell" href="javascript:" onclick="changeGender()">
         <div class="weui-cell__bd">
@@ -83,7 +83,7 @@
     </div>
 </div>
 
-<input type="hidden" id="kickname_val" name="kickname_val">
+<input type="hidden" id="nickname_val" name="nickname_val">
 <input type="hidden" id="gender_val" name="gender_val">
 <input type="hidden" id="major_val" name="major_val">
 
@@ -246,7 +246,7 @@
 <br>
 
 <!-- 修改昵称窗口 -->
-<div id="changeKickname" class="weui-popup__container">
+<div id="changeNickname" class="weui-popup__container">
     <div class="weui-popup__overlay"></div>
     <div class="weui-popup__modal">
         <div class="toolbar">
@@ -263,13 +263,13 @@
                         <label class="weui-label">昵称</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input id="kickname" class="weui-input" type="text" onkeyup="inputLengthCheck(this,24)">
+                        <input id="nickname" class="weui-input" type="text" onkeyup="inputLengthCheck(this,24)">
                     </div>
                 </div>
             </div>
             <!-- 提交按钮 -->
             <div class="weui_btn_area">
-                <a class="weui_btn weui_btn_primary" href="javascript:" onclick="changeKickname()">确认</a>
+                <a class="weui_btn weui_btn_primary" href="javascript:" onclick="changeNickname()">确认</a>
             </div>
         </div>
     </div>

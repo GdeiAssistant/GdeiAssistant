@@ -198,9 +198,9 @@
                     //用户名
                     $("#username").text(result.data.username);
                     //昵称
-                    $("#kickname_text").text(result.data.kickname);
-                    $("#kickname_val").val(result.data.kickname);
-                    $("#kickname").val(result.data.kickname);
+                    $("#nickname_text").text(result.data.nickname);
+                    $("#nickname_val").val(result.data.nickname);
+                    $("#nickname").val(result.data.nickname);
                     //性别
                     let gender = result.data.gender == null ? 0 : result.data.gender;
                     if (gender == 3) {
@@ -332,9 +332,9 @@
     }
 
     //弹出昵称修改窗口
-    function showKicknameDialog() {
-        $("#kickname").val($("#kickname_val").val());
-        $("#changeKickname").popup();
+    function showNicknameDialog() {
+        $("#nickname").val($("#nickname_val").val());
+        $("#changeNickname").popup();
     }
 
     //弹出自定义性别窗口
@@ -484,13 +484,13 @@
     }
 
     //修改昵称
-    function changeKickname() {
-        if ($("#kickname").val().length > 0) {
+    function changeNickname() {
+        if ($("#nickname").val().length > 0) {
             $.closePopup();
             $.ajax({
-                url: "/api/profile/kickname",
+                url: "/api/profile/nickname",
                 data: {
-                    kickname: $("#kickname").val()
+                    nickname: $("#nickname").val()
                 },
                 type: 'post',
                 success: function (updateResult) {

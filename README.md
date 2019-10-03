@@ -204,6 +204,7 @@
 - Spring 4.3.14
 - Mybatis 3.4.4
 - Jquery 3.2.1
+- AmazeUI 2.7.2
 - Log4j 2.10.0
 - Jsoup 1.10.3
 - HttpClient 4.5.3

@@ -88,6 +88,8 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         loginInterceptorExceptionList.add("/agreement");
         loginInterceptorExceptionList.add("/policy");
         loginInterceptorExceptionList.add("/license");
+        //公告声明
+        loginInterceptorExceptionList.add("/announcement");
         //软件说明
         loginInterceptorExceptionList.add("/about");
         //Restful API
@@ -125,6 +127,8 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         authenticationInterceptorExceptionList.add("/agreement");
         authenticationInterceptorExceptionList.add("/policy");
         authenticationInterceptorExceptionList.add("/license");
+        //公告声明
+        authenticationInterceptorExceptionList.add("/announcement");
         //软件说明
         authenticationInterceptorExceptionList.add("/about");
         //微信API接口
@@ -216,6 +220,7 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/policy/social").setViewName("AgreementAndPolicy/socialPolicy");
         registry.addViewController("/about/graduation").setViewName("AgreementAndPolicy/graduationPolicy");
         registry.addViewController("/announcement/equalrights").setViewName("Announcement/equalrights");
+        registry.addViewController("/announcement/suicideprevention").setViewName("Announcement/suicideprevention");
         super.addViewControllers(registry);
     }
 }

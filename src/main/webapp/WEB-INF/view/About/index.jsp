@@ -65,9 +65,6 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:">主页</a>
-                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="javascript:" role="button"
                        data-toggle="dropdown"
@@ -125,6 +122,9 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/announcement/equalrights">反歧视声明</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="/announcement/suicideprevention">青少年自杀干预热线</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="mailto:report@gdeiassistant.cn">违规举报</a>

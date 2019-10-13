@@ -7,6 +7,7 @@ import edu.gdei.gdeiassistant.Constant.ItemConstantUtils;
 import edu.gdei.gdeiassistant.Constant.StateConstantUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.*;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Data.AppDataMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Phone.PhoneMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Privacy.PrivacyMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Profile.ProfileMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.User.UserMapper;
@@ -38,6 +39,9 @@ public class UserDataService {
 
     @Resource(name = "userMapper")
     private UserMapper userMapper;
+
+    @Resource(name = "phoneMapper")
+    private PhoneMapper phoneMapper;
 
     @Resource(name = "profileMapper")
     private ProfileMapper profileMapper;
@@ -125,6 +129,22 @@ public class UserDataService {
             if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg")) {
                 InputStream avatar = ossClient.getObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg").getObjectContent();
                 userDataInputStreamMap.put("avatar_hd.jpg", avatar);
+            }
+            //获取绑定手机信息
+            Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(username));
+            if (phone != null) {
+                phone.setPhone(StringEncryptUtils.decryptString(phone.getPhone()));
+                //隐藏用户绑定的手机号
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < phone.getPhone().length(); i++) {
+                    if (i < 3) {
+                        stringBuilder.append(phone.getPhone().charAt(i));
+                    } else {
+                        stringBuilder.append('*');
+                    }
+                }
+                phone.setPhone(stringBuilder.toString());
+                data.put("phone", phone);
             }
             //获取个人资料信息
             Profile profile = appDataMapper.selectUserProfile(StringEncryptUtils.encryptString(username));

@@ -263,7 +263,7 @@
                         <label class="weui-label">昵称</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input id="nickname" class="weui-input" type="text" onkeyup="inputLengthCheck(this,24)">
+                        <input id="nickname" class="weui-input" type="text" onkeyup="inputLengthCheck(this,32)">
                     </div>
                 </div>
             </div>

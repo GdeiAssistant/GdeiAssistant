@@ -33,6 +33,8 @@ public class PhoneService {
     public Phone QueryUserPhone(String username) throws WsgException {
         Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(username));
         if (phone != null) {
+            //解密手机号
+            phone.setPhone(StringEncryptUtils.decryptString(phone.getPhone()));
             //隐藏用户绑定的手机号
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < phone.getPhone().length(); i++) {

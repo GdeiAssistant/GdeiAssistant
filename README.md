@@ -156,6 +156,7 @@
 目前提供的体验用户账号如下（用户名 - 密码）：
 
 - gdeiassistant - gdeiassistant
+- trialuser - trialuser
 
 ## 官网
 

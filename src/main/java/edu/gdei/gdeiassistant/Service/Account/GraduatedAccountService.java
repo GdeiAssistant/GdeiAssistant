@@ -111,7 +111,7 @@ public class GraduatedAccountService {
                         , decryptedUser.getPassword()))) {
                     //检查当前用户是否为毕业生
                     Graduation graduation = graduationMapper.selectGraduation(user.getUsername());
-                    if (graduation != null && graduation.getProgram().equals(GraduationProgramTypeEnum
+                    if (graduation == null || graduation.getProgram().equals(GraduationProgramTypeEnum
                             .UPGRADE_TO_GRADUATED_ACCOUNT.getType())) {
                         //升级为毕业用户账号
                         userMapper.updateUserGroup(user.getUsername(), UserGroupEnum.GRADUATED.getValue());

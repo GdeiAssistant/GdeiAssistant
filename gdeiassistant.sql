@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gdeiassistant_log
 -- ------------------------------------------------------
--- Server version	8.0.17
+-- Server version	8.0.18
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -246,7 +246,7 @@ CREATE TABLE `access` (
   PRIMARY KEY (`id`),
   KEY `accessUserGroup_idx` (`user_group`),
   CONSTRAINT `accessUserGroup` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=273 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=386 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,7 +255,7 @@ CREATE TABLE `access` (
 
 LOCK TABLES `access` WRITE;
 /*!40000 ALTER TABLE `access` DISABLE KEYS */;
-INSERT INTO `access` VALUES (160,1,'grade'),(161,1,'schedule'),(162,1,'cet'),(163,1,'collection'),(164,1,'book'),(165,1,'bill'),(166,1,'card'),(167,1,'evaluate'),(168,1,'spare'),(169,1,'kaoyan'),(170,1,'tice'),(171,1,'news'),(172,1,'data'),(173,1,'ershou'),(174,1,'lostandfound'),(175,1,'secret'),(176,1,'delivery'),(177,1,'calendar'),(178,1,'government'),(179,1,'volunteer'),(180,1,'wechat'),(181,1,'yiban'),(182,2,'grade'),(183,2,'schedule'),(184,2,'cet'),(185,2,'collection'),(186,2,'book'),(187,2,'bill'),(188,2,'card'),(189,2,'evaluate'),(190,2,'spare'),(191,2,'kaoyan'),(192,2,'tice'),(193,2,'news'),(194,2,'data'),(195,2,'ershou'),(196,2,'lostandfound'),(197,2,'secret'),(198,2,'delivery'),(199,2,'calendar'),(200,2,'government'),(201,2,'volunteer'),(202,2,'wechat'),(203,2,'yiban'),(204,3,'grade'),(205,3,'schedule'),(206,3,'collection'),(207,3,'book'),(208,3,'evaluate'),(209,3,'spare'),(210,3,'kaoyan'),(211,3,'tice'),(212,3,'news'),(213,3,'data'),(214,3,'ershou'),(215,3,'lostandfound'),(216,3,'secret'),(217,3,'delivery'),(218,3,'calendar'),(219,3,'government'),(220,3,'volunteer'),(221,3,'wechat'),(222,3,'yiban'),(223,6,'cet'),(224,6,'collection'),(225,6,'kaoyan'),(226,6,'news'),(227,6,'data'),(228,6,'ershou'),(229,6,'lostandfound'),(230,6,'secret'),(231,6,'delivery'),(232,6,'calendar'),(233,6,'government'),(234,6,'volunteer'),(235,6,'wechat'),(236,6,'yiban'),(237,1,'lost'),(238,2,'lost'),(239,1,'charge'),(240,2,'charge'),(241,7,'grade'),(242,7,'schedule'),(243,7,'cet'),(244,7,'collection'),(245,7,'book'),(246,7,'bill'),(247,7,'card'),(248,7,'evaluate'),(249,7,'spare'),(250,7,'kaoyan'),(251,7,'tice'),(252,7,'news'),(253,7,'data'),(254,7,'ershou'),(255,7,'lostandfound'),(256,7,'secret'),(257,7,'delivery'),(258,7,'calendar'),(259,7,'government'),(260,7,'volunteer'),(261,7,'wechat'),(262,7,'yiban'),(263,1,'student'),(264,2,'student'),(265,3,'student'),(266,6,'student'),(267,7,'student'),(268,1,'photograph'),(269,2,'photograph'),(270,3,'photograph'),(271,6,'photograph'),(272,7,'photograph');
+INSERT INTO `access` VALUES (273,1,'grade'),(274,1,'schedule'),(275,1,'cet'),(276,1,'collection'),(277,1,'book'),(278,1,'bill'),(279,1,'charge'),(280,1,'card'),(281,1,'lost'),(282,1,'evaluate'),(283,1,'spare'),(284,1,'kaoyan'),(285,1,'tice'),(286,1,'news'),(287,1,'data'),(288,1,'ershou'),(289,1,'lostandfound'),(290,1,'secret'),(291,1,'delivery'),(292,1,'photograph'),(293,1,'calendar'),(294,1,'government'),(295,1,'volunteer'),(296,1,'student'),(297,1,'wechat'),(298,1,'yiban'),(299,2,'grade'),(300,2,'schedule'),(301,2,'cet'),(302,2,'collection'),(303,2,'book'),(304,2,'bill'),(305,2,'charge'),(306,2,'card'),(307,2,'lost'),(308,2,'evaluate'),(309,2,'spare'),(310,2,'kaoyan'),(311,2,'tice'),(312,2,'news'),(313,2,'data'),(314,2,'ershou'),(315,2,'lostandfound'),(316,2,'secret'),(317,2,'delivery'),(318,2,'photograph'),(319,2,'calendar'),(320,2,'government'),(321,2,'volunteer'),(322,2,'student'),(323,2,'wechat'),(324,2,'yiban'),(325,3,'grade'),(326,3,'schedule'),(327,3,'collection'),(328,3,'book'),(329,3,'evaluate'),(330,3,'spare'),(331,3,'kaoyan'),(332,3,'tice'),(333,3,'news'),(334,3,'data'),(335,3,'ershou'),(336,3,'lostandfound'),(337,3,'secret'),(338,3,'delivery'),(339,3,'photograph'),(340,3,'calendar'),(341,3,'government'),(342,3,'volunteer'),(343,3,'student'),(344,3,'wechat'),(345,3,'yiban'),(346,6,'cet'),(347,6,'collection'),(348,6,'kaoyan'),(349,6,'news'),(350,6,'data'),(351,6,'ershou'),(352,6,'lostandfound'),(353,6,'secret'),(354,6,'delivery'),(355,6,'photograph'),(356,6,'calendar'),(357,6,'government'),(358,6,'volunteer'),(359,6,'student'),(360,6,'wechat'),(361,6,'yiban'),(362,7,'grade'),(363,7,'schedule'),(364,7,'cet'),(365,7,'collection'),(366,7,'book'),(367,7,'bill'),(368,7,'card'),(369,7,'evaluate'),(370,7,'spare'),(371,7,'kaoyan'),(372,7,'tice'),(373,7,'news'),(374,7,'data'),(375,7,'ershou'),(376,7,'lostandfound'),(377,7,'secret'),(378,7,'delivery'),(379,7,'photograph'),(380,7,'calendar'),(381,7,'government'),(382,7,'volunteer'),(383,7,'student'),(384,7,'wechat'),(385,7,'yiban');
 /*!40000 ALTER TABLE `access` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -278,7 +278,7 @@ CREATE TABLE `authentication` (
   UNIQUE KEY `username_UNIQUE` (`username`),
   KEY `authenticationUsername_idx` (`username`),
   CONSTRAINT `authenticationUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -287,7 +287,7 @@ CREATE TABLE `authentication` (
 
 LOCK TABLES `authentication` WRITE;
 /*!40000 ALTER TABLE `authentication` DISABLE KEYS */;
-INSERT INTO `authentication` VALUES (1,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','gdeiassistant','2019-08-31 14:01:30','2019-08-31 14:01:30',0);
+INSERT INTO `authentication` VALUES (1,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','gdeiassistant','2019-08-31 14:01:30','2019-08-31 14:01:30',0),(2,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','trialuser','2019-10-17 02:05:32','2019-10-17 02:05:32',0);
 /*!40000 ALTER TABLE `authentication` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -381,7 +381,7 @@ DROP TABLE IF EXISTS `dating_profile`;
 CREATE TABLE `dating_profile` (
   `profile_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '卖室友信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `nickname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
+  `nickname` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `area` tinyint(1) NOT NULL COMMENT '地区',
   `grade` tinyint(1) NOT NULL COMMENT '年级',
   `faculty` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '院系',
@@ -568,7 +568,7 @@ CREATE TABLE `introduction` (
 
 LOCK TABLES `introduction` WRITE;
 /*!40000 ALTER TABLE `introduction` DISABLE KEYS */;
-INSERT INTO `introduction` VALUES ('gdeiassistant',NULL);
+INSERT INTO `introduction` VALUES ('gdeiassistant',NULL),('trialuser',NULL);
 /*!40000 ALTER TABLE `introduction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -756,7 +756,7 @@ CREATE TABLE `privacy` (
 
 LOCK TABLES `privacy` WRITE;
 /*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
-INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,1,1,0,1);
+INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,1,1,0,1),('trialuser',1,1,1,1,1,1,1,1,1,1,1,1,0,1);
 /*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -769,7 +769,7 @@ DROP TABLE IF EXISTS `profile`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `profile` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `nickname` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
+  `nickname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `gender` tinyint(1) DEFAULT NULL COMMENT '性别',
   `birthday` date DEFAULT NULL COMMENT '生日',
   `degree` tinyint(1) DEFAULT NULL COMMENT '学历',
@@ -794,7 +794,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('trialuser','广东二师助手用户',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -908,7 +908,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('gdeiassistant','gdeiassistant',1,7);
+INSERT INTO `user` VALUES ('gdeiassistant','gdeiassistant',1,7),('trialuser','trialuser',1,7);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -995,4 +995,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-04  1:12:08
+-- Dump completed on 2019-10-17 10:02:13

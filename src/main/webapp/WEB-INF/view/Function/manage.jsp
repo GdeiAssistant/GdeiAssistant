@@ -136,6 +136,12 @@
         </div>
     </div>
     <div class="weui-cell weui-cell_switch" style="display: none">
+        <div class="weui-cell__bd">拍好校园</div>
+        <div class="weui-cell__ft">
+            <input id="photograph" class="weui-switch" type="checkbox">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch" style="display: none">
         <div class="weui-cell__bd">全民快递</div>
         <div class="weui-cell__ft">
             <input id="delivery" class="weui-switch" type="checkbox">

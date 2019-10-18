@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.GradeQuery.Controller;
 
-import edu.gdei.gdeiassistant.Service.GradeQuery.GradeQueryService;
+import edu.gdei.gdeiassistant.Service.GradeQuery.GradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class GradeQueryController {
 
     @Autowired
-    private GradeQueryService gradeQueryService;
+    private GradeService gradeService;
 
     @RequestMapping(value = "/grade")
     public ModelAndView ResolveGradePage() {

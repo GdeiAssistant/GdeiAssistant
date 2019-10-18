@@ -1,16 +1,12 @@
 package edu.gdei.gdeiassistant.Controller.GradeQuery.RestController;
 
-import edu.gdei.gdeiassistant.Annotation.QueryLogPersistence;
-import edu.gdei.gdeiassistant.Annotation.RestAuthentication;
-import edu.gdei.gdeiassistant.Annotation.RestQueryLogPersistence;
-import edu.gdei.gdeiassistant.Annotation.TrialData;
+import edu.gdei.gdeiassistant.Annotation.*;
 import edu.gdei.gdeiassistant.Enum.Method.QueryMethodEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
-import edu.gdei.gdeiassistant.Service.GradeQuery.GradeCacheService;
-import edu.gdei.gdeiassistant.Service.GradeQuery.GradeQueryService;
+import edu.gdei.gdeiassistant.Service.GradeQuery.GradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,10 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class GradeQueryRestController {
 
     @Autowired
-    private GradeQueryService gradeQueryService;
-
-    @Autowired
-    private GradeCacheService gradeCacheService;
+    private GradeService gradeService;
 
     /**
      * 清空缓存成绩信息
@@ -35,9 +28,10 @@ public class GradeQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/refreshgrade", method = RequestMethod.POST)
+    @UserGroupAccess(group = {2, 3})
     public JsonResult RefreshGradeData(HttpServletRequest request) {
         String username = (String) request.getSession().getAttribute("username");
-        gradeCacheService.ClearGrade(username);
+        gradeService.ClearGrade(username);
         return new JsonResult(true);
     }
 
@@ -51,7 +45,8 @@ public class GradeQueryRestController {
      */
     @RequestMapping(value = "/api/gradequery", method = RequestMethod.POST)
     @QueryLogPersistence
-    @TrialData(value = "grade", time = "year")
+    @TrialData(value = "grade", requestTime = "year", responseTime = "year")
+    @UserGroupAccess(group = {2, 3, 7})
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
             , Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -77,7 +72,8 @@ public class GradeQueryRestController {
     @RequestMapping(value = "/rest/gradequery", method = RequestMethod.POST)
     @RestQueryLogPersistence
     @RestAuthentication
-    @TrialData(value = "grade", time = "year")
+    @TrialData(value = "grade", requestTime = "year", responseTime = "year")
+    @UserGroupAccess(group = {2, 3, 7})
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
             , @RequestParam("token") String token, Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -103,16 +99,16 @@ public class GradeQueryRestController {
         switch (method) {
             case CACHE_ONLY:
                 //只查询缓存
-                return gradeQueryService.QueryUserGradeFromDocument(user.getUsername(), year);
+                return gradeService.QueryUserGradeFromDocument(user.getUsername(), year);
 
             case QUERY_ONLY:
                 //只查询教务系统
-                return gradeQueryService.QueryGradeFromSystem(sessionId, user, year);
+                return gradeService.QueryGradeFromSystem(sessionId, user, year);
 
             case CACHE_FIRST:
             default:
                 //优先查询缓存
-                return gradeQueryService.QueryGrade(sessionId, user, year);
+                return gradeService.QueryGrade(sessionId, user, year);
         }
     }
 }

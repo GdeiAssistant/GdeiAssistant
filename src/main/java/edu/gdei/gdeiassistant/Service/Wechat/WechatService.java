@@ -17,8 +17,8 @@ import edu.gdei.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Mapper.Reading.ReadingMapper;
 import edu.gdei.gdeiassistant.Repository.Redis.AccessToken.AccessTokenDao;
 import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
-import edu.gdei.gdeiassistant.Service.GradeQuery.GradeQueryService;
-import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
+import edu.gdei.gdeiassistant.Service.GradeQuery.GradeService;
+import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
@@ -81,10 +81,10 @@ public class WechatService {
     private WechatUserDataService wechatUserDataService;
 
     @Autowired
-    private GradeQueryService gradeQueryService;
+    private GradeService gradeService;
 
     @Autowired
-    private ScheduleQueryService scheduleQueryService;
+    private ScheduleService scheduleService;
 
     @Autowired
     private CardQueryService cardQueryService;
@@ -413,7 +413,7 @@ public class WechatService {
             }
             return new WechatTextMessage(wechatBaseMessage, "没有查询到成绩信息");
         }
-        GradeQueryResult gradeQueryResult = gradeQueryService.QueryUserGradeFromDocument(user.getUsername(), null);
+        GradeQueryResult gradeQueryResult = gradeService.QueryUserGradeFromDocument(user.getUsername(), null);
         if (gradeQueryResult != null) {
             int term = gradeQueryResult.getSecondTermGradeList().size() == 0 ? 1 : 2;
             if (term == 1) {
@@ -513,7 +513,7 @@ public class WechatService {
             }
             return new WechatTextMessage(wechatBaseMessage, "没有查找到成绩信息");
         }
-        ScheduleQueryResult scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(user.getUsername(), null);
+        ScheduleQueryResult scheduleQueryResult = scheduleService.QueryScheduleFromDocument(user.getUsername(), null);
         if (scheduleQueryResult != null) {
             List<Schedule> scheduleList = scheduleQueryResult.getScheduleList();
             int dayOfWeek = LocalDate.now().getDayOfWeek().getValue();

@@ -6,7 +6,7 @@ import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Teacher;
 import edu.gdei.gdeiassistant.Pojo.Entity.TeacherSchedule;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
-import edu.gdei.gdeiassistant.Service.ScheduleQuery.TeacherQueryService;
+import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +22,7 @@ import java.util.List;
 public class TeacherQueryController {
 
     @Autowired
-    private TeacherQueryService teacherQueryService;
+    private ScheduleService scheduleService;
 
     /**
      * 教师个人课表查询Restful接口
@@ -39,7 +39,7 @@ public class TeacherQueryController {
     public DataJsonResult<List<TeacherSchedule>> TeacherScheduleQuery(HttpServletRequest request
             , @Validated Teacher teacher, @RequestParam("year") String year, @RequestParam("term") String term
             , @RequestParam(value = "teacherName", required = false) String teacherName) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
-        List<TeacherSchedule> teacherScheduleList = teacherQueryService.TeacherScheduleQuery(request.getSession().getId(), teacher.getUsername()
+        List<TeacherSchedule> teacherScheduleList = scheduleService.TeacherScheduleQuery(request.getSession().getId(), teacher.getUsername()
                 , teacher.getPassword(), year, term, teacherName);
         return new DataJsonResult<>(true, teacherScheduleList);
     }

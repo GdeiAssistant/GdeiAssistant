@@ -1,9 +1,6 @@
 package edu.gdei.gdeiassistant.Controller.ScheduleQuery.RestController;
 
-import edu.gdei.gdeiassistant.Annotation.QueryLogPersistence;
-import edu.gdei.gdeiassistant.Annotation.RestAuthentication;
-import edu.gdei.gdeiassistant.Annotation.RestQueryLogPersistence;
-import edu.gdei.gdeiassistant.Annotation.TrialData;
+import edu.gdei.gdeiassistant.Annotation.*;
 import edu.gdei.gdeiassistant.Enum.Method.QueryMethodEnum;
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import edu.gdei.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
@@ -12,8 +9,7 @@ import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
-import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleCacheService;
-import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
+import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ScheduleQueryRestController {
 
     @Autowired
-    private ScheduleQueryService scheduleQueryService;
-
-    @Autowired
-    private ScheduleCacheService scheduleCacheService;
+    private ScheduleService scheduleService;
 
     /**
      * 清空缓存课表信息
@@ -36,9 +29,10 @@ public class ScheduleQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/refreshschedule", method = RequestMethod.POST)
+    @UserGroupAccess(group = {2, 3})
     public JsonResult RefreshGradeData(HttpServletRequest request) {
         String username = (String) request.getSession().getAttribute("username");
-        scheduleCacheService.ClearSchedule(username);
+        scheduleService.ClearSchedule(username);
         return new JsonResult(true);
     }
 
@@ -52,9 +46,10 @@ public class ScheduleQueryRestController {
      * @throws CountOverLimitException
      */
     @RequestMapping(value = "/api/customshedule", method = RequestMethod.POST)
+    @UserGroupAccess(group = {2, 3, 7})
     public JsonResult AddCustomSchedule(HttpServletRequest request, @Validated CustomSchedule customSchedule) throws GenerateScheduleException, CountOverLimitException {
         String username = (String) request.getSession().getAttribute("username");
-        scheduleQueryService.AddCustomSchedule(username, customSchedule);
+        scheduleService.AddCustomSchedule(username, customSchedule);
         return new JsonResult(true);
     }
 
@@ -66,9 +61,10 @@ public class ScheduleQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/customschedule/id/{id}", method = RequestMethod.DELETE)
+    @UserGroupAccess(group = {2, 3, 7})
     public JsonResult DeleteCustomSchedule(HttpServletRequest request, @PathVariable String id) {
         String username = (String) request.getSession().getAttribute("username");
-        scheduleQueryService.DeleteCustomSchedule(username, id);
+        scheduleService.DeleteCustomSchedule(username, id);
         return new JsonResult(true);
     }
 
@@ -82,7 +78,8 @@ public class ScheduleQueryRestController {
      */
     @RequestMapping(value = "/api/schedulequery", method = RequestMethod.POST)
     @QueryLogPersistence
-    @TrialData(value = "schedule", time = "week")
+    @TrialData(value = "schedule", responseTime = "week")
+    @UserGroupAccess(group = {2, 3, 7})
     public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
             , Integer week, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -95,17 +92,17 @@ public class ScheduleQueryRestController {
         switch (method) {
             case CACHE_FIRST:
                 //优先查询缓存数据
-                scheduleQueryResult = scheduleQueryService.QuerySchedule(request.getSession().getId()
+                scheduleQueryResult = scheduleService.QuerySchedule(request.getSession().getId()
                         , new User(username, password), week);
                 break;
 
             case CACHE_ONLY:
                 //只查询缓存数据
-                scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(username, week);
+                scheduleQueryResult = scheduleService.QueryScheduleFromDocument(username, week);
                 break;
 
             case QUERY_ONLY:
-                scheduleQueryResult = scheduleQueryService.QueryScheduleFromSystem(request.getSession().getId()
+                scheduleQueryResult = scheduleService.QueryScheduleFromSystem(request.getSession().getId()
                         , new User(username, password), week);
                 break;
         }
@@ -124,7 +121,8 @@ public class ScheduleQueryRestController {
     @RequestMapping(value = "/rest/schedulequery", method = RequestMethod.POST)
     @RestAuthentication
     @RestQueryLogPersistence
-    @TrialData(value = "schedule", time = "week")
+    @TrialData(value = "schedule", responseTime = "week")
+    @UserGroupAccess(group = {2, 3, 7})
     public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
             , @RequestParam("token") String token, Integer week
             , @RequestParam(name = "method", required = false
@@ -137,15 +135,15 @@ public class ScheduleQueryRestController {
         switch (method) {
             case CACHE_FIRST:
                 //优先查询缓存数据
-                scheduleQueryResult = scheduleQueryService.QuerySchedule(request.getSession().getId(), user, week);
+                scheduleQueryResult = scheduleService.QuerySchedule(request.getSession().getId(), user, week);
                 break;
 
             case CACHE_ONLY:
-                scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(user.getUsername(), week);
+                scheduleQueryResult = scheduleService.QueryScheduleFromDocument(user.getUsername(), week);
                 break;
 
             case QUERY_ONLY:
-                scheduleQueryResult = scheduleQueryService.QueryScheduleFromSystem(request.getSession().getId(), user, week);
+                scheduleQueryResult = scheduleService.QueryScheduleFromSystem(request.getSession().getId(), user, week);
                 break;
         }
         return new DataJsonResult<>(true, scheduleQueryResult);

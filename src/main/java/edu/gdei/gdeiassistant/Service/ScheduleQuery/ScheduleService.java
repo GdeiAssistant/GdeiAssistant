@@ -1,5 +1,6 @@
 package edu.gdei.gdeiassistant.Service.ScheduleQuery;
 
+import edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import edu.gdei.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Exception.CommonException.ServerErrorException;
@@ -8,18 +9,17 @@ import edu.gdei.gdeiassistant.Exception.CustomScheduleException.GenerateSchedule
 import edu.gdei.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Document.CustomScheduleDocument;
 import edu.gdei.gdeiassistant.Pojo.Document.ScheduleDocument;
-import edu.gdei.gdeiassistant.Pojo.Entity.CustomSchedule;
-import edu.gdei.gdeiassistant.Pojo.Entity.Schedule;
-import edu.gdei.gdeiassistant.Pojo.Entity.User;
+import edu.gdei.gdeiassistant.Pojo.Entity.*;
 import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import edu.gdei.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import edu.gdei.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Privacy.PrivacyMapper;
+import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.User.UserMapper;
 import edu.gdei.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
+import edu.gdei.gdeiassistant.Service.UserLogin.TeacherLoginService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
-import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
-import edu.gdei.gdeiassistant.Tools.ScheduleUtils;
-import edu.gdei.gdeiassistant.Tools.WeekUtils;
+import edu.gdei.gdeiassistant.Tools.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -36,15 +36,28 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 @Service
-public class ScheduleQueryService {
+public class ScheduleService {
+
+    private Log log = LogFactory.getLog(ScheduleService.class);
 
     private String url;
 
@@ -52,16 +65,31 @@ public class ScheduleQueryService {
 
     private int term;
 
-    private int timeout;
+    private int scheduleQueryTimeout;
+
+    private int teacherScheduleQueryTimeout;
+
+    private int currentUserStart = 0;
+
+    private int scheduleInterval;
 
     @Autowired
     private UserLoginService userLoginService;
+
+    @Autowired
+    private TeacherLoginService teacherLoginService;
 
     @Autowired
     private ScheduleDao scheduleDao;
 
     @Autowired
     private UserCertificateDao userCertificateDao;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private PrivacyMapper privacyMapper;
 
     @Value("#{propertiesReader['schedule.year']}")
     public void setYear(int year) {
@@ -79,11 +107,19 @@ public class ScheduleQueryService {
     }
 
     @Value("#{propertiesReader['timeout.schedulequery']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+    public void setScheduleQueryTimeout(int scheduleQueryTimeout) {
+        this.scheduleQueryTimeout = scheduleQueryTimeout;
     }
 
-    private Log log = LogFactory.getLog(ScheduleQueryService.class);
+    @Value("#{propertiesReader['timeout.teacherquery']}")
+    public void setTeacherScheduleQueryTimeout(int teacherScheduleQueryTimeout) {
+        this.teacherScheduleQueryTimeout = teacherScheduleQueryTimeout;
+    }
+
+    @Value("#{propertiesReader['education.cache.schedule.interval']}")
+    public void setScheduleInterval(int scheduleInterval) {
+        this.scheduleInterval = scheduleInterval;
+    }
 
     /**
      * 添加自定义课程信息
@@ -190,14 +226,26 @@ public class ScheduleQueryService {
             }
             List<Schedule> scheduleList = new ArrayList<>(scheduleDocument.getScheduleList());
             //获取自定义课表信息
-            CustomScheduleDocument customScheduleDocument = scheduleDao.queryCustomSchedule(username);
-            if (customScheduleDocument != null) {
-                scheduleList.addAll(new ArrayList<>(customScheduleDocument.getScheduleMap().values()));
-            }
+            List<Schedule> customScheduleList = GetCustomScheduleList(username);
+            scheduleList.addAll(customScheduleList);
             return new ScheduleQueryResult(GetSpecifiedWeekSchedule(scheduleList, week), week);
         }
         //缓存中没有数据
         return null;
+    }
+
+    /**
+     * 获取自定义课表信息
+     *
+     * @param username
+     * @return
+     */
+    public List<Schedule> GetCustomScheduleList(String username) {
+        CustomScheduleDocument customScheduleDocument = scheduleDao.queryCustomSchedule(username);
+        if (customScheduleDocument != null) {
+            return new ArrayList<>(customScheduleDocument.getScheduleMap().values());
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -207,7 +255,7 @@ public class ScheduleQueryService {
      * @param week
      * @return
      */
-    private List<Schedule> GetSpecifiedWeekSchedule(List<Schedule> scheduleList, int week) {
+    public List<Schedule> GetSpecifiedWeekSchedule(List<Schedule> scheduleList, int week) {
         List<Schedule> list = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
             //判断当前周是否在此课表信息的周数范围内
@@ -236,7 +284,7 @@ public class ScheduleQueryService {
         CookieStore cookieStore = null;
         try {
             HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
-                    , false, timeout);
+                    , false, scheduleQueryTimeout);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
@@ -484,6 +532,308 @@ public class ScheduleQueryService {
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             log.error("查询课表异常：", e);
+            throw new ServerErrorException("教务系统异常");
+        } finally {
+            if (httpClient != null) {
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (cookieStore != null) {
+                HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
+            }
+        }
+    }
+
+    /**
+     * 清空缓存的课表信息
+     *
+     * @param username
+     */
+    public void ClearSchedule(String username) {
+        scheduleDao.removeSchedule(username);
+    }
+
+    /**
+     * 异步获取教务系统课表信息任务
+     *
+     * @param semaphore
+     * @param user
+     */
+    @Async
+    public ListenableFuture<ScheduleQueryResult> QueryScheduleData(Semaphore semaphore, User user) {
+        try {
+            semaphore.acquire();
+            return AsyncResult.forValue(QueryScheduleFromSystem(null, user.decryptUser(), 0));
+        } catch (PasswordIncorrectException ignored) {
+
+        } catch (Exception e) {
+            log.error("定时查询保存课表信息异常：", e);
+        } finally {
+            semaphore.release();
+        }
+        return AsyncResult.forValue(null);
+    }
+
+    /**
+     * 定时查询并保存用户课表信息
+     */
+    @Scheduled(fixedDelay = 7200000)
+    public void SaveSchedule() {
+        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了查询保存用户课表信息的任务");
+        try {
+            Integer count = userMapper.selectUserCount();
+            if (currentUserStart >= count) {
+                currentUserStart = 0;
+            }
+            List<User> userList = userMapper.selectUserList(currentUserStart, 50);
+            currentUserStart = currentUserStart + 50;
+            LocalDateTime localDateTime = LocalDateTime.now();
+            //设置线程信号量，限制最大同时查询的线程数为5
+            Semaphore semaphore = new Semaphore(5);
+            for (User user : userList) {
+                if (user.getGroup().equals(UserGroupEnum.STUDENT.getValue())
+                        || user.getGroup().equals(UserGroupEnum.TEST.getValue())) {
+                    Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
+                    if (privacy != null && privacy.isCacheAllow()) {
+                        ScheduleDocument scheduleDocument = scheduleDao.querySchedule(StringEncryptUtils
+                                .decryptString(user.getUsername()));
+                        //如果最后更新日期距今已超过3天，则进行更新
+                        if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()
+                                .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= scheduleInterval) {
+                            ListenableFuture<ScheduleQueryResult> future = QueryScheduleData(semaphore, user);
+                            future.addCallback(new ListenableFutureCallback<ScheduleQueryResult>() {
+
+                                @Override
+                                public void onFailure(Throwable ex) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(ScheduleQueryResult result) {
+                                    try {
+                                        if (result != null) {
+                                            ScheduleDocument document = new ScheduleDocument();
+                                            if (scheduleDocument != null && scheduleDocument.getId() != null) {
+                                                document.setId(scheduleDocument.getId());
+                                            }
+                                            document.setUsername(StringEncryptUtils.decryptString(user.getUsername()));
+                                            document.setScheduleList(result.getScheduleList());
+                                            document.setUpdateDateTime(new Date());
+                                            scheduleDao.saveSchedule(document);
+                                        }
+                                    } catch (Exception e) {
+                                        log.error("定时查询保存课表信息异常：", e);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("定时查询保存课表信息异常：", e);
+        }
+    }
+
+    /**
+     * 查询教师个人课表
+     *
+     * @param sessionId
+     * @param username
+     * @param password
+     * @param year
+     * @param term
+     * @param teacherName
+     * @return
+     */
+    public List<TeacherSchedule> TeacherScheduleQuery(String sessionId
+            , String username, String password, String year, String term, String teacherName) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
+        CloseableHttpClient httpClient = null;
+        CookieStore cookieStore = null;
+        try {
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
+                    , true, teacherScheduleQueryTimeout);
+            httpClient = httpClientSession.getCloseableHttpClient();
+            cookieStore = httpClientSession.getCookieStore();
+            HttpGet httpGet = new HttpGet(url + "js_main.aspx?xh=" + username);
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                boolean reLogin = false;
+                if (document.title().equals("欢迎使用正方教务管理系统！请登录")) {
+                    //登录凭证过期，重新登录
+                    teacherLoginService.TeacherLogin(sessionId, username, password);
+                    reLogin = true;
+                }
+                if (document.title().equals("正方教务管理系统") || reLogin) {
+                    //进入教师个人课表查询页面
+                    httpGet = new HttpGet(url + "jstjkbcx.aspx?zgh=" + username);
+                    httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36");
+                    httpGet.setHeader("Referer", url + "js_main.aspx?xh=" + username);
+                    httpResponse = httpClient.execute(httpGet);
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                        if (StringUtils.isNotBlank(teacherName)) {
+                            HttpPost httpPost = new HttpPost("http://jwgl.gdei.edu.cn/jstjkbcx.aspx?zgh=" + username);
+                            httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36");
+                            httpPost.setHeader("Referer", url + "jstjkbcx.aspx?zgh=" + username);
+                            List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
+                            basicNameValuePairs.add(new BasicNameValuePair("__EVENTTARGET", document.getElementsByAttributeValue("name", "__EVENTTARGET").val()));
+                            basicNameValuePairs.add(new BasicNameValuePair("__EVENTARGUMENT", document.getElementsByAttributeValue("name", "__EVENTARGUMENT").val()));
+                            basicNameValuePairs.add(new BasicNameValuePair("__VIEWSTATE", document.getElementsByAttributeValue("name", "__VIEWSTATE").val()));
+                            basicNameValuePairs.add(new BasicNameValuePair("xn", year));
+                            basicNameValuePairs.add(new BasicNameValuePair("xq", term));
+                            basicNameValuePairs.add(new BasicNameValuePair("bm", ""));
+                            basicNameValuePairs.add(new BasicNameValuePair("TextBox1", teacherName));
+                            basicNameValuePairs.add(new BasicNameValuePair("Button2", "查询教师"));
+                            basicNameValuePairs.add(new BasicNameValuePair("js", username));
+                            httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
+                            httpResponse = httpClient.execute(httpPost);
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                        }
+                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                            //获取存放课表信息的表格
+                            Element table = document.getElementById("Table6");
+                            //获取表格中的所有行
+                            Elements trs = table.select("tr");
+                            //特殊的空课程,用于标记当前单元格被上边的课程信息占用,即上边同列课程的课程时长大于1
+                            TeacherSchedule specialEmptySchedule = new TeacherSchedule();
+                            //存放课表信息的数组,包含特殊的空课程对象
+                            TeacherSchedule[] schedulesWithSpecialEmptySchedule = new TeacherSchedule[84];
+                            //存放课表信息的列表,过滤特殊的空课程对象后添加入该列表
+                            List<TeacherSchedule> schedulesWithoutSpecialEmptySchedule = new ArrayList<>();
+                            //当前单元格位置position值
+                            int currentPosition = 0;
+                            //当前行最大位置position值
+                            int currentRowMaxPosition = 0;
+                            //前两行为行列信息,从第三行开始获取信息
+                            for (int row = 2; row < trs.size(); row++) {
+                                //获取该行内所有列
+                                Elements tds = trs.get(row).select("td");
+                                //记录当前访问列数据的游标,若当前为第3行或第8行或第13行,初始列游标值为2,否则初始值为1
+                                //因为特殊行里面的第一列包含上午/下午的信息提示
+                                int currentColumnIndexInThisRow;
+                                if (row == 2 || row == 7 || row == 11) {
+                                    currentColumnIndexInThisRow = 2;
+                                } else {
+                                    currentColumnIndexInThisRow = 1;
+                                }
+                                //当前行的列最大游标
+                                int maxColumnIndex;
+                                if (tds.size() < 7) {
+                                    maxColumnIndex = tds.size() - 1;
+                                } else {
+                                    maxColumnIndex = 6;
+                                }
+                                //遍历当前行,获取课表信息
+                                for (currentRowMaxPosition = currentRowMaxPosition + 7; currentPosition < currentRowMaxPosition; currentPosition++) {
+                                    if (schedulesWithSpecialEmptySchedule[currentPosition] == specialEmptySchedule) {
+                                        //当前position指向特殊空Schedule对象,跳过当前单元格
+                                    } else {
+                                        //判断当前行是否已经遍历完
+                                        if (currentPosition % 7 <= maxColumnIndex) {
+                                            //判断当前position的课程信息是否为空课表信息
+                                            //下面的字符非空格而是一个特殊的Unicode字符
+                                            if (tds.get(currentColumnIndexInThisRow).text().equals(" ")) {
+                                                //不存在课表信息
+                                            } else {
+                                                //当前td标签属性,代表课程时长
+                                                int rowspan;
+                                                //判断td标签有无rowspan属性,该属性代表课程时长
+                                                if (tds.get(currentColumnIndexInThisRow).hasAttr("rowspan")) {
+                                                    //通过rowspan属性得到课程时长
+                                                    rowspan = Integer.parseInt(tds.get(currentColumnIndexInThisRow).attr("rowspan"));
+                                                    //将当前单元格下方对应的原单元格的课程信息标记为特殊空课程
+                                                    switch (rowspan) {
+                                                        case 2:
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 7] = specialEmptySchedule;
+                                                            break;
+
+                                                        case 3:
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 7] = specialEmptySchedule;
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 14] = specialEmptySchedule;
+                                                            break;
+
+                                                        case 4:
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 7] = specialEmptySchedule;
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 14] = specialEmptySchedule;
+                                                            schedulesWithSpecialEmptySchedule[currentPosition + 21] = specialEmptySchedule;
+                                                            break;
+                                                    }
+                                                } else {
+                                                    //如果td标签没有rowspan属性,则该课程课程时长为默认的1
+                                                    rowspan = 1;
+                                                }
+                                                //将单元格里的课表信息按独立行进行分割单独处理
+                                                String[] string = tds.get(currentColumnIndexInThisRow).text().split(" ");
+                                                //记录单元格中的独立课表信息下标
+                                                for (int j = 0; j < string.length; j++) {
+                                                    if (string.length == 0) {
+                                                        schedulesWithSpecialEmptySchedule[currentPosition] = specialEmptySchedule;
+                                                    } else if (string[j].isEmpty() || string[j].substring(0, 1).equals("<") || string[j].equals(" ") || string[j].substring(0, 1).equals("(")) {
+                                                        //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
+                                                    } else {
+                                                        //有效的课表头信息,进行信息处理
+                                                        String scheduleName = string[j];
+                                                        String scheduleType = string[j + 1];
+                                                        String scheduleTime = string[j + 2];
+                                                        String scheduleWeek = (scheduleTime.split("\\("))[0];
+                                                        String scheduleLesson = ((scheduleTime.split("\\("))[1]).split("\\)")[0];
+                                                        String scheduleLocation = string[j + 4];
+                                                        String scheduleClass = string[j + 5];
+                                                        TeacherSchedule teacherSchedule = new TeacherSchedule();
+                                                        teacherSchedule.setPosition(currentPosition);
+                                                        teacherSchedule.setScheduleLength(rowspan);
+                                                        teacherSchedule.setScheduleName(scheduleName);
+                                                        teacherSchedule.setScheduleType(scheduleType);
+                                                        teacherSchedule.setScheduleLesson(scheduleLesson);
+                                                        teacherSchedule.setScheduleWeek(scheduleWeek);
+                                                        teacherSchedule.setScheduleClass(scheduleClass);
+                                                        teacherSchedule.setScheduleLocation(scheduleLocation);
+                                                        teacherSchedule.setRow(row - 2);
+                                                        if (row == 2 || row == 7 || row == 11) {
+                                                            teacherSchedule.setColumn(currentColumnIndexInThisRow - 2);
+                                                        } else {
+                                                            teacherSchedule.setColumn(currentColumnIndexInThisRow - 1);
+                                                        }
+                                                        teacherSchedule.setColorCode(ScheduleUtils.getScheduleColor(currentPosition));
+                                                        schedulesWithSpecialEmptySchedule[currentPosition] = teacherSchedule;
+                                                        j = j + 5;
+                                                    }
+                                                }
+                                            }
+                                            currentColumnIndexInThisRow = currentColumnIndexInThisRow + 1;
+                                        }
+                                    }
+                                }
+                            }
+                            for (TeacherSchedule teacherSchedule : schedulesWithSpecialEmptySchedule) {
+                                if (teacherSchedule != null && teacherSchedule != specialEmptySchedule) {
+                                    schedulesWithoutSpecialEmptySchedule.add(teacherSchedule);
+                                }
+                            }
+                            return schedulesWithoutSpecialEmptySchedule;
+                        }
+                        throw new ServerErrorException("提交课表查询请求异常");
+                    }
+                    throw new ServerErrorException("进入教师个人课表查询页面异常");
+                }
+                throw new ServerErrorException("教务系统异常");
+            }
+            throw new ServerErrorException("教务系统异常");
+        } catch (IOException e) {
+            log.error("教师个人课表查询异常：", e);
+            throw new NetWorkTimeoutException("网络连接超时");
+        } catch (ServerErrorException e) {
+            log.error("教师个人课表查询异常：", e);
+            throw new ServerErrorException("教务系统异常");
+        } catch (PasswordIncorrectException ignored) {
+            throw new PasswordIncorrectException("用户账号密码错误");
+        } catch (Exception e) {
+            log.error("教师个人课表查询异常：", e);
             throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {

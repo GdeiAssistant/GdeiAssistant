@@ -17,8 +17,8 @@ import edu.gdei.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Mapper.Reading.ReadingMapper;
 import edu.gdei.gdeiassistant.Repository.Redis.AccessToken.AccessTokenDao;
 import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
-import edu.gdei.gdeiassistant.Service.GradeQuery.GradeQueryService;
-import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleQueryService;
+import edu.gdei.gdeiassistant.Service.GradeQuery.GradeService;
+import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
@@ -81,10 +81,10 @@ public class WechatService {
     private WechatUserDataService wechatUserDataService;
 
     @Autowired
-    private GradeQueryService gradeQueryService;
+    private GradeService gradeService;
 
     @Autowired
-    private ScheduleQueryService scheduleQueryService;
+    private ScheduleService scheduleService;
 
     @Autowired
     private CardQueryService cardQueryService;
@@ -103,12 +103,12 @@ public class WechatService {
             , RequestTypeEnum requestTypeEnum, String contentText, String wechatId) throws Exception {
         String username = wechatUserDataService.QueryWechatAttachUsername(wechatId);
         if (StringUtils.isNotBlank(username)) {
-            //已绑定微信账号，获取微信ID绑定的用户账号
+            //已绑定微信账号，获取微信ID绑定的用户账�?
             User user = wechatUserDataService.QueryWechatUserData(username);
             if (user != null) {
                 switch (requestTypeEnum) {
                     case CARD:
-                        //查询校园卡基本信息
+                        //查询校园卡基本信�?
                         return HandleCardInfoQueryRequest(request, wechatBaseMessage, user);
 
                     case GRADE:
@@ -128,15 +128,15 @@ public class WechatService {
                         return new WechatTextMessage(wechatBaseMessage, "不支持的服务请求");
                 }
             }
-            return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发送如下格式文本" +
-                    "进行绑定：绑定账号-用户名-密码。例：绑定账号-gdeiassistant-123456");
+            return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发�?�如下格式文�?" +
+                    "进行绑定：绑定账�?-用户�?-密码。例：绑定账�?-gdeiassistant-123456");
         }
         if (requestTypeEnum == RequestTypeEnum.ATTACH) {
             //绑定账号
             return HandleAttachRequest(request, wechatId, contentText, wechatBaseMessage);
         }
-        return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发送如下格式文本" +
-                "进行绑定：绑定账号-用户名-密码。例：绑定账号-gdeiassistant-123456");
+        return new WechatTextMessage(wechatBaseMessage, "你未绑定微信账号，请发�?�如下格式文�?" +
+                "进行绑定：绑定账�?-用户�?-密码。例：绑定账�?-gdeiassistant-123456");
     }
 
     /**
@@ -167,7 +167,7 @@ public class WechatService {
      * @return
      */
     private synchronized String GetWechatAccessToken() {
-        //检查Redis缓存中有无AccessToken
+        //�?查Redis缓存中有无AccessToken
         String accessToken = accessTokenDao.QueryWechatAccessToken();
         //若缓存中没有AccessToken则调用API数据接口
         if (StringUtils.isBlank(accessToken)) {
@@ -183,7 +183,7 @@ public class WechatService {
 
 
     /**
-     * 获取微信JS接口的临时票据
+     * 获取微信JS接口的临时票�?
      *
      * @param accessToken
      * @return
@@ -198,7 +198,7 @@ public class WechatService {
     }
 
     /**
-     * 生成JS-SDK权限验证的签名
+     * 生成JS-SDK权限验证的签�?
      *
      * @param url
      * @return
@@ -206,9 +206,9 @@ public class WechatService {
     public JSSDKSignature SetUpJSSDKConfig(String url) {
         String accessToken = GetWechatAccessToken();
         String ticket = GetWechatJSApiTicket(accessToken);
-        //生成随机数
+        //生成随机�?
         String nonce = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
-        //获取时间戳
+        //获取时间�?
         Long timestamp = LocalDateTime.now().atZone(ZoneId.systemDefault()).toEpochSecond();
         String signature = StringEncryptUtils.SHA1HexString("jsapi_ticket=" + ticket + "&noncestr=" + nonce + "&timestamp=" + timestamp + "&url=" + url);
         JSSDKSignature jssdkSignature = new JSSDKSignature();
@@ -219,7 +219,7 @@ public class WechatService {
     }
 
     /**
-     * 下载JSSDK上传的音频
+     * 下载JSSDK上传的音�?
      *
      * @param voiceId
      * @return
@@ -243,7 +243,7 @@ public class WechatService {
     @Scheduled(fixedDelay = 21600000)
     @Transactional("dataTransactionManager")
     public void SyncWechatReadingItem() {
-        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了同步微信专题阅读素材的任务");
+        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd�? HH:mm:ss")) + "启动了同步微信专题阅读素材的任务");
         String accessToken = GetWechatAccessToken();
         //获取专题阅读素材总数
         JSONObject jsonObject = restTemplate.getForObject("https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=" + accessToken, JSONObject.class);
@@ -285,7 +285,7 @@ public class WechatService {
     }
 
     /**
-     * 获取微信用户的统一标识ID
+     * 获取微信用户的统�?标识ID
      *
      * @param access_token
      * @return
@@ -301,7 +301,7 @@ public class WechatService {
     }
 
     /**
-     * 处理校园卡信息查询请求
+     * 处理校园卡信息查询请�?
      *
      * @param request
      * @param user
@@ -323,32 +323,32 @@ public class WechatService {
         }
         if (cardInfo != null) {
             String content = "基本信息：\n" +
-                    "姓名：" + cardInfo.getName() + "\n" +
-                    "学号：" + cardInfo.getNumber() + "\n" +
-                    "卡号：" + cardInfo.getCardNumber() + "\n" +
+                    "姓名�?" + cardInfo.getName() + "\n" +
+                    "学号�?" + cardInfo.getNumber() + "\n" +
+                    "卡号�?" + cardInfo.getCardNumber() + "\n" +
                     "\n余额信息：\n" +
-                    "余额：" + cardInfo.getCardBalance() + "元\n" +
-                    "过渡余额：" + cardInfo.getCardInterimBalance() + "元\n" +
-                    "\n状态信息：\n" +
-                    "冻结状态：" + cardInfo.getCardFreezeState() + "\n" +
-                    "挂失状态：" + cardInfo.getCardLostState();
+                    "余额�?" + cardInfo.getCardBalance() + "元\n" +
+                    "过渡余额�?" + cardInfo.getCardInterimBalance() + "元\n" +
+                    "\n状�?�信息：\n" +
+                    "冻结状�?�：" + cardInfo.getCardFreezeState() + "\n" +
+                    "挂失状�?�：" + cardInfo.getCardLostState();
             wechatTextMessage.setContent(content);
         } else {
             wechatTextMessage.setContent("没有查询到校园卡信息");
         }
         /*wechatTextMessage.setContent(stringBuilder);
         WechatArticle cardArticle = new WechatArticle();
-        cardArticle.setTitle("校园卡信息查询结果");
+        cardArticle.setTitle("校园卡信息查询结�?");
         String stringBuilder = "基本信息：\n" +
-                "姓名：" + cardInfo.getName() + "\n" +
-                "学号：" + cardInfo.getNumber() + "\n" +
-                "卡号：" + cardInfo.getCardNumber() + "\n" +
+                "姓名�?" + cardInfo.getName() + "\n" +
+                "学号�?" + cardInfo.getNumber() + "\n" +
+                "卡号�?" + cardInfo.getCardNumber() + "\n" +
                 "\n余额信息：\n" +
-                "余额：" + cardInfo.getCardBalance() + "元\n" +
-                "过渡余额：" + cardInfo.getCardInterimBalance() + "元\n" +
-                "\n状态信息：\n" +
-                "冻结状态：" + cardInfo.getCardFreezeState() + "\n" +
-                "挂失状态：" + cardInfo.getCardLostState();
+                "余额�?" + cardInfo.getCardBalance() + "元\n" +
+                "过渡余额�?" + cardInfo.getCardInterimBalance() + "元\n" +
+                "\n状�?�信息：\n" +
+                "冻结状�?�：" + cardInfo.getCardFreezeState() + "\n" +
+                "挂失状�?�：" + cardInfo.getCardLostState();
         cardArticle.setDescription(stringBuilder);
         cardArticle.setPicUrl("");
         cardArticle.setUrl("https://gdeiassistant.cn/cardinfo");
@@ -411,9 +411,9 @@ public class WechatService {
                     return new WechatTextMessage(wechatBaseMessage, "当前学期没有成绩信息");
                 }
             }
-            return new WechatTextMessage(wechatBaseMessage, "没有查询到成绩信息");
+            return new WechatTextMessage(wechatBaseMessage, "没有查询到成绩信�?");
         }
-        GradeQueryResult gradeQueryResult = gradeQueryService.QueryUserGradeFromDocument(user.getUsername(), null);
+        GradeQueryResult gradeQueryResult = gradeService.QueryUserGradeFromDocument(user.getUsername(), null);
         if (gradeQueryResult != null) {
             int term = gradeQueryResult.getSecondTermGradeList().size() == 0 ? 1 : 2;
             if (term == 1) {
@@ -473,7 +473,7 @@ public class WechatService {
             }
         }
         return new WechatTextMessage(wechatBaseMessage
-                , "成绩缓存信息未同步，请确保已在个人中心的隐私设置中开启教务缓存功能");
+                , "成绩缓存信息未同步，请确保已在个人中心的隐私设置中开启教务缓存功�?");
     }
 
     /**
@@ -511,9 +511,9 @@ public class WechatService {
                 }
                 return new WechatTextMessage(wechatBaseMessage, "今天没有课程");
             }
-            return new WechatTextMessage(wechatBaseMessage, "没有查找到成绩信息");
+            return new WechatTextMessage(wechatBaseMessage, "没有查找到成绩信�?");
         }
-        ScheduleQueryResult scheduleQueryResult = scheduleQueryService.QueryScheduleFromDocument(user.getUsername(), null);
+        ScheduleQueryResult scheduleQueryResult = scheduleService.QueryScheduleFromDocument(user.getUsername(), null);
         if (scheduleQueryResult != null) {
             List<Schedule> scheduleList = scheduleQueryResult.getScheduleList();
             int dayOfWeek = LocalDate.now().getDayOfWeek().getValue();
@@ -547,7 +547,7 @@ public class WechatService {
                     , "今天没有课程");
         }
         return new WechatTextMessage(wechatBaseMessage
-                , "课表缓存信息未同步，请确保已在个人中心的隐私设置中开启教务缓存功能");
+                , "课表缓存信息未同步，请确保已在个人中心的隐私设置中开启教务缓存功�?");
     }
 
     /**
@@ -561,7 +561,7 @@ public class WechatService {
      */
     private WechatBaseMessage HandleAttachRequest(HttpServletRequest request, String wechatId
             , String contentText, WechatBaseMessage wechatBaseMessage) throws Exception {
-        //检测用户发送的文本内容合法性
+        //�?测用户发送的文本内容合法�?
         if (contentText.split("-").length >= 3) {
             String username = contentText.split("-")[1];
             String password = null;
@@ -584,16 +584,16 @@ public class WechatService {
                 try {
                     //进行用户登录
                     userLoginService.UserLogin(request.getSession().getId(), new User(username, password), true);
-                    //登录成功，进行微信账号绑定
+                    //登录成功，进行微信账号绑�?
                     wechatUserDataService.SyncWechatUserData(username, wechatId);
                     return new WechatTextMessage(wechatBaseMessage, "绑定微信账号成功");
                 } catch (PasswordIncorrectException e) {
                     //密码错误
-                    return new WechatTextMessage(wechatBaseMessage, "账号密码错误，请检查并重试");
+                    return new WechatTextMessage(wechatBaseMessage, "账号密码错误，请�?查并重试");
                 }
             }
         }
-        return new WechatTextMessage(wechatBaseMessage, "发送的文本格式有误，请检查并重试！" +
-                "绑定账号文本格式：绑定账号-用户名-密码。例：绑定账号-gdeiassistant-123456");
+        return new WechatTextMessage(wechatBaseMessage, "发�?�的文本格式有误，请�?查并重试�?" +
+                "绑定账号文本格式：绑定账�?-用户�?-密码。例：绑定账�?-gdeiassistant-123456");
     }
 }

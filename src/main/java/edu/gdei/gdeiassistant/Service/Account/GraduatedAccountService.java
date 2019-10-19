@@ -11,6 +11,8 @@ import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Graduation.GraduationMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.User.UserMapper;
 import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
+import edu.gdei.gdeiassistant.Service.GradeQuery.GradeService;
+import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
@@ -53,6 +55,12 @@ public class GraduatedAccountService {
     private UserLoginService userLoginService;
 
     @Autowired
+    private GradeService gradeService;
+
+    @Autowired
+    private ScheduleService scheduleService;
+
+    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -90,9 +98,9 @@ public class GraduatedAccountService {
     }
 
     /**
-     * 每年的七月一日执行毕业用户账号处理方案
+     * 每年的七月、八月和九月一日执行毕业用户账号处理方案
      */
-    @Scheduled(cron = "0 0 0 1 7 ?")
+    @Scheduled(cron = "0 0 0 1 7,8,9 ?")
     public void ProceedGraduationProgram() throws Exception {
         log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了执行毕业用户账号处理方案的任务");
         List<User> userList = userMapper.selectAllUser();
@@ -113,6 +121,9 @@ public class GraduatedAccountService {
                     Graduation graduation = graduationMapper.selectGraduation(user.getUsername());
                     if (graduation == null || graduation.getProgram().equals(GraduationProgramTypeEnum
                             .UPGRADE_TO_GRADUATED_ACCOUNT.getType())) {
+                        //清除缓存的成绩和课表数据
+                        gradeService.ClearGrade(decryptedUser.getUsername());
+                        scheduleService.ClearSchedule(decryptedUser.getUsername());
                         //升级为毕业用户账号
                         userMapper.updateUserGroup(user.getUsername(), UserGroupEnum.GRADUATED.getValue());
                     } else {

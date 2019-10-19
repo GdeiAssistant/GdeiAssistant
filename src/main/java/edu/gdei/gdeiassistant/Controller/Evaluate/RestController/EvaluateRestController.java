@@ -2,6 +2,7 @@ package edu.gdei.gdeiassistant.Controller.Evaluate.RestController;
 
 import edu.gdei.gdeiassistant.Annotation.RestAuthentication;
 import edu.gdei.gdeiassistant.Annotation.TrialData;
+import edu.gdei.gdeiassistant.Annotation.UserGroupAccess;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import edu.gdei.gdeiassistant.Service.Evaluate.EvaluateService;
@@ -22,6 +23,7 @@ public class EvaluateRestController {
 
     @RequestMapping(value = "/api/evaluate", method = RequestMethod.POST)
     @TrialData(value = "evaluate")
+    @UserGroupAccess(group = {2, 3, 7})
     public JsonResult StartEvaluate(HttpServletRequest request, boolean directlySubmit) throws Exception {
         String username = (String) WebUtils.getSessionAttribute(request, "username");
         String password = (String) WebUtils.getSessionAttribute(request, "password");
@@ -33,6 +35,7 @@ public class EvaluateRestController {
     @RequestMapping(value = "/rest/evaluate", method = RequestMethod.POST)
     @RestAuthentication
     @TrialData(value = "evaluate")
+    @UserGroupAccess(group = {2, 3, 7})
     public JsonResult StartEvaluate(HttpServletRequest request, @RequestParam("token") String token
             , boolean directlySubmit) throws Exception {
         User user = (User) request.getAttribute("user");

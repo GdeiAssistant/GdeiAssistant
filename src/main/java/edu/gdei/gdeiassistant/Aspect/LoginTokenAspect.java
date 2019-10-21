@@ -38,7 +38,7 @@ public class LoginTokenAspect {
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
         //获取用户请求的权限令牌签名
-        String token = (String) args[1];
+        String token = request.getParameter("token");
         //获取用户请求的IP地址
         String ip = ipService.GetRequestRealIPAddress(request);
         //校验令牌信息

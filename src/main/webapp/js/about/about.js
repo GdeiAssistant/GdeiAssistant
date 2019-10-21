@@ -91,7 +91,7 @@ function AlipayApp() {
     $.photoBrowser({
         items: [
             {
-                image: "/img/download/alipayapp_qrcode.jpg",
+                image: "/img/about/alipayapp_qrcode.jpg",
             }
         ],
         onOpen: function () {
@@ -104,7 +104,20 @@ function Wechat() {
     $.photoBrowser({
         items: [
             {
-                image: "/img/download/wechat_qrcode.jpg",
+                image: "/img/about/wechat_qrcode.jpg",
+            }
+        ],
+        onOpen: function () {
+            $(".photo-container img").css("margin", "0 auto");
+        }
+    }).open();
+}
+
+function QQApp() {
+    $.photoBrowser({
+        items: [
+            {
+                image: "/img/about/qqapp_qrcode.jpg",
             }
         ],
         onOpen: function () {
@@ -117,7 +130,7 @@ function WechatApp() {
     $.photoBrowser({
         items: [
             {
-                image: "/img/download/wechatapp_qrcode.jpg",
+                image: "/img/about/wechatapp_qrcode.jpg",
             }
         ],
         onOpen: function () {

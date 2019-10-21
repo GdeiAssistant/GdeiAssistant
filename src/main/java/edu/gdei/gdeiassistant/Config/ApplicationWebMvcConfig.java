@@ -96,6 +96,8 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         loginInterceptorExceptionList.add("/rest");
         //微信API接口
         loginInterceptorExceptionList.add("/wechat");
+        //QQAPI接口
+        loginInterceptorExceptionList.add("/qq");
         //易班API接口
         loginInterceptorExceptionList.add("/yiban");
         //支付宝API接口
@@ -133,6 +135,8 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         authenticationInterceptorExceptionList.add("/about");
         //微信API接口
         authenticationInterceptorExceptionList.add("/wechat");
+        //QQAPI接口
+        authenticationInterceptorExceptionList.add("/qq");
         //易班API接口
         authenticationInterceptorExceptionList.add("/yiban");
         //支付宝API接口

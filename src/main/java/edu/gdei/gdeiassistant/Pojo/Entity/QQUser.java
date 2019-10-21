@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WechatUser extends ConnectUser {
+public class QQUser extends ConnectUser {
 
 }

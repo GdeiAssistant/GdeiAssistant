@@ -21,7 +21,7 @@
     <p style="text-align:center">更新日期：2019年2月14日</p>
     <p style="text-align: center;">
         <img style="width: 50% !important; height: auto !important; visibility: visible !important;"
-             src="/img/download/wechat_qrcode.jpg" onclick="window.location.href='/img/download/wechat_qrcode.jpg'">
+             src="/img/about/wechat_qrcode.jpg" onclick="window.location.href='../../../img/about/wechat_qrcode.jpg'">
     </p>
     <p>&nbsp; &nbsp; &nbsp; &nbsp; 易小助微信公众号提供了用户消息对话进行教务查询的功能。用户在微信公众号绑定教务系统账号后，可以通过发送消息快捷查询成绩信息、课表信息和校园卡信息等。</p>
     <p style="text-align: center;">

@@ -4,6 +4,7 @@ import edu.gdei.gdeiassistant.Annotation.UserGroupAccess;
 import edu.gdei.gdeiassistant.Constant.ErrorConstantUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
+import edu.gdei.gdeiassistant.Service.Token.LoginTokenService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -23,6 +24,9 @@ public class UserGroupAccessAspect {
     @Autowired
     private UserLoginService userLoginService;
 
+    @Autowired
+    private LoginTokenService loginTokenService;
+
     @Pointcut("@annotation(edu.gdei.gdeiassistant.Annotation.UserGroupAccess)")
     public void RequestAction() {
 
@@ -32,8 +36,15 @@ public class UserGroupAccessAspect {
     public JsonResult ValidateAdminAccess(ProceedingJoinPoint proceedingJoinPoint, UserGroupAccess userGroupAccess) throws Throwable {
         Object[] args = proceedingJoinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
+        User user = null;
         String username = (String) request.getSession().getAttribute("username");
-        User user = userLoginService.GetUserByUsername(username);
+        if (username == null) {
+            //获取用户请求的权限令牌签名
+            String token = request.getParameter("token");
+            user = userLoginService.GetUserByUsername(loginTokenService.ParseToken(token).get("username").asString());
+        } else {
+            user = userLoginService.GetUserByUsername(username);
+        }
         //对比用户组值是否与资源要求的权限值相匹配
         for (int group : userGroupAccess.group()) {
             if (user.getGroup().equals(group)) {

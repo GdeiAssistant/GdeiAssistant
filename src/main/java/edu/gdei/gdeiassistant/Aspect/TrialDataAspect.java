@@ -45,19 +45,15 @@ public class TrialDataAspect {
         HttpServletRequest request = (HttpServletRequest) args[0];
         String username = (String) request.getSession().getAttribute("username");
         Integer group = (Integer) request.getSession().getAttribute("group");
-        if (group == null) {
+        if (username == null || group == null) {
             //获取用户请求的权限令牌签名
-            String token = (String) args[1];
+            String token = request.getParameter("token");
             User user = userLoginService.GetUserByUsername(loginTokenService.ParseToken(token).get("username").asString());
+            username = user.decryptUser().getUsername();
             group = user.getGroup();
         }
         //若当前用户组为体验用户，则返回模拟结果数据
         if (UserGroupEnum.TRIAL.getValue().equals(group)) {
-            if (StringUtils.isBlank(username)) {
-                //解析权限令牌获取用户名
-                String token = (String) args[1];
-                username = loginTokenService.ParseToken(token).get("username").asString();
-            }
             /*
               若TrialData注解的请求时间信息RequestTime值不为空字符串，则表示请求的数据要求携带时间信息
               将在请求参数中获取对应的属性值，该属性的名称与注解中RequestTime的值相同，将作为时间属性被用于获取模拟数据或模拟数据后加工的过程中

@@ -29,6 +29,9 @@
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
     <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_pink.css">
     <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_blue.css">
+    <link title="default" rel="stylesheet" href="/css/common/jquery-weui.min.css">
+    <link title="pink" rel="alternate stylesheet" href="/css/common/jquery-weui.min_pink.css">
+    <link title="blue" rel="alternate stylesheet" href="/css/common/jquery-weui.min_blue.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
@@ -45,33 +48,43 @@
             if ($("#username").val() === "" || $("#password").val() === "") {
                 $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
             } else {
-                $("#loadingToast, .weui_mask").show();
-                $.ajax({
-                    url: '/api/userlogin',
-                    method: 'POST',
-                    data: {
-                        username: $("#username").val(),
-                        password: $("#password").val()
-                    },
-                    success: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
-                        if (result.success) {
-                            if ($("#redirect").val() != '') {
-                                window.location.href = $("#redirect").val();
-                            } else {
-                                window.location.href = '/index';
+                //弹出用户协议和隐私政策提示
+                $.confirm({
+                    title: '用户协议和隐私政策提示',
+                    text: '在您使用广东二师助手前，请您认真阅读并了解《服务条款》和《隐私政策》。如您未满14周岁，你还需通知您的监护人共同阅读《儿童隐私政策》，点击"确定"即表示您和您的监护人已阅读并同意全部条款。若您不同意，请点击"取消"并退出应用。',
+                    onOK: function () {
+                        $("#loadingToast, .weui_mask").show();
+                        $.ajax({
+                            url: '/api/userlogin',
+                            method: 'POST',
+                            data: {
+                                username: $("#username").val(),
+                                password: $("#password").val()
+                            },
+                            success: function (result) {
+                                $("#loadingToast, .weui_mask").hide();
+                                if (result.success) {
+                                    if ($("#redirect").val() != '') {
+                                        window.location.href = $("#redirect").val();
+                                    } else {
+                                        window.location.href = '/index';
+                                    }
+                                } else {
+                                    $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                                }
+                            },
+                            error: function (result) {
+                                $("#loadingToast, .weui_mask").hide();
+                                if (result.status) {
+                                    $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                                } else {
+                                    $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
+                                }
                             }
-                        } else {
-                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
-                        }
+                        });
                     },
-                    error: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
-                        if (result.status) {
-                            $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
-                        } else {
-                            $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
-                        }
+                    onCancel: function () {
+
                     }
                 });
             }
@@ -121,17 +134,13 @@
     <a class="page_desc"
        onclick="window.location.href = '/about/account'">《教务系统账号说明》
     </a>
+    <br>
+    未注册广东二师助手账号的用户
+    <br>
+    登录时将自动创建广东二师助手账号
 </p>
 
-<p class="page_desc">点击登录按钮表示你已阅读并同意
-    <br>
-    <a class="page_desc"
-       onclick="window.location.href = '/agreement'">《用户协议》
-    </a>和
-    <a class="page_desc"
-       onclick="window.location.href = '/policy/privacy'">《隐私政策》
-    </a>
-</p>
+<p class="page_desc"></p>
 
 <br>
 
@@ -164,8 +173,13 @@
 <div class="weui_msg">
 
     <div class="weui_extra_area">
-        <p>广东二师助手团队 版权所有</p>
-        <p>All rights reserved © 2016 - 2019</p>
+        使用前请仔细阅读
+        <a onclick="window.location.href = '/agreement'">《用户协议》</a>
+        <br>
+        和
+        <a onclick="window.location.href = '/policy/privacy'">《隐私政策》</a>
+        以及
+        <a onclick="window.location.href = '/policy/privacy#policy-children'">《儿童隐私政策》</a>
     </div>
 
 </div>

@@ -17,7 +17,7 @@
 <body>
 
 <div>
-    <p style="text-align:center">《广东二师助手隐私政策》</p>
+    <p id="policy-common" style="text-align:center">《广东二师助手隐私政策》</p>
     <p style="text-align:center">更新日期：2019年9月14日</p>
     <p style="text-align:right"><br></p>
     <p style="text-indent:14px;line-height:150%">
@@ -171,7 +171,7 @@
     <p>特别提示：本《广东二师助手隐私政策》将于发布之日正式生效，除非广东二师助手平台根据相关法律法规及平台运营对本隐私政策作出调整并发布新的隐私政策，否则本隐私政策一直有效。</p>
     <p>&nbsp;</p>
     <p><br></p>
-    <p style="text-align:center">《广东二师助手儿童隐私政策》</p>
+    <p id="policy-children" style="text-align:center">《广东二师助手儿童隐私政策》</p>
     <p style="text-align:center">更新日期：2019年9月14日</p>
     <p style="text-align:right"><br></p>
     <p style="text-indent:14px;line-height:150%">

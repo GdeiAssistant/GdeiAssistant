@@ -1,0 +1,45 @@
+<Accounts>
+    <Account Id="GdeiAssistant" Biz="MzUyNzkxMTcxMQ==" Name="易小助" Description="易小助是一款旨在为广东第二师范学院在校师生提供最便捷获取校园生活、社团活动、教务信息的校园应用，提供了课表查询、成绩查询、空课室查询、图书查询、校园卡充值挂失、消费查询等综合性的服务与功能。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5ZCtYYlNlnVjgPIHv1uC5tic2sm6pHqPoaf74NeYiaic5aA/0"/>
+    <Account Id="gdei1955" Biz="MzI5MjQ0ODY2Nw==" Name="广东第二师范学院" Description="广东第二师范学院官方微信" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM53wicWxdaohQ8ZlHYPQuRu2xc0sfQ84b2aDSe5Uyv6wGg/0"/>
+    <Account Id="gdesxsh" Biz="MjM5NzYyNDkwMg==" Name="广东第二师范学院学生会"
+             Description="全心全意为同学服务,二师大事小事都在这!有什么开心事困难事,都可以在后台留言与校会君分享.校会君与你分享快乐,也为你解答疑惑!" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM4ibvheiaYJSeYbWAiafpgHibubbV7iaZKicudB2eSYiar3xjdGA/0"/>
+    <Account Id="gdeixgi" Biz="MzI5NjQ5NTMzMQ==" Name="广东第二师范学院i学工" Description="广东二师学生工作信息官方推送平台" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6rShNFtaR9hNoEv4BDn0ibC0D5YM45tIHJT50HzaiaKmWQ/0"/>
+    <Account Id="gdei_jyzd" Biz="MzUzNjc1MTM0Nw==" Name="广东第二师范学院就业指导中心"
+             Description="本公众号主要为广东第二师范学院学生提供最新的招聘信息、就业动态、宣讲会和就业指导等相关服务。同时也希望各位同学能与我们分享就业信息和就业问题，并发送至本公众号，我们将竭诚为各位同学服务。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5GGGP1CoOq7meVVeRLVE8sB1sFk04TPsAbL5y3ZlU3IQ/0"/>
+    <Account Id="gh_1151ec6061de" Biz="MzI3MTU2MjcxOQ==" Name="广东第二师范学院图书馆" Description="广东第二师范学院图书馆官方微信" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM7B7hmXVBxsSXW8Sia112vXKe7x3C2lo2dISx5ZFaDR02w/0"/>
+    <Account Id="gdeshdgbt" Biz="MjM5NDczNTQ4NQ==" Name="广东第二师范学院花都校区广播台"
+             Description="广东第二师范学院广播台官方微信 （定期发布节目预告、校内消息、新闻资讯等；可接受听众咨询和节目互动哦O(∩_∩)O）" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5fF9maah41IwEYREFsmaAXLrdc272F1qKv4ej1qdTozA/0"/>
+    <Account Id="gdei_zsb" Biz="MzU2MTg1MTMwMQ==" Name="广东第二师范学院招生办公室" Description="广东省属公办普通本科院校，创建于1955年，学校国标代码:14278，欢迎考生踊跃报考！" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5JnC8lUrbibl46U7zo2ADp7zTTkzxRsZZJv7MAqzw314A/0"/>
+    <Account Id="Ling1866250601" Biz="MzAxMTE3NTAyOQ==" Name="广东第二师范学院音乐系学生会" Description="音乐系学生会交流平台，宣传各项活动。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6iciasLWAqQaibwjibicicLUTVSrRS9UkkKBjxnSy5e3aveVoA/0"/>
+    <Account Id="gh_df5d1ab52d57" Biz="MzA5MDA3OTI2Ng==" Name="广东第二师范学院秋实文学社"
+             Description="秋实文学社创办于1984年，是共青团广东第二师范学院委员会旗下的一个有近300多名社员的全校性文学团体。一直受到广东作家协会的支持和帮助，著名作家郭小东、雷铎、洪三泰和著名诗人杨克曾担任本社的顾问。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5DOPL8iaibWic43mxiatibqpmBTUiazPnNcDCe8uamXGPKlPyQ/0"/>
+    <Account Id="gh_22a2073aba16" Biz="MzIxMzYzNTc1Mw==" Name="广东二师在线" Description="本微信号为广东第二师范学院网络教育学院官方微信账号，发布教育与培训资讯，提供教育与培训服务，提示注意事项。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM4vh9oic4Dgj0bNTlPaBZStEN7iaumFoHnS2hWBbpcSHEMA/0"/>
+    <Account Id="shuxuexituanzongzhi" Biz="MjM5MzQ4NjM5MA==" Name="广东二师数学系团委" Description="共青团广东第二师范学院数学系总支部委员会" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM4TOOCwVfLPUGcfiaNvyIicJiaqLKiclgsuE2ibqfeafjKYZDA/0"/>
+    <Account Id="gh_3abc55eacb43" Biz="MzUzNDYxMTcxNQ==" Name="广东二师青年" Description="共青团广东第二师范学院委员会" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM7ygeBAzAhz0RggEFodjuQiaicc6JMt17wELajFN4m0UBtA/0"/>
+    <Account Id="gdeshzgbt" Biz="MzA5MjY5MTczNQ==" Name="广东二师广播台" Description="广东第二师范学院海珠校区广播台各类资讯速递；听众盆友们的互动平台；点歌神器" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6nEvaq6BkNVFAZ6aBSVaoCIAvD5dGPAAgxvKv4Sp9m7g/0"/>
+    <Account Id="gdei-hqfw" Biz="MzU4MzM0ODIwOQ==" Name="广东二师后勤服务" Description="智能报修，失物招领，紧急通知，服务监督、评价，维修耗材的使用统计和监管等。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6WIMm38nUaObEsAOycK2sDqJMT0F6PVawTKelxgOK35A/0"/>
+    <Account Id="gh_25a879793939" Biz="MzI4OTY5MDYxMA==" Name="广东二师创新创业学院" Description="创业教育" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM708Wibq5iabuxrTSjksiapOM7sr7dIQicnCcGZB0CPvV8xSQ/0"/>
+    <Account Id="Guangershi-HongHui" Biz="MzA4OTk0ODEyMg==" Name="广二师红十字会" Description="广东第二师范学院红十字会成立于1996年五月份,它是以保护人的生命和健康,发扬人道主义精神,促进和平进步事业为宗旨,从事人道主义工作的社会救助团体。它以“救死扶伤,扶危济困,敬老助残,助人为乐”为工作方针,本着“人道,博爱,奉献”的精神。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM50sYM4Nkcibc71QAQYmVFEDpz1OMgoGWh60dbzamJov1Q/0"/>
+    <Account Id="gdueshuxuexingqu" Biz="MzA3MDA2Mjg3Ng==" Name="广二师花都区数学兴趣协会" Description="本订阅号是广东第二师范学院数学兴趣协会为二师学子们提供数学资料共享的平台；通过此公众号或我们的官方微博@广东二师数学兴趣协会可了解我们的最新消息。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6eswtRMPDXwjxCvtcaLbTCu8YGE5CK9ostBt3XKsTpDw/0"/>
+    <Account Id="gh_063f5c57e45d" Biz="MzAxMzU2MjY4MQ==" Name="广二师音乐系舞蹈团" Description="【广东第二师范学院音乐系舞蹈团】" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6zk2wNOV3Dm1Z2b24zCZwXRWy4INibkFRsEllja6alg6A/0"/>
+    <Account Id="G-dei-hangmodui" Biz="MzI1ODQ3Mzk2OA==" Name="广二师航模队" Description="想要亲手制作一架自己的飞机？想体验飞机冲向天空的刺激感？关注我们吧 我们为你提供最新的航模动向。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM4ZVkssAXn9rXcTxibwjCKkV6UdFxmpHhHBfiaRA8wvzhkQ/0"/>
+    <Account Id="gdguita" Biz="MzA4NTA0NzU5Mw==" Name="广二师吉他协会" Description="不定时分享一些好听的音乐 吉他谱 吉他视频" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM7k0jAU04WWcshEB0b7zPADdQHsk1Uose8JvP6POJAN4A/0"/>
+    <Account Id="gescys" Biz="Mzg3MjA1MTM4Nw==" Name="广二师创意社" Description="连接二师学子的一切~" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM7ovIyWvrvcHGTrPnUKdp1rOqEsQaiakO5IaV6ib8lECNUg/0"/>
+    <Account Id="yishutuan22" Biz="MzAwMzA3Nzg5MQ==" Name="广二师计算机科学系艺术团" Description="更好的推广宣传计算机科学系艺术团，为同学们提供计算机科学系最新的活动消息及各种晚会宣传。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5G8nW8QQ5qDqoqBibwxwwc6np9ayT0kvG8LbXqJPWvAcg/0"/>
+    <Account Id="gh_d9cf5e921825" Biz="MzI4MjkyODYwNg==" Name="广二师GES街舞社" Description="不会跳舞的我 想和你们一起跳舞" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM7neWLnxYZ17EcdeR4aehVaU3sTmDJuic26QyJJpNtQHbA/0"/>
+    <Account Id="gdueSXJM" Biz="MzA3NzAyNzE3Nw==" Name="广二师数模协会" Description="为我校广大数学爱好者提供交流和互相学习的空间，致力于我校社团建设和丰富我校学生的课余生活，并为我校数学建模的发展做出贡献，致力于建设成我校数学建模人才输送基地。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5yZzkm0TsbvHBvyibyX5EYkw9iciaiaqSdInGnoqgR87T8Ig/0"/>
+    <Account Id="gh_6459646d98eb" Biz="MzI5NzA0NTYyMQ==" Name="广二师鸟协" Description="观鸟，爱鸟，保护大自然。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6Idepbblmrow57la3KQroO04fUuMEwxoLCrLxX5LZINw/0"/>
+    <Account Id="gh_05e0c0f2c20f" Biz="MzA4NTA2Nzg1Mg==" Name="广二师书协" Description="习书有道，以书会友" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM4mWl2YIagV0n5xV4dzkDU59gp4cAIURvFFkMbuibFXgRg/0"/>
+    <Account Id="gh_6167ae7a0a0f" Biz="MzI4ODQ5Njg1Mg==" Name="广二师学生陶行知研究会" Description="广二师陶行知研究会公共消息发布平台" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6pZBjs4Mic8ZdsKURQicffyohDCIutvIDUn7wnzQ2yWaDw/0"/>
+    <Account Id="gdes14527" Biz="MzAxNzcyODY5Mg==" Name="花都广二师棋协" Description="以棋会友，陶冶情操，切磋棋艺，共同提高。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM4hHHgnQtn1yAELQibNS9iaC3SyzM5U7ianM2BXibUucZVbXg/0"/>
+    <Account Id="hxxhjyst" Biz="MzIxNDI5MjA2Mg==" Name="广二师化学系化境艺术团" Description="随时关注艺术团举办各类活动，并且及时获知院系内小、中、大型文艺活动的资讯哟！" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5EB61guZeonvq9eVlpJk4AJOYV5UKZeicQeXaHEFG3u7w/0"/>
+    <Account Id="gh_b134560001b2" Biz="MzI5MTQ4MjA4Ng==" Name="广二师音乐剧团" Description="此公众号会在第一时间推出音乐剧团的一切活动.喜欢音乐剧的你们还不快点戳戳我." Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6HHJhYhH0OAo7RLCaYjCVOmq4fC744QzwdIAtAPCH4Lg/0"/>
+    <Account Id="gdesjsjmxh" Biz="MzAwMTQ2NjQ3NQ==" Name="广二师健协" Description="以健为美" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5SdkdYZqMlPjMGGbN4ek1kJQEgtblOgial1KDF36OVXKA/0"/>
+    <Account Id="gh_763b41bcffba" Biz="MzI4NTU4ODk4NQ==" Name="广二师国画工作室" Description="传承国画书法艺术" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6Kv0ANLljkyLS7B4fD02XaLPpOWTJPRhEu7rbCL8Xaaw/0"/>
+    <Account Id="gh_cbb8cfb3cdee" Biz="MzU0MTAxMjEzMQ==" Name="广二师sunshine曜日三下乡服务队" Description="sunshine曜日三下乡服务队的有关信息发布" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM7sOwhBnnIcKSSuUNwls48H2OVzf7O3mnrs0pq7nBuomA/0"/>
+    <Account Id="gh_2d1269e49de2" Biz="MzUyNjk0NjQ5NQ==" Name="广二师青春作伴读书社" Description="本订阅号是广东第二师范学院花都校区青春作伴读书社为了打造读书社和广大二师学子的大学生活平台，及时为你送上最新的文学动态和大学生值得看的书籍与文章。欢迎关注《青春作伴读书社》或@广东二师青春作伴读书社微博，青春有你，与我作伴，我们会更精彩！" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM4fgSLa9vibCBbn0FeFArB4mMficzjuZpibYlYa4ywiaFuuhg/0"/>
+    <Account Id="gh_170aabf9d5d0" Biz="MzUzNTUxMDk4OQ==" Name="广二师花都校区女篮" Description="为你呈上广二师花都区校女篮的最新资讯！" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6anSiaTjIM0gibia43ueORI8wwND9UnIibDrdBOAwCRBTk8g/0"/>
+    <Account Id="cswhxh" Biz="MzA4Mjk5MTg2OA==" Name="广二师潮协" Description="广二师潮汕文化协会，本着弘扬潮汕文化，丰富学生课余生活，激发学生学习研究潮汕历史风俗和文化精神的热情，提高学生的文化素养，提高同学们对身边的传统文化的认知度，继承和弘扬潮汕精神，增强中华民族凝聚力。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6wlXCIypfqXGPI5micA2bcDGXuf8NPJIdXJng0cUQLOfA/0"/>
+    <Account Id="notsecond" Biz="MzI3ODQ3MTE4MQ==" Name="不二师苑" Description="广二师校园自媒体，陪你度过四年的不二师苑。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6qE8Mib1n165IcW8fwjIwqsKiaUFialpCX5XSEIQyRcjF7A/0"/>
+    <Account Id="gh_88d36aa3dea0" Biz="MzAwNDQ1MzQ1Ng==" Name="广二师桃源怡遇三下乡服务队" Description="盛夏，愿桃源，有怡遇" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6iaJVEiaKGUbZKKUUFQbxmU6cnjOwWveuzdMXU5dTVJqaA/0"/>
+</Accounts>

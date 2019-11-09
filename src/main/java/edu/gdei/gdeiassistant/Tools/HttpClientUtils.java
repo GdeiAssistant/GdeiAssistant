@@ -83,7 +83,9 @@ public class HttpClientUtils {
      * @param cookieStore
      */
     public static void SyncHttpClientCookieStore(String sessionId, CookieStore cookieStore) {
-        cookieStoreDao.SaveCookieStore(sessionId, cookieStore);
+        if (StringUtils.isNotBlank(sessionId)) {
+            cookieStoreDao.SaveCookieStore(sessionId, cookieStore);
+        }
     }
 
     /**
@@ -92,7 +94,9 @@ public class HttpClientUtils {
      * @param sessionId
      */
     public static void ClearHttpClientCookieStore(String sessionId) {
-        cookieStoreDao.ClearCookieStore(sessionId);
+        if (StringUtils.isNotBlank(sessionId)) {
+            cookieStoreDao.ClearCookieStore(sessionId);
+        }
     }
 
     /**

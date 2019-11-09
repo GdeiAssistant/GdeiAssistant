@@ -16,4 +16,13 @@
         <example>${info:getFestivalInfo()}</example>
     </function>
 
+    <function>
+        <description>获取校园公众号数据</description>
+        <name>getSchoolWechatAccountData</name>
+        <function-class>edu.gdei.gdeiassistant.Tools.WechatAccountUtils</function-class>
+        <function-signature>java.util.List getWechatAccountList()
+        </function-signature>
+        <example>${info:getSchoolWechatAccountData()}</example>
+    </function>
+
 </taglib>

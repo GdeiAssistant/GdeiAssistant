@@ -9,6 +9,7 @@ import edu.gdei.gdeiassistant.Service.Recognition.RecognitionService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.ImageEncodeUtils;
 import edu.gdei.gdeiassistant.Tools.WechatAccountUtils;
+import net.sf.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -60,6 +61,13 @@ public class WechatAccountService {
                 WechatAccountUtils.getWechatAccountList().set(wechatAccount.getIndex(), wechatAccount);
             } catch (Exception ignored) {
 
+            } finally {
+                try {
+                    //线程休眠三秒，避免触发网络异常验证码校验
+                    Thread.sleep(3000);
+                } catch (InterruptedException ignored) {
+
+                }
             }
         }
     }
@@ -76,7 +84,7 @@ public class WechatAccountService {
         CookieStore cookieStore = null;
         try {
             HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
-                    , false, timeout);
+                    , true, timeout);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("https://weixin.sogou.com");
@@ -88,7 +96,7 @@ public class WechatAccountService {
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 if (document.getElementsByAttributeValue("uigs", "account_name_0").isEmpty()) {
-                    Element checkcode = document.getElementById("seccodeImage");
+                    Element checkcode = document.getElementById("code-img");
                     Element noresult = document.getElementById("noresult_part1_container");
                     if (noresult != null) {
                         //没有相关的官方认证订阅号
@@ -96,25 +104,58 @@ public class WechatAccountService {
                     } else if (checkcode != null) {
                         //异常访问请求，进行验证码校验
                         httpGet = new HttpGet("https://weixin.sogou.com/antispider/" + checkcode.attr("src"));
+                        httpGet.setHeader("Referer", "https://weixin.sogou.com/antispider/?query=" + wechatAccount.getId());
+                        httpGet.setHeader("Sec-Fetch-Mode", "no-cors");
+                        httpGet.setHeader("Sec-Fetch-Site", "same-origin");
+                        httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
                         httpResponse = httpClient.execute(httpGet);
                         InputStream inputStream = httpResponse.getEntity().getContent();
                         String checkCode = recognitionService.CheckCodeRecognize(ImageEncodeUtils
                                         .ConvertToBase64(inputStream, ImageEncodeUtils.ImageFormTypeEnum.PNG)
                                 , CheckCodeTypeEnum.ENGLISH_WITH_NUMBER, 6);
                         HttpPost httpPost = new HttpPost("https://weixin.sogou.com/antispider/thank.php");
+                        httpPost.setHeader("Referer", "https://weixin.sogou.com/antispider/?query=" + wechatAccount.getId());
+                        httpPost.setHeader("Sec-Fetch-Mode", "no-cors");
+                        httpPost.setHeader("Sec-Fetch-Site", "same-origin");
+                        httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
                         BasicNameValuePair basicNameValuePair1 = new BasicNameValuePair("c", checkCode);
-                        BasicNameValuePair basicNameValuePair2 = new BasicNameValuePair("r", "card");
-                        BasicNameValuePair basicNameValuePair3 = new BasicNameValuePair("v", "0");
+                        BasicNameValuePair basicNameValuePair2 = new BasicNameValuePair("r"
+                                , document.getElementById("from") != null ? document.getElementById("from").val() : "");
+                        BasicNameValuePair basicNameValuePair3 = new BasicNameValuePair("v"
+                                , document.getElementById("type") != null ? document.getElementById("type").val() : "");
                         List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
                         basicNameValuePairs.add(basicNameValuePair1);
                         basicNameValuePairs.add(basicNameValuePair2);
                         basicNameValuePairs.add(basicNameValuePair3);
                         //提交表单
                         httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
-                        httpClient.execute(httpPost);
-                    } else {
-                        throw new ServerErrorException("通过微信号查询公众号信息异常");
+                        httpResponse = httpClient.execute(httpPost);
+                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                            JSONObject jsonObject = JSONObject.fromObject(document.body().text());
+                            if (jsonObject.containsKey("code") && jsonObject.getInt("code") == 0) {
+                                //验证码校验通过
+                                httpGet = new HttpGet("https://weixin.sogou.com/weixin?query=" + wechatAccount.getId());
+                                httpGet.setHeader("Referer", "https://weixin.sogou.com/antispider/?query=" + wechatAccount.getId());
+                                httpGet.setHeader("Sec-Fetch-Mode", "navigate");
+                                httpGet.setHeader("Sec-Fetch-Site", "same-origin");
+                                httpGet.setHeader("Sec-Fetch-User", "?1");
+                                httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
+                                httpResponse = httpClient.execute(httpGet);
+                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                                if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                                    String name = document.getElementsByAttributeValue("uigs", "account_name_0").text();
+                                    String description = document.select("dl").first().select("dd").first().text();
+                                    String article = document.getElementsByAttributeValue("uigs", "account_article_0").text();
+                                    wechatAccount.setName(name);
+                                    wechatAccount.setDescription(description);
+                                    wechatAccount.setArticle(article);
+                                    return wechatAccount;
+                                }
+                            }
+                        }
                     }
+                    throw new ServerErrorException("通过微信号查询公众号信息异常");
                 }
                 String name = document.getElementsByAttributeValue("uigs", "account_name_0").text();
                 String description = document.select("dl").first().select("dd").first().text();

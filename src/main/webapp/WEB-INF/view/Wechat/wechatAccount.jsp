@@ -55,7 +55,7 @@
                     <label class="weui-form-preview__label">功能介绍</label>
                     <span class="weui-form-preview__value">${wechataccount.description}</span>
                 </div>
-                <c:if test="${wechataccount.article==null or wechataccount.article!=''}">
+                <c:if test="${wechataccount.article!=null and wechataccount.article!=''}">
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">最近文章</label>
                         <span class="weui-form-preview__value">${wechataccount.article}</span>
@@ -69,6 +69,12 @@
         </div>
     </c:forEach>
 </div>
+
+<p class="page_desc">校园公众号资讯信息服务由微信公众平台提供<br>公众号未被收录？点击此处
+    <a class="page_desc" href="javascript:" onclick="window.location.href = 'mailto:admin@gdeiassistant.cn?subject=提交校园公众号&body=请补全此模板邮件中的空缺信息，并将邮件发送到admin@gdeiassistant.cn。公众号至少发送过一篇文章推送，否则不予以收录。本站仅进行信息收录和展示，公众号资讯信息服务由微信公众平台提供，运营者在公众号运营推广过程中需遵守微信公众平台相关规则。%0d%0a%0d%0a公众号名称：%0d%0a公众号微信号：%0d%0a公众号主体：（个人填写账号管理员姓名，非个人的其他如个体户、政府、媒体、企业以及其他组织等主体类型填写机构组织的名称）%0d%0a公众号类型：（填写订阅号/服务号，不支持企业微信）%0d%0a公众号说明：（填写公众号的功能和介绍）'">进行提交</a>
+</p>
+
+<br>
 
 </body>
 </html>

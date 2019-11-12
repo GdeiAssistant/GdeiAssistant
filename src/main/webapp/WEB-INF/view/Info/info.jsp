@@ -41,7 +41,7 @@
                         <label class="weui-form-preview__label">功能介绍</label>
                         <span class="weui-form-preview__value">${wechataccount.description}</span>
                     </div>
-                    <c:if test="${wechataccount.article==null or wechataccount.article!=''}">
+                    <c:if test="${wechataccount.article!=null and wechataccount.article!=''}">
                         <div class="weui-form-preview__item">
                             <label class="weui-form-preview__label">最近文章</label>
                             <span class="weui-form-preview__value">${wechataccount.article}</span>

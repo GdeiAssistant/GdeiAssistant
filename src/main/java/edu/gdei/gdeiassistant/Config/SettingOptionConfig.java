@@ -74,5 +74,9 @@ public class SettingOptionConfig {
         if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.photograph"))).equals(1)) {
             servletContext.setAttribute("authentication.photograph", true);
         }
+        //表白墙
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.express"))).equals(1)) {
+            servletContext.setAttribute("authentication.express", true);
+        }
     }
 }

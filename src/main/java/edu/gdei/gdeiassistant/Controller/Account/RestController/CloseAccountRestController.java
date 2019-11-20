@@ -24,7 +24,7 @@ public class CloseAccountRestController {
      * @return
      */
     @RequestMapping(value = "/api/close/submit", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3, 6})
+    @UserGroupAccess(group = {2, 3, 6}, rest = true)
     public JsonResult CloseAccount(HttpServletRequest request, String password) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         closeAccountService.CloseAccount(username, password);

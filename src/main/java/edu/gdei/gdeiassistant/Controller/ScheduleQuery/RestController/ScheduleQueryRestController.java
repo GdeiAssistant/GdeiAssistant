@@ -29,7 +29,7 @@ public class ScheduleQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/refreshschedule", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3})
+    @UserGroupAccess(group = {2, 3}, rest = true)
     public JsonResult RefreshGradeData(HttpServletRequest request) {
         String username = (String) request.getSession().getAttribute("username");
         scheduleService.ClearSchedule(username);
@@ -46,7 +46,7 @@ public class ScheduleQueryRestController {
      * @throws CountOverLimitException
      */
     @RequestMapping(value = "/api/customshedule", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3, 7})
+    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public JsonResult AddCustomSchedule(HttpServletRequest request, @Validated CustomSchedule customSchedule) throws GenerateScheduleException, CountOverLimitException {
         String username = (String) request.getSession().getAttribute("username");
         scheduleService.AddCustomSchedule(username, customSchedule);
@@ -61,7 +61,7 @@ public class ScheduleQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/customschedule/id/{id}", method = RequestMethod.DELETE)
-    @UserGroupAccess(group = {2, 3, 7})
+    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public JsonResult DeleteCustomSchedule(HttpServletRequest request, @PathVariable String id) {
         String username = (String) request.getSession().getAttribute("username");
         scheduleService.DeleteCustomSchedule(username, id);
@@ -79,7 +79,7 @@ public class ScheduleQueryRestController {
     @RequestMapping(value = "/api/schedulequery", method = RequestMethod.POST)
     @QueryLogPersistence
     @TrialData(value = "schedule", responseTime = "week")
-    @UserGroupAccess(group = {2, 3, 7})
+    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
             , Integer week, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -122,7 +122,7 @@ public class ScheduleQueryRestController {
     @RestAuthentication
     @RestQueryLogPersistence
     @TrialData(value = "schedule", responseTime = "week")
-    @UserGroupAccess(group = {2, 3, 7})
+    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
             , @RequestParam("token") String token, Integer week
             , @RequestParam(name = "method", required = false

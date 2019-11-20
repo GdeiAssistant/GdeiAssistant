@@ -35,7 +35,7 @@ public class SpareRoomRestController {
     @RequestMapping(value = "/api/sparequery", method = RequestMethod.POST)
     @QueryLogPersistence
     @TrialData(value = "spare")
-    @UserGroupAccess(group = {2, 3, 7})
+    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public DataJsonResult<List<SpareRoom>> QuerySpareRoomList(HttpServletRequest request
             , @Validated SpareRoomQuery spareRoomQuery) throws Exception {
         String username = (String) WebUtils.getSessionAttribute(request, "username");

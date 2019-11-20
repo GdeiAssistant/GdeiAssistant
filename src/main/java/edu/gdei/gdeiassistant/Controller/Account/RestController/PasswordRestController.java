@@ -32,7 +32,7 @@ public class PasswordRestController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/password", method = RequestMethod.POST)
-    @UserGroupAccess(group = {1, 2, 3, 4, 5, 6})
+    @UserGroupAccess(group = {1, 2, 3, 4, 5, 6}, rest = true)
     public JsonResult ChangePassword(HttpServletRequest request, HttpServletResponse response
             , @Validated @NotBlank @Length(max = 35) String oldPassword
             , @Validated @NotBlank @Length(max = 35) String newPassword) throws Exception {

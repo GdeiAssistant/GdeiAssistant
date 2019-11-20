@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface UserGroupAccess {
 
     int[] group();
+
+    boolean rest();
 }

@@ -57,7 +57,7 @@ public class AuthenticateRestController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/authentication/remove", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3, 6})
+    @UserGroupAccess(group = {2, 3, 6}, rest = true)
     public JsonResult RemoveAuthenticationData(HttpServletRequest request) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         Authentication authentication = authenticateDataService.QueryAuthenticationData(username);
@@ -77,7 +77,7 @@ public class AuthenticateRestController {
      * @throws ServerErrorException
      */
     @RequestMapping(value = "/api/authentication", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3, 6})
+    @UserGroupAccess(group = {2, 3, 6}, rest = true)
     public JsonResult RealNameAuthenticate(HttpServletRequest request
             , @RequestParam(value = "image", required = false) MultipartFile file
             , @RequestParam("method") AuthenticationTypeEnum authenticationTypeEnum) throws Exception {

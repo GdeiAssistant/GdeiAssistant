@@ -51,4 +51,8 @@ public interface AppDataMapper {
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserSecretItemList")
     @ResultMap("edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Secret.SecretMapper.SecretContent")
     public List<Secret> selectUserSecretItemList(String username);
+
+    @SelectProvider(type = DataSQLBuilder.class, method = "selectUserPhotographItemList")
+    @ResultMap("edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Photograph.PhotographMapper.PhotographContent")
+    public List<Photograph> selectUserPhotographItemList(String username);
 }

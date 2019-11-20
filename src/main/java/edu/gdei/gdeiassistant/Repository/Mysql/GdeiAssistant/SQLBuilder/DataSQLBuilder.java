@@ -1,6 +1,5 @@
 package edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.SQLBuilder;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 public class DataSQLBuilder {
@@ -101,11 +100,16 @@ public class DataSQLBuilder {
         }}.toString();
     }
 
-    public String selectSecretCommentList(@Param("id") int id) {
+    public String selectUserPhotographItemList(String username) {
         return new SQL() {{
-            SELECT("scc.id as id,scc.comment as comment,scc.publish_time as publish_time,scc.avatar_theme as avatar_theme");
-            FROM("secret_comment scc");
-            WHERE("scc.id=#{id}");
+            SELECT("p.id,p.title,p.count,p.content,p.type,p.create_time");
+            SELECT("count(pl.like_id)as like_count,count(pc.comment_id) as comment_count");
+            SELECT("sum(CASE WHEN pl.username=#{username} THEN 1 ELSE 0 END) as liked");
+            FROM("photograph p");
+            LEFT_OUTER_JOIN("photograph_like pl on p.id=pl.photo_id");
+            LEFT_OUTER_JOIN("photograph_comment pc on p.id=pc.photo_id");
+            WHERE("username=#{username}");
+            GROUP_BY("p.id,p.title,p.count,p.content,p.type,p.create_time,pl.like_id,pc.comment_id");
         }}.toString();
     }
 }

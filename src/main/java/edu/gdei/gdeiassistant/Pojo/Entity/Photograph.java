@@ -12,6 +12,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @Scope("prototype")
@@ -77,6 +78,8 @@ public class Photograph implements Serializable, Entity {
      * 是否已点赞
      */
     private Boolean liked;
+
+    private List<PhotographComment> photographCommentList;
 
     public Integer getLikeCount() {
         return likeCount;
@@ -156,5 +159,13 @@ public class Photograph implements Serializable, Entity {
 
     public void setLiked(Boolean liked) {
         this.liked = liked;
+    }
+
+    public List<PhotographComment> getPhotographCommentList() {
+        return photographCommentList;
+    }
+
+    public void setPhotographCommentList(List<PhotographComment> photographCommentList) {
+        this.photographCommentList = photographCommentList;
     }
 }

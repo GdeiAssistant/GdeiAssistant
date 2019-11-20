@@ -13,6 +13,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +34,7 @@ public class UserGroupAccessAspect {
     }
 
     @Around("RequestAction() && @annotation(userGroupAccess)")
-    public JsonResult ValidateAdminAccess(ProceedingJoinPoint proceedingJoinPoint, UserGroupAccess userGroupAccess) throws Throwable {
+    public Object ValidateAdminAccess(ProceedingJoinPoint proceedingJoinPoint, UserGroupAccess userGroupAccess) throws Throwable {
         Object[] args = proceedingJoinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
         User user = null;
@@ -48,10 +49,16 @@ public class UserGroupAccessAspect {
         //对比用户组值是否与资源要求的权限值相匹配
         for (int group : userGroupAccess.group()) {
             if (user.getGroup().equals(group)) {
-                return (JsonResult) proceedingJoinPoint.proceed(args);
+                if (userGroupAccess.rest()) {
+                    return (JsonResult) proceedingJoinPoint.proceed(args);
+                }
+                return new ModelAndView("Error/unauthorizedError");
             }
         }
         //当前用户组没有权限访问该资源或执行操作
-        return new JsonResult(ErrorConstantUtils.USER_GROUP_NO_ACCESS, false, "当前用户组没有权限访问该资源或执行操作");
+        if (userGroupAccess.rest()) {
+            return new JsonResult(ErrorConstantUtils.USER_GROUP_NO_ACCESS, false, "当前用户组没有权限访问该资源或执行操作");
+        }
+        return new ModelAndView("Error/unauthorizedError");
     }
 }

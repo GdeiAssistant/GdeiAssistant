@@ -57,7 +57,7 @@ public class PhoneRestController {
      * @return
      */
     @RequestMapping(value = "/api/phone/verification", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3, 6})
+    @UserGroupAccess(group = {2, 3, 6}, rest = true)
     public JsonResult GetPhoneVerificationCode(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(999) Integer code
             , @Validated @NotBlank @Length(min = 7, max = 11) @Pattern(regexp = "^[0-9]*$") String phone) throws ClientException, SendSMSException {
         if (LocationUtils.getAttributionMap().get(code) == null) {
@@ -76,7 +76,7 @@ public class PhoneRestController {
      * @return
      */
     @RequestMapping(value = "/api/phone/attach", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3, 6})
+    @UserGroupAccess(group = {2, 3, 6}, rest = true)
     public JsonResult AttachPhoneNumber(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(999) Integer code
             , @Validated @NotBlank @Length(min = 7, max = 11) @Pattern(regexp = "^[0-9]*$") String phone
             , @Validated @NotNull @Min(10000) @Max(999999) Integer randomCode) throws VerificationCodeInvalidException, WsgException {
@@ -96,7 +96,7 @@ public class PhoneRestController {
      * @return
      */
     @RequestMapping(value = "/api/phone/unattach", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3, 6})
+    @UserGroupAccess(group = {2, 3, 6}, rest = true)
     public JsonResult UnAttachPhoneNumber(HttpServletRequest request) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
         Phone phone = phoneService.QueryUserPhone(username);

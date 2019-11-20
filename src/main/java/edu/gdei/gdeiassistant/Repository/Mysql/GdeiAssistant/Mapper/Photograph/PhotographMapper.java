@@ -30,6 +30,29 @@ public interface PhotographMapper {
     public List<Photograph> selectPhotograph(@Param("start") int start, @Param("size") int size
             , @Param("type") int type, @Param("username") String username);
 
+    @Select("select p.id,p.title,p.content,p.count,p.type,p.username,p.create_time," +
+            " count(pl.like_id)as like_count,count(pc.comment_id) as comment_count," +
+            " sum(CASE WHEN pl.username=#{username} THEN 1 ELSE 0 END) as liked" +
+            " from photograph p" +
+            " left join photograph_like pl on p.id=pl.photo_id" +
+            " left join photograph_comment pc on p.id=pc.photo_id" +
+            " where id=#{id} group by p.id order by p.id")
+    @Results(id = "PhotographContent", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "title", column = "title"),
+            @Result(property = "content", column = "content"),
+            @Result(property = "count", column = "count"),
+            @Result(property = "type", column = "type"),
+            @Result(property = "username", column = "username"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "liked", column = "liked"),
+            @Result(property = "likeCount", column = "like_count"),
+            @Result(property = "commentCount", column = "comment_count"),
+            @Result(property = "photographCommentList", column = "id", javaType = List.class
+                    , many = @Many(select = "selectPhotographCommentByPhotoId"))
+    })
+    public List<Photograph> selectPhotographById(int id);
+
     @Select("select IFNULL(sum(count),0) as count from photograph")
     @ResultType(Integer.class)
     public Integer selectPhotographImageCount();

@@ -45,7 +45,7 @@ public class GraduatedAccountRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/graduation", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3})
+    @UserGroupAccess(group = {2, 3}, rest = true)
     public JsonResult SaveGraduation(HttpServletRequest request, @Validated @NotNull Integer program) throws WsgException {
         if (program < 0 || program >= GraduationProgramTypeEnum.values().length) {
             return new JsonResult(false, "请求参数不合法");

@@ -50,7 +50,7 @@ public class UserGroupAccessAspect {
         for (int group : userGroupAccess.group()) {
             if (user.getGroup().equals(group)) {
                 if (userGroupAccess.rest()) {
-                    return (JsonResult) proceedingJoinPoint.proceed(args);
+                    return proceedingJoinPoint.proceed(args);
                 }
                 return new ModelAndView("Error/unauthorizedError");
             }

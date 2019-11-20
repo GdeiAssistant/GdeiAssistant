@@ -245,6 +245,22 @@ public class UserDataService {
                 }
                 data.put("secretItems", secretList);
             }
+            //获取拍好校园信息
+            List<Photograph> photographList = appDataMapper.selectUserPhotographItemList(StringEncryptUtils.encryptString(username));
+            if (photographList != null && !photographList.isEmpty()) {
+                data.put("photographItems", photographList);
+                for (Photograph photograph : photographList) {
+                    //下载拍好校园图片
+                    for (int i = 1; i <= photograph.getCount(); i++) {
+                        if (ossClient.doesObjectExist("gdeiassistant-userdata", "photograph/" + photograph.getId() + "_" + i + ".jpg")) {
+                            InputStream image = ossClient.getObject("gdeiassistant-userdata", "photograph/" + photograph.getId() + "_" + i + ".jpg").getObjectContent();
+                            userDataInputStreamMap.put("photograph_" + photograph.getId() + "_" + i + ".jpg", image);
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
             //获取校园卡充值日志记录
             List<ChargeLog> chargeLogList = logDataMapper.selectChargeLogList(StringEncryptUtils.encryptString(username));
             if (chargeLogList != null && !chargeLogList.isEmpty()) {

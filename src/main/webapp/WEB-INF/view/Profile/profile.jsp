@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:include page="/js/profile/profile.jsp"/>
 
@@ -226,6 +227,17 @@
     <a class="weui-cell weui-cell_access" href="javascript:" onclick="exportUserData()">
         <div class="weui-cell__bd">
             <p>下载用户数据</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/admin'">
+        <div class="weui-cell__bd">
+            <p>管理员选项</p>
         </div>
         <div class="weui-cell__ft">
         </div>

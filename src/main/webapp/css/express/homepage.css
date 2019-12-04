@@ -1,0 +1,509 @@
+html, body {
+    font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu;
+    /*background-color: #ee5952;*/
+    /*background-image: url("../../img/express/background.jpg");*/
+    background-position: center;
+    background-repeat: repeat;
+    background-attachment: fixed;
+}
+
+.navbar li a {
+    background-color: #000;
+}
+
+.Header img {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    max-width: 400px;
+}
+
+.ui-icon-article:after {
+    /*background-color: #fff;*/
+    background-image: url("../../img/express/article_white.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.ui-icon-articleNow:after {
+    /*background-color: #fff;*/
+    background-image: url("../../img/express/wenzhang.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.ui-icon-heart:after {
+    /*background-color: #fff;*/
+    background-image: url("../../img/express/heart_white.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.ui-icon-heartNow:after {
+    /*background-color: #fff;*/
+    background-image: url("../../img/express/upvote.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.ui-icon-search:after {
+    /*background-color: #fff;*/
+    background-image: url("../../img/express/search_white.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.ui-icon-searchNow:after {
+    /*background-color: #fff;*/
+    background-image: url("../../img/express/sousuo.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.ui-icon-like:after {
+    background-color: #fff;
+    background-image: url("../../img/express/dianzan.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.ui-icon-liked:after {
+    background-color: #fff;
+    background-image: url("../../img/express/dianzanhou.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.ui-icon-like, .ui-icon-like:after {
+    transition: all 0.3s;
+    -moz-transition: all 0.3s; /* Firefox 4 */
+    -webkit-transition: all 0.3s; /* Safari 和 Chrome */
+    -o-transition: all 0.3s; /* Opera */
+}
+
+.ui-icon-guess:after {
+    background-color: #fff;
+    background-image: url("../../img/express/jingcai.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.ui-icon-comment:after {
+    background-color: #fff;
+    background-image: url("../../img/express/pinglun.png");
+    /**你的图片，路径是相对于当前使用文件可以访问到的*/
+    background-size: 18px 18px;
+    border-radius: 0;
+    /*图标形态，0=方形，不设置就是默认的圆形*/
+}
+
+.loading {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    height: 82px;
+}
+
+#Header {
+    background-color: initial;
+    /*background-image: url("../../img/express/header.png");*/
+    background-position: center;
+    background-repeat: repeat-x;
+    border-color: initial;
+    background-size: contain;
+    border: 0px none;
+    color: #fff;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+.Header .Header-title {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.ui-header .ui-title, .ui-footer .ui-title {
+    color: pink;
+    font-size: 24px;
+}
+
+.ui-page-theme-a .ui-btn.ui-btn-active, html .ui-bar-a .ui-btn.ui-btn-active, html .ui-body-a .ui-btn.ui-btn-active, html body .ui-group-theme-a .ui-btn.ui-btn-active, html head body .ui-btn.ui-btn-a.ui-btn-active, .ui-page-theme-a .ui-checkbox-on:after, html .ui-bar-a .ui-checkbox-on:after, html .ui-body-a .ui-checkbox-on:after, html body .ui-group-theme-a .ui-checkbox-on:after, .ui-btn.ui-checkbox-on.ui-btn-a:after, .ui-page-theme-a .ui-flipswitch-active, html .ui-bar-a .ui-flipswitch-active, html .ui-body-a .ui-flipswitch-active, html body .ui-group-theme-a .ui-flipswitch-active, html body .ui-flipswitch.ui-bar-a.ui-flipswitch-active, .ui-page-theme-a .ui-slider-track .ui-btn-active, html .ui-bar-a .ui-slider-track .ui-btn-active, html .ui-body-a .ui-slider-track .ui-btn-active, html body .ui-group-theme-a .ui-slider-track .ui-btn-active, html body div.ui-slider-track.ui-body-a .ui-btn-active {
+    background-color: #ff3333;
+    border-color: #ff3333;
+}
+
+html body .post .action ul li .ui-btn, html body .post .action ul li .ui-btn-active {
+    background-color: #fff;
+    border-color: #fff;
+    border-top: 1px solid #eee;
+}
+
+html body .action ul li .ui-btn:link, html body .action ul li .ui-btn:visited, html body .action ul li .ui-btn:active {
+    box-shadow: none;
+}
+
+#guess-Name-Popup > div.ui-btn.ui-input-btn.ui-corner-all.ui-shadow.ui-btn-inline, #comment-Popup > div.ui-btn.ui-input-btn.ui-corner-all.ui-shadow.ui-btn-inline {
+    display: block;
+    margin: 0 auto;
+}
+
+#guess-Name-Popup p {
+    color: #8c8888;
+    font-size: 14px;
+}
+
+#guess-hint, #comment-submit, #comment-hint {
+    color: #ff3333;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+#comment-lists {
+}
+
+#comment-lists ul {
+    padding-left: 0;
+}
+
+#comment-lists ul li {
+    list-style-type: none;
+    border-bottom: 1px solid #eee;
+}
+
+#comment-lists .comment-nickname {
+    text-align: left;
+    float: left;
+    color: #b3b3b3;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+#comment-lists .comment-floor {
+    float: left;
+    padding: 4px;
+    background: #eee;
+    color: #000;
+    text-shadow: none;
+    margin-right: 10px;
+}
+
+#comment-lists .comment-time {
+    /* float: right; */
+    display: block;
+    text-align: right;
+    text-indent: 0;
+    padding: 0;
+    color: #b3b3b3;
+    /* padding-right: 10px; */
+    font-size: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#comment-lists p {
+    padding-top: 20px;
+    clear: both;
+    text-indent: 2em;
+}
+
+html body .action .ui-btn-active {
+    color: #000;
+    text-shadow: none;
+}
+
+.post {
+    max-width: 320px;
+    background: #fff;
+    /*padding: 10px;*/
+    padding-top: 10px;
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    box-shadow: 2px 4px 6px #eee;
+}
+
+.post-title {
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.post-title ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    /*text-align: center;*/
+    color: #ef5350;
+    font-size: 18px;
+    text-align: left;
+}
+
+.post-title ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+.post-title img {
+    position: relative;
+    top: 1px;
+    height: 12px;
+}
+
+.post-body {
+}
+
+.post-body .post-body-content {
+    word-wrap: break-word;
+    text-indent: 2em;
+    padding: 10px;
+    padding-bottom: 0px;
+    /*color: #FF9800;*/
+    color: #333;
+    text-align: left;
+}
+
+.post-actions {
+}
+
+.post-body-time {
+    text-align: right;
+    text-indent: 0em;
+    padding: 0px;
+    color: #b3b3b3;
+    padding-right: 10px;
+    font-size: 12px;
+}
+
+.post-background1 {
+    background-image: url("../../img/express/posts_1.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    background-position: top;
+    background-size: contain;
+}
+
+.post-background2 {
+    background-image: url("../../img/express/posts_2.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    background-position: top;
+    background-size: contain;
+}
+
+.post-background3 {
+    background-image: url("../../img/express/posts_3.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    background-position: top;
+    background-size: contain;
+}
+
+/*性别*/
+/*.male{*/
+/*color: #03a9f4;*/
+/*border-bottom: 2px dashed #03a9f4;*/
+/*}*/
+/*.female{*/
+/*color: #ff3333;*/
+/*border-bottom: 2px dashed #ff3333;*/
+/*}*/
+/*.secrecy{*/
+/*color: #424242;*/
+/*border-bottom: 2px dashed #424242;*/
+/*}*/
+.male {
+    color: #03a9f4;
+    border-bottom: 2px dashed #03a9f4;
+    line-height: 30px;
+}
+
+.female {
+    color: #ff3333;
+    border-bottom: 2px dashed #ff3333;
+    line-height: 30px;
+}
+
+.secrecy {
+    color: #424242;
+    border-bottom: 2px dashed #424242;
+    line-height: 30px;
+}
+
+.ui-icon-carat-d:after {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%3Csvg%20version%3D%221.1%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20%20width%3D%2214px%22%20height%3D%2214px%22%20viewBox%3D%220%200%2014%2014%22%20style%3D%22enable-background%3Anew%200%200%2014%2014%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cpolygon%20style%3D%22fill%3A%23FFFFFF%3B%22%20points%3D%2211.949%2C3.404%207%2C8.354%202.05%2C3.404%20-0.071%2C5.525%207%2C12.596%2014.07%2C5.525%20%22%2F%3E%3C%2Fsvg%3E");
+}
+
+#link a {
+    display: block;
+    word-wrap: break-word;
+}
+
+#footer > div > ul a {
+    background-color: #000;
+    border-color: none;
+    color: #fff;
+    text-shadow: none;
+    border-style: none;
+    border-radius: 0px;
+    border: 0px none #000;
+}
+
+/*表白*/
+#saylove-box {
+    padding: 10px;
+    max-width: 320px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding-bottom: 300px;
+}
+
+.guess-hint {
+    font-size: 12px;
+    color: #757575;
+}
+
+#saylove-box > fieldset > div > div.ui-input-text.ui-body-inherit.ui-corner-all.ui-shadow-inset {
+}
+
+#saylove-box > fieldset > div > div.ui-select {
+}
+
+#textCountBox, #textCount {
+    font-size: 14px;
+    text-align: right;
+    color: #757575;
+    padding-top: 0px;
+    margin-top: 0;
+}
+
+.loadmore {
+    text-align: center;
+    line-height: 38px;
+    height: 38px;
+    margin-top: 20px;
+    color: #999;
+}
+
+#submit {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+    overflow: visible;
+}
+
+#hint img {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+    height: 82px;
+}
+
+#Hint, #comment-hint {
+    color: #ff3333;
+    display: block;
+    word-wrap: break-word;
+    background-color: white;
+    padding: 10px;
+    font-size: 14px;
+    text-align: left;
+    line-height: 25px;
+    border-radius: 10px;
+}
+
+/*搜索页*/
+#search-bars {
+    /*max-width: 320px;*/
+    display: block;
+    margin: 0 auto;
+    /*text-align: center;*/
+}
+
+#search-bars > div.ui-field-contain {
+    max-width: 340px;
+    padding: 6px;
+    display: block;
+    margin: 0 auto;
+}
+
+#search-bars > div.ui-btn.ui-input-btn.ui-corner-all.ui-shadow.ui-btn-inline {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 340px;
+    padding: 6px;
+}
+
+#search-bars a {
+    text-align: center;
+    margin: 0 auto;
+}
+
+/*帮助*/
+#help-box {
+    max-width: 320px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding-bottom: 60px;
+}
+
+#help-box h4 {
+}
+
+#help-box h5 {
+    text-align: center;
+    color: #ff3333;
+}
+
+#help-box p {
+    text-indent: 2em;
+}
+
+#help-box img {
+    height: 24px;
+}
+
+/*分享*/
+#share-bars {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    max-width: 320px;
+    margin-top: 20px;
+}
+
+#saylove-box fieldset {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 2px 3px 2px #d2d2d2;
+    margin-bottom: 28px;
+    border: 2px;
+    border-color: #00bcd4;
+    border-style: dashed;
+}
+
+#saylove-box legend {
+    background: #00BCD4;
+    color: #fff;
+    padding: 4px;
+    border-radius: 4px;
+}

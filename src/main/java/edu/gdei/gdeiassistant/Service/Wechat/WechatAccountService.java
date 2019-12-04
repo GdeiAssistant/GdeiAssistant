@@ -89,7 +89,7 @@ public class WechatAccountService {
             cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("https://weixin.sogou.com");
             httpClient.execute(httpGet);
-            httpGet = new HttpGet("https://weixin.sogou.com/weixin?query=" + wechatAccount.getId());
+            httpGet = new HttpGet("https://weixin.sogou.com/weixin?type=1&s_from=input&query=" + wechatAccount.getId() +"&ie=utf8&_sug_=n&_sug_type");
             httpGet.setHeader("Referer", "https://weixin.sogou.com");
             httpGet.setHeader("User-Agent", "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Mobile Safari/537.36");
             HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -135,7 +135,7 @@ public class WechatAccountService {
                             JSONObject jsonObject = JSONObject.fromObject(document.body().text());
                             if (jsonObject.containsKey("code") && jsonObject.getInt("code") == 0) {
                                 //验证码校验通过
-                                httpGet = new HttpGet("https://weixin.sogou.com/weixin?query=" + wechatAccount.getId());
+                                httpGet = new HttpGet("https://weixin.sogou.com/weixin?type=1&s_from=input&query=" + wechatAccount.getId() +"&ie=utf8&_sug_=n&_sug_type");
                                 httpGet.setHeader("Referer", "https://weixin.sogou.com/antispider/?query=" + wechatAccount.getId());
                                 httpGet.setHeader("Sec-Fetch-Mode", "navigate");
                                 httpGet.setHeader("Sec-Fetch-Site", "same-origin");
@@ -144,6 +144,11 @@ public class WechatAccountService {
                                 httpResponse = httpClient.execute(httpGet);
                                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                                    noresult = document.getElementById("noresult_part1_container");
+                                    if (noresult != null) {
+                                        //没有相关的官方认证订阅号
+                                        return wechatAccount;
+                                    }
                                     String name = document.getElementsByAttributeValue("uigs", "account_name_0").text();
                                     String description = document.select("dl").first().select("dd").first().text();
                                     String article = document.getElementsByAttributeValue("uigs", "account_article_0").text();

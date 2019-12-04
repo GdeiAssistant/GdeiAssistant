@@ -82,6 +82,11 @@
         </i>
         <p>拍好校园</p>
     </div>
+    <div id="express" style="display: none" onclick="window.location.href='/express'">
+        <i style="background: url(/img/function/express.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
+        </i>
+        <p>表白墙</p>
+    </div>
     <div id="delivery" style="display: none" onclick="window.location.href='/delivery'">
         <i style="background: url(/img/function/delivery.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
         </i>

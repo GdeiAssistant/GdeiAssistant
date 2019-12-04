@@ -57,6 +57,6 @@ public interface AppDataMapper {
     public List<Photograph> selectUserPhotographItemList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserExpressItemList")
-    @ResultMap("edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Express.expressContent")
+    @ResultMap("edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Express.ExpressMapper.expressContent")
     public List<Express> selectUserExpresssItemList(String username);
 }

@@ -112,4 +112,19 @@ public class DataSQLBuilder {
             GROUP_BY("p.id,p.title,p.count,p.content,p.type,p.create_time,pl.like_id,pc.comment_id");
         }}.toString();
     }
+
+    public String selectUserExpressItemList(String username) {
+        return new SQL() {{
+            SELECT("e.id,e.nickname,e.realname,e.self_gender,e.name,e.content,e.person_gender,e.publish_time");
+            SELECT("count(distinct el.id) as like_count,count(em.id) as comment_count,count(eg.id) as guess_sum");
+            SELECT("sum(CASE WHEN el.username=#{username} THEN 1 ELSE 0 END) as liked");
+            SELECT("sum(CASE WHEN eg.result=1 THEN 1 ELSE 0 END) as guess_count");
+            FROM("express e");
+            LEFT_OUTER_JOIN("express_like el on e.id=el.express_id");
+            LEFT_OUTER_JOIN("express_comment em on e.id=em.express_id");
+            LEFT_OUTER_JOIN("express_guess eg on e.id=eg.express_id");
+            WHERE("e.username=#{username}");
+            GROUP_BY("e.id");
+        }}.toString();
+    }
 }

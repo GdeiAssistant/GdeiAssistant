@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.aliyun.oss.OSSClient;
 import com.taobao.wsgsvr.WsgException;
 import edu.gdei.gdeiassistant.Constant.ItemConstantUtils;
-import edu.gdei.gdeiassistant.Constant.StateConstantUtils;
 import edu.gdei.gdeiassistant.Pojo.Entity.*;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Data.AppDataMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Phone.PhoneMapper;
@@ -189,7 +188,6 @@ public class UserDataService {
             //获取二手交易信息
             List<ErshouItem> ershouItemList = appDataMapper.selectUserErshouItemList(StringEncryptUtils.encryptString(username));
             if (ershouItemList != null && !ershouItemList.isEmpty()) {
-                data.put("ershouItems", ershouItemList);
                 for (ErshouItem ershouItem : ershouItemList) {
                     //下载二手交易图片
                     for (int i = 0; i <= 3; i++) {
@@ -201,11 +199,11 @@ public class UserDataService {
                         }
                     }
                 }
+                data.put("ershouItems", ershouItemList);
             }
             //获取失物招领信息
             List<LostAndFoundItem> lostAndFoundItemList = appDataMapper.selectUserLostAndFoundItemList(StringEncryptUtils.encryptString(username));
             if (lostAndFoundItemList != null && !lostAndFoundItemList.isEmpty()) {
-                data.put("lostandfoundItems", lostAndFoundItemList);
                 for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
                     //下载失物招领图片
                     for (int i = 0; i <= 3; i++) {
@@ -217,6 +215,7 @@ public class UserDataService {
                         }
                     }
                 }
+                data.put("lostandfoundItems", lostAndFoundItemList);
             }
             //获取校园树洞信息
             List<Secret> secretList = appDataMapper.selectUserSecretItemList(StringEncryptUtils.encryptString(username));
@@ -248,7 +247,6 @@ public class UserDataService {
             //获取拍好校园信息
             List<Photograph> photographList = appDataMapper.selectUserPhotographItemList(StringEncryptUtils.encryptString(username));
             if (photographList != null && !photographList.isEmpty()) {
-                data.put("photographItems", photographList);
                 for (Photograph photograph : photographList) {
                     //下载拍好校园图片
                     for (int i = 1; i <= photograph.getCount(); i++) {
@@ -260,6 +258,12 @@ public class UserDataService {
                         }
                     }
                 }
+                data.put("photographItems", photographList);
+            }
+            //获取表白墙信息
+            List<Express> expressList = appDataMapper.selectUserExpresssItemList(StringEncryptUtils.encryptString(username));
+            if (expressList != null && !expressList.isEmpty()) {
+                data.put("expressItems", expressList);
             }
             //获取校园卡充值日志记录
             List<ChargeLog> chargeLogList = logDataMapper.selectChargeLogList(StringEncryptUtils.encryptString(username));
@@ -286,31 +290,42 @@ public class UserDataService {
             //使用字符串描述值替换部分参数值
             if (map.containsKey("deliveryOrders")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("deliveryOrders")) {
-                    object.put("state", StateConstantUtils.DELIVERY_ORDER_STATE_TYPE[(int) object.get("state")]);
+                    object.put("state", ItemConstantUtils.DELIVERY_ORDER_STATE_TYPE[(int) object.get("state")]);
                 }
             }
             if (map.containsKey("deliveryTrades")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("deliveryTrades")) {
-                    object.put("state", StateConstantUtils.DELIVERY_TRADE_STATE_TYPE[(int) object.get("state")]);
+                    object.put("state", ItemConstantUtils.DELIVERY_TRADE_STATE_TYPE[(int) object.get("state")]);
                 }
             }
             if (map.containsKey("ershouItems")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("ershouItems")) {
                     object.put("type", ItemConstantUtils.ERSHOU_ITEM_TYPE[(int) object.get("type")]);
-                    object.put("state", StateConstantUtils.ERSHOU_STATE_TYPE[(int) object.get("state")]);
+                    object.put("state", ItemConstantUtils.ERSHOU_STATE_TYPE[(int) object.get("state")]);
                 }
             }
             if (map.containsKey("lostandfoundItems")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("lostandfoundItems")) {
                     object.put("itemType", ItemConstantUtils.LOST_AND_FOUND_ITEM_TYPE[(int) object.get("itemType")]);
                     object.put("lostType", ItemConstantUtils.LOST_AND_FOUND_LOST_TYPE[(int) object.get("lostType")]);
-                    object.put("state", StateConstantUtils.LOST_AND_FOUND_STATE_TYPE[(int) object.get("state")]);
+                    object.put("state", ItemConstantUtils.LOST_AND_FOUND_STATE_TYPE[(int) object.get("state")]);
                 }
             }
             if (map.containsKey("secretItems")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("secretItems")) {
-                    object.put("state", StateConstantUtils.SECRET_STATE_TYPE[(int) object.get("state")]);
+                    object.put("state", ItemConstantUtils.SECRET_STATE_TYPE[(int) object.get("state")]);
                     object.put("type", ItemConstantUtils.SECRET_ITEM_TYPE[(int) object.get("type")]);
+                }
+            }
+            if (map.containsKey("photographItems")) {
+                for (Map<String, Object> object : (List<Map<String, Object>>) map.get("photographItems")) {
+                    object.put("type", ItemConstantUtils.PHOTOGRAPH_ITEM_TYPE[(int) object.get("type")]);
+                }
+            }
+            if (map.containsKey("expressItems")) {
+                for (Map<String, Object> object : (List<Map<String, Object>>) map.get("expressItems")) {
+                    object.put("selfGender", ItemConstantUtils.EXPRESS_ITEM_GENDER_TYPE[(int) object.get("type")]);
+                    object.put("personGender", ItemConstantUtils.EXPRESS_ITEM_GENDER_TYPE[(int) object.get("type")]);
                 }
             }
             if (map.containsKey("profile")) {

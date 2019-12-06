@@ -11,8 +11,8 @@ public interface ExpressMapper {
 
     @Select("select e.id,e.username,e.nickname,e.self_gender,e.name,e.content,e.person_gender,e.publish_time," +
             " count(distinct el.id) as like_count,count(distinct em.id) as comment_count,count(distinct eg.id) as guess_sum," +
-            " count(distinct CASE WHEN el.username=#{username} THEN 1 ELSE 0 END) as liked," +
-            " count(distinct CASE WHEN eg.result=1 THEN 1 ELSE 0 END) as guess_count" +
+            " sum(distinct CASE WHEN el.username=#{username} THEN 1 ELSE 0 END) as liked," +
+            " sum(distinct CASE WHEN eg.result=1 THEN 1 ELSE 0 END) as guess_count" +
             " from express e" +
             " left join express_like el on e.id=el.express_id" +
             " left join express_comment em on e.id=em.express_id" +
@@ -36,9 +36,9 @@ public interface ExpressMapper {
     public List<Express> selectExpress(@Param("start") int start, @Param("size") int size, @Param("username") String username);
 
     @Select("select e.id,e.username,e.nickname,e.realname,e.self_gender,e.name,e.content,e.person_gender,e.publish_time," +
-            " count(distinct el.id) as like_count,count(em.id) as comment_count,count(eg.id) as guess_sum," +
-            " sum(CASE WHEN el.username=#{username} THEN 1 ELSE 0 END) as liked," +
-            " sum(CASE WHEN eg.result=1 THEN 1 ELSE 0 END) as guess_count" +
+            " count(distinct el.id) as like_count,count(distinct em.id) as comment_count,count(distinct eg.id) as guess_sum," +
+            " sum(distinct CASE WHEN el.username=#{username} THEN 1 ELSE 0 END) as liked," +
+            " sum(distinct CASE WHEN eg.result=1 THEN 1 ELSE 0 END) as guess_count" +
             " from express e" +
             " left join express_like el on e.id=el.express_id" +
             " left join express_comment em on e.id=em.express_id" +
@@ -64,8 +64,8 @@ public interface ExpressMapper {
 
     @Select("select e.id,e.username,e.nickname,e.self_gender,e.name,e.content,e.person_gender,e.publish_time," +
             " count(distinct el.id) as like_count,count(distinct em.id) as comment_count,count(distinct eg.id) as guess_sum," +
-            " count(distinct CASE WHEN el.username=#{username} THEN 1 ELSE 0 END) as liked," +
-            " count(distinct CASE WHEN eg.result=1 THEN 1 ELSE 0 END) as guess_count" +
+            " sum(distinct CASE WHEN el.username=#{username} THEN 1 ELSE 0 END) as liked," +
+            " sum(distinct CASE WHEN eg.result=1 THEN 1 ELSE 0 END) as guess_count" +
             " from express e" +
             " left join express_like el on e.id=el.express_id" +
             " left join express_comment em on e.id=em.express_id" +

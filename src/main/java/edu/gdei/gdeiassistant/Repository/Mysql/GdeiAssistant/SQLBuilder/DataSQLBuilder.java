@@ -103,8 +103,8 @@ public class DataSQLBuilder {
     public String selectUserPhotographItemList(String username) {
         return new SQL() {{
             SELECT("p.id,p.title,p.count,p.content,p.type,p.create_time");
-            SELECT("count(pl.like_id)as like_count,count(pc.comment_id) as comment_count");
-            SELECT("sum(CASE WHEN pl.username=#{username} THEN 1 ELSE 0 END) as liked");
+            SELECT("count(distinct pl.like_id)as like_count,count(distinct pc.comment_id) as comment_count");
+            SELECT("sum(distinct CASE WHEN pl.username=#{username} THEN 1 ELSE 0 END) as liked");
             FROM("photograph p");
             LEFT_OUTER_JOIN("photograph_like pl on p.id=pl.photo_id");
             LEFT_OUTER_JOIN("photograph_comment pc on p.id=pc.photo_id");
@@ -116,9 +116,9 @@ public class DataSQLBuilder {
     public String selectUserExpressItemList(String username) {
         return new SQL() {{
             SELECT("e.id,e.nickname,e.realname,e.self_gender,e.name,e.content,e.person_gender,e.publish_time");
-            SELECT("count(distinct el.id) as like_count,count(em.id) as comment_count,count(eg.id) as guess_sum");
-            SELECT("sum(CASE WHEN el.username=#{username} THEN 1 ELSE 0 END) as liked");
-            SELECT("sum(CASE WHEN eg.result=1 THEN 1 ELSE 0 END) as guess_count");
+            SELECT("count(distinct el.id) as like_count,count(distinct em.id) as comment_count,count(distinct eg.id) as guess_sum");
+            SELECT("sum(distinct CASE WHEN el.username=#{username} THEN 1 ELSE 0 END) as liked");
+            SELECT("sum(distinct CASE WHEN eg.result=1 THEN 1 ELSE 0 END) as guess_count");
             FROM("express e");
             LEFT_OUTER_JOIN("express_like el on e.id=el.express_id");
             LEFT_OUTER_JOIN("express_comment em on e.id=em.express_id");

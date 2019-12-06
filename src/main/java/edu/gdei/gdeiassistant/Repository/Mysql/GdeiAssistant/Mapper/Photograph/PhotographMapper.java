@@ -9,8 +9,8 @@ import java.util.List;
 public interface PhotographMapper {
 
     @Select("select p.id,p.title,p.content,p.count,p.type,p.username,p.create_time," +
-            " count(pl.like_id)as like_count,count(pc.comment_id) as comment_count," +
-            " sum(CASE WHEN pl.username=#{username} THEN 1 ELSE 0 END) as liked" +
+            " count(distinct pl.like_id)as like_count,count(distinct pc.comment_id) as comment_count," +
+            " sum(distinct CASE WHEN pl.username=#{username} THEN 1 ELSE 0 END) as liked" +
             " from photograph p" +
             " left join photograph_like pl on p.id=pl.photo_id" +
             " left join photograph_comment pc on p.id=pc.photo_id" +
@@ -31,8 +31,8 @@ public interface PhotographMapper {
             , @Param("type") int type, @Param("username") String username);
 
     @Select("select p.id,p.title,p.content,p.count,p.type,p.username,p.create_time," +
-            " count(pl.like_id)as like_count,count(pc.comment_id) as comment_count," +
-            " sum(CASE WHEN pl.username=#{username} THEN 1 ELSE 0 END) as liked" +
+            " count(distinct pl.like_id)as like_count,count(distinct pc.comment_id) as comment_count," +
+            " sum(distinct CASE WHEN pl.username=#{username} THEN 1 ELSE 0 END) as liked" +
             " from photograph p" +
             " left join photograph_like pl on p.id=pl.photo_id" +
             " left join photograph_comment pc on p.id=pc.photo_id" +

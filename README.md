@@ -66,6 +66,7 @@
 4. 失物招领平台
 5. 全民快递平台
 6. 拍好校园平台
+7. 表白墙平台
 
 #### 第三方平台
 
@@ -141,6 +142,12 @@
   <img width="250" src="./github/screenshot_33.jpg">
 </p>
 
+<p>
+  <img width="250" src="./github/screenshot_34.jpg">
+  <img width="250" src="./github/screenshot_35.jpg">
+  <img width="250" src="./github/screenshot_36.jpg">
+</p>
+
 ## 授权范围
 
 本应用在中华人民共和国境内注册、发布和运营，目前仅面向广东第二师范学院在校师生开放注册使用。学生用户在毕业后，账号可以被升级为**毕业用户账号**，详情请查阅 [广东二师助手毕业用户账号处理方案说明](https://gdeiassistant.cn/about/graduation)。
@@ -204,8 +211,11 @@
 - BootStrap 4.0.0
 - Spring 4.3.14
 - Mybatis 3.4.4
-- Jquery 3.2.1
+- JQuery 3.2.1
+- JQuery WeUI 1.0.1
+- JQuery Mobile 1.4.5
 - AmazeUI 2.7.2
+- Layer Mobile 2.0.0
 - Log4j 2.10.0
 - Jsoup 1.10.3
 - HttpClient 4.5.3
@@ -370,6 +380,46 @@ Copyright (c) 2016 - 2019 GdeiAssistant
 - 用户客服和系统故障工单提交：[support@gdeiassistant.cn](mailto:support@gdeiassistant.cn)
 
 - 社区违法和不良信息举报邮箱：[report@gdeiassistant.cn](mailto:report@gdeiassistant.cn)
+
+## 鸣谢
+
+感谢以下框架及系统的开发者为本应用作出的巨大贡献
+
+- [WeUI](https://github.com/Tencent/weui) - 微信基础样式库
+
+- [JQuery WeUI](https://github.com/lihongxun945/jquery-weui) - 为微信公众账号开发而设计的一个简洁而强大的UI库
+
+- [AmazeUI](https://github.com/amazeui/amazeui) - 中国首个开源HTML5跨屏前端框架
+
+- [Layer Mobile](http://layer.layui.com) - 为移动设备量身定做的弹层UI
+
+- [Bootstrap](https://github.com/twbs/bootstrap) - 简洁、直观、强悍的前端开发框架
+
+- [JQuery](https://github.com/jquery/jquery) - 跨浏览器的JavaScript库
+
+- [JQuery Mobile](https://github.com/jquery/jquery-mobile) - 用于创建移动Web应用的前端开发框架
+
+- [Cropper](https://github.com/fengyuanchen/cropper) - 简单且功能强大的图片剪裁jQuery插件
+
+- [Recorder](https://github.com/xiangyuecn/Recorder) - HTML5语音录制组件
+
+- [Swiper](https://github.com/nolimits4web/swiper) - 应用较广泛的移动端网页触摸内容滑动js插件
+
+- [Spring](https://github.com/spring-projects/spring-framework) - Java平台的开源的全栈应用程序框架和控制反转容器实现
+
+- [Mybatis](https://github.com/mybatis/mybatis-3) - 支持定制化SQL、存储过程以及高级映射的Java持久化框架
+
+- [Jsoup](https://github.com/jhy/jsoup) - 用于解析、提取、操作HTML的开源Java函式库
+
+- [HttpClient](https://github.com/apache/httpcomponents-client) - 高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包
+
+- [OkHttp](https://github.com/square/okhttp) - Android、Kotlin和Java平台的HTTP客户端组件
+
+- [superdaxue](https://github.com/zuiyu/superdaxue) - 超级大学查成绩查课表系统，本应用成绩查询、课表查询功能在此应用基础上进行修改和开发
+
+- [Online-photo-uploading-and-voting-application](https://github.com/ping-xiong/Online-photo-uploading-and-voting-application) - 最美军训照，本应用拍好校园功能在此应用基础上进行修改和开发
+
+- [saylovewall](https://github.com/ping-xiong/saylovewall) - 广西科技大学表白墙，本应用表白墙功能在此应用基础上进行修改和开发
 
 ## 声明
 

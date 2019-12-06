@@ -18,7 +18,7 @@
 
 <h2>MIT License</h2>
 
-<p>Copyright (c) [2016-2019] [GdeiAssistant]</p>
+<p>Copyright (c) [2016-2020] [GdeiAssistant]</p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@
 
 <h2>Anti 996 License Version 1.0 (Draft)</h2>
 
-<p>Copyright (c) [2016-2019] [GdeiAssistant]</p>
+<p>Copyright (c) [2016-2020] [GdeiAssistant]</p>
 
 <p>Permission is hereby granted to any individual or legal entity
     obtaining a copy of this licensed work (including the source code,

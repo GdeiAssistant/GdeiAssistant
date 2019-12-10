@@ -37,6 +37,7 @@
 
         <div class="hd">
             <h1 class="page_title">新闻通知</h1>
+            <p style="text-align: center;color: lightgrey">新闻信息服务由广东第二师范学院网站提供，本站仅作收录和展示</p>
         </div>
 
         <div style="margin-top: 0;" class="weui-cells">

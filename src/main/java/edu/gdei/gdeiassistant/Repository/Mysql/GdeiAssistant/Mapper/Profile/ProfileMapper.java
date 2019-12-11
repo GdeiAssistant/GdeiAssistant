@@ -23,9 +23,12 @@ public interface ProfileMapper {
             @Result(property = "highSchool", column = "high_school"),
             @Result(property = "juniorHighSchool", column = "junior_high_school"),
             @Result(property = "primarySchool", column = "primary_school"),
-            @Result(property = "region", column = "region"),
-            @Result(property = "state", column = "state"),
-            @Result(property = "city", column = "city")
+            @Result(property = "locationRegion", column = "location_region"),
+            @Result(property = "locationState", column = "location_state"),
+            @Result(property = "locationCity", column = "location_city"),
+            @Result(property = "hometownRegion", column = "hometown_region"),
+            @Result(property = "hometownState", column = "hometown_state"),
+            @Result(property = "hometownCity", column = "hometown_city")
     })
     Profile selectUserProfile(String username) throws Exception;
 
@@ -66,8 +69,11 @@ public interface ProfileMapper {
     @Update("update profile set profession=#{profession} where username=#{username}")
     void updateProfession(Profile profile);
 
-    @Update("update profile set region=#{region},state=#{state},city=#{city} where username=#{username}")
+    @Update("update profile set location_region=#{locationRegion},location_state=#{locationState},location_city=#{locationCity} where username=#{username}")
     void updateLocation(Profile profile);
+
+    @Update("update profile set hometown_region=#{hometownRegion},hometown_state=#{hometownState},hometown_city=#{hometownCity} where username=#{username}")
+    void updateHometown(Profile profile);
 
     @Update("update profile set high_school=#{highSchool} where username=#{username}")
     void updateHighSchool(Profile profile);
@@ -78,8 +84,8 @@ public interface ProfileMapper {
     @Update("update profile set primary_school=#{primarySchool} where username=#{username}")
     void updatePrimarySchool(Profile profile);
 
-    @Update("update profile set nickname=#{nickname},gender=null,birthday=null,enrollment=null,profession=null,region=null" +
-            ",state=null,city=null,high_school=null,junior_high_school=null,primary_school=null where username=#{username}")
+    @Update("update profile set nickname=#{nickname},gender=null,birthday=null,enrollment=null,profession=null,location_region=null" +
+            ",location_state=null,location_city=null,hometown_region=null,hometown_state=null,hometown_city=null,high_school=null,junior_high_school=null,primary_school=null where username=#{username}")
     void resetUserProfile(@Param("username") String username, @Param("nickname") String nickname) throws Exception;
 
     @Update("update introduction set introduction=null where username=#{username}")

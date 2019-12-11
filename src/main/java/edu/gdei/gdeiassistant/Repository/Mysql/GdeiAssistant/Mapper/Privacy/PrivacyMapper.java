@@ -9,7 +9,8 @@ public interface PrivacyMapper {
     @Results(id = "Privacy", value = {
             @Result(property = "username", column = "username"),
             @Result(property = "genderOpen", column = "is_gender_open"),
-            @Result(property = "regionOpen", column = "is_region_open"),
+            @Result(property = "locationOpen", column = "is_location_open"),
+            @Result(property = "hometownOpen", column = "is_hometown_open"),
             @Result(property = "introductionOpen", column = "is_introduction_open"),
             @Result(property = "facultyOpen", column = "is_faculty_open"),
             @Result(property = "majorOpen", column = "is_major_open"),
@@ -27,12 +28,12 @@ public interface PrivacyMapper {
 
     @Insert("insert into privacy (username,is_gender_open,is_faculty_open" +
             ",is_major_open,is_enrollment_open,is_age_open,is_degree_open,is_profession_open,is_primary_school_open,is_junior_high_school_open,is_high_school_open" +
-            ",is_region_open,is_introduction_open,is_cache_allow,is_robots_index_allow) " +
-            "values(#{username},true,true,true,true,true,true,true,true,true,true,true,true,false,true)")
+            ",is_location_open,is_hometown_open,is_introduction_open,is_cache_allow,is_robots_index_allow) " +
+            "values(#{username},true,true,true,true,true,true,true,true,true,true,true,true,true,false,true)")
     public void initPrivacy(String username) throws Exception;
 
     @Update("update privacy set is_gender_open=1,is_faculty_open=1,is_major_open=1,is_enrollment_open=1,is_age_open,is_degree_open,is_primary_school_open=1" +
-            ",is_junior_high_school_open=1,is_high_school_open=1,is_region_open=1,is_introduction_open=1,is_cache_allow=0,is_robots_index_allow=1 where username=#{username}")
+            ",is_junior_high_school_open=1,is_high_school_open=1,is_location_open=1,is_hometown_open=1,is_introduction_open=1,is_cache_allow=0,is_robots_index_allow=1 where username=#{username}")
     public void resetPrivacy(String username) throws Exception;
 
     @Update("<script>" +
@@ -82,17 +83,30 @@ public interface PrivacyMapper {
     @Update("<script>" +
             "update privacy" +
             "        <choose>" +
-            "            <when test='regionOpen'>" +
-            "                set is_region_open='1'" +
+            "            <when test='locationOpen'>" +
+            "                set is_location_open='1'" +
             "            </when>" +
             "            <otherwise>" +
-            "                set is_region_open='0'" +
+            "                set is_location_open='0'" +
             "            </otherwise>" +
             "        </choose>" +
             "        where username=#{username}"
             + "</script>")
-    public void updateRegion(@Param("regionOpen") boolean region
-            , @Param("username") String username) throws Exception;
+    public void updateLocation(@Param("locationOpen") boolean location, @Param("username") String username) throws Exception;
+
+    @Update("<script>" +
+            "update privacy" +
+            "        <choose>" +
+            "            <when test='hometownOpen'>" +
+            "                set is_hometown_open='1'" +
+            "            </when>" +
+            "            <otherwise>" +
+            "                set is_hometown_open='0'" +
+            "            </otherwise>" +
+            "        </choose>" +
+            "        where username=#{username}"
+            + "</script>")
+    public void updateHometown(@Param("hometownOpen") boolean hometown, @Param("username") String username) throws Exception;
 
     @Update("<script>" +
             "update privacy" +

@@ -15,7 +15,9 @@ public class Privacy implements Serializable, Entity {
 
     private Boolean genderOpen;
 
-    private Boolean regionOpen;
+    private Boolean locationOpen;
+
+    private Boolean hometownOpen;
 
     private Boolean introductionOpen;
 
@@ -57,12 +59,20 @@ public class Privacy implements Serializable, Entity {
         this.genderOpen = genderOpen;
     }
 
-    public Boolean isRegionOpen() {
-        return regionOpen;
+    public Boolean isLocationOpen() {
+        return locationOpen;
     }
 
-    public void setRegionOpen(Boolean regionOpen) {
-        this.regionOpen = regionOpen;
+    public void setLocationOpen(Boolean locationOpen) {
+        this.locationOpen = locationOpen;
+    }
+
+    public Boolean isHometownOpen() {
+        return hometownOpen;
+    }
+
+    public void setHometownOpen(Boolean hometownOpen) {
+        this.hometownOpen = hometownOpen;
     }
 
     public Boolean isIntroductionOpen() {

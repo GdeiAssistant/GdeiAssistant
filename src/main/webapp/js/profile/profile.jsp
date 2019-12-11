@@ -20,8 +20,14 @@
     // 所在地选择器
     var locationPicker;
 
+    // 家乡选择器
+    var hometownPicker;
+
     // 所在地选择器选项
     var locationPickerItems = [];
+
+    // 家乡选择器选项
+    var hometownPickerItems = [];
 
     var genderMap = [];
 
@@ -62,27 +68,27 @@
                     for (var i = 0; i < locationData.length; i++) {
                         if (locationData[i].hasOwnProperty("stateMap") && Object.getOwnPropertyNames(locationData[i].stateMap).length > 0) {
                             var stateMap = locationData[i].stateMap;
-                            var statePickerItems = [];
+                            var locationStatePickerItems = [];
                             var j = 0;
                             for (var stateKey in stateMap) {
                                 if (stateMap[stateKey].hasOwnProperty("cityMap") && Object.getOwnPropertyNames(stateMap[stateKey]).length) {
                                     var cityMap = stateMap[stateKey].cityMap;
-                                    var cityPickerItems = [];
+                                    var locationCityPickerItems = [];
                                     var k = 0;
                                     for (var cityKey in cityMap) {
-                                        cityPickerItems[k] = {
+                                        locationCityPickerItems[k] = {
                                             label: cityMap[cityKey].name,
                                             value: cityKey
                                         };
                                         k++;
                                     }
-                                    statePickerItems[j] = {
+                                    locationStatePickerItems[j] = {
                                         label: stateMap[stateKey].name,
                                         value: stateKey,
-                                        children: cityPickerItems
+                                        children: locationCityPickerItems
                                     }
                                 } else {
-                                    statePickerItems[j] = {
+                                    locationStatePickerItems[j] = {
                                         label: stateMap[stateKey].name,
                                         value: stateKey,
                                         children: [
@@ -96,12 +102,72 @@
                                 locationPickerItems[i] = {
                                     label: locationData[i].name,
                                     value: locationData[i].code,
-                                    children: statePickerItems
+                                    children: locationStatePickerItems
                                 };
                                 j++;
                             }
                         } else {
                             locationPickerItems[i] = {
+                                label: locationData[i].name,
+                                value: locationData[i].code,
+                                children: [
+                                    {
+                                        label: locationData[i].name.substring(4),
+                                        value: '',
+                                        children: [
+                                            {
+                                                label: locationData[i].name.substring(4),
+                                                value: ''
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                    for (var i = 0; i < locationData.length; i++) {
+                        if (locationData[i].hasOwnProperty("stateMap") && Object.getOwnPropertyNames(locationData[i].stateMap).length > 0) {
+                            var stateMap = locationData[i].stateMap;
+                            var hometownStatePickerItems = [];
+                            var j = 0;
+                            for (var stateKey in stateMap) {
+                                if (stateMap[stateKey].hasOwnProperty("cityMap") && Object.getOwnPropertyNames(stateMap[stateKey]).length) {
+                                    var cityMap = stateMap[stateKey].cityMap;
+                                    var hometownCityPickerItems = [];
+                                    var k = 0;
+                                    for (var cityKey in cityMap) {
+                                        hometownCityPickerItems[k] = {
+                                            label: cityMap[cityKey].name,
+                                            value: cityKey
+                                        };
+                                        k++;
+                                    }
+                                    hometownStatePickerItems[j] = {
+                                        label: stateMap[stateKey].name,
+                                        value: stateKey,
+                                        children: hometownCityPickerItems
+                                    }
+                                } else {
+                                    hometownStatePickerItems[j] = {
+                                        label: stateMap[stateKey].name,
+                                        value: stateKey,
+                                        children: [
+                                            {
+                                                label: stateMap[stateKey].name,
+                                                value: ''
+                                            }
+                                        ]
+                                    }
+                                }
+                                hometownPickerItems[i] = {
+                                    label: locationData[i].name,
+                                    value: locationData[i].code,
+                                    children: hometownStatePickerItems
+                                };
+                                j++;
+                            }
+                        } else {
+                            hometownPickerItems[i] = {
                                 label: locationData[i].name,
                                 value: locationData[i].code,
                                 children: [
@@ -209,17 +275,31 @@
                     } else {
                         $("#gender").text(genderMap[gender]);
                     }
-                    var location = result.data.region;
+                    //所在地
+                    var location = result.data.locationRegion;
                     if (location != null) {
-                        if (result.data.state != null && result.data.state != result.data.region) {
-                            location = location + result.data.state;
+                        if (result.data.locationState != null && result.data.locationState != result.data.locationRegion) {
+                            location = location + result.data.locationState;
                         }
-                        if (result.data.city != null && result.data.city != result.data.state) {
-                            location = location + result.data.city;
+                        if (result.data.locationCity != null && result.data.locationCity != result.data.locationState) {
+                            location = location + result.data.locationCity;
                         }
                         $("#location").text(location);
                     } else {
                         $("#location").text("未选择");
+                    }
+                    //家乡
+                    var hometown = result.data.hometownRegion;
+                    if (hometown != null) {
+                        if (result.data.hometownState != null && result.data.hometownState != result.data.hometownRegion) {
+                            hometown = hometown + result.data.hometownState;
+                        }
+                        if (result.data.hometownCity != null && result.data.hometownCity != result.data.hometownState) {
+                            hometown = hometown + result.data.hometownCity;
+                        }
+                        $("#hometown").text(hometown);
+                    } else {
+                        $("#hometown").text("未选择");
                     }
                     //年龄
                     let birthday = result.data.birthday;
@@ -298,7 +378,7 @@
     }
 
     //修改用户所在地
-    function changeRegion() {
+    function changeLocation() {
         locationPicker = weui.picker(locationPickerItems,
             {
                 defaultValue: ['CN', '44', '1'],
@@ -306,6 +386,40 @@
                 onConfirm: function (result) {
                     $.ajax({
                         url: '/api/profile/location',
+                        type: 'post',
+                        data: {
+                            region: result[0].value,
+                            state: result[1].value,
+                            city: result[2].value
+                        },
+                        success: function (updateResult) {
+                            if (updateResult.success === true) {
+                                loadProfile();
+                            } else {
+                                showCustomErrorTip(updateResult.message);
+                            }
+                        },
+                        error: function (result) {
+                            if (result.status) {
+                                showCustomErrorTip(result.responseJSON.message);
+                            } else {
+                                showNetworkErrorTip();
+                            }
+                        }
+                    });
+                }
+            });
+    }
+
+    //修改用户家乡
+    function changeHometown() {
+        hometownPicker = weui.picker(hometownPickerItems,
+            {
+                defaultValue: ['CN', '44', '1'],
+                container: 'body',
+                onConfirm: function (result) {
+                    $.ajax({
+                        url: '/api/profile/hometown',
                         type: 'post',
                         data: {
                             region: result[0].value,

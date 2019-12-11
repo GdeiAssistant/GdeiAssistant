@@ -110,30 +110,36 @@ public class ProfileRestController {
         DataJsonResult<Profile> jsonResult = new DataJsonResult<>();
         User user = (User) request.getAttribute("user");
         Profile profile = userProfileService.GetUserProfile(user.getUsername());
-        if (!LocationUtils.getRegionMap().containsKey(profile.getRegion())) {
-            profile.setRegion(null);
+        if (!LocationUtils.getRegionMap().containsKey(profile.getLocationRegion())) {
+            profile.setLocationRegion(null);
         } else {
             //获取国家/地区信息
-            Region region = LocationUtils.getRegionMap().get(profile.getRegion());
+            Region region = LocationUtils.getRegionMap().get(profile.getLocationRegion());
             if (region == null) {
-                profile.setRegion(null);
-                profile.setState(null);
-                profile.setCity(null);
+                profile.setLocationRegion(null);
+                profile.setLocationState(null);
+                profile.setLocationCity(null);
             } else {
-                profile.setRegion(region.getName().substring(4));
+                profile.setLocationRegion(region.getName().substring(4));
                 //获取省/州信息
-                State state = region.getStateMap().get(profile.getState());
+                State state = region.getStateMap().get(profile.getLocationState());
                 if (state == null) {
-                    profile.setState(null);
-                    profile.setCity(null);
+                    profile.setLocationState(null);
+                    profile.setLocationCity(null);
                 } else {
-                    profile.setState(state.getName());
-                    //获取市/直辖市
-                    City city = state.getCityMap().get(profile.getCity());
-                    if (city == null) {
-                        profile.setCity(null);
+                    if (!state.getName().equals(region.getName())
+                            && (state.getName().equals("香港特别行政区")
+                            || state.getName().equals("澳门特别行政区"))) {
+                        profile.setLocationState(region.getName().substring(4));
                     } else {
-                        profile.setCity(city.getName());
+                        profile.setLocationState(state.getName());
+                    }
+                    //获取市/直辖市
+                    City city = state.getCityMap().get(profile.getLocationCity());
+                    if (city == null) {
+                        profile.setLocationCity(null);
+                    } else {
+                        profile.setLocationCity(city.getName());
                     }
                 }
             }
@@ -155,30 +161,66 @@ public class ProfileRestController {
         String username = (String) request.getSession().getAttribute("username");
         Profile profile = userProfileService.GetUserProfile(username);
         if (profile != null) {
-            if (!LocationUtils.getRegionMap().containsKey(profile.getRegion())) {
-                profile.setRegion("未选择");
+            if (!LocationUtils.getRegionMap().containsKey(profile.getLocationRegion())) {
+                profile.setLocationRegion("未选择");
             } else {
-                //获取国家/地区信息
-                Region region = LocationUtils.getRegionMap().get(profile.getRegion());
-                if (region == null) {
-                    profile.setRegion("未选择");
-                    profile.setState("");
-                    profile.setCity("");
+                //获取所在地国家/地区信息
+                Region locationRegion = LocationUtils.getRegionMap().get(profile.getLocationRegion());
+                if (locationRegion == null) {
+                    profile.setLocationRegion("未选择");
+                    profile.setLocationState("");
+                    profile.setLocationCity("");
                 } else {
-                    profile.setRegion(region.getName().substring(4));
+                    profile.setLocationRegion(locationRegion.getName().substring(4));
                     //获取省/州信息
-                    State state = region.getStateMap().get(profile.getState());
-                    if (state == null) {
-                        profile.setState("");
-                        profile.setCity("");
+                    State locationState = locationRegion.getStateMap().get(profile.getLocationState());
+                    if (locationState == null) {
+                        profile.setLocationState("");
+                        profile.setLocationCity("");
                     } else {
-                        profile.setState(state.getName());
-                        //获取市/直辖市
-                        City city = state.getCityMap().get(profile.getCity());
-                        if (city == null) {
-                            profile.setCity("");
+                        if (!locationState.getName().equals(locationRegion.getName())
+                                && (locationState.getName().equals("香港特别行政区")
+                                || locationState.getName().equals("澳门特别行政区"))) {
+                            profile.setLocationState(locationRegion.getName().substring(4));
                         } else {
-                            profile.setCity(city.getName());
+                            profile.setLocationState(locationState.getName());
+                        }
+                        //获取市/直辖市
+                        City locationCity = locationState.getCityMap().get(profile.getLocationCity());
+                        if (locationCity == null) {
+                            profile.setLocationCity("");
+                        } else {
+                            profile.setLocationCity(locationCity.getName());
+                        }
+                    }
+                }
+                //获取家乡国家/地区信息
+                Region hometownRegion = LocationUtils.getRegionMap().get(profile.getHometownRegion());
+                if (hometownRegion == null) {
+                    profile.setHometownRegion("未选择");
+                    profile.setHometownState("");
+                    profile.setHometownCity("");
+                } else {
+                    profile.setHometownRegion(hometownRegion.getName().substring(4));
+                    //获取省/州信息
+                    State hometownState = hometownRegion.getStateMap().get(profile.getHometownState());
+                    if (hometownState == null) {
+                        profile.setHometownState("");
+                        profile.setHometownCity("");
+                    } else {
+                        if (!hometownState.getName().equals(hometownRegion.getName())
+                                && (hometownState.getName().equals("香港特别行政区")
+                                || hometownState.getName().equals("澳门特别行政区"))) {
+                            profile.setHometownState(hometownRegion.getName().substring(4));
+                        } else {
+                            profile.setHometownState(hometownState.getName());
+                        }
+                        //获取市/直辖市
+                        City hometownCity = hometownState.getCityMap().get(profile.getHometownCity());
+                        if (hometownCity == null) {
+                            profile.setHometownCity("");
+                        } else {
+                            profile.setHometownCity(hometownCity.getName());
                         }
                     }
                 }
@@ -315,10 +357,13 @@ public class ProfileRestController {
      *
      * @param request
      * @param region
+     * @param state
+     * @param city
      * @return
+     * @throws Exception
      */
     @RequestMapping(value = "/api/profile/location", method = RequestMethod.POST)
-    public JsonResult UpdateRegion(HttpServletRequest request
+    public JsonResult UpdateLocation(HttpServletRequest request
             , @Validated @NotBlank @RequestParam("region") String region
             , String state, String city) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
@@ -327,20 +372,66 @@ public class ProfileRestController {
             if (LocationUtils.getRegionMap().get(region).getStateMap() == null
                     || LocationUtils.getRegionMap().get(region).getStateMap().size() == 0) {
                 //省/州为空
-                userProfileService.UpdateRegion(username, region, null, null);
+                userProfileService.UpdateLocation(username, region, null, null);
             } else {
                 Map<String, State> stateMap = LocationUtils.getRegionMap().get(region).getStateMap();
                 //判断省/州代码是否合法
                 if (stateMap.containsKey(state)) {
                     if (stateMap.get(state).getCityMap() == null || stateMap.get(state).getCityMap().size() == 0) {
                         //市/直辖市为空
-                        userProfileService.UpdateRegion(username, region, state, null);
+                        userProfileService.UpdateLocation(username, region, state, null);
                         return new JsonResult(true);
                     } else {
                         Map<String, City> cityMap = stateMap.get(state).getCityMap();
                         //判断市/直辖市代码是否合法
                         if (cityMap.containsKey(city)) {
-                            userProfileService.UpdateRegion(username, region, state, city);
+                            userProfileService.UpdateLocation(username, region, state, city);
+                            return new JsonResult(true);
+                        } else {
+                            return new JsonResult(false, "不合法的市/直辖市代码");
+                        }
+                    }
+                }
+                return new JsonResult(false, "不合法的省/州代码");
+            }
+        }
+        return new JsonResult(false, "不合法的国家/地区代码");
+    }
+
+    /**
+     * 更新用户家乡
+     *
+     * @param request
+     * @param region
+     * @param state
+     * @param city
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/api/profile/hometown", method = RequestMethod.POST)
+    public JsonResult UpdateHometown(HttpServletRequest request
+            , @Validated @NotBlank @RequestParam("region") String region
+            , String state, String city) throws Exception {
+        String username = (String) request.getSession().getAttribute("username");
+        //判断国家/地区代码是否合法
+        if (LocationUtils.getRegionMap().containsKey(region)) {
+            if (LocationUtils.getRegionMap().get(region).getStateMap() == null
+                    || LocationUtils.getRegionMap().get(region).getStateMap().size() == 0) {
+                //省/州为空
+                userProfileService.UpdateHometown(username, region, null, null);
+            } else {
+                Map<String, State> stateMap = LocationUtils.getRegionMap().get(region).getStateMap();
+                //判断省/州代码是否合法
+                if (stateMap.containsKey(state)) {
+                    if (stateMap.get(state).getCityMap() == null || stateMap.get(state).getCityMap().size() == 0) {
+                        //市/直辖市为空
+                        userProfileService.UpdateHometown(username, region, state, null);
+                        return new JsonResult(true);
+                    } else {
+                        Map<String, City> cityMap = stateMap.get(state).getCityMap();
+                        //判断市/直辖市代码是否合法
+                        if (cityMap.containsKey(city)) {
+                            userProfileService.UpdateHometown(username, region, state, city);
                             return new JsonResult(true);
                         } else {
                             return new JsonResult(false, "不合法的市/直辖市代码");

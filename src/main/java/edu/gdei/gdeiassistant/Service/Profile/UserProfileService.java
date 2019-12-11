@@ -29,6 +29,11 @@ public class UserProfileService {
     @Resource(name = "genderMapper")
     private GenderMapper genderMapper;
 
+    @Resource(name = "professionMap")
+    public void setProfessionMap(Map<Integer, String> professionMap) {
+        UserProfileService.professionMap = professionMap;
+    }
+
     private String accessKeyID;
 
     private String accessKeySecret;
@@ -234,21 +239,37 @@ public class UserProfileService {
      * @param city
      * @return
      */
-    public void UpdateRegion(String username, String region, String state, String city) throws Exception {
+    public void UpdateLocation(String username, String region, String state, String city) throws Exception {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {
-            profile.setRegion(region);
-            profile.setState(state);
-            profile.setCity(city);
+            profile.setLocationRegion(region);
+            profile.setLocationState(state);
+            profile.setLocationCity(city);
             profileMapper.updateLocation(profile);
             return;
         }
         throw new UserNotExistException("查询的用户不存在");
     }
 
-    @Resource(name = "professionMap")
-    public void setProfessionMap(Map<Integer, String> professionMap) {
-        UserProfileService.professionMap = professionMap;
+    /**
+     * 更新用户家乡
+     *
+     * @param username
+     * @param region
+     * @param state
+     * @param city
+     * @throws Exception
+     */
+    public void UpdateHometown(String username, String region, String state, String city) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+        if (profile != null) {
+            profile.setHometownRegion(region);
+            profile.setHometownState(state);
+            profile.setHometownCity(city);
+            profileMapper.updateHometown(profile);
+            return;
+        }
+        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**

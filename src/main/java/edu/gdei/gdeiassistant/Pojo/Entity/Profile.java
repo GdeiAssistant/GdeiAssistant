@@ -32,11 +32,17 @@ public class Profile implements Serializable, Entity {
 
     private String customGenderName;
 
-    private String region;
+    private String locationRegion;
 
-    private String state;
+    private String locationState;
 
-    private String city;
+    private String locationCity;
+
+    private String hometownRegion;
+
+    private String hometownState;
+
+    private String hometownCity;
 
     private String primarySchool;
 
@@ -78,12 +84,12 @@ public class Profile implements Serializable, Entity {
         this.gender = gender;
     }
 
-    public String getRegion() {
-        return region;
+    public String getLocationRegion() {
+        return locationRegion;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public void setLocationRegion(String locationRegion) {
+        this.locationRegion = locationRegion;
     }
 
     public String getUsername() {
@@ -94,20 +100,44 @@ public class Profile implements Serializable, Entity {
         this.username = username;
     }
 
-    public String getState() {
-        return state;
+    public String getLocationState() {
+        return locationState;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setLocationState(String locationState) {
+        this.locationState = locationState;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocationCity() {
+        return locationCity;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocationCity(String locationCity) {
+        this.locationCity = locationCity;
+    }
+
+    public String getHometownRegion() {
+        return hometownRegion;
+    }
+
+    public void setHometownRegion(String hometownRegion) {
+        this.hometownRegion = hometownRegion;
+    }
+
+    public String getHometownState() {
+        return hometownState;
+    }
+
+    public void setHometownState(String hometownState) {
+        this.hometownState = hometownState;
+    }
+
+    public String getHometownCity() {
+        return hometownCity;
+    }
+
+    public void setHometownCity(String hometownCity) {
+        this.hometownCity = hometownCity;
     }
 
     public String getCustomGenderName() {

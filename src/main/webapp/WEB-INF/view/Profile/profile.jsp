@@ -94,11 +94,17 @@
 <input type="hidden" id="primary_school_val" name="primary_school_val">
 
 <div class="weui-cells">
-    <div class="weui-cell" href="javascript:" onclick="changeRegion()">
+    <div class="weui-cell" href="javascript:" onclick="changeLocation()">
         <div class="weui-cell__bd">
             <p>所在地</p>
         </div>
         <div id="location" class="weui-cell__ft"></div>
+    </div>
+    <div class="weui-cell" href="javascript:" onclick="changeHometown()">
+        <div class="weui-cell__bd">
+            <p>家乡</p>
+        </div>
+        <div id="hometown" class="weui-cell__ft"></div>
     </div>
     <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/introduction'">

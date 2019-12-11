@@ -90,23 +90,42 @@ public class ProfileController {
                         .get(profile.getProfession()));
             }
             StringBuilder location = new StringBuilder();
-            Region region = LocationUtils.getRegionMap().get(profile.getRegion());
-            if (region != null) {
-                location.append(region.getName());
-                State state = region.getStateMap().get(profile.getState());
-                if (state != null) {
-                    if (!state.getName().equals(region.getName())) {
-                        if (!state.getName().equals("香港特别行政区")
-                                && !state.getName().equals("澳门特别行政区")) {
-                            location.append(state.getName());
+            Region locationRegion = LocationUtils.getRegionMap().get(profile.getLocationRegion());
+            if (locationRegion != null) {
+                location.append(locationRegion.getName());
+                State locationState = locationRegion.getStateMap().get(profile.getLocationState());
+                if (locationState != null) {
+                    if (!locationState.getName().equals(locationRegion.getName())) {
+                        if (!locationState.getName().equals("香港特别行政区")
+                                && !locationState.getName().equals("澳门特别行政区")) {
+                            location.append(locationState.getName());
                         }
                     }
-                    City city = state.getCityMap().get(profile.getCity());
-                    if (city != null && !city.getName().equals(state.getName())) {
-                        location.append(city.getName());
+                    City locationCity = locationState.getCityMap().get(profile.getLocationCity());
+                    if (locationCity != null && !locationCity.getName().equals(locationState.getName())) {
+                        location.append(locationCity.getName());
                     }
                 }
                 modelAndView.addObject("Location", location.toString());
+            }
+            StringBuilder hometown = new StringBuilder();
+            Region hometownRegion = LocationUtils.getRegionMap().get(profile.getHometownRegion());
+            if (hometownRegion != null) {
+                hometown.append(locationRegion.getName());
+                State hometownState = locationRegion.getStateMap().get(profile.getHometownState());
+                if (hometownState != null) {
+                    if (!hometownState.getName().equals(locationRegion.getName())) {
+                        if (!hometownState.getName().equals("香港特别行政区")
+                                && !hometownState.getName().equals("澳门特别行政区")) {
+                            hometown.append(hometownState.getName());
+                        }
+                    }
+                    City hometownCity = hometownState.getCityMap().get(profile.getHometownCity());
+                    if (hometownCity != null && !hometownCity.getName().equals(hometownState.getName())) {
+                        hometown.append(hometownCity.getName());
+                    }
+                }
+                modelAndView.addObject("Hometown", hometown.toString());
             }
             Introduction introduction = userProfileService.GetUserIntroduction(username);
             if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
@@ -193,12 +212,12 @@ public class ProfileController {
                             .get(profile.getProfession()));
                 }
             }
-            if (privacy.isRegionOpen().equals(Boolean.TRUE)) {
+            if (privacy.isLocationOpen().equals(Boolean.TRUE)) {
                 StringBuilder location = new StringBuilder();
-                Region region = LocationUtils.getRegionMap().get(profile.getRegion());
+                Region region = LocationUtils.getRegionMap().get(profile.getLocationRegion());
                 if (region != null) {
                     location.append(region.getName());
-                    State state = region.getStateMap().get(profile.getState());
+                    State state = region.getStateMap().get(profile.getLocationState());
                     if (state != null) {
                         if (!state.getName().equals(region.getName())) {
                             if (!state.getName().equals("香港特别行政区")
@@ -206,12 +225,33 @@ public class ProfileController {
                                 location.append(state.getName());
                             }
                         }
-                        City city = state.getCityMap().get(profile.getCity());
+                        City city = state.getCityMap().get(profile.getLocationCity());
                         if (city != null && !city.getName().equals(state.getName())) {
                             location.append(city.getName());
                         }
                     }
                     modelAndView.addObject("Location", location.toString());
+                }
+            }
+            if (privacy.isHometownOpen().equals(Boolean.TRUE)) {
+                StringBuilder hometown = new StringBuilder();
+                Region region = LocationUtils.getRegionMap().get(profile.getHometownRegion());
+                if (region != null) {
+                    hometown.append(region.getName());
+                    State state = region.getStateMap().get(profile.getHometownState());
+                    if (state != null) {
+                        if (!state.getName().equals(region.getName())) {
+                            if (!state.getName().equals("香港特别行政区")
+                                    && !state.getName().equals("澳门特别行政区")) {
+                                hometown.append(state.getName());
+                            }
+                        }
+                        City city = state.getCityMap().get(profile.getHometownCity());
+                        if (city != null && !city.getName().equals(state.getName())) {
+                            hometown.append(city.getName());
+                        }
+                    }
+                    modelAndView.addObject("Hometown", hometown.toString());
                 }
             }
             if (privacy.isIntroductionOpen().equals(Boolean.TRUE)) {

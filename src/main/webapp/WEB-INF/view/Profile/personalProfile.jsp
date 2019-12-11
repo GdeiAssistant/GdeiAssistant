@@ -177,6 +177,17 @@
 
     </c:if>
 
+    <c:if test="${Hometown!=null}">
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>家乡</p>
+            </div>
+            <div class="weui-cell__ft">${Hometown}</div>
+        </div>
+
+    </c:if>
+
     <c:if test="${HighSchool!=null}">
 
         <div class="weui-cell">

@@ -79,7 +79,18 @@ public class PrivacyService {
      * @return
      */
     public void UpdateLocation(boolean state, String username) throws Exception {
-        privacyMapper.updateRegion(state, StringEncryptUtils.encryptString(username));
+        privacyMapper.updateLocation(state, StringEncryptUtils.encryptString(username));
+    }
+
+    /**
+     * 更新家乡隐私设置
+     *
+     * @param state
+     * @param username
+     * @throws Exception
+     */
+    public void UpdateHometown(boolean state, String username) throws Exception {
+        privacyMapper.updateHometown(state, StringEncryptUtils.encryptString(username));
     }
 
     /**

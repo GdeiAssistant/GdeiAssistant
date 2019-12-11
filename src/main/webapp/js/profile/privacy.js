@@ -23,8 +23,11 @@ $(function () {
                     if (result.data.majorOpen === true) {
                         $("#major").prop("checked", true);
                     }
-                    if (result.data.regionOpen === true) {
-                        $("#region").prop("checked", true);
+                    if (result.data.locationOpen === true) {
+                        $("#location").prop("checked", true);
+                    }
+                    if (result.data.hometownOpen === true) {
+                        $("#hometown").prop("checked", true);
                     }
                     if (result.data.introductionOpen === true) {
                         $("#introduction").prop("checked", true);

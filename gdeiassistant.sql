@@ -519,7 +519,7 @@ CREATE TABLE `express` (
   PRIMARY KEY (`id`),
   KEY `expressUsername_idx` (`username`),
   CONSTRAINT `expressUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -853,7 +853,8 @@ DROP TABLE IF EXISTS `privacy`;
 CREATE TABLE `privacy` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `is_gender_open` tinyint(1) NOT NULL COMMENT '公开性别',
-  `is_region_open` tinyint(1) NOT NULL COMMENT '公开国家/地区',
+  `is_location_open` tinyint(1) NOT NULL COMMENT '公开国家/地区',
+  `is_hometown_open` tinyint(1) NOT NULL COMMENT '公开家乡',
   `is_introduction_open` tinyint(1) NOT NULL COMMENT '公开个人简介',
   `is_faculty_open` tinyint(1) NOT NULL COMMENT '公开院系',
   `is_major_open` tinyint(1) NOT NULL COMMENT '公开专业',
@@ -877,7 +878,7 @@ CREATE TABLE `privacy` (
 
 LOCK TABLES `privacy` WRITE;
 /*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
-INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,1,1,0,1),('trialuser',1,1,1,1,1,1,1,1,1,1,1,1,0,1);
+INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,1,1,1,0,1),('trialuser',1,1,1,1,1,1,1,1,1,1,1,1,1,0,1);
 /*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -897,9 +898,12 @@ CREATE TABLE `profile` (
   `faculty` tinyint(1) DEFAULT NULL COMMENT '院系',
   `profession` tinyint(1) DEFAULT NULL COMMENT '职业',
   `major` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '专业',
-  `region` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家/地区',
-  `state` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '省份/州',
-  `city` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '城市',
+  `location_region` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '所在地国家/地区',
+  `location_state` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '所在地省份/州',
+  `location_city` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '所在地城市',
+  `hometown_region` varchar(5) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '家乡国家/地区',
+  `hometown_state` varchar(5) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '家乡省份/州',
+  `hometown_city` varchar(5) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '家乡城市',
   `enrollment` int(4) DEFAULT NULL COMMENT '入学年份',
   `primary_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '小学',
   `junior_high_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '初中',
@@ -915,7 +919,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('trialuser','广东二师助手用户',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('trialuser','广东二师助手用户',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1116,4 +1120,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-04 12:59:52
+-- Dump completed on 2019-12-11 14:25:17

@@ -124,11 +124,15 @@ public class ExpressService {
      * @param expressId
      * @param username
      */
-    public void LikeExpress(int expressId, String username) throws WsgException {
-        ExpressLike expressLike = expressMapper.selectExpressLike(expressId, StringEncryptUtils.encryptString(username));
-        if (expressLike == null) {
-            expressMapper.insertExpressLike(expressId, username);
+    public void LikeExpress(int expressId, String username) throws WsgException, DataNotExistException {
+        Express express = expressMapper.selectExpressById(expressId);
+        if (express != null) {
+            ExpressLike expressLike = expressMapper.selectExpressLike(expressId, StringEncryptUtils.encryptString(username));
+            if (expressLike == null) {
+                expressMapper.insertExpressLike(expressId, username);
+            }
         }
+        throw new DataNotExistException("表白信息不存在");
     }
 
     /**

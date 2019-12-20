@@ -532,6 +532,20 @@ public class ProfileRestController {
     }
 
     /**
+     * 获取昵称信息Rest接口
+     *
+     * @param username
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/rest/nickname/{username}", method = RequestMethod.GET)
+    public DataJsonResult<String> GetUserNickname(@PathVariable("username") String username) throws Exception {
+        Profile profile = userProfileService.GetUserProfile(username);
+        String nickname = profile.getNickname();
+        return new DataJsonResult<>(true, nickname);
+    }
+
+    /**
      * 获取头像URL信息Rest接口
      *
      * @param username

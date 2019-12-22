@@ -34,6 +34,9 @@ $(function () {
                     if (result.data.authenticationExpress === true) {
                         $("#authentication_express").prop("checked", true);
                     }
+                    if (result.data.authenticationTopic === true) {
+                        $("#authentication_topic").prop("checked", true);
+                    }
                     if (result.data.authenticationForce === true) {
                         $("#authentication_force").prop("checked", true);
                         $("#authentication_ershou").prop("checked", true);
@@ -48,6 +51,7 @@ $(function () {
                         $("#authentication_delivery").attr("disabled", true);
                         $("#authentication_photograph").attr("disabled", true);
                         $("#authentication_express").attr("disabled", true);
+                        $("#authentication_topic").attr("disabled", true);
                     }
                 } else {
                     $.toptip(result.message, 'error');
@@ -86,6 +90,7 @@ function changeAdminSetting(index) {
                     $("#authentication_delivery").attr("disabled", state);
                     $("#authentication_photograph").attr("disabled", state);
                     $("#authentication_express").attr("disabled", state);
+                    $("#authentication_topic").attr("disabled", state);
                 }
                 $.toptip("更新成功", 'success');
             } else {

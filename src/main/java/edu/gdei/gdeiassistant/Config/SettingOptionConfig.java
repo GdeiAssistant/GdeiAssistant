@@ -78,5 +78,9 @@ public class SettingOptionConfig {
         if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.express"))).equals(1)) {
             servletContext.setAttribute("authentication.express", true);
         }
+        //话题
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("authentication.topic"))).equals(1)) {
+            servletContext.setAttribute("authentication.topic", true);
+        }
     }
 }

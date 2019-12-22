@@ -29,6 +29,8 @@ public class Admin implements Serializable,Entity {
 
     private Boolean authenticationExpress;
 
+    private Boolean authenticationTopic;
+
     public Boolean getGrayscale() {
         return grayscale;
     }
@@ -99,5 +101,13 @@ public class Admin implements Serializable,Entity {
 
     public void setAuthenticationDelivery(Boolean authenticationDelivery) {
         this.authenticationDelivery = authenticationDelivery;
+    }
+
+    public Boolean getAuthenticationTopic() {
+        return authenticationTopic;
+    }
+
+    public void setAuthenticationTopic(Boolean authenticationTopic) {
+        this.authenticationTopic = authenticationTopic;
     }
 }

@@ -31,6 +31,7 @@ public class AdminRestController {
         admin.setAuthenticationDelivery(Boolean.TRUE.equals(servletContext.getAttribute("authentication.delivery")));
         admin.setAuthenticationPhotograph(Boolean.TRUE.equals(servletContext.getAttribute("authentication.photograph")));
         admin.setAuthenticationExpress(Boolean.TRUE.equals(servletContext.getAttribute("authentication.express")));
+        admin.setAuthenticationTopic(Boolean.TRUE.equals(servletContext.getAttribute("authentication.topic")));
         return new DataJsonResult<>(true, admin);
     }
 
@@ -81,6 +82,11 @@ public class AdminRestController {
             case 8:
                 //表白墙实名认证
                 servletContext.setAttribute("authentication.express", true);
+                break;
+
+            case 9:
+                //话题实名认证
+                servletContext.setAttribute("authentication.topic", true);
                 break;
 
             default:

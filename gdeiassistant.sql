@@ -240,13 +240,11 @@ DROP TABLE IF EXISTS `access`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `access` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '权限表ID',
   `user_group` tinyint(2) NOT NULL COMMENT '用户组ID',
   `name` varchar(15) NOT NULL COMMENT '功能名称',
-  PRIMARY KEY (`id`),
   KEY `accessUserGroup_idx` (`user_group`),
   CONSTRAINT `accessUserGroup` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=504 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,7 +253,7 @@ CREATE TABLE `access` (
 
 LOCK TABLES `access` WRITE;
 /*!40000 ALTER TABLE `access` DISABLE KEYS */;
-INSERT INTO `access` VALUES (386,1,'grade'),(387,1,'schedule'),(388,1,'cet'),(389,1,'collection'),(390,1,'book'),(391,1,'bill'),(392,1,'charge'),(393,1,'card'),(394,1,'lost'),(395,1,'evaluate'),(396,1,'spare'),(397,1,'kaoyan'),(398,1,'tice'),(399,1,'news'),(400,1,'data'),(401,1,'ershou'),(402,1,'lostandfound'),(403,1,'secret'),(404,1,'delivery'),(405,1,'photograph'),(406,1,'express'),(407,1,'calendar'),(408,1,'government'),(409,1,'volunteer'),(410,1,'student'),(411,1,'wechat'),(412,1,'yiban'),(413,2,'grade'),(414,2,'schedule'),(415,2,'cet'),(416,2,'collection'),(417,2,'book'),(418,2,'bill'),(419,2,'charge'),(420,2,'card'),(421,2,'lost'),(422,2,'evaluate'),(423,2,'spare'),(424,2,'kaoyan'),(425,2,'tice'),(426,2,'news'),(427,2,'data'),(428,2,'ershou'),(429,2,'lostandfound'),(430,2,'secret'),(431,2,'delivery'),(432,2,'photograph'),(433,2,'express'),(434,2,'calendar'),(435,2,'government'),(436,2,'volunteer'),(437,2,'student'),(438,2,'wechat'),(439,2,'yiban'),(440,3,'grade'),(441,3,'schedule'),(442,3,'collection'),(443,3,'book'),(444,3,'evaluate'),(445,3,'spare'),(446,3,'kaoyan'),(447,3,'tice'),(448,3,'news'),(449,3,'data'),(450,3,'ershou'),(451,3,'lostandfound'),(452,3,'secret'),(453,3,'delivery'),(454,3,'express'),(455,3,'photograph'),(456,3,'calendar'),(457,3,'government'),(458,3,'volunteer'),(459,3,'student'),(460,3,'wechat'),(461,3,'yiban'),(462,6,'cet'),(463,6,'collection'),(464,6,'kaoyan'),(465,6,'news'),(466,6,'data'),(467,6,'ershou'),(468,6,'lostandfound'),(469,6,'secret'),(470,6,'delivery'),(471,6,'express'),(472,6,'photograph'),(473,6,'calendar'),(474,6,'government'),(475,6,'volunteer'),(476,6,'student'),(477,6,'wechat'),(478,6,'yiban'),(479,7,'grade'),(480,7,'schedule'),(481,7,'cet'),(482,7,'collection'),(483,7,'book'),(484,7,'bill'),(485,7,'card'),(486,7,'evaluate'),(487,7,'spare'),(488,7,'kaoyan'),(489,7,'tice'),(490,7,'news'),(491,7,'data'),(492,7,'ershou'),(493,7,'lostandfound'),(494,7,'secret'),(495,7,'delivery'),(496,7,'photograph'),(497,7,'express'),(498,7,'calendar'),(499,7,'government'),(500,7,'volunteer'),(501,7,'student'),(502,7,'wechat'),(503,7,'yiban');
+INSERT INTO `access` VALUES (1,'grade'),(1,'schedule'),(1,'cet'),(1,'collection'),(1,'book'),(1,'bill'),(1,'charge'),(1,'card'),(1,'lost'),(1,'evaluate'),(1,'spare'),(1,'kaoyan'),(1,'tice'),(1,'news'),(1,'data'),(1,'ershou'),(1,'lostandfound'),(1,'secret'),(1,'delivery'),(1,'photograph'),(1,'express'),(1,'topic'),(1,'calendar'),(1,'government'),(1,'volunteer'),(1,'student'),(1,'wechat'),(1,'yiban'),(2,'grade'),(2,'schedule'),(2,'cet'),(2,'collection'),(2,'book'),(2,'bill'),(2,'charge'),(2,'card'),(2,'lost'),(2,'evaluate'),(2,'spare'),(2,'kaoyan'),(2,'tice'),(2,'news'),(2,'data'),(2,'ershou'),(2,'lostandfound'),(2,'secret'),(2,'delivery'),(2,'photograph'),(2,'express'),(2,'topic'),(2,'calendar'),(2,'government'),(2,'volunteer'),(2,'student'),(2,'wechat'),(2,'yiban'),(3,'grade'),(3,'schedule'),(3,'collection'),(3,'book'),(3,'evaluate'),(3,'spare'),(3,'kaoyan'),(3,'tice'),(3,'news'),(3,'data'),(3,'ershou'),(3,'lostandfound'),(3,'secret'),(3,'delivery'),(3,'express'),(3,'topic'),(3,'photograph'),(3,'calendar'),(3,'government'),(3,'volunteer'),(3,'student'),(3,'wechat'),(3,'yiban'),(6,'cet'),(6,'collection'),(6,'kaoyan'),(6,'news'),(6,'data'),(6,'ershou'),(6,'lostandfound'),(6,'secret'),(6,'delivery'),(6,'express'),(6,'topic'),(6,'photograph'),(6,'calendar'),(6,'government'),(6,'volunteer'),(6,'student'),(6,'wechat'),(6,'yiban'),(7,'grade'),(7,'schedule'),(7,'cet'),(7,'collection'),(7,'book'),(7,'bill'),(7,'card'),(7,'evaluate'),(7,'spare'),(7,'kaoyan'),(7,'tice'),(7,'news'),(7,'data'),(7,'ershou'),(7,'lostandfound'),(7,'secret'),(7,'delivery'),(7,'photograph'),(7,'express'),(7,'topic'),(7,'calendar'),(7,'government'),(7,'volunteer'),(7,'student'),(7,'wechat'),(7,'yiban');
 /*!40000 ALTER TABLE `access` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1010,6 +1008,62 @@ LOCK TABLES `secret_like` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `topic`
+--
+
+DROP TABLE IF EXISTS `topic`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `topic` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '话题信息主键ID',
+  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '话题信息发布者用户名',
+  `topic` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '话题信息关键词',
+  `content` varchar(250) COLLATE utf8mb4_bin NOT NULL COMMENT '话题信息内容',
+  `count` tinyint(1) NOT NULL COMMENT '话题信息图片数量',
+  `publish_time` datetime NOT NULL COMMENT '话题信息发布时间',
+  PRIMARY KEY (`id`),
+  KEY `topicUsername_idx` (`username`),
+  CONSTRAINT `topicUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `topic`
+--
+
+LOCK TABLES `topic` WRITE;
+/*!40000 ALTER TABLE `topic` DISABLE KEYS */;
+/*!40000 ALTER TABLE `topic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `topic_like`
+--
+
+DROP TABLE IF EXISTS `topic_like`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `topic_like` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '话题信息点赞ID',
+  `topic_id` int(11) NOT NULL COMMENT '话题信息ID',
+  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '点赞者用户名',
+  `create_time` datetime NOT NULL COMMENT '点赞时间',
+  PRIMARY KEY (`id`),
+  KEY `topicLikeUsername_idx` (`username`),
+  CONSTRAINT `topicLikeUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `topic_like`
+--
+
+LOCK TABLES `topic_like` WRITE;
+/*!40000 ALTER TABLE `topic_like` DISABLE KEYS */;
+/*!40000 ALTER TABLE `topic_like` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -1120,4 +1174,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-11 14:25:17
+-- Dump completed on 2019-12-23  5:52:48

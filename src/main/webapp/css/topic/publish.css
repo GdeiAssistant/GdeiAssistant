@@ -1,0 +1,15 @@
+#dynamic_topic_span {
+    display: none
+}
+
+#topic {
+    float: left;
+    text-align: center;
+    width: 120px;
+    margin-left: 5px;
+    margin-right: 5px
+}
+
+.topic_line {
+    float: left
+}

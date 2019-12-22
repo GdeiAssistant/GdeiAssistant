@@ -106,6 +106,13 @@
                    onchange="changeAdminSetting(8)">
         </div>
     </div>
+    <div class="weui-cell weui-cell_switch">
+        <div class="weui-cell__bd">话题启用实名</div>
+        <div class="weui-cell__ft">
+            <input id="authentication_topic" class="weui-switch" type="checkbox"
+                   onchange="changeAdminSetting(9)">
+        </div>
+    </div>
 </div>
 
 <div class="weui-cells__title">资讯信息</div>

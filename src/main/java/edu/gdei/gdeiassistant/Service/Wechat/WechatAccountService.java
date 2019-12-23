@@ -10,8 +10,6 @@ import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.ImageEncodeUtils;
 import edu.gdei.gdeiassistant.Tools.WechatAccountUtils;
 import net.sf.json.JSONObject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -37,9 +35,8 @@ import java.util.List;
 @Service
 public class WechatAccountService {
 
-    private Log log = LogFactory.getLog(WechatAccountService.class);
-
     private int timeout;
+
     @Autowired
     private RecognitionService recognitionService;
 
@@ -172,10 +169,8 @@ public class WechatAccountService {
             }
             throw new ServerErrorException("通过微信号查询公众号信息异常");
         } catch (IOException e) {
-            log.error("查询公众号信息异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("查询公众号信息异常：", e);
             throw new ServerErrorException("查询公众号信息异常");
         } finally {
             if (httpClient != null) {

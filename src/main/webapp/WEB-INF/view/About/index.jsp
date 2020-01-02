@@ -126,9 +126,6 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/announcement/suicideprevention">青少年自杀干预热线</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="mailto:report@gdeiassistant.cn">违规举报</a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
                 </li>

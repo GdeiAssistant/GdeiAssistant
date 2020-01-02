@@ -252,6 +252,17 @@
 
 <div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/feedback'">
+        <div class="weui-cell__bd">
+            <p>帮助与反馈</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="showLogoutConfirm()">
         <div class="weui-cell__bd">
             <p>退出账号</p>

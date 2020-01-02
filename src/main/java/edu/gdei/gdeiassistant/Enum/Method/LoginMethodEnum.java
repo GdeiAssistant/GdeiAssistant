@@ -2,25 +2,25 @@ package edu.gdei.gdeiassistant.Enum.Method;
 
 public enum LoginMethodEnum {
 
-    QUICK_LOGIN("0"),
-    CAS_LOGIN("1");
+    QUICK_LOGIN(0),
+    CAS_LOGIN(1);
 
-    LoginMethodEnum(String method) {
+    private Integer method;
+
+    LoginMethodEnum(Integer method) {
         this.method = method;
-    }
-
-    private String method;
-
-    public String getMethod() {
-        return method;
     }
 
     public static LoginMethodEnum getEnumByValue(String value) {
         for (LoginMethodEnum loginMethodEnum : values()) {
-            if (loginMethodEnum.method.equals(value)) {
+            if (loginMethodEnum.method.equals(Integer.valueOf(value))) {
                 return loginMethodEnum;
             }
         }
         return null;
+    }
+
+    public Integer getMethod() {
+        return method;
     }
 }

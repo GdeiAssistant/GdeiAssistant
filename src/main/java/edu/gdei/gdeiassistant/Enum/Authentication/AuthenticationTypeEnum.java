@@ -14,13 +14,22 @@ public enum AuthenticationTypeEnum {
 
     TAIWAN_EXIT_AND_ENTRY_PERMIT(9), FOREIGN_PASSPORT(10), PHONE(11);
 
-    private Integer type;
+    private Integer method;
 
     AuthenticationTypeEnum(Integer type) {
-        this.type = type;
+        this.method = type;
     }
 
-    public Integer getType() {
-        return type;
+    public static AuthenticationTypeEnum getEnumByValue(String value) {
+        for (AuthenticationTypeEnum authenticationTypeEnum : values()) {
+            if (authenticationTypeEnum.method.equals(Integer.valueOf(value))) {
+                return authenticationTypeEnum;
+            }
+        }
+        return null;
+    }
+
+    public Integer getMethod() {
+        return method;
     }
 }

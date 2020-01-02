@@ -66,6 +66,12 @@ $(function () {
                 //更新图片显示数量
                 let count = parseInt($(".weui-uploader__info").text().split("/")[0]);
                 $(".weui-uploader__info").text((count + 1) + "/9");
+
+                // 如果当前图片数量已经超过9张，则拒绝上传
+                if (count + 1 >= 9) {
+                    $uploaderInput.attr("disabled", true);
+                    $uploaderInput.hide();
+                }
             }
         }
     });
@@ -92,6 +98,11 @@ function deleteImage() {
     //更新图片显示数量
     let count = parseInt($(".weui-uploader__info").text().split("/")[0]);
     $(".weui-uploader__info").text((count - 1) + "/9");
+    //图片少于9张时允许继续上传
+    if (count + 1 < 9) {
+        $("#uploaderInput").attr("disabled", false);
+        $("#uploaderInput").show();
+    }
 }
 
 //动态设置话题表单宽度
@@ -149,7 +160,7 @@ function postTopicForm() {
                 formData.append('images', blob);
             }
         }
-        //上传头像到服务器
+        //提交话题信息
         $.ajax({
             url: "/api/topic",
             type: "post",

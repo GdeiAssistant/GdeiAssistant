@@ -75,12 +75,14 @@ public class TopicRestController {
     @RequestMapping(value = "/api/topic", method = RequestMethod.POST)
     @RestCheckAuthentication(name = "topic")
     public JsonResult AddTopic(HttpServletRequest request, @Validated Topic topic, MultipartFile[] images) throws WsgException, IOException {
-        if (images == null || images.length <= 0) {
-            return new JsonResult(false, "不合法的图片文件");
-        }
-        for (MultipartFile file : images) {
-            if (file == null || file.isEmpty() || file.getSize() >= MAX_PICTURE_SIZE) {
+        if (images != null) {
+            if (images.length > 9) {
                 return new JsonResult(false, "不合法的图片文件");
+            }
+            for (MultipartFile file : images) {
+                if (file == null || file.isEmpty() || file.getSize() >= MAX_PICTURE_SIZE) {
+                    return new JsonResult(false, "不合法的图片文件");
+                }
             }
         }
         String username = (String) request.getSession().getAttribute("username");

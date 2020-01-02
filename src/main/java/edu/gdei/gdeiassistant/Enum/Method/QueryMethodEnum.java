@@ -2,27 +2,27 @@ package edu.gdei.gdeiassistant.Enum.Method;
 
 public enum QueryMethodEnum {
 
-    CACHE_FIRST("0"),
-    QUERY_ONLY("1"),
-    CACHE_ONLY("2");
+    CACHE_FIRST(0),
+    QUERY_ONLY(1),
+    CACHE_ONLY(2);
 
-    QueryMethodEnum(String method) {
+    private Integer method;
+
+    QueryMethodEnum(Integer method) {
         this.method = method;
-    }
-
-    private String method;
-
-    public String getMethod() {
-        return method;
     }
 
     public static QueryMethodEnum getEnumByValue(String value) {
         for (QueryMethodEnum queryMethodEnum : values()) {
-            if (queryMethodEnum.method.equals(value)) {
+            if (queryMethodEnum.method.equals(Integer.valueOf(value))) {
                 return queryMethodEnum;
             }
         }
         return null;
+    }
+
+    public Integer getMethod() {
+        return method;
     }
 
 }

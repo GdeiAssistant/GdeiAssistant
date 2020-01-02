@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.Config;
 
-import edu.gdei.gdeiassistant.Converter.EnumConvert.IntegerToAuthenticationTypeEnumConverter;
+import edu.gdei.gdeiassistant.Converter.EnumConvert.StringToAuthenticationTypeEnumConverter;
 import edu.gdei.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter;
 import edu.gdei.gdeiassistant.Converter.EnumConvert.StringToQueryMethodEnumConverter;
 import edu.gdei.gdeiassistant.Interceptor.AuthenticationInterceptor;
@@ -178,7 +178,7 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         //字符串值转换为对应的枚举类值
-        registry.addConverter(new IntegerToAuthenticationTypeEnumConverter());
+        registry.addConverter(new StringToAuthenticationTypeEnumConverter());
         registry.addConverter(new StringToLoginMethodEnumConverter());
         registry.addConverter(new StringToQueryMethodEnumConverter());
     }

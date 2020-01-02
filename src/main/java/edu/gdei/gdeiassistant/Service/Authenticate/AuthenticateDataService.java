@@ -58,7 +58,7 @@ public class AuthenticateDataService {
         authentication.setIdentityCode(StringEncryptUtils.SHA512HexString(
                 StringEncryptUtils.encryptString(username + realname + identityNumber + salt)));
         authentication.setSalt(salt);
-        authentication.setType(authenticationTypeEnum.getType());
+        authentication.setType(authenticationTypeEnum.getMethod());
         if (authenticationMapper.selectAuthentication(StringEncryptUtils.encryptString(username)) == null) {
             authenticationMapper.insertAuthentication(authentication);
         } else {
@@ -79,7 +79,7 @@ public class AuthenticateDataService {
         authentication.setIdentityCode(StringEncryptUtils.SHA512HexString(
                 StringEncryptUtils.encryptString(username + phone.getCode() + phone.getPhone() + salt)));
         authentication.setSalt(salt);
-        authentication.setType(AuthenticationTypeEnum.PHONE.getType());
+        authentication.setType(AuthenticationTypeEnum.PHONE.getMethod());
         if (authenticationMapper.selectAuthentication(StringEncryptUtils.encryptString(username)) == null) {
             authenticationMapper.insertAuthentication(authentication);
         } else {

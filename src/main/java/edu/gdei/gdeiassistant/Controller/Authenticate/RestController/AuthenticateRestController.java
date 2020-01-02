@@ -72,7 +72,7 @@ public class AuthenticateRestController {
      * 进行实名认证
      *
      * @param request
-     * @param authenticationTypeEnum
+     * @param method
      * @return
      * @throws ServerErrorException
      */
@@ -80,11 +80,11 @@ public class AuthenticateRestController {
     @UserGroupAccess(group = {2, 3, 6}, rest = true)
     public JsonResult RealNameAuthenticate(HttpServletRequest request
             , @RequestParam(value = "image", required = false) MultipartFile file
-            , @RequestParam("method") AuthenticationTypeEnum authenticationTypeEnum) throws Exception {
+            , AuthenticationTypeEnum method) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         String password = (String) request.getSession().getAttribute("password");
         Integer group = (Integer) request.getSession().getAttribute("group");
-        switch (authenticationTypeEnum) {
+        switch (method) {
             //与教务系统进行同步
             case CAS_SYSTEM:
                 //获取用户真实姓名
@@ -116,6 +116,7 @@ public class AuthenticateRestController {
                         , identityNumber, AuthenticationTypeEnum.MAINLAND_IDENTITY_CARD);
                 return new JsonResult(true);
 
+            //手机号快捷实名认证
             case PHONE:
                 Phone phone = phoneService.QueryUserPhone(username);
                 if (phone != null) {

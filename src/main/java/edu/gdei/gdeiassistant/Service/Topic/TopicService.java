@@ -25,6 +25,7 @@ public class TopicService {
     private String accessKeySecret;
 
     private String endpoint;
+
     @Autowired
     private TopicMapper topicMapper;
 
@@ -54,10 +55,13 @@ public class TopicService {
      */
     public List<Topic> QueryTopic(int start, int size, String username) throws WsgException {
         List<Topic> topicList = topicMapper.selectTopicPage(start, size, StringEncryptUtils.encryptString(username));
-        if (topicList == null || topicList.isEmpty()) {
-            return new ArrayList<>();
+        if (topicList != null && !topicList.isEmpty()) {
+            for (Topic topic : topicList) {
+                topic.setUsername(StringEncryptUtils.decryptString(topic.getUsername()));
+            }
+            return topicList;
         }
-        return topicList;
+        return new ArrayList<>();
     }
 
     /**
@@ -72,10 +76,13 @@ public class TopicService {
      */
     public List<Topic> QueryTopicByKeyword(int start, int size, String username, String keyword) throws WsgException {
         List<Topic> topicList = topicMapper.selectTopicPageByKeyword(start, size, StringEncryptUtils.encryptString(username), keyword);
-        if (topicList == null || topicList.isEmpty()) {
-            return new ArrayList<>();
+        if (topicList != null && !topicList.isEmpty()) {
+            for (Topic topic : topicList) {
+                topic.setUsername(StringEncryptUtils.decryptString(topic.getUsername()));
+            }
+            return topicList;
         }
-        return topicList;
+        return new ArrayList<>();
     }
 
     /**

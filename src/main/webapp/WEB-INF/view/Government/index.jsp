@@ -94,6 +94,17 @@
     </a>
 </div>
 
+<div class="weui-cells__title">交通资讯</div>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = 'http://gzjt.gzticc.cn/list1/index_21.aspx'">
+        <div class="weui-cell__bd">
+            <p>广州交通资讯</p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+</div>
+
 <div class="weui-cells__title">网上信访</div>
 <div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"

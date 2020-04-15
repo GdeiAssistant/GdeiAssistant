@@ -120,14 +120,17 @@
                         <!-- This item has been removed -->
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/announcement/equalrights">反歧视声明</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/announcement/suicideprevention">青少年自杀干预热线</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="https://ncov.dxy.cn/ncovh5/view/pneumonia">新型冠状病毒肺炎疫情实时动态</a>
                 </li>
             </ul>
         </div>

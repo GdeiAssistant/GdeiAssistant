@@ -92,40 +92,56 @@ public class ProfileController {
             StringBuilder location = new StringBuilder();
             Region locationRegion = LocationUtils.getRegionMap().get(profile.getLocationRegion());
             if (locationRegion != null) {
-                location.append(locationRegion.getName());
+                String name = StringUtils.isBlank(locationRegion.getAliasesName()) ? locationRegion.getName()
+                        : locationRegion.getAliasesName();
+                location.append(name);
                 State locationState = locationRegion.getStateMap().get(profile.getLocationState());
                 if (locationState != null) {
-                    if (!locationState.getName().equals(locationRegion.getName())) {
-                        if (!locationState.getName().equals("香港特别行政区")
-                                && !locationState.getName().equals("澳门特别行政区")) {
-                            location.append(locationState.getName());
-                        }
+                    String temp = StringUtils.isBlank(locationState.getAliasesName()) ? locationState.getName()
+                            : locationState.getAliasesName();
+                    if (!name.equals(temp)) {
+                        name = temp;
+                        location.append(name);
                     }
                     City locationCity = locationState.getCityMap().get(profile.getLocationCity());
-                    if (locationCity != null && !locationCity.getName().equals(locationState.getName())) {
-                        location.append(locationCity.getName());
+                    if (locationCity != null) {
+                        temp = StringUtils.isBlank(locationCity.getAliasesName()) ? locationCity.getName()
+                                : locationCity.getAliasesName();
+                        if (!name.equals(temp)) {
+                            name = temp;
+                            location.append(name);
+                        }
                     }
                 }
-                modelAndView.addObject("Location", location.toString());
+                modelAndView.addObject("Location", LocationUtils
+                        .convertCountryCodeToEmoji(locationRegion.getIso()) + location.toString());
             }
             StringBuilder hometown = new StringBuilder();
             Region hometownRegion = LocationUtils.getRegionMap().get(profile.getHometownRegion());
             if (hometownRegion != null) {
-                hometown.append(locationRegion.getName());
-                State hometownState = locationRegion.getStateMap().get(profile.getHometownState());
+                String name = StringUtils.isBlank(hometownRegion.getAliasesName()) ? hometownRegion.getName()
+                        : hometownRegion.getAliasesName();
+                hometown.append(name);
+                State hometownState = hometownRegion.getStateMap().get(profile.getHometownState());
                 if (hometownState != null) {
-                    if (!hometownState.getName().equals(locationRegion.getName())) {
-                        if (!hometownState.getName().equals("香港特别行政区")
-                                && !hometownState.getName().equals("澳门特别行政区")) {
-                            hometown.append(hometownState.getName());
-                        }
+                    String temp = StringUtils.isBlank(hometownState.getAliasesName()) ? hometownState.getName()
+                            : hometownState.getAliasesName();
+                    if (!name.equals(temp)) {
+                        name = temp;
+                        hometown.append(name);
                     }
                     City hometownCity = hometownState.getCityMap().get(profile.getHometownCity());
-                    if (hometownCity != null && !hometownCity.getName().equals(hometownState.getName())) {
-                        hometown.append(hometownCity.getName());
+                    if (hometownCity != null) {
+                        temp = StringUtils.isBlank(hometownCity.getAliasesName()) ? hometownCity.getName()
+                                : hometownCity.getAliasesName();
+                        if (!name.equals(temp)) {
+                            name = temp;
+                            hometown.append(name);
+                        }
                     }
                 }
-                modelAndView.addObject("Hometown", hometown.toString());
+                modelAndView.addObject("Hometown", LocationUtils
+                        .convertCountryCodeToEmoji(hometownRegion.getIso()) + hometown.toString());
             }
             Introduction introduction = userProfileService.GetUserIntroduction(username);
             if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
@@ -216,42 +232,58 @@ public class ProfileController {
                 StringBuilder location = new StringBuilder();
                 Region region = LocationUtils.getRegionMap().get(profile.getLocationRegion());
                 if (region != null) {
-                    location.append(region.getName());
+                    String name = StringUtils.isBlank(region.getAliasesName()) ? region.getName()
+                            : region.getAliasesName();
+                    location.append(name);
                     State state = region.getStateMap().get(profile.getLocationState());
                     if (state != null) {
-                        if (!state.getName().equals(region.getName())) {
-                            if (!state.getName().equals("香港特别行政区")
-                                    && !state.getName().equals("澳门特别行政区")) {
-                                location.append(state.getName());
-                            }
+                        String temp = StringUtils.isBlank(state.getAliasesName()) ? state.getName()
+                                : state.getAliasesName();
+                        if (!name.equals(temp)) {
+                            name = temp;
+                            location.append(name);
                         }
                         City city = state.getCityMap().get(profile.getLocationCity());
-                        if (city != null && !city.getName().equals(state.getName())) {
-                            location.append(city.getName());
+                        if (city != null) {
+                            temp = StringUtils.isBlank(city.getAliasesName()) ? city.getName()
+                                    : city.getAliasesName();
+                            if (!name.equals(temp)) {
+                                name = temp;
+                                location.append(name);
+                            }
                         }
                     }
-                    modelAndView.addObject("Location", location.toString());
+                    modelAndView.addObject("Location", LocationUtils
+                            .convertCountryCodeToEmoji(region.getIso()) + location.toString());
                 }
             }
             if (privacy.isHometownOpen().equals(Boolean.TRUE)) {
                 StringBuilder hometown = new StringBuilder();
                 Region region = LocationUtils.getRegionMap().get(profile.getHometownRegion());
                 if (region != null) {
-                    hometown.append(region.getName());
+                    String name = StringUtils.isBlank(region.getAliasesName()) ? region.getName()
+                            : region.getAliasesName();
+                    hometown.append(name);
                     State state = region.getStateMap().get(profile.getHometownState());
                     if (state != null) {
-                        if (!state.getName().equals(region.getName())) {
-                            if (!state.getName().equals("香港特别行政区")
-                                    && !state.getName().equals("澳门特别行政区")) {
-                                hometown.append(state.getName());
-                            }
+                        String temp = StringUtils.isBlank(state.getAliasesName()) ? state.getName()
+                                : state.getAliasesName();
+                        if (!name.equals(temp)) {
+                            name = temp;
+                            hometown.append(name);
                         }
                         City city = state.getCityMap().get(profile.getHometownCity());
-                        if (city != null && !city.getName().equals(state.getName())) {
-                            hometown.append(city.getName());
+                        if (city != null) {
+                            temp = StringUtils.isBlank(city.getAliasesName()) ? city.getName()
+                                    : city.getAliasesName();
+                            if (!name.equals(temp)) {
+                                name = temp;
+                                hometown.append(name);
+                            }
                         }
                     }
-                    modelAndView.addObject("Hometown", hometown.toString());
+                    modelAndView.addObject("Hometown", LocationUtils
+                            .convertCountryCodeToEmoji(region.getIso()) + hometown.toString());
                 }
             }
             if (privacy.isIntroductionOpen().equals(Boolean.TRUE)) {

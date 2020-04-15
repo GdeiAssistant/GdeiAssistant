@@ -12,6 +12,6 @@ public class LocationComparator implements Comparator {
     public int compare(Object o1, Object o2) {
         Region r1 = (Region) o1;
         Region r2 = (Region) o2;
-        return Collator.getInstance(Locale.CHINESE).compare(r1.getName().substring(4), r2.getName().substring(4));
+        return Collator.getInstance(Locale.CHINESE).compare(r1.getName(), r2.getName());
     }
 }

@@ -47,6 +47,11 @@
         loadRegionMap();
     });
 
+    //转换ISO 3166-1 alpha-2 Code为Unicode Flag Emoji
+    function convertISOCountryCodeToUnicodeFlageEmoji(code) {
+        return code ? code.replace(/./g, char => String.fromCodePoint(char.charCodeAt(0) + 127397)) : "";
+    }
+
     //加载用户组映射表
     function loadUserGroupMap() {
 
@@ -100,7 +105,7 @@
                                     }
                                 }
                                 locationPickerItems[i] = {
-                                    label: locationData[i].name,
+                                    label: convertISOCountryCodeToUnicodeFlageEmoji(locationData[i].iso) + locationData[i].name,
                                     value: locationData[i].code,
                                     children: locationStatePickerItems
                                 };
@@ -108,15 +113,15 @@
                             }
                         } else {
                             locationPickerItems[i] = {
-                                label: locationData[i].name,
+                                label: convertISOCountryCodeToUnicodeFlageEmoji(locationData[i].iso) + locationData[i].name,
                                 value: locationData[i].code,
                                 children: [
                                     {
-                                        label: locationData[i].name.substring(4),
+                                        label: locationData[i].name,
                                         value: '',
                                         children: [
                                             {
-                                                label: locationData[i].name.substring(4),
+                                                label: locationData[i].name,
                                                 value: ''
                                             }
                                         ]
@@ -160,7 +165,7 @@
                                     }
                                 }
                                 hometownPickerItems[i] = {
-                                    label: locationData[i].name,
+                                    label: convertISOCountryCodeToUnicodeFlageEmoji(locationData[i].iso) + locationData[i].name,
                                     value: locationData[i].code,
                                     children: hometownStatePickerItems
                                 };
@@ -168,15 +173,15 @@
                             }
                         } else {
                             hometownPickerItems[i] = {
-                                label: locationData[i].name,
+                                label: convertISOCountryCodeToUnicodeFlageEmoji(locationData[i].iso) + locationData[i].name,
                                 value: locationData[i].code,
                                 children: [
                                     {
-                                        label: locationData[i].name.substring(4),
+                                        label: locationData[i].name,
                                         value: '',
                                         children: [
                                             {
-                                                label: locationData[i].name.substring(4),
+                                                label: locationData[i].name,
                                                 value: ''
                                             }
                                         ]

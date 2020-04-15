@@ -120,17 +120,15 @@ public class ProfileRestController {
                 profile.setLocationState(null);
                 profile.setLocationCity(null);
             } else {
-                profile.setLocationRegion(region.getName().substring(4));
+                profile.setLocationRegion(region.getName());
                 //获取省/州信息
                 State state = region.getStateMap().get(profile.getLocationState());
                 if (state == null) {
                     profile.setLocationState(null);
                     profile.setLocationCity(null);
                 } else {
-                    if (!state.getName().equals(region.getName())
-                            && (state.getName().equals("香港特别行政区")
-                            || state.getName().equals("澳门特别行政区"))) {
-                        profile.setLocationState(region.getName().substring(4));
+                    if (!state.getName().equals(region.getName())) {
+                        profile.setLocationState(region.getName());
                     } else {
                         profile.setLocationState(state.getName());
                     }
@@ -171,17 +169,15 @@ public class ProfileRestController {
                     profile.setLocationState("");
                     profile.setLocationCity("");
                 } else {
-                    profile.setLocationRegion(locationRegion.getName().substring(4));
+                    profile.setLocationRegion(locationRegion.getName());
                     //获取省/州信息
                     State locationState = locationRegion.getStateMap().get(profile.getLocationState());
                     if (locationState == null) {
                         profile.setLocationState("");
                         profile.setLocationCity("");
                     } else {
-                        if (!locationState.getName().equals(locationRegion.getName())
-                                && (locationState.getName().equals("香港特别行政区")
-                                || locationState.getName().equals("澳门特别行政区"))) {
-                            profile.setLocationState(locationRegion.getName().substring(4));
+                        if (!locationState.getName().equals(locationRegion.getName())) {
+                            profile.setLocationState(locationRegion.getName());
                         } else {
                             profile.setLocationState(locationState.getName());
                         }
@@ -201,17 +197,15 @@ public class ProfileRestController {
                     profile.setHometownState("");
                     profile.setHometownCity("");
                 } else {
-                    profile.setHometownRegion(hometownRegion.getName().substring(4));
+                    profile.setHometownRegion(hometownRegion.getName());
                     //获取省/州信息
                     State hometownState = hometownRegion.getStateMap().get(profile.getHometownState());
                     if (hometownState == null) {
                         profile.setHometownState("");
                         profile.setHometownCity("");
                     } else {
-                        if (!hometownState.getName().equals(hometownRegion.getName())
-                                && (hometownState.getName().equals("香港特别行政区")
-                                || hometownState.getName().equals("澳门特别行政区"))) {
-                            profile.setHometownState(hometownRegion.getName().substring(4));
+                        if (!hometownState.getName().equals(hometownRegion.getName())) {
+                            profile.setHometownState(hometownRegion.getName());
                         } else {
                             profile.setHometownState(hometownState.getName());
                         }

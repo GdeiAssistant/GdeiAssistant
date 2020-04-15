@@ -13,7 +13,9 @@ public class Admin implements Serializable,Entity {
 
     private Boolean grayscale;
 
-    private Boolean pridetheme;
+    private Boolean prideThemeLogo;
+
+    private Boolean pinkThemeLogo;
 
     private Boolean authenticationForce;
 
@@ -39,12 +41,12 @@ public class Admin implements Serializable,Entity {
         this.grayscale = grayscale;
     }
 
-    public Boolean getPridetheme() {
-        return pridetheme;
+    public Boolean getPrideThemeLogo() {
+        return prideThemeLogo;
     }
 
-    public void setPridetheme(Boolean pridetheme) {
-        this.pridetheme = pridetheme;
+    public void setPrideThemeLogo(Boolean prideThemeLogo) {
+        this.prideThemeLogo = prideThemeLogo;
     }
 
     public Boolean getAuthenticationForce() {
@@ -109,5 +111,13 @@ public class Admin implements Serializable,Entity {
 
     public void setAuthenticationTopic(Boolean authenticationTopic) {
         this.authenticationTopic = authenticationTopic;
+    }
+
+    public Boolean getPinkThemeLogo() {
+        return pinkThemeLogo;
+    }
+
+    public void setPinkThemeLogo(Boolean pinkThemeLogo) {
+        this.pinkThemeLogo = pinkThemeLogo;
     }
 }

@@ -35,6 +35,40 @@ public class LocationUtils {
         return attributionMap;
     }
 
+    /**
+     * 转换ISO 3166-1 alpha-2代码为国家/地区Flag Emoji
+     * @param code
+     * @return
+     */
+    public static String convertCountryCodeToEmoji(String code){
+
+        // offset between uppercase ascii and regional indicator symbols
+        int OFFSET = 127397;
+
+        // validate code
+        if(code == null || code.length() != 2) {
+            return "";
+        }
+
+        //fix for uk -> gb
+        if (code.equalsIgnoreCase("uk")) {
+            code = "gb";
+        }
+
+        // convert code to uppercase
+        code = code.toUpperCase();
+
+        StringBuilder emojiStr = new StringBuilder();
+
+        //loop all characters
+        for (int i = 0; i < code.length(); i++) {
+            emojiStr.appendCodePoint(code.charAt(i) + OFFSET);
+        }
+
+        // return emoji
+        return emojiStr.toString();
+    }
+
     private static void LoadLocationData() {
         Resource resource = new ClassPathResource("/config/location/location.xml");
         SAXReader saxReader = new SAXReader();
@@ -50,23 +84,36 @@ public class LocationUtils {
         for (Element regionElement : regionElements) {
             String regionName = regionElement.attribute("Name").getValue();
             String regionCode = regionElement.attribute("Code").getValue();
+            String regionISO = regionElement.attribute("ISO").getValue();
+            String regionAliasesName = regionElement.attribute("AliasesName") == null ?
+                    null : regionElement.attribute("AliasesName").getValue();
             Region region = new Region();
             region.setName(regionName);
             region.setCode(regionCode);
+            region.setIso(regionISO);
+            region.setAliasesName(regionAliasesName);
             Map<String, State> stateMap = new HashMap<>();
             List<Element> stateElements = regionElement.elements();
             for (Element stateElement : stateElements) {
                 String stateName = stateElement.attribute("Name").getValue();
                 String stateCode = stateElement.attribute("Code").getValue();
+                String stateAliasesName = stateElement.attribute("AliasesName") == null ?
+                        null : stateElement.attribute("AliasesName").getValue();
                 State state = new State();
+                state.setCode(stateCode);
                 state.setName(stateName);
+                state.setAliasesName(stateAliasesName);
                 Map<String, City> cityMap = new HashMap<>();
                 List<Element> cityElements = stateElement.elements();
                 for (Element cityElement : cityElements) {
                     String cityName = cityElement.attribute("Name").getValue();
                     String cityCode = cityElement.attribute("Code").getValue();
+                    String cityAliasesName = cityElement.attribute("AliasesName") == null ?
+                            null : cityElement.attribute("AliasesName").getValue();
                     City city = new City();
+                    city.setCode(cityCode);
                     city.setName(cityName);
+                    city.setAliasesName(cityAliasesName);
                     cityMap.put(cityCode, city);
                 }
                 state.setCityMap(cityMap);

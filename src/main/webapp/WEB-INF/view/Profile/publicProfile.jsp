@@ -176,7 +176,7 @@
             <div class="weui-cell__bd">
                 <p>所在地</p>
             </div>
-            <div class="weui-cell__ft">${Location}</div>
+            <div class="weui-cell__ft">${ISO}${Location}</div>
         </div>
 
     </c:if>

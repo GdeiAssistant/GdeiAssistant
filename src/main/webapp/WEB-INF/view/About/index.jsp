@@ -116,9 +116,12 @@
                         <a class="dropdown-item" href="http://www.gz41zx.com">广州市第四十一中学</a>
                         <a class="dropdown-item" href="http://www.hsfz.net.cn">华南师范大学附属中学</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="https://carrotfairy.xyz">萝卜仙女姐姐的衣柜</a>
-                        <a class="dropdown-item" href="https://peachshrubfizz.github.io">站长的个人技术博客</a>
+                        <a class="dropdown-item" href="https://photos.leithinkyee.xyz">仙女懿的相册画廊</a>
+                        <a class="dropdown-item" href="https://wardrobe.leithinkyee.xyz">萝卜仙女姐姐的衣柜</a>
                     </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/announcement/equalrights">反歧视声明</a>
@@ -126,8 +129,8 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/announcement/suicideprevention">青少年自杀干预热线</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="https://leithinkyee.github.io/COVID-19">新型冠状病毒肺炎疫情实时动态</a>
                 </li>
             </ul>
         </div>

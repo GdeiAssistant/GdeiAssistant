@@ -43,14 +43,21 @@
         <div class="weui-cell__bd">使用黑白网页</div>
         <div class="weui-cell__ft">
             <input id="grayscale" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(0)">
+                   onchange="changeAdminSetting('GRAYSCALE')">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
-        <div class="weui-cell__bd">使用Pride主题</div>
+        <div class="weui-cell__bd">使用Pride主题Logo</div>
         <div class="weui-cell__ft">
-            <input id="pridetheme" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(1)">
+            <input id="pridethemelogo" class="weui-switch" type="checkbox"
+                   onchange="changeAdminSetting('PRIDETHEMELOGO')">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch">
+        <div class="weui-cell__bd">使用Pink主题Logo</div>
+        <div class="weui-cell__ft">
+            <input id="pinkthemelogo" class="weui-switch" type="checkbox"
+                   onchange="changeAdminSetting('PINKTHEMELOGO')">
         </div>
     </div>
 </div>
@@ -61,56 +68,56 @@
         <div class="weui-cell__bd">强制实名认证</div>
         <div class="weui-cell__ft">
             <input id="authentication_force" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(2)">
+                   onchange="changeAdminSetting('FORCE_AUTHENTICATION')">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">二手交易启用实名</div>
         <div class="weui-cell__ft">
             <input id="authentication_ershou" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(3)">
+                   onchange="changeAdminSetting('ERSHOU_AUTHENTICATION')">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">失物招领启用实名</div>
         <div class="weui-cell__ft">
             <input id="authentication_lostandfound" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(4)">
+                   onchange="changeAdminSetting('LOSTANDFOUND_AUTHENTICATION')">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">校园树洞启用实名</div>
         <div class="weui-cell__ft">
             <input id="authentication_secret" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(5)">
+                   onchange="changeAdminSetting('SECRET_AUTHENTICATION')">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">全民快递启用实名</div>
         <div class="weui-cell__ft">
             <input id="authentication_delivery" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(6)">
+                   onchange="changeAdminSetting('DELIVERY_AUTHENTICATION')">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">拍好校园启用实名</div>
         <div class="weui-cell__ft">
             <input id="authentication_photograph" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(7)">
+                   onchange="changeAdminSetting('PHOTOGRAPH_AUTHENTICATION')">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">表白墙启用实名</div>
         <div class="weui-cell__ft">
             <input id="authentication_express" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(8)">
+                   onchange="changeAdminSetting('EXPRESS_AUTHENTICATION')">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">话题启用实名</div>
         <div class="weui-cell__ft">
             <input id="authentication_topic" class="weui-switch" type="checkbox"
-                   onchange="changeAdminSetting(9)">
+                   onchange="changeAdminSetting('TOPIC_AUTHENTICATION')">
         </div>
     </div>
 </div>

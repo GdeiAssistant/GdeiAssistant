@@ -40,13 +40,17 @@ public class SettingOptionConfig {
     }
 
     /**
-     * 检查是否使用Pride主题
+     * 检查Logo主题
      */
     @Bean
-    public void CheckUsingPrideTheme() {
-        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("theme.pride"))).equals(1)) {
-            servletContext.setAttribute("pridetheme", true);
+    public void CheckLogoTheme() {
+        if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("theme.logo.pink"))).equals(1)) {
+            servletContext.setAttribute("pinkthemelogo", true);
         }
+        else if (Integer.valueOf(Objects.requireNonNull(environment.getProperty("theme.logo.pride"))).equals(1)) {
+            servletContext.setAttribute("pridethemelogo", true);
+        }
+
     }
 
     /**

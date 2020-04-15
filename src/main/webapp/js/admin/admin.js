@@ -1,10 +1,12 @@
 $(function () {
     //消除iOS点击延迟
     FastClick.attach(document.body);
+    //获取管理员选项设置
+    LoadAdminSetting();
 });
 
-//获取用户隐私设置
-$(function () {
+//获取管理员选项设置
+function LoadAdminSetting() {
     $.ajax({
             url: '/api/admin',
             type: 'get',
@@ -13,8 +15,11 @@ $(function () {
                     if (result.data.grayscale === true) {
                         $("#grayscale").prop("checked", true);
                     }
-                    if (result.data.pridetheme === true) {
-                        $("#pridetheme").prop("checked", true);
+                    if (result.data.prideThemeLogo === true) {
+                        $("#pridethemelogo").prop("checked", true);
+                    }
+                    if (result.data.pinkThemeLogo === true) {
+                        $("#pinkthemelogo").prop("checked", true);
                     }
                     if (result.data.authenticationErshou === true) {
                         $("#authentication_ershou").prop("checked", true);
@@ -62,11 +67,10 @@ $(function () {
             }
         }
     );
-});
+}
 
 //更改管理员选项设置
 function changeAdminSetting(index) {
-    let state = $("input:eq(" + index + ")").prop("checked");
     $.ajax({
         url: '/api/admin',
         type: 'post',
@@ -75,39 +79,15 @@ function changeAdminSetting(index) {
             state: state
         },
         success: function (result) {
+            LoadAdminSetting();
             if (result.success === true) {
-                if (index === 2) {
-                    //强制实名认证启用/停用后，关闭/开启各功能模块实名认证设置可用性
-                    $("#authentication_ershou").prop("checked", state);
-                    $("#authentication_lostandfound").prop("checked", state);
-                    $("#authentication_secret").prop("checked", state);
-                    $("#authentication_delivery").prop("checked", state);
-                    $("#authentication_photograph").prop("checked", state);
-                    $("#authentication_express").prop("checked", state);
-                    $("#authentication_ershou").attr("disabled", state);
-                    $("#authentication_lostandfound").attr("disabled", state);
-                    $("#authentication_secret").attr("disabled", state);
-                    $("#authentication_delivery").attr("disabled", state);
-                    $("#authentication_photograph").attr("disabled", state);
-                    $("#authentication_express").attr("disabled", state);
-                    $("#authentication_topic").attr("disabled", state);
-                }
                 $.toptip("更新成功", 'success');
             } else {
-                if (state === true) {
-                    $("input:eq(" + index + ")").prop("checked", false);
-                } else {
-                    $("input:eq(" + index + ")").prop("checked", true);
-                }
                 $.toptip(result.message, 'error');
             }
         },
         error: function () {
-            if (state === true) {
-                $("input:eq(" + index + ")").prop("checked", false);
-            } else {
-                $("input:eq(" + index + ")").prop("checked", true);
-            }
+            LoadAdminSetting();
             $.toptip('网络连接失败，请检查网络连接', 'error');
         }
     });

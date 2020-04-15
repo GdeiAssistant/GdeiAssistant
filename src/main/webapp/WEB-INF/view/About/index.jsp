@@ -141,7 +141,10 @@
 
     <div class="app_logo margin-bottom60">
         <c:choose>
-            <c:when test="${applicationScope.get('pridetheme')}">
+            <c:when test="${applicationScope.get('pinkthemelogo')}">
+                <img src="/img/about/logo_pink.png" width="120" height="120">
+            </c:when>
+            <c:when test="${applicationScope.get('pridethemelogo')}">
                 <img src="/img/about/logo_pride.png" width="120" height="120">
             </c:when>
             <c:otherwise>

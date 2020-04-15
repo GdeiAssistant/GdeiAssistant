@@ -357,7 +357,7 @@ public class UserDataService {
                     String regionCode = (String) object.get("region");
                     String stateCode = (String) object.get("state");
                     String cityCode = (String) object.get("city");
-                    String region = regionMap.get(regionCode).getName().substring(4);
+                    String region = regionMap.get(regionCode).getName();
                     String state = regionMap.get(regionCode).getStateMap().get(stateCode).getName();
                     String city = regionMap.get(regionCode).getStateMap().get(stateCode).getCityMap().get(cityCode).getName();
                     object.put("region", region);

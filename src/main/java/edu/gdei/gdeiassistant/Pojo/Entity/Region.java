@@ -16,6 +16,10 @@ public class Region implements Serializable, Entity {
 
     private String name;
 
+    private String aliasesName;
+
+    private String iso;
+
     private Map<String, State> stateMap;
 
     public String getName() {
@@ -40,5 +44,21 @@ public class Region implements Serializable, Entity {
 
     public void setStateMap(Map<String, State> stateMap) {
         this.stateMap = stateMap;
+    }
+
+    public String getAliasesName() {
+        return aliasesName;
+    }
+
+    public void setAliasesName(String aliasesName) {
+        this.aliasesName = aliasesName;
+    }
+
+    public String getIso() {
+        return iso;
+    }
+
+    public void setIso(String iso) {
+        this.iso = iso;
     }
 }

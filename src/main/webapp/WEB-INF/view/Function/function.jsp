@@ -120,6 +120,10 @@
         <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>绑定微信</p>
     </div>
+    <div id="ncov" onclick="window.location.href = 'https://ncov.dxy.cn/ncovh5/view/pneumonia'">
+        <i style="background: url(/img/function/ncov.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+        <p>疫情动态</p>
+    </div>
     <div id="about" onclick="window.location.href='/about'">
         <i style="background: url(/img/function/about.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>关于应用</p>

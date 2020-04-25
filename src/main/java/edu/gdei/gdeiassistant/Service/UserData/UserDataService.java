@@ -352,17 +352,29 @@ public class UserDataService {
                     String faculty = (String) UserProfileService.getFacultyMap().get(object.get("faculty"));
                     object.put("faculty", faculty);
                 }
-                if (object.containsKey("region")) {
+                if (object.containsKey("locationRegion")) {
                     Map<String, Region> regionMap = LocationUtils.getRegionMap();
-                    String regionCode = (String) object.get("region");
-                    String stateCode = (String) object.get("state");
-                    String cityCode = (String) object.get("city");
+                    String regionCode = (String) object.get("locationRegion");
+                    String stateCode = (String) object.get("locationState");
+                    String cityCode = (String) object.get("locationCity");
                     String region = regionMap.get(regionCode).getName();
                     String state = regionMap.get(regionCode).getStateMap().get(stateCode).getName();
                     String city = regionMap.get(regionCode).getStateMap().get(stateCode).getCityMap().get(cityCode).getName();
-                    object.put("region", region);
-                    object.put("state", state);
-                    object.put("city", city);
+                    object.put("locationRegion", region);
+                    object.put("locationState", state);
+                    object.put("locationCity", city);
+                }
+                if (object.containsKey("hometownRegion")) {
+                    Map<String, Region> regionMap = LocationUtils.getRegionMap();
+                    String regionCode = (String) object.get("hometownRegion");
+                    String stateCode = (String) object.get("hometownState");
+                    String cityCode = (String) object.get("hometownCity");
+                    String region = regionMap.get(regionCode).getName();
+                    String state = regionMap.get(regionCode).getStateMap().get(stateCode).getName();
+                    String city = regionMap.get(regionCode).getStateMap().get(stateCode).getCityMap().get(cityCode).getName();
+                    object.put("hometownRegion", region);
+                    object.put("hometownState", state);
+                    object.put("hometownCity", city);
                 }
             }
 

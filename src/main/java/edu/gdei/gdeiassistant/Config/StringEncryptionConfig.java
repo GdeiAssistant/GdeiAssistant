@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.util.Objects;
 
 @Configuration
 @PropertySource("classpath:/config/jaq/encryptor.properties")
@@ -17,30 +20,16 @@ public class StringEncryptionConfig implements EnvironmentAware {
     private Environment environment;
 
     /**
-     * 加载开发环境加密配置
+     * 加载加密配置
      *
      * @return
      */
     @Bean("stringEncryptConfig")
-    @Profile("development")
-    public StringEncryptConfig developmentStringEncryptConfig() {
+    public StringEncryptConfig developmentStringEncryptConfig() throws IOException {
         StringEncryptConfig stringEncryptConfig = new StringEncryptConfig();
         stringEncryptConfig.setAppkey(environment.getProperty("encryptor.appkey"));
-        stringEncryptConfig.setConfigLocation(environment.getProperty("encryptor.config.dev.location"));
-        return stringEncryptConfig;
-    }
-
-    /**
-     * 加载生产环境加密配置
-     *
-     * @return
-     */
-    @Bean("stringEncryptConfig")
-    @Profile("production")
-    public StringEncryptConfig productionStringEncryptConfig() {
-        StringEncryptConfig stringEncryptConfig = new StringEncryptConfig();
-        stringEncryptConfig.setAppkey(environment.getProperty("encryptor.appkey"));
-        stringEncryptConfig.setConfigLocation(environment.getProperty("encryptor.config.pro.location"));
+        stringEncryptConfig.setConfigLocation(new ClassPathResource(Objects.requireNonNull(environment
+                .getProperty("encryptor.config.location"))).getFile().getAbsolutePath());
         return stringEncryptConfig;
     }
 

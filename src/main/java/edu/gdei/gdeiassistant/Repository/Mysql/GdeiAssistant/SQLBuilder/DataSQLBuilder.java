@@ -6,8 +6,8 @@ public class DataSQLBuilder {
 
     public String selectUserProfile(String username) {
         return new SQL() {{
-            SELECT("p.nickname,p.gender,p.birthday,p.degree,p.faculty,p.major,p.region,p.state,p.city");
-            SELECT("p.enrollment,p.profession,p.primary_school,p.junior_high_school,p.high_school");
+            SELECT("p.nickname,p.gender,p.birthday,p.degree,p.faculty,p.major,p.location_region,p.location_state,p.location_city");
+            SELECT("p.hometown_region,p.hometown_state,p.hometown_city,p.enrollment,p.profession,p.primary_school,p.junior_high_school,p.high_school");
             SELECT("g.gender as custom_gender");
             FROM("profile p");
             LEFT_OUTER_JOIN("gender g on p.username = g.username");
@@ -25,7 +25,7 @@ public class DataSQLBuilder {
 
     public String selectUserPrivacy(String username) {
         return new SQL() {{
-            SELECT("p.is_gender_open,p.is_region_open,p.is_introduction_open");
+            SELECT("p.is_gender_open,p.is_location_open,p.is_hometown_open,p.is_introduction_open");
             SELECT("p.is_enrollment_open,p.is_age_open,p.is_degree_open,p.is_primary_school_open,p.is_junior_high_school_open,p.is_high_school_open");
             SELECT("p.is_faculty_open,p.is_major_open,p.is_cache_allow,p.is_robots_index_allow");
             FROM("privacy p");
@@ -51,7 +51,7 @@ public class DataSQLBuilder {
 
     public String selectUserAuthentication(String username) {
         return new SQL() {{
-            SELECT("auth.identity_code,auth.realname,auth.identity_number,auth.school_number");
+            SELECT("auth.identity_code,auth.type");
             FROM("authentication auth");
             WHERE("username=#{username}");
         }}.toString();
@@ -108,7 +108,7 @@ public class DataSQLBuilder {
             FROM("photograph p");
             LEFT_OUTER_JOIN("photograph_like pl on p.id=pl.photo_id");
             LEFT_OUTER_JOIN("photograph_comment pc on p.id=pc.photo_id");
-            WHERE("username=#{username}");
+            WHERE("p.username=#{username}");
             GROUP_BY("p.id,p.title,p.count,p.content,p.type,p.create_time,pl.like_id,pc.comment_id");
         }}.toString();
     }

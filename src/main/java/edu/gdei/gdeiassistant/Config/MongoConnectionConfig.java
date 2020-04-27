@@ -29,9 +29,9 @@ public class MongoConnectionConfig implements EnvironmentAware {
     public MongoDbFactory mongoDbFactory() {
         MongoClient mongoClient = new MongoClient(new ServerAddress(environment.getProperty("mongo.host")
                 , Integer.parseInt(Objects.requireNonNull(environment.getProperty("mongo.port"))))
-                , MongoCredential.createCredential(environment.getProperty("mongo.username")
+                , MongoCredential.createCredential(Objects.requireNonNull(environment.getProperty("mongo.username"))
                 , Objects.requireNonNull(environment.getProperty("mongo.dbname"))
-                , Objects.requireNonNull(environment.getProperty("redis.pass")).toCharArray())
+                , Objects.requireNonNull(environment.getProperty("mongo.password")).toCharArray())
                 , new MongoClientOptions.Builder()
                 .connectionsPerHost(Integer.parseInt(Objects.requireNonNull(environment.getProperty("mongo.connectionsPerHost"))))
                 .minConnectionsPerHost(Integer.parseInt(Objects.requireNonNull(environment.getProperty("mongo.minConnectionsPerHost"))))

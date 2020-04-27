@@ -29,6 +29,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,7 +46,7 @@ public class CardQueryService {
     @Autowired
     private RecognitionService recognitionService;
 
-    private Log log = LogFactory.getLog(CardQueryService.class);
+    private Logger logger = LoggerFactory.getLogger(CardQueryService.class);
 
     private int timeout;
 
@@ -75,13 +77,13 @@ public class CardQueryService {
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码不正确");
         } catch (ServerErrorException e) {
-            log.error("查询饭卡基本信息异常：", e);
+            logger.error("查询饭卡基本信息异常：", e);
             throw new ServerErrorException("支付管理系统异常");
         } catch (IOException e) {
-            log.error("查询饭卡基本信息异常：", e);
+            logger.error("查询饭卡基本信息异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("查询饭卡基本信息异常", e);
+            logger.error("查询饭卡基本信息异常", e);
             throw new ServerErrorException("支付管理系统异常");
         } finally {
             if (httpClient != null) {
@@ -126,10 +128,10 @@ public class CardQueryService {
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码不正确");
         } catch (IOException e) {
-            log.error("查询消费流水异常：", e);
+            logger.error("查询消费流水异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("查询消费流水异常：", e);
+            logger.error("查询消费流水异常：", e);
             throw new ServerErrorException("支付管理系统异常");
         } finally {
             if (httpClient != null) {
@@ -168,10 +170,10 @@ public class CardQueryService {
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码不正确");
         } catch (IOException e) {
-            log.error("校园卡挂失异常：", e);
+            logger.error("校园卡挂失异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("校园卡挂失异常：", e);
+            logger.error("校园卡挂失异常：", e);
             throw new ServerErrorException("支付管理系统异常");
         } finally {
             if (httpClient != null) {

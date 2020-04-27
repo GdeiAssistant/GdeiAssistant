@@ -12,8 +12,6 @@ import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Cet.CetMappe
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.ImageEncodeUtils;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
@@ -23,6 +21,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,7 @@ public class CetQueryService {
     @Resource(name = "cetMapper")
     private CetMapper cetMapper;
 
-    private Log log = LogFactory.getLog(CetQueryService.class);
+    private Logger logger = LoggerFactory.getLogger(CetQueryService.class);
 
     private int timeout;
 
@@ -72,10 +72,10 @@ public class CetQueryService {
             }
             throw new ServerErrorException("访问学信网异常");
         } catch (IOException e) {
-            log.error("查询四六级成绩异常：", e);
+            logger.error("查询四六级成绩异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("查询四六级成绩异常：", e);
+            logger.error("查询四六级成绩异常：", e);
             throw new ServerErrorException("学信网系统异常");
         } finally {
             if (httpClient != null) {
@@ -157,13 +157,13 @@ public class CetQueryService {
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码错误");
         } catch (ErrorQueryConditionException e) {
-            log.error("查询四六级成绩异常：", e);
+            logger.error("查询四六级成绩异常：", e);
             throw new ErrorQueryConditionException("查询条件错误");
         } catch (IOException e) {
-            log.error("查询四六级成绩异常：", e);
+            logger.error("查询四六级成绩异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("查询四六级成绩异常：", e);
+            logger.error("查询四六级成绩异常：", e);
             throw new ServerErrorException("学信网系统异常");
         } finally {
             if (httpClient != null) {

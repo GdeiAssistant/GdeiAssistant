@@ -5,8 +5,8 @@ import edu.gdei.gdeiassistant.Exception.CloseAccountException.ItemAvailableExcep
 import edu.gdei.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 1)
 public class CloseAccountRestExceptionHandler {
 
-    private Log log = LogFactory.getLog(CloseAccountRestExceptionHandler.class);
+    private Logger logger = LoggerFactory.getLogger(CloseAccountRestExceptionHandler.class);
 
     /**
      * 处理用户账号状态异常的错误
@@ -25,7 +25,7 @@ public class CloseAccountRestExceptionHandler {
      */
     @ExceptionHandler(UserStateErrorException.class)
     public ResponseEntity HandleUserStateErrorException(UserStateErrorException e) {
-        log.error("CloseAccountRestExceptionHandler：", e);
+        logger.error("CloseAccountRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "用户账号状态异常，请联系管理员"));
     }
 
@@ -36,7 +36,7 @@ public class CloseAccountRestExceptionHandler {
      */
     @ExceptionHandler(PasswordIncorrectException.class)
     public ResponseEntity HandlePasswordIncorrectException(PasswordIncorrectException e) {
-        log.error("CloseAccountRestExceptionHandler：", e);
+        logger.error("CloseAccountRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "用户账号密码不匹配，请重试"));
     }
 
@@ -47,7 +47,7 @@ public class CloseAccountRestExceptionHandler {
      */
     @ExceptionHandler(ItemAvailableException.class)
     public ResponseEntity HandleItemAvailableException(ItemAvailableException e) {
-        log.error("CloseAccountRestExceptionHandler：", e);
+        logger.error("CloseAccountRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
     }
 

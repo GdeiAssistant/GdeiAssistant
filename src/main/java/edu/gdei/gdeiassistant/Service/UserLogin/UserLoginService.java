@@ -15,8 +15,6 @@ import edu.gdei.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDa
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -28,6 +26,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -52,7 +52,7 @@ import java.util.concurrent.Semaphore;
 @Service
 public class UserLoginService {
 
-    private Log log = LogFactory.getLog(UserLoginService.class);
+    private Logger logger = LoggerFactory.getLogger(UserLoginService.class);
 
     private int timeout;
 
@@ -120,7 +120,7 @@ public class UserLoginService {
                 }
             } catch (Exception e) {
                 //若查询数据库或加解密出现异常,则放弃数据库校验,使用学校教务系统登录校验
-                log.error("用户登录数据库校验异常：", e);
+                logger.error("用户登录数据库校验异常：", e);
             }
         }
         //用户不存在或与数据库的数据信息不匹配,进行普通登录
@@ -185,13 +185,13 @@ public class UserLoginService {
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("用户密码错误");
         } catch (IOException e) {
-            log.error("用户登录异常：", e);
+            logger.error("用户登录异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (UserGraduatedException e) {
-            log.error("用户登录异常：", e);
+            logger.error("用户登录异常：", e);
             throw new UserGraduatedException("用户账号已毕业注销");
         } catch (Exception e) {
-            log.error("用户登录异常：", e);
+            logger.error("用户登录异常：", e);
             throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {
@@ -368,7 +368,7 @@ public class UserLoginService {
 
                     @Override
                     public void onFailure(Throwable ex) {
-                        log.error("定时更新用户账号信息异常：", ex);
+                        logger.error("定时更新用户账号信息异常：", ex);
                         semaphore.release();
                     }
 
@@ -379,7 +379,7 @@ public class UserLoginService {
                 });
             }
         } catch (Exception e) {
-            log.error("定时更新用户账号信息异常：", e);
+            logger.error("定时更新用户账号信息异常：", e);
         }
     }
 }

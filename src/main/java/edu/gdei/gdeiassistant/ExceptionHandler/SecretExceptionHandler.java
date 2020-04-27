@@ -2,8 +2,8 @@ package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Controller.Secret.Controller.SecretController;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Order(value = 1)
 public class SecretExceptionHandler {
 
-    private Log log = LogFactory.getLog(SecretExceptionHandler.class);
+    private Logger logger = LoggerFactory.getLogger(SecretExceptionHandler.class);
 
     /**
      * 处理树洞信息不存在的异常
@@ -22,7 +22,7 @@ public class SecretExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView ShowDataNotExistExceptionTip(DataNotExistException e) {
-        log.error("SecretExceptionHandler：", e);
+        logger.error("SecretExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "树洞信息不存在");

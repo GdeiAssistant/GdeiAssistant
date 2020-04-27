@@ -8,12 +8,12 @@ import edu.gdei.gdeiassistant.Pojo.Entity.KaoYan;
 import edu.gdei.gdeiassistant.Service.Recognition.RecognitionService;
 import edu.gdei.gdeiassistant.Tools.ImageEncodeUtils;
 import okhttp3.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class KaoYanService {
     @Autowired
     private RecognitionService recognitionService;
 
-    private Log log = LogFactory.getLog(KaoYanService.class);
+    private Logger logger = LoggerFactory.getLogger(KaoYanService.class);
 
     /**
      * 查询考研初试成绩
@@ -104,13 +104,13 @@ public class KaoYanService {
             }
             throw new ServerErrorException("查询系统异常");
         } catch (IOException e) {
-            log.error("查询考研成绩异常：", e);
+            logger.error("查询考研成绩异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (ErrorQueryConditionException e) {
-            log.error("查询考研成绩异常：", e);
+            logger.error("查询考研成绩异常：", e);
             throw new ErrorQueryConditionException("查询条件错误");
         } catch (Exception e) {
-            log.error("查询考研成绩异常：", e);
+            logger.error("查询考研成绩异常：", e);
             throw new ServerErrorException("教务系统异常");
         }
     }

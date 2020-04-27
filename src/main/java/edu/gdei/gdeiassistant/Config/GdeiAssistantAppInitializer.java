@@ -1,8 +1,8 @@
 package edu.gdei.gdeiassistant.Config;
 
+import ch.qos.logback.ext.spring.web.LogbackConfigListener;
 import edu.gdei.gdeiassistant.Filter.XSSFilter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.LoggerContext;
+import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -13,7 +13,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
@@ -35,6 +34,11 @@ public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
         //配置默认Profile环境变量
         servletContext.setInitParameter("spring.profiles.default", "development");
 
+        //配置Logback配置文件路径和监听器
+        String suffix = StringUtils.nullToBlank(System.getProperty("logback.profile.suffix"));
+        servletContext.setInitParameter("logbackConfigLocation", "classpath:config/logback/logback" + suffix + ".xml");
+        servletContext.addListener(LogbackConfigListener.class);
+
         //设置超时时间为2小时
         servletContext.addListener(new HttpSessionListener() {
             @Override
@@ -45,11 +49,6 @@ public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
 
         //设置WebRootKey
         servletContext.setInitParameter("webAppRootKey", "GdeiAssistant");
-
-        //配置Log4j
-        LoggerContext context = (LoggerContext) LogManager.getContext(false);
-        context.setConfigLocation(URI.create("classpath:/config/log4j2/log4j2.xml"));
-        context.reconfigure();
 
         //配置DispatcherServlet
         AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();

@@ -224,7 +224,7 @@
 - JQuery Mobile 1.4.5
 - AmazeUI 2.7.2
 - Layer Mobile 2.0.0
-- Log4j 2.10.0
+- Logback 1.2.3
 - Jsoup 1.10.3
 - HttpClient 4.5.3
 - OkHttp 3.8.1
@@ -338,7 +338,7 @@ System.setProperty("spring.profiles.active" , "production");
 
 2. **JWT**：jwt目录下的配置文件保存了生成和校验JSON Web Token使用的HMAC-SHA256算法的密钥，开发者可以自行生成并妥善保存。
 
-3. **Log4j2**：与log4j不同，log4j2使用了XML配置文件，除了输出日志和错误日志外，log4j2还会保存用户的表单请求记录和教务查询记录。开发者可以自行修改log4j2的日志保存路径和策略。
+3. **Logback**：Logback使用了XML配置文件，除了输出信息日志和错误日志外，Logback还会保存用户的表单请求记录和教务查询记录。开发者可以自行修改Logback的日志保存路径和策略。
 
 4. **新闻通知**：由于部分学校新闻页面需要用户登录后才拥有权限访问，因此需要在news目录下的account.properties文件中配置你的教务系统账号用户名和密码。
 

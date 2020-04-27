@@ -26,6 +26,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,7 +46,7 @@ public class BookQueryService {
     @Autowired
     private UserLoginService userLoginService;
 
-    private Log log = LogFactory.getLog(BookQueryService.class);
+    private Logger logger = LoggerFactory.getLogger(BookQueryService.class);
 
     private int timeout;
 
@@ -102,13 +104,13 @@ public class BookQueryService {
             }
             throw new ServerErrorException("图书馆系统异常");
         } catch (IOException e) {
-            log.error("续借图书异常:", e);
+            logger.error("续借图书异常:", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (BookRenewOvertimeException e) {
-            log.error("续借图书异常:", e);
+            logger.error("续借图书异常:", e);
             throw new BookRenewOvertimeException("图书续借超过次数限制");
         } catch (Exception e) {
-            log.error("续借图书异常", e);
+            logger.error("续借图书异常", e);
             throw new ServerErrorException("图书馆系统异常");
         } finally {
             if (httpClient != null) {
@@ -214,12 +216,12 @@ public class BookQueryService {
             }
             throw new ServerErrorException("图书馆系统异常");
         } catch (IOException e) {
-            log.error("查询借阅图书异常：", e);
+            logger.error("查询借阅图书异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("图书馆查询密码错误");
         } catch (Exception e) {
-            log.error("查询借阅图书异常：", e);
+            logger.error("查询借阅图书异常：", e);
             throw new ServerErrorException("图书馆系统异常");
         } finally {
             if (httpClient != null) {

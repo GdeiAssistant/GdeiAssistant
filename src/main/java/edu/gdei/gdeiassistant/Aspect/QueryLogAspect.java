@@ -1,12 +1,12 @@
 package edu.gdei.gdeiassistant.Aspect;
 
 import edu.gdei.gdeiassistant.Pojo.Entity.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
@@ -24,9 +24,9 @@ import java.util.Optional;
 @Order(4)
 public class QueryLogAspect {
 
-    private Log log = LogFactory.getLog(QueryLogAspect.class);
+    private final Logger logger = LoggerFactory.getLogger(QueryLogAspect.class);
 
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Pointcut("@annotation(edu.gdei.gdeiassistant.Annotation.QueryLogPersistence)")
     public void QueryAction() {
@@ -49,17 +49,17 @@ public class QueryLogAspect {
         switch (functionName) {
             //成绩查询
             case "GradeQuery":
-                log.info("用户" + username + "于" + dateTime + "查询了成绩信息");
+                logger.info("用户{}于{}查询了成绩信息", username, dateTime);
                 break;
 
             //课表查询
             case "ScheduleQuery":
-                log.info("用户" + username + "于" + dateTime + "查询了课表信息");
+                logger.info("用户{}于{}查询了课表信息", username, dateTime);
                 break;
 
             //消费记录查询
             case "CardQuery":
-                log.info("用户" + username + "于" + dateTime + "查询了消费记录信息");
+                logger.info("用户{}于{}查询了消费记录信息", username, dateTime);
                 break;
         }
     }
@@ -74,32 +74,32 @@ public class QueryLogAspect {
         switch (functionName) {
             //成绩查询
             case "GradeQuery":
-                log.info("用户" + username + "于" + dateTime + "查询了成绩信息");
+                logger.info("用户{}于{}查询了成绩信息", username, dateTime);
                 break;
 
             //课表查询
             case "ScheduleQuery":
-                log.info("用户" + username + "于" + dateTime + "查询了课表信息");
+                logger.info("用户{}于{}查询了课表信息", username, dateTime);
                 break;
 
-            //消费查询
+            //消费记录查询
             case "CardQuery":
-                log.info("用户" + username + "于" + dateTime + "查询了消费记录信息");
+                logger.info("用户{}于{}查询了消费记录信息", username, dateTime);
                 break;
 
             //校园卡信息查询
             case "CardInfoQuery":
-                log.info("用户" + username + "于" + dateTime + "查询了校园卡基本信息");
+                logger.info("用户{}于{}查询了校园卡基本信息", username, dateTime);
                 break;
 
             //校园卡挂失
             case "CardLost":
-                log.info("用户" + username + "于" + dateTime + "进行了校园卡挂失操作");
+                logger.info("用户{}于{}进行了校园卡挂失操作", username, dateTime);
                 break;
 
             //查询空课室信息
             case "QuerySpareRoomList":
-                log.info("用户" + username + "于" + dateTime + "查询了空课室信息");
+                logger.info("用户{}于{}查询了空课室信息", username, dateTime);
                 break;
         }
     }

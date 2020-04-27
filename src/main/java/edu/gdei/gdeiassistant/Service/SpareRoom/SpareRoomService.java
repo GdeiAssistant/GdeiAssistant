@@ -13,8 +13,6 @@ import edu.gdei.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import edu.gdei.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -27,6 +25,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -52,7 +52,7 @@ public class SpareRoomService {
         this.url = url;
     }
 
-    private Log log = LogFactory.getLog(SpareRoomService.class);
+    private Logger logger = LoggerFactory.getLogger(SpareRoomService.class);
 
     private int timeout;
 
@@ -282,16 +282,16 @@ public class SpareRoomService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
-            log.error("查询空课室异常：", e);
+            logger.error("查询空课室异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (TimeStampIncorrectException e) {
-            log.error("查询空课室异常：", e);
+            logger.error("查询空课室异常：", e);
             throw new TimeStampIncorrectException("时间戳校验失败");
         } catch (ErrorQueryConditionException e) {
-            log.error("查询空课室异常：", e);
+            logger.error("查询空课室异常：", e);
             throw new ErrorQueryConditionException("查询条件错误");
         } catch (Exception e) {
-            log.error("查询空课室异常：", e);
+            logger.error("查询空课室异常：", e);
             throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {

@@ -16,8 +16,6 @@ import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Service.YiBan.YiBanAPIService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.ImageEncodeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
@@ -25,6 +23,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -55,7 +55,7 @@ public class AuthenticateService {
     @Autowired
     private AliYunService aliYunService;
 
-    private Log log = LogFactory.getLog(AuthenticateService.class);
+    private Logger logger = LoggerFactory.getLogger(AuthenticateService.class);
 
     private String url;
 
@@ -118,7 +118,7 @@ public class AuthenticateService {
             resultMap.put("number", cardInfo.getNumber());
             return resultMap;
         } catch (Exception e) {
-            log.error("获取用户真实姓名异常：", e);
+            logger.error("获取用户真实姓名异常：", e);
             throw new ServerErrorException("获取真实姓名异常");
         } finally {
             if (httpClient != null) {
@@ -175,10 +175,10 @@ public class AuthenticateService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
-            log.error("获取用户身份证号码异常：", e);
+            logger.error("获取用户身份证号码异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("获取用户身份证号码异常：", e);
+            logger.error("获取用户身份证号码异常：", e);
             throw new ServerErrorException("教务系统一次");
         } finally {
             if (httpClient != null) {

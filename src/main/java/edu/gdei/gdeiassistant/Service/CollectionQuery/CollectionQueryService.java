@@ -11,12 +11,12 @@ import edu.gdei.gdeiassistant.Pojo.Entity.CollectionDistribution;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CollectionQueryService {
 
-    private Log log = LogFactory.getLog(CollectionQueryService.class);
+    private Logger logger = LoggerFactory.getLogger(CollectionQueryService.class);
 
     /**
      * 查询馆藏信息
@@ -94,13 +94,13 @@ public class CollectionQueryService {
             }
             throw new ServerErrorException("移动图书馆系统异常");
         } catch (IOException e) {
-            log.error("查询馆藏图书异常：", e);
+            logger.error("查询馆藏图书异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (ErrorQueryConditionException e) {
-            log.error("查询馆藏图书异常：", e);
+            logger.error("查询馆藏图书异常：", e);
             throw e;
         } catch (Exception e) {
-            log.error("查询馆藏图书异常：", e);
+            logger.error("查询馆藏图书异常：", e);
             throw new ServerErrorException("图书馆系统异常");
         }
     }
@@ -153,10 +153,10 @@ public class CollectionQueryService {
             }
             throw new ServerErrorException("移动图书馆系统异常");
         } catch (IOException e) {
-            log.error("查询馆藏图书详细信息异常：", e);
+            logger.error("查询馆藏图书详细信息异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("查询馆藏图书详细信息异常：", e);
+            logger.error("查询馆藏图书详细信息异常：", e);
             throw new ServerErrorException("图书馆系统异常");
         }
     }

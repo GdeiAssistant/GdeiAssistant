@@ -8,8 +8,8 @@ import edu.gdei.gdeiassistant.Pojo.Entity.DatingPick;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingProfile;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Dating.DatingMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.InputStream;
@@ -42,7 +42,7 @@ public class DatingService {
         this.endpoint = endpoint;
     }
 
-    private Log log = LogFactory.getLog(DatingService.class);
+    private Logger logger = LoggerFactory.getLogger(DatingService.class);
 
     /**
      * 根据ID查找卖室友详细信息

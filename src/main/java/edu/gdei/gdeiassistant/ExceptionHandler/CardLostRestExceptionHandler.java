@@ -3,8 +3,8 @@ package edu.gdei.gdeiassistant.ExceptionHandler;
 import edu.gdei.gdeiassistant.Controller.CardQuery.RestController.CardRestController;
 import edu.gdei.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class CardLostRestExceptionHandler {
 
-    private Log log = LogFactory.getLog(CardLostRestExceptionHandler.class);
+    private Logger logger = LoggerFactory.getLogger(CardLostRestExceptionHandler.class);
 
     /**
      * 处理校园卡密码错误的异常
@@ -23,7 +23,7 @@ public class CardLostRestExceptionHandler {
      */
     @ExceptionHandler(PasswordIncorrectException.class)
     public ResponseEntity HandlePasswordIncorrectException(PasswordIncorrectException e) {
-        log.error("CardLostRestExceptionHandler：", e);
+        logger.error("CardLostRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(false, "校园卡密码错误，请检查并重试"));
     }
 

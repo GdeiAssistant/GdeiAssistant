@@ -19,7 +19,7 @@ public class ReflectionUtils {
 
     private static final String CGLIB_CLASS_SEPARATOR = "$$";
 
-    private static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
 
     /**
      * 调用Getter方法.

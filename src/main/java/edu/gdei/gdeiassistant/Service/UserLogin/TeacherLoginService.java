@@ -9,8 +9,6 @@ import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import edu.gdei.gdeiassistant.Service.Recognition.RecognitionService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.ImageEncodeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -21,6 +19,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class TeacherLoginService {
         this.url = url;
     }
 
-    private Log log = LogFactory.getLog(TeacherLoginService.class);
+    private Logger logger = LoggerFactory.getLogger(TeacherLoginService.class);
 
     private int timeout;
 
@@ -113,15 +113,15 @@ public class TeacherLoginService {
             }
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
-            log.error("教师登录异常：", e);
+            logger.error("教师登录异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (ServerErrorException | RecognitionException e) {
-            log.error("教师登录异常：", e);
+            logger.error("教师登录异常：", e);
             throw new ServerErrorException("教务系统异常");
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("用户账号密码错误");
         } catch (Exception e) {
-            log.error("教师登录异常：", e);
+            logger.error("教师登录异常：", e);
             throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {

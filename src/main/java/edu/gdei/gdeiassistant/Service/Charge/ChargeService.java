@@ -10,8 +10,6 @@ import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Mapper.Charge.ChargeMapper;
 import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -24,6 +22,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -47,7 +47,7 @@ public class ChargeService {
     @Autowired
     private ChargeMapper chargeMapper;
 
-    private Log log = LogFactory.getLog(ChargeService.class);
+    private Logger logger = LoggerFactory.getLogger(ChargeService.class);
 
     @Value("#{propertiesReader['timeout.charge']}")
     public void setTimeout(int timeout) {
@@ -80,13 +80,13 @@ public class ChargeService {
             //确认充值请求
             return ConfirmChargeRequest(sessionId, httpClient, cookieStore, ecardDataMap);
         } catch (AmountNotAvailableException e) {
-            log.error("校园卡充值异常：", e);
+            logger.error("校园卡充值异常：", e);
             throw new AmountNotAvailableException("用户充值金额超过范围");
         } catch (IOException e) {
-            log.error("校园卡充值异常：", e);
+            logger.error("校园卡充值异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("校园卡充值异常：", e);
+            logger.error("校园卡充值异常：", e);
             throw new ServerErrorException("支付管理系统异常");
         } finally {
             if (httpClient != null) {

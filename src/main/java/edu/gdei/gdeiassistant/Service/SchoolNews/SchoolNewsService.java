@@ -7,8 +7,6 @@ import edu.gdei.gdeiassistant.Repository.Mongodb.New.NewDao;
 import edu.gdei.gdeiassistant.Tools.SchoolNewsUtils;
 import edu.gdei.gdeiassistant.Tools.XMLParseUtils;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -23,6 +21,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -43,7 +43,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class SchoolNewsService {
 
-    private Log log = LogFactory.getLog(SchoolNewsService.class);
+    private Logger logger = LoggerFactory.getLogger(SchoolNewsService.class);
 
     @Resource(name = "newsUrlsList")
     private List<List<String>> newsUrlsList;
@@ -107,7 +107,8 @@ public class SchoolNewsService {
      */
     @Scheduled(cron = "0 0 7,12,17 * * ?")
     public void CollectNews() throws IOException, ExecutionException, InterruptedException {
-        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了收集新闻通知信息的任务");
+        logger.info("{}启动了收集新闻通知信息的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
         List<NewInfo> newInfoList = new ArrayList<>();
         IOReactorConfig ioReactorConfig = IOReactorConfig.custom().setSelectInterval(3000).setSoTimeout(3000).setConnectTimeout(3000).build();
         CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.custom().setDefaultIOReactorConfig(ioReactorConfig).build();

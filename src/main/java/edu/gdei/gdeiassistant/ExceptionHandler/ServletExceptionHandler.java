@@ -1,9 +1,9 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Exception.CommonException.ResourceNotFoundException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Order(value = 4)
 public class ServletExceptionHandler {
 
-    private Log log = LogFactory.getLog(ServletExceptionHandler.class);
+    private Logger logger = LoggerFactory.getLogger(ServletExceptionHandler.class);
 
     /**
      * 处理HTTP请求400错误
@@ -66,7 +66,7 @@ public class ServletExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ModelAndView HandleException(Exception e) {
-        log.error("ServletExceptionHandler：", e);
+        logger.error("ServletExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         modelAndView.setViewName("Error/serverError");

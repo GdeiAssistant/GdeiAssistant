@@ -7,6 +7,8 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.NotAvailableStateException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Order(value = 1)
 public class ErshouExceptionHandler {
 
-    private Log log = LogFactory.getLog(ErshouExceptionHandler.class);
+    private Logger logger = LoggerFactory.getLogger(ErshouExceptionHandler.class);
 
     /**
      * 处理二手交易信息不存在的异常
@@ -25,7 +27,7 @@ public class ErshouExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView ShowDataNotExistExceptionTip(DataNotExistException e) {
-        log.error("ErshouExceptionHandler：", e);
+        logger.error("ErshouExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "二手交易信息不存在");
@@ -40,7 +42,7 @@ public class ErshouExceptionHandler {
      */
     @ExceptionHandler(NoAccessException.class)
     public ModelAndView ShowNoAccessExceptionTip(NoAccessException e) {
-        log.error("ErshouExceptionHandler：", e);
+        logger.error("ErshouExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "当前用户没有权限");
@@ -55,7 +57,7 @@ public class ErshouExceptionHandler {
      */
     @ExceptionHandler(ConfirmedStateException.class)
     public ModelAndView ShowUnmodifiableStateException(ConfirmedStateException e) {
-        log.error("ErshouExceptionHandler：", e);
+        logger.error("ErshouExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "商品已确认售出");
@@ -70,7 +72,7 @@ public class ErshouExceptionHandler {
      */
     @ExceptionHandler(NotAvailableStateException.class)
     public ModelAndView ShowNotAvailableStateException(NotAvailableStateException e) {
-        log.error("ErshouExceptionHandler：", e);
+        logger.error("ErshouExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "商品已下架");

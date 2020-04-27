@@ -2,13 +2,13 @@ package edu.gdei.gdeiassistant.Aspect;
 
 import com.alibaba.fastjson.JSON;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ import java.util.Date;
 @Order(3)
 public class RequestLogAspect {
 
-    private Log log = LogFactory.getLog(RequestLogAspect.class);
+    private final Logger logger = LoggerFactory.getLogger(RequestLogAspect.class);
 
     @Pointcut("@annotation(edu.gdei.gdeiassistant.Annotation.RequestLogPersistence)")
     public void RequestAction() {
@@ -56,6 +56,6 @@ public class RequestLogAspect {
         }
         stringBuilder.append(" . ");
         //保存请求信息到日志
-        log.info(stringBuilder.toString());
+        logger.info(stringBuilder.toString());
     }
 }

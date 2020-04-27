@@ -9,8 +9,8 @@ import edu.gdei.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import edu.gdei.gdeiassistant.Service.Wechat.WechatService;
 import edu.gdei.gdeiassistant.Tools.XMLParseUtils;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,6 +28,8 @@ import java.util.*;
 @Controller
 public class WechatController {
 
+    private final Logger logger = LoggerFactory.getLogger(WechatController.class);
+
     private String wechatToken;
 
     @Value("#{propertiesReader['wechat.account.token']}")
@@ -37,8 +39,6 @@ public class WechatController {
 
     @Autowired
     private WechatService wechatService;
-
-    private Log log = LogFactory.getLog(WechatController.class);
 
     /**
      * 验证消息来自微信服务器
@@ -107,7 +107,7 @@ public class WechatController {
         } catch (PasswordIncorrectException e) {
             resultMessage = new WechatTextMessage(wechatBaseMessage, "账号密码已更新，请尝试重新绑定账号");
         } catch (Exception e) {
-            log.error("微信消息对话服务异常：", e);
+            logger.error("微信消息对话服务异常：", e);
             resultMessage = new WechatTextMessage(wechatBaseMessage, "系统异常，请联系管理员");
         }
         if (resultMessage instanceof WechatTextMessage) {

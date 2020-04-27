@@ -16,10 +16,10 @@ import edu.gdei.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,7 +36,7 @@ import java.util.UUID;
 @Service
 public class GraduatedAccountService {
 
-    private Log log = LogFactory.getLog(GraduatedAccountService.class);
+    private final Logger logger = LoggerFactory.getLogger(GraduatedAccountService.class);
 
     private int timeout;
 
@@ -102,7 +102,8 @@ public class GraduatedAccountService {
      */
     @Scheduled(cron = "0 0 0 1 7,8,9 ?")
     public void ProceedGraduationProgram() throws Exception {
-        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了执行毕业用户账号处理方案的任务");
+        logger.info("{}启动了执行毕业用户账号处理方案的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
         List<User> userList = userMapper.selectAllUser();
         for (User user : userList) {
             User decryptedUser = user.decryptUser();
@@ -134,7 +135,7 @@ public class GraduatedAccountService {
                     }
                 }
             } catch (Exception e) {
-                log.error(e);
+                logger.error("test", e);
             }
         }
     }

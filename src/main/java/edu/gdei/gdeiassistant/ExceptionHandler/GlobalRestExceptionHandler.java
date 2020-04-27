@@ -12,6 +12,8 @@ import edu.gdei.gdeiassistant.Pojo.Result.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.MethodNotSupportedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,7 @@ import javax.validation.ConstraintViolationException;
 @Order(value = 2)
 public class GlobalRestExceptionHandler {
 
-    private Log log = LogFactory.getLog(GlobalRestExceptionHandler.class);
+    private Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandler.class);
 
     /**
      * 处理HTTP请求400错误
@@ -72,7 +74,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ResponseEntity HandleDataNotExistException(DataNotExistException e) {
-        log.error("GlobalRestExceptionHandler：", e);
+        logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.DATA_NOT_EXIST, false, e.getMessage()));
     }
 
@@ -83,7 +85,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(NetWorkTimeoutException.class)
     public ResponseEntity HandleNetWorkTimeoutException(NetWorkTimeoutException e) {
-        log.error("GlobalRestExceptionHandler：", e);
+        logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.NETWORK_TIMEOUT, false, "网络连接超时，请重试"));
     }
 
@@ -94,7 +96,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(ErrorQueryConditionException.class)
     public ResponseEntity HandleErrorQueryConditionException(ErrorQueryConditionException e) {
-        log.error("GlobalRestExceptionHandler：", e);
+        logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.ERROR_QUERY_CONDITION, false, "查询条件不合法，请重新填写"));
     }
 
@@ -105,7 +107,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(TimeStampIncorrectException.class)
     public ResponseEntity HandleTimeStampIncorrectException(TimeStampIncorrectException e) {
-        log.error("GlobalRestExceptionHandler：", e);
+        logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.TIMESTAMP_INVALIDATED, false, "时间戳校验失败，请尝试重新登录"));
     }
 
@@ -116,7 +118,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(PasswordIncorrectException.class)
     public ResponseEntity HandlePasswordIncorrectException(PasswordIncorrectException e) {
-        log.error("GlobalRestExceptionHandler：", e);
+        logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.PASSWORD_INCORRECT
                 , false, "用户账号密码错误，请检查重试或重新登录"));
     }
@@ -128,7 +130,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(UserNotExistException.class)
     public ResponseEntity HandleUserNotExistException(UserNotExistException e) {
-        log.error("GlobalRestExceptionHandler：", e);
+        logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.USER_NOT_EXIST
                 , false, "当前用户不存在，请尝试重新登录"));
     }
@@ -140,7 +142,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(UserGraduatedException.class)
     public ResponseEntity HandleUserGraduatedException(UserGraduatedException e) {
-        log.error("GlobalRestExceptionHandler：", e);
+        logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.ACCOUNT_GRADUATED
                 , false, "账号为毕业用户账号，无法使用教务查询功能"));
     }
@@ -153,7 +155,7 @@ public class GlobalRestExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity HandleException(Exception e) {
-        log.error("GlobalRestExceptionHandler：", e);
+        logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.INTERNAL_SERVER_ERROR, false, "系统异常，请联系管理员"));
     }
 }

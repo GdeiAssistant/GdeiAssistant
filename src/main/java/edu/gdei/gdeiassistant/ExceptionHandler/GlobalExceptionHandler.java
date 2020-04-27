@@ -1,8 +1,8 @@
 package edu.gdei.gdeiassistant.ExceptionHandler;
 
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ import javax.validation.ConstraintViolationException;
 @Order(value = 3)
 public class GlobalExceptionHandler {
 
-    private Log log = LogFactory.getLog(GlobalExceptionHandler.class);
+    private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * 处理数据校验异常
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DataNotExistException.class)
     public ModelAndView HandleDataNotExistException(DataNotExistException e) {
-        log.error("GlobalExceptionHandler：", e);
+        logger.error("GlobalExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "查询的数据不存在");
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ModelAndView HandleException(Exception e) {
-        log.error("GlobalExceptionHandler：", e);
+        logger.error("GlobalExceptionHandler：", e);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Error/commonError");
         modelAndView.addObject("ErrorTitle", "服务暂不可用");

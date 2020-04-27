@@ -22,8 +22,6 @@ import edu.gdei.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDa
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -36,6 +34,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -62,7 +62,11 @@ import java.util.concurrent.Semaphore;
 @Service
 public class GradeService {
 
+    private Logger logger = LoggerFactory.getLogger(GradeService.class);
+
     private String url;
+
+    private int timeout;
 
     private int currentUserStart = 0;
 
@@ -87,10 +91,6 @@ public class GradeService {
     public void setUrl(String url) {
         this.url = url;
     }
-
-    private Log log = LogFactory.getLog(GradeService.class);
-
-    private int timeout;
 
     @Value("#{propertiesReader['timeout.gradequery']}")
     public void setTimeout(int timeout) {
@@ -256,19 +256,19 @@ public class GradeService {
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("用户密码错误");
         } catch (TimeStampIncorrectException e) {
-            log.error("课程成绩查询异常：", e);
+            logger.error("课程成绩查询异常：", e);
             throw new TimeStampIncorrectException("时间戳校验失败");
         } catch (NotAvailableConditionException e) {
-            log.error("课程成绩查询异常：", e);
+            logger.error("课程成绩查询异常：", e);
             throw new NotAvailableConditionException("查询条件不可用");
         } catch (ServerErrorException e) {
-            log.error("课程成绩查询异常：", e);
+            logger.error("课程成绩查询异常：", e);
             throw new ServerErrorException("教务系统异常");
         } catch (IOException e) {
-            log.error("课程成绩查询异常：", e);
+            logger.error("课程成绩查询异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
-            log.error("课程成绩查询异常：", e);
+            logger.error("课程成绩查询异常：", e);
             throw new ServerErrorException("教务系统异常");
         } finally {
             if (httpClient != null) {
@@ -405,7 +405,7 @@ public class GradeService {
         } catch (PasswordIncorrectException ignored) {
 
         } catch (Exception e) {
-            log.error("定时查询保存成绩信息异常：", e);
+            logger.error("定时查询保存成绩信息异常：", e);
         } finally {
             countDownLatch.countDown();
         }
@@ -450,7 +450,7 @@ public class GradeService {
             countDownLatch.await();
             return AsyncResult.forValue(gradeCacheResult);
         } catch (Exception e) {
-            log.error("定时查询保存成绩信息异常：", e);
+            logger.error("定时查询保存成绩信息异常：", e);
         } finally {
             semaphore.release();
         }
@@ -462,7 +462,7 @@ public class GradeService {
      */
     @Scheduled(fixedDelay = 7200000)
     public void SaveGrade() {
-        log.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了查询保存用户成绩信息的任务");
+        logger.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了查询保存用户成绩信息的任务");
         try {
             Integer count = userMapper.selectUserCount();
             if (currentUserStart >= count) {
@@ -539,7 +539,7 @@ public class GradeService {
                                             gradeDao.saveGrade(document);
                                         }
                                     } catch (Exception e) {
-                                        log.error("定时查询保存成绩信息异常：", e);
+                                        logger.error("定时查询保存成绩信息异常：", e);
                                     }
                                 }
                             });
@@ -548,7 +548,7 @@ public class GradeService {
                 }
             }
         } catch (Exception e) {
-            log.error("定时查询保存成绩信息异常：", e);
+            logger.error("定时查询保存成绩信息异常：", e);
         }
     }
 }

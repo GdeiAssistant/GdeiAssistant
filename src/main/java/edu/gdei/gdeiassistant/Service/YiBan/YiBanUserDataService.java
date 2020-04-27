@@ -3,8 +3,6 @@ package edu.gdei.gdeiassistant.Service.YiBan;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.YiBanUser.YiBanUserMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,8 +12,6 @@ public class YiBanUserDataService {
 
     @Resource(name = "yiBanUserMapper")
     private YiBanUserMapper yiBanUserMapper;
-
-    private Log log = LogFactory.getLog(YiBanUserDataService.class);
 
     /**
      * 同步易班账号与教务系统账号绑定的数据

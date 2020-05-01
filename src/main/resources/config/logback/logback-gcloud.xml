@@ -17,7 +17,7 @@
 
     <root level="info">
         <appender-ref ref="STDOUT"/>
-<!--        <appender-ref ref="CLOUD"/>-->
+        <appender-ref ref="CLOUD"/>
     </root>
 
 </configuration>

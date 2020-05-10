@@ -5,7 +5,7 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.ConfirmedStateExceptio
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import edu.gdei.gdeiassistant.Pojo.Entity.LostAndFoundItem;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.LostAndFound.LostAndFoundMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import edu.gdei.gdeiassistant.Service.Profile.UserProfileService;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;

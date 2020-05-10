@@ -4,7 +4,7 @@ import com.aliyun.oss.OSSClient;
 import com.taobao.wsgsvr.WsgException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Photograph;
 import edu.gdei.gdeiassistant.Pojo.Entity.PhotographComment;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Photograph.PhotographMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Photograph.PhotographMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -8,7 +8,7 @@ import edu.gdei.gdeiassistant.Exception.DeliveryException.NoAccessUpdatingExcept
 import edu.gdei.gdeiassistant.Exception.DeliveryException.SelfTradingOrderException;
 import edu.gdei.gdeiassistant.Pojo.Entity.DeliveryOrder;
 import edu.gdei.gdeiassistant.Pojo.Entity.DeliveryTrade;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Delivery.DeliveryMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Delivery.DeliveryMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.springframework.stereotype.Service;

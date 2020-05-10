@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.Service.Reading;
 
 import edu.gdei.gdeiassistant.Pojo.Entity.Reading;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Mapper.Reading.ReadingMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantData.Reading.ReadingMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -7,7 +7,7 @@ import edu.gdei.gdeiassistant.Pojo.Entity.Charge;
 import edu.gdei.gdeiassistant.Pojo.Entity.ChargeLog;
 import edu.gdei.gdeiassistant.Pojo.Entity.Cookie;
 import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Mapper.Charge.ChargeMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Charge.ChargeMapper;
 import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import org.apache.http.HttpResponse;

@@ -3,7 +3,7 @@ package edu.gdei.gdeiassistant.Service.Authenticate;
 import edu.gdei.gdeiassistant.Enum.Authentication.AuthenticationTypeEnum;
 import edu.gdei.gdeiassistant.Pojo.Entity.Authentication;
 import edu.gdei.gdeiassistant.Pojo.Entity.Phone;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Authentication.AuthenticationMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Authentication.AuthenticationMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

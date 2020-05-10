@@ -1,7 +1,7 @@
 package edu.gdei.gdeiassistant.Service.Announcement;
 
 import edu.gdei.gdeiassistant.Pojo.Entity.Announcement;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Mapper.Announcement.AnnouncementMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantData.Announcement.AnnouncementMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

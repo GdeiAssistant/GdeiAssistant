@@ -7,7 +7,7 @@ import edu.gdei.gdeiassistant.Exception.ExpressException.NoRealNameException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Express;
 import edu.gdei.gdeiassistant.Pojo.Entity.ExpressComment;
 import edu.gdei.gdeiassistant.Pojo.Entity.ExpressLike;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Express.ExpressMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Express.ExpressMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import edu.gdei.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -8,7 +8,7 @@ import edu.gdei.gdeiassistant.Pojo.CetQuery.CetQuery;
 import edu.gdei.gdeiassistant.Pojo.Entity.Cet;
 import edu.gdei.gdeiassistant.Pojo.Entity.CetNumber;
 import edu.gdei.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Cet.CetMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Cet.CetMapper;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.ImageEncodeUtils;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;

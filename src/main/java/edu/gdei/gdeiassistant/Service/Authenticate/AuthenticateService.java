@@ -13,7 +13,6 @@ import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
 import edu.gdei.gdeiassistant.Service.CloudAPI.AliYunService;
 import edu.gdei.gdeiassistant.Service.Recognition.RecognitionService;
 import edu.gdei.gdeiassistant.Service.UserLogin.UserLoginService;
-import edu.gdei.gdeiassistant.Service.YiBan.YiBanAPIService;
 import edu.gdei.gdeiassistant.Tools.HttpClientUtils;
 import edu.gdei.gdeiassistant.Tools.ImageEncodeUtils;
 import org.apache.http.HttpResponse;
@@ -48,9 +47,6 @@ public class AuthenticateService {
 
     @Autowired
     private CardQueryService cardQueryService;
-
-    @Autowired
-    private YiBanAPIService yiBanAPIService;
 
     @Autowired
     private AliYunService aliYunService;
@@ -192,17 +188,6 @@ public class AuthenticateService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-    }
-
-    /**
-     * 获取易班用户校方认证信息
-     *
-     * @param accessToken
-     * @return
-     * @throws ServerErrorException
-     */
-    public Map<String, String> GetAuthenticationInfoByYiBan(String accessToken) throws ServerErrorException {
-        return yiBanAPIService.getYiBanVerifyInfo(accessToken);
     }
 
     /**

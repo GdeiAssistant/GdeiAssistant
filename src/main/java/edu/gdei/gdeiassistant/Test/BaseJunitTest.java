@@ -1,6 +1,6 @@
 package edu.gdei.gdeiassistant.Test;
 
-import edu.gdei.gdeiassistant.Config.ApplicationContextConfig;
+import edu.gdei.gdeiassistant.Config.Application.ApplicationContextConfig;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

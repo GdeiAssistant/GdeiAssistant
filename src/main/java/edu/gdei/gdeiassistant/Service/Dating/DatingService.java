@@ -6,7 +6,7 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingMessage;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingPick;
 import edu.gdei.gdeiassistant.Pojo.Entity.DatingProfile;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Dating.DatingMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Dating.DatingMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

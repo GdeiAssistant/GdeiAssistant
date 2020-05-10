@@ -5,7 +5,7 @@ import com.taobao.wsgsvr.WsgException;
 import edu.gdei.gdeiassistant.Exception.PhoneException.SendSMSException;
 import edu.gdei.gdeiassistant.Exception.PhoneException.VerificationCodeInvalidException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Phone;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Phone.PhoneMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Phone.PhoneMapper;
 import edu.gdei.gdeiassistant.Repository.Redis.VerificationCode.VerificationCodeDao;
 import edu.gdei.gdeiassistant.Service.CloudAPI.AliYunService;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;

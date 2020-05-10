@@ -4,8 +4,8 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.DataQuery.YellowPageType;
 import edu.gdei.gdeiassistant.Pojo.Entity.ElectricFees;
 import edu.gdei.gdeiassistant.Pojo.Entity.YellowPage;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Mapper.ElectricFees.ElectricFeesMapper;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Mapper.YellowPage.YellowPageMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantData.ElectricFees.ElectricFeesMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantData.YellowPage.YellowPageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

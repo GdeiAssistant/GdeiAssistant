@@ -5,7 +5,7 @@ import com.taobao.wsgsvr.WsgException;
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Topic;
 import edu.gdei.gdeiassistant.Pojo.Entity.TopicLike;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Topic.TopicMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Topic.TopicMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

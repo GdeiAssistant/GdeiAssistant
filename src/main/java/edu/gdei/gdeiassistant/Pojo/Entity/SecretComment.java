@@ -12,7 +12,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SecretComment implements Serializable, Entity {
 
-    private int id;
+    private int contentId;
 
     private String username;
 
@@ -21,14 +21,6 @@ public class SecretComment implements Serializable, Entity {
     private Date publishTime;
 
     private int avatarTheme;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
@@ -60,5 +52,13 @@ public class SecretComment implements Serializable, Entity {
 
     public void setAvatarTheme(int avatarTheme) {
         this.avatarTheme = avatarTheme;
+    }
+
+    public int getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(int contentId) {
+        this.contentId = contentId;
     }
 }

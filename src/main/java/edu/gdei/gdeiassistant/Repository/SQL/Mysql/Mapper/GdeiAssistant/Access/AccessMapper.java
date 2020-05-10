@@ -12,7 +12,6 @@ public interface AccessMapper {
 
     @Select("select * from access")
     @Results(id = "Access", value = {
-            @Result(property = "id", column = "id"),
             @Result(property = "name", column = "name"),
             @Result(property = "group", column = "user_group"),
     })

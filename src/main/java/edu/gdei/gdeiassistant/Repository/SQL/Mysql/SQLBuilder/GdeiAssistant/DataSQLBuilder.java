@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.SQLBuilder;
+package edu.gdei.gdeiassistant.Repository.SQL.Mysql.SQLBuilder.GdeiAssistant;
 
 import org.apache.ibatis.jdbc.SQL;
 
@@ -94,9 +94,9 @@ public class DataSQLBuilder {
         return new SQL() {{
             SELECT("sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state,sc.publish_time,count(scl.id) as like_count");
             FROM("secret_content sc");
-            LEFT_OUTER_JOIN("secret_like scl using (id)");
+            LEFT_OUTER_JOIN("secret_like scl on sc.id=scl.content_id");
             WHERE("sc.username=#{username}");
-            GROUP_BY("sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state,sc.publish_time,scl.id");
+            GROUP_BY("sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state,sc.publish_time,scl.content_id");
         }}.toString();
     }
 

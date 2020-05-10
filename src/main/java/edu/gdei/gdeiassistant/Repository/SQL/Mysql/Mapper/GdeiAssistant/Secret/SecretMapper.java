@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Secret;
+package edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Secret;
 
 import edu.gdei.gdeiassistant.Pojo.Entity.Secret;
 import edu.gdei.gdeiassistant.Pojo.Entity.SecretComment;
@@ -12,8 +12,8 @@ import java.util.List;
 public interface SecretMapper {
 
     @Select("select sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state,sc.publish_time,count(scl.id) " +
-            "as like_count from secret_content sc left outer join secret_like scl using (id) " +
-            "where id=#{id} and state=0 group by sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state," +
+            "as like_count from secret_content sc left outer join secret_like scl on sc.id=scl.content_id " +
+            "where sc.id=#{id} and state=0 group by sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state," +
             "sc.publish_time,scl.id limit 1")
     @Results(id = "SecretContent", value = {
             @Result(property = "id", column = "id"),
@@ -49,32 +49,33 @@ public interface SecretMapper {
     @ResultType(Integer.class)
     public Integer selectSecretLike(@Param("id") int id, @Param("username") String username) throws Exception;
 
-    @Select("select * from secret_comment where id=#{id}")
+    @Select("select * from secret_comment where content_id=#{id}")
     @Results(id = "SecretComment", value = {
-            @Result(property = "id", column = "id"),
+
+            @Result(property = "contentId", column = "content_id"),
             @Result(property = "comment", column = "comment"),
             @Result(property = "publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP),
             @Result(property = "avatarTheme", column = "avatar_theme")
     })
     public List<SecretComment> selectSecretComment();
 
-    @Select("select count(id) from secret_comment where id=#{id}")
+    @Select("select count(id) from secret_comment where content_id=#{contentId}")
     @ResultType(Integer.class)
-    public Integer selectSecretCommentCount(int id) throws Exception;
+    public Integer selectSecretCommentCount(int contentId) throws Exception;
 
     @Insert("insert into secret_content (username,content,theme,type,timer,state,publish_time) values(#{username},#{content},#{theme},#{type},#{timer},0,now())")
     @Options(useGeneratedKeys = true)
     public void insertSecret(SecretContent secretContent) throws Exception;
 
-    @Insert("insert into secret_comment (id,username,comment,avatar_theme,publish_time) values(#{id},#{username},#{comment},#{avatarTheme},now())")
+    @Insert("insert into secret_comment (content_id,username,comment,avatar_theme,publish_time) values(#{contentId},#{username},#{comment},#{avatarTheme},now())")
     public void insertSecretComment(SecretComment secretComment) throws Exception;
 
-    @Insert("insert into secret_like (id,username) values(#{id},#{username})")
-    public void insertSecretLike(@Param("id") int id, @Param("username") String username) throws Exception;
+    @Insert("insert into secret_like (content_id,username) values(#{content_id},#{username})")
+    public void insertSecretLike(@Param("content_id") int contentId, @Param("username") String username) throws Exception;
 
     @Update("update secret_content set state=1 where id=#{id}")
     public void deleteSecret(@Param("id") int id) throws Exception;
 
-    @Delete("delete from secret_like where id=#{id} and username=#{username}")
-    public void deleteSecretLike(@Param("id") int id, @Param("username") String username) throws Exception;
+    @Delete("delete from secret_like where content_id=#{content_id} and username=#{username}")
+    public void deleteSecretLike(@Param("content_id") int contentId, @Param("username") String username) throws Exception;
 }

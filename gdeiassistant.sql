@@ -929,14 +929,16 @@ DROP TABLE IF EXISTS `secret_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `secret_comment` (
-  `id` int(10) unsigned NOT NULL COMMENT '校园树洞评论编号ID',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '校园树洞评论编号ID',
+  `content_id` int(10) unsigned NOT NULL COMMENT '校园树洞信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `comment` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '校园树洞评论内容',
   `avatar_theme` tinyint(2) NOT NULL COMMENT '随机头像编号',
   `publish_time` datetime NOT NULL COMMENT '回复时间',
+  PRIMARY KEY (`id`),
   KEY `CommentId_idx` (`id`),
   KEY `secretCommentUsername` (`username`),
-  CONSTRAINT `CommentId` FOREIGN KEY (`id`) REFERENCES `secret_content` (`id`),
+  CONSTRAINT `CommentId` FOREIGN KEY (`content_id`) REFERENCES `secret_content` (`id`),
   CONSTRAINT `secretCommentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -989,11 +991,13 @@ DROP TABLE IF EXISTS `secret_like`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `secret_like` (
-  `id` int(10) unsigned NOT NULL COMMENT '校园树洞信息编号ID',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '校园树洞点赞编号ID',
+  `content_id` int(10) unsigned NOT NULL COMMENT '校园树洞信息编号ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
+  PRIMARY KEY (`id`),
   KEY `LikeId_idx` (`id`),
   KEY `secretLikeUsername` (`username`),
-  CONSTRAINT `LikeId` FOREIGN KEY (`id`) REFERENCES `secret_content` (`id`),
+  CONSTRAINT `LikeId` FOREIGN KEY (`content_id`) REFERENCES `secret_content` (`id`),
   CONSTRAINT `secretLikeUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;

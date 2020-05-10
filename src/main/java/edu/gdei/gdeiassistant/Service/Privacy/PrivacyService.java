@@ -4,7 +4,7 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Privacy;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import edu.gdei.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Privacy.PrivacyMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.PrivacyMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

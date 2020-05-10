@@ -14,7 +14,7 @@ import edu.gdei.gdeiassistant.Pojo.Result.DataJsonResult;
 import edu.gdei.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import edu.gdei.gdeiassistant.Pojo.Wechat.WechatTextMessage;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Mapper.Reading.ReadingMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantData.Reading.ReadingMapper;
 import edu.gdei.gdeiassistant.Repository.Redis.AccessToken.AccessTokenDao;
 import edu.gdei.gdeiassistant.Service.CardQuery.CardQueryService;
 import edu.gdei.gdeiassistant.Service.GradeQuery.GradeService;

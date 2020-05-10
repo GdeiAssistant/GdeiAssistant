@@ -5,7 +5,7 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.ConfirmedStateExceptio
 import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.ErshouInfo;
 import edu.gdei.gdeiassistant.Pojo.Entity.ErshouItem;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Ershou.ErshouMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Ershou.ErshouMapper;
 import edu.gdei.gdeiassistant.Service.Profile.UserProfileService;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;

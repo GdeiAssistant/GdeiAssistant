@@ -18,7 +18,6 @@ import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Privacy.Priv
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Profile.ProfileMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.User.UserMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.WechatUser.WechatUserMapper;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.YiBanUser.YiBanUserMapper;
 import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantLogs.Mapper.Close.CloseMapper;
 import edu.gdei.gdeiassistant.Service.Profile.UserProfileService;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
@@ -60,9 +59,6 @@ public class CloseAccountService {
 
     @Autowired
     private GenderMapper genderMapper;
-
-    @Autowired
-    private YiBanUserMapper yiBanUserMapper;
 
     @Autowired
     private WechatUserMapper wechatUserMapper;
@@ -188,7 +184,6 @@ public class CloseAccountService {
         scheduleDao.removeSchedule(username);
         //移除易班和微信绑定状态
         wechatUserMapper.resetWechatUser(StringEncryptUtils.encryptString(username));
-        yiBanUserMapper.resetYiBanUser(StringEncryptUtils.encryptString(username));
         //删除用户资料信息
         profileMapper.resetUserProfile(StringEncryptUtils.encryptString(username), "已注销");
         profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(username));

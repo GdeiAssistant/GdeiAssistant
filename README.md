@@ -429,6 +429,16 @@ Copyright (c) 2016 - 2020 GdeiAssistant
 
 - [saylovewall](https://github.com/ping-xiong/saylovewall) - 广西科技大学表白墙，本应用表白墙功能在此应用基础上进行修改和开发
 
+## 技术支持
+
+- [Google Cloud Platform](https://cloud.google.com)
+
+- [Microsoft Azure](https://azure.microsoft.com)
+
+- [Cloudflare](https://www.cloudflare.com)
+
+- [阿里云](https://cn.aliyun.com)
+
 ## 声明
 
 本项目只用作个人学习研究，如因使用本项目导致任何损失，本人概不负责。

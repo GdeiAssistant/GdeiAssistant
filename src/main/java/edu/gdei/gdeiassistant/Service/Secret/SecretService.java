@@ -5,7 +5,7 @@ import edu.gdei.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import edu.gdei.gdeiassistant.Pojo.Entity.Secret;
 import edu.gdei.gdeiassistant.Pojo.Entity.SecretComment;
 import edu.gdei.gdeiassistant.Pojo.Entity.SecretContent;
-import edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistant.Mapper.Secret.SecretMapper;
+import edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Secret.SecretMapper;
 import edu.gdei.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -174,7 +174,7 @@ public class SecretService {
      */
     public void AddSecretComment(int id, String username, String comment) throws Exception {
         SecretComment secretComment = new SecretComment();
-        secretComment.setId(id);
+        secretComment.setContentId(id);
         secretComment.setUsername(StringEncryptUtils.encryptString(username));
         secretComment.setComment(comment);
         secretComment.setAvatarTheme((int) (Math.random() * 50));

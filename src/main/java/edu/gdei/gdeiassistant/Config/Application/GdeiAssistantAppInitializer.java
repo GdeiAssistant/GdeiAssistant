@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Config;
+package edu.gdei.gdeiassistant.Config.Application;
 
 import ch.qos.logback.ext.spring.web.LogbackConfigListener;
 import edu.gdei.gdeiassistant.Filter.XSSFilter;

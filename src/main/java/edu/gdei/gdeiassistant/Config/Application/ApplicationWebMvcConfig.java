@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Config;
+package edu.gdei.gdeiassistant.Config.Application;
 
 import edu.gdei.gdeiassistant.Converter.EnumConvert.StringToAuthenticationTypeEnumConverter;
 import edu.gdei.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter;

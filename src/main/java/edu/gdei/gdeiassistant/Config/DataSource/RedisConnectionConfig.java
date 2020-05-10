@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Config;
+package edu.gdei.gdeiassistant.Config.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;

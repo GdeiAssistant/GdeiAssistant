@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Config;
+package edu.gdei.gdeiassistant.Config.DataSource;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -6,10 +6,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -19,8 +16,8 @@ import java.beans.PropertyVetoException;
 import java.util.Objects;
 
 @Configuration
-@MapperScan(basePackages = "edu.gdei.gdeiassistant.Repository.Mysql.GdeiAssistantData.Mapper", sqlSessionFactoryRef = "dataSqlSessionFactory")
-@PropertySource("classpath:/config/mysql/data-jdbc.properties")
+@MapperScan(basePackages = "edu.gdei.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantData", sqlSessionFactoryRef = "dataSqlSessionFactory")
+@PropertySource("classpath:/config/sql/mysql.properties")
 public class DataDataSourceConfig implements EnvironmentAware {
 
     @Autowired
@@ -76,7 +73,7 @@ public class DataDataSourceConfig implements EnvironmentAware {
     @Profile("development")
     public SqlSessionFactoryBean dataDevelopmentSqlSessionFactory(@Qualifier("dataDataSource") DataSource dataSource) {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("/config/mysql/mybatis-config.xml"));
+        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("/config/sql/mybatis-config.xml"));
         sqlSessionFactoryBean.setDataSource(dataSource);
         return sqlSessionFactoryBean;
     }
@@ -90,7 +87,7 @@ public class DataDataSourceConfig implements EnvironmentAware {
     @Profile("production")
     public SqlSessionFactoryBean dataProductionSqlSessionFactory(@Qualifier("dataDataSource") DataSource dataSource) {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("/config/mysql/mybatis-config.xml"));
+        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("/config/sql/mybatis-config.xml"));
         sqlSessionFactoryBean.setDataSource(dataSource);
         return sqlSessionFactoryBean;
     }

@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Config;
+package edu.gdei.gdeiassistant.Config.Option;
 
 import edu.gdei.gdeiassistant.Constant.OptionConstantUtils;
 import org.springframework.context.annotation.Bean;

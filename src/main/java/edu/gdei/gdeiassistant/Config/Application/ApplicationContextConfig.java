@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Config;
+package edu.gdei.gdeiassistant.Config.Application;
 
 import edu.gdei.gdeiassistant.Converter.HttpMessageConvert.WeChatMappingJackson2HttpMessageConverter;
 import edu.gdei.gdeiassistant.ErrorHandler.RestTemplateResponseErrorHandler;

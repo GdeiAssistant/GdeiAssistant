@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Config;
+package edu.gdei.gdeiassistant.Config.Application;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

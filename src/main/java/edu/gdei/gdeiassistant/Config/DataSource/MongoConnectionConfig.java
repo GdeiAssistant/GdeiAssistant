@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Config;
+package edu.gdei.gdeiassistant.Config.DataSource;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoClients;

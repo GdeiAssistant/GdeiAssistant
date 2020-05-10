@@ -1,4 +1,4 @@
-package edu.gdei.gdeiassistant.Config;
+package edu.gdei.gdeiassistant.Config.Encryption;
 
 import edu.gdei.gdeiassistant.Pojo.Entity.StringEncryptConfig;
 import org.springframework.beans.factory.annotation.Autowired;

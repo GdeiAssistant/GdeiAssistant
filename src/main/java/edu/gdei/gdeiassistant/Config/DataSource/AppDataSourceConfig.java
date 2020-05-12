@@ -34,7 +34,7 @@ public class AppDataSourceConfig implements EnvironmentAware {
     public ComboPooledDataSource appDevelopmentDataSource() throws PropertyVetoException {
         ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
         comboPooledDataSource.setDriverClass(environment.getProperty("app.jdbc.driverClass"));
-        comboPooledDataSource.setJdbcUrl(environment.getProperty("app.jdbc.jdbcUrl"));
+        comboPooledDataSource.setJdbcUrl(environment.getProperty("app.jdbc.dev.jdbcUrl"));
         comboPooledDataSource.setMinPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.minPoolSize"))));
         comboPooledDataSource.setMaxPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.maxPoolSize"))));
         comboPooledDataSource.setMaxIdleTime(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.maxIdleTime"))));
@@ -55,7 +55,7 @@ public class AppDataSourceConfig implements EnvironmentAware {
     public ComboPooledDataSource appProductionDataSource() throws PropertyVetoException {
         ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
         comboPooledDataSource.setDriverClass(environment.getProperty("app.jdbc.driverClass"));
-        comboPooledDataSource.setJdbcUrl(environment.getProperty("app.jdbc.jdbcUrl"));
+        comboPooledDataSource.setJdbcUrl(environment.getProperty("app.jdbc.pro.jdbcUrl"));
         comboPooledDataSource.setMinPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.minPoolSize"))));
         comboPooledDataSource.setMaxPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.maxPoolSize"))));
         comboPooledDataSource.setMaxIdleTime(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.maxIdleTime"))));

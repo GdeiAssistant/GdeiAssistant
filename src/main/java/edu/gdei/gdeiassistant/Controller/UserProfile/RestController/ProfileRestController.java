@@ -176,7 +176,7 @@ public class ProfileRestController {
                         profile.setLocationState("");
                         profile.setLocationCity("");
                     } else {
-                        if (!locationState.getName().equals(locationRegion.getName())) {
+                        if (locationState.getName().equals(locationRegion.getName())) {
                             profile.setLocationState(locationRegion.getName());
                         } else {
                             profile.setLocationState(locationState.getName());
@@ -204,7 +204,7 @@ public class ProfileRestController {
                         profile.setHometownState("");
                         profile.setHometownCity("");
                     } else {
-                        if (!hometownState.getName().equals(hometownRegion.getName())) {
+                        if (hometownState.getName().equals(hometownRegion.getName())) {
                             profile.setHometownState(hometownRegion.getName());
                         } else {
                             profile.setHometownState(hometownState.getName());

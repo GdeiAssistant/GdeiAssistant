@@ -36,6 +36,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -424,7 +425,8 @@ public class GradeService {
             gradeCacheResult.setGradeListArray(new ArrayList[4]);
             CountDownLatch countDownLatch = new CountDownLatch(4);
             for (int i = 0; i < 4; i++) {
-                ListenableFuture<GradeQueryResult> future = QueryGradeYearData(countDownLatch, user, i);
+                ListenableFuture<GradeQueryResult> future = ((GradeService) AopContext.currentProxy())
+                        .QueryGradeYearData(countDownLatch, user, i);
                 future.addCallback(new ListenableFutureCallback<GradeQueryResult>() {
 
                     @Override

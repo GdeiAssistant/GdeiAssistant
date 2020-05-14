@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.20, for macos10.15 (x86_64)
 --
 -- Host: localhost    Database: gdeiassistant_log
 -- ------------------------------------------------------
--- Server version	8.0.18
+-- Server version	8.0.16
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -267,7 +267,7 @@ DROP TABLE IF EXISTS `authentication`;
 CREATE TABLE `authentication` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '实名认证记录编号ID',
   `identity_code` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '实名人唯一标识ID',
-  `salt` varchar(6) COLLATE utf8mb4_bin NOT NULL COMMENT '盐值',
+  `salt` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '盐值',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `gmt_create` datetime NOT NULL COMMENT '记录创建时间',
   `gmt_modified` datetime NOT NULL COMMENT '记录更新时间',
@@ -285,7 +285,7 @@ CREATE TABLE `authentication` (
 
 LOCK TABLES `authentication` WRITE;
 /*!40000 ALTER TABLE `authentication` DISABLE KEYS */;
-INSERT INTO `authentication` VALUES (1,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','gdeiassistant','2019-08-31 14:01:30','2019-08-31 14:01:30',0),(2,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','trialuser','2019-10-17 02:05:32','2019-10-17 02:05:32',0);
+INSERT INTO `authentication` VALUES (1,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','gdeiassistant','2019-08-31 14:01:30','2019-08-31 14:01:30',0);
 /*!40000 ALTER TABLE `authentication` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -507,11 +507,11 @@ DROP TABLE IF EXISTS `express`;
 CREATE TABLE `express` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '表白信息ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '发布者用户名',
-  `nickname` varchar(10) COLLATE utf8mb4_bin NOT NULL COMMENT '表白者昵称',
-  `realname` varchar(10) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '表白者真实姓名',
+  `nickname` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '表白者昵称',
+  `realname` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '表白者真实姓名',
   `self_gender` tinyint(1) NOT NULL COMMENT '表白者性别',
-  `name` varchar(10) COLLATE utf8mb4_bin NOT NULL COMMENT '被表白者昵称',
-  `content` varchar(250) COLLATE utf8mb4_bin NOT NULL COMMENT '表白内容',
+  `name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '被表白者昵称',
+  `content` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '表白内容',
   `person_gender` tinyint(1) NOT NULL COMMENT '被表白者性别',
   `publish_time` datetime NOT NULL COMMENT '表白信息发布时间',
   PRIMARY KEY (`id`),
@@ -540,7 +540,7 @@ CREATE TABLE `express_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '表白评论信息ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论者用户名',
   `express_id` int(11) NOT NULL COMMENT '表白信息ID',
-  `comment` varchar(50) COLLATE utf8mb4_bin NOT NULL COMMENT '表白评论',
+  `comment` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '表白评论',
   `publish_time` datetime NOT NULL COMMENT '表白评论发布时间',
   PRIMARY KEY (`id`),
   KEY `expressCommentExpressId_idx` (`express_id`),
@@ -687,7 +687,7 @@ CREATE TABLE `introduction` (
 
 LOCK TABLES `introduction` WRITE;
 /*!40000 ALTER TABLE `introduction` DISABLE KEYS */;
-INSERT INTO `introduction` VALUES ('gdeiassistant',NULL),('trialuser',NULL);
+INSERT INTO `introduction` VALUES ('gdeiassistant',NULL);
 /*!40000 ALTER TABLE `introduction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -761,9 +761,9 @@ DROP TABLE IF EXISTS `photograph`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `photograph` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '照片信息ID',
-  `title` varchar(25) COLLATE utf8mb4_bin NOT NULL COMMENT '照片信息标题',
+  `title` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '照片信息标题',
   `count` tinyint(2) NOT NULL COMMENT '照片信息图片数量',
-  `content` varchar(150) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '照片信息描述内容',
+  `content` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '照片信息描述内容',
   `type` tinyint(1) NOT NULL COMMENT '照片信息类型',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '发布者用户名',
   `create_time` datetime NOT NULL COMMENT '照片信息发布时间',
@@ -793,7 +793,7 @@ CREATE TABLE `photograph_comment` (
   `comment_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '照片评论ID',
   `photo_id` int(11) NOT NULL COMMENT '照片信息ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论者用户名',
-  `comment` varchar(50) COLLATE utf8mb4_bin NOT NULL COMMENT '评论内容',
+  `comment` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '评论内容',
   `create_time` datetime NOT NULL COMMENT '评论信息发布时间',
   PRIMARY KEY (`comment_id`),
   KEY `photographCommentUsername_idx` (`username`),
@@ -850,22 +850,22 @@ DROP TABLE IF EXISTS `privacy`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `privacy` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `is_gender_open` tinyint(1) NOT NULL COMMENT '公开性别',
-  `is_location_open` tinyint(1) NOT NULL COMMENT '公开国家/地区',
-  `is_hometown_open` tinyint(1) NOT NULL COMMENT '公开家乡',
-  `is_introduction_open` tinyint(1) NOT NULL COMMENT '公开个人简介',
-  `is_faculty_open` tinyint(1) NOT NULL COMMENT '公开院系',
-  `is_major_open` tinyint(1) NOT NULL COMMENT '公开专业',
-  `is_enrollment_open` tinyint(1) NOT NULL COMMENT '公开入学年份',
-  `is_age_open` tinyint(1) NOT NULL COMMENT '公开年龄',
-  `is_degree_open` tinyint(1) NOT NULL COMMENT '公开学历',
-  `is_profession_open` tinyint(1) NOT NULL COMMENT '公开职业',
-  `is_primary_school_open` tinyint(1) NOT NULL COMMENT '公开小学',
-  `is_junior_high_school_open` tinyint(1) NOT NULL COMMENT '公开初中',
-  `is_high_school_open` tinyint(1) NOT NULL COMMENT '公开高中/职中',
-  `is_colleges_open` tinyint(1) NOT NULL COMMENT '公开大专院校',
-  `is_cache_allow` tinyint(1) NOT NULL COMMENT '使用教务缓存',
-  `is_robots_index_allow` tinyint(1) NOT NULL COMMENT '允许搜索引擎收录',
+  `is_gender_open` tinyint(1) DEFAULT NULL COMMENT '公开性别',
+  `is_location_open` tinyint(1) DEFAULT NULL COMMENT '公开国家/地区',
+  `is_hometown_open` tinyint(1) DEFAULT NULL COMMENT '公开家乡',
+  `is_introduction_open` tinyint(1) DEFAULT NULL COMMENT '公开个人简介',
+  `is_faculty_open` tinyint(1) DEFAULT NULL COMMENT '公开院系',
+  `is_major_open` tinyint(1) DEFAULT NULL COMMENT '公开专业',
+  `is_enrollment_open` tinyint(1) DEFAULT NULL COMMENT '公开入学年份',
+  `is_age_open` tinyint(1) DEFAULT NULL COMMENT '公开年龄',
+  `is_degree_open` tinyint(1) DEFAULT NULL COMMENT '公开学历',
+  `is_profession_open` tinyint(1) DEFAULT NULL COMMENT '公开职业',
+  `is_primary_school_open` tinyint(1) DEFAULT NULL COMMENT '公开小学',
+  `is_junior_high_school_open` tinyint(1) DEFAULT NULL COMMENT '公开初中',
+  `is_high_school_open` tinyint(1) DEFAULT NULL COMMENT '公开高中/职中',
+  `is_colleges_open` tinyint(1) DEFAULT NULL COMMENT '公开大专院校',
+  `is_cache_allow` tinyint(1) DEFAULT NULL COMMENT '使用教务缓存',
+  `is_robots_index_allow` tinyint(1) DEFAULT NULL COMMENT '允许搜索引擎收录',
   PRIMARY KEY (`username`) USING BTREE,
   CONSTRAINT `privacyUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
@@ -877,7 +877,7 @@ CREATE TABLE `privacy` (
 
 LOCK TABLES `privacy` WRITE;
 /*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
-INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1),('trialuser',1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1);
+INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,1,1,1,NULL,0,1);
 /*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -900,14 +900,14 @@ CREATE TABLE `profile` (
   `location_region` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '所在地国家/地区',
   `location_state` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '所在地省份/州',
   `location_city` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '所在地城市',
-  `hometown_region` varchar(5) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '家乡国家/地区',
-  `hometown_state` varchar(5) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '家乡省份/州',
-  `hometown_city` varchar(5) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '家乡城市',
+  `hometown_region` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '家乡国家/地区',
+  `hometown_state` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '家乡省份/州',
+  `hometown_city` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '家乡城市',
   `enrollment` int(4) DEFAULT NULL COMMENT '入学年份',
   `primary_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '小学',
   `junior_high_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '初中',
   `high_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '高中/职中',
-  `colleges` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '大专院校',
+  `colleges` varchar(45) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '大专院校',
   PRIMARY KEY (`username`),
   CONSTRAINT `profileUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -919,7 +919,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('trialuser','广东二师助手用户',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `profile` VALUES ('gdeiassistant','gdeiassistant',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -940,6 +940,7 @@ CREATE TABLE `secret_comment` (
   PRIMARY KEY (`id`),
   KEY `CommentId_idx` (`id`),
   KEY `secretCommentUsername` (`username`),
+  KEY `CommentId` (`content_id`),
   CONSTRAINT `CommentId` FOREIGN KEY (`content_id`) REFERENCES `secret_content` (`id`),
   CONSTRAINT `secretCommentUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -999,6 +1000,7 @@ CREATE TABLE `secret_like` (
   PRIMARY KEY (`id`),
   KEY `LikeId_idx` (`id`),
   KEY `secretLikeUsername` (`username`),
+  KEY `LikeId` (`content_id`),
   CONSTRAINT `LikeId` FOREIGN KEY (`content_id`) REFERENCES `secret_content` (`id`),
   CONSTRAINT `secretLikeUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -1024,7 +1026,7 @@ CREATE TABLE `topic` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '话题信息主键ID',
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '话题信息发布者用户名',
   `topic` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '话题信息关键词',
-  `content` varchar(250) COLLATE utf8mb4_bin NOT NULL COMMENT '话题信息内容',
+  `content` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '话题信息内容',
   `count` tinyint(1) NOT NULL COMMENT '话题信息图片数量',
   `publish_time` datetime NOT NULL COMMENT '话题信息发布时间',
   PRIMARY KEY (`id`),
@@ -1093,7 +1095,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('gdeiassistant','gdeiassistant',1,7),('trialuser','trialuser',1,7);
+INSERT INTO `user` VALUES ('gdeiassistant','gdeiassistant',1,7);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1180,4 +1182,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-23  5:52:48
+-- Dump completed on 2020-05-14 11:04:03

@@ -330,6 +330,8 @@
                     var profession = result.data.profession == null ? 0 : result.data.profession;
                     $("#profession_text").text(professionMap[profession]);
                     //学校信息
+                    $("#colleges").text(result.data.colleges == null ? "未填写" : result.data.colleges);
+                    $("#colleges_val").text(result.data.colleges == null ? "" : result.data.colleges);
                     $("#high_school").text(result.data.highSchool == null ? "未填写" : result.data.highSchool);
                     $("#high_school_val").val(result.data.highSchool == null ? "" : result.data.highSchool);
                     $("#junior_high_school").text(result.data.juniorHighSchool == null ? "未填写" : result.data.juniorHighSchool);
@@ -473,17 +475,21 @@
         $("#school_index").val(index);
         switch (index) {
             case 0:
+                //大专院校
+                $("#school").val($("#colleges_val").val());
+                break;
+
+            case 1:
                 //高中/职中
                 $("#school").val($("#high_school_val").val());
                 break;
 
-            case 1:
+            case 2:
                 //初中
                 $("#school").val($("#junior_high_school_val").val());
                 break;
 
-            case 2:
-            default:
+            case 3:
                 //小学
                 $("#school").val($("#primary_school_val").val());
                 break;

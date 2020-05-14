@@ -39,78 +39,83 @@ public class PrivacyRestController {
      * @return
      */
     @RequestMapping(value = "/api/privacy", method = RequestMethod.POST)
-    public JsonResult UpdateUserPrivacySetting(HttpServletRequest request, int index, boolean state) throws Exception {
+    public JsonResult UpdateUserPrivacySetting(HttpServletRequest request, String index, boolean state) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
-        switch (index) {
-            case 0:
+        switch (index.toUpperCase()) {
+            case "GENDER":
                 //性别
                 privacyService.UpdateGender(state, username);
                 break;
 
-            case 1:
+            case "FACULTY":
                 //院系
                 privacyService.UpdateFaculty(state, username);
                 break;
 
-            case 2:
+            case "MAJOR":
                 //专业
                 privacyService.UpdateMajor(state, username);
                 break;
 
-            case 3:
+            case "LOCATION":
                 //所在地
                 privacyService.UpdateLocation(state, username);
                 break;
 
-            case 4:
+            case "HOMETOWN":
                 //家乡
-                privacyService.UpdateHometown(state,username);
+                privacyService.UpdateHometown(state, username);
                 break;
 
-            case 5:
+            case "INTRODUCTION":
                 //个人简介
                 privacyService.UpdateIntroduction(state, username);
                 break;
 
-            case 6:
+            case "ENROLLMENT":
                 //入学年份
                 privacyService.UpdateEnrollment(state, username);
                 break;
 
-            case 7:
+            case "AGE":
                 //年龄
-                privacyService.UpdateAge(state,username);
+                privacyService.UpdateAge(state, username);
                 break;
 
-            case 8:
+            case "DEGREE":
                 //学历
-                privacyService.UpdateDegree(state,username);
+                privacyService.UpdateDegree(state, username);
                 break;
 
-            case 9:
+            case "PROFESSION":
                 privacyService.UpdateProfession(state, username);
                 break;
 
-            case 10:
-                //高中/职中
+            case "COLLEGES":
+                //大专院校
                 privacyService.UpdateSchool(state, 0, username);
-
-            case 11:
-                //初中
-                privacyService.UpdateSchool(state, 1, username);
                 break;
 
-            case 12:
-                //小学
+            case "HIGH_SCHOOL":
+                //高中/职中
+                privacyService.UpdateSchool(state, 1, username);
+
+            case "JUNIOR_HIGH_SCHOOL":
+                //初中
                 privacyService.UpdateSchool(state, 2, username);
                 break;
 
-            case 13:
+            case "PRIMARY_SCHOOL":
+                //小学
+                privacyService.UpdateSchool(state, 3, username);
+                break;
+
+            case "CACHE":
                 //教务缓存
                 privacyService.UpdateCache(state, username);
                 break;
 
-            case 14:
+            case "ROBOTS_INDEX":
                 //搜索引擎收录
                 privacyService.UpdateRobotsIndex(state, username);
                 break;

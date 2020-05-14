@@ -863,6 +863,7 @@ CREATE TABLE `privacy` (
   `is_primary_school_open` tinyint(1) NOT NULL COMMENT '公开小学',
   `is_junior_high_school_open` tinyint(1) NOT NULL COMMENT '公开初中',
   `is_high_school_open` tinyint(1) NOT NULL COMMENT '公开高中/职中',
+  `is_colleges_open` tinyint(1) NOT NULL COMMENT '公开大专院校',
   `is_cache_allow` tinyint(1) NOT NULL COMMENT '使用教务缓存',
   `is_robots_index_allow` tinyint(1) NOT NULL COMMENT '允许搜索引擎收录',
   PRIMARY KEY (`username`) USING BTREE,
@@ -876,7 +877,7 @@ CREATE TABLE `privacy` (
 
 LOCK TABLES `privacy` WRITE;
 /*!40000 ALTER TABLE `privacy` DISABLE KEYS */;
-INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,1,1,1,0,1),('trialuser',1,1,1,1,1,1,1,1,1,1,1,1,1,0,1);
+INSERT INTO `privacy` VALUES ('gdeiassistant',1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1),('trialuser',1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1);
 /*!40000 ALTER TABLE `privacy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -906,6 +907,7 @@ CREATE TABLE `profile` (
   `primary_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '小学',
   `junior_high_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '初中',
   `high_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '高中/职中',
+  `colleges` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '大专院校',
   PRIMARY KEY (`username`),
   CONSTRAINT `profileUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

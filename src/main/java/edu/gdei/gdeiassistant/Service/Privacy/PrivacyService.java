@@ -159,17 +159,21 @@ public class PrivacyService {
     public void UpdateSchool(boolean state, int index, String username) throws Exception {
         switch (index) {
             case 0:
+                //大专院校
+                privacyMapper.updateColleges(state, StringEncryptUtils.encryptString(username));
+                break;
+
+            case 1:
                 //高中/职中
                 privacyMapper.updateHighSchool(state, StringEncryptUtils.encryptString(username));
                 break;
 
-            case 1:
+            case 2:
                 //初中
                 privacyMapper.updateJuniorHighSchool(state, StringEncryptUtils.encryptString(username));
                 break;
 
-            case 2:
-            default:
+            case 3:
                 //小学
                 privacyMapper.updatePrimarySchool(state, StringEncryptUtils.encryptString(username));
                 break;

@@ -53,6 +53,9 @@ $(function () {
                     if (result.data.highSchoolOpen === true) {
                         $("#high_school").prop("checked", true);
                     }
+                    if (result.data.colleges === true) {
+                        $("colleges").prop("checked", true);
+                    }
                     if (result.data.cacheAllow === true) {
                         $("#cache").prop("checked", true);
                     }
@@ -71,7 +74,8 @@ $(function () {
 });
 
 //更改隐私设置
-function changePrivacySetting(index) {
+function changePrivacySetting(event) {
+    console.log(event);
     let state = $("input:eq(" + index + ")").prop("checked");
     $.ajax({
         url: '/api/privacy',

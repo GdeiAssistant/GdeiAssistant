@@ -89,6 +89,7 @@
 <input type="hidden" id="major_val" name="major_val">
 
 <input type="hidden" id="school_index" name="school_index">
+<input type="hidden" id="colleges_val" name="colleges_val">
 <input type="hidden" id="high_school_val" name="high_school_val">
 <input type="hidden" id="junior_high_school_val" name="junior_high_school_val">
 <input type="hidden" id="primary_school_val" name="primary_school_val">
@@ -119,17 +120,23 @@
 <div class="weui-cells">
     <div class="weui-cell" href="javascript:" onclick="showSchoolDialog(0)">
         <div class="weui-cell__bd">
+            <p>大专院校</p>
+        </div>
+        <div id="colleges" class="weui-cell__ft"></div>
+    </div>
+    <div class="weui-cell" href="javascript:" onclick="showSchoolDialog(1)">
+        <div class="weui-cell__bd">
             <p>高中/职中</p>
         </div>
         <div id="high_school" class="weui-cell__ft"></div>
     </div>
-    <div class="weui-cell" href="javascript:" onclick="showSchoolDialog(1)">
+    <div class="weui-cell" href="javascript:" onclick="showSchoolDialog(2)">
         <div class="weui-cell__bd">
             <p>初中</p>
         </div>
         <div id="junior_high_school" class="weui-cell__ft"></div>
     </div>
-    <div class="weui-cell" href="javascript:" onclick="showSchoolDialog(2)">
+    <div class="weui-cell" href="javascript:" onclick="showSchoolDialog(3)">
         <div class="weui-cell__bd">
             <p>小学</p>
         </div>

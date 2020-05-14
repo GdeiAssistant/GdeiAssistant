@@ -21,19 +21,16 @@ public interface PrivacyMapper {
             @Result(property = "primarySchoolOpen", column = "is_primary_school_open"),
             @Result(property = "juniorHighSchoolOpen", column = "is_junior_high_school_open"),
             @Result(property = "highSchoolOpen", column = "is_high_school_open"),
+            @Result(property = "collegesOpen", column = "is_colleges_open"),
             @Result(property = "cacheAllow", column = "is_cache_allow"),
             @Result(property = "robotsIndexAllow", column = "is_robots_index_allow")
     })
     public Privacy selectPrivacy(String username) throws Exception;
 
-    @Insert("insert into privacy (username,is_gender_open,is_faculty_open" +
-            ",is_major_open,is_enrollment_open,is_age_open,is_degree_open,is_profession_open,is_primary_school_open,is_junior_high_school_open,is_high_school_open" +
-            ",is_location_open,is_hometown_open,is_introduction_open,is_cache_allow,is_robots_index_allow) " +
-            "values(#{username},true,true,true,true,true,true,true,true,true,true,true,true,true,false,true)")
+    @Insert("insert into privacy (username,is_cache_allow) values(#{username},false)")
     public void initPrivacy(String username) throws Exception;
 
-    @Update("update privacy set is_gender_open=1,is_faculty_open=1,is_major_open=1,is_enrollment_open=1,is_age_open,is_degree_open,is_primary_school_open=1" +
-            ",is_junior_high_school_open=1,is_high_school_open=1,is_location_open=1,is_hometown_open=1,is_introduction_open=1,is_cache_allow=0,is_robots_index_allow=1 where username=#{username}")
+    @Update("update privacy set is_cache_allow=0 where username=#{username}")
     public void resetPrivacy(String username) throws Exception;
 
     @Update("<script>" +
@@ -220,6 +217,20 @@ public interface PrivacyMapper {
             "        where username=#{username}" +
             "</script>")
     public void updateHighSchool(@Param("highSchool") boolean highSchool, @Param("username") String username) throws Exception;
+
+    @Update("<script>" +
+            "update privacy" +
+            "        <choose>" +
+            "            <when test='colleges'>" +
+            "                set is_colleges_open='1'" +
+            "            </when>" +
+            "            <otherwise>" +
+            "                set is_colleges_open='0'" +
+            "            </otherwise>" +
+            "        </choose>" +
+            "        where username=#{username}" +
+            "</script>")
+    public void updateColleges(@Param("colleges") boolean colleges, @Param("username") String username) throws Exception;
 
     @Update("<script>" +
             "update privacy" +

@@ -34,6 +34,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -604,7 +605,8 @@ public class ScheduleService {
                         //如果最后更新日期距今已超过3天，则进行更新
                         if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()
                                 .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= scheduleInterval) {
-                            ListenableFuture<ScheduleQueryResult> future = QueryScheduleData(semaphore, user);
+                            ListenableFuture<ScheduleQueryResult> future = ((ScheduleService) AopContext.currentProxy())
+                                    .QueryScheduleData(semaphore, user);
                             future.addCallback(new ListenableFutureCallback<ScheduleQueryResult>() {
 
                                 @Override

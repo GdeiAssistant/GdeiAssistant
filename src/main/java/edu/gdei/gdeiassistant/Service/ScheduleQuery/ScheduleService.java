@@ -582,7 +582,7 @@ public class ScheduleService {
      */
     @Scheduled(fixedDelay = 7200000)
     public void SaveSchedule() {
-        logger.info("{}启动了查询保存用户课表信息的任务",LocalDateTime.now().atZone(ZoneId.systemDefault())
+        logger.info("{}启动了查询保存用户课表信息的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
         try {
             Integer count = userMapper.selectUserCount();

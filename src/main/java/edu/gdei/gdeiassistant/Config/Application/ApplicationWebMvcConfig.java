@@ -80,6 +80,8 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         loginInterceptorExceptionList.add("/logout");
         //登录账号
         loginInterceptorExceptionList.add("/login");
+        //Cron作业
+        loginInterceptorExceptionList.add("/cron");
         //用户登录接口
         loginInterceptorExceptionList.add("/api/userlogin");
         //下载接口
@@ -112,6 +114,8 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
         authenticationInterceptorExceptionList.add("/logout");
         //登录账号
         authenticationInterceptorExceptionList.add("/login");
+        //Cron作业
+        authenticationInterceptorExceptionList.add("/cron");
         //用户登录接口
         authenticationInterceptorExceptionList.add("/api/userlogin");
         authenticationInterceptorExceptionList.add("/rest/userlogin");

@@ -98,9 +98,9 @@ public class GraduatedAccountService {
     }
 
     /**
-     * 每年的七月、八月和九月一日执行毕业用户账号处理方案
+     * 每年的七月、八月和九月，每周九点执行一次毕业用户账号处理方案
      */
-    @Scheduled(cron = "0 0 0 1 7,8,9 ?")
+    @Scheduled(cron = "0 0 9 1,15 7,8,9 ?")
     public void ProceedGraduationProgram() throws Exception {
         logger.info("{}启动了执行毕业用户账号处理方案的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));

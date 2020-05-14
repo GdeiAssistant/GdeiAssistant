@@ -105,7 +105,7 @@ public class SchoolNewsService {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    @Scheduled(cron = "0 0 7,12,17 * * ?")
+    @Scheduled(cron = "0 0 0,9,18 * * ?")
     public void CollectNews() throws IOException, ExecutionException, InterruptedException {
         logger.info("{}启动了收集新闻通知信息的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));

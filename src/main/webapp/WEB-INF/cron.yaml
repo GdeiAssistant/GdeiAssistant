@@ -8,8 +8,8 @@ cron:
   - url: /cron/wechat/account
     schedule: every 6 hours
   - url: /cron/secret
-    schedule: every 2 minutes synchronized
+    schedule: every 5 minutes synchronized
   - url: /cron/graduation
-    schedule: 1,8,15,22 of july,aug,sep 09:00
+    schedule: 1,8,15,22 of jul,aug,sep 09:00
   - url: /cron/news
-    schedule: every day 00:00,09:00,18:00
+    schedule: every 9 hours

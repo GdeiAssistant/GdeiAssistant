@@ -454,19 +454,24 @@ public class UserProfileService {
         if (profile != null) {
             switch (index) {
                 case 0:
+                    //大专院校
+                    profile.setColleges(school);
+                    profileMapper.updateColleges(profile);
+                    break;
+
+                case 1:
                     //高中/职中
                     profile.setHighSchool(school);
                     profileMapper.updateHighSchool(profile);
                     break;
 
-                case 1:
+                case 2:
                     //初中
                     profile.setJuniorHighSchool(school);
                     profileMapper.updateJuniorHighSchool(profile);
                     break;
 
-                case 2:
-                default:
+                case 3:
                     //小学
                     profile.setPrimarySchool(school);
                     profileMapper.updatePrimarySchool(profile);

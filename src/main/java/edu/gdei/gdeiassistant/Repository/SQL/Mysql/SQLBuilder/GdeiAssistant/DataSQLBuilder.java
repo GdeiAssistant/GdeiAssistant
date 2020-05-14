@@ -7,7 +7,7 @@ public class DataSQLBuilder {
     public String selectUserProfile(String username) {
         return new SQL() {{
             SELECT("p.nickname,p.gender,p.birthday,p.degree,p.faculty,p.major,p.location_region,p.location_state,p.location_city");
-            SELECT("p.hometown_region,p.hometown_state,p.hometown_city,p.enrollment,p.profession,p.primary_school,p.junior_high_school,p.high_school");
+            SELECT("p.hometown_region,p.hometown_state,p.hometown_city,p.enrollment,p.profession,p.primary_school,p.junior_high_school,p.high_school,p.colleges");
             SELECT("g.gender as custom_gender");
             FROM("profile p");
             LEFT_OUTER_JOIN("gender g on p.username = g.username");

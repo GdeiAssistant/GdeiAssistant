@@ -50,6 +50,8 @@ public class Profile implements Serializable, Entity {
 
     private String highSchool;
 
+    private String colleges;
+
     private Integer profession;
 
     public String getPrimarySchool() {
@@ -210,5 +212,13 @@ public class Profile implements Serializable, Entity {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getColleges() {
+        return colleges;
+    }
+
+    public void setColleges(String colleges) {
+        this.colleges = colleges;
     }
 }

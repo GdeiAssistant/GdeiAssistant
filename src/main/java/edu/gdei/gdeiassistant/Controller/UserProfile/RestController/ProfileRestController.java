@@ -518,7 +518,7 @@ public class ProfileRestController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/profile/school", method = RequestMethod.POST)
-    public JsonResult UpdateSchool(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(2) Integer index
+    public JsonResult UpdateSchool(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(3) Integer index
             , @Validated @NotBlank @Length(min = 1, max = 45) String school) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         userProfileService.UpdateSchool(username, school, index);

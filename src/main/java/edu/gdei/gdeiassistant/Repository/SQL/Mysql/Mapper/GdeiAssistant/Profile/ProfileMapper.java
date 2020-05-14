@@ -20,6 +20,7 @@ public interface ProfileMapper {
             @Result(property = "major", column = "major"),
             @Result(property = "enrollment", column = "enrollment"),
             @Result(property = "profession", column = "profession"),
+            @Result(property = "colleges", column = "colleges"),
             @Result(property = "highSchool", column = "high_school"),
             @Result(property = "juniorHighSchool", column = "junior_high_school"),
             @Result(property = "primarySchool", column = "primary_school"),
@@ -74,6 +75,9 @@ public interface ProfileMapper {
 
     @Update("update profile set hometown_region=#{hometownRegion},hometown_state=#{hometownState},hometown_city=#{hometownCity} where username=#{username}")
     void updateHometown(Profile profile);
+
+    @Update("update profile set colleges=#{colleges} where username=#{username}")
+    void updateColleges(Profile profile);
 
     @Update("update profile set high_school=#{highSchool} where username=#{username}")
     void updateHighSchool(Profile profile);

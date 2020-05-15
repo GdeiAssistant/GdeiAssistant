@@ -76,6 +76,9 @@ public class ProfileController {
             if (profile.getDegree() != null) {
                 modelAndView.addObject("Degree", UserProfileService.getDegreeMap().get(profile.getDegree()));
             }
+            if (StringUtils.isNotBlank(profile.getColleges())) {
+                modelAndView.addObject("Colleges", profile.getColleges());
+            }
             if (StringUtils.isNotBlank(profile.getHighSchool())) {
                 modelAndView.addObject("HighSchool", profile.getHighSchool());
             }
@@ -172,7 +175,7 @@ public class ProfileController {
             modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(username));
             modelAndView.addObject("Username", username);
             modelAndView.addObject("NickName", profile.getNickname());
-            if (privacy.isGenderOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isGenderOpen())) {
                 if (profile.getGender() != null && profile.getGender() != 0) {
                     if (profile.getGender() == 3) {
                         modelAndView.addObject("Gender", profile.getCustomGenderName());
@@ -181,54 +184,59 @@ public class ProfileController {
                     }
                 }
             }
-            if (privacy.isFacultyOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isFacultyOpen().equals(Boolean.TRUE))) {
                 if (profile.getFaculty() != null && !profile.getFaculty().equals(0)) {
                     modelAndView.addObject("Faculty", UserProfileService.getFacultyMap().get(profile.getFaculty()));
                 }
             }
-            if (privacy.isMajorOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isMajorOpen())) {
                 if (StringUtils.isNotBlank(profile.getMajor())) {
                     modelAndView.addObject("Major", profile.getMajor());
                 }
             }
-            if (privacy.isEnrollmentOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isEnrollmentOpen())) {
                 if (profile.getEnrollment() != null) {
                     modelAndView.addObject("Enrollment", profile.getEnrollment());
                 }
             }
-            if (privacy.isAgeOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isAgeOpen())) {
                 if (profile.getBirthday() != null) {
                     modelAndView.addObject("Age", ChronoUnit.YEARS.between(profile.getBirthday().toInstant()
                             .atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()));
                 }
             }
-            if (privacy.isDegreeOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isDegreeOpen())) {
                 if (profile.getDegree() != null) {
                     modelAndView.addObject("Degree", UserProfileService.getDegreeMap().get(profile.getDegree()));
                 }
             }
-            if (privacy.isHighSchoolOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isCollegesOpen())) {
+                if (profile.getColleges() != null) {
+                    modelAndView.addObject("Colleges", profile.getColleges());
+                }
+            }
+            if (Boolean.TRUE.equals(privacy.isHighSchoolOpen())) {
                 if (StringUtils.isNotBlank(profile.getHighSchool())) {
                     modelAndView.addObject("HighSchool", profile.getHighSchool());
                 }
             }
-            if (privacy.isJuniorHighSchoolOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isJuniorHighSchoolOpen())) {
                 if (StringUtils.isNotBlank(profile.getJuniorHighSchool())) {
                     modelAndView.addObject("JuniorHighSchool", profile.getJuniorHighSchool());
                 }
             }
-            if (privacy.isPrimarySchoolOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isPrimarySchoolOpen())) {
                 if (StringUtils.isNotBlank(profile.getPrimarySchool())) {
                     modelAndView.addObject("PrimarySchool", profile.getPrimarySchool());
                 }
             }
-            if (privacy.isProfessionOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isProfessionOpen())) {
                 if (profile.getProfession() != null) {
                     modelAndView.addObject("Profession", UserProfileService.getProfessionMap()
                             .get(profile.getProfession()));
                 }
             }
-            if (privacy.isLocationOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isLocationOpen())) {
                 StringBuilder location = new StringBuilder();
                 Region region = LocationUtils.getRegionMap().get(profile.getLocationRegion());
                 if (region != null) {
@@ -257,7 +265,7 @@ public class ProfileController {
                             .convertCountryCodeToEmoji(region.getIso()) + location.toString());
                 }
             }
-            if (privacy.isHometownOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isHometownOpen())) {
                 StringBuilder hometown = new StringBuilder();
                 Region region = LocationUtils.getRegionMap().get(profile.getHometownRegion());
                 if (region != null) {
@@ -286,13 +294,13 @@ public class ProfileController {
                             .convertCountryCodeToEmoji(region.getIso()) + hometown.toString());
                 }
             }
-            if (privacy.isIntroductionOpen().equals(Boolean.TRUE)) {
+            if (Boolean.TRUE.equals(privacy.isIntroductionOpen())) {
                 Introduction introduction = userProfileService.GetUserIntroduction(username);
                 if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
                     modelAndView.addObject("Introduction", introduction.getIntroductionContent());
                 }
             }
-            if (privacy.isRobotsIndexAllow().equals(Boolean.FALSE)) {
+            if (Boolean.TRUE.equals(privacy.isRobotsIndexAllow())) {
                 modelAndView.addObject("RobotsNoIndex", true);
             }
         } else {

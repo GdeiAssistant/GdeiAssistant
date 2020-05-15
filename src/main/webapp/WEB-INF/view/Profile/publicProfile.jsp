@@ -192,6 +192,17 @@
 
     </c:if>
 
+    <c:if test="${Colleges!=null}">
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>大专院校</p>
+            </div>
+            <div class="weui-cell__ft">${Colleges}</div>
+        </div>
+
+    </c:if>
+
     <c:if test="${HighSchool!=null}">
 
         <div class="weui-cell">

@@ -1,15 +1,22 @@
 cron:
   - url: /cron/grade
     schedule: every 2 hours
+    timezone: Asia/Shanghai
   - url: /cron/schedule
     schedule: every 2 hours
+    timezone: Asia/Shanghai
   - url: /cron/wechat/reading
     schedule: every 6 hours
+    timezone: Asia/Shanghai
   - url: /cron/wechat/account
     schedule: every 6 hours
+    timezone: Asia/Shanghai
   - url: /cron/secret
     schedule: every 5 minutes synchronized
+    timezone: Asia/Shanghai
   - url: /cron/graduation
     schedule: 1,8,15,22 of jul,aug,sep 09:00
+    timezone: Asia/Shanghai
   - url: /cron/news
     schedule: every 9 hours
+    timezone: Asia/Shanghai

@@ -204,7 +204,7 @@ public class SecretService {
      *
      * @throws Exception
      */
-    @Scheduled(fixedDelay = 3600)
+    @Scheduled(fixedDelay = 300000)
     @Transactional("appTransactionManager")
     public void DeleteTimerSecretInfos() throws Exception {
         List<Secret> secretList = secretMapper.selectNotRemovedSecrets();

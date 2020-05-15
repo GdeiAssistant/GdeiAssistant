@@ -23,7 +23,7 @@ import java.util.List;
 
 @Configuration
 @ComponentScan(basePackages = "edu.gdei.gdeiassistant")
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(exposeProxy = true)
 @EnableAsync
 @EnableTransactionManagement
 public class ApplicationContextConfig {

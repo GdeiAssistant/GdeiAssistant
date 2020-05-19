@@ -152,7 +152,7 @@
                             hasMore = false;
                         }
                     } else {
-                        $(".weui_warn").text(message).show().delay(2000).hide(0);
+                        $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                     }
 
                     //若用户查看过树洞详细消息并返回，跳转到瞄点的位置

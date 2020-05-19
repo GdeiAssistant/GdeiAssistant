@@ -41,17 +41,17 @@ public interface SecretMapper {
     @ResultMap("SecretContent")
     public List<Secret> selectSecret(@Param("start") int start, @Param("size") int size) throws Exception;
 
-    @Select("select count(id) from secret_like where id=#{id}")
+    @Select("select count(id) from secret_like where content_id=#{contentId}")
     @ResultType(Integer.class)
-    public Integer selectSecretLikeCount(int id) throws Exception;
+    public Integer selectSecretLikeCount(int contentId) throws Exception;
 
-    @Select("select count(id) from secret_like where id=#{id} and username=#{username} limit 1")
+    @Select("select count(id) from secret_like where content_id=#{contentId} and username=#{username} limit 1")
     @ResultType(Integer.class)
-    public Integer selectSecretLike(@Param("id") int id, @Param("username") String username) throws Exception;
+    public Integer selectSecretLike(@Param("contentId") int contentId, @Param("username") String username) throws Exception;
 
     @Select("select * from secret_comment where content_id=#{id}")
     @Results(id = "SecretComment", value = {
-
+            @Result(property = "id", column = "id"),
             @Result(property = "contentId", column = "content_id"),
             @Result(property = "comment", column = "comment"),
             @Result(property = "publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP),

@@ -43,13 +43,13 @@ public class CronRestController {
 
     @RequestMapping(value = "/cron/grade", method = RequestMethod.GET)
     public JsonResult CacheGradeData(HttpServletRequest request) {
-        gradeService.SaveGrade();
+        gradeService.SynchronizeGradeData();
         return new JsonResult(true);
     }
 
     @RequestMapping(value = "/cron/schedule", method = RequestMethod.GET)
     public JsonResult CacheScheduleData(HttpServletRequest request) {
-        scheduleService.SaveSchedule();
+        scheduleService.SynchronizeScheduleData();
         return new JsonResult(true);
     }
 

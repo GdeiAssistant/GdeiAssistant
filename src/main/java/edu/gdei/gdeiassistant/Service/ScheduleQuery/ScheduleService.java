@@ -558,7 +558,7 @@ public class ScheduleService {
     }
 
     /**
-     * 异步获取教务系统课表信息任务
+     * 异步获取教务系统课表信息
      *
      * @param semaphore
      * @param user
@@ -579,10 +579,10 @@ public class ScheduleService {
     }
 
     /**
-     * 定时查询并保存用户课表信息
+     * 同步教务系统实时课表信息
      */
     @Scheduled(fixedDelay = 7200000)
-    public void SaveSchedule() {
+    public void SynchronizeScheduleData() {
         logger.info("{}启动了查询保存用户课表信息的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
         try {

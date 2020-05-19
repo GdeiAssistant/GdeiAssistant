@@ -398,21 +398,13 @@ public class GradeService {
         gradeDao.removeGrade(username);
     }
 
-    @Async
-    public ListenableFuture<GradeQueryResult> QueryGradeYearData(CountDownLatch countDownLatch
-            , User user, int year) {
-        try {
-            return AsyncResult.forValue(QueryGradeFromSystem(null, user.decryptUser(), year));
-        } catch (PasswordIncorrectException ignored) {
-
-        } catch (Exception e) {
-            logger.error("定时查询保存成绩信息异常：", e);
-        } finally {
-            countDownLatch.countDown();
-        }
-        return AsyncResult.forValue(null);
-    }
-
+    /**
+     * 异步获取教务系统成绩信息
+     *
+     * @param semaphore
+     * @param user
+     * @return
+     */
     @Async
     public ListenableFuture<GradeCacheResult> QueryGradeData(Semaphore semaphore, User user) {
         try {
@@ -425,29 +417,25 @@ public class GradeService {
             gradeCacheResult.setGradeListArray(new ArrayList[4]);
             CountDownLatch countDownLatch = new CountDownLatch(4);
             for (int i = 0; i < 4; i++) {
-                ListenableFuture<GradeQueryResult> future = ((GradeService) AopContext.currentProxy())
-                        .QueryGradeYearData(countDownLatch, user, i);
-                future.addCallback(new ListenableFutureCallback<GradeQueryResult>() {
-
-                    @Override
-                    public void onFailure(Throwable ex) {
-
+                try {
+                    GradeQueryResult result = QueryGradeFromSystem(null, user.decryptUser(), i);
+                    if (result != null) {
+                        gradeCacheResult.getFirstTermGPAArray()[result.getYear()] = result.getFirstTermGPA();
+                        gradeCacheResult.getSecondTermGPAArray()[result.getYear()] = result.getSecondTermGPA();
+                        gradeCacheResult.getFirstTermIGPArray()[result.getYear()] = result.getFirstTermIGP();
+                        gradeCacheResult.getSecondTermIGPArray()[result.getYear()] = result.getSecondTermIGP();
+                        List<Grade> gradeList = new ArrayList<>();
+                        gradeList.addAll(result.getFirstTermGradeList());
+                        gradeList.addAll(result.getSecondTermGradeList());
+                        gradeCacheResult.getGradeListArray()[result.getYear()] = gradeList;
                     }
+                } catch (PasswordIncorrectException ignored) {
 
-                    @Override
-                    public void onSuccess(GradeQueryResult result) {
-                        if (result != null) {
-                            gradeCacheResult.getFirstTermGPAArray()[result.getYear()] = result.getFirstTermGPA();
-                            gradeCacheResult.getSecondTermGPAArray()[result.getYear()] = result.getSecondTermGPA();
-                            gradeCacheResult.getFirstTermIGPArray()[result.getYear()] = result.getFirstTermIGP();
-                            gradeCacheResult.getSecondTermIGPArray()[result.getYear()] = result.getSecondTermIGP();
-                            List<Grade> gradeList = new ArrayList<>();
-                            gradeList.addAll(result.getFirstTermGradeList());
-                            gradeList.addAll(result.getSecondTermGradeList());
-                            gradeCacheResult.getGradeListArray()[result.getYear()] = gradeList;
-                        }
-                    }
-                });
+                } catch (Exception e) {
+                    logger.error("定时查询保存成绩信息异常：", e);
+                } finally {
+                    countDownLatch.countDown();
+                }
             }
             countDownLatch.await();
             return AsyncResult.forValue(gradeCacheResult);
@@ -460,10 +448,10 @@ public class GradeService {
     }
 
     /**
-     * 定时查询并保存成绩信息
+     * 同步教务系统实时成绩信息
      */
     @Scheduled(fixedDelay = 7200000)
-    public void SaveGrade() {
+    public void SynchronizeGradeData() {
         logger.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了查询保存用户成绩信息的任务");
         try {
             Integer count = userMapper.selectUserCount();
@@ -485,7 +473,8 @@ public class GradeService {
                         //如果最后更新日期距今已超过7天，则进行更新
                         if (gradeDocument == null || Duration.between(gradeDocument.getUpdateDateTime()
                                 .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= gradeInterval) {
-                            ListenableFuture<GradeCacheResult> future = QueryGradeData(semaphore, user);
+                            ListenableFuture<GradeCacheResult> future = ((GradeService) AopContext.currentProxy())
+                                    .QueryGradeData(semaphore, user);
                             future.addCallback(new ListenableFutureCallback<GradeCacheResult>() {
 
                                 @Override

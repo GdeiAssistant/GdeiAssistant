@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.client.AsyncRestTemplate;
@@ -24,7 +23,6 @@ import java.util.List;
 @Configuration
 @ComponentScan(basePackages = "edu.gdei.gdeiassistant")
 @EnableAspectJAutoProxy(exposeProxy = true)
-@EnableAsync
 @EnableTransactionManagement
 public class ApplicationContextConfig {
 

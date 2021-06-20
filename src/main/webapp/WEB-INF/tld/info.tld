@@ -10,8 +10,8 @@
     <function>
         <description>获取节日信息</description>
         <name>getFestivalInfo</name>
-        <function-class>edu.gdei.gdeiassistant.Tools.FestivalUtils</function-class>
-        <function-signature>edu.gdei.gdeiassistant.Pojo.Entity.Festival GetFestivalInfo()
+        <function-class>cn.gdeiassistant.Tools.FestivalUtils</function-class>
+        <function-signature>cn.gdeiassistant.Pojo.Entity.Festival GetFestivalInfo()
         </function-signature>
         <example>${info:getFestivalInfo()}</example>
     </function>
@@ -19,7 +19,7 @@
     <function>
         <description>获取校园公众号数据</description>
         <name>getSchoolWechatAccountData</name>
-        <function-class>edu.gdei.gdeiassistant.Tools.WechatAccountUtils</function-class>
+        <function-class>cn.gdeiassistant.Tools.WechatAccountUtils</function-class>
         <function-signature>java.util.List getWechatAccountList()
         </function-signature>
         <example>${info:getSchoolWechatAccountData()}</example>

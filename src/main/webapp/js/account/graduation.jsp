@@ -1,4 +1,4 @@
-<%@ page import="edu.gdei.gdeiassistant.Enum.UserGroup.UserGroupEnum" %>
+<%@ page import="cn.gdeiassistant.Enum.UserGroup.UserGroupEnum" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>

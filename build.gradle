@@ -98,7 +98,7 @@ appengine {
     }
 }
 
-group 'cn.edu.gdei'
+group 'cn.gdeiassistant'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8

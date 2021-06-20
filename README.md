@@ -254,7 +254,7 @@ $ mysql -u用户名 -p密码 < gdeiassistant.sql
 若在系统中，开发者没有指定使用何种环境，则默认情况下使用开发环境的配置：
 
 ```java
-package edu.gdei.gdeiassistant.Config;
+package cn.gdeiassistant.Config;
 
 import ...
 
@@ -277,7 +277,7 @@ public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
 - 作为DispatcherServlet的初始化参数
 
 ```java
-package edu.gdei.gdeiassistant.Config;
+package cn.gdeiassistant.Config;
 
 import ...
 
@@ -297,7 +297,7 @@ public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
 - 作为web应用的上下文参数
 
 ```java
-package edu.gdei.gdeiassistant.Config;
+package cn.gdeiassistant.Config;
 
 import ...
 

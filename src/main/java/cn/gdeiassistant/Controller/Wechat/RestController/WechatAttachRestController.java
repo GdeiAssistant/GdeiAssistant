@@ -42,7 +42,7 @@ public class WechatAttachRestController {
         //清除已登录用户的用户凭证记录
         HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
         UserCertificate userCertificate = userLoginService.UserLogin(request.getSession().getId(), user, true);
-        //同步用户教务系统账号信息到数据库
+        //同步用户校园网络账号信息到数据库
         userDataService.SyncUserData(userCertificate.getUser());
         //同步微信数据
         wechatUserDataService.SyncWechatUserData(userCertificate.getUser().getUsername(), wechatUserID);

@@ -110,7 +110,7 @@
             </div>
             <div class="weui_cell_bd weui_cell_primary">
                 <input id="username" class="weui_input" type="text" maxlength="20" name="username"
-                       placeholder="请输入你的教务系统账号">
+                       placeholder="请输入你的校园网络账号">
             </div>
         </div>
         <div class="weui_cell">
@@ -132,7 +132,7 @@
 
 <p class="page_desc" style="margin-top: 25px">关于登录账户请阅读
     <a class="page_desc"
-       onclick="window.location.href = '/about/account'">《教务系统账号说明》
+       onclick="window.location.href = '/about/account'">《校园网络账号说明》
     </a>
     <br>
     未注册广东二师助手账号的用户

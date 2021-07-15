@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>易班-绑定教务系统账号</title>
+    <title>易班-绑定校园网络账号</title>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <meta content="yes" name="apple-mobile-web-app-capable">
@@ -49,7 +49,7 @@
             </div>
             <div class="weui_cell_bd weui_cell_primary">
                 <input id="username" class="weui_input" type="text" maxlength="20" name="username"
-                       placeholder="请输入你的教务系统账号">
+                       placeholder="请输入你的校园网络账号">
             </div>
         </div>
         <div class="weui_cell">
@@ -97,7 +97,7 @@
 
 <p class="page_desc" style="margin-top: 25px">关于登录账户请阅读
     <a class="page_desc"
-       onclick="window.location.href = '/about/account'">《教务系统账号说明》</a>
+       onclick="window.location.href = '/about/account'">《校园网络账号说明》</a>
 </p>
 
 <p class="page_desc">点击登录按钮表示你已阅读并同意

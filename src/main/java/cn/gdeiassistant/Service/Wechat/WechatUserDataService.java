@@ -19,7 +19,7 @@ public class WechatUserDataService {
     private WechatUserMapper wechatUserMapper;
 
     /**
-     * 查询微信账号绑定教务系统账号用户名
+     * 查询微信账号绑定校园网络账号用户名
      *
      * @param wechatID
      * @return
@@ -47,7 +47,7 @@ public class WechatUserDataService {
     }
 
     /**
-     * 同步微信账号与教务系统账号绑定的数据
+     * 同步微信账号与校园网络账号绑定的数据
      *
      * @param username
      * @param wechatUserID
@@ -55,7 +55,7 @@ public class WechatUserDataService {
      */
     public void SyncWechatUserData(String username, String wechatUserID) throws Exception {
         if (wechatUserMapper.selectUsername(wechatUserID) != null) {
-            //更新微信账号绑定的教务系统账号
+            //更新微信账号绑定的校园网络账号
             wechatUserMapper.updateWechatUser(wechatUserID, StringEncryptUtils.encryptString(username));
         } else {
             wechatUserMapper.insertWechatUser(wechatUserID, StringEncryptUtils.encryptString(username));

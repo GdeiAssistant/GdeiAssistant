@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>微信-绑定教务系统账号</title>
+    <title>微信-绑定校园网络账号</title>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
@@ -47,7 +47,7 @@
             </div>
             <div class="weui_cell_bd weui_cell_primary">
                 <input id="username" class="weui_input" type="text" maxlength="20" name="username"
-                       placeholder="请输入你的教务系统账号">
+                       placeholder="请输入你的校园网络账号">
             </div>
         </div>
         <div class="weui_cell">

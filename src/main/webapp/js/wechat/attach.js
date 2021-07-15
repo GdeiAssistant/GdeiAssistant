@@ -19,7 +19,7 @@ function postLoginForm() {
             success: function (result) {
                 $("#loadingToast, .weui_mask").hide();
                 if (result.success) {
-                    weui.alert('绑定教务系统账号成功', {
+                    weui.alert('绑定校园网络账号成功', {
                         title: '绑定成功',
                         buttons: [{
                             label: '进入功能主页',

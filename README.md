@@ -340,7 +340,7 @@ System.setProperty("spring.profiles.active" , "production");
 
 3. **Logback**：Logback使用了XML配置文件，除了输出信息日志和错误日志外，Logback还会保存用户的表单请求记录和教务查询记录。开发者可以自行修改Logback的日志保存路径和策略。
 
-4. **新闻通知**：由于部分学校新闻页面需要用户登录后才拥有权限访问，因此需要在news目录下的account.properties文件中配置你的教务系统账号用户名和密码。
+4. **新闻通知**：由于部分学校新闻页面需要用户登录后才拥有权限访问，因此需要在news目录下的account.properties文件中配置你的校园网络账号用户名和密码。
 
 5. **对象存储**：OSS对象存储是阿里云平台提供的海量、安全、低成本、高可靠的云存储服务。oss目录保存了服务端访问OSS服务和生成移动端临时令牌的配置参数。all_policy.txt、bucket_read_policy.txt和bucket_read_write_policy.txt是类JSON结构的RAM权限策略控制配置文件，分别表示允许所有动作、只读和读写。开发者可以使用阿里云平台提供的 [RAM Policy Editor](http://gosspublic.alicdn.com/ram-policy-editor/index.html) 生成授权策略。oss.properties保存的是服务端直接访问OSS服务的AccessKey和SecretKey身份凭证等信息，token.properties保存的是生成移动端临时令牌的RAM角色身份凭证、令牌过期时间和RAM权限策略控制配置文件路径等信息。
 

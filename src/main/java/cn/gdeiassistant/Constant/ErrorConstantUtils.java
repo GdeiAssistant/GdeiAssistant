@@ -98,7 +98,7 @@ public class ErrorConstantUtils {
     //一键评教未开放
     public static final int EVALUATE_NOT_AVAILABLE = 50002;
 
-    //用户教务系统账号已毕业注销
+    //用户校园网络账号已毕业注销
     public static final int ACCOUNT_GRADUATED = 50003;
 
     //网络连接超时

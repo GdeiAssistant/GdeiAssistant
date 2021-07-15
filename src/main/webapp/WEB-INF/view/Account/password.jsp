@@ -71,7 +71,7 @@
     <br>
     关于登录账号请阅读
     <a class="page_desc"
-       onclick="window.location.href = '/about/account'">《教务系统账号说明》
+       onclick="window.location.href = '/about/account'">《校园网络账号说明》
     </a>
 </p>
 

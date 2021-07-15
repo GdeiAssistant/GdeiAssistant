@@ -69,7 +69,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/about/security">安全技术规格说明</a>
-                        <a class="dropdown-item" href="/about/account">教务系统账号说明</a>
+                        <a class="dropdown-item" href="/about/account">校园网络账号说明</a>
                         <a class="dropdown-item" href="/about/graduation">毕业处理方案说明</a>
                     </div>
                 </li>

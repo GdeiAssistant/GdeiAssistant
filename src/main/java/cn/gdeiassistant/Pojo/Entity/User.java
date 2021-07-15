@@ -19,19 +19,19 @@ public class User implements Serializable, Entity {
 
     @NotBlank(message = "用户名不能为空", groups = {UserLoginValidGroup.class})
     @Size(min = 1, max = 20, message = "用户名长度超过限制", groups = {UserLoginValidGroup.class})
-    //教务系统账号用户名
+    //校园网络账号用户名
     private String username;
 
     @NotBlank(message = "密码不能为空", groups = {UserLoginValidGroup.class})
     @Size(min = 1, max = 35, message = "密码长度超过限制", groups = {UserLoginValidGroup.class})
     @JSONField(serialize = false)
-    //教务系统账号密码
+    //校园网络账号密码
     private String password;
 
-    //教务系统账号加密值
+    //校园网络账号加密值
     private String keycode;
 
-    //教务系统账号学号
+    //校园网络账号学号
     private String number;
 
     /**

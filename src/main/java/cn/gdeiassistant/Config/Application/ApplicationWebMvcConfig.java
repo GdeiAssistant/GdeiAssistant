@@ -1,5 +1,6 @@
 package cn.gdeiassistant.Config.Application;
 
+import cn.gdeiassistant.Constant.SettingConstantUtils;
 import cn.gdeiassistant.Converter.EnumConvert.StringToAuthenticationTypeEnumConverter;
 import cn.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter;
 import cn.gdeiassistant.Converter.EnumConvert.StringToQueryMethodEnumConverter;
@@ -14,8 +15,9 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 @EnableWebMvc
@@ -75,77 +77,12 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public List<String> loginInterceptorExceptionList() {
-        List<String> loginInterceptorExceptionList = new ArrayList<>();
-        //退出账号
-        loginInterceptorExceptionList.add("/logout");
-        //登录账号
-        loginInterceptorExceptionList.add("/login");
-        //Cron作业
-        loginInterceptorExceptionList.add("/cron");
-        //用户登录接口
-        loginInterceptorExceptionList.add("/api/userlogin");
-        //下载接口
-        loginInterceptorExceptionList.add("/download");
-        //协议与政策
-        loginInterceptorExceptionList.add("/agreement");
-        loginInterceptorExceptionList.add("/policy");
-        loginInterceptorExceptionList.add("/license");
-        //公告声明
-        loginInterceptorExceptionList.add("/announcement");
-        //软件说明
-        loginInterceptorExceptionList.add("/about");
-        //Restful API
-        loginInterceptorExceptionList.add("/rest");
-        //微信API接口
-        loginInterceptorExceptionList.add("/wechat");
-        //QQAPI接口
-        loginInterceptorExceptionList.add("/qq");
-        //易班API接口
-        loginInterceptorExceptionList.add("/yiban");
-        //支付宝API接口
-        loginInterceptorExceptionList.add("/alipay");
-        return loginInterceptorExceptionList;
+        return Arrays.asList(SettingConstantUtils.LOGIN_INTERCEPTOR_EXCEPTION_LIST);
     }
 
     @Bean
     public List<String> authenticationInterceptorExceptionList() {
-        List<String> authenticationInterceptorExceptionList = new ArrayList<>();
-        //退出账号
-        authenticationInterceptorExceptionList.add("/logout");
-        //登录账号
-        authenticationInterceptorExceptionList.add("/login");
-        //Cron作业
-        authenticationInterceptorExceptionList.add("/cron");
-        //用户登录接口
-        authenticationInterceptorExceptionList.add("/api/userlogin");
-        authenticationInterceptorExceptionList.add("/rest/userlogin");
-        //权限令牌操作
-        authenticationInterceptorExceptionList.add("/rest/token");
-        //实名认证页面和接口
-        authenticationInterceptorExceptionList.add("/authentication");
-        authenticationInterceptorExceptionList.add("/api/authentication");
-        //注销页面和接口
-        authenticationInterceptorExceptionList.add("/close");
-        authenticationInterceptorExceptionList.add("/api/close");
-        //下载接口
-        authenticationInterceptorExceptionList.add("/download");
-        //协议与政策
-        authenticationInterceptorExceptionList.add("/agreement");
-        authenticationInterceptorExceptionList.add("/policy");
-        authenticationInterceptorExceptionList.add("/license");
-        //公告声明
-        authenticationInterceptorExceptionList.add("/announcement");
-        //软件说明
-        authenticationInterceptorExceptionList.add("/about");
-        //微信API接口
-        authenticationInterceptorExceptionList.add("/wechat");
-        //QQAPI接口
-        authenticationInterceptorExceptionList.add("/qq");
-        //易班API接口
-        authenticationInterceptorExceptionList.add("/yiban");
-        //支付宝API接口
-        authenticationInterceptorExceptionList.add("/alipay");
-        return authenticationInterceptorExceptionList;
+        return Arrays.asList(SettingConstantUtils.AUTHENTICATION_INTERCEPTOR_EXCEPTION_LIST);
     }
 
     /**
@@ -216,19 +153,9 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("About/index");
-        registry.addViewController("/about").setViewName("About/index");
-        registry.addViewController("/about/security").setViewName("About/security");
-        registry.addViewController("/about/account").setViewName("About/account");
-        registry.addViewController("/about/wechat").setViewName("About/wechat");
-        registry.addViewController("/license").setViewName("About/license");
-        registry.addViewController("/agreement").setViewName("AgreementAndPolicy/agreement");
-        registry.addViewController("/policy/cookie").setViewName("AgreementAndPolicy/cookiePolicy");
-        registry.addViewController("/policy/privacy").setViewName("AgreementAndPolicy/privacyPolicy");
-        registry.addViewController("/policy/social").setViewName("AgreementAndPolicy/socialPolicy");
-        registry.addViewController("/about/graduation").setViewName("AgreementAndPolicy/graduationPolicy");
-        registry.addViewController("/announcement/equalrights").setViewName("Announcement/equalrights");
-        registry.addViewController("/announcement/suicideprevention").setViewName("Announcement/suicideprevention");
+        for (Map.Entry<String, String> entry : SettingConstantUtils.VIEW_CONTROLLER_NAME_MAP.entrySet()) {
+            registry.addViewController(entry.getKey()).setViewName(entry.getValue());
+        }
         super.addViewControllers(registry);
     }
 }

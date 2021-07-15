@@ -51,7 +51,7 @@
     </c:forEach>
 </div>
 
-<p class="page_desc">专题阅读信息服务由微信公众号易小助提供</p>
+<p class="page_desc">专题阅读信息服务由微信公众订阅号提供</p>
 
 </body>
 </html>

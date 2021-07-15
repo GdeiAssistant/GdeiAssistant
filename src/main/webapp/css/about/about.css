@@ -16,17 +16,27 @@ html {
 
 .download_button {
     margin-bottom: 10px;
-    width: 43%;
+    width: 100%;
     margin-left: 10px;
     margin-right: 10px;
     border: 1px solid #e7e7e7;
     border-radius: 15px;
     height: 68px;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     display: flex;
     display: -webkit-flex;
     padding: 0 5% 0 5%;
+}
+
+.download_button div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.download_button div img {
+    margin-right: 5%;
 }
 
 .download h2 {
@@ -36,8 +46,9 @@ html {
 }
 
 .download strong {
-    text-align: left;
+    width: 100px;
     font-size: 12px;
+    margin-left: 5%;
 }
 
 .download strong a {
@@ -468,7 +479,7 @@ h3 {
 div strong {
     font-size: 1.3rem;
     margin-bottom: 0;
-    margin-left: 15%;
+    margin-left: 5%;
 }
 
 .wxtip {

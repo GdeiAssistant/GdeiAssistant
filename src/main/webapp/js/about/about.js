@@ -14,127 +14,34 @@ $(function () {
     }
 });
 
-//获取客户端下载地址
-$(function () {
-    $.ajax({
-        url: '/download/android',
-        type: 'get',
-        success: function (result) {
-            $("#android_url").val(result.url);
-        }
+//下载客户端APP应用
+function downloadAPP() {
+    $.actions({
+        title: "请选择客户端平台",
+        actions: [{
+            text: "Android",
+            onClick: function () {
+                if (navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger") {
+                    //正在使用微信访问应用，跳转到腾讯应用宝进行下载
+                } else {
+                    //跳转到CDN或GooglePlay平台进行下载
+                }
+            }
+        }, {
+            text: "iOS",
+            onClick: function () {
+                //跳转到AppStore应用页面
+            }
+        }, {
+            text: "UWP",
+            onClick: function () {
+                //跳转到WindowsStore应用页面
+            }
+        }]
     });
-    $.ajax({
-        url: '/download/android/googleplay',
-        type: 'get',
-        success: function (result) {
-            $("#android_google_play_url").val(result.url);
-        }
-    });
-    $.ajax({
-        url: '/download/android/amazon',
-        type: 'get',
-        success: function (result) {
-            $("#android_amazon_url").val(result.url);
-        }
-    });
-    $.ajax({
-        url: '/download/uwp',
-        type: 'get',
-        success: function (result) {
-            $("#uwp_url").val(result.url);
-        }
-    })
-});
-
-//用户使用微信浏览器打开时，提示用户使用系统浏览器打开下载链接
-function isWechat() {
-    return navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == "micromessenger"
 }
 
-function androidDownload() {
-    if (isWechat()) {
-        $(".wxtip").show();
-    } else {
-        if ($("#android_url").val() !== '#') {
-            window.location.href = $("#android_url").val();
-        }
-    }
-}
+//显示微信公众号和微信小程序二维码
+function showWechatQRCode() {
 
-function androidGooglePlayDownload() {
-    if ($("#android_google_play_url").val() !== '#') {
-        window.location.href = $("#android_google_play_url").val();
-    }
-}
-
-function androidAmazonDownload() {
-    if ($("#android_amazon_url").val() !== '#') {
-        window.location.href = $("#android_amazon_url").val();
-    }
-}
-
-function iOSDownload() {
-    alert("暂无iOS版本");
-}
-
-function UWPDownload() {
-    if ($("#uwp_url").val() !== '#') {
-        window.location.href = $("#uwp_url").val();
-    }
-}
-
-function QuickApp() {
-    alert("进入应用商店的快应用分类中搜索易小助即可使用");
-}
-
-function AlipayApp() {
-    $.photoBrowser({
-        items: [
-            {
-                image: "/img/about/alipayapp_qrcode.jpg",
-            }
-        ],
-        onOpen: function () {
-            $(".photo-container img").css("margin", "0 auto");
-        }
-    }).open();
-}
-
-function Wechat() {
-    $.photoBrowser({
-        items: [
-            {
-                image: "/img/about/wechat_qrcode.jpg",
-            }
-        ],
-        onOpen: function () {
-            $(".photo-container img").css("margin", "0 auto");
-        }
-    }).open();
-}
-
-function QQApp() {
-    $.photoBrowser({
-        items: [
-            {
-                image: "/img/about/qqapp_qrcode.jpg",
-            }
-        ],
-        onOpen: function () {
-            $(".photo-container img").css("margin", "0 auto");
-        }
-    }).open();
-}
-
-function WechatApp() {
-    $.photoBrowser({
-        items: [
-            {
-                image: "/img/about/wechatapp_qrcode.jpg",
-            }
-        ],
-        onOpen: function () {
-            $(".photo-container img").css("margin", "0 auto");
-        }
-    }).open();
 }

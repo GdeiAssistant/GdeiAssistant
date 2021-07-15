@@ -1,11 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-    <title>广东二师助手-广东第二师范学院必备校园服务应用</title>
+    <title>广东第二师范学院校园助手-广东第二师范学院必备校园服务应用</title>
     <meta name="keywords" content="校园,四六级,查分,课程表,二师助手,广二师助手,广东二师助手,广东第二师范学院">
     <meta name="description"
-          content="广东二师助手，别名易小助，是为广东第二师范学院专属打造的校园服务应用。它不仅提供了课表查询、成绩查询、四六级考试成绩查询、空课室查询、图书借阅查询、馆藏图书查询、校园卡充值、校园卡挂失、消费查询等综合性的教务功能，还提供了二手交易、失物招领、校园树洞、恋爱交友、表白墙、全民快递、话题等社区交流平台。广东二师助手旨在为广东第二师范学院的在校师生们提供最优质的教育教学、校园生活、社团活动、文化娱乐和教务服务等信息。四年时光，广东二师助手陪你一起走过。">
+          content="广东第二师范学院校园助手，是为广东第二师范学院专属打造的校园服务应用。它不仅提供了课表查询、成绩查询、四六级考试成绩查询、空课室查询、图书借阅查询、馆藏图书查询、校园卡充值、校园卡挂失、消费查询等综合性的教务功能，还提供了二手交易、失物招领、校园树洞、恋爱交友、表白墙、全民快递、话题等社区交流平台。广东二师助手旨在为广东第二师范学院的在校师生们提供最优质的教育教学、校园生活、社团活动、文化娱乐和教务服务等信息。四年时光，广东二师助手陪你一起走过。">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -50,11 +51,6 @@
 </head>
 <body>
 
-<input type="hidden" id="android_url" value="#">
-<input type="hidden" id="android_google_play_url" value="#">
-<input type="hidden" id="android_amazon_url" value="#">
-<input type="hidden" id="uwp_url" value="#">
-
 <div class="margin-bottom60">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="javascript:">广东二师助手</a>
@@ -72,7 +68,6 @@
                         使用帮助
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/about/wechat">微信查询使用说明</a>
                         <a class="dropdown-item" href="/about/security">安全技术规格说明</a>
                         <a class="dropdown-item" href="/about/account">教务系统账号说明</a>
                         <a class="dropdown-item" href="/about/graduation">毕业处理方案说明</a>
@@ -100,24 +95,21 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="http://www.moe.gov.cn">教育部门户网</a>
-                        <a class="dropdown-item" href="http://edu.gd.gov.cn">广东省教育厅</a>
-                        <a class="dropdown-item" href="http://www.gzedu.gov.cn">广州市教育局</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="http://www.sysu.edu.cn">中山大学</a>
-                        <a class="dropdown-item" href="https://www.jnu.edu.cn">暨南大学</a>
-                        <a class="dropdown-item" href="https://www.scut.edu.cn">华南理工大学</a>
-                        <a class="dropdown-item" href="http://www.scnu.edu.cn">华南师范大学</a>
+                        <a class="dropdown-item" href="http://www.gd.gov.cn">广东省人民政府</a>
+                        <a class="dropdown-item" href="http://www.gz.gov.cn">广州市人民政府</a>
+                        <a class="dropdown-item" href="http://www.edu.cn">中国教育科研网</a>
+                        <a class="dropdown-item" href="https://www.cnki.net">中国知网</a>
                         <a class="dropdown-item" href="http://www.gdei.edu.cn">广东第二师范学院</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="http://www.gdsyzx.edu.cn">广东实验中学</a>
-                        <a class="dropdown-item" href="http://www.gyzx.edu.cn">广东广雅中学</a>
-                        <a class="dropdown-item" href="https://www.zhixinhs.cn">广州市执信中学</a>
-                        <a class="dropdown-item" href="https://www.gztlms.com">广州市真光中学</a>
-                        <a class="dropdown-item" href="http://www.gz41zx.com">广州市第四十一中学</a>
-                        <a class="dropdown-item" href="http://www.hsfz.net.cn">华南师范大学附属中学</a>
+                        <a class="dropdown-item" href="http://cpc.people.com.cn/index.html">中国共产党新闻网</a>
+                        <a class="dropdown-item" href="http://chuxin.people.cn/GB/index.html">“不忘初心、牢记使命”主题教育</a>
+                        <a class="dropdown-item" href="http://dangshi.people.cn">党史学习教育</a>
+                        <a class="dropdown-item" href="https://www.enaea.edu.cn">干部在线学习中心</a>
+                        <a class="dropdown-item" href="http://cpc.people.com.cn/19th">十九大专题报道</a>
                         <div class="dropdown-divider"></div>
-                        <!-- This item has been removed -->
-                        <!-- This item has been removed -->
+                        <a class="dropdown-item"
+                           href="http://www.nhc.gov.cn/xcs/xxgzbd/gzbd_index.shtml">新型冠状病毒肺炎疫情防控专题</a>
+                        <a class="dropdown-item" href="https://ncov.dxy.cn/ncovh5/view/pneumonia">新型冠状病毒肺炎疫情实时动态</a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -128,9 +120,6 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/announcement/suicideprevention">青少年自杀干预热线</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="https://ncov.dxy.cn/ncovh5/view/pneumonia">新型冠状病毒肺炎疫情实时动态</a>
                 </li>
             </ul>
         </div>
@@ -155,64 +144,28 @@
 
     <div class="download">
         <div class="download_button" onclick="window.location.href='/login'">
-            <img width="35px" height="35px" src="/img/about/chrome_icon.png">
-            <strong>
-                <a href="javascript:">网页版</a>
-            </strong>
+            <div>
+                <img width="35px" height="35px" src="/img/about/web_icon.png">
+                <strong>
+                    <a href="javascript:">点击进入系统</a>
+                </strong>
+            </div>
         </div>
-        <div class="download_button" onclick="androidDownload()">
-            <img width="35px" height="35px" src="/img/about/android_icon.png">
-            <strong>
-                <a href="javascript:">Android</a>
-            </strong>
+        <div class="download_button" onclick="downloadAPP()">
+            <div>
+                <img width="35px" height="35px" src="/img/about/app_icon.png">
+                <strong>
+                    <a href="javascript:">下载APP客户端</a>
+                </strong>
+            </div>
         </div>
-        <div class="download_button" onclick="iOSDownload()">
-            <img width="35px" height="35px" src="/img/about/ios_icon.png">
-            <strong>
-                <a href="javascript:">iOS</a>
-            </strong>
-        </div>
-        <div class="download_button" onclick="androidGooglePlayDownload()">
-            <img width="35px" height="35px" src="/img/about/google_play_icon.png">
-            <strong>
-                <a href="javascript:">Google Play</a>
-            </strong>
-        </div>
-        <div class="download_button" onclick="UWPDownload()">
-            <img width="35px" height="35px" src="/img/about/uwp_icon.png">
-            <strong>
-                <a href="javascript:">Windows Store</a>
-            </strong>
-        </div>
-        <div class="download_button" onclick="QuickApp()">
-            <img width="35px" height="35px" src="/img/about/quick_app_icon.png">
-            <strong>
-                <a href="javascript:">快应用</a>
-            </strong>
-        </div>
-        <div class="download_button" onclick="Wechat()">
-            <img width="35px" height="35px" src="/img/about/wechat_icon.png">
-            <strong>
-                <a href="javascript:">微信公众号</a>
-            </strong>
-        </div>
-        <div class="download_button" onclick="WechatApp()">
-            <img width="35px" height="35px" src="/img/about/wechat_app_icon.png">
-            <strong>
-                <a href="javascript:">微信小程序</a>
-            </strong>
-        </div>
-        <div class="download_button" onclick="QQApp()">
-            <img width="35px" height="35px" src="/img/about/qq_app_icon.png">
-            <strong>
-                <a href="javascript:">QQ小程序</a>
-            </strong>
-        </div>
-        <div class="download_button" onclick="AlipayApp()">
-            <img width="35px" height="35px" src="/img/about/alipay_icon.png">
-            <strong>
-                <a href="javascript:">支付宝小程序</a>
-            </strong>
+        <div class="download_button" onclick="showWechatQRCode()">
+            <div>
+                <img width="35px" height="35px" src="/img/about/wechat_icon.png">
+                <strong>
+                    <a href="javascript:">公众号和小程序</a>
+                </strong>
+            </div>
         </div>
     </div>
 
@@ -221,7 +174,7 @@
         <h2>应用介绍</h2>
         <div class="dsp margin-bottom60">
             <section>
-                广东二师助手，别名易小助，是为广东第二师范学院专属打造的校园服务应用。它不仅提供了课表查询、成绩查询、四六级考试成绩查询、空课室查询、图书借阅查询、馆藏图书查询、教学质量评价、电费查询、黄页信息查询、校园卡充值、校园卡挂失、消费查询等综合性的教务功能，还提供了二手交易、失物招领、校园树洞、恋爱交友、表白墙、全民快递、拍好校园、话题、匿名评教等社区交流平台。广东二师助手旨在为广东第二师范学院的在校师生们提供最优质的教育教学、校园生活、社团活动、文化娱乐和教务服务等信息。四年时光，广东二师助手陪你一起走过。
+                广东第二师范学院校园助手，是为广东第二师范学院专属打造的校园服务应用。它不仅提供了课表查询、成绩查询、四六级考试成绩查询、空课室查询、图书借阅查询、馆藏图书查询、教学质量评价、电费查询、黄页信息查询、校园卡充值、校园卡挂失、消费查询等综合性的教务功能，还提供了二手交易、失物招领、校园树洞、恋爱交友、表白墙、全民快递、拍好校园、话题、匿名评教等社区交流平台。广东二师助手旨在为广东第二师范学院的在校师生们提供最优质的教育教学、校园生活、社团活动、文化娱乐和教务服务等信息。四年时光，广东二师助手陪你一起走过。
             </section>
         </div>
     </div>
@@ -235,27 +188,27 @@
                 <tr>
                     <td>
                         <div style="">
-                            <img src="/img/about/screenshot_01.jpg">
+                            <img src="/img/about/preview_0.jpg">
                         </div>
                     </td>
                     <td>
                         <div style="">
-                            <img src="/img/about/screenshot_02.jpg">
+                            <img src="/img/about/preview_1.jpg">
                         </div>
                     </td>
                     <td>
                         <div style="">
-                            <img src="/img/about/screenshot_05.jpg">
+                            <img src="/img/about/preview_2.jpg">
                         </div>
                     </td>
                     <td>
                         <div style="">
-                            <img src="/img/about/screenshot_04.jpg">
+                            <img src="/img/about/preview_3.jpg">
                         </div>
                     </td>
                     <td>
                         <div style="">
-                            <img src="/img/about/screenshot_03.jpg">
+                            <img src="/img/about/preview_4.jpg">
                         </div>
                     </td>
                 </tr>
@@ -275,12 +228,6 @@
             </p>
         </div>
     </div>
-
-</div>
-
-<div class="wxtip" id="JweixinTip">
-    <span class="wxtip-icon"></span>
-    <p class="wxtip-txt">点击右上角<br>选择在其他浏览器中打开</p>
 </div>
 
 <div id="rnw_cookies_banner" style="display: none">
@@ -291,6 +238,8 @@
         请点击<a href="/policy/cookie" id="rnw_cookies_banner_button_more">Cookie政策</a>了解更多信息。
     </div>
 </div>
+
+<br>
 
 </body>
 </html>

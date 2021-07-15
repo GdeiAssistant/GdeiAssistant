@@ -1,5 +1,4 @@
 <Accounts>
-    <Account Id="GdeiAssistant" Biz="MzUyNzkxMTcxMQ==" Name="易小助" Description="易小助是一款旨在为广东第二师范学院在校师生提供最便捷获取校园生活、社团活动、教务信息的校园应用，提供了课表查询、成绩查询、空课室查询、图书查询、校园卡充值挂失、消费查询等综合性的服务与功能。" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM5ZCtYYlNlnVjgPIHv1uC5tic2sm6pHqPoaf74NeYiaic5aA/0"/>
     <Account Id="gdei1955" Biz="MzI5MjQ0ODY2Nw==" Name="广东第二师范学院" Description="广东第二师范学院官方微信" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM53wicWxdaohQ8ZlHYPQuRu2xc0sfQ84b2aDSe5Uyv6wGg/0"/>
     <Account Id="gdesxsh" Biz="MjM5NzYyNDkwMg==" Name="广东第二师范学院学生会"
              Description="全心全意为同学服务,二师大事小事都在这!有什么开心事困难事,都可以在后台留言与校会君分享.校会君与你分享快乐,也为你解答疑惑!" Avatar="http://wx.qlogo.cn/mmhead/Q3auHgzwzM4ibvheiaYJSeYbWAiafpgHibubbV7iaZKicudB2eSYiar3xjdGA/0"/>

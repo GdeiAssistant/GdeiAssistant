@@ -188,7 +188,7 @@ public class LoginTokenService {
             Location currentLocation = ipService.GetLocationInfoByIPAddress(ip);
             Location tokenLocation = ipService.GetLocationInfoByIPAddress(tokenIP);
             if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
-                    && Objects.equals(currentLocation.getRegion(), tokenLocation.getRegion())) {
+                    && Objects.equals(currentLocation.getProvince(), tokenLocation.getProvince())) {
                 //IP校验通过，更新令牌的IP地址
                 AccessToken accessToken = new AccessToken();
                 accessToken.setSignature(signature);

@@ -64,7 +64,7 @@ public class JiSuAPIService {
         if (jsonObject.has("status") && jsonObject.getString("status").equals("0")) {
             Location location = new Location();
             location.setCountry(jsonObject.getJSONObject("result").has("country") ? jsonObject.getJSONObject("result").getString("country") : null);
-            location.setRegion(jsonObject.getJSONObject("result").has("region") ? jsonObject.getJSONObject("result").getString("region") : null);
+            location.setProvince(jsonObject.getJSONObject("result").has("province") ? jsonObject.getJSONObject("result").getString("province") : null);
             location.setCity(jsonObject.getJSONObject("result").has("city") ? jsonObject.getJSONObject("result").getString("city") : null);
             return location;
         }

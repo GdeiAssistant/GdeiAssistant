@@ -17,7 +17,7 @@ public class Location implements Serializable, Entity {
 
     private String city;
 
-    private String region;
+    private String province;
 
     public String getArea() {
         return area;
@@ -43,23 +43,23 @@ public class Location implements Serializable, Entity {
         this.city = city;
     }
 
-    public String getRegion() {
-        return region;
+    public String getProvince() {
+        return province;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public Location() {
 
     }
 
-    public Location(String area, String country, String city, String region) {
+    public Location(String area, String country, String city, String province) {
         this.area = area;
         this.country = country;
         this.city = city;
-        this.region = region;
+        this.province = province;
     }
 
 }

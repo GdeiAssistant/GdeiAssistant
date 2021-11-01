@@ -1,8 +1,8 @@
 package cn.gdeiassistant.Constant;
 
 import java.util.Map;
-
-import static java.util.Map.entry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SettingConstantUtils {
 
@@ -45,18 +45,19 @@ public class SettingConstantUtils {
             "/alipay", //支付宝API接口
     };
 
-    public static final Map<String, String> VIEW_CONTROLLER_NAME_MAP = Map.ofEntries(
-            entry("/", "/About/index"),
-            entry("/about", "About/index"),
-            entry("/about/security", "About/security"),
-            entry("/about/account", "About/account"),
-            entry("/license", "About/license"),
-            entry("/agreement", "AgreementAndPolicy/agreement"),
-            entry("/policy/cookie", "AgreementAndPolicy/cookiePolicy"),
-            entry("/policy/privacy", "AgreementAndPolicy/privacyPolicy"),
-            entry("/policy/social", "AgreementAndPolicy/socialPolicy"),
-            entry("/about/graduation", "AgreementAndPolicy/graduationPolicy"),
-            entry("/announcement/equalrights", "Announcement/equalrights"),
-            entry("/announcement/suicideprevention", "Announcement/suicideprevention")
-    );
+    public static final Map<String, String> VIEW_CONTROLLER_NAME_MAP =
+            Stream.of(new String[][]{
+                    {"/", "/About/index"},
+                    {"/about", "About/index"},
+                    {"/about/security", "About/security"},
+                    {"/about/account", "About/account"},
+                    {"/license", "About/license"},
+                    {"/agreement", "AgreementAndPolicy/agreement"},
+                    {"/policy/cookie", "AgreementAndPolicy/cookiePolicy"},
+                    {"/policy/privacy", "AgreementAndPolicy/privacyPolicy"},
+                    {"/policy/social", "AgreementAndPolicy/socialPolicy"},
+                    {"/about/graduation", "AgreementAndPolicy/graduationPolicy"},
+                    {"/announcement/equalrights", "Announcement/equalrights"},
+                    {"/announcement/suicideprevention", "Announcement/suicideprevention"}
+            }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 }

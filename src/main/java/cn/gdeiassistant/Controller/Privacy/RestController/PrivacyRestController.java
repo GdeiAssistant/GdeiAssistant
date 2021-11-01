@@ -82,34 +82,6 @@ public class PrivacyRestController {
                 privacyService.UpdateAge(state, username);
                 break;
 
-            case "DEGREE":
-                //学历
-                privacyService.UpdateDegree(state, username);
-                break;
-
-            case "PROFESSION":
-                privacyService.UpdateProfession(state, username);
-                break;
-
-            case "COLLEGES":
-                //大专院校
-                privacyService.UpdateSchool(state, 0, username);
-                break;
-
-            case "HIGH_SCHOOL":
-                //高中/职中
-                privacyService.UpdateSchool(state, 1, username);
-
-            case "JUNIOR_HIGH_SCHOOL":
-                //初中
-                privacyService.UpdateSchool(state, 2, username);
-                break;
-
-            case "PRIMARY_SCHOOL":
-                //小学
-                privacyService.UpdateSchool(state, 3, username);
-                break;
-
             case "CACHE":
                 //教务缓存
                 privacyService.UpdateCache(state, username);

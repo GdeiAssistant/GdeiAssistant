@@ -341,23 +341,6 @@ public class UserProfileService {
     }
 
     /**
-     * 更新学历信息
-     *
-     * @param username
-     * @param degree
-     * @throws Exception
-     */
-    public void UpdateDegree(String username, int degree) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
-        if (profile != null) {
-            profile.setDegree(degree);
-            profileMapper.updateDegree(profile);
-            return;
-        }
-        throw new UserNotExistException("查询的用户不存在");
-    }
-
-    /**
      * 更新院系个人资料
      *
      * @param username
@@ -442,70 +425,12 @@ public class UserProfileService {
     }
 
     /**
-     * 更新学校信息
-     *
-     * @param username
-     * @param school
-     * @param index
-     * @throws Exception
-     */
-    public void UpdateSchool(String username, String school, int index) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
-        if (profile != null) {
-            switch (index) {
-                case 0:
-                    //大专院校
-                    profile.setColleges(school);
-                    profileMapper.updateColleges(profile);
-                    break;
-
-                case 1:
-                    //高中/职中
-                    profile.setHighSchool(school);
-                    profileMapper.updateHighSchool(profile);
-                    break;
-
-                case 2:
-                    //初中
-                    profile.setJuniorHighSchool(school);
-                    profileMapper.updateJuniorHighSchool(profile);
-                    break;
-
-                case 3:
-                    //小学
-                    profile.setPrimarySchool(school);
-                    profileMapper.updatePrimarySchool(profile);
-                    break;
-            }
-            return;
-        }
-        throw new UserNotExistException("查询的用户不存在");
-    }
-
-    /**
      * 获取性别字典
      *
      * @return
      */
     public static Map getGenderMap() {
         return genderMap;
-    }
-
-    /**
-     * 更新职业个人资料
-     *
-     * @param username
-     * @param profession
-     * @throws Exception
-     */
-    public void UpdateProfession(String username, int profession) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
-        if (profile != null) {
-            profile.setProfession(profession);
-            profileMapper.updateProfession(profile);
-            return;
-        }
-        throw new UserNotExistException("查询的用户不存在");
     }
 
     /**

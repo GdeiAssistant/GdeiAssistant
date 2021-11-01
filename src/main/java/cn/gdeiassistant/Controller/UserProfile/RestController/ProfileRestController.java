@@ -2,7 +2,6 @@ package cn.gdeiassistant.Controller.UserProfile.RestController;
 
 import cn.gdeiassistant.Annotation.RestAuthentication;
 import cn.gdeiassistant.Pojo.Entity.*;
-import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Pojo.Profile.LocationComparator;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -20,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
@@ -315,22 +313,6 @@ public class ProfileRestController {
     }
 
     /**
-     * 更新用户学历信息
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/api/profile/degree", method = RequestMethod.POST)
-    public JsonResult UpdateDegree(HttpServletRequest request, int degree) throws Exception {
-        if (degree >= 0 && degree < UserProfileService.getDegreeMap().size()) {
-            String username = (String) request.getSession().getAttribute("username");
-            userProfileService.UpdateDegree(username, degree);
-            return new JsonResult(true);
-        }
-        return new JsonResult(false, "请求参数异常");
-    }
-
-    /**
      * 更新用户院系
      *
      * @param request
@@ -477,24 +459,6 @@ public class ProfileRestController {
     }
 
     /**
-     * 更新职业信息
-     *
-     * @param request
-     * @param profession
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/api/profile/profession", method = RequestMethod.POST)
-    public JsonResult UpdateProfession(HttpServletRequest request, @Validated @NotNull @Min(0) Integer profession) throws Exception {
-        if (profession == null || profession >= UserProfileService.getProfessionMap().size()) {
-            return new JsonResult(false, "请求参数不合法");
-        }
-        String username = (String) request.getSession().getAttribute("username");
-        userProfileService.UpdateProfession(username, profession);
-        return new JsonResult(true);
-    }
-
-    /**
      * 更新用户昵称
      *
      * @param request
@@ -506,23 +470,6 @@ public class ProfileRestController {
     public JsonResult UpdateNickname(HttpServletRequest request, @Validated @NotBlank @Range(min = 1, max = 24) String nickname) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         userProfileService.UpdateNickname(username, nickname);
-        return new JsonResult(true);
-    }
-
-    /**
-     * 更新学校信息
-     *
-     * @param request
-     * @param index
-     * @param school
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/api/profile/school", method = RequestMethod.POST)
-    public JsonResult UpdateSchool(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(3) Integer index
-            , @Validated @NotBlank @Length(min = 1, max = 45) String school) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        userProfileService.UpdateSchool(username, school, index);
         return new JsonResult(true);
     }
 

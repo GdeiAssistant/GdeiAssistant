@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Controller.UserProfile.Controller;
 
 import cn.gdeiassistant.Pojo.Entity.*;
-import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Service.Privacy.PrivacyService;
 import cn.gdeiassistant.Service.Profile.UserProfileService;
 import cn.gdeiassistant.Tools.LocationUtils;
@@ -73,25 +72,6 @@ public class ProfileController {
             if (profile.getBirthday() != null) {
                 modelAndView.addObject("Age", ChronoUnit.YEARS.between(profile.getBirthday().toInstant()
                         .atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()));
-            }
-            if (profile.getDegree() != null) {
-                modelAndView.addObject("Degree", UserProfileService.getDegreeMap().get(profile.getDegree()));
-            }
-            if (StringUtils.isNotBlank(profile.getColleges())) {
-                modelAndView.addObject("Colleges", profile.getColleges());
-            }
-            if (StringUtils.isNotBlank(profile.getHighSchool())) {
-                modelAndView.addObject("HighSchool", profile.getHighSchool());
-            }
-            if (StringUtils.isNotBlank(profile.getJuniorHighSchool())) {
-                modelAndView.addObject("JuniorHighSchool", profile.getJuniorHighSchool());
-            }
-            if (StringUtils.isNotBlank(profile.getPrimarySchool())) {
-                modelAndView.addObject("PrimarySchool", profile.getPrimarySchool());
-            }
-            if (profile.getProfession() != null) {
-                modelAndView.addObject("Profession", UserProfileService.getProfessionMap()
-                        .get(profile.getProfession()));
             }
             StringBuilder location = new StringBuilder();
             Region locationRegion = LocationUtils.getRegionMap().get(profile.getLocationRegion());
@@ -204,37 +184,6 @@ public class ProfileController {
                 if (profile.getBirthday() != null) {
                     modelAndView.addObject("Age", ChronoUnit.YEARS.between(profile.getBirthday().toInstant()
                             .atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()));
-                }
-            }
-            if (Boolean.TRUE.equals(privacy.isDegreeOpen())) {
-                if (profile.getDegree() != null) {
-                    modelAndView.addObject("Degree", UserProfileService.getDegreeMap().get(profile.getDegree()));
-                }
-            }
-            if (Boolean.TRUE.equals(privacy.isCollegesOpen())) {
-                if (profile.getColleges() != null) {
-                    modelAndView.addObject("Colleges", profile.getColleges());
-                }
-            }
-            if (Boolean.TRUE.equals(privacy.isHighSchoolOpen())) {
-                if (StringUtils.isNotBlank(profile.getHighSchool())) {
-                    modelAndView.addObject("HighSchool", profile.getHighSchool());
-                }
-            }
-            if (Boolean.TRUE.equals(privacy.isJuniorHighSchoolOpen())) {
-                if (StringUtils.isNotBlank(profile.getJuniorHighSchool())) {
-                    modelAndView.addObject("JuniorHighSchool", profile.getJuniorHighSchool());
-                }
-            }
-            if (Boolean.TRUE.equals(privacy.isPrimarySchoolOpen())) {
-                if (StringUtils.isNotBlank(profile.getPrimarySchool())) {
-                    modelAndView.addObject("PrimarySchool", profile.getPrimarySchool());
-                }
-            }
-            if (Boolean.TRUE.equals(privacy.isProfessionOpen())) {
-                if (profile.getProfession() != null) {
-                    modelAndView.addObject("Profession", UserProfileService.getProfessionMap()
-                            .get(profile.getProfession()));
                 }
             }
             if (Boolean.TRUE.equals(privacy.isLocationOpen())) {

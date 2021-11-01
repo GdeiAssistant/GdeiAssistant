@@ -102,41 +102,6 @@
                    onchange="changePrivacySetting()">
         </div>
     </div>
-    <div class="weui-cell weui-cell_switch">
-        <div class="weui-cell__bd">公开我的职业</div>
-        <div class="weui-cell__ft">
-            <input id="profession" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
-        </div>
-    </div>
-    <div class="weui-cell weui-cell_switch">
-        <div class="weui-cell__bd">公开我的大专院校</div>
-        <div class="weui-cell__ft">
-            <input id="colleges" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
-        </div>
-    </div>
-    <div class="weui-cell weui-cell_switch">
-        <div class="weui-cell__bd">公开我的高中/职中</div>
-        <div class="weui-cell__ft">
-            <input id="primary_school" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
-        </div>
-    </div>
-    <div class="weui-cell weui-cell_switch">
-        <div class="weui-cell__bd">公开我的初中</div>
-        <div class="weui-cell__ft">
-            <input id="junior_high_school" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
-        </div>
-    </div>
-    <div class="weui-cell weui-cell_switch">
-        <div class="weui-cell__bd">公开我的小学</div>
-        <div class="weui-cell__ft">
-            <input id="high_school" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
-        </div>
-    </div>
 </div>
 
 <div class="weui-cells__title">数据缓存</div>

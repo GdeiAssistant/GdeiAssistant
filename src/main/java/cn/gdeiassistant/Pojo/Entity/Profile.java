@@ -22,8 +22,6 @@ public class Profile implements Serializable, Entity {
 
     private Date birthday;
 
-    private Integer degree;
-
     private Integer faculty;
 
     private Integer enrollment;
@@ -43,40 +41,6 @@ public class Profile implements Serializable, Entity {
     private String hometownState;
 
     private String hometownCity;
-
-    private String primarySchool;
-
-    private String juniorHighSchool;
-
-    private String highSchool;
-
-    private String colleges;
-
-    private Integer profession;
-
-    public String getPrimarySchool() {
-        return primarySchool;
-    }
-
-    public void setPrimarySchool(String primarySchool) {
-        this.primarySchool = primarySchool;
-    }
-
-    public String getJuniorHighSchool() {
-        return juniorHighSchool;
-    }
-
-    public void setJuniorHighSchool(String juniorHighSchool) {
-        this.juniorHighSchool = juniorHighSchool;
-    }
-
-    public String getHighSchool() {
-        return highSchool;
-    }
-
-    public void setHighSchool(String highSchool) {
-        this.highSchool = highSchool;
-    }
 
     public Integer getGender() {
         return gender;
@@ -174,14 +138,6 @@ public class Profile implements Serializable, Entity {
         this.avatarURL = avatarURL;
     }
 
-    public Integer getDegree() {
-        return degree;
-    }
-
-    public void setDegree(Integer degree) {
-        this.degree = degree;
-    }
-
     public Date getBirthday() {
         return birthday;
     }
@@ -198,27 +154,11 @@ public class Profile implements Serializable, Entity {
         this.enrollment = enrollment;
     }
 
-    public Integer getProfession() {
-        return profession;
-    }
-
-    public void setProfession(Integer profession) {
-        this.profession = profession;
-    }
-
     public String getNickname() {
         return nickname;
     }
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public String getColleges() {
-        return colleges;
-    }
-
-    public void setColleges(String colleges) {
-        this.colleges = colleges;
     }
 }

@@ -315,9 +315,6 @@
                     } else {
                         $("#age").text("未填写");
                     }
-                    //学历
-                    var degree = result.data.degree == null ? 0 : result.data.degree;
-                    $("#degree").text(degreeMap[degree]);
                     //院系
                     var faculty = result.data.faculty == null ? 0 : result.data.faculty;
                     $("#faculty").text(facultyMap[faculty]);
@@ -326,18 +323,6 @@
                     $("#major_val").val(result.data.major == null ? "" : result.data.major);
                     //入学年份
                     $("#enrollment_text").text(result.data.enrollment == null ? "未选择" : result.data.enrollment + "年");
-                    //职业信息
-                    var profession = result.data.profession == null ? 0 : result.data.profession;
-                    $("#profession_text").text(professionMap[profession]);
-                    //学校信息
-                    $("#colleges").text(result.data.colleges == null ? "未填写" : result.data.colleges);
-                    $("#colleges_val").text(result.data.colleges == null ? "" : result.data.colleges);
-                    $("#high_school").text(result.data.highSchool == null ? "未填写" : result.data.highSchool);
-                    $("#high_school_val").val(result.data.highSchool == null ? "" : result.data.highSchool);
-                    $("#junior_high_school").text(result.data.juniorHighSchool == null ? "未填写" : result.data.juniorHighSchool);
-                    $("#junior_high_school_val").val(result.data.juniorHighSchool == null ? "" : result.data.juniorHighSchool);
-                    $("#primary_school").text(result.data.primarySchool == null ? "未填写" : result.data.primarySchool);
-                    $("#primary_school_val").val(result.data.primarySchool == null ? "" : result.data.primarySchool);
                 } else {
                     showCustomErrorTip(result.message);
                 }
@@ -470,33 +455,6 @@
         $("#changeMajor").popup();
     }
 
-    //弹出学校修改窗口
-    function showSchoolDialog(index) {
-        $("#school_index").val(index);
-        switch (index) {
-            case 0:
-                //大专院校
-                $("#school").val($("#colleges_val").val());
-                break;
-
-            case 1:
-                //高中/职中
-                $("#school").val($("#high_school_val").val());
-                break;
-
-            case 2:
-                //初中
-                $("#school").val($("#junior_high_school_val").val());
-                break;
-
-            case 3:
-                //小学
-                $("#school").val($("#primary_school_val").val());
-                break;
-        }
-        $("#changeSchool").popup();
-    }
-
     //弹出入学年份选择框
     function showEnrollmentPicker() {
         var enrollmentPicker = [];
@@ -570,42 +528,6 @@
         } else {
             showEnrollmentPicker();
         }
-    }
-
-    //修改职业信息
-    function showProfessionDialog() {
-        var professionPicker = [];
-        for (var i = 0; i < professionMap.length; i++) {
-            professionPicker[i] = {
-                label: professionMap[i],
-                value: i
-            }
-        }
-        weui.picker(professionPicker, {
-            onConfirm: function (profession) {
-                $.ajax({
-                    url: "/api/profile/profession",
-                    data: {
-                        profession: profession[0].value
-                    },
-                    type: 'post',
-                    success: function (updateResult) {
-                        if (updateResult.success === true) {
-                            loadProfile();
-                        } else {
-                            showCustomErrorTip(updateResult.message);
-                        }
-                    },
-                    error: function (result) {
-                        if (result.status) {
-                            showCustomErrorTip(result.responseJSON.message);
-                        } else {
-                            showNetworkErrorTip();
-                        }
-                    }
-                });
-            }
-        });
     }
 
     //修改昵称
@@ -778,43 +700,6 @@
         }
     }
 
-    //修改学历
-    function changeDegree() {
-        var degreePicker = [];
-        for (var i = 0; i < degreeMap.length; i++) {
-            degreePicker[i] = {
-                label: degreeMap[i],
-                value: i
-            }
-        }
-        weui.picker(degreePicker, {
-            defaultValue: [0],
-            onConfirm: function (degree) {
-                $.ajax({
-                    url: "/api/profile/degree",
-                    data: {
-                        degree: degree[0].value
-                    },
-                    type: 'post',
-                    success: function (updateResult) {
-                        if (updateResult.success === true) {
-                            loadProfile();
-                        } else {
-                            showCustomErrorTip(updateResult.message);
-                        }
-                    },
-                    error: function (result) {
-                        if (result.status) {
-                            showCustomErrorTip(result.responseJSON.message);
-                        } else {
-                            showNetworkErrorTip();
-                        }
-                    }
-                });
-            }
-        });
-    }
-
     //修改院系
     function changeFaculty() {
         var facultyPicker = [];
@@ -862,37 +747,6 @@
                     major: $("#major").val()
                 },
                 type: 'post',
-                success: function (updateResult) {
-                    if (updateResult.success === true) {
-                        loadProfile();
-                    } else {
-                        showCustomErrorTip(updateResult.message);
-                    }
-                },
-                error: function (result) {
-                    if (result.status) {
-                        showCustomErrorTip(result.responseJSON.message);
-                    } else {
-                        showNetworkErrorTip();
-                    }
-                }
-            });
-        }
-    }
-
-    //修改学校信息
-    function changeSchool() {
-        if ($("#school").val().length > 0 && $("#school").val().length <= 45) {
-            var school = $("#school").val();
-            var index = $("#school_index").val();
-            $.closePopup();
-            $.ajax({
-                url: '/api/profile/school',
-                type: 'post',
-                data: {
-                    index: index,
-                    school: school
-                },
                 success: function (updateResult) {
                     if (updateResult.success === true) {
                         loadProfile();

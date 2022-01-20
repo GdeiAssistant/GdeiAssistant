@@ -562,30 +562,6 @@ LOCK TABLES `express_like` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `gender`
---
-
-DROP TABLE IF EXISTS `gender`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `gender` (
-  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `gender` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '自定义性别',
-  PRIMARY KEY (`username`),
-  CONSTRAINT `genderUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `gender`
---
-
-LOCK TABLES `gender` WRITE;
-/*!40000 ALTER TABLE `gender` DISABLE KEYS */;
-/*!40000 ALTER TABLE `gender` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `introduction`
 --
 
@@ -811,6 +787,7 @@ CREATE TABLE `profile` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `nickname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `gender` tinyint(1) DEFAULT NULL COMMENT '性别',
+  `custom_gender` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '自定义性别',
   `birthday` date DEFAULT NULL COMMENT '生日',
   `degree` tinyint(1) DEFAULT NULL COMMENT '学历',
   `faculty` tinyint(1) DEFAULT NULL COMMENT '院系',

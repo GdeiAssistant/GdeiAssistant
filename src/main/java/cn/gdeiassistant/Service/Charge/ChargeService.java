@@ -9,7 +9,7 @@ import cn.gdeiassistant.Pojo.Entity.ChargeLog;
 import cn.gdeiassistant.Pojo.Entity.Cookie;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Service.CardQuery.CardQueryService;
-import cn.gdeiassistant.Tools.HttpClientUtils;
+import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Tools;
+package cn.gdeiassistant.Tools.Utils;
 
 import cn.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import cn.gdeiassistant.Pojo.Entity.Access;

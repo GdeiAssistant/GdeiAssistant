@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Controller.RSAEncryption.RestController;
 
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
-import cn.gdeiassistant.Tools.RSAUtils;
+import cn.gdeiassistant.Tools.Utils.RSAUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

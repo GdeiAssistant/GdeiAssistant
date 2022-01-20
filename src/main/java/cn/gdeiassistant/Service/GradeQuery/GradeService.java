@@ -20,8 +20,8 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.Privac
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
-import cn.gdeiassistant.Tools.HttpClientUtils;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

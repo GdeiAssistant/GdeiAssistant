@@ -11,7 +11,7 @@ import cn.gdeiassistant.Pojo.Profile.AttributionComparator;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.Phone.PhoneService;
-import cn.gdeiassistant.Tools.LocationUtils;
+import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;

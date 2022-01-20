@@ -6,7 +6,7 @@ import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Pojo.Entity.KaoYan;
 import cn.gdeiassistant.Service.Recognition.RecognitionService;
-import cn.gdeiassistant.Tools.ImageEncodeUtils;
+import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
 import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

@@ -2,7 +2,7 @@ package cn.gdeiassistant.Config.Application;
 
 import ch.qos.logback.ext.spring.web.LogbackConfigListener;
 import cn.gdeiassistant.Filter.XSSFilter;
-import cn.gdeiassistant.Tools.StringUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;

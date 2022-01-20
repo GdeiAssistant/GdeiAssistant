@@ -10,7 +10,7 @@ import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import cn.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Pojo.Entity.Book;
-import cn.gdeiassistant.Tools.HttpClientUtils;
+import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;

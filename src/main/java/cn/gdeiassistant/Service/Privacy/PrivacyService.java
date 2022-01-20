@@ -5,7 +5,7 @@ import cn.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.PrivacyMapper;
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Privacy;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

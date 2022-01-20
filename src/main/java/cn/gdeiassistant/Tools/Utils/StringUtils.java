@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Tools;
+package cn.gdeiassistant.Tools.Utils;
 
 import java.util.UUID;
 
@@ -46,6 +46,16 @@ public class StringUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * 判断字符串是否为布尔值
+     *
+     * @param string
+     * @return
+     */
+    public static boolean isBoolean(String string) {
+        return "true".equalsIgnoreCase(string) || "false".equalsIgnoreCase(string);
     }
 
     /**

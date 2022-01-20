@@ -142,11 +142,6 @@ public class UserDataService {
             if (privacy != null) {
                 data.put("privacy", privacy);
             }
-            //获取毕业账号处理方案设置
-            Graduation graduation = appDataMapper.selectUserGraduation(StringEncryptUtils.encryptString(username));
-            if (graduation != null) {
-                data.put("graduation", graduation.getProgram());
-            }
             //获取保存的四六级准考证号
             CetNumber cetNumber = appDataMapper.selectUserCetNumber(StringEncryptUtils.encryptString(username));
             if (cetNumber != null && cetNumber.getNumber() != null) {

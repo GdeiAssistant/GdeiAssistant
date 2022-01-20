@@ -184,14 +184,6 @@
 </div>
 
 <div class="weui-cells">
-    <a class="weui-cell weui-cell_access" href="javascript:"
-       onclick="window.location.href = '/graduation'">
-        <div class="weui-cell__bd">
-            <p>毕业账号处理</p>
-        </div>
-        <div class="weui-cell__ft">
-        </div>
-    </a>
     <a class="weui-cell weui-cell_access" href="javascript:" onclick="exportUserData()">
         <div class="weui-cell__bd">
             <p>下载用户数据</p>

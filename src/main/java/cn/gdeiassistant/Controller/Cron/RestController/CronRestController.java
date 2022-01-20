@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Controller.Cron.RestController;
 
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.Account.GraduatedAccountService;
 import cn.gdeiassistant.Service.GradeQuery.GradeService;
 import cn.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import cn.gdeiassistant.Service.SchoolNews.SchoolNewsService;
@@ -36,9 +35,6 @@ public class CronRestController {
     private WechatAccountService wechatAccountService;
 
     @Autowired
-    private GraduatedAccountService graduatedAccountService;
-
-    @Autowired
     private SchoolNewsService schoolNewsService;
 
     @RequestMapping(value = "/cron/grade", method = RequestMethod.GET)
@@ -68,12 +64,6 @@ public class CronRestController {
     @RequestMapping(value = "/cron/secret", method = RequestMethod.GET)
     public JsonResult DeleteSecretData(HttpServletRequest request) throws Exception {
         secretService.DeleteTimerSecretInfos();
-        return new JsonResult(true);
-    }
-
-    @RequestMapping(value = "/cron/graduation", method = RequestMethod.GET)
-    public JsonResult ProceedGraduationProgram(HttpServletRequest request) throws Exception {
-        graduatedAccountService.ProceedGraduationProgram();
         return new JsonResult(true);
     }
 

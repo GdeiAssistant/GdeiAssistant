@@ -33,14 +33,6 @@ public class DataSQLBuilder {
         }}.toString();
     }
 
-    public String selectUserGraduation(String username) {
-        return new SQL() {{
-            SELECT("g.program");
-            FROM("graduation g");
-            WHERE("username=#{username}");
-        }}.toString();
-    }
-
     public String selectUserCetNumber(String username) {
         return new SQL() {{
             SELECT("c.number");

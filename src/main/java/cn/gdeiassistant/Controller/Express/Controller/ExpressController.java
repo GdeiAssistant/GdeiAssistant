@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Express.Controller;
 
-import cn.gdeiassistant.Annotation.CheckAuthentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +16,6 @@ public class ExpressController {
      * @return
      */
     @RequestMapping(value = "/express", method = RequestMethod.GET)
-    @CheckAuthentication(name = "express")
     public ModelAndView ResolveExpressPage(HttpServletRequest request) {
         return new ModelAndView("Express/index");
     }
@@ -28,7 +26,6 @@ public class ExpressController {
      * @return
      */
     @RequestMapping(value = "/express/publish", method = RequestMethod.GET)
-    @CheckAuthentication(name = "express")
     public ModelAndView ResolveExpressPublishPage(HttpServletRequest request) {
         return new ModelAndView("Express/publish");
     }
@@ -39,7 +36,6 @@ public class ExpressController {
      * @return
      */
     @RequestMapping(value = "/express/search", method = RequestMethod.GET)
-    @CheckAuthentication(name = "express")
     public ModelAndView ResolveExpressSearchPage(HttpServletRequest request) {
         return new ModelAndView("Express/search");
     }

@@ -1,13 +1,12 @@
 package cn.gdeiassistant.Controller.Secret.RestController;
 
-import cn.gdeiassistant.Annotation.RestCheckAuthentication;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Secret;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.Secret.SecretService;
 import cn.gdeiassistant.Service.Wechat.WechatService;
-import cn.gdeiassistant.Tools.StringUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
@@ -38,7 +37,6 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/info/start/{start}/size/{size}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "secret")
     public DataJsonResult<List<Secret>> GetMoreSecret(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
@@ -56,7 +54,6 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "secret")
     public JsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret, String voiceId
             , @RequestParam(value = "voice", required = false) MultipartFile file) throws Exception {
         if (secret.getType() == 0 && StringUtils.isBlank(secret.getContent())) {
@@ -105,7 +102,6 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/id/{id}/comment", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "secret")
     public JsonResult AddSecretComment(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
@@ -125,7 +121,6 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/id/{id}/like", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "secret")
     public JsonResult UpdateSecretLikeState(HttpServletRequest request
             , @PathVariable("id") int id, @Validated @Range(min = 0, max = 1) int like) throws Exception {
         String username = (String) request.getSession().getAttribute("username");

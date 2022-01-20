@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Photograph.Controller;
 
-import cn.gdeiassistant.Annotation.CheckAuthentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +16,6 @@ public class PhotographController {
      * @return
      */
     @RequestMapping(value = "/photograph", method = RequestMethod.GET)
-    @CheckAuthentication(name = "photograph")
     public ModelAndView ResolveLifePhotographPage(HttpServletRequest request) {
         return new ModelAndView("Photograph/index");
     }
@@ -28,7 +26,6 @@ public class PhotographController {
      * @return
      */
     @RequestMapping(value = "/photograph/upload", method = RequestMethod.GET)
-    @CheckAuthentication(name = "photograph")
     public ModelAndView ResolvePhotographPage(HttpServletRequest request) {
         return new ModelAndView("Photograph/upload");
     }

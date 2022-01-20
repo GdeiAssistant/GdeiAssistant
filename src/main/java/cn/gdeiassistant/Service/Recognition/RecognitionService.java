@@ -1,10 +1,9 @@
 package cn.gdeiassistant.Service.Recognition;
 
+import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
-import cn.gdeiassistant.Pojo.Entity.Identity;
 import cn.gdeiassistant.Service.CloudAPI.AliYunService;
 import cn.gdeiassistant.Service.CloudAPI.JiSuAPIService;
-import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,16 +36,5 @@ public class RecognitionService {
      */
     public String CharacterNumberRecognize(String image) throws RecognitionException {
         return aliyunService.CharacterNumberRecognize(image);
-    }
-
-    /**
-     * 识别身份证图片的文字，解析身份证照片信息
-     *
-     * @param image
-     * @return
-     * @throws Exception
-     */
-    public Identity ParseIdentityCardInfo(String image) throws Exception {
-        return aliyunService.ParseIdentityCard(image);
     }
 }

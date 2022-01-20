@@ -147,11 +147,6 @@ public class UserDataService {
             if (cetNumber != null && cetNumber.getNumber() != null) {
                 data.put("cet", cetNumber);
             }
-            //获取实名认证信息
-            Authentication authentication = appDataMapper.selectUserAuthentication(StringEncryptUtils.encryptString(username));
-            if (authentication != null) {
-                data.put("authentication", authentication);
-            }
             //获取全民快递订单信息
             List<DeliveryOrder> deliveryOrderList = appDataMapper.selectUserDeliveryOrderList(StringEncryptUtils.encryptString(username));
             if (deliveryOrderList != null && !deliveryOrderList.isEmpty()) {

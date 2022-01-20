@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Controller.Express.RestController;
 
 import com.taobao.wsgsvr.WsgException;
-import cn.gdeiassistant.Annotation.RestCheckAuthentication;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.ExpressException.CorrectRecordException;
 import cn.gdeiassistant.Exception.ExpressException.NoRealNameException;
@@ -37,7 +36,6 @@ public class ExpressRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/express/start/{start}/size/{size}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "express")
     public DataJsonResult<List<Express>> QueryExpressPage(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
@@ -56,7 +54,6 @@ public class ExpressRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/express/keyword/{keyword}/start/{start}/size/{size}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "express")
     public DataJsonResult<List<Express>> QueryExpressPageByKeyWord(HttpServletRequest request, @PathVariable("keyword") String keyword
             , @PathVariable("start") int start, @PathVariable("size") int size) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
@@ -73,7 +70,6 @@ public class ExpressRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/express", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "express")
     public JsonResult AddExpress(HttpServletRequest request, @Validated Express express) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
         expressService.AddExpress(express, username);
@@ -87,7 +83,6 @@ public class ExpressRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/express/id/{id}/comment", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "express")
     public DataJsonResult<List<ExpressComment>> QueryExpressComment(HttpServletRequest request, @PathVariable("id") Integer id) throws WsgException {
         List<ExpressComment> expressCommentList = expressService.QueryExpressComment(id);
         return new DataJsonResult<>(true, expressCommentList);
@@ -104,7 +99,6 @@ public class ExpressRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/express/id/{id}/comment", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "express")
     public JsonResult AddExpressComment(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws DataNotExistException, WsgException {
         String username = (String) request.getSession().getAttribute("username");
@@ -120,7 +114,6 @@ public class ExpressRestController {
      * @return
      */
     @RequestMapping(value = "/api/express/id/{id}/guess", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "express")
     public DataJsonResult<Boolean> GuessExpress(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 10) String name) throws DataNotExistException, WsgException, NoRealNameException, CorrectRecordException {
         String username = (String) request.getSession().getAttribute("username");
@@ -137,7 +130,6 @@ public class ExpressRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/express/id/{id}/like", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "express")
     public JsonResult LikeExpress(HttpServletRequest request, @PathVariable("id") int id) throws WsgException, DataNotExistException {
         String username = (String) request.getSession().getAttribute("username");
         expressService.LikeExpress(id, username);

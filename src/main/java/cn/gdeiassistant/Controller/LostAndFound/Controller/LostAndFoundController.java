@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.LostAndFound.Controller;
 
-import cn.gdeiassistant.Annotation.CheckAuthentication;
 import cn.gdeiassistant.Constant.ItemConstantUtils;
 import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
@@ -34,7 +33,6 @@ public class LostAndFoundController {
      * @return
      */
     @RequestMapping(value = {"/lostandfound", "/lostandfound/lost"}, method = RequestMethod.GET)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView ResolveLostIndexPage(HttpServletRequest request) {
         return new ModelAndView("LostAndFound/lostIndex");
     }
@@ -45,7 +43,6 @@ public class LostAndFoundController {
      * @return
      */
     @RequestMapping(value = "/lostandfound/found", method = RequestMethod.GET)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView ResolveFoundIndexPage(HttpServletRequest request) {
         return new ModelAndView("LostAndFound/foundIndex");
     }
@@ -56,7 +53,6 @@ public class LostAndFoundController {
      * @return
      */
     @RequestMapping(value = "/lostandfound/publish", method = RequestMethod.GET)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView ResolvePublishPage(HttpServletRequest request) {
         return new ModelAndView("LostAndFound/publish");
     }
@@ -67,7 +63,6 @@ public class LostAndFoundController {
      * @return
      */
     @RequestMapping(value = "/lostandfound/search/index", method = RequestMethod.GET)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView ResolveSearchPage(HttpServletRequest request) {
         return new ModelAndView("LostAndFound/search");
     }
@@ -79,7 +74,6 @@ public class LostAndFoundController {
      * @return
      */
     @RequestMapping(value = "/lostandfound/personal", method = RequestMethod.GET)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView ResolvePersonalPage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         String username = (String) request.getSession().getAttribute("username");
@@ -115,7 +109,6 @@ public class LostAndFoundController {
      * @throws Exception
      */
     @RequestMapping(value = "/lostandfound/edit/id/{id}", method = RequestMethod.GET)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView EditLostAndFoundInfo(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         String username = (String) request.getSession().getAttribute("username");
@@ -147,7 +140,6 @@ public class LostAndFoundController {
      * @return
      */
     @RequestMapping(value = "/lostandfound/search", method = RequestMethod.POST)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView SearchLostAndFoundInfo(HttpServletRequest request, @Validated @Range(min = 0, max = 1) @RequestParam("type") Integer lostType
             , @Validated @NotBlank @Length(min = 1, max = 50) @RequestParam("keywords") String keywords) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
@@ -171,7 +163,6 @@ public class LostAndFoundController {
      * @return
      */
     @RequestMapping(value = "/lostandfound/detail/id/{id}", method = RequestMethod.GET)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView GetLostAndFoundItemDetailInfo(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         LostAndFoundInfo lostAndFoundInfo = lostAndFoundService.QueryLostAndFoundInfoByID(id);
@@ -187,7 +178,6 @@ public class LostAndFoundController {
      * @return
      */
     @RequestMapping(value = "/lostandfound/lostinfo/type/{type}", method = RequestMethod.GET)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView SearchLostInfoByType(HttpServletRequest request, @Validated @Range(min = 0, max = 11) @PathVariable("type") Integer type) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundService.QueryLostItemsByType(type, 0);
@@ -206,7 +196,6 @@ public class LostAndFoundController {
      * @return
      */
     @RequestMapping(value = "/lostandfound/foundinfo/type/{type}", method = RequestMethod.GET)
-    @CheckAuthentication(name = "lostandfound")
     public ModelAndView SearchFoundInfoByType(HttpServletRequest request, @Validated @Range(min = 0, max = 11) @PathVariable("type") Integer type) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundService

@@ -26,10 +26,6 @@ public interface AppDataMapper {
     @ResultType(CetNumber.class)
     public CetNumber selectUserCetNumber(String username);
 
-    @SelectProvider(type = DataSQLBuilder.class, method = "selectUserAuthentication")
-    @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Authentication.AuthenticationMapper.Authentication")
-    public Authentication selectUserAuthentication(String username);
-
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserDeliveryOrderList")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Delivery.DeliveryMapper.DeliveryOrderDetail")
     public List<DeliveryOrder> selectUserDeliveryOrderList(String username);

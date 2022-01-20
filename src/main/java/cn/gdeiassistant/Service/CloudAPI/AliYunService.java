@@ -1,6 +1,8 @@
 package cn.gdeiassistant.Service.CloudAPI;
 
 import cn.gdeiassistant.Exception.PhoneException.*;
+import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
+import cn.gdeiassistant.Pojo.Config.AliyunConfig;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -8,19 +10,11 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
-import cn.gdeiassistant.Exception.AuthenticationException.IDCardReversedSideException;
-import cn.gdeiassistant.Exception.AuthenticationException.IDCardVerificationException;
-import cn.gdeiassistant.Exception.PhoneException.*;
-import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
-import cn.gdeiassistant.Pojo.Entity.Identity;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -29,54 +23,8 @@ public class AliYunService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private String aliyunUserId;
-
-    private String aliyunAccessKeyId;
-
-    private String aliyunAccessKeySecret;
-
-    private String aliyun_h5_verifyKey;
-
-    private String official_appCode;
-
-    private String aliyunSMSChinaTemplateCode;
-
-    private String aliyunSMSGlobalTemplateCode;
-
-    @Value("#{propertiesReader['api.aliyun.userid']}")
-    public void setAliyunUserId(String aliyunUserId) {
-        this.aliyunUserId = aliyunUserId;
-    }
-
-    @Value("#{propertiesReader['api.aliyun.accesskey.id']}")
-    public void setAliyunAccessKeyId(String aliyunAccessKeyId) {
-        this.aliyunAccessKeyId = aliyunAccessKeyId;
-    }
-
-    @Value("#{propertiesReader['api.aliyun.accesskey.secret']}")
-    public void setAliyunAccessKeySecret(String aliyunAccessKeySecret) {
-        this.aliyunAccessKeySecret = aliyunAccessKeySecret;
-    }
-
-    @Value("#{propertiesReader['api.aliyun.h5.verifykey']}")
-    public void setAliyun_h5_verifyKey(String aliyun_h5_verifyKey) {
-        this.aliyun_h5_verifyKey = aliyun_h5_verifyKey;
-    }
-
-    @Value("#{propertiesReader['api.aliyun.official.appcode']}")
-    public void setOfficial_appCode(String official_appCode) {
-        this.official_appCode = official_appCode;
-    }
-
-    @Value("#{propertiesReader['api.aliyun.sms.china.templatecode']}")
-    public void setAliyunSMSChinaTemplateCode(String aliyunSMSChinaTemplateCode) {
-        this.aliyunSMSChinaTemplateCode = aliyunSMSChinaTemplateCode;
-    }
-
-    @Value("#{propertiesReader['api.aliyun.sms.global.templatecode']}")
-    public void setAliyunSMSGlobalTemplateCode(String aliyunSMSGlobalTemplateCode) {
-        this.aliyunSMSGlobalTemplateCode = aliyunSMSGlobalTemplateCode;
-    }
+    @Autowired
+    private AliyunConfig aliyunConfig;
 
     /**
      * OCR识别图片中的数字，返回数字文本串
@@ -87,7 +35,7 @@ public class AliYunService {
      */
     public String CharacterNumberRecognize(String image) throws RecognitionException {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", "APPCODE " + official_appCode);
+        httpHeaders.set("Authorization", "APPCODE " + aliyunConfig.getOfficial_appCode());
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         JSONObject configure = new JSONObject();
         configure.put("min_size", "16");
@@ -113,113 +61,14 @@ public class AliYunService {
     }
 
     /**
-     * 识别身份证图片的文字，获取身份证实名信息
-     *
-     * @return
-     */
-    public Identity ParseIdentityCard(String image) throws Exception {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", "APPCODE " + official_appCode);
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("image", "data:image/jpeg;base64," + image);
-        ResponseEntity<String> responseEntity = restTemplate.exchange("https://orcidcard.market.alicloudapi.com/idCardAuto"
-                , HttpMethod.POST, new HttpEntity<>(params, httpHeaders), String.class);
-        JSONObject result = JSONObject.fromObject(responseEntity.getBody());
-        if (result.has("code")) {
-            if (result.getString("code").equals("1")) {
-                //身份证校验通过，进行解析信息
-                Identity identity = new Identity();
-                identity.setName(result.getJSONObject("result").getString("name"));
-                identity.setCode(result.getJSONObject("result").getString("code"));
-                identity.setSex(result.getJSONObject("result").getString("sex"));
-                identity.setNation(result.getJSONObject("result").getString("nation"));
-                identity.setAddress(result.getJSONObject("result").getString("address"));
-                identity.setBirthday(result.getJSONObject("result").getString("birthday"));
-                return identity;
-            } else if (result.getString("code").equals("2")) {
-                //正反面颠倒
-                throw new IDCardReversedSideException("身份证正反面颠倒");
-            }
-        }
-        throw new RecognitionException("OCR识别失败");
-    }
-
-    /**
-     * 身份二要素（姓名+身份证号码）实名制认证
-     *
-     * @param name
-     * @param number
-     * @return
-     */
-    public void VerifyIdentityCard(String name, String number) throws IDCardVerificationException {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", "APPCODE " + official_appCode);
-        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange("https://safrvcert.market.alicloudapi.com/" +
-                "safrv_2meta_id_name/?__userId=" + aliyunUserId + "&identifyNum=" + number + "&userName=" + name +
-                "&verifyKey=" + aliyun_h5_verifyKey, HttpMethod.GET, new HttpEntity<>(httpHeaders), JSONObject.class);
-        JSONObject jsonObject = responseEntity.getBody();
-        if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
-            //校验成功
-            return;
-        }
-        throw new IDCardVerificationException("身份证信息校验不通过");
-    }
-
-    /**
-     * 身份三要素（姓名+身份证号码+手机号）实名制认证
-     *
-     * @param name
-     * @param number
-     * @return
-     */
-    public void VerifyIdentityCard(String name, String number, String phone) throws IDCardVerificationException {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", "APPCODE " + official_appCode);
-        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange("https://safrvcert.market.alicloudapi.com/" +
-                        "safrv_3meta_id_name_phone/?__userId=" + aliyunUserId + "&identifyNum=" + number +
-                        "&mobilePhone=" + phone + "&userName=" + name + "&verifyKey=" + aliyun_h5_verifyKey
-                , HttpMethod.GET, new HttpEntity<>(httpHeaders), JSONObject.class);
-        JSONObject jsonObject = responseEntity.getBody();
-        if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
-            //校验成功
-            return;
-        }
-        throw new IDCardVerificationException("身份证信息校验不通过");
-    }
-
-    /**
-     * 身份四要素（姓名+身份证号码+手机号+银行卡）实名制认证
-     *
-     * @param name
-     * @param identityNumber
-     * @param phone
-     * @param cardNumber
-     * @return
-     */
-    public void VerifyIdentityCard(String name, String identityNumber, String phone, String cardNumber) throws IDCardVerificationException {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", "APPCODE " + official_appCode);
-        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange("https://safrvcert.market.alicloudapi.com/" +
-                        "safrv_3meta_id_name_phone/?__userId=" + aliyunUserId + "&identifyNum=" + identityNumber +
-                        "&mobilePhone=" + phone + "&userName=" + name + "&bankCard=" + cardNumber + "&verifyKey=" + aliyun_h5_verifyKey
-                , HttpMethod.GET, new HttpEntity<>(httpHeaders), JSONObject.class);
-        JSONObject jsonObject = responseEntity.getBody();
-        if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
-            //校验成功
-            return;
-        }
-        throw new IDCardVerificationException("身份证信息校验不通过");
-    }
-
-    /**
      * 国内手机发送短信验证码
      *
      * @param code
      * @param phone
      */
     public void SendChinaPhoneVerificationCodeSMS(int code, String phone) throws ClientException, SendSMSException {
-        DefaultProfile profile = DefaultProfile.getProfile("default", aliyunAccessKeyId, aliyunAccessKeySecret);
+        DefaultProfile profile = DefaultProfile.getProfile("default", aliyunConfig.getAliyunAccessKeyId()
+                , aliyunConfig.getAliyunAccessKeySecret());
         IAcsClient client = new DefaultAcsClient(profile);
         CommonRequest request = new CommonRequest();
         request.setSysMethod(MethodType.POST);
@@ -228,8 +77,8 @@ public class AliYunService {
         request.setSysAction("SendSms");
         request.putQueryParameter("RegionId", "default");
         request.putQueryParameter("PhoneNumbers", phone);
-        request.putQueryParameter("SignName", "易小助");
-        request.putQueryParameter("TemplateCode", aliyunSMSChinaTemplateCode);
+        request.putQueryParameter("SignName", "广东二师助手");
+        request.putQueryParameter("TemplateCode", aliyunConfig.getAliyunSMSChinaTemplateCode());
         request.putQueryParameter("TemplateParam", "{code:\"" + code + "\"}");
         CommonResponse response = client.getCommonResponse(request);
         JSONObject result = JSONObject.fromObject(response.getData());
@@ -264,7 +113,8 @@ public class AliYunService {
      * @throws ClientException
      */
     public void SendGlobalPhoneVerificationCodeSMS(int code, int areaCode, String phone) throws ClientException, SendSMSException {
-        DefaultProfile profile = DefaultProfile.getProfile("default", aliyunAccessKeyId, aliyunAccessKeySecret);
+        DefaultProfile profile = DefaultProfile.getProfile("default", aliyunConfig.getAliyunAccessKeyId()
+                , aliyunConfig.getAliyunAccessKeySecret());
         IAcsClient client = new DefaultAcsClient(profile);
         CommonRequest request = new CommonRequest();
         request.setSysMethod(MethodType.POST);
@@ -273,8 +123,8 @@ public class AliYunService {
         request.setSysAction("SendSms");
         request.putQueryParameter("RegionId", "default");
         request.putQueryParameter("PhoneNumbers", areaCode + phone);
-        request.putQueryParameter("SignName", "易小助");
-        request.putQueryParameter("TemplateCode", aliyunSMSGlobalTemplateCode);
+        request.putQueryParameter("SignName", "广东二师助手");
+        request.putQueryParameter("TemplateCode", aliyunConfig.getAliyunSMSGlobalTemplateCode());
         request.putQueryParameter("TemplateParam", "{code:\"" + code + "\"}");
         CommonResponse response = client.getCommonResponse(request);
         JSONObject result = JSONObject.fromObject(response.getData());

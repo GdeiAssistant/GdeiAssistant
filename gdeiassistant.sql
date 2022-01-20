@@ -258,38 +258,6 @@ INSERT INTO `access` VALUES (1,'grade'),(1,'schedule'),(1,'cet'),(1,'collection'
 UNLOCK TABLES;
 
 --
--- Table structure for table `authentication`
---
-
-DROP TABLE IF EXISTS `authentication`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `authentication` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '实名认证记录编号ID',
-  `identity_code` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '实名人唯一标识ID',
-  `salt` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '盐值',
-  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `gmt_create` datetime NOT NULL COMMENT '记录创建时间',
-  `gmt_modified` datetime NOT NULL COMMENT '记录更新时间',
-  `type` tinyint(1) NOT NULL COMMENT '实名认证方式',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `username_UNIQUE` (`username`),
-  KEY `authenticationUsername_idx` (`username`),
-  CONSTRAINT `authenticationUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `authentication`
---
-
-LOCK TABLES `authentication` WRITE;
-/*!40000 ALTER TABLE `authentication` DISABLE KEYS */;
-INSERT INTO `authentication` VALUES (1,'da623b80618e011d8c6ff53ec28857dcc96fc5080ac43b26bd50919d9f3fbb85d154850da54e55c57fcaf06760b09aa315f94523cc2a1bc7db35145de5a26198','1eab95','gdeiassistant','2019-08-31 14:01:30','2019-08-31 14:01:30',0);
-/*!40000 ALTER TABLE `authentication` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `cet`
 --
 

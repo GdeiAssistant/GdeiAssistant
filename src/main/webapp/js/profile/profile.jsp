@@ -42,7 +42,6 @@
     $(function () {
         loadUserGroupMap();
         loadProfile();
-        loadAuthenticationState();
         loadAvatar();
         loadRegionMap();
     });
@@ -189,34 +188,6 @@
                                 ]
                             }
                         }
-                    }
-                } else {
-                    showCustomErrorTip(result.message);
-                }
-            },
-            error: function (result) {
-                if (result.status) {
-                    showCustomErrorTip(result.responseJSON.message);
-                } else {
-                    showNetworkErrorTip();
-                }
-            }
-        });
-    }
-
-    //加载实名认证状态
-    function loadAuthenticationState() {
-        $.ajax({
-            url: "/api/authentication",
-            method: "GET",
-            success: function (result) {
-                if (result.success) {
-                    if (result.data) {
-                        $("#authenticated").show();
-                        $("#unauthenticated").hide();
-                    } else {
-                        $("#unauthenticated").show();
-                        $("#authenticated").hide();
                     }
                 } else {
                     showCustomErrorTip(result.message);

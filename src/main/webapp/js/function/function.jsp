@@ -2,9 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>
 
-    //权限表信息
-    var access = [];
-
     //用户是否为微信浏览器
     var wechatUser = false;
 
@@ -60,25 +57,19 @@
         if (localStorage.getItem("functionDisplaySetting")) {
             let setting = JSON.parse(localStorage.getItem("functionDisplaySetting"));
             for (let index = 0; index < $(".links div").length; index++) {
-                //检测当前用户组有无权限
-                if (access[${sessionScope.group}].has($(".links div:eq(" + index + ")").attr("id"))) {
-                    //检测功能管理是否设置为显示
-                    if (Object.keys(setting).indexOf($(".links div:eq(" + index + ")").attr("id")) == -1) {
+                //检测功能管理是否设置为显示
+                if (Object.keys(setting).indexOf($(".links div:eq(" + index + ")").attr("id")) == -1) {
+                    $(".links div:eq(" + index + ")").show();
+                } else {
+                    if (setting[$(".links div:eq(" + index + ")").attr("id")] == true) {
                         $(".links div:eq(" + index + ")").show();
-                    } else {
-                        if (setting[$(".links div:eq(" + index + ")").attr("id")] == true) {
-                            $(".links div:eq(" + index + ")").show();
-                        }
                     }
                 }
             }
         } else {
             for (let index = 0; index < $(".links div").length; index++) {
-                //检测当前用户组有无权限
-                if (access[${sessionScope.group}].has($(".links div:eq(" + index + ")").attr("id"))) {
-                    //检测功能管理是否设置为显示
-                    $(".links div:eq(" + index + ")").show();
-                }
+                //检测功能管理是否设置为显示
+                $(".links div:eq(" + index + ")").show();
             }
         }
         let functionSize = $("[class='links']").find("div").length;

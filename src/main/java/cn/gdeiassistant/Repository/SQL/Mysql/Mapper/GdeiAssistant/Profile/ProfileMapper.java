@@ -14,6 +14,7 @@ public interface ProfileMapper {
             @Result(property = "username", column = "username"),
             @Result(property = "nickname", column = "nickname"),
             @Result(property = "gender", column = "gender"),
+            @Result(property = "customGenderName", column = "custom_gender"),
             @Result(property = "birthday", column = "birthday", javaType = Date.class, jdbcType = JdbcType.DATE),
             @Result(property = "degree", column = "degree"),
             @Result(property = "faculty", column = "faculty"),
@@ -49,7 +50,7 @@ public interface ProfileMapper {
     @Update("update profile set nickname=#{nickname} where username=#{username}")
     void updateNickname(Profile profile);
 
-    @Update("update profile set gender=#{gender} where username=#{username}")
+    @Update("update profile set gender=#{gender} and custom_gender=#{customGenderName} where username=#{username}")
     void updateGender(Profile profile);
 
     @Update("update profile set birthday=#{birthday} where username=#{username}")

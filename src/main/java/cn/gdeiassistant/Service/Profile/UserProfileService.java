@@ -81,9 +81,6 @@ public class UserProfileService {
     public Profile GetUserProfile(String username) throws Exception {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {
-            if (profile.getGender() != null && profile.getGender().equals(3)) {
-                profile.setCustomGenderName(genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)));
-            }
             profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
             return profile;
         }
@@ -265,20 +262,8 @@ public class UserProfileService {
     public void UpdateGender(String username, int gender, String customGenderName) throws Exception {
         Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
         if (profile != null) {
-            //若选择传统性别，则清除自定义性别表记录
-            if (gender != 3) {
-                if (genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)) != null) {
-                    genderMapper.deleteCustomGender(StringEncryptUtils.encryptString(username));
-                }
-            } else {
-                //保存自定义性别
-                if (genderMapper.selectCustomGender(StringEncryptUtils.encryptString(username)) != null) {
-                    genderMapper.updateCustomGender(StringEncryptUtils.encryptString(username), customGenderName);
-                } else {
-                    genderMapper.insertCustomGender(StringEncryptUtils.encryptString(username), customGenderName);
-                }
-            }
             profile.setGender(gender);
+            profile.setCustomGenderName(customGenderName);
             profileMapper.updateGender(profile);
             return;
         }

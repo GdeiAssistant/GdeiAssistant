@@ -3,61 +3,50 @@ package cn.gdeiassistant.Service.Wechat;
 import cn.gdeiassistant.Enum.Wechat.RequestTypeEnum;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Pojo.Config.WechatOfficialAccountConfig;
-import cn.gdeiassistant.Pojo.Entity.*;
+import cn.gdeiassistant.Pojo.Entity.CardInfo;
+import cn.gdeiassistant.Pojo.Entity.Grade;
+import cn.gdeiassistant.Pojo.Entity.Schedule;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Pojo.JSSDK.JSSDKSignature;
-import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import cn.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import cn.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import cn.gdeiassistant.Repository.Redis.AccessToken.AccessTokenDao;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantData.Reading.ReadingMapper;
 import cn.gdeiassistant.Service.CardQuery.CardQueryService;
 import cn.gdeiassistant.Service.GradeQuery.GradeService;
 import cn.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.http.*;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class WechatService {
-
-    private Logger logger = LoggerFactory.getLogger(WechatService.class);
-
-    @Autowired
-    private Environment environment;
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
     private AccessTokenDao accessTokenDao;
-
-    @Autowired
-    private ReadingMapper readingMapper;
 
     @Autowired
     private UserLoginService userLoginService;
@@ -155,7 +144,7 @@ public class WechatService {
      *
      * @return
      */
-    private synchronized String GetWechatAccessToken() {
+    protected synchronized String GetWechatAccessToken() {
         //检查Redis缓存中有无AccessToken
         String accessToken = accessTokenDao.QueryWechatAccessToken();
         //若缓存中没有AccessToken则调用API数据接口
@@ -223,56 +212,6 @@ public class WechatService {
             return new ByteArrayInputStream(bytes);
         }
         return null;
-    }
-
-    /**
-     * 定时同步微信专题阅读素材
-     *
-     * @return
-     */
-    @Scheduled(fixedDelay = 21600000)
-    @Transactional("dataTransactionManager")
-    public void SyncWechatReadingItem() {
-        logger.info("{}启动了同步微信专题阅读素材的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
-                .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
-        String accessToken = GetWechatAccessToken();
-        //获取专题阅读素材总数
-        JSONObject jsonObject = restTemplate.getForObject("https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=" + accessToken, JSONObject.class);
-        int count = 0;
-        if (jsonObject.containsKey("news_count")) {
-            count = jsonObject.getInteger("news_count");
-        }
-        int page = count % 20 == 0 ? (count / 20) : (count / 20 + 1);
-        for (int i = 0; i < page; i++) {
-            JSONObject params = new JSONObject();
-            params.put("type", "news");
-            params.put("offset", String.valueOf(i));
-            params.put("count", "20");
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-            JSONObject result = restTemplate.postForObject("https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=" + accessToken
-                    , new HttpEntity<>(params, httpHeaders), JSONObject.class);
-            if (result.containsKey("item")) {
-                JSONArray items = result.getJSONArray("item");
-                for (int j = 0; j < items.size(); j++) {
-                    Reading reading = new Reading();
-                    reading.setId(items.getJSONObject(j).getString("media_id"));
-                    reading.setTitle(items.getJSONObject(j).getJSONObject("content")
-                            .getJSONArray("news_item").getJSONObject(0).getString("title"));
-                    reading.setDescription(items.getJSONObject(j).getJSONObject("content")
-                            .getJSONArray("news_item").getJSONObject(0).getString("digest"));
-                    reading.setLink(items.getJSONObject(j).getJSONObject("content")
-                            .getJSONArray("news_item").getJSONObject(0).getString("url"));
-                    reading.setCreateTime(Date.from(Instant.ofEpochSecond(items.getJSONObject(j).getJSONObject("content")
-                            .getLongValue("create_time"))));
-                    if (readingMapper.selectReadingById(items.getJSONObject(j).getString("media_id")) == null) {
-                        readingMapper.insertReading(reading);
-                    } else {
-                        readingMapper.updateReading(reading);
-                    }
-                }
-            }
-        }
     }
 
     /**

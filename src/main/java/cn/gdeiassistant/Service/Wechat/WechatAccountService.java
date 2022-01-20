@@ -8,7 +8,6 @@ import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Service.Recognition.RecognitionService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
-import cn.gdeiassistant.Tools.Utils.WechatAccountUtils;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -23,7 +22,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -43,30 +41,6 @@ public class WechatAccountService {
     @Value("#{propertiesReader['timeout.wechataccount']}")
     public void setTimeout(int timeout) {
         this.timeout = timeout;
-    }
-
-    /**
-     * 定时更新微信公众号数据
-     */
-    @Scheduled(fixedDelay = 21600000)
-    public void UpdateAccountData() {
-        for (int i = 0; i < WechatAccountUtils.getWechatAccountList().size(); i++) {
-            WechatAccountUtils.getWechatAccountList().get(i).setIndex(i);
-            try {
-                WechatAccount wechatAccount = QueryLatestWechatAccountData(null
-                        , WechatAccountUtils.getWechatAccountList().get(i));
-                WechatAccountUtils.getWechatAccountList().set(wechatAccount.getIndex(), wechatAccount);
-            } catch (Exception ignored) {
-
-            } finally {
-                try {
-                    //线程休眠三秒，避免触发网络异常验证码校验
-                    Thread.sleep(3000);
-                } catch (InterruptedException ignored) {
-
-                }
-            }
-        }
     }
 
     /**

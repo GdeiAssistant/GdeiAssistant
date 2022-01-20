@@ -8,17 +8,21 @@ import cn.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleExcept
 import cn.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import cn.gdeiassistant.Pojo.Document.CustomScheduleDocument;
 import cn.gdeiassistant.Pojo.Document.ScheduleDocument;
-import cn.gdeiassistant.Pojo.Entity.*;
+import cn.gdeiassistant.Pojo.Entity.CustomSchedule;
+import cn.gdeiassistant.Pojo.Entity.Schedule;
+import cn.gdeiassistant.Pojo.Entity.TeacherSchedule;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import cn.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import cn.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.PrivacyMapper;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Service.UserLogin.TeacherLoginService;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
-import cn.gdeiassistant.Tools.Utils.*;
+import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
+import cn.gdeiassistant.Tools.Utils.ScheduleUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
+import cn.gdeiassistant.Tools.Utils.WeekUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -33,24 +37,16 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -69,10 +65,6 @@ public class ScheduleService {
 
     private int teacherScheduleQueryTimeout;
 
-    private int currentUserStart = 0;
-
-    private int scheduleInterval;
-
     @Autowired
     private UserLoginService userLoginService;
 
@@ -84,12 +76,6 @@ public class ScheduleService {
 
     @Autowired
     private UserCertificateDao userCertificateDao;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private PrivacyMapper privacyMapper;
 
     @Value("#{propertiesReader['schedule.year']}")
     public void setYear(int year) {
@@ -114,11 +100,6 @@ public class ScheduleService {
     @Value("#{propertiesReader['timeout.teacherquery']}")
     public void setTeacherScheduleQueryTimeout(int teacherScheduleQueryTimeout) {
         this.teacherScheduleQueryTimeout = teacherScheduleQueryTimeout;
-    }
-
-    @Value("#{propertiesReader['education.cache.schedule.interval']}")
-    public void setScheduleInterval(int scheduleInterval) {
-        this.scheduleInterval = scheduleInterval;
     }
 
     /**
@@ -575,66 +556,6 @@ public class ScheduleService {
             semaphore.release();
         }
         return AsyncResult.forValue(null);
-    }
-
-    /**
-     * 同步教务系统实时课表信息
-     */
-    @Scheduled(fixedDelay = 7200000)
-    public void SynchronizeScheduleData() {
-        logger.info("{}启动了查询保存用户课表信息的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
-                .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
-        try {
-            Integer count = userMapper.selectUserCount();
-            if (currentUserStart >= count) {
-                currentUserStart = 0;
-            }
-            List<User> userList = userMapper.selectUserList(currentUserStart, 50);
-            currentUserStart = currentUserStart + 50;
-            LocalDateTime localDateTime = LocalDateTime.now();
-            //设置线程信号量，限制最大同时查询的线程数为5
-            Semaphore semaphore = new Semaphore(5);
-            for (User user : userList) {
-                Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
-                if (privacy != null && privacy.isCacheAllow()) {
-                    ScheduleDocument scheduleDocument = scheduleDao.querySchedule(StringEncryptUtils
-                            .decryptString(user.getUsername()));
-                    //如果最后更新日期距今已超过3天，则进行更新
-                    if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()
-                            .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= scheduleInterval) {
-                        ListenableFuture<ScheduleQueryResult> future = ((ScheduleService) AopContext.currentProxy())
-                                .QueryScheduleData(semaphore, user);
-                        future.addCallback(new ListenableFutureCallback<ScheduleQueryResult>() {
-
-                            @Override
-                            public void onFailure(Throwable ex) {
-
-                            }
-
-                            @Override
-                            public void onSuccess(ScheduleQueryResult result) {
-                                try {
-                                    if (result != null) {
-                                        ScheduleDocument document = new ScheduleDocument();
-                                        if (scheduleDocument != null && scheduleDocument.getId() != null) {
-                                            document.setId(scheduleDocument.getId());
-                                        }
-                                        document.setUsername(StringEncryptUtils.decryptString(user.getUsername()));
-                                        document.setScheduleList(result.getScheduleList());
-                                        document.setUpdateDateTime(new Date());
-                                        scheduleDao.saveSchedule(document);
-                                    }
-                                } catch (Exception e) {
-                                    logger.error("定时查询保存课表信息异常：", e);
-                                }
-                            }
-                        });
-                    }
-                }
-            }
-        } catch (Exception e) {
-            logger.error("定时查询保存课表信息异常：", e);
-        }
     }
 
     /**

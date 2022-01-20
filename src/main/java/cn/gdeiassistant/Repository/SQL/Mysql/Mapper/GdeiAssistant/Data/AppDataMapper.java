@@ -1,9 +1,10 @@
 package cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Data;
 
 import cn.gdeiassistant.Pojo.Entity.*;
-import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Repository.SQL.Mysql.SQLBuilder.GdeiAssistant.DataSQLBuilder;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.ResultType;
+import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;
 
@@ -20,10 +21,6 @@ public interface AppDataMapper {
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserPrivacy")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.PrivacyMapper.Privacy")
     public Privacy selectUserPrivacy(String username);
-
-    @SelectProvider(type = DataSQLBuilder.class, method = "selectUserGraduation")
-    @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Graduation.GraduationMapper.Graduation")
-    public Graduation selectUserGraduation(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserCetNumber")
     @ResultType(CetNumber.class)

@@ -643,30 +643,6 @@ LOCK TABLES `gender` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `graduation`
---
-
-DROP TABLE IF EXISTS `graduation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `graduation` (
-  `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `program` tinyint(1) DEFAULT NULL COMMENT '毕业用户账号处理方案',
-  PRIMARY KEY (`username`),
-  CONSTRAINT `graduationUsername` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `graduation`
---
-
-LOCK TABLES `graduation` WRITE;
-/*!40000 ALTER TABLE `graduation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `graduation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `introduction`
 --
 

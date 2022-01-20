@@ -57,7 +57,6 @@ public class SettingConstantUtils {
                     {"/policy/cookie", "AgreementAndPolicy/cookiePolicy"},
                     {"/policy/privacy", "AgreementAndPolicy/privacyPolicy"},
                     {"/policy/social", "AgreementAndPolicy/socialPolicy"},
-                    {"/about/graduation", "AgreementAndPolicy/graduationPolicy"},
                     {"/announcement/equalrights", "Announcement/equalrights"},
                     {"/announcement/suicideprevention", "Announcement/suicideprevention"}
             }).collect(Collectors.toMap(data -> data[0], data -> data[1]));

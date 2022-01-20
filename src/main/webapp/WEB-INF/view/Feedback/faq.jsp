@@ -18,7 +18,7 @@
 
 <div>
     <p style="text-align:center">《广东二师助手常见问题解答》</p>
-    <p style="text-align:center">更新日期：2020年1月2日</p>
+    <p style="text-align:center">更新日期：2022年1月20日</p>
     <p style="text-align:right"><br></p>
     <p style="text-indent:14px;line-height:150%">
     <p><strong>用户登录</strong></p>
@@ -32,13 +32,13 @@
         Q：应用账号是否支持修改密码？
     </p>
     <p style="text-indent:28px">
-        A：若用户为毕业学生用户，可以在应用内的个人中心修改密码。若用户非毕业学生用户，则系统会采取“被动更新”的密码同步策略，即用户在学校教务系统中修改了密码，只有在此应用中使用新密码成功登录，才会同步修改此系统中的用户账户密码。
+        A：用户需要通过广东第二师范学院统一身份认证系统修改密码。修改密码后，重新登录广东二师助手即可同步修改应用账号。
     </p>
     <p style="text-indent:28px">
         Q：忘记了账户密码怎么办？
     </p>
     <p style="text-indent:28px">
-        A：若用户为毕业学生用户，可以通过邮箱support@gdeiassistant.cn联系客服找回密码。若用户非毕业学生用户，则可以直接在学校网络中心申请重置密码，并使用新的密码重新登录本系统。
+        A：用户可以直接在学校网络中心或广东第二师范学院统一身份认证系统申请重置密码，并使用新的密码重新登录本系统。
     </p>
     <p>&nbsp;</p>
     <p><strong>教务查询</strong></p>

@@ -1,13 +1,13 @@
 package cn.gdeiassistant.Service.Photograph;
 
+import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.Photograph;
 import cn.gdeiassistant.Pojo.Entity.PhotographComment;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Photograph.PhotographMapper;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.aliyun.oss.OSSClient;
 import com.taobao.wsgsvr.WsgException;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -20,26 +20,8 @@ public class PhotographService {
     @Autowired
     private PhotographMapper photographMapper;
 
-    private String accessKeyID;
-
-    private String accessKeySecret;
-
-    private String endpoint;
-
-    @Value("#{propertiesReader['oss.accessKeySecret']}")
-    public void setAccessKeySecret(String accessKeySecret) {
-        this.accessKeySecret = accessKeySecret;
-    }
-
-    @Value("#{propertiesReader['oss.accessKeyID']}")
-    public void setAccessKeyID(String accessKeyID) {
-        this.accessKeyID = accessKeyID;
-    }
-
-    @Value("#{propertiesReader['oss.endpoint']}")
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
+    @Autowired
+    private OSSConfig ossConfig;
 
     /**
      * 查询照片统计数量
@@ -148,7 +130,7 @@ public class PhotographService {
      */
     public void UploadPhotographItemPicture(int id, int index, InputStream inputStream) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         //上传文件
         ossClient.putObject("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", inputStream);
         ossClient.shutdown();
@@ -163,7 +145,7 @@ public class PhotographService {
      */
     public String GetPhotographItemPictureURL(int id, int index) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         String url = null;
         if (ossClient.doesObjectExist("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg")) {
             //设置过期时间30分钟

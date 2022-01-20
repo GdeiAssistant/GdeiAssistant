@@ -1,9 +1,9 @@
 package cn.gdeiassistant.Controller.Wechat.Controller;
 
+import cn.gdeiassistant.Pojo.Config.WechatMiniProgramConfig;
 import cn.gdeiassistant.Service.Wechat.WechatService;
-import cn.gdeiassistant.Tools.StringUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,15 +18,11 @@ import java.util.Map;
 @Controller
 public class WechatAttachController {
 
-    private String appid;
-
     @Autowired
     private WechatService wechatService;
 
-    @Value("#{propertiesReader['wechat.account.appid']}")
-    public void setAppid(String appid) {
-        this.appid = appid;
-    }
+    @Autowired
+    private WechatMiniProgramConfig wechatMiniProgramConfig;
 
     /**
      * 进入绑定微信页面
@@ -47,7 +43,7 @@ public class WechatAttachController {
                 String uuid = StringUtils.randomUUID();
                 request.getSession().setAttribute("wechatUUID", uuid);
                 modelAndView.setViewName("redirect:https://open.weixin.qq.com/connect/oauth2/authorize?appid="
-                        + appid + "&redirect_uri=" + URLEncoder.encode("https://www.gdeiassistant.cn/wechat/attach"
+                        + wechatMiniProgramConfig.getAppid() + "&redirect_uri=" + URLEncoder.encode("https://www.gdeiassistant.cn/wechat/attach"
                         , StandardCharsets.UTF_8.displayName()) + "&response_type=code&scope=snsapi_userinfo&state=" + uuid + "#wechat_redirect");
                 return modelAndView;
             }

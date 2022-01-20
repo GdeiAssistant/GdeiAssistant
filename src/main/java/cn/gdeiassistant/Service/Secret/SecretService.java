@@ -1,13 +1,14 @@
 package cn.gdeiassistant.Service.Secret;
 
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Secret.SecretMapper;
-import com.aliyun.oss.OSSClient;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.Secret;
 import cn.gdeiassistant.Pojo.Entity.SecretComment;
 import cn.gdeiassistant.Pojo.Entity.SecretContent;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
-import org.springframework.beans.factory.annotation.Value;
+import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Secret.SecretMapper;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
+import com.aliyun.oss.OSSClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,26 +28,8 @@ public class SecretService {
     @Resource(name = "secretMapper")
     private SecretMapper secretMapper;
 
-    private String accessKeyID;
-
-    private String accessKeySecret;
-
-    private String endpoint;
-
-    @Value("#{propertiesReader['oss.accessKeySecret']}")
-    public void setAccessKeySecret(String accessKeySecret) {
-        this.accessKeySecret = accessKeySecret;
-    }
-
-    @Value("#{propertiesReader['oss.accessKeyID']}")
-    public void setAccessKeyID(String accessKeyID) {
-        this.accessKeyID = accessKeyID;
-    }
-
-    @Value("#{propertiesReader['oss.endpoint']}")
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
+    @Autowired
+    private OSSConfig ossConfig;
 
     /**
      * 获取树洞消息
@@ -102,7 +85,7 @@ public class SecretService {
      */
     public String GetSecretVoiceURL(int id) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         String url = null;
         //检查树洞语音音频是否存在
         if (ossClient.doesObjectExist("gdeiassistant-userdata", "secret/voice/" + id + ".mp3")) {
@@ -123,7 +106,7 @@ public class SecretService {
      */
     public void UploadVoiceSecret(int id, InputStream inputStream) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         //上传文件
         ossClient.putObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", inputStream);
         ossClient.shutdown();

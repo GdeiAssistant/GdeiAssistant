@@ -1,19 +1,24 @@
 package cn.gdeiassistant.Config.DataSource;
 
+import cn.gdeiassistant.Enum.Module.CoreModuleEnum;
+import cn.gdeiassistant.Tools.SpringUtils.ModuleUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
-import java.util.Objects;
 
 @Configuration
 @MapperScan(basePackages = "cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant", sqlSessionFactoryRef = "appSqlSessionFactory")
@@ -22,6 +27,9 @@ public class AppDataSourceConfig implements EnvironmentAware {
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private ModuleUtils moduleUtils;
 
     /**
      * 开发环境应用数据源
@@ -33,13 +41,28 @@ public class AppDataSourceConfig implements EnvironmentAware {
     @Qualifier("appDevelopmentDataSource")
     public ComboPooledDataSource appDevelopmentDataSource() throws PropertyVetoException {
         ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
-        comboPooledDataSource.setDriverClass(environment.getProperty("app.jdbc.driverClass"));
-        comboPooledDataSource.setJdbcUrl(environment.getProperty("app.jdbc.dev.jdbcUrl"));
-        comboPooledDataSource.setMinPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.minPoolSize"))));
-        comboPooledDataSource.setMaxPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.maxPoolSize"))));
-        comboPooledDataSource.setMaxIdleTime(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.maxIdleTime"))));
-        comboPooledDataSource.setUser(environment.getProperty("app.jdbc.dev.username"));
-        comboPooledDataSource.setPassword(environment.getProperty("app.jdbc.dev.password"));
+        String driverClass = environment.getProperty("app.jdbc.driverClass");
+        String jdbcUrl = environment.getProperty("app.jdbc.dev.jdbcUrl");
+        String minPoolSize = environment.getProperty("app.jdbc.minPoolSize");
+        String maxPoolSize = environment.getProperty("app.jdbc.maxPoolSize");
+        String maxIdleTime = environment.getProperty("app.jdbc.maxIdleTime");
+        String user = environment.getProperty("app.jdbc.dev.username");
+        String password = environment.getProperty("app.jdbc.dev.password");
+        if (StringUtils.isNotBlank(driverClass) && StringUtils.isNotBlank(jdbcUrl) && StringUtils.isNotBlank(minPoolSize)
+                && StringUtils.isNotBlank(maxPoolSize) && StringUtils.isNotBlank(maxIdleTime)
+                && StringUtils.isNotBlank(user) && StringUtils.isNotBlank(password)) {
+            if (StringUtils.isNumeric(minPoolSize) && StringUtils.isNumeric(maxPoolSize) && StringUtils.isNumeric(maxIdleTime)) {
+                comboPooledDataSource.setDriverClass(driverClass);
+                comboPooledDataSource.setJdbcUrl(jdbcUrl);
+                comboPooledDataSource.setMinPoolSize(Integer.parseInt(minPoolSize));
+                comboPooledDataSource.setMaxPoolSize(Integer.parseInt(maxPoolSize));
+                comboPooledDataSource.setMaxIdleTime(Integer.parseInt(maxIdleTime));
+                comboPooledDataSource.setUser(user);
+                comboPooledDataSource.setPassword(password);
+                return comboPooledDataSource;
+            }
+        }
+        moduleUtils.DisableCoreModule(CoreModuleEnum.MYSQL);
         return comboPooledDataSource;
     }
 
@@ -54,15 +77,31 @@ public class AppDataSourceConfig implements EnvironmentAware {
     @Qualifier("appProductionDataSource")
     public ComboPooledDataSource appProductionDataSource() throws PropertyVetoException {
         ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
-        comboPooledDataSource.setDriverClass(environment.getProperty("app.jdbc.driverClass"));
-        comboPooledDataSource.setJdbcUrl(environment.getProperty("app.jdbc.pro.jdbcUrl"));
-        comboPooledDataSource.setMinPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.minPoolSize"))));
-        comboPooledDataSource.setMaxPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.maxPoolSize"))));
-        comboPooledDataSource.setMaxIdleTime(Integer.parseInt(Objects.requireNonNull(environment.getProperty("app.jdbc.maxIdleTime"))));
-        comboPooledDataSource.setUser(environment.getProperty("app.jdbc.pro.username"));
-        comboPooledDataSource.setPassword(environment.getProperty("app.jdbc.pro.password"));
+        String driverClass = environment.getProperty("app.jdbc.driverClass");
+        String jdbcUrl = environment.getProperty("app.jdbc.pro.jdbcUrl");
+        String minPoolSize = environment.getProperty("app.jdbc.minPoolSize");
+        String maxPoolSize = environment.getProperty("app.jdbc.maxPoolSize");
+        String maxIdleTime = environment.getProperty("app.jdbc.maxIdleTime");
+        String user = environment.getProperty("app.jdbc.pro.username");
+        String password = environment.getProperty("app.jdbc.pro.password");
+        if (StringUtils.isNotBlank(driverClass) && StringUtils.isNotBlank(jdbcUrl) && StringUtils.isNotBlank(minPoolSize)
+                && StringUtils.isNotBlank(maxPoolSize) && StringUtils.isNotBlank(maxIdleTime)
+                && StringUtils.isNotBlank(user) && StringUtils.isNotBlank(password)) {
+            if (StringUtils.isNumeric(minPoolSize) && StringUtils.isNumeric(maxPoolSize) && StringUtils.isNumeric(maxIdleTime)) {
+                comboPooledDataSource.setDriverClass(driverClass);
+                comboPooledDataSource.setJdbcUrl(jdbcUrl);
+                comboPooledDataSource.setMinPoolSize(Integer.parseInt(minPoolSize));
+                comboPooledDataSource.setMaxPoolSize(Integer.parseInt(maxPoolSize));
+                comboPooledDataSource.setMaxIdleTime(Integer.parseInt(maxIdleTime));
+                comboPooledDataSource.setUser(user);
+                comboPooledDataSource.setPassword(password);
+                return comboPooledDataSource;
+            }
+        }
+        moduleUtils.DisableCoreModule(CoreModuleEnum.MYSQL);
         return comboPooledDataSource;
     }
+
 
     /**
      * 开发环境应用SqlSessionFactory

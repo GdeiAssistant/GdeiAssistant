@@ -47,7 +47,7 @@
     <script type="text/javascript" src="/js/common/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/common/swiper.js"></script>
     <script type="application/javascript" src="/js/common/themeLoader.js"></script>
-    <script>document.write("<script type='text/javascript' src='/js/about/about.js?time=" + Date.now() + "'><\/script>");</script>
+    <jsp:include page="/js/about/about.jsp"/>
 </head>
 <body>
 
@@ -140,6 +140,12 @@
                 <img src="/img/about/logo.png" width="120" height="120">
             </c:otherwise>
         </c:choose>
+    </div>
+
+    <!-- 功能模块启用状态检查结果提示信息 仅开发模式下显示 -->
+    <div class="function-module-check-result margin-bottom60">
+        <text class='core-module-check-result-text'></text>
+        <text class='module-check-result-text'></text>
     </div>
 
     <div class="download">
@@ -238,6 +244,7 @@
         请点击<a href="/policy/cookie" id="rnw_cookies_banner_button_more">Cookie政策</a>了解更多信息。
     </div>
 </div>
+
 
 <br>
 

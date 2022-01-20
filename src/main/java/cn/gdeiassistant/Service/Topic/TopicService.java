@@ -1,14 +1,14 @@
 package cn.gdeiassistant.Service.Topic;
 
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Topic.TopicMapper;
-import com.aliyun.oss.OSSClient;
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.Topic;
 import cn.gdeiassistant.Pojo.Entity.TopicLike;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Topic.TopicMapper;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
+import com.aliyun.oss.OSSClient;
+import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -20,29 +20,11 @@ import java.util.List;
 @Service
 public class TopicService {
 
-    private String accessKeyID;
-
-    private String accessKeySecret;
-
-    private String endpoint;
-
     @Autowired
     private TopicMapper topicMapper;
 
-    @Value("#{propertiesReader['oss.accessKeySecret']}")
-    public void setAccessKeySecret(String accessKeySecret) {
-        this.accessKeySecret = accessKeySecret;
-    }
-
-    @Value("#{propertiesReader['oss.accessKeyID']}")
-    public void setAccessKeyID(String accessKeyID) {
-        this.accessKeyID = accessKeyID;
-    }
-
-    @Value("#{propertiesReader['oss.endpoint']}")
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
+    @Autowired
+    private OSSConfig ossConfig;
 
     /**
      * 加载话题信息
@@ -131,7 +113,7 @@ public class TopicService {
     public String DownloadTopicItemPicture(int id, int index) {
         String url = null;
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         //检查用户数据是否存在
         if (ossClient.doesObjectExist("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg")) {
             //设置过期时间10分钟
@@ -154,7 +136,7 @@ public class TopicService {
     @Async
     public void UploadTopicItemPicture(int id, int index, InputStream inputStream) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         //上传文件
         ossClient.putObject("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg", inputStream);
         ossClient.shutdown();

@@ -38,7 +38,6 @@
         <p class="weui-msg__desc">2、失物招领平台所有物品已确认寻回</p>
         <p class="weui-msg__desc">3、全民快递平台无待接单的订单和未交付的交易</p>
         <p class="weui-msg__desc">4、近期无账号异常或被封禁的情况</p>
-        <p class="weui-msg__desc">注意：若你为毕业生，删除账号后将无法重新注册</p>
     </div>
 </div>
 

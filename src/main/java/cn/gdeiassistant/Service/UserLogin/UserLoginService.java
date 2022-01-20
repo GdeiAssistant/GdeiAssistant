@@ -4,7 +4,6 @@ import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
-import cn.gdeiassistant.Exception.UserLoginException.UserGraduatedException;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -186,9 +185,6 @@ public class UserLoginService {
         } catch (IOException e) {
             logger.error("用户登录异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
-        } catch (UserGraduatedException e) {
-            logger.error("用户登录异常：", e);
-            throw new UserGraduatedException("用户账号已毕业注销");
         } catch (Exception e) {
             logger.error("用户登录异常：", e);
             throw new ServerErrorException("教务系统异常");
@@ -264,10 +260,10 @@ public class UserLoginService {
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
         if (httpResponse.getStatusLine().getStatusCode() == 200) {
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (document.select("script").size() > 0
-                    && document.select("script").text().equals("alert('用户【工号】在教务系统中不存在。！');")) {
-                throw new UserGraduatedException("该账号已毕业注销");
-            }
+//            if (document.select("script").size() > 0
+//                    && document.select("script").text().equals("alert('用户【工号】在教务系统中不存在。！');")) {
+//                throw new UserGraduatedException("该账号已毕业注销");
+//            }
             httpResponse.close();
             httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number + "&type=1");
             httpResponse = httpClient.execute(httpGet);

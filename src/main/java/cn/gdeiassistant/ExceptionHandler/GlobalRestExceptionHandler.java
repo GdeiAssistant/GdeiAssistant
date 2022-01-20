@@ -1,14 +1,13 @@
 package cn.gdeiassistant.ExceptionHandler;
 
+import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
-import cn.gdeiassistant.Exception.UserLoginException.UserGraduatedException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,18 +130,6 @@ public class GlobalRestExceptionHandler {
         logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.USER_NOT_EXIST
                 , false, "当前用户不存在，请尝试重新登录"));
-    }
-
-    /**
-     * 处理用户账号已毕业注销的异常
-     *
-     * @return
-     */
-    @ExceptionHandler(UserGraduatedException.class)
-    public ResponseEntity HandleUserGraduatedException(UserGraduatedException e) {
-        logger.error("GlobalRestExceptionHandler：", e);
-        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.ACCOUNT_GRADUATED
-                , false, "账号为毕业用户账号，无法使用教务查询功能"));
     }
 
     /**

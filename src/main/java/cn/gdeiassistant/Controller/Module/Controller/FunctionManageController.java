@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Controller.FunctionManage.Controller;
+package cn.gdeiassistant.Controller.Module.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -119,7 +119,7 @@
             </div>
             <div class="weui_cell_bd weui_cell_primary">
                 <input id="password" class="weui_input" type="password" maxlength="35" name="password"
-                       placeholder="请输入你的教务系统密码">
+                       placeholder="请输入你的校园网密码">
             </div>
         </div>
     </form>

@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Announcement.Controller;
 
-import cn.gdeiassistant.Annotation.UserGroupAccess;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +16,6 @@ public class AnnouncementController {
      * @return
      */
     @RequestMapping(value = "/announcement/publish", method = RequestMethod.GET)
-    @UserGroupAccess(group = {1}, rest = false)
     public ModelAndView ResolveAnnouncementPage(HttpServletRequest request) {
         return new ModelAndView("Announcement/publish");
     }

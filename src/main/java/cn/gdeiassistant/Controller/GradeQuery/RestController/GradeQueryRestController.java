@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Controller.GradeQuery.RestController;
 
 import cn.gdeiassistant.Annotation.*;
-import cn.gdeiassistant.Annotation.*;
 import cn.gdeiassistant.Enum.Method.QueryMethodEnum;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
@@ -29,7 +28,6 @@ public class GradeQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/refreshgrade", method = RequestMethod.POST)
-    @UserGroupAccess(group = {2, 3}, rest = true)
     public JsonResult RefreshGradeData(HttpServletRequest request) {
         String username = (String) request.getSession().getAttribute("username");
         gradeService.ClearGrade(username);
@@ -47,7 +45,6 @@ public class GradeQueryRestController {
     @RequestMapping(value = "/api/gradequery", method = RequestMethod.POST)
     @QueryLogPersistence
     @TrialData(value = "grade", requestTime = "year", responseTime = "year")
-    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
             , Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {
@@ -74,7 +71,6 @@ public class GradeQueryRestController {
     @RestQueryLogPersistence
     @RestAuthentication
     @TrialData(value = "grade", requestTime = "year", responseTime = "year")
-    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
             , @RequestParam("token") String token, Integer year, @RequestParam(value = "method", required = false
             , defaultValue = "0") QueryMethodEnum method) throws Exception {

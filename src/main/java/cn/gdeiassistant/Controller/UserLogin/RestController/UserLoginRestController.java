@@ -5,7 +5,6 @@ import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Annotation.ReplayAttacksProtection;
 import cn.gdeiassistant.Annotation.RequestLogPersistence;
 import cn.gdeiassistant.Enum.Method.LoginMethodEnum;
-import cn.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
@@ -103,12 +102,8 @@ public class UserLoginRestController {
         //将用户信息数据写入Session
         request.getSession().setAttribute("username", userCertificate.getUser().getUsername());
         request.getSession().setAttribute("password", userCertificate.getUser().getPassword());
-        request.getSession().setAttribute("group", userCertificate.getUser().getGroup());
-        if (userCertificate.getUser().getGroup().equals(UserGroupEnum.STUDENT.getValue())
-                || userCertificate.getUser().getGroup().equals(UserGroupEnum.TEST.getValue())) {
-            //若当前用户组为学生用户或测试用户，则异步地与教务系统会话进行同步
-            userLoginService.AsyncUpdateSession(request);
-        }
+        //若当前用户组为学生用户或测试用户，则异步地与教务系统会话进行同步
+        userLoginService.AsyncUpdateSession(request);
         //将加密的用户信息保存到Cookie中
         String username = StringEncryptUtils.encryptString(userCertificate.getUser().getUsername());
         String password = StringEncryptUtils.encryptString(userCertificate.getUser().getPassword());

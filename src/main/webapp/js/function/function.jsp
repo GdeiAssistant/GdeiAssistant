@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="access" uri="/WEB-INF/tld/access.tld" %>
 <script>
 
     //权限表信息
@@ -15,29 +14,6 @@
     //消除iOS点击延迟
     $(function () {
         FastClick.attach(document.body);
-    });
-
-    //加载权限表信息
-    $(function () {
-
-        <c:set var="Access" scope="page" value="${access:loadAccessInfo()}" />
-
-        <c:forEach begin="0" end="${Access.size()}" step="1" varStatus="state">
-
-        access[${state.index}] = new Set();
-
-        </c:forEach>
-
-        <c:forEach items="${Access}" var="AccessList" varStatus="state">
-
-        <c:forEach items="${AccessList}" var="access">
-
-        access[${state.index}].add("${access}");
-
-        </c:forEach>
-
-        </c:forEach>
-
     });
 
     //检查用户浏览器属性

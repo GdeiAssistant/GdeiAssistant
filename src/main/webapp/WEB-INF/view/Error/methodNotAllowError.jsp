@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <title>405 Method Not Allow</title>
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_pink.css">
-    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_blue.css">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">

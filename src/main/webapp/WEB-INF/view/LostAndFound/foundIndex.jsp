@@ -14,11 +14,7 @@
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_pink.css">
-    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-1.1.1.min_blue.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
-    <link title="pink" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_pink.css">
-    <link title="blue" type="text/css" rel="alternate stylesheet" href="/css/common/weui-0.2.2.min_blue.css">
     <link rel="stylesheet" type="text/css" href="/css/lostandfound/base.css">
     <link rel="stylesheet" type="text/css" href="/css/lostandfound/nav.css">
     <title>广东第二师范学院失物招领</title>

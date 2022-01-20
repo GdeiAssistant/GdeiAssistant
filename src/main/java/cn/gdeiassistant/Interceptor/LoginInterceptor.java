@@ -3,7 +3,7 @@ package cn.gdeiassistant.Interceptor;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import com.google.gson.Gson;
 import cn.gdeiassistant.Constant.ErrorConstantUtils;
-import cn.gdeiassistant.Tools.StringUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 

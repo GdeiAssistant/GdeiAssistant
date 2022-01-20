@@ -3,8 +3,8 @@ package cn.gdeiassistant.Service.Wechat;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.WechatUser.WechatUserMapper;
 import cn.gdeiassistant.Pojo.Entity.User;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
-import cn.gdeiassistant.Tools.StringUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -3,7 +3,7 @@ package cn.gdeiassistant.Pojo.Entity;
 import cn.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.taobao.wsgsvr.WsgException;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.context.annotation.Scope;

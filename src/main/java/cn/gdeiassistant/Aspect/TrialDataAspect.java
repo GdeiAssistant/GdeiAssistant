@@ -8,7 +8,7 @@ import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.Token.LoginTokenService;
 import cn.gdeiassistant.Service.TrailData.TrialDataService;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
-import cn.gdeiassistant.Tools.StringUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

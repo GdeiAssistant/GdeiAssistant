@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Tools;
+package cn.gdeiassistant.Tools.Utils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

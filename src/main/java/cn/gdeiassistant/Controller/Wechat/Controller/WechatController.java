@@ -7,7 +7,7 @@ import cn.gdeiassistant.Pojo.Wechat.WechatImageTextMessage;
 import cn.gdeiassistant.Pojo.Wechat.WechatSignature;
 import cn.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import cn.gdeiassistant.Service.Wechat.WechatService;
-import cn.gdeiassistant.Tools.XMLParseUtils;
+import cn.gdeiassistant.Tools.Utils.XMLParseUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

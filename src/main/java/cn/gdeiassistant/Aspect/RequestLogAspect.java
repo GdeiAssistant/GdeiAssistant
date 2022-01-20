@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Aspect;
 
 import com.alibaba.fastjson.JSON;
-import cn.gdeiassistant.Tools.StringUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;

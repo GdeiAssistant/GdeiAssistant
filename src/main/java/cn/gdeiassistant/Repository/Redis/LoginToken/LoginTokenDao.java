@@ -13,5 +13,5 @@ public interface LoginTokenDao {
 
     public void UpdateAccessToken(AccessToken token);
 
-    public Boolean DeleteToken(String signature);
+    public void DeleteToken(String signature);
 }

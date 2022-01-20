@@ -3,12 +3,10 @@ package cn.gdeiassistant.Service.Account;
 import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import cn.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Authentication.AuthenticationMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Cet.CetMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Delivery.DeliveryMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Ershou.ErshouMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Gender.GenderMapper;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Graduation.GraduationMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Phone.PhoneMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.PrivacyMapper;
@@ -19,9 +17,8 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Close.Clos
 import cn.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
 import cn.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Service.Profile.UserProfileService;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,12 +63,6 @@ public class CloseAccountService {
 
     @Autowired
     private ProfileMapper profileMapper;
-
-    @Autowired
-    private AuthenticationMapper authenticationMapper;
-
-    @Autowired
-    private GraduationMapper graduationMapper;
 
     @Autowired
     private PrivacyMapper privacyMapper;
@@ -188,13 +179,6 @@ public class CloseAccountService {
         //删除用户资料信息
         profileMapper.resetUserProfile(StringEncryptUtils.encryptString(username), "已注销");
         profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(username));
-        //清除实名认证信息
-        Authentication authentication = authenticationMapper.selectAuthentication(StringEncryptUtils.encryptString(username));
-        if (authentication != null) {
-            authenticationMapper.deleteAuthentication(StringEncryptUtils.encryptString(username));
-        }
-        //重置毕业用户账号处理方案
-        graduationMapper.resetGraduation(StringEncryptUtils.encryptString(username));
         //重置用户隐私配置
         privacyMapper.resetPrivacy(StringEncryptUtils.encryptString(username));
         //删除用户头像

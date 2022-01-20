@@ -128,17 +128,7 @@
 <div class="banxin">
 
     <div class="app_logo margin-bottom60">
-        <c:choose>
-            <c:when test="${applicationScope.get('pinkthemelogo')}">
-                <img src="/img/about/logo_pink.png" width="120" height="120">
-            </c:when>
-            <c:when test="${applicationScope.get('pridethemelogo')}">
-                <img src="/img/about/logo_pride.png" width="120" height="120">
-            </c:when>
-            <c:otherwise>
-                <img src="/img/about/logo.png" width="120" height="120">
-            </c:otherwise>
-        </c:choose>
+        <img src="/img/about/logo.png" width="120" height="120">
     </div>
 
     <!-- 功能模块启用状态检查结果提示信息 仅开发模式下显示 -->

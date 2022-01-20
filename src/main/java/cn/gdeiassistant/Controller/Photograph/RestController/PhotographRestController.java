@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Controller.Photograph.RestController;
 
 import com.taobao.wsgsvr.WsgException;
-import cn.gdeiassistant.Annotation.RestCheckAuthentication;
 import cn.gdeiassistant.Pojo.Entity.Photograph;
 import cn.gdeiassistant.Pojo.Entity.PhotographComment;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -35,7 +34,6 @@ public class PhotographRestController {
      * 查询照片总数统计数据
      */
     @RequestMapping(value = "/api/photograph/statistics/photos", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "photograph")
     public DataJsonResult<Integer> QueryPhotoStatisticalData(HttpServletRequest request) {
         int count = photographService.QueryPhotoStatisticalData();
         return new DataJsonResult<>(true, count);
@@ -45,7 +43,6 @@ public class PhotographRestController {
      * 查询评论总数统计数据
      */
     @RequestMapping(value = "/api/photograph/statistics/comments", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "photograph")
     public DataJsonResult<Integer> QueryCommentStatisticalData(HttpServletRequest request) {
         int count = photographService.QueryCommentStatisticalData();
         return new DataJsonResult<>(true, count);
@@ -55,7 +52,6 @@ public class PhotographRestController {
      * 查询点赞总数统计数据
      */
     @RequestMapping(value = "/api/photograph/statistics/likes", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "photograph")
     public DataJsonResult<Integer> QueryLikeStatisticalData(HttpServletRequest request) {
         int count = photographService.QueryLikeStatisticalData();
         return new DataJsonResult<>(true, count);
@@ -69,7 +65,6 @@ public class PhotographRestController {
      * @return
      */
     @RequestMapping(value = "/api/photograph/type/{type}/start/{start}/size/{size}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "photograph")
     public DataJsonResult<List<Photograph>> QueryPhotographList(HttpServletRequest request
             , @Validated @NotNull @Min(0) @Max(1) @PathVariable("type") int type
             , @PathVariable("start") int start, @PathVariable("size") int size) throws WsgException {
@@ -86,7 +81,6 @@ public class PhotographRestController {
      * @return
      */
     @RequestMapping(value = "/api/photograph/id/{id}/index/{index}/image", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "photograph")
     public DataJsonResult<String> GetPhotographItemImage(HttpServletRequest request
             , @PathVariable("id") int id, @PathVariable("index") int index) {
         String url = photographService.GetPhotographItemPictureURL(id, index);
@@ -101,7 +95,6 @@ public class PhotographRestController {
      * @return
      */
     @RequestMapping(value = "/api/photograph/id/{id}/comment", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "photograph")
     public DataJsonResult<List<PhotographComment>> QueryPhotographCommentList(HttpServletRequest request
             , @PathVariable("id") int id) throws WsgException {
         List<PhotographComment> photographCommentList = photographService.QueryPhotographCommentList(id);
@@ -116,7 +109,6 @@ public class PhotographRestController {
      * @return
      */
     @RequestMapping(value = "/api/photograph/id/{id}/comment", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "photograph")
     public JsonResult AddPhotographComment(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
@@ -138,7 +130,6 @@ public class PhotographRestController {
      * @throws IOException
      */
     @RequestMapping(value = "/api/photograph", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "photograph")
     public JsonResult AddPhotograph(HttpServletRequest request, @Validated Photograph photograph
             , MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4) throws WsgException, IOException {
         String username = (String) request.getSession().getAttribute("username");
@@ -167,7 +158,6 @@ public class PhotographRestController {
      * @return
      */
     @RequestMapping(value = "/api/photograph/id/{id}/like", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "photograph")
     public JsonResult LikePhotograph(HttpServletRequest request, @PathVariable("id") int id) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
         photographService.LikePhotograph(id, username);

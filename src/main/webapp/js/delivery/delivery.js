@@ -1,6 +1,5 @@
 $(function () {
     FastClick.attach(document.body);
-    loadAuthenticationState();
 });
 
 //检测Input文字长度是否超过限制

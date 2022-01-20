@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Ershou.RestController;
 
-import cn.gdeiassistant.Annotation.RestCheckAuthentication;
 import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.Pojo.Entity.ErshouInfo;
 import cn.gdeiassistant.Pojo.Entity.ErshouItem;
@@ -33,7 +32,6 @@ public class ErshouRestController {
      * @return
      */
     @RequestMapping(value = "/api/ershou/item/start/{start}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "ershou")
     public DataJsonResult<List<ErshouItem>> GetErshouItem(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
         DataJsonResult<List<ErshouItem>> result = new DataJsonResult<>();
         List<ErshouItem> ershouItemList = ershouService.QueryErshouItems(start);
@@ -51,7 +49,6 @@ public class ErshouRestController {
      * @return
      */
     @RequestMapping(value = "/api/ershou/item", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "ershou")
     public JsonResult AddErshouInfo(HttpServletRequest request
             , @Validated ErshouItem ershouItem, MultipartFile image1
             , MultipartFile image2, MultipartFile image3, MultipartFile image4) throws Exception {
@@ -83,7 +80,6 @@ public class ErshouRestController {
      * @return
      */
     @RequestMapping(value = "/api/ershou/keyword/{keyword}/start/{start}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "ershou")
     public DataJsonResult<List<ErshouItem>> GetErshouItemWithKeyword(HttpServletRequest request, @PathVariable("keyword") String keyword
             , @PathVariable("start") int start) throws Exception {
         List<ErshouItem> ershouItemList = ershouService.QueryErshouItemsWithKeyword(keyword, start);
@@ -97,7 +93,6 @@ public class ErshouRestController {
      * @return
      */
     @RequestMapping(value = "/api/ershou/item/id/{id}/preview", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "ershou")
     public DataJsonResult<String> GetErshouItemPreviewImage(HttpServletRequest request, @PathVariable("id") int id) {
         DataJsonResult<String> result = new DataJsonResult<>();
         List<String> list = ershouService.GetErshouItemPictureURL(id);
@@ -116,7 +111,6 @@ public class ErshouRestController {
      * @return
      */
     @RequestMapping(value = "/api/ershou/item/type/{type}/start/{start}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "ershou")
     public DataJsonResult<List<ErshouItem>> GetErshouItemByType(HttpServletRequest request, @Validated @Range(min = 0, max = 11) @PathVariable("type") int type
             , @PathVariable("start") int start) throws Exception {
         List<ErshouItem> ershouItemList = ershouService.QueryErshouItemByType(type, start);
@@ -131,7 +125,6 @@ public class ErshouRestController {
      * @return
      */
     @RequestMapping(value = "/api/ershou/item/id/{id}", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "ershou")
     public JsonResult UpdateErshouItem(HttpServletRequest request, @Validated ErshouItem ershouItem
             , @PathVariable("id") int id) throws Exception {
         if (ershouItem.getPrice() <= 0 || ershouItem.getPrice() > 9999.99) {
@@ -156,7 +149,6 @@ public class ErshouRestController {
      * @return
      */
     @RequestMapping(value = "/api/ershou/item/state/id/{id}", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "ershou")
     public JsonResult UpdateErshouItemState(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @Range(min = 0, max = 2) int state) throws Exception {
         ErshouInfo ershouInfo = ershouService.QueryErshouInfoByID(id);

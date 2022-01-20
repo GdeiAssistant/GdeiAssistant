@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Ershou.Controller;
 
-import cn.gdeiassistant.Annotation.CheckAuthentication;
 import cn.gdeiassistant.Constant.ItemConstantUtils;
 import cn.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
@@ -33,7 +32,6 @@ public class ErshouController {
      * @return
      */
     @RequestMapping(value = "/ershou", method = RequestMethod.GET)
-    @CheckAuthentication(name = "ershou")
     public ModelAndView ResolveErshouIndexPage(HttpServletRequest request) {
         return new ModelAndView("Ershou/ershouIndex");
     }
@@ -44,7 +42,6 @@ public class ErshouController {
      * @return
      */
     @RequestMapping(value = "/ershou/publish", method = RequestMethod.GET)
-    @CheckAuthentication(name = "ershou")
     public ModelAndView ResolveErshouPublishPage(HttpServletRequest request) {
         return new ModelAndView("Ershou/ershouPublish");
     }
@@ -57,7 +54,6 @@ public class ErshouController {
      * @return
      */
     @RequestMapping(value = {"/ershou/edit/id/{id}"}, method = RequestMethod.GET)
-    @CheckAuthentication(name = "ershou")
     public ModelAndView ResolveErshouEditPage(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         String username = (String) request.getSession().getAttribute("username");
@@ -88,7 +84,6 @@ public class ErshouController {
      * @return
      */
     @RequestMapping(value = {"/ershou/personal"}, method = RequestMethod.GET)
-    @CheckAuthentication(name = "ershou")
     public ModelAndView ResolveErshouPersonalPage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Ershou/ershouPersonal");
@@ -128,7 +123,6 @@ public class ErshouController {
      * @return
      */
     @RequestMapping(value = "/ershou/search/keyword/{keyword}", method = RequestMethod.GET)
-    @CheckAuthentication(name = "ershou")
     public ModelAndView SearchErshouItemWithKeyword(HttpServletRequest request, @Validated @Range(min = 1, max = 25) @PathVariable("keyword") String keyword) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("KeyWord", keyword);
@@ -145,7 +139,6 @@ public class ErshouController {
      * @return
      */
     @RequestMapping(value = {"/ershou/type/{type}"}, method = RequestMethod.GET)
-    @CheckAuthentication(name = "ershou")
     public ModelAndView SearchErshouItemByType(HttpServletRequest request, @Validated @Range(min = 0, max = 11) @PathVariable("type") int type) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("TypeNumber", type);
@@ -163,7 +156,6 @@ public class ErshouController {
      * @return
      */
     @RequestMapping(value = {"ershou/detail/id/{id}"})
-    @CheckAuthentication(name = "ershou")
     public ModelAndView GetErshouItemDetail(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         ErshouInfo ershouInfo = ershouService.QueryErshouInfoByID(id);

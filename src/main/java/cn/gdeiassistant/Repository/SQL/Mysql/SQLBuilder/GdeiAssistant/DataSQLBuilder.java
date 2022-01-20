@@ -41,14 +41,6 @@ public class DataSQLBuilder {
         }}.toString();
     }
 
-    public String selectUserAuthentication(String username) {
-        return new SQL() {{
-            SELECT("auth.identity_code,auth.type");
-            FROM("authentication auth");
-            WHERE("username=#{username}");
-        }}.toString();
-    }
-
     public String selectUserDeliveryOrderList(String username) {
         return new SQL() {{
             SELECT("do.order_id,do.order_time,do.name,do.number,do.phone,do.price,do.company");

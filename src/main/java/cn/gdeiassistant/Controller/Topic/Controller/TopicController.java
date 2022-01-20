@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Topic.Controller;
 
-import cn.gdeiassistant.Annotation.CheckAuthentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +17,6 @@ public class TopicController {
      * @return
      */
     @RequestMapping(value = "/topic", method = RequestMethod.GET)
-    @CheckAuthentication(name = "topic")
     public ModelAndView ResolveTopicPage(HttpServletRequest request) {
         return new ModelAndView("Topic/index");
     }
@@ -30,7 +28,6 @@ public class TopicController {
      * @return
      */
     @RequestMapping(value = "/topic/publish", method = RequestMethod.GET)
-    @CheckAuthentication(name = "topic")
     public ModelAndView ResolveTopicPublishPage(HttpServletRequest request) {
         return new ModelAndView("Topic/publish");
     }
@@ -42,7 +39,6 @@ public class TopicController {
      * @return
      */
     @RequestMapping(value = "/topic/search", method = RequestMethod.GET)
-    @CheckAuthentication(name = "topic")
     public ModelAndView ResolveTopicSearchPage(HttpServletRequest request) {
         return new ModelAndView("Topic/search");
     }

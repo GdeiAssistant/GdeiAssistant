@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Controller.Topic.RestController;
 
 import com.taobao.wsgsvr.WsgException;
-import cn.gdeiassistant.Annotation.RestCheckAuthentication;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Topic;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -36,7 +35,6 @@ public class TopicRestController {
      * @return
      */
     @RequestMapping(value = "/api/topic/start/{start}/size/{size}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "topic")
     public DataJsonResult<List<Topic>> QueryTopic(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
@@ -54,7 +52,6 @@ public class TopicRestController {
      * @return
      */
     @RequestMapping(value = "/api/topic/keyword/{keyword}/start/{start}/size/{size}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "topic")
     public DataJsonResult<List<Topic>> QueryTopicByKeyword(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size, @PathVariable("keyword") String keyword) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
@@ -73,7 +70,6 @@ public class TopicRestController {
      * @throws IOException
      */
     @RequestMapping(value = "/api/topic", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "topic")
     public JsonResult AddTopic(HttpServletRequest request, @Validated Topic topic, MultipartFile[] images) throws WsgException, IOException {
         if (images != null) {
             if (images.length > 9) {
@@ -103,7 +99,6 @@ public class TopicRestController {
      * @return
      */
     @RequestMapping(value = "/api/topic/id/{id}/like", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "topic")
     public JsonResult LikeTopic(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException, WsgException {
         String username = (String) request.getSession().getAttribute("username");
         topicService.LikeTopic(id, username);
@@ -119,7 +114,6 @@ public class TopicRestController {
      * @return
      */
     @RequestMapping(value = "/api/topic/id/{id}/index/{index}/image", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "topic")
     public DataJsonResult<String> GetTopicImage(HttpServletRequest request, @PathVariable("id") int id, @PathVariable("index") int index) {
         String url = topicService.DownloadTopicItemPicture(id, index);
         return new DataJsonResult<>(true, url);

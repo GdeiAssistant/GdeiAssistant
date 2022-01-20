@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Controller.Delivery.RestController;
 
 import com.taobao.wsgsvr.WsgException;
-import cn.gdeiassistant.Annotation.RestCheckAuthentication;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.DeliveryException.DeliveryOrderStateUpdatedException;
 import cn.gdeiassistant.Exception.DeliveryException.NoAccessUpdatingException;
@@ -32,7 +31,6 @@ public class DeliveryRestController {
      * @return
      */
     @RequestMapping(value = "/api/delivery/order/start/{start}/size/{size}", method = RequestMethod.GET)
-    @RestCheckAuthentication(name = "delivery")
     public DataJsonResult<List<DeliveryOrder>> QueryDeliveryOrderPage(HttpServletRequest request, @PathVariable("start") Integer start
             , @PathVariable("size") Integer size) throws WsgException {
         List<DeliveryOrder> deliveryOrderList = deliveryService.QueryDeliveryOrderPage(start, size);
@@ -48,7 +46,6 @@ public class DeliveryRestController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/delivery/acceptorder", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "delivery")
     public JsonResult AcceptOrder(HttpServletRequest request, Integer orderId) throws Exception {
         String username = (String) request.getSession().getAttribute("username");
         deliveryService.AcceptOrder(orderId, username);
@@ -66,7 +63,6 @@ public class DeliveryRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/delivery/order/id/{id}", method = RequestMethod.DELETE)
-    @RestCheckAuthentication(name = "delivery")
     public JsonResult DeleteOrder(HttpServletRequest request, @PathVariable("id") Integer orderId) throws NoAccessUpdatingException, DataNotExistException, WsgException, DeliveryOrderStateUpdatedException {
         String username = (String) request.getSession().getAttribute("username");
         deliveryService.DeleteOrder(orderId, username);
@@ -84,7 +80,6 @@ public class DeliveryRestController {
      * @throws WsgException
      */
     @RequestMapping(value = "/api/delivery/trade/id/{id}/finishtrade", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "delivery")
     public JsonResult FinishTrade(HttpServletRequest request, @PathVariable("id") Integer tradeId) throws DataNotExistException, NoAccessUpdatingException, WsgException {
         String username = (String) request.getSession().getAttribute("username");
         deliveryService.FinishTrade(tradeId, username);
@@ -99,7 +94,6 @@ public class DeliveryRestController {
      * @return
      */
     @RequestMapping(value = "/api/delivery/order", method = RequestMethod.POST)
-    @RestCheckAuthentication(name = "delivery")
     public JsonResult AddDeliveryOrder(HttpServletRequest request, DeliveryOrder deliveryOrder) throws WsgException {
         String username = (String) request.getSession().getAttribute("username");
         deliveryOrder.setUsername(username);

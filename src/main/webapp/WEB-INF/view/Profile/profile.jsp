@@ -129,20 +129,11 @@
             <span id="functionBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
         </div>
     </a>
-    <a class="weui-cell weui-cell_access" href="javascript:"
-       onclick="window.location.href = '/theme'">
-        <div class="weui-cell__bd">
-            <p>主题设置</p>
-        </div>
-        <div class="weui-cell__ft">
-            <span id="themeBadge" class="weui-badge" style="display:none;margin-left: 5px;">New</span>
-        </div>
-    </a>
 </div>
 
 <div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
-       onclick="window.location.href = '/password'">
+       onclick="$.alert('请通过广东第二师范学院统一身份认证系统修改密码', '提示信息');">
         <div class="weui-cell__bd">
             <p>修改密码</p>
         </div>
@@ -158,36 +149,9 @@
         </div>
     </a>
     <a class="weui-cell weui-cell_access" href="javascript:"
-       onclick="window.location.href = '/authentication'">
-        <div class="weui-cell__bd">
-            <p>实名认证</p>
-        </div>
-        <div class="weui-cell__ft">
-            <div style="display: none" id="unauthenticated">
-                未认证
-                <span id="authenticationBadge" class="weui-badge weui-badge_dot"
-                      style="margin-left: 5px;margin-right: 5px;"></span>
-            </div>
-            <div style="display: none" id="authenticated">
-                已认证
-            </div>
-        </div>
-    </a>
-    <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/close'">
         <div class="weui-cell__bd">
             <p>删除账号</p>
-        </div>
-        <div class="weui-cell__ft">
-        </div>
-    </a>
-</div>
-
-<div class="weui-cells">
-    <a class="weui-cell weui-cell_access" href="javascript:"
-       onclick="window.location.href = '/admin'">
-        <div class="weui-cell__bd">
-            <p>管理员选项</p>
         </div>
         <div class="weui-cell__ft">
         </div>

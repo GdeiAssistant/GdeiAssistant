@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Aspect;
 
 import cn.gdeiassistant.Annotation.TrialData;
-import cn.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -9,13 +8,17 @@ import cn.gdeiassistant.Service.Token.LoginTokenService;
 import cn.gdeiassistant.Service.TrailData.TrialDataService;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +26,11 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 @Component
 @Order(5)
-public class TrialDataAspect {
+@PropertySource("classpath:/config/trial/setting.properties")
+public class TrialDataAspect implements EnvironmentAware {
+
+    @Autowired
+    private Environment environment;
 
     @Autowired
     private LoginTokenService loginTokenService;
@@ -50,10 +57,9 @@ public class TrialDataAspect {
             String token = request.getParameter("token");
             User user = userLoginService.GetUserByUsername(loginTokenService.ParseToken(token).get("username").asString());
             username = user.decryptUser().getUsername();
-            group = user.getGroup();
         }
-        //若当前用户组为体验用户，则返回模拟结果数据
-        if (UserGroupEnum.TRIAL.getValue().equals(group)) {
+        //若设置模拟教务查询数据，则返回模拟数据
+        if (BooleanUtils.isTrue(Boolean.valueOf(environment.getProperty("trial.data.simulation")))) {
             /*
               若TrialData注解的请求时间信息RequestTime值不为空字符串，则表示请求的数据要求携带时间信息
               将在请求参数中获取对应的属性值，该属性的名称与注解中RequestTime的值相同，将作为时间属性被用于获取模拟数据或模拟数据后加工的过程中
@@ -96,5 +102,10 @@ public class TrialDataAspect {
             return new DataJsonResult((JsonResult) proceedingJoinPoint.proceed(args));
         }
         return (DataJsonResult) proceedingJoinPoint.proceed(args);
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 }

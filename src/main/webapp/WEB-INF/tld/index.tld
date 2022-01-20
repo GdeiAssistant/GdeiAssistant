@@ -10,7 +10,7 @@
     <function>
         <description>获取主页欢迎页面标题</description>
         <name>getWelcomeTitle</name>
-        <function-class>cn.gdeiassistant.Tools.WelcomeUtils</function-class>
+        <function-class>cn.gdeiassistant.Tools.Utils.WelcomeUtils</function-class>
         <function-signature>java.lang.String getWelcomeTitle()</function-signature>
         <example>${index:getWelcomeTitle()}</example>
     </function>
@@ -18,7 +18,7 @@
     <function>
         <description>获取主页欢迎页面标题</description>
         <name>getWelcomeContent</name>
-        <function-class>cn.gdeiassistant.Tools.WelcomeUtils</function-class>
+        <function-class>cn.gdeiassistant.Tools.Utils.WelcomeUtils</function-class>
         <function-signature>java.lang.String getWelcomeContent()</function-signature>
         <example>${index:getWelcomeContent()}</example>
     </function>

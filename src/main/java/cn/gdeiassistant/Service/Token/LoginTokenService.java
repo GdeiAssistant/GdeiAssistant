@@ -1,25 +1,25 @@
 package cn.gdeiassistant.Service.Token;
 
+import cn.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
+import cn.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
+import cn.gdeiassistant.Exception.TokenValidException.TokenServerException;
+import cn.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
+import cn.gdeiassistant.Pojo.Config.JWTConfig;
+import cn.gdeiassistant.Pojo.Entity.AccessToken;
+import cn.gdeiassistant.Pojo.Entity.Location;
+import cn.gdeiassistant.Pojo.Entity.RefreshToken;
+import cn.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
 import cn.gdeiassistant.Repository.Redis.LoginToken.LoginTokenDao;
+import cn.gdeiassistant.Service.IPAddress.IPService;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import cn.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
-import cn.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
-import cn.gdeiassistant.Exception.TokenValidException.TokenServerException;
-import cn.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
-import cn.gdeiassistant.Pojo.Entity.AccessToken;
-import cn.gdeiassistant.Pojo.Entity.Location;
-import cn.gdeiassistant.Pojo.Entity.RefreshToken;
-import cn.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
-import cn.gdeiassistant.Service.IPAddress.IPService;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
-import cn.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,8 +37,8 @@ public class LoginTokenService {
     @Autowired
     private IPService ipService;
 
-    @Value("#{propertiesReader['jwt.secret']}")
-    private String secret;
+    @Autowired
+    private JWTConfig jwtConfig;
 
     /**
      * 使令牌过期，从缓存中过期
@@ -50,9 +50,7 @@ public class LoginTokenService {
         if (StringUtils.isBlank(loginTokenDao.QueryToken(signature))) {
             throw new TokenNotMatchingException("令牌信息不存在");
         }
-        if (!loginTokenDao.DeleteToken(signature)) {
-            throw new TokenServerException("令牌服务系统异常");
-        }
+        loginTokenDao.DeleteToken(signature);
     }
 
     /**
@@ -134,7 +132,7 @@ public class LoginTokenService {
                 .withClaim("createTime"
                         , createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .withClaim("expireTime", expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-                .sign(Algorithm.HMAC256(secret));
+                .sign(Algorithm.HMAC256(jwtConfig.getSecret()));
         AccessToken accessToken = new AccessToken();
         accessToken.setUsername(username);
         accessToken.setIp(ip);
@@ -166,7 +164,7 @@ public class LoginTokenService {
     public void ValidToken(String signature, String ip) throws TokenNotMatchingException, UnusualLocationException, TokenServerException, TokenExpiredException {
         try {
             //验证Token是否被伪造或篡改
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(secret)).withIssuer("gdeiassistant").build();
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(jwtConfig.getSecret())).withIssuer("gdeiassistant").build();
             DecodedJWT decodedJWT = jwtVerifier.verify(signature);
             //获取时间戳，检验权限令牌是否已经过期
             Long expireTime = decodedJWT.getClaim("expireTime").asLong();

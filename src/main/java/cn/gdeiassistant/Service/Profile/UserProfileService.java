@@ -1,14 +1,14 @@
 package cn.gdeiassistant.Service.Profile;
 
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Gender.GenderMapper;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.ProfileMapper;
-import com.aliyun.oss.OSSClient;
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
+import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.Introduction;
 import cn.gdeiassistant.Pojo.Entity.Profile;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Gender.GenderMapper;
+import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.ProfileMapper;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
+import com.aliyun.oss.OSSClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.AsyncRestTemplate;
@@ -33,12 +33,6 @@ public class UserProfileService {
     public void setProfessionMap(Map<Integer, String> professionMap) {
         UserProfileService.professionMap = professionMap;
     }
-
-    private String accessKeyID;
-
-    private String accessKeySecret;
-
-    private String endpoint;
 
     private static Map<Integer, String> genderMap;
 
@@ -75,20 +69,8 @@ public class UserProfileService {
         UserProfileService.facultyMap = facultyMap;
     }
 
-    @Value("#{propertiesReader['oss.accessKeySecret']}")
-    public void setAccessKeySecret(String accessKeySecret) {
-        this.accessKeySecret = accessKeySecret;
-    }
-
-    @Value("#{propertiesReader['oss.accessKeyID']}")
-    public void setAccessKeyID(String accessKeyID) {
-        this.accessKeyID = accessKeyID;
-    }
-
-    @Value("#{propertiesReader['oss.endpoint']}")
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
+    @Autowired
+    private OSSConfig ossConfig;
 
     /**
      * 获取用户个人资料
@@ -131,7 +113,7 @@ public class UserProfileService {
      */
     public String GetUserAvatar(String username) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         String url = "";
         //检查自定义头像图片是否存在
         if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + ".jpg")) {
@@ -152,7 +134,7 @@ public class UserProfileService {
      */
     public String GetUserHighDefinitionAvatar(String username) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         String url = "";
         //检查自定义头像图片是否存在
         if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg")) {
@@ -174,7 +156,7 @@ public class UserProfileService {
      */
     public void UpdateAvatar(String username, InputStream inputStream) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         //上传文件
         ossClient.putObject("gdeiassistant-userdata", "avatar/" + username + ".jpg", inputStream);
         ossClient.shutdown();
@@ -188,7 +170,7 @@ public class UserProfileService {
      */
     public void UpdateHighDefinitionAvatar(String username, InputStream inputStream) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         //上传文件
         ossClient.putObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg", inputStream);
         ossClient.shutdown();
@@ -200,7 +182,7 @@ public class UserProfileService {
      * @param username
      */
     public void DeleteAvatar(String username) {
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + ".jpg")) {
             //删除头像文件
             ossClient.deleteObject("gdeiassistant-userdata", "avatar/" + username + ".jpg");

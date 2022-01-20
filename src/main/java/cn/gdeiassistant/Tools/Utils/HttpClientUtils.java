@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Tools;
+package cn.gdeiassistant.Tools.Utils;
 
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Repository.Redis.CookieStore.CookieStoreDao;
@@ -16,7 +16,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.HttpSessionRequiredException;
 
@@ -26,32 +25,11 @@ import javax.servlet.http.HttpSession;
 @Component
 public class HttpClientUtils {
 
-    private static String proxyIP;
-
-    private static Integer proxyPort;
-
-    private static String proxyType;
-
     private static CookieStoreDao cookieStoreDao;
 
     @Autowired
     public void setCookieStoreDao(CookieStoreDao cookieStoreDao) {
         HttpClientUtils.cookieStoreDao = cookieStoreDao;
-    }
-
-    @Value("#{propertiesReader['client.proxy.ip']}")
-    public void setProxyIP(String proxyIP) {
-        HttpClientUtils.proxyIP = proxyIP;
-    }
-
-    @Value("#{propertiesReader['client.proxy.port']}")
-    public void setProxyPort(Integer proxyPort) {
-        HttpClientUtils.proxyPort = proxyPort;
-    }
-
-    @Value("#{propertiesReader['client.proxy.type']}")
-    public void setProxyType(String proxyType) {
-        HttpClientUtils.proxyType = proxyType;
     }
 
     /**

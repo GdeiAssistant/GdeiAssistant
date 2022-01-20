@@ -1,15 +1,15 @@
 package cn.gdeiassistant.Service.Ershou;
 
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Ershou.ErshouMapper;
-import cn.gdeiassistant.Service.Profile.UserProfileService;
-import com.aliyun.oss.OSSClient;
 import cn.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.ErshouInfo;
 import cn.gdeiassistant.Pojo.Entity.ErshouItem;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Ershou.ErshouMapper;
+import cn.gdeiassistant.Service.Profile.UserProfileService;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
+import com.aliyun.oss.OSSClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,26 +27,8 @@ public class ErshouService {
     @Autowired
     private UserProfileService userProfileService;
 
-    private String accessKeyID;
-
-    private String accessKeySecret;
-
-    private String endpoint;
-
-    @Value("#{propertiesReader['oss.accessKeySecret']}")
-    public void setAccessKeySecret(String accessKeySecret) {
-        this.accessKeySecret = accessKeySecret;
-    }
-
-    @Value("#{propertiesReader['oss.accessKeyID']}")
-    public void setAccessKeyID(String accessKeyID) {
-        this.accessKeyID = accessKeyID;
-    }
-
-    @Value("#{propertiesReader['oss.endpoint']}")
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
+    @Autowired
+    private OSSConfig ossConfig;
 
     /**
      * 查询指定ID的二手交易商品信息
@@ -207,7 +189,7 @@ public class ErshouService {
      */
     public void UploadErshouItemPicture(int id, int index, InputStream inputStream) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         //上传文件
         ossClient.putObject("gdeiassistant-userdata", "ershou/" + id + "_" + index + ".jpg", inputStream);
         ossClient.shutdown();
@@ -221,7 +203,7 @@ public class ErshouService {
      */
     public List<String> GetErshouItemPictureURL(int id) {
         // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         List<String> pictureURL = new ArrayList<>();
         //检查二手交易商品图片是否存在
         for (int i = 1; i <= 4; i++) {

@@ -2,10 +2,10 @@ package cn.gdeiassistant.Service.CloudAPI;
 
 import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
+import cn.gdeiassistant.Pojo.Config.JisuConfig;
 import cn.gdeiassistant.Pojo.Entity.Location;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,33 +19,8 @@ public class JiSuAPIService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private String host;
-
-    private String recognitionPath;
-
-    private String ipaddressPath;
-
-    private String appkey;
-
-    @Value("#{propertiesReader['api.jisu.host']}")
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    @Value("#{propertiesReader['api.jisu.ipadress.path']}")
-    public void setIpaddressPath(String ipaddressPath) {
-        this.ipaddressPath = ipaddressPath;
-    }
-
-    @Value("#{propertiesReader['api.jisu.recognize.path']}")
-    public void setRecognitionPath(String recognitionPath) {
-        this.recognitionPath = recognitionPath;
-    }
-
-    @Value("#{propertiesReader['api.jisu.appkey']}")
-    public void setAppkey(String appkey) {
-        this.appkey = appkey;
-    }
+    @Autowired
+    private JisuConfig jisuConfig;
 
     /**
      * 根据IP地址查询IP地址归属地
@@ -58,8 +33,8 @@ public class JiSuAPIService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         params.add("ip", ip);
-        params.add("appkey", appkey);
-        JSONObject jsonObject = restTemplate.postForObject(host + ipaddressPath
+        params.add("appkey", jisuConfig.getAppkey());
+        JSONObject jsonObject = restTemplate.postForObject(jisuConfig.getHost() + jisuConfig.getIpaddressPath()
                 , new HttpEntity<>(params, httpHeaders), JSONObject.class);
         if (jsonObject.has("status") && jsonObject.getString("status").equals("0")) {
             Location location = new Location();
@@ -85,8 +60,8 @@ public class JiSuAPIService {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         params.add("pic", image);
         params.add("type", checkCodeTypeEnum.getType() + length);
-        params.add("appkey", appkey);
-        JSONObject jsonObject = restTemplate.postForObject(host + recognitionPath
+        params.add("appkey", jisuConfig.getAppkey());
+        JSONObject jsonObject = restTemplate.postForObject(jisuConfig.getHost() + jisuConfig.getRecognitionPath()
                 , new HttpEntity<>(params, httpHeaders), JSONObject.class);
         if (jsonObject.has("status") && jsonObject.getString("status").equals("0")) {
             return jsonObject.getJSONObject("result").getString("code");

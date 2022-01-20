@@ -1,6 +1,8 @@
 package cn.gdeiassistant.Service.Feedback;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -14,16 +16,22 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class FeedbackService {
+
+    private Logger logger = LoggerFactory.getLogger(FeedbackService.class);
 
     private String senderEmail;
 
     private String feedbackEmail;
 
     private String ticketEmail;
-    @Autowired
+
+    @Autowired(required = false)
     private JavaMailSender javaMailSender;
 
     @Value("#{propertiesReader['email.smtp.username']}")
@@ -51,17 +59,22 @@ public class FeedbackService {
      */
     @Async
     public void SendFeedbackEmail(String username, String content, InputStream[] inputStreams) throws MessagingException, IOException {
-        MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true
-                , StandardCharsets.UTF_8.displayName());
-        mimeMessageHelper.setFrom(senderEmail);
-        mimeMessageHelper.setTo(feedbackEmail);
-        mimeMessageHelper.setSubject("用户" + username + "提交的意见建议反馈");
-        mimeMessageHelper.setText(content);
-        for (int i = 1; i <= inputStreams.length; i++) {
-            mimeMessageHelper.addAttachment("attachment-image-" + i + ".jpg", new ByteArrayResource(IOUtils.toByteArray(inputStreams[i - 1])));
+        if (javaMailSender != null) {
+            MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true
+                    , StandardCharsets.UTF_8.displayName());
+            mimeMessageHelper.setFrom(senderEmail);
+            mimeMessageHelper.setTo(feedbackEmail);
+            mimeMessageHelper.setSubject("用户" + username + "提交的意见建议反馈");
+            mimeMessageHelper.setText(content);
+            for (int i = 1; i <= inputStreams.length; i++) {
+                mimeMessageHelper.addAttachment("attachment-image-" + i + ".jpg", new ByteArrayResource(IOUtils.toByteArray(inputStreams[i - 1])));
+            }
+            javaMailSender.send(mimeMailMessage);
+            return;
         }
-        javaMailSender.send(mimeMailMessage);
+        logger.error("发送至" + feedbackEmail + "的邮箱发送失败，原因为未配置邮件发送器", LocalDateTime.now().atZone(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
     }
 
     /**
@@ -75,17 +88,21 @@ public class FeedbackService {
      */
     @Async
     public void SendTicketEmail(String username, String content, String type, InputStream[] inputStreams) throws MessagingException, IOException {
-        MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true
-                , StandardCharsets.UTF_8.displayName());
-        mimeMessageHelper.setFrom(senderEmail);
-        mimeMessageHelper.setTo(ticketEmail);
-        mimeMessageHelper.setSubject("用户" + username + "提交的" + type + "分类故障工单");
-        mimeMessageHelper.setText(content);
-        for (int i = 1; i <= inputStreams.length; i++) {
-            mimeMessageHelper.addAttachment("attachment-image-" + i + ".jpg", new ByteArrayResource(IOUtils.toByteArray(inputStreams[i - 1])));
+        if (javaMailSender != null) {
+            MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true
+                    , StandardCharsets.UTF_8.displayName());
+            mimeMessageHelper.setFrom(senderEmail);
+            mimeMessageHelper.setTo(ticketEmail);
+            mimeMessageHelper.setSubject("用户" + username + "提交的" + type + "分类故障工单");
+            mimeMessageHelper.setText(content);
+            for (int i = 1; i <= inputStreams.length; i++) {
+                mimeMessageHelper.addAttachment("attachment-image-" + i + ".jpg", new ByteArrayResource(IOUtils.toByteArray(inputStreams[i - 1])));
+            }
+            javaMailSender.send(mimeMailMessage);
         }
-        javaMailSender.send(mimeMailMessage);
+        logger.error("发送至" + ticketEmail + "的邮箱发送失败，原因为未配置邮件发送器", LocalDateTime.now().atZone(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
     }
 
 }

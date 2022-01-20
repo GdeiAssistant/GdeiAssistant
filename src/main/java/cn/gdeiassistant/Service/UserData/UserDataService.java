@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Service.UserData;
 
+import cn.gdeiassistant.Constant.ItemConstantUtils;
+import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Repository.Redis.ExportData.ExportDataDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Data.AppDataMapper;
@@ -9,17 +11,14 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.Profil
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Data.LogDataMapper;
 import cn.gdeiassistant.Service.Profile.UserProfileService;
+import cn.gdeiassistant.Tools.Utils.LocationUtils;
+import cn.gdeiassistant.Tools.Utils.ReflectionUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.aliyun.oss.OSSClient;
 import com.taobao.wsgsvr.WsgException;
-import cn.gdeiassistant.Constant.ItemConstantUtils;
-import cn.gdeiassistant.Pojo.Entity.*;
-import cn.gdeiassistant.Tools.LocationUtils;
-import cn.gdeiassistant.Tools.ReflectionUtils;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
-import cn.gdeiassistant.Tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,26 +57,8 @@ public class UserDataService {
     @Autowired
     private ExportDataDao exportDataDao;
 
-    private String accessKeyID;
-
-    private String accessKeySecret;
-
-    private String endpoint;
-
-    @Value("#{propertiesReader['oss.accessKeySecret']}")
-    public void setAccessKeySecret(String accessKeySecret) {
-        this.accessKeySecret = accessKeySecret;
-    }
-
-    @Value("#{propertiesReader['oss.accessKeyID']}")
-    public void setAccessKeyID(String accessKeyID) {
-        this.accessKeyID = accessKeyID;
-    }
-
-    @Value("#{propertiesReader['oss.endpoint']}")
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
+    @Autowired
+    private OSSConfig ossConfig;
 
     /**
      * 检查24小时内有无导出用户数据的记录
@@ -115,7 +96,7 @@ public class UserDataService {
         ByteArrayOutputStream byteArrayOutputStream = null;
         ZipOutputStream zipOutputStream = null;
         Map<String, InputStream> userDataInputStreamMap = new HashMap<>();
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
 
         try {
             Map<String, Object> data = new HashMap<>();
@@ -444,7 +425,7 @@ public class UserDataService {
         String url = null;
         if (StringUtils.isNotBlank(token)) {
             // 创建OSSClient实例
-            OSSClient ossClient = new OSSClient(endpoint, accessKeyID, accessKeySecret);
+            OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
             //检查用户数据是否存在
             if (ossClient.doesObjectExist("gdeiassistant-userdata", "export/" + token + ".zip")) {
                 //设置过期时间10分钟

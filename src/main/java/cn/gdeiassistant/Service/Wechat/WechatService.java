@@ -1,15 +1,9 @@
 package cn.gdeiassistant.Service.Wechat;
 
-import cn.gdeiassistant.Pojo.Entity.*;
-import cn.gdeiassistant.Repository.Redis.AccessToken.AccessTokenDao;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantData.Reading.ReadingMapper;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import cn.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import cn.gdeiassistant.Enum.Wechat.RequestTypeEnum;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
+import cn.gdeiassistant.Pojo.Config.WechatOfficialAccountConfig;
 import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Pojo.JSSDK.JSSDKSignature;
@@ -17,16 +11,21 @@ import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import cn.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import cn.gdeiassistant.Pojo.Wechat.WechatTextMessage;
+import cn.gdeiassistant.Repository.Redis.AccessToken.AccessTokenDao;
+import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantData.Reading.ReadingMapper;
 import cn.gdeiassistant.Service.CardQuery.CardQueryService;
 import cn.gdeiassistant.Service.GradeQuery.GradeService;
 import cn.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
-import cn.gdeiassistant.Tools.StringUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -48,20 +47,6 @@ import java.util.*;
 public class WechatService {
 
     private Logger logger = LoggerFactory.getLogger(WechatService.class);
-
-    private String appid;
-
-    private String appsecret;
-
-    @Value("#{propertiesReader['wechat.account.appid']}")
-    public void setAppid(String appid) {
-        this.appid = appid;
-    }
-
-    @Value("#{propertiesReader['wechat.account.appsecret']}")
-    public void setAppsecret(String appsecret) {
-        this.appsecret = appsecret;
-    }
 
     @Autowired
     private Environment environment;
@@ -89,6 +74,9 @@ public class WechatService {
 
     @Autowired
     private CardQueryService cardQueryService;
+
+    @Autowired
+    private WechatOfficialAccountConfig wechatOfficialAccountConfig;
 
     /**
      * 处理微信用户请求
@@ -150,7 +138,8 @@ public class WechatService {
         Map<String, String> map = new HashMap<>();
         JSONObject jsonObject = restTemplate
                 .getForObject("https://api.weixin.qq.com/sns/oauth2/access_token?appid="
-                        + appid + "&secret=" + appsecret + "&code=" + code
+                        + wechatOfficialAccountConfig.getAppid() + "&secret="
+                        + wechatOfficialAccountConfig.getAppsecret() + "&code=" + code
                         + "&grant_type=authorization_code", JSONObject.class);
         if (jsonObject.containsKey("access_token")) {
             String access_token = jsonObject.getString("access_token");
@@ -173,7 +162,8 @@ public class WechatService {
         //若缓存中没有AccessToken则调用API数据接口
         if (StringUtils.isBlank(accessToken)) {
             JSONObject jsonObject = restTemplate.getForObject("https://api.weixin.qq.com/cgi-bin/token?" +
-                    "grant_type=client_credential&appid=" + appid + "&secret=" + appsecret, JSONObject.class);
+                    "grant_type=client_credential&appid=" + wechatOfficialAccountConfig.getAppid() +
+                    "&secret=" + wechatOfficialAccountConfig.getAppsecret(), JSONObject.class);
             if (jsonObject.containsKey("access_token")) {
                 accessTokenDao.SaveWechatAccessToken(jsonObject.getString("access_token"));
                 return jsonObject.getString("access_token");

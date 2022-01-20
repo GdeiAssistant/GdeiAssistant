@@ -269,6 +269,18 @@ a {
     border-radius: 21px;
 }
 
+.core-module-check-result-text {
+    color: red;
+    word-break: break-all;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.module-check-result-text {
+    color: #ffcc00;
+    word-break: break-all;
+}
+
 .models {
     width: 382px;
     margin: 0 auto;

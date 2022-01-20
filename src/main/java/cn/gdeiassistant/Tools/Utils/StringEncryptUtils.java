@@ -1,19 +1,20 @@
-package cn.gdeiassistant.Tools;
+package cn.gdeiassistant.Tools.Utils;
 
 import cn.gdeiassistant.Pojo.Entity.StringEncryptConfig;
 import com.taobao.wsgsvr.EncryptWithCfg;
 import com.taobao.wsgsvr.WsgException;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 @Component
 public class StringEncryptUtils {
 
     private static StringEncryptConfig stringEncryptConfig;
 
-    @Resource(name = "stringEncryptConfig")
+    @Autowired(required = false)
+    @Qualifier("stringEncryptConfig")
     public void setStringEncryptConfig(StringEncryptConfig stringEncryptConfig) {
         StringEncryptUtils.stringEncryptConfig = stringEncryptConfig;
     }
@@ -31,8 +32,11 @@ public class StringEncryptUtils {
             return data;
         }
         //生产环境下使用阿里聚安全加密
-        return new EncryptWithCfg(stringEncryptConfig.getConfigLocation())
-                .encryptString(stringEncryptConfig.getAppkey(), data);
+        if (stringEncryptConfig != null) {
+            return new EncryptWithCfg(stringEncryptConfig.getConfigLocation())
+                    .encryptString(stringEncryptConfig.getAppkey(), data);
+        }
+        return data;
     }
 
     /**
@@ -48,8 +52,11 @@ public class StringEncryptUtils {
             return data;
         }
         //生产环境下使用阿里聚安全加密
-        return new EncryptWithCfg(stringEncryptConfig.getConfigLocation())
-                .decryptString(stringEncryptConfig.getAppkey(), data);
+        if (stringEncryptConfig != null) {
+            return new EncryptWithCfg(stringEncryptConfig.getConfigLocation())
+                    .decryptString(stringEncryptConfig.getAppkey(), data);
+        }
+        return null;
     }
 
     /**

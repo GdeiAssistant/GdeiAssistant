@@ -1,11 +1,12 @@
 package cn.gdeiassistant.Service.SchoolNews;
 
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.Pojo.Config.NewsConfig;
 import cn.gdeiassistant.Pojo.Entity.NewInfo;
 import cn.gdeiassistant.Pojo.Entity.RSSNewInfo;
 import cn.gdeiassistant.Repository.Mongodb.New.NewDao;
-import cn.gdeiassistant.Tools.SchoolNewsUtils;
-import cn.gdeiassistant.Tools.XMLParseUtils;
+import cn.gdeiassistant.Tools.Utils.SchoolNewsUtils;
+import cn.gdeiassistant.Tools.Utils.XMLParseUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -24,7 +25,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -54,19 +54,8 @@ public class SchoolNewsService {
     @Autowired
     private NewDao newDao;
 
-    private String adminAccount;
-
-    private String adminPassword;
-
-    @Value("#{propertiesReader['news.admin.account']}")
-    public void setAdminAccount(String adminAccount) {
-        this.adminAccount = adminAccount;
-    }
-
-    @Value("#{propertiesReader['news.admin.password']}")
-    public void setAdminPassword(String adminPassword) {
-        this.adminPassword = adminPassword;
-    }
+    @Autowired
+    private NewsConfig newsConfig;
 
     /**
      * 查找新闻通知信息列表
@@ -120,8 +109,8 @@ public class SchoolNewsService {
         HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
         List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
         basicNameValuePairList.add(new BasicNameValuePair("service", "http://web.gdei.edu.cn/gdei/stuwork/stuadmin/index.html"));
-        basicNameValuePairList.add(new BasicNameValuePair("username", adminAccount));
-        basicNameValuePairList.add(new BasicNameValuePair("password", adminPassword));
+        basicNameValuePairList.add(new BasicNameValuePair("username", newsConfig.getAdminAccount()));
+        basicNameValuePairList.add(new BasicNameValuePair("password", newsConfig.getAdminPassword()));
         basicNameValuePairList.add(new BasicNameValuePair("imageField.x", "0"));
         basicNameValuePairList.add(new BasicNameValuePair("imageField.y", "0"));
         basicNameValuePairList.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));

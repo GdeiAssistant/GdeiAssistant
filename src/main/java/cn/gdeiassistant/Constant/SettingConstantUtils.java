@@ -11,6 +11,7 @@ public class SettingConstantUtils {
             "/logout", //退出账号
             "/cron", //Cron作业
             "/api/userlogin", //用户登录接口
+            "/api/module", //功能接口
             "/download", //下载接口
             "/agreement", //用户协议
             "/policy", //政策准则

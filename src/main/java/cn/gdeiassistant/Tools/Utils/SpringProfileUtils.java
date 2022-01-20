@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Tools;
+package cn.gdeiassistant.Tools.Utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -8,6 +8,18 @@ import org.springframework.stereotype.Component;
 public class SpringProfileUtils {
 
     private static Environment environment;
+
+    /**
+     * 获取当前的Spring Profile环境名称
+     *
+     * @return
+     */
+    public static String GetSpringProfileName() {
+        if (environment.getActiveProfiles().length == 0) {
+            return environment.getDefaultProfiles()[0];
+        }
+        return environment.getActiveProfiles()[0];
+    }
 
     /**
      * 检测是否为开发环境

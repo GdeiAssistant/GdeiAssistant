@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Wechat.RestController;
 
-import cn.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
@@ -49,12 +48,8 @@ public class WechatAttachRestController {
         //将用户信息数据写入Session
         request.getSession().setAttribute("username", userCertificate.getUser().getUsername());
         request.getSession().setAttribute("password", userCertificate.getUser().getPassword());
-        request.getSession().setAttribute("group", userCertificate.getUser().getGroup());
-        if (userCertificate.getUser().getGroup().equals(UserGroupEnum.STUDENT.getValue())
-                || userCertificate.getUser().getGroup().equals(UserGroupEnum.TEST.getValue())) {
-            //若当前用户组为学生用户或测试用户，则异步地与教务系统会话进行同步
-            userLoginService.AsyncUpdateSession(request);
-        }
+        //若当前用户组为学生用户或测试用户，则异步地与教务系统会话进行同步
+        userLoginService.AsyncUpdateSession(request);
         return new JsonResult(true);
     }
 }

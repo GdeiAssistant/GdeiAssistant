@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Announcement.RestController;
 
-import cn.gdeiassistant.Annotation.UserGroupAccess;
 import cn.gdeiassistant.Pojo.Entity.Announcement;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -38,7 +37,6 @@ public class AnnouncementRestController {
      * @return
      */
     @RequestMapping(value = "/api/announcement", method = RequestMethod.POST)
-    @UserGroupAccess(group = 1, rest = true)
     public JsonResult SaveAnnouncement(HttpServletRequest request, @Validated Announcement announcement) {
         announcementService.SaveAnnouncement(announcement);
         return new JsonResult(true);

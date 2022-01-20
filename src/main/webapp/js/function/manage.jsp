@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="access" uri="/WEB-INF/tld/access.tld" %>
 <script>
 
     let displaySetting = Object.create(null);
@@ -37,29 +36,6 @@
                 $(this).parent().parent().show();
             }
         });
-    }
-
-    //加载权限表信息
-    function loadAccessInfo() {
-
-        <c:set var="Access" scope="page" value="${access:loadAccessInfo()}" />
-
-        <c:forEach begin="0" end="${Access.size()}" step="1" varStatus="state">
-
-        access[${state.index}] = new Set();
-
-        </c:forEach>
-
-        <c:forEach items="${Access}" var="AccessList" varStatus="state">
-
-        <c:forEach items="${AccessList}" var="access">
-
-        access[${state.index}].add("${access}");
-
-        </c:forEach>
-
-        </c:forEach>
-
     }
 
     //加载功能显示设置

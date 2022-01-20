@@ -40,11 +40,6 @@ public class User implements Serializable, Entity {
      */
     private Integer state;
 
-    /**
-     * 用户所属的角色组
-     */
-    private Integer group;
-
     public String getPassword() {
         return password;
     }
@@ -95,9 +90,6 @@ public class User implements Serializable, Entity {
             if (state != null) {
                 decryptUser.setState(state);
             }
-            if (group != null) {
-                decryptUser.setGroup(group);
-            }
         } catch (WsgException e) {
             e.printStackTrace();
         }
@@ -121,9 +113,6 @@ public class User implements Serializable, Entity {
             }
             if (state != null) {
                 encryptUser.setState(state);
-            }
-            if (group != null) {
-                encryptUser.setGroup(group);
             }
         } catch (WsgException e) {
             e.printStackTrace();
@@ -157,13 +146,5 @@ public class User implements Serializable, Entity {
 
     public void setState(Integer state) {
         this.state = state;
-    }
-
-    public Integer getGroup() {
-        return group;
-    }
-
-    public void setGroup(Integer group) {
-        this.group = group;
     }
 }

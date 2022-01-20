@@ -28,12 +28,6 @@
         </div>
         <div id="username" class="weui-cell__ft"></div>
     </div>
-    <div class="weui-cell" href="javascript:">
-        <div class="weui-cell__bd">
-            <p>用户组</p>
-        </div>
-        <div id="user_group" class="weui-cell__ft"></div>
-    </div>
     <div class="weui-cell" href="javascript:" onclick="showNicknameDialog()">
         <div class="weui-cell__bd">
             <p>昵称</p>

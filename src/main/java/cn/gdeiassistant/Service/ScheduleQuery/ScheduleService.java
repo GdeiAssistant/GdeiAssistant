@@ -16,7 +16,6 @@ import cn.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import cn.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.PrivacyMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
-import cn.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import cn.gdeiassistant.Service.UserLogin.TeacherLoginService;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Tools.Utils.*;
@@ -596,43 +595,40 @@ public class ScheduleService {
             //设置线程信号量，限制最大同时查询的线程数为5
             Semaphore semaphore = new Semaphore(5);
             for (User user : userList) {
-                if (user.getGroup().equals(UserGroupEnum.STUDENT.getValue())
-                        || user.getGroup().equals(UserGroupEnum.TEST.getValue())) {
-                    Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
-                    if (privacy != null && privacy.isCacheAllow()) {
-                        ScheduleDocument scheduleDocument = scheduleDao.querySchedule(StringEncryptUtils
-                                .decryptString(user.getUsername()));
-                        //如果最后更新日期距今已超过3天，则进行更新
-                        if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()
-                                .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= scheduleInterval) {
-                            ListenableFuture<ScheduleQueryResult> future = ((ScheduleService) AopContext.currentProxy())
-                                    .QueryScheduleData(semaphore, user);
-                            future.addCallback(new ListenableFutureCallback<ScheduleQueryResult>() {
+                Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
+                if (privacy != null && privacy.isCacheAllow()) {
+                    ScheduleDocument scheduleDocument = scheduleDao.querySchedule(StringEncryptUtils
+                            .decryptString(user.getUsername()));
+                    //如果最后更新日期距今已超过3天，则进行更新
+                    if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()
+                            .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), localDateTime).toDays() >= scheduleInterval) {
+                        ListenableFuture<ScheduleQueryResult> future = ((ScheduleService) AopContext.currentProxy())
+                                .QueryScheduleData(semaphore, user);
+                        future.addCallback(new ListenableFutureCallback<ScheduleQueryResult>() {
 
-                                @Override
-                                public void onFailure(Throwable ex) {
+                            @Override
+                            public void onFailure(Throwable ex) {
 
-                                }
+                            }
 
-                                @Override
-                                public void onSuccess(ScheduleQueryResult result) {
-                                    try {
-                                        if (result != null) {
-                                            ScheduleDocument document = new ScheduleDocument();
-                                            if (scheduleDocument != null && scheduleDocument.getId() != null) {
-                                                document.setId(scheduleDocument.getId());
-                                            }
-                                            document.setUsername(StringEncryptUtils.decryptString(user.getUsername()));
-                                            document.setScheduleList(result.getScheduleList());
-                                            document.setUpdateDateTime(new Date());
-                                            scheduleDao.saveSchedule(document);
+                            @Override
+                            public void onSuccess(ScheduleQueryResult result) {
+                                try {
+                                    if (result != null) {
+                                        ScheduleDocument document = new ScheduleDocument();
+                                        if (scheduleDocument != null && scheduleDocument.getId() != null) {
+                                            document.setId(scheduleDocument.getId());
                                         }
-                                    } catch (Exception e) {
-                                        logger.error("定时查询保存课表信息异常：", e);
+                                        document.setUsername(StringEncryptUtils.decryptString(user.getUsername()));
+                                        document.setScheduleList(result.getScheduleList());
+                                        document.setUpdateDateTime(new Date());
+                                        scheduleDao.saveSchedule(document);
                                     }
+                                } catch (Exception e) {
+                                    logger.error("定时查询保存课表信息异常：", e);
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
                 }
             }

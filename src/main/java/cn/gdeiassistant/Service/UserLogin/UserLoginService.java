@@ -11,7 +11,6 @@ import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import cn.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
-import cn.gdeiassistant.Enum.UserGroup.UserGroupEnum;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
@@ -286,7 +285,6 @@ public class UserLoginService {
                     user.setPassword(password);
                     user.setKeycode(keycode);
                     user.setNumber(number);
-                    user.setGroup(UserGroupEnum.STUDENT.getValue());
                     UserCertificate userCertificate = new UserCertificate();
                     userCertificate.setUser(user);
                     userCertificate.setTimestamp(timestamp);

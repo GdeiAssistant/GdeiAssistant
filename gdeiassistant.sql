@@ -233,31 +233,6 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant` /*!40100 DEFAULT CHARAC
 USE `gdeiassistant`;
 
 --
--- Table structure for table `access`
---
-
-DROP TABLE IF EXISTS `access`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `access` (
-  `user_group` tinyint(2) NOT NULL COMMENT '用户组ID',
-  `name` varchar(15) NOT NULL COMMENT '功能名称',
-  KEY `accessUserGroup_idx` (`user_group`),
-  CONSTRAINT `accessUserGroup` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `access`
---
-
-LOCK TABLES `access` WRITE;
-/*!40000 ALTER TABLE `access` DISABLE KEYS */;
-INSERT INTO `access` VALUES (1,'grade'),(1,'schedule'),(1,'cet'),(1,'collection'),(1,'book'),(1,'bill'),(1,'charge'),(1,'card'),(1,'lost'),(1,'evaluate'),(1,'spare'),(1,'kaoyan'),(1,'tice'),(1,'news'),(1,'data'),(1,'ershou'),(1,'lostandfound'),(1,'secret'),(1,'delivery'),(1,'photograph'),(1,'express'),(1,'topic'),(1,'calendar'),(1,'government'),(1,'volunteer'),(1,'student'),(1,'wechat'),(1,'yiban'),(2,'grade'),(2,'schedule'),(2,'cet'),(2,'collection'),(2,'book'),(2,'bill'),(2,'charge'),(2,'card'),(2,'lost'),(2,'evaluate'),(2,'spare'),(2,'kaoyan'),(2,'tice'),(2,'news'),(2,'data'),(2,'ershou'),(2,'lostandfound'),(2,'secret'),(2,'delivery'),(2,'photograph'),(2,'express'),(2,'topic'),(2,'calendar'),(2,'government'),(2,'volunteer'),(2,'student'),(2,'wechat'),(2,'yiban'),(3,'grade'),(3,'schedule'),(3,'collection'),(3,'book'),(3,'evaluate'),(3,'spare'),(3,'kaoyan'),(3,'tice'),(3,'news'),(3,'data'),(3,'ershou'),(3,'lostandfound'),(3,'secret'),(3,'delivery'),(3,'express'),(3,'topic'),(3,'photograph'),(3,'calendar'),(3,'government'),(3,'volunteer'),(3,'student'),(3,'wechat'),(3,'yiban'),(6,'cet'),(6,'collection'),(6,'kaoyan'),(6,'news'),(6,'data'),(6,'ershou'),(6,'lostandfound'),(6,'secret'),(6,'delivery'),(6,'express'),(6,'topic'),(6,'photograph'),(6,'calendar'),(6,'government'),(6,'volunteer'),(6,'student'),(6,'wechat'),(6,'yiban'),(7,'grade'),(7,'schedule'),(7,'cet'),(7,'collection'),(7,'book'),(7,'bill'),(7,'card'),(7,'evaluate'),(7,'spare'),(7,'kaoyan'),(7,'tice'),(7,'news'),(7,'data'),(7,'ershou'),(7,'lostandfound'),(7,'secret'),(7,'delivery'),(7,'photograph'),(7,'express'),(7,'topic'),(7,'calendar'),(7,'government'),(7,'volunteer'),(7,'student'),(7,'wechat'),(7,'yiban');
-/*!40000 ALTER TABLE `access` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `cet`
 --
 
@@ -1026,10 +1001,7 @@ CREATE TABLE `user` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `password` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '密码',
   `state` tinyint(1) NOT NULL COMMENT '账户状态',
-  `user_group` tinyint(2) NOT NULL COMMENT '账户所属的用户组',
   PRIMARY KEY (`username`),
-  KEY `userUserGroup_idx` (`user_group`),
-  CONSTRAINT `userUserGroup` FOREIGN KEY (`user_group`) REFERENCES `user_group` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1041,30 +1013,6 @@ LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` VALUES ('gdeiassistant','gdeiassistant',1,7);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_group`
---
-
-DROP TABLE IF EXISTS `user_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_group` (
-  `id` tinyint(2) NOT NULL AUTO_INCREMENT COMMENT '用户组ID',
-  `description` varchar(10) NOT NULL COMMENT '用户组描述',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_group`
---
-
-LOCK TABLES `user_group` WRITE;
-/*!40000 ALTER TABLE `user_group` DISABLE KEYS */;
-INSERT INTO `user_group` VALUES (1,'管理员'),(2,'学生用户'),(3,'测试用户'),(4,'教师用户'),(5,'客服人员'),(6,'毕业学生'),(7,'体验用户');
-/*!40000 ALTER TABLE `user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

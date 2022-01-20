@@ -2,7 +2,6 @@ package cn.gdeiassistant.Controller.SpareRoom.RestController;
 
 import cn.gdeiassistant.Annotation.QueryLogPersistence;
 import cn.gdeiassistant.Annotation.TrialData;
-import cn.gdeiassistant.Annotation.UserGroupAccess;
 import cn.gdeiassistant.Pojo.Entity.SpareRoom;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -35,7 +34,6 @@ public class SpareRoomRestController {
     @RequestMapping(value = "/api/sparequery", method = RequestMethod.POST)
     @QueryLogPersistence
     @TrialData(value = "spare")
-    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public DataJsonResult<List<SpareRoom>> QuerySpareRoomList(HttpServletRequest request
             , @Validated SpareRoomQuery spareRoomQuery) throws Exception {
         String username = (String) WebUtils.getSessionAttribute(request, "username");

@@ -2,7 +2,6 @@ package cn.gdeiassistant.Controller.Evaluate.RestController;
 
 import cn.gdeiassistant.Annotation.RestAuthentication;
 import cn.gdeiassistant.Annotation.TrialData;
-import cn.gdeiassistant.Annotation.UserGroupAccess;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.Evaluate.EvaluateService;
@@ -23,7 +22,6 @@ public class EvaluateRestController {
 
     @RequestMapping(value = "/api/evaluate", method = RequestMethod.POST)
     @TrialData(value = "evaluate")
-    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public JsonResult StartEvaluate(HttpServletRequest request, boolean directlySubmit) throws Exception {
         String username = (String) WebUtils.getSessionAttribute(request, "username");
         String password = (String) WebUtils.getSessionAttribute(request, "password");
@@ -35,7 +33,6 @@ public class EvaluateRestController {
     @RequestMapping(value = "/rest/evaluate", method = RequestMethod.POST)
     @RestAuthentication
     @TrialData(value = "evaluate")
-    @UserGroupAccess(group = {2, 3, 7}, rest = true)
     public JsonResult StartEvaluate(HttpServletRequest request, @RequestParam("token") String token
             , boolean directlySubmit) throws Exception {
         User user = (User) request.getAttribute("user");

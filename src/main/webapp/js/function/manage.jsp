@@ -4,8 +4,6 @@
 
     let displaySetting = Object.create(null);
 
-    let access = [];
-
     $(function () {
         //消除iOS点击延迟
         FastClick.attach(document.body);
@@ -22,19 +20,14 @@
         if (!localStorage.getItem("functionBadge")) {
             localStorage.setItem("functionBadge", 1);
         }
-        //加载权限表信息
-        loadAccessInfo();
         //显示当前权限组的功能菜单
         loadFunctionMenu();
     });
 
-    //显示当前权限组的功能菜单
+    //显示功能菜单
     function loadFunctionMenu() {
         $(".weui-cells input").each(function () {
-            //检测当前用户组有无权限
-            if (access[${sessionScope.group}].has($(this).attr("id"))) {
-                $(this).parent().parent().show();
-            }
+            $(this).parent().parent().show();
         });
     }
 

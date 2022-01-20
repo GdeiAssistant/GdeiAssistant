@@ -184,9 +184,10 @@
 </div>
 
 <div class="weui-cells">
-    <a class="weui-cell weui-cell_access" href="javascript:" onclick="exportUserData()">
+    <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/admin'">
         <div class="weui-cell__bd">
-            <p>下载用户数据</p>
+            <p>管理员选项</p>
         </div>
         <div class="weui-cell__ft">
         </div>
@@ -195,9 +196,19 @@
 
 <div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
-       onclick="window.location.href = '/admin'">
+       onclick="window.location.href = 'https://www.wjx.top/m/47687434.aspx'">
         <div class="weui-cell__bd">
-            <p>管理员选项</p>
+            <p>不良“校园贷”举报通道</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:" onclick="exportUserData()">
+        <div class="weui-cell__bd">
+            <p>下载用户数据</p>
         </div>
         <div class="weui-cell__ft">
         </div>

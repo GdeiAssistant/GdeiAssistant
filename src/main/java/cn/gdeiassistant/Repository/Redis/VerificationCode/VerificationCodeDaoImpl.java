@@ -1,11 +1,13 @@
 package cn.gdeiassistant.Repository.Redis.VerificationCode;
 
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Tools.SpringUtils.RedisDaoUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
+
+;
 
 @Repository
 public class VerificationCodeDaoImpl implements VerificationCodeDao {
@@ -13,7 +15,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
     private final String PREFIX = "VERIFICATION_CODE_";
 
     @Autowired
-    private RedisTemplate<String, Integer> redisTemplate;
+    private RedisDaoUtils redisDaoUtils;
 
     /**
      * 查询手机验证码记录
@@ -23,7 +25,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * @return
      */
     public Integer QueryPhoneVerificationCode(int code, String phone) {
-        return redisTemplate.opsForValue().get(StringEncryptUtils.SHA256HexString(PREFIX + code + phone));
+        return redisDaoUtils.get(StringEncryptUtils.SHA256HexString(PREFIX + code + phone));
     }
 
     /**
@@ -34,7 +36,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      */
     @Override
     public void DeletePhoneVerificationCode(int code, String phone) {
-        redisTemplate.delete(StringEncryptUtils.SHA256HexString(PREFIX + code + phone));
+        redisDaoUtils.delete(StringEncryptUtils.SHA256HexString(PREFIX + code + phone));
     }
 
     /**
@@ -45,8 +47,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * @param randomCode
      */
     public void SavePhoneVerificationCode(int code, String phone, int randomCode) {
-        redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(PREFIX + code + phone), randomCode);
-        //设置有效期为5分钟
-        redisTemplate.expire(StringEncryptUtils.SHA256HexString(PREFIX + code + phone), 5, TimeUnit.MINUTES);
+        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(PREFIX + code + phone), randomCode);
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(PREFIX + code + phone), 5, TimeUnit.MINUTES);
     }
 }

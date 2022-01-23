@@ -2,9 +2,9 @@ package cn.gdeiassistant.Repository.Redis.LoginToken;
 
 import cn.gdeiassistant.Pojo.Entity.AccessToken;
 import cn.gdeiassistant.Pojo.Entity.RefreshToken;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Tools.SpringUtils.RedisDaoUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
@@ -15,7 +15,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     private final String PREFIX = "LOGIN_TOKEN_";
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisDaoUtils redisDaoUtils;
 
     /**
      * 查找令牌签名对应的记录信息
@@ -25,7 +25,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      */
     @Override
     public String QueryToken(String signature) {
-        return redisTemplate.opsForValue().get(StringEncryptUtils.SHA256HexString(PREFIX + signature));
+        return redisDaoUtils.get(StringEncryptUtils.SHA256HexString(PREFIX + signature));
     }
 
     /**
@@ -36,8 +36,9 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     @Override
     public void InsertAccessToken(AccessToken token) {
         //保存权限令牌，设置有效期为7天
-        redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature()), token.getIp());
-        redisTemplate.expire(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature()), 7, TimeUnit.DAYS);
+        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature()), token.getIp());
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature())
+                , 7, TimeUnit.DAYS);
     }
 
     /**
@@ -48,16 +49,16 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     @Override
     public void InsertRefreshToken(RefreshToken token) {
         //保存刷新令牌，设置有效期为30天
-        redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature())
+        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature())
                 , token.getTokenSignature());
-        redisTemplate.expire(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature())
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature())
                 , 30, TimeUnit.DAYS);
     }
 
     @Override
     public void UpdateAccessToken(AccessToken token) {
         //更新权限令牌信息，但不重新设置有效期
-        redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature()), token.getIp());
+        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(PREFIX + token.getSignature()), token.getIp());
     }
 
     /**
@@ -67,8 +68,9 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      * @return
      */
     @Override
-    public Boolean DeleteToken(String signature) {
-        return redisTemplate.expire(StringEncryptUtils.SHA256HexString(PREFIX + signature), 5, TimeUnit.MINUTES);
+    public void DeleteToken(String signature) {
+        redisDaoUtils.delete(StringEncryptUtils
+                .SHA256HexString(PREFIX + signature));
     }
 
 }

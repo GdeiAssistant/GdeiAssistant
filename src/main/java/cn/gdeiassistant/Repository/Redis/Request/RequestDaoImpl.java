@@ -1,8 +1,8 @@
 package cn.gdeiassistant.Repository.Redis.Request;
 
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Tools.SpringUtils.RedisDaoUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
@@ -13,7 +13,7 @@ public class RequestDaoImpl implements RequestDao {
     private final String PREFIX = "REQUEST_";
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisDaoUtils redisDaoUtils;
 
     /**
      * 通过随机数查找请求记录
@@ -23,7 +23,7 @@ public class RequestDaoImpl implements RequestDao {
      */
     @Override
     public String QueryRequest(String nonce) {
-        return redisTemplate.opsForValue().get(StringEncryptUtils.SHA256HexString(PREFIX + nonce));
+        return redisDaoUtils.get(StringEncryptUtils.SHA256HexString(PREFIX + nonce));
     }
 
     /**
@@ -35,7 +35,7 @@ public class RequestDaoImpl implements RequestDao {
     @Override
     public void InsertRequest(String nonce, String timestamp) {
         //保存权限令牌，设置有效期为60秒
-        redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(PREFIX + nonce), timestamp);
-        redisTemplate.expire(StringEncryptUtils.SHA256HexString(PREFIX + nonce), 60, TimeUnit.SECONDS);
+        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(PREFIX + nonce), timestamp);
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(PREFIX + nonce), 60, TimeUnit.SECONDS);
     }
 }

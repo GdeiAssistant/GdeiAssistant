@@ -1,8 +1,8 @@
 package cn.gdeiassistant.Repository.Redis.ExportData;
 
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Tools.SpringUtils.RedisDaoUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
@@ -15,34 +15,36 @@ public class ExportDataDaoImpl implements ExportDataDao {
     private final String EXPORTING_PREFIX = "EXPORTING_DATA_";
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisDaoUtils redisDaoUtils;
 
     @Override
     public String QueryExportingDataToken(String username) {
-        return redisTemplate.opsForValue().get(StringEncryptUtils.SHA256HexString(EXPORTING_PREFIX + username));
+        return redisDaoUtils.get(StringEncryptUtils.SHA256HexString(EXPORTING_PREFIX + username));
     }
 
     @Override
     public void RemoveExportingDataToken(String username) {
-        redisTemplate.delete(StringEncryptUtils.SHA256HexString(EXPORTING_PREFIX + username));
+        redisDaoUtils.delete(StringEncryptUtils.SHA256HexString(EXPORTING_PREFIX + username));
     }
 
     @Override
     public void SaveExportingDataToken(String username, String token) {
-        redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(EXPORTING_PREFIX + username)
+        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(EXPORTING_PREFIX + username)
                 , token);
         //一小时后以任务超时处理
-        redisTemplate.expire(StringEncryptUtils.SHA256HexString(EXPORTING_PREFIX + username), 1, TimeUnit.HOURS);
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(EXPORTING_PREFIX + username)
+                , 1, TimeUnit.HOURS);
     }
 
     @Override
     public String QueryExportDataToken(String username) {
-        return redisTemplate.opsForValue().get(StringEncryptUtils.SHA256HexString(EXPORT_PREFIX + username));
+        return redisDaoUtils.get(StringEncryptUtils.SHA256HexString(EXPORT_PREFIX + username));
     }
 
     @Override
     public void SaveExportDataToken(String username, String token) {
-        redisTemplate.opsForValue().set(StringEncryptUtils.SHA256HexString(EXPORT_PREFIX + username), token);
-        redisTemplate.expire(StringEncryptUtils.SHA256HexString(EXPORT_PREFIX + username), 24, TimeUnit.HOURS);
+        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(EXPORT_PREFIX + username), token);
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(EXPORT_PREFIX + username)
+                , 24, TimeUnit.HOURS);
     }
 }

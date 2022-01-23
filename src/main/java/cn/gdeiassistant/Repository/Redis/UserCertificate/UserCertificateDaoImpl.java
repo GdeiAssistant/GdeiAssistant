@@ -2,9 +2,9 @@ package cn.gdeiassistant.Repository.Redis.UserCertificate;
 
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import cn.gdeiassistant.Tools.StringEncryptUtils;
+import cn.gdeiassistant.Tools.SpringUtils.RedisDaoUtils;
+import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -17,11 +17,11 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
     private final String PREFIX = "USER_CERTIFICATE_";
 
     @Autowired
-    private RedisTemplate<String, Map<String, String>> redisTemplate;
+    private RedisDaoUtils redisDaoUtils;
 
     @Override
     public UserCertificate queryUserCertificate(String username) {
-        Map<String, String> map = redisTemplate.opsForValue().get(StringEncryptUtils
+        Map<String, String> map = redisDaoUtils.get(StringEncryptUtils
                 .SHA256HexString(PREFIX + username));
         if (map != null) {
             UserCertificate userCertificate = new UserCertificate();
@@ -45,9 +45,9 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         map.put("keycode", user.getKeycode());
         map.put("number", user.getNumber());
         map.put("timestamp", String.valueOf(userCertificate.getTimestamp()));
-        redisTemplate.opsForValue().set(StringEncryptUtils
+        redisDaoUtils.set(StringEncryptUtils
                 .SHA256HexString(PREFIX + user.getUsername()), map);
-        redisTemplate.expire(StringEncryptUtils.SHA256HexString(PREFIX + user.getUsername())
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(PREFIX + user.getUsername())
                 , 1, TimeUnit.HOURS);
     }
 }

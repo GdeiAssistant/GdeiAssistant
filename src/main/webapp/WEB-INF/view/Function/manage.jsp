@@ -152,15 +152,33 @@
         </div>
     </div>
     <div class="weui-cell weui-cell_switch" style="display: none">
-        <div class="weui-cell__bd">学信查询</div>
+        <div class="weui-cell__bd">学信网</div>
         <div class="weui-cell__ft">
             <input id="student" class="weui-switch" type="checkbox">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch" style="display: none">
-        <div class="weui-cell__bd">志愿活动</div>
+        <div class="weui-cell__bd">i志愿</div>
         <div class="weui-cell__ft">
             <input id="volunteer" class="weui-switch" type="checkbox">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch" style="display: none">
+        <div class="weui-cell__bd">粤康码</div>
+        <div class="weui-cell__ft">
+            <input id="healthcode" class="weui-switch" type="checkbox">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch" style="display: none">
+        <div class="weui-cell__bd">通信行程码</div>
+        <div class="weui-cell__ft">
+            <input id="travelcode" class="weui-switch" type="checkbox">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch" style="display: none">
+        <div class="weui-cell__bd">疫情动态</div>
+        <div class="weui-cell__ft">
+            <input id="ncov" class="weui-switch" type="checkbox">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch" style="display: none">

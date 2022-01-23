@@ -20,7 +20,7 @@
         if (!localStorage.getItem("functionBadge")) {
             localStorage.setItem("functionBadge", 1);
         }
-        //显示当前权限组的功能菜单
+        //显示功能菜单
         loadFunctionMenu();
     });
 

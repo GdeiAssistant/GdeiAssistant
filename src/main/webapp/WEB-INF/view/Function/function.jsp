@@ -103,26 +103,34 @@
         <p>学期校历</p>
     </div>
     <div id="government" style="display: none"
-         onclick="window.location.href='/government'">
+         onclick="window.location.href='https://www.gdzwfw.gov.cn/portal/personal/hot'">
         <i style="background: url(/img/function/goverment.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>政务服务</p>
     </div>
     <div id="student" style="display: none"
          onclick="window.location.href='https://www.chsi.com.cn'">
         <i style="background: url(/img/function/student.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>学信查询</p>
+        <p>学信网</p>
     </div>
-    <div id="volunteer" style="display: none" onclick="window.location.href='/volunteer'">
+    <div id="volunteer" style="display: none" onclick="window.location.href='https://www.gdzyz.cn/'">
         <i style="background: url(/img/function/volunteer.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>志愿活动</p>
+        <p>i志愿</p>
+    </div>
+    <div id="healthcode" style="display: none" onclick="linkToYueKangCode()">
+        <i style="background: url(/img/function/healthcode.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+        <p>粤康码</p>
+    </div>
+    <div id="travelcode" style="display: none" onclick="window.location.href='https://xc.caict.ac.cn/'">
+        <i style="background: url(/img/function/travelcode.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+        <p>通信行程码</p>
+    </div>
+    <div id="ncov" style="display: none" onclick="window.location.href = 'https://ncov.dxy.cn/ncovh5/view/pneumonia'">
+        <i style="background: url(/img/function/ncov.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
+        <p>疫情动态</p>
     </div>
     <div id="wechat" style="display: none" onclick="window.location.href = '/about/wechat'">
         <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>绑定微信</p>
-    </div>
-    <div id="ncov" onclick="window.location.href = 'https://ncov.dxy.cn/ncovh5/view/pneumonia'">
-        <i style="background: url(/img/function/ncov.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
-        <p>疫情动态</p>
     </div>
     <div id="about" onclick="window.location.href='/about'">
         <i style="background: url(/img/function/about.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>

@@ -105,6 +105,15 @@
         }
     }
 
+    //进入粤康码系统
+    function linkToYueKangCode() {
+        if (wechatUser) {
+            window.location.href = 'weixin://app/wxd930ea5d5a258f4f/jumpWxa/?userName=gh_1ac06b5a8f4e&path=operation_plus/pages/yiqing/daka/user/index/index.html';
+        } else {
+            $.alert("请使用微信客户端访问以启用该功能", "请使用微信客户端进行登录");
+        }
+    }
+
     //弹出重新绑定易班确认框
     function showYibanAttachConfirm() {
         if (yibanUser) {

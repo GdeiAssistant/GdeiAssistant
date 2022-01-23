@@ -50,7 +50,7 @@ public interface ProfileMapper {
     @Update("update profile set nickname=#{nickname} where username=#{username}")
     void updateNickname(Profile profile);
 
-    @Update("update profile set gender=#{gender} and custom_gender=#{customGenderName} where username=#{username}")
+    @Update("update profile set gender=#{gender},custom_gender=#{customGenderName} where username=#{username}")
     void updateGender(Profile profile);
 
     @Update("update profile set birthday=#{birthday} where username=#{username}")

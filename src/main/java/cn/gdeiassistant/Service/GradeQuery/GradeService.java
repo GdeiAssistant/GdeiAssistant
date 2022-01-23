@@ -323,11 +323,9 @@ public class GradeService {
         if (userCertificate == null) {
             //进行会话同步
             userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
-            return GradeQuery(sessionId, user.getUsername()
-                    , user.getKeycode(), user.getNumber(), userCertificate.getTimestamp(), year);
         }
-        return GradeQuery(sessionId, userCertificate.getUser().getUsername()
-                , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
+        return GradeQuery(sessionId, user.getUsername()
+                , userCertificate.getKeycode(), userCertificate.getNumber()
                 , userCertificate.getTimestamp(), year);
     }
 

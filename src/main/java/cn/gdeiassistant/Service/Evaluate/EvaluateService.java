@@ -279,11 +279,9 @@ public class EvaluateService {
         if (userCertificate == null) {
             //进行会话同步
             userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
-            TeacherEvaluate(sessionId, user.getUsername()
-                    , user.getKeycode(), user.getNumber(), userCertificate.getTimestamp(), directlySubmit);
         }
-        TeacherEvaluate(sessionId, userCertificate.getUser().getUsername()
-                , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
+        TeacherEvaluate(sessionId, user.getUsername()
+                , userCertificate.getKeycode(), userCertificate.getNumber()
                 , userCertificate.getTimestamp(), directlySubmit);
     }
 }

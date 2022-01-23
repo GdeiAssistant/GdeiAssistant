@@ -162,10 +162,11 @@ public class ScheduleService {
             //进行会话同步
             userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
             scheduleQueryResult = ScheduleQuery(sessionId, user.getUsername()
-                    , user.getKeycode(), user.getNumber(), userCertificate.getTimestamp());
+                    , userCertificate.getKeycode(), userCertificate.getNumber()
+                    , userCertificate.getTimestamp());
         } else {
-            scheduleQueryResult = ScheduleQuery(sessionId, userCertificate.getUser().getUsername()
-                    , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber()
+            scheduleQueryResult = ScheduleQuery(sessionId, user.getUsername()
+                    , userCertificate.getKeycode(), userCertificate.getNumber()
                     , userCertificate.getTimestamp());
         }
         //获取自定义课表信息

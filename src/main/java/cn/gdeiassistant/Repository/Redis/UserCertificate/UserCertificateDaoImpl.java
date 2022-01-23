@@ -28,8 +28,8 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
             User user = new User();
             user.setUsername(username);
             user.setPassword(map.get("password"));
-            user.setKeycode(map.get("keycode"));
-            user.setNumber(map.get("number"));
+            userCertificate.setKeycode(map.get("keycode"));
+            userCertificate.setNumber(map.get("number"));
             userCertificate.setUser(user);
             userCertificate.setTimestamp(Long.valueOf(map.get("timestamp")));
             return userCertificate;
@@ -40,14 +40,18 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
     @Override
     public void saveUserCertificate(UserCertificate userCertificate) {
         Map<String, String> map = new HashMap<>();
-        User user = userCertificate.getUser();
-        map.put("password", user.getPassword());
-        map.put("keycode", user.getKeycode());
-        map.put("number", user.getNumber());
-        map.put("timestamp", String.valueOf(userCertificate.getTimestamp()));
+        String username = userCertificate.getUser().getUsername();
+        String password = userCertificate.getUser().getPassword();
+        String keycode = userCertificate.getKeycode();
+        String number = userCertificate.getNumber();
+        Long timestamp = userCertificate.getTimestamp();
+        map.put("password", password);
+        map.put("keycode", keycode);
+        map.put("number", number);
+        map.put("timestamp", String.valueOf(timestamp));
         redisDaoUtils.set(StringEncryptUtils
-                .SHA256HexString(PREFIX + user.getUsername()), map);
-        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(PREFIX + user.getUsername())
+                .SHA256HexString(PREFIX + username), map);
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(PREFIX + username)
                 , 1, TimeUnit.HOURS);
     }
 }

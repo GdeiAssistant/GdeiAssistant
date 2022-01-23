@@ -103,7 +103,7 @@ public class UserLoginService {
         if (quickLogin) {
             try {
                 User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(user.getUsername()));
-                if (queryUser != null && !queryUser.getState().equals(2)) {
+                if (queryUser != null) {
                     //将数据库查询的用户数据与用户提交的用户信息进行对比
                     User decryptUser = queryUser.decryptUser();
                     if (StringUtils.isNotBlank(user.getPassword())) {
@@ -279,10 +279,10 @@ public class UserLoginService {
                     User user = new User();
                     user.setUsername(username);
                     user.setPassword(password);
-                    user.setKeycode(keycode);
-                    user.setNumber(number);
                     UserCertificate userCertificate = new UserCertificate();
                     userCertificate.setUser(user);
+                    userCertificate.setKeycode(keycode);
+                    userCertificate.setNumber(number);
                     userCertificate.setTimestamp(timestamp);
                     return userCertificate;
                 }
@@ -303,16 +303,6 @@ public class UserLoginService {
      */
     public UserCertificate SyncUpdateSession(String sessionId, User user) throws Exception {
         UserCertificate userCertificate = UserLogin(sessionId, user, false);
-        Long timestamp = userCertificate.getTimestamp();
-        if (StringUtils.isBlank(user.getKeycode())) {
-            user.setKeycode(userCertificate.getUser().getKeycode());
-        }
-        if (StringUtils.isBlank(user.getNumber())) {
-            user.setNumber(userCertificate.getUser().getNumber());
-        }
-        userCertificate = new UserCertificate();
-        userCertificate.setUser(user);
-        userCertificate.setTimestamp(timestamp);
         userCertificateDao.saveUserCertificate(userCertificate);
         return userCertificate;
     }

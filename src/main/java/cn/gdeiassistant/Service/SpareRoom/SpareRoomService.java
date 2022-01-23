@@ -321,10 +321,8 @@ public class SpareRoomService {
         if (userCertificate == null) {
             //进行会话同步
             userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
-            return QuerySpareRoom(sessionId, userCertificate.getUser().getUsername()
-                    , userCertificate.getUser().getKeycode(), userCertificate.getUser().getNumber(), userCertificate.getTimestamp(), spareRoomQuery);
         }
-        return QuerySpareRoom(sessionId, userCertificate.getUser().getUsername(), userCertificate.getUser().getKeycode()
-                , userCertificate.getUser().getNumber(), userCertificate.getTimestamp(), spareRoomQuery);
+        return QuerySpareRoom(sessionId, user.getUsername(), userCertificate.getKeycode()
+                , userCertificate.getNumber(), userCertificate.getTimestamp(), spareRoomQuery);
     }
 }

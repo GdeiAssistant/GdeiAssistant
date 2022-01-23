@@ -28,18 +28,6 @@ public class User implements Serializable, Entity {
     //校园网络账号密码
     private String password;
 
-    //校园网络账号加密值
-    private String keycode;
-
-    //校园网络账号学号
-    private String number;
-
-    /**
-     * 账号状态
-     * 1为正常，2为用户自主注销
-     */
-    private Integer state;
-
     public String getPassword() {
         return password;
     }
@@ -56,21 +44,7 @@ public class User implements Serializable, Entity {
         this.username = username;
     }
 
-    public String getKeycode() {
-        return keycode;
-    }
 
-    public void setKeycode(String keycode) {
-        this.keycode = keycode;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
 
     public User decryptUser() {
         User decryptUser = new User();
@@ -80,15 +54,6 @@ public class User implements Serializable, Entity {
             }
             if (password != null) {
                 decryptUser.setPassword(StringEncryptUtils.decryptString(password));
-            }
-            if (keycode != null) {
-                decryptUser.setKeycode(StringEncryptUtils.decryptString(keycode));
-            }
-            if (number != null) {
-                decryptUser.setNumber(StringEncryptUtils.decryptString(number));
-            }
-            if (state != null) {
-                decryptUser.setState(state);
             }
         } catch (WsgException e) {
             e.printStackTrace();
@@ -104,15 +69,6 @@ public class User implements Serializable, Entity {
             }
             if (password != null) {
                 encryptUser.setPassword(StringEncryptUtils.encryptString(password));
-            }
-            if (keycode != null) {
-                encryptUser.setKeycode(StringEncryptUtils.encryptString(keycode));
-            }
-            if (number != null) {
-                encryptUser.setNumber(StringEncryptUtils.encryptString(number));
-            }
-            if (state != null) {
-                encryptUser.setState(state);
             }
         } catch (WsgException e) {
             e.printStackTrace();
@@ -131,20 +87,5 @@ public class User implements Serializable, Entity {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public User(String username, String password, String keycode, String number) {
-        this.username = username;
-        this.password = password;
-        this.keycode = keycode;
-        this.number = number;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
     }
 }

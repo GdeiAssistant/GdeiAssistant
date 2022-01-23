@@ -117,7 +117,7 @@ public class CloseAccountService {
     public void CloseAccount(String username, String password) throws Exception {
         //检查用户账号状态
         User user = userMapper.selectUser(StringEncryptUtils.encryptString(username)).decryptUser();
-        if (user == null || !user.getState().equals(1)) {
+        if (user == null/* || !user.getState().equals(1)*/) {
             //若账号状态异常，则抛出异常
             throw new UserStateErrorException("用户账号状态异常");
         }

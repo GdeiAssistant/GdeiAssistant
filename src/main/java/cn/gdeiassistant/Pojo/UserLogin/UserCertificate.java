@@ -8,8 +8,16 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class UserCertificate {
 
+    //校园网络用户类
     private User user;
 
+    //校园网络账号加密值
+    private String keycode;
+
+    //校园网络账号学号
+    private String number;
+
+    //校园网络登录时间戳
     private Long timestamp;
 
     public User getUser() {
@@ -18,6 +26,22 @@ public class UserCertificate {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getKeycode() {
+        return keycode;
+    }
+
+    public void setKeycode(String keycode) {
+        this.keycode = keycode;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public Long getTimestamp() {

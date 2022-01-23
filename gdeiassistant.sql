@@ -1007,7 +1007,6 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `username` varchar(24) CHARACTER SET utf8 NOT NULL COMMENT '用户名',
   `password` varchar(24) CHARACTER SET utf8 DEFAULT NULL COMMENT '密码',
-  `state` tinyint(1) NOT NULL COMMENT '账户状态',
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1018,7 +1017,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('gdeiassistant','gdeiassistant',1);
+INSERT INTO `user` VALUES ('gdeiassistant','gdeiassistant');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 

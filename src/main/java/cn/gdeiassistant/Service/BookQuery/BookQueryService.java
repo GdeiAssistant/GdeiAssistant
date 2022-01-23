@@ -54,7 +54,7 @@ public class BookQueryService {
     }
 
     /**
-     * 同步教务系统会话，获取用户手机号
+     * 同步教务系统会话，获取用户学号
      *
      * @param sessionId
      * @param username
@@ -67,7 +67,7 @@ public class BookQueryService {
         if (userCertificate == null) {
             userCertificate = userLoginService.SyncUpdateSession(sessionId, new User(username, password));
         }
-        return userCertificate.getUser().getNumber();
+        return userCertificate.getNumber();
     }
 
     /**

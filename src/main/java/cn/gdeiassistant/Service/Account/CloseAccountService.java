@@ -6,7 +6,6 @@ import cn.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Cet.CetMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Delivery.DeliveryMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Ershou.ErshouMapper;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Gender.GenderMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Phone.PhoneMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.PrivacyMapper;
@@ -54,9 +53,6 @@ public class CloseAccountService {
 
     @Autowired
     private PhoneMapper phoneMapper;
-
-    @Autowired
-    private GenderMapper genderMapper;
 
     @Autowired
     private WechatUserMapper wechatUserMapper;
@@ -169,8 +165,6 @@ public class CloseAccountService {
         if (phone != null) {
             phoneMapper.deletePhone(StringEncryptUtils.encryptString(username));
         }
-        //删除自定义性别
-        genderMapper.deleteCustomGender(StringEncryptUtils.encryptString(username));
         //删除教务缓存信息
         gradeDao.removeGrade(username);
         scheduleDao.removeSchedule(username);

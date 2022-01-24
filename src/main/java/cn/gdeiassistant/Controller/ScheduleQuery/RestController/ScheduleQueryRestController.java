@@ -4,6 +4,7 @@ import cn.gdeiassistant.Annotation.*;
 import cn.gdeiassistant.Enum.Method.QueryMethodEnum;
 import cn.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import cn.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
+import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Pojo.Entity.CustomSchedule;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -29,7 +30,7 @@ public class ScheduleQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/refreshschedule", method = RequestMethod.POST)
-    public JsonResult RefreshGradeData(HttpServletRequest request) {
+    public JsonResult RefreshGradeData(HttpServletRequest request) throws MongodbNotConfiguredException {
         String username = (String) request.getSession().getAttribute("username");
         scheduleService.ClearSchedule(username);
         return new JsonResult(true);
@@ -45,7 +46,7 @@ public class ScheduleQueryRestController {
      * @throws CountOverLimitException
      */
     @RequestMapping(value = "/api/customshedule", method = RequestMethod.POST)
-    public JsonResult AddCustomSchedule(HttpServletRequest request, @Validated CustomSchedule customSchedule) throws GenerateScheduleException, CountOverLimitException {
+    public JsonResult AddCustomSchedule(HttpServletRequest request, @Validated CustomSchedule customSchedule) throws GenerateScheduleException, CountOverLimitException, MongodbNotConfiguredException {
         String username = (String) request.getSession().getAttribute("username");
         scheduleService.AddCustomSchedule(username, customSchedule);
         return new JsonResult(true);
@@ -59,7 +60,7 @@ public class ScheduleQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/customschedule/id/{id}", method = RequestMethod.DELETE)
-    public JsonResult DeleteCustomSchedule(HttpServletRequest request, @PathVariable String id) {
+    public JsonResult DeleteCustomSchedule(HttpServletRequest request, @PathVariable String id) throws MongodbNotConfiguredException {
         String username = (String) request.getSession().getAttribute("username");
         scheduleService.DeleteCustomSchedule(username, id);
         return new JsonResult(true);

@@ -1,5 +1,6 @@
 package cn.gdeiassistant.Controller.Cron.RestController;
 
+import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.GradeQuery.GradeCronService;
 import cn.gdeiassistant.Service.ScheduleQuery.ScheduleCronService;
@@ -65,7 +66,7 @@ public class CronRestController {
     }
 
     @RequestMapping(value = "/cron/news", method = RequestMethod.GET)
-    public JsonResult CollectNews() throws InterruptedException, ExecutionException, IOException {
+    public JsonResult CollectNews() throws InterruptedException, ExecutionException, IOException, MongodbNotConfiguredException {
         if (schoolNewsCornService != null) {
             schoolNewsCornService.CollectNews();
             return new JsonResult(true);

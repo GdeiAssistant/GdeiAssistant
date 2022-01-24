@@ -5,6 +5,8 @@ import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
+import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
+import cn.gdeiassistant.Exception.DatasourceException.RedisNotConfiguredException;
 import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -130,6 +132,20 @@ public class GlobalRestExceptionHandler {
         logger.error("GlobalRestExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.USER_NOT_EXIST
                 , false, "当前用户不存在，请尝试重新登录"));
+    }
+
+    @ExceptionHandler(MongodbNotConfiguredException.class)
+    public ResponseEntity HandleMongodbNotConfiguredException(MongodbNotConfiguredException e) {
+        logger.error("GlobalRestExceptionHandler：", e);
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.MONGODB_DATASOURCE_NOT_CONFIGURED
+                , false, "Mongodb数据源未配置"));
+    }
+
+    @ExceptionHandler(RedisNotConfiguredException.class)
+    public ResponseEntity HandleRedisNotConfiguredException(RedisNotConfiguredException e) {
+        logger.error("GlobalRestExceptionHandler：", e);
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.REDIS_DATASOURCE_NOT_CONFIGURED
+                , false, "Redis数据源未配置"));
     }
 
     /**

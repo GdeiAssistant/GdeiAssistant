@@ -1,5 +1,6 @@
 package cn.gdeiassistant.Service.SchoolNews;
 
+import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Pojo.Config.NewsConfig;
 import cn.gdeiassistant.Pojo.Entity.NewInfo;
 import cn.gdeiassistant.Pojo.Entity.RSSNewInfo;
@@ -66,7 +67,7 @@ public class SchoolNewsCornService {
      * @throws InterruptedException
      */
     @Scheduled(cron = "0 0 0,9,18 * * ?")
-    public void CollectNews() throws IOException, ExecutionException, InterruptedException {
+    public void CollectNews() throws IOException, ExecutionException, InterruptedException, MongodbNotConfiguredException {
         logger.info("{}启动了收集新闻通知信息的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
         List<NewInfo> newInfoList = new ArrayList<>();

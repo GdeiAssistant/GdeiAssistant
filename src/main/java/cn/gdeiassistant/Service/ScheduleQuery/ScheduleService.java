@@ -5,6 +5,7 @@ import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import cn.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
+import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import cn.gdeiassistant.Pojo.Document.CustomScheduleDocument;
 import cn.gdeiassistant.Pojo.Document.ScheduleDocument;
@@ -110,7 +111,7 @@ public class ScheduleService {
      * @throws GenerateScheduleException
      * @throws CountOverLimitException
      */
-    public void AddCustomSchedule(String username, CustomSchedule customSchedule) throws GenerateScheduleException, CountOverLimitException {
+    public void AddCustomSchedule(String username, CustomSchedule customSchedule) throws GenerateScheduleException, CountOverLimitException, MongodbNotConfiguredException {
         scheduleDao.addCustomSchedule(username, customSchedule);
     }
 
@@ -120,7 +121,7 @@ public class ScheduleService {
      * @param username
      * @param id
      */
-    public void DeleteCustomSchedule(String username, String id) {
+    public void DeleteCustomSchedule(String username, String id) throws MongodbNotConfiguredException {
         scheduleDao.deleteCustomSchedule(username, id);
     }
 
@@ -534,7 +535,7 @@ public class ScheduleService {
      *
      * @param username
      */
-    public void ClearSchedule(String username) {
+    public void ClearSchedule(String username) throws MongodbNotConfiguredException {
         scheduleDao.removeSchedule(username);
     }
 

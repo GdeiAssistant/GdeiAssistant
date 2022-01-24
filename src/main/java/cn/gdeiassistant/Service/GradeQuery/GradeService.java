@@ -3,6 +3,7 @@ package cn.gdeiassistant.Service.GradeQuery;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
+import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Exception.QueryException.NotAvailableConditionException;
 import cn.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
@@ -365,7 +366,7 @@ public class GradeService {
      *
      * @param username
      */
-    public void ClearGrade(String username) {
+    public void ClearGrade(String username) throws MongodbNotConfiguredException {
         gradeDao.removeGrade(username);
     }
 

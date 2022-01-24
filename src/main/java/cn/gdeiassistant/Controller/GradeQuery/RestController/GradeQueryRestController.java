@@ -2,6 +2,7 @@ package cn.gdeiassistant.Controller.GradeQuery.RestController;
 
 import cn.gdeiassistant.Annotation.*;
 import cn.gdeiassistant.Enum.Method.QueryMethodEnum;
+import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -28,7 +29,7 @@ public class GradeQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/refreshgrade", method = RequestMethod.POST)
-    public JsonResult RefreshGradeData(HttpServletRequest request) {
+    public JsonResult RefreshGradeData(HttpServletRequest request) throws MongodbNotConfiguredException {
         String username = (String) request.getSession().getAttribute("username");
         gradeService.ClearGrade(username);
         return new JsonResult(true);

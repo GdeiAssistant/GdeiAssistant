@@ -104,4 +104,10 @@ public class ErrorConstantUtils {
     //网络连接超时
     public static final int NETWORK_TIMEOUT = 50301;
 
+    //Mongodb数据源未配置
+    public static final int MONGODB_DATASOURCE_NOT_CONFIGURED= 50401;
+
+    //Redis数据源未配置
+    public static final int REDIS_DATASOURCE_NOT_CONFIGURED = 50501;
+
 }

@@ -62,6 +62,14 @@
     蓝色下划线：男生 / 红色下划线：女生 / 黑色下划线：其他或保密
 </p>
 
+<!-- 提示信息 -->
+<p style="text-align:center;color:#9e9e9e;font-size:12px;">
+    交友需谨慎，请注意保护个人隐私。
+</p>
+<p style="text-align:center;color:#9e9e9e;font-size:12px;">
+    抵制粗俗语言，共创文明网络环境。
+</p>
+
 <!-- 底部菜单 -->
 <div data-role="footer" id="footer" data-position="fixed" data-fullscreen="true" data-tap-toggle="false">
     <div class="ui-navbar" data-role="navbar" role="navigation">

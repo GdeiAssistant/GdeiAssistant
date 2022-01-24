@@ -2,21 +2,23 @@ package cn.gdeiassistant.Service.LostAndFound;
 
 import cn.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import cn.gdeiassistant.Pojo.Entity.LostAndFoundItem;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import cn.gdeiassistant.Service.Profile.UserProfileService;
+import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
-import com.aliyun.oss.OSSClient;
+import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LostAndFoundService {
@@ -28,7 +30,7 @@ public class LostAndFoundService {
     private UserProfileService userProfileService;
 
     @Autowired
-    private OSSConfig ossConfig;
+    private OSSUtils ossUtils;
 
     /**
      * 查询指定ID的失物招领物品信息
@@ -251,11 +253,14 @@ public class LostAndFoundService {
      * @return
      */
     public void UploadLostAndFoundItemPicture(int id, int index, InputStream inputStream) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        //上传文件
-        ossClient.putObject("gdeiassistant-userdata", "lostandfound/" + id + "_" + index + ".jpg", inputStream);
-        ossClient.shutdown();
+        ossUtils.UploadOSSObject("gdeiassistant-userdata", "lostandfound/" + id + "_" + index + ".jpg", inputStream);
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -265,22 +270,16 @@ public class LostAndFoundService {
      * @return
      */
     public List<String> GetLostAndFoundItemPictureURL(int id) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
         List<String> pictureURL = new ArrayList<>();
-        //检查图片是否存在
         for (int i = 1; i <= 4; i++) {
-            if (ossClient.doesObjectExist("gdeiassistant-userdata", "lostandfound/" + id + "_" + i + ".jpg")) {
-                //设置过期时间30分钟
-                Date expiration = new Date(new Date().getTime() + 1000 * 60 * 30);
-                // 生成URL
-                String url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "lostandfound/" + id + "_" + i + ".jpg", expiration).toString().replace("http", "https");
+            String url = ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "lostandfound/" + id + "_" + i + ".jpg"
+                    , 30, TimeUnit.MINUTES);
+            if (StringUtils.isNotBlank(url)) {
                 pictureURL.add(url);
             } else {
                 break;
             }
         }
-        ossClient.shutdown();
         return pictureURL;
     }
 }

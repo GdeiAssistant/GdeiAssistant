@@ -1,18 +1,18 @@
 package cn.gdeiassistant.Service.Photograph;
 
-import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.Photograph;
 import cn.gdeiassistant.Pojo.Entity.PhotographComment;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Photograph.PhotographMapper;
+import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
-import com.aliyun.oss.OSSClient;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class PhotographService {
@@ -21,7 +21,7 @@ public class PhotographService {
     private PhotographMapper photographMapper;
 
     @Autowired
-    private OSSConfig ossConfig;
+    private OSSUtils ossUtils;
 
     /**
      * 查询照片统计数量
@@ -129,11 +129,14 @@ public class PhotographService {
      * @return
      */
     public void UploadPhotographItemPicture(int id, int index, InputStream inputStream) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        //上传文件
-        ossClient.putObject("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", inputStream);
-        ossClient.shutdown();
+        ossUtils.UploadOSSObject("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", inputStream);
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -144,17 +147,8 @@ public class PhotographService {
      * @return
      */
     public String GetPhotographItemPictureURL(int id, int index) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        String url = null;
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg")) {
-            //设置过期时间30分钟
-            Date expiration = new Date(new Date().getTime() + 1000 * 60 * 30);
-            // 生成URL
-            url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", expiration).toString().replace("http", "https");
-        }
-        ossClient.shutdown();
-        return url;
+        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg"
+                , 30, TimeUnit.MINUTES);
     }
 
     /**

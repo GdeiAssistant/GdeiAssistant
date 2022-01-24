@@ -51,8 +51,7 @@ public class TrialDataAspect implements EnvironmentAware {
         Object[] args = proceedingJoinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
         String username = (String) request.getSession().getAttribute("username");
-        Integer group = (Integer) request.getSession().getAttribute("group");
-        if (username == null || group == null) {
+        if (username == null) {
             //获取用户请求的权限令牌签名
             String token = request.getParameter("token");
             User user = userLoginService.GetUserByUsername(loginTokenService.ParseToken(token).get("username").asString());

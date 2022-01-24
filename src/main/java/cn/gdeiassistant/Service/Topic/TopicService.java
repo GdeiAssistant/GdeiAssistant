@@ -1,21 +1,21 @@
 package cn.gdeiassistant.Service.Topic;
 
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.Topic;
 import cn.gdeiassistant.Pojo.Entity.TopicLike;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Topic.TopicMapper;
+import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
-import com.aliyun.oss.OSSClient;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TopicService {
@@ -24,7 +24,7 @@ public class TopicService {
     private TopicMapper topicMapper;
 
     @Autowired
-    private OSSConfig ossConfig;
+    private OSSUtils ossUtils;
 
     /**
      * 加载话题信息
@@ -111,19 +111,8 @@ public class TopicService {
      * @return
      */
     public String DownloadTopicItemPicture(int id, int index) {
-        String url = null;
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        //检查用户数据是否存在
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg")) {
-            //设置过期时间10分钟
-            Date expiration = new Date(new Date().getTime() + 1000 * 60 * 90);
-            // 生成URL
-            url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg"
-                    , expiration).toString().replace("http", "https");
-        }
-        ossClient.shutdown();
-        return url;
+        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg"
+                , 90, TimeUnit.MINUTES);
     }
 
     /**
@@ -135,10 +124,14 @@ public class TopicService {
      */
     @Async
     public void UploadTopicItemPicture(int id, int index, InputStream inputStream) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        //上传文件
-        ossClient.putObject("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg", inputStream);
-        ossClient.shutdown();
+        ossUtils.UploadOSSObject("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg"
+                , inputStream);
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

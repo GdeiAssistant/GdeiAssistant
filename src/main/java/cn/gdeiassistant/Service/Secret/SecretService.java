@@ -1,26 +1,26 @@
 package cn.gdeiassistant.Service.Secret;
 
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.Secret;
 import cn.gdeiassistant.Pojo.Entity.SecretComment;
 import cn.gdeiassistant.Pojo.Entity.SecretContent;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Secret.SecretMapper;
+import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
-import com.aliyun.oss.OSSClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SecretService {
@@ -29,7 +29,7 @@ public class SecretService {
     private SecretMapper secretMapper;
 
     @Autowired
-    private OSSConfig ossConfig;
+    private OSSUtils ossUtils;
 
     /**
      * 获取树洞消息
@@ -84,18 +84,8 @@ public class SecretService {
      * @return
      */
     public String GetSecretVoiceURL(int id) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        String url = null;
-        //检查树洞语音音频是否存在
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "secret/voice/" + id + ".mp3")) {
-            //设置过期时间30分钟
-            Date expiration = new Date(new Date().getTime() + 1000 * 60 * 30);
-            // 生成URL
-            url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", expiration).toString().replace("http", "https");
-        }
-        ossClient.shutdown();
-        return url;
+        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "secret/voice/" + id + ".mp3"
+                ,30, TimeUnit.MINUTES);
     }
 
     /**
@@ -105,11 +95,14 @@ public class SecretService {
      * @param inputStream
      */
     public void UploadVoiceSecret(int id, InputStream inputStream) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        //上传文件
-        ossClient.putObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", inputStream);
-        ossClient.shutdown();
+        ossUtils.UploadOSSObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", inputStream);
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -1,19 +1,19 @@
 package cn.gdeiassistant.Service.Dating;
 
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.DatingMessage;
 import cn.gdeiassistant.Pojo.Entity.DatingPick;
 import cn.gdeiassistant.Pojo.Entity.DatingProfile;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Dating.DatingMapper;
+import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
-import com.aliyun.oss.OSSClient;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Deprecated
 public class DatingService {
@@ -21,7 +21,7 @@ public class DatingService {
     private DatingMapper datingMapper;
 
     @Autowired
-    private OSSConfig ossConfig;
+    private OSSUtils ossUtils;
 
     /**
      * 根据ID查找卖室友详细信息
@@ -96,11 +96,14 @@ public class DatingService {
      * @param inputStream
      */
     public void UploadPicture(int id, InputStream inputStream) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        //上传文件
-        ossClient.putObject("gdeiassistant-userdata", "dating/" + id + ".jpg", inputStream);
-        ossClient.shutdown();
+        ossUtils.UploadOSSObject("gdeiassistant-userdata", "dating/" + id + ".jpg", inputStream);
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -234,18 +237,6 @@ public class DatingService {
      * @return
      */
     public String GetDatingProfilePictureURL(int id) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        //检查图片是否存在
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "dating/" + id + ".jpg")) {
-            //设置过期时间30分钟
-            Date expiration = new Date(new Date().getTime() + 1000 * 60 * 30);
-            // 生成URL
-            String url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "dating/" + id + ".jpg", expiration)
-                    .toString().replace("http", "https");
-            ossClient.shutdown();
-            return url;
-        }
-        return null;
+        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "dating/" + id + ".jpg", 30, TimeUnit.MINUTES);
     }
 }

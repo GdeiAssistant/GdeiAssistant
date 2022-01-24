@@ -1,33 +1,30 @@
 package cn.gdeiassistant.Service.Profile;
 
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
-import cn.gdeiassistant.Pojo.Config.OSSConfig;
 import cn.gdeiassistant.Pojo.Entity.Introduction;
 import cn.gdeiassistant.Pojo.Entity.Profile;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Gender.GenderMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.ProfileMapper;
+import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
-import com.aliyun.oss.OSSClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.AsyncRestTemplate;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserProfileService {
 
     @Resource(name = "profileMapper")
     private ProfileMapper profileMapper;
-
-    @Resource(name = "genderMapper")
-    private GenderMapper genderMapper;
 
     @Resource(name = "professionMap")
     public void setProfessionMap(Map<Integer, String> professionMap) {
@@ -70,7 +67,7 @@ public class UserProfileService {
     }
 
     @Autowired
-    private OSSConfig ossConfig;
+    private OSSUtils ossUtils;
 
     /**
      * 获取用户个人资料
@@ -109,18 +106,8 @@ public class UserProfileService {
      * @return
      */
     public String GetUserAvatar(String username) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        String url = "";
-        //检查自定义头像图片是否存在
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + ".jpg")) {
-            //设置过期时间10分钟
-            Date expiration = new Date(new Date().getTime() + 1000 * 60 * 30);
-            // 生成URL
-            url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "avatar/" + username + ".jpg", expiration).toString().replace("http", "https");
-        }
-        ossClient.shutdown();
-        return url;
+        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "avatar/" + username + ".jpg"
+                , 30, TimeUnit.MINUTES);
     }
 
     /**
@@ -130,18 +117,8 @@ public class UserProfileService {
      * @return
      */
     public String GetUserHighDefinitionAvatar(String username) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        String url = "";
-        //检查自定义头像图片是否存在
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg")) {
-            //设置过期时间10分钟
-            Date expiration = new Date(new Date().getTime() + 1000 * 60 * 30);
-            // 生成URL
-            url = ossClient.generatePresignedUrl("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg", expiration).toString().replace("http", "https");
-        }
-        ossClient.shutdown();
-        return url;
+        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg"
+                , 30, TimeUnit.MINUTES);
     }
 
     /**
@@ -152,11 +129,14 @@ public class UserProfileService {
      * @return
      */
     public void UpdateAvatar(String username, InputStream inputStream) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        //上传文件
-        ossClient.putObject("gdeiassistant-userdata", "avatar/" + username + ".jpg", inputStream);
-        ossClient.shutdown();
+        ossUtils.UploadOSSObject("gdeiassistant-userdata", "avatar/" + username + ".jpg", inputStream);
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -166,11 +146,15 @@ public class UserProfileService {
      * @param inputStream
      */
     public void UpdateHighDefinitionAvatar(String username, InputStream inputStream) {
-        // 创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        //上传文件
-        ossClient.putObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg", inputStream);
-        ossClient.shutdown();
+        ossUtils.UploadOSSObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg"
+                , inputStream);
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -179,16 +163,8 @@ public class UserProfileService {
      * @param username
      */
     public void DeleteAvatar(String username) {
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID(), ossConfig.getAccessKeySecret());
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + ".jpg")) {
-            //删除头像文件
-            ossClient.deleteObject("gdeiassistant-userdata", "avatar/" + username + ".jpg");
-        }
-        if (ossClient.doesObjectExist("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg")) {
-            //删除高清头像文件
-            ossClient.deleteObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg");
-        }
-        ossClient.shutdown();
+        ossUtils.DeleteOSSObject("gdeiassistant-userdata", "avatar/" + username + ".jpg");
+        ossUtils.DeleteOSSObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg");
     }
 
     /**

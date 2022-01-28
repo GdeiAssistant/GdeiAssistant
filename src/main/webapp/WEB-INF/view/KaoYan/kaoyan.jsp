@@ -72,8 +72,6 @@
         <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postQueryForm()">查询</a>
     </div>
 
-    <p class="page_desc" style="margin-top: 25px">祝2019考研er金榜题名</p>
-
     <br><br>
 
     <div class="weui-cells__title">

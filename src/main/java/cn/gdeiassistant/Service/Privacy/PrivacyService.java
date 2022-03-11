@@ -1,10 +1,12 @@
 package cn.gdeiassistant.Service.Privacy;
 
+import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
+import cn.gdeiassistant.Pojo.Entity.Privacy;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import cn.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.PrivacyMapper;
-import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
-import cn.gdeiassistant.Pojo.Entity.Privacy;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ import javax.annotation.Resource;
 
 @Service
 public class PrivacyService {
+
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     @Resource(name = "privacyMapper")
     private PrivacyMapper privacyMapper;
@@ -26,12 +31,13 @@ public class PrivacyService {
     /**
      * 获取用户隐私设置
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public Privacy GetPrivacySetting(String username) throws Exception {
+    public Privacy GetPrivacySetting(String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         Privacy privacy = privacyMapper.selectPrivacy(StringEncryptUtils
-                .encryptString(username));
+                .encryptString(user.getUsername()));
         if (privacy != null) {
             return privacy;
         }
@@ -42,88 +48,96 @@ public class PrivacyService {
      * 更新性别隐私设置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @return
      */
-    public void UpdateGender(boolean state, String username) throws Exception {
-        privacyMapper.updateGender(state, StringEncryptUtils.encryptString(username));
+    public void UpdateGender(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateGender(state, StringEncryptUtils.encryptString(user.getUsername()));
     }
 
     /**
      * 更新院系隐私设置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @return
      */
-    public void UpdateFaculty(boolean state, String username) throws Exception {
-        privacyMapper.updateFaculty(state, StringEncryptUtils.encryptString(username));
+    public void UpdateFaculty(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateFaculty(state, StringEncryptUtils.encryptString(user.getUsername()));
     }
 
     /**
      * 更新专业隐私配置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @return
      */
-    public void UpdateMajor(boolean state, String username) throws Exception {
-        privacyMapper.updateMajor(state, StringEncryptUtils.encryptString(username));
+    public void UpdateMajor(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateMajor(state, StringEncryptUtils.encryptString(user.getUsername()));
     }
 
     /**
      * 更新国家/地区隐私设置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @return
      */
-    public void UpdateLocation(boolean state, String username) throws Exception {
-        privacyMapper.updateLocation(state, StringEncryptUtils.encryptString(username));
+    public void UpdateLocation(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateLocation(state, StringEncryptUtils.encryptString(user.getUsername()));
     }
 
     /**
      * 更新家乡隐私设置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @throws Exception
      */
-    public void UpdateHometown(boolean state, String username) throws Exception {
-        privacyMapper.updateHometown(state, StringEncryptUtils.encryptString(username));
+    public void UpdateHometown(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateHometown(state, StringEncryptUtils.encryptString(user.getUsername()));
     }
 
     /**
      * 更新个人简介隐私设置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @return
      */
-    public void UpdateIntroduction(boolean state, String username) throws Exception {
-        privacyMapper.updateIntroduction(state, StringEncryptUtils.encryptString(username));
+    public void UpdateIntroduction(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateIntroduction(state, StringEncryptUtils.encryptString(user.getUsername()));
     }
 
     /**
      * 更新入学年份隐私设置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @throws Exception
      */
-    public void UpdateEnrollment(boolean state, String username) throws Exception {
-        privacyMapper.updateEnrollment(state, StringEncryptUtils.encryptString(username));
+    public void UpdateEnrollment(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateEnrollment(state, StringEncryptUtils.encryptString(user.getUsername()));
     }
 
     /**
      * 更新年龄隐私设置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @throws Exception
      */
-    public void UpdateAge(boolean state, String username) throws Exception {
-        privacyMapper.updateAge(state, StringEncryptUtils.encryptString(username));
+    public void UpdateAge(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateAge(state, StringEncryptUtils.encryptString(user.getUsername()));
     }
 
     /**
@@ -184,23 +198,25 @@ public class PrivacyService {
      * 更新教务信息缓存隐私配置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @return
      */
-    public void UpdateCache(boolean state, String username) throws Exception {
-        privacyMapper.updateCache(state, StringEncryptUtils.encryptString(username));
-        gradeDao.removeGrade(username);
-        scheduleDao.removeSchedule(username);
+    public void UpdateCache(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateCache(state, StringEncryptUtils.encryptString(user.getUsername()));
+        gradeDao.removeGrade(user.getUsername());
+        scheduleDao.removeSchedule(user.getUsername());
     }
 
     /**
      * 更新个人主页搜索引擎收录设置
      *
      * @param state
-     * @param username
+     * @param sessionId
      * @throws Exception
      */
-    public void UpdateRobotsIndex(boolean state, String username) throws Exception {
-        privacyMapper.updateRobotsIndex(state, StringEncryptUtils.encryptString(username));
+    public void UpdateRobotsIndex(boolean state, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        privacyMapper.updateRobotsIndex(state, StringEncryptUtils.encryptString(user.getUsername()));
     }
 }

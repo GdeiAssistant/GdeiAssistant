@@ -3,20 +3,17 @@ package cn.gdeiassistant.Service.GradeQuery;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Exception.QueryException.NotAvailableConditionException;
 import cn.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import cn.gdeiassistant.Pojo.Document.GradeDocument;
 import cn.gdeiassistant.Pojo.Entity.Grade;
 import cn.gdeiassistant.Pojo.Entity.User;
-import cn.gdeiassistant.Pojo.GradeQuery.GradeCacheResult;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import cn.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
-import cn.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
-import cn.gdeiassistant.Service.UserLogin.UserLoginService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -33,11 +30,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -45,60 +38,89 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Semaphore;
 
 @Service
 public class GradeService {
 
     private Logger logger = LoggerFactory.getLogger(GradeService.class);
 
-    private String url;
-
-    private int timeout;
-
     @Autowired
-    private UserLoginService userLoginService;
-
-    @Autowired
-    private UserCertificateDao userCertificateDao;
+    private UserCertificateService userCertificateService;
 
     @Autowired
     private GradeDao gradeDao;
 
-    @Value("#{propertiesReader['education.system.url']}")
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    @Value("#{propertiesReader['timeout.gradequery']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
-
     /**
-     * 查询学科成绩
+     * 清空用户缓存的成绩信息
      *
      * @param sessionId
-     * @param username
-     * @param keycode
-     * @param number
+     */
+    public void ClearGrade(String sessionId) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        gradeDao.removeGrade(user.getUsername());
+    }
+
+    /**
+     * 查询成绩
+     *
+     * @param sessionId
      * @param year
      * @return
+     * @throws Exception
      */
-    private GradeQueryResult GradeQuery(String sessionId, String username, String keycode
-            , String number, Long timestamp, int year) throws Exception {
+    public GradeQueryResult QueryGrade(String sessionId, Integer year) throws Exception {
+        //优先从缓存中获取
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        GradeDocument gradeDocument = gradeDao.queryGrade(user.getUsername());
+        if (gradeDocument != null) {
+            List<List<Grade>> gradeLists = gradeDocument.getGradeList();
+            //若未指定查询学年，则默认查询最后学年的成绩信息
+            if (year == null) {
+                year = gradeLists.size() - 1;
+            }
+            if (gradeLists.size() == 0) {
+                return null;
+            }
+            if (year >= gradeLists.size()) {
+                throw new ErrorQueryConditionException("查询条件不可用");
+            }
+            List<Grade> gradeList = gradeDocument.getGradeList().get(year);
+            List<Grade> firstTermGradeList = new ArrayList<>();
+            List<Grade> secondTermGradeList = new ArrayList<>();
+            for (Grade grade : gradeList) {
+                if (grade.getGradeTerm().equals("1")) {
+                    firstTermGradeList.add(grade);
+                } else {
+                    secondTermGradeList.add(grade);
+                }
+            }
+            Double firstTermGPA = gradeDocument.getFirstTermGPAList().get(year);
+            Double secondTermGPA = gradeDocument.getSecondTermGPAList().get(year);
+            Double firstTermIGP = gradeDocument.getFirstTermIGPList().get(year);
+            Double secondTermIGP = gradeDocument.getSecondTermIGPList().get(year);
+            GradeQueryResult gradeQueryResult = new GradeQueryResult();
+            gradeQueryResult.setFirstTermGPA(firstTermGPA);
+            gradeQueryResult.setFirstTermIGP(firstTermIGP);
+            gradeQueryResult.setSecondTermGPA(secondTermGPA);
+            gradeQueryResult.setSecondTermIGP(secondTermIGP);
+            gradeQueryResult.setFirstTermGradeList(firstTermGradeList);
+            gradeQueryResult.setSecondTermGradeList(secondTermGradeList);
+            gradeQueryResult.setYear(year);
+            return gradeQueryResult;
+        }
+        //从教务系统实时获取
+        UserCertificate userCertificate = userCertificateService.GetUserSessionCertificate(sessionId);
         GradeQueryResult gradeQueryResult = new GradeQueryResult();
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //快速连接教务系统
-            HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
-                    + keycode + "&timestamp=" + timestamp);
+            HttpGet httpGet = new HttpGet("http://jwgl.gdei.edu.cn/cas_verify.aspx?i="
+                    + userCertificate.getUser().getUsername() + "&k="
+                    + userCertificate.getKeycode() + "&timestamp=" + userCertificate.getTimestamp());
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -107,11 +129,13 @@ public class GradeService {
                         "，为安全起见请重新登录后再进行操作！")) {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 } else {
-                    httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number + "&type=1");
+                    httpGet = new HttpGet("http://jwgl.gdei.edu.cn/xs_main.aspx?xh="
+                            + userCertificate.getNumber() + "&type=1");
                     httpResponse = httpClient.execute(httpGet);
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         //成功进入学生个人主页,进行成绩查询操作
-                        httpGet = new HttpGet(url + "xscj_gc.aspx?xh=" + number);
+                        httpGet = new HttpGet("http://jwgl.gdei.edu.cn/xscj_gc.aspx?xh="
+                                + userCertificate.getNumber());
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         if (httpResponse.getStatusLine().getStatusCode() == 200) {
@@ -140,7 +164,8 @@ public class GradeService {
                             basicNameValuePairs.add(new BasicNameValuePair("Button5", "按学年查询"));
                             basicNameValuePairs.add(new BasicNameValuePair("ddlXN", yearList.get(year)));
                             basicNameValuePairs.add(new BasicNameValuePair("ddlXQ", ""));
-                            HttpPost httpPost = new HttpPost(url + "xscj_gc.aspx?xh=" + number);
+                            HttpPost httpPost = new HttpPost("http://jwgl.gdei.edu.cn/xscj_gc.aspx?xh="
+                                    + userCertificate.getNumber());
                             httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
                             httpResponse = httpClient.execute(httpPost);
                             if (httpResponse.getStatusLine().getStatusCode() == 200) {
@@ -257,165 +282,5 @@ public class GradeService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-    }
-
-    /**
-     * 从MongoDB中获取用户缓存的成绩信息
-     *
-     * @param username
-     * @param year
-     * @return
-     */
-    public GradeQueryResult QueryUserGradeFromDocument(String username, Integer year) throws Exception {
-        GradeQueryResult gradeQueryResult = new GradeQueryResult();
-        GradeDocument gradeDocument = ReadGrade(username);
-        if (gradeDocument != null) {
-            List<List<Grade>> gradeLists = gradeDocument.getGradeList();
-            if (year == null) {
-                year = gradeLists.size() - 1;
-            }
-            if (gradeLists.size() == 0) {
-                return null;
-            }
-            if (year >= gradeLists.size()) {
-                throw new ErrorQueryConditionException("查询条件不可用");
-            }
-            List<Grade> gradeList = gradeDocument.getGradeList().get(year);
-            List<Grade> firstTermGradeList = new ArrayList<>();
-            List<Grade> secondTermGradeList = new ArrayList<>();
-            for (Grade grade : gradeList) {
-                if (grade.getGradeTerm().equals("1")) {
-                    firstTermGradeList.add(grade);
-                } else {
-                    secondTermGradeList.add(grade);
-                }
-            }
-            Double firstTermGPA = gradeDocument.getFirstTermGPAList().get(year);
-            Double secondTermGPA = gradeDocument.getSecondTermGPAList().get(year);
-            Double firstTermIGP = gradeDocument.getFirstTermIGPList().get(year);
-            Double secondTermIGP = gradeDocument.getSecondTermIGPList().get(year);
-            gradeQueryResult.setFirstTermGPA(firstTermGPA);
-            gradeQueryResult.setFirstTermIGP(firstTermIGP);
-            gradeQueryResult.setSecondTermGPA(secondTermGPA);
-            gradeQueryResult.setSecondTermIGP(secondTermIGP);
-            gradeQueryResult.setFirstTermGradeList(firstTermGradeList);
-            gradeQueryResult.setSecondTermGradeList(secondTermGradeList);
-            gradeQueryResult.setYear(year);
-            return gradeQueryResult;
-        }
-        return null;
-    }
-
-    /**
-     * 从教务系统获取用户的成绩信息
-     *
-     * @param sessionId
-     * @param user
-     * @param year
-     * @return
-     */
-    public GradeQueryResult QueryGradeFromSystem(String sessionId, User user, Integer year) throws Exception {
-        if (year == null) {
-            //若没有指定查询的学年，则进行默认学年查询
-            year = -1;
-        }
-        //检测是否已与教务系统进行会话同步
-        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
-        if (userCertificate == null) {
-            //进行会话同步
-            userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
-        }
-        return GradeQuery(sessionId, user.getUsername()
-                , userCertificate.getKeycode(), userCertificate.getNumber()
-                , userCertificate.getTimestamp(), year);
-    }
-
-    /**
-     * 优先从缓存中获取成绩信息，若缓存不存在，则通过教务系统获取
-     *
-     * @param sessionId
-     * @param user
-     * @param year
-     * @return
-     * @throws Exception
-     */
-    public GradeQueryResult QueryGrade(String sessionId, User user, Integer year) throws Exception {
-        try {
-            GradeQueryResult gradeQueryResult = QueryUserGradeFromDocument(user.getUsername(), year);
-            if (gradeQueryResult == null) {
-                return QueryGradeFromSystem(sessionId, user, year);
-            }
-            return gradeQueryResult;
-        } catch (Exception e) {
-            return QueryGradeFromSystem(sessionId, user, year);
-        }
-    }
-
-    /**
-     * 查询用户保存的成绩信息
-     *
-     * @param username
-     * @return
-     */
-    public GradeDocument ReadGrade(String username) {
-        return gradeDao.queryGradeByUsername(username);
-    }
-
-    /**
-     * 清空用户保存的成绩信息
-     *
-     * @param username
-     */
-    public void ClearGrade(String username) throws MongodbNotConfiguredException {
-        gradeDao.removeGrade(username);
-    }
-
-    /**
-     * 异步获取教务系统成绩信息
-     *
-     * @param semaphore
-     * @param user
-     * @return
-     */
-    @Async
-    public ListenableFuture<GradeCacheResult> QueryGradeData(Semaphore semaphore, User user) {
-        try {
-            semaphore.acquire();
-            GradeCacheResult gradeCacheResult = new GradeCacheResult();
-            gradeCacheResult.setFirstTermGPAArray(new Double[4]);
-            gradeCacheResult.setSecondTermGPAArray(new Double[4]);
-            gradeCacheResult.setFirstTermIGPArray(new Double[4]);
-            gradeCacheResult.setSecondTermIGPArray(new Double[4]);
-            gradeCacheResult.setGradeListArray(new ArrayList[4]);
-            CountDownLatch countDownLatch = new CountDownLatch(4);
-            for (int i = 0; i < 4; i++) {
-                try {
-                    GradeQueryResult result = QueryGradeFromSystem(null, user.decryptUser(), i);
-                    if (result != null) {
-                        gradeCacheResult.getFirstTermGPAArray()[result.getYear()] = result.getFirstTermGPA();
-                        gradeCacheResult.getSecondTermGPAArray()[result.getYear()] = result.getSecondTermGPA();
-                        gradeCacheResult.getFirstTermIGPArray()[result.getYear()] = result.getFirstTermIGP();
-                        gradeCacheResult.getSecondTermIGPArray()[result.getYear()] = result.getSecondTermIGP();
-                        List<Grade> gradeList = new ArrayList<>();
-                        gradeList.addAll(result.getFirstTermGradeList());
-                        gradeList.addAll(result.getSecondTermGradeList());
-                        gradeCacheResult.getGradeListArray()[result.getYear()] = gradeList;
-                    }
-                } catch (PasswordIncorrectException ignored) {
-
-                } catch (Exception e) {
-                    logger.error("定时查询保存成绩信息异常：", e);
-                } finally {
-                    countDownLatch.countDown();
-                }
-            }
-            countDownLatch.await();
-            return AsyncResult.forValue(gradeCacheResult);
-        } catch (Exception e) {
-            logger.error("定时查询保存成绩信息异常：", e);
-        } finally {
-            semaphore.release();
-        }
-        return AsyncResult.forValue(null);
     }
 }

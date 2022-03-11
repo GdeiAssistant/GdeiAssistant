@@ -27,11 +27,10 @@ public class UserDataRestController {
      */
     @RequestMapping(value = "/api/userdata/state", method = RequestMethod.GET)
     public DataJsonResult<Integer> CheckExportState(HttpServletRequest request) {
-        String username = (String) request.getSession().getAttribute("username");
-        if (userDataService.CheckAlreadyExportUserData(username)) {
+        if (userDataService.CheckAlreadyExportUserData(request.getSession().getId())) {
             return new DataJsonResult<>(true, ExportStateEnum.EXPORTED.getValue());
         }
-        if (userDataService.CheckExportingUserData(username)) {
+        if (userDataService.CheckExportingUserData(request.getSession().getId())) {
             return new DataJsonResult<>(true, ExportStateEnum.EXPORTING.getValue());
         }
         return new DataJsonResult<>(true, ExportStateEnum.NOT_EXPORT.getValue());
@@ -46,14 +45,13 @@ public class UserDataRestController {
      */
     @RequestMapping(value = "/api/userdata/export", method = RequestMethod.POST)
     public JsonResult ExportUserData(HttpServletRequest request) throws WsgException, IOException {
-        String username = (String) request.getSession().getAttribute("username");
-        if (userDataService.CheckAlreadyExportUserData(username)) {
+        if (userDataService.CheckAlreadyExportUserData(request.getSession().getId())) {
             return new JsonResult(false, "24小时内已导出过用户数据，请勿重复提交请求");
         }
-        if (userDataService.CheckExportingUserData(username)) {
+        if (userDataService.CheckExportingUserData(request.getSession().getId())) {
             return new JsonResult(false, "系统正在导出用户数据，请稍候再返回下载");
         }
-        userDataService.ExportUserData(username);
+        userDataService.ExportUserData(request.getSession().getId());
         return new JsonResult(true);
     }
 
@@ -65,9 +63,8 @@ public class UserDataRestController {
      */
     @RequestMapping(value = "/api/userdata/download", method = RequestMethod.POST)
     public DataJsonResult<String> DownloadUserData(HttpServletRequest request) {
-        String username = (String) request.getSession().getAttribute("username");
-        if (userDataService.CheckAlreadyExportUserData(username)) {
-            String url = userDataService.DownloadUserData(username);
+        if (userDataService.CheckAlreadyExportUserData(request.getSession().getId())) {
+            String url = userDataService.DownloadUserData(request.getSession().getId());
             return new DataJsonResult<>(true, url);
         }
         return new DataJsonResult<>(new JsonResult(false, "请先提交用户数据导出请求"));

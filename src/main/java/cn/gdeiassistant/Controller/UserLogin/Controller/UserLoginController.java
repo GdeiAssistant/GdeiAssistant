@@ -2,9 +2,8 @@ package cn.gdeiassistant.Controller.UserLogin.Controller;
 
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Redirect.RedirectInfo;
-import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import cn.gdeiassistant.Service.UserData.UserDataService;
 import cn.gdeiassistant.Service.UserLogin.AutoLoginService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
@@ -33,7 +32,7 @@ public class UserLoginController {
     private UserLoginService userLoginService;
 
     @Autowired
-    private UserDataService userDataService;
+    private UserCertificateService userCertificateService;
 
     /**
      * 用户登录，若自动登录失败，则进入登录界面
@@ -75,19 +74,15 @@ public class UserLoginController {
             //清除已登录用户的用户凭证记录
             HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
             //进行用户登录
-            UserCertificate userCertificate = userLoginService.UserLogin(request.getSession().getId()
-                    , new User(cookieUsername, cookiePassword), true);
-            //同步数据库用户数据
-            userDataService.SyncUserData(userCertificate.getUser());
-            //将用户信息数据写入Session
-            request.getSession().setAttribute("username", userCertificate.getUser().getUsername());
-            request.getSession().setAttribute("password", userCertificate.getUser().getPassword());
-            userLoginService.AsyncUpdateSession(request);
+            userLoginService.UserLogin(request.getSession().getId(), cookieUsername, cookiePassword);
+            //异步地与教务系统会话进行同步
+            userCertificateService.AsyncUpdateSessionCertificate(request.getSession().getId()
+                    , new User(cookieUsername, cookiePassword));
             //将加密的用户信息保存到Cookie中
-            String username = StringEncryptUtils.encryptString(userCertificate.getUser().getUsername());
-            String password = StringEncryptUtils.encryptString(userCertificate.getUser().getPassword());
-            Cookie usernameCookie = new Cookie("username", username);
-            Cookie passwordCookie = new Cookie("password", password);
+            Cookie usernameCookie = new Cookie("username", StringEncryptUtils
+                    .encryptString(cookieUsername));
+            Cookie passwordCookie = new Cookie("password", StringEncryptUtils
+                    .encryptString(cookiePassword));
             //设置Cookie最大有效时间为3个月
             usernameCookie.setMaxAge(7776000);
             usernameCookie.setPath("/");

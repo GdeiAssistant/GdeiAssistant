@@ -35,9 +35,8 @@ public class ProfileController {
     public ModelAndView ResolveUserAvatarPage(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Profile/avatar");
-        String username = (String) request.getSession().getAttribute("username");
-        String avatarHDURL = userProfileService.GetUserHighDefinitionAvatar(username);
-        String avatarURL = userProfileService.GetUserAvatar(username);
+        String avatarHDURL = userProfileService.GetUserHighDefinitionAvatar(request.getSession().getId());
+        String avatarURL = userProfileService.GetUserAvatar(request.getSession().getId());
         modelAndView.addObject("AvatarURL", avatarURL);
         modelAndView.addObject("AvatarHDURL", avatarHDURL);
         return modelAndView;
@@ -46,12 +45,11 @@ public class ProfileController {
     @RequestMapping(value = "/profile/user", method = RequestMethod.GET)
     public ModelAndView ResolvePersonalProfilePage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        String username = (String) request.getSession().getAttribute("username");
-        Profile profile = userProfileService.GetUserProfile(username);
+        Profile profile = userProfileService.GetUserProfile(request.getSession().getId());
         if (profile != null) {
             modelAndView.setViewName("Profile/personalProfile");
-            modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(username));
-            modelAndView.addObject("Username", username);
+            modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(request.getSession().getId()));
+            modelAndView.addObject("Username", profile.getUsername());
             modelAndView.addObject("NickName", profile.getNickname());
             if (profile.getGender() != null && profile.getGender() != 0) {
                 if (profile.getGender() == 3) {
@@ -127,7 +125,7 @@ public class ProfileController {
                 modelAndView.addObject("Hometown", LocationUtils
                         .convertCountryCodeToEmoji(hometownRegion.getIso()) + hometown.toString());
             }
-            Introduction introduction = userProfileService.GetUserIntroduction(username);
+            Introduction introduction = userProfileService.GetUserIntroduction(request.getSession().getId());
             if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
                 modelAndView.addObject("Introduction", introduction.getIntroductionContent());
             }

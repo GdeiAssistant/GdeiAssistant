@@ -24,8 +24,7 @@ public class CloseAccountRestController {
      */
     @RequestMapping(value = "/api/close/submit", method = RequestMethod.POST)
     public JsonResult CloseAccount(HttpServletRequest request, String password) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        closeAccountService.CloseAccount(username, password);
+        closeAccountService.CloseAccount(request.getSession().getId(), password);
         return new JsonResult(true);
     }
 }

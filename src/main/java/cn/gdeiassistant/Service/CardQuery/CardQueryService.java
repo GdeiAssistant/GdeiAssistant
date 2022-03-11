@@ -1,5 +1,6 @@
 package cn.gdeiassistant.Service.CardQuery;
 
+import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
@@ -9,12 +10,13 @@ import cn.gdeiassistant.Pojo.CardQuery.CardQueryResult;
 import cn.gdeiassistant.Pojo.Entity.Card;
 import cn.gdeiassistant.Pojo.Entity.CardInfo;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import cn.gdeiassistant.Service.Recognition.RecognitionService;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -30,7 +32,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -41,35 +42,32 @@ import java.util.*;
 @Service
 public class CardQueryService {
 
+    private Logger logger = LoggerFactory.getLogger(CardQueryService.class);
+
     @Autowired
     private RecognitionService recognitionService;
 
-    private Logger logger = LoggerFactory.getLogger(CardQueryService.class);
-
-    private int timeout;
-
-    @Value("#{propertiesReader['timeout.cardquery']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     /**
      * 查询饭卡基本信息
      *
      * @param sessionId
-     * @param username
-     * @param password
      * @return
+     * @throws Exception
      */
-    public CardInfo CardInfoQuery(String sessionId, String username, String password) throws Exception {
+    public CardInfo CardInfoQuery(String sessionId) throws Exception {
+        UserCertificate userCertificate = userCertificateService.GetUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            LoginCardSystem(httpClient, username, password, true);
+            LoginCardSystem(httpClient, userCertificate.getUser().getUsername()
+                    , userCertificate.getUser().getPassword(), true);
             //获取饭卡基本信息
             return QueryCardInformation(httpClient);
         } catch (PasswordIncorrectException ignored) {
@@ -103,16 +101,19 @@ public class CardQueryService {
      * @param sessionId
      * @param cardQuery
      * @return
+     * @throws Exception
      */
-    public CardQueryResult CardQuery(String sessionId, String username, String password, CardQuery cardQuery) throws Exception {
+    public CardQueryResult CardQuery(String sessionId, CardQuery cardQuery) throws Exception {
+        UserCertificate userCertificate = userCertificateService.GetUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            LoginCardSystem(httpClient, username, password, true);
+            LoginCardSystem(httpClient, userCertificate.getUser().getUsername(),
+                    userCertificate.getUser().getPassword(), true);
             //获取饭卡基本信息
             CardInfo cardInfo = QueryCardInformation(httpClient);
             //获取消费记录流水
@@ -149,20 +150,20 @@ public class CardQueryService {
      * 校园卡挂失
      *
      * @param sessionId
-     * @param username
-     * @param password
      * @param cardPassword
-     * @return
+     * @throws Exception
      */
-    public void CardLost(String sessionId, String username, String password, String cardPassword) throws Exception {
+    public void CardLost(String sessionId, String cardPassword) throws Exception {
+        UserCertificate userCertificate = userCertificateService.GetUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            LoginCardSystem(httpClient, username, password, true);
+            LoginCardSystem(httpClient, userCertificate.getUser().getUsername()
+                    , userCertificate.getUser().getPassword(), true);
             //提交校园卡挂失请求
             SubmitCardLostRequest(httpClient, cardPassword);
         } catch (PasswordIncorrectException ignored) {
@@ -193,11 +194,12 @@ public class CardQueryService {
      * @param httpClient
      * @param username
      * @param password
+     * @param autoRedirect
      * @throws IOException
      * @throws ServerErrorException
      * @throws PasswordIncorrectException
      */
-    public void LoginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws IOException, ServerErrorException, PasswordIncorrectException {
+    private void LoginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws IOException, ServerErrorException, PasswordIncorrectException {
         HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
         HttpResponse httpResponse = httpClient.execute(httpGet);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -325,7 +327,7 @@ public class CardQueryService {
      * @throws ServerErrorException
      * @throws IOException
      */
-    public CardInfo QueryCardInformation(CloseableHttpClient httpClient) throws ServerErrorException, IOException {
+    private CardInfo QueryCardInformation(CloseableHttpClient httpClient) throws ServerErrorException, IOException {
         //获取校园卡基本信息
         HttpGet httpGet = new HttpGet("http://ecard.gdei.edu.cn/CardManage/CardInfo/BasicInfo");
         HttpResponse httpResponse = httpClient.execute(httpGet);

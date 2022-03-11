@@ -1,7 +1,5 @@
 package cn.gdeiassistant.Controller.Ershou.RestController;
 
-import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
-import cn.gdeiassistant.Pojo.Entity.ErshouInfo;
 import cn.gdeiassistant.Pojo.Entity.ErshouItem;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -55,8 +53,7 @@ public class ErshouRestController {
         if (image1 == null || image1.getSize() <= 0 || image1.getSize() >= MAX_PICTURE_SIZE) {
             return new JsonResult(false, "不合法的图片文件");
         } else {
-            String username = (String) request.getSession().getAttribute("username");
-            ershouItem = ershouService.AddErshouItem(ershouItem, username);
+            ershouItem = ershouService.AddErshouItem(ershouItem, request.getSession().getId());
             //添加二手交易数据成功，进行图片上传
             ershouService.UploadErshouItemPicture(ershouItem.getId(), 1, image1.getInputStream());
             if (image2 != null && image2.getSize() > 0 && image2.getSize() < MAX_PICTURE_SIZE) {
@@ -129,15 +126,9 @@ public class ErshouRestController {
             , @PathVariable("id") int id) throws Exception {
         if (ershouItem.getPrice() <= 0 || ershouItem.getPrice() > 9999.99) {
             return new JsonResult(false, "商品价格不合法");
-        } else {
-            String username = (String) request.getSession().getAttribute("username");
-            ErshouInfo ershouInfo = ershouService.QueryErshouInfoByID(id);
-            if (ershouInfo.getErshouItem().getUsername().equals(username)) {
-                ershouService.UpdateErshouItem(ershouItem, ershouInfo.getErshouItem().getId());
-                return new JsonResult(true);
-            }
-            throw new NoAccessException("没有权限修改该商品信息");
         }
+        ershouService.UpdateErshouItem(request.getSession().getId(), ershouItem, id);
+        return new JsonResult(true);
     }
 
     /**
@@ -151,16 +142,7 @@ public class ErshouRestController {
     @RequestMapping(value = "/api/ershou/item/state/id/{id}", method = RequestMethod.POST)
     public JsonResult UpdateErshouItemState(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @Range(min = 0, max = 2) int state) throws Exception {
-        ErshouInfo ershouInfo = ershouService.QueryErshouInfoByID(id);
-        String username = (String) request.getSession().getAttribute("username");
-        if (ershouInfo.getErshouItem().getUsername().equals(username)) {
-            if (ershouInfo.getErshouItem().getState() == 2) {
-                //已出售状态的商品不能修改状态
-                return new JsonResult(false, "商品已出售，不能修改");
-            }
-            ershouService.UpdateErshouItemState(id, state);
-            return new JsonResult(true);
-        }
-        throw new NoAccessException("没有权限修改该商品信息");
+        ershouService.UpdateErshouItemState(request.getSession().getId(), id, state);
+        return new JsonResult(true);
     }
 }

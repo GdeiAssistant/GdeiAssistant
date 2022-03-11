@@ -43,8 +43,7 @@ public class ProfileRestController {
     @RequestMapping(value = "/api/avatar", method = RequestMethod.GET)
     public DataJsonResult<String> GetUserAvatar(HttpServletRequest request) {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
-        String username = (String) request.getSession().getAttribute("username");
-        String url = userProfileService.GetUserAvatar(username);
+        String url = userProfileService.GetUserAvatar(request.getSession().getId());
         if (StringUtils.isBlank(url)) {
             //未上传自定义头像
             jsonResult.setSuccess(true);
@@ -65,8 +64,7 @@ public class ProfileRestController {
      */
     @RequestMapping(value = "/api/avatar/remove", method = RequestMethod.POST)
     public JsonResult DeleteUserAvatar(HttpServletRequest request) {
-        String username = (String) request.getSession().getAttribute("username");
-        userProfileService.DeleteAvatar(username);
+        userProfileService.DeleteAvatar(request.getSession().getId());
         return new JsonResult(true);
     }
 
@@ -83,65 +81,14 @@ public class ProfileRestController {
     public JsonResult UpdateUserAvatar(HttpServletRequest request
             , @RequestParam("avatar") MultipartFile avatar, @RequestParam("avatar_hd") MultipartFile avatarHD) throws IOException {
         JsonResult jsonResult = new JsonResult();
-        String username = (String) request.getSession().getAttribute("username");
         if (avatar == null || avatar.getSize() <= 0 || avatar.getSize() >= AVATAR_MAX_SIZE
                 || avatarHD == null || avatarHD.getSize() <= 0 || avatarHD.getSize() >= AVATAR_MAX_SIZE) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("上传的图片文件不合法");
         } else {
-            userProfileService.UpdateAvatar(username, avatar.getInputStream());
-            userProfileService.UpdateHighDefinitionAvatar(username, avatarHD.getInputStream());
+            userProfileService.UpdateAvatar(request.getSession().getId(), avatar.getInputStream());
+            userProfileService.UpdateHighDefinitionAvatar(request.getSession().getId(), avatarHD.getInputStream());
             jsonResult.setSuccess(true);
-        }
-        return jsonResult;
-    }
-
-    /**
-     * 获取用户个人资料Rest接口
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/rest/profile", method = RequestMethod.POST)
-    @RestAuthentication
-    public DataJsonResult<Profile> GetUserProfile(HttpServletRequest request
-            , @RequestParam("token") String token) throws Exception {
-        DataJsonResult<Profile> jsonResult = new DataJsonResult<>();
-        User user = (User) request.getAttribute("user");
-        Profile profile = userProfileService.GetUserProfile(user.getUsername());
-        if (!LocationUtils.getRegionMap().containsKey(profile.getLocationRegion())) {
-            profile.setLocationRegion(null);
-        } else {
-            //获取国家/地区信息
-            Region region = LocationUtils.getRegionMap().get(profile.getLocationRegion());
-            if (region == null) {
-                profile.setLocationRegion(null);
-                profile.setLocationState(null);
-                profile.setLocationCity(null);
-            } else {
-                profile.setLocationRegion(region.getName());
-                //获取省/州信息
-                State state = region.getStateMap().get(profile.getLocationState());
-                if (state == null) {
-                    profile.setLocationState(null);
-                    profile.setLocationCity(null);
-                } else {
-                    if (!state.getName().equals(region.getName())) {
-                        profile.setLocationState(region.getName());
-                    } else {
-                        profile.setLocationState(state.getName());
-                    }
-                    //获取市/直辖市
-                    City city = state.getCityMap().get(profile.getLocationCity());
-                    if (city == null) {
-                        profile.setLocationCity(null);
-                    } else {
-                        profile.setLocationCity(city.getName());
-                    }
-                }
-            }
-            jsonResult.setSuccess(true);
-            jsonResult.setData(profile);
         }
         return jsonResult;
     }
@@ -155,8 +102,7 @@ public class ProfileRestController {
     @RequestMapping(value = "/api/profile", method = RequestMethod.GET)
     public DataJsonResult<Profile> GetUserProfile(HttpServletRequest request) throws Exception {
         DataJsonResult<Profile> result = new DataJsonResult<>();
-        String username = (String) request.getSession().getAttribute("username");
-        Profile profile = userProfileService.GetUserProfile(username);
+        Profile profile = userProfileService.GetUserProfile(request.getSession().getId());
         if (profile != null) {
             if (!LocationUtils.getRegionMap().containsKey(profile.getLocationRegion())) {
                 profile.setLocationRegion("未选择");
@@ -234,12 +180,11 @@ public class ProfileRestController {
      */
     @RequestMapping(value = "/api/introduction", method = RequestMethod.POST)
     public JsonResult UpdateIntroduction(HttpServletRequest request, String introduction) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
         if (introduction != null && introduction.length() <= 80) {
             if (introduction.isEmpty()) {
                 introduction = null;
             }
-            userProfileService.UpdateIntroduction(username, introduction);
+            userProfileService.UpdateIntroduction(request.getSession().getId(), introduction);
             return new JsonResult(true);
         }
         return new JsonResult(false, "个人简介长度不合法");
@@ -253,8 +198,7 @@ public class ProfileRestController {
      */
     @RequestMapping(value = "/api/introduction", method = RequestMethod.GET)
     public DataJsonResult<String> GetUserIntroduction(HttpServletRequest request) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        Introduction introduction = userProfileService.GetUserIntroduction(username);
+        Introduction introduction = userProfileService.GetUserIntroduction(request.getSession().getId());
         return new DataJsonResult<>(true, StringUtils.isBlank(introduction.getIntroductionContent()) ? "" : introduction.getIntroductionContent());
     }
 
@@ -283,8 +227,7 @@ public class ProfileRestController {
         if (gender < 0 || gender >= UserProfileService.getGenderMap().size() || (gender == 3 && StringUtils.isBlank(customGenderName))) {
             return new JsonResult(false, "请求参数不合法");
         }
-        String username = (String) request.getSession().getAttribute("username");
-        userProfileService.UpdateGender(username, gender, customGenderName);
+        userProfileService.UpdateGender(request.getSession().getId(), gender, customGenderName);
         return new JsonResult(true);
     }
 
@@ -300,13 +243,12 @@ public class ProfileRestController {
     @RequestMapping(value = "/api/profile/birthday", method = RequestMethod.POST)
     public JsonResult UpdateBirthday(HttpServletRequest request, @Validated @Min(1900) @Max(2050) Integer year
             , @Validated @Min(1) @Max(12) Integer month, @Validated @Min(1) @Max(31) Integer date) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
         if (year == null && month == null && date == null) {
-            userProfileService.ResetBirthday(username);
+            userProfileService.ResetBirthday(request.getSession().getId());
             return new JsonResult(true);
         }
         if (year != null && month != null && date != null) {
-            userProfileService.UpdateBirthday(username, year, month, date);
+            userProfileService.UpdateBirthday(request.getSession().getId(), year, month, date);
             return new JsonResult(true);
         }
         return new JsonResult(false, "请求参数不合法");
@@ -322,8 +264,7 @@ public class ProfileRestController {
     @RequestMapping(value = "/api/profile/faculty", method = RequestMethod.POST)
     public JsonResult UpdateFaculty(HttpServletRequest request, int faculty) throws Exception {
         if (faculty >= 0 && faculty < UserProfileService.getFacultyMap().size()) {
-            String username = (String) request.getSession().getAttribute("username");
-            userProfileService.UpdateFaculty(username, faculty);
+            userProfileService.UpdateFaculty(request.getSession().getId(), faculty);
             return new JsonResult(true);
         }
         return new JsonResult(false, "请求参数异常");
@@ -343,26 +284,25 @@ public class ProfileRestController {
     public JsonResult UpdateLocation(HttpServletRequest request
             , @Validated @NotBlank @RequestParam("region") String region
             , String state, String city) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
         //判断国家/地区代码是否合法
         if (LocationUtils.getRegionMap().containsKey(region)) {
             if (LocationUtils.getRegionMap().get(region).getStateMap() == null
                     || LocationUtils.getRegionMap().get(region).getStateMap().size() == 0) {
                 //省/州为空
-                userProfileService.UpdateLocation(username, region, null, null);
+                userProfileService.UpdateLocation(request.getSession().getId(), region, null, null);
             } else {
                 Map<String, State> stateMap = LocationUtils.getRegionMap().get(region).getStateMap();
                 //判断省/州代码是否合法
                 if (stateMap.containsKey(state)) {
                     if (stateMap.get(state).getCityMap() == null || stateMap.get(state).getCityMap().size() == 0) {
                         //市/直辖市为空
-                        userProfileService.UpdateLocation(username, region, state, null);
+                        userProfileService.UpdateLocation(request.getSession().getId(), region, state, null);
                         return new JsonResult(true);
                     } else {
                         Map<String, City> cityMap = stateMap.get(state).getCityMap();
                         //判断市/直辖市代码是否合法
                         if (cityMap.containsKey(city)) {
-                            userProfileService.UpdateLocation(username, region, state, city);
+                            userProfileService.UpdateLocation(request.getSession().getId(), region, state, city);
                             return new JsonResult(true);
                         } else {
                             return new JsonResult(false, "不合法的市/直辖市代码");
@@ -389,26 +329,25 @@ public class ProfileRestController {
     public JsonResult UpdateHometown(HttpServletRequest request
             , @Validated @NotBlank @RequestParam("region") String region
             , String state, String city) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
         //判断国家/地区代码是否合法
         if (LocationUtils.getRegionMap().containsKey(region)) {
             if (LocationUtils.getRegionMap().get(region).getStateMap() == null
                     || LocationUtils.getRegionMap().get(region).getStateMap().size() == 0) {
                 //省/州为空
-                userProfileService.UpdateHometown(username, region, null, null);
+                userProfileService.UpdateHometown(request.getSession().getId(), region, null, null);
             } else {
                 Map<String, State> stateMap = LocationUtils.getRegionMap().get(region).getStateMap();
                 //判断省/州代码是否合法
                 if (stateMap.containsKey(state)) {
                     if (stateMap.get(state).getCityMap() == null || stateMap.get(state).getCityMap().size() == 0) {
                         //市/直辖市为空
-                        userProfileService.UpdateHometown(username, region, state, null);
+                        userProfileService.UpdateHometown(request.getSession().getId(), region, state, null);
                         return new JsonResult(true);
                     } else {
                         Map<String, City> cityMap = stateMap.get(state).getCityMap();
                         //判断市/直辖市代码是否合法
                         if (cityMap.containsKey(city)) {
-                            userProfileService.UpdateHometown(username, region, state, city);
+                            userProfileService.UpdateHometown(request.getSession().getId(), region, state, city);
                             return new JsonResult(true);
                         } else {
                             return new JsonResult(false, "不合法的市/直辖市代码");
@@ -431,8 +370,7 @@ public class ProfileRestController {
      */
     @RequestMapping(value = "/api/profile/major", method = RequestMethod.POST)
     public JsonResult UpdateMajor(HttpServletRequest request, @Validated @NotBlank @Length(min = 1, max = 20) String major) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        userProfileService.UpdateMajor(username, major);
+        userProfileService.UpdateMajor(request.getSession().getId(), major);
         return new JsonResult(true);
     }
 
@@ -449,11 +387,10 @@ public class ProfileRestController {
         if (enrollment != null && enrollment > LocalDate.now().getYear()) {
             return new JsonResult(false, "请求参数不合法");
         }
-        String username = (String) request.getSession().getAttribute("username");
         if (enrollment != null) {
-            userProfileService.UpdateEnrollment(username, enrollment);
+            userProfileService.UpdateEnrollment(request.getSession().getId(), enrollment);
         } else {
-            userProfileService.ResetEnrollment(username);
+            userProfileService.ResetEnrollment(request.getSession().getId());
         }
         return new JsonResult(true);
     }
@@ -468,35 +405,40 @@ public class ProfileRestController {
      */
     @RequestMapping(value = "/api/profile/nickname", method = RequestMethod.POST)
     public JsonResult UpdateNickname(HttpServletRequest request, @Validated @NotBlank @Range(min = 1, max = 24) String nickname) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        userProfileService.UpdateNickname(username, nickname);
+        userProfileService.UpdateNickname(request.getSession().getId(), nickname);
         return new JsonResult(true);
     }
 
     /**
-     * 获取昵称信息Rest接口
+     * 获取昵称信息接口
      *
-     * @param username
+     * @param request
+     * @param token
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/rest/nickname/{username}", method = RequestMethod.GET)
-    public DataJsonResult<String> GetUserNickname(@PathVariable("username") String username) throws Exception {
-        Profile profile = userProfileService.GetUserProfile(username);
+    @RequestMapping(value = "/rest/profile/nickname", method = RequestMethod.GET)
+    public DataJsonResult<String> GetUserNickname(HttpServletRequest request
+            , @RequestParam("token") String token) throws Exception {
+        String sessionId = (String) request.getAttribute("sessionId");
+        Profile profile = userProfileService.GetUserProfile(sessionId);
         String nickname = profile.getNickname();
         return new DataJsonResult<>(true, nickname);
     }
 
     /**
-     * 获取头像URL信息Rest接口
+     * 获取头像信息接口
      *
-     * @param username
+     * @param request
+     * @param token
      * @return
      */
-    @RequestMapping(value = "/rest/avatar/{username}", method = RequestMethod.GET)
-    public DataJsonResult<String> GetUserAvatar(@PathVariable("username") String username) {
+    @RequestMapping(value = "/rest/profile/avatar", method = RequestMethod.GET)
+    public DataJsonResult<String> GetUserAvatar(HttpServletRequest request
+            , @RequestParam("token") String token) {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
-        String url = userProfileService.GetUserAvatar(username);
+        String sessionId = (String) request.getAttribute("sessionId");
+        String url = userProfileService.GetUserAvatar(sessionId);
         if (StringUtils.isBlank(url)) {
             //未上传自定义头像
             jsonResult.setSuccess(true);
@@ -505,6 +447,57 @@ public class ProfileRestController {
             //已上传自定义头像
             jsonResult.setSuccess(true);
             jsonResult.setData(url);
+        }
+        return jsonResult;
+    }
+
+
+    /**
+     * 获取用户个人资料Rest接口
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/rest/profile", method = RequestMethod.POST)
+    @RestAuthentication
+    public DataJsonResult<Profile> GetUserProfile(HttpServletRequest request
+            , @RequestParam("token") String token) throws Exception {
+        DataJsonResult<Profile> jsonResult = new DataJsonResult<>();
+        String sessionId = (String) request.getAttribute("sessionId");
+        Profile profile = userProfileService.GetUserProfile(sessionId);
+        if (!LocationUtils.getRegionMap().containsKey(profile.getLocationRegion())) {
+            profile.setLocationRegion(null);
+        } else {
+            //获取国家/地区信息
+            Region region = LocationUtils.getRegionMap().get(profile.getLocationRegion());
+            if (region == null) {
+                profile.setLocationRegion(null);
+                profile.setLocationState(null);
+                profile.setLocationCity(null);
+            } else {
+                profile.setLocationRegion(region.getName());
+                //获取省/州信息
+                State state = region.getStateMap().get(profile.getLocationState());
+                if (state == null) {
+                    profile.setLocationState(null);
+                    profile.setLocationCity(null);
+                } else {
+                    if (!state.getName().equals(region.getName())) {
+                        profile.setLocationState(region.getName());
+                    } else {
+                        profile.setLocationState(state.getName());
+                    }
+                    //获取市/直辖市
+                    City city = state.getCityMap().get(profile.getLocationCity());
+                    if (city == null) {
+                        profile.setLocationCity(null);
+                    } else {
+                        profile.setLocationCity(city.getName());
+                    }
+                }
+            }
+            jsonResult.setSuccess(true);
+            jsonResult.setData(profile);
         }
         return jsonResult;
     }

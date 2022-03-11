@@ -39,8 +39,7 @@ public class SecretRestController {
     @RequestMapping(value = "/api/secret/info/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Secret>> GetMoreSecret(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        List<Secret> secretList = secretService.GetSecretInfo(start, size, username);
+                List < Secret > secretList = secretService.GetSecretInfo(start, size, request.getSession().getId());
         return new DataJsonResult<>(true, secretList);
     }
 
@@ -59,10 +58,9 @@ public class SecretRestController {
         if (secret.getType() == 0 && StringUtils.isBlank(secret.getContent())) {
             return new JsonResult(false, "树洞信息不能为空");
         }
-        String username = (String) request.getSession().getAttribute("username");
         if (secret.getType().equals(0)) {
             //文字树洞信息
-            secretService.AddSecretInfo(username, secret);
+            secretService.AddSecretInfo(request.getSession().getId(), secret);
             return new JsonResult(true);
         } else if (secret.getType().equals(1)) {
             //语音树洞信息
@@ -72,7 +70,7 @@ public class SecretRestController {
                 return new JsonResult(false, "语音文件大小过大");
             } else {
                 //插入树洞信息记录
-                Integer id = secretService.AddSecretInfo(username, secret);
+                Integer id = secretService.AddSecretInfo(request.getSession().getId(), secret);
                 //上传录音文件
                 secretService.UploadVoiceSecret(id, file.getInputStream());
                 return new JsonResult(true);
@@ -82,7 +80,7 @@ public class SecretRestController {
             InputStream inputStream = wechatService.DownloadWechatVoiceRecord(voiceId);
             if (inputStream != null) {
                 //插入树洞信息记录
-                Integer id = secretService.AddSecretInfo(username, secret);
+                Integer id = secretService.AddSecretInfo(request.getSession().getId(), secret);
                 //上传录音文件
                 secretService.UploadVoiceSecret(id, inputStream);
                 return new JsonResult(true);
@@ -104,11 +102,10 @@ public class SecretRestController {
     @RequestMapping(value = "/api/secret/id/{id}/comment", method = RequestMethod.POST)
     public JsonResult AddSecretComment(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
         if (!secretService.CheckSecretInfoExist(id)) {
             throw new DataNotExistException("查询的校园树洞信息不存在");
         }
-        secretService.AddSecretComment(id, username, comment);
+        secretService.AddSecretComment(id, request.getSession().getId(), comment);
         return new JsonResult(true);
     }
 
@@ -123,17 +120,16 @@ public class SecretRestController {
     @RequestMapping(value = "/api/secret/id/{id}/like", method = RequestMethod.POST)
     public JsonResult UpdateSecretLikeState(HttpServletRequest request
             , @PathVariable("id") int id, @Validated @Range(min = 0, max = 1) int like) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
         if (secretService.CheckSecretInfoExist(id)) {
             switch (like) {
                 case 0:
                     //取消点赞
-                    secretService.ChangeUserLikeState(false, id, username);
+                    secretService.ChangeUserLikeState(false, id, request.getSession().getId());
                     return new JsonResult(true);
 
                 case 1:
                     //点赞
-                    secretService.ChangeUserLikeState(true, id, username);
+                    secretService.ChangeUserLikeState(true, id, request.getSession().getId());
                     return new JsonResult(true);
 
                 default:

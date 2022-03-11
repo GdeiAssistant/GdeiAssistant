@@ -1,14 +1,16 @@
 package cn.gdeiassistant.Service.Phone;
 
-import cn.gdeiassistant.Repository.Redis.VerificationCode.VerificationCodeDao;
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Phone.PhoneMapper;
-import cn.gdeiassistant.Service.CloudAPI.AliYunService;
-import com.aliyuncs.exceptions.ClientException;
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Exception.PhoneException.SendSMSException;
 import cn.gdeiassistant.Exception.PhoneException.VerificationCodeInvalidException;
 import cn.gdeiassistant.Pojo.Entity.Phone;
+import cn.gdeiassistant.Pojo.Entity.User;
+import cn.gdeiassistant.Repository.Redis.VerificationCode.VerificationCodeDao;
+import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Phone.PhoneMapper;
+import cn.gdeiassistant.Service.CloudAPI.AliYunService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
+import com.aliyuncs.exceptions.ClientException;
+import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +24,20 @@ public class PhoneService {
     private VerificationCodeDao verificationCodeDao;
 
     @Autowired
+    private UserCertificateService userCertificateService;
+
+    @Autowired
     private AliYunService aliYunService;
 
     /**
      * 查询用户绑定的手机号信息
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public Phone QueryUserPhone(String username) throws WsgException {
-        Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(username));
+    public Phone QueryUserPhone(String sessionId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
         if (phone != null) {
             //解密手机号
             phone.setPhone(StringEncryptUtils.decryptString(phone.getPhone()));
@@ -92,31 +98,34 @@ public class PhoneService {
     /**
      * 添加或更新绑定的手机号信息
      *
-     * @param username
+     * @param sessionId
      * @param code
      * @param phone
      */
-    public void AttachUserPhone(String username, Integer code, String phone) throws WsgException {
-        Phone data = phoneMapper.selectPhone(StringEncryptUtils.encryptString(username));
+    public void AttachUserPhone(String sessionId, Integer code, String phone) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Phone data = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
         if (data != null) {
             data.setCode(code);
             data.setPhone(StringEncryptUtils.encryptString(phone));
             phoneMapper.updatePhone(data);
         } else {
-            phoneMapper.insertPhone(StringEncryptUtils.encryptString(username), code, StringEncryptUtils.encryptString(phone));
+            phoneMapper.insertPhone(StringEncryptUtils.encryptString(user.getUsername())
+                    , code, StringEncryptUtils.encryptString(phone));
         }
     }
 
     /**
      * 解除绑定用户的手机号信息
      *
-     * @param username
+     * @param sessionId
      * @throws WsgException
      */
-    public void UnAttachUserPhone(String username) throws WsgException {
-        Phone data = phoneMapper.selectPhone(StringEncryptUtils.encryptString(username));
+    public void UnAttachUserPhone(String sessionId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Phone data = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
         if (data != null) {
-            phoneMapper.deletePhone(StringEncryptUtils.encryptString(username));
+            phoneMapper.deletePhone(StringEncryptUtils.encryptString(user.getUsername()));
         }
     }
 }

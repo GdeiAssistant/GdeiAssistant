@@ -47,8 +47,7 @@ public class DeliveryRestController {
      */
     @RequestMapping(value = "/api/delivery/acceptorder", method = RequestMethod.POST)
     public JsonResult AcceptOrder(HttpServletRequest request, Integer orderId) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        deliveryService.AcceptOrder(orderId, username);
+        deliveryService.AcceptOrder(orderId, request.getSession().getId());
         return new JsonResult(true);
     }
 
@@ -64,8 +63,7 @@ public class DeliveryRestController {
      */
     @RequestMapping(value = "/api/delivery/order/id/{id}", method = RequestMethod.DELETE)
     public JsonResult DeleteOrder(HttpServletRequest request, @PathVariable("id") Integer orderId) throws NoAccessUpdatingException, DataNotExistException, WsgException, DeliveryOrderStateUpdatedException {
-        String username = (String) request.getSession().getAttribute("username");
-        deliveryService.DeleteOrder(orderId, username);
+        deliveryService.DeleteOrder(orderId, request.getSession().getId());
         return new JsonResult(true);
     }
 
@@ -81,8 +79,7 @@ public class DeliveryRestController {
      */
     @RequestMapping(value = "/api/delivery/trade/id/{id}/finishtrade", method = RequestMethod.POST)
     public JsonResult FinishTrade(HttpServletRequest request, @PathVariable("id") Integer tradeId) throws DataNotExistException, NoAccessUpdatingException, WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        deliveryService.FinishTrade(tradeId, username);
+        deliveryService.FinishTrade(tradeId, request.getSession().getId());
         return new JsonResult(true);
     }
 
@@ -95,9 +92,7 @@ public class DeliveryRestController {
      */
     @RequestMapping(value = "/api/delivery/order", method = RequestMethod.POST)
     public JsonResult AddDeliveryOrder(HttpServletRequest request, DeliveryOrder deliveryOrder) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        deliveryOrder.setUsername(username);
-        deliveryService.AddDeliveryOrder(deliveryOrder);
+        deliveryService.AddDeliveryOrder(request.getSession().getId(), deliveryOrder);
         return new JsonResult(true);
     }
 }

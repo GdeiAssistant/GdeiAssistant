@@ -2,10 +2,13 @@ package cn.gdeiassistant.Service.LostAndFound;
 
 import cn.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import cn.gdeiassistant.Pojo.Entity.LostAndFoundItem;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.LostAndFound.LostAndFoundMapper;
 import cn.gdeiassistant.Service.Profile.UserProfileService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
@@ -25,6 +28,9 @@ public class LostAndFoundService {
 
     @Resource(name = "lostAndFoundMapper")
     private LostAndFoundMapper lostAndFoundMapper;
+
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     @Autowired
     private UserProfileService userProfileService;
@@ -61,18 +67,39 @@ public class LostAndFoundService {
     /**
      * 查询个人发布的失物招领物品信息
      *
+     * @param sessionId
      * @return
      */
-    public List<LostAndFoundItem> QueryPersonalLostAndFoundItems(String username) throws Exception {
+    public List<LostAndFoundItem> QueryPersonalLostAndFoundItems(String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                .selectItemByUsername(StringEncryptUtils.encryptString(username));
+                .selectItemByUsername(StringEncryptUtils.encryptString(user.getUsername()));
         if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
             return new ArrayList<>();
         }
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-            lostAndFoundItem.setUsername(username);
+            lostAndFoundItem.setUsername(user.getUsername());
         }
         return lostAndFoundItemList;
+    }
+
+    /**
+     * 检查当前用户有无编辑权限
+     *
+     * @param sessionId
+     * @param id
+     */
+    public void VerifyLostAndFoundInfoEditAccess(String sessionId, int id) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        LostAndFoundInfo lostAndFoundInfo = lostAndFoundMapper.selectInfoByID(id);
+        if (lostAndFoundInfo != null) {
+            if (lostAndFoundInfo.getLostAndFoundItem().getUsername().equals(StringEncryptUtils
+                    .encryptString(user.getUsername()))) {
+                return;
+            }
+            throw new NoAccessException("没有权限编辑该失物招领信息");
+        }
+        throw new DataNotExistException("失物招领信息不存在");
     }
 
     /**
@@ -195,10 +222,12 @@ public class LostAndFoundService {
      * 添加失物招领物品信息
      *
      * @param lostAndFoundItem
+     * @param sessionId
      * @return
      */
-    public LostAndFoundItem AddLostAndFoundItem(LostAndFoundItem lostAndFoundItem, String username) throws Exception {
-        lostAndFoundItem.setUsername(StringEncryptUtils.encryptString(username));
+    public LostAndFoundItem AddLostAndFoundItem(LostAndFoundItem lostAndFoundItem, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        lostAndFoundItem.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
         //使用24小时制显示发布时间
         lostAndFoundItem.setPublishTime(new Date());
         lostAndFoundMapper.insertItem(lostAndFoundItem);

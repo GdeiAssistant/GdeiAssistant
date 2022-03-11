@@ -1,20 +1,26 @@
 package cn.gdeiassistant.Interceptor;
 
-import cn.gdeiassistant.Pojo.Result.JsonResult;
-import com.google.gson.Gson;
 import cn.gdeiassistant.Constant.ErrorConstantUtils;
-import cn.gdeiassistant.Tools.Utils.StringUtils;
+import cn.gdeiassistant.Pojo.Entity.User;
+import cn.gdeiassistant.Pojo.Result.JsonResult;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
+import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@Component
 public class LoginInterceptor implements HandlerInterceptor {
 
     private List<String> exceptionList;
+
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     public LoginInterceptor() {
 
@@ -37,11 +43,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         //校验用户登录状态
-        HttpSession httpSession = request.getSession();
-        String username = (String) httpSession.getAttribute("username");
-        String password = (String) httpSession.getAttribute("password");
-
-        if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
+        User user = userCertificateService.GetUserLoginCertificate(request.getSession().getId());
+        if (user != null) {
+            //更新用户登录凭证有效期
+            userCertificateService.UpdateUserLoginExpiration(request.getSession().getId());
             return true;
         }
 
@@ -49,7 +54,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (uri.startsWith("/api")) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(new Gson().toJson(new JsonResult(ErrorConstantUtils.SESSION_INVALIDATED, false, "用户登录凭证过期，请重新登录")));
+            response.getWriter().print(new Gson().toJson(new JsonResult(ErrorConstantUtils
+                    .SESSION_INVALIDATED, false, "用户登录凭证过期，请重新登录")));
             response.getWriter().flush();
             response.getWriter().close();
             return false;

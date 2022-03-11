@@ -7,7 +7,6 @@ import cn.gdeiassistant.Annotation.TrialData;
 import cn.gdeiassistant.Pojo.CardQuery.CardQuery;
 import cn.gdeiassistant.Pojo.CardQuery.CardQueryResult;
 import cn.gdeiassistant.Pojo.Entity.CardInfo;
-import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.CardQuery.CardQueryService;
@@ -32,6 +31,50 @@ public class CardRestController {
      * 查询消费记录
      *
      * @param request
+     * @param cardQuery
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/api/cardquery", method = RequestMethod.POST)
+    @QueryLogPersistence
+    @TrialData(value = "card", rest = false, responseTime = "cardQuery")
+    public DataJsonResult<CardQueryResult> CardQuery(HttpServletRequest request, @Validated CardQuery cardQuery) throws Exception {
+        CardQueryResult cardQueryResult = cardQueryService.CardQuery(request.getSession().getId(), cardQuery);
+        return new DataJsonResult<>(true, cardQueryResult);
+    }
+
+    /**
+     * 查询校园卡基本信息
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/api/cardinfoquery", method = RequestMethod.POST)
+    @QueryLogPersistence
+    @TrialData(value = "cardinfo", rest = false)
+    public DataJsonResult<CardInfo> CardInfoQuery(HttpServletRequest request) throws Exception {
+        CardInfo cardInfo = cardQueryService.CardInfoQuery(request.getSession().getId());
+        return new DataJsonResult<>(true, cardInfo);
+    }
+
+    /**
+     * 设置校园卡挂失
+     *
+     * @param request
+     * @param cardPassword
+     * @return
+     */
+    @RequestMapping(value = "/api/cardlost", method = RequestMethod.POST)
+    @TrialData(value = "cardlost", rest = false)
+    public JsonResult CardLost(HttpServletRequest request, @Validated @NotBlank @Pattern(regexp = "^[0-9]*$") String cardPassword) throws Exception {
+        cardQueryService.CardLost(request.getSession().getId(), cardPassword);
+        return new JsonResult(true);
+    }
+
+    /**
+     * 查询消费记录
+     *
+     * @param request
      * @param token
      * @param cardQuery
      * @return
@@ -39,31 +82,11 @@ public class CardRestController {
     @RequestMapping(value = "/rest/cardquery", method = RequestMethod.POST)
     @RestAuthentication
     @RestQueryLogPersistence
-    @TrialData(value = "card", responseTime = "cardQuery")
+    @TrialData(value = "card", rest = true, responseTime = "cardQuery")
     public DataJsonResult<CardQueryResult> CardQuery(HttpServletRequest request
             , @RequestParam("token") String token, @Validated CardQuery cardQuery) throws Exception {
-        User user = (User) request.getAttribute("user");
-        CardQueryResult cardQueryResult = cardQueryService.CardQuery(request.getSession().getId()
-                , user.getUsername(), user.getPassword(), cardQuery);
-        return new DataJsonResult<>(true, cardQueryResult);
-    }
-
-    /**
-     * 查询消费记录
-     *
-     * @param request
-     * @param cardQuery
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/api/cardquery", method = RequestMethod.POST)
-    @QueryLogPersistence
-    @TrialData(value = "card", responseTime = "cardQuery")
-    public DataJsonResult<CardQueryResult> CardQuery(HttpServletRequest request, @Validated CardQuery cardQuery) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        String password = (String) request.getSession().getAttribute("password");
-        CardQueryResult cardQueryResult = cardQueryService.CardQuery(request.getSession().getId()
-                , username, password, cardQuery);
+        String sessionId = (String) request.getAttribute("sessionId");
+        CardQueryResult cardQueryResult = cardQueryService.CardQuery(sessionId, cardQuery);
         return new DataJsonResult<>(true, cardQueryResult);
     }
 
@@ -77,29 +100,12 @@ public class CardRestController {
      */
     @RequestMapping(value = "/rest/cardlost", method = RequestMethod.POST)
     @RestAuthentication
-    @TrialData(value = "cardlost")
+    @TrialData(value = "cardlost", rest = true)
     public JsonResult CardLost(HttpServletRequest request, @RequestParam("token") String token
             , @Validated @NotBlank @Pattern(regexp = "^[0-9]*$") @RequestParam("cardPassword") String cardPassword) throws Exception {
-        User user = (User) request.getAttribute("user");
-        cardQueryService.CardLost(request.getSession().getId(), user.getUsername()
-                , user.getPassword(), cardPassword);
+        String sessionId = (String) request.getAttribute("sessionId");
+        cardQueryService.CardLost(sessionId, cardPassword);
         return new JsonResult(true);
-    }
-
-    /**
-     * 查询校园卡基本信息
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/api/cardinfoquery", method = RequestMethod.POST)
-    @QueryLogPersistence
-    @TrialData(value = "cardinfo")
-    public DataJsonResult<CardInfo> CardInfoQuery(HttpServletRequest request) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        String password = (String) request.getSession().getAttribute("password");
-        CardInfo cardInfo = cardQueryService.CardInfoQuery(request.getSession().getId(), username, password);
-        return new DataJsonResult<>(true, cardInfo);
     }
 
     /**
@@ -111,26 +117,11 @@ public class CardRestController {
      */
     @RequestMapping(value = "/rest/cardinfo", method = RequestMethod.POST)
     @RestAuthentication
-    @TrialData(value = "cardinfo")
-    public DataJsonResult<CardInfo> CardInfoQuery(HttpServletRequest request, @RequestParam("token") String token) throws Exception {
-        User user = (User) request.getAttribute("user");
-        CardInfo cardInfo = cardQueryService.CardInfoQuery(request.getSession().getId(), user.getUsername(), user.getPassword());
+    @TrialData(value = "cardinfo", rest = true)
+    public DataJsonResult<CardInfo> CardInfoQuery(HttpServletRequest request
+            , @RequestParam("token") String token) throws Exception {
+        String sessionId = (String) request.getAttribute("sessionId");
+        CardInfo cardInfo = cardQueryService.CardInfoQuery(sessionId);
         return new DataJsonResult<>(true, cardInfo);
-    }
-
-    /**
-     * 设置校园卡挂失
-     *
-     * @param request
-     * @param cardPassword
-     * @return
-     */
-    @RequestMapping(value = "/api/cardlost", method = RequestMethod.POST)
-    @TrialData(value = "cardlost")
-    public JsonResult CardLost(HttpServletRequest request, @Validated @NotBlank @Pattern(regexp = "^[0-9]*$") String cardPassword) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        String password = (String) request.getSession().getAttribute("password");
-        cardQueryService.CardLost(request.getSession().getId(), username, password, cardPassword);
-        return new JsonResult(true);
     }
 }

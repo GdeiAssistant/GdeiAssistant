@@ -6,12 +6,10 @@ import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import cn.gdeiassistant.Pojo.Entity.SpareRoom;
-import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Pojo.SpareRoomQuery.SpareRoomQuery;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import cn.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
-import cn.gdeiassistant.Service.UserLogin.UserLoginService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -28,7 +26,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -39,47 +36,33 @@ import java.util.List;
 @Service
 public class SpareRoomService {
 
-    private String url;
-
-    @Autowired
-    private UserCertificateDao userCertificateDao;
-
-    @Autowired
-    private UserLoginService userLoginService;
-
-    @Value("#{propertiesReader['education.system.url']}")
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     private Logger logger = LoggerFactory.getLogger(SpareRoomService.class);
 
-    private int timeout;
-
-    @Value("#{propertiesReader['timeout.spareroom']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     /**
      * 查询空课室信息
      *
      * @param sessionId
-     * @param username
-     * @param keycode
-     * @param number
+     * @param spareRoomQuery
      * @return
      */
-    private List<SpareRoom> QuerySpareRoom(String sessionId, String username, String keycode, String number, Long timestamp, SpareRoomQuery spareRoomQuery) throws NetWorkTimeoutException, TimeStampIncorrectException, ServerErrorException, ErrorQueryConditionException {
+    public List<SpareRoom> QuerySpareRoom(String sessionId, SpareRoomQuery spareRoomQuery)
+            throws NetWorkTimeoutException, TimeStampIncorrectException
+            , ServerErrorException, ErrorQueryConditionException, PasswordIncorrectException {
+        //获取缓存的教务系统会话凭证
+        UserCertificate userCertificate = userCertificateService.GetUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
             HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
-                    , false, timeout);
+                    , false, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            HttpGet httpGet = new HttpGet(url + "cas_verify.aspx?i=" + username + "&k="
-                    + keycode + "&timestamp=" + timestamp);
+            HttpGet httpGet = new HttpGet("http://jwgl.gdei.edu.cn/cas_verify.aspx?i="
+                    + userCertificate.getUser().getUsername() + "&k="
+                    + userCertificate.getKeycode() + "&timestamp=" + userCertificate.getTimestamp());
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -87,12 +70,13 @@ public class SpareRoomService {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 } else {
                     //进入教务系统个人主页
-                    httpGet = new HttpGet(url + "xs_main.aspx?xh=" + number);
+                    httpGet = new HttpGet("http://jwgl.gdei.edu.cn/xs_main.aspx?xh="
+                            + userCertificate.getNumber());
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         //成功进入学生个人主页，进入空课室查询页面
-                        httpGet = new HttpGet(url + "xxjsjy.aspx?xh=" + number);
+                        httpGet = new HttpGet("http://jwgl.gdei.edu.cn/xxjsjy.aspx?xh=" + userCertificate.getNumber());
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         if (httpResponse.getStatusLine().getStatusCode() == 200) {
@@ -189,7 +173,7 @@ public class SpareRoomService {
                                     }
                                 }
                                 //构建POST请求体
-                                HttpPost httpPost = new HttpPost(url + document.getElementsByAttributeValue("name", "Form1").first().attr("action"));
+                                HttpPost httpPost = new HttpPost("http://jwgl.gdei.edu.cn/" + document.getElementsByAttributeValue("name", "Form1").first().attr("action"));
                                 List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
                                 basicNameValuePairList.add(new BasicNameValuePair("__EVENTTARGET", __EVENTTARGET));
                                 basicNameValuePairList.add(new BasicNameValuePair("__EVENTARGUMENT", __EVENTARGUMENT));
@@ -305,24 +289,5 @@ public class SpareRoomService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-    }
-
-    /**
-     * 与教务系统进行会话同步并查询空教室信息
-     *
-     * @param sessionId
-     * @param user
-     * @param spareRoomQuery
-     * @return
-     */
-    public List<SpareRoom> SyncSessionAndQuerySpareRoom(String sessionId, User user, SpareRoomQuery spareRoomQuery) throws Exception {
-        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(user.getUsername());
-        //检测是否已与教务系统进行会话同步
-        if (userCertificate == null) {
-            //进行会话同步
-            userCertificate = userLoginService.SyncUpdateSession(sessionId, user);
-        }
-        return QuerySpareRoom(sessionId, user.getUsername(), userCertificate.getKeycode()
-                , userCertificate.getNumber(), userCertificate.getTimestamp(), spareRoomQuery);
     }
 }

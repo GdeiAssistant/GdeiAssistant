@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Service.Feedback;
 
+import cn.gdeiassistant.Pojo.Entity.User;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,9 @@ public class FeedbackService {
     @Autowired(required = false)
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private UserCertificateService userCertificateService;
+
     @Value("#{propertiesReader['email.smtp.username']}")
     public void setSenderEmail(String senderEmail) {
         this.senderEmail = senderEmail;
@@ -52,20 +57,21 @@ public class FeedbackService {
     /**
      * 发送意见建议反馈邮件
      *
-     * @param username
+     * @param sessionId
      * @param content
      * @param inputStreams
      * @throws MessagingException
      */
     @Async
-    public void SendFeedbackEmail(String username, String content, InputStream[] inputStreams) throws MessagingException, IOException {
+    public void SendFeedbackEmail(String sessionId, String content, InputStream[] inputStreams) throws MessagingException, IOException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         if (javaMailSender != null) {
             MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true
                     , StandardCharsets.UTF_8.displayName());
             mimeMessageHelper.setFrom(senderEmail);
             mimeMessageHelper.setTo(feedbackEmail);
-            mimeMessageHelper.setSubject("用户" + username + "提交的意见建议反馈");
+            mimeMessageHelper.setSubject("用户" + user.getUsername() + "提交的意见建议反馈");
             mimeMessageHelper.setText(content);
             for (int i = 1; i <= inputStreams.length; i++) {
                 mimeMessageHelper.addAttachment("attachment-image-" + i + ".jpg", new ByteArrayResource(IOUtils.toByteArray(inputStreams[i - 1])));
@@ -80,21 +86,22 @@ public class FeedbackService {
     /**
      * 发送故障工单反馈邮件
      *
-     * @param username
+     * @param sessionId
      * @param content
      * @param type
      * @param inputStreams
      * @throws MessagingException
      */
     @Async
-    public void SendTicketEmail(String username, String content, String type, InputStream[] inputStreams) throws MessagingException, IOException {
+    public void SendTicketEmail(String sessionId, String content, String type, InputStream[] inputStreams) throws MessagingException, IOException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         if (javaMailSender != null) {
             MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true
                     , StandardCharsets.UTF_8.displayName());
             mimeMessageHelper.setFrom(senderEmail);
             mimeMessageHelper.setTo(ticketEmail);
-            mimeMessageHelper.setSubject("用户" + username + "提交的" + type + "分类故障工单");
+            mimeMessageHelper.setSubject("用户" + user.getUsername() + "提交的" + type + "分类故障工单");
             mimeMessageHelper.setText(content);
             for (int i = 1; i <= inputStreams.length; i++) {
                 mimeMessageHelper.addAttachment("attachment-image-" + i + ".jpg", new ByteArrayResource(IOUtils.toByteArray(inputStreams[i - 1])));

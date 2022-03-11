@@ -10,6 +10,7 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.Profil
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Data.LogDataMapper;
 import cn.gdeiassistant.Service.Profile.UserProfileService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import cn.gdeiassistant.Tools.Utils.ReflectionUtils;
@@ -35,6 +36,9 @@ import java.util.zip.ZipOutputStream;
 
 @Service
 public class UserDataService {
+
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     @Resource(name = "userMapper")
     private UserMapper userMapper;
@@ -63,35 +67,39 @@ public class UserDataService {
     /**
      * 检查24小时内有无导出用户数据的记录
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public boolean CheckAlreadyExportUserData(String username) {
-        return StringUtils.isNotBlank(exportDataDao.QueryExportDataToken(username));
+    public boolean CheckAlreadyExportUserData(String sessionId) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        return StringUtils.isNotBlank(exportDataDao.QueryExportDataToken(user.getUsername()));
     }
 
     /**
      * 检查当前用户是否已有导出数据任务
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public boolean CheckExportingUserData(String username) {
-        return StringUtils.isNotBlank(exportDataDao.QueryExportingDataToken(username));
+    public boolean CheckExportingUserData(String sessionId) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        return StringUtils.isNotBlank(exportDataDao.QueryExportingDataToken(user.getUsername()));
     }
 
     /**
      * 导出用户数据
      *
-     * @param username
+     * @param sessionId
      * @return
      */
     @SuppressWarnings("unchecked")
     @Async
-    public void ExportUserData(String username) throws WsgException, IOException {
+    public void ExportUserData(String sessionId) throws WsgException, IOException {
+
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
 
         //写入导出任务记录
-        exportDataDao.SaveExportingDataToken(username, UUID.randomUUID().toString());
+        exportDataDao.SaveExportingDataToken(user.getUsername(), UUID.randomUUID().toString());
 
         ByteArrayInputStream byteArrayInputStream = null;
         ByteArrayOutputStream byteArrayOutputStream = null;
@@ -100,21 +108,21 @@ public class UserDataService {
 
         try {
             Map<String, Object> data = new HashMap<>();
-            data.put("username", username);
+            data.put("username", user.getUsername());
             //下载用户头像
             InputStream avatar = ossUtils.DownloadOSSObject("gdeiassistant-userdata"
-                    , "avatar/" + username + ".jpg");
+                    , "avatar/" + user.getUsername() + ".jpg");
             if (avatar != null) {
                 userDataMap.put("avatar.jpg", avatar);
             }
             //下载用户高清头像
             InputStream avatarHD = ossUtils.DownloadOSSObject("gdeiassistant-userdata"
-                    , "avatar/" + username + "_hd.jpg");
+                    , "avatar/" + user.getUsername() + "_hd.jpg");
             if (avatarHD != null) {
                 userDataMap.put("avatar_hd.jpg", avatarHD);
             }
             //获取绑定手机信息
-            Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(username));
+            Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
             if (phone != null) {
                 phone.setPhone(StringEncryptUtils.decryptString(phone.getPhone()));
                 //隐藏用户绑定的手机号
@@ -130,37 +138,42 @@ public class UserDataService {
                 data.put("phone", phone);
             }
             //获取个人资料信息
-            Profile profile = appDataMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+            Profile profile = appDataMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
             if (profile != null) {
                 data.put("profile", profile);
             }
             //获取个人简介信息
-            Introduction introduction = appDataMapper.selectUserIntroduction(StringEncryptUtils.encryptString(username));
+            Introduction introduction = appDataMapper.selectUserIntroduction(StringEncryptUtils
+                    .encryptString(user.getUsername()));
             if (introduction != null && introduction.getIntroductionContent() != null) {
                 data.put("introduction", introduction.getIntroductionContent());
             }
             //获取用户隐私设置
-            Privacy privacy = appDataMapper.selectUserPrivacy(StringEncryptUtils.encryptString(username));
+            Privacy privacy = appDataMapper.selectUserPrivacy(StringEncryptUtils.encryptString(user.getUsername()));
             if (privacy != null) {
                 data.put("privacy", privacy);
             }
             //获取保存的四六级准考证号
-            CetNumber cetNumber = appDataMapper.selectUserCetNumber(StringEncryptUtils.encryptString(username));
+            CetNumber cetNumber = appDataMapper.selectUserCetNumber(StringEncryptUtils
+                    .encryptString(user.getUsername()));
             if (cetNumber != null && cetNumber.getNumber() != null) {
                 data.put("cet", cetNumber);
             }
             //获取全民快递订单信息
-            List<DeliveryOrder> deliveryOrderList = appDataMapper.selectUserDeliveryOrderList(StringEncryptUtils.encryptString(username));
+            List<DeliveryOrder> deliveryOrderList = appDataMapper.selectUserDeliveryOrderList(StringEncryptUtils
+                    .encryptString(user.getUsername()));
             if (deliveryOrderList != null && !deliveryOrderList.isEmpty()) {
                 data.put("deliveryOrders", deliveryOrderList);
             }
             //获取全名快递交易信息
-            List<DeliveryTrade> deliveryTradeList = appDataMapper.selectUserDeliveryTradeList(StringEncryptUtils.encryptString(username));
+            List<DeliveryTrade> deliveryTradeList = appDataMapper.selectUserDeliveryTradeList(StringEncryptUtils
+                    .encryptString(user.getUsername()));
             if (deliveryTradeList != null && !deliveryTradeList.isEmpty()) {
                 data.put("deliveryTrades", deliveryTradeList);
             }
             //获取二手交易信息
-            List<ErshouItem> ershouItemList = appDataMapper.selectUserErshouItemList(StringEncryptUtils.encryptString(username));
+            List<ErshouItem> ershouItemList = appDataMapper.selectUserErshouItemList(StringEncryptUtils
+                    .encryptString(user.getUsername()));
             if (ershouItemList != null && !ershouItemList.isEmpty()) {
                 for (ErshouItem ershouItem : ershouItemList) {
                     //下载二手交易图片
@@ -177,7 +190,8 @@ public class UserDataService {
                 data.put("ershouItems", ershouItemList);
             }
             //获取失物招领信息
-            List<LostAndFoundItem> lostAndFoundItemList = appDataMapper.selectUserLostAndFoundItemList(StringEncryptUtils.encryptString(username));
+            List<LostAndFoundItem> lostAndFoundItemList = appDataMapper.selectUserLostAndFoundItemList(StringEncryptUtils
+                    .encryptString(user.getUsername()));
             if (lostAndFoundItemList != null && !lostAndFoundItemList.isEmpty()) {
                 for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
                     //下载失物招领图片
@@ -194,7 +208,8 @@ public class UserDataService {
                 data.put("lostandfoundItems", lostAndFoundItemList);
             }
             //获取校园树洞信息
-            List<Secret> secretList = appDataMapper.selectUserSecretItemList(StringEncryptUtils.encryptString(username));
+            List<Secret> secretList = appDataMapper.selectUserSecretItemList(StringEncryptUtils
+                    .encryptString(user.getUsername()));
             if (secretList != null && !secretList.isEmpty()) {
                 for (Secret secret : secretList) {
                     if (secret.getSecretCommentList() != null && !secret.getSecretCommentList().isEmpty()) {
@@ -221,7 +236,8 @@ public class UserDataService {
                 data.put("secretItems", secretList);
             }
             //获取拍好校园信息
-            List<Photograph> photographList = appDataMapper.selectUserPhotographItemList(StringEncryptUtils.encryptString(username));
+            List<Photograph> photographList = appDataMapper.selectUserPhotographItemList(StringEncryptUtils
+                    .encryptString(user.getUsername()));
             if (photographList != null && !photographList.isEmpty()) {
                 for (Photograph photograph : photographList) {
                     //下载拍好校园图片
@@ -238,12 +254,14 @@ public class UserDataService {
                 data.put("photographItems", photographList);
             }
             //获取表白墙信息
-            List<Express> expressList = appDataMapper.selectUserExpresssItemList(StringEncryptUtils.encryptString(username));
+            List<Express> expressList = appDataMapper.selectUserExpresssItemList(
+                    StringEncryptUtils.encryptString(user.getUsername()));
             if (expressList != null && !expressList.isEmpty()) {
                 data.put("expressItems", expressList);
             }
             //获取校园卡充值日志记录
-            List<ChargeLog> chargeLogList = logDataMapper.selectChargeLogList(StringEncryptUtils.encryptString(username));
+            List<ChargeLog> chargeLogList = logDataMapper.selectChargeLogList(StringEncryptUtils
+                    .encryptString(user.getUsername()));
             if (chargeLogList != null && !chargeLogList.isEmpty()) {
                 data.put("chargeLogs", chargeLogList);
             }
@@ -383,9 +401,9 @@ public class UserDataService {
                     , byteArrayInputStream);
 
             //导出用户数据成功，写入Redis记录
-            exportDataDao.SaveExportDataToken(username, uuid);
+            exportDataDao.SaveExportDataToken(user.getUsername(), uuid);
             //移除导出任务记录
-            exportDataDao.RemoveExportingDataToken(username);
+            exportDataDao.RemoveExportingDataToken(user.getUsername());
 
         } finally {
             if (byteArrayInputStream != null) {
@@ -416,11 +434,12 @@ public class UserDataService {
     /**
      * 获取用户数据下载地址
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public String DownloadUserData(String username) {
-        String token = exportDataDao.QueryExportDataToken(username);
+    public String DownloadUserData(String sessionId) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        String token = exportDataDao.QueryExportDataToken(user.getUsername());
         String url = null;
         if (StringUtils.isNotBlank(token)) {
             ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "export/" + token + ".zip"
@@ -443,8 +462,7 @@ public class UserDataService {
         if (queryUser != null) {
             //该用户已经存在,检查是否需要更新用户数据
             queryUser = queryUser.decryptUser();
-            if (!queryUser.getUsername().equals(user.getUsername())
-                    || !queryUser.getPassword().equals(user.getPassword())) {
+            if (queryUser.equals(user)) {
                 userMapper.updateUser(encryptUser);
             }
         } else {

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.Tools.SpringUtils;
 
-import cn.gdeiassistant.Enum.Module.ModuleEnum;
+import cn.gdeiassistant.Enum.Module.CoreModuleEnum;
 import cn.gdeiassistant.Pojo.DelayTask.DelayTask;
 import cn.gdeiassistant.Pojo.DelayTask.SessionAttributeExpireDelayTaskElement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +26,14 @@ public class RedisDaoUtils {
     private DelayTaskUtils delayTaskUtils;
 
     public <T> T get(String key) {
-        if (moduleUtils.CheckModuleState(ModuleEnum.REDIS)) {
+        if (moduleUtils.CheckCoreModuleState(CoreModuleEnum.REDIS)) {
             return (T) redisTemplate.opsForValue().get(key);
         }
         return (T) servletContext.getAttribute(key);
     }
 
     public <E> void set(String key, E object) {
-        if (moduleUtils.CheckModuleState(ModuleEnum.REDIS)) {
+        if (moduleUtils.CheckCoreModuleState(CoreModuleEnum.REDIS)) {
             redisTemplate.opsForValue().set(key, object);
         } else {
             servletContext.setAttribute(key, object);
@@ -41,7 +41,7 @@ public class RedisDaoUtils {
     }
 
     public void delete(String key) {
-        if (moduleUtils.CheckModuleState(ModuleEnum.REDIS)) {
+        if (moduleUtils.CheckCoreModuleState(CoreModuleEnum.REDIS)) {
             redisTemplate.delete(key);
         } else {
             servletContext.removeAttribute(key);
@@ -49,7 +49,7 @@ public class RedisDaoUtils {
     }
 
     public void expire(String key, long timeout, TimeUnit unit) {
-        if (moduleUtils.CheckModuleState(ModuleEnum.REDIS)) {
+        if (moduleUtils.CheckCoreModuleState(CoreModuleEnum.REDIS)) {
             redisTemplate.expire(key, timeout, unit);
         } else {
             delayTaskUtils.put(new DelayTask(new SessionAttributeExpireDelayTaskElement(key)

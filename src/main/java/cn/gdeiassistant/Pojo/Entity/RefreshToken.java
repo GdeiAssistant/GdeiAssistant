@@ -12,18 +12,18 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RefreshToken extends SimpleToken {
+public class RefreshToken extends Token {
 
     /**
-     * 该刷新令牌对应的令牌签名
+     * 该刷新令牌对应的权限令牌签名
      */
-    private String tokenSignature;
+    private String accessTokenSignature;
 
-    public String getTokenSignature() {
-        return tokenSignature;
+    public String getAccessTokenSignature() {
+        return accessTokenSignature;
     }
 
-    public void setTokenSignature(String tokenSignature) {
-        this.tokenSignature = tokenSignature;
+    public void setAccessTokenSignature(String accessTokenSignature) {
+        this.accessTokenSignature = accessTokenSignature;
     }
 }

@@ -3,7 +3,7 @@ package cn.gdeiassistant.ExceptionHandler;
 import cn.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenServerException;
-import cn.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
+import cn.gdeiassistant.Exception.TokenValidException.SuspiciouseRequestException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import org.aspectj.lang.annotation.Aspect;
@@ -34,15 +34,15 @@ public class TokenExceptionHandler {
     }
 
     /**
-     * 处理登录地点的异常
+     * 处理可疑访问请求的异常
      *
      * @return
      */
-    @ExceptionHandler(UnusualLocationException.class)
-    public ResponseEntity HandleUnusualLocationException(UnusualLocationException e) {
+    @ExceptionHandler(SuspiciouseRequestException.class)
+    public ResponseEntity HandleUnusualLocationException(SuspiciouseRequestException e) {
         logger.error("TokenExceptionHandler：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.UNUSUAL_LOCATION_EXCEPTION
-                , false, "登录地点异常，请进行身份验证"));
+                , false, "可疑的登录请求，请退出账号并重新登录进行身份验证"));
     }
 
     /**

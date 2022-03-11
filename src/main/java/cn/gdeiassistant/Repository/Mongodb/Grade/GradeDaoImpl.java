@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Repository.Mongodb.Grade;
 
-import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Pojo.Document.GradeDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -20,11 +19,10 @@ public class GradeDaoImpl implements GradeDao {
      * @param gradeDocument
      */
     @Override
-    public void saveGrade(GradeDocument gradeDocument) throws MongodbNotConfiguredException {
+    public void saveGrade(GradeDocument gradeDocument) {
         if (mongoTemplate != null) {
             mongoTemplate.save(gradeDocument, "grade");
         }
-        throw new MongodbNotConfiguredException("MongoDB数据源未配置");
     }
 
     /**
@@ -34,7 +32,7 @@ public class GradeDaoImpl implements GradeDao {
      * @return
      */
     @Override
-    public GradeDocument queryGradeByUsername(String username) {
+    public GradeDocument queryGrade(String username) {
         if (mongoTemplate != null) {
             return mongoTemplate.findOne(new Query(Criteria.where("username").is(username))
                     , GradeDocument.class, "grade");
@@ -48,10 +46,9 @@ public class GradeDaoImpl implements GradeDao {
      * @param username
      */
     @Override
-    public void removeGrade(String username) throws MongodbNotConfiguredException {
+    public void removeGrade(String username) {
         if (mongoTemplate != null) {
             mongoTemplate.remove(new Query(Criteria.where("username").is(username)), "grade");
         }
-        throw new MongodbNotConfiguredException("MongoDB数据源未配置");
     }
 }

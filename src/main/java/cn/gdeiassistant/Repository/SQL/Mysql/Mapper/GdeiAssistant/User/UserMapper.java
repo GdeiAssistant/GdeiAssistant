@@ -26,10 +26,6 @@ public interface UserMapper {
     @ResultMap("User")
     List<User> selectAllUser() throws Exception;
 
-    @Select("select count(username) from user where state!=2;")
-    @ResultType(Integer.class)
-    Integer selectUserCount() throws Exception;
-
     @Insert("insert into user (username,password) values (#{username},#{password})")
     void insertUser(User user) throws Exception;
 

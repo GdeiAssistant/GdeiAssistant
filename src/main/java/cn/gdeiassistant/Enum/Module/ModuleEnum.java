@@ -14,9 +14,7 @@ public enum ModuleEnum {
     OSS_FEDERATION("OSSFederation", "/oss/token.properties"),
     REPLAY_ATTACKS_VALIDATE("防重放攻击验证", "/validate/token.properties"),
     WECHAT_OFFICIAL_ACCOUNT("微信公众号", "/wechat/account.properties"),
-    WECHAT_MINI_PROGRAM("微信小程序", "/wechat/app.properties"),
-    MONGODB("Mongodb", "/mongodb/mongodb-config.properties"),
-    REDIS("Redis", "/redis/redis.properties");
+    WECHAT_MINI_PROGRAM("微信小程序", "/wechat/app.properties");
 
     ModuleEnum(String name, String location) {
         this.name = name;

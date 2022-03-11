@@ -134,6 +134,24 @@
         </div>
     </div>
     <div class="weui-cell weui-cell_switch" style="display: none">
+        <div class="weui-cell__bd">表白墙</div>
+        <div class="weui-cell__ft">
+            <input id="express" class="weui-switch" type="checkbox">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch" style="display: none">
+        <div class="weui-cell__bd">卖室友</div>
+        <div class="weui-cell__ft">
+            <input id="dating" class="weui-switch" type="checkbox">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch" style="display: none">
+        <div class="weui-cell__bd">话题</div>
+        <div class="weui-cell__ft">
+            <input id="topic" class="weui-switch" type="checkbox">
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_switch" style="display: none">
         <div class="weui-cell__bd">全民快递</div>
         <div class="weui-cell__ft">
             <input id="delivery" class="weui-switch" type="checkbox">

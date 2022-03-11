@@ -1,12 +1,16 @@
 package cn.gdeiassistant.Controller.ScheduleQuery.RestController;
 
-import cn.gdeiassistant.Annotation.*;
-import cn.gdeiassistant.Enum.Method.QueryMethodEnum;
+import cn.gdeiassistant.Annotation.QueryLogPersistence;
+import cn.gdeiassistant.Annotation.RestAuthentication;
+import cn.gdeiassistant.Annotation.RestQueryLogPersistence;
+import cn.gdeiassistant.Annotation.TrialData;
+import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
+import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
+import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import cn.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
-import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
+import cn.gdeiassistant.Exception.QueryException.TimeStampIncorrectException;
 import cn.gdeiassistant.Pojo.Entity.CustomSchedule;
-import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
@@ -16,6 +20,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @RestController
 public class ScheduleQueryRestController {
@@ -24,16 +31,35 @@ public class ScheduleQueryRestController {
     private ScheduleService scheduleService;
 
     /**
-     * 清空缓存课表信息
+     * 课表查询
+     *
+     * @param request
+     * @param week
+     * @return
+     */
+    @RequestMapping(value = "/api/schedulequery", method = RequestMethod.POST)
+    @QueryLogPersistence
+    @TrialData(value = "schedule", rest = false, responseTime = "week")
+    public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
+            , @Valid @Min(0) @Max(20) Integer week) throws Exception {
+        ScheduleQueryResult scheduleQueryResult = scheduleService
+                .QuerySchedule(request.getSession().getId(), week);
+        return new DataJsonResult<>(true, scheduleQueryResult);
+    }
+
+    /**
+     * 更新实时课表信息
      *
      * @param request
      * @return
      */
     @RequestMapping(value = "/api/refreshschedule", method = RequestMethod.POST)
-    public JsonResult RefreshGradeData(HttpServletRequest request) throws MongodbNotConfiguredException {
-        String username = (String) request.getSession().getAttribute("username");
-        scheduleService.ClearSchedule(username);
-        return new JsonResult(true);
+    public DataJsonResult<ScheduleQueryResult> RefreshGradeData(HttpServletRequest request
+            , @Valid @Min(0) @Max(20) Integer week) throws TimeStampIncorrectException, NetWorkTimeoutException, PasswordIncorrectException, ServerErrorException {
+        scheduleService.ClearSchedule(request.getSession().getId());
+        ScheduleQueryResult scheduleQueryResult = scheduleService.QuerySchedule(request.getSession()
+                .getId(), week);
+        return new DataJsonResult<>(true, scheduleQueryResult);
     }
 
     /**
@@ -46,9 +72,9 @@ public class ScheduleQueryRestController {
      * @throws CountOverLimitException
      */
     @RequestMapping(value = "/api/customshedule", method = RequestMethod.POST)
-    public JsonResult AddCustomSchedule(HttpServletRequest request, @Validated CustomSchedule customSchedule) throws GenerateScheduleException, CountOverLimitException, MongodbNotConfiguredException {
-        String username = (String) request.getSession().getAttribute("username");
-        scheduleService.AddCustomSchedule(username, customSchedule);
+    public JsonResult AddCustomSchedule(HttpServletRequest request, @Validated CustomSchedule customSchedule)
+            throws GenerateScheduleException, CountOverLimitException {
+        scheduleService.AddCustomSchedule(request.getSession().getId(), customSchedule);
         return new JsonResult(true);
     }
 
@@ -60,51 +86,11 @@ public class ScheduleQueryRestController {
      * @return
      */
     @RequestMapping(value = "/api/customschedule/id/{id}", method = RequestMethod.DELETE)
-    public JsonResult DeleteCustomSchedule(HttpServletRequest request, @PathVariable String id) throws MongodbNotConfiguredException {
-        String username = (String) request.getSession().getAttribute("username");
-        scheduleService.DeleteCustomSchedule(username, id);
+    public JsonResult DeleteCustomSchedule(HttpServletRequest request, @PathVariable String id) {
+        scheduleService.DeleteCustomSchedule(request.getSession().getId(), id);
         return new JsonResult(true);
     }
 
-    /**
-     * 课表查询
-     *
-     * @param request
-     * @param week
-     * @param method
-     * @return
-     */
-    @RequestMapping(value = "/api/schedulequery", method = RequestMethod.POST)
-    @QueryLogPersistence
-    @TrialData(value = "schedule", responseTime = "week")
-    public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
-            , Integer week, @RequestParam(value = "method", required = false
-            , defaultValue = "0") QueryMethodEnum method) throws Exception {
-        if ((week != null && (week < 0 || week > 20)) || method == null) {
-            return new DataJsonResult<>(new JsonResult(false, "请求参数不合法"));
-        }
-        String username = (String) request.getSession().getAttribute("username");
-        String password = (String) request.getSession().getAttribute("password");
-        ScheduleQueryResult scheduleQueryResult = null;
-        switch (method) {
-            case CACHE_FIRST:
-                //优先查询缓存数据
-                scheduleQueryResult = scheduleService.QuerySchedule(request.getSession().getId()
-                        , new User(username, password), week);
-                break;
-
-            case CACHE_ONLY:
-                //只查询缓存数据
-                scheduleQueryResult = scheduleService.QueryScheduleFromDocument(username, week);
-                break;
-
-            case QUERY_ONLY:
-                scheduleQueryResult = scheduleService.QueryScheduleFromSystem(request.getSession().getId()
-                        , new User(username, password), week);
-                break;
-        }
-        return new DataJsonResult<>(true, scheduleQueryResult);
-    }
 
     /**
      * 课表查询Rest接口
@@ -112,36 +98,17 @@ public class ScheduleQueryRestController {
      * @param request
      * @param token
      * @param week
-     * @param method
      * @return
      */
     @RequestMapping(value = "/rest/schedulequery", method = RequestMethod.POST)
     @RestAuthentication
     @RestQueryLogPersistence
-    @TrialData(value = "schedule", responseTime = "week")
+    @TrialData(value = "schedule", rest = true, responseTime = "week")
     public DataJsonResult<ScheduleQueryResult> ScheduleQuery(HttpServletRequest request
-            , @RequestParam("token") String token, Integer week
-            , @RequestParam(name = "method", required = false
-            , defaultValue = "0") QueryMethodEnum method) throws Exception {
-        if ((week != null && (week < 0 || week > 20)) || method == null) {
-            return new DataJsonResult<>(new JsonResult(false, "请求参数不合法"));
-        }
-        User user = (User) request.getAttribute("user");
-        ScheduleQueryResult scheduleQueryResult = null;
-        switch (method) {
-            case CACHE_FIRST:
-                //优先查询缓存数据
-                scheduleQueryResult = scheduleService.QuerySchedule(request.getSession().getId(), user, week);
-                break;
-
-            case CACHE_ONLY:
-                scheduleQueryResult = scheduleService.QueryScheduleFromDocument(user.getUsername(), week);
-                break;
-
-            case QUERY_ONLY:
-                scheduleQueryResult = scheduleService.QueryScheduleFromSystem(request.getSession().getId(), user, week);
-                break;
-        }
+            , @RequestParam("token") String token
+            , @Valid @Min(0) @Max(20) Integer week) throws Exception {
+        String sessionId = (String) request.getAttribute("sessionId");
+        ScheduleQueryResult scheduleQueryResult = scheduleService.QuerySchedule(sessionId, week);
         return new DataJsonResult<>(true, scheduleQueryResult);
     }
 }

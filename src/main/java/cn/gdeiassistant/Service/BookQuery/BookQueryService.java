@@ -4,12 +4,10 @@ import cn.gdeiassistant.Exception.BookRenewException.BookRenewOvertimeException;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.Pojo.Entity.User;
+import cn.gdeiassistant.Pojo.Entity.Book;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import cn.gdeiassistant.Repository.Redis.UserCertificate.UserCertificateDao;
-import cn.gdeiassistant.Service.UserLogin.UserLoginService;
-import cn.gdeiassistant.Pojo.Entity.Book;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;
@@ -27,7 +25,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -38,37 +35,10 @@ import java.util.List;
 @Service
 public class BookQueryService {
 
-    @Autowired
-    private UserCertificateDao userCertificateDao;
-
-    @Autowired
-    private UserLoginService userLoginService;
-
     private Logger logger = LoggerFactory.getLogger(BookQueryService.class);
 
-    private int timeout;
-
-    @Value("#{propertiesReader['timeout.bookquery']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
-    /**
-     * 同步教务系统会话，获取用户学号
-     *
-     * @param sessionId
-     * @param username
-     * @param password
-     * @return
-     * @throws Exception
-     */
-    public String UpdateSessionAndGetUserNumber(String sessionId, String username, String password) throws Exception {
-        UserCertificate userCertificate = userCertificateDao.queryUserCertificate(username);
-        if (userCertificate == null) {
-            userCertificate = userLoginService.SyncUpdateSession(sessionId, new User(username, password));
-        }
-        return userCertificate.getNumber();
-    }
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     /**
      * 续借图书
@@ -83,7 +53,7 @@ public class BookQueryService {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("http://agentdockingopac.featurelib.libsou.com/showhome/searchrenew/opacSearchRenew?&check=1&sn="
@@ -128,18 +98,18 @@ public class BookQueryService {
      * 查询借阅图书
      *
      * @param sessionId
-     * @param number
      * @param password
      * @return
      * @throws NetWorkTimeoutException
      * @throws ServerErrorException
      * @throws PasswordIncorrectException
      */
-    public List<Book> BookQuery(String sessionId, String number, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
+    public List<Book> BookQuery(String sessionId, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
+        UserCertificate userCertificate = userCertificateService.GetUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //进入移动图书馆主页
@@ -158,7 +128,7 @@ public class BookQueryService {
                     basicNameValuePairList.add(new BasicNameValuePair("schoolid", "705"));
                     basicNameValuePairList.add(new BasicNameValuePair("backurl", "/user/uc/showUserCenter.jspx"));
                     basicNameValuePairList.add(new BasicNameValuePair("userType", "0"));
-                    basicNameValuePairList.add(new BasicNameValuePair("username", number));
+                    basicNameValuePairList.add(new BasicNameValuePair("username", userCertificate.getNumber()));
                     basicNameValuePairList.add(new BasicNameValuePair("password", password));
                     httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairList, StandardCharsets.UTF_8));
                     httpResponse = httpClient.execute(httpPost);

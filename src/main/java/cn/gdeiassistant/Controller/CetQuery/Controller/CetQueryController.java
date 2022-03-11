@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,8 +24,7 @@ public class CetQueryController {
     public ModelAndView ResolveCetNumberSavePage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Cet/cetSave");
-        String username = (String) WebUtils.getSessionAttribute(request, "username");
-        Long number = cetQueryService.getCetNumber(username);
+        Long number = cetQueryService.getCetNumber(request.getSession().getId());
         modelAndView.addObject("CetNumber", number);
         return modelAndView;
     }

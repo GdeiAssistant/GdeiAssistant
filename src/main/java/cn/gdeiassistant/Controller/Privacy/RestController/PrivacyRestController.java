@@ -25,8 +25,7 @@ public class PrivacyRestController {
      */
     @RequestMapping(value = "/api/privacy", method = RequestMethod.GET)
     public DataJsonResult<Privacy> GetUserPrivacySetting(HttpServletRequest request) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        Privacy privacy = privacyService.GetPrivacySetting(username);
+        Privacy privacy = privacyService.GetPrivacySetting(request.getSession().getId());
         return new DataJsonResult<>(true, privacy);
     }
 
@@ -40,56 +39,55 @@ public class PrivacyRestController {
      */
     @RequestMapping(value = "/api/privacy", method = RequestMethod.POST)
     public JsonResult UpdateUserPrivacySetting(HttpServletRequest request, String index, boolean state) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
         switch (index.toUpperCase()) {
             case "GENDER":
                 //性别
-                privacyService.UpdateGender(state, username);
+                privacyService.UpdateGender(state, request.getSession().getId());
                 break;
 
             case "FACULTY":
                 //院系
-                privacyService.UpdateFaculty(state, username);
+                privacyService.UpdateFaculty(state, request.getSession().getId());
                 break;
 
             case "MAJOR":
                 //专业
-                privacyService.UpdateMajor(state, username);
+                privacyService.UpdateMajor(state, request.getSession().getId());
                 break;
 
             case "LOCATION":
                 //所在地
-                privacyService.UpdateLocation(state, username);
+                privacyService.UpdateLocation(state, request.getSession().getId());
                 break;
 
             case "HOMETOWN":
                 //家乡
-                privacyService.UpdateHometown(state, username);
+                privacyService.UpdateHometown(state, request.getSession().getId());
                 break;
 
             case "INTRODUCTION":
                 //个人简介
-                privacyService.UpdateIntroduction(state, username);
+                privacyService.UpdateIntroduction(state, request.getSession().getId());
                 break;
 
             case "ENROLLMENT":
                 //入学年份
-                privacyService.UpdateEnrollment(state, username);
+                privacyService.UpdateEnrollment(state, request.getSession().getId());
                 break;
 
             case "AGE":
                 //年龄
-                privacyService.UpdateAge(state, username);
+                privacyService.UpdateAge(state, request.getSession().getId());
                 break;
 
             case "CACHE":
                 //教务缓存
-                privacyService.UpdateCache(state, username);
+                privacyService.UpdateCache(state, request.getSession().getId());
                 break;
 
             case "ROBOTS_INDEX":
                 //搜索引擎收录
-                privacyService.UpdateRobotsIndex(state, username);
+                privacyService.UpdateRobotsIndex(state, request.getSession().getId());
                 break;
 
             default:

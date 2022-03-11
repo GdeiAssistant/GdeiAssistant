@@ -1,5 +1,8 @@
 package cn.gdeiassistant.Service.Account;
 
+import cn.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
+import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
+import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import cn.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
@@ -13,10 +16,8 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.Profil
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.WechatUser.WechatUserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Close.CloseMapper;
-import cn.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
-import cn.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
-import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Service.Profile.UserProfileService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class CloseAccountService {
 
     @Autowired
     private UserProfileService userProfileService;
+
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     @Autowired
     private GradeDao gradeDao;
@@ -105,32 +109,33 @@ public class CloseAccountService {
     /**
      * 删除用户账号
      *
-     * @param username
+     * @param sessionId
      * @param password
      * @throws Exception
      */
     @Transactional("appTransactionManager")
-    public void CloseAccount(String username, String password) throws Exception {
+    public void CloseAccount(String sessionId, String password) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         //检查用户账号状态
-        User user = userMapper.selectUser(StringEncryptUtils.encryptString(username)).decryptUser();
-        if (user == null/* || !user.getState().equals(1)*/) {
-            //若账号状态异常，则抛出异常
-            throw new UserStateErrorException("用户账号状态异常");
+        User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(user.getUsername()));
+        if (queryUser == null) {
+            //若账号不存在，则抛出异常
+            throw new UserNotExistException("用户账号不存在");
         }
-        if (!user.getPassword().equals(password)) {
+        if (!queryUser.decryptUser().getPassword().equals(password)) {
             //账号密码错误
             throw new PasswordIncorrectException("用户账号密码不匹配");
         }
         //检查有无待处理的社区功能信息
         List<ErshouItem> ershouItemList = ershouMapper
-                .selectItemsByUsername(StringEncryptUtils.encryptString(username));
+                .selectItemsByUsername(StringEncryptUtils.encryptString(user.getUsername()));
         for (ErshouItem ershouItem : ershouItemList) {
             if (ershouItem.getState().equals(1)) {
                 throw new ItemAvailableException("请下架或确认出售账号下的所有二手交易物品");
             }
         }
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                .selectItemByUsername(StringEncryptUtils.encryptString(username));
+                .selectItemByUsername(StringEncryptUtils.encryptString(user.getUsername()));
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
             if (lostAndFoundItem.getState().equals(0)) {
                 throw new ItemAvailableException("请确认寻回账号下的所有失物招领物品");
@@ -138,7 +143,7 @@ public class CloseAccountService {
         }
         //检查有无待处理的全民快递订单和交易
         List<DeliveryOrder> deliveryOrderList = deliveryMapper
-                .selectDeliveryOrderByUsername(StringEncryptUtils.encryptString(username));
+                .selectDeliveryOrderByUsername(StringEncryptUtils.encryptString(user.getUsername()));
         for (DeliveryOrder deliveryOrder : deliveryOrderList) {
             if (deliveryOrder.getState().equals(0)) {
                 //下单者有未删除的快递代收订单信息
@@ -156,35 +161,35 @@ public class CloseAccountService {
 
         //删除四六级准考证号
         CetNumber cetNumber = cetMapper
-                .selectNumber(StringEncryptUtils.encryptString(username));
+                .selectNumber(StringEncryptUtils.encryptString(user.getUsername()));
         if (cetNumber != null) {
-            cetMapper.updateNumber(StringEncryptUtils.encryptString(username), null);
+            cetMapper.updateNumber(StringEncryptUtils.encryptString(user.getUsername()), null);
         }
         //删除绑定的手机号
-        Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(username));
+        Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
         if (phone != null) {
-            phoneMapper.deletePhone(StringEncryptUtils.encryptString(username));
+            phoneMapper.deletePhone(StringEncryptUtils.encryptString(user.getUsername()));
         }
         //删除教务缓存信息
-        gradeDao.removeGrade(username);
-        scheduleDao.removeSchedule(username);
+        gradeDao.removeGrade(user.getUsername());
+        scheduleDao.removeSchedule(user.getUsername());
         //移除易班和微信绑定状态
-        wechatUserMapper.resetWechatUser(StringEncryptUtils.encryptString(username));
+        wechatUserMapper.resetWechatUser(StringEncryptUtils.encryptString(user.getUsername()));
         //删除用户资料信息
-        profileMapper.resetUserProfile(StringEncryptUtils.encryptString(username), "已注销");
-        profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(username));
+        profileMapper.resetUserProfile(StringEncryptUtils.encryptString(user.getUsername()), "已注销");
+        profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()));
         //重置用户隐私配置
-        privacyMapper.resetPrivacy(StringEncryptUtils.encryptString(username));
+        privacyMapper.resetPrivacy(StringEncryptUtils.encryptString(user.getUsername()));
         //删除用户头像
-        userProfileService.DeleteAvatar(username);
+        userProfileService.DeleteAvatar(user.getUsername());
         //删除用户账号信息
         Integer count = userMapper.selectDeletedUserCount("del_"
-                + StringEncryptUtils.SHA1HexString(username).substring(0, 15));
+                + StringEncryptUtils.SHA1HexString(user.getUsername()).substring(0, 15));
         count = count == null ? 0 : count;
-        userMapper.closeUser("del_" + StringEncryptUtils.SHA1HexString(username)
-                .substring(0, 15) + "_" + count, StringEncryptUtils.encryptString(username));
+        userMapper.closeUser("del_" + StringEncryptUtils.SHA1HexString(user.getUsername())
+                .substring(0, 15) + "_" + count, StringEncryptUtils.encryptString(user.getUsername()));
         //保存注销日志
-        SaveCloseLog(username, count);
+        SaveCloseLog(user.getUsername(), count);
     }
 
     /**

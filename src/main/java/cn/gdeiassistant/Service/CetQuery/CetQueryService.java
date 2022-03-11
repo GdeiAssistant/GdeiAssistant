@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Service.CetQuery;
 
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Cet.CetMapper;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
@@ -8,7 +7,10 @@ import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Pojo.CetQuery.CetQuery;
 import cn.gdeiassistant.Pojo.Entity.Cet;
 import cn.gdeiassistant.Pojo.Entity.CetNumber;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
+import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Cet.CetMapper;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
@@ -23,26 +25,21 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 
 @Service
 public class CetQueryService {
 
-    @Resource(name = "cetMapper")
-    private CetMapper cetMapper;
-
     private Logger logger = LoggerFactory.getLogger(CetQueryService.class);
 
-    private int timeout;
+    @Autowired
+    private CetMapper cetMapper;
 
-    @Value("#{propertiesReader['timeout.cet']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     /**
      * 进入学信网四六级成绩查询页面，获取验证码
@@ -54,7 +51,7 @@ public class CetQueryService {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("http://www.chsi.com.cn/cet/");
@@ -102,7 +99,7 @@ public class CetQueryService {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //查询CET成绩信息
@@ -182,11 +179,12 @@ public class CetQueryService {
     /**
      * 查询保存的四六级准考证号
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public Long getCetNumber(String username) throws Exception {
-        CetNumber cetNumber = cetMapper.selectNumber(StringEncryptUtils.encryptString(username));
+    public Long getCetNumber(String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        CetNumber cetNumber = cetMapper.selectNumber(StringEncryptUtils.encryptString(user.getUsername()));
         if (cetNumber == null || cetNumber.getNumber() == null) {
             return null;
         }
@@ -196,16 +194,17 @@ public class CetQueryService {
     /**
      * 保存四六级准考证号
      *
-     * @param username
+     * @param sessionId
      * @param number
      * @return
      */
-    public void saveCetNumber(String username, Long number) throws Exception {
-        CetNumber cetNumber = cetMapper.selectNumber(StringEncryptUtils.encryptString(username));
+    public void saveCetNumber(String sessionId, Long number) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        CetNumber cetNumber = cetMapper.selectNumber(StringEncryptUtils.encryptString(user.getUsername()));
         if (cetNumber == null) {
-            cetMapper.insertNumber(StringEncryptUtils.encryptString(username), number);
+            cetMapper.insertNumber(StringEncryptUtils.encryptString(user.getUsername()), number);
         } else {
-            cetMapper.updateNumber(StringEncryptUtils.encryptString(username), number);
+            cetMapper.updateNumber(StringEncryptUtils.encryptString(user.getUsername()), number);
         }
     }
 

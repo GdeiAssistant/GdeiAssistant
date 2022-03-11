@@ -38,8 +38,7 @@ public class ExpressRestController {
     @RequestMapping(value = "/api/express/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Express>> QueryExpressPage(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        List<Express> expressList = expressService.QueryExpressPage(start, size, username);
+        List<Express> expressList = expressService.QueryExpressPage(start, size, request.getSession().getId());
         return new DataJsonResult<>(true, expressList);
     }
 
@@ -56,8 +55,7 @@ public class ExpressRestController {
     @RequestMapping(value = "/api/express/keyword/{keyword}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Express>> QueryExpressPageByKeyWord(HttpServletRequest request, @PathVariable("keyword") String keyword
             , @PathVariable("start") int start, @PathVariable("size") int size) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        List<Express> expressList = expressService.QueryExpressPageByKeyword(start, size, username, keyword);
+        List<Express> expressList = expressService.QueryExpressPageByKeyword(request.getSession().getId(), start, size, keyword);
         return new DataJsonResult<>(true, expressList);
     }
 
@@ -71,8 +69,7 @@ public class ExpressRestController {
      */
     @RequestMapping(value = "/api/express", method = RequestMethod.POST)
     public JsonResult AddExpress(HttpServletRequest request, @Validated Express express) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        expressService.AddExpress(express, username);
+        expressService.AddExpress(express, request.getSession().getId());
         return new JsonResult(true);
     }
 
@@ -101,8 +98,7 @@ public class ExpressRestController {
     @RequestMapping(value = "/api/express/id/{id}/comment", method = RequestMethod.POST)
     public JsonResult AddExpressComment(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws DataNotExistException, WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        expressService.AddExpressComment(id, username, comment);
+        expressService.AddExpressComment(id, request.getSession().getId(), comment);
         return new JsonResult(true);
     }
 
@@ -116,8 +112,7 @@ public class ExpressRestController {
     @RequestMapping(value = "/api/express/id/{id}/guess", method = RequestMethod.POST)
     public DataJsonResult<Boolean> GuessExpress(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 10) String name) throws DataNotExistException, WsgException, NoRealNameException, CorrectRecordException {
-        String username = (String) request.getSession().getAttribute("username");
-        boolean result = expressService.GuessExpress(id, username, name);
+        boolean result = expressService.GuessExpress(id, request.getSession().getId(), name);
         return new DataJsonResult<>(true, result);
     }
 
@@ -131,8 +126,7 @@ public class ExpressRestController {
      */
     @RequestMapping(value = "/api/express/id/{id}/like", method = RequestMethod.POST)
     public JsonResult LikeExpress(HttpServletRequest request, @PathVariable("id") int id) throws WsgException, DataNotExistException {
-        String username = (String) request.getSession().getAttribute("username");
-        expressService.LikeExpress(id, username);
+        expressService.LikeExpress(id, request.getSession().getId());
         return new JsonResult(true);
     }
 }

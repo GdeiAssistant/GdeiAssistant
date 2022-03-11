@@ -48,8 +48,7 @@ public class FeedbackRestController {
                 inputStreamList.add(inputStream);
             }
         }
-        String username = (String) request.getSession().getAttribute("username");
-        feedbackService.SendFeedbackEmail(username, feedback.getContent(), inputStreamList.toArray(new InputStream[0]));
+        feedbackService.SendFeedbackEmail(request.getSession().getId(), feedback.getContent(), inputStreamList.toArray(new InputStream[0]));
         return new JsonResult(true);
     }
 
@@ -78,8 +77,7 @@ public class FeedbackRestController {
                 inputStreamList.add(inputStream);
             }
         }
-        String username = (String) request.getSession().getAttribute("username");
-        feedbackService.SendTicketEmail(username, feedback.getContent(), feedback.getType()
+        feedbackService.SendTicketEmail(request.getSession().getId(), feedback.getContent(), feedback.getType()
                 , inputStreamList.toArray(new InputStream[0]));
         return new JsonResult(true);
     }

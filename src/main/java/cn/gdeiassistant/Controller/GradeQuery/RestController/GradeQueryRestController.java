@@ -1,12 +1,11 @@
 package cn.gdeiassistant.Controller.GradeQuery.RestController;
 
-import cn.gdeiassistant.Annotation.*;
-import cn.gdeiassistant.Enum.Method.QueryMethodEnum;
-import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
-import cn.gdeiassistant.Pojo.Entity.User;
+import cn.gdeiassistant.Annotation.QueryLogPersistence;
+import cn.gdeiassistant.Annotation.RestAuthentication;
+import cn.gdeiassistant.Annotation.RestQueryLogPersistence;
+import cn.gdeiassistant.Annotation.TrialData;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
-import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.GradeQuery.GradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @RestController
 public class GradeQueryRestController {
@@ -23,39 +25,18 @@ public class GradeQueryRestController {
     private GradeService gradeService;
 
     /**
-     * 清空缓存成绩信息
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/api/refreshgrade", method = RequestMethod.POST)
-    public JsonResult RefreshGradeData(HttpServletRequest request) throws MongodbNotConfiguredException {
-        String username = (String) request.getSession().getAttribute("username");
-        gradeService.ClearGrade(username);
-        return new JsonResult(true);
-    }
-
-    /**
      * 成绩查询
      *
      * @param request
      * @param year
-     * @param method
      * @return
      */
     @RequestMapping(value = "/api/gradequery", method = RequestMethod.POST)
     @QueryLogPersistence
-    @TrialData(value = "grade", requestTime = "year", responseTime = "year")
+    @TrialData(value = "grade", rest = false, requestTime = "year", responseTime = "year")
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
-            , Integer year, @RequestParam(value = "method", required = false
-            , defaultValue = "0") QueryMethodEnum method) throws Exception {
-        if ((year != null && (year < 0 || year > 3)) || method == null) {
-            return new DataJsonResult<>(new JsonResult(false, "请求参数不合法"));
-        }
-        String username = (String) request.getSession().getAttribute("username");
-        String password = (String) request.getSession().getAttribute("password");
-        User user = new User(username, password);
-        GradeQueryResult gradeQueryResult = HandleGradeQuery(request.getSession().getId(), user, year, method);
+            , @Valid @Min(0) @Max(3) Integer year) throws Exception {
+        GradeQueryResult gradeQueryResult = gradeService.QueryGrade(request.getSession().getId(), year);
         return new DataJsonResult<>(true, gradeQueryResult);
     }
 
@@ -65,48 +46,35 @@ public class GradeQueryRestController {
      * @param request
      * @param token
      * @param year
-     * @param method
      * @return
      */
     @RequestMapping(value = "/rest/gradequery", method = RequestMethod.POST)
     @RestQueryLogPersistence
     @RestAuthentication
-    @TrialData(value = "grade", requestTime = "year", responseTime = "year")
+    @TrialData(value = "grade", rest = true, requestTime = "year", responseTime = "year")
     public DataJsonResult<GradeQueryResult> GradeQuery(HttpServletRequest request
-            , @RequestParam("token") String token, Integer year, @RequestParam(value = "method", required = false
-            , defaultValue = "0") QueryMethodEnum method) throws Exception {
-        if ((year != null && (year < 0 || year > 3)) || method == null) {
-            return new DataJsonResult<>(new JsonResult(false, "请求参数不合法"));
-        }
-        User user = (User) request.getAttribute("user");
-        GradeQueryResult gradeQueryResult = HandleGradeQuery(request.getSession().getId(), user, year, method);
+            , @RequestParam("token") String token
+            , @Valid @Min(0) @Max(3) Integer year) throws Exception {
+        String sessionId = (String) request.getAttribute("sessionId");
+        GradeQueryResult gradeQueryResult = gradeService.QueryGrade(sessionId, year);
         return new DataJsonResult<>(true, gradeQueryResult);
     }
 
     /**
-     * 处理成绩查询请求
+     * 刷新实时成绩信息
      *
-     * @param sessionId
-     * @param user
-     * @param year
-     * @param method
+     * @param request
      * @return
      */
-    private GradeQueryResult HandleGradeQuery(String sessionId, User user, Integer year
-            , QueryMethodEnum method) throws Exception {
-        switch (method) {
-            case CACHE_ONLY:
-                //只查询缓存
-                return gradeService.QueryUserGradeFromDocument(user.getUsername(), year);
-
-            case QUERY_ONLY:
-                //只查询教务系统
-                return gradeService.QueryGradeFromSystem(sessionId, user, year);
-
-            case CACHE_FIRST:
-            default:
-                //优先查询缓存
-                return gradeService.QueryGrade(sessionId, user, year);
-        }
+    @RequestMapping(value = "/api/refreshgrade", method = RequestMethod.POST)
+    @QueryLogPersistence
+    @TrialData(value = "grade", rest = false, requestTime = "year", responseTime = "year")
+    public DataJsonResult<GradeQueryResult> RefreshGradeData(HttpServletRequest request
+            , @Valid @Min(0) @Max(3) Integer year) throws Exception {
+        //清空缓存的成绩信息
+        gradeService.ClearGrade(request.getSession().getId());
+        //重新查询成绩信息
+        GradeQueryResult gradeQueryResult = gradeService.QueryGrade(request.getSession().getId(), year);
+        return new DataJsonResult<>(true, gradeQueryResult);
     }
 }

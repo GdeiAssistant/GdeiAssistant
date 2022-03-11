@@ -2,7 +2,9 @@ package cn.gdeiassistant.Service.Photograph;
 
 import cn.gdeiassistant.Pojo.Entity.Photograph;
 import cn.gdeiassistant.Pojo.Entity.PhotographComment;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Photograph.PhotographMapper;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.taobao.wsgsvr.WsgException;
@@ -19,6 +21,9 @@ public class PhotographService {
 
     @Autowired
     private PhotographMapper photographMapper;
+
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     @Autowired
     private OSSUtils ossUtils;
@@ -56,12 +61,13 @@ public class PhotographService {
      * @param start
      * @param size
      * @param type
-     * @param username
+     * @param sessionId
      * @return
      */
-    public List<Photograph> QueryPhotographList(int start, int size, int type, String username) throws WsgException {
+    public List<Photograph> QueryPhotographList(int start, int size, int type, String sessionId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         List<Photograph> photographList = photographMapper.selectPhotograph(start, size, type
-                , StringEncryptUtils.encryptString(username));
+                , StringEncryptUtils.encryptString(user.getUsername()));
         //清除空行
         photographList.removeIf(photograph -> photograph.getId() == null);
         for (Photograph photograph : photographList) {
@@ -91,15 +97,16 @@ public class PhotographService {
      * @param content
      * @param count
      * @param type
-     * @param username
+     * @param sessionId
      */
-    public int AddPhotograph(String title, String content, int count, int type, String username) throws WsgException {
+    public int AddPhotograph(String title, String content, int count, int type, String sessionId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         Photograph photograph = new Photograph();
         photograph.setTitle(title);
         photograph.setContent(content);
         photograph.setCount(count);
         photograph.setType(type);
-        photograph.setUsername(StringEncryptUtils.encryptString(username));
+        photograph.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
         photographMapper.insertPhotograph(photograph);
         return photograph.getId();
     }
@@ -109,14 +116,15 @@ public class PhotographService {
      *
      * @param id
      * @param comment
-     * @param username
+     * @param sessionId
      * @throws WsgException
      */
-    public void AddPhotographComment(int id, String comment, String username) throws WsgException {
+    public void AddPhotographComment(int id, String comment, String sessionId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         PhotographComment photographComment = new PhotographComment();
         photographComment.setPhotoId(id);
         photographComment.setComment(comment);
-        photographComment.setUsername(StringEncryptUtils.encryptString(username));
+        photographComment.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
         photographMapper.insertPhotographComment(photographComment);
     }
 
@@ -155,12 +163,13 @@ public class PhotographService {
      * 点赞照片信息
      *
      * @param id
-     * @param username
+     * @param sessionId
      */
-    public void LikePhotograph(int id, String username) throws WsgException {
-        int count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, StringEncryptUtils.encryptString(username));
+    public void LikePhotograph(int id, String sessionId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        int count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, StringEncryptUtils.encryptString(user.getUsername()));
         if (count == 0) {
-            photographMapper.insertPhotographLike(id, StringEncryptUtils.encryptString(username));
+            photographMapper.insertPhotographLike(id, StringEncryptUtils.encryptString(user.getUsername()));
         }
     }
 

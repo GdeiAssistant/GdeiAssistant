@@ -1,7 +1,5 @@
 package cn.gdeiassistant.Controller.LostAndFound.RestController;
 
-import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
-import cn.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import cn.gdeiassistant.Pojo.Entity.LostAndFoundItem;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -112,13 +110,9 @@ public class LostAndFoundRestController {
      */
     @RequestMapping(value = "/api/lostandfound/item/id/{id}/didfound", method = RequestMethod.POST)
     public JsonResult DidFoundItem(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
-        String username = (String) request.getSession().getAttribute("username");
-        LostAndFoundInfo lostAndFoundInfo = lostAndFoundService.QueryLostAndFoundInfoByID(id);
-        if (lostAndFoundInfo.getLostAndFoundItem().getUsername().equals(username)) {
-            lostAndFoundService.UpdateLostAndFoundItemState(id, 1);
-            return new JsonResult(true);
-        }
-        throw new NoAccessException("没有权限修改该失物招领信息状态");
+        lostAndFoundService.VerifyLostAndFoundInfoEditAccess(request.getSession().getId(), id);
+        lostAndFoundService.UpdateLostAndFoundItemState(id, 1);
+        return new JsonResult(true);
     }
 
     /**
@@ -154,8 +148,7 @@ public class LostAndFoundRestController {
         if (image1 == null || image1.getSize() <= 0 || image1.getSize() >= MAX_PICTURE_SIZE) {
             return new JsonResult(false, "不合法的图片文件");
         }
-        String username = (String) request.getSession().getAttribute("username");
-        lostAndFoundItem = lostAndFoundService.AddLostAndFoundItem(lostAndFoundItem, username);
+        lostAndFoundItem = lostAndFoundService.AddLostAndFoundItem(lostAndFoundItem, request.getSession().getId());
         //添加二手交易数据成功，进行图片上传
         lostAndFoundService.UploadLostAndFoundItemPicture(lostAndFoundItem.getId(), 1, image1.getInputStream());
         if (image2 != null && image2.getSize() > 0 && image2.getSize() < MAX_PICTURE_SIZE) {

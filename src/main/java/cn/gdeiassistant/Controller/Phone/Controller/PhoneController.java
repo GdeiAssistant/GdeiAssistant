@@ -25,8 +25,7 @@ public class PhoneController {
     @RequestMapping(value = "/phone", method = RequestMethod.GET)
     public ModelAndView ResolvePhonePage(HttpServletRequest request) throws WsgException {
         ModelAndView modelAndView = new ModelAndView("Phone/index");
-        String username = (String) request.getSession().getAttribute("username");
-        Phone phone = phoneService.QueryUserPhone(username);
+        Phone phone = phoneService.QueryUserPhone(request.getSession().getId());
         modelAndView.addObject("Phone", phone);
         return modelAndView;
     }

@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Controller.LostAndFound.Controller;
 
 import cn.gdeiassistant.Constant.ItemConstantUtils;
-import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.Pojo.Entity.LostAndFoundInfo;
 import cn.gdeiassistant.Pojo.Entity.LostAndFoundItem;
 import cn.gdeiassistant.Service.LostAndFound.LostAndFoundService;
@@ -76,9 +75,8 @@ public class LostAndFoundController {
     @RequestMapping(value = "/lostandfound/personal", method = RequestMethod.GET)
     public ModelAndView ResolvePersonalPage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        String username = (String) request.getSession().getAttribute("username");
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundService
-                .QueryPersonalLostAndFoundItems(username);
+                .QueryPersonalLostAndFoundItems(request.getSession().getId());
         List<LostAndFoundItem> lostItemList = new ArrayList<>();
         List<LostAndFoundItem> foundItemList = new ArrayList<>();
         List<LostAndFoundItem> didFoundItemList = new ArrayList<>();
@@ -111,25 +109,20 @@ public class LostAndFoundController {
     @RequestMapping(value = "/lostandfound/edit/id/{id}", method = RequestMethod.GET)
     public ModelAndView EditLostAndFoundInfo(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        String username = (String) request.getSession().getAttribute("username");
-        LostAndFoundInfo lostAndFoundInfo = lostAndFoundService
-                .QueryLostAndFoundInfoByID(id);
-        LostAndFoundItem lostAndFoundItem = lostAndFoundInfo.getLostAndFoundItem();
-        if (username.equals(lostAndFoundItem.getUsername())) {
-            modelAndView.addObject("LostAndFoundItemID", id);
-            modelAndView.addObject("LostAndFoundItemName", lostAndFoundItem.getName());
-            modelAndView.addObject("LostAndFoundItemDescription", lostAndFoundItem.getDescription());
-            modelAndView.addObject("LostAndFoundItemLocation", lostAndFoundItem.getLocation());
-            modelAndView.addObject("LostAndFoundItemLostType", lostAndFoundItem.getLostType());
-            modelAndView.addObject("LostAndFoundItemItemType", ItemConstantUtils.LOST_AND_FOUND_ITEM_TYPE[lostAndFoundItem.getItemType()]);
-            modelAndView.addObject("LostAndFoundItemItemTypeValue", lostAndFoundItem.getItemType());
-            modelAndView.addObject("LostAndFoundItemQQ", lostAndFoundItem.getQq());
-            modelAndView.addObject("LostAndFoundItemWechat", lostAndFoundItem.getWechat());
-            modelAndView.addObject("LostAndFoundItemPhone", lostAndFoundItem.getPhone());
-            modelAndView.setViewName("LostAndFound/edit");
-            return modelAndView;
-        }
-        throw new NoAccessException("没有权限编辑该失物招领信息");
+        lostAndFoundService.VerifyLostAndFoundInfoEditAccess(request.getSession().getId(), id);
+        LostAndFoundItem lostAndFoundItem = lostAndFoundService.QueryLostAndFoundInfoByID(id).getLostAndFoundItem();
+        modelAndView.addObject("LostAndFoundItemID", id);
+        modelAndView.addObject("LostAndFoundItemName", lostAndFoundItem.getName());
+        modelAndView.addObject("LostAndFoundItemDescription", lostAndFoundItem.getDescription());
+        modelAndView.addObject("LostAndFoundItemLocation", lostAndFoundItem.getLocation());
+        modelAndView.addObject("LostAndFoundItemLostType", lostAndFoundItem.getLostType());
+        modelAndView.addObject("LostAndFoundItemItemType", ItemConstantUtils.LOST_AND_FOUND_ITEM_TYPE[lostAndFoundItem.getItemType()]);
+        modelAndView.addObject("LostAndFoundItemItemTypeValue", lostAndFoundItem.getItemType());
+        modelAndView.addObject("LostAndFoundItemQQ", lostAndFoundItem.getQq());
+        modelAndView.addObject("LostAndFoundItemWechat", lostAndFoundItem.getWechat());
+        modelAndView.addObject("LostAndFoundItemPhone", lostAndFoundItem.getPhone());
+        modelAndView.setViewName("LostAndFound/edit");
+        return modelAndView;
     }
 
     /**

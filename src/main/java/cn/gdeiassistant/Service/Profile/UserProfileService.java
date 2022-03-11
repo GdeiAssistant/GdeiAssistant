@@ -3,7 +3,9 @@ package cn.gdeiassistant.Service.Profile;
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Introduction;
 import cn.gdeiassistant.Pojo.Entity.Profile;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.ProfileMapper;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserProfileService {
+
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     @Resource(name = "profileMapper")
     private ProfileMapper profileMapper;
@@ -72,11 +77,12 @@ public class UserProfileService {
     /**
      * 获取用户个人资料
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public Profile GetUserProfile(String username) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public Profile GetUserProfile(String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
             return profile;
@@ -87,12 +93,13 @@ public class UserProfileService {
     /**
      * 获取用户个人简介
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public Introduction GetUserIntroduction(String username) throws Exception {
+    public Introduction GetUserIntroduction(String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils
-                .encryptString(username));
+                .encryptString(user.getUsername()));
         if (introduction != null) {
             return introduction;
         }
@@ -102,34 +109,38 @@ public class UserProfileService {
     /**
      * 获取用户的头像图片URL
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public String GetUserAvatar(String username) {
-        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "avatar/" + username + ".jpg"
-                , 30, TimeUnit.MINUTES);
+    public String GetUserAvatar(String sessionId) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "avatar/"
+                + user.getUsername() + ".jpg", 30, TimeUnit.MINUTES);
     }
 
     /**
      * 获取用户的头像高清图片URL
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public String GetUserHighDefinitionAvatar(String username) {
-        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg"
-                , 30, TimeUnit.MINUTES);
+    public String GetUserHighDefinitionAvatar(String sessionId) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "avatar/"
+                + user.getUsername() + "_hd.jpg", 30, TimeUnit.MINUTES);
     }
 
     /**
      * 更新用户头像
      *
-     * @param username
+     * @param sessionId
      * @param inputStream
      * @return
      */
-    public void UpdateAvatar(String username, InputStream inputStream) {
-        ossUtils.UploadOSSObject("gdeiassistant-userdata", "avatar/" + username + ".jpg", inputStream);
+    public void UpdateAvatar(String sessionId, InputStream inputStream) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        ossUtils.UploadOSSObject("gdeiassistant-userdata", "avatar/"
+                + user.getUsername() + ".jpg", inputStream);
         try {
             if (inputStream != null) {
                 inputStream.close();
@@ -142,11 +153,13 @@ public class UserProfileService {
     /**
      * 更新用户高清头像
      *
-     * @param username
+     * @param sessionId
      * @param inputStream
      */
-    public void UpdateHighDefinitionAvatar(String username, InputStream inputStream) {
-        ossUtils.UploadOSSObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg"
+    public void UpdateHighDefinitionAvatar(String sessionId, InputStream inputStream) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        ossUtils.UploadOSSObject("gdeiassistant-userdata", "avatar/"
+                        + user.getUsername() + "_hd.jpg"
                 , inputStream);
         try {
             if (inputStream != null) {
@@ -160,42 +173,45 @@ public class UserProfileService {
     /**
      * 删除用户头像
      *
-     * @param username
+     * @param sessionId
      */
-    public void DeleteAvatar(String username) {
-        ossUtils.DeleteOSSObject("gdeiassistant-userdata", "avatar/" + username + ".jpg");
-        ossUtils.DeleteOSSObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg");
+    public void DeleteAvatar(String sessionId) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        ossUtils.DeleteOSSObject("gdeiassistant-userdata", "avatar/" + user.getUsername() + ".jpg");
+        ossUtils.DeleteOSSObject("gdeiassistant-userdata", "avatar/" + user.getUsername() + "_hd.jpg");
     }
 
     /**
      * 更新个人简介
      *
-     * @param username
+     * @param sessionId
      * @param introductionContent
      * @return
      */
     @Transactional("appTransactionManager")
-    public void UpdateIntroduction(String username, String introductionContent) throws Exception {
-        Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils.encryptString(username));
+    public void UpdateIntroduction(String sessionId, String introductionContent) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()));
         if (introduction != null) {
-            profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(username), introductionContent);
+            profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()), introductionContent);
         } else {
-            profileMapper.initUserIntroduction(StringEncryptUtils.encryptString(username));
-            profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(username), introductionContent);
+            profileMapper.initUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()));
+            profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()), introductionContent);
         }
     }
 
     /**
      * 更新用户所在地
      *
-     * @param username
+     * @param sessionId
      * @param region
      * @param state
      * @param city
      * @return
      */
-    public void UpdateLocation(String username, String region, String state, String city) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void UpdateLocation(String sessionId, String region, String state, String city) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setLocationRegion(region);
             profile.setLocationState(state);
@@ -209,14 +225,15 @@ public class UserProfileService {
     /**
      * 更新用户家乡
      *
-     * @param username
+     * @param sessionId
      * @param region
      * @param state
      * @param city
      * @throws Exception
      */
-    public void UpdateHometown(String username, String region, String state, String city) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void UpdateHometown(String sessionId, String region, String state, String city) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setHometownRegion(region);
             profile.setHometownState(state);
@@ -230,13 +247,14 @@ public class UserProfileService {
     /**
      * 更新性别个人资料
      *
-     * @param username
+     * @param sessionId
      * @param gender
      * @return
      */
     @Transactional("appTransactionManager")
-    public void UpdateGender(String username, int gender, String customGenderName) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void UpdateGender(String sessionId, int gender, String customGenderName) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setGender(gender);
             profile.setCustomGenderName(customGenderName);
@@ -249,14 +267,15 @@ public class UserProfileService {
     /**
      * 更新生日日期
      *
-     * @param username
+     * @param sessionId
      * @param year
      * @param month
      * @param date
      * @return
      */
-    public void UpdateBirthday(String username, int year, int month, int date) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void UpdateBirthday(String sessionId, int year, int month, int date) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             Date birthday = Date.from(LocalDate.of(year, month, date)
                     .atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -270,11 +289,12 @@ public class UserProfileService {
     /**
      * 重置生日日期
      *
-     * @param username
+     * @param sessionId
      * @throws Exception
      */
-    public void ResetBirthday(String username) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void ResetBirthday(String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setBirthday(null);
             profileMapper.updateBirthday(profile);
@@ -286,12 +306,13 @@ public class UserProfileService {
     /**
      * 更新院系个人资料
      *
-     * @param username
+     * @param sessionId
      * @param faculty
      * @return
      */
-    public void UpdateFaculty(String username, int faculty) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void UpdateFaculty(String sessionId, int faculty) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setFaculty(faculty);
             profileMapper.updateFaculty(profile);
@@ -303,12 +324,13 @@ public class UserProfileService {
     /**
      * 更新专业个人资料
      *
-     * @param username
+     * @param sessionId
      * @param major
      * @return
      */
-    public void UpdateMajor(String username, String major) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void UpdateMajor(String sessionId, String major) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setMajor(major);
             profileMapper.updateMajor(profile);
@@ -320,12 +342,13 @@ public class UserProfileService {
     /**
      * 更新入学年份
      *
-     * @param username
+     * @param sessionId
      * @param enrollment
      * @throws Exception
      */
-    public void UpdateEnrollment(String username, int enrollment) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void UpdateEnrollment(String sessionId, int enrollment) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setEnrollment(enrollment);
             profileMapper.updateEnrollment(profile);
@@ -337,11 +360,12 @@ public class UserProfileService {
     /**
      * 重置入学年份信息
      *
-     * @param username
+     * @param sessionId
      * @throws Exception
      */
-    public void ResetEnrollment(String username) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void ResetEnrollment(String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setEnrollment(null);
             profileMapper.updateEnrollment(profile);
@@ -353,12 +377,13 @@ public class UserProfileService {
     /**
      * 更新昵称个人资料
      *
-     * @param username
+     * @param sessionId
      * @param nickname
      * @return
      */
-    public void UpdateNickname(String username, String nickname) throws Exception {
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(username));
+    public void UpdateNickname(String sessionId, String nickname) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
         if (profile != null) {
             profile.setNickname(nickname);
             profileMapper.updateNickname(profile);

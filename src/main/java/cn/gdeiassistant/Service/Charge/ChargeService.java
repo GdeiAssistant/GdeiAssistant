@@ -1,14 +1,17 @@
 package cn.gdeiassistant.Service.Charge;
 
-import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Charge.ChargeMapper;
 import cn.gdeiassistant.Exception.ChargeException.AmountNotAvailableException;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
+import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Pojo.Entity.Charge;
 import cn.gdeiassistant.Pojo.Entity.ChargeLog;
 import cn.gdeiassistant.Pojo.Entity.Cookie;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import cn.gdeiassistant.Service.CardQuery.CardQueryService;
+import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
+import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Charge.ChargeMapper;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -25,7 +28,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -39,46 +41,39 @@ import java.util.Map;
 @Service
 public class ChargeService {
 
-    private int timeout;
-
-    @Autowired
-    private CardQueryService cardQueryService;
+    private Logger logger = LoggerFactory.getLogger(ChargeService.class);
 
     @Autowired
     private ChargeMapper chargeMapper;
 
-    private Logger logger = LoggerFactory.getLogger(ChargeService.class);
-
-    @Value("#{propertiesReader['timeout.charge']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     /**
      * 提交校园卡充值请求并自动确认，返回支付宝URL和Cookie列表
      *
      * @param sessionId
-     * @param username
-     * @param password
      * @param amount
      * @return
      */
-    public Charge ChargeRequest(String sessionId, String username, String password, int amount) throws Exception {
+    public Charge ChargeRequest(String sessionId, int amount) throws Exception {
+        UserCertificate userCertificate = userCertificateService.GetUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
             if (amount <= 0 || amount > 500) {
                 throw new AmountNotAvailableException("充值金额超过范围");
             }
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            cardQueryService.LoginCardSystem(httpClient, username, password, false);
+            LoginCardSystem(httpClient, userCertificate.getUser().getUsername()
+                    , userCertificate.getUser().getPassword(), false);
             //发送充值请求
             Map<String, String> ecardDataMap = SendChargeRequest(httpClient, amount);
             //确认充值请求
-            return ConfirmChargeRequest(sessionId, httpClient, cookieStore, ecardDataMap);
+            return ConfirmChargeRequest(httpClient, cookieStore, ecardDataMap);
         } catch (AmountNotAvailableException e) {
             logger.error("校园卡充值异常：", e);
             throw new AmountNotAvailableException("用户充值金额超过范围");
@@ -100,6 +95,137 @@ public class ChargeService {
                 HttpClientUtils.SyncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
+    }
+
+    /**
+     * 登录支付管理平台
+     *
+     * @param httpClient
+     * @param username
+     * @param password
+     * @param autoRedirect
+     * @throws ServerErrorException
+     * @throws IOException
+     * @throws PasswordIncorrectException
+     */
+    private void LoginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws ServerErrorException, IOException, PasswordIncorrectException {
+        HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
+        HttpResponse httpResponse = httpClient.execute(httpGet);
+        Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.getElementsByClass("pcclient").size() > 0) {
+            //封装需要提交的数据
+            List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
+            basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
+            basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
+            basicNameValuePairs.add(new BasicNameValuePair("username", username));
+            basicNameValuePairs.add(new BasicNameValuePair("password", password));
+            basicNameValuePairs.add(new BasicNameValuePair("service", "http://ecard.gdei.edu.cn:8050/LoginCas.aspx"));
+            basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
+            basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
+            HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
+            //绑定表单参数
+            httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
+            httpResponse = httpClient.execute(httpPost);
+            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                if (document.getElementsByClass("pcclient").size() > 0) {
+                    throw new PasswordIncorrectException("用户名或密码错误");
+                }
+                //获取html页面中的首个URL地址,进入支付系统页面
+                httpGet = new HttpGet(document.select("a").first().attr("href"));
+                //请求后,若账号正确会进行两次302重定向,进入支付系统主页
+                httpResponse = httpClient.execute(httpGet);
+                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                if (autoRedirect) {
+                    //判断是否成功跳转至支付平台页面
+                    if (httpResponse.getStatusLine().getStatusCode() == 200
+                            && document.getElementsByClass("clear main").size() > 0) {
+                        return;
+                    }
+                } else {
+                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                        httpResponse = httpClient.execute(httpGet);
+                        if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                            httpResponse = httpClient.execute(httpGet);
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                            //判断是否成功跳转至支付平台页面
+                            if (httpResponse.getStatusLine().getStatusCode() == 200
+                                    && document.getElementsByClass("clear main").size() > 0) {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            if (autoRedirect) {
+                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.select("span[class='style2']").size() > 0) {
+                    //开启自动重定向时的自动登录
+                    httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                    httpResponse = httpClient.execute(httpGet);
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                        httpGet = new HttpGet(document.select("a").first().attr("href"));
+                        httpResponse = httpClient.execute(httpGet);
+                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                            httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                            httpResponse = httpClient.execute(httpGet);
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                            if (document.select("div[class='right menu_a'] span em").size() > 0) {
+                                return;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                    //未开启自动重定向时的自动登录
+                    httpGet = new HttpGet("https://security.gdei.edu.cn/cas/" + httpResponse.getFirstHeader("Location").getValue());
+                    httpResponse = httpClient.execute(httpGet);
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    if (httpResponse.getStatusLine().getStatusCode() == 200
+                            && document.select("span[class='style2']").size() > 0) {
+                        httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                        httpResponse = httpClient.execute(httpGet);
+                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                        if (httpResponse.getStatusLine().getStatusCode() == 200
+                                && document.getElementsByClass("main clear").size() > 0) {
+                            if (document.select("div[class='right menu_a'] span em").size() > 0) {
+                                return;
+                            }
+                            httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                            httpResponse = httpClient.execute(httpGet);
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                            if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                                httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                                httpResponse = httpClient.execute(httpGet);
+                                if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                                    httpGet = new HttpGet(document.select("a").first().attr("href"));
+                                    httpResponse = httpClient.execute(httpGet);
+                                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                                        httpResponse = httpClient.execute(httpGet);
+                                        if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                                            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                                            httpResponse = httpClient.execute(httpGet);
+                                            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                                                if (document.select("div[class='right menu_a'] span em").size() > 0) {
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        throw new ServerErrorException("支付管理平台异常");
     }
 
     /**
@@ -190,13 +316,12 @@ public class ChargeService {
     /**
      * 确认充值请求
      *
-     * @param sessionId
      * @param httpClient
      * @param ecardDataMap
      * @return
      * @throws Exception
      */
-    private Charge ConfirmChargeRequest(String sessionId, CloseableHttpClient httpClient, CookieStore cookieStore
+    private Charge ConfirmChargeRequest(CloseableHttpClient httpClient, CookieStore cookieStore
             , Map<String, String> ecardDataMap) throws Exception {
         Charge charge = new Charge();
         List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
@@ -252,13 +377,14 @@ public class ChargeService {
     /**
      * 保存用户充值记录日志
      *
-     * @param username
+     * @param sessionId
      * @param amount
      */
     @Async
-    public void SaveChargeLog(String username, int amount) throws Exception {
+    public void SaveChargeLog(String sessionId, int amount) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         ChargeLog chargeLog = new ChargeLog();
-        chargeLog.setUsername(username);
+        chargeLog.setUsername(user.getUsername());
         chargeLog.setAmount(amount);
         chargeMapper.insertChargeLog(chargeLog);
     }

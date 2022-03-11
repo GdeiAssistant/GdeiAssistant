@@ -68,8 +68,7 @@ public class PhotographRestController {
     public DataJsonResult<List<Photograph>> QueryPhotographList(HttpServletRequest request
             , @Validated @NotNull @Min(0) @Max(1) @PathVariable("type") int type
             , @PathVariable("start") int start, @PathVariable("size") int size) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        List<Photograph> photographList = photographService.QueryPhotographList(start, size, type, username);
+        List<Photograph> photographList = photographService.QueryPhotographList(start, size, type, request.getSession().getId());
         return new DataJsonResult<>(true, photographList);
     }
 
@@ -111,8 +110,7 @@ public class PhotographRestController {
     @RequestMapping(value = "/api/photograph/id/{id}/comment", method = RequestMethod.POST)
     public JsonResult AddPhotographComment(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        photographService.AddPhotographComment(id, comment, username);
+        photographService.AddPhotographComment(id, comment, request.getSession().getId());
         return new JsonResult(true);
     }
 
@@ -132,10 +130,9 @@ public class PhotographRestController {
     @RequestMapping(value = "/api/photograph", method = RequestMethod.POST)
     public JsonResult AddPhotograph(HttpServletRequest request, @Validated Photograph photograph
             , MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4) throws WsgException, IOException {
-        String username = (String) request.getSession().getAttribute("username");
         //插入照片信息记录
         int id = photographService.AddPhotograph(photograph.getTitle(), photograph.getContent()
-                , photograph.getCount(), photograph.getType(), username);
+                , photograph.getCount(), photograph.getType(), request.getSession().getId());
         //上传照片图片
         photographService.UploadPhotographItemPicture(id, 1, image1.getInputStream());
         if (image2 != null && image2.getSize() > 0 && image2.getSize() < MAX_PICTURE_SIZE) {
@@ -159,8 +156,7 @@ public class PhotographRestController {
      */
     @RequestMapping(value = "/api/photograph/id/{id}/like", method = RequestMethod.POST)
     public JsonResult LikePhotograph(HttpServletRequest request, @PathVariable("id") int id) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        photographService.LikePhotograph(id, username);
+        photographService.LikePhotograph(id, request.getSession().getId());
         return new JsonResult(true);
     }
 

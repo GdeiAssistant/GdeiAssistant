@@ -1,10 +1,15 @@
 package cn.gdeiassistant.Service.Dating;
 
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
+import cn.gdeiassistant.Exception.DatingException.RepeatPickException;
+import cn.gdeiassistant.Exception.DatingException.SelfPickException;
 import cn.gdeiassistant.Pojo.Entity.DatingMessage;
 import cn.gdeiassistant.Pojo.Entity.DatingPick;
 import cn.gdeiassistant.Pojo.Entity.DatingProfile;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Dating.DatingMapper;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.taobao.wsgsvr.WsgException;
@@ -17,6 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 @Deprecated
 public class DatingService {
+
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     private DatingMapper datingMapper;
 
@@ -79,12 +87,13 @@ public class DatingService {
     /**
      * 添加卖室友信息
      *
-     * @param username
+     * @param sessionId
      * @param datingProfile
      * @return
      */
-    public Integer AddDatingProfile(String username, DatingProfile datingProfile) throws WsgException {
-        datingProfile.setUsername(StringEncryptUtils.encryptString(username));
+    public Integer AddDatingProfile(String sessionId, DatingProfile datingProfile) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        datingProfile.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
         datingMapper.insertDatingProfile(datingProfile);
         return datingProfile.getProfileId();
     }
@@ -110,12 +119,13 @@ public class DatingService {
      * 查找撩一下记录
      *
      * @param profileId
-     * @param username
+     * @param sessionId
      * @return
      */
-    public DatingPick QueryDatingPick(Integer profileId, String username) throws WsgException {
+    public DatingPick QueryDatingPick(Integer profileId, String sessionId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DatingPick datingPick = datingMapper.selectDatingPick(profileId
-                , StringEncryptUtils.encryptString(username));
+                , StringEncryptUtils.encryptString(user.getUsername()));
         if (datingPick == null) {
             return null;
         }
@@ -124,12 +134,35 @@ public class DatingService {
     }
 
     /**
+     * 检查是否隐藏撩一下界面
+     *
+     * @param sessionId
+     * @param pickId
+     * @return
+     */
+    public boolean CheckIsPickPageHidden(String sessionId, int pickId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        DatingPick datingPick = QueryDatingPickById(pickId);
+        if (datingPick != null) {
+            if (datingPick.getState().equals(1)) {
+                //如果对方已接受该撩一下请求，则隐藏撩一下界面，显示联系方式
+                return true;
+            }
+            if (datingPick.getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+                //当发布者与浏览者相同时，隐藏撩一下功能
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 查找撩一下记录
      *
      * @param id
      * @return
      */
-    public DatingPick QueryDatingPickById(Integer id) throws WsgException {
+    public DatingPick QueryDatingPickById(int id) throws WsgException {
         DatingPick datingPick = datingMapper.selectDatingPickById(id);
         if (datingPick != null) {
             datingPick.setUsername(StringEncryptUtils.decryptString(datingPick.getUsername()));
@@ -139,14 +172,50 @@ public class DatingService {
         return null;
     }
 
+    public void VerifyDatingPickRequestAccess(String sessionId, int pickId) throws RepeatPickException, WsgException, SelfPickException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        DatingPick datingPick = datingMapper.selectDatingPickById(pickId);
+        if (datingPick != null) {
+            //对方未拒绝前，不能发起多次撩一下请求
+            if (!datingPick.getState().equals(-1)) {
+                throw new RepeatPickException("重复的撩一下请求");
+            }
+            //不能向自己发布的卖室友信息发送撩一下请求
+            if (datingPick.getDatingProfile().getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+                throw new SelfPickException("不能向自己发布的卖室友信息发送撩一下请求");
+            }
+        }
+    }
+
+    /**
+     * 检查当前用户有无查看撩一下记录的权限
+     *
+     * @param sessionId
+     * @param id
+     */
+    public void VerifyDatingPickViewAccess(String sessionId, int id) throws WsgException, DataNotExistException, NoAccessException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        DatingPick datingPick = datingMapper.selectDatingPickById(id);
+        if (datingPick != null) {
+            if (datingPick.getDatingProfile().getUsername().equals(StringEncryptUtils
+                    .encryptString(user.getUsername()))) {
+                return;
+            }
+            throw new NoAccessException("没有权限查看该撩一下信息");
+        }
+        throw new DataNotExistException("该撩一下信息不存在");
+    }
+
     /**
      * 添加撩一下记录
      *
+     * @param sessionId
      * @param datingPick
      * @return
      */
-    public void AddDatingPick(String username, DatingPick datingPick) throws WsgException {
-        datingPick.setUsername(StringEncryptUtils.encryptString(username));
+    public void AddDatingPick(String sessionId, DatingPick datingPick) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        datingPick.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
         datingMapper.insertDatingPick(datingPick);
         //创建卖室友通知
         DatingProfile datingProfile = datingMapper.selectDatingProfileById(datingPick
@@ -169,27 +238,37 @@ public class DatingService {
      * @param state
      * @return
      */
-    public void UpdateDatingPickState(Integer id, Integer state) {
-        datingMapper.updateDatingPickState(id, state);
+    public void UpdateDatingPickState(Integer id, Integer state) throws DataNotExistException, NoAccessException {
         DatingPick datingPick = datingMapper.selectDatingPickById(id);
-        DatingMessage datingMessage = new DatingMessage();
-        datingMessage.setUsername(datingPick.getUsername());
-        datingMessage.setType(1);
-        datingMessage.setDatingPick(datingPick);
-        datingMessage.setState(0);
-        datingMapper.insertDatingMessage(datingMessage);
+        if (datingPick != null) {
+            if (datingPick.getState().equals(0)) {
+                datingMapper.updateDatingPickState(id, state);
+                DatingMessage datingMessage = new DatingMessage();
+                datingMessage.setUsername(datingPick.getUsername());
+                datingMessage.setType(1);
+                datingMessage.setDatingPick(datingPick);
+                datingMessage.setState(0);
+                datingMapper.insertDatingMessage(datingMessage);
+                return;
+            }
+            throw new NoAccessException("该撩一下记录已处理，请勿重复提交");
+        }
+        throw new DataNotExistException("该撩一下记录不存在");
+
     }
 
     /**
      * 分页查找用户卖室友消息列表
      *
-     * @param username
+     * @param sessionId
      * @param start
      * @param size
      * @return
      */
-    public List<DatingMessage> QueryUserDatingMessage(String username, Integer start, Integer size) throws WsgException {
-        List<DatingMessage> list = datingMapper.selectUserDatingMessagePage(StringEncryptUtils.encryptString(username), start, size);
+    public List<DatingMessage> QueryUserDatingMessage(String sessionId, Integer start, Integer size) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        List<DatingMessage> list = datingMapper.selectUserDatingMessagePage(StringEncryptUtils
+                .encryptString(user.getUsername()), start, size);
         for (DatingMessage datingMessage : list) {
             datingMessage.setUsername(StringEncryptUtils.decryptString(datingMessage.getUsername()));
             datingMessage.getDatingPick().setUsername(StringEncryptUtils.decryptString(datingMessage.getDatingPick().getUsername()));
@@ -201,11 +280,12 @@ public class DatingService {
     /**
      * 查询用户未读的通知消息数量
      *
-     * @param username
+     * @param sessionId
      * @return
      */
-    public Integer QueryUserUnReadDatingMessageCount(String username) throws WsgException {
-        return datingMapper.selectUserUnReadDatingMessageCount(StringEncryptUtils.encryptString(username));
+    public Integer QueryUserUnReadDatingMessageCount(String sessionId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        return datingMapper.selectUserUnReadDatingMessageCount(StringEncryptUtils.encryptString(user.getUsername()));
     }
 
     /**

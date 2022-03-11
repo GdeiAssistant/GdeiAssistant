@@ -8,7 +8,6 @@ import cn.gdeiassistant.Pojo.Charge.ChargeRequest;
 import cn.gdeiassistant.Pojo.Entity.Charge;
 import cn.gdeiassistant.Pojo.Entity.RequestSecurity;
 import cn.gdeiassistant.Pojo.Entity.RequestValidation;
-import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Service.Charge.ChargeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +39,10 @@ public class ChargeRequestRestController {
             , @Validated ChargeRequest requestParams
             , @Validated RequestValidation requestValidation
             , @Validated RequestSecurity requestSecurity) throws Exception {
-        User user = (User) request.getAttribute("user");
-        Charge charge = chargeService.ChargeRequest(request.getSession().getId()
-                , user.getUsername(), user.getPassword(), amount);
+        String sessionId = (String) request.getAttribute("sessionId");
+        Charge charge = chargeService.ChargeRequest(sessionId, amount);
         //保存充值日志记录
-        chargeService.SaveChargeLog(user.getUsername(), amount);
+        chargeService.SaveChargeLog(sessionId, amount);
         //返回充值结果
         return new DataJsonResult<>(true, charge);
     }

@@ -2,10 +2,13 @@ package cn.gdeiassistant.Service.Ershou;
 
 import cn.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.Pojo.Entity.ErshouInfo;
 import cn.gdeiassistant.Pojo.Entity.ErshouItem;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Ershou.ErshouMapper;
 import cn.gdeiassistant.Service.Profile.UserProfileService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
@@ -25,6 +28,9 @@ public class ErshouService {
 
     @Resource(name = "ershouMapper")
     private ErshouMapper ershouMapper;
+
+    @Autowired
+    private UserCertificateService userCertificateService;
 
     @Autowired
     private UserProfileService userProfileService;
@@ -55,17 +61,43 @@ public class ErshouService {
     }
 
     /**
+     * 校验当前用户有无编辑权限
+     *
+     * @param sessionId
+     * @param id
+     */
+    public void VerifyErshouInfoEditAccess(String sessionId, int id) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        ErshouInfo ershouInfo = ershouMapper.selectInfoByID(id);
+        if (ershouInfo != null) {
+            if (ershouInfo.getErshouItem().getUsername().equals(StringEncryptUtils
+                    .encryptString(user.getUsername()))) {
+                if (!ershouInfo.getErshouItem().getState().equals(2)) {
+                    //校验通过
+                    return;
+                }
+                throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
+            }
+            throw new NoAccessException("没有权限编辑该二手交易信息");
+        }
+        throw new DataNotExistException("二手交易商品不存在");
+    }
+
+    /**
      * 查询个人发布的二手交易信息
      *
+     * @param sessionId
      * @return
      */
-    public List<ErshouItem> QueryPersonalErShouItems(String username) throws Exception {
-        List<ErshouItem> ershouItemList = ershouMapper.selectItemsByUsername(StringEncryptUtils.encryptString(username));
+    public List<ErshouItem> QueryPersonalErShouItems(String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        List<ErshouItem> ershouItemList = ershouMapper.selectItemsByUsername(StringEncryptUtils
+                .encryptString(user.getUsername()));
         if (ershouItemList == null || ershouItemList.isEmpty()) {
             return new ArrayList<>();
         }
         for (ErshouItem ershouItem : ershouItemList) {
-            ershouItem.setUsername(username);
+            ershouItem.setUsername(user.getUsername());
         }
         return ershouItemList;
     }
@@ -130,12 +162,14 @@ public class ErshouService {
      * 添加二手交易商品信息
      *
      * @param ershouItem
+     * @param sessionId
      * @return
      */
-    public ErshouItem AddErshouItem(ErshouItem ershouItem, String username) throws Exception {
+    public ErshouItem AddErshouItem(ErshouItem ershouItem, String sessionId) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         //金额价格保留两位小数点
         ershouItem.setPrice((float) (Math.round(ershouItem.getPrice() * 100)) / 100);
-        ershouItem.setUsername(StringEncryptUtils.encryptString(username));
+        ershouItem.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
         //使用24小时制显示发布时间
         ershouItem.setPublishTime(new Date());
         ershouMapper.insertItem(ershouItem);
@@ -145,21 +179,28 @@ public class ErshouService {
     /**
      * 更新二手交易商品信息
      *
+     * @param sessionId
      * @param ershouItem
      * @param id
      * @return
      */
-    public void UpdateErshouItem(ErshouItem ershouItem, int id) throws Exception {
+    public void UpdateErshouItem(String sessionId, ErshouItem ershouItem, int id) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         ershouItem.setId(id);
         ErshouInfo ershouInfo = ershouMapper.selectInfoByID(id);
         if (ershouInfo == null) {
             throw new DataNotExistException("查找的二手交易信息不存在");
         }
-        if (!ershouInfo.getErshouItem().getState().equals(2)) {
-            ershouMapper.updateItem(ershouItem);
-            return;
+        if (ershouInfo.getErshouItem().getUsername().equals(StringEncryptUtils
+                .encryptString(user.getUsername()))) {
+            if (!ershouInfo.getErshouItem().getState().equals(2)) {
+                ershouMapper.updateItem(ershouItem);
+                return;
+            }
+            throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
         }
-        throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
+        throw new NoAccessException("没有权限修改该商品信息");
+
     }
 
     /**
@@ -169,16 +210,20 @@ public class ErshouService {
      * @param state
      * @return
      */
-    public void UpdateErshouItemState(int id, int state) throws Exception {
+    public void UpdateErshouItemState(String sessionId, int id, int state) throws Exception {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         ErshouInfo ershouInfo = ershouMapper.selectInfoByID(id);
         if (ershouInfo == null) {
             throw new DataNotExistException("查找的二手交易信息不存在");
         }
-        if (!ershouInfo.getErshouItem().getState().equals(2)) {
-            ershouMapper.updateItemState(id, state);
-            return;
+        if (ershouInfo.getErshouItem().getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+            if (!ershouInfo.getErshouItem().getState().equals(2)) {
+                ershouMapper.updateItemState(id, state);
+            }
+            //已出售状态的商品不能修改状态
+            throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
         }
-        throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
+        throw new NoAccessException("没有权限修改该商品信息");
     }
 
     /**

@@ -1,10 +1,10 @@
 package cn.gdeiassistant.Service.UserLogin;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @Service
 public class AutoLoginService {
@@ -13,6 +13,9 @@ public class AutoLoginService {
     private final int AUTOLOGIN_SESSION = 1;
     private final int AUTOLOGIN_COOKIE = 2;
 
+    @Autowired
+    private UserCertificateService userCertificateService;
+
     /**
      * 检查自动登录状态
      *
@@ -20,8 +23,7 @@ public class AutoLoginService {
      * @return 自动登录状态
      */
     public int CheckAutoLogin(HttpServletRequest request) {
-        HttpSession httpSession = request.getSession();
-        if (httpSession != null && httpSession.getAttribute("username") != null && httpSession.getAttribute("password") != null) {
+        if (userCertificateService.GetUserLoginCertificate(request.getSession().getId()) != null) {
             return AUTOLOGIN_SESSION;
         } else {
             Cookie cookie[] = request.getCookies();

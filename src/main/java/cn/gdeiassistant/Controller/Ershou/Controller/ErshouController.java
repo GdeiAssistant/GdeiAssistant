@@ -2,7 +2,6 @@ package cn.gdeiassistant.Controller.Ershou.Controller;
 
 import cn.gdeiassistant.Constant.ItemConstantUtils;
 import cn.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
-import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.Exception.DatabaseException.NotAvailableStateException;
 import cn.gdeiassistant.Pojo.Entity.ErshouInfo;
 import cn.gdeiassistant.Pojo.Entity.ErshouItem;
@@ -56,25 +55,19 @@ public class ErshouController {
     @RequestMapping(value = {"/ershou/edit/id/{id}"}, method = RequestMethod.GET)
     public ModelAndView ResolveErshouEditPage(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        String username = (String) request.getSession().getAttribute("username");
+        ershouService.VerifyErshouInfoEditAccess(request.getSession().getId(), id);
         ErshouInfo ershouInfo = ershouService.QueryErshouInfoByID(id);
-        if (username.equals(ershouInfo.getErshouItem().getUsername())) {
-            if (ershouInfo.getErshouItem().getState().equals(1) || ershouInfo.getErshouItem().getState().equals(0)) {
-                modelAndView.addObject("ErshouItemID", id);
-                modelAndView.addObject("ErshouItemName", ershouInfo.getErshouItem().getName());
-                modelAndView.addObject("ErshouItemDescription", ershouInfo.getErshouItem().getDescription());
-                modelAndView.addObject("ErshouItemPrice", ershouInfo.getErshouItem().getPrice());
-                modelAndView.addObject("ErshouItemLocation", ershouInfo.getErshouItem().getLocation());
-                modelAndView.addObject("ErshouItemType", ItemConstantUtils.ERSHOU_ITEM_TYPE[ershouInfo.getErshouItem().getType()]);
-                modelAndView.addObject("ErshouItemTypeValue", ershouInfo.getErshouItem().getType());
-                modelAndView.addObject("ErshouItemQQ", ershouInfo.getErshouItem().getQq());
-                modelAndView.addObject("ErshouItemPhone", ershouInfo.getErshouItem().getPhone());
-                modelAndView.setViewName("Ershou/ershouEdit");
-                return modelAndView;
-            }
-            throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
-        }
-        throw new NoAccessException("没有权限编辑该二手交易信息");
+        modelAndView.addObject("ErshouItemID", id);
+        modelAndView.addObject("ErshouItemName", ershouInfo.getErshouItem().getName());
+        modelAndView.addObject("ErshouItemDescription", ershouInfo.getErshouItem().getDescription());
+        modelAndView.addObject("ErshouItemPrice", ershouInfo.getErshouItem().getPrice());
+        modelAndView.addObject("ErshouItemLocation", ershouInfo.getErshouItem().getLocation());
+        modelAndView.addObject("ErshouItemType", ItemConstantUtils.ERSHOU_ITEM_TYPE[ershouInfo.getErshouItem().getType()]);
+        modelAndView.addObject("ErshouItemTypeValue", ershouInfo.getErshouItem().getType());
+        modelAndView.addObject("ErshouItemQQ", ershouInfo.getErshouItem().getQq());
+        modelAndView.addObject("ErshouItemPhone", ershouInfo.getErshouItem().getPhone());
+        modelAndView.setViewName("Ershou/ershouEdit");
+        return modelAndView;
     }
 
     /**
@@ -87,8 +80,7 @@ public class ErshouController {
     public ModelAndView ResolveErshouPersonalPage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Ershou/ershouPersonal");
-        String username = (String) request.getSession().getAttribute("username");
-        List<ErshouItem> ershouItemList = ershouService.QueryPersonalErShouItems(username);
+        List<ErshouItem> ershouItemList = ershouService.QueryPersonalErShouItems(request.getSession().getId());
         List<ErshouItem> availableErshouItemList = new ArrayList<>();
         List<ErshouItem> soldedErshouItemList = new ArrayList<>();
         List<ErshouItem> notAvailableErshouItemList = new ArrayList<>();

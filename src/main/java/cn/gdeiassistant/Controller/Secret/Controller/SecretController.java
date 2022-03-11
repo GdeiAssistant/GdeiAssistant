@@ -59,8 +59,7 @@ public class SecretController {
     @RequestMapping(value = {"/secret/profile"}, method = RequestMethod.GET)
     public ModelAndView ResolveSecretProfilePage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        String username = (String) request.getSession().getAttribute("username");
-        List<Secret> secretList = secretService.GetSecretInfo(username);
+        List<Secret> secretList = secretService.GetSecretInfo(request.getSession().getId());
         modelAndView.addObject("SecretList", secretList);
         modelAndView.setViewName("Secret/secretProfile");
         return modelAndView;
@@ -75,8 +74,7 @@ public class SecretController {
     @RequestMapping(value = {"/secret/detail/id/{id}"}, method = RequestMethod.GET)
     public ModelAndView ResolveSecretDetailPage(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        String username = (String) request.getSession().getAttribute("username");
-        Secret secret = secretService.GetSecretDetailInfo(id, username);
+        Secret secret = secretService.GetSecretDetailInfo(id, request.getSession().getId());
         modelAndView.setViewName("Secret/secretDetail");
         modelAndView.addObject("Secret", secret);
         return modelAndView;

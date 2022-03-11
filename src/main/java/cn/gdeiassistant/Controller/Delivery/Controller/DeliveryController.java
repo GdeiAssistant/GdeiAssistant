@@ -36,10 +36,9 @@ public class DeliveryController {
     @RequestMapping(value = "/delivery", method = RequestMethod.GET)
     public ModelAndView ResolveDeliveryIndexPage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        String username = (String) request.getSession().getAttribute("username");
         //获取头像地址
-        String url = userProfileService.GetUserAvatar(username);
-        String nickname = userProfileService.GetUserProfile(username).getNickname();
+        String url = userProfileService.GetUserAvatar(request.getSession().getId());
+        String nickname = userProfileService.GetUserProfile(request.getSession().getId()).getNickname();
         modelAndView.setViewName("Delivery/index");
         modelAndView.addObject("AvatarURL", url);
         modelAndView.addObject("NickName", nickname);
@@ -61,7 +60,6 @@ public class DeliveryController {
      */
     @RequestMapping(value = "/delivery/order/id/{id}", method = RequestMethod.GET)
     public ModelAndView ResolveDeliveryOrderDetailPage(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException, WsgException {
-        String username = (String) request.getSession().getAttribute("username");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/Delivery/orderDetail");
         DeliveryOrder deliveryOrder = deliveryService.QueryDeliveryOrderByOrderId(id);
@@ -70,35 +68,13 @@ public class DeliveryController {
             modelAndView.addObject("DeliveryTrade", deliveryTrade);
         }
         modelAndView.addObject("DeliveryOrder", deliveryOrder);
-        if (deliveryOrder.getUsername().equals(username)) {
-            //自己发布的订单信息
-            modelAndView.addObject("DetailType", 0);
-        } else {
-            //他人发布的订单信息
-            if (deliveryOrder.getState().equals(0)) {
-                //等待接单，可以查看
-                modelAndView.addObject("DetailType", 1);
-            } else {
-                //已经接单，检查当前用户是否为接单人
-                if (deliveryService.CheckOrderAccepter(deliveryOrder.getOrderId(), username)) {
-                    //当前用户为接单人，可以查看详细信息
-                    modelAndView.addObject("DetailType", 3);
-                } else {
-                    //没有权限查看
-                    modelAndView.addObject("DetailType", 2);
-                }
-            }
-        }
+        int detailType = deliveryService.QueryDeliveryOrderDetailType(request.getSession().getId(), id);
+        modelAndView.addObject("DetailType", detailType);
         return modelAndView;
     }
 
     /**
      * 查看代收交易详细信息
-     * <p>
-     * DetailType表示信息详细程度
-     * 0表示显示所有信息且显示确认交付按钮（下单者）
-     * 1表示没有权限查看（第三方）
-     * 2表示显示所有信息但没有操作按钮（接单者）
      *
      * @param request
      * @param tradeId
@@ -106,24 +82,12 @@ public class DeliveryController {
      */
     @RequestMapping(value = "/delivery/trade/id/{id}", method = RequestMethod.GET)
     public ModelAndView ResolveDeliveryTradeDetailPage(HttpServletRequest request, @PathVariable("id") Integer tradeId) throws WsgException, DataNotExistException {
-        String username = (String) request.getSession().getAttribute("username");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/Delivery/tradeDetail");
         DeliveryTrade deliveryTrade = deliveryService.QueryDeliveryTradeByTradeId(tradeId);
+        int detailType = deliveryService.QueryDeliveryTradeDetailType(request.getSession().getId(), tradeId);
         modelAndView.addObject("DeliveryTrade", deliveryTrade);
-        if (deliveryTrade.getUsername().equals(username)) {
-            //自己接受的交易单
-            modelAndView.addObject("DetailType", 2);
-        } else {
-            //他人接受的交易单，检查当前用户是否为下单人
-            if (deliveryService.CheckOrderPublisher(deliveryTrade.getOrderId(), username)) {
-                //当前用户为下单人，可以查看详细信息和交付按钮
-                modelAndView.addObject("DetailType", 0);
-            } else {
-                //没有权限查看
-                modelAndView.addObject("DetailType", 1);
-            }
-        }
+        modelAndView.addObject("DetailType", detailType);
         return modelAndView;
     }
 
@@ -156,19 +120,10 @@ public class DeliveryController {
      */
     @RequestMapping(value = "/delivery/personal", method = RequestMethod.GET)
     public ModelAndView ResolveDeliveryPersonalPage(HttpServletRequest request) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
         ModelAndView modelAndView = new ModelAndView("Delivery/personal");
-        List<DeliveryOrder> list = deliveryService.QueryPersonalDeliveryOrder(username);
-        List<DeliveryOrder> deliveryOrderList = new ArrayList<>();
-        List<DeliveryOrder> acceptedDeliveryOrderList = new ArrayList<>();
-        for (DeliveryOrder deliveryOrder : list) {
-            if (deliveryOrder.getUsername().equals(username)) {
-                deliveryOrderList.add(deliveryOrder);
-            } else {
-                acceptedDeliveryOrderList.add(deliveryOrder);
-            }
-        }
-        modelAndView.addObject("OrderList", deliveryOrderList);
+        List<DeliveryOrder> personalDeliveryOrderList = deliveryService.QueryPersonalDeliveryOrder(request.getSession().getId());
+        List<DeliveryOrder> acceptedDeliveryOrderList = deliveryService.QueryPersonalAcceptedDeliveryOrder(request.getSession().getId());
+        modelAndView.addObject("OrderList", personalDeliveryOrderList);
         modelAndView.addObject("AcceptedOrderList", acceptedDeliveryOrderList);
         return modelAndView;
     }

@@ -81,8 +81,7 @@ public class PhoneRestController {
             return new JsonResult(false, "不受支持的国际手机区号");
         }
         phoneService.CheckVerificationCode(code, phone, randomCode);
-        String username = (String) request.getSession().getAttribute("username");
-        phoneService.AttachUserPhone(username, code, phone);
+        phoneService.AttachUserPhone(request.getSession().getId(), code, phone);
         return new JsonResult(true);
     }
 
@@ -94,10 +93,9 @@ public class PhoneRestController {
      */
     @RequestMapping(value = "/api/phone/unattach", method = RequestMethod.POST)
     public JsonResult UnAttachPhoneNumber(HttpServletRequest request) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        Phone phone = phoneService.QueryUserPhone(username);
+        Phone phone = phoneService.QueryUserPhone(request.getSession().getId());
         if (phone != null) {
-            phoneService.UnAttachUserPhone(username);
+            phoneService.UnAttachUserPhone(request.getSession().getId());
             return new JsonResult(true);
         }
         return new JsonResult(false, "当前用户未绑定手机号");

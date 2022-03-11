@@ -3,7 +3,9 @@ package cn.gdeiassistant.Service.Topic;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Topic;
 import cn.gdeiassistant.Pojo.Entity.TopicLike;
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Topic.TopicMapper;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.taobao.wsgsvr.WsgException;
@@ -21,6 +23,9 @@ import java.util.concurrent.TimeUnit;
 public class TopicService {
 
     @Autowired
+    private UserCertificateService userCertificateService;
+
+    @Autowired
     private TopicMapper topicMapper;
 
     @Autowired
@@ -29,14 +34,17 @@ public class TopicService {
     /**
      * 加载话题信息
      *
+     * @param sessionId
      * @param start
      * @param size
-     * @param username
      * @return
      * @throws WsgException
      */
-    public List<Topic> QueryTopic(int start, int size, String username) throws WsgException {
-        List<Topic> topicList = topicMapper.selectTopicPage(start, size, StringEncryptUtils.encryptString(username));
+    public List<Topic> QueryTopic(String sessionId, int start, int size) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+
+        List<Topic> topicList = topicMapper.selectTopicPage(start, size
+                , StringEncryptUtils.encryptString(user.getUsername()));
         if (topicList != null && !topicList.isEmpty()) {
             for (Topic topic : topicList) {
                 topic.setUsername(StringEncryptUtils.decryptString(topic.getUsername()));
@@ -49,15 +57,17 @@ public class TopicService {
     /**
      * 关键词加载话题信息
      *
+     * @param sessionId
      * @param start
      * @param size
-     * @param username
      * @param keyword
      * @return
      * @throws WsgException
      */
-    public List<Topic> QueryTopicByKeyword(int start, int size, String username, String keyword) throws WsgException {
-        List<Topic> topicList = topicMapper.selectTopicPageByKeyword(start, size, StringEncryptUtils.encryptString(username), keyword);
+    public List<Topic> QueryTopicByKeyword(String sessionId, int start, int size, String keyword) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        List<Topic> topicList = topicMapper.selectTopicPageByKeyword(start, size
+                , StringEncryptUtils.encryptString(user.getUsername()), keyword);
         if (topicList != null && !topicList.isEmpty()) {
             for (Topic topic : topicList) {
                 topic.setUsername(StringEncryptUtils.decryptString(topic.getUsername()));
@@ -71,16 +81,17 @@ public class TopicService {
      * 点赞话题信息
      *
      * @param id
-     * @param username
+     * @param sessionId
      * @throws WsgException
      * @throws DataNotExistException
      */
-    public void LikeTopic(int id, String username) throws WsgException, DataNotExistException {
-        Topic topic = topicMapper.selectTopicById(id, StringEncryptUtils.encryptString(username));
+    public void LikeTopic(int id, String sessionId) throws WsgException, DataNotExistException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        Topic topic = topicMapper.selectTopicById(id, StringEncryptUtils.encryptString(user.getUsername()));
         if (topic != null) {
-            TopicLike topicLike = topicMapper.selectTopicLike(id, StringEncryptUtils.encryptString(username));
+            TopicLike topicLike = topicMapper.selectTopicLike(id, StringEncryptUtils.encryptString(user.getUsername()));
             if (topicLike == null) {
-                topicMapper.insertTopicLike(id, StringEncryptUtils.encryptString(username));
+                topicMapper.insertTopicLike(id, StringEncryptUtils.encryptString(user.getUsername()));
             }
             return;
         }
@@ -91,11 +102,12 @@ public class TopicService {
      * 添加话题信息
      *
      * @param topic
-     * @param username
+     * @param sessionId
      */
-    public Topic AddTopic(Topic topic, String username) throws WsgException {
+    public Topic AddTopic(Topic topic, String sessionId) throws WsgException {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         Topic data = new Topic();
-        data.setUsername(StringEncryptUtils.encryptString(username));
+        data.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
         data.setTopic(topic.getTopic());
         data.setContent(topic.getContent());
         data.setCount(topic.getCount());

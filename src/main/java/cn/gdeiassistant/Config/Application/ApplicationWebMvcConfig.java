@@ -1,8 +1,6 @@
 package cn.gdeiassistant.Config.Application;
 
 import cn.gdeiassistant.Constant.SettingConstantUtils;
-import cn.gdeiassistant.Converter.EnumConvert.StringToLoginMethodEnumConverter;
-import cn.gdeiassistant.Converter.EnumConvert.StringToQueryMethodEnumConverter;
 import cn.gdeiassistant.Interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -106,8 +104,6 @@ public class ApplicationWebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         //字符串值转换为对应的枚举类值
-        registry.addConverter(new StringToLoginMethodEnumConverter());
-        registry.addConverter(new StringToQueryMethodEnumConverter());
     }
 
     /**

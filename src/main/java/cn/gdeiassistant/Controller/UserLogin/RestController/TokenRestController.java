@@ -1,13 +1,19 @@
 package cn.gdeiassistant.Controller.UserLogin.RestController;
 
+import cn.gdeiassistant.Annotation.DeviceUpdateRequirement;
+import cn.gdeiassistant.Pojo.Entity.Device;
 import cn.gdeiassistant.Pojo.Entity.Token;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.TokenRefresh.TokenRefreshJsonResult;
 import cn.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
-import cn.gdeiassistant.Service.IPAddress.IPService;
 import cn.gdeiassistant.Service.Token.LoginTokenService;
+import cn.gdeiassistant.ValidGroup.Device.DeviceDataValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,21 +23,18 @@ public class TokenRestController {
     @Autowired
     private LoginTokenService loginTokenService;
 
-    @Autowired
-    private IPService ipService;
-
     /**
      * 使令牌信息主动过期
      *
-     * @param signature
+     * @param request
+     * @param accessTokenSignature
      * @return
      */
     @RequestMapping(value = "/rest/token/expire", method = RequestMethod.POST)
-    public JsonResult ExpireToken(@RequestParam("token") String signature) throws Exception {
-        JsonResult result = new JsonResult();
-        loginTokenService.ExpireToken(signature);
-        result.setSuccess(true);
-        return result;
+    public JsonResult ExpireToken(HttpServletRequest request
+            , @RequestParam("token") String accessTokenSignature) throws Exception {
+        loginTokenService.ExpireToken(accessTokenSignature);
+        return new JsonResult(true);
     }
 
     /**
@@ -42,15 +45,18 @@ public class TokenRestController {
      * @return
      */
     @RequestMapping(value = "/rest/token/refresh", method = RequestMethod.POST)
+    @DeviceUpdateRequirement
     public TokenRefreshJsonResult RefreshToken(HttpServletRequest request
-            , @RequestParam("token") String refreshTokenSignature) throws Exception {
+            , @RequestParam("token") String refreshTokenSignature
+            , @Validated(value = DeviceDataValidGroup.class) Device device) throws Exception {
         TokenRefreshJsonResult result = new TokenRefreshJsonResult();
-        //获取用户请求的IP地址
-        String ip = ipService.GetRequestRealIPAddress(request);
         //刷新令牌
-        TokenRefreshResult tokenRefreshResult = loginTokenService.RefreshToken(refreshTokenSignature, ip);
+        TokenRefreshResult tokenRefreshResult = loginTokenService.RefreshToken(request.getSession().getId()
+                , refreshTokenSignature);
         result.setAccessToken(new Token(tokenRefreshResult.getAccessToken()));
         result.setRefreshToken(new Token(tokenRefreshResult.getRefreshToken()));
+        //将令牌签名写入Request作用域，LoginTokenAspect将保存设备信息到缓存
+        request.setAttribute("token", tokenRefreshResult.getAccessToken().getSignature());
         return result;
     }
 

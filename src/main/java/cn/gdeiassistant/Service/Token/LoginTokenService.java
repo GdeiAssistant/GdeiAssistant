@@ -1,18 +1,17 @@
 package cn.gdeiassistant.Service.Token;
 
+import cn.gdeiassistant.Exception.TokenValidException.SuspiciouseRequestException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
-import cn.gdeiassistant.Exception.TokenValidException.TokenServerException;
-import cn.gdeiassistant.Exception.TokenValidException.UnusualLocationException;
 import cn.gdeiassistant.Pojo.Config.JWTConfig;
 import cn.gdeiassistant.Pojo.Entity.AccessToken;
+import cn.gdeiassistant.Pojo.Entity.Device;
 import cn.gdeiassistant.Pojo.Entity.Location;
 import cn.gdeiassistant.Pojo.Entity.RefreshToken;
 import cn.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
 import cn.gdeiassistant.Repository.Redis.LoginToken.LoginTokenDao;
 import cn.gdeiassistant.Service.IPAddress.IPService;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
-import cn.gdeiassistant.Tools.Utils.StringUtils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -26,7 +25,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 public class LoginTokenService {
@@ -47,43 +45,42 @@ public class LoginTokenService {
      * @return
      */
     public void ExpireToken(String signature) throws Exception {
-        if (StringUtils.isBlank(loginTokenDao.QueryToken(signature))) {
+        AccessToken accessToken = loginTokenDao.QueryAccessToken(signature);
+        if (accessToken == null) {
             throw new TokenNotMatchingException("令牌信息不存在");
         }
-        loginTokenDao.DeleteToken(signature);
+        loginTokenDao.DeleteAccessToken(signature);
+        loginTokenDao.DeleteRefreshToken(StringEncryptUtils.SHA256HexString(accessToken.getSignature()));
     }
 
     /**
      * 刷新权限令牌，并生成一个新的刷新令牌
      *
      * @param refreshTokenSignature
-     * @param ip
      * @return
      */
-    public TokenRefreshResult RefreshToken(String refreshTokenSignature, String ip) throws Exception {
+    public TokenRefreshResult RefreshToken(String sessionId, String refreshTokenSignature) throws Exception {
         TokenRefreshResult result = new TokenRefreshResult();
         //从Redis缓存中查找权限令牌签名
-        String accessTokenSignature = loginTokenDao
-                .QueryToken(refreshTokenSignature);
-        if (StringUtils.isBlank(accessTokenSignature)) {
+        RefreshToken token = loginTokenDao.QueryRefreshToken(refreshTokenSignature);
+        if (token == null) {
             //没有对应的权限令牌
             throw new TokenNotMatchingException("没有对应的权限令牌");
         }
         //校验AccessToken信息
         try {
-            ValidToken(accessTokenSignature, ip);
+            ValidToken(token.getAccessTokenSignature());
         } catch (TokenExpiredException ignored) {
             //忽略Token令牌是否过期
         }
         //解析AccessToken
-        Map<String, Claim> claimMap = ParseToken(accessTokenSignature);
+        Map<String, Claim> claimMap = ParseToken(token.getAccessTokenSignature());
         String username = claimMap.get("username").asString();
-        String unionid = claimMap.get("unionid").asString();
         //从Redis缓存中移除令牌信息
-        loginTokenDao.DeleteToken(accessTokenSignature);
-        loginTokenDao.DeleteToken(refreshTokenSignature);
+        loginTokenDao.DeleteAccessToken(token.getAccessTokenSignature());
+        loginTokenDao.DeleteRefreshToken(refreshTokenSignature);
         //生成新的权限令牌和刷新令牌
-        AccessToken accessToken = GetAccessToken(username, ip, unionid);
+        AccessToken accessToken = GetAccessToken(username, sessionId);
         RefreshToken refreshToken = GetRefreshToken(accessToken);
         //刷新令牌成功
         result.setAccessToken(accessToken);
@@ -97,7 +94,7 @@ public class LoginTokenService {
      * @param accessToken
      * @return
      */
-    public RefreshToken GetRefreshToken(AccessToken accessToken) throws Exception {
+    public RefreshToken GetRefreshToken(AccessToken accessToken) {
         LocalDateTime createTime = LocalDateTime.now();
         LocalDateTime expireTime = createTime.plusDays(30);
         //生成RefreshToken签名
@@ -105,11 +102,9 @@ public class LoginTokenService {
         //生成RefreshToken
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setSignature(token);
-        refreshToken.setTokenSignature(accessToken.getSignature());
+        refreshToken.setAccessTokenSignature(accessToken.getSignature());
         refreshToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         refreshToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        refreshToken.setUnionid(accessToken.getUnionid());
-        refreshToken.setIp(accessToken.getIp());
         loginTokenDao.InsertRefreshToken(refreshToken);
         return refreshToken;
     }
@@ -117,26 +112,22 @@ public class LoginTokenService {
     /**
      * 生成AccessToken
      *
+     * @param sessionId
      * @param username
-     * @param ip
-     * @param unionid
      * @return
      */
-    public AccessToken GetAccessToken(String username, String ip, String unionid) throws Exception {
+    public AccessToken GetAccessToken(String sessionId, String username) {
         LocalDateTime createTime = LocalDateTime.now();
         LocalDateTime expireTime = createTime.plusDays(7);
         //生成AccessToken签名
         String token = JWT.create().withIssuer("gdeiassistant")
-                .withClaim("username", username).withClaim("unionid", unionid == null
-                        ? UUID.randomUUID().toString() : unionid)
-                .withClaim("createTime"
-                        , createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .withClaim("username", username)
+                .withClaim("sessionId", sessionId)
+                .withClaim("createTime", createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .withClaim("expireTime", expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .sign(Algorithm.HMAC256(jwtConfig.getSecret()));
         AccessToken accessToken = new AccessToken();
         accessToken.setUsername(username);
-        accessToken.setIp(ip);
-        accessToken.setUnionid(unionid);
         accessToken.setSignature(token);
         accessToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         accessToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
@@ -155,13 +146,58 @@ public class LoginTokenService {
     }
 
     /**
-     * 校验客户端提交的签名信息
+     * 保存设备信息
+     *
+     * @param signature
+     * @param device
+     */
+    public void SaveDevice(String signature, Device device) {
+        loginTokenDao.SaveDeviceData(signature, device);
+    }
+
+    /**
+     * 校验客户端设备信息
      *
      * @param signature
      * @param ip
+     * @param device
+     */
+    public void ValidDevice(String signature, String ip, Device device) throws TokenExpiredException, SuspiciouseRequestException {
+        //获取上次使用令牌访问时的设备信息
+        Device data = loginTokenDao.QueryDeviceData(signature);
+        if (data == null) {
+            //没有找到对应的设备信息记录
+            throw new TokenExpiredException("令牌已过期");
+        }
+        if (!data.getUnionId().equals(device.getUnionId())) {
+            //设备UnionID不匹配，校验IP地址
+            if (data.getIp().equals(ip)) {
+                //若IP地址相同，则不需要重复校验
+                return;
+            }
+            //检测IP地址是否为同一省份
+            Location currentLocation = ipService.GetLocationInfoByIPAddress(ip);
+            Location tokenLocation = ipService.GetLocationInfoByIPAddress(device.getIp());
+            if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
+                    && Objects.equals(currentLocation.getProvince(), tokenLocation.getProvince())) {
+                //IP地址为同一省份，校验通过
+                return;
+            }
+            //IP地址非同一省份，令牌失效
+            loginTokenDao.DeleteAccessToken(signature);
+            loginTokenDao.DeleteRefreshToken(StringEncryptUtils.SHA256HexString(signature));
+            throw new SuspiciouseRequestException("可疑的登录请求");
+        }
+        //设备UnionID相同，校验通过
+    }
+
+    /**
+     * 校验客户端提交的签名信息
+     *
+     * @param signature
      * @return
      */
-    public void ValidToken(String signature, String ip) throws TokenNotMatchingException, UnusualLocationException, TokenServerException, TokenExpiredException {
+    public void ValidToken(String signature) throws TokenNotMatchingException, TokenExpiredException {
         try {
             //验证Token是否被伪造或篡改
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(jwtConfig.getSecret())).withIssuer("gdeiassistant").build();
@@ -172,32 +208,27 @@ public class LoginTokenService {
                 //若过期时间为小于等于当前时间的时间戳，则认为权限令牌已过期
                 throw new TokenExpiredException("令牌过期异常");
             }
-            //获取令牌信息记录的IP地址
-            String tokenIP = loginTokenDao.QueryToken(signature);
-            if (StringUtils.isBlank(tokenIP)) {
-                //若没有找到对应的令牌信息记录
-                throw new TokenNotMatchingException("没有找到对应的令牌信息记录");
-            }
-            //若IP地址相同，则不需要重复校验
-            if (tokenIP.equals(ip)) {
-                return;
-            }
-            //检测IP地址是否为同一省份
-            Location currentLocation = ipService.GetLocationInfoByIPAddress(ip);
-            Location tokenLocation = ipService.GetLocationInfoByIPAddress(tokenIP);
-            if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
-                    && Objects.equals(currentLocation.getProvince(), tokenLocation.getProvince())) {
-                //IP校验通过，更新令牌的IP地址
-                AccessToken accessToken = new AccessToken();
-                accessToken.setSignature(signature);
-                accessToken.setIp(ip);
-                loginTokenDao.UpdateAccessToken(accessToken);
-                return;
-            }
-            throw new UnusualLocationException("用户在异常登录地使用");
+            //校验通过
         } catch (JWTVerificationException e) {
             //签名验证不通过
             throw new TokenNotMatchingException("签名验证不通过");
         }
     }
+
+    /**
+     * 验证令牌有效期
+     *
+     * @param token
+     */
+    public void ValidExpiration(String token) throws TokenExpiredException {
+        AccessToken accessToken = loginTokenDao.QueryAccessToken(token);
+        if (accessToken != null) {
+            Device device = loginTokenDao.QueryDeviceData(token);
+            if (device != null) {
+                return;
+            }
+        }
+        throw new TokenExpiredException("令牌已过期");
+    }
+
 }

@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Repository.Mongodb.New;
 
-import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Pojo.Entity.NewInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -18,13 +17,12 @@ public class NewDaoImpl implements NewDao {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public void saveNewInfoList(List<NewInfo> newInfoList) throws MongodbNotConfiguredException {
+    public void saveNewInfoList(List<NewInfo> newInfoList){
         if (mongoTemplate != null) {
             for (NewInfo newInfo : newInfoList) {
                 mongoTemplate.insert(newInfo, "new");
             }
         }
-        throw new MongodbNotConfiguredException("MongoDB数据源未配置");
     }
 
     @Override

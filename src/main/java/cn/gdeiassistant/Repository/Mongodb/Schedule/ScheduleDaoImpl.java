@@ -2,7 +2,6 @@ package cn.gdeiassistant.Repository.Mongodb.Schedule;
 
 import cn.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import cn.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
-import cn.gdeiassistant.Exception.DatasourceException.MongodbNotConfiguredException;
 import cn.gdeiassistant.Pojo.Document.CustomScheduleDocument;
 import cn.gdeiassistant.Pojo.Document.ScheduleDocument;
 import cn.gdeiassistant.Pojo.Entity.CustomSchedule;
@@ -45,11 +44,10 @@ public class ScheduleDaoImpl implements ScheduleDao {
      * @param scheduleDocument
      */
     @Override
-    public void saveSchedule(ScheduleDocument scheduleDocument) throws MongodbNotConfiguredException {
+    public void saveSchedule(ScheduleDocument scheduleDocument){
         if (mongoTemplate != null) {
             mongoTemplate.save(scheduleDocument, "schedule");
         }
-        throw new MongodbNotConfiguredException("MongoDB数据源未配置");
     }
 
     /**
@@ -58,11 +56,10 @@ public class ScheduleDaoImpl implements ScheduleDao {
      * @param username
      */
     @Override
-    public void removeSchedule(String username) throws MongodbNotConfiguredException {
+    public void removeSchedule(String username) {
         if (mongoTemplate != null) {
             mongoTemplate.remove(new Query(Criteria.where("username").is(username)), "schedule");
         }
-        throw new MongodbNotConfiguredException("MongoDB数据源未配置");
     }
 
     /**
@@ -89,7 +86,8 @@ public class ScheduleDaoImpl implements ScheduleDao {
      * @throws GenerateScheduleException
      */
     @Override
-    public synchronized void addCustomSchedule(String username, CustomSchedule customSchedule) throws CountOverLimitException, GenerateScheduleException, MongodbNotConfiguredException {
+    public synchronized void addCustomSchedule(String username, CustomSchedule customSchedule)
+            throws CountOverLimitException, GenerateScheduleException {
         if (mongoTemplate != null) {
             //生成课程编号
             Schedule schedule = ScheduleUtils.GenerateCustomSchedule(customSchedule);
@@ -114,7 +112,6 @@ public class ScheduleDaoImpl implements ScheduleDao {
             customScheduleDocument.getScheduleMap().put(schedule.getId(), schedule);
             mongoTemplate.save(customScheduleDocument, "customSchedule");
         }
-        throw new MongodbNotConfiguredException("MongoDB数据源未配置");
     }
 
     /**
@@ -124,7 +121,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
      * @param id
      */
     @Override
-    public void deleteCustomSchedule(String username, String id) throws MongodbNotConfiguredException {
+    public void deleteCustomSchedule(String username, String id) {
         if (mongoTemplate != null) {
             //生成课程编号
             CustomScheduleDocument customScheduleDocument = queryCustomSchedule(username);
@@ -133,6 +130,5 @@ public class ScheduleDaoImpl implements ScheduleDao {
                 mongoTemplate.save(customScheduleDocument, "customSchedule");
             }
         }
-        throw new MongodbNotConfiguredException("MongoDB数据源未配置");
     }
 }

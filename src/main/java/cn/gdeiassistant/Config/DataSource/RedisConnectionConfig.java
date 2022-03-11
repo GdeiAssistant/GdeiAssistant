@@ -1,12 +1,14 @@
 package cn.gdeiassistant.Config.DataSource;
 
-import cn.gdeiassistant.Enum.Module.ModuleEnum;
+import cn.gdeiassistant.Enum.Module.CoreModuleEnum;
 import cn.gdeiassistant.Tools.SpringUtils.ModuleUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -47,16 +49,51 @@ public class RedisConnectionConfig implements EnvironmentAware {
     }
 
     /**
-     * 配置Redis连接工厂
+     * 配置开发环境Redis连接工厂
      *
      * @return
      */
-    public JedisConnectionFactory connectionFactory() {
+    @Bean("jedisConnectionFactory")
+    @Profile("development")
+    @Qualifier("developmentJedisConnectionFactory")
+    public JedisConnectionFactory developmentJedisConnectionFactory() {
         JedisPoolConfig poolConfig = poolConfig();
         if (poolConfig != null) {
-            String host = environment.getProperty("redis.host");
-            String port = environment.getProperty("redis.port");
-            String pass = environment.getProperty("redis.pass");
+            String host = environment.getProperty("redis.dev.host");
+            String port = environment.getProperty("redis.dev.port");
+            String pass = environment.getProperty("redis.dev.pass");
+            if (StringUtils.isNotBlank(host) && StringUtils.isNotBlank(port) && StringUtils.isNotBlank(pass)
+                    && StringUtils.isNumeric(port)) {
+                //配置Redis客户端连接参数
+                JedisClientConfiguration jedisClientConfiguration = JedisClientConfiguration
+                        .builder().usePooling().poolConfig(poolConfig).build();
+                //配置Redis单机连接配置
+                RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+                redisStandaloneConfiguration.setHostName(host);
+                redisStandaloneConfiguration.setPort(Integer.parseInt(port));
+                redisStandaloneConfiguration.setPassword(pass);
+                //构造Redis连接工厂
+                return new JedisConnectionFactory(redisStandaloneConfiguration
+                        , jedisClientConfiguration);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 配置生产环境Redis连接工厂
+     *
+     * @return
+     */
+    @Bean("jedisConnectionFactory")
+    @Profile("production")
+    @Qualifier("productionJedisConnectionFactory")
+    public JedisConnectionFactory productionJedisConnectionFactory() {
+        JedisPoolConfig poolConfig = poolConfig();
+        if (poolConfig != null) {
+            String host = environment.getProperty("redis.pro.host");
+            String port = environment.getProperty("redis.pro.port");
+            String pass = environment.getProperty("redis.pro.pass");
             if (StringUtils.isNotBlank(host) && StringUtils.isNotBlank(port) && StringUtils.isNotBlank(pass)
                     && StringUtils.isNumeric(port)) {
                 //配置Redis客户端连接参数
@@ -76,14 +113,13 @@ public class RedisConnectionConfig implements EnvironmentAware {
     }
 
     @Bean
-    public RedisTemplate redisTemplate() {
-        JedisConnectionFactory connectionFactory = connectionFactory();
-        if (connectionFactory != null) {
+    public RedisTemplate redisTemplate(@Qualifier("jedisConnectionFactory") JedisConnectionFactory jedisConnectionFactory) {
+        if (jedisConnectionFactory != null) {
             RedisTemplate redisTemplate = new RedisTemplate();
-            redisTemplate.setConnectionFactory(connectionFactory());
+            redisTemplate.setConnectionFactory(jedisConnectionFactory);
             return redisTemplate;
         }
-        moduleUtils.DisableModule(ModuleEnum.REDIS);
+        moduleUtils.DisableCoreModule(CoreModuleEnum.REDIS);
         return null;
     }
 

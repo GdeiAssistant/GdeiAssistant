@@ -159,9 +159,12 @@ function refreshGradeData() {
         url: '/api/refreshgrade',
         method: 'POST',
         success: function (result) {
+            //隐藏进度条
             $("#loadingToast, .weui_mask").hide();
-            if (result.success) {
-                postQueryForm();
+            clearGradeInfo();
+            if (result.success === true) {
+                changeYearSelectedClass(result.data.year);
+                handleGradeInfo(result.data);
             } else {
                 showCustomErrorTip(result.message);
             }

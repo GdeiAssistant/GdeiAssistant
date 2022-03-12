@@ -44,6 +44,36 @@ public class UserCertificateService {
     private UserCertificateDao userCertificateDao;
 
     /**
+     * 获取用户Cookie凭证
+     *
+     * @param cookieId
+     * @return
+     */
+    public User GetUserCookieCertificate(String cookieId) {
+        return userCertificateDao.queryUserCookieCertificate(cookieId);
+    }
+
+    /**
+     * 保存用户登录凭证
+     *
+     * @param cookieId
+     * @param username
+     * @param password
+     */
+    public void SaveUserCookieCertificate(String cookieId, String username, String password) {
+        userCertificateDao.saveUserCookieCertificate(cookieId, username, password);
+    }
+
+    /**
+     * 更新用户登录凭证有效期
+     *
+     * @param cookieId
+     */
+    public void UpdateUserCookieExpiration(String cookieId) {
+        userCertificateDao.updateUserCookieCertificateExpiration(cookieId);
+    }
+
+    /**
      * 获取用户登录凭证
      *
      * @param sessionId

@@ -16,6 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Current Database: `gdeiassistant_log`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_log` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `gdeiassistant_log`;
+
+--
 -- Table structure for table `charge_log`
 --
 
@@ -91,6 +99,14 @@ UNLOCK TABLES;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `gdeiassistant_data`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant_data` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `gdeiassistant_data`;
 
 --
 -- Table structure for table `announcement`
@@ -261,6 +277,14 @@ UNLOCK TABLES;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `gdeiassistant`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `gdeiassistant` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `gdeiassistant`;
 
 --
 -- Table structure for table `cet`

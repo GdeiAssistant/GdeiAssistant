@@ -9,7 +9,6 @@ import cn.gdeiassistant.Pojo.Entity.ExpressLike;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Express.ExpressMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,13 @@ public class ExpressService {
      * @param sessionId
      * @return
      */
-    public List<Express> QueryExpressPage(int start, int size, String sessionId) throws WsgException {
+    public List<Express> QueryExpressPage(int start, int size, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         List<Express> expressList = expressMapper.selectExpress(start, size
-                , StringEncryptUtils.encryptString(user.getUsername()));
+                , user.getUsername());
         if (expressList != null && !expressList.isEmpty()) {
             for (Express express : expressList) {
-                express.setUsername(StringEncryptUtils.decryptString(express.getUsername()));
+                express.setUsername(express.getUsername());
             }
             return expressList;
         }
@@ -57,12 +56,12 @@ public class ExpressService {
      * @param keyword
      * @return
      */
-    public List<Express> QueryExpressPageByKeyword(String sessionId, int start, int size, String keyword) throws WsgException {
+    public List<Express> QueryExpressPageByKeyword(String sessionId, int start, int size, String keyword) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         List<Express> expressList = expressMapper.selectExpressByKeyWord(start, size, user.getUsername(), keyword);
         if (expressList != null && !expressList.isEmpty()) {
             for (Express express : expressList) {
-                express.setUsername(StringEncryptUtils.decryptString(express.getUsername()));
+                express.setUsername(express.getUsername());
             }
             return expressList;
         }
@@ -76,11 +75,11 @@ public class ExpressService {
      * @return
      * @throws WsgException
      */
-    public List<ExpressComment> QueryExpressComment(int expressId) throws WsgException {
+    public List<ExpressComment> QueryExpressComment(int expressId) {
         List<ExpressComment> expressCommentList = expressMapper.selectExpressComment(expressId);
         if (expressCommentList != null && !expressCommentList.isEmpty()) {
             for (ExpressComment expressComment : expressCommentList) {
-                expressComment.setUsername(StringEncryptUtils.decryptString(expressComment.getUsername()));
+                expressComment.setUsername(expressComment.getUsername());
             }
             return expressCommentList;
         }
@@ -96,11 +95,11 @@ public class ExpressService {
      * @throws WsgException
      * @throws DataNotExistException
      */
-    public void AddExpressComment(int expressId, String sessionId, String comment) throws WsgException, DataNotExistException {
+    public void AddExpressComment(int expressId, String sessionId, String comment) throws DataNotExistException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Express express = expressMapper.selectExpressById(expressId);
+        Express express = expressMapper.selectExpressById(expressId, user.getUsername());
         if (express != null) {
-            expressMapper.insertExpressComment(expressId, StringEncryptUtils.encryptString(user.getUsername()), comment);
+            expressMapper.insertExpressComment(expressId, user.getUsername(), comment);
             return;
         }
         throw new DataNotExistException("表白信息不存在");
@@ -113,7 +112,7 @@ public class ExpressService {
      * @param sessionId
      * @throws WsgException
      */
-    public void AddExpress(Express express, String sessionId) throws WsgException {
+    public void AddExpress(Express express, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         Express data = new Express();
         data.setNickname(express.getNickname());
@@ -124,7 +123,7 @@ public class ExpressService {
         data.setName(express.getName());
         data.setPersonGender(express.getPersonGender());
         data.setContent(express.getContent());
-        data.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        data.setUsername(user.getUsername());
         expressMapper.insertExpress(data);
     }
 
@@ -134,12 +133,11 @@ public class ExpressService {
      * @param expressId
      * @param sessionId
      */
-    public void LikeExpress(int expressId, String sessionId) throws WsgException, DataNotExistException {
+    public void LikeExpress(int expressId, String sessionId) throws DataNotExistException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Express express = expressMapper.selectExpressById(expressId);
+        Express express = expressMapper.selectExpressById(expressId, user.getUsername());
         if (express != null) {
-            ExpressLike expressLike = expressMapper.selectExpressLike(expressId, StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            ExpressLike expressLike = expressMapper.selectExpressLike(expressId, user.getUsername());
             if (expressLike == null) {
                 expressMapper.insertExpressLike(expressId, user.getUsername());
             }
@@ -154,14 +152,13 @@ public class ExpressService {
      * @param sessionId
      * @param name
      */
-    public boolean GuessExpress(int expressId, String sessionId, String name) throws NoRealNameException, DataNotExistException, WsgException, CorrectRecordException {
+    public boolean GuessExpress(int expressId, String sessionId, String name) throws NoRealNameException, DataNotExistException, CorrectRecordException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         //检查所猜名字与表白者填写的是否相符
-        Express express = expressMapper.selectExpressById(expressId);
+        Express express = expressMapper.selectExpressById(expressId, user.getUsername());
         if (express != null) {
             //检测当前用户有无猜中过表白者的记录
-            int correctTime = expressMapper.selectCorrectExpressGuessRecord(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            int correctTime = expressMapper.selectCorrectExpressGuessRecord(user.getUsername());
             if (correctTime > 0) {
                 //猜中过，不能继续提交猜一下记录
                 throw new CorrectRecordException("已经猜中过真实姓名");
@@ -172,11 +169,11 @@ public class ExpressService {
             }
             if (realname.equals(name)) {
                 //猜中了真实姓名
-                expressMapper.insertExpressGuess(expressId, StringEncryptUtils.encryptString(user.getUsername()), 1);
+                expressMapper.insertExpressGuess(expressId, user.getUsername(), 1);
                 return true;
             }
             //没有猜中真实姓名
-            expressMapper.insertExpressGuess(expressId, StringEncryptUtils.encryptString(user.getUsername()), 0);
+            expressMapper.insertExpressGuess(expressId, user.getUsername(), 0);
             return false;
         }
         throw new DataNotExistException("表白信息不存在");

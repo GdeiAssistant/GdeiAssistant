@@ -102,7 +102,7 @@
             </div>
             <div class="weui_cell_bd weui_cell_primary">
                 <input id="username" class="weui_input" type="text" maxlength="20" name="username"
-                       placeholder="请输入你的校园网络账号">
+                       placeholder="请输入你的校园网账号">
             </div>
         </div>
         <div class="weui_cell">

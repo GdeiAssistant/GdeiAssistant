@@ -24,6 +24,13 @@ public @interface TrialData {
     boolean base() default false;
 
     /**
+     * 是否通过令牌访问资源
+     *
+     * @return
+     */
+    boolean rest();
+
+    /**
      * 若请求的数据要求携带时间信息，则填写对应的请求时间信息属性字段名。默认该值为空
      * <p>
      * 如成绩查询功能，此处填写注解的RequestTime属性值为Year，则系统会拦截并获取成绩查询请求中属性名为Year的参数属性值

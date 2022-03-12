@@ -4,9 +4,31 @@ import cn.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleExcept
 import cn.gdeiassistant.Pojo.Entity.CustomSchedule;
 import cn.gdeiassistant.Pojo.Entity.Schedule;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ScheduleUtils {
 
     private static final String[] COLUMNS = {"一", "二", "三", "四", "五", "六", "日"};
+
+    /**
+     * 获取指定周数的课表信息，过滤多余的课表信息
+     *
+     * @param scheduleList
+     * @param week
+     * @return
+     */
+    public static List<Schedule> GetSpecifiedWeekSchedule(List<Schedule> scheduleList, int week) {
+        List<Schedule> list = new ArrayList<>();
+        for (Schedule schedule : scheduleList) {
+            //判断当前周是否在此课表信息的周数范围内
+            if (week >= schedule.getMinScheduleWeek() && week <= schedule.getMaxScheduleWeek()) {
+                //当前周数在课表周数范围内,则显示当前课表
+                list.add(schedule);
+            }
+        }
+        return list;
+    }
 
     /**
      * 生成自定义课程信息

@@ -15,6 +15,10 @@ public class WeekUtils {
 
     private static int startDate;
 
+    private static int year;
+
+    private static int term;
+
     @Value("#{propertiesReader['schedule.start.date']}")
     public void setStartDate(int startDate) {
         WeekUtils.startDate = startDate;
@@ -28,6 +32,16 @@ public class WeekUtils {
     @Value("#{propertiesReader['schedule.start.year']}")
     public void setStartYear(int startYear) {
         WeekUtils.startYear = startYear;
+    }
+
+    @Value("#{propertiesReader['schedule.year']}")
+    public void setYear(int year) {
+        WeekUtils.year = year;
+    }
+
+    @Value("#{propertiesReader['schedule.term']}")
+    public void setTerm(int term) {
+        WeekUtils.term = term;
     }
 
     /**
@@ -49,5 +63,23 @@ public class WeekUtils {
             return 20;
         }
         return result;
+    }
+
+    /**
+     * 获取当前学年
+     *
+     * @return
+     */
+    public static int GetCurrentYear() {
+        return year;
+    }
+
+    /**
+     * 获取当前学期
+     *
+     * @return
+     */
+    public static int GetCurrentTerm() {
+        return term;
     }
 }

@@ -60,7 +60,7 @@ public interface ExpressMapper {
             @Result(property = "guessSum", column = "guess_sum"),
             @Result(property = "commentCount", column = "comment_count")
     })
-    public Express selectExpressById(int id);
+    public Express selectExpressById(@Param("id") int id, @Param("username") String username);
 
     @Select("select e.id,e.username,e.nickname,e.self_gender,e.name,e.content,e.person_gender,e.publish_time," +
             " count(distinct el.id) as like_count,count(distinct em.id) as comment_count,count(distinct eg.id) as guess_sum," +

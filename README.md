@@ -423,7 +423,11 @@ Copyright (c) 2016 - 2021 GdeiAssistant
 
 - [Google Cloud Platform](https://cloud.google.com)
 
+- [Amazon Web Services](https://aws.amazon.com)
+
 - [Microsoft Azure](https://azure.microsoft.com)
+
+- [Oracle Cloud](https://oracle.cloud.com)
 
 - [Cloudflare](https://www.cloudflare.com)
 

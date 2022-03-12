@@ -1,12 +1,10 @@
 package cn.gdeiassistant.Aspect;
 
 import cn.gdeiassistant.Annotation.TrialData;
-import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.Token.LoginTokenService;
 import cn.gdeiassistant.Service.TrailData.TrialDataService;
-import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -36,9 +34,6 @@ public class TrialDataAspect implements EnvironmentAware {
     private LoginTokenService loginTokenService;
 
     @Autowired
-    private UserLoginService userLoginService;
-
-    @Autowired
     private TrialDataService trialDataService;
 
     @Pointcut("@annotation(cn.gdeiassistant.Annotation.TrialData)")
@@ -50,13 +45,15 @@ public class TrialDataAspect implements EnvironmentAware {
     public DataJsonResult CheckTrialUser(ProceedingJoinPoint proceedingJoinPoint, TrialData trialData) throws Throwable {
         Object[] args = proceedingJoinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
-        String username = (String) request.getSession().getAttribute("username");
-        if (username == null) {
-            //获取用户请求的权限令牌签名
+        String sessionId = null;
+        if (trialData.rest()) {
+            //令牌资源访问
             String token = request.getParameter("token");
-            User user = userLoginService.GetUserByUsername(loginTokenService.ParseToken(token).get("username").asString());
-            username = user.decryptUser().getUsername();
+            sessionId = loginTokenService.ParseToken(token).get("sessionId").asString();
         }
+        //API访问
+        sessionId = request.getSession().getId();
+
         //若设置模拟教务查询数据，则返回模拟数据
         if (BooleanUtils.isTrue(Boolean.valueOf(environment.getProperty("trial.data.simulation")))) {
             /*
@@ -92,9 +89,9 @@ public class TrialDataAspect implements EnvironmentAware {
                 }
             }
             //解析、加工并返回模拟结果数据
-            return trialDataService.ParseTrialData(trialData.value(), trialData.base()
+            return trialDataService.ParseTrialData(sessionId, trialData.value(), trialData.base()
                     , trialData.requestTime(), requestTimeValue, trialData.responseTime()
-                    , responseTimeValue, username);
+                    , responseTimeValue);
         }
         //若非体验用户，则进行网络请求，返回真实数据
         if (trialData.base()) {

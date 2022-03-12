@@ -1,12 +1,14 @@
 package cn.gdeiassistant.Service.TrailData;
 
 import cn.gdeiassistant.Pojo.CardQuery.CardQuery;
+import cn.gdeiassistant.Pojo.Document.CustomScheduleDocument;
 import cn.gdeiassistant.Pojo.Entity.Grade;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import cn.gdeiassistant.Service.ScheduleQuery.ScheduleService;
+import cn.gdeiassistant.Tools.Utils.ScheduleUtils;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,32 +36,36 @@ public class TrialDataService {
     /**
      * 解析并加载模拟结果数据
      *
+     * @param sessionId
      * @param module
      * @param isBaseJsonResult
      * @param requestTime
      * @param requestTimeValue
      * @param responseTime
      * @param responseTimeValue
-     * @param username
      * @return
      */
-    public DataJsonResult ParseTrialData(String module, boolean isBaseJsonResult
-            , String requestTime, Object requestTimeValue, String responseTime, Object responseTimeValue, String username) {
+    public DataJsonResult ParseTrialData(String sessionId, String module, boolean isBaseJsonResult
+            , String requestTime, Object requestTimeValue, String responseTime, Object responseTimeValue) {
         //加载初始模拟数据
-        DataJsonResult result = LoadInitialTrialData(module, isBaseJsonResult, requestTime, requestTimeValue);
+        DataJsonResult result = LoadInitialTrialData(sessionId, module, isBaseJsonResult
+                , requestTime, requestTimeValue);
         //进行模拟数据后加工处理
-        result = ProcessTrialData(module, username, result, responseTime, responseTimeValue);
+        result = ProcessTrialData(sessionId, module, result, responseTime, responseTimeValue);
         return result;
     }
 
     /**
      * 加载初始模拟数据
      *
+     * @param sessionId
      * @param module
+     * @param isBaseJsonResult
      * @param requestTime
+     * @param requestTimeValue
      * @return
      */
-    private DataJsonResult LoadInitialTrialData(String module, boolean isBaseJsonResult, String requestTime
+    private DataJsonResult LoadInitialTrialData(String sessionId, String module, boolean isBaseJsonResult, String requestTime
             , Object requestTimeValue) {
         //基础类型返回值
         if (isBaseJsonResult) {
@@ -96,11 +103,14 @@ public class TrialDataService {
     /**
      * 对初始模拟结果数据进行后加工处理
      *
+     * @param sessionId
      * @param module
-     * @param username
      * @param result
+     * @param responseTime
+     * @param responseTimeValue
+     * @return
      */
-    private DataJsonResult ProcessTrialData(String module, String username, DataJsonResult result
+    private DataJsonResult ProcessTrialData(String sessionId, String module, DataJsonResult result
             , String responseTime, Object responseTimeValue) {
         //填充返回值时间属性
         if (StringUtils.isNotBlank(responseTime)) {
@@ -183,14 +193,18 @@ public class TrialDataService {
                         , new TypeToken<DataJsonResult<ScheduleQueryResult>>() {
                         }.getType());
                 //添加自定义的课表信息
-                List<Schedule> scheduleList = scheduleService.GetCustomScheduleList(username);
-                scheduleJsonData.getData().getScheduleList().addAll(scheduleList);
+                CustomScheduleDocument customScheduleDocument = scheduleService.GetCustomSchedule(sessionId);
+                if (customScheduleDocument != null) {
+                    List<Schedule> scheduleList = new ArrayList<>(customScheduleDocument
+                            .getScheduleMap().values());
+                    scheduleJsonData.getData().getScheduleList().addAll(scheduleList);
+                }
                 //筛选剔除非当前周数的课程
                 if (responseTimeValue == null) {
-                    scheduleJsonData.getData().setScheduleList(scheduleService.GetSpecifiedWeekSchedule
+                    scheduleJsonData.getData().setScheduleList(ScheduleUtils.GetSpecifiedWeekSchedule
                             (scheduleJsonData.getData().getScheduleList(), WeekUtils.GetCurrentWeek()));
                 } else {
-                    scheduleJsonData.getData().setScheduleList(scheduleService.GetSpecifiedWeekSchedule
+                    scheduleJsonData.getData().setScheduleList(ScheduleUtils.GetSpecifiedWeekSchedule
                             (scheduleJsonData.getData().getScheduleList(), (Integer) responseTimeValue));
                 }
                 return scheduleJsonData;

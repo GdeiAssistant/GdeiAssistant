@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 @Repository
 public class UserCertificateDaoImpl implements UserCertificateDao {
 
+    private final String COOKIE_PREFIX = "USER_COOKIE_CERTIFICATE_";
+
     private final String LOGIN_PREFIX = "USER_LOGIN_CERTIFICATE_";
 
     private final String SESSION_PREFIX = "USER_SESSION_CERTIFICATE_";
@@ -22,9 +24,38 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
     private RedisDaoUtils redisDaoUtils;
 
     @Override
+    public User queryUserCookieCertificate(String cookieId) {
+        Map<String, String> map = redisDaoUtils.get(StringEncryptUtils.SHA256HexString(COOKIE_PREFIX
+                + cookieId));
+        if (map != null) {
+            User user = new User();
+            user.setUsername(map.get("username"));
+            user.setPassword(map.get("password"));
+            return user;
+        }
+        return null;
+    }
+
+    @Override
+    public void saveUserCookieCertificate(String cookieId, String username, String password) {
+        Map<String, String> map = new HashMap<>();
+        map.put("username", username);
+        map.put("password", password);
+        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(COOKIE_PREFIX + cookieId), map);
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(COOKIE_PREFIX + cookieId)
+                , 30, TimeUnit.DAYS);
+    }
+
+    @Override
+    public void updateUserCookieCertificateExpiration(String cookieId) {
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(COOKIE_PREFIX
+                + cookieId), 30, TimeUnit.DAYS);
+    }
+
+    @Override
     public User queryUserLoginCertificate(String sessionId) {
-        Map<String, String> map = redisDaoUtils.get(StringEncryptUtils
-                .SHA256HexString(LOGIN_PREFIX + sessionId));
+        Map<String, String> map = redisDaoUtils.get(StringEncryptUtils.SHA256HexString(LOGIN_PREFIX
+                + sessionId));
         if (map != null) {
             User user = new User();
             user.setUsername(map.get("username"));
@@ -36,7 +67,8 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
 
     @Override
     public void updateUserLoginCertificateExpiration(String sessionId) {
-        redisDaoUtils.expire(sessionId, 1, TimeUnit.HOURS);
+        redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(LOGIN_PREFIX
+                + sessionId), 1, TimeUnit.HOURS);
     }
 
     @Override

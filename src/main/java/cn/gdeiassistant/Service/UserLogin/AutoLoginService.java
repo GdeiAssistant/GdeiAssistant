@@ -28,17 +28,13 @@ public class AutoLoginService {
         } else {
             Cookie cookie[] = request.getCookies();
             if (cookie != null && cookie.length > 0) {
-                String username = "";
-                String password = "";
+                String cookieId = "";
                 for (int i = 0; i < cookie.length; i++) {
-                    if (cookie[i].getName().equals("username")) {
-                        username = cookie[i].getValue();
-                    }
-                    if (cookie[i].getName().equals("password")) {
-                        password = cookie[i].getValue();
+                    if (cookie[i].getName().equals("cookieId")) {
+                        cookieId = cookie[i].getValue();
                     }
                 }
-                if (!username.trim().isEmpty() && !password.trim().isEmpty()) {
+                if (!cookieId.trim().isEmpty()) {
                     return AUTOLOGIN_COOKIE;
                 }
             }

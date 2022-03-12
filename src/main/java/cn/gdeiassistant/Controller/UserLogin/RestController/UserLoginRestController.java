@@ -11,7 +11,6 @@ import cn.gdeiassistant.Service.Token.LoginTokenService;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.ValidGroup.Device.DeviceDataValidGroup;
 import cn.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import com.taobao.wsgsvr.WsgException;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 @RestController
 public class UserLoginRestController {
@@ -88,22 +88,17 @@ public class UserLoginRestController {
         //登录用户账号
         userLoginService.UserLogin(request.getSession().getId(), user.getUsername(), user.getPassword());
         //异步地与教务系统会话进行同步
-        userCertificateService.AsyncUpdateSessionCertificate(request.getSession().getId()
-                , user);
-        //将加密的用户信息保存到Cookie中
-        Cookie usernameCookie = new Cookie("username", StringEncryptUtils
-                .encryptString(user.getUsername()));
-        Cookie passwordCookie = new Cookie("password", StringEncryptUtils
-                .encryptString(user.getPassword()));
-        //设置Cookie最大有效时间为3个月
-        usernameCookie.setMaxAge(7776000);
-        usernameCookie.setPath("/");
-        usernameCookie.setHttpOnly(true);
-        passwordCookie.setMaxAge(7776000);
-        passwordCookie.setPath("/");
-        passwordCookie.setHttpOnly(true);
-        response.addCookie(usernameCookie);
-        response.addCookie(passwordCookie);
+        userCertificateService.AsyncUpdateSessionCertificate(request.getSession().getId(), user);
+        //生成用户Cookie凭证并保存到缓存
+        String cookieId = UUID.randomUUID().toString().replace("-", "");
+        userCertificateService.SaveUserCookieCertificate(cookieId, user.getUsername(), user.getPassword());
+        //生成Cookie
+        Cookie cookie = new Cookie("cookieId", cookieId);
+        //设置Cookie最大有效时间为1个月
+        cookie.setMaxAge(2592000);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
         return new JsonResult(true);
     }
 }

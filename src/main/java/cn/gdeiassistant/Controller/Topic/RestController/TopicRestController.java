@@ -37,8 +37,7 @@ public class TopicRestController {
     @RequestMapping(value = "/api/topic/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Topic>> QueryTopic(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        List<Topic> topicList = topicService.QueryTopic(start, size, username);
+        List<Topic> topicList = topicService.QueryTopic(request.getSession().getId(), start, size);
         return new DataJsonResult<>(true, topicList);
     }
 
@@ -54,8 +53,7 @@ public class TopicRestController {
     @RequestMapping(value = "/api/topic/keyword/{keyword}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Topic>> QueryTopicByKeyword(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size, @PathVariable("keyword") String keyword) throws WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        List<Topic> topicList = topicService.QueryTopicByKeyword(start, size, username, keyword);
+        List<Topic> topicList = topicService.QueryTopicByKeyword(request.getSession().getId(), start, size, keyword);
         return new DataJsonResult<>(true, topicList);
     }
 
@@ -81,9 +79,8 @@ public class TopicRestController {
                 }
             }
         }
-        String username = (String) request.getSession().getAttribute("username");
         //插入话题信息
-        Topic data = topicService.AddTopic(topic, username);
+        Topic data = topicService.AddTopic(topic, request.getSession().getId());
         //上传图片信息
         for (int i = 1; i <= images.length; i++) {
             topicService.UploadTopicItemPicture(data.getId(), i, images[i - 1].getInputStream());
@@ -100,8 +97,7 @@ public class TopicRestController {
      */
     @RequestMapping(value = "/api/topic/id/{id}/like", method = RequestMethod.POST)
     public JsonResult LikeTopic(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException, WsgException {
-        String username = (String) request.getSession().getAttribute("username");
-        topicService.LikeTopic(id, username);
+        topicService.LikeTopic(id, request.getSession().getId());
         return new JsonResult(true);
     }
 

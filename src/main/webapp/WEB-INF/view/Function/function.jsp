@@ -86,6 +86,11 @@
         </i>
         <p>表白墙</p>
     </div>
+    <div id="dating" style="display: none" onclick="window.location.href='/dating'">
+        <i style="background: url(/img/function/dating.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
+        </i>
+        <p>卖室友</p>
+    </div>
     <div id="topic" style="display: none" onclick="window.location.href='/topic'">
         <i style="background: url(/img/function/topic.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto">
         </i>
@@ -127,7 +132,7 @@
         <i style="background: url(/img/function/ncov.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>疫情动态</p>
     </div>
-    <div id="wechat" style="display: none" onclick="window.location.href = '/about/wechat'">
+    <div id="wechat" style="display: none" onclick="window.location.href = '/wechat/attach'">
         <i style="background: url(/img/function/wechat.png) ; background-repeat: no-repeat; background-position: center; background-size: 85% auto"></i>
         <p>绑定微信</p>
     </div>

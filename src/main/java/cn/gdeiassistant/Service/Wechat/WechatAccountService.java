@@ -21,7 +21,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -33,15 +32,8 @@ import java.util.List;
 @Service
 public class WechatAccountService {
 
-    private int timeout;
-
     @Autowired
     private RecognitionService recognitionService;
-
-    @Value("#{propertiesReader['timeout.wechataccount']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
 
     /**
      * 通过搜狗微信查询微信公众号最新数据
@@ -55,7 +47,7 @@ public class WechatAccountService {
         CookieStore cookieStore = null;
         try {
             HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
-                    , true, timeout);
+                    , true, 5);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             HttpGet httpGet = new HttpGet("https://weixin.sogou.com");

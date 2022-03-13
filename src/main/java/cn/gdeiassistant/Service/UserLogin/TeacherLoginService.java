@@ -1,12 +1,12 @@
 package cn.gdeiassistant.Service.UserLogin;
 
+import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Service.Recognition.RecognitionService;
-import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
 import org.apache.http.HttpResponse;
@@ -22,7 +22,6 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -34,24 +33,10 @@ import java.util.List;
 @Service
 public class TeacherLoginService {
 
-    private String url;
-
     @Autowired
     private RecognitionService recognitionService;
 
-    @Value("#{propertiesReader['education.system.url']}")
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     private Logger logger = LoggerFactory.getLogger(TeacherLoginService.class);
-
-    private int timeout;
-
-    @Value("#{propertiesReader['timeout.teacherlogin']}")
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
 
     /**
      * 教师用户登录
@@ -65,21 +50,21 @@ public class TeacherLoginService {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, timeout);
+            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            HttpGet httpGet = new HttpGet(url);
+            HttpGet httpGet = new HttpGet("http://jwgl.gdei.edu.cn/");
             HttpResponse httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("欢迎使用正方教务管理系统！请登录")) {
                 //获取验证码图片
-                httpGet = new HttpGet(url + "CheckCode.aspx");
+                httpGet = new HttpGet( "http://jwgl.gdei.edu.cn/CheckCode.aspx");
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     InputStream checkCodeImage = httpResponse.getEntity().getContent();
                     String checkCode = recognitionService.CheckCodeRecognize(ImageEncodeUtils.ConvertToBase64(checkCodeImage)
                             , CheckCodeTypeEnum.ENGLISH_WITH_NUMBER, 4);
-                    HttpPost httpPost = new HttpPost(url + "default2.aspx");
+                    HttpPost httpPost = new HttpPost("http://jwgl.gdei.edu.cn/default2.aspx");
                     List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
                     basicNameValuePairList.add(new BasicNameValuePair("__VIEWSTATE", document
                             .getElementsByAttributeValue("name", "__VIEWSTATE").val()));
@@ -96,7 +81,7 @@ public class TeacherLoginService {
                     httpResponse = httpClient.execute(httpPost);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                        httpGet = new HttpGet(url + "js_main.aspx?xh=" + username);
+                        httpGet = new HttpGet("http://jwgl.gdei.edu.cn/js_main.aspx?xh=" + username);
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {

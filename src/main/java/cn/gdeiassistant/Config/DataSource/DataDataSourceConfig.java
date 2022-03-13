@@ -74,6 +74,8 @@ public class DataDataSourceConfig implements EnvironmentAware {
     public SqlSessionFactoryBean dataDevelopmentSqlSessionFactory(@Qualifier("dataDataSource") DataSource dataSource) {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("/config/sql/mybatis-config.xml"));
+        sqlSessionFactoryBean.setTypeAliasesPackage("cn.gdeiassistant.Pojo.Alias");
+        sqlSessionFactoryBean.setTypeHandlersPackage("cn.gdeiassistant.TypeHandler");
         sqlSessionFactoryBean.setDataSource(dataSource);
         return sqlSessionFactoryBean;
     }
@@ -88,6 +90,8 @@ public class DataDataSourceConfig implements EnvironmentAware {
     public SqlSessionFactoryBean dataProductionSqlSessionFactory(@Qualifier("dataDataSource") DataSource dataSource) {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("/config/sql/mybatis-config.xml"));
+        sqlSessionFactoryBean.setTypeAliasesPackage("cn.gdeiassistant.Pojo.Alias");
+        sqlSessionFactoryBean.setTypeHandlersPackage("cn.gdeiassistant.TypeHandler");
         sqlSessionFactoryBean.setDataSource(dataSource);
         return sqlSessionFactoryBean;
     }

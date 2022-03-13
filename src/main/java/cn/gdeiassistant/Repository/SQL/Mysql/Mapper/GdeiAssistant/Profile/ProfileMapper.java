@@ -7,6 +7,7 @@ import org.apache.ibatis.type.JdbcType;
 
 import java.util.Date;
 
+
 public interface ProfileMapper {
 
     @Select("select * from profile where username=#{username} limit 1")
@@ -32,20 +33,20 @@ public interface ProfileMapper {
             @Result(property = "hometownState", column = "hometown_state"),
             @Result(property = "hometownCity", column = "hometown_city")
     })
-    Profile selectUserProfile(String username) throws Exception;
+    Profile selectUserProfile(String username);
 
     @Select("select * from introduction where username=#{username} limit 1")
     @Results(id = "Introduction", value = {
             @Result(property = "introductionContent", column = "introduction"),
             @Result(property = "username", column = "username")
     })
-    Introduction selectUserIntroduction(String username) throws Exception;
+    Introduction selectUserIntroduction(String username);
 
     @Insert("insert into profile (username,nickname) values (#{username},#{nickname})")
-    void initUserProfile(@Param("username") String username, @Param("nickname") String nickname) throws Exception;
+    void initUserProfile(@Param("username") String username, @Param("nickname") String nickname);
 
     @Insert("insert into introduction (username) values (#{username})")
-    void initUserIntroduction(String username) throws Exception;
+    void initUserIntroduction(String username);
 
     @Update("update profile set nickname=#{nickname} where username=#{username}")
     void updateNickname(Profile profile);
@@ -91,11 +92,11 @@ public interface ProfileMapper {
 
     @Update("update profile set nickname=#{nickname},gender=null,birthday=null,enrollment=null,profession=null,location_region=null" +
             ",location_state=null,location_city=null,hometown_region=null,hometown_state=null,hometown_city=null,high_school=null,junior_high_school=null,primary_school=null where username=#{username}")
-    void resetUserProfile(@Param("username") String username, @Param("nickname") String nickname) throws Exception;
+    void resetUserProfile(@Param("username") String username, @Param("nickname") String nickname);
 
     @Update("update introduction set introduction=null where username=#{username}")
     void resetUserIntroduction(@Param("username") String username);
 
     @Update("update introduction set introduction=#{introduction} where username=#{username}")
-    void updateUserIntroduction(@Param("username") String username, @Param("introduction") String introduction) throws Exception;
+    void updateUserIntroduction(@Param("username") String username, @Param("introduction") String introduction);
 }

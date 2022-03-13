@@ -3,7 +3,6 @@ package cn.gdeiassistant.Service.Wechat;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.WechatUser.WechatUserMapper;
 import cn.gdeiassistant.Pojo.Entity.User;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class WechatUserDataService {
     public String QueryWechatAttachUsername(String wechatID) throws Exception {
         String username = wechatUserMapper.selectUsername(wechatID);
         if (StringUtils.isNotBlank(username)) {
-            return StringEncryptUtils.decryptString(username);
+            return username;
         }
         return null;
     }
@@ -39,9 +38,9 @@ public class WechatUserDataService {
      * @return
      */
     public User QueryWechatUserData(String username) throws Exception {
-        User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+        User queryUser = userMapper.selectUser(username);
         if (queryUser != null) {
-            return queryUser.decryptUser();
+            return queryUser;
         }
         return null;
     }
@@ -56,9 +55,9 @@ public class WechatUserDataService {
     public void SyncWechatUserData(String username, String wechatUserID) throws Exception {
         if (wechatUserMapper.selectUsername(wechatUserID) != null) {
             //更新微信账号绑定的校园网络账号
-            wechatUserMapper.updateWechatUser(wechatUserID, StringEncryptUtils.encryptString(username));
+            wechatUserMapper.updateWechatUser(wechatUserID, username);
         } else {
-            wechatUserMapper.insertWechatUser(wechatUserID, StringEncryptUtils.encryptString(username));
+            wechatUserMapper.insertWechatUser(wechatUserID, username);
         }
     }
 }

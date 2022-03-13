@@ -26,7 +26,7 @@ public interface ErshouMapper {
             @Result(property = "profile.username", column = "username"),
             @Result(property = "profile.nickname", column = "nickname")
     })
-    public ErshouInfo selectInfoByID(int id) throws Exception;
+    public ErshouInfo selectInfoByID(int id);
 
     @Select("select * from ershou where username=#{username} order by id desc")
     @Results(id = "ErshouItem", value = {
@@ -42,27 +42,27 @@ public interface ErshouMapper {
             @Result(property = "state", column = "state"),
             @Result(property = "publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP)
     })
-    public List<ErshouItem> selectItemsByUsername(String username) throws Exception;
+    public List<ErshouItem> selectItemsByUsername(String username);
 
     @Select("select * from ershou where state='1' order by id desc limit #{start},#{size}")
     @ResultMap("ErshouItem")
-    public List<ErshouItem> selectAvailableItems(@Param("start") int start, @Param("size") int size) throws Exception;
+    public List<ErshouItem> selectAvailableItems(@Param("start") int start, @Param("size") int size);
 
     @Select("select * from ershou where type=#{type} and state='1' order by id desc limit #{start},#{size}")
     @ResultMap("ErshouItem")
-    public List<ErshouItem> selectItemsByType(@Param("start") int start, @Param("size") int size, @Param("type") int type) throws Exception;
+    public List<ErshouItem> selectItemsByType(@Param("start") int start, @Param("size") int size, @Param("type") int type);
 
     @Select("select distinct * from ershou where state='1' and (name like '%${keyword}%' or description like '%${keyword}%' or location like '%${keyword}%') order by id desc limit #{start},#{size}")
     @ResultMap("ErshouItem")
-    public List<ErshouItem> selectItemsWithKeyword(@Param("start") int start, @Param("size") int size, @Param("keyword") String keyword) throws Exception;
+    public List<ErshouItem> selectItemsWithKeyword(@Param("start") int start, @Param("size") int size, @Param("keyword") String keyword);
 
     @Insert("insert into ershou (username,name,description,price,location,type,qq,phone,state,publish_time) values (#{username},#{name},#{description},#{price},#{location},#{type},#{qq},#{phone},'1',#{publishTime})")
     @Options(useGeneratedKeys = true)
-    public void insertItem(ErshouItem ershouItem) throws Exception;
+    public void insertItem(ErshouItem ershouItem);
 
     @Update("update ershou set name=#{name},description=#{description},price=#{price},location=#{location},type=#{type},qq=#{qq},phone=#{phone} where id=#{id}")
-    public void updateItem(ErshouItem ershouItem) throws Exception;
+    public void updateItem(ErshouItem ershouItem);
 
     @Update("update ershou set state=#{state} where id=#{id}")
-    public void updateItemState(@Param("id") int id, @Param("state") int state) throws Exception;
+    public void updateItemState(@Param("id") int id, @Param("state") int state);
 }

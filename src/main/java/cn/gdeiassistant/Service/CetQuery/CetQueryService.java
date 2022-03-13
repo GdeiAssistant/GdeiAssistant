@@ -13,7 +13,6 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Cet.CetMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
@@ -182,9 +181,9 @@ public class CetQueryService {
      * @param sessionId
      * @return
      */
-    public Long getCetNumber(String sessionId) throws Exception {
+    public Long getCetNumber(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        CetNumber cetNumber = cetMapper.selectNumber(StringEncryptUtils.encryptString(user.getUsername()));
+        CetNumber cetNumber = cetMapper.selectNumber(user.getUsername());
         if (cetNumber == null || cetNumber.getNumber() == null) {
             return null;
         }
@@ -198,13 +197,13 @@ public class CetQueryService {
      * @param number
      * @return
      */
-    public void saveCetNumber(String sessionId, Long number) throws Exception {
+    public void saveCetNumber(String sessionId, Long number) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        CetNumber cetNumber = cetMapper.selectNumber(StringEncryptUtils.encryptString(user.getUsername()));
+        CetNumber cetNumber = cetMapper.selectNumber(user.getUsername());
         if (cetNumber == null) {
-            cetMapper.insertNumber(StringEncryptUtils.encryptString(user.getUsername()), number);
+            cetMapper.insertNumber(user.getUsername(), number);
         } else {
-            cetMapper.updateNumber(StringEncryptUtils.encryptString(user.getUsername()), number);
+            cetMapper.updateNumber(user.getUsername(), number);
         }
     }
 

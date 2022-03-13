@@ -3,7 +3,6 @@ package cn.gdeiassistant.Service.UserLogin;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Service.UserData.UserDataService;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class UserLoginService {
     public void UserLogin(String sessionId, String username, String password) throws Exception {
         //查询数据库，若账号密码相同，则通过登录校验
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-            User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(username));
+            User queryUser = userMapper.selectUser(username);
             if (queryUser != null) {
                 //将数据库查询的用户数据与用户提交的用户信息进行对比
                 if (queryUser.equals(new User(username, password))) {

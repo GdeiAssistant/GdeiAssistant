@@ -7,7 +7,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Topic.TopicMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -40,14 +39,13 @@ public class TopicService {
      * @return
      * @throws WsgException
      */
-    public List<Topic> QueryTopic(String sessionId, int start, int size) throws WsgException {
+    public List<Topic> QueryTopic(String sessionId, int start, int size)  {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
 
-        List<Topic> topicList = topicMapper.selectTopicPage(start, size
-                , StringEncryptUtils.encryptString(user.getUsername()));
+        List<Topic> topicList = topicMapper.selectTopicPage(start, size, user.getUsername());
         if (topicList != null && !topicList.isEmpty()) {
             for (Topic topic : topicList) {
-                topic.setUsername(StringEncryptUtils.decryptString(topic.getUsername()));
+                topic.setUsername(topic.getUsername());
             }
             return topicList;
         }
@@ -66,11 +64,10 @@ public class TopicService {
      */
     public List<Topic> QueryTopicByKeyword(String sessionId, int start, int size, String keyword) throws WsgException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        List<Topic> topicList = topicMapper.selectTopicPageByKeyword(start, size
-                , StringEncryptUtils.encryptString(user.getUsername()), keyword);
+        List<Topic> topicList = topicMapper.selectTopicPageByKeyword(start, size, user.getUsername(), keyword);
         if (topicList != null && !topicList.isEmpty()) {
             for (Topic topic : topicList) {
-                topic.setUsername(StringEncryptUtils.decryptString(topic.getUsername()));
+                topic.setUsername(topic.getUsername());
             }
             return topicList;
         }
@@ -85,13 +82,13 @@ public class TopicService {
      * @throws WsgException
      * @throws DataNotExistException
      */
-    public void LikeTopic(int id, String sessionId) throws WsgException, DataNotExistException {
+    public void LikeTopic(int id, String sessionId) throws  DataNotExistException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Topic topic = topicMapper.selectTopicById(id, StringEncryptUtils.encryptString(user.getUsername()));
+        Topic topic = topicMapper.selectTopicById(id, user.getUsername());
         if (topic != null) {
-            TopicLike topicLike = topicMapper.selectTopicLike(id, StringEncryptUtils.encryptString(user.getUsername()));
+            TopicLike topicLike = topicMapper.selectTopicLike(id, user.getUsername());
             if (topicLike == null) {
-                topicMapper.insertTopicLike(id, StringEncryptUtils.encryptString(user.getUsername()));
+                topicMapper.insertTopicLike(id, user.getUsername());
             }
             return;
         }
@@ -104,10 +101,10 @@ public class TopicService {
      * @param topic
      * @param sessionId
      */
-    public Topic AddTopic(Topic topic, String sessionId) throws WsgException {
+    public Topic AddTopic(Topic topic, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         Topic data = new Topic();
-        data.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        data.setUsername(user.getUsername());
         data.setTopic(topic.getTopic());
         data.setContent(topic.getContent());
         data.setCount(topic.getCount());

@@ -685,7 +685,7 @@ DROP TABLE IF EXISTS `phone`;
 CREATE TABLE `phone` (
   `username` varchar(24) CHARACTER SET utf8 NOT NULL COMMENT '用户名',
   `code` smallint(3) NOT NULL COMMENT '国际区号',
-  `phone` varchar(24) CHARACTER SET utf8 NOT NULL COMMENT '手机号',
+  `phone` varchar(24) CHARACTER SET utf8 NOT NULL COMMENT '手机号，使用AES加密时需要将varchar长度提升到32及以上',
   `gmt_create` datetime NOT NULL COMMENT '记录创建时间',
   `gmt_modified` datetime NOT NULL COMMENT '记录更新时间',
   PRIMARY KEY (`username`)
@@ -1030,7 +1030,7 @@ DROP TABLE IF EXISTS `user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `username` varchar(24) CHARACTER SET utf8 NOT NULL COMMENT '用户名',
-  `password` varchar(24) CHARACTER SET utf8 DEFAULT NULL COMMENT '密码',
+  `password` varchar(24) CHARACTER SET utf8 DEFAULT NULL COMMENT '密码，使用AES加密时需要将varchar长度提升到32及以上',
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;

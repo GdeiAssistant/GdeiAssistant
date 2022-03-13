@@ -8,7 +8,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Secret.SecretMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -54,8 +53,7 @@ public class SecretService {
             //加载点赞数量/评论数量/点赞状态
             secret.setCommentCount(secretMapper.selectSecretCommentCount(secret.getId()));
             secret.setLikeCount(secretMapper.selectSecretLikeCount(secret.getId()));
-            secret.setLiked(secretMapper.selectSecretLike(secret.getId(), StringEncryptUtils
-                    .encryptString(user.getUsername())));
+            secret.setLiked(secretMapper.selectSecretLike(secret.getId(), user.getUsername()));
         }
         return secretList;
     }
@@ -68,8 +66,7 @@ public class SecretService {
      */
     public List<Secret> GetSecretInfo(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        List<Secret> secretList = secretMapper.selectSecretByUsername(StringEncryptUtils
-                .encryptString(user.getUsername()));
+        List<Secret> secretList = secretMapper.selectSecretByUsername(user.getUsername());
         if (secretList == null || secretList.isEmpty()) {
             return new ArrayList<>();
         }
@@ -133,8 +130,7 @@ public class SecretService {
             //加载点赞数量/评论数量/点赞状态
             secret.setCommentCount(secretMapper.selectSecretCommentCount(secret.getId()));
             secret.setLikeCount(secretMapper.selectSecretLikeCount(secret.getId()));
-            secret.setLiked(secretMapper.selectSecretLike(secret.getId(), StringEncryptUtils
-                    .encryptString(user.getUsername())));
+            secret.setLiked(secretMapper.selectSecretLike(secret.getId(), user.getUsername()));
             return secret;
         }
         throw new DataNotExistException("查询的树洞消息不存在");
@@ -149,7 +145,7 @@ public class SecretService {
      */
     public Integer AddSecretInfo(String sessionId, Secret secret) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        SecretContent secretContent = new SecretContent(secret, StringEncryptUtils.encryptString(user.getUsername()));
+        SecretContent secretContent = new SecretContent(secret, user.getUsername());
         secretMapper.insertSecret(secretContent);
         return secretContent.getId();
     }
@@ -166,7 +162,7 @@ public class SecretService {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         SecretComment secretComment = new SecretComment();
         secretComment.setContentId(id);
-        secretComment.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        secretComment.setUsername(user.getUsername());
         secretComment.setComment(comment);
         secretComment.setAvatarTheme((int) (Math.random() * 50));
         secretMapper.insertSecretComment(secretComment);
@@ -184,10 +180,10 @@ public class SecretService {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         if (like) {
             //点赞
-            secretMapper.insertSecretLike(id, StringEncryptUtils.encryptString(user.getUsername()));
+            secretMapper.insertSecretLike(id, user.getUsername());
         } else {
             //取消点赞
-            secretMapper.deleteSecretLike(id, StringEncryptUtils.encryptString(user.getUsername()));
+            secretMapper.deleteSecretLike(id, user.getUsername());
         }
     }
 

@@ -6,13 +6,13 @@ public interface WechatUserMapper {
 
     @Select("select username from wechat_user where wechat_id=#{wechatId} limit 1")
     @ResultType(String.class)
-    public String selectUsername(@Param("wechatId") String wechatID) throws Exception;
+    public String selectUsername(@Param("wechatId") String wechatID) ;
 
     @Insert("insert into wechat_user (wechat_id,username) values (#{wechatId},#{username})")
-    public void insertWechatUser(@Param("wechatId") String wechatID, @Param("username") String username) throws Exception;
+    public void insertWechatUser(@Param("wechatId") String wechatID, @Param("username") String username);
 
     @Update("update wechat_user set username=#{username} where wechat_id=#{wechatId}")
-    public void updateWechatUser(@Param("wechatId") String wechatID, @Param("username") String username) throws Exception;
+    public void updateWechatUser(@Param("wechatId") String wechatID, @Param("username") String username);
 
     @Delete("delete from wechat_user where username=#{username}")
     public void resetWechatUser(String username);

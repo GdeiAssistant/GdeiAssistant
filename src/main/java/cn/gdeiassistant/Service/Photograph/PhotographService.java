@@ -6,7 +6,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Photograph.PhotographMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,14 +63,13 @@ public class PhotographService {
      * @param sessionId
      * @return
      */
-    public List<Photograph> QueryPhotographList(int start, int size, int type, String sessionId) throws WsgException {
+    public List<Photograph> QueryPhotographList(int start, int size, int type, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        List<Photograph> photographList = photographMapper.selectPhotograph(start, size, type
-                , StringEncryptUtils.encryptString(user.getUsername()));
+        List<Photograph> photographList = photographMapper.selectPhotograph(start, size, type, user.getUsername());
         //清除空行
         photographList.removeIf(photograph -> photograph.getId() == null);
         for (Photograph photograph : photographList) {
-            photograph.setUsername(StringEncryptUtils.decryptString(photograph.getUsername()));
+            photograph.setUsername(photograph.getUsername());
         }
         return photographList;
     }
@@ -82,10 +80,10 @@ public class PhotographService {
      * @param id
      * @return
      */
-    public List<PhotographComment> QueryPhotographCommentList(int id) throws WsgException {
+    public List<PhotographComment> QueryPhotographCommentList(int id) {
         List<PhotographComment> commentList = photographMapper.selectPhotographCommentByPhotoId(id);
         for (PhotographComment photographComment : commentList) {
-            photographComment.setUsername(StringEncryptUtils.decryptString(photographComment.getUsername()));
+            photographComment.setUsername(photographComment.getUsername());
         }
         return commentList;
     }
@@ -99,14 +97,14 @@ public class PhotographService {
      * @param type
      * @param sessionId
      */
-    public int AddPhotograph(String title, String content, int count, int type, String sessionId) throws WsgException {
+    public int AddPhotograph(String title, String content, int count, int type, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         Photograph photograph = new Photograph();
         photograph.setTitle(title);
         photograph.setContent(content);
         photograph.setCount(count);
         photograph.setType(type);
-        photograph.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        photograph.setUsername(user.getUsername());
         photographMapper.insertPhotograph(photograph);
         return photograph.getId();
     }
@@ -119,12 +117,12 @@ public class PhotographService {
      * @param sessionId
      * @throws WsgException
      */
-    public void AddPhotographComment(int id, String comment, String sessionId) throws WsgException {
+    public void AddPhotographComment(int id, String comment, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         PhotographComment photographComment = new PhotographComment();
         photographComment.setPhotoId(id);
         photographComment.setComment(comment);
-        photographComment.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        photographComment.setUsername(user.getUsername());
         photographMapper.insertPhotographComment(photographComment);
     }
 
@@ -155,8 +153,7 @@ public class PhotographService {
      * @return
      */
     public String GetPhotographItemPictureURL(int id, int index) {
-        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg"
-                , 30, TimeUnit.MINUTES);
+        return ossUtils.GeneratePresignedUrl("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
     }
 
     /**
@@ -165,11 +162,11 @@ public class PhotographService {
      * @param id
      * @param sessionId
      */
-    public void LikePhotograph(int id, String sessionId) throws WsgException {
+    public void LikePhotograph(int id, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        int count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, StringEncryptUtils.encryptString(user.getUsername()));
+        int count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, user.getUsername());
         if (count == 0) {
-            photographMapper.insertPhotographLike(id, StringEncryptUtils.encryptString(user.getUsername()));
+            photographMapper.insertPhotographLike(id, user.getUsername());
         }
     }
 

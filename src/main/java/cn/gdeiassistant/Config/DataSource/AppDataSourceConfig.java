@@ -15,10 +15,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
+import java.io.IOException;
 
 @Configuration
 @MapperScan(basePackages = "cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant", sqlSessionFactoryRef = "appSqlSessionFactory")
@@ -110,9 +112,11 @@ public class AppDataSourceConfig implements EnvironmentAware {
      */
     @Bean(name = "appSqlSessionFactory")
     @Profile("development")
-    public SqlSessionFactoryBean appDevelopmentSqlSessionFactory(@Qualifier("appDataSource") DataSource dataSource) {
+    public SqlSessionFactoryBean appDevelopmentSqlSessionFactory(@Qualifier("appDataSource") DataSource dataSource) throws IOException {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("/config/sql/mybatis-config.xml"));
+        sqlSessionFactoryBean.setTypeAliasesPackage("cn.gdeiassistant.Pojo.Alias");
+        sqlSessionFactoryBean.setTypeHandlersPackage("cn.gdeiassistant.TypeHandler");
         sqlSessionFactoryBean.setDataSource(dataSource);
         return sqlSessionFactoryBean;
     }
@@ -124,9 +128,11 @@ public class AppDataSourceConfig implements EnvironmentAware {
      */
     @Bean(name = "appSqlSessionFactory")
     @Profile("production")
-    public SqlSessionFactoryBean appProductionSqlSessionFactory(@Qualifier("appDataSource") DataSource dataSource) {
+    public SqlSessionFactoryBean appProductionSqlSessionFactory(@Qualifier("appDataSource") DataSource dataSource) throws IOException {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("/config/sql/mybatis-config.xml"));
+        sqlSessionFactoryBean.setTypeAliasesPackage("cn.gdeiassistant.Pojo.Alias");
+        sqlSessionFactoryBean.setTypeHandlersPackage("cn.gdeiassistant.TypeHandler");
         sqlSessionFactoryBean.setDataSource(dataSource);
         return sqlSessionFactoryBean;
     }

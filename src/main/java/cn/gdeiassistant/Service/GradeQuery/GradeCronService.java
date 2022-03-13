@@ -62,7 +62,6 @@ public class GradeCronService {
             //设置线程信号量，限制最大同时查询的线程数为5
             Semaphore semaphore = new Semaphore(5);
             for (User user : userList) {
-                user = user.decryptUser();
                 GradeDocument gradeDocument = gradeDao.queryGrade(user.getUsername());
                 //如果最后更新日期距今已超过7天，则进行更新
                 if (gradeDocument == null || Duration.between(gradeDocument.getUpdateDateTime()

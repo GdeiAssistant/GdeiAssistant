@@ -14,7 +14,6 @@ import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import cn.gdeiassistant.Tools.Utils.ReflectionUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.taobao.wsgsvr.WsgException;
@@ -122,9 +121,9 @@ public class UserDataService {
                 userDataMap.put("avatar_hd.jpg", avatarHD);
             }
             //获取绑定手机信息
-            Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
+            Phone phone = phoneMapper.selectPhone(user.getUsername());
             if (phone != null) {
-                phone.setPhone(StringEncryptUtils.decryptString(phone.getPhone()));
+                phone.setPhone(phone.getPhone());
                 //隐藏用户绑定的手机号
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < phone.getPhone().length(); i++) {
@@ -138,42 +137,37 @@ public class UserDataService {
                 data.put("phone", phone);
             }
             //获取个人资料信息
-            Profile profile = appDataMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+            Profile profile = appDataMapper.selectUserProfile(user.getUsername());
             if (profile != null) {
                 data.put("profile", profile);
             }
             //获取个人简介信息
-            Introduction introduction = appDataMapper.selectUserIntroduction(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            Introduction introduction = appDataMapper.selectUserIntroduction(user.getUsername());
             if (introduction != null && introduction.getIntroductionContent() != null) {
                 data.put("introduction", introduction.getIntroductionContent());
             }
             //获取用户隐私设置
-            Privacy privacy = appDataMapper.selectUserPrivacy(StringEncryptUtils.encryptString(user.getUsername()));
+            Privacy privacy = appDataMapper.selectUserPrivacy(user.getUsername());
             if (privacy != null) {
                 data.put("privacy", privacy);
             }
             //获取保存的四六级准考证号
-            CetNumber cetNumber = appDataMapper.selectUserCetNumber(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            CetNumber cetNumber = appDataMapper.selectUserCetNumber(user.getUsername());
             if (cetNumber != null && cetNumber.getNumber() != null) {
                 data.put("cet", cetNumber);
             }
             //获取全民快递订单信息
-            List<DeliveryOrder> deliveryOrderList = appDataMapper.selectUserDeliveryOrderList(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            List<DeliveryOrder> deliveryOrderList = appDataMapper.selectUserDeliveryOrderList(user.getUsername());
             if (deliveryOrderList != null && !deliveryOrderList.isEmpty()) {
                 data.put("deliveryOrders", deliveryOrderList);
             }
             //获取全名快递交易信息
-            List<DeliveryTrade> deliveryTradeList = appDataMapper.selectUserDeliveryTradeList(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            List<DeliveryTrade> deliveryTradeList = appDataMapper.selectUserDeliveryTradeList(user.getUsername());
             if (deliveryTradeList != null && !deliveryTradeList.isEmpty()) {
                 data.put("deliveryTrades", deliveryTradeList);
             }
             //获取二手交易信息
-            List<ErshouItem> ershouItemList = appDataMapper.selectUserErshouItemList(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            List<ErshouItem> ershouItemList = appDataMapper.selectUserErshouItemList(user.getUsername());
             if (ershouItemList != null && !ershouItemList.isEmpty()) {
                 for (ErshouItem ershouItem : ershouItemList) {
                     //下载二手交易图片
@@ -190,8 +184,7 @@ public class UserDataService {
                 data.put("ershouItems", ershouItemList);
             }
             //获取失物招领信息
-            List<LostAndFoundItem> lostAndFoundItemList = appDataMapper.selectUserLostAndFoundItemList(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            List<LostAndFoundItem> lostAndFoundItemList = appDataMapper.selectUserLostAndFoundItemList(user.getUsername());
             if (lostAndFoundItemList != null && !lostAndFoundItemList.isEmpty()) {
                 for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
                     //下载失物招领图片
@@ -208,8 +201,7 @@ public class UserDataService {
                 data.put("lostandfoundItems", lostAndFoundItemList);
             }
             //获取校园树洞信息
-            List<Secret> secretList = appDataMapper.selectUserSecretItemList(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            List<Secret> secretList = appDataMapper.selectUserSecretItemList(user.getUsername());
             if (secretList != null && !secretList.isEmpty()) {
                 for (Secret secret : secretList) {
                     if (secret.getSecretCommentList() != null && !secret.getSecretCommentList().isEmpty()) {
@@ -236,8 +228,7 @@ public class UserDataService {
                 data.put("secretItems", secretList);
             }
             //获取拍好校园信息
-            List<Photograph> photographList = appDataMapper.selectUserPhotographItemList(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            List<Photograph> photographList = appDataMapper.selectUserPhotographItemList(user.getUsername());
             if (photographList != null && !photographList.isEmpty()) {
                 for (Photograph photograph : photographList) {
                     //下载拍好校园图片
@@ -254,14 +245,12 @@ public class UserDataService {
                 data.put("photographItems", photographList);
             }
             //获取表白墙信息
-            List<Express> expressList = appDataMapper.selectUserExpresssItemList(
-                    StringEncryptUtils.encryptString(user.getUsername()));
+            List<Express> expressList = appDataMapper.selectUserExpresssItemList(user.getUsername());
             if (expressList != null && !expressList.isEmpty()) {
                 data.put("expressItems", expressList);
             }
             //获取校园卡充值日志记录
-            List<ChargeLog> chargeLogList = logDataMapper.selectChargeLogList(StringEncryptUtils
-                    .encryptString(user.getUsername()));
+            List<ChargeLog> chargeLogList = logDataMapper.selectChargeLogList(user.getUsername());
             if (chargeLogList != null && !chargeLogList.isEmpty()) {
                 data.put("chargeLogs", chargeLogList);
             }
@@ -456,31 +445,29 @@ public class UserDataService {
      */
     @Transactional("appTransactionManager")
     public void SyncUserData(User user) throws Exception {
-        User encryptUser = user.encryptUser();
         //检测数据库中有无该用户记录
-        User queryUser = userMapper.selectUser(encryptUser.getUsername());
+        User queryUser = userMapper.selectUser(user.getUsername());
         if (queryUser != null) {
             //该用户已经存在,检查是否需要更新用户数据
-            queryUser = queryUser.decryptUser();
             if (queryUser.equals(user)) {
-                userMapper.updateUser(encryptUser);
+                userMapper.updateUser(user);
             }
         } else {
             //用户不存在,向数据库写入该用户数据
-            userMapper.insertUser(encryptUser);
+            userMapper.insertUser(user);
         }
         //个人资料初始化
-        Profile profile = profileMapper.selectUserProfile(encryptUser.getUsername());
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile == null) {
-            profileMapper.initUserProfile(encryptUser.getUsername(), UUID.randomUUID().toString().replace("-", ""));
+            profileMapper.initUserProfile(user.getUsername(), UUID.randomUUID().toString().replace("-", ""));
         }
-        Introduction introduction = profileMapper.selectUserIntroduction(encryptUser.getUsername());
+        Introduction introduction = profileMapper.selectUserIntroduction(user.getUsername());
         if (introduction == null) {
-            profileMapper.initUserIntroduction(encryptUser.getUsername());
+            profileMapper.initUserIntroduction(user.getUsername());
         }
-        Privacy privacy = privacyMapper.selectPrivacy(encryptUser.getUsername());
+        Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
         if (privacy == null) {
-            privacyMapper.initPrivacy(encryptUser.getUsername());
+            privacyMapper.initPrivacy(user.getUsername());
         }
     }
 

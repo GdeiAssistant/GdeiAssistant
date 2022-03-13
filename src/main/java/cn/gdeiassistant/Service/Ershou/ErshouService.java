@@ -10,7 +10,6 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Ershou.ErshouM
 import cn.gdeiassistant.Service.Profile.UserProfileService;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +48,7 @@ public class ErshouService {
             throw new DataNotExistException("二手交易商品不存在");
         }
         //获取二手交易商品图片URL
-        String username = StringEncryptUtils.decryptString(ershouInfo.getErshouItem().getUsername());
+        String username = ershouInfo.getErshouItem().getUsername();
         int itemId = ershouInfo.getErshouItem().getId();
         List<String> pictureURL = GetErshouItemPictureURL(itemId);
         ershouInfo.getErshouItem().setUsername(username);
@@ -70,8 +69,7 @@ public class ErshouService {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         ErshouInfo ershouInfo = ershouMapper.selectInfoByID(id);
         if (ershouInfo != null) {
-            if (ershouInfo.getErshouItem().getUsername().equals(StringEncryptUtils
-                    .encryptString(user.getUsername()))) {
+            if (ershouInfo.getErshouItem().getUsername().equals(user.getUsername())) {
                 if (!ershouInfo.getErshouItem().getState().equals(2)) {
                     //校验通过
                     return;
@@ -91,8 +89,7 @@ public class ErshouService {
      */
     public List<ErshouItem> QueryPersonalErShouItems(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        List<ErshouItem> ershouItemList = ershouMapper.selectItemsByUsername(StringEncryptUtils
-                .encryptString(user.getUsername()));
+        List<ErshouItem> ershouItemList = ershouMapper.selectItemsByUsername(user.getUsername());
         if (ershouItemList == null || ershouItemList.isEmpty()) {
             return new ArrayList<>();
         }
@@ -114,7 +111,7 @@ public class ErshouService {
             return new ArrayList<>();
         }
         for (ErshouItem ershouItem : ershouItemList) {
-            String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
+            String username = ershouItem.getUsername();
             ershouItem.setUsername(username);
         }
         return ershouItemList;
@@ -133,7 +130,7 @@ public class ErshouService {
             return new ArrayList<>();
         }
         for (ErshouItem ershouItem : ershouItemList) {
-            String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
+            String username =ershouItem.getUsername();
             ershouItem.setUsername(username);
         }
         return ershouItemList;
@@ -152,7 +149,7 @@ public class ErshouService {
             return new ArrayList<>();
         }
         for (ErshouItem ershouItem : ershouItemList) {
-            String username = StringEncryptUtils.decryptString(ershouItem.getUsername());
+            String username =ershouItem.getUsername();
             ershouItem.setUsername(username);
         }
         return ershouItemList;
@@ -169,7 +166,7 @@ public class ErshouService {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         //金额价格保留两位小数点
         ershouItem.setPrice((float) (Math.round(ershouItem.getPrice() * 100)) / 100);
-        ershouItem.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        ershouItem.setUsername(user.getUsername());
         //使用24小时制显示发布时间
         ershouItem.setPublishTime(new Date());
         ershouMapper.insertItem(ershouItem);
@@ -191,8 +188,7 @@ public class ErshouService {
         if (ershouInfo == null) {
             throw new DataNotExistException("查找的二手交易信息不存在");
         }
-        if (ershouInfo.getErshouItem().getUsername().equals(StringEncryptUtils
-                .encryptString(user.getUsername()))) {
+        if (ershouInfo.getErshouItem().getUsername().equals(user.getUsername())) {
             if (!ershouInfo.getErshouItem().getState().equals(2)) {
                 ershouMapper.updateItem(ershouItem);
                 return;
@@ -216,7 +212,7 @@ public class ErshouService {
         if (ershouInfo == null) {
             throw new DataNotExistException("查找的二手交易信息不存在");
         }
-        if (ershouInfo.getErshouItem().getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+        if (ershouInfo.getErshouItem().getUsername().equals(user.getUsername())) {
             if (!ershouInfo.getErshouItem().getState().equals(2)) {
                 ershouMapper.updateItemState(id, state);
             }

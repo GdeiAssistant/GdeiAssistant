@@ -10,7 +10,6 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.LostAndFound.L
 import cn.gdeiassistant.Service.Profile.UserProfileService;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,7 @@ public class LostAndFoundService {
             throw new ConfirmedStateException("物品已确认寻回，不可再次编辑和查看");
         }
         //获取二手交易商品图片URL
-        String username = StringEncryptUtils.decryptString(lostAndFoundInfo.getLostAndFoundItem().getUsername());
+        String username = lostAndFoundInfo.getLostAndFoundItem().getUsername();
         int itemId = lostAndFoundInfo.getLostAndFoundItem().getId();
         List<String> pictureURL = GetLostAndFoundItemPictureURL(itemId);
         lostAndFoundInfo.getLostAndFoundItem().setUsername(username);
@@ -73,7 +72,7 @@ public class LostAndFoundService {
     public List<LostAndFoundItem> QueryPersonalLostAndFoundItems(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                .selectItemByUsername(StringEncryptUtils.encryptString(user.getUsername()));
+                .selectItemByUsername(user.getUsername());
         if (lostAndFoundItemList == null || lostAndFoundItemList.isEmpty()) {
             return new ArrayList<>();
         }
@@ -93,8 +92,7 @@ public class LostAndFoundService {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         LostAndFoundInfo lostAndFoundInfo = lostAndFoundMapper.selectInfoByID(id);
         if (lostAndFoundInfo != null) {
-            if (lostAndFoundInfo.getLostAndFoundItem().getUsername().equals(StringEncryptUtils
-                    .encryptString(user.getUsername()))) {
+            if (lostAndFoundInfo.getLostAndFoundItem().getUsername().equals(user.getUsername())) {
                 return;
             }
             throw new NoAccessException("没有权限编辑该失物招领信息");
@@ -114,7 +112,7 @@ public class LostAndFoundService {
             return new ArrayList<>();
         }
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            String username = lostAndFoundItem.getUsername();
             lostAndFoundItem.setUsername(username);
         }
         return lostAndFoundItemList;
@@ -132,7 +130,7 @@ public class LostAndFoundService {
             return new ArrayList<>();
         }
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            String username = lostAndFoundItem.getUsername();
             lostAndFoundItem.setUsername(username);
         }
         return lostAndFoundItemList;
@@ -152,7 +150,7 @@ public class LostAndFoundService {
             return new ArrayList<>();
         }
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            String username = lostAndFoundItem.getUsername();
             lostAndFoundItem.setUsername(username);
         }
         return lostAndFoundItemList;
@@ -172,7 +170,7 @@ public class LostAndFoundService {
             return new ArrayList<>();
         }
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            String username = lostAndFoundItem.getUsername();
             lostAndFoundItem.setUsername(username);
         }
         return lostAndFoundItemList;
@@ -192,7 +190,7 @@ public class LostAndFoundService {
             return new ArrayList<>();
         }
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            String username = lostAndFoundItem.getUsername();
             lostAndFoundItem.setUsername(username);
         }
         return lostAndFoundItemList;
@@ -212,7 +210,7 @@ public class LostAndFoundService {
             return new ArrayList<>();
         }
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
-            String username = StringEncryptUtils.decryptString(lostAndFoundItem.getUsername());
+            String username = lostAndFoundItem.getUsername();
             lostAndFoundItem.setUsername(username);
         }
         return lostAndFoundItemList;
@@ -227,7 +225,7 @@ public class LostAndFoundService {
      */
     public LostAndFoundItem AddLostAndFoundItem(LostAndFoundItem lostAndFoundItem, String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        lostAndFoundItem.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        lostAndFoundItem.setUsername(user.getUsername());
         //使用24小时制显示发布时间
         lostAndFoundItem.setPublishTime(new Date());
         lostAndFoundMapper.insertItem(lostAndFoundItem);

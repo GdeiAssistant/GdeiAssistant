@@ -8,7 +8,6 @@ import cn.gdeiassistant.Repository.Redis.VerificationCode.VerificationCodeDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Phone.PhoneMapper;
 import cn.gdeiassistant.Service.CloudAPI.AliYunService;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.aliyuncs.exceptions.ClientException;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +34,12 @@ public class PhoneService {
      * @param sessionId
      * @return
      */
-    public Phone QueryUserPhone(String sessionId) throws WsgException {
+    public Phone QueryUserPhone(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
+        Phone phone = phoneMapper.selectPhone(user.getUsername());
         if (phone != null) {
             //解密手机号
-            phone.setPhone(StringEncryptUtils.decryptString(phone.getPhone()));
+            phone.setPhone(phone.getPhone());
             //隐藏用户绑定的手机号
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < phone.getPhone().length(); i++) {
@@ -102,16 +101,15 @@ public class PhoneService {
      * @param code
      * @param phone
      */
-    public void AttachUserPhone(String sessionId, Integer code, String phone) throws WsgException {
+    public void AttachUserPhone(String sessionId, Integer code, String phone) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Phone data = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
+        Phone data = phoneMapper.selectPhone(user.getUsername());
         if (data != null) {
             data.setCode(code);
-            data.setPhone(StringEncryptUtils.encryptString(phone));
+            data.setPhone(phone);
             phoneMapper.updatePhone(data);
         } else {
-            phoneMapper.insertPhone(StringEncryptUtils.encryptString(user.getUsername())
-                    , code, StringEncryptUtils.encryptString(phone));
+            phoneMapper.insertPhone(user.getUsername(), code, phone);
         }
     }
 
@@ -121,11 +119,11 @@ public class PhoneService {
      * @param sessionId
      * @throws WsgException
      */
-    public void UnAttachUserPhone(String sessionId) throws WsgException {
+    public void UnAttachUserPhone(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Phone data = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
+        Phone data = phoneMapper.selectPhone(user.getUsername());
         if (data != null) {
-            phoneMapper.deletePhone(StringEncryptUtils.encryptString(user.getUsername()));
+            phoneMapper.deletePhone(user.getUsername());
         }
     }
 }

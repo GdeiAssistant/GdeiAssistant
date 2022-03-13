@@ -11,7 +11,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Dating.DatingMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,10 +36,10 @@ public class DatingService {
      * @param id
      * @return
      */
-    public DatingProfile QueryDatingProfile(Integer id) throws WsgException, DataNotExistException {
+    public DatingProfile QueryDatingProfile(Integer id) throws DataNotExistException {
         DatingProfile datingProfile = datingMapper.selectDatingProfileById(id);
         if (datingProfile != null) {
-            datingProfile.setUsername(StringEncryptUtils.decryptString(datingProfile.getUsername()));
+            datingProfile.setUsername(datingProfile.getUsername());
             return datingProfile;
         }
         throw new DataNotExistException("该卖室友信息不存在");
@@ -58,7 +57,7 @@ public class DatingService {
         for (DatingProfile datingProfile : list) {
             datingProfile.setQq("请进入详情页查看");
             datingProfile.setWechat("请进入详情页查看");
-            datingProfile.setUsername(StringEncryptUtils.decryptString(datingProfile.getUsername()));
+            datingProfile.setUsername(datingProfile.getUsername());
         }
         return list;
     }
@@ -93,7 +92,7 @@ public class DatingService {
      */
     public Integer AddDatingProfile(String sessionId, DatingProfile datingProfile) throws WsgException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        datingProfile.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        datingProfile.setUsername(user.getUsername());
         datingMapper.insertDatingProfile(datingProfile);
         return datingProfile.getProfileId();
     }
@@ -122,14 +121,13 @@ public class DatingService {
      * @param sessionId
      * @return
      */
-    public DatingPick QueryDatingPick(Integer profileId, String sessionId) throws WsgException {
+    public DatingPick QueryDatingPick(Integer profileId, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        DatingPick datingPick = datingMapper.selectDatingPick(profileId
-                , StringEncryptUtils.encryptString(user.getUsername()));
+        DatingPick datingPick = datingMapper.selectDatingPick(profileId, user.getUsername());
         if (datingPick == null) {
             return null;
         }
-        datingPick.setUsername(StringEncryptUtils.decryptString(datingPick.getUsername()));
+        datingPick.setUsername(datingPick.getUsername());
         return datingPick;
     }
 
@@ -148,7 +146,7 @@ public class DatingService {
                 //如果对方已接受该撩一下请求，则隐藏撩一下界面，显示联系方式
                 return true;
             }
-            if (datingPick.getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+            if (datingPick.getUsername().equals(user.getUsername())) {
                 //当发布者与浏览者相同时，隐藏撩一下功能
                 return true;
             }
@@ -162,11 +160,11 @@ public class DatingService {
      * @param id
      * @return
      */
-    public DatingPick QueryDatingPickById(int id) throws WsgException {
+    public DatingPick QueryDatingPickById(int id) {
         DatingPick datingPick = datingMapper.selectDatingPickById(id);
         if (datingPick != null) {
-            datingPick.setUsername(StringEncryptUtils.decryptString(datingPick.getUsername()));
-            datingPick.getDatingProfile().setUsername(StringEncryptUtils.decryptString(datingPick.getDatingProfile().getUsername()));
+            datingPick.setUsername(datingPick.getUsername());
+            datingPick.getDatingProfile().setUsername(datingPick.getDatingProfile().getUsername());
             return datingPick;
         }
         return null;
@@ -181,7 +179,7 @@ public class DatingService {
                 throw new RepeatPickException("重复的撩一下请求");
             }
             //不能向自己发布的卖室友信息发送撩一下请求
-            if (datingPick.getDatingProfile().getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+            if (datingPick.getDatingProfile().getUsername().equals(user.getUsername())) {
                 throw new SelfPickException("不能向自己发布的卖室友信息发送撩一下请求");
             }
         }
@@ -193,12 +191,11 @@ public class DatingService {
      * @param sessionId
      * @param id
      */
-    public void VerifyDatingPickViewAccess(String sessionId, int id) throws WsgException, DataNotExistException, NoAccessException {
+    public void VerifyDatingPickViewAccess(String sessionId, int id) throws DataNotExistException, NoAccessException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DatingPick datingPick = datingMapper.selectDatingPickById(id);
         if (datingPick != null) {
-            if (datingPick.getDatingProfile().getUsername().equals(StringEncryptUtils
-                    .encryptString(user.getUsername()))) {
+            if (datingPick.getDatingProfile().getUsername().equals(user.getUsername())) {
                 return;
             }
             throw new NoAccessException("没有权限查看该撩一下信息");
@@ -215,7 +212,7 @@ public class DatingService {
      */
     public void AddDatingPick(String sessionId, DatingPick datingPick) throws WsgException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        datingPick.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        datingPick.setUsername(user.getUsername());
         datingMapper.insertDatingPick(datingPick);
         //创建卖室友通知
         DatingProfile datingProfile = datingMapper.selectDatingProfileById(datingPick
@@ -267,12 +264,11 @@ public class DatingService {
      */
     public List<DatingMessage> QueryUserDatingMessage(String sessionId, Integer start, Integer size) throws WsgException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        List<DatingMessage> list = datingMapper.selectUserDatingMessagePage(StringEncryptUtils
-                .encryptString(user.getUsername()), start, size);
+        List<DatingMessage> list = datingMapper.selectUserDatingMessagePage(user.getUsername(), start, size);
         for (DatingMessage datingMessage : list) {
-            datingMessage.setUsername(StringEncryptUtils.decryptString(datingMessage.getUsername()));
-            datingMessage.getDatingPick().setUsername(StringEncryptUtils.decryptString(datingMessage.getDatingPick().getUsername()));
-            datingMessage.getDatingPick().getDatingProfile().setUsername(StringEncryptUtils.decryptString(datingMessage.getDatingPick().getDatingProfile().getUsername()));
+            datingMessage.setUsername(datingMessage.getUsername());
+            datingMessage.getDatingPick().setUsername(datingMessage.getDatingPick().getUsername());
+            datingMessage.getDatingPick().getDatingProfile().setUsername(datingMessage.getDatingPick().getDatingProfile().getUsername());
         }
         return list;
     }
@@ -283,9 +279,9 @@ public class DatingService {
      * @param sessionId
      * @return
      */
-    public Integer QueryUserUnReadDatingMessageCount(String sessionId) throws WsgException {
+    public Integer QueryUserUnReadDatingMessageCount(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        return datingMapper.selectUserUnReadDatingMessageCount(StringEncryptUtils.encryptString(user.getUsername()));
+        return datingMapper.selectUserUnReadDatingMessageCount(user.getUsername());
     }
 
     /**
@@ -294,8 +290,8 @@ public class DatingService {
      * @param datingMessage
      * @return
      */
-    public void AddDatingMessage(DatingMessage datingMessage) throws WsgException {
-        datingMessage.setUsername(StringEncryptUtils.encryptString(datingMessage.getUsername()));
+    public void AddDatingMessage(DatingMessage datingMessage) {
+        datingMessage.setUsername(datingMessage.getUsername());
         datingMapper.insertDatingMessage(datingMessage);
     }
 

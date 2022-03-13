@@ -58,7 +58,6 @@ public class ScheduleCronService {
             //设置线程信号量，限制最大同时查询的线程数为5
             Semaphore semaphore = new Semaphore(5);
             for (User user : userList) {
-                user = user.decryptUser();
                 ScheduleDocument scheduleDocument = scheduleDao.querySchedule(user.getUsername());
                 //如果最后更新日期距今已超过3天，则进行更新
                 if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()

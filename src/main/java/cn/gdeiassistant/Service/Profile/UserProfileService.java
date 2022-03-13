@@ -7,7 +7,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.ProfileMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,9 +81,9 @@ public class UserProfileService {
      */
     public Profile GetUserProfile(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
-            profile.setUsername(StringEncryptUtils.decryptString(profile.getUsername()));
+            profile.setUsername(profile.getUsername());
             return profile;
         }
         throw new UserNotExistException("查询的用户不存在");
@@ -98,8 +97,7 @@ public class UserProfileService {
      */
     public Introduction GetUserIntroduction(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils
-                .encryptString(user.getUsername()));
+        Introduction introduction = profileMapper.selectUserIntroduction(user.getUsername());
         if (introduction != null) {
             return introduction;
         }
@@ -191,12 +189,12 @@ public class UserProfileService {
     @Transactional("appTransactionManager")
     public void UpdateIntroduction(String sessionId, String introductionContent) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Introduction introduction = profileMapper.selectUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()));
+        Introduction introduction = profileMapper.selectUserIntroduction(user.getUsername());
         if (introduction != null) {
-            profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()), introductionContent);
+            profileMapper.updateUserIntroduction(user.getUsername(), introductionContent);
         } else {
-            profileMapper.initUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()));
-            profileMapper.updateUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()), introductionContent);
+            profileMapper.initUserIntroduction(user.getUsername());
+            profileMapper.updateUserIntroduction(user.getUsername(), introductionContent);
         }
     }
 
@@ -211,7 +209,7 @@ public class UserProfileService {
      */
     public void UpdateLocation(String sessionId, String region, String state, String city) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             profile.setLocationRegion(region);
             profile.setLocationState(state);
@@ -233,7 +231,7 @@ public class UserProfileService {
      */
     public void UpdateHometown(String sessionId, String region, String state, String city) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             profile.setHometownRegion(region);
             profile.setHometownState(state);
@@ -254,7 +252,7 @@ public class UserProfileService {
     @Transactional("appTransactionManager")
     public void UpdateGender(String sessionId, int gender, String customGenderName) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             profile.setGender(gender);
             profile.setCustomGenderName(customGenderName);
@@ -275,7 +273,7 @@ public class UserProfileService {
      */
     public void UpdateBirthday(String sessionId, int year, int month, int date) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             Date birthday = Date.from(LocalDate.of(year, month, date)
                     .atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -294,7 +292,7 @@ public class UserProfileService {
      */
     public void ResetBirthday(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             profile.setBirthday(null);
             profileMapper.updateBirthday(profile);
@@ -312,7 +310,7 @@ public class UserProfileService {
      */
     public void UpdateFaculty(String sessionId, int faculty) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             profile.setFaculty(faculty);
             profileMapper.updateFaculty(profile);
@@ -330,7 +328,7 @@ public class UserProfileService {
      */
     public void UpdateMajor(String sessionId, String major) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             profile.setMajor(major);
             profileMapper.updateMajor(profile);
@@ -348,7 +346,7 @@ public class UserProfileService {
      */
     public void UpdateEnrollment(String sessionId, int enrollment) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             profile.setEnrollment(enrollment);
             profileMapper.updateEnrollment(profile);
@@ -365,7 +363,7 @@ public class UserProfileService {
      */
     public void ResetEnrollment(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             profile.setEnrollment(null);
             profileMapper.updateEnrollment(profile);
@@ -383,7 +381,7 @@ public class UserProfileService {
      */
     public void UpdateNickname(String sessionId, String nickname) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(StringEncryptUtils.encryptString(user.getUsername()));
+        Profile profile = profileMapper.selectUserProfile(user.getUsername());
         if (profile != null) {
             profile.setNickname(nickname);
             profileMapper.updateNickname(profile);

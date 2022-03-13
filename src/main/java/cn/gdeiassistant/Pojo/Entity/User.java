@@ -3,8 +3,6 @@ package cn.gdeiassistant.Pojo.Entity;
 import cn.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
-import com.taobao.wsgsvr.WsgException;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -42,36 +40,6 @@ public class User implements Serializable, Entity {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public User decryptUser() {
-        User decryptUser = new User();
-        try {
-            if (username != null) {
-                decryptUser.setUsername(StringEncryptUtils.decryptString(username));
-            }
-            if (password != null) {
-                decryptUser.setPassword(StringEncryptUtils.decryptString(password));
-            }
-        } catch (WsgException e) {
-            e.printStackTrace();
-        }
-        return decryptUser;
-    }
-
-    public User encryptUser() {
-        User encryptUser = new User();
-        try {
-            if (username != null) {
-                encryptUser.setUsername(StringEncryptUtils.encryptString(username));
-            }
-            if (password != null) {
-                encryptUser.setPassword(StringEncryptUtils.encryptString(password));
-            }
-        } catch (WsgException e) {
-            e.printStackTrace();
-        }
-        return encryptUser;
     }
 
     public User() {

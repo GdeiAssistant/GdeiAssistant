@@ -76,21 +76,21 @@ public class CloseAccountService {
     @Transactional("appTranscationManager")
     public void CloseSocialDataState(String username) throws Exception {
         List<ErshouItem> ershouItemList = ershouMapper
-                .selectItemsByUsername(StringEncryptUtils.encryptString(username));
+                .selectItemsByUsername(username);
         for (ErshouItem ershouItem : ershouItemList) {
             if (ershouItem.getState().equals(1)) {
                 ershouMapper.updateItemState(ershouItem.getId(), 3);
             }
         }
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                .selectItemByUsername(StringEncryptUtils.encryptString(username));
+                .selectItemByUsername(username);
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
             if (lostAndFoundItem.getState().equals(0)) {
                 lostAndFoundMapper.updateItemState(lostAndFoundItem.getId(), 2);
             }
         }
         List<DeliveryOrder> deliveryOrderList = deliveryMapper
-                .selectDeliveryOrderByUsername(StringEncryptUtils.encryptString(username));
+                .selectDeliveryOrderByUsername(username);
         for (DeliveryOrder deliveryOrder : deliveryOrderList) {
             if (deliveryOrder.getState().equals(0)) {
                 //下单者有未删除的快递代收订单信息
@@ -117,25 +117,25 @@ public class CloseAccountService {
     public void CloseAccount(String sessionId, String password) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         //检查用户账号状态
-        User queryUser = userMapper.selectUser(StringEncryptUtils.encryptString(user.getUsername()));
+        User queryUser = userMapper.selectUser(user.getUsername());
         if (queryUser == null) {
             //若账号不存在，则抛出异常
             throw new UserNotExistException("用户账号不存在");
         }
-        if (!queryUser.decryptUser().getPassword().equals(password)) {
+        if (!queryUser.getPassword().equals(password)) {
             //账号密码错误
             throw new PasswordIncorrectException("用户账号密码不匹配");
         }
         //检查有无待处理的社区功能信息
         List<ErshouItem> ershouItemList = ershouMapper
-                .selectItemsByUsername(StringEncryptUtils.encryptString(user.getUsername()));
+                .selectItemsByUsername(user.getUsername());
         for (ErshouItem ershouItem : ershouItemList) {
             if (ershouItem.getState().equals(1)) {
                 throw new ItemAvailableException("请下架或确认出售账号下的所有二手交易物品");
             }
         }
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
-                .selectItemByUsername(StringEncryptUtils.encryptString(user.getUsername()));
+                .selectItemByUsername(user.getUsername());
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
             if (lostAndFoundItem.getState().equals(0)) {
                 throw new ItemAvailableException("请确认寻回账号下的所有失物招领物品");
@@ -143,7 +143,7 @@ public class CloseAccountService {
         }
         //检查有无待处理的全民快递订单和交易
         List<DeliveryOrder> deliveryOrderList = deliveryMapper
-                .selectDeliveryOrderByUsername(StringEncryptUtils.encryptString(user.getUsername()));
+                .selectDeliveryOrderByUsername(user.getUsername());
         for (DeliveryOrder deliveryOrder : deliveryOrderList) {
             if (deliveryOrder.getState().equals(0)) {
                 //下单者有未删除的快递代收订单信息
@@ -160,26 +160,25 @@ public class CloseAccountService {
         //开始进行账号关闭事务
 
         //删除四六级准考证号
-        CetNumber cetNumber = cetMapper
-                .selectNumber(StringEncryptUtils.encryptString(user.getUsername()));
+        CetNumber cetNumber = cetMapper.selectNumber(user.getUsername());
         if (cetNumber != null) {
-            cetMapper.updateNumber(StringEncryptUtils.encryptString(user.getUsername()), null);
+            cetMapper.updateNumber(user.getUsername(), null);
         }
         //删除绑定的手机号
-        Phone phone = phoneMapper.selectPhone(StringEncryptUtils.encryptString(user.getUsername()));
+        Phone phone = phoneMapper.selectPhone(user.getUsername());
         if (phone != null) {
-            phoneMapper.deletePhone(StringEncryptUtils.encryptString(user.getUsername()));
+            phoneMapper.deletePhone(user.getUsername());
         }
         //删除教务缓存信息
         gradeDao.removeGrade(user.getUsername());
         scheduleDao.removeSchedule(user.getUsername());
         //移除易班和微信绑定状态
-        wechatUserMapper.resetWechatUser(StringEncryptUtils.encryptString(user.getUsername()));
+        wechatUserMapper.resetWechatUser(user.getUsername());
         //删除用户资料信息
-        profileMapper.resetUserProfile(StringEncryptUtils.encryptString(user.getUsername()), "已注销");
-        profileMapper.resetUserIntroduction(StringEncryptUtils.encryptString(user.getUsername()));
+        profileMapper.resetUserProfile(user.getUsername(), "已注销");
+        profileMapper.resetUserIntroduction(user.getUsername());
         //重置用户隐私配置
-        privacyMapper.resetPrivacy(StringEncryptUtils.encryptString(user.getUsername()));
+        privacyMapper.resetPrivacy(user.getUsername());
         //删除用户头像
         userProfileService.DeleteAvatar(user.getUsername());
         //删除用户账号信息
@@ -187,7 +186,7 @@ public class CloseAccountService {
                 + StringEncryptUtils.SHA1HexString(user.getUsername()).substring(0, 15));
         count = count == null ? 0 : count;
         userMapper.closeUser("del_" + StringEncryptUtils.SHA1HexString(user.getUsername())
-                .substring(0, 15) + "_" + count, StringEncryptUtils.encryptString(user.getUsername()));
+                .substring(0, 15) + "_" + count, user.getUsername());
         //保存注销日志
         SaveCloseLog(user.getUsername(), count);
     }

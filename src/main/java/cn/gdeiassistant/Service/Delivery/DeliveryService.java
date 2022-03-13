@@ -10,7 +10,6 @@ import cn.gdeiassistant.Pojo.Entity.DeliveryTrade;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Delivery.DeliveryMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +37,11 @@ public class DeliveryService {
      * @param size
      * @return
      */
-    public List<DeliveryOrder> QueryDeliveryOrderPage(Integer start, Integer size) throws WsgException {
+    public List<DeliveryOrder> QueryDeliveryOrderPage(Integer start, Integer size) {
         List<DeliveryOrder> deliveryOrderList = deliveryMapper.selectDeliveryOrderPage(start, size);
         if (deliveryOrderList != null && !deliveryOrderList.isEmpty()) {
             for (DeliveryOrder deliveryOrder : deliveryOrderList) {
-                deliveryOrder.setUsername(StringEncryptUtils.decryptString(deliveryOrder.getUsername()));
+                deliveryOrder.setUsername(deliveryOrder.getUsername());
             }
             return deliveryOrderList;
         }
@@ -56,14 +55,14 @@ public class DeliveryService {
      * @return
      * @throws WsgException
      */
-    public List<DeliveryOrder> QueryPersonalDeliveryOrder(String sessionId) throws WsgException {
+    public List<DeliveryOrder> QueryPersonalDeliveryOrder(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         List<DeliveryOrder> list = new ArrayList<>();
         List<DeliveryOrder> deliveryOrderList = deliveryMapper
-                .selectDeliveryOrderByUsername(StringEncryptUtils.encryptString(user.getUsername()));
+                .selectDeliveryOrderByUsername(user.getUsername());
         if (deliveryOrderList != null && !deliveryOrderList.isEmpty()) {
             for (DeliveryOrder deliveryOrder : deliveryOrderList) {
-                deliveryOrder.setUsername(StringEncryptUtils.decryptString(deliveryOrder.getUsername()));
+                deliveryOrder.setUsername(deliveryOrder.getUsername());
             }
             list.addAll(deliveryOrderList);
         }
@@ -77,14 +76,14 @@ public class DeliveryService {
      * @return
      * @throws WsgException
      */
-    public List<DeliveryOrder> QueryPersonalAcceptedDeliveryOrder(String sessionId) throws WsgException {
+    public List<DeliveryOrder> QueryPersonalAcceptedDeliveryOrder(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         List<DeliveryOrder> list = new ArrayList<>();
-        List<DeliveryOrder> acceptedDeliveryOrderList = deliveryMapper.selectAcceptedDeliveryOrderByUsername(StringEncryptUtils
-                .encryptString(user.getUsername()));
+        List<DeliveryOrder> acceptedDeliveryOrderList = deliveryMapper.selectAcceptedDeliveryOrderByUsername(
+                user.getUsername());
         if (acceptedDeliveryOrderList != null && !acceptedDeliveryOrderList.isEmpty()) {
             for (DeliveryOrder deliveryOrder : acceptedDeliveryOrderList) {
-                deliveryOrder.setUsername(StringEncryptUtils.decryptString(deliveryOrder.getUsername()));
+                deliveryOrder.setUsername(deliveryOrder.getUsername());
             }
             list.addAll(acceptedDeliveryOrderList);
         }
@@ -97,11 +96,11 @@ public class DeliveryService {
      * @param username
      * @return
      */
-    public List<DeliveryTrade> QueryPersonalDeliveryTrade(String username) throws WsgException {
-        List<DeliveryTrade> deliveryTradeList = deliveryMapper.selectDeliveryTradeByUsername(StringEncryptUtils.encryptString(username));
+    public List<DeliveryTrade> QueryPersonalDeliveryTrade(String username) {
+        List<DeliveryTrade> deliveryTradeList = deliveryMapper.selectDeliveryTradeByUsername(username);
         if (deliveryTradeList != null && !deliveryTradeList.isEmpty()) {
             for (DeliveryTrade deliveryTrade : deliveryTradeList) {
-                deliveryTrade.setUsername(StringEncryptUtils.decryptString(deliveryTrade.getUsername()));
+                deliveryTrade.setUsername(deliveryTrade.getUsername());
             }
             return deliveryTradeList;
         }
@@ -113,10 +112,10 @@ public class DeliveryService {
      *
      * @param orderId
      */
-    public DeliveryOrder QueryDeliveryOrderByOrderId(Integer orderId) throws DataNotExistException, WsgException {
+    public DeliveryOrder QueryDeliveryOrderByOrderId(Integer orderId) throws DataNotExistException {
         DeliveryOrder deliveryOrder = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
         if (deliveryOrder != null) {
-            deliveryOrder.setUsername(StringEncryptUtils.decryptString(deliveryOrder.getUsername()));
+            deliveryOrder.setUsername(deliveryOrder.getUsername());
             return deliveryOrder;
         }
         throw new DataNotExistException("该快递代收订单不存在");
@@ -130,10 +129,10 @@ public class DeliveryService {
      * @throws WsgException
      * @throws DataNotExistException
      */
-    public DeliveryTrade QueryDeliveryTradeByOrderId(Integer orderId) throws WsgException, DataNotExistException {
+    public DeliveryTrade QueryDeliveryTradeByOrderId(Integer orderId) throws DataNotExistException {
         DeliveryTrade deliveryTrade = deliveryMapper.selectDeliveryTradeByOrderId(orderId);
         if (deliveryTrade != null) {
-            deliveryTrade.setUsername(StringEncryptUtils.decryptString(deliveryTrade.getUsername()));
+            deliveryTrade.setUsername(deliveryTrade.getUsername());
             return deliveryTrade;
         }
         throw new DataNotExistException("该快递代收订单不存在");
@@ -147,10 +146,10 @@ public class DeliveryService {
      * @throws DataNotExistException
      * @throws WsgException
      */
-    public DeliveryTrade QueryDeliveryTradeByTradeId(Integer tradeId) throws DataNotExistException, WsgException {
+    public DeliveryTrade QueryDeliveryTradeByTradeId(Integer tradeId) throws DataNotExistException {
         DeliveryTrade deliveryTrade = deliveryMapper.selectDeliveryTradeByTradeId(tradeId);
         if (deliveryTrade != null) {
-            deliveryTrade.setUsername(StringEncryptUtils.decryptString(deliveryTrade.getUsername()));
+            deliveryTrade.setUsername(deliveryTrade.getUsername());
             return deliveryTrade;
         }
         throw new DataNotExistException("该快递代收交易不存在");
@@ -171,7 +170,7 @@ public class DeliveryService {
     public int QueryDeliveryTradeDetailType(String sessionId, int tradeId) throws DataNotExistException, WsgException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DeliveryTrade deliveryTrade = QueryDeliveryTradeByTradeId(tradeId);
-        if (deliveryTrade.getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+        if (deliveryTrade.getUsername().equals(user.getUsername())) {
             //自己接受的交易单
             return 2;
         } else {
@@ -203,7 +202,7 @@ public class DeliveryService {
     public int QueryDeliveryOrderDetailType(String sessionId, int orderId) throws DataNotExistException, WsgException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DeliveryOrder deliveryOrder = QueryDeliveryOrderByOrderId(orderId);
-        if (deliveryOrder.getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+        if (deliveryOrder.getUsername().equals(user.getUsername())) {
             //自己发布的订单信息
             return 0;
         } else {
@@ -241,9 +240,9 @@ public class DeliveryService {
     /**
      * 检查接单人和下单人的身份，防止自行接单
      */
-    public boolean CheckAcceptUsername(Integer orderId, String username) throws WsgException {
+    public boolean CheckAcceptUsername(Integer orderId, String username) {
         String orderUsername = deliveryMapper.selectDeliveryOrderUsername(orderId);
-        return Objects.equals(StringEncryptUtils.encryptString(username), orderUsername);
+        return Objects.equals(username, orderUsername);
     }
 
     /**
@@ -259,7 +258,7 @@ public class DeliveryService {
         if (result > 0) {
             //若影响行数大于0，则表示抢单成功
             DeliveryTrade deliveryTrade = new DeliveryTrade();
-            deliveryTrade.setUsername(StringEncryptUtils.encryptString(username));
+            deliveryTrade.setUsername(username);
             deliveryTrade.setOrderId(orderId);
             //插入交易记录
             deliveryMapper.insertTradeRecord(deliveryTrade);
@@ -282,7 +281,7 @@ public class DeliveryService {
         if (StringUtils.isBlank(accepterUsername)) {
             throw new DataNotExistException("该快递代收交易不存在");
         }
-        return Objects.equals(StringEncryptUtils.decryptString(accepterUsername), user.getUsername());
+        return Objects.equals(accepterUsername, user.getUsername());
     }
 
     /**
@@ -293,13 +292,13 @@ public class DeliveryService {
      * @return
      * @throws WsgException
      */
-    public boolean CheckOrderPublisher(Integer orderId, String sessionId) throws WsgException, DataNotExistException {
+    public boolean CheckOrderPublisher(Integer orderId, String sessionId) throws DataNotExistException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         String publisherUsername = deliveryMapper.selectDeliveryOrderUsernameByOrderId(orderId);
         if (StringUtils.isBlank(publisherUsername)) {
             throw new DataNotExistException("该快递代收订单不存在");
         }
-        return Objects.equals(StringEncryptUtils.decryptString(publisherUsername), user.getUsername());
+        return Objects.equals(publisherUsername, user.getUsername());
     }
 
     /**
@@ -312,11 +311,11 @@ public class DeliveryService {
      * @throws NoAccessUpdatingException
      */
     @Transactional("appTransactionManager")
-    public void DeleteOrder(Integer orderId, String sessionId) throws DataNotExistException, WsgException, NoAccessUpdatingException, DeliveryOrderStateUpdatedException {
+    public void DeleteOrder(Integer orderId, String sessionId) throws DataNotExistException, NoAccessUpdatingException, DeliveryOrderStateUpdatedException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DeliveryOrder deliveryOrder = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
         if (deliveryOrder != null) {
-            if (deliveryOrder.getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+            if (deliveryOrder.getUsername().equals(user.getUsername())) {
                 int result = deliveryMapper.deleteOrder(orderId);
                 if (result == 0) {
                     throw new DeliveryOrderStateUpdatedException("订单状态已更新");
@@ -334,14 +333,14 @@ public class DeliveryService {
      * @param tradeId
      * @param sessionId
      */
-    public void FinishTrade(Integer tradeId, String sessionId) throws DataNotExistException, WsgException, NoAccessUpdatingException {
+    public void FinishTrade(Integer tradeId, String sessionId) throws DataNotExistException, NoAccessUpdatingException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DeliveryTrade deliveryTrade = deliveryMapper.selectDeliveryTradeByTradeId(tradeId);
         if (deliveryTrade != null) {
             if (deliveryTrade.getOrderId() != null) {
                 DeliveryOrder deliveryOrder = deliveryMapper.selectDeliveryOrderByOrderId(deliveryTrade.getOrderId());
                 if (deliveryOrder != null) {
-                    if (deliveryOrder.getUsername().equals(StringEncryptUtils.encryptString(user.getUsername()))) {
+                    if (deliveryOrder.getUsername().equals(user.getUsername())) {
                         deliveryMapper.updateTradeState(tradeId, 1);
                         return;
                     }
@@ -357,10 +356,10 @@ public class DeliveryService {
      *
      * @param deliveryOrder
      */
-    public void AddDeliveryOrder(String sessionId, DeliveryOrder deliveryOrder) throws WsgException {
+    public void AddDeliveryOrder(String sessionId, DeliveryOrder deliveryOrder)  {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DeliveryOrder order = new DeliveryOrder();
-        order.setUsername(StringEncryptUtils.encryptString(user.getUsername()));
+        order.setUsername(user.getUsername());
         order.setName(deliveryOrder.getName());
         order.setNumber(deliveryOrder.getNumber());
         order.setPhone(deliveryOrder.getPhone());
@@ -369,7 +368,7 @@ public class DeliveryService {
         order.setCompany(deliveryOrder.getCompany());
         order.setAddress(deliveryOrder.getAddress());
         order.setRemarks(deliveryOrder.getRemarks());
-        order.setUsername(StringEncryptUtils.encryptString(deliveryOrder.getUsername()));
+        order.setUsername(deliveryOrder.getUsername());
         order.setRemarks(deliveryOrder.getRemarks());
         deliveryMapper.insertDeliveryOrder(order);
     }

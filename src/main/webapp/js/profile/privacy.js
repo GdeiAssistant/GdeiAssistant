@@ -75,13 +75,13 @@ $(function () {
 
 //更改隐私设置
 function changePrivacySetting(event) {
-    console.log(event);
-    let state = $("input:eq(" + index + ")").prop("checked");
+    let tag = event.id;
+    let state = $("#" + tag).prop("checked");
     $.ajax({
         url: '/api/privacy',
         type: 'post',
         data: {
-            index: index,
+            tag: tag,
             state: state
         },
         success: function (result) {

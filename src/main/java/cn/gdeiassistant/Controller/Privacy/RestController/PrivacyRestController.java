@@ -33,13 +33,13 @@ public class PrivacyRestController {
      * 更新用户隐私设置
      *
      * @param request
-     * @param index
+     * @param tag
      * @param state
      * @return
      */
     @RequestMapping(value = "/api/privacy", method = RequestMethod.POST)
-    public JsonResult UpdateUserPrivacySetting(HttpServletRequest request, String index, boolean state) throws Exception {
-        switch (index.toUpperCase()) {
+    public JsonResult UpdateUserPrivacySetting(HttpServletRequest request, String tag, boolean state) throws Exception {
+        switch (tag.toUpperCase()) {
             case "GENDER":
                 //性别
                 privacyService.UpdateGender(state, request.getSession().getId());

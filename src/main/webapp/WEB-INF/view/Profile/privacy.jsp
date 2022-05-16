@@ -35,63 +35,63 @@
         <div class="weui-cell__bd">公开我的性别</div>
         <div class="weui-cell__ft">
             <input id="gender" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的院系</div>
         <div class="weui-cell__ft">
             <input id="faculty" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的专业</div>
         <div class="weui-cell__ft">
             <input id="major" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的国家/地区</div>
         <div class="weui-cell__ft">
             <input id="location" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的家乡</div>
         <div class="weui-cell__ft">
             <input id="hometown" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的个人简介</div>
         <div class="weui-cell__ft">
             <input id="introduction" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的入学年份</div>
         <div class="weui-cell__ft">
             <input id="enrollerment" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的年龄</div>
         <div class="weui-cell__ft">
             <input id="age" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的学历</div>
         <div class="weui-cell__ft">
             <input id="degree" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting()">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
 </div>
@@ -102,7 +102,7 @@
         <div class="weui-cell__bd">缓存我的教务数据</div>
         <div class="weui-cell__ft">
             <input id="cache" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting(13)">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
 </div>
@@ -114,7 +114,7 @@
         <div class="weui-cell__bd">让搜索引擎链接到我的个人资料页</div>
         <div class="weui-cell__ft">
             <input id="robots" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting(14)">
+                   onchange="changePrivacySetting(this)">
         </div>
     </div>
 </div>

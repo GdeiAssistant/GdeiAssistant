@@ -139,60 +139,6 @@ public class PrivacyService {
     }
 
     /**
-     * 更新学历隐私设置
-     *
-     * @param state
-     * @param username
-     * @throws Exception
-     */
-    public void UpdateDegree(boolean state, String username) throws Exception {
-        privacyMapper.updateDegree(state, username);
-    }
-
-    /**
-     * 更新职业隐私设置
-     *
-     * @param state
-     * @param username
-     * @throws Exception
-     */
-    public void UpdateProfession(boolean state, String username) throws Exception {
-        privacyMapper.updateProfession(state, username);
-    }
-
-    /**
-     * 更新学校隐私设置
-     *
-     * @param state
-     * @param index
-     * @param username
-     * @throws Exception
-     */
-    public void UpdateSchool(boolean state, int index, String username) throws Exception {
-        switch (index) {
-            case 0:
-                //大专院校
-                privacyMapper.updateColleges(state, username);
-                break;
-
-            case 1:
-                //高中/职中
-                privacyMapper.updateHighSchool(state, username);
-                break;
-
-            case 2:
-                //初中
-                privacyMapper.updateJuniorHighSchool(state, username);
-                break;
-
-            case 3:
-                //小学
-                privacyMapper.updatePrimarySchool(state, username);
-                break;
-        }
-    }
-
-    /**
      * 更新教务信息缓存隐私配置
      *
      * @param state

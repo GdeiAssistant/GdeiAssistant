@@ -29,18 +29,6 @@ public class Privacy implements Serializable, Entity {
 
     private Boolean ageOpen;
 
-    private Boolean degreeOpen;
-
-    private Boolean primarySchoolOpen;
-
-    private Boolean juniorHighSchoolOpen;
-
-    private Boolean highSchoolOpen;
-
-    private Boolean collegesOpen;
-
-    private Boolean professionOpen;
-
     private Boolean cacheAllow;
 
     private Boolean robotsIndexAllow;
@@ -58,7 +46,7 @@ public class Privacy implements Serializable, Entity {
     }
 
     public void setGenderOpen(Boolean genderOpen) {
-        this.genderOpen = Boolean.FALSE.equals(genderOpen);
+        this.genderOpen = genderOpen;
     }
 
     public Boolean isLocationOpen() {
@@ -66,7 +54,7 @@ public class Privacy implements Serializable, Entity {
     }
 
     public void setLocationOpen(Boolean locationOpen) {
-        this.locationOpen = Boolean.FALSE.equals(locationOpen);
+        this.locationOpen = locationOpen;
     }
 
     public Boolean isHometownOpen() {
@@ -74,7 +62,7 @@ public class Privacy implements Serializable, Entity {
     }
 
     public void setHometownOpen(Boolean hometownOpen) {
-        this.hometownOpen = Boolean.FALSE.equals(hometownOpen);
+        this.hometownOpen = hometownOpen;
     }
 
     public Boolean isIntroductionOpen() {
@@ -82,7 +70,7 @@ public class Privacy implements Serializable, Entity {
     }
 
     public void setIntroductionOpen(Boolean introductionOpen) {
-        this.introductionOpen = Boolean.FALSE.equals(introductionOpen);
+        this.introductionOpen = introductionOpen;
     }
 
     public Boolean isFacultyOpen() {
@@ -90,7 +78,7 @@ public class Privacy implements Serializable, Entity {
     }
 
     public void setFacultyOpen(Boolean facultyOpen) {
-        this.facultyOpen = Boolean.FALSE.equals(facultyOpen);
+        this.facultyOpen = facultyOpen;
     }
 
     public Boolean isMajorOpen() {
@@ -98,39 +86,7 @@ public class Privacy implements Serializable, Entity {
     }
 
     public void setMajorOpen(Boolean majorOpen) {
-        this.majorOpen = Boolean.FALSE.equals(majorOpen);
-    }
-
-    public Boolean isCacheAllow() {
-        return cacheAllow;
-    }
-
-    public Boolean isAgeOpen() {
-        return ageOpen;
-    }
-
-    public void setAgeOpen(Boolean ageOpen) {
-        this.ageOpen = Boolean.FALSE.equals(ageOpen);
-    }
-
-    public Boolean isDegreeOpen() {
-        return degreeOpen;
-    }
-
-    public void setDegreeOpen(Boolean degreeOpen) {
-        this.degreeOpen = Boolean.FALSE.equals(degreeOpen);
-    }
-
-    public void setCacheAllow(Boolean cacheAllow) {
-        this.cacheAllow = Boolean.FALSE.equals(cacheAllow);
-    }
-
-    public Boolean isRobotsIndexAllow() {
-        return robotsIndexAllow;
-    }
-
-    public void setRobotsIndexAllow(Boolean robotsIndexAllow) {
-        this.robotsIndexAllow = Boolean.FALSE.equals(robotsIndexAllow);
+        this.majorOpen = majorOpen;
     }
 
     public Boolean isEnrollmentOpen() {
@@ -138,46 +94,30 @@ public class Privacy implements Serializable, Entity {
     }
 
     public void setEnrollmentOpen(Boolean enrollmentOpen) {
-        this.enrollmentOpen = Boolean.FALSE.equals(enrollmentOpen);
+        this.enrollmentOpen = enrollmentOpen;
     }
 
-    public Boolean isPrimarySchoolOpen() {
-        return primarySchoolOpen;
+    public Boolean isAgeOpen() {
+        return ageOpen;
     }
 
-    public void setPrimarySchoolOpen(Boolean primarySchoolOpen) {
-        this.primarySchoolOpen = Boolean.FALSE.equals(primarySchoolOpen);
+    public void setAgeOpen(Boolean ageOpen) {
+        this.ageOpen = ageOpen;
     }
 
-    public Boolean isJuniorHighSchoolOpen() {
-        return juniorHighSchoolOpen;
+    public Boolean isCacheAllow() {
+        return cacheAllow;
     }
 
-    public void setJuniorHighSchoolOpen(Boolean juniorHighSchoolOpen) {
-        this.juniorHighSchoolOpen = Boolean.FALSE.equals(juniorHighSchoolOpen);
+    public void setCacheAllow(Boolean cacheAllow) {
+        this.cacheAllow = cacheAllow;
     }
 
-    public Boolean isHighSchoolOpen() {
-        return highSchoolOpen;
+    public Boolean isRobotsIndexAllow() {
+        return robotsIndexAllow;
     }
 
-    public void setHighSchoolOpen(Boolean highSchoolOpen) {
-        this.highSchoolOpen = Boolean.FALSE.equals(highSchoolOpen);
-    }
-
-    public Boolean isProfessionOpen() {
-        return professionOpen;
-    }
-
-    public void setProfessionOpen(Boolean professionOpen) {
-        this.professionOpen = Boolean.FALSE.equals(professionOpen);
-    }
-
-    public Boolean isCollegesOpen() {
-        return collegesOpen;
-    }
-
-    public void setCollegesOpen(Boolean collegesOpen) {
-        this.collegesOpen = Boolean.FALSE.equals(collegesOpen);
+    public void setRobotsIndexAllow(Boolean robotsIndexAllow) {
+        this.robotsIndexAllow = robotsIndexAllow;
     }
 }

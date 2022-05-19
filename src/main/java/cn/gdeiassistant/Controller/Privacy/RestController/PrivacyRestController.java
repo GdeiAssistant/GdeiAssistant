@@ -85,7 +85,7 @@ public class PrivacyRestController {
                 privacyService.UpdateCache(state, request.getSession().getId());
                 break;
 
-            case "ROBOTS_INDEX":
+            case "ROBOTS":
                 //搜索引擎收录
                 privacyService.UpdateRobotsIndex(state, request.getSession().getId());
                 break;

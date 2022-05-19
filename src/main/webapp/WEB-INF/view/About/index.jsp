@@ -76,6 +76,7 @@
                         <a class="dropdown-item" href="/policy/social">社区准则</a>
                         <a class="dropdown-item" href="/license">开源协议</a>
                         <a class="dropdown-item" href="/policy/cookie">Cookie政策</a>
+                        <a class="dropdown-item" href="/policy/nondiscrimination">不歧视及不骚扰声明</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -95,19 +96,14 @@
                         <a class="dropdown-item" href="http://cpc.people.com.cn/index.html">中国共产党新闻网</a>
                         <a class="dropdown-item" href="http://chuxin.people.cn/GB/index.html">“不忘初心、牢记使命”主题教育</a>
                         <a class="dropdown-item" href="http://dangshi.people.cn">党史学习教育</a>
-                        <a class="dropdown-item" href="https://www.enaea.edu.cn">干部在线学习中心</a>
                         <a class="dropdown-item" href="http://cpc.people.com.cn/19th">十九大专题报道</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item"
-                           href="http://www.nhc.gov.cn/xcs/xxgzbd/gzbd_index.shtml">新型冠状病毒肺炎疫情防控专题</a>
-                        <a class="dropdown-item" href="https://ncov.dxy.cn/ncovh5/view/pneumonia">新型冠状病毒肺炎疫情实时动态</a>
+                           href="http://www.nhc.gov.cn/xcs/xxgzbd/gzbd_index.shtml">新型冠状病毒肺炎疫情防控</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="/announcement/equalrights">反歧视声明</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/announcement/suicideprevention">青少年自杀干预热线</a>

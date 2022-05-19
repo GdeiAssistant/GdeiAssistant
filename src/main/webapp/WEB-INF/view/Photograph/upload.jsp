@@ -50,6 +50,7 @@
         <label>照片类型</label>
         <input type="radio" class="" name="type" value="1" checked>生活照
         <input type="radio" class="" name="type" value="2">校园照
+        <input type="radio" class="" name="type" value="3">毕业照
     </div>
     <div style="margin-bottom: 10px">
         <i class="am-icon-picture-o"></i>选择主图<span class="red-text">*</span>

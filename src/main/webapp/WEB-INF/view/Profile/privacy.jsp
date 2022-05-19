@@ -76,7 +76,7 @@
     <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的入学年份</div>
         <div class="weui-cell__ft">
-            <input id="enrollerment" class="weui-switch" type="checkbox"
+            <input id="enrollment" class="weui-switch" type="checkbox"
                    onchange="changePrivacySetting(this)">
         </div>
     </div>

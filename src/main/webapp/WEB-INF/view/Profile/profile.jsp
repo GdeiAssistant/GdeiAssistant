@@ -245,7 +245,7 @@
                         <label class="weui-label">性别</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input id="customGenderName" class="weui-input" type="text" onkeyup="inputLengthCheck(this,50)">
+                        <input id="customGenderName" class="weui-input" type="text" onkeyup="inputLengthCheck(this,16)">
                     </div>
                 </div>
             </div>

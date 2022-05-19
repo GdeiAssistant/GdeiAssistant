@@ -73,11 +73,14 @@
 <footer id="toolbar">
     <div class="am-btn-group am-btn-group-justify bottom-btns" style="box-shadow: 0 -1px 5px #989898;">
         <a class="am-btn am-btn-danger" role="button" href="javascript:"
-           onclick="switchToLifePhoto()">
+           onclick="switchPhoto(1)">
             <img width="20px" height="20px" src="/img/photograph/life.png"/><br>最美生活照</a>
         <a class="am-btn am-btn-primary" role="button" href="javascript:"
-           onclick="switchToSchoolPhoto()">
+           onclick="switchPhoto(2)">
             <img width="20px" height="20px" src="/img/photograph/school.png"/><br>最美校园照</a>
+        <a class="am-btn am-btn-warning" role="button" href="javascript:"
+           onclick="switchPhoto(3)">
+            <img width="20px" height="20px" src="/img/photograph/graduation.png"/><br>最美毕业照</a>
         <a class="am-btn am-btn-success" role="button" href="javascript:"
            onclick="window.location.href='/photograph/upload'">
             <img width="20px" height="20px" src="/img/photograph/upload.png"/><br>我要晒照</a>

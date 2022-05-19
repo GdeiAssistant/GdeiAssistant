@@ -46,11 +46,11 @@ public class Photograph implements Serializable, Entity {
     private String content;
 
     /**
-     * 照片类型，1为生活照，2为校园照
+     * 照片类型，1为生活照，2为校园照，3为毕业照
      */
     @NotNull
     @Min(1)
-    @Max(2)
+    @Max(3)
     private Integer type;
 
     /**

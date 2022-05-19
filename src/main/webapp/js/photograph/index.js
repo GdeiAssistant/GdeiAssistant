@@ -357,26 +357,14 @@ function likePhoto(id) {
     }
 }
 
-//切换到生活照模块
-function switchToLifePhoto() {
+//切换照片模块
+function switchPhoto(index) {
     //清空已加载的照片信息
     $("#card-box").empty();
     $("#start").val(0);
     $("#loadmore").attr("disabled", false);
-    //设置为生活照模块
-    $("#type").val(1);
-    //重新加载照片列表
-    loadPhotographs();
-}
-
-//切换到校园照模块
-function switchToSchoolPhoto() {
-    //清空已加载的照片信息
-    $("#card-box").empty();
-    $("#start").val(0);
-    $("#loadmore").attr("disabled", false);
-    //设置为校园照模块
-    $("#type").val(2);
+    //设置照片模块
+    $("#type").val(index);
     //重新加载照片列表
     loadPhotographs();
 }

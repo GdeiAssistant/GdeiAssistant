@@ -16,7 +16,7 @@ public class ItemConstantUtils {
 
     public static final String[] SECRET_ITEM_TYPE = {"文本", "语音"};
 
-    public static final String[] PHOTOGRAPH_ITEM_TYPE = {"生活照", "校园照"};
+    public static final String[] PHOTOGRAPH_ITEM_TYPE = {"生活照", "校园照", "毕业照"};
 
     public static final String[] EXPRESS_ITEM_GENDER_TYPE = {"男", "女", "其他或保密"};
 

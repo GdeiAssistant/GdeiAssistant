@@ -357,7 +357,7 @@ System.setProperty("java.net.preferIPv4Addresses" , "true");
 
 [Anti 996 License](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 
-Copyright (c) 2016 - 2021 GdeiAssistant
+Copyright (c) 2016 - 2022 GdeiAssistant
 
 ## 文档
 

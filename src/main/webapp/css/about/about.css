@@ -10,13 +10,12 @@ html {
     margin: 0 auto;
     text-align: center;
     display: -webkit-flex;
-    flex-wrap: wrap;
     justify-content: center;
 }
 
 .download_button {
     margin-bottom: 10px;
-    width: 100%;
+    width: 50%;
     margin-left: 10px;
     margin-right: 10px;
     border: 1px solid #e7e7e7;
@@ -527,7 +526,7 @@ div strong {
     color: #ccc;
     font-size: 0.6rem;
     margin: 0 0 2rem 0;
-    padding: 0 1rem;
+    padding-bottom: 1rem;
     text-align: center;
 }
 
@@ -577,6 +576,144 @@ div strong {
     padding: 0 20px;
     font-weight: bold;
     font-size: 2.5em;
+}
+
+.app-download-tip {
+    margin-top: 40px;
+    line-height: 19px;
+    font-size: 18px;
+}
+
+.app-download {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    zoom: 1;
+}
+
+.app-download-wrap {
+    width: 33%;
+    min-width: 250px;
+    border: 1px solid #e7e7e7;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: -apple-system, sans-serif;
+    text-align: center;
+}
+
+.app-download-title {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    align-items: center;
+}
+
+.app-download-title strong {
+    font-size: 12px;
+    line-height: 50px;
+}
+
+.app-download-content {
+    text-align: left;
+    font-size: 14px;
+    margin: 0 1rem 0.5rem 1rem;
+    height: 120px;
+    overflow: hidden;
+}
+
+.app-download-content ul {
+    margin-top: 0.5rem;
+}
+
+.app-download-content ul li {
+    width: 100%;
+    color: #666;
+    margin-top: 0.3rem;
+}
+
+.app-download-area {
+    width: 142px;
+    height: 68px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 14px;
+}
+
+.app-download-date {
+    display: block;
+    height: 20px;
+    line-height: 17px;
+    color: #848484;
+    font-size: 12px;
+}
+
+.app-download-button, .app-other-download-button {
+    display: block;
+    width: 126px;
+    height: 30px;
+    margin: 0 auto;
+    background: transparent url(/img/about/download.png) no-repeat 0 0;
+    line-height: 30px;
+}
+
+.app-download-button span, .app-other-download-button span {
+    color: #fff;
+    letter-spacing: .12em;
+}
+
+.app-other-download {
+    margin-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    zoom: 1;
+}
+
+.app-other-download-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    height: 120px;
+    min-width: 350px;
+    border: 1px solid #e7e7e7;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: -apple-system, sans-serif;
+    text-align: center;
+}
+
+.app-other-download-image {
+    padding-left: 1rem;
+}
+
+.app-other-download-content {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.app-other-download-content strong {
+    font-size: 16px;
+    margin-bottom: 0.3rem;
+}
+
+.app-other-download-content text {
+    font-size: 13px;
+}
+
+.app-other-download-area {
+    padding-right: 0.5rem;
+}
+
+.app-other-download-button span {
+    font-size: 14px;
 }
 
 /*# sourceMappingURL=download-base.css.map */

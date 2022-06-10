@@ -28,6 +28,7 @@ public class SettingConstantUtils {
             Stream.of(new String[][]{
                     {"/", "/About/index"},
                     {"/about", "About/index"},
+                    {"/about/download", "/About/download"},
                     {"/about/security", "About/security"},
                     {"/about/account", "About/account"},
                     {"/license", "About/license"},

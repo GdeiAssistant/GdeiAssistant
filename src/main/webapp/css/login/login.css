@@ -1,0 +1,25 @@
+.quick-login {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+}
+
+.quick-login-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quick-login-text {
+    text-align: center;
+}
+
+.quick-login-text p {
+    color: gray;
+    font-size: 15px;
+}
+
+.quick-login-button img {
+    padding: 1rem;
+}

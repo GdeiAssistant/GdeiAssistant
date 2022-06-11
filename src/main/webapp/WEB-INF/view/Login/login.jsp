@@ -24,6 +24,7 @@
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
     <link title="default" rel="stylesheet" href="/css/common/jquery-weui.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/login/login.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
@@ -43,7 +44,7 @@
                 //弹出用户协议和隐私政策提示
                 $.confirm({
                     title: '用户协议和隐私政策提示',
-                    text: '在您使用广东二师助手前，请您认真阅读并了解《服务条款》和《隐私政策》。如您未满14周岁，你还需通知您的监护人共同阅读《儿童隐私政策》，点击"确定"即表示您和您的监护人已阅读并同意全部条款。若您不同意，请点击"取消"并退出应用。',
+                    text: '在您使用广东二师助手前，请您认真阅读并了解《用户协议》和《隐私政策》。如您是未满18周岁的未成年人，你还需通知您的监护人共同阅读用户协议和隐私政策，点击"确定"即表示您已阅读并同意全部条款。若您不同意，请点击"取消"并退出应用。若您未注册广东二师助手账号，点击登录时系统将自动为您创建一个广东二师助手账号。',
                     onOK: function () {
                         $("#loadingToast, .weui_mask").show();
                         $.ajax({
@@ -122,15 +123,28 @@
     <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postLoginForm()">登录</a>
 </div>
 
+<!-- 提示信息 -->
 <p class="page_desc" style="margin-top: 25px">关于登录账户请阅读
     <a class="page_desc"
        onclick="window.location.href = '/about/account'">《校园网络账号说明》
     </a>
     <br>
-    未注册广东二师助手账号的用户
-    <br>
-    登录时将自动创建广东二师助手账号
+    使用前请仔细阅读
+    <a onclick="window.location.href = '/agreement'">《用户协议》</a>和<a onclick="window.location.href = '/policy/privacy'">《隐私政策》</a>
 </p>
+
+<!-- 快速登录 -->
+<div class="quick-login">
+    <div class="quick-login-text">
+        <p>——&nbsp;&nbsp;&nbsp;其他方式登录&nbsp;&nbsp;&nbsp;——</p>
+    </div>
+    <div class="quick-login-button">
+        <img src="/img/login/qq.png" width="30" height="30"/>
+        <img src="/img/login/wechat.png" width="30" height="30"/>
+        <img src="/img/login/weibo.png" width="30" height="30"/>
+        <img src="/img/login/apple.png" width="30" height="30"/>
+    </div>
+</div>
 
 <p class="page_desc"></p>
 
@@ -161,20 +175,6 @@
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
 <div class="weui_toptips weui_warn js_tooltips"></div>
-
-<div class="weui_msg">
-
-    <div class="weui_extra_area">
-        使用前请仔细阅读
-        <a onclick="window.location.href = '/agreement'">《用户协议》</a>
-        <br>
-        和
-        <a onclick="window.location.href = '/policy/privacy'">《隐私政策》</a>
-        以及
-        <a onclick="window.location.href = '/policy/privacy#policy-children'">《儿童隐私政策》</a>
-    </div>
-
-</div>
 
 </body>
 

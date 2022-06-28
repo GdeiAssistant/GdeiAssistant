@@ -3568,9 +3568,7 @@
             <City Name="五家渠" Code="94"/>
             <City Name="北屯" Code="95"/>
         </State>
-    </Region>
-    <Region Name="香港" AliasesName="中国香港特别行政区" Code="HK" ISO="HK">
-        <State Name="香港特别行政区" AliasesName="中国香港特别行政区" Code="HK">
+        <State Name="香港" AliasesName="香港特别行政区" Code="HK">
             <City Name="中西区" Code="HCW"/>
             <City Name="东区" Code="HEA"/>
             <City Name="九龙城区" Code="KKC"/>
@@ -3590,9 +3588,7 @@
             <City Name="荃湾区" Code="NTW"/>
             <City Name="元朗区" Code="NYL"/>
         </State>
-    </Region>
-    <Region Name="澳门" AliasesName="中国澳门特别行政区" Code="MO" ISO="MO">
-        <State Name="澳门特别行政区" AliasesName="中国澳门特别行政区" Code="MO">
+        <State Name="澳门" AliasesName="澳门特别行政区" Code="MO">
             <City Name="花地玛堂区" Code="OLF"/>
             <City Name="圣安多尼堂区" Code="ANT"/>
             <City Name="大堂区" Code="CAT"/>
@@ -3601,9 +3597,7 @@
             <City Name="氹仔" Code="TPA"/>
             <City Name="路环" Code="CLN"/>
         </State>
-    </Region>
-    <Region Name="台湾" AliasesName="中国台湾" Code="TW" ISO="TW">
-        <State Name="台湾" AliasesName="中国台湾" Code="TW">
+        <State Name="台湾" Code="TW">
             <City Name="台北市" Code="1"/>
             <City Name="高雄市" Code="2"/>
             <City Name="基隆市" Code="3"/>

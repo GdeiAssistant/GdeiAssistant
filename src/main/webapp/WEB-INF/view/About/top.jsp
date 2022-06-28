@@ -45,7 +45,7 @@
 
 <div class="margin-bottom60">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="javascript:">广东二师助手</a>
+        <a class="navbar-brand" href="/">广东二师助手</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -102,8 +102,16 @@
                            href="http://www.nhc.gov.cn/xcs/xxgzbd/gzbd_index.shtml">新型冠状病毒肺炎疫情防控</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="javascript:" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        下载内容
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/about/download">下载客户端</a>
+                        <a class="dropdown-item" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
+                    </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/announcement/suicideprevention">青少年自杀干预热线</a>

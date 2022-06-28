@@ -8,23 +8,6 @@
         <img src="/img/about/logo.png" width="120" height="120  ">
     </div>
 
-    <div class="download">
-        <div class="download_button" onclick="window.location.href='/'">
-            <div>
-                <strong>
-                    <a href="javascript:">首页</a>
-                </strong>
-            </div>
-        </div>
-        <div class="download_button" onclick="window.location.href='/login'">
-            <div>
-                <strong>
-                    <a href="javascript:">进入系统</a>
-                </strong>
-            </div>
-        </div>
-    </div>
-
     <h2 class="app-download-tip">主要客户端</h2>
 
     <div class="app-download">

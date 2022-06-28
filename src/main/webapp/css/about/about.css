@@ -6,16 +6,16 @@ html {
     visibility: visible;
 }
 
-.download {
+.main-function-items-area {
     margin: 0 auto;
     text-align: center;
     display: -webkit-flex;
     justify-content: center;
 }
 
-.download_button {
+.login-items {
     margin-bottom: 10px;
-    width: 50%;
+    width: 80%;
     margin-left: 10px;
     margin-right: 10px;
     border: 1px solid #e7e7e7;
@@ -28,29 +28,29 @@ html {
     padding: 0 5% 0 5%;
 }
 
-.download_button div {
+.login-items div {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.download_button div img {
+.login-items div img {
     margin-right: 5%;
 }
 
-.download h2 {
+.login-items h2 {
     height: 25px;
     font-size: 100%;
     align-items: center;
 }
 
-.download strong {
+.login-items strong {
     width: 100px;
     font-size: 12px;
     margin-left: 5%;
 }
 
-.download strong a {
+.login-items strong a {
     color: #333;
     text-decoration: none;
 }

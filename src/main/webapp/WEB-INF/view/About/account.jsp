@@ -18,7 +18,7 @@
 
 <div style="max-width: 677px;margin-left: auto;margin-right: auto">
     <p style="text-align:center">《广东二师助手校园网络账号说明》</p>
-    <p style="text-align:center">更新日期：2021年7月14日</p>
+    <p style="text-align:center">更新日期：2022年6月28日</p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;广东第二师范学院的同学们，欢迎使用广东第二师范学院校园助手系统。<span style="color: rgb(255, 0, 0);">若你为新生或首次使用本系统，建议你先阅读本使用说明</span>。
     </p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用本系统，需要使用校园网账号的用户名与密码进行登录。<span style="color: rgb(255, 0, 0);">值得注意的是，用户名并不是学号</span>。此外，<span

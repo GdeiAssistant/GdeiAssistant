@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Phone.Controller;
 
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Pojo.Entity.Phone;
 import cn.gdeiassistant.Service.Phone.PhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class PhoneController {
      * @return
      */
     @RequestMapping(value = "/phone", method = RequestMethod.GET)
-    public ModelAndView ResolvePhonePage(HttpServletRequest request) throws WsgException {
+    public ModelAndView ResolvePhonePage(HttpServletRequest request)  {
         ModelAndView modelAndView = new ModelAndView("Phone/index");
         Phone phone = phoneService.QueryUserPhone(request.getSession().getId());
         modelAndView.addObject("Phone", phone);

@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Express.RestController;
 
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.ExpressException.CorrectRecordException;
 import cn.gdeiassistant.Exception.ExpressException.NoRealNameException;
@@ -33,11 +32,10 @@ public class ExpressRestController {
      * @param start
      * @param size
      * @return
-     * @throws WsgException
      */
     @RequestMapping(value = "/api/express/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Express>> QueryExpressPage(HttpServletRequest request, @PathVariable("start") int start
-            , @PathVariable("size") int size) throws WsgException {
+            , @PathVariable("size") int size) {
         List<Express> expressList = expressService.QueryExpressPage(start, size, request.getSession().getId());
         return new DataJsonResult<>(true, expressList);
     }
@@ -50,11 +48,10 @@ public class ExpressRestController {
      * @param start
      * @param size
      * @return
-     * @throws WsgException
      */
     @RequestMapping(value = "/api/express/keyword/{keyword}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Express>> QueryExpressPageByKeyWord(HttpServletRequest request, @PathVariable("keyword") String keyword
-            , @PathVariable("start") int start, @PathVariable("size") int size) throws WsgException {
+            , @PathVariable("start") int start, @PathVariable("size") int size) {
         List<Express> expressList = expressService.QueryExpressPageByKeyword(request.getSession().getId(), start, size, keyword);
         return new DataJsonResult<>(true, expressList);
     }
@@ -65,10 +62,9 @@ public class ExpressRestController {
      * @param request
      * @param express
      * @return
-     * @throws WsgException
      */
     @RequestMapping(value = "/api/express", method = RequestMethod.POST)
-    public JsonResult AddExpress(HttpServletRequest request, @Validated Express express) throws WsgException {
+    public JsonResult AddExpress(HttpServletRequest request, @Validated Express express) {
         expressService.AddExpress(express, request.getSession().getId());
         return new JsonResult(true);
     }
@@ -77,10 +73,9 @@ public class ExpressRestController {
      * 查询表白评论
      *
      * @return
-     * @throws WsgException
      */
     @RequestMapping(value = "/api/express/id/{id}/comment", method = RequestMethod.GET)
-    public DataJsonResult<List<ExpressComment>> QueryExpressComment(HttpServletRequest request, @PathVariable("id") Integer id) throws WsgException {
+    public DataJsonResult<List<ExpressComment>> QueryExpressComment(HttpServletRequest request, @PathVariable("id") Integer id) {
         List<ExpressComment> expressCommentList = expressService.QueryExpressComment(id);
         return new DataJsonResult<>(true, expressCommentList);
     }
@@ -93,11 +88,10 @@ public class ExpressRestController {
      * @param comment
      * @return
      * @throws DataNotExistException
-     * @throws WsgException
      */
     @RequestMapping(value = "/api/express/id/{id}/comment", method = RequestMethod.POST)
     public JsonResult AddExpressComment(HttpServletRequest request, @PathVariable("id") Integer id
-            , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws DataNotExistException, WsgException {
+            , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws DataNotExistException {
         expressService.AddExpressComment(id, request.getSession().getId(), comment);
         return new JsonResult(true);
     }
@@ -107,11 +101,15 @@ public class ExpressRestController {
      *
      * @param request
      * @param id
+     * @param name
      * @return
+     * @throws DataNotExistException
+     * @throws NoRealNameException
+     * @throws CorrectRecordException
      */
     @RequestMapping(value = "/api/express/id/{id}/guess", method = RequestMethod.POST)
     public DataJsonResult<Boolean> GuessExpress(HttpServletRequest request, @PathVariable("id") int id
-            , @Validated @NotBlank @Length(min = 1, max = 10) String name) throws DataNotExistException, WsgException, NoRealNameException, CorrectRecordException {
+            , @Validated @NotBlank @Length(min = 1, max = 10) String name) throws DataNotExistException, NoRealNameException, CorrectRecordException {
         boolean result = expressService.GuessExpress(id, request.getSession().getId(), name);
         return new DataJsonResult<>(true, result);
     }
@@ -122,10 +120,10 @@ public class ExpressRestController {
      * @param request
      * @param id
      * @return
-     * @throws WsgException
+     * @throws DataNotExistException
      */
     @RequestMapping(value = "/api/express/id/{id}/like", method = RequestMethod.POST)
-    public JsonResult LikeExpress(HttpServletRequest request, @PathVariable("id") int id) throws WsgException, DataNotExistException {
+    public JsonResult LikeExpress(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
         expressService.LikeExpress(id, request.getSession().getId());
         return new JsonResult(true);
     }

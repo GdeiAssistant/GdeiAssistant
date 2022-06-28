@@ -13,7 +13,6 @@ import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.ValidGroup.Device.DeviceDataValidGroup;
 import cn.gdeiassistant.ValidGroup.User.UserLoginValidGroup;
-import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,7 +77,6 @@ public class UserLoginRestController {
      * @param response
      * @param user
      * @return
-     * @throws WsgException
      */
     @RequestMapping(value = "/api/userlogin")
     public JsonResult UserLogin(HttpServletRequest request, HttpServletResponse response

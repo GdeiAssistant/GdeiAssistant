@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Delivery.RestController;
 
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.DeliveryException.DeliveryOrderStateUpdatedException;
 import cn.gdeiassistant.Exception.DeliveryException.NoAccessUpdatingException;
@@ -32,7 +31,7 @@ public class DeliveryRestController {
      */
     @RequestMapping(value = "/api/delivery/order/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<DeliveryOrder>> QueryDeliveryOrderPage(HttpServletRequest request, @PathVariable("start") Integer start
-            , @PathVariable("size") Integer size) throws WsgException {
+            , @PathVariable("size") Integer size) {
         List<DeliveryOrder> deliveryOrderList = deliveryService.QueryDeliveryOrderPage(start, size);
         return new DataJsonResult<>(true, deliveryOrderList);
     }
@@ -59,10 +58,10 @@ public class DeliveryRestController {
      * @return
      * @throws NoAccessUpdatingException
      * @throws DataNotExistException
-     * @throws WsgException
+     * @throws DeliveryOrderStateUpdatedException
      */
     @RequestMapping(value = "/api/delivery/order/id/{id}", method = RequestMethod.DELETE)
-    public JsonResult DeleteOrder(HttpServletRequest request, @PathVariable("id") Integer orderId) throws NoAccessUpdatingException, DataNotExistException, WsgException, DeliveryOrderStateUpdatedException {
+    public JsonResult DeleteOrder(HttpServletRequest request, @PathVariable("id") Integer orderId) throws NoAccessUpdatingException, DataNotExistException, DeliveryOrderStateUpdatedException {
         deliveryService.DeleteOrder(orderId, request.getSession().getId());
         return new JsonResult(true);
     }
@@ -75,10 +74,9 @@ public class DeliveryRestController {
      * @return
      * @throws DataNotExistException
      * @throws NoAccessUpdatingException
-     * @throws WsgException
      */
     @RequestMapping(value = "/api/delivery/trade/id/{id}/finishtrade", method = RequestMethod.POST)
-    public JsonResult FinishTrade(HttpServletRequest request, @PathVariable("id") Integer tradeId) throws DataNotExistException, NoAccessUpdatingException, WsgException {
+    public JsonResult FinishTrade(HttpServletRequest request, @PathVariable("id") Integer tradeId) throws DataNotExistException, NoAccessUpdatingException {
         deliveryService.FinishTrade(tradeId, request.getSession().getId());
         return new JsonResult(true);
     }
@@ -91,7 +89,7 @@ public class DeliveryRestController {
      * @return
      */
     @RequestMapping(value = "/api/delivery/order", method = RequestMethod.POST)
-    public JsonResult AddDeliveryOrder(HttpServletRequest request, DeliveryOrder deliveryOrder) throws WsgException {
+    public JsonResult AddDeliveryOrder(HttpServletRequest request, DeliveryOrder deliveryOrder) {
         deliveryService.AddDeliveryOrder(request.getSession().getId(), deliveryOrder);
         return new JsonResult(true);
     }

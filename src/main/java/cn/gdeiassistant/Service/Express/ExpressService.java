@@ -10,7 +10,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Express.ExpressMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
-import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +72,6 @@ public class ExpressService {
      *
      * @param expressId
      * @return
-     * @throws WsgException
      */
     public List<ExpressComment> QueryExpressComment(int expressId) {
         List<ExpressComment> expressCommentList = expressMapper.selectExpressComment(expressId);
@@ -92,7 +90,6 @@ public class ExpressService {
      * @param expressId
      * @param sessionId
      * @param comment
-     * @throws WsgException
      * @throws DataNotExistException
      */
     public void AddExpressComment(int expressId, String sessionId, String comment) throws DataNotExistException {
@@ -110,7 +107,6 @@ public class ExpressService {
      *
      * @param express
      * @param sessionId
-     * @throws WsgException
      */
     public void AddExpress(Express express, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);

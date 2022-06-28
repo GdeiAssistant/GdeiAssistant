@@ -2,9 +2,6 @@ package cn.gdeiassistant.Tools.Utils;
 
 import cn.gdeiassistant.Pojo.Encryption.AESEncryptConfig;
 import cn.gdeiassistant.Pojo.Encryption.EncryptConfig;
-import cn.gdeiassistant.Pojo.Encryption.JAQEncryptConfig;
-import com.taobao.wsgsvr.EncryptWithCfg;
-import com.taobao.wsgsvr.WsgException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,18 +33,19 @@ public class StringEncryptUtils {
      *
      * @param data
      * @return
-     * @throws WsgException
+     * @throws NoSuchAlgorithmException
      */
-    public static String encryptString(String data) throws WsgException, NoSuchAlgorithmException
+    public static String encryptString(String data) throws NoSuchAlgorithmException
             , NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException
             , InvalidKeyException {
         if (StringEncryptUtils.encryptConfig != null) {
             switch (StringEncryptUtils.encryptConfig.getClass().getSimpleName()) {
                 case "JAQEncryptConfig":
                     //使用阿里聚安全数据算法加密
-                    return new EncryptWithCfg(((JAQEncryptConfig) StringEncryptUtils.encryptConfig)
+                    /*return new EncryptWithCfg(((JAQEncryptConfig) StringEncryptUtils.encryptConfig)
                             .getConfigLocation()).encryptString(((JAQEncryptConfig) StringEncryptUtils.encryptConfig)
-                            .getAppKey(), data);
+                            .getAppKey(), data);*/
+                    break;
 
                 case "AESEncryptConfig":
                     //使用AES对称加密算法加密
@@ -73,18 +71,19 @@ public class StringEncryptUtils {
      *
      * @param data
      * @return
-     * @throws WsgException
+     * @throws NoSuchAlgorithmException
      */
-    public static String decryptString(String data) throws WsgException, NoSuchAlgorithmException
+    public static String decryptString(String data) throws NoSuchAlgorithmException
             , NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException
             , InvalidKeyException {
         if (StringEncryptUtils.encryptConfig != null) {
             switch (StringEncryptUtils.encryptConfig.getClass().getSimpleName()) {
                 case "JAQEncryptConfig":
                     //使用阿里聚安全数据算法解密
-                    return new EncryptWithCfg(((JAQEncryptConfig) StringEncryptUtils.encryptConfig)
+                    /*return new EncryptWithCfg(((JAQEncryptConfig) StringEncryptUtils.encryptConfig)
                             .getConfigLocation()).decryptString(((JAQEncryptConfig) StringEncryptUtils.encryptConfig)
-                            .getAppKey(), data);
+                            .getAppKey(), data);*/
+                    break;
 
                 case "AESEncryptConfig":
                     //使用AES对称加密算法解密

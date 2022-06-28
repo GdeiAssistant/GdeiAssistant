@@ -3,7 +3,6 @@ package cn.gdeiassistant.Controller.Dating.Controller;
 import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.Exception.DatingException.RepeatPickException;
 import cn.gdeiassistant.Exception.DatingException.SelfPickException;
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.DatingMessage;
 import cn.gdeiassistant.Pojo.Entity.DatingPick;
@@ -38,7 +37,7 @@ public class DatingController {
      * @return
      */
     @RequestMapping(value = "/dating", method = RequestMethod.GET)
-    public ModelAndView ResolveDatingIndexPage(HttpServletRequest request) throws WsgException {
+    public ModelAndView ResolveDatingIndexPage(HttpServletRequest request)  {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/Dating/datingIndex");
         Integer unreadCount = datingService.QueryUserUnReadDatingMessageCount(request.getSession().getId());
@@ -76,7 +75,7 @@ public class DatingController {
      * @return
      */
     @RequestMapping(value = "/dating/pick/id/{id}", method = RequestMethod.GET)
-    public ModelAndView ResolveDatingPickPage(HttpServletRequest request, @PathVariable("id") Integer id) throws WsgException, DataNotExistException, NoAccessException {
+    public ModelAndView ResolveDatingPickPage(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException, NoAccessException {
         ModelAndView modelAndView = new ModelAndView();
         //只有自己可以查看该撩一下记录
         datingService.VerifyDatingPickViewAccess(request.getSession().getId(), id);
@@ -96,7 +95,7 @@ public class DatingController {
     @RequestMapping(value = "/dating/pick/id/{id}", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult UpdateDatingPickState(HttpServletRequest request
-            , @PathVariable("id") Integer id, Integer state) throws WsgException, DataNotExistException, NoAccessException {
+            , @PathVariable("id") Integer id, Integer state) throws DataNotExistException, NoAccessException {
         JsonResult jsonResult = new JsonResult();
         if (!state.equals(-1) && !state.equals(1)) {
             jsonResult.setSuccess(false);
@@ -116,7 +115,7 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/profile/id/{id}", method = RequestMethod.GET)
     public ModelAndView ResolveDatingProfileDetailPage(HttpServletRequest request
-            , @PathVariable("id") Integer id) throws WsgException, DataNotExistException {
+            , @PathVariable("id") Integer id) throws DataNotExistException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("ProfileID", id);
         DatingProfile datingProfile = datingService.QueryDatingProfile(id);
@@ -148,7 +147,7 @@ public class DatingController {
     @RequestMapping(value = "/dating/profile", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult AddDatingProfile(HttpServletRequest request, @Validated DatingProfile datingProfile
-            , MultipartFile image) throws IOException, WsgException {
+            , MultipartFile image) throws IOException {
         if (image == null || image.getSize() <= 0 || image.getSize() >= MAX_PICTURE_SIZE) {
             return new JsonResult(false, "图片文件不能为空");
         } else {
@@ -168,7 +167,7 @@ public class DatingController {
     @RequestMapping(value = "/dating/pick", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult AddDatingPick(HttpServletRequest request, DatingPick datingPick, Integer profileId) throws
-            WsgException, DataNotExistException, SelfPickException, RepeatPickException {
+            SelfPickException, RepeatPickException {
         DatingProfile datingProfile = new DatingProfile();
         datingProfile.setProfileId(profileId);
         datingPick.setDatingProfile(datingProfile);
@@ -194,7 +193,7 @@ public class DatingController {
     @RequestMapping(value = "/dating/message/start/{start}", method = RequestMethod.GET)
     @ResponseBody
     public DataJsonResult<List<DatingMessage>> QueryDatingMessage(HttpServletRequest
-                                                                          request, @PathVariable("start") Integer start) throws WsgException {
+                                                                          request, @PathVariable("start") Integer start)  {
         List<DatingMessage> datingMessageList = datingService.QueryUserDatingMessage(request.getSession().getId(), start, 10);
         return new DataJsonResult<>(true, datingMessageList);
     }
@@ -209,7 +208,7 @@ public class DatingController {
     @RequestMapping(value = "/dating/profile/area/{area}/start/{start}", method = RequestMethod.GET)
     @ResponseBody
     public DataJsonResult<List<DatingProfile>> QueryDatingProfile(@PathVariable("start") Integer
-                                                                          start, @PathVariable("area") Integer area) throws WsgException {
+                                                                          start, @PathVariable("area") Integer area) {
         List<DatingProfile> datingProfileList = datingService.QueryDatingProfile(start, 10, area);
         return new DataJsonResult<>(true, datingProfileList);
     }

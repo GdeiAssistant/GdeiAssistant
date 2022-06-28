@@ -6,7 +6,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Photograph.PhotographMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,7 +114,6 @@ public class PhotographService {
      * @param id
      * @param comment
      * @param sessionId
-     * @throws WsgException
      */
     public void AddPhotographComment(int id, String comment, String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);

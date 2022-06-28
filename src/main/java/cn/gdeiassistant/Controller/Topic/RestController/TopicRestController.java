@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Topic.RestController;
 
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Topic;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -36,7 +35,7 @@ public class TopicRestController {
      */
     @RequestMapping(value = "/api/topic/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Topic>> QueryTopic(HttpServletRequest request, @PathVariable("start") int start
-            , @PathVariable("size") int size) throws WsgException {
+            , @PathVariable("size") int size) {
         List<Topic> topicList = topicService.QueryTopic(request.getSession().getId(), start, size);
         return new DataJsonResult<>(true, topicList);
     }
@@ -52,7 +51,7 @@ public class TopicRestController {
      */
     @RequestMapping(value = "/api/topic/keyword/{keyword}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Topic>> QueryTopicByKeyword(HttpServletRequest request, @PathVariable("start") int start
-            , @PathVariable("size") int size, @PathVariable("keyword") String keyword) throws WsgException {
+            , @PathVariable("size") int size, @PathVariable("keyword") String keyword) {
         List<Topic> topicList = topicService.QueryTopicByKeyword(request.getSession().getId(), start, size, keyword);
         return new DataJsonResult<>(true, topicList);
     }
@@ -64,11 +63,10 @@ public class TopicRestController {
      * @param topic
      * @param images
      * @return
-     * @throws WsgException
      * @throws IOException
      */
     @RequestMapping(value = "/api/topic", method = RequestMethod.POST)
-    public JsonResult AddTopic(HttpServletRequest request, @Validated Topic topic, MultipartFile[] images) throws WsgException, IOException {
+    public JsonResult AddTopic(HttpServletRequest request, @Validated Topic topic, MultipartFile[] images) throws IOException {
         if (images != null) {
             if (images.length > 9) {
                 return new JsonResult(false, "不合法的图片文件");
@@ -94,9 +92,10 @@ public class TopicRestController {
      * @param request
      * @param id
      * @return
+     * @throws DataNotExistException
      */
     @RequestMapping(value = "/api/topic/id/{id}/like", method = RequestMethod.POST)
-    public JsonResult LikeTopic(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException, WsgException {
+    public JsonResult LikeTopic(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
         topicService.LikeTopic(id, request.getSession().getId());
         return new JsonResult(true);
     }

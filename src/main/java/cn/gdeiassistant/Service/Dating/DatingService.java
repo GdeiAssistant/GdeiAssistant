@@ -11,7 +11,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Dating.DatingMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class DatingService {
      * @param size
      * @return
      */
-    public List<DatingProfile> QueryDatingProfile(Integer start, Integer size, Integer area) throws WsgException {
+    public List<DatingProfile> QueryDatingProfile(Integer start, Integer size, Integer area) {
         List<DatingProfile> list = datingMapper.selectDatingProfilePage(start, size, area);
         for (DatingProfile datingProfile : list) {
             datingProfile.setQq("请进入详情页查看");
@@ -90,7 +89,7 @@ public class DatingService {
      * @param datingProfile
      * @return
      */
-    public Integer AddDatingProfile(String sessionId, DatingProfile datingProfile) throws WsgException {
+    public Integer AddDatingProfile(String sessionId, DatingProfile datingProfile) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         datingProfile.setUsername(user.getUsername());
         datingMapper.insertDatingProfile(datingProfile);
@@ -138,7 +137,7 @@ public class DatingService {
      * @param pickId
      * @return
      */
-    public boolean CheckIsPickPageHidden(String sessionId, int pickId) throws WsgException {
+    public boolean CheckIsPickPageHidden(String sessionId, int pickId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DatingPick datingPick = QueryDatingPickById(pickId);
         if (datingPick != null) {
@@ -170,7 +169,7 @@ public class DatingService {
         return null;
     }
 
-    public void VerifyDatingPickRequestAccess(String sessionId, int pickId) throws RepeatPickException, WsgException, SelfPickException {
+    public void VerifyDatingPickRequestAccess(String sessionId, int pickId) throws RepeatPickException, SelfPickException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DatingPick datingPick = datingMapper.selectDatingPickById(pickId);
         if (datingPick != null) {
@@ -210,7 +209,7 @@ public class DatingService {
      * @param datingPick
      * @return
      */
-    public void AddDatingPick(String sessionId, DatingPick datingPick) throws WsgException {
+    public void AddDatingPick(String sessionId, DatingPick datingPick) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         datingPick.setUsername(user.getUsername());
         datingMapper.insertDatingPick(datingPick);
@@ -262,7 +261,7 @@ public class DatingService {
      * @param size
      * @return
      */
-    public List<DatingMessage> QueryUserDatingMessage(String sessionId, Integer start, Integer size) throws WsgException {
+    public List<DatingMessage> QueryUserDatingMessage(String sessionId, Integer start, Integer size) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         List<DatingMessage> list = datingMapper.selectUserDatingMessagePage(user.getUsername(), start, size);
         for (DatingMessage datingMessage : list) {

@@ -9,7 +9,6 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Phone.PhoneMap
 import cn.gdeiassistant.Service.CloudAPI.AliYunService;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import com.aliyuncs.exceptions.ClientException;
-import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +116,6 @@ public class PhoneService {
      * 解除绑定用户的手机号信息
      *
      * @param sessionId
-     * @throws WsgException
      */
     public void UnAttachUserPhone(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);

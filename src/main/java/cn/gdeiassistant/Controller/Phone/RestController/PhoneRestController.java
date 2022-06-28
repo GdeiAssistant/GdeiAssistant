@@ -1,7 +1,6 @@
 package cn.gdeiassistant.Controller.Phone.RestController;
 
 import com.aliyuncs.exceptions.ClientException;
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Exception.PhoneException.SendSMSException;
 import cn.gdeiassistant.Exception.PhoneException.VerificationCodeInvalidException;
 import cn.gdeiassistant.Pojo.Entity.Attribution;
@@ -76,7 +75,7 @@ public class PhoneRestController {
     @RequestMapping(value = "/api/phone/attach", method = RequestMethod.POST)
     public JsonResult AttachPhoneNumber(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(999) Integer code
             , @Validated @NotBlank @Length(min = 7, max = 11) @Pattern(regexp = "^[0-9]*$") String phone
-            , @Validated @NotNull @Min(10000) @Max(999999) Integer randomCode) throws VerificationCodeInvalidException, WsgException {
+            , @Validated @NotNull @Min(10000) @Max(999999) Integer randomCode) throws VerificationCodeInvalidException {
         if (LocationUtils.getAttributionMap().get(code) == null) {
             return new JsonResult(false, "不受支持的国际手机区号");
         }
@@ -92,7 +91,7 @@ public class PhoneRestController {
      * @return
      */
     @RequestMapping(value = "/api/phone/unattach", method = RequestMethod.POST)
-    public JsonResult UnAttachPhoneNumber(HttpServletRequest request) throws WsgException {
+    public JsonResult UnAttachPhoneNumber(HttpServletRequest request)  {
         Phone phone = phoneService.QueryUserPhone(request.getSession().getId());
         if (phone != null) {
             phoneService.UnAttachUserPhone(request.getSession().getId());

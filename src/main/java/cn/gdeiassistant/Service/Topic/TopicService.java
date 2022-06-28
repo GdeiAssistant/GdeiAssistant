@@ -7,7 +7,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Topic.TopicMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
-import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,6 @@ public class TopicService {
      * @param start
      * @param size
      * @return
-     * @throws WsgException
      */
     public List<Topic> QueryTopic(String sessionId, int start, int size)  {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
@@ -60,9 +58,8 @@ public class TopicService {
      * @param size
      * @param keyword
      * @return
-     * @throws WsgException
      */
-    public List<Topic> QueryTopicByKeyword(String sessionId, int start, int size, String keyword) throws WsgException {
+    public List<Topic> QueryTopicByKeyword(String sessionId, int start, int size, String keyword)  {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         List<Topic> topicList = topicMapper.selectTopicPageByKeyword(start, size, user.getUsername(), keyword);
         if (topicList != null && !topicList.isEmpty()) {
@@ -79,7 +76,6 @@ public class TopicService {
      *
      * @param id
      * @param sessionId
-     * @throws WsgException
      * @throws DataNotExistException
      */
     public void LikeTopic(int id, String sessionId) throws  DataNotExistException {

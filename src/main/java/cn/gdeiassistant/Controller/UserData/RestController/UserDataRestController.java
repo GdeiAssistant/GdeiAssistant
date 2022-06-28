@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.UserData.RestController;
 
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Enum.UserData.ExportStateEnum;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -41,10 +40,10 @@ public class UserDataRestController {
      *
      * @param request
      * @return
-     * @throws WsgException
+     * @throws IOException
      */
     @RequestMapping(value = "/api/userdata/export", method = RequestMethod.POST)
-    public JsonResult ExportUserData(HttpServletRequest request) throws WsgException, IOException {
+    public JsonResult ExportUserData(HttpServletRequest request) throws IOException {
         if (userDataService.CheckAlreadyExportUserData(request.getSession().getId())) {
             return new JsonResult(false, "24小时内已导出过用户数据，请勿重复提交请求");
         }

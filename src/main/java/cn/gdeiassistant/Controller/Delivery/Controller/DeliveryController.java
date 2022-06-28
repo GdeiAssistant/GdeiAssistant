@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Delivery.Controller;
 
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.DeliveryOrder;
 import cn.gdeiassistant.Pojo.Entity.DeliveryTrade;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -59,7 +57,7 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(value = "/delivery/order/id/{id}", method = RequestMethod.GET)
-    public ModelAndView ResolveDeliveryOrderDetailPage(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException, WsgException {
+    public ModelAndView ResolveDeliveryOrderDetailPage(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/Delivery/orderDetail");
         DeliveryOrder deliveryOrder = deliveryService.QueryDeliveryOrderByOrderId(id);
@@ -81,7 +79,7 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(value = "/delivery/trade/id/{id}", method = RequestMethod.GET)
-    public ModelAndView ResolveDeliveryTradeDetailPage(HttpServletRequest request, @PathVariable("id") Integer tradeId) throws WsgException, DataNotExistException {
+    public ModelAndView ResolveDeliveryTradeDetailPage(HttpServletRequest request, @PathVariable("id") Integer tradeId) throws DataNotExistException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/Delivery/tradeDetail");
         DeliveryTrade deliveryTrade = deliveryService.QueryDeliveryTradeByTradeId(tradeId);
@@ -116,10 +114,9 @@ public class DeliveryController {
      *
      * @param request
      * @return
-     * @throws WsgException
      */
     @RequestMapping(value = "/delivery/personal", method = RequestMethod.GET)
-    public ModelAndView ResolveDeliveryPersonalPage(HttpServletRequest request) throws WsgException {
+    public ModelAndView ResolveDeliveryPersonalPage(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("Delivery/personal");
         List<DeliveryOrder> personalDeliveryOrderList = deliveryService.QueryPersonalDeliveryOrder(request.getSession().getId());
         List<DeliveryOrder> acceptedDeliveryOrderList = deliveryService.QueryPersonalAcceptedDeliveryOrder(request.getSession().getId());

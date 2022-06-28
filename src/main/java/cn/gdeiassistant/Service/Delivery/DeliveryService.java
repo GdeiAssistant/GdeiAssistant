@@ -11,7 +11,6 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Delivery.DeliveryMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
-import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +52,6 @@ public class DeliveryService {
      *
      * @param sessionId
      * @return
-     * @throws WsgException
      */
     public List<DeliveryOrder> QueryPersonalDeliveryOrder(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
@@ -74,7 +72,6 @@ public class DeliveryService {
      *
      * @param sessionId
      * @return
-     * @throws WsgException
      */
     public List<DeliveryOrder> QueryPersonalAcceptedDeliveryOrder(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
@@ -126,7 +123,6 @@ public class DeliveryService {
      *
      * @param orderId
      * @return
-     * @throws WsgException
      * @throws DataNotExistException
      */
     public DeliveryTrade QueryDeliveryTradeByOrderId(Integer orderId) throws DataNotExistException {
@@ -144,7 +140,6 @@ public class DeliveryService {
      * @param tradeId
      * @return
      * @throws DataNotExistException
-     * @throws WsgException
      */
     public DeliveryTrade QueryDeliveryTradeByTradeId(Integer tradeId) throws DataNotExistException {
         DeliveryTrade deliveryTrade = deliveryMapper.selectDeliveryTradeByTradeId(tradeId);
@@ -166,8 +161,9 @@ public class DeliveryService {
      * @param sessionId
      * @param tradeId
      * @return
+     * @throws DataNotExistException
      */
-    public int QueryDeliveryTradeDetailType(String sessionId, int tradeId) throws DataNotExistException, WsgException {
+    public int QueryDeliveryTradeDetailType(String sessionId, int tradeId) throws DataNotExistException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DeliveryTrade deliveryTrade = QueryDeliveryTradeByTradeId(tradeId);
         if (deliveryTrade.getUsername().equals(user.getUsername())) {
@@ -197,9 +193,8 @@ public class DeliveryService {
      * @param sessionId
      * @param orderId
      * @throws DataNotExistException
-     * @throws WsgException
      */
-    public int QueryDeliveryOrderDetailType(String sessionId, int orderId) throws DataNotExistException, WsgException {
+    public int QueryDeliveryOrderDetailType(String sessionId, int orderId) throws DataNotExistException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DeliveryOrder deliveryOrder = QueryDeliveryOrderByOrderId(orderId);
         if (deliveryOrder.getUsername().equals(user.getUsername())) {
@@ -274,8 +269,9 @@ public class DeliveryService {
      * @param orderId
      * @param sessionId
      * @return
+     * @throws DataNotExistException
      */
-    public boolean CheckOrderAccepter(Integer orderId, String sessionId) throws DataNotExistException, WsgException {
+    public boolean CheckOrderAccepter(Integer orderId, String sessionId) throws DataNotExistException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         String accepterUsername = deliveryMapper.selectDeliveryTradeUsernameByOrderId(orderId);
         if (StringUtils.isBlank(accepterUsername)) {
@@ -290,7 +286,7 @@ public class DeliveryService {
      * @param orderId
      * @param sessionId
      * @return
-     * @throws WsgException
+     * @throws DataNotExistException
      */
     public boolean CheckOrderPublisher(Integer orderId, String sessionId) throws DataNotExistException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
@@ -307,7 +303,6 @@ public class DeliveryService {
      * @param orderId
      * @param sessionId
      * @throws DataNotExistException
-     * @throws WsgException
      * @throws NoAccessUpdatingException
      */
     @Transactional("appTransactionManager")
@@ -332,6 +327,8 @@ public class DeliveryService {
      *
      * @param tradeId
      * @param sessionId
+     * @throws DataNotExistException
+     * @throws NoAccessUpdatingException
      */
     public void FinishTrade(Integer tradeId, String sessionId) throws DataNotExistException, NoAccessUpdatingException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
@@ -356,7 +353,7 @@ public class DeliveryService {
      *
      * @param deliveryOrder
      */
-    public void AddDeliveryOrder(String sessionId, DeliveryOrder deliveryOrder)  {
+    public void AddDeliveryOrder(String sessionId, DeliveryOrder deliveryOrder) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         DeliveryOrder order = new DeliveryOrder();
         order.setUsername(user.getUsername());

@@ -16,7 +16,6 @@ import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import cn.gdeiassistant.Tools.Utils.ReflectionUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import com.alibaba.fastjson.JSON;
-import com.taobao.wsgsvr.WsgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -89,11 +88,11 @@ public class UserDataService {
      * 导出用户数据
      *
      * @param sessionId
-     * @return
+     * @throws IOException
      */
     @SuppressWarnings("unchecked")
     @Async
-    public void ExportUserData(String sessionId) throws WsgException, IOException {
+    public void ExportUserData(String sessionId) throws IOException {
 
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
 

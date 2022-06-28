@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Controller.Photograph.RestController;
 
-import com.taobao.wsgsvr.WsgException;
 import cn.gdeiassistant.Pojo.Entity.Photograph;
 import cn.gdeiassistant.Pojo.Entity.PhotographComment;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -67,7 +66,7 @@ public class PhotographRestController {
     @RequestMapping(value = "/api/photograph/type/{type}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Photograph>> QueryPhotographList(HttpServletRequest request
             , @Validated @NotNull @Min(0) @Max(1) @PathVariable("type") int type
-            , @PathVariable("start") int start, @PathVariable("size") int size) throws WsgException {
+            , @PathVariable("start") int start, @PathVariable("size") int size) {
         List<Photograph> photographList = photographService.QueryPhotographList(start, size, type, request.getSession().getId());
         return new DataJsonResult<>(true, photographList);
     }
@@ -95,7 +94,7 @@ public class PhotographRestController {
      */
     @RequestMapping(value = "/api/photograph/id/{id}/comment", method = RequestMethod.GET)
     public DataJsonResult<List<PhotographComment>> QueryPhotographCommentList(HttpServletRequest request
-            , @PathVariable("id") int id) throws WsgException {
+            , @PathVariable("id") int id) {
         List<PhotographComment> photographCommentList = photographService.QueryPhotographCommentList(id);
         return new DataJsonResult<>(true, photographCommentList);
     }
@@ -109,7 +108,7 @@ public class PhotographRestController {
      */
     @RequestMapping(value = "/api/photograph/id/{id}/comment", method = RequestMethod.POST)
     public JsonResult AddPhotographComment(HttpServletRequest request, @PathVariable("id") Integer id
-            , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws WsgException {
+            , @Validated @NotBlank @Length(min = 1, max = 50) String comment) {
         photographService.AddPhotographComment(id, comment, request.getSession().getId());
         return new JsonResult(true);
     }
@@ -124,12 +123,11 @@ public class PhotographRestController {
      * @param image3
      * @param image4
      * @return
-     * @throws WsgException
      * @throws IOException
      */
     @RequestMapping(value = "/api/photograph", method = RequestMethod.POST)
     public JsonResult AddPhotograph(HttpServletRequest request, @Validated Photograph photograph
-            , MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4) throws WsgException, IOException {
+            , MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4) throws IOException {
         //插入照片信息记录
         int id = photographService.AddPhotograph(photograph.getTitle(), photograph.getContent()
                 , photograph.getCount(), photograph.getType(), request.getSession().getId());
@@ -155,7 +153,7 @@ public class PhotographRestController {
      * @return
      */
     @RequestMapping(value = "/api/photograph/id/{id}/like", method = RequestMethod.POST)
-    public JsonResult LikePhotograph(HttpServletRequest request, @PathVariable("id") int id) throws WsgException {
+    public JsonResult LikePhotograph(HttpServletRequest request, @PathVariable("id") int id) {
         photographService.LikePhotograph(id, request.getSession().getId());
         return new JsonResult(true);
     }

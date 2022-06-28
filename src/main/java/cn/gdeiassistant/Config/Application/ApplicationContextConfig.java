@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -84,5 +85,18 @@ public class ApplicationContextConfig {
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
         commonsMultipartResolver.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
         return commonsMultipartResolver;
+    }
+
+    /**
+     * 国际化支持
+     *
+     * @return
+     */
+    @Bean
+    public ResourceBundleMessageSource resourceBundleMessageSource() {
+        ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
+        resourceBundleMessageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
+        resourceBundleMessageSource.setBasename("i18n/messages");
+        return resourceBundleMessageSource;
     }
 }

@@ -14,15 +14,8 @@
         <text class='module-check-result-text'></text>
     </div>
 
-    <div class="download">
-        <div class="download_button" onclick="window.location.href='/about/download'">
-            <div>
-                <strong>
-                    <a href="javascript:">下载</a>
-                </strong>
-            </div>
-        </div>
-        <div class="download_button" onclick="window.location.href='/login'">
+    <div class="main-function-items-area">
+        <div class="login-items" onclick="window.location.href='/login'">
             <div>
                 <strong>
                     <a href="javascript:">进入系统</a>

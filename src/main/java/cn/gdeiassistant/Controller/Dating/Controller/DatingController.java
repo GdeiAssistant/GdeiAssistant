@@ -1,9 +1,9 @@
 package cn.gdeiassistant.Controller.Dating.Controller;
 
+import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.Exception.DatingException.RepeatPickException;
 import cn.gdeiassistant.Exception.DatingException.SelfPickException;
-import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.DatingMessage;
 import cn.gdeiassistant.Pojo.Entity.DatingPick;
 import cn.gdeiassistant.Pojo.Entity.DatingProfile;
@@ -11,6 +11,8 @@ import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.Dating.DatingService;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +25,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
-@Deprecated
+@Controller
 public class DatingController {
 
+    @Autowired
     private DatingService datingService;
 
     private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;

@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-@Deprecated
 public interface DatingMapper {
 
     @Select("select * from dating_profile where state=1 and area=#{area} limit #{start},#{size}")

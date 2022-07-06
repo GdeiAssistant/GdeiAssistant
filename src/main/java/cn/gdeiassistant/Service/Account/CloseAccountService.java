@@ -1,9 +1,9 @@
 package cn.gdeiassistant.Service.Account;
 
-import cn.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import cn.gdeiassistant.Pojo.Entity.*;
+import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import cn.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Cet.CetMapper;
@@ -23,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CloseAccountService {
@@ -105,16 +107,16 @@ public class CloseAccountService {
         }
     }
 
-
     /**
-     * 删除用户账号
+     * 检查账号是否符合删除条件，若不符合，则输出所有不符合的条件，若符合则通过
      *
      * @param sessionId
      * @param password
-     * @throws Exception
+     * @return
      */
-    @Transactional("appTransactionManager")
-    public void CloseAccount(String sessionId, String password) throws Exception {
+    public DataJsonResult<Map<String, String>> CheckAccountClosable(String sessionId, String password)
+            throws UserNotExistException, PasswordIncorrectException {
+        Map<String, String> map = new HashMap<>();
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         //检查用户账号状态
         User queryUser = userMapper.selectUser(user.getUsername());
@@ -131,14 +133,14 @@ public class CloseAccountService {
                 .selectItemsByUsername(user.getUsername());
         for (ErshouItem ershouItem : ershouItemList) {
             if (ershouItem.getState().equals(1)) {
-                throw new ItemAvailableException("请下架或确认出售账号下的所有二手交易物品");
+                map.put("二手交易平台存在未交易完成的物品", "请下架或确认出售账号下的所有二手交易物品");
             }
         }
         List<LostAndFoundItem> lostAndFoundItemList = lostAndFoundMapper
                 .selectItemByUsername(user.getUsername());
         for (LostAndFoundItem lostAndFoundItem : lostAndFoundItemList) {
             if (lostAndFoundItem.getState().equals(0)) {
-                throw new ItemAvailableException("请确认寻回账号下的所有失物招领物品");
+                map.put("失物招领平台存在未确认状态的物品", "请确认寻回账号下的所有失物招领物品");
             }
         }
         //检查有无待处理的全民快递订单和交易
@@ -147,16 +149,30 @@ public class CloseAccountService {
         for (DeliveryOrder deliveryOrder : deliveryOrderList) {
             if (deliveryOrder.getState().equals(0)) {
                 //下单者有未删除的快递代收订单信息
-                throw new ItemAvailableException("请删除账号下的所有快递代收订单信息");
+                map.put("全民快递平台存在未删除的订单信息", "请删除账号下的所有快递代收订单信息");
             } else if (deliveryOrder.getState().equals(1)) {
                 //下单者有未确认交付的快递代收交易
                 DeliveryTrade deliveryTrade = deliveryMapper.selectDeliveryTradeByOrderId(deliveryOrder.getOrderId());
                 if (deliveryTrade != null && deliveryTrade.getState().equals(0)) {
-                    throw new ItemAvailableException("请确认交付账号下的未交付的快递代收交易");
+                    map.put("全民快递平台存在未确认交易的订单信息", "请删除账号下的所有快递代收订单信息");
                 }
             }
         }
+        if (map.isEmpty()) {
+            return new DataJsonResult<>(true);
+        }
+        return new DataJsonResult<>(false, map);
+    }
 
+    /**
+     * 删除用户账号
+     *
+     * @param sessionId
+     * @throws Exception
+     */
+    @Transactional("appTransactionManager")
+    public void CloseAccount(String sessionId){
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
         //开始进行账号关闭事务
 
         //删除四六级准考证号

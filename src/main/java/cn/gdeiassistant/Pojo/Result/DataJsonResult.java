@@ -21,6 +21,10 @@ public class DataJsonResult<T> extends JsonResult {
 
     }
 
+    public DataJsonResult(boolean success){
+        super(success);
+    }
+
     public DataJsonResult(boolean success, T data) {
         super(success);
         this.data = data;

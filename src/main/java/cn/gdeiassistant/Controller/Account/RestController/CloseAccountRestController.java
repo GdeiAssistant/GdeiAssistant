@@ -1,5 +1,6 @@
 package cn.gdeiassistant.Controller.Account.RestController;
 
+import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Service.Account.CloseAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @RestController
 public class CloseAccountRestController {
@@ -24,7 +26,12 @@ public class CloseAccountRestController {
      */
     @RequestMapping(value = "/api/close/submit", method = RequestMethod.POST)
     public JsonResult CloseAccount(HttpServletRequest request, String password) throws Exception {
-        closeAccountService.CloseAccount(request.getSession().getId(), password);
-        return new JsonResult(true);
+        //检查是否符合删除账号条件
+        DataJsonResult<Map<String,String>> result = closeAccountService.CheckAccountClosable(request.getSession().getId(), password);
+        if (result.isSuccess()) {
+            //符合删除账号条件，进行账号删除
+            closeAccountService.CloseAccount(request.getSession().getId());
+        }
+        return result;
     }
 }

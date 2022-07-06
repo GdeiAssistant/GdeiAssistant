@@ -12,18 +12,20 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Dating.DatingM
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.OSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Deprecated
+@Service
 public class DatingService {
 
     @Autowired
     private UserCertificateService userCertificateService;
 
+    @Autowired
     private DatingMapper datingMapper;
 
     @Autowired

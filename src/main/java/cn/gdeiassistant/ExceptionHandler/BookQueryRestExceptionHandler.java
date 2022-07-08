@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.BookQuery.RestController.BookQueryRestController;
+import cn.gdeiassistant.Controller.AcademicAffairs.BookQuery.RestController.BookQueryRestController;
 import cn.gdeiassistant.Exception.BookRenewException.BookRenewOvertimeException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;

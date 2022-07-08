@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.Delivery.RestController.DeliveryRestController;
+import cn.gdeiassistant.Controller.Socialising.Delivery.RestController.DeliveryRestController;
 import cn.gdeiassistant.Exception.DeliveryException.DeliveryOrderStateUpdatedException;
 import cn.gdeiassistant.Exception.DeliveryException.DeliveryOrderTakenException;
 import cn.gdeiassistant.Exception.DeliveryException.NoAccessUpdatingException;

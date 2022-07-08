@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.ChargeRequest.RestController.ChargeRequestRestController;
+import cn.gdeiassistant.Controller.AcademicAffairs.ChargeRequest.RestController.ChargeRequestRestController;
 import cn.gdeiassistant.Exception.ChargeException.AmountNotAvailableException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Constant.ErrorConstantUtils;

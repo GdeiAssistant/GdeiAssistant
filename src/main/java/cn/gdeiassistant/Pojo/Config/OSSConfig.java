@@ -18,6 +18,10 @@ public class OSSConfig {
 
     private String endpoint;
 
+    private String region;
+
+    private String version;
+
     @Autowired
     private ModuleUtils moduleUtils;
 
@@ -51,6 +55,17 @@ public class OSSConfig {
         }
     }
 
+    @Value("#{propertiesReader['oss.api.region']}")
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    @Value("#{propertiesReader['oss.api.version']}")
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+
     public String getAccessKeyID() {
         return accessKeyID;
     }
@@ -61,5 +76,13 @@ public class OSSConfig {
 
     public String getEndpoint() {
         return endpoint;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public String getVersion() {
+        return version;
     }
 }

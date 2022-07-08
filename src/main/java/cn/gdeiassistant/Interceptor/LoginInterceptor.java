@@ -3,7 +3,7 @@ package cn.gdeiassistant.Interceptor;
 import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.Account.RestController.CloseAccountRestController;
+import cn.gdeiassistant.Controller.AccountManagement.Deletion.RestController.AccountDeletionRestController;
 import cn.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
 import cn.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(basePackageClasses = CloseAccountRestController.class)
+@RestControllerAdvice(basePackageClasses = AccountDeletionRestController.class)
 @Order(value = 1)
 public class CloseAccountRestExceptionHandler {
 

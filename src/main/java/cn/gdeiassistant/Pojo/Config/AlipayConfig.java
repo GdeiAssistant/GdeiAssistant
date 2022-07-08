@@ -17,6 +17,8 @@ public class AlipayConfig {
 
     private String appid;
 
+    private String aesSecret;
+
     private String publicKey;
 
     private String privateKey;
@@ -25,6 +27,15 @@ public class AlipayConfig {
     public void setAppid(String appid) {
         if (StringUtils.isNotBlank(appid)) {
             this.appid = appid;
+        } else {
+            moduleUtils.DisableModule(ModuleEnum.ALIPAY);
+        }
+    }
+
+    @Value("#{propertiesReader['alipay.app.aes.secret']}")
+    public void setAesSecret(String aesSecret) {
+        if (StringUtils.isNotBlank(aesSecret)) {
+            this.aesSecret = aesSecret;
         } else {
             moduleUtils.DisableModule(ModuleEnum.ALIPAY);
         }
@@ -58,5 +69,9 @@ public class AlipayConfig {
 
     public String getPrivateKey() {
         return privateKey;
+    }
+
+    public String getAesSecret() {
+        return aesSecret;
     }
 }

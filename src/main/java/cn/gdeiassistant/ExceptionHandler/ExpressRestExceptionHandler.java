@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.Express.RestController.ExpressRestController;
+import cn.gdeiassistant.Controller.Socialising.Express.RestController.ExpressRestController;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.ExpressException.CorrectRecordException;
 import cn.gdeiassistant.Exception.ExpressException.NoRealNameException;

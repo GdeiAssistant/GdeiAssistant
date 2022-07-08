@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.UserProfile.Controller.ProfileController;
+import cn.gdeiassistant.Controller.AccountManagement.UserProfile.Controller.ProfileController;
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

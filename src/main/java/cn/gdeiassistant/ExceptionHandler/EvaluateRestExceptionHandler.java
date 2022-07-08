@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.Evaluate.RestController.EvaluateRestController;
+import cn.gdeiassistant.Controller.AcademicAffairs.Evaluate.RestController.EvaluateRestController;
 import cn.gdeiassistant.Exception.EvaluateException.NotAvailableTimeException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Constant.ErrorConstantUtils;

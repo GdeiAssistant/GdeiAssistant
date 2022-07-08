@@ -26,9 +26,10 @@ public class SettingConstantUtils {
 
     public static final Map<String, String> VIEW_CONTROLLER_NAME_MAP =
             Stream.of(new String[][]{
-                    {"/", "/About/index"},
+                    {"/", "About/index"},
+                    {"/index", "Index/index"},
                     {"/about", "About/index"},
-                    {"/about/download", "/About/download"},
+                    {"/about/download", "About/download"},
                     {"/about/security", "About/security"},
                     {"/about/account", "About/account"},
                     {"/license", "About/license"},

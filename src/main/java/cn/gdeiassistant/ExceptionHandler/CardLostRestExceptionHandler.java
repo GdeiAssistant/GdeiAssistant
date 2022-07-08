@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.CardQuery.RestController.CardRestController;
+import cn.gdeiassistant.Controller.AcademicAffairs.CardQuery.RestController.CardRestController;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import org.slf4j.Logger;

@@ -4,7 +4,7 @@ import cn.gdeiassistant.Exception.TokenValidException.SuspiciouseRequestExceptio
 import cn.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
 import cn.gdeiassistant.Pojo.Entity.Device;
-import cn.gdeiassistant.Service.Token.LoginTokenService;
+import cn.gdeiassistant.Service.AccountManagement.Token.LoginTokenService;
 import cn.gdeiassistant.Tools.Utils.IPAddressUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.JoinPoint;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 1)
 public class CloseAccountRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(CloseAccountRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(CloseAccountRestExceptionHandler.class);
 
     /**
      * 处理用户账号状态异常的错误

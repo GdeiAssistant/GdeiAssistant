@@ -11,13 +11,13 @@ public enum CoreModuleEnum {
         this.location = location;
     }
 
-    private String name;
+    private final String name;
 
     public String getName() {
         return name;
     }
 
-    private String location;
+    private final String location;
 
     public String getLocation() {
         return location;

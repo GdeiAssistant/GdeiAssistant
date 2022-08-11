@@ -8,6 +8,7 @@ import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -112,7 +113,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      */
     @Override
     public void SaveDeviceData(String signature, Device device) {
-        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(DEVICE_DATA_PREFIX + signature), device);
+        redisDaoUtils.set(StringEncryptUtils.SHA256HexString(DEVICE_DATA_PREFIX + signature), (Serializable) device);
         redisDaoUtils.expire(StringEncryptUtils.SHA256HexString(DEVICE_DATA_PREFIX + signature), 7, TimeUnit.DAYS);
     }
 

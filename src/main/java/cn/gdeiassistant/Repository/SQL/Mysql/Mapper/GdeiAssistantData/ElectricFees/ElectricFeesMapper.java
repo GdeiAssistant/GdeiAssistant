@@ -23,7 +23,7 @@ public interface ElectricFeesMapper {
             @Result(column = "total_electric_bill", property = "totalElectricBill"),
             @Result(column = "average_electric_bill", property = "averageElectricBill")
     })
-    public ElectricFees selectElectricFees(@Param("name") String name
+    ElectricFees selectElectricFees(@Param("name") String name
             , @Param("number") Long number, @Param("year") Integer year);
 
     @Insert("insert into electricfees (year,building_number,room_number,people_number" +
@@ -36,5 +36,5 @@ public interface ElectricFeesMapper {
             ",#{electricFees.freeElectricAmount},#{electricFees.feeBasedElectricAmount}" +
             ",#{electricFees.electricPrice},#{electricFees.totalElectricBill},#{electricFees.averageElectricBill}) " +
             "</foreach>")
-    public void insertElectricFeesBatch(List<ElectricFees> electricFees);
+    void insertElectricFeesBatch(List<ElectricFees> electricFees);
 }

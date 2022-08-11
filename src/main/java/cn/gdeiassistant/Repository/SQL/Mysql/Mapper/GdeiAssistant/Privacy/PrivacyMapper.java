@@ -19,13 +19,13 @@ public interface PrivacyMapper {
             @Result(property = "cacheAllow", column = "is_cache_allow", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
             @Result(property = "robotsIndexAllow", column = "is_robots_index_allow", javaType = Boolean.class, jdbcType = JdbcType.TINYINT)
     })
-    public Privacy selectPrivacy(String username);
+    Privacy selectPrivacy(String username);
 
     @Insert("insert into privacy (username,is_cache_allow) values(#{username},false)")
-    public void initPrivacy(String username);
+    void initPrivacy(String username);
 
     @Update("update privacy set is_cache_allow=0 where username=#{username}")
-    public void resetPrivacy(String username);
+    void resetPrivacy(String username);
 
     @Update("<script>" +
             "update privacy" +
@@ -39,7 +39,7 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}" +
             "</script>")
-    public void updateGender(@Param("genderOpen") Boolean gender, @Param("username") String username);
+    void updateGender(@Param("genderOpen") Boolean gender, @Param("username") String username);
 
     @Update("<script>" +
             "update privacy" +
@@ -53,7 +53,7 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}" +
             "</script>")
-    public void updateFaculty(@Param("facultyOpen") Boolean faculty
+    void updateFaculty(@Param("facultyOpen") Boolean faculty
             , @Param("username") String username);
 
     @Update("<script>" +
@@ -68,7 +68,7 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}" +
             "</script>")
-    public void updateMajor(@Param("majorOpen") Boolean major
+    void updateMajor(@Param("majorOpen") Boolean major
             , @Param("username") String username);
 
     @Update("<script>" +
@@ -83,7 +83,7 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}"
             + "</script>")
-    public void updateLocation(@Param("locationOpen") Boolean location, @Param("username") String username);
+    void updateLocation(@Param("locationOpen") Boolean location, @Param("username") String username);
 
     @Update("<script>" +
             "update privacy" +
@@ -97,7 +97,7 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}"
             + "</script>")
-    public void updateHometown(@Param("hometownOpen") Boolean hometown, @Param("username") String username);
+    void updateHometown(@Param("hometownOpen") Boolean hometown, @Param("username") String username);
 
     @Update("<script>" +
             "update privacy" +
@@ -111,7 +111,7 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}" +
             "</script>")
-    public void updateIntroduction(@Param("introductionOpen") Boolean introduction
+    void updateIntroduction(@Param("introductionOpen") Boolean introduction
             , @Param("username") String username);
 
     @Update("<script>" +
@@ -126,7 +126,7 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}" +
             "</script>")
-    public void updateEnrollment(@Param("enrollment") Boolean enrollment, @Param("username") String username);
+    void updateEnrollment(@Param("enrollment") Boolean enrollment, @Param("username") String username);
 
     @Update("<script>" +
             "update privacy" +
@@ -140,7 +140,7 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}" +
             "</script>")
-    public void updateAge(@Param("age") Boolean age, @Param("username") String username);
+    void updateAge(@Param("age") Boolean age, @Param("username") String username);
 
     @Update("<script>" +
             "update privacy" +
@@ -154,7 +154,7 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}" +
             "</script>")
-    public void updateCache(@Param("cacheAllow") Boolean cache, @Param("username") String username)
+    void updateCache(@Param("cacheAllow") Boolean cache, @Param("username") String username)
            ;
 
     @Update("<script>" +
@@ -169,5 +169,5 @@ public interface PrivacyMapper {
             "        </choose>" +
             "        where username=#{username}" +
             "</script>")
-    public void updateRobotsIndex(@Param("robotsIndexAllow") Boolean robotsIndex, @Param("username") String username);
+    void updateRobotsIndex(@Param("robotsIndexAllow") Boolean robotsIndex, @Param("username") String username);
 }

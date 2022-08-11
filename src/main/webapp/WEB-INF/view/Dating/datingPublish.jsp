@@ -66,7 +66,7 @@
 
                 if (file.size > maxSize) {
                     showErrorTip("图片文件不能超过5MB", "文件过大");
-                    return;
+
                 } else {
                     reader.readAsDataURL(file);
                     reader.onload = function (e) {

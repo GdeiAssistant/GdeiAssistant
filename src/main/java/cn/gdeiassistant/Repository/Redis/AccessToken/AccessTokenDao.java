@@ -2,7 +2,7 @@ package cn.gdeiassistant.Repository.Redis.AccessToken;
 
 public interface AccessTokenDao {
 
-    public String QueryWechatAccessToken();
+    String QueryWechatAccessToken();
 
-    public void SaveWechatAccessToken(String accessToken);
+    void SaveWechatAccessToken(String accessToken);
 }

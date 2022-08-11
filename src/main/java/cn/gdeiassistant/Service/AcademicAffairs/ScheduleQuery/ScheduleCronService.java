@@ -32,7 +32,7 @@ import java.util.concurrent.Semaphore;
 @Profile("production")
 public class ScheduleCronService {
 
-    private Logger logger = LoggerFactory.getLogger(ScheduleCronService.class);
+    private final Logger logger = LoggerFactory.getLogger(ScheduleCronService.class);
 
     @Autowired
     private UserLoginService userLoginService;

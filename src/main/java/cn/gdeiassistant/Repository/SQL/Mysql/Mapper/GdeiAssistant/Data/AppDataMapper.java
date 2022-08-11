@@ -12,45 +12,45 @@ public interface AppDataMapper {
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserProfile")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.ProfileMapper.Profile")
-    public Profile selectUserProfile(String username);
+    Profile selectUserProfile(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserIntroduction")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.ProfileMapper.Introduction")
-    public Introduction selectUserIntroduction(String username);
+    Introduction selectUserIntroduction(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserPrivacy")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.PrivacyMapper.Privacy")
-    public Privacy selectUserPrivacy(String username);
+    Privacy selectUserPrivacy(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserCetNumber")
     @ResultType(CetNumber.class)
-    public CetNumber selectUserCetNumber(String username);
+    CetNumber selectUserCetNumber(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserDeliveryOrderList")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Delivery.DeliveryMapper.DeliveryOrderDetail")
-    public List<DeliveryOrder> selectUserDeliveryOrderList(String username);
+    List<DeliveryOrder> selectUserDeliveryOrderList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserDeliveryTradeList")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Delivery.DeliveryMapper.DeliveryTrade")
-    public List<DeliveryTrade> selectUserDeliveryTradeList(String username);
+    List<DeliveryTrade> selectUserDeliveryTradeList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserErshouItemList")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Ershou.ErshouMapper.ErshouItem")
-    public List<ErshouItem> selectUserErshouItemList(String username);
+    List<ErshouItem> selectUserErshouItemList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserLostAndFoundItemList")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.LostAndFound.LostAndFoundMapper.LostAndFoundItem")
-    public List<LostAndFoundItem> selectUserLostAndFoundItemList(String username);
+    List<LostAndFoundItem> selectUserLostAndFoundItemList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserSecretItemList")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Secret.SecretMapper.SecretContent")
-    public List<Secret> selectUserSecretItemList(String username);
+    List<Secret> selectUserSecretItemList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserPhotographItemList")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Photograph.PhotographMapper.PhotographContent")
-    public List<Photograph> selectUserPhotographItemList(String username);
+    List<Photograph> selectUserPhotographItemList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserExpressItemList")
     @ResultMap("cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Express.ExpressMapper.expressContent")
-    public List<Express> selectUserExpresssItemList(String username);
+    List<Express> selectUserExpresssItemList(String username);
 }

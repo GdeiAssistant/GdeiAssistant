@@ -12,7 +12,7 @@ import java.util.List;
 
 public class WechatAccountUtils {
 
-    private static List<WechatAccount> wechatAccountList = new ArrayList<>();
+    private static final List<WechatAccount> wechatAccountList = new ArrayList<>();
 
     static {
         //加载校园公众号列表

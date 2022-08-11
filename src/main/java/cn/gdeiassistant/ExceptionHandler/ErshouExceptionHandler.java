@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Order(value = 1)
 public class ErshouExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(ErshouExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(ErshouExceptionHandler.class);
 
     /**
      * 处理二手交易信息不存在的异常

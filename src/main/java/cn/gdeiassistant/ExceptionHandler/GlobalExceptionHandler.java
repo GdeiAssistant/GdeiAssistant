@@ -17,7 +17,7 @@ import javax.validation.ConstraintViolationException;
 @Order(value = 3)
 public class GlobalExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * 处理数据校验异常

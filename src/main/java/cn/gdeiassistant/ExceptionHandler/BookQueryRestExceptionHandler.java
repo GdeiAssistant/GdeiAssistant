@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class BookQueryRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(BookQueryRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(BookQueryRestExceptionHandler.class);
 
     /**
      * 处理图书续借超过次数限制的异常

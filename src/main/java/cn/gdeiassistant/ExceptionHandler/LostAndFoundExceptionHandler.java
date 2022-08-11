@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Order(value = 1)
 public class LostAndFoundExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(LostAndFoundExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(LostAndFoundExceptionHandler.class);
 
     /**
      * 处理失物招领信息不存在的异常

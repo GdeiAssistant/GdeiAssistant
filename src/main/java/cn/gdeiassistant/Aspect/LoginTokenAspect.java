@@ -46,7 +46,7 @@ public class LoginTokenAspect {
                 .getParameterNames(), "device")];
         //获取IP地址信息
         String ip = IPAddressUtils.GetRequestRealIPAddress(request);
-        device.setIp(ip);
+        device.setIP(ip);
     }
 
     @After("LoginAction()")

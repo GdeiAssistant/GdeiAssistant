@@ -104,11 +104,11 @@ public class XMLParseUtils {
     /**
      * 扩展xStream，使其支持CDATA块
      */
-    private static XStream xStream = new XStream(new XppDriver() {
+    private static final XStream xStream = new XStream(new XppDriver() {
         public HierarchicalStreamWriter createWriter(Writer out) {
             return new PrettyPrintWriter(out) {
                 // 对所有xml节点的转换都增加CDATA标记
-                boolean cdata = true;
+                final boolean cdata = true;
 
                 public void startNode(String name, Class clazz) {
                     super.startNode(name, clazz);

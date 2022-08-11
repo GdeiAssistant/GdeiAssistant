@@ -28,7 +28,7 @@ import javax.validation.ConstraintViolationException;
 @Order(value = 2)
 public class GlobalRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandler.class);
 
     /**
      * 处理HTTP请求400错误

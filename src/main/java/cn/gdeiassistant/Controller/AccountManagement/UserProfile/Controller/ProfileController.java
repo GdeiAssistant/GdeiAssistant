@@ -96,7 +96,7 @@ public class ProfileController {
                     }
                 }
                 modelAndView.addObject("Location", LocationUtils
-                        .convertCountryCodeToEmoji(locationRegion.getIso()) + location.toString());
+                        .convertCountryCodeToEmoji(locationRegion.getIso()) + location);
             }
             StringBuilder hometown = new StringBuilder();
             Region hometownRegion = LocationUtils.getRegionMap().get(profile.getHometownRegion());
@@ -123,7 +123,7 @@ public class ProfileController {
                     }
                 }
                 modelAndView.addObject("Hometown", LocationUtils
-                        .convertCountryCodeToEmoji(hometownRegion.getIso()) + hometown.toString());
+                        .convertCountryCodeToEmoji(hometownRegion.getIso()) + hometown);
             }
             Introduction introduction = userProfileService.GetUserIntroduction(request.getSession().getId());
             if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
@@ -210,7 +210,7 @@ public class ProfileController {
                         }
                     }
                     modelAndView.addObject("Location", LocationUtils
-                            .convertCountryCodeToEmoji(region.getIso()) + location.toString());
+                            .convertCountryCodeToEmoji(region.getIso()) + location);
                 }
             }
             if (Boolean.TRUE.equals(privacy.isHometownOpen())) {
@@ -239,7 +239,7 @@ public class ProfileController {
                         }
                     }
                     modelAndView.addObject("Hometown", LocationUtils
-                            .convertCountryCodeToEmoji(region.getIso()) + hometown.toString());
+                            .convertCountryCodeToEmoji(region.getIso()) + hometown);
                 }
             }
             if (Boolean.TRUE.equals(privacy.isIntroductionOpen())) {

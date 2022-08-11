@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class DeliveryRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(DeliveryRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(DeliveryRestExceptionHandler.class);
 
     /**
      * 处理接单失败异常

@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Pojo.DataQuery;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import cn.gdeiassistant.Pojo.Entity.YellowPage;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

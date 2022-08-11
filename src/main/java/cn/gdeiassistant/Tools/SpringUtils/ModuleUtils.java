@@ -105,7 +105,7 @@ public class ModuleUtils {
             coreMessage.append("。必须启用核心功能模块才能正常使用系统，请完善相关配置文件。");
         }
         //整合功能模块提示信息和功能模块配置文件路径提示信息作为提示文本
-        return coreMessage.toString() + coreLocations.toString();
+        return coreMessage.toString() + coreLocations;
     }
 
     /**
@@ -135,6 +135,6 @@ public class ModuleUtils {
             message.append("。部分功能可能无法使用，若需要使用对应功能，请完善相关配置文件。");
         }
         //整合功能模块提示信息和功能模块配置文件路径提示信息作为提示文本
-        return message.toString() + locations.toString();
+        return message.toString() + locations;
     }
 }

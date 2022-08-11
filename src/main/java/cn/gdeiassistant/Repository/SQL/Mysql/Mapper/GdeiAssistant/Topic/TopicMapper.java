@@ -25,7 +25,7 @@ public interface TopicMapper {
             @Result(property = "liked", column = "liked")
 
     })
-    public List<Topic> selectTopicPage(@Param("start") int start, @Param("size") int size, @Param("username") String username);
+    List<Topic> selectTopicPage(@Param("start") int start, @Param("size") int size, @Param("username") String username);
 
     @Select("select t.id,t.username,t.topic,t.content,t.count,t.publish_time," +
             "sum(distinct CASE WHEN tl.username=#{username} THEN 1 ELSE 0 END) as liked," +
@@ -34,7 +34,7 @@ public interface TopicMapper {
             "left join topic_like tl on t.id=tl.topic_id " +
             "where t.topic like concat(concat('%',#{keyword}),'%') group by t.id order by t.id limit #{start},#{size}")
     @ResultMap("Topic")
-    public List<Topic> selectTopicPageByKeyword(@Param("start") int start, @Param("size") int size, @Param("username") String username, @Param("keyword") String keyword);
+    List<Topic> selectTopicPageByKeyword(@Param("start") int start, @Param("size") int size, @Param("username") String username, @Param("keyword") String keyword);
 
     @Select("select t.id,t.username,t.topic,t.content,t.count,t.publish_time," +
             "sum(distinct CASE WHEN tl.username=#{username} THEN 1 ELSE 0 END) as liked," +
@@ -43,11 +43,11 @@ public interface TopicMapper {
             "left join topic_like tl on t.id=tl.topic_id " +
             "where t.id=#{id} group by t.id")
     @ResultMap("Topic")
-    public Topic selectTopicById(@Param("id") int id,@Param("username") String username);
+    Topic selectTopicById(@Param("id") int id, @Param("username") String username);
 
     @Insert("insert into topic (username,topic,content,count,publish_time) values(#{username},#{topic},#{content},#{count},now())")
     @Options(useGeneratedKeys = true)
-    public void insertTopic(Topic topic);
+    void insertTopic(Topic topic);
 
     @Select("select id from topic_like where topic_id=#{id} and username=#{username}")
     @Results(id = "TopicLike", value = {
@@ -56,8 +56,8 @@ public interface TopicMapper {
             @Result(property = "username", column = "username"),
             @Result(property = "createTime", column = "create_time")
     })
-    public TopicLike selectTopicLike(@Param("id") int id, @Param("username") String username);
+    TopicLike selectTopicLike(@Param("id") int id, @Param("username") String username);
 
     @Insert("insert into topic_like (topic_id,username,create_time) values(#{topicId},#{username},now())")
-    public void insertTopicLike(@Param("topicId") int id, @Param("username") String username);
+    void insertTopicLike(@Param("topicId") int id, @Param("username") String username);
 }

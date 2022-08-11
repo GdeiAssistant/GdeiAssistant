@@ -1,9 +1,9 @@
 package cn.gdeiassistant.ExceptionHandler;
 
+import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import cn.gdeiassistant.Controller.AcademicAffairs.ChargeRequest.RestController.ChargeRequestRestController;
 import cn.gdeiassistant.Exception.ChargeException.AmountNotAvailableException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 1)
 public class ChargeRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(ChargeRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(ChargeRestExceptionHandler.class);
 
     /**
      * 处理校园卡充值金额不合法异常

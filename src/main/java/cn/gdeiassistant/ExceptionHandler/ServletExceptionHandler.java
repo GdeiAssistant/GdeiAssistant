@@ -19,7 +19,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Order(value = 4)
 public class ServletExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(ServletExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(ServletExceptionHandler.class);
 
     /**
      * 处理HTTP请求400错误

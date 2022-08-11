@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Pojo.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import cn.gdeiassistant.Annotation.ExcelField;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

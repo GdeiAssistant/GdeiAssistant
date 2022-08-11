@@ -42,7 +42,7 @@ import java.util.List;
 @Service
 public class GradeService {
 
-    private Logger logger = LoggerFactory.getLogger(GradeService.class);
+    private final Logger logger = LoggerFactory.getLogger(GradeService.class);
 
     @Autowired
     private UserCertificateService userCertificateService;

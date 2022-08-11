@@ -1,8 +1,8 @@
 package cn.gdeiassistant.Pojo.Excel;
 
-import com.google.common.collect.Lists;
 import cn.gdeiassistant.Annotation.ExcelField;
 import cn.gdeiassistant.Tools.Utils.ReflectionUtils;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -29,17 +29,17 @@ public class ImportExcel {
     /**
      * 工作薄对象
      */
-    private Workbook workbook;
+    private final Workbook workbook;
 
     /**
      * 工作表对象
      */
-    private Sheet sheet;
+    private final Sheet sheet;
 
     /**
      * 标题行号
      */
-    private int headerNum;
+    private final int headerNum;
 
     /**
      * 构造函数
@@ -282,7 +282,7 @@ public class ImportExcel {
         //循环获取每一行的数据
         for (int i = this.getDataRowNum(); i < this.getLastDataRowNum(); i++) {
             //实例化对象
-            E e = (E) cls.newInstance();
+            E e = cls.newInstance();
             int column = 0;
             Row row = this.getRow(i);
             StringBuilder sb = new StringBuilder();

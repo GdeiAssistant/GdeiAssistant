@@ -1,11 +1,11 @@
 package cn.gdeiassistant.ExceptionHandler;
 
+import cn.gdeiassistant.Constant.ErrorConstantUtils;
+import cn.gdeiassistant.Exception.TokenValidException.SuspiciouseRequestException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenServerException;
-import cn.gdeiassistant.Exception.TokenValidException.SuspiciouseRequestException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class TokenExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(TokenExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(TokenExceptionHandler.class);
 
     /**
      * 处理登录凭证已过期的异常

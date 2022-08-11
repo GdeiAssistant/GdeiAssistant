@@ -1,10 +1,10 @@
 package cn.gdeiassistant.ExceptionHandler;
 
+import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import cn.gdeiassistant.Controller.AcademicAffairs.ScheduleQuery.RestController.ScheduleQueryRestController;
 import cn.gdeiassistant.Exception.CustomScheduleException.CountOverLimitException;
 import cn.gdeiassistant.Exception.CustomScheduleException.GenerateScheduleException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class CustomScheduleRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(CustomScheduleRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(CustomScheduleRestExceptionHandler.class);
 
     /**
      * 处理自定义课程数量超过限制的异常

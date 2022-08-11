@@ -16,5 +16,5 @@ public interface LogDataMapper {
             @Result(property = "amount", column = "amount"),
             @Result(property = "time", column = "time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP)
     })
-    public List<ChargeLog> selectChargeLogList(String username);
+    List<ChargeLog> selectChargeLogList(String username);
 }

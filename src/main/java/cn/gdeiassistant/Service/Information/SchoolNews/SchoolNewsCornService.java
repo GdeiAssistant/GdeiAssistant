@@ -335,7 +335,7 @@ public class SchoolNewsCornService {
                                             for (Element element : hrefs) {
                                                 if (!element.attr("href").startsWith("http://web.gdei.edu.cn/")) {
                                                     if (element.attr("href").startsWith("resource")) {
-                                                        element.attr("href", url.toString() + "/" + element.attr("href"));
+                                                        element.attr("href", url + "/" + element.attr("href"));
                                                     } else if (element.attr("href").startsWith("mailto:")
                                                             || element.attr("href").startsWith("http://")
                                                             || element.attr("href").startsWith("https://")) {
@@ -348,7 +348,7 @@ public class SchoolNewsCornService {
                                             for (Element element : sources) {
                                                 if (!element.attr("src").startsWith("http://web.gdei.edu.cn/")) {
                                                     if (element.attr("src").startsWith("resource")) {
-                                                        element.attr("src", url.toString() + "/" + element.attr("src"));
+                                                        element.attr("src", url + "/" + element.attr("src"));
                                                     } else if (element.attr("src").startsWith("mailto:")
                                                             || element.attr("src").startsWith("http://")
                                                             || element.attr("src").startsWith("https://")) {

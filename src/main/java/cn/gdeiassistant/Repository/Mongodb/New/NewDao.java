@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface NewDao {
 
-    public void saveNewInfoList(List<NewInfo> newInfoList);
+    void saveNewInfoList(List<NewInfo> newInfoList);
 
-    public NewInfo queryNewInfo(String id);
+    NewInfo queryNewInfo(String id);
 
-    public List<NewInfo> queryNewInfoList(int type, int start, int size);
+    List<NewInfo> queryNewInfoList(int type, int start, int size);
 }

@@ -41,7 +41,7 @@ import java.util.Map;
 @Service
 public class ChargeService {
 
-    private Logger logger = LoggerFactory.getLogger(ChargeService.class);
+    private final Logger logger = LoggerFactory.getLogger(ChargeService.class);
 
     @Autowired
     private ChargeMapper chargeMapper;

@@ -27,7 +27,7 @@ public interface PhotographMapper {
             @Result(property = "likeCount", column = "like_count"),
             @Result(property = "commentCount", column = "comment_count")
     })
-    public List<Photograph> selectPhotograph(@Param("start") int start, @Param("size") int size
+    List<Photograph> selectPhotograph(@Param("start") int start, @Param("size") int size
             , @Param("type") int type, @Param("username") String username);
 
     @Select("select p.id,p.title,p.content,p.count,p.type,p.username,p.create_time," +
@@ -51,15 +51,15 @@ public interface PhotographMapper {
             @Result(property = "photographCommentList", column = "id", javaType = List.class
                     , many = @Many(select = "selectPhotographCommentByPhotoId"))
     })
-    public List<Photograph> selectPhotographById(int id);
+    List<Photograph> selectPhotographById(int id);
 
     @Select("select IFNULL(sum(count),0) as count from photograph")
     @ResultType(Integer.class)
-    public Integer selectPhotographImageCount();
+    Integer selectPhotographImageCount();
 
     @Insert("insert into photograph (title,content,count,type,username,create_time) values(#{title},#{content},#{count},#{type},#{username},now())")
     @Options(useGeneratedKeys = true)
-    public Integer insertPhotograph(Photograph photograph);
+    Integer insertPhotograph(Photograph photograph);
 
     @Select("select pc.comment_id,pc.photo_id,pc.comment,pc.username,p.nickname,pc.create_time from photograph_comment pc" +
             " inner join profile p on pc.username=p.username where photo_id=#{id}")
@@ -71,23 +71,23 @@ public interface PhotographMapper {
             @Result(property = "nickname", column = "nickname"),
             @Result(property = "createTime", column = "create_time")
     })
-    public List<PhotographComment> selectPhotographCommentByPhotoId(int id);
+    List<PhotographComment> selectPhotographCommentByPhotoId(int id);
 
     @Select("select count(comment_id) from photograph_comment")
     @ResultType(Integer.class)
-    public Integer selectPhotographCommentCount();
+    Integer selectPhotographCommentCount();
 
     @Insert("insert into photograph_comment (photo_id,comment,username,create_time) values(#{photoId},#{comment},#{username},now())")
-    public void insertPhotographComment(PhotographComment photographComment);
+    void insertPhotographComment(PhotographComment photographComment);
 
     @Select("select count(like_id) from photograph_like")
     @ResultType(Integer.class)
-    public Integer selectPhotographLikeCount();
+    Integer selectPhotographLikeCount();
 
     @Select("select count(like_id) from photograph_like where photo_id=#{id} and username=#{username}")
     @ResultType(Integer.class)
-    public Integer selectPhotographLikeCountByPhotoIdAndUsername(@Param("id") int id, @Param("username") String username);
+    Integer selectPhotographLikeCountByPhotoIdAndUsername(@Param("id") int id, @Param("username") String username);
 
     @Insert("insert into photograph_like (photo_id,username,create_time) values(#{id},#{username},now())")
-    public void insertPhotographLike(@Param("id") int id, @Param("username") String username);
+    void insertPhotographLike(@Param("id") int id, @Param("username") String username);
 }

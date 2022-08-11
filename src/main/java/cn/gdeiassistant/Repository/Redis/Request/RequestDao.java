@@ -2,7 +2,7 @@ package cn.gdeiassistant.Repository.Redis.Request;
 
 public interface RequestDao {
 
-    public String QueryRequest(String nonce);
+    String QueryRequest(String nonce);
 
-    public void InsertRequest(String nonce, String timestamp);
+    void InsertRequest(String nonce, String timestamp);
 }

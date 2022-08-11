@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class EmailUtils {
 
-    private Logger logger = LoggerFactory.getLogger(FeedbackService.class);
+    private final Logger logger = LoggerFactory.getLogger(FeedbackService.class);
 
     @Autowired(required = false)
     private JavaMailSender javaMailSender;

@@ -1,8 +1,8 @@
 package cn.gdeiassistant.Pojo.Excel;
 
-import com.google.common.collect.Lists;
 import cn.gdeiassistant.Annotation.ExcelField;
 import cn.gdeiassistant.Tools.Utils.ReflectionUtils;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -11,7 +11,6 @@ import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -125,7 +124,6 @@ public class ExportExcel {
                 return Integer.compare(((ExcelField) o1[0]).sort(), ((ExcelField) o2[0]).sort());
             }
 
-            ;
         });
         // Initialize
         List<String> headerList = Lists.newArrayList();
@@ -408,7 +406,7 @@ public class ExportExcel {
      *
      * @param name 输出文件名
      */
-    public ExportExcel writeFile(String name) throws FileNotFoundException, IOException {
+    public ExportExcel writeFile(String name) throws IOException {
         FileOutputStream os = new FileOutputStream(name);
         this.write(os);
         return this;

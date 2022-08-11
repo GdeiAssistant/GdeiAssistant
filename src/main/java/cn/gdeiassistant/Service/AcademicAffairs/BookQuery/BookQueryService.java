@@ -35,7 +35,7 @@ import java.util.List;
 @Service
 public class BookQueryService {
 
-    private Logger logger = LoggerFactory.getLogger(BookQueryService.class);
+    private final Logger logger = LoggerFactory.getLogger(BookQueryService.class);
 
     @Autowired
     private UserCertificateService userCertificateService;

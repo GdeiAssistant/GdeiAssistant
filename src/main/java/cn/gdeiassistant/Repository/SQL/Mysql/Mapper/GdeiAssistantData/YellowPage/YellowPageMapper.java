@@ -24,14 +24,14 @@ public interface YellowPageMapper {
             @Result(property = "email", column = "email"),
             @Result(property = "website", column = "website")
     })
-    public List<YellowPage> selectAllYellowPageList();
+    List<YellowPage> selectAllYellowPageList();
 
     @Select("select * from yellow_page_type")
     @Results(id = "YellowPageType", value = {
             @Result(property = "typeCode", column = "type_code"),
             @Result(property = "typeName", column = "type_name")
     })
-    public List<YellowPageType> selectYellowPageType();
+    List<YellowPageType> selectYellowPageType();
 
     @Insert("insert into yellow_page (type_code,section,campus,major_phone,minor_phone,address,email,website) values " +
             "<foreach collection='list' item='yellowPage' index='index' separator=','> " +
@@ -39,5 +39,5 @@ public interface YellowPageMapper {
             ",#{yellowPage.majorPhone},#{yellowPage.minorPhone} " +
             ",#{yellowPage.address},#{yellowPage.email},#{yellowPage.website}) " +
             "</foreach>")
-    public void insertYellowPageBatch(List<YellowPage> yellowPageList);
+    void insertYellowPageBatch(List<YellowPage> yellowPageList);
 }

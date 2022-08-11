@@ -263,7 +263,7 @@ public class ScheduleService {
                                                         schedulesWithSpecialEmptySchedule[currentPosition][0] = specialEmptySchedule;
                                                     } else {
                                                         for (int j = 0; j < string.length; j++) {
-                                                            if (string[j].isEmpty() || string[j].substring(0, 1).equals("<") || string[j].equals(" ") || string[j].substring(0, 1).equals("(")) {
+                                                            if (string[j].isEmpty() || string[j].charAt(0) == '<' || string[j].equals(" ") || string[j].charAt(0) == '(') {
                                                                 //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
                                                             } else {
                                                                 //有效的课表头信息,进行信息处理
@@ -547,7 +547,7 @@ public class ScheduleService {
                                                 for (int j = 0; j < string.length; j++) {
                                                     if (string.length == 0) {
                                                         schedulesWithSpecialEmptySchedule[currentPosition] = specialEmptySchedule;
-                                                    } else if (string[j].isEmpty() || string[j].substring(0, 1).equals("<") || string[j].equals(" ") || string[j].substring(0, 1).equals("(")) {
+                                                    } else if (string[j].isEmpty() || string[j].charAt(0) == '<' || string[j].equals(" ") || string[j].charAt(0) == '(') {
                                                         //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
                                                     } else {
                                                         //有效的课表头信息,进行信息处理

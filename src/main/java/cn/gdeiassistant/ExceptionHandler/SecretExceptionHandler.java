@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Order(value = 1)
 public class SecretExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(SecretExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(SecretExceptionHandler.class);
 
     /**
      * 处理树洞信息不存在的异常

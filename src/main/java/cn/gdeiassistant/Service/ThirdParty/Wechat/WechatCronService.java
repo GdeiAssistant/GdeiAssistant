@@ -28,7 +28,7 @@ import java.util.Date;
 @Profile("production")
 public class WechatCronService {
 
-    private Logger logger = LoggerFactory.getLogger(WechatCronService.class);
+    private final Logger logger = LoggerFactory.getLogger(WechatCronService.class);
 
     @Autowired
     private RestTemplate restTemplate;

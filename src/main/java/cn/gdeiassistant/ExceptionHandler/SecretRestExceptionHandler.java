@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class SecretRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(SecretRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(SecretRestExceptionHandler.class);
 
     /**
      * 处理校园树洞信息不存在的异常

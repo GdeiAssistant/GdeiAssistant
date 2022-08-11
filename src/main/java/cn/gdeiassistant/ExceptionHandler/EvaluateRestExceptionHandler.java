@@ -1,9 +1,9 @@
 package cn.gdeiassistant.ExceptionHandler;
 
+import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import cn.gdeiassistant.Controller.AcademicAffairs.Evaluate.RestController.EvaluateRestController;
 import cn.gdeiassistant.Exception.EvaluateException.NotAvailableTimeException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class EvaluateRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(EvaluateRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(EvaluateRestExceptionHandler.class);
 
     @ExceptionHandler(NotAvailableTimeException.class)
     public ResponseEntity HandleNotAvailableTimeException(NotAvailableTimeException e) {

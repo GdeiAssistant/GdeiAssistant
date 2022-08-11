@@ -8,15 +8,15 @@ import cn.gdeiassistant.Pojo.Entity.CustomSchedule;
 
 public interface ScheduleDao {
 
-    public void saveSchedule(ScheduleDocument scheduleDocument);
+    void saveSchedule(ScheduleDocument scheduleDocument);
 
-    public ScheduleDocument querySchedule(String username);
+    ScheduleDocument querySchedule(String username);
 
-    public CustomScheduleDocument queryCustomSchedule(String username);
+    CustomScheduleDocument queryCustomSchedule(String username);
 
-    public void removeSchedule(String username);
+    void removeSchedule(String username);
 
-    public void addCustomSchedule(String username, CustomSchedule customSchedule) throws CountOverLimitException, GenerateScheduleException;
+    void addCustomSchedule(String username, CustomSchedule customSchedule) throws CountOverLimitException, GenerateScheduleException;
 
-    public void deleteCustomSchedule(String username, String id) ;
+    void deleteCustomSchedule(String username, String id) ;
 }

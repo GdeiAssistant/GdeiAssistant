@@ -33,7 +33,7 @@ public interface ExpressMapper {
             @Result(property = "guessSum", column = "guess_sum"),
             @Result(property = "commentCount", column = "comment_count")
     })
-    public List<Express> selectExpress(@Param("start") int start, @Param("size") int size, @Param("username") String username);
+    List<Express> selectExpress(@Param("start") int start, @Param("size") int size, @Param("username") String username);
 
     @Select("select e.id,e.username,e.nickname,e.realname,e.self_gender,e.name,e.content,e.person_gender,e.publish_time," +
             " count(distinct el.id) as like_count,count(distinct em.id) as comment_count,count(distinct eg.id) as guess_sum," +
@@ -60,7 +60,7 @@ public interface ExpressMapper {
             @Result(property = "guessSum", column = "guess_sum"),
             @Result(property = "commentCount", column = "comment_count")
     })
-    public Express selectExpressById(@Param("id") int id, @Param("username") String username);
+    Express selectExpressById(@Param("id") int id, @Param("username") String username);
 
     @Select("select e.id,e.username,e.nickname,e.self_gender,e.name,e.content,e.person_gender,e.publish_time," +
             " count(distinct el.id) as like_count,count(distinct em.id) as comment_count,count(distinct eg.id) as guess_sum," +
@@ -73,10 +73,10 @@ public interface ExpressMapper {
             " where e.nickname like concat(concat('%',#{keyword}),'%') or e.name like concat(concat('%',#{keyword}),'%')" +
             " group by e.id order by e.id limit #{start},#{size}")
     @ResultMap("express")
-    public List<Express> selectExpressByKeyWord(@Param("start") int start, @Param("size") int size, @Param("username") String username, @Param("keyword") String keyword);
+    List<Express> selectExpressByKeyWord(@Param("start") int start, @Param("size") int size, @Param("username") String username, @Param("keyword") String keyword);
 
     @Insert("insert into express (username,nickname,realname,self_gender,name,content,person_gender,publish_time) values(#{username},#{nickname},#{realname},#{selfGender},#{name},#{content},#{personGender},now())")
-    public void insertExpress(Express express);
+    void insertExpress(Express express);
 
     @Select("select * from express_like where username=#{username} and express_id=#{expressId}")
     @Results(id = "expressLike", value = {
@@ -85,16 +85,16 @@ public interface ExpressMapper {
             @Result(property = "username", column = "username"),
             @Result(property = "createTime", column = "create_time")
     })
-    public ExpressLike selectExpressLike(@Param("expressId") int expressId, @Param("username") String username);
+    ExpressLike selectExpressLike(@Param("expressId") int expressId, @Param("username") String username);
 
     @Insert("insert into express_like (express_id,username,create_time) values(#{expressId},#{username},now())")
-    public void insertExpressLike(@Param("expressId") int expressId, @Param("username") String username);
+    void insertExpressLike(@Param("expressId") int expressId, @Param("username") String username);
 
     @Select("select count(id) from express_guess where username=#{username} and result=1")
-    public Integer selectCorrectExpressGuessRecord(String username);
+    Integer selectCorrectExpressGuessRecord(String username);
 
     @Insert("insert into express_guess (express_id,username,result,create_time) values(#{expressId},#{username},#{result},now())")
-    public void insertExpressGuess(@Param("expressId") int expressId, @Param("username") String username, @Param("result") int result);
+    void insertExpressGuess(@Param("expressId") int expressId, @Param("username") String username, @Param("result") int result);
 
     @Select("select ec.id,ec.username,p.nickname,ec.express_id,ec.comment,ec.publish_time" +
             " from express_comment ec" +
@@ -108,8 +108,8 @@ public interface ExpressMapper {
             @Result(property = "comment", column = "comment"),
             @Result(property = "publishTime", column = "publish_time")
     })
-    public List<ExpressComment> selectExpressComment(@Param("expressId") int expressId);
+    List<ExpressComment> selectExpressComment(@Param("expressId") int expressId);
 
     @Insert("insert into express_comment (username,express_id,comment,publish_time) values(#{username},#{expressId},#{comment},now())")
-    public void insertExpressComment(@Param("expressId") int expressId, @Param("username") String username, @Param("comment") String comment);
+    void insertExpressComment(@Param("expressId") int expressId, @Param("username") String username, @Param("comment") String comment);
 }

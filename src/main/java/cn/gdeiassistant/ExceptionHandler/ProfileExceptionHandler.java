@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Order(value = 1)
 public class ProfileExceptionHandler {
 
-    private Logger logger= LoggerFactory.getLogger(ProfileExceptionHandler.class);
+    private final Logger logger= LoggerFactory.getLogger(ProfileExceptionHandler.class);
 
     /**
      * 处理用户资料不存在的异常

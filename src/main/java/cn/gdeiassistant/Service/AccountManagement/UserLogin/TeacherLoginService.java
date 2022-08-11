@@ -36,7 +36,7 @@ public class TeacherLoginService {
     @Autowired
     private ImageRecognitionService imageRecognitionService;
 
-    private Logger logger = LoggerFactory.getLogger(TeacherLoginService.class);
+    private final Logger logger = LoggerFactory.getLogger(TeacherLoginService.class);
 
     /**
      * 教师用户登录

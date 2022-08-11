@@ -11,8 +11,8 @@ import cn.gdeiassistant.Pojo.Entity.Card;
 import cn.gdeiassistant.Pojo.Entity.CardInfo;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import cn.gdeiassistant.Service.OpenAPI.ImageRecognition.ImageRecognitionService;
 import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.OpenAPI.ImageRecognition.ImageRecognitionService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
 import com.alibaba.fastjson.JSON;
@@ -42,7 +42,7 @@ import java.util.*;
 @Service
 public class CardQueryService {
 
-    private Logger logger = LoggerFactory.getLogger(CardQueryService.class);
+    private final Logger logger = LoggerFactory.getLogger(CardQueryService.class);
 
     @Autowired
     private ImageRecognitionService imageRecognitionService;

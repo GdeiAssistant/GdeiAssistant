@@ -26,7 +26,7 @@ public class AutoLoginService {
         if (userCertificateService.GetUserLoginCertificate(request.getSession().getId()) != null) {
             return AUTOLOGIN_SESSION;
         } else {
-            Cookie cookie[] = request.getCookies();
+            Cookie[] cookie = request.getCookies();
             if (cookie != null && cookie.length > 0) {
                 String cookieId = "";
                 for (int i = 0; i < cookie.length; i++) {

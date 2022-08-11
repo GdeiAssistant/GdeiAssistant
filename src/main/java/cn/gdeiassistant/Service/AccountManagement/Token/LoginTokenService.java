@@ -169,15 +169,15 @@ public class LoginTokenService {
             //没有找到对应的设备信息记录
             throw new TokenExpiredException("令牌已过期");
         }
-        if (!data.getUnionId().equals(device.getUnionId())) {
+        if (!data.getUnionID().equals(device.getUnionID())) {
             //设备UnionID不匹配，校验IP地址
-            if (data.getIp().equals(ip)) {
+            if (data.getIP().equals(ip)) {
                 //若IP地址相同，则不需要重复校验
                 return;
             }
             //检测IP地址是否为同一省份
             Location currentLocation = ipAddressService.GetLocationInfoByIPAddress(ip);
-            Location tokenLocation = ipAddressService.GetLocationInfoByIPAddress(device.getIp());
+            Location tokenLocation = ipAddressService.GetLocationInfoByIPAddress(device.getIP());
             if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
                     && Objects.equals(currentLocation.getProvince(), tokenLocation.getProvince())) {
                 //IP地址为同一省份，校验通过

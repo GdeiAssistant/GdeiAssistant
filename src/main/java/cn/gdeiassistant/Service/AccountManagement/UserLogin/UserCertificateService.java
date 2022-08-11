@@ -35,7 +35,7 @@ import java.util.List;
 @Service
 public class UserCertificateService {
 
-    private Logger logger = LoggerFactory.getLogger(UserCertificateService.class);
+    private final Logger logger = LoggerFactory.getLogger(UserCertificateService.class);
 
     @Autowired
     private Environment environment;

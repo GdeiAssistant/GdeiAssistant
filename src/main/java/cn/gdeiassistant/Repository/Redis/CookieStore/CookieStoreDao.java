@@ -4,9 +4,9 @@ import org.apache.http.client.CookieStore;
 
 public interface CookieStoreDao {
 
-    public void SaveCookieStore(String sessionId, CookieStore cookieStore);
+    void SaveCookieStore(String sessionId, CookieStore cookieStore);
 
-    public CookieStore QueryCookieStore(String sessionId);
+    CookieStore QueryCookieStore(String sessionId);
 
-    public void ClearCookieStore(String sessionId);
+    void ClearCookieStore(String sessionId);
 }

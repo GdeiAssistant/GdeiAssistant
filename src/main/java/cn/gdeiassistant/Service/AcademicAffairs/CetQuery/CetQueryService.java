@@ -32,7 +32,7 @@ import java.io.IOException;
 @Service
 public class CetQueryService {
 
-    private Logger logger = LoggerFactory.getLogger(CetQueryService.class);
+    private final Logger logger = LoggerFactory.getLogger(CetQueryService.class);
 
     @Autowired
     private CetMapper cetMapper;

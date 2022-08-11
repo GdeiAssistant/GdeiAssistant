@@ -36,7 +36,7 @@ import java.util.List;
 @Service
 public class SpareRoomService {
 
-    private Logger logger = LoggerFactory.getLogger(SpareRoomService.class);
+    private final Logger logger = LoggerFactory.getLogger(SpareRoomService.class);
 
     @Autowired
     private UserCertificateService userCertificateService;

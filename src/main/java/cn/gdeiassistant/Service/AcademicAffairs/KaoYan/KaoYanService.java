@@ -27,7 +27,7 @@ public class KaoYanService {
     @Autowired
     private ImageRecognitionService imageRecognitionService;
 
-    private Logger logger = LoggerFactory.getLogger(KaoYanService.class);
+    private final Logger logger = LoggerFactory.getLogger(KaoYanService.class);
 
     /**
      * 查询考研初试成绩

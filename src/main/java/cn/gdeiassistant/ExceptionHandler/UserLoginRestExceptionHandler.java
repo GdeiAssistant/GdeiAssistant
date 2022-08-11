@@ -1,12 +1,12 @@
 package cn.gdeiassistant.ExceptionHandler;
 
+import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import cn.gdeiassistant.Controller.AccountManagement.UserLogin.RestController.UserLoginRestController;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.RequestValidException.NonceInvalidException;
 import cn.gdeiassistant.Exception.RequestValidException.SignInvalidException;
 import cn.gdeiassistant.Exception.RequestValidException.TimestampInvalidException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Constant.ErrorConstantUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class UserLoginRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(UserLoginRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(UserLoginRestExceptionHandler.class);
 
     /**
      * 处理账户密码错误异常

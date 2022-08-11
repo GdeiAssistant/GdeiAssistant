@@ -5,20 +5,20 @@ import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
 
 public interface UserCertificateDao {
 
-    public User queryUserCookieCertificate(String cookieId);
+    User queryUserCookieCertificate(String cookieId);
 
-    public void saveUserCookieCertificate(String cookieId, String username, String password);
+    void saveUserCookieCertificate(String cookieId, String username, String password);
 
-    public void updateUserCookieCertificateExpiration(String cookieId);
+    void updateUserCookieCertificateExpiration(String cookieId);
 
-    public User queryUserLoginCertificate(String sessionId);
+    User queryUserLoginCertificate(String sessionId);
 
-    public void saveUserLoginCertificate(String session, String username, String password);
+    void saveUserLoginCertificate(String session, String username, String password);
 
-    public void updateUserLoginCertificateExpiration(String sessionId);
+    void updateUserLoginCertificateExpiration(String sessionId);
 
-    public UserCertificate queryUserSessionCertificate(String sessionId);
+    UserCertificate queryUserSessionCertificate(String sessionId);
 
-    public void saveUserSessionCertificate(String sessionId, UserCertificate user);
+    void saveUserSessionCertificate(String sessionId, UserCertificate user);
 
 }

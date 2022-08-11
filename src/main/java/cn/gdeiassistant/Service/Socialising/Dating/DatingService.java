@@ -147,10 +147,8 @@ public class DatingService {
                 //如果对方已接受该撩一下请求，则隐藏撩一下界面，显示联系方式
                 return true;
             }
-            if (datingPick.getUsername().equals(user.getUsername())) {
-                //当发布者与浏览者相同时，隐藏撩一下功能
-                return true;
-            }
+            //当发布者与浏览者相同时，隐藏撩一下功能
+            return datingPick.getUsername().equals(user.getUsername());
         }
         return false;
     }

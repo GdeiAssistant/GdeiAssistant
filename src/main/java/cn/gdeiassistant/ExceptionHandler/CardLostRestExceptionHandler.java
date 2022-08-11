@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class CardLostRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(CardLostRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(CardLostRestExceptionHandler.class);
 
     /**
      * 处理校园卡密码错误的异常

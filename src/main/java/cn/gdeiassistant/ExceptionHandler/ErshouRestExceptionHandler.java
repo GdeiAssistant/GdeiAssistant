@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class ErshouRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(ErshouRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(ErshouRestExceptionHandler.class);
 
     /**
      * 处理二手交易信息不存在的异常

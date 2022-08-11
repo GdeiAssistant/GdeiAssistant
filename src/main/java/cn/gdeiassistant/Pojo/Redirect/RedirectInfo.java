@@ -26,9 +26,6 @@ public class RedirectInfo {
      * @return
      */
     public boolean needToRedirect() {
-        if (redirect_url != null && !redirect_url.trim().isEmpty()) {
-            return true;
-        }
-        return false;
+        return redirect_url != null && !redirect_url.trim().isEmpty();
     }
 }

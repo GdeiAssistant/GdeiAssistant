@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class DatingRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(DatingRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(DatingRestExceptionHandler.class);
 
     /**
      * 处理重复发送撩一下请求的异常

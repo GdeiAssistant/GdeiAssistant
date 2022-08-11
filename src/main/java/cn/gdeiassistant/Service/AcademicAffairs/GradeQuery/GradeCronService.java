@@ -36,7 +36,7 @@ import java.util.concurrent.Semaphore;
 @Profile("production")
 public class GradeCronService {
 
-    private Logger logger = LoggerFactory.getLogger(GradeCronService.class);
+    private final Logger logger = LoggerFactory.getLogger(GradeCronService.class);
 
     @Autowired
     private UserLoginService userLoginService;

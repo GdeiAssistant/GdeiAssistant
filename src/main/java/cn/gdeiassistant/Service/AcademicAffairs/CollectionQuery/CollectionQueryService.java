@@ -6,8 +6,8 @@ import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Pojo.CollectionQuery.CollectionDetailQuery;
 import cn.gdeiassistant.Pojo.CollectionQuery.CollectionQueryResult;
 import cn.gdeiassistant.Pojo.Entity.Collection;
-import cn.gdeiassistant.Pojo.Entity.CollectionDistribution;
 import cn.gdeiassistant.Pojo.Entity.CollectionDetail;
+import cn.gdeiassistant.Pojo.Entity.CollectionDistribution;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CollectionQueryService {
 
-    private Logger logger = LoggerFactory.getLogger(CollectionQueryService.class);
+    private final Logger logger = LoggerFactory.getLogger(CollectionQueryService.class);
 
     /**
      * 查询馆藏信息

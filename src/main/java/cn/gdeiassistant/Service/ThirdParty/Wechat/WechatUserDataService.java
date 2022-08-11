@@ -1,8 +1,8 @@
 package cn.gdeiassistant.Service.ThirdParty.Wechat;
 
+import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.WechatUser.WechatUserMapper;
-import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -39,10 +39,7 @@ public class WechatUserDataService {
      */
     public User QueryWechatUserData(String username) throws Exception {
         User queryUser = userMapper.selectUser(username);
-        if (queryUser != null) {
-            return queryUser;
-        }
-        return null;
+        return queryUser;
     }
 
     /**

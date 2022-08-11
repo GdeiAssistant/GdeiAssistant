@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(value = 0)
 public class LostAndFoundRestExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(LostAndFoundRestExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(LostAndFoundRestExceptionHandler.class);
 
     /**
      * 处理失物招领信息不存在的异常

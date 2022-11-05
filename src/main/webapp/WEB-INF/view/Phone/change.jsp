@@ -42,8 +42,8 @@
     <div class="weui-cell weui-cell_access weui-cell_select-before">
         <div class="weui-cell__hd">
             <input id="phone_code" type="hidden" value="86">
-            <label id="phone_flag" class="weui-label" style="width: 2.5rem"
-                   onclick="changePhoneCode()">🇨🇳</label>
+            <label id="phone_flag" class="weui-label" style="width: 4rem"
+                   onclick="changePhoneCode()">🇨🇳 +86</label>
         </div>
         <div class="weui-cell__bd">
             <input id="phone" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入手机号">

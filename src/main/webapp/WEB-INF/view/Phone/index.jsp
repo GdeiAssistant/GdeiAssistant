@@ -92,7 +92,5 @@
     </div>
 </c:if>
 
-<p class="page_desc" style="margin-top: 25px">你的手机号将被加密存储并严格保密<br>仅用于实名认证和供系统发送通知信息</p>
-
 </body>
 </html>

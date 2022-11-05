@@ -48,7 +48,7 @@ function changePhoneCode() {
             onConfirm: function (result) {
                 //设置国际区号和国家/地区旗帜
                 $("#phone_code").val(result[0].value);
-                $("#phone_flag").text(attributionMap.get(result[0].value).flag);
+                $("#phone_flag").text(attributionMap.get(result[0].value).flag + " +" + result[0].value);
             }
         });
 }

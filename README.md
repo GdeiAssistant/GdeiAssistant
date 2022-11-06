@@ -169,20 +169,6 @@
 
 - [广东二师助手官网](https://gdeiassistant.cn)
 
-## 客户端
-
-- [安卓客户端](https://github.com/GdeiAssistant/GdeiAssistant-Android)
-- [微信小程序](https://github.com/GdeiAssistant/GdeiAssistant-WechatApp)
-- [支付宝小程序](https://github.com/GdeiAssistant/GdeiAssistant-AlipayApp)
-- [快应用客户端](https://github.com/GdeiAssistant/GdeiAssistant-QuickApp)
-- [通用Windows客户端](https://github.com/GdeiAssistant/GdeiAssistant-UWP)
-
-## 公众号
-
-<p>
-  <img width="250" src="./github/qrcode.jpg">
-</p>
-
 ## 环境
 
 ### 操作系统
@@ -378,11 +364,13 @@ Copyright (c) 2016 - 2022 GdeiAssistant
 
 ## 联系
 
-- 技术支持和意见建议反馈：[gdeiassistant@gmail.com](mailto:gdeiassistant@gmail.com)
+- 技术支持和意见建议：[gdeiassistant@gmail.com](mailto:gdeiassistant@gmail.com)
 
-- 用户客服和系统故障工单提交：[support@gdeiassistant.cn](mailto:support@gdeiassistant.cn)
+- 网络侵权投诉和申诉：[copyright@gdeiassistant.cn](mailto:copyright@gdeiassistant.cn)
 
-- 社区违法和不良信息举报邮箱：[report@gdeiassistant.cn](mailto:report@gdeiassistant.cn)
+- 客服和系统故障提交：[support@gdeiassistant.cn](mailto:support@gdeiassistant.cn)
+
+- 违法及不良信息举报：[report@gdeiassistant.cn](mailto:report@gdeiassistant.cn)
 
 ## 鸣谢
 
@@ -436,7 +424,7 @@ Copyright (c) 2016 - 2022 GdeiAssistant
 
 - [Cloudflare](https://www.cloudflare.com)
 
-- [阿里云](https://cn.aliyun.com)
+- [腾讯云](https://cloud.tencent.com)
 
 ## 声明
 

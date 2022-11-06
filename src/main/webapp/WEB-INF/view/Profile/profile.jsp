@@ -143,6 +143,14 @@
         </div>
     </a>
     <a class="weui-cell weui-cell_access" href="javascript:"
+       onclick="window.location.href = '/email'">
+        <div class="weui-cell__bd">
+            <p>绑定邮箱</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/close'">
         <div class="weui-cell__bd">
             <p>删除账号</p>

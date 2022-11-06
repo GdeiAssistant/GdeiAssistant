@@ -702,6 +702,31 @@ LOCK TABLES `phone` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `email`
+--
+
+DROP TABLE IF EXISTS `email`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `email` (
+  `username` varchar(24) CHARACTER SET utf8 NOT NULL COMMENT '用户名',
+  `email` varchar(24) CHARACTER SET utf8 NOT NULL COMMENT '电子邮件地址，使用AES加密时需要将varchar长度提升到32及以上',
+  `gmt_create` datetime NOT NULL COMMENT '记录创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '记录更新时间',
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email`
+--
+
+LOCK TABLES `email` WRITE;
+/*!40000 ALTER TABLE `email` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `photograph`
 --
 

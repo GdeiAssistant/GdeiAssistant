@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Exception.PhoneException;
+package cn.gdeiassistant.Exception.VerificationException;
 
 /**
  * 缓存中没有验证码记录（过期或未申请）或验证码不匹配时，抛出该异常

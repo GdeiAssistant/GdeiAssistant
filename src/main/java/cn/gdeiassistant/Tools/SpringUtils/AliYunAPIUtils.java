@@ -1,6 +1,6 @@
 package cn.gdeiassistant.Tools.SpringUtils;
 
-import cn.gdeiassistant.Exception.PhoneException.*;
+import cn.gdeiassistant.Exception.VerificationException.*;
 import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import cn.gdeiassistant.Pojo.Config.AliyunConfig;
 import com.aliyuncs.CommonRequest;

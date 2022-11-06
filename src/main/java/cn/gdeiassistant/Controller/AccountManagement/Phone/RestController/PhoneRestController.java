@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Controller.AccountManagement.Phone.RestController;
 
-import cn.gdeiassistant.Exception.PhoneException.SendSMSException;
-import cn.gdeiassistant.Exception.PhoneException.VerificationCodeInvalidException;
+import cn.gdeiassistant.Exception.VerificationException.SendSMSException;
+import cn.gdeiassistant.Exception.VerificationException.VerificationCodeInvalidException;
 import cn.gdeiassistant.Pojo.Entity.Attribution;
 import cn.gdeiassistant.Pojo.Entity.Phone;
 import cn.gdeiassistant.Pojo.Profile.AttributionComparator;

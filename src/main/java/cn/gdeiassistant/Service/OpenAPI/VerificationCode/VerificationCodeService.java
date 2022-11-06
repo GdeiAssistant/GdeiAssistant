@@ -1,6 +1,6 @@
 package cn.gdeiassistant.Service.OpenAPI.VerificationCode;
 
-import cn.gdeiassistant.Exception.PhoneException.SendSMSException;
+import cn.gdeiassistant.Exception.VerificationException.SendSMSException;
 import cn.gdeiassistant.Tools.SpringUtils.AliYunAPIUtils;
 import com.aliyuncs.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Autowired;

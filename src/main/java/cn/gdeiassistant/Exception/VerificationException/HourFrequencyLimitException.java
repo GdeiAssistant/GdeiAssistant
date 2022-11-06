@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Exception.PhoneException;
+package cn.gdeiassistant.Exception.VerificationException;
 
 /**
  * 小时发送频率超过限制时，抛出该异常

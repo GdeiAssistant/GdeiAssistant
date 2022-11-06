@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Service.AccountManagement.Phone;
 
-import cn.gdeiassistant.Exception.PhoneException.SendSMSException;
-import cn.gdeiassistant.Exception.PhoneException.VerificationCodeInvalidException;
+import cn.gdeiassistant.Exception.VerificationException.SendSMSException;
+import cn.gdeiassistant.Exception.VerificationException.VerificationCodeInvalidException;
 import cn.gdeiassistant.Pojo.Entity.Phone;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.Redis.VerificationCode.VerificationCodeDao;
@@ -37,8 +37,6 @@ public class PhoneService {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
         Phone phone = phoneMapper.selectPhone(user.getUsername());
         if (phone != null) {
-            //解密手机号
-            phone.setPhone(phone.getPhone());
             //隐藏用户绑定的手机号
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < phone.getPhone().length(); i++) {

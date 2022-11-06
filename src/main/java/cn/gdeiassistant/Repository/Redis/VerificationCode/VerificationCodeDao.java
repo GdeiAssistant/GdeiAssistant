@@ -8,4 +8,10 @@ public interface VerificationCodeDao {
 
     void DeletePhoneVerificationCode(int code, String phone);
 
+    Integer QueryEmailVerificationCode(String email);
+
+    void SaveEmailVerificationCode(String email, int randomCode);
+
+    void DeleteEmailVerificationCode(String email);
+
 }

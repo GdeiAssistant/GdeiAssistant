@@ -3,9 +3,9 @@ package cn.gdeiassistant.Service.ThirdParty.QQ;
 import cn.gdeiassistant.Pojo.Entity.QQUser;
 import cn.gdeiassistant.Tools.SpringUtils.QQUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
+@Deprecated
 public class QQAppService {
 
     @Autowired

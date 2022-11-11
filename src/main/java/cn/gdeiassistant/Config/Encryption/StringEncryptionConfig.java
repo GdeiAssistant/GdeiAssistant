@@ -50,6 +50,8 @@ public class StringEncryptionConfig implements EnvironmentAware {
                             aesEncryptionConfig.setPrivateKey(privateKey);
                             return aesEncryptionConfig;
                         }
+                        //安全加密功能模块未配置
+                        moduleUtils.DisableModule(ModuleEnum.ENCRYPTION);
                         break;
 
                     case "jaq":
@@ -63,12 +65,13 @@ public class StringEncryptionConfig implements EnvironmentAware {
                                     .getProperty("encrypt.config.location"))).getFile().getAbsolutePath());
                             return encryptionConfig;
                         }
+                        //安全加密功能模块未配置
+                        moduleUtils.DisableModule(ModuleEnum.ENCRYPTION);
                         break;
                 }
             }
         }
-        //安全加密功能模块未配置启用
-        moduleUtils.DisableModule(ModuleEnum.ENCRYPTION);
+        //安全加密功能模块未启用
         return null;
     }
 

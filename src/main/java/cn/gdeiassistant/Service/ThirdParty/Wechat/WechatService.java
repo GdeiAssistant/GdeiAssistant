@@ -63,7 +63,7 @@ public class WechatService {
     @Autowired
     private CardQueryService cardQueryService;
 
-    @Autowired
+    @Autowired(required = false)
     private WechatOfficialAccountConfig wechatOfficialAccountConfig;
 
     /**

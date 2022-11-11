@@ -424,6 +424,8 @@ Copyright (c) 2016 - 2022 GdeiAssistant
 
 - [Cloudflare](https://www.cloudflare.com)
 
+- [阿里云](https://www.aliyun.com)
+
 - [腾讯云](https://cloud.tencent.com)
 
 ## 声明

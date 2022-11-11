@@ -1,6 +1,5 @@
 package cn.gdeiassistant.Pojo.Config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -12,12 +11,20 @@ public class WechatOfficialAccountConfig {
 
     private String appsecret;
 
-    @Value("#{propertiesReader['wechat.account.appid']}")
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public void setAppid(String appid) {
         this.appid = appid;
     }
 
-    @Value("#{propertiesReader['wechat.account.appsecret']}")
     public void setAppsecret(String appsecret) {
         this.appsecret = appsecret;
     }

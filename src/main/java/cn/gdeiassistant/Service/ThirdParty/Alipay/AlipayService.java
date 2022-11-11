@@ -4,9 +4,9 @@ import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Tools.SpringUtils.AlipayUtils;
 import com.alipay.api.AlipayApiException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
+//@Service
+@Deprecated
 public class AlipayService {
 
     @Autowired

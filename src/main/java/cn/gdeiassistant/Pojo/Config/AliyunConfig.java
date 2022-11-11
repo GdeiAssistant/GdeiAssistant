@@ -18,8 +18,6 @@ public class AliyunConfig {
 
     private String aliyunAccessKeySecret;
 
-    private String aliyun_h5_verifyKey;
-
     private String official_appCode;
 
     private String aliyunSMSChinaTemplateCode;
@@ -56,15 +54,6 @@ public class AliyunConfig {
         }
     }
 
-    @Value("#{propertiesReader['api.aliyun.h5.verifykey']}")
-    public void setAliyun_h5_verifyKey(String aliyun_h5_verifyKey) {
-        if (StringUtils.isNotBlank(aliyun_h5_verifyKey)) {
-            this.aliyun_h5_verifyKey = aliyun_h5_verifyKey;
-        } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIYUN);
-        }
-    }
-
     @Value("#{propertiesReader['api.aliyun.official.appcode']}")
     public void setOfficial_appCode(String official_appCode) {
         if (StringUtils.isNotBlank(official_appCode)) {
@@ -79,7 +68,7 @@ public class AliyunConfig {
         if (StringUtils.isNotBlank(aliyunSMSChinaTemplateCode)) {
             this.aliyunSMSChinaTemplateCode = aliyunSMSChinaTemplateCode;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIYUN);
+            moduleUtils.DisableModule(ModuleEnum.ALIYUN_SMS);
         }
     }
 
@@ -88,7 +77,7 @@ public class AliyunConfig {
         if (StringUtils.isNotBlank(aliyunSMSGlobalTemplateCode)) {
             this.aliyunSMSGlobalTemplateCode = aliyunSMSGlobalTemplateCode;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIYUN);
+            moduleUtils.DisableModule(ModuleEnum.ALIYUN_SMS);
         }
     }
 
@@ -102,10 +91,6 @@ public class AliyunConfig {
 
     public String getAliyunAccessKeySecret() {
         return aliyunAccessKeySecret;
-    }
-
-    public String getAliyun_h5_verifyKey() {
-        return aliyun_h5_verifyKey;
     }
 
     public String getOfficial_appCode() {

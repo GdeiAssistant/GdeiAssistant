@@ -5,12 +5,11 @@ import cn.gdeiassistant.Tools.SpringUtils.ModuleUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("singleton")
-public class AlipayConfig {
+//@Component
+//@Scope("singleton")
+@Deprecated
+public class AlipayMiniProgramConfig {
 
     @Autowired
     private ModuleUtils moduleUtils;
@@ -28,7 +27,7 @@ public class AlipayConfig {
         if (StringUtils.isNotBlank(appid)) {
             this.appid = appid;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIPAY);
+            moduleUtils.DisableModule(ModuleEnum.ALIPAY_MINIPROGRAM);
         }
     }
 
@@ -37,7 +36,7 @@ public class AlipayConfig {
         if (StringUtils.isNotBlank(aesSecret)) {
             this.aesSecret = aesSecret;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIPAY);
+            moduleUtils.DisableModule(ModuleEnum.ALIPAY_MINIPROGRAM);
         }
     }
 
@@ -46,7 +45,7 @@ public class AlipayConfig {
         if (StringUtils.isNotBlank(privateKey)) {
             this.privateKey = privateKey;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIPAY);
+            moduleUtils.DisableModule(ModuleEnum.ALIPAY_MINIPROGRAM);
         }
     }
 
@@ -55,7 +54,7 @@ public class AlipayConfig {
         if (StringUtils.isNotBlank(publicKey)) {
             this.publicKey = publicKey;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIPAY);
+            moduleUtils.DisableModule(ModuleEnum.ALIPAY_MINIPROGRAM);
         }
     }
 

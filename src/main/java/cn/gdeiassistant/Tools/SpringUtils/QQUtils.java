@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Tools.SpringUtils;
 
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.Pojo.Config.QQConfig;
+import cn.gdeiassistant.Pojo.Config.QQMiniProgramConfig;
 import cn.gdeiassistant.Pojo.Entity.QQUser;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,17 +9,17 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-@Component
+//@Component
+@Deprecated
 public class QQUtils {
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
-    private QQConfig qqConfig;
+    private QQMiniProgramConfig qqMiniProgramConfig;
 
     /**
      * 使用登录凭证获取用户标识信息
@@ -29,7 +29,7 @@ public class QQUtils {
      */
     public QQUser GetQQUser(String js_code) throws Exception {
         ResponseEntity<String> responseEntity = restTemplate.exchange("https://api.q.qq.com/sns/jscode2session?appid="
-                        + qqConfig.getAppId() + "&secret=" + qqConfig.getAppSecret() + "&js_code=" + js_code + "&grant_type=authorization_code", HttpMethod.GET
+                        + qqMiniProgramConfig.getAppId() + "&secret=" + qqMiniProgramConfig.getAppSecret() + "&js_code=" + js_code + "&grant_type=authorization_code", HttpMethod.GET
                 , new HttpEntity<>(new HttpHeaders()), String.class);
         JSONObject jsonObject = JSONObject.fromObject(responseEntity.getBody());
         if (jsonObject.has("openid")) {

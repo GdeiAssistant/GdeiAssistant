@@ -3,11 +3,12 @@ package cn.gdeiassistant.Enum.Module;
 public enum ModuleEnum {
 
     EMAIL("邮件", "/email/email.properties"),
-    ENCRYPTION("安全加密", "/jaq/encryptor.properties"),
-    ALIPAY("支付宝小程序", "/alipay/app.properties"),
-    QQ("QQ小程序", "/qq/app.properties"),
-    ALIYUN("阿里云", "/api/aliyun.properties"),
-    JISU("极速数据", "/api/jisu.properties"),
+    ENCRYPTION("安全加密", "/encrypt/encryptor.properties"),
+    ALIPAY_MINIPROGRAM("支付宝小程序", "/alipay/app.properties"),
+    QQ_MINIPROGRAM("QQ小程序", "/qq/app.properties"),
+    ALIYUN("阿里云", "/aliyun/account.properties"),
+    ALIYUN_SMS("阿里云API服务", "/api/aliyun.properties"),
+    JISU("极速数据API服务", "/api/jisu.properties"),
     JWT("JSON Web Token", "/jwt/secret.properties"),
     NEWS("新闻通知", "/news/account.properties"),
     OSS("OSS", "/oss/oss.properties"),

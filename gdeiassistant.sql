@@ -1087,6 +1087,35 @@ LOCK TABLES `close_log` WRITE;
 /*!40000 ALTER TABLE `close_log` DISABLE KEYS */;
 /*!40000 ALTER TABLE `close_log` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `ip_log`
+--
+
+DROP TABLE IF EXISTS `ip_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ip_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IP地址记录编号',
+  `username` varchar(24) COLLATE utf8mb4_bin NOT NULL COMMENT '用户名',
+  `type` tinyint(1) NOT NULL COMMENT 'IP地址记录类型',
+  `ip` varchar(45) COLLATE utf8mb4_bin NOT NULL COMMENT 'IP地址',
+  `country` varchar(15) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'IP地址所属国家',
+  `province` varchar(15) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'IP地址所属省份',
+  `city` varchar(15) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'IP所属城市',
+  `time` datetime NOT NULL COMMENT 'IP地址记录时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ip_log`
+--
+
+LOCK TABLES `ip_log` WRITE;
+/*!40000 ALTER TABLE `ip_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ip_log` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1097,4 +1126,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-12  4:49:44
+-- Dump completed on 2022-11-12 12:44:47

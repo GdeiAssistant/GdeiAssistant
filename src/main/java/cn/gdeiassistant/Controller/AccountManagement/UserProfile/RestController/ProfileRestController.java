@@ -47,7 +47,7 @@ public class ProfileRestController {
     @RequestMapping(value = "/api/avatar", method = RequestMethod.GET)
     public DataJsonResult<String> GetUserAvatar(HttpServletRequest request) {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
-        String url = userProfileService.GetUserAvatar(request.getSession().getId());
+        String url = userProfileService.GetSelfUserAvatar(request.getSession().getId());
         if (StringUtils.isBlank(url)) {
             //未上传自定义头像
             jsonResult.setSuccess(true);
@@ -106,7 +106,7 @@ public class ProfileRestController {
     @RequestMapping(value = "/api/profile", method = RequestMethod.GET)
     public DataJsonResult<Profile> GetUserProfile(HttpServletRequest request) throws Exception {
         DataJsonResult<Profile> result = new DataJsonResult<>();
-        Profile profile = userProfileService.GetUserProfile(request.getSession().getId());
+        Profile profile = userProfileService.GetSelfUserProfile(request.getSession().getId());
         if (profile != null) {
             if (!LocationUtils.getRegionMap().containsKey(profile.getLocationRegion())) {
                 profile.setLocationRegion("未选择");
@@ -202,7 +202,7 @@ public class ProfileRestController {
      */
     @RequestMapping(value = "/api/introduction", method = RequestMethod.GET)
     public DataJsonResult<String> GetUserIntroduction(HttpServletRequest request) throws Exception {
-        Introduction introduction = userProfileService.GetUserIntroduction(request.getSession().getId());
+        Introduction introduction = userProfileService.GetSelfUserIntroduction(request.getSession().getId());
         return new DataJsonResult<>(true, StringUtils.isBlank(introduction.getIntroductionContent()) ? "" : introduction.getIntroductionContent());
     }
 
@@ -425,7 +425,7 @@ public class ProfileRestController {
     public DataJsonResult<String> GetUserNickname(HttpServletRequest request
             , @RequestParam("token") String token) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
-        Profile profile = userProfileService.GetUserProfile(sessionId);
+        Profile profile = userProfileService.GetSelfUserProfile(sessionId);
         String nickname = profile.getNickname();
         return new DataJsonResult<>(true, nickname);
     }
@@ -442,7 +442,7 @@ public class ProfileRestController {
             , @RequestParam("token") String token) {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
         String sessionId = (String) request.getAttribute("sessionId");
-        String url = userProfileService.GetUserAvatar(sessionId);
+        String url = userProfileService.GetSelfUserAvatar(sessionId);
         if (StringUtils.isBlank(url)) {
             //未上传自定义头像
             jsonResult.setSuccess(true);
@@ -468,7 +468,7 @@ public class ProfileRestController {
             , @RequestParam("token") String token) throws Exception {
         DataJsonResult<Profile> jsonResult = new DataJsonResult<>();
         String sessionId = (String) request.getAttribute("sessionId");
-        Profile profile = userProfileService.GetUserProfile(sessionId);
+        Profile profile = userProfileService.GetSelfUserProfile(sessionId);
         if (!LocationUtils.getRegionMap().containsKey(profile.getLocationRegion())) {
             profile.setLocationRegion(null);
         } else {

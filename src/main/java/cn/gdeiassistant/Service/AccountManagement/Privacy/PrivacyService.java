@@ -28,14 +28,25 @@ public class PrivacyService {
     private ScheduleDao scheduleDao;
 
     /**
-     * 获取用户隐私设置
+     * 获取当前用户隐私设置
      *
      * @param sessionId
      * @return
      */
-    public Privacy GetPrivacySetting(String sessionId) throws Exception {
+    public Privacy GetSelfUserPrivacySetting(String sessionId) throws UserNotExistException {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Privacy privacy = privacyMapper.selectPrivacy(user.getUsername());
+        return GetOtherUserPrivacySetting(user.getUsername());
+    }
+
+    /**
+     * 获取其他用户隐私设置
+     *
+     * @param username
+     * @return
+     * @throws UserNotExistException
+     */
+    public Privacy GetOtherUserPrivacySetting(String username) throws UserNotExistException {
+        Privacy privacy = privacyMapper.selectPrivacy(username);
         if (privacy != null) {
             return privacy;
         }

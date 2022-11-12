@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Controller.Socialising.Photograph.RestController;
 
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.Photograph;
 import cn.gdeiassistant.Pojo.Entity.PhotographComment;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -107,6 +109,7 @@ public class PhotographRestController {
      * @return
      */
     @RequestMapping(value = "/api/photograph/id/{id}/comment", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddPhotographComment(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) {
         photographService.AddPhotographComment(id, comment, request.getSession().getId());
@@ -126,6 +129,7 @@ public class PhotographRestController {
      * @throws IOException
      */
     @RequestMapping(value = "/api/photograph", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddPhotograph(HttpServletRequest request, @Validated Photograph photograph
             , MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4) throws IOException {
         //插入照片信息记录

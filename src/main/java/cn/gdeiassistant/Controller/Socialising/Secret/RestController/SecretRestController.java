@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Controller.Socialising.Secret.RestController;
 
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Secret;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -53,6 +55,7 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddSecretInfo(HttpServletRequest request, @Validated Secret secret, String voiceId
             , @RequestParam(value = "voice", required = false) MultipartFile file) throws Exception {
         if (secret.getType() == 0 && StringUtils.isBlank(secret.getContent())) {
@@ -100,6 +103,7 @@ public class SecretRestController {
      * @return
      */
     @RequestMapping(value = "/api/secret/id/{id}/comment", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddSecretComment(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws Exception {
         if (!secretService.CheckSecretInfoExist(id)) {

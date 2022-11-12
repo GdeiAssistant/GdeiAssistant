@@ -35,8 +35,8 @@ public class DeliveryController {
     public ModelAndView ResolveDeliveryIndexPage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         //获取头像地址
-        String url = userProfileService.GetUserAvatar(request.getSession().getId());
-        String nickname = userProfileService.GetUserProfile(request.getSession().getId()).getNickname();
+        String url = userProfileService.GetSelfUserAvatar(request.getSession().getId());
+        String nickname = userProfileService.GetOtherUserProfile(request.getSession().getId()).getNickname();
         modelAndView.setViewName("Delivery/index");
         modelAndView.addObject("AvatarURL", url);
         modelAndView.addObject("NickName", nickname);

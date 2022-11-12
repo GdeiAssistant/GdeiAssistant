@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.Socialising.Topic.RestController.TopicRestController;
+import cn.gdeiassistant.Controller.Topic.RestController.TopicRestController;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import org.springframework.core.annotation.Order;

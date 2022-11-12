@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.Socialising.Secret.Controller.SecretController;
+import cn.gdeiassistant.Controller.Secret.Controller.SecretController;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

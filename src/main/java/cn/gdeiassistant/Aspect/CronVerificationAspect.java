@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @Order(6)
 public class CronVerificationAspect {
 
-    @Pointcut("execution(* cn.gdeiassistant.Controller.FunctionSetting.Cron.RestController.CronRestController.*(..))")
+    @Pointcut("execution(* cn.gdeiassistant.Controller.Cron.RestController.CronRestController.*(..))")
     public void CronAction() {
 
     }

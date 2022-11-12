@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.AccountManagement.Deletion.RestController.AccountDeletionRestController;
+import cn.gdeiassistant.Controller.Deletion.RestController.AccountDeletionRestController;
 import cn.gdeiassistant.Exception.CloseAccountException.ItemAvailableException;
 import cn.gdeiassistant.Exception.CloseAccountException.UserStateErrorException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;

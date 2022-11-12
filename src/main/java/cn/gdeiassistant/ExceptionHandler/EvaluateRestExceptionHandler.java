@@ -1,7 +1,7 @@
 package cn.gdeiassistant.ExceptionHandler;
 
 import cn.gdeiassistant.Constant.ErrorConstantUtils;
-import cn.gdeiassistant.Controller.AcademicAffairs.Evaluate.RestController.EvaluateRestController;
+import cn.gdeiassistant.Controller.Evaluate.RestController.EvaluateRestController;
 import cn.gdeiassistant.Exception.EvaluateException.NotAvailableTimeException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import org.slf4j.Logger;

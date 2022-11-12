@@ -1,8 +1,10 @@
 package cn.gdeiassistant.Tools.SpringUtils;
 
+import cn.gdeiassistant.Exception.AuthenticationException.InconsistentAuthenticationException;
 import cn.gdeiassistant.Exception.VerificationException.*;
 import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import cn.gdeiassistant.Pojo.Config.AliyunConfig;
+import cn.gdeiassistant.Pojo.Entity.Authentication;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -25,6 +27,31 @@ public class AliYunAPIUtils {
 
     @Autowired
     private AliyunConfig aliyunConfig;
+
+    /**
+     * 校验中国居民身份证信息
+     *
+     * @param authentication
+     */
+    public void VerifyMainLandChineseResidentIDCard(Authentication authentication) throws InconsistentAuthenticationException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Authorization", "APPCODE " + aliyunConfig.getOfficial_appCode());
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("idcard", authentication.getNumber());
+        jsonObject.put("name", authentication.getName());
+        ResponseEntity<JSONObject> responseEntity = restTemplate
+                .exchange("https://eid.shumaidata.com/eid/check"
+                        , HttpMethod.POST, new HttpEntity<>(jsonObject, httpHeaders), JSONObject.class);
+        JSONObject result = responseEntity.getBody();
+        if (Integer.valueOf(result.getInt("code")).equals(0)) {
+            if (Integer.valueOf(result.getJSONObject("result").getInt("res")).equals(1)) {
+                //校验通过
+                return;
+            }
+            throw new InconsistentAuthenticationException("校验不通过");
+        }
+    }
 
     /**
      * OCR识别图片中的数字，返回数字文本串

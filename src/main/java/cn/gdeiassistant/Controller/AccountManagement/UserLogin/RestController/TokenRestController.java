@@ -1,6 +1,8 @@
 package cn.gdeiassistant.Controller.AccountManagement.UserLogin.RestController;
 
 import cn.gdeiassistant.Annotation.DeviceUpdateRequirement;
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.Device;
 import cn.gdeiassistant.Pojo.Entity.Token;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -46,6 +48,7 @@ public class TokenRestController {
      */
     @RequestMapping(value = "/rest/token/refresh", method = RequestMethod.POST)
     @DeviceUpdateRequirement
+    @RecordIPAddress(type = IPAddressEnum.LOGIN, rest = true)
     public TokenRefreshJsonResult RefreshToken(HttpServletRequest request
             , @RequestParam("token") String refreshTokenSignature
             , @Validated(value = DeviceDataValidGroup.class) Device device) throws Exception {

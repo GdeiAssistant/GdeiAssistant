@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Controller.Socialising.Ershou.RestController;
 
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.ErshouItem;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -47,6 +49,7 @@ public class ErshouRestController {
      * @return
      */
     @RequestMapping(value = "/api/ershou/item", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddErshouInfo(HttpServletRequest request
             , @Validated ErshouItem ershouItem, MultipartFile image1
             , MultipartFile image2, MultipartFile image3, MultipartFile image4) throws Exception {
@@ -122,6 +125,7 @@ public class ErshouRestController {
      * @return
      */
     @RequestMapping(value = "/api/ershou/item/id/{id}", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult UpdateErshouItem(HttpServletRequest request, @Validated ErshouItem ershouItem
             , @PathVariable("id") int id) throws Exception {
         if (ershouItem.getPrice() <= 0 || ershouItem.getPrice() > 9999.99) {

@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Controller.Socialising.Topic.RestController;
 
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Topic;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -66,6 +68,7 @@ public class TopicRestController {
      * @throws IOException
      */
     @RequestMapping(value = "/api/topic", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddTopic(HttpServletRequest request, @Validated Topic topic, MultipartFile[] images) throws IOException {
         if (images != null) {
             if (images.length > 9) {

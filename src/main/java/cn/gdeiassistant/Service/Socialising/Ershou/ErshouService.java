@@ -55,7 +55,7 @@ public class ErshouService {
         ershouInfo.getErshouItem().setPictureURL(pictureURL);
         //获取用户资料和头像信息
         ershouInfo.getProfile().setUsername(username);
-        ershouInfo.getProfile().setAvatarURL(userProfileService.GetUserAvatar(username));
+        ershouInfo.getProfile().setAvatarURL(userProfileService.GetSelfUserAvatar(username));
         return ershouInfo;
     }
 

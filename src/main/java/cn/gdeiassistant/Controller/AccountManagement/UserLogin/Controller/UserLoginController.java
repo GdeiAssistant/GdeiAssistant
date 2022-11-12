@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Controller.AccountManagement.UserLogin.Controller;
 
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Redirect.RedirectInfo;
 import cn.gdeiassistant.Service.AccountManagement.UserLogin.AutoLoginService;
@@ -43,6 +45,7 @@ public class UserLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/login")
+    @RecordIPAddress(type = IPAddressEnum.LOGIN)
     public ModelAndView DoDispatch(HttpServletRequest request, HttpServletResponse response
             , RedirectInfo redirectInfo) throws Exception {
         //检查自动登录状态

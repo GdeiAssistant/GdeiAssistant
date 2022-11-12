@@ -3,6 +3,7 @@ package cn.gdeiassistant.Controller.AccountManagement.UserProfile.Controller;
 import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Service.AccountManagement.Privacy.PrivacyService;
 import cn.gdeiassistant.Service.AccountManagement.Profile.UserProfileService;
+import cn.gdeiassistant.Service.OpenAPI.IPAddress.IPAddressService;
 import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class ProfileController {
     @Autowired
     private PrivacyService privacyService;
 
+    @Autowired
+    private IPAddressService ipAddressService;
+
     @RequestMapping(value = "/introduction", method = RequestMethod.GET)
     public ModelAndView ResolveUserIntroductionPage() {
         return new ModelAndView("Profile/introduction");
@@ -35,8 +39,8 @@ public class ProfileController {
     public ModelAndView ResolveUserAvatarPage(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Profile/avatar");
-        String avatarHDURL = userProfileService.GetUserHighDefinitionAvatar(request.getSession().getId());
-        String avatarURL = userProfileService.GetUserAvatar(request.getSession().getId());
+        String avatarHDURL = userProfileService.GetSelfUserHighDefinitionAvatar(request.getSession().getId());
+        String avatarURL = userProfileService.GetSelfUserAvatar(request.getSession().getId());
         modelAndView.addObject("AvatarURL", avatarURL);
         modelAndView.addObject("AvatarHDURL", avatarHDURL);
         return modelAndView;
@@ -45,12 +49,14 @@ public class ProfileController {
     @RequestMapping(value = "/profile/user", method = RequestMethod.GET)
     public ModelAndView ResolvePersonalProfilePage(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        Profile profile = userProfileService.GetUserProfile(request.getSession().getId());
+        Profile profile = userProfileService.GetSelfUserProfile(request.getSession().getId());
         if (profile != null) {
             modelAndView.setViewName("Profile/personalProfile");
-            modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(request.getSession().getId()));
+            modelAndView.addObject("AvatarURL", userProfileService.GetSelfUserAvatar(request.getSession().getId()));
             modelAndView.addObject("Username", profile.getUsername());
             modelAndView.addObject("NickName", profile.getNickname());
+            IPAddressRecord ipAddressRecord = ipAddressService.QuerySelfUserLatestPostTypeIPAddress(request.getSession().getId());
+            modelAndView.addObject("IPAddressArea", ipAddressRecord.getArea());
             if (profile.getGender() != null && profile.getGender() != 0) {
                 if (profile.getGender() == 3) {
                     modelAndView.addObject("Gender", profile.getCustomGenderName());
@@ -125,7 +131,7 @@ public class ProfileController {
                 modelAndView.addObject("Hometown", LocationUtils
                         .convertCountryCodeToEmoji(hometownRegion.getIso()) + hometown);
             }
-            Introduction introduction = userProfileService.GetUserIntroduction(request.getSession().getId());
+            Introduction introduction = userProfileService.GetSelfUserIntroduction(request.getSession().getId());
             if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
                 modelAndView.addObject("Introduction", introduction.getIntroductionContent());
             }
@@ -147,13 +153,15 @@ public class ProfileController {
     @RequestMapping(value = "/profile/user/{username}", method = RequestMethod.GET)
     public ModelAndView ResolvePublicProfilePage(@PathVariable("username") String username) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        Profile profile = userProfileService.GetUserProfile(username);
+        Profile profile = userProfileService.GetOtherUserProfile(username);
         if (profile != null) {
-            Privacy privacy = privacyService.GetPrivacySetting(username);
+            Privacy privacy = privacyService.GetOtherUserPrivacySetting(username);
             modelAndView.setViewName("Profile/publicProfile");
-            modelAndView.addObject("AvatarURL", userProfileService.GetUserAvatar(username));
+            modelAndView.addObject("AvatarURL", userProfileService.GetOtherUserAvatar(username));
             modelAndView.addObject("Username", username);
             modelAndView.addObject("NickName", profile.getNickname());
+            IPAddressRecord ipAddressRecord = ipAddressService.QueryOtherUserLatestPostTypeIPAddress(username);
+            modelAndView.addObject("IPAddressArea", ipAddressRecord.getArea());
             if (Boolean.TRUE.equals(privacy.isGenderOpen())) {
                 if (profile.getGender() != null && profile.getGender() != 0) {
                     if (profile.getGender() == 3) {
@@ -243,7 +251,7 @@ public class ProfileController {
                 }
             }
             if (Boolean.TRUE.equals(privacy.isIntroductionOpen())) {
-                Introduction introduction = userProfileService.GetUserIntroduction(username);
+                Introduction introduction = userProfileService.GetSelfUserIntroduction(username);
                 if (introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())) {
                     modelAndView.addObject("Introduction", introduction.getIntroductionContent());
                 }

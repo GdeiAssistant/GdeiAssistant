@@ -1,8 +1,10 @@
 package cn.gdeiassistant.Controller.AccountManagement.UserLogin.RestController;
 
 import cn.gdeiassistant.Annotation.DeviceUpdateRequirement;
+import cn.gdeiassistant.Annotation.RecordIPAddress;
 import cn.gdeiassistant.Annotation.ReplayAttacksProtection;
 import cn.gdeiassistant.Annotation.RequestLogPersistence;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -48,6 +50,7 @@ public class UserLoginRestController {
     @RequestLogPersistence
     @ReplayAttacksProtection
     @DeviceUpdateRequirement
+    @RecordIPAddress(type = IPAddressEnum.LOGIN, rest = true)
     public DataJsonResult<UserLoginResult> UserLogin(HttpServletRequest request
             , @Validated(value = UserLoginValidGroup.class) User user
             , RequestValidation requestValidation
@@ -79,6 +82,7 @@ public class UserLoginRestController {
      * @return
      */
     @RequestMapping(value = "/api/userlogin")
+    @RecordIPAddress(type = IPAddressEnum.LOGIN)
     public JsonResult UserLogin(HttpServletRequest request, HttpServletResponse response
             , @Validated(value = UserLoginValidGroup.class) User user) throws Exception {
         //清除已登录用户的用户凭证记录

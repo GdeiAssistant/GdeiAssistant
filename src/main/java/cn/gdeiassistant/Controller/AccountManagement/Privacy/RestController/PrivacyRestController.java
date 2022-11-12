@@ -25,7 +25,7 @@ public class PrivacyRestController {
      */
     @RequestMapping(value = "/api/privacy", method = RequestMethod.GET)
     public DataJsonResult<Privacy> GetUserPrivacySetting(HttpServletRequest request) throws Exception {
-        Privacy privacy = privacyService.GetPrivacySetting(request.getSession().getId());
+        Privacy privacy = privacyService.GetSelfUserPrivacySetting(request.getSession().getId());
         return new DataJsonResult<>(true, privacy);
     }
 

@@ -74,14 +74,25 @@ public class UserProfileService {
     private AliyunOSSUtils aliyunOssUtils;
 
     /**
-     * 获取用户个人资料
+     * 获取当前用户个人资料
      *
      * @param sessionId
      * @return
+     * @throws Exception
      */
-    public Profile GetUserProfile(String sessionId) throws Exception {
+    public Profile GetSelfUserProfile(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(user.getUsername());
+        return GetOtherUserProfile(user.getUsername());
+    }
+
+    /**
+     * 获取其他用户个人资料
+     *
+     * @param username
+     * @return
+     */
+    public Profile GetOtherUserProfile(String username) throws Exception {
+        Profile profile = profileMapper.selectUserProfile(username);
         if (profile != null) {
             profile.setUsername(profile.getUsername());
             return profile;
@@ -90,14 +101,13 @@ public class UserProfileService {
     }
 
     /**
-     * 获取用户个人简介
+     * 获取当前用户个人简介
      *
-     * @param sessionId
+     * @param username
      * @return
      */
-    public Introduction GetUserIntroduction(String sessionId) throws Exception {
-        User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Introduction introduction = profileMapper.selectUserIntroduction(user.getUsername());
+    public Introduction GetOtherUserIntroduction(String username) throws UserNotExistException {
+        Introduction introduction = profileMapper.selectUserIntroduction(username);
         if (introduction != null) {
             return introduction;
         }
@@ -105,27 +115,58 @@ public class UserProfileService {
     }
 
     /**
-     * 获取用户的头像图片URL
+     * 获取当前用户个人简介
      *
      * @param sessionId
      * @return
      */
-    public String GetUserAvatar(String sessionId) {
+    public Introduction GetSelfUserIntroduction(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        return aliyunOssUtils.GeneratePresignedUrl("gdeiassistant-userdata", "avatar/"
-                + user.getUsername() + ".jpg", 30, TimeUnit.MINUTES);
+        return GetOtherUserIntroduction(user.getUsername());
     }
 
     /**
-     * 获取用户的头像高清图片URL
+     * 获取当前用户的头像图片URL
      *
      * @param sessionId
      * @return
      */
-    public String GetUserHighDefinitionAvatar(String sessionId) {
+    public String GetSelfUserAvatar(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        return GetOtherUserAvatar(user.getUsername());
+    }
+
+    /**
+     * 获取其他用户的头像图片URL
+     *
+     * @param username
+     * @return
+     */
+    public String GetOtherUserAvatar(String username) {
         return aliyunOssUtils.GeneratePresignedUrl("gdeiassistant-userdata", "avatar/"
-                + user.getUsername() + "_hd.jpg", 30, TimeUnit.MINUTES);
+                + username + ".jpg", 30, TimeUnit.MINUTES);
+    }
+
+    /**
+     * 获取当前用户的头像高清图片URL
+     *
+     * @param sessionId
+     * @return
+     */
+    public String GetSelfUserHighDefinitionAvatar(String sessionId) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        return GetOtherUserHighDefinitionAvatar(user.getUsername());
+    }
+
+    /**
+     * 获取其他用户的头像高清图片URL
+     *
+     * @param username
+     * @return
+     */
+    public String GetOtherUserHighDefinitionAvatar(String username) {
+        return aliyunOssUtils.GeneratePresignedUrl("gdeiassistant-userdata", "avatar/"
+                + username + "_hd.jpg", 30, TimeUnit.MINUTES);
     }
 
     /**

@@ -84,6 +84,8 @@ dependencies {
     implementation group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.80'
     implementation group: 'com.google.cloud', name: 'google-cloud-logging-logback', version: '0.117.0-alpha'
     implementation group: 'com.google.cloud.sql', name: 'mysql-socket-factory-connector-j-8', version: '1.0.16'
+    implementation group: 'com.tencentcloudapi', name: 'tencentcloud-sdk-java', version: '3.1.628'
+    implementation group: 'com.qcloud', name: 'cos_api', version: '5.6.110'
     compileOnly group: 'junit', name: 'junit', version: '4.12'
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     compileOnly group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.3'

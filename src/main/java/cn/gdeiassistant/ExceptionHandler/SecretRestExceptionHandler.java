@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.Socialising.Secret.RestController.SecretRestController;
+import cn.gdeiassistant.Controller.Secret.RestController.SecretRestController;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import org.slf4j.Logger;

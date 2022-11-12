@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.AccountManagement.Authentication.RestController.AuthenticationRestController;
+import cn.gdeiassistant.Controller.Authentication.RestController.AuthenticationRestController;
 import cn.gdeiassistant.Exception.AuthenticationException.AuthenticationRecordExistException;
 import cn.gdeiassistant.Exception.AuthenticationException.InconsistentAuthenticationException;
 import cn.gdeiassistant.Exception.AuthenticationException.NullIDPhotoException;

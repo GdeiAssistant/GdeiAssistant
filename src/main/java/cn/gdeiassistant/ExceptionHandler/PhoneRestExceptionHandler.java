@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.AccountManagement.Phone.RestController.PhoneRestController;
+import cn.gdeiassistant.Controller.Phone.RestController.PhoneRestController;
 import cn.gdeiassistant.Exception.VerificationException.*;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import org.springframework.core.annotation.Order;

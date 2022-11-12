@@ -1,6 +1,6 @@
 package cn.gdeiassistant.ExceptionHandler;
 
-import cn.gdeiassistant.Controller.Socialising.LostAndFound.Controller.LostAndFoundController;
+import cn.gdeiassistant.Controller.LostAndFound.Controller.LostAndFoundController;
 import cn.gdeiassistant.Exception.DatabaseException.ConfirmedStateException;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;

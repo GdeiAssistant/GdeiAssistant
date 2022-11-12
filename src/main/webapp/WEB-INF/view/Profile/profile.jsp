@@ -94,6 +94,17 @@
 </div>
 
 <div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:">
+        <div class="weui-cell__bd">
+            <p>IP属地</p>
+        </div>
+        <div id="ip-area" class="weui-cell__hd">
+
+        </div>
+    </a>
+</div>
+
+<div class="weui-cells">
     <a class="weui-cell weui-cell_access" href="javascript:"
        onclick="window.location.href = '/profile/user'">
         <div class="weui-cell__bd">

@@ -75,6 +75,15 @@
         </div>
     </div>
 
+    <div class="weui-cell">
+        <div class="weui-cell__bd">
+            <p>IP属地</p>
+        </div>
+        <div class="weui-cell__ft">
+            ${IPAddressArea}
+        </div>
+    </div>
+
     <c:if test="${Gender!=null}">
 
         <div class="weui-cell">
@@ -244,19 +253,6 @@
         </div>
     </div>
 
-</c:if>
-
-<c:if test="${Username==sessionScope.username}">
-    <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="javascript:"
-           onclick="window.location.href = '/profile/user'">
-            <div class="weui-cell__bd">
-                <p>查看个人资料页个人视角</p>
-            </div>
-            <div class="weui-cell__ft">
-            </div>
-        </a>
-    </div>
 </c:if>
 
 <br>

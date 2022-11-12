@@ -40,6 +40,7 @@
         loadProfile();
         loadAvatar();
         loadRegionMap();
+        loadIPAddressArea();
     });
 
     //转换ISO 3166-1 alpha-2 Code为Unicode Flag Emoji
@@ -187,6 +188,24 @@
                 }
             }
         });
+    }
+
+    //加载IP属地
+    function loadIPAddressArea() {
+        $.ajax({
+            url: '/api/ip/area',
+            type: 'get',
+            success: function (result) {
+                if (result.success) {
+                    $("#ip-area").text(result.data);
+                } else {
+                    $("#ip-area").text("-");
+                }
+            },
+            error: function () {
+                $("#ip-area").text("-");
+            }
+        })
     }
 
     //加载个人资料

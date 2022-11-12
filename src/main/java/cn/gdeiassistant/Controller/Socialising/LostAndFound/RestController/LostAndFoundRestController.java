@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Controller.Socialising.LostAndFound.RestController;
 
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.LostAndFoundItem;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -123,6 +125,7 @@ public class LostAndFoundRestController {
      * @return
      */
     @RequestMapping(value = "/api/lostandfound/item/id/{id}", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult UpdateLostAndFoundInfo(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated LostAndFoundItem lostAndFoundItem) throws Exception {
         lostAndFoundService.UpdateLostAndFoundItem(lostAndFoundItem, id);
@@ -142,6 +145,7 @@ public class LostAndFoundRestController {
      * @throws IOException
      */
     @RequestMapping(value = "/api/lostandfound/item", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddLostAndFoundInfo(HttpServletRequest request
             , @Validated LostAndFoundItem lostAndFoundItem, MultipartFile image1
             , MultipartFile image2, MultipartFile image3, MultipartFile image4) throws Exception {

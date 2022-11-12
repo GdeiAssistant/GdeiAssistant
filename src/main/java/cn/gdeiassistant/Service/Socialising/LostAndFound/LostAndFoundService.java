@@ -59,7 +59,7 @@ public class LostAndFoundService {
         lostAndFoundInfo.getLostAndFoundItem().setPictureURL(pictureURL);
         //获取用户资料和头像信息
         lostAndFoundInfo.getProfile().setUsername(username);
-        lostAndFoundInfo.getProfile().setAvatarURL(userProfileService.GetUserAvatar(username));
+        lostAndFoundInfo.getProfile().setAvatarURL(userProfileService.GetSelfUserAvatar(username));
         return lostAndFoundInfo;
     }
 

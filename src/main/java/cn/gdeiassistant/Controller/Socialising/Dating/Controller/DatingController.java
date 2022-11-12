@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Controller.Socialising.Dating.Controller;
 
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.Exception.DatingException.RepeatPickException;
@@ -149,6 +151,7 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/profile", method = RequestMethod.POST)
     @ResponseBody
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddDatingProfile(HttpServletRequest request, @Validated DatingProfile datingProfile
             , MultipartFile image) throws IOException {
         if (image == null || image.getSize() <= 0 || image.getSize() >= MAX_PICTURE_SIZE) {
@@ -169,6 +172,7 @@ public class DatingController {
      */
     @RequestMapping(value = "/dating/pick", method = RequestMethod.POST)
     @ResponseBody
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddDatingPick(HttpServletRequest request, DatingPick datingPick, Integer profileId) throws
             SelfPickException, RepeatPickException {
         DatingProfile datingProfile = new DatingProfile();

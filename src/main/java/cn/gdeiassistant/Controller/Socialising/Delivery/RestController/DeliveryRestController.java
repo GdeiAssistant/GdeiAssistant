@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Controller.Socialising.Delivery.RestController;
 
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.DeliveryException.DeliveryOrderStateUpdatedException;
 import cn.gdeiassistant.Exception.DeliveryException.NoAccessUpdatingException;
@@ -89,6 +91,7 @@ public class DeliveryRestController {
      * @return
      */
     @RequestMapping(value = "/api/delivery/order", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddDeliveryOrder(HttpServletRequest request, DeliveryOrder deliveryOrder) {
         deliveryService.AddDeliveryOrder(request.getSession().getId(), deliveryOrder);
         return new JsonResult(true);

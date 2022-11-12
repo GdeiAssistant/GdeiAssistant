@@ -1,5 +1,7 @@
 package cn.gdeiassistant.Controller.Socialising.Express.RestController;
 
+import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.ExpressException.CorrectRecordException;
 import cn.gdeiassistant.Exception.ExpressException.NoRealNameException;
@@ -64,6 +66,7 @@ public class ExpressRestController {
      * @return
      */
     @RequestMapping(value = "/api/express", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddExpress(HttpServletRequest request, @Validated Express express) {
         expressService.AddExpress(express, request.getSession().getId());
         return new JsonResult(true);
@@ -90,6 +93,7 @@ public class ExpressRestController {
      * @throws DataNotExistException
      */
     @RequestMapping(value = "/api/express/id/{id}/comment", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddExpressComment(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws DataNotExistException {
         expressService.AddExpressComment(id, request.getSession().getId(), comment);
@@ -108,6 +112,7 @@ public class ExpressRestController {
      * @throws CorrectRecordException
      */
     @RequestMapping(value = "/api/express/id/{id}/guess", method = RequestMethod.POST)
+    @RecordIPAddress(type = IPAddressEnum.POST)
     public DataJsonResult<Boolean> GuessExpress(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 10) String name) throws DataNotExistException, NoRealNameException, CorrectRecordException {
         boolean result = expressService.GuessExpress(id, request.getSession().getId(), name);

@@ -2,7 +2,7 @@ package cn.gdeiassistant.Controller.IPAddress.RestController;
 
 import cn.gdeiassistant.Pojo.Entity.IPAddressRecord;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
-import cn.gdeiassistant.Service.OpenAPI.IPAddress.IPAddressService;
+import cn.gdeiassistant.Service.IPAddress.IPAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

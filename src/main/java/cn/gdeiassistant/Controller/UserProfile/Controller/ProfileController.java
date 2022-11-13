@@ -3,7 +3,7 @@ package cn.gdeiassistant.Controller.UserProfile.Controller;
 import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Service.AccountManagement.Privacy.PrivacyService;
 import cn.gdeiassistant.Service.AccountManagement.Profile.UserProfileService;
-import cn.gdeiassistant.Service.OpenAPI.IPAddress.IPAddressService;
+import cn.gdeiassistant.Service.IPAddress.IPAddressService;
 import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

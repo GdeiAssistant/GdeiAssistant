@@ -50,9 +50,10 @@ public class TrialDataAspect implements EnvironmentAware {
             //令牌资源访问
             String token = request.getParameter("token");
             sessionId = loginTokenService.ParseToken(token).get("sessionId").asString();
+        } else {
+            //API访问
+            sessionId = request.getSession().getId();
         }
-        //API访问
-        sessionId = request.getSession().getId();
 
         //若设置模拟教务查询数据，则返回模拟数据
         if (BooleanUtils.isTrue(Boolean.valueOf(environment.getProperty("trial.data.simulation")))) {

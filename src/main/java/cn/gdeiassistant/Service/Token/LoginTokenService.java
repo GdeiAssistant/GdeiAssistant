@@ -10,7 +10,7 @@ import cn.gdeiassistant.Pojo.Entity.Location;
 import cn.gdeiassistant.Pojo.Entity.RefreshToken;
 import cn.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
 import cn.gdeiassistant.Repository.Redis.LoginToken.LoginTokenDao;
-import cn.gdeiassistant.Service.OpenAPI.IPAddress.IPAddressService;
+import cn.gdeiassistant.Service.IPAddress.IPAddressService;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

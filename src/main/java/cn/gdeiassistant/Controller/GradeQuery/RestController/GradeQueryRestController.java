@@ -6,7 +6,7 @@ import cn.gdeiassistant.Annotation.RestQueryLogPersistence;
 import cn.gdeiassistant.Annotation.TrialData;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.GradeQuery.GradeService;
+import cn.gdeiassistant.Service.GradeQuery.GradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

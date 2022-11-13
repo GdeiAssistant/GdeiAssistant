@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.OpenAPI.ImageRecognition;
+package cn.gdeiassistant.Service.ImageRecognition;
 
 import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class ImageRecognitionService {
 
     @Autowired
-    private AliYunAPIUtils aliyunAPIUtils;
+    private AliYunAPIUtils aliYunAPIUtils;
 
     @Autowired
     private JiSuAPIUtils jiSuAPIUtils;
@@ -35,6 +35,6 @@ public class ImageRecognitionService {
      * @return
      */
     public String CharacterNumberRecognize(String image) throws RecognitionException {
-        return aliyunAPIUtils.CharacterNumberRecognize(image);
+        return aliYunAPIUtils.CharacterNumberRecognize(image);
     }
 }

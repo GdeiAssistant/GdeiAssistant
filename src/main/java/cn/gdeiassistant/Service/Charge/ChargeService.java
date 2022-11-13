@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.Charge;
+package cn.gdeiassistant.Service.Charge;
 
 import cn.gdeiassistant.Exception.ChargeException.AmountNotAvailableException;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;

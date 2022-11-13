@@ -11,7 +11,7 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMappe
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Data.LogDataMapper;
 import cn.gdeiassistant.Service.AccountManagement.Profile.UserProfileService;
 import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Tools.SpringUtils.AliyunOSSUtils;
+import cn.gdeiassistant.Tools.SpringUtils.AliYunOSSUtils;
 import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import cn.gdeiassistant.Tools.Utils.ReflectionUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
@@ -60,7 +60,7 @@ public class UserDataService {
     private ExportDataDao exportDataDao;
 
     @Autowired
-    private AliyunOSSUtils aliyunOssUtils;
+    private AliYunOSSUtils aliyunOssUtils;
 
     /**
      * 检查24小时内有无导出用户数据的记录

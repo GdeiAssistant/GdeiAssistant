@@ -13,10 +13,10 @@ import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import cn.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import cn.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import cn.gdeiassistant.Repository.Redis.AccessToken.AccessTokenDao;
-import cn.gdeiassistant.Service.AcademicAffairs.CardQuery.CardQueryService;
-import cn.gdeiassistant.Service.AcademicAffairs.GradeQuery.GradeService;
-import cn.gdeiassistant.Service.AcademicAffairs.ScheduleQuery.ScheduleService;
 import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserLoginService;
+import cn.gdeiassistant.Service.CardQuery.CardQueryService;
+import cn.gdeiassistant.Service.GradeQuery.GradeService;
+import cn.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import com.alibaba.fastjson.JSONObject;
@@ -52,7 +52,7 @@ public class WechatService {
     private UserLoginService userLoginService;
 
     @Autowired
-    private WechatUserDataService wechatUserDataService;
+    private cn.gdeiassistant.Service.ThirdParty.Wechat.WechatUserDataService wechatUserDataService;
 
     @Autowired
     private GradeService gradeService;

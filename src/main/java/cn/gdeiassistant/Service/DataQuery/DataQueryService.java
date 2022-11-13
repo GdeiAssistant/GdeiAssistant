@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.DataQuery;
+package cn.gdeiassistant.Service.DataQuery;
 
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.DataQuery.YellowPageType;

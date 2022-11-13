@@ -18,60 +18,60 @@ import java.io.InputStreamReader;
 @Scope("singleton")
 public class OssFederationTokenConfig {
 
-    private String accessKeyID;
+    private String ossFederationAccessKeyID;
 
-    private String accessKeySecret;
+    private String ossFederationAccessKeySecret;
 
-    private String roleArn;
+    private String ossFederationRoleArn;
 
-    private long tokenExpireTime;
+    private long ossTokenExpireTime;
 
-    private String policy;
+    private String ossPolicy;
 
     @Autowired
     private ModuleUtils moduleUtils;
 
-    @Value("#{propertiesReader['token.accessKeyID']}")
-    public void setAccessKeyID(String accessKeyID) {
-        if (StringUtils.isNotBlank(accessKeyID)) {
-            this.accessKeyID = accessKeyID;
+    @Value("#{propertiesReader['osstoken.aliyun.accessKeyID']}")
+    public void setOssFederationAccessKeyID(String ossFederationAccessKeyID) {
+        if (StringUtils.isNotBlank(ossFederationAccessKeyID)) {
+            this.ossFederationAccessKeyID = ossFederationAccessKeyID;
 
         } else {
-            moduleUtils.DisableModule(ModuleEnum.OSS_FEDERATION);
+            moduleUtils.DisableModule(ModuleEnum.ALIYUN_OSS);
         }
     }
 
-    @Value("#{propertiesReader['token.accessKeySecret']}")
-    public void setAccessKeySecret(String accessKeySecret) {
-        if (StringUtils.isNotBlank(accessKeySecret)) {
-            this.accessKeySecret = accessKeySecret;
+    @Value("#{propertiesReader['osstoken.aliyun.accessKeySecret']}")
+    public void setOssFederationAccessKeySecret(String ossFederationAccessKeySecret) {
+        if (StringUtils.isNotBlank(ossFederationAccessKeySecret)) {
+            this.ossFederationAccessKeySecret = ossFederationAccessKeySecret;
 
         } else {
-            moduleUtils.DisableModule(ModuleEnum.OSS_FEDERATION);
+            moduleUtils.DisableModule(ModuleEnum.ALIYUN_OSS);
         }
     }
 
-    @Value("#{propertiesReader['token.roleArn']}")
-    public void setRoleArn(String roleArn) {
-        if (StringUtils.isNotBlank(roleArn)) {
-            this.roleArn = roleArn;
+    @Value("#{propertiesReader['osstoken.aliyun.roleArn']}")
+    public void setOssFederationRoleArn(String ossFederationRoleArn) {
+        if (StringUtils.isNotBlank(ossFederationRoleArn)) {
+            this.ossFederationRoleArn = ossFederationRoleArn;
 
         } else {
-            moduleUtils.DisableModule(ModuleEnum.OSS_FEDERATION);
+            moduleUtils.DisableModule(ModuleEnum.ALIYUN_OSS);
         }
     }
 
-    @Value("#{propertiesReader['token.tokenExpireTime']}")
-    public void setTokenExpireTime(String tokenExpireTime) {
-        if (StringUtils.isNotBlank(tokenExpireTime)) {
-            this.tokenExpireTime = Long.parseLong(tokenExpireTime);
+    @Value("#{propertiesReader['osstoken.aliyun.tokenExpireTime']}")
+    public void setOssTokenExpireTime(String ossTokenExpireTime) {
+        if (StringUtils.isNotBlank(ossTokenExpireTime)) {
+            this.ossTokenExpireTime = Long.parseLong(ossTokenExpireTime);
         } else {
-            moduleUtils.DisableModule(ModuleEnum.OSS_FEDERATION);
+            moduleUtils.DisableModule(ModuleEnum.ALIYUN_OSS);
         }
     }
 
-    @Value("#{propertiesReader['token.policyFile']}")
-    public void setPolicy(String policyFileLocation) {
+    @Value("#{propertiesReader['osstoken.aliyun.policyFile']}")
+    public void setOssPolicy(String policyFileLocation) {
         if (StringUtils.isNotBlank(policyFileLocation)) {
             InputStream inputStream = null;
             BufferedReader bufferedReader = null;
@@ -83,7 +83,7 @@ public class OssFederationTokenConfig {
                 while ((temp = bufferedReader.readLine()) != null) {
                     stringBuilder.append(temp);
                 }
-                policy = stringBuilder.toString();
+                ossPolicy = stringBuilder.toString();
             } catch (IOException e) {
                 if (inputStream != null) {
                     try {
@@ -101,27 +101,27 @@ public class OssFederationTokenConfig {
                 }
             }
         } else {
-            moduleUtils.DisableModule(ModuleEnum.OSS_FEDERATION);
+            moduleUtils.DisableModule(ModuleEnum.ALIYUN_OSS);
         }
     }
 
-    public String getAccessKeyID() {
-        return accessKeyID;
+    public String getOssFederationAccessKeyID() {
+        return ossFederationAccessKeyID;
     }
 
-    public String getAccessKeySecret() {
-        return accessKeySecret;
+    public String getOssFederationAccessKeySecret() {
+        return ossFederationAccessKeySecret;
     }
 
-    public String getRoleArn() {
-        return roleArn;
+    public String getOssFederationRoleArn() {
+        return ossFederationRoleArn;
     }
 
-    public long getTokenExpireTime() {
-        return tokenExpireTime;
+    public long getOssTokenExpireTime() {
+        return ossTokenExpireTime;
     }
 
-    public String getPolicy() {
-        return policy;
+    public String getOssPolicy() {
+        return ossPolicy;
     }
 }

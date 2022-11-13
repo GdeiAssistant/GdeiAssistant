@@ -5,7 +5,7 @@ import cn.gdeiassistant.Pojo.Entity.PhotographComment;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Photograph.PhotographMapper;
 import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Tools.SpringUtils.AliyunOSSUtils;
+import cn.gdeiassistant.Tools.SpringUtils.AliYunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class PhotographService {
     private UserCertificateService userCertificateService;
 
     @Autowired
-    private AliyunOSSUtils aliyunOssUtils;
+    private AliYunOSSUtils aliyunOssUtils;
 
     /**
      * 查询照片统计数量

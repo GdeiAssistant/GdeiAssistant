@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.GradeQuery;
+package cn.gdeiassistant.Service.GradeQuery;
 
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;

@@ -6,7 +6,7 @@ import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import cn.gdeiassistant.Service.OpenAPI.ImageRecognition.ImageRecognitionService;
+import cn.gdeiassistant.Service.ImageRecognition.ImageRecognitionService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
 import org.apache.http.HttpResponse;
@@ -58,7 +58,7 @@ public class TeacherLoginService {
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("欢迎使用正方教务管理系统！请登录")) {
                 //获取验证码图片
-                httpGet = new HttpGet( "http://jwgl.gdei.edu.cn/CheckCode.aspx");
+                httpGet = new HttpGet("http://jwgl.gdei.edu.cn/CheckCode.aspx");
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     InputStream checkCodeImage = httpResponse.getEntity().getContent();

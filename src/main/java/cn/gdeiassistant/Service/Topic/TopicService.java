@@ -6,7 +6,7 @@ import cn.gdeiassistant.Pojo.Entity.TopicLike;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Topic.TopicMapper;
 import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Tools.SpringUtils.AliyunOSSUtils;
+import cn.gdeiassistant.Tools.SpringUtils.AliYunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class TopicService {
     private TopicMapper topicMapper;
 
     @Autowired
-    private AliyunOSSUtils aliyunOssUtils;
+    private AliYunOSSUtils aliyunOssUtils;
 
     /**
      * 加载话题信息

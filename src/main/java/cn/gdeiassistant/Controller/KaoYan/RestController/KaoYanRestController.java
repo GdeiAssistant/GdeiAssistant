@@ -6,7 +6,7 @@ import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Pojo.Entity.KaoYan;
 import cn.gdeiassistant.Pojo.KaoYanQuery.KaoYanQuery;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.KaoYan.KaoYanService;
+import cn.gdeiassistant.Service.KaoYan.KaoYanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

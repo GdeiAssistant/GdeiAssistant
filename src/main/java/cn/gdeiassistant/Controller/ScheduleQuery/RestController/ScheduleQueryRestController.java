@@ -14,7 +14,7 @@ import cn.gdeiassistant.Pojo.Entity.CustomSchedule;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
-import cn.gdeiassistant.Service.AcademicAffairs.ScheduleQuery.ScheduleService;
+import cn.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

@@ -7,7 +7,7 @@ import cn.gdeiassistant.Pojo.CollectionQuery.CollectionDetailQuery;
 import cn.gdeiassistant.Pojo.CollectionQuery.CollectionQuery;
 import cn.gdeiassistant.Pojo.CollectionQuery.CollectionQueryResult;
 import cn.gdeiassistant.Pojo.Entity.CollectionDetail;
-import cn.gdeiassistant.Service.AcademicAffairs.CollectionQuery.CollectionQueryService;
+import cn.gdeiassistant.Service.CollectionQuery.CollectionQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;

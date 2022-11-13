@@ -1,6 +1,7 @@
 package cn.gdeiassistant.Controller.Photograph.RestController;
 
 import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Constant.ValueConstantUtils;
 import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.Photograph;
 import cn.gdeiassistant.Pojo.Entity.PhotographComment;
@@ -27,7 +28,6 @@ import java.util.List;
 @RestController
 public class PhotographRestController {
 
-    private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
     @Autowired
     private PhotographService photographService;
 
@@ -137,11 +137,11 @@ public class PhotographRestController {
                 , photograph.getCount(), photograph.getType(), request.getSession().getId());
         //上传照片图片
         photographService.UploadPhotographItemPicture(id, 1, image1.getInputStream());
-        if (image2 != null && image2.getSize() > 0 && image2.getSize() < MAX_PICTURE_SIZE) {
+        if (image2 != null && image2.getSize() > 0 && image2.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
             photographService.UploadPhotographItemPicture(id, 2, image2.getInputStream());
-            if (image3 != null && image3.getSize() > 0 && image3.getSize() < MAX_PICTURE_SIZE) {
+            if (image3 != null && image3.getSize() > 0 && image3.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
                 photographService.UploadPhotographItemPicture(id, 3, image3.getInputStream());
-                if (image4 != null && image4.getSize() > 0 && image4.getSize() < MAX_PICTURE_SIZE) {
+                if (image4 != null && image4.getSize() > 0 && image4.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
                     photographService.UploadPhotographItemPicture(id, 4, image4.getInputStream());
                 }
             }

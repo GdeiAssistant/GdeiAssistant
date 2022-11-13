@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Service.OpenAPI.VerificationCode;
 
 import cn.gdeiassistant.Exception.VerificationException.SendSMSException;
-import cn.gdeiassistant.Tools.SpringUtils.AliYunAPIUtils;
+import cn.gdeiassistant.Tools.SpringUtils.AliYunSMSUtils;
 import com.aliyuncs.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class VerificationCodeService {
 
     @Autowired
-    private AliYunAPIUtils aliYunAPIUtils;
+    private AliYunSMSUtils aliYunSMSUtils;
 
     /**
      * 国内手机发送短信验证码
@@ -19,7 +19,7 @@ public class VerificationCodeService {
      * @param phone
      */
     public void SendChinaPhoneVerificationCodeSMS(int code, String phone) throws ClientException, SendSMSException {
-        aliYunAPIUtils.SendChinaPhoneVerificationCodeSMS(code, phone);
+        aliYunSMSUtils.SendChinaPhoneVerificationCodeSMS(code, phone);
     }
 
     /**
@@ -31,6 +31,6 @@ public class VerificationCodeService {
      * @throws ClientException
      */
     public void SendGlobalPhoneVerificationCodeSMS(int code, int areaCode, String phone) throws ClientException, SendSMSException {
-        aliYunAPIUtils.SendGlobalPhoneVerificationCodeSMS(code, areaCode, phone);
+        aliYunSMSUtils.SendGlobalPhoneVerificationCodeSMS(code, areaCode, phone);
     }
 }

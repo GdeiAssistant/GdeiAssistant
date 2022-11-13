@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.SpareRoom;
+package cn.gdeiassistant.Service.SpareRoom;
 
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.Evaluate;
+package cn.gdeiassistant.Service.Evaluate;
 
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;

@@ -6,7 +6,7 @@ import cn.gdeiassistant.Pojo.Entity.SpareRoom;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.SpareRoomQuery.SpareRoomQuery;
-import cn.gdeiassistant.Service.AcademicAffairs.SpareRoom.SpareRoomService;
+import cn.gdeiassistant.Service.SpareRoom.SpareRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

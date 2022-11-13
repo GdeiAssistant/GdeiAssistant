@@ -6,7 +6,7 @@ import cn.gdeiassistant.Annotation.TrialData;
 import cn.gdeiassistant.Pojo.Entity.Book;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.BookQuery.BookQueryService;
+import cn.gdeiassistant.Service.BookQuery.BookQueryService;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

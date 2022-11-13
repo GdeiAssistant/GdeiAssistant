@@ -3,7 +3,7 @@ package cn.gdeiassistant.Aspect;
 import cn.gdeiassistant.Annotation.TrialData;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.TrailData.TrialDataService;
+import cn.gdeiassistant.Service.TrailData.TrialDataService;
 import cn.gdeiassistant.Service.AccountManagement.Token.LoginTokenService;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.apache.commons.lang3.BooleanUtils;

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.CollectionQuery;
+package cn.gdeiassistant.Service.CollectionQuery;
 
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;

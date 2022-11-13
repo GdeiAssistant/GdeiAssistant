@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.CetQuery;
+package cn.gdeiassistant.Service.CetQuery;
 
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;

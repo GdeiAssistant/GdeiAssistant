@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.TrailData;
+package cn.gdeiassistant.Service.TrailData;
 
 import cn.gdeiassistant.Pojo.CardQuery.CardQuery;
 import cn.gdeiassistant.Pojo.Document.CustomScheduleDocument;
@@ -8,7 +8,7 @@ import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
-import cn.gdeiassistant.Service.AcademicAffairs.ScheduleQuery.ScheduleService;
+import cn.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import cn.gdeiassistant.Tools.Utils.ScheduleUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import cn.gdeiassistant.Tools.Utils.WeekUtils;

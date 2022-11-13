@@ -1,8 +1,8 @@
 package cn.gdeiassistant.Controller.Cron.RestController;
 
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.GradeQuery.GradeCronService;
-import cn.gdeiassistant.Service.AcademicAffairs.ScheduleQuery.ScheduleCronService;
+import cn.gdeiassistant.Service.GradeQuery.GradeCronService;
+import cn.gdeiassistant.Service.ScheduleQuery.ScheduleCronService;
 import cn.gdeiassistant.Service.Information.SchoolNews.SchoolNewsCornService;
 import cn.gdeiassistant.Service.ThirdParty.Wechat.WechatCronService;
 import org.springframework.beans.factory.annotation.Autowired;

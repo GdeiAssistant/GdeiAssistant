@@ -1,11 +1,11 @@
-package cn.gdeiassistant.Service.AcademicAffairs.KaoYan;
+package cn.gdeiassistant.Service.KaoYan;
 
 import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.Pojo.Entity.KaoYan;
-import cn.gdeiassistant.Service.OpenAPI.ImageRecognition.ImageRecognitionService;
+import cn.gdeiassistant.Service.ImageRecognition.ImageRecognitionService;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
 import okhttp3.*;
 import org.jsoup.Jsoup;

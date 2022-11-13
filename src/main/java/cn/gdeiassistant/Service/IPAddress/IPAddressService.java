@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.OpenAPI.IPAddress;
+package cn.gdeiassistant.Service.IPAddress;
 
 import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.IPAddressRecord;
@@ -72,14 +72,9 @@ public class IPAddressService {
     /**
      * 保存IP地址记录
      *
-     * @param sessionId
      * @param ipAddressRecord
      */
-    public void SaveIPAddress(String sessionId, IPAddressRecord ipAddressRecord) {
-        User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        if (user != null) {
-            ipAddressRecord.setUsername(user.getUsername());
-            ipAddressMapper.insertIPAddressRecord(ipAddressRecord);
-        }
+    public void SaveIPAddress(IPAddressRecord ipAddressRecord) {
+        ipAddressMapper.insertIPAddressRecord(ipAddressRecord);
     }
 }

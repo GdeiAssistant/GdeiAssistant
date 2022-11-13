@@ -1,6 +1,7 @@
 package cn.gdeiassistant.Controller.Ershou.RestController;
 
 import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Constant.ValueConstantUtils;
 import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.ErshouItem;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
@@ -23,8 +24,6 @@ public class ErshouRestController {
 
     @Autowired
     private ErshouService ershouService;
-
-    private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
 
     /**
      * 分页查询二手交易信息
@@ -53,17 +52,17 @@ public class ErshouRestController {
     public JsonResult AddErshouInfo(HttpServletRequest request
             , @Validated ErshouItem ershouItem, MultipartFile image1
             , MultipartFile image2, MultipartFile image3, MultipartFile image4) throws Exception {
-        if (image1 == null || image1.getSize() <= 0 || image1.getSize() >= MAX_PICTURE_SIZE) {
+        if (image1 == null || image1.getSize() <= 0 || image1.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
             return new JsonResult(false, "不合法的图片文件");
         } else {
             ershouItem = ershouService.AddErshouItem(ershouItem, request.getSession().getId());
             //添加二手交易数据成功，进行图片上传
             ershouService.UploadErshouItemPicture(ershouItem.getId(), 1, image1.getInputStream());
-            if (image2 != null && image2.getSize() > 0 && image2.getSize() < MAX_PICTURE_SIZE) {
+            if (image2 != null && image2.getSize() > 0 && image2.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
                 ershouService.UploadErshouItemPicture(ershouItem.getId(), 2, image2.getInputStream());
-                if (image3 != null && image3.getSize() > 0 && image3.getSize() < MAX_PICTURE_SIZE) {
+                if (image3 != null && image3.getSize() > 0 && image3.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
                     ershouService.UploadErshouItemPicture(ershouItem.getId(), 3, image3.getInputStream());
-                    if (image4 != null && image4.getSize() > 0 && image4.getSize() < MAX_PICTURE_SIZE) {
+                    if (image4 != null && image4.getSize() > 0 && image4.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
                         ershouService.UploadErshouItemPicture(ershouItem.getId(), 4, image4.getInputStream());
                     }
                 }

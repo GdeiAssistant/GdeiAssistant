@@ -1,5 +1,6 @@
 package cn.gdeiassistant.Service.AccountManagement.Authentication;
 
+import cn.gdeiassistant.Constant.ValueConstantUtils;
 import cn.gdeiassistant.Enum.Authentication.AuthenticationEnum;
 import cn.gdeiassistant.Exception.AuthenticationException.*;
 import cn.gdeiassistant.Pojo.Entity.Authentication;
@@ -14,8 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AuthenticationService {
-
-    private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
 
     @Autowired
     private AuthenticationMapper authenticationMapper;
@@ -77,7 +76,7 @@ public class AuthenticationService {
                     throw new IDPhotoCountLimitationException("证件照片数量超过限制");
                 }
                 for (MultipartFile file : images) {
-                    if (file == null || file.isEmpty() || file.getSize() >= MAX_PICTURE_SIZE) {
+                    if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
                         throw new IDPhotoSizeLimitationException("证件照片文件大小超过限制");
                     }
                 }

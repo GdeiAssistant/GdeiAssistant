@@ -1,5 +1,6 @@
 package cn.gdeiassistant.Controller.Feedback.RestController;
 
+import cn.gdeiassistant.Constant.ValueConstantUtils;
 import cn.gdeiassistant.Pojo.Entity.ClassifiedFeedback;
 import cn.gdeiassistant.Pojo.Entity.Feedback;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
@@ -21,8 +22,6 @@ import java.util.List;
 @RestController
 public class FeedbackRestController {
 
-    private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
-
     @Autowired
     private FeedbackService feedbackService;
 
@@ -41,7 +40,7 @@ public class FeedbackRestController {
                 return new JsonResult(false, "不合法的图片文件");
             }
             for (MultipartFile file : images) {
-                if (file == null || file.isEmpty() || file.getSize() >= MAX_PICTURE_SIZE) {
+                if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
                     return new JsonResult(false, "不合法的图片文件");
                 }
                 InputStream inputStream = file.getInputStream();
@@ -70,7 +69,7 @@ public class FeedbackRestController {
                 return new JsonResult(false, "不合法的图片文件");
             }
             for (MultipartFile file : images) {
-                if (file == null || file.isEmpty() || file.getSize() >= MAX_PICTURE_SIZE) {
+                if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
                     return new JsonResult(false, "不合法的图片文件");
                 }
                 InputStream inputStream = file.getInputStream();

@@ -1,6 +1,7 @@
 package cn.gdeiassistant.Controller.Dating.Controller;
 
 import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Constant.ValueConstantUtils;
 import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Exception.DatabaseException.NoAccessException;
@@ -32,8 +33,6 @@ public class DatingController {
 
     @Autowired
     private DatingService datingService;
-
-    private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
 
     /**
      * 进入卖室友首页
@@ -154,7 +153,7 @@ public class DatingController {
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult AddDatingProfile(HttpServletRequest request, @Validated DatingProfile datingProfile
             , MultipartFile image) throws IOException {
-        if (image == null || image.getSize() <= 0 || image.getSize() >= MAX_PICTURE_SIZE) {
+        if (image == null || image.getSize() <= 0 || image.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
             return new JsonResult(false, "图片文件不能为空");
         } else {
             Integer id = datingService.AddDatingProfile(request.getSession().getId(), datingProfile);

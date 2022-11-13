@@ -54,6 +54,7 @@ public class IPAddressAspect {
             //保存IP记录
             IPAddressRecord record = new IPAddressRecord();
             record.setIp(ip);
+            record.setUsername(user.getUsername());
             record.setType(annotation.type().getValue());
             record.setCountry(location.getCountry());
             record.setProvince(location.getProvince());

@@ -1,6 +1,7 @@
 package cn.gdeiassistant.Controller.Topic.RestController;
 
 import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Constant.ValueConstantUtils;
 import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Topic;
@@ -21,8 +22,6 @@ import java.util.List;
 
 @RestController
 public class TopicRestController {
-
-    private final int MAX_PICTURE_SIZE = 1024 * 1024 * 5;
 
     @Autowired
     private TopicService topicService;
@@ -75,7 +74,7 @@ public class TopicRestController {
                 return new JsonResult(false, "不合法的图片文件");
             }
             for (MultipartFile file : images) {
-                if (file == null || file.isEmpty() || file.getSize() >= MAX_PICTURE_SIZE) {
+                if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
                     return new JsonResult(false, "不合法的图片文件");
                 }
             }

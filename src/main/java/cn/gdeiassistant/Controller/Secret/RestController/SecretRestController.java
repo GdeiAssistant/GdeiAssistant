@@ -1,6 +1,7 @@
 package cn.gdeiassistant.Controller.Secret.RestController;
 
 import cn.gdeiassistant.Annotation.RecordIPAddress;
+import cn.gdeiassistant.Constant.ValueConstantUtils;
 import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.Secret;
@@ -24,8 +25,6 @@ import java.util.List;
 @RestController
 public class SecretRestController {
 
-    private final int MAX_VOICE_SIZE = 1024 * 1024 * 1;
-
     @Autowired
     private SecretService secretService;
 
@@ -41,7 +40,7 @@ public class SecretRestController {
     @RequestMapping(value = "/api/secret/info/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<Secret>> GetMoreSecret(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) throws Exception {
-                List < Secret > secretList = secretService.GetSecretInfo(start, size, request.getSession().getId());
+        List<Secret> secretList = secretService.GetSecretInfo(start, size, request.getSession().getId());
         return new DataJsonResult<>(true, secretList);
     }
 
@@ -69,7 +68,7 @@ public class SecretRestController {
             //语音树洞信息
             if (file == null || file.isEmpty() || file.getSize() == 0) {
                 return new JsonResult(false, "语音内容不能为空");
-            } else if (file.getSize() > MAX_VOICE_SIZE) {
+            } else if (file.getSize() > ValueConstantUtils.MAX_VOICE_SIZE) {
                 return new JsonResult(false, "语音文件大小过大");
             } else {
                 //插入树洞信息记录

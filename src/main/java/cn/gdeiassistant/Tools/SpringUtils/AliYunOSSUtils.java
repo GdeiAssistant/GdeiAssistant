@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Tools.SpringUtils;
 
 import cn.gdeiassistant.Enum.Module.ModuleEnum;
-import cn.gdeiassistant.Pojo.Config.OSSConfig;
+import cn.gdeiassistant.Pojo.Config.AliYunOSSConfig;
 import cn.gdeiassistant.Pojo.Config.OssFederationTokenConfig;
 import cn.gdeiassistant.Pojo.OssToken.OssFederationToken;
 import com.aliyun.oss.OSSClient;
@@ -21,13 +21,13 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class AliyunOSSUtils {
+public class AliYunOSSUtils {
 
     @Autowired
     private ModuleUtils moduleUtils;
 
     @Autowired
-    private OSSConfig ossConfig;
+    private AliYunOSSConfig aliyunOssConfig;
 
     @Autowired
     private OssFederationTokenConfig ossFederationTokenConfig;
@@ -42,10 +42,10 @@ public class AliyunOSSUtils {
      * @return
      */
     public String GeneratePresignedUrl(String bucket, String key, long expire, TimeUnit unit) {
-        if (moduleUtils.CheckModuleState(ModuleEnum.OSS)) {
+        if (moduleUtils.CheckModuleState(ModuleEnum.ALIYUN_OSS)) {
             // 创建OSSClient实例
-            OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID()
-                    , ossConfig.getAccessKeySecret());
+            OSSClient ossClient = new OSSClient(aliyunOssConfig.getOssEndpoint(), aliyunOssConfig.getOssAccessKeyID()
+                    , aliyunOssConfig.getOssAccessKeySecret());
             String url = "";
             //检查自定义头像图片是否存在
             if (ossClient.doesObjectExist(bucket, key)) {
@@ -69,11 +69,11 @@ public class AliyunOSSUtils {
      * @param inputStream
      */
     public void UploadOSSObject(String bucket, String key, InputStream inputStream) {
-        if (moduleUtils.CheckModuleState(ModuleEnum.OSS)) {
+        if (moduleUtils.CheckModuleState(ModuleEnum.ALIYUN_OSS)) {
             if (inputStream != null) {
                 //创建OSSClient实例
-                OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID()
-                        , ossConfig.getAccessKeySecret());
+                OSSClient ossClient = new OSSClient(aliyunOssConfig.getOssEndpoint(), aliyunOssConfig.getOssAccessKeyID()
+                        , aliyunOssConfig.getOssAccessKeySecret());
                 //上传文件
                 ossClient.putObject(bucket, key, inputStream);
                 ossClient.shutdown();
@@ -90,8 +90,8 @@ public class AliyunOSSUtils {
      */
     public InputStream DownloadOSSObject(String bucket, String key) {
         //创建OSSClient实例
-        OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID()
-                , ossConfig.getAccessKeySecret());
+        OSSClient ossClient = new OSSClient(aliyunOssConfig.getOssEndpoint(), aliyunOssConfig.getOssAccessKeyID()
+                , aliyunOssConfig.getOssAccessKeySecret());
         if (ossClient.doesObjectExist(bucket, key)) {
             InputStream inputStream = ossClient.getObject(bucket, key).getObjectContent();
             ossClient.shutdown();
@@ -107,10 +107,10 @@ public class AliyunOSSUtils {
      * @param key
      */
     public void DeleteOSSObject(String bucket, String key) {
-        if (moduleUtils.CheckModuleState(ModuleEnum.OSS)) {
+        if (moduleUtils.CheckModuleState(ModuleEnum.ALIYUN_OSS)) {
             //创建OSSClient实例
-            OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyID()
-                    , ossConfig.getAccessKeySecret());
+            OSSClient ossClient = new OSSClient(aliyunOssConfig.getOssEndpoint(), aliyunOssConfig.getOssAccessKeyID()
+                    , aliyunOssConfig.getOssAccessKeySecret());
             if (ossClient.doesObjectExist(bucket, key)) {
                 //删除文件
                 ossClient.deleteObject(bucket, key);
@@ -123,12 +123,12 @@ public class AliyunOSSUtils {
             roleArn, String roleSessionName, String policy, ProtocolType protocolType, long durationSeconds) throws ClientException {
 
         //创建一个AliyunAcsClient,用于发起OpenAPI请求
-        IClientProfile profile = DefaultProfile.getProfile(ossConfig.getRegion(), accessKeyId, accessKeySecret);
+        IClientProfile profile = DefaultProfile.getProfile(aliyunOssConfig.getOssRegion(), accessKeyId, accessKeySecret);
         DefaultAcsClient client = new DefaultAcsClient(profile);
 
         //创建一个AssumeRoleRequest并设置请求参数
         AssumeRoleRequest request = new AssumeRoleRequest();
-        request.setVersion(ossConfig.getVersion());
+        request.setVersion(aliyunOssConfig.getVersion());
         request.setMethod(MethodType.POST);
         request.setProtocol(protocolType);
         request.setRoleArn(roleArn);
@@ -144,10 +144,10 @@ public class AliyunOSSUtils {
         String roleSessionName = "GdeiAssistant";
         ProtocolType protocolType = ProtocolType.HTTPS;
         OssFederationToken ossFederationToken = new OssFederationToken();
-        AssumeRoleResponse assumeRoleResponse = AssumeRole(ossFederationTokenConfig.getAccessKeyID()
-                , ossFederationTokenConfig.getAccessKeySecret(), ossFederationTokenConfig.getRoleArn()
-                , roleSessionName, ossFederationTokenConfig.getPolicy()
-                , protocolType, ossFederationTokenConfig.getTokenExpireTime());
+        AssumeRoleResponse assumeRoleResponse = AssumeRole(ossFederationTokenConfig.getOssFederationAccessKeyID()
+                , ossFederationTokenConfig.getOssFederationAccessKeySecret(), ossFederationTokenConfig.getOssFederationRoleArn()
+                , roleSessionName, ossFederationTokenConfig.getOssPolicy()
+                , protocolType, ossFederationTokenConfig.getOssTokenExpireTime());
         ossFederationToken.setStatus("200");
         ossFederationToken.setAccessKeyId(assumeRoleResponse.getCredentials().getAccessKeyId());
         ossFederationToken.setAccessKeySecret(assumeRoleResponse.getCredentials().getAccessKeySecret());

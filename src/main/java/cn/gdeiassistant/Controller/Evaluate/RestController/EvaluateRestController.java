@@ -3,7 +3,7 @@ package cn.gdeiassistant.Controller.Evaluate.RestController;
 import cn.gdeiassistant.Annotation.RestAuthentication;
 import cn.gdeiassistant.Annotation.TrialData;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.Evaluate.EvaluateService;
+import cn.gdeiassistant.Service.Evaluate.EvaluateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

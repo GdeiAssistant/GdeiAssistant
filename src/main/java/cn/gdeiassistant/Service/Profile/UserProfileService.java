@@ -6,7 +6,7 @@ import cn.gdeiassistant.Pojo.Entity.Profile;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.ProfileMapper;
 import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Tools.SpringUtils.AliyunOSSUtils;
+import cn.gdeiassistant.Tools.SpringUtils.AliYunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +71,7 @@ public class UserProfileService {
     }
 
     @Autowired
-    private AliyunOSSUtils aliyunOssUtils;
+    private AliYunOSSUtils aliyunOssUtils;
 
     /**
      * 获取当前用户个人资料

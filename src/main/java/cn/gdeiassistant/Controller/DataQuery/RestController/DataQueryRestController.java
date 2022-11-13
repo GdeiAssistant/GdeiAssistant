@@ -6,7 +6,7 @@ import cn.gdeiassistant.Pojo.DataQuery.YellowPageType;
 import cn.gdeiassistant.Pojo.Entity.ElectricFees;
 import cn.gdeiassistant.Pojo.Entity.YellowPage;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.DataQuery.DataQueryService;
+import cn.gdeiassistant.Service.DataQuery.DataQueryService;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;

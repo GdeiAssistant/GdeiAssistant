@@ -5,7 +5,7 @@ import cn.gdeiassistant.Pojo.CetQuery.CetQuery;
 import cn.gdeiassistant.Pojo.Entity.Cet;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.CetQuery.CetQueryService;
+import cn.gdeiassistant.Service.CetQuery.CetQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

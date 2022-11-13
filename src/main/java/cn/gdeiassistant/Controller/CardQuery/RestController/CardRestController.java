@@ -9,7 +9,7 @@ import cn.gdeiassistant.Pojo.CardQuery.CardQueryResult;
 import cn.gdeiassistant.Pojo.Entity.CardInfo;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.CardQuery.CardQueryService;
+import cn.gdeiassistant.Service.CardQuery.CardQueryService;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

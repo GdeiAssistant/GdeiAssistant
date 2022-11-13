@@ -9,7 +9,7 @@ import cn.gdeiassistant.Pojo.Entity.Charge;
 import cn.gdeiassistant.Pojo.Entity.RequestSecurity;
 import cn.gdeiassistant.Pojo.Entity.RequestValidation;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.Charge.ChargeService;
+import cn.gdeiassistant.Service.Charge.ChargeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

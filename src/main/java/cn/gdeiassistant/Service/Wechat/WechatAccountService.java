@@ -5,7 +5,7 @@ import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Pojo.Entity.WechatAccount;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
-import cn.gdeiassistant.Service.OpenAPI.ImageRecognition.ImageRecognitionService;
+import cn.gdeiassistant.Service.ImageRecognition.ImageRecognitionService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
 import net.sf.json.JSONObject;

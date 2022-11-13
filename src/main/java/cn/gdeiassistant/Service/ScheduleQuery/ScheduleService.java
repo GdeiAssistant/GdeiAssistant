@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.ScheduleQuery;
+package cn.gdeiassistant.Service.ScheduleQuery;
 
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;

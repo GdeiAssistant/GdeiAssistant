@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.BookQuery;
+package cn.gdeiassistant.Service.BookQuery;
 
 import cn.gdeiassistant.Exception.BookRenewException.BookRenewOvertimeException;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;

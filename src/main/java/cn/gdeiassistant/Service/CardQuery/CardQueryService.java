@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AcademicAffairs.CardQuery;
+package cn.gdeiassistant.Service.CardQuery;
 
 import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
@@ -12,7 +12,7 @@ import cn.gdeiassistant.Pojo.Entity.CardInfo;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
 import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Service.OpenAPI.ImageRecognition.ImageRecognitionService;
+import cn.gdeiassistant.Service.ImageRecognition.ImageRecognitionService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.ImageEncodeUtils;
 import com.alibaba.fastjson.JSON;

@@ -9,7 +9,7 @@ import cn.gdeiassistant.Pojo.CollectionQuery.CollectionQueryResult;
 import cn.gdeiassistant.Pojo.Entity.CollectionDetail;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AcademicAffairs.CollectionQuery.CollectionQueryService;
+import cn.gdeiassistant.Service.CollectionQuery.CollectionQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

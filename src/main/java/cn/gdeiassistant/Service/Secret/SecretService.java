@@ -7,7 +7,7 @@ import cn.gdeiassistant.Pojo.Entity.SecretContent;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Secret.SecretMapper;
 import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Tools.SpringUtils.AliyunOSSUtils;
+import cn.gdeiassistant.Tools.SpringUtils.AliYunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class SecretService {
     private SecretMapper secretMapper;
 
     @Autowired
-    private AliyunOSSUtils aliyunOssUtils;
+    private AliYunOSSUtils aliyunOssUtils;
 
     /**
      * 获取树洞消息

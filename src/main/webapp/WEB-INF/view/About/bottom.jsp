@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div class="foot">
-    <p>Copyright © 2016 - 2022 GdeiAssistant</p>
+    <p>Copyright © 2016 - 2023 GdeiAssistant</p>
     <p>All rights reserved</p>
     <div class="beian_area">
         <p class="beian_p"><a class="beian" href="http://www.beian.miit.gov.cn">粤ICP备17087427号-1</a></p>

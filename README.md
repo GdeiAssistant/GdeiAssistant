@@ -364,13 +364,7 @@ Copyright (c) 2016 - 2022 GdeiAssistant
 
 ## 联系
 
-- 技术支持和意见建议：[gdeiassistant@gmail.com](mailto:gdeiassistant@gmail.com)
-
-- 网络侵权投诉和申诉：[copyright@gdeiassistant.cn](mailto:copyright@gdeiassistant.cn)
-
-- 客服和系统故障提交：[support@gdeiassistant.cn](mailto:support@gdeiassistant.cn)
-
-- 违法及不良信息举报：[report@gdeiassistant.cn](mailto:report@gdeiassistant.cn)
+如果你在使用过程中需要寻求技术支持或对应用开发及软件设计等方面有建议和意见需要向我们提出，可以通过电子邮件地址[gdeiassistant@gmail.com](mailto:gdeiassistant@gmail.com)联系我们。
 
 ## 鸣谢
 

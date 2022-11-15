@@ -43,7 +43,14 @@ public class IPAddressService {
         if (ipAddressRecord != null) {
             if (ipAddressRecord.getCountry().equals("中国")) {
                 if (ipAddressRecord.getProvince() != null) {
-                    ipAddressRecord.setArea(ipAddressRecord.getProvince());
+                    //港澳台地区处理
+                    if (ipAddressRecord.getProvince().equals("香港")
+                            || ipAddressRecord.getProvince().equals("澳门")
+                            || ipAddressRecord.getProvince().equals("台湾")) {
+                        ipAddressRecord.setCountry(ipAddressRecord.getCountry() + ipAddressRecord.getProvince());
+                    } else {
+                        ipAddressRecord.setArea(ipAddressRecord.getProvince());
+                    }
                 } else {
                     ipAddressRecord.setArea("-");
                 }

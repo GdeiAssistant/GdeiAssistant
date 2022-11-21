@@ -4,9 +4,9 @@ import cn.gdeiassistant.Annotation.RecordIPAddress;
 import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Redirect.RedirectInfo;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.AutoLoginService;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserLoginService;
+import cn.gdeiassistant.Service.UserLogin.AutoLoginService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,23 +70,32 @@ public class UserLoginController {
             HttpClientUtils.ClearHttpClientCookieStore(request.getSession().getId());
             //获取用户Cookie凭证
             User user = userCertificateService.GetUserCookieCertificate(cookieId);
-            //进行用户登录
-            userLoginService.UserLogin(request.getSession().getId(), user.getUsername(), user.getPassword());
-            //异步地与教务系统会话进行同步
-            userCertificateService.AsyncUpdateSessionCertificate(request.getSession().getId(), user);
-            //更新Cookie凭证有效期
-            userCertificateService.UpdateUserCookieExpiration(cookieId);
-            //更新Cookie有效期
-            Cookie cookie = new Cookie("cookieId", cookieId);
-            //设置Cookie最大有效时间为1个月
-            cookie.setMaxAge(2592000);
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            response.addCookie(cookie);
-            if (redirectInfo.needToRedirect()) {
-                modelAndView.setViewName("redirect:" + redirectInfo.getRedirect_url());
+            if (user == null) {
+                //没有找到对应的用户Cookie凭证，跳转到普通登录页面
+                //不自动登录,返回登录主页
+                if (redirectInfo.needToRedirect()) {
+                    modelAndView.addObject("RedirectURL", redirectInfo.getRedirect_url());
+                }
+                modelAndView.setViewName("Login/login");
             } else {
-                modelAndView.setViewName("redirect:/index");
+                //进行用户登录
+                userLoginService.UserLogin(request.getSession().getId(), user.getUsername(), user.getPassword());
+                //异步地与教务系统会话进行同步
+                userCertificateService.AsyncUpdateSessionCertificate(request.getSession().getId(), user);
+                //更新Cookie凭证有效期
+                userCertificateService.UpdateUserCookieExpiration(cookieId);
+                //更新Cookie有效期
+                Cookie cookie = new Cookie("cookieId", cookieId);
+                //设置Cookie最大有效时间为1个月
+                cookie.setMaxAge(2592000);
+                cookie.setPath("/");
+                cookie.setHttpOnly(true);
+                response.addCookie(cookie);
+                if (redirectInfo.needToRedirect()) {
+                    modelAndView.setViewName("redirect:" + redirectInfo.getRedirect_url());
+                } else {
+                    modelAndView.setViewName("redirect:/index");
+                }
             }
         } else {
             if (redirectInfo.needToRedirect()) {

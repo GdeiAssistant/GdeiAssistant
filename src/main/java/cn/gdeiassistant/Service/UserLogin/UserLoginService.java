@@ -1,8 +1,8 @@
-package cn.gdeiassistant.Service.AccountManagement.UserLogin;
+package cn.gdeiassistant.Service.UserLogin;
 
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
-import cn.gdeiassistant.Service.AccountManagement.UserData.UserDataService;
+import cn.gdeiassistant.Service.UserData.UserDataService;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class UserLoginService {
     private UserMapper userMapper;
 
     @Autowired
-    private UserCertificateService userCertificateService;
+    private cn.gdeiassistant.Service.UserLogin.UserCertificateService userCertificateService;
 
     @Autowired
     private UserDataService userDataService;
@@ -46,6 +46,7 @@ public class UserLoginService {
         userCertificateService.SyncUpdateSessionCertificate(sessionId
                 , username, password);
         //校验通过，将用户数据同步到数据库
+
         userDataService.SyncUserData(new User(username, password));
     }
 

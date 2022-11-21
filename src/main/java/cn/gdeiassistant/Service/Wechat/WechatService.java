@@ -13,7 +13,7 @@ import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import cn.gdeiassistant.Pojo.Wechat.WechatBaseMessage;
 import cn.gdeiassistant.Pojo.Wechat.WechatTextMessage;
 import cn.gdeiassistant.Repository.Redis.AccessToken.AccessTokenDao;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserLoginService;
+import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Service.CardQuery.CardQueryService;
 import cn.gdeiassistant.Service.GradeQuery.GradeService;
 import cn.gdeiassistant.Service.ScheduleQuery.ScheduleService;

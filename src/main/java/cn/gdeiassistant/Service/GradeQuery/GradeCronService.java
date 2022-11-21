@@ -8,7 +8,7 @@ import cn.gdeiassistant.Pojo.GradeQuery.GradeCacheResult;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Repository.Mongodb.Grade.GradeDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Cron.CronMapper;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserLoginService;
+import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;

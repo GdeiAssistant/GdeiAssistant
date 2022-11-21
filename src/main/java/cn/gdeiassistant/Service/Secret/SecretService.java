@@ -6,7 +6,7 @@ import cn.gdeiassistant.Pojo.Entity.SecretComment;
 import cn.gdeiassistant.Pojo.Entity.SecretContent;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Secret.SecretMapper;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.AliYunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

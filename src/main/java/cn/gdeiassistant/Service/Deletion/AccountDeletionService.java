@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AccountManagement.Deletion;
+package cn.gdeiassistant.Service.Deletion;
 
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.Exception.DatabaseException.UserNotExistException;
@@ -16,8 +16,8 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.Profil
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.WechatUser.WechatUserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Close.CloseMapper;
-import cn.gdeiassistant.Service.AccountManagement.Profile.UserProfileService;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.Profile.UserProfileService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

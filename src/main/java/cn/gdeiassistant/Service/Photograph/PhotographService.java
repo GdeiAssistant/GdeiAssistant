@@ -4,7 +4,7 @@ import cn.gdeiassistant.Pojo.Entity.Photograph;
 import cn.gdeiassistant.Pojo.Entity.PhotographComment;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Photograph.PhotographMapper;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.AliYunOSSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AccountManagement.UserData;
+package cn.gdeiassistant.Service.UserData;
 
 import cn.gdeiassistant.Constant.ItemConstantUtils;
 import cn.gdeiassistant.Pojo.Entity.*;
@@ -9,8 +9,8 @@ import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Privacy.Privac
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Profile.ProfileMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.User.UserMapper;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.Data.LogDataMapper;
-import cn.gdeiassistant.Service.AccountManagement.Profile.UserProfileService;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.Profile.UserProfileService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.AliYunOSSUtils;
 import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import cn.gdeiassistant.Tools.Utils.ReflectionUtils;

@@ -4,7 +4,7 @@ import cn.gdeiassistant.Constant.ValueConstantUtils;
 import cn.gdeiassistant.Pojo.Entity.ClassifiedFeedback;
 import cn.gdeiassistant.Pojo.Entity.Feedback;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AccountManagement.Feedback.FeedbackService;
+import cn.gdeiassistant.Service.Feedback.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

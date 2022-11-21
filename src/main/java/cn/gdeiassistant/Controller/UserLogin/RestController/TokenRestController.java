@@ -8,7 +8,7 @@ import cn.gdeiassistant.Pojo.Entity.Token;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.TokenRefresh.TokenRefreshJsonResult;
 import cn.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
-import cn.gdeiassistant.Service.AccountManagement.Token.LoginTokenService;
+import cn.gdeiassistant.Service.Token.LoginTokenService;
 import cn.gdeiassistant.ValidGroup.Device.DeviceDataValidGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

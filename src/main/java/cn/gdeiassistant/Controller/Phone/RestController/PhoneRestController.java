@@ -7,7 +7,7 @@ import cn.gdeiassistant.Pojo.Entity.Phone;
 import cn.gdeiassistant.Pojo.Profile.AttributionComparator;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AccountManagement.Phone.PhoneService;
+import cn.gdeiassistant.Service.Phone.PhoneService;
 import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import com.aliyuncs.exceptions.ClientException;
 import org.hibernate.validator.constraints.Length;

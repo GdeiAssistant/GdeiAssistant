@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AccountManagement.Token;
+package cn.gdeiassistant.Service.Token;
 
 import cn.gdeiassistant.Exception.TokenValidException.SuspiciouseRequestException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenExpiredException;

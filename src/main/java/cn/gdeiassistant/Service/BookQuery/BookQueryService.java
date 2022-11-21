@@ -7,7 +7,7 @@ import cn.gdeiassistant.Exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.Pojo.Entity.Book;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;

@@ -1,7 +1,7 @@
-package cn.gdeiassistant.Service.AccountManagement.Feedback;
+package cn.gdeiassistant.Service.Feedback;
 
 import cn.gdeiassistant.Pojo.Entity.User;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.EmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

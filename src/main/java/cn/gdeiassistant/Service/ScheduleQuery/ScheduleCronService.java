@@ -6,7 +6,7 @@ import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
 import cn.gdeiassistant.Repository.Mongodb.Schedule.ScheduleDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Cron.CronMapper;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserLoginService;
+import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;

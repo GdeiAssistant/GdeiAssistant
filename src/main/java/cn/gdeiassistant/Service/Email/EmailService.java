@@ -1,11 +1,11 @@
-package cn.gdeiassistant.Service.AccountManagement.Email;
+package cn.gdeiassistant.Service.Email;
 
 import cn.gdeiassistant.Exception.VerificationException.VerificationCodeInvalidException;
 import cn.gdeiassistant.Pojo.Entity.Email;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.Redis.VerificationCode.VerificationCodeDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Email.EmailMapper;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Service.OpenAPI.VerificationCode.VerificationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

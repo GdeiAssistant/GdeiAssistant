@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Controller.Email.Controller;
 
 import cn.gdeiassistant.Pojo.Entity.Email;
-import cn.gdeiassistant.Service.AccountManagement.Email.EmailService;
+import cn.gdeiassistant.Service.Email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

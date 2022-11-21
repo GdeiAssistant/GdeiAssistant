@@ -9,7 +9,7 @@ import cn.gdeiassistant.Pojo.Entity.SpareRoom;
 import cn.gdeiassistant.Pojo.HttpClient.HttpClientSession;
 import cn.gdeiassistant.Pojo.SpareRoomQuery.SpareRoomQuery;
 import cn.gdeiassistant.Pojo.UserLogin.UserCertificate;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;

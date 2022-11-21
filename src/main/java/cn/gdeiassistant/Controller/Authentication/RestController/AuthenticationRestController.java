@@ -4,7 +4,7 @@ import cn.gdeiassistant.Exception.AuthenticationException.*;
 import cn.gdeiassistant.Pojo.Entity.Authentication;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AccountManagement.Authentication.AuthenticationService;
+import cn.gdeiassistant.Service.Authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;

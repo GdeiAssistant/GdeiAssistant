@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AccountManagement.Phone;
+package cn.gdeiassistant.Service.Phone;
 
 import cn.gdeiassistant.Exception.VerificationException.SendSMSException;
 import cn.gdeiassistant.Exception.VerificationException.VerificationCodeInvalidException;
@@ -6,7 +6,7 @@ import cn.gdeiassistant.Pojo.Entity.Phone;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.Redis.VerificationCode.VerificationCodeDao;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Phone.PhoneMapper;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Service.OpenAPI.VerificationCode.VerificationCodeService;
 import com.aliyuncs.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Autowired;

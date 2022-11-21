@@ -3,19 +3,6 @@
 <%@ taglib prefix="profile" uri="/WEB-INF/tld/profile.tld" %>
 <script>
 
-    //获取个人资料页隐私设置和功能管理小红点图标显示配置，显示或隐藏小红点图标
-    $(function () {
-        if (!localStorage.getItem("privacyBadge")) {
-            $("#privacyBadge").show();
-        }
-        if (!localStorage.getItem("functionBadge")) {
-            $("#functionBadge").show();
-        }
-        if (!localStorage.getItem("themeBadge")) {
-            $("#themeBadge").show();
-        }
-    });
-
     // 所在地选择器
     var locationPicker;
 

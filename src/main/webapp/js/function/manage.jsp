@@ -16,10 +16,6 @@
         });
         //加载功能显示设置并调整开关组件状态
         loadFunctionDisplaySetting();
-        //配置个人资料页功能管理小红点图标显示配置
-        if (!localStorage.getItem("functionBadge")) {
-            localStorage.setItem("functionBadge", 1);
-        }
         //显示功能菜单
         loadFunctionMenu();
     });

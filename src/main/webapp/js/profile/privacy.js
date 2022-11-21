@@ -1,10 +1,6 @@
 $(function () {
     //消除iOS点击延迟
     FastClick.attach(document.body);
-    //配置个人资料页隐私设置小红点图标显示配置
-    if (!localStorage.getItem("privacyBadge")) {
-        localStorage.setItem("privacyBadge", 1);
-    }
 });
 
 //获取用户隐私设置

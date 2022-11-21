@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AccountManagement.UserLogin;
+package cn.gdeiassistant.Service.UserLogin;
 
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.Exception.CommonException.PasswordIncorrectException;
@@ -239,6 +239,9 @@ public class UserCertificateService {
                     }
                 }
             }
+        } else {
+            //模拟登录环境下不允许修改密码
+            throw new PasswordIncorrectException("登录账号密码不正确");
         }
     }
 

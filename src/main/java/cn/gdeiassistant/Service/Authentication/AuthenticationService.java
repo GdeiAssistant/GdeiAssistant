@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AccountManagement.Authentication;
+package cn.gdeiassistant.Service.Authentication;
 
 import cn.gdeiassistant.Constant.ValueConstantUtils;
 import cn.gdeiassistant.Enum.Authentication.AuthenticationEnum;
@@ -6,7 +6,7 @@ import cn.gdeiassistant.Exception.AuthenticationException.*;
 import cn.gdeiassistant.Pojo.Entity.Authentication;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistant.Authentication.AuthenticationMapper;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserCertificateService;
+import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.AliYunAPIUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;

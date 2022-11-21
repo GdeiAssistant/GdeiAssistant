@@ -3,7 +3,7 @@ package cn.gdeiassistant.Controller.Privacy.RestController;
 import cn.gdeiassistant.Pojo.Entity.Privacy;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AccountManagement.Privacy.PrivacyService;
+import cn.gdeiassistant.Service.Privacy.PrivacyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

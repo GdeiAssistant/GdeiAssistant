@@ -1,7 +1,7 @@
 package cn.gdeiassistant.Controller.Authentication.Controller;
 
 import cn.gdeiassistant.Pojo.Entity.Authentication;
-import cn.gdeiassistant.Service.AccountManagement.Authentication.AuthenticationService;
+import cn.gdeiassistant.Service.Authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

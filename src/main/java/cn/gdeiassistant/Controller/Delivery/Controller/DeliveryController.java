@@ -3,7 +3,7 @@ package cn.gdeiassistant.Controller.Delivery.Controller;
 import cn.gdeiassistant.Exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.Pojo.Entity.DeliveryOrder;
 import cn.gdeiassistant.Pojo.Entity.DeliveryTrade;
-import cn.gdeiassistant.Service.AccountManagement.Profile.UserProfileService;
+import cn.gdeiassistant.Service.Profile.UserProfileService;
 import cn.gdeiassistant.Service.Socialising.Delivery.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

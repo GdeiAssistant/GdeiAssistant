@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AccountManagement.UserLogin;
+package cn.gdeiassistant.Service.UserLogin;
 
 import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Exception.CommonException.NetWorkTimeoutException;

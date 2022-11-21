@@ -1,4 +1,4 @@
-package cn.gdeiassistant.Service.AccountManagement.UserLogin;
+package cn.gdeiassistant.Service.UserLogin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

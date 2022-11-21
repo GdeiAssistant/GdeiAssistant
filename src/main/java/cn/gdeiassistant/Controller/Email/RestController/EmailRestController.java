@@ -3,7 +3,7 @@ package cn.gdeiassistant.Controller.Email.RestController;
 import cn.gdeiassistant.Exception.VerificationException.VerificationCodeInvalidException;
 import cn.gdeiassistant.Pojo.Entity.Email;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AccountManagement.Email.EmailService;
+import cn.gdeiassistant.Service.Email.EmailService;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;

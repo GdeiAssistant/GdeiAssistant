@@ -2,7 +2,7 @@ package cn.gdeiassistant.Controller.Wechat.RestController;
 
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AccountManagement.UserLogin.UserLoginService;
+import cn.gdeiassistant.Service.UserLogin.UserLoginService;
 import cn.gdeiassistant.Service.ThirdParty.Wechat.WechatUserDataService;
 import cn.gdeiassistant.Tools.Utils.HttpClientUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;

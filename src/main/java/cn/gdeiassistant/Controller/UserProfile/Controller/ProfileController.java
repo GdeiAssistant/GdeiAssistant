@@ -1,8 +1,8 @@
 package cn.gdeiassistant.Controller.UserProfile.Controller;
 
 import cn.gdeiassistant.Pojo.Entity.*;
-import cn.gdeiassistant.Service.AccountManagement.Privacy.PrivacyService;
-import cn.gdeiassistant.Service.AccountManagement.Profile.UserProfileService;
+import cn.gdeiassistant.Service.Privacy.PrivacyService;
+import cn.gdeiassistant.Service.Profile.UserProfileService;
 import cn.gdeiassistant.Service.IPAddress.IPAddressService;
 import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;

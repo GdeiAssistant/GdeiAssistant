@@ -5,7 +5,7 @@ import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Pojo.Profile.LocationComparator;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
-import cn.gdeiassistant.Service.AccountManagement.Profile.UserProfileService;
+import cn.gdeiassistant.Service.Profile.UserProfileService;
 import cn.gdeiassistant.Tools.Utils.LocationUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
 import org.hibernate.validator.constraints.Length;

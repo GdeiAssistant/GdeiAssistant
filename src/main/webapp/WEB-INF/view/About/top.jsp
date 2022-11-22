@@ -77,7 +77,6 @@
                         <a class="dropdown-item" href="/license">开源协议</a>
                         <a class="dropdown-item" href="/policy/cookie">Cookie政策</a>
                         <a class="dropdown-item" href="/policy/intellectualproperty">知识产权声明</a>
-                        <a class="dropdown-item" href="/policy/nondiscrimination">不歧视及不骚扰声明</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">

@@ -64,6 +64,8 @@
     </div>
 </div>
 
+<p class="page_desc" style="margin-top: 25px">运营商可能会收取短信或通话费用<br>为了保证你的账号安全，请仅绑定本人使用的手机号</p>
+
 <div class="weui_btn_area">
     <a class="weui_btn weui_btn_primary close-popup" href="javascript:"
        onclick="savePhoneNumber()">保存</a>

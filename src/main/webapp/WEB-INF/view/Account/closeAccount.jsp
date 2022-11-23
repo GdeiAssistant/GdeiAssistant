@@ -58,13 +58,9 @@
         <a class="weui_btn weui_btn_warn" href="javascript:" onclick="postCloseRequest()">注销</a>
     </div>
 
-    <p class="page_desc" style="margin-top: 15px">无法自助注销？点击
+    <p class="page_desc" style="margin-top: 15px">注销账号前请认真阅读并同意
         <a class="page_desc"
-           onclick="window.location.href = 'mailto:support@gdeiassistant.cn?subject=注销账号&body=请尽可能补全此模板邮件中的空缺信息，并通过附件上传身份证/学生证/教师工作证/教务系统或学信网个人信息界面截图（截图需包含显示操作系统当前时间，' +
-                   '若截图无操作系统当前信息或显示时间与发送邮件时间相差超过7天，我们将视其为无效的证明信息）等其中一项或多项可以证明账号所属权的扫描件或照片，一并发送到support@gdeiassistant.cn。如你遗忘了部分资料信息，可以留空遗忘项。' +
-                   '提供尽可能多的账号资料，可以提高你通过人工审核注销的成功率。若我们认为你提供的资料无法证明你为当前账号的所有者，我们会驳回你的人工审核注销申请。' +
-                   '你提供的信息将被严格保密，并在完成账号注销审核后的48小时内进行删除。%0d%0a用户名：${sessionScope.username}%0d%0a注销原因：%0d%0a注册时间：（具体到月份，如2016年6月）%0d%0a注册地点：（具体到城市，如广东省广州市）%0d%0a常用设备型号：（如填写iPhoneXR/魅蓝E3）'">联系客服进行注销
-        </a>
+           onclick="window.location.href = '/policy/deletion'">《注销协议》</a>
     </p>
 
 </div>

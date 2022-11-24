@@ -2,13 +2,15 @@ package cn.gdeiassistant.Service.IPAddress;
 
 import cn.gdeiassistant.Enum.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.Pojo.Entity.IPAddressRecord;
-import cn.gdeiassistant.Pojo.Entity.Location;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.IPAddress.IPAddressMapper;
 import cn.gdeiassistant.Service.UserLogin.UserCertificateService;
 import cn.gdeiassistant.Tools.SpringUtils.JiSuAPIUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class IPAddressService {
@@ -28,8 +30,27 @@ public class IPAddressService {
      * @param ip
      * @return
      */
-    public Location GetLocationInfoByIPAddress(String ip) {
-        return jiSuAPIUtils.GetLocationInfoByIPAddress(ip);
+    public IPAddressRecord GetInfoByIPAddress(String ip) {
+        return jiSuAPIUtils.GetInfoByIPAddress(ip);
+    }
+
+    /**
+     * 获取当前用户IP地址记录
+     *
+     * @param sessionId
+     * @param type
+     * @param start
+     * @param size
+     * @return
+     */
+    public List<IPAddressRecord> GetSelfUserAddressRecord(String sessionId, int type
+            , int start, int size) {
+        User user = userCertificateService.GetUserLoginCertificate(sessionId);
+        List<IPAddressRecord> ipAddressRecords = ipAddressMapper.selectIPAddressRecordByType(user.getUsername(), type, start, size);
+        if (ipAddressRecords != null) {
+            return ipAddressRecords;
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -38,7 +59,7 @@ public class IPAddressService {
      * @param username
      * @return
      */
-    public IPAddressRecord QueryOtherUserLatestPostTypeIPAddress(String username) {
+    public IPAddressRecord GetOtherUserLatestPostTypeIPAddress(String username) {
         IPAddressRecord ipAddressRecord = ipAddressMapper.selectLatestIPAddressRecordByType(username, IPAddressEnum.POST.getValue());
         if (ipAddressRecord != null) {
             if (ipAddressRecord.getCountry().equals("中国")) {
@@ -47,7 +68,7 @@ public class IPAddressService {
                     if (ipAddressRecord.getProvince().equals("香港")
                             || ipAddressRecord.getProvince().equals("澳门")
                             || ipAddressRecord.getProvince().equals("台湾")) {
-                        ipAddressRecord.setCountry(ipAddressRecord.getCountry() + ipAddressRecord.getProvince());
+                        ipAddressRecord.setArea(ipAddressRecord.getCountry() + ipAddressRecord.getProvince());
                     } else {
                         ipAddressRecord.setArea(ipAddressRecord.getProvince());
                     }
@@ -70,9 +91,9 @@ public class IPAddressService {
      * @param sessionId
      * @return
      */
-    public IPAddressRecord QuerySelfUserLatestPostTypeIPAddress(String sessionId) {
+    public IPAddressRecord GetSelfUserLatestPostTypeIPAddress(String sessionId) {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        IPAddressRecord ipAddressRecord = QueryOtherUserLatestPostTypeIPAddress(user.getUsername());
+        IPAddressRecord ipAddressRecord = GetOtherUserLatestPostTypeIPAddress(user.getUsername());
         return ipAddressRecord;
     }
 

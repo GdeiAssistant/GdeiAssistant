@@ -3,6 +3,8 @@ package cn.gdeiassistant.Repository.SQL.Mysql.Mapper.GdeiAssistantLogs.IPAddress
 import cn.gdeiassistant.Pojo.Entity.IPAddressRecord;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 public interface IPAddressMapper {
 
     @Select("select * from ip_log where username=#{username} order by time desc limit 1")
@@ -18,6 +20,10 @@ public interface IPAddressMapper {
     })
     IPAddressRecord selectLatestIPAddressRecord(String username);
 
+    @Select("select * from ip_log where username=#{username} and type=#{type} order by time desc limit #{start},#{size}")
+    @ResultMap("IPAddressRecord")
+    List<IPAddressRecord> selectIPAddressRecordByType(@Param("username") String username, @Param("type") int type, @Param("start") int start, @Param("size") int size);
+
     @Select("select * from ip_log where username=#{username} and type=#{type} order by time desc limit 1")
     @ResultMap("IPAddressRecord")
     IPAddressRecord selectLatestIPAddressRecordByType(@Param("username") String username, @Param("type") int type);
@@ -26,7 +32,7 @@ public interface IPAddressMapper {
     @ResultMap("IPAddressRecord")
     IPAddressRecord selectAllIPAddressRecord(String username);
 
-    @Insert("insert into ip_log (type,username,ip,country,province,city,time)" +
-            " values(#{type},#{username},#{ip},#{country},#{province},#{city},now())")
+    @Insert("insert into ip_log (type,username,ip,network,country,province,city,time)" +
+            " values(#{type},#{username},#{ip},#{network},#{country},#{province},#{city},now())")
     void insertIPAddressRecord(IPAddressRecord ipAddressRecord);
 }

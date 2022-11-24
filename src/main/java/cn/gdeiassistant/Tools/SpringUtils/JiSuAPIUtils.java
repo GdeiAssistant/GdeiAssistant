@@ -3,7 +3,7 @@ package cn.gdeiassistant.Tools.SpringUtils;
 import cn.gdeiassistant.Enum.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.Exception.RecognitionException.RecognitionException;
 import cn.gdeiassistant.Pojo.Config.JisuConfig;
-import cn.gdeiassistant.Pojo.Entity.Location;
+import cn.gdeiassistant.Pojo.Entity.IPAddressRecord;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
 @Component
 public class JiSuAPIUtils {
 
@@ -22,12 +23,12 @@ public class JiSuAPIUtils {
     private JisuConfig jisuConfig;
 
     /**
-     * 根据IP地址查询IP地址归属地
+     * 根据IP地址查询IP地址归属地和网络类型
      *
      * @param ip
      * @return
      */
-    public Location GetLocationInfoByIPAddress(String ip) {
+    public IPAddressRecord GetInfoByIPAddress(String ip) {
         LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -36,11 +37,12 @@ public class JiSuAPIUtils {
         JSONObject jsonObject = restTemplate.postForObject(jisuConfig.getHost() + jisuConfig.getIpaddressPath()
                 , new HttpEntity<>(params, httpHeaders), JSONObject.class);
         if (jsonObject.has("status") && jsonObject.getString("status").equals("0")) {
-            Location location = new Location();
-            location.setCountry(jsonObject.getJSONObject("result").has("country") ? jsonObject.getJSONObject("result").getString("country") : null);
-            location.setProvince(jsonObject.getJSONObject("result").has("province") ? jsonObject.getJSONObject("result").getString("province") : null);
-            location.setCity(jsonObject.getJSONObject("result").has("city") ? jsonObject.getJSONObject("result").getString("city") : null);
-            return location;
+            IPAddressRecord ipAddressRecord = new IPAddressRecord();
+            ipAddressRecord.setNetwork((jsonObject.getJSONObject("result").has("type") && !jsonObject.getJSONObject("result").get("type").equals("")) ? jsonObject.getJSONObject("result").getString("type") : null);
+            ipAddressRecord.setCountry((jsonObject.getJSONObject("result").has("country") && !jsonObject.getJSONObject("result").get("country").equals("null")) ? jsonObject.getJSONObject("result").getString("country") : null);
+            ipAddressRecord.setProvince((jsonObject.getJSONObject("result").has("province") && !jsonObject.getJSONObject("result").get("province").equals("null")) ? jsonObject.getJSONObject("result").getString("province") : null);
+            ipAddressRecord.setCity((jsonObject.getJSONObject("result").has("city") && !jsonObject.getJSONObject("result").get("city").equals("null")) ? jsonObject.getJSONObject("result").getString("city") : null);
+            return ipAddressRecord;
         }
         return null;
     }

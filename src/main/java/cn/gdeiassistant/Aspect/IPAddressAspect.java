@@ -2,7 +2,6 @@ package cn.gdeiassistant.Aspect;
 
 import cn.gdeiassistant.Annotation.RecordIPAddress;
 import cn.gdeiassistant.Pojo.Entity.IPAddressRecord;
-import cn.gdeiassistant.Pojo.Entity.Location;
 import cn.gdeiassistant.Pojo.Entity.User;
 import cn.gdeiassistant.Service.Token.LoginTokenService;
 import cn.gdeiassistant.Service.IPAddress.IPAddressService;
@@ -49,16 +48,12 @@ public class IPAddressAspect {
         if (user != null) {
             //获取IP地址信息
             String ip = IPAddressUtils.GetRequestRealIPAddress(request);
-            //获取IP归属地
-            Location location = ipAddressService.GetLocationInfoByIPAddress(ip);
+            //获取IP归属地和网络类型
+            IPAddressRecord record = ipAddressService.GetInfoByIPAddress(ip);
             //保存IP记录
-            IPAddressRecord record = new IPAddressRecord();
             record.setIp(ip);
             record.setUsername(user.getUsername());
             record.setType(annotation.type().getValue());
-            record.setCountry(location.getCountry());
-            record.setProvince(location.getProvince());
-            record.setCity(location.getCity());
             ipAddressService.SaveIPAddress(record);
         }
         //匿名用户不记录IP地址

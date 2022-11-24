@@ -1100,6 +1100,7 @@ CREATE TABLE `ip_log` (
   `username` varchar(24) COLLATE utf8mb4_bin NOT NULL COMMENT '用户名',
   `type` tinyint(1) NOT NULL COMMENT 'IP地址记录类型',
   `ip` varchar(45) COLLATE utf8mb4_bin NOT NULL COMMENT 'IP地址',
+  `network` varchar(15) COLLATE utf8mb4_bin NOT NULL COMMENT 'IP地址运营商类型',
   `country` varchar(15) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'IP地址所属国家',
   `province` varchar(15) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'IP地址所属省份',
   `city` varchar(15) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'IP所属城市',

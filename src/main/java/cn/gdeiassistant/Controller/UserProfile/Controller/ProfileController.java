@@ -55,7 +55,7 @@ public class ProfileController {
             modelAndView.addObject("AvatarURL", userProfileService.GetSelfUserAvatar(request.getSession().getId()));
             modelAndView.addObject("Username", profile.getUsername());
             modelAndView.addObject("NickName", profile.getNickname());
-            IPAddressRecord ipAddressRecord = ipAddressService.QuerySelfUserLatestPostTypeIPAddress(request.getSession().getId());
+            IPAddressRecord ipAddressRecord = ipAddressService.GetSelfUserLatestPostTypeIPAddress(request.getSession().getId());
             modelAndView.addObject("IPAddressArea", ipAddressRecord.getArea());
             if (profile.getGender() != null && profile.getGender() != 0) {
                 if (profile.getGender() == 3) {
@@ -160,7 +160,7 @@ public class ProfileController {
             modelAndView.addObject("AvatarURL", userProfileService.GetOtherUserAvatar(username));
             modelAndView.addObject("Username", username);
             modelAndView.addObject("NickName", profile.getNickname());
-            IPAddressRecord ipAddressRecord = ipAddressService.QueryOtherUserLatestPostTypeIPAddress(username);
+            IPAddressRecord ipAddressRecord = ipAddressService.GetOtherUserLatestPostTypeIPAddress(username);
             modelAndView.addObject("IPAddressArea", ipAddressRecord.getArea());
             if (Boolean.TRUE.equals(privacy.isGenderOpen())) {
                 if (profile.getGender() != null && profile.getGender() != 0) {

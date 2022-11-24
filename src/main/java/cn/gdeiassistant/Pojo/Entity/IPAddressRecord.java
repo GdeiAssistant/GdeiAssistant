@@ -20,6 +20,8 @@ public class IPAddressRecord implements Serializable,Entity {
 
     private String ip;
 
+    private String network;
+
     private String country;
 
     private String province;
@@ -101,5 +103,13 @@ public class IPAddressRecord implements Serializable,Entity {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(String network) {
+        this.network = network;
     }
 }

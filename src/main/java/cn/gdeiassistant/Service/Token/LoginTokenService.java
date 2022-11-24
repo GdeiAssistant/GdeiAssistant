@@ -4,10 +4,7 @@ import cn.gdeiassistant.Exception.TokenValidException.SuspiciouseRequestExceptio
 import cn.gdeiassistant.Exception.TokenValidException.TokenExpiredException;
 import cn.gdeiassistant.Exception.TokenValidException.TokenNotMatchingException;
 import cn.gdeiassistant.Pojo.Config.JWTConfig;
-import cn.gdeiassistant.Pojo.Entity.AccessToken;
-import cn.gdeiassistant.Pojo.Entity.Device;
-import cn.gdeiassistant.Pojo.Entity.Location;
-import cn.gdeiassistant.Pojo.Entity.RefreshToken;
+import cn.gdeiassistant.Pojo.Entity.*;
 import cn.gdeiassistant.Pojo.TokenRefresh.TokenRefreshResult;
 import cn.gdeiassistant.Repository.Redis.LoginToken.LoginTokenDao;
 import cn.gdeiassistant.Service.IPAddress.IPAddressService;
@@ -176,8 +173,8 @@ public class LoginTokenService {
                 return;
             }
             //检测IP地址是否为同一省份
-            Location currentLocation = ipAddressService.GetLocationInfoByIPAddress(ip);
-            Location tokenLocation = ipAddressService.GetLocationInfoByIPAddress(device.getIP());
+            IPAddressRecord currentLocation = ipAddressService.GetInfoByIPAddress(ip);
+            IPAddressRecord tokenLocation = ipAddressService.GetInfoByIPAddress(device.getIP());
             if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
                     && Objects.equals(currentLocation.getProvince(), tokenLocation.getProvince())) {
                 //IP地址为同一省份，校验通过

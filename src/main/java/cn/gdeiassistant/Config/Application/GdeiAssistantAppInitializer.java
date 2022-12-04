@@ -50,6 +50,10 @@ public class GdeiAssistantAppInitializer implements WebApplicationInitializer {
         //设置WebRootKey
         servletContext.setInitParameter("webAppRootKey", "GdeiAssistant");
 
+        //配置使用IPV4
+        System.setProperty("java.net.preferIPv4Stack", "true");
+        System.setProperty("java.net.preferIPv4Addresses", "true");
+
         //配置DispatcherServlet
         AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
         applicationContext.register(ApplicationContextConfig.class);

@@ -21,12 +21,14 @@ public class SettingConstantUtils {
             "/rest", //Restful API接口
             "/wechat", //微信API接口
             "/qq", //QQ API接口
-            "/alipay" //支付宝API接口
+            "/alipay", //支付宝API接口
+            "/covid19" //疫情防控专题
     };
 
     public static final Map<String, String> VIEW_CONTROLLER_NAME_MAP =
             Stream.of(new String[][]{
                     {"/", "About/index"},
+                    {"/covid19", "Covid19/index"},
                     {"/index", "Index/index"},
                     {"/about", "About/index"},
                     {"/about/download", "About/download"},

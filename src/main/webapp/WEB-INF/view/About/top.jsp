@@ -95,6 +95,7 @@
                         <a class="dropdown-item" href="/about/download">下载客户端</a>
                         <a class="dropdown-item" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/covid19">疫情防控资讯专题</a>
                         <a class="dropdown-item" href="/announcement/suicideprevention">青少年自杀干预热线</a>
                     </div>
                 </li>

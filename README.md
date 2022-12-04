@@ -165,6 +165,10 @@
 
 本应用在中华人民共和国境内注册、发布和运营，目前仅面向广东第二师范学院在校师生开放注册使用。
 
+测试环境账号：（用户名 - 密码）
+
+- gdeiassistant - gdeiassistant
+
 ## 官网
 
 - [广东二师助手官网](https://gdeiassistant.cn)
@@ -349,10 +353,6 @@ System.setProperty("java.net.preferIPv4Addresses" , "true");
 [Anti 996 License](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 
 Copyright (c) 2016 - 2023 GdeiAssistant
-
-## 文档
-
-- 广东第二师范学院校园助手系统说明文档请参考 [Wiki](https://github.com/GdeiAssistant/GdeiAssistant/wiki)
 
 ## 贡献
 

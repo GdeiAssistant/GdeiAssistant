@@ -3,6 +3,8 @@ package cn.gdeiassistant.Tools.Utils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class IPAddressUtils {
 
@@ -42,6 +44,16 @@ public class IPAddressUtils {
         }
         if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
             XFor = request.getRemoteAddr();
+        }
+        if ("127.0.0.1".equals(XFor) || "0:0:0:0:0:0:0:1".equals(XFor)) {
+            //如果是本地环回IP，则根据网卡取本机配置的IP
+            try {
+                InetAddress inetAddress = InetAddress.getLocalHost();
+                return inetAddress.getHostAddress();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                return XFor;
+            }
         }
         return XFor;
     }

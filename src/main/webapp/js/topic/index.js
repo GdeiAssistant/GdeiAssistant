@@ -66,16 +66,16 @@ function likeTopic(id) {
                     $("#like-icon-" + id).removeClass("lite-iconf-like").addClass("lite-iconf-liked");
                     $("#like-count-" + id).text(parseInt($("#like-count-" + id).text()) + 1);
                 } else {
-                    $.toptip(result.message, 'error');
+                    weui.topTips(result.message);
                 }
             },
             error: function (result) {
                 $(".m-diy-btn").attr("disabled", false);
                 $("#loadingToast, .weui_mask").hide();
                 if (result.status) {
-                    $.toptip(result.responseJSON.message, 'error');
+                    weui.topTips(result.responseJSON.message);
                 } else {
-                    $.toptip('网络连接失败,请检查网络连接', 'error');
+                    weui.topTips('网络连接失败,请检查网络连接');
                 }
             }
         });
@@ -153,16 +153,16 @@ function loadTopicData() {
                     $("#loadmore").attr("disabled", true);
                 }
             } else {
-                $.toptip(result.message, 'error');
+                weui.topTips(result.message);
             }
         },
         error: function (result) {
             $("#loadmore").attr("disabled", false);
             $("#loadingToast, .weui_mask").hide();
             if (result.status) {
-                $.toptip(result.responseJSON.message, 'error');
+                weui.topTips(result.responseJSON.message);
             } else {
-                $.toptip('网络连接失败,请检查网络连接', 'error');
+                weui.topTips('网络连接失败,请检查网络连接');
             }
         }
     });

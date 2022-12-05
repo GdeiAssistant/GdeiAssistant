@@ -59,11 +59,11 @@ $(function () {
                         $("#robots").prop("checked", true);
                     }
                 } else {
-                    $.toptip(result.message, 'error');
+                    weui.topTips(result.message);
                 }
             },
             error: function () {
-                $.toptip('网络连接失败，请检查网络连接', 'error');
+                weui.topTips('网络连接失败，请检查网络连接');
             }
         }
     );
@@ -82,14 +82,14 @@ function changePrivacySetting(event) {
         },
         success: function (result) {
             if (result.success === true) {
-                $.toptip("更新成功", 'success');
+                weui.toast('更新成功');
             } else {
                 if (state === true) {
                     $("input:eq(" + index + ")").prop("checked", false);
                 } else {
                     $("input:eq(" + index + ")").prop("checked", true);
                 }
-                $.toptip(result.message, 'error');
+                weui.topTips(result.message);
             }
         },
         error: function () {
@@ -98,7 +98,7 @@ function changePrivacySetting(event) {
             } else {
                 $("input:eq(" + index + ")").prop("checked", true);
             }
-            $.toptip('网络连接失败，请检查网络连接', 'error');
+            weui.topTips('网络连接失败，请检查网络连接');
         }
     });
 }

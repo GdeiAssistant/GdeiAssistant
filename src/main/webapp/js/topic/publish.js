@@ -32,12 +32,12 @@ $(function () {
 
         // 如果类型不在允许的类型范围内
         if (allowTypes.indexOf(file.type) === -1) {
-            $.alert("不合法的图片文件类型", "上传错误");
+            weui.alert('不合法的图片文件类型', {title: '上传错误'});
             return;
         }
 
         if (file.size > maxSize) {
-            $.alert("图片文件不能超过5MB", "文件过大");
+            weui.alert('图片文件不能超过5MB', {title: '文件过大'});
             return;
         }
 
@@ -135,9 +135,9 @@ function inputLengthCheck(str, maxLen) {
 
 function postTopicForm() {
     if ($("#topic").val() == '' || $("#topic").val().length > 15) {
-        $.alert("话题长度不合法");
+        weui.alert('话题长度不合法');
     } else if ($("#content").val() == '' || $("content").val() > 250) {
-        $.alert("内容长度不合法");
+        weui.alert('内容长度不合法');
     } else {
         //禁用提交按钮并显示进度条
         $(".weui_btn_primary").attr("disabled", true);
@@ -173,16 +173,16 @@ function postTopicForm() {
                 if (result.success === true) {
                     window.location.href = '/topic';
                 } else {
-                    $.toptip(result.message, 'error');
+                    weui.topTips(result.message);
                 }
             },
             error: function (result) {
                 $(".weui_btn_primary").attr("disabled", false);
                 $("#loadingToast, .weui_mask").hide();
                 if (result.status) {
-                    $.toptip(result.responseJSON.message, 'error');
+                    weui.topTips(result.responseJSON.message);
                 } else {
-                    $.toptip('网络连接失败,请检查网络连接', 'error');
+                    weui.topTips('网络连接失败,请检查网络连接');
                 }
             }
         });

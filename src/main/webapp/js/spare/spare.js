@@ -32,7 +32,7 @@ function postQueryForm() {
                             + "<div class='weui-cell__ft'>" + result.data[i].name + "</div></div>");
                     }
                 } else {
-                    $.toptip(result.message, 'error');
+                    weui.topTips(result.message);
                 }
             },
             error: function (result) {

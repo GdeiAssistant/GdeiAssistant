@@ -127,12 +127,10 @@ function savePhoneNumber() {
             success: function (result) {
                 $("#loadingToast, .weui_mask").hide();
                 if (result.success) {
-                    $.alert({
-                        text: '你已成功绑定手机号',
-                        title: '绑定成功',
-                        onOK: function () {
-                            history.go(-1);
-                        }
+                    weui.alert('你已成功绑定手机号', function(){
+                        history.go(-1);
+                    }, {
+                        title: '绑定成功'
                     });
                 } else {
                     $(".weui_warn").text(result.message).show().delay(2000).hide(0);
@@ -152,31 +150,38 @@ function savePhoneNumber() {
 
 //解绑手机号
 function unattachPhoneNumber() {
-    $.confirm({
+    weui.confirm('解绑手机号不会同步清除你的实名认证信息，且解绑后此手机号将不能接收到系统的通知信息，你是否确认要解绑？', {
         title: '解绑手机号',
-        text: '解绑手机号不会同步清除你的实名认证信息，且解绑后此手机号将不能接收到系统的通知信息，你是否确认要解绑？',
-        onOK: function () {
-            $("#loadingToast, .weui_mask").show();
-            $.ajax({
-                url: '/api/phone/unattach',
-                method: 'POST',
-                success: function (result) {
-                    $("#loadingToast, .weui_mask").hide();
-                    if (result.success) {
-                        window.location.reload();
-                    } else {
-                        $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+        buttons: [{
+            label: '取消',
+            type: 'default',
+            onClick: function(){}
+        }, {
+            label: 'YES',
+            type: 'primary',
+            onClick: function(){
+                $("#loadingToast, .weui_mask").show();
+                $.ajax({
+                    url: '/api/phone/unattach',
+                    method: 'POST',
+                    success: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.success) {
+                            window.location.reload();
+                        } else {
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                        }
+                    },
+                    error: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.status) {
+                            $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                        } else {
+                            $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
+                        }
                     }
-                },
-                error: function (result) {
-                    $("#loadingToast, .weui_mask").hide();
-                    if (result.status) {
-                        $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
-                    } else {
-                        $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
-                    }
-                }
-            });
-        }
+                });
+            }
+        }]
     });
 }

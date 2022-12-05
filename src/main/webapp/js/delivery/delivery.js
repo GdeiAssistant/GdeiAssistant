@@ -109,38 +109,48 @@ function loadDeliveryOrder() {
 
 //删除订单
 function deleteOrder(orderId) {
-    $.confirm({
+    weui.confirm('将删除该订单，订单信息无法恢复，你确定吗？', {
         title: '删除订单信息',
-        text: '将删除该订单，订单信息无法恢复，你确定吗？',
-        onOK: function () {
-            $("#loadingToast, .weui_mask").show();
-            $.ajax({
-                url: '/api/delivery/order/id/' + orderId,
-                method: 'DELETE',
-                success: function (result) {
-                    if (result.success) {
+        buttons: [{
+            label: '取消',
+            type: 'default',
+            onClick: function(){}
+        }, {
+            label: '确认',
+            type: 'primary',
+            onClick: function(){
+                $("#loadingToast, .weui_mask").show();
+                $.ajax({
+                    url: '/api/delivery/order/id/' + orderId,
+                    method: 'DELETE',
+                    success: function (result) {
+                        if (result.success) {
+                            $("#loadingToast, .weui_mask").hide();
+                            weui.alert('删除订单成功', {
+                                title: '订单已删除',
+                                buttons: [{
+                                    label: '确定',
+                                    type: 'primary',
+                                    onClick: function(){
+                                        history.go(-1);
+                                    }
+                                }]
+                            });
+                        } else {
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                        }
+                    },
+                    error: function (result) {
                         $("#loadingToast, .weui_mask").hide();
-                        $.alert({
-                            title: '订单已删除',
-                            text: '删除订单成功',
-                            onOK: function () {
-                                history.go(-1);
-                            }
-                        });
-                    } else {
-                        $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                        if (result.status) {
+                            $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                        } else {
+                            $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
+                        }
                     }
-                },
-                error: function (result) {
-                    $("#loadingToast, .weui_mask").hide();
-                    if (result.status) {
-                        $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
-                    } else {
-                        $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
-                    }
-                }
-            })
-        }
+                })
+            }
+        }]
     });
 }
 
@@ -156,12 +166,15 @@ function acceptOrder(orderId) {
         success: function (result) {
             $("#loadingToast, .weui_mask").hide();
             if (result.success) {
-                $.alert({
+                weui.alert('接单成功，点击确定刷新订单信息', {
                     title: '接单成功',
-                    text: '接单成功，点击确定刷新订单信息',
-                    onOK: function () {
-                        window.location.reload();
-                    }
+                    buttons: [{
+                        label: 'OK',
+                        type: 'primary',
+                        onClick: function(){
+                            window.location.reload();
+                        }
+                    }]
                 });
             } else {
                 $(".weui_warn").text(result.message).show().delay(2000).hide(0);
@@ -180,37 +193,47 @@ function acceptOrder(orderId) {
 
 //完成快递代收交易
 function finishTrade(tradeId) {
-    $.confirm({
+    weui.confirm('将确认快递交付，并完成当前快递代收交易，你确定吗？', {
         title: '确认快递已交付',
-        text: '将确认快递交付，并完成当前快递代收交易，你确定吗？',
-        onOK: function () {
-            $("#loadingToast, .weui_mask").show();
-            $.ajax({
-                url: '/api/delivery/trade/id/' + tradeId + '/finishtrade',
-                method: 'POST',
-                success: function (result) {
-                    $("#loadingToast, .weui_mask").hide();
-                    if (result.success) {
-                        $.alert({
-                            title: '交易完成',
-                            text: '交易已完成',
-                            onOK: function () {
-                                history.go(-1);
-                            }
-                        });
-                    } else {
-                        $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+        buttons: [{
+            label: '取消',
+            type: 'default',
+            onClick: function(){}
+        }, {
+            label: '确定',
+            type: 'primary',
+            onClick: function(){
+                $("#loadingToast, .weui_mask").show();
+                $.ajax({
+                    url: '/api/delivery/trade/id/' + tradeId + '/finishtrade',
+                    method: 'POST',
+                    success: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.success) {
+                            weui.alert('交易已完成', {
+                                title: '交易完成',
+                                buttons: [{
+                                    label: 'OK',
+                                    type: 'primary',
+                                    onClick: function(){
+                                        history.go(-1);
+                                    }
+                                }]
+                            });
+                        } else {
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                        }
+                    },
+                    error: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.status) {
+                            $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                        } else {
+                            $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
+                        }
                     }
-                },
-                error: function (result) {
-                    $("#loadingToast, .weui_mask").hide();
-                    if (result.status) {
-                        $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
-                    } else {
-                        $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
-                    }
-                }
-            })
-        }
+                })
+            }
+        }]
     });
 }

@@ -47,14 +47,14 @@
     function changeFunctionDisplaySetting(id, state) {
         displaySetting[id] = state;
         localStorage.setItem("functionDisplaySetting", JSON.stringify(displaySetting));
-        $.toptip('保存成功', 'success');
+        weui.toast('保存成功');
     }
 
     //重置功能显示设置
     function resetFunctionDisplaySetting() {
         localStorage.removeItem("functionDisplaySetting");
         $(".weui-switch").prop("checked", true);
-        $.toptip('重置成功', 'success');
+        weui.toast('重置成功');
     }
 
 </script>

@@ -32,12 +32,12 @@ $(function () {
 
         // 如果类型不在允许的类型范围内
         if (allowTypes.indexOf(file.type) === -1) {
-            $.alert("不合法的图片文件类型", "上传错误");
+            weui.alert('不合法的图片文件类型', { title: '上传错误' });
             return;
         }
 
         if (file.size > maxSize) {
-            $.alert("图片文件不能超过5MB", "文件过大");
+            weui.alert('图片文件不能超过5MB', { title: '文件过大' });
             return;
         }
 
@@ -126,7 +126,7 @@ function inputLengthCheck(str, maxLen) {
 //提交意见建议反馈表单
 function postFeedbackForm() {
     if ($("#content").val() == '' || $("#content").val().length > 250) {
-        $.alert("话题长度不合法");
+        weui.alert('话题长度不合法');
     } else {
         //禁用提交按钮并显示进度条
         $(".weui_btn_primary").attr("disabled", true);
@@ -159,7 +159,7 @@ function postFeedbackForm() {
                 $(".weui_btn_primary").attr("disabled", false);
                 $("#loadingToast, .weui_mask").hide();
                 if (result.success === true) {
-                    $.toptip('反馈意见提交成功', 'success');
+                    weui.toast('反馈意见提交成功');
                     images = [];
                     $("#uploaderFiles li").remove();
                     //更新图片显示数量和上传按钮状态
@@ -167,16 +167,16 @@ function postFeedbackForm() {
                     $("#uploaderInput").attr("disabled", false);
                     $("#uploaderInput").show();
                 } else {
-                    $.toptip(result.message, 'error');
+                    weui.topTips(result.message);
                 }
             },
             error: function (result) {
                 $(".weui_btn_primary").attr("disabled", false);
                 $("#loadingToast, .weui_mask").hide();
                 if (result.status) {
-                    $.toptip(result.responseJSON.message, 'error');
+                    weui.topTips(result.responseJSON.message);
                 } else {
-                    $.toptip('网络连接失败,请检查网络连接', 'error');
+                    weui.topTips('网络连接失败,请检查网络连接');
                 }
             }
         });

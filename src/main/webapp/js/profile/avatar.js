@@ -10,31 +10,38 @@ function selectAvatarImage() {
 
 //删除头像文件
 function deleteAvatar() {
-    $.confirm({
+    weui.confirm('将删除用户上传的头像，并恢复为系统默认头像', {
         title: '删除头像',
-        text: '将删除用户上传的头像，并恢复为系统默认头像',
-        onOK: function () {
-            $.ajax({
-                url: "/api/avatar/remove",
-                type: "post",
-                processData: false,
-                contentType: false,
-                success: function (result) {
-                    if (result.success === true) {
-                        window.location.reload();
-                    } else {
-                        $.toptip(result.message, 'error');
+        buttons: [{
+            label: '取消',
+            type: 'default',
+            onClick: function(){}
+        }, {
+            label: '确定',
+            type: 'primary',
+            onClick: function(){
+                $.ajax({
+                    url: "/api/avatar/remove",
+                    type: "post",
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        if (result.success === true) {
+                            window.location.reload();
+                        } else {
+                            weui.topTips(result.message);
+                        }
+                    },
+                    error: function (result) {
+                        if (result.status) {
+                            weui.topTips(result.responseJSON.message);
+                        } else {
+                            weui.topTips('网络连接失败,请检查网络连接');
+                        }
                     }
-                },
-                error: function (result) {
-                    if (result.status) {
-                        $.toptip(result.responseJSON.message, 'error');
-                    } else {
-                        $.toptip('网络连接失败,请检查网络连接', 'error');
-                    }
-                }
-            });
-        }
+                });
+            }
+        }]
     });
 }
 
@@ -68,12 +75,12 @@ $(function () {
 
         // 如果类型不在允许的类型范围内
         if (allowTypes.indexOf(file.type) === -1) {
-            $.alert("不合法的图片文件类型", "上传错误");
+            weui.alert('不合法的图片文件类型', { title: '上传错误' });
             return;
         }
 
         if (file.size > maxSize) {
-            $.alert("图片文件不能超过5MB", "文件过大");
+            weui.alert('图片文件不能超过5MB', { title: '文件过大' });
             return;
         }
 
@@ -197,14 +204,14 @@ function drawImageAndUpload() {
             if (result.success === true) {
                 window.location.reload();
             } else {
-                $.toptip(result.message, 'error');
+                weui.topTips(result.message);
             }
         },
         error: function (result) {
             if (result.status) {
-                $.toptip(result.responseJSON.message, 'error');
+                weui.topTips(result.responseJSON.message);
             } else {
-                $.toptip('网络连接失败,请检查网络连接', 'error');
+                weui.topTips('网络连接失败,请检查网络连接');
             }
         }
     });

@@ -36,10 +36,7 @@ function postCardLostRequest() {
             success: function (result) {
                 $("#loadingToast, .weui_mask").hide();
                 if (result.success) {
-                    $.alert({
-                        title: '挂失校园卡成功',
-                        text: '请尽快前往办卡处进行校园卡补办'
-                    });
+                    weui.alert('请尽快前往办卡处进行校园卡补办', { title: '挂失校园卡成功' });
                 } else {
                     $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                 }

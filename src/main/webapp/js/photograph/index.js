@@ -114,32 +114,14 @@ function loadCommentList(id) {
                             "<script>loadCommenterAvatar(" + result.data[i].commentId + ",'" + result.data[i].username + "')<\/script>");
                     }
                 } else {
-                    weui.alert(result.message, {
-                        title: '加载失败',
-                        buttons: [{
-                            label: '确定',
-                            type: 'primary'
-                        }]
-                    });
+                    $.alert(result.message, '加载失败');
                 }
             },
             error: function (result) {
                 if (result.status) {
-                    weui.alert(result.responseJSON.message, {
-                        title: '请求失败',
-                        buttons: [{
-                            label: '确定',
-                            type: 'primary'
-                        }]
-                    });
+                    $.alert(result.responseJSON.message, '请求失败');
                 } else {
-                    weui.alert('网络访问异常，请检查网络连接', {
-                        title: '网络异常',
-                        buttons: [{
-                            label: '确定',
-                            type: 'primary'
-                        }]
-                    });
+                    $.alert('网络访问异常，请检查网络连接', '网络异常');
                 }
             }
         });
@@ -149,13 +131,13 @@ function loadCommentList(id) {
 //加载照片列表
 function loadPhotographs() {
     if (!$("#loadmore").attr("disabled")) {
-        let loading = weui.loading("加载信息中");
+        $("#loadingToast, .weui_mask").show();
         $("#loadmore").attr("disabled", true);
         $.ajax({
             url: '/api/photograph/type/' + $("#type").val() + '/start/' + $("#start").val() + '/size/' + 10,
             method: 'GET',
             success: function (result) {
-                loading.hide();
+                $("#loadingToast, .weui_mask").hide();
                 if (result.success) {
                     if (result.data.length == 0) {
                         $("#loadmore").attr("disabled", true);
@@ -225,7 +207,7 @@ function loadPhotographs() {
                 }
             },
             error: function (result) {
-                loading.hide();
+                $("#loadingToast, .weui_mask").hide();
                 $("#loadmore").attr("disabled", false);
                 if (result.status) {
                     $.alert({

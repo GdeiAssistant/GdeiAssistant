@@ -44,12 +44,12 @@ $(function () {
 
         // 如果类型不在允许的类型范围内
         if (allowTypes.indexOf(file.type) === -1) {
-            $.alert("不合法的图片文件类型", "上传错误");
+            weui.alert('不合法的图片文件类型', {title: '上传错误'});
             return;
         }
 
         if (file.size > maxSize) {
-            $.alert("图片文件不能超过5MB", "文件过大");
+            weui.alert('图片文件不能超过5MB', {title: '文件过大'});
             return;
         }
 
@@ -135,25 +135,23 @@ function updateMainLandIDCardAuthentication() {
                 $(".weui-btn").attr("disabled", false);
                 loading.hide();
                 if (result.success === true) {
-                    $.alert({
-                        title: '实名认证结果',
-                        text: '实名认证成功',
-                        onOK: function () {
-                            history.go(-1);
-                        }
+                    weui.alert('实名认证成功', function () {
+                        history.go(-1);
+                    }, {
+                        title: '实名认证结果'
                     });
                 } else {
-                    $.toptip(result.message, 'error');
+                    weui.topTips(result.message);
                 }
             },
             error: function () {
                 $(".weui-btn").attr("disabled", false);
                 loading.hide();
-                $.toptip('网络异常，请检查网络连接', 'error');
+                weui.topTips('网络异常，请检查网络连接');
             }
         });
     } else {
-        $.toptip('请将证件信息填写完整', 'error');
+        weui.topTips('请将证件信息填写完整');
     }
 }
 
@@ -188,23 +186,21 @@ function updateHMTFIDCardAuthentication() {
             success: function (result) {
                 loading.hide();
                 if (result.success === true) {
-                    $.alert({
-                        title: '实名认证结果',
-                        text: '实名认证成功',
-                        onOK: function () {
-                            history.go(-1);
-                        }
+                    weui.alert('实名认证成功', function () {
+                        history.go(-1);
+                    }, {
+                        title: '实名认证结果'
                     });
                 } else {
-                    $.toptip(result.message, 'error');
+                    weui.topTips(result.message);
                 }
             },
             error: function (result) {
                 loading.hide();
                 if (result.status) {
-                    $.toptip(result.responseJSON.message, 'error');
+                    weui.topTips(result.responseJSON.message);
                 } else {
-                    $.toptip('网络连接失败,请检查网络连接', 'error');
+                    weui.topTips('网络连接失败,请检查网络连接');
                 }
             }
         });
@@ -213,32 +209,36 @@ function updateHMTFIDCardAuthentication() {
 
 //取消实名认证
 function deleteAuthentication() {
-    $.confirm({
+    weui.confirm('你是否确认要取消实名认证？', {
         title: '取消实名认证',
-        text: '你是否确认要取消实名认证？',
-        onOK: function () {
-            $.ajax({
-                url: '/api/authentication/delete',
-                type: 'post',
-                success: function (result) {
-                    if (result.success) {
-                        $.alert({
-                            title: '取消实名认证成功',
-                            text: '已注销当前用户的实名认证信息'
-                        });
-                    } else {
-                        $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+        buttons: [{
+            label: '取消',
+            type: 'default',
+            onClick: function(){}
+        }, {
+            label: '确定',
+            type: 'primary',
+            onClick: function(){
+                $.ajax({
+                    url: '/api/authentication/delete',
+                    type: 'post',
+                    success: function (result) {
+                        if (result.success) {
+                            weui.alert('已注销当前用户的实名认证信息', { title: '取消实名认证成功' });
+                        } else {
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                        }
+                    },
+                    error: function () {
+                        if (result.status == 503) {
+                            //网络连接超时
+                            $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                        } else {
+                            $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                        }
                     }
-                },
-                error: function () {
-                    if (result.status == 503) {
-                        //网络连接超时
-                        $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
-                    } else {
-                        $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
-                    }
-                }
-            });
-        }
+                });
+            }
+        }]
     });
 }

@@ -84,18 +84,29 @@
     //显示网址确认ActionSheet
     function showWebsiteActionSheet(content) {
         if (content != '无') {
-            $.actions({
-                actions: [{
-                    text: "跳转网站",
+            weui.actionSheet([
+                {
+                    label: '跳转网站',
                     onClick: function () {
                         switchWebSite(content);
                     }
                 }, {
-                    text: "复制网址",
+                    label: '复制网址',
                     onClick: function () {
                         copyDetailInfo(content);
                     }
-                }]
+                }
+            ], [
+                {
+                    label: '取消',
+                    onClick: function () {
+
+                    }
+                }
+            ], {
+                onClose: function () {
+
+                }
             });
         }
     }
@@ -108,7 +119,7 @@
     //发送短信
     function sendSMS(content) {
         if (${sessionScope.yiBanUserID!=null}) {
-            $.toptip('易班客户端暂不支持直接发送短信，你可选择复制电话号码', 'warning');
+            weui.topTips('易班客户端暂不支持直接发送短信，你可选择复制电话号码');
         } else {
             window.location.href = 'sms:' + content;
         }
@@ -119,9 +130,9 @@
         if (${sessionScope.yiBanUserID!=null}) {
             phone_fun(content, function (errorInfo) {
                 if (errorInfo == '手机号格式错误') {
-                    $.toptip('该电话号码不支持直接拨打，你可选择复制电话号码', 'warning');
+                    weui.topTips('该电话号码不支持直接拨打，你可选择复制电话号码');
                 } else if (errorInfo == '该终端类型暂不支持使用') {
-                    $.toptip('当前设备不支持电话通话功能', 'error');
+                    weui.topTips('当前设备不支持电话通话功能');
                 }
             });
         } else {
@@ -134,9 +145,9 @@
         if (${sessionScope.yiBanUserID!=null}) {
             mail_fun(content, function (errorInfo) {
                 if (errorInfo == '邮箱地址格式错误') {
-                    $.toptip('该邮箱地址不支持直接发送，你可选择复制该邮箱地址', 'warning');
+                    weui.topTips('该邮箱地址不支持直接发送，你可选择复制该邮箱地址');
                 } else if (errorInfo == '该终端类型暂不支持使用') {
-                    $.toptip('当前设备不支持电子邮箱功能', 'error');
+                    weui.topTips('当前设备不支持电子邮箱功能');
                 }
             });
         } else {
@@ -153,9 +164,9 @@
         input.select();
         if (document.execCommand('copy')) {
             document.execCommand('copy');
-            $.toptip('复制成功', 'success');
+            weui.toast('复制成功');
         } else {
-            $.toptip('当前浏览器不支持复制操作', 'error');
+            weui.topTips('当前浏览器不支持复制操作');
         }
         document.body.removeChild(input);
     }

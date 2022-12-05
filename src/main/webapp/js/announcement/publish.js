@@ -26,15 +26,15 @@ function publishAnnouncement() {
                 $(".weui-btn").attr("disabled", false);
                 loading.hide();
                 if (result.success === true) {
-                    $.toptip('提交成功', 'success');
+                    weui.toast('提交成功');
                 } else {
-                    $.toptip(result.message, 'error');
+                    weui.topTips(result.message);
                 }
             },
             error: function () {
                 $(".weui-btn").attr("disabled", false);
                 loading.hide();
-                $.toptip('网络异常，请检查网络连接', 'error');
+                weui.topTips('网络异常，请检查网络连接');
             }
         });
     }

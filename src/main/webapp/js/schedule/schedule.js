@@ -315,13 +315,13 @@ function selectScheduleWeek() {
 
 //提交删除自定义课程请求
 function deleteCustomSchedule(id, dataListIndex, detailListIndex) {
-    let loading = weui.loading('提交信息中');
+    $("#loadingToast, .weui_mask").show();
     $("button[type='submit']").attr("disabeled", true);
     $.ajax({
         url: '/api/customschedule/id/' + id,
         type: 'DELETE',
         success: function (result) {
-            loading.hide();
+            $("#loadingToast, .weui_mask").hide();
             if (result.success) {
                 $.toptip('删除成功', 'success');
                 //同步删除缓存数据列表中对应的数据
@@ -351,7 +351,7 @@ function deleteCustomSchedule(id, dataListIndex, detailListIndex) {
             }
         },
         error: function (result) {
-            loading.hide();
+            $("#loadingToast, .weui_mask").hide();
             $("button[type='submit']").attr("disabeled", false);
             if (result.status) {
                 $.toptip(result.responseJSON.message, 'error');
@@ -378,7 +378,7 @@ function addCustomSchedule() {
         $("#error").text("初始上课周数不能小于结束上课周数").show().delay(2000).hide(0);
     } else {
         //提交自定义课程信息
-        let loading = weui.loading('提交信息中');
+        $("#loadingToast, .weui_mask").show();
         $("#submit").attr("disabled", true);
         $.ajax({
             url: '/api/customshedule',
@@ -392,7 +392,7 @@ function addCustomSchedule() {
                 maxScheduleWeek: parseInt($("#max_week").val())
             },
             success: function (result) {
-                loading.hide();
+                $("#loadingToast, .weui_mask").hide();
                 if (result.success) {
                     $.toptip('提交成功', 'success');
                     setTimeout(function () {
@@ -407,7 +407,7 @@ function addCustomSchedule() {
                 }
             },
             error: function (result) {
-                loading.hide();
+                $("#loadingToast, .weui_mask").hide();
                 $("#submit").attr("disabled", false);
                 if (result.status) {
                     $.toptip(result.responseJSON.message, 'error');
@@ -439,14 +439,32 @@ function postQueryForm() {
                     $("#currentWeek").text("第" + result.data.week + "周");
                     handleScheduleQueryResult(result.data);
                 } else {
-                    showCustomErrorTip(result.message);
+                    $.alert({
+                        title: '查询课表信息失败',
+                        text: result.message,
+                        onOK: function (){
+                            history.go(-1);
+                        }
+                    });
                 }
             },
             error: function (result) {
                 if (result.status) {
-                    showCustomErrorTip(result.responseJSON.message);
+                    $.alert({
+                        title: '查询课表信息失败',
+                        text: result.responseJSON.message,
+                        onOK: function () {
+                            history.go(-1);
+                        }
+                    });
                 } else {
-                    showNetworkErrorTip();
+                    $.alert({
+                        title: '查询课表信息失败',
+                        text: '查询课表信息失败，请检查网络连接后重试',
+                        onOK: function () {
+                            history.go(-1);
+                        }
+                    });
                 }
             }
         });
@@ -466,16 +484,34 @@ function postQueryForm() {
                     $("#currentWeek").text("第" + result.data.week + "周");
                     handleScheduleQueryResult(result.data);
                 } else {
-                    showCustomErrorTip(result.message);
+                    $.alert({
+                        title: '查询课表信息失败',
+                        text: result.message,
+                        onOK: function (){
+                            history.go(-1);
+                        }
+                    });
                 }
             },
             error: function (result) {
                 $("#loadingToast, .weui_mask").hide();
-                if (result.status === 503) {
-                    //网络连接超时
-                    showCustomErrorTip(result.responseJSON.message);
+                if (result.status) {
+                    $.alert({
+                        title: '查询课表信息失败',
+                        text: result.responseJSON.message,
+                        onOK: function () {
+                            history.go(-1);
+                        }
+                    });
+                } else {
+                    $.alert({
+                        title: '查询课表信息失败',
+                        text: '查询课表信息失败，请检查网络连接后重试',
+                        onOK: function () {
+                            history.go(-1);
+                        }
+                    });
                 }
-                showNetworkErrorTip();
             }
         });
     }
@@ -648,46 +684,6 @@ function updateTableSchedule(schedule) {
     }
 }
 
-//显示网络错误提示
-function showNetworkErrorTip() {
-    weui.confirm('查询课表信息失败，请检查网络连接', {
-        title: '错误提示',
-        buttons: [{
-            label: '返回主页',
-            type: 'default',
-            onClick: function () {
-                window.location.href = '/index';
-            }
-        }, {
-            label: '重新加载',
-            type: 'primary',
-            onClick: function () {
-                window.location.reload();
-            }
-        }]
-    });
-}
-
-//显示自定义错误提示
-function showCustomErrorTip(message) {
-    weui.confirm(message, {
-        title: '错误提示',
-        buttons: [{
-            label: '返回主页',
-            type: 'default',
-            onClick: function () {
-                window.location.href = '/index';
-            }
-        }, {
-            label: '重新加载',
-            type: 'primary',
-            onClick: function () {
-                window.location.reload();
-            }
-        }]
-    });
-}
-
 //隐藏课程时长大于2时对应被占用的单元格,从0开始计算
 function hideCell(row, column) {
     $("tr:eq(" + row + ") td:eq(" + column + ")").hide();
@@ -715,7 +711,13 @@ function refreshScheduleData() {
             if (result.success) {
                 postQueryForm();
             } else {
-                showCustomErrorTip(result.message);
+                $.alert({
+                    title: '查询课表信息失败',
+                    text: result.message,
+                    onOK: function (){
+                        history.go(-1);
+                    }
+                });
             }
         },
         error: function (result) {
@@ -723,9 +725,21 @@ function refreshScheduleData() {
             $("#loadingToast, .weui_mask").hide();
             if (result.status) {
                 //网络连接超时
-                showCustomErrorTip(result.responseJSON.message);
+                $.alert({
+                    title: '查询课表信息失败',
+                    text: result.responseJSON.message,
+                    onOK: function () {
+                        history.go(-1);
+                    }
+                });
             } else {
-                showNetworkErrorTip();
+                $.alert({
+                    title: '查询课表信息失败',
+                    text: '查询课表信息失败，请检查网络连接后重试',
+                    onOK: function () {
+                        history.go(-1);
+                    }
+                });
             }
         }
     })

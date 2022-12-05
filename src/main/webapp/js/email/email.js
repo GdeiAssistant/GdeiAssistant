@@ -75,12 +75,15 @@ function saveEmail() {
             success: function (result) {
                 $("#loadingToast, .weui_mask").hide();
                 if (result.success) {
-                    $.alert({
-                        text: '你已成功绑定电子邮件地址',
+                    weui.alert('你已成功绑定电子邮件地址', {
                         title: '绑定成功',
-                        onOK: function () {
-                            history.go(-1);
-                        }
+                        buttons: [{
+                            label: '确定',
+                            type: 'primary',
+                            onClick: function(){
+                                history.go(-1);
+                            }
+                        }]
                     });
                 } else {
                     $(".weui_warn").text(result.message).show().delay(2000).hide(0);
@@ -100,31 +103,38 @@ function saveEmail() {
 
 //解绑电子邮件地址
 function unBindEmail() {
-    $.confirm({
+    weui.confirm('你是否确认要解绑电子邮件地址？', {
         title: '解绑电子邮件地址',
-        text: '你是否确认要解绑电子邮件地址？',
-        onOK: function () {
-            $("#loadingToast, .weui_mask").show();
-            $.ajax({
-                url: '/api/email/unbind',
-                method: 'POST',
-                success: function (result) {
-                    $("#loadingToast, .weui_mask").hide();
-                    if (result.success) {
-                        window.location.reload();
-                    } else {
-                        $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+        buttons: [{
+            label: '取消',
+            type: 'default',
+            onClick: function(){}
+        }, {
+            label: '确定',
+            type: 'primary',
+            onClick: function(){
+                $("#loadingToast, .weui_mask").show();
+                $.ajax({
+                    url: '/api/email/unbind',
+                    method: 'POST',
+                    success: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.success) {
+                            window.location.reload();
+                        } else {
+                            $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                        }
+                    },
+                    error: function (result) {
+                        $("#loadingToast, .weui_mask").hide();
+                        if (result.status) {
+                            $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                        } else {
+                            $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
+                        }
                     }
-                },
-                error: function (result) {
-                    $("#loadingToast, .weui_mask").hide();
-                    if (result.status) {
-                        $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
-                    } else {
-                        $(".weui_warn").text("网络访问异常，请检查网络连接").show().delay(2000).hide(0);
-                    }
-                }
-            });
-        }
+                });
+            }
+        }]
     });
 }

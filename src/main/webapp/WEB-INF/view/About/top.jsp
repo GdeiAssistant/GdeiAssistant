@@ -31,11 +31,10 @@
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
-    <link title="default" rel="stylesheet" href="/css/common/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/common/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/about/about.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
+    <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="text/javascript" src="/js/common/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/common/swiper.js"></script>
     <script type="application/javascript" src="/js/common/themeLoader.js"></script>

@@ -5,18 +5,16 @@
     <meta charset="UTF-8">
     <title>我的校园卡</title>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
-    <link title="default" rel="stylesheet" href="/css/common/jquery-weui.min.css">
     <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon/logo.png">
-    <link rel="shortcut icon" type="image/png" sizes="64x64" href="/img/favicon/logo.png">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
-    <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
     <script>document.write("<script type='text/javascript' src='/js/card/cardInfo.js?time=" + Date.now() + "'><\/script>");</script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script type="application/javascript" src="/js/common/themeLoader.js"></script>

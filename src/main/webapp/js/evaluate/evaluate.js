@@ -5,7 +5,7 @@ $(function () {
 
 //提交一键评教请求
 function postEvaluateForm() {
-    $("#loadingToast, .weui_mask").show();
+    let loading = weui.loading('提交中');
     let checked = $("#directlySubmit").prop("checked");
     $.ajax({
         url: '/api/evaluate',
@@ -14,7 +14,7 @@ function postEvaluateForm() {
             directlySubmit: checked
         },
         success: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            loading.hide();
             if (result.success === true) {
                 if (checked) {
                     weui.alert('已提交教学质量评价信息', {
@@ -34,16 +34,16 @@ function postEvaluateForm() {
                     });
                 }
             } else {
-                $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                weui.topTips(result.message);
             }
         },
         error: function (result) {
-            $("#loadingToast, .weui_mask").hide();
-            if (result.status == 503) {
+            loading.hide();
+            if (result.status) {
                 //网络连接超时
-                $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                weui.topTips(result.responseJSON.message);
             } else {
-                $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                weui.topTips('网络连接异常，请检查网络连接');
             }
         }
     });

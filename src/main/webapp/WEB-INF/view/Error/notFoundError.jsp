@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>404 Not Found</title>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <meta content="yes" name="apple-mobile-web-app-capable">

@@ -18,48 +18,26 @@
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
     <link title="default" type="text/css" rel="stylesheet" href="/css/schedule/schedule.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <link title="default" rel="stylesheet" href="/css/common/jquery-weui.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-weui.min.js"></script>
-    <script>document.write("<script type='text/javascript' src='/js/schedule/schedule.js?time=" + Date.now() + "'><\/script>");</script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script type="application/javascript" src="/js/common/themeLoader.js"></script>
+    <script>document.write("<script type='text/javascript' src='/js/schedule/schedule.js?time=" + Date.now() + "'><\/script>");</script>
 </head>
 <body>
 
 <div>
-    <div class="weui_cells_title" style="float: left" onclick="history.go(-1)">返回</div>
-    <div class="weui_cells_title" style="float: right" onclick="showOptionMenu()">更多</div>
+    <div class="weui-cells__title" style="float: left" onclick="history.go(-1)">返回</div>
+    <div class="weui-cells__title" style="float: right" onclick="showOptionMenu()">更多</div>
     <div class="hd">
         <h1 class="page_title" style="clear:both;margin-top: 35px">我的课程表</h1>
     </div>
 </div>
 
-<!-- 加载中弹框 -->
-<div class="weui_mask" style="display: none"></div>
-<div id="loadingToast" class="weui_loading_toast" style="display: none">
-    <div class="weui_mask_transparent"></div>
-    <div class="weui_toast">
-        <div class="weui_loading">
-            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
-        </div>
-        <p class="weui_toast_content">提交信息中</p>
-    </div>
-</div>
 
 <!-- 选择查询的周数 -->
 <div onclick="selectQueryWeek()" style="width:100%;height:auto;box-sizing: border-box;margin-bottom:10px;">
@@ -248,41 +226,30 @@
                 </div>
             </div>
             <!-- 提交按钮 -->
-            <div class="weui_btn_area">
-                <a id="submit" class="weui_btn weui_btn_primary" href="javascript:" onclick="addCustomSchedule()">提交</a>
+            <div class="weui-btn_area">
+                <a id="submit" class="weui-btn weui-btn_primary" href="javascript:" onclick="addCustomSchedule()">提交</a>
             </div>
         </div>
     </div>
 </div>
 
 <!-- 加载中提示框 -->
-<div id="loadingToast" class="weui_loading_toast" style="display: none">
-    <div class="weui_mask_transparent"></div>
-    <div class="weui_toast">
-        <div class="weui_loading">
-            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
-        </div>
-        <p class="weui_toast_content">数据加载中</p>
+<div role="alert" id="loadingToast" style="display: none;">
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+            <span class="weui-primary-loading weui-icon_toast">
+              <span class="weui-primary-loading__dot"></span>
+            </span>
+        <p class="weui-toast__content">加载中</p>
     </div>
 </div>
 
 <!-- 查询成功弹框 -->
 <div id="toast" style="display:none">
-    <div class="weui_mask_transparent"></div>
-    <div class="weui_toast">
-        <i class="weui_icon_toast"></i>
-        <p class="weui_toast_content">加载课表成功</p>
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+        <p class="weui-toast__content">加载课表成功</p>
     </div>
 </div>
 

@@ -28,9 +28,8 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/common/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/about/about.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
@@ -76,26 +75,6 @@
                         <a class="dropdown-item" href="/license">开源协议</a>
                         <a class="dropdown-item" href="/policy/cookie">Cookie政策</a>
                         <a class="dropdown-item" href="/policy/intellectualproperty">知识产权声明</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item"
-                           href="http://www.moe.gov.cn/jyb_xxgk/gk_gbgg/moe_0/moe_495/moe_1073/tnull_11916.html">高等学校学生行为准则</a>
-                        <a class="dropdown-item" href="https://www.gdei.edu.cn/2019/0717/c1371a15694/page.htm">全日制学生学籍管理规定</a>
-                        <a class="dropdown-item"
-                           href="http://www.moe.gov.cn/srcsite/A02/s5911/moe_621/201702/t20170216_296385.html">普通高等学校学生管理规定</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="javascript:" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        站内链接
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/about/download">下载客户端</a>
-                        <a class="dropdown-item" href="https://github.com/GdeiAssistant/GdeiAssistant">程序源代码</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/covid19">疫情防控资讯专题</a>
-                        <a class="dropdown-item" href="/announcement/suicideprevention">青少年自杀干预热线</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -119,27 +98,23 @@
                         <a class="dropdown-item" href="https://www.jnu.edu.cn">暨南大学</a>
                         <a class="dropdown-item" href="https://www.scnu.edu.cn">华南师范大学</a>
                         <a class="dropdown-item" href="http://www.gdei.edu.cn">广东第二师范学院</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item"
-                           href="http://www.nhc.gov.cn/xcs/xxgzbd/gzbd_index.shtml">新冠肺炎疫情防控信息专区</a>
-                        <a class="dropdown-item"
-                           href="http://www.gov.cn/fuwu/zt/yqfkzq/index.htm">新冠肺炎疫情防控服务专区
-                        </a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="javascript:" role="button"
                        data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
-                        党建宣传
+                        智慧党建
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="http://cpc.people.com.cn/index.html">中国共产党新闻网</a>
                         <a class="dropdown-item"
                            href="http://chuxin.people.cn/GB/index.html">“不忘初心、牢记使命”主题教育</a>
-                        <a class="dropdown-item" href="http://cpc.people.com.cn/GB/67481/431601/index.html">人民战“疫”党旗飘扬</a>
+                        <a class="dropdown-item"
+                           href="http://cpc.people.com.cn/GB/67481/431601/index.html">人民战“疫”党旗飘扬</a>
                         <a class="dropdown-item" href="http://dangshi.people.cn">党史学习教育</a>
-                        <a class="dropdown-item" href="http://dangjian.people.com.cn/GB/136058/447038/index.html">我奋斗家国美</a>
+                        <a class="dropdown-item"
+                           href="http://dangjian.people.com.cn/GB/136058/447038/index.html">我奋斗家国美</a>
                         <a class="dropdown-item" href="http://cpc.people.com.cn/20th">二十大专题报道</a>
                     </div>
                 </li>

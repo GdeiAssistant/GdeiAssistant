@@ -55,13 +55,13 @@ function loadTopicImage(id, index) {
 function likeTopic(id) {
     if (!$("#like-icon-" + id).hasClass("lite-iconf-liked")) {
         $(".m-diy-btn").attr("disabled", true);
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         $.ajax({
             url: "/api/topic/id/" + id + "/like",
             type: "post",
             success: function (result) {
                 $(".m-diy-btn").attr("disabled", false);
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.success === true) {
                     $("#like-icon-" + id).removeClass("lite-iconf-like").addClass("lite-iconf-liked");
                     $("#like-count-" + id).text(parseInt($("#like-count-" + id).text()) + 1);
@@ -71,7 +71,7 @@ function likeTopic(id) {
             },
             error: function (result) {
                 $(".m-diy-btn").attr("disabled", false);
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.status) {
                     weui.topTips(result.responseJSON.message);
                 } else {
@@ -107,13 +107,13 @@ function browseTopicImage(image) {
 //加载话题信息
 function loadTopicData() {
     $("#loadmore").attr("disabled", true);
-    $("#loadingToast, .weui_mask").show();
+    $("#loadingToast").show();
     $.ajax({
         url: "/api/topic/start/" + start + "/size/10",
         type: "get",
         success: function (result) {
             $("#loadmore").attr("disabled", false);
-            $("#loadingToast, .weui_mask").hide();
+            $("#loadingToast").hide();
             if (result.success === true) {
                 if (result.data.length != 0) {
                     start = start + result.data.length;
@@ -158,7 +158,7 @@ function loadTopicData() {
         },
         error: function (result) {
             $("#loadmore").attr("disabled", false);
-            $("#loadingToast, .weui_mask").hide();
+            $("#loadingToast").hide();
             if (result.status) {
                 weui.topTips(result.responseJSON.message);
             } else {

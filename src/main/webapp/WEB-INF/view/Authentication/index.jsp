@@ -16,9 +16,8 @@
   <c:if test="${applicationScope.get('grayscale')}">
     <link rel="stylesheet" href="/css/common/grayscale.min.css">
   </c:if>
-  <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-  <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-  <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+  <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+  <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
   <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="/js/common/weui.min.js"></script>
   <script type="application/javascript" src="/js/common/fastclick.js"></script>
@@ -27,14 +26,14 @@
 </head>
 <body>
 
-<div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+<div class="weui-cells__title" onclick="history.go(-1)">返回</div>
 
 <div class="hd">
   <h1 class="page_title">实名认证</h1>
 </div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 <div class="weui-cells">
   <div class="weui-cell" href="javascript:" onclick="">
@@ -57,14 +56,14 @@
 <!-- 选项按钮 -->
 <c:choose>
   <c:when test="${Authentication==null}">
-    <div class="weui_btn_area">
-      <a class="weui_btn weui_btn_primary" href="javascript:"
+    <div class="weui-btn_area">
+      <a class="weui-btn weui-btn_primary" href="javascript:"
          onclick="window.location.href='/authentication/update'">进行认证</a>
     </div>
   </c:when>
   <c:otherwise>
-    <div class="weui_btn_area">
-      <a class="weui_btn weui-btn_warn" href="javascript:"
+    <div class="weui-btn_area">
+      <a class="weui-btn weui-btn_warn" href="javascript:"
          onclick="deleteAuthentication()">取消认证</a>
     </div>
   </c:otherwise>

@@ -53,6 +53,7 @@ html {
 .login-items strong a {
     color: #333;
     text-decoration: none;
+    font-size: 1rem;
 }
 
 @charset "utf-8";
@@ -273,11 +274,13 @@ a {
     word-break: break-all;
     margin-bottom: 15px;
     display: block;
+    font-size: 16px;
 }
 
 .module-check-result-text {
     color: #ffcc00;
     word-break: break-all;
+    font-size: 16px;
 }
 
 .models {
@@ -531,9 +534,23 @@ div strong {
     text-align: center;
 }
 
+.foot .media {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.foot .media img {
+    width: 20px;
+    height: 20px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
 .foot p {
     margin-top: 0.2rem;
     margin-bottom: 0;
+    font-size: 1rem;
 }
 
 .foot .beian {
@@ -546,7 +563,11 @@ div strong {
 }
 
 .dropdown-menu .dropdown-item {
-    font-size: 0.7rem;
+    font-size: 1rem;
+}
+
+.dropdown-toggle {
+    font-size: 1rem;
 }
 
 #rnw_cookies_banner {
@@ -656,7 +677,7 @@ div strong {
     width: 126px;
     height: 30px;
     margin: 0 auto;
-    background: transparent url(/img/about/download.png) no-repeat 0 0;
+    background: transparent url(/img/about/download/download.png) no-repeat 0 0;
     line-height: 30px;
 }
 
@@ -716,6 +737,14 @@ div strong {
 
 .app-other-download-button span {
     font-size: 14px;
+}
+
+.navbar-brand {
+    font-size: 25px;
+}
+
+.dropdown-toggle {
+    margin: 10px;
 }
 
 /*# sourceMappingURL=download-base.css.map */

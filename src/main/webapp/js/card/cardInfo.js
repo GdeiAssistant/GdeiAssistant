@@ -7,12 +7,12 @@ $(function () {
 
 //查询校园卡信息
 function queryCardInfo() {
-    $("#loadingToast, .weui_mask").show();
+    let loading = weui.loading('查询中');
     $.ajax({
         url: '/api/cardinfoquery',
         type: 'post',
         success: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            loading.hide();
             if (result.success) {
                 $("#name").text(result.data.name);
                 $("#number").text(result.data.number);
@@ -23,16 +23,16 @@ function queryCardInfo() {
                 $("#cardFreezeState").text(result.data.cardFreezeState);
             }
             else {
-                $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                weui.topTips(result.message);
             }
         },
         error: function (result) {
-            $("#loadingToast, .weui_mask").hide();
-            if (result.status == 503) {
+            loading.hide();
+            if (result.status) {
                 //网络连接超时
-                $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                weui.topTips(result.responseJSON.message);
             } else {
-                $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                weui.topTips('网络连接异常，请检查网络连接');
             }
         }
     })

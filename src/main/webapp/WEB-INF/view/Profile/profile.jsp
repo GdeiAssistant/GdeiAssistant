@@ -10,7 +10,7 @@
 </div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 <div class="weui-cells">
     <div class="weui-cell" href="javascript:" onclick="window.location.href='/avatar'">
@@ -251,8 +251,8 @@
                 </div>
             </div>
             <!-- 提交按钮 -->
-            <div class="weui_btn_area">
-                <a class="weui_btn weui_btn_primary" href="javascript:" onclick="changeNickname()">确认</a>
+            <div class="weui-btn_area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" onclick="changeNickname()">确认</a>
             </div>
         </div>
     </div>
@@ -281,8 +281,8 @@
                 </div>
             </div>
             <!-- 提交按钮 -->
-            <div class="weui_btn_area">
-                <a class="weui_btn weui_btn_primary" href="javascript:" onclick="submitCustomGender()">确认</a>
+            <div class="weui-btn_area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" onclick="submitCustomGender()">确认</a>
             </div>
         </div>
     </div>
@@ -310,8 +310,8 @@
                 </div>
             </div>
             <!-- 提交按钮 -->
-            <div class="weui_btn_area">
-                <a class="weui_btn weui_btn_primary" href="javascript:" onclick="changeMajor()">确认</a>
+            <div class="weui-btn_area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" onclick="changeMajor()">确认</a>
             </div>
         </div>
     </div>
@@ -339,8 +339,8 @@
                 </div>
             </div>
             <!-- 提交按钮 -->
-            <div class="weui_btn_area">
-                <a class="weui_btn weui_btn_primary" href="javascript:" onclick="changeSchool()">确认</a>
+            <div class="weui-btn_area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" onclick="changeSchool()">确认</a>
             </div>
         </div>
     </div>

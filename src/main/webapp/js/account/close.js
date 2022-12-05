@@ -28,7 +28,7 @@ function postCloseRequest() {
                 label: '确认删除',
                 type: 'default',
                 onClick: function () {
-                    $("#loadingToast, .weui_mask").show();
+                    $("#loadingToast").show();
                     $.ajax({
                         url: '/api/close/submit',
                         method: 'post',
@@ -36,7 +36,7 @@ function postCloseRequest() {
                             password: $("#password").val()
                         },
                         success: function (result) {
-                            $("#loadingToast, .weui_mask").hide();
+                            $("#loadingToast").hide();
                             $(".close-account-request").hide();
                             //显示删除账号结果
                             if (result.success) {
@@ -71,7 +71,7 @@ function postCloseRequest() {
                             $(".close-account-result").show();
                         },
                         error: function () {
-                            $("#loadingToast, .weui_mask").hide();
+                            $("#loadingToast").hide();
                             showNetworkErrorTip();
                         }
                     });

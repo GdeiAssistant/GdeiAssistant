@@ -10,9 +10,8 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <link rel="stylesheet" href="/css/topic/publish.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
@@ -33,24 +32,24 @@
         <span id="dynamic_topic_span"></span>
 
         <!-- 提交的话题信息表单 -->
-        <div class="weui_cells weui_cells_form">
+        <div class="weui-cells weui-cells_form">
             <form>
                 <!-- 话题标签 -->
-                <div class="weui_cell">
-                    <div class="weui_cell_hd">
-                        <label class="weui_label">话题</label>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">话题</label>
                     </div>
-                    <div class="weui_cell_bd weui_cell_primary">
+                    <div class="weui-cell__bd weui-cell_primary">
                         <p class="topic_line">#</p>
-                        <input id="topic" class="weui_input" type="text" maxlength="15"
+                        <input id="topic" class="weui-input" type="text" maxlength="15"
                                name="topic" placeholder="请输入你的话题" onkeyup="setTopicInputDynamicWidth(this)">
                         <p class="topic_line">#</p>
                     </div>
                 </div>
                 <!-- 话题内容 -->
                 <div class="weui-cell">
-                    <div class="weui_cell_hd">
-                        <label class="weui_label">内容</label>
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">内容</label>
                     </div>
                     <div class="weui-cell__bd">
                         <textarea id="content" name="content" class="weui-textarea" placeholder="请输入你的内容" rows="3"
@@ -87,32 +86,20 @@
         </div>
 
         <!-- 提交按钮 -->
-        <div class="weui_btn_area">
-            <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postTopicForm()">提交</a>
+        <div class="weui-btn_area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" onclick="postTopicForm()">提交</a>
         </div>
 
     </div>
 
     <!-- 提交中弹框 -->
-    <div class="weui_mask" style="display: none"></div>
-    <div id="loadingToast" class="weui_loading_toast" style="display: none">
-        <div class="weui_mask_transparent"></div>
-        <div class="weui_toast">
-            <div class="weui_loading">
-                <div class="weui_loading_leaf weui_loading_leaf_0"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_1"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_2"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_3"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_4"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_5"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_6"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_7"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_8"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_9"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_10"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_11"></div>
-            </div>
-            <p class="weui_toast_content">提交中</p>
+    <div role="alert" id="loadingToast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <span class="weui-primary-loading weui-icon_toast">
+              <span class="weui-primary-loading__dot"></span>
+            </span>
+            <p class="weui-toast__content">提交中</p>
         </div>
     </div>
 

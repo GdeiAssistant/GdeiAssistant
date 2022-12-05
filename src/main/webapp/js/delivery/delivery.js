@@ -32,7 +32,7 @@ function submitForm() {
     } else if ($("#remarks").val().length > 100) {
         $(".weui_warn").text('备注长度不合法').show().delay(2000).hide(0);
     } else {
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         $(".weui-btn_primary").attr("disabled", true);
         $.ajax({
             url: '/api/delivery/order',
@@ -47,7 +47,7 @@ function submitForm() {
                 remarks: $("#remarks").val()
             },
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 $(".weui-btn_primary").attr("disabled", false);
                 if (result.success) {
                     window.location.href = '/delivery';
@@ -56,7 +56,7 @@ function submitForm() {
                 }
             },
             error: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 $(".weui-btn_primary").attr("disabled", false);
                 if (result.status) {
                     $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
@@ -70,12 +70,12 @@ function submitForm() {
 
 //加载快递代收订单信息
 function loadDeliveryOrder() {
-    $("#loadingToast, .weui_mask").show();
+    $("#loadingToast").show();
     $.ajax({
         url: '/api/delivery/order/start/' + $(".weui_cells a").length + '/size/10',
         method: 'GET',
         success: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            $("#loadingToast").hide();
             if (result.success) {
                 if (result.data.length == 0) {
                     $("#bottomLine").text("已经到底了");
@@ -97,7 +97,7 @@ function loadDeliveryOrder() {
             }
         },
         error: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            $("#loadingToast").hide();
             if (result.status) {
                 $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
             } else {
@@ -119,13 +119,13 @@ function deleteOrder(orderId) {
             label: '确认',
             type: 'primary',
             onClick: function(){
-                $("#loadingToast, .weui_mask").show();
+                $("#loadingToast").show();
                 $.ajax({
                     url: '/api/delivery/order/id/' + orderId,
                     method: 'DELETE',
                     success: function (result) {
                         if (result.success) {
-                            $("#loadingToast, .weui_mask").hide();
+                            $("#loadingToast").hide();
                             weui.alert('删除订单成功', {
                                 title: '订单已删除',
                                 buttons: [{
@@ -141,7 +141,7 @@ function deleteOrder(orderId) {
                         }
                     },
                     error: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
+                        $("#loadingToast").hide();
                         if (result.status) {
                             $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
                         } else {
@@ -156,7 +156,7 @@ function deleteOrder(orderId) {
 
 //用户接单
 function acceptOrder(orderId) {
-    $("#loadingToast, .weui_mask").show();
+    $("#loadingToast").show();
     $.ajax({
         url: '/api/delivery/acceptorder',
         method: 'POST',
@@ -164,7 +164,7 @@ function acceptOrder(orderId) {
             orderId: orderId
         },
         success: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            $("#loadingToast").hide();
             if (result.success) {
                 weui.alert('接单成功，点击确定刷新订单信息', {
                     title: '接单成功',
@@ -181,7 +181,7 @@ function acceptOrder(orderId) {
             }
         },
         error: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            $("#loadingToast").hide();
             if (result.status) {
                 $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
             } else {
@@ -203,12 +203,12 @@ function finishTrade(tradeId) {
             label: '确定',
             type: 'primary',
             onClick: function(){
-                $("#loadingToast, .weui_mask").show();
+                $("#loadingToast").show();
                 $.ajax({
                     url: '/api/delivery/trade/id/' + tradeId + '/finishtrade',
                     method: 'POST',
                     success: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
+                        $("#loadingToast").hide();
                         if (result.success) {
                             weui.alert('交易已完成', {
                                 title: '交易完成',
@@ -225,7 +225,7 @@ function finishTrade(tradeId) {
                         }
                     },
                     error: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
+                        $("#loadingToast").hide();
                         if (result.status) {
                             $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
                         } else {

@@ -16,9 +16,8 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
@@ -27,20 +26,20 @@
 </head>
 <body>
 
-<div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+<div class="weui-cells__title" onclick="history.go(-1)">返回</div>
 
 <div class="hd">
     <h1 class="page_title">修改绑定手机</h1>
 </div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 <div class="weui-cells">
     <div class="weui-cell weui-cell_access weui-cell_select-before">
         <div class="weui-cell__hd">
             <input id="phone_code" type="hidden" value="86">
-            <label id="phone_flag" class="weui-label" style="width: 4rem"
+            <label id="phone_flag" class="weui-label" style="width: 5rem"
                    onclick="changePhoneCode()">🇨🇳 +86</label>
         </div>
         <div class="weui-cell__bd">
@@ -64,8 +63,8 @@
 
 <p class="page_desc" style="margin-top: 25px">运营商可能会收取短信或通话费用<br>为了保证你的账号安全，请仅绑定本人使用的手机号</p>
 
-<div class="weui_btn_area">
-    <a class="weui_btn weui_btn_primary close-popup" href="javascript:"
+<div class="weui-btn_area">
+    <a class="weui-btn weui-btn_primary close-popup" href="javascript:"
        onclick="savePhoneNumber()">保存</a>
 </div>
 

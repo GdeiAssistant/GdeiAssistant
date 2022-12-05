@@ -1,6 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div class="foot">
+    <div class="media">
+        <img src="/img/about/media/wechat.png" >
+        <img src="/img/about/media/weibo.png" >
+        <img src="/img/about/media/bilibili.png" >
+        <img src="/img/about/media/xiaohongshu.png" >
+        <img src="/img/about/media/douyin.png" >
+    </div>
     <p>Copyright © 2016 - 2023 GdeiAssistant</p>
     <p>All rights reserved</p>
     <div class="beian_area">

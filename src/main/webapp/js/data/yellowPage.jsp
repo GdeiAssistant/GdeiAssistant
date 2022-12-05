@@ -173,12 +173,12 @@
 
     //加载黄页信息
     function queryYellowPageInfo() {
-        $("#loadingToast, .weui_mask").show();
+        $.showLoading('加载中');
         $.ajax({
             url: '/api/data/yellowpage',
             method: 'GET',
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $.hideLoading();
                 if (result.success) {
                     result.data.type.forEach(function (element) {
                         $("#result").append("<div class='weui-cell-container'><div class='weui-cells__title'>" + element.typeName + "</div><div class='weui-cells'></div></div>")
@@ -189,15 +189,15 @@
                     });
                     list = result.data.data;
                 } else {
-                    $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                    $.toptip(result.message, 'error');
                 }
             },
             error: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $.hideLoading();
                 if (result.status) {
-                    $(".weui_warn").text("服务暂不可用，请稍后再试").show().delay(2000).hide(0);
+                    $.toptip('服务暂不可用，请稍后再试', 'error');
                 } else {
-                    $(".weui_warn").text("网络连接异常，请检查并重试").show().delay(2000).hide(0);
+                    $.toptip('网络连接异常，请检查并重试', 'error');
                 }
             }
         })

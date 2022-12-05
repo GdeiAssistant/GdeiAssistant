@@ -10,8 +10,7 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <link rel="stylesheet" href="/css/secret/secret-publish.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
@@ -112,7 +111,7 @@
 </div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 </body>
 

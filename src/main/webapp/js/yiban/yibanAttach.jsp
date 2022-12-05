@@ -13,7 +13,7 @@
             $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
         }
         else {
-            $("#loadingToast, .weui_mask").show();
+            $("#loadingToast").show();
             $.ajax({
                 url: "/yiban/userattach",
                 data: {
@@ -23,7 +23,7 @@
                 type: 'post',
                 success: function (yibanAttachResult) {
                     //隐藏进度条
-                    $("#loadingToast, .weui_mask").hide();
+                    $("#loadingToast").hide();
                     if (yibanAttachResult.success === true) {
                         //绑定易班校园网络账号成功
                         <c:choose>
@@ -42,7 +42,7 @@
                 },
                 error: function () {
                     //隐藏进度条
-                    $("#loadingToast, .weui_mask").hide();
+                    $("#loadingToast").hide();
                     $(".weui_warn").text("绑定校园网络账号失败,请检查网络连接！").show().delay(2000).hide(0);
                 }
             });

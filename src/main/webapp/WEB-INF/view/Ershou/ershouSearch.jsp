@@ -153,7 +153,7 @@
 </section>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 </body>
 </html>

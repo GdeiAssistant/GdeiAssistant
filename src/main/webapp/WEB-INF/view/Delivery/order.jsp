@@ -17,16 +17,15 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script>document.write("<script type='text/javascript' src='/js/delivery/delivery.js?time=" + Date.now() + "'><\/script>");</script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script type="application/javascript" src="/js/common/themeLoader.js"></script>
     <style>
-        .weui_cells {
+        .weui-cells {
             margin-top: 0;
         }
     </style>
@@ -34,78 +33,78 @@
 <body>
 
 <div>
-    <div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+    <div class="weui-cells__title" onclick="history.go(-1)">返回</div>
     <div class="hd">
         <h1 class="page_title" style="margin-top: 15px">在线下单</h1>
     </div>
 </div>
 
 <div class="weui-cells__title">个人信息</div>
-<div class="weui_cells weui_cells_form">
-    <div class="weui_cell">
-        <div class="weui_cell_hd">
-            <label class="weui_label">姓名</label>
+<div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+        <div class="weui-cell__hd">
+            <label class="weui-label">姓名</label>
         </div>
-        <div class="weui_cell_bd weui_cell_primary">
-            <input id="name" class="weui_input" type="text" maxlength="10" name="name"
+        <div class="weui-cell__bd weui-cell_primary">
+            <input id="name" class="weui-input" type="text" maxlength="10" name="name"
                    placeholder="请输入姓名">
         </div>
     </div>
     <div class="weui-cell">
-        <div class="weui_cell_hd">
-            <label class="weui_label">学号</label>
+        <div class="weui-cell__hd">
+            <label class="weui-label">学号</label>
         </div>
-        <div class="weui_cell_bd weui_cell_primary">
-            <input id="number" class="weui_input" type="number" maxlength="11"
+        <div class="weui-cell__bd weui-cell_primary">
+            <input id="number" class="weui-input" type="number" maxlength="11"
                    name="number" pattern="[0-9]*" placeholder="请输入学号" onkeyup="inputLengthCheck(this,11)">
         </div>
     </div>
     <div class="weui-cell">
-        <div class="weui_cell_hd">
-            <label class="weui_label">手机号</label>
+        <div class="weui-cell__hd">
+            <label class="weui-label">手机号</label>
         </div>
-        <div class="weui_cell_bd weui_cell_primary">
-            <input id="phone" class="weui_input" type="number" maxlength="11"
+        <div class="weui-cell__bd weui-cell_primary">
+            <input id="phone" class="weui-input" type="number" maxlength="11"
                    name="phone" pattern="[0-9]*" placeholder="请输入手机号" onkeyup="inputLengthCheck(this,11)">
         </div>
     </div>
 </div>
 
 <div class="weui-cells__title">交易信息</div>
-<div class="weui_cells weui_cells_form">
+<div class="weui-cells weui-cells_form">
     <div class="weui-cell">
-        <div class="weui_cell_hd">
-            <label class="weui_label">报酬</label>
+        <div class="weui-cell__hd">
+            <label class="weui-label">报酬</label>
         </div>
-        <div class="weui_cell_bd weui_cell_primary">
-            <input id="price" class="weui_input" type="number" name="price" placeholder="不超过99元，数值将四舍五入">
+        <div class="weui-cell__bd weui-cell_primary">
+            <input id="price" class="weui-input" type="number" name="price" placeholder="不超过99元，数值将四舍五入">
         </div>
     </div>
     <div class="weui-cell">
-        <div class="weui_cell_hd">
-            <label class="weui_label">地址</label>
+        <div class="weui-cell__hd">
+            <label class="weui-label">地址</label>
         </div>
-        <div class="weui_cell_bd weui_cell_primary">
-            <input id="address" class="weui_input" type="text" maxlength="50" name="address" placeholder="请输入送往地址">
+        <div class="weui-cell__bd weui-cell_primary">
+            <input id="address" class="weui-input" type="text" maxlength="50" name="address" placeholder="请输入送往地址">
         </div>
     </div>
 </div>
 
 <div class="weui-cells__title">快递信息</div>
-<div class="weui_cells weui_cells_form">
+<div class="weui-cells weui-cells_form">
     <div class="weui-cell">
-        <div class="weui_cell_hd">
-            <label class="weui_label">公司</label>
+        <div class="weui-cell__hd">
+            <label class="weui-label">公司</label>
         </div>
-        <div class="weui_cell_bd weui_cell_primary">
-            <input id="company" class="weui_input" type="text" maxlength="10" name="company" placeholder="请输入快递公司名称">
+        <div class="weui-cell__bd weui-cell_primary">
+            <input id="company" class="weui-input" type="text" maxlength="10" name="company" placeholder="请输入快递公司名称">
         </div>
     </div>
     <div class="weui-cell">
-        <div class="weui_cell_hd">
-            <label class="weui_label">备注</label>
+        <div class="weui-cell__hd">
+            <label class="weui-label">备注</label>
         </div>
-        <div class="weui_cell_bd weui_cell_primary">
+        <div class="weui-cell__bd weui-cell_primary">
          <textarea id="remarks" onkeyup="textAreaInputLengthCheck(this,100)"
                    placeholder="请输入备注" type="text"
                    class="weui-textarea"></textarea>
@@ -123,30 +122,18 @@
 <br>
 
 <!-- 提交中弹框 -->
-<div class="weui_mask" style="display: none"></div>
-<div id="loadingToast" class="weui_loading_toast" style="display: none">
-    <div class="weui_mask_transparent"></div>
-    <div class="weui_toast">
-        <div class="weui_loading">
-            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
-        </div>
-        <p class="weui_toast_content">提交中</p>
+<div role="alert" id="loadingToast" style="display: none;">
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+            <span class="weui-primary-loading weui-icon_toast">
+              <span class="weui-primary-loading__dot"></span>
+            </span>
+        <p class="weui-toast__content">提交中</p>
     </div>
 </div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 </body>
 </html>

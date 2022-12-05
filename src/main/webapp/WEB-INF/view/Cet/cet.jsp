@@ -17,9 +17,8 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script>document.write("<script type='text/javascript' src='/js/cet/cet.js?time=" + Date.now() + "'><\/script>");</script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
@@ -30,20 +29,20 @@
 <!-- 用户填写信息页面 -->
 <div id="edit">
 
-    <div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+    <div class="weui-cells__title" onclick="history.go(-1)">返回</div>
 
     <div class="hd">
         <h1 class="page_title">四六级查询</h1>
     </div>
 
     <!-- 提交的查询信息表单 -->
-    <div class="weui_cells weui_cells_form">
+    <div class="weui-cells weui-cells_form">
         <div class="weui-cell weui-cell_vcode">
-            <div class="weui_cell_hd">
-                <label class="weui_label">考号</label>
+            <div class="weui-cell__hd">
+                <label class="weui-label">考号</label>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input id="number" class="weui_input" type="number" maxlength="15" name="number" pattern="[0-9]*"
+            <div class="weui-cell__bd weui-cell_primary">
+                <input id="number" class="weui-input" type="number" maxlength="15" name="number" pattern="[0-9]*"
                        placeholder="请输入15位准证号" onkeyup="inputLengthCheck(this,15)">
             </div>
             <div class="weui-cell__ft">
@@ -51,22 +50,22 @@
             </div>
         </div>
 
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">姓名</label>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">姓名</label>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input id="name" class="weui_input" type="text" maxlength="20" name="name"
+            <div class="weui-cell__bd weui-cell_primary">
+                <input id="name" class="weui-input" type="text" maxlength="20" name="name"
                        placeholder="姓名超过3个字可只输入前3个">
             </div>
         </div>
 
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">验证码</label>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">验证码</label>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input id="checkcode" class="weui_input" type="text" maxlength="10" name="checkcode"
+            <div class="weui-cell__bd weui-cell_primary">
+                <input id="checkcode" class="weui-input" type="text" maxlength="10" name="checkcode"
                        placeholder="请输入验证码">
             </div>
             <div class="weui-cell__ft" style="width: 120px;height: 50px;">
@@ -78,8 +77,8 @@
     </div>
 
     <!-- 提交按钮 -->
-    <div class="weui_btn_area">
-        <a class="weui_btn weui_btn_primary" href="javascript:" onclick="postQueryForm()">查询</a>
+    <div class="weui-btn_area">
+        <a class="weui-btn weui-btn_primary" href="javascript:" onclick="postQueryForm()">查询</a>
     </div>
 
     <p class="page_desc" style="margin-top: 25px">担心遗忘准考证号？点击
@@ -87,30 +86,18 @@
     </p>
 
     <!-- 查询中弹框 -->
-    <div class="weui_mask" style="display: none"></div>
-    <div id="loadingToast" class="weui_loading_toast" style="display: none">
-        <div class="weui_mask_transparent"></div>
-        <div class="weui_toast">
-            <div class="weui_loading">
-                <div class="weui_loading_leaf weui_loading_leaf_0"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_1"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_2"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_3"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_4"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_5"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_6"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_7"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_8"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_9"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_10"></div>
-                <div class="weui_loading_leaf weui_loading_leaf_11"></div>
-            </div>
-            <p class="weui_toast_content">查询中</p>
+    <div role="alert" id="loadingToast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <span class="weui-primary-loading weui-icon_toast">
+              <span class="weui-primary-loading__dot"></span>
+            </span>
+            <p class="weui-toast__content">查询中</p>
         </div>
     </div>
 
     <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-    <div class="weui_toptips weui_warn js_tooltips"></div>
+    <div class="weui-toptips weui_warn js_tooltips"></div>
 
     <br><br>
 
@@ -146,22 +133,22 @@
         <p class="page_desc">成绩仅供参考,请以成绩单为准</p>
     </div>
 
-    <div class="weui_msg">
+    <div class="weui-msg">
         <div class="weui_text_area">
-            <h2 id="cetName" class="weui_msg_title"></h2>
-            <p id="cetType" class="weui_msg_desc"></p>
-            <p id="cetSchool" class="weui_msg_desc"></p>
+            <h2 id="cetName" class="weui-msg_title"></h2>
+            <p id="cetType" class="weui-msg_desc"></p>
+            <p id="cetSchool" class="weui-msg_desc"></p>
             <br>
-            <p id="cetTotalScore" class="weui_msg_desc" style="color: red"></p>
-            <p id="cetListeningScore" class="weui_msg_desc"></p>
-            <p id="cetReadingScore" class="weui_msg_desc"></p>
-            <p id="cetWritingAndTranslatingScore" class="weui_msg_desc"></p>
+            <p id="cetTotalScore" class="weui-msg_desc" style="color: red"></p>
+            <p id="cetListeningScore" class="weui-msg_desc"></p>
+            <p id="cetReadingScore" class="weui-msg_desc"></p>
+            <p id="cetWritingAndTranslatingScore" class="weui-msg_desc"></p>
         </div>
         <br>
         <div class="weui_opr_area">
-            <p class="weui_btn_area">
-                <a onclick="reQuery()" class="weui_btn weui_btn_primary" href="javascript:">重新查询</a>
-                <a onclick="window.location.href='/index'" class="weui_btn weui_btn_default" href="javascript:">返回主页</a>
+            <p class="weui-btn_area">
+                <a onclick="reQuery()" class="weui-btn weui-btn_primary" href="javascript:">重新查询</a>
+                <a onclick="window.location.href='/index'" class="weui-btn weui-btn_default" href="javascript:">返回主页</a>
             </p>
         </div>
     </div>

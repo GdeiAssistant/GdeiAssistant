@@ -7,12 +7,12 @@ $(function () {
 function saveCetNumber() {
     if ($("#cetNumberInput").val().length === 0) {
         //删除保存的准考证号
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         $.ajax({
             url: '/api/cet/number',
             type: 'post',
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.success) {
                     window.location.reload();
                 } else {
@@ -20,7 +20,7 @@ function saveCetNumber() {
                 }
             },
             error: function () {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.status == 503) {
                     //网络连接超时
                     $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
@@ -31,7 +31,7 @@ function saveCetNumber() {
         })
     } else {
         if ($("#cetNumberInput").val().length === 15) {
-            $("#loadingToast, .weui_mask").show();
+            $("#loadingToast").show();
             $.ajax({
                 url: '/api/cet/number',
                 type: 'post',
@@ -39,7 +39,7 @@ function saveCetNumber() {
                     number: $("#cetNumberInput").val()
                 },
                 success: function (result) {
-                    $("#loadingToast, .weui_mask").hide();
+                    $("#loadingToast").hide();
                     if (result.success) {
                         window.location.reload();
                     } else {
@@ -47,7 +47,7 @@ function saveCetNumber() {
                     }
                 },
                 error: function (result) {
-                    $("#loadingToast, .weui_mask").hide();
+                    $("#loadingToast").hide();
                     if (result.status == 503) {
                         //网络连接超时
                         $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);

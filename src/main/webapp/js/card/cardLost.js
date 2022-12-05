@@ -24,9 +24,9 @@ function inputLengthCheck(str, maxLen) {
 function postCardLostRequest() {
     var password = $("#password").val();
     if (password.length === 0 || password.length > 6) {
-        $(".weui_warn").text("请输入6位的校园卡查询密码").show().delay(2000).hide(0);
+        weui.topTips('请输入6位的校园卡查询密码');
     } else {
-        $("#loadingToast, .weui_mask").show();
+        let loading = weui.loading('挂失中');
         $.ajax({
             url: '/api/cardlost',
             type: 'post',
@@ -34,20 +34,20 @@ function postCardLostRequest() {
                 cardPassword: password
             },
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                loading.hide();
                 if (result.success) {
                     weui.alert('请尽快前往办卡处进行校园卡补办', { title: '挂失校园卡成功' });
                 } else {
-                    $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                    weui.topTips(result.message);
                 }
             },
             error: function (result) {
-                $("#loadingToast, .weui_mask").hide();
-                if (result.status == 503) {
+                loading.hide();
+                if (result.status) {
                     //网络连接超时
-                    $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                    weui.topTips(result.responseJSON.message);
                 } else {
-                    $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                    weui.topTips('网络连接异常，请检查网络连接');
                 }
             }
         })

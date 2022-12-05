@@ -51,14 +51,14 @@ function handleGradeInfo(gradeQueryResult) {
 function postQueryForm(year) {
     //显示进度条
     changeYearSelectedClass(year);
-    $("#loadingToast, .weui_mask").show();
+    let loading = weui.loading('加载中')
     if (year == undefined) {
         $.ajax({
             url: "/api/gradequery",
             type: 'post',
             success: function (result) {
                 //隐藏进度条
-                $("#loadingToast, .weui_mask").hide();
+                loading.hide();
                 clearGradeInfo();
                 if (result.success === true) {
                     changeYearSelectedClass(result.data.year);
@@ -69,7 +69,7 @@ function postQueryForm(year) {
             },
             error: function (result) {
                 //隐藏进度条
-                $("#loadingToast, .weui_mask").hide();
+                loading.hide();
                 if (result.status) {
                     //网络连接超时
                     showCustomErrorTip(result.responseJSON.message);
@@ -85,7 +85,7 @@ function postQueryForm(year) {
             type: 'post',
             success: function (result) {
                 //隐藏进度条
-                $("#loadingToast, .weui_mask").hide();
+                loading.hide();
                 clearGradeInfo();
                 if (result.success === true) {
                     changeYearSelectedClass(result.data.year);
@@ -96,7 +96,7 @@ function postQueryForm(year) {
             },
             error: function (result) {
                 //隐藏进度条
-                $("#loadingToast, .weui_mask").hide();
+                loading.hide();
                 if (result.status) {
                     //网络连接超时
                     showCustomErrorTip(result.responseJSON.message);
@@ -154,13 +154,13 @@ function changeYearSelectedClass(region) {
 
 //更新实时成绩数据
 function refreshGradeData() {
-    $("#loadingToast, .weui_mask").show();
+    let loading = weui.loading('加载中');
     $.ajax({
         url: '/api/refreshgrade',
         method: 'POST',
         success: function (result) {
             //隐藏进度条
-            $("#loadingToast, .weui_mask").hide();
+            loading.hide();
             clearGradeInfo();
             if (result.success === true) {
                 changeYearSelectedClass(result.data.year);
@@ -171,7 +171,7 @@ function refreshGradeData() {
         },
         error: function (result) {
             //隐藏进度条
-            $("#loadingToast, .weui_mask").hide();
+            loading.hide();
             if (result.status) {
                 //网络连接超时
                 showCustomErrorTip(result.responseJSON.message);

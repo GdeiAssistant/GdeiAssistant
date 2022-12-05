@@ -81,7 +81,7 @@ function postQueryForm() {
     } else if ($('#number').val().length !== 15) {
         $(".weui_warn").text("准考证号长度不正确！").show().delay(2000).hide(0);
     } else {
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         $.ajax({
             url: '/rest/cetquery',
             type: 'post',
@@ -91,7 +91,7 @@ function postQueryForm() {
                 checkcode: $("#checkcode").val()
             },
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.success) {
                     $("#edit").hide();
                     //加载成绩信息
@@ -110,7 +110,7 @@ function postQueryForm() {
             },
             error: function (result) {
                 updateCheckCode();
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.status == 503) {
                     //网络连接超时
                     $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);

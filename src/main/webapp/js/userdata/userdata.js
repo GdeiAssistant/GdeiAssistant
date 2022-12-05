@@ -4,7 +4,7 @@ function exportUserData() {
         title: '导出用户数据',
         text: '是否确认提交用户数据导出请求？',
         onOK: function () {
-            $("#loadingToast, .weui_mask").show();
+            $("#loadingToast").show();
             $.ajax({
                 url: '/api/userdata/state',
                 method: 'get',
@@ -17,7 +17,7 @@ function exportUserData() {
                                     url: '/api/userdata/export',
                                     method: 'post',
                                     success: function (result) {
-                                        $("#loadingToast, .weui_mask").hide();
+                                        $("#loadingToast").hide();
                                         if (result.success) {
                                             $.alert({
                                                 title: '已提交用户数据导出请求',
@@ -28,7 +28,7 @@ function exportUserData() {
                                         }
                                     },
                                     error: function () {
-                                        $("#loadingToast, .weui_mask").hide();
+                                        $("#loadingToast").hide();
                                         $.toptip('网络连接失败，请检查网络连接！', 'error');
                                     }
                                 });
@@ -48,7 +48,7 @@ function exportUserData() {
                                     url: '/api/userdata/download',
                                     method: 'post',
                                     success: function (result) {
-                                        $("#loadingToast, .weui_mask").hide();
+                                        $("#loadingToast").hide();
                                         if (result.success) {
                                             window.open(result.data);
                                         } else {
@@ -56,14 +56,14 @@ function exportUserData() {
                                         }
                                     },
                                     error: function () {
-                                        $("#loadingToast, .weui_mask").hide();
+                                        $("#loadingToast").hide();
                                         $.toptip('网络连接失败，请检查网络连接！', 'error');
                                     }
                                 });
                                 break;
                         }
                     } else {
-                        $("#loadingToast, .weui_mask").hide();
+                        $("#loadingToast").hide();
                         $.toptip(result.message, 'error');
                     }
                 },

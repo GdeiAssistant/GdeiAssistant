@@ -5,7 +5,7 @@
 <div class="banxin">
 
     <div class="app_logo margin-bottom60">
-        <img src="/img/about/logo.png" width="120" height="120">
+        <img src="/img/about/application/logo.png" width="120" height="120">
     </div>
 
     <!-- 功能模块启用状态检查结果提示信息 仅开发模式下显示 -->
@@ -43,27 +43,27 @@
                 <tr>
                     <td>
                         <div>
-                            <img src="/img/about/preview_0.jpg">
+                            <img src="/img/about/application/preview_0.jpg">
                         </div>
                     </td>
                     <td>
                         <div>
-                            <img src="/img/about/preview_1.jpg">
+                            <img src="/img/about/application/preview_1.jpg">
                         </div>
                     </td>
                     <td>
                         <div>
-                            <img src="/img/about/preview_2.jpg">
+                            <img src="/img/about/application/preview_2.jpg">
                         </div>
                     </td>
                     <td>
                         <div>
-                            <img src="/img/about/preview_3.jpg">
+                            <img src="/img/about/application/preview_3.jpg">
                         </div>
                     </td>
                     <td>
                         <div>
-                            <img src="/img/about/preview_4.jpg">
+                            <img src="/img/about/application/preview_4.jpg">
                         </div>
                     </td>
                 </tr>

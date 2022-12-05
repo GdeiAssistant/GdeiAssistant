@@ -18,8 +18,7 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <link rel="stylesheet" href="/css/dating/global.css">
     <link rel="stylesheet" href="/css/dating/layout.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
@@ -137,15 +136,15 @@
 
 <!-- 撩一下信息发送成功弹框 -->
 <div id="toast" style="display:none">
-    <div class="weui_mask_transparent"></div>
-    <div class="weui_toast">
-        <i class="weui_icon_toast"></i>
-        <p class="weui_toast_content">发送成功，请耐心等待对方回复</p>
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+        <p class="weui-toast__content">发送成功，请耐心等待对方回复</p>
     </div>
 </div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 </body>
 </html>

@@ -14,8 +14,7 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/ershou/ershou-base.css">
     <link rel="stylesheet" type="text/css" href="/css/ershou/ershou-nav.css">
     <title>广东第二师范学院二手交易</title>
@@ -336,7 +335,7 @@
 <div style="height: 4rem;"></div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 <!-- 底部Tab栏 -->
 <nav class="main-nav">

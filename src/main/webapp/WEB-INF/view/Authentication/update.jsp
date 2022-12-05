@@ -16,9 +16,8 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
@@ -27,34 +26,34 @@
 </head>
 <body>
 
-<div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+<div class="weui-cells__title" onclick="history.go(-1)">返回</div>
 
 <div class="hd">
     <h1 class="page_title">实名认证</h1>
 </div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 <!-- 中国居民身份证实名认证 -->
 <div class="mainland_authentication">
-    <div class="weui_cells weui_cells_form">
+    <div class="weui-cells weui-cells_form">
         <form>
-            <div class="weui_cell">
-                <div class="weui_cell_hd" style="width: 4rem">
-                    <label class="weui_label" style="width: 4rem">姓名</label>
+            <div class="weui-cell">
+                <div class="weui-cell__hd" style="width: 4rem">
+                    <label class="weui-label" style="width: 4rem">姓名</label>
                 </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input id="mainland-idcard-name" class="weui_input" type="text" maxlength="15" name="name"
+                <div class="weui-cell__bd weui-cell_primary">
+                    <input id="mainland-idcard-name" class="weui-input" type="text" maxlength="15" name="name"
                            placeholder="请输入你的姓名">
                 </div>
             </div>
-            <div class="weui_cell">
-                <div class="weui_cell_hd" style="width: 4rem">
-                    <label class="weui_label" style="width: 4rem">身份证号</label>
+            <div class="weui-cell">
+                <div class="weui-cell__hd" style="width: 4rem">
+                    <label class="weui-label" style="width: 4rem">身份证号</label>
                 </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input id="mainland-idcard-number" class="weui_input" type="text" maxlength="18" name="number"
+                <div class="weui-cell__bd weui-cell_primary">
+                    <input id="mainland-idcard-number" class="weui-input" type="text" maxlength="18" name="number"
                            placeholder="请输入你的15位或18位中国居民身份证号码">
                 </div>
             </div>
@@ -62,8 +61,8 @@
     </div>
 
     <!-- 提交按钮 -->
-    <div class="weui_btn_area">
-        <a class="weui_btn weui_btn_primary" href="javascript:" onclick="updateMainLandIDCardAuthentication()">认证</a>
+    <div class="weui-btn_area">
+        <a class="weui-btn weui-btn_primary" href="javascript:" onclick="updateMainLandIDCardAuthentication()">认证</a>
     </div>
 
     <p class="page_desc" style="margin-top: 25px" onclick="switchToHMTFAuthentication()">港澳台及海外用户实名认证</p>
@@ -72,23 +71,23 @@
 
 <!-- 港澳台和海外用户实名认证 -->
 <div class="hmtf_authentication" style="display: none">
-    <div class="weui_cells weui_cells_form">
+    <div class="weui-cells weui-cells_form">
         <form>
-            <div class="weui_cell">
-                <div class="weui_cell_hd" style="width: 4rem">
-                    <label class="weui_label" style="width: 4rem">姓名</label>
+            <div class="weui-cell">
+                <div class="weui-cell__hd" style="width: 4rem">
+                    <label class="weui-label" style="width: 4rem">姓名</label>
                 </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input id="hmtf-idcard-name" class="weui_input" type="text" maxlength="15" name="name"
+                <div class="weui-cell__bd weui-cell_primary">
+                    <input id="hmtf-idcard-name" class="weui-input" type="text" maxlength="15" name="name"
                            placeholder="请输入你的姓名">
                 </div>
             </div>
-            <div class="weui_cell">
-                <div class="weui_cell_hd" style="width: 4rem">
-                    <label class="weui_label" style="width: 4rem">证件号码</label>
+            <div class="weui-cell">
+                <div class="weui-cell__hd" style="width: 4rem">
+                    <label class="weui-label" style="width: 4rem">证件号码</label>
                 </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input id="hmtf-idcard-number" class="weui_input" type="text" maxlength="18" name="number"
+                <div class="weui-cell__bd weui-cell_primary">
+                    <input id="hmtf-idcard-number" class="weui-input" type="text" maxlength="18" name="number"
                            placeholder="请输入你的证件号码">
                 </div>
             </div>
@@ -136,8 +135,8 @@
     </div>
 
     <!-- 提交按钮 -->
-    <div class="weui_btn_area">
-        <a class="weui_btn weui_btn_primary" href="javascript:" onclick="updateHMTFIDCardAuthentication()">认证</a>
+    <div class="weui-btn_area">
+        <a class="weui-btn weui-btn_primary" href="javascript:" onclick="updateHMTFIDCardAuthentication()">认证</a>
     </div>
 
     <p class="page_desc" style="margin-top: 25px" onclick="switchToMainlandAuthentication()">

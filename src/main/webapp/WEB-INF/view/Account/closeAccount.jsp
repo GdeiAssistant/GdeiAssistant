@@ -11,9 +11,8 @@
     <c:if test="${applicationScope.get('grayscale')}">
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script>document.write("<script type='text/javascript' src='/js/account/close.js?time=" + Date.now() + "'><\/script>");</script>
@@ -22,10 +21,10 @@
 </head>
 <body>
 
-<div class="weui_cells_title" onclick="history.go(-1)">返回</div>
+<div class="weui-cells__title" onclick="history.go(-1)">返回</div>
 
 <!-- 错误提示，显示时用$.show();隐藏时用$.hide(); -->
-<div class="weui_toptips weui_warn js_tooltips"></div>
+<div class="weui-toptips weui_warn js_tooltips"></div>
 
 <div class="close-account-request">
     <div class="weui-msg">
@@ -40,21 +39,21 @@
     </div>
 
     <!-- 提交的用户信息表单 -->
-    <div class="weui_cells">
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">密码</label>
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">密码</label>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input id="password" class="weui_input" type="password" maxlength="35" name="password"
+            <div class="weui-cell__bd weui-cell_primary">
+                <input id="password" class="weui-input" type="password" maxlength="35" name="password"
                        placeholder="请输入你的校园网密码">
             </div>
         </div>
     </div>
 
     <!-- 注销按钮 -->
-    <div class="weui_btn_area">
-        <a class="weui_btn weui_btn_warn" href="javascript:" onclick="postCloseRequest()">注销</a>
+    <div class="weui-btn_area">
+        <a class="weui-btn weui-btn_warn" href="javascript:" onclick="postCloseRequest()">注销</a>
     </div>
 
     <p class="page_desc" style="margin-top: 15px">注销账号前请认真阅读并同意
@@ -97,25 +96,13 @@
 </div>
 
 <!-- 注销中弹框 -->
-<div class="weui_mask" style="display: none"></div>
-<div id="loadingToast" class="weui_loading_toast" style="display: none">
-    <div class="weui_mask_transparent"></div>
-    <div class="weui_toast">
-        <div class="weui_loading">
-            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
-        </div>
-        <p class="weui_toast_content">注销中</p>
+<div role="alert" id="loadingToast" style="display: none;">
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+            <span class="weui-primary-loading weui-icon_toast">
+              <span class="weui-primary-loading__dot"></span>
+            </span>
+        <p class="weui-toast__content">注销中</p>
     </div>
 </div>
 

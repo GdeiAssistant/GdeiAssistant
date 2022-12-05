@@ -31,9 +31,9 @@ function showDatePicker() {
 //提交查询表单
 function postQueryForm() {
     if ($("#year").val() === '' || $("#month").val() === '' || $("#date").val() === '') {
-        $(".weui_warn").text("请选择查询的日期").show().delay(2000).hide(0);
+        weui.topTips('请选择查询的日期');
     } else {
-        $("#loadingToast, .weui_mask").show();
+        let loading = weui.loading('查询中');
         $.ajax({
             url: '/api/cardquery',
             method: 'post',
@@ -43,7 +43,7 @@ function postQueryForm() {
                 'date': $("#date").val()
             },
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                loading.hide();
                 if (result.success) {
                     //清空查询结果
                     $("#cardQueryResult").empty();
@@ -66,16 +66,16 @@ function postQueryForm() {
                     $("#input").hide();
                     $("#result").show();
                 } else {
-                    $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                    weui.topTips(result.message);
                 }
             },
             error: function (result) {
-                $("#loadingToast, .weui_mask").hide();
-                if (result.status == 503) {
+                loading.hide();
+                if (result.status) {
                     //网络连接超时
-                    $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                    weui.topTips(result.responseJSON.message);
                 } else {
-                    $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                    weui.topTips('网络连接异常，请检查网络连接');
                 }
             }
         })

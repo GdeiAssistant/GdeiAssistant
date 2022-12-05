@@ -131,13 +131,13 @@ function loadCommentList(id) {
 //加载照片列表
 function loadPhotographs() {
     if (!$("#loadmore").attr("disabled")) {
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         $("#loadmore").attr("disabled", true);
         $.ajax({
             url: '/api/photograph/type/' + $("#type").val() + '/start/' + $("#start").val() + '/size/' + 10,
             method: 'GET',
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.success) {
                     if (result.data.length == 0) {
                         $("#loadmore").attr("disabled", true);
@@ -207,7 +207,7 @@ function loadPhotographs() {
                 }
             },
             error: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 $("#loadmore").attr("disabled", false);
                 if (result.status) {
                     $.alert({

@@ -8,7 +8,7 @@ function postLoginForm() {
     if ($("#username").val() === "" || $("#password").val() === "") {
         $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
     } else {
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         $.ajax({
             url: '/wechat/userattach',
             method: 'post',
@@ -17,7 +17,7 @@ function postLoginForm() {
                 password: $("#password").val()
             },
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.success) {
                     weui.alert('绑定校园网络账号成功', {
                         title: '绑定成功',
@@ -30,7 +30,7 @@ function postLoginForm() {
                         }]
                     });
                 } else {
-                    $("#loadingToast, .weui_mask").hide();
+                    $("#loadingToast").hide();
                     $(".weui_warn").text(result.message).show().delay(2000).hide(0);
                 }
             },

@@ -220,9 +220,7 @@ function selectQueryWeek() {
         onConfirm: function (result) {
             //更新当前选中周数
             sessionStorage.setItem("scheduleWeek", result[0].value);
-            setTimeout(function () {
-                window.location.reload();
-            }, 100);
+            postQueryForm();
         }
     });
 }
@@ -315,13 +313,13 @@ function selectScheduleWeek() {
 
 //提交删除自定义课程请求
 function deleteCustomSchedule(id, dataListIndex, detailListIndex) {
-    $("#loadingToast, .weui_mask").show();
+    $.showLoading("删除中")
     $("button[type='submit']").attr("disabeled", true);
     $.ajax({
         url: '/api/customschedule/id/' + id,
         type: 'DELETE',
         success: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            $.hideLoading();
             if (result.success) {
                 $.toptip('删除成功', 'success');
                 //同步删除缓存数据列表中对应的数据
@@ -351,7 +349,7 @@ function deleteCustomSchedule(id, dataListIndex, detailListIndex) {
             }
         },
         error: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            $.hideLoading();
             $("button[type='submit']").attr("disabeled", false);
             if (result.status) {
                 $.toptip(result.responseJSON.message, 'error');
@@ -378,7 +376,7 @@ function addCustomSchedule() {
         $("#error").text("初始上课周数不能小于结束上课周数").show().delay(2000).hide(0);
     } else {
         //提交自定义课程信息
-        $("#loadingToast, .weui_mask").show();
+        $.showLoading("提交中")
         $("#submit").attr("disabled", true);
         $.ajax({
             url: '/api/customshedule',
@@ -392,7 +390,7 @@ function addCustomSchedule() {
                 maxScheduleWeek: parseInt($("#max_week").val())
             },
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $.hideLoading();
                 if (result.success) {
                     $.toptip('提交成功', 'success');
                     setTimeout(function () {
@@ -407,7 +405,7 @@ function addCustomSchedule() {
                 }
             },
             error: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $.hideLoading();
                 $("#submit").attr("disabled", false);
                 if (result.status) {
                     $.toptip(result.responseJSON.message, 'error');
@@ -422,7 +420,7 @@ function addCustomSchedule() {
 //提交课表查询请求
 function postQueryForm() {
     //显示进度条
-    $("#loadingToast, .weui_mask").show();
+    $.showLoading("加载中")
     let week = sessionStorage.getItem("scheduleWeek");
     //判断是否查询指定周数
     if (!week) {
@@ -432,7 +430,7 @@ function postQueryForm() {
             type: 'post',
             success: function (result) {
                 //隐藏进度条
-                $("#loadingToast, .weui_mask").hide();
+                $.hideLoading();
                 if (result.success === true) {
                     //更新当前选中周数
                     sessionStorage.setItem("scheduleWeek", result.data.week);
@@ -441,10 +439,7 @@ function postQueryForm() {
                 } else {
                     $.alert({
                         title: '查询课表信息失败',
-                        text: result.message,
-                        onOK: function (){
-                            history.go(-1);
-                        }
+                        text: result.message
                     });
                 }
             },
@@ -452,18 +447,12 @@ function postQueryForm() {
                 if (result.status) {
                     $.alert({
                         title: '查询课表信息失败',
-                        text: result.responseJSON.message,
-                        onOK: function () {
-                            history.go(-1);
-                        }
+                        text: result.responseJSON.message
                     });
                 } else {
                     $.alert({
                         title: '查询课表信息失败',
-                        text: '查询课表信息失败，请检查网络连接后重试',
-                        onOK: function () {
-                            history.go(-1);
-                        }
+                        text: '查询课表信息失败，请检查网络连接后重试'
                     });
                 }
             }
@@ -477,7 +466,7 @@ function postQueryForm() {
             type: 'post',
             success: function (result) {
                 //隐藏进度条
-                $("#loadingToast, .weui_mask").hide();
+                $.hideLoading();
                 if (result.success === true) {
                     //更新当前选中周数
                     sessionStorage.setItem("scheduleWeek", result.data.week);
@@ -487,14 +476,14 @@ function postQueryForm() {
                     $.alert({
                         title: '查询课表信息失败',
                         text: result.message,
-                        onOK: function (){
+                        onOK: function () {
                             history.go(-1);
                         }
                     });
                 }
             },
             error: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $.hideLoading();
                 if (result.status) {
                     $.alert({
                         title: '查询课表信息失败',
@@ -702,19 +691,19 @@ function setTextColor() {
 
 //更新实时课表数据
 function refreshScheduleData() {
-    $("#loadingToast, .weui_mask").show();
+    $.showLoading("加载中")
     $.ajax({
         url: '/api/refreshschedule',
         method: 'POST',
         success: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            $.hideLoading();
             if (result.success) {
                 postQueryForm();
             } else {
                 $.alert({
                     title: '查询课表信息失败',
                     text: result.message,
-                    onOK: function (){
+                    onOK: function () {
                         history.go(-1);
                     }
                 });
@@ -722,7 +711,7 @@ function refreshScheduleData() {
         },
         error: function (result) {
             //隐藏进度条
-            $("#loadingToast, .weui_mask").hide();
+            $.hideLoading();
             if (result.status) {
                 //网络连接超时
                 $.alert({

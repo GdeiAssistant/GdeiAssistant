@@ -111,28 +111,28 @@ function showNewDetailInfo(id) {
 }
 
 function loadNews(index, onSuccess, onError) {
-    $("#loadingToast, .weui_mask").show();
+    let loading = weui.loading('加载中');
     $.ajax({
         url: '/rest/new/type/' + index + '/start/' + news[index].length + '/size/10',
         method: 'GET',
         success: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            loading.hide();
             if (result.success) {
                 for (let i = 0; i < result.data.length; i++) {
                     news[index].push(result.data[i]);
                 }
                 onSuccess(result.data);
             } else {
-                $(".weui_warn").text(result.message).show().delay(2000).hide(0);
+                weui.topTips(result.message);
                 onError();
             }
         },
         error: function (result) {
-            $("#loadingToast, .weui_mask").hide();
+            loading.hide();
             if (result.status) {
-                $(".weui_warn").text("服务暂不可用，请稍后再试").show().delay(2000).hide(0);
+                weui.topTips('服务暂不可用，请稍后再试');
             } else {
-                $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                weui.topTips('网络连接异常，请检查网络连接');
             }
             onError();
         }

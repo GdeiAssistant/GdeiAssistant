@@ -18,21 +18,19 @@
         <link rel="stylesheet" href="/css/common/grayscale.min.css">
     </c:if>
     <link title="default" type="text/css" rel="stylesheet" href="/css/grade/grade.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-1.1.1.min.css">
-    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui-0.2.2.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
-    <script>document.write("<script type='text/javascript' src='/js/grade/grade.js?time=" + Date.now() + "'><\/script>");</script>
     <script type="application/javascript" src="/js/common/fastclick.js"></script>
     <script type="application/javascript" src="/js/common/themeLoader.js"></script>
+    <script>document.write("<script type='text/javascript' src='/js/grade/grade.js?time=" + Date.now() + "'><\/script>");</script>
 </head>
 <body>
 
 <div>
 
-    <div class="weui_cells_title" style="float: left" onclick="history.go(-1)">返回</div>
-    <div class="weui_cells_title" style="float: right" onclick="showOptionMenu()">更多</div>
+    <div class="weui-cells__title" style="float: left" onclick="history.go(-1)">返回</div>
+    <div class="weui-cells__title" style="float: right" onclick="showOptionMenu()">更多</div>
     <div class="hd">
         <h1 class="page_title" style="clear:both;margin-top: 35px">我的成绩单</h1>
     </div>
@@ -79,37 +77,6 @@
         </div>
     </div>
 
-</div>
-
-<!-- 更新弹框 -->
-<div id="loadingToast" class="weui_loading_toast" style="display: none">
-    <div class="weui_mask_transparent"></div>
-    <div class="weui_toast">
-        <div class="weui_loading">
-            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
-            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
-        </div>
-        <p class="weui_toast_content">数据加载中</p>
-    </div>
-</div>
-
-<!-- 更新成功弹框 -->
-<div id="toast" style="display:none">
-    <div class="weui_mask_transparent"></div>
-    <div class="weui_toast">
-        <i class="weui_icon_toast"></i>
-        <p class="weui_toast_content">加载成绩成功</p>
-    </div>
 </div>
 
 </body>

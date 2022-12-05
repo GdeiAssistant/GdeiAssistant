@@ -9,7 +9,7 @@ function postQueryForm() {
     if ($("#password").val() === "") {
         $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
     } else {
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         list = [];
         $.ajax({
             url: '/api/bookquery',
@@ -18,7 +18,7 @@ function postQueryForm() {
                 'password': $("#password").val()
             },
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.success) {
                     if (result.data.length > 0) {
                         $("#result").show();
@@ -42,7 +42,7 @@ function postQueryForm() {
                 }
             },
             error: function () {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.status == 503) {
                     //网络连接超时
                     $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);

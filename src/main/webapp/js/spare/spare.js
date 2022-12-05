@@ -9,19 +9,17 @@ $(function () {
 //提交查询请求
 function postQueryForm() {
     if (parseInt($("#startTime").val()) > parseInt($("#endTime").val())) {
-        $(".weui_warn").text("起始时间不能晚于结束时间").show().delay(2000).hide(0);
+        $.toptip('起始时间不能晚于结束时间', 'error');
     } else if (parseInt($("#minWeek").val()) >= parseInt($("#maxWeek").val())) {
-        $(".weui_warn").text("起始星期数不能晚于或等于结束星期数").show().delay(2000).hide(0);
+        $.toptip('起始星期数不能晚于或等于结束星期数', 'error');
     } else {
-        $(".weui_btn").attr("disabled", true);
-        $("#loadingToast, .weui_mask").show();
+        $.showLoading('查询中');
         $.ajax({
             url: '/api/sparequery',
             type: 'post',
             data: $("#spareForm").serialize(),
             success: function (result) {
-                $(".weui_btn").attr("disabled", false);
-                $("#loadingToast, .weui_mask").hide();
+                $.hideLoading();
                 if (result.success) {
                     $("#form").hide();
                     $("#result").show();
@@ -32,17 +30,16 @@ function postQueryForm() {
                             + "<div class='weui-cell__ft'>" + result.data[i].name + "</div></div>");
                     }
                 } else {
-                    weui.topTips(result.message);
+                    $.toptip(result.message, 'error');
                 }
             },
             error: function (result) {
-                $(".weui_btn").attr("disabled", false);
-                $("#loadingToast, .weui_mask").hide();
-                if (result.status == 503) {
+                $.hideLoading();
+                if (result.status) {
                     //网络连接超时
-                    $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
+                    $.toptip(result.responseJSON.message, 'error');
                 } else {
-                    $(".weui_warn").text("网络连接异常，请检查网络连接").show().delay(2000).hide(0);
+                    $.toptip('网络连接异常，请检查网络连接', 'error');
                 }
             }
         })

@@ -98,7 +98,7 @@ function postQueryForm() {
         $(".weui_warn").text("请将信息填写完整！").show().delay(2000).hide(0);
     } else {
         //显示进度条
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         //提交表单请求
         var action = '/collectionquery';
         var form = $("<form></form>");
@@ -120,7 +120,7 @@ function postQueryForm() {
 function queryMore() {
     if ($("#currentPage").val() !== $("#sumPage").val()) {
         //显示进度条
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         $.ajax({
             url: "/rest/collectionquery",
             data: {
@@ -135,7 +135,7 @@ function queryMore() {
                     if (collectionList.length === 0) {
                         //隐藏进度条
                         $(document).ready(function () {
-                            $("#loadingToast, .weui_mask").hide();
+                            $("#loadingToast").hide();
                         });
                         //查询结果为空,显示错误提示
                         weui.alert('查询图书出现异常', {
@@ -148,7 +148,7 @@ function queryMore() {
                     } else {
                         //隐藏进度条
                         $(document).ready(function () {
-                            $("#loadingToast, .weui_mask").hide();
+                            $("#loadingToast").hide();
                         });
                         $("#currentPage").val(parseInt($("#currentPage").val()) + 1);
                         $("#sumPage").val(cetQueryResultEnum.sumPage);
@@ -214,7 +214,7 @@ function queryMore() {
                 } else {
                     $(document).ready(function () {
                         //隐藏进度条
-                        $("#loadingToast, .weui_mask").hide();
+                        $("#loadingToast").hide();
                         //显示错误提示
                         weui.alert(cetQueryResultEnum.message, {
                             title: '错误提示',
@@ -229,7 +229,7 @@ function queryMore() {
             error: function (cetQueryResultEnum) {
                 $(document).ready(function () {
                     //隐藏进度条
-                    $("#loadingToast, .weui_mask").hide();
+                    $("#loadingToast").hide();
                     //显示错误提示
                     weui.alert('查询馆藏失败,请检查网络连接', {
                         title: '错误提示',
@@ -244,7 +244,7 @@ function queryMore() {
     } else {
         $(document).ready(function () {
             //隐藏进度条
-            $("#loadingToast, .weui_mask").hide();
+            $("#loadingToast").hide();
             //显示错误提示
             weui.alert('查询页数超出范围', {
                 title: '错误提示',

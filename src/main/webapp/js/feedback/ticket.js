@@ -130,7 +130,7 @@ function postFeedbackForm() {
     } else {
         //禁用提交按钮并显示进度条
         $(".weui_btn_primary").attr("disabled", true);
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         let formData = new FormData();
         formData.append('content', $("#content").val());
         formData.append('type', $("#type").val());
@@ -157,7 +157,7 @@ function postFeedbackForm() {
             contentType: false,
             success: function (result) {
                 $(".weui_btn_primary").attr("disabled", false);
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.success === true) {
                     weui.toast('反馈意见提交成功');
                     images = [];
@@ -172,7 +172,7 @@ function postFeedbackForm() {
             },
             error: function (result) {
                 $(".weui_btn_primary").attr("disabled", false);
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.status) {
                     weui.topTips(result.responseJSON.message);
                 } else {

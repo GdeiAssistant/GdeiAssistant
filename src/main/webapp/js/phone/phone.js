@@ -115,7 +115,7 @@ function savePhoneNumber() {
     } else if ($("#verification_code").val().length != 6 || !/^\d+$/.test($("#verification_code").val())) {
         $(".weui_warn").text("验证码必须为6位的数字").show().delay(2000).hide(0);
     } else {
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         $.ajax({
             url: '/api/phone/attach',
             method: 'POST',
@@ -125,7 +125,7 @@ function savePhoneNumber() {
                 randomCode: $("#verification_code").val()
             },
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.success) {
                     weui.alert('你已成功绑定手机号', function(){
                         history.go(-1);
@@ -137,7 +137,7 @@ function savePhoneNumber() {
                 }
             },
             error: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.status) {
                     $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
                 } else {
@@ -160,12 +160,12 @@ function unattachPhoneNumber() {
             label: 'YES',
             type: 'primary',
             onClick: function(){
-                $("#loadingToast, .weui_mask").show();
+                $("#loadingToast").show();
                 $.ajax({
                     url: '/api/phone/unattach',
                     method: 'POST',
                     success: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
+                        $("#loadingToast").hide();
                         if (result.success) {
                             window.location.reload();
                         } else {
@@ -173,7 +173,7 @@ function unattachPhoneNumber() {
                         }
                     },
                     error: function (result) {
-                        $("#loadingToast, .weui_mask").hide();
+                        $("#loadingToast").hide();
                         if (result.status) {
                             $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
                         } else {

@@ -29,7 +29,7 @@ function postQueryForm() {
     } else if ($("#year").val() < 2016 || $("#year").val() > 2050) {
         $(".weui_warn").text("请选择正确的年份").show().delay(2000).hide(0);
     } else {
-        $("#loadingToast, .weui_mask").show();
+        $("#loadingToast").show();
         $.ajax({
             url: '/api/data/electricfees',
             method: 'POST',
@@ -39,7 +39,7 @@ function postQueryForm() {
                 year: $("#year").val()
             },
             success: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.success) {
                     $("#result").show();
                     $("#edit").hide();
@@ -58,7 +58,7 @@ function postQueryForm() {
                 }
             },
             error: function (result) {
-                $("#loadingToast, .weui_mask").hide();
+                $("#loadingToast").hide();
                 if (result.status) {
                     $(".weui_warn").text(result.responseJSON.message).show().delay(2000).hide(0);
                 } else {

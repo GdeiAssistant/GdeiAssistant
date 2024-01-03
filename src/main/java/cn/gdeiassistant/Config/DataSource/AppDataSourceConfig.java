@@ -42,7 +42,7 @@ public class AppDataSourceConfig implements EnvironmentAware {
     @Qualifier("appDevelopmentDataSource")
     public ComboPooledDataSource appDevelopmentDataSource() throws PropertyVetoException {
         ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
-        String driverClass = environment.getProperty("app.jdbc.driverClass");
+        String driverClass = environment.getProperty("jdbc.driverClass");
         String jdbcUrl = environment.getProperty("app.jdbc.dev.jdbcUrl");
         String minPoolSize = environment.getProperty("app.jdbc.minPoolSize");
         String maxPoolSize = environment.getProperty("app.jdbc.maxPoolSize");
@@ -78,7 +78,7 @@ public class AppDataSourceConfig implements EnvironmentAware {
     @Qualifier("appProductionDataSource")
     public ComboPooledDataSource appProductionDataSource() throws PropertyVetoException {
         ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
-        String driverClass = environment.getProperty("app.jdbc.driverClass");
+        String driverClass = environment.getProperty("jdbc.driverClass");
         String jdbcUrl = environment.getProperty("app.jdbc.pro.jdbcUrl");
         String minPoolSize = environment.getProperty("app.jdbc.minPoolSize");
         String maxPoolSize = environment.getProperty("app.jdbc.maxPoolSize");

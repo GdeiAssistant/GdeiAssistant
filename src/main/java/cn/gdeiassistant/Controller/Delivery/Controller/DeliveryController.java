@@ -36,7 +36,7 @@ public class DeliveryController {
         ModelAndView modelAndView = new ModelAndView();
         //获取头像地址
         String url = userProfileService.GetSelfUserAvatar(request.getSession().getId());
-        String nickname = userProfileService.GetOtherUserProfile(request.getSession().getId()).getNickname();
+        String nickname = userProfileService.GetSelfUserProfile(request.getSession().getId()).getNickname();
         modelAndView.setViewName("Delivery/index");
         modelAndView.addObject("AvatarURL", url);
         modelAndView.addObject("NickName", nickname);

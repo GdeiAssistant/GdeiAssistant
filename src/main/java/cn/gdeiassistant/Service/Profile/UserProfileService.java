@@ -82,16 +82,16 @@ public class UserProfileService {
      */
     public Profile GetSelfUserProfile(String sessionId) throws Exception {
         User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        return GetOtherUserProfile(user.getUsername());
+        return GetUserProfile(user.getUsername());
     }
 
     /**
-     * 获取其他用户个人资料
+     * 获取指定用户名用户个人资料
      *
      * @param username
      * @return
      */
-    public Profile GetOtherUserProfile(String username) throws Exception {
+    public Profile GetUserProfile(String username) throws Exception {
         Profile profile = profileMapper.selectUserProfile(username);
         if (profile != null) {
             profile.setUsername(profile.getUsername());

@@ -153,7 +153,7 @@ public class ProfileController {
     @RequestMapping(value = "/profile/user/{username}", method = RequestMethod.GET)
     public ModelAndView ResolvePublicProfilePage(@PathVariable("username") String username) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        Profile profile = userProfileService.GetOtherUserProfile(username);
+        Profile profile = userProfileService.GetUserProfile(username);
         if (profile != null) {
             Privacy privacy = privacyService.GetOtherUserPrivacySetting(username);
             modelAndView.setViewName("Profile/publicProfile");

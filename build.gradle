@@ -2,19 +2,17 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies {
-        classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.2.0'
-    }
 }
 apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'com.google.cloud.tools.appengine'
 
 repositories {
     flatDir {
         dirs 'libs'
     }
-    mavenCentral()
+    maven {
+        url 'https://maven.aliyun.com/repository/central'
+    }
 }
 
 configurations.all {
@@ -89,14 +87,11 @@ dependencies {
     compileOnly group: 'junit', name: 'junit', version: '4.12'
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     compileOnly group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.3'
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 }
 
-appengine {
-    deploy {
-        projectId = System.getenv('gdeiassistant')
-        version = '1'
-    }
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
 }
 
 group 'cn.gdeiassistant'

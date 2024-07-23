@@ -51,10 +51,12 @@ public class IPAddressAspect {
             //获取IP归属地和网络类型
             IPAddressRecord record = ipAddressService.GetInfoByIPAddress(ip);
             //保存IP记录
-            record.setIp(ip);
-            record.setUsername(user.getUsername());
-            record.setType(annotation.type().getValue());
-            ipAddressService.SaveIPAddress(record);
+            if (record != null) {
+                record.setIp(ip);
+                record.setUsername(user.getUsername());
+                record.setType(annotation.type().getValue());
+                ipAddressService.SaveIPAddress(record);
+            }
         }
         //匿名用户不记录IP地址
     }

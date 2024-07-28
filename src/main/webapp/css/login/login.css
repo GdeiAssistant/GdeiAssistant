@@ -25,3 +25,7 @@
 .quick-login-button img {
     padding: 1rem;
 }
+
+.weui-dialog{
+    margin: 0 auto;
+}

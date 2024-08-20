@@ -165,7 +165,9 @@
 
 本应用在中华人民共和国境内注册、发布和运营，目前仅面向广东第二师范学院在校师生开放注册使用。
 
-测试环境账号：（用户名 - 密码）
+功能演示网站：https://gdeiassistant.azurewebsites.net/
+
+测试账号：（用户名 - 密码）
 
 - gdeiassistant - gdeiassistant
 

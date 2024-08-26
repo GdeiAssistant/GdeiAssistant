@@ -2,12 +2,14 @@ package cn.gdeiassistant.Service.TrailData;
 
 import cn.gdeiassistant.Pojo.CardQuery.CardQuery;
 import cn.gdeiassistant.Pojo.Document.CustomScheduleDocument;
+import cn.gdeiassistant.Pojo.Document.TrialDocument;
 import cn.gdeiassistant.Pojo.Entity.Grade;
 import cn.gdeiassistant.Pojo.Entity.Schedule;
 import cn.gdeiassistant.Pojo.GradeQuery.GradeQueryResult;
 import cn.gdeiassistant.Pojo.Result.DataJsonResult;
 import cn.gdeiassistant.Pojo.Result.JsonResult;
 import cn.gdeiassistant.Pojo.ScheduleQuery.ScheduleQueryResult;
+import cn.gdeiassistant.Repository.Mongodb.Trial.TrialDao;
 import cn.gdeiassistant.Service.ScheduleQuery.ScheduleService;
 import cn.gdeiassistant.Tools.Utils.ScheduleUtils;
 import cn.gdeiassistant.Tools.Utils.StringUtils;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -32,6 +35,9 @@ public class TrialDataService {
 
     @Autowired
     private ScheduleService scheduleService;
+
+    @Autowired
+    private TrialDao trialDao;
 
     /**
      * 解析并加载模拟结果数据
@@ -46,9 +52,9 @@ public class TrialDataService {
      * @return
      */
     public DataJsonResult ParseTrialData(String sessionId, String module, boolean isBaseJsonResult
-            , String requestTime, Object requestTimeValue, String responseTime, Object responseTimeValue) {
+            , String requestTime, int requestTimeValue, String responseTime, Object responseTimeValue) throws ClassNotFoundException {
         //加载初始模拟数据
-        DataJsonResult result = LoadInitialTrialData(sessionId, module, isBaseJsonResult
+        DataJsonResult result = LoadInitialTrialData(module, isBaseJsonResult
                 , requestTime, requestTimeValue);
         //进行模拟数据后加工处理
         result = ProcessTrialData(sessionId, module, result, responseTime, responseTimeValue);
@@ -58,46 +64,33 @@ public class TrialDataService {
     /**
      * 加载初始模拟数据
      *
-     * @param sessionId
      * @param module
      * @param isBaseJsonResult
      * @param requestTime
      * @param requestTimeValue
      * @return
      */
-    private DataJsonResult LoadInitialTrialData(String sessionId, String module, boolean isBaseJsonResult, String requestTime
-            , Object requestTimeValue) {
+    private DataJsonResult LoadInitialTrialData(String module, boolean isBaseJsonResult, String requestTime
+            , int requestTimeValue) {
         //基础类型返回值
         if (isBaseJsonResult) {
-            //从配置文件加载对应的模拟数据值，并封装成基础类型返回值
-            return new DataJsonResult(new Gson().fromJson(environment.getProperty("trial.data." + module)
-                    , new TypeToken<JsonResult>() {
-                    }.getType()));
+            //模拟成功操作数据
+            return new DataJsonResult(true);
         }
         //数据类型返回值
         if (StringUtils.isBlank(requestTime)) {
             //不要求请求时间属性
-            return new Gson().fromJson(environment.getProperty("trial.data." + module)
-                    , new TypeToken<DataJsonResult>() {
-                    }.getType());
+            TrialDocument trialDocument = trialDao.queryTrialData(module);
+            if (trialDocument != null) {
+                return new DataJsonResult(true, trialDocument.getData());
+            }
+        } else {
+            TrialDocument trialDocument = trialDao.queryTrialData(module, requestTimeValue);
+            if (trialDocument != null) {
+                return new DataJsonResult(true, trialDocument.getData());
+            }
         }
-        //要求时间属性，按照功能模块进行处理
-        switch (module) {
-            case "grade":
-                //使用学年时间属性加载不同的初始模拟数据
-                if (requestTimeValue == null) {
-                    //使用默认的第一学年属性
-                    requestTimeValue = 0;
-                }
-                return new Gson().fromJson(environment.getProperty("trial.data." + module + "." + requestTimeValue)
-                        , new TypeToken<DataJsonResult>() {
-                        }.getType());
-
-            default:
-                return new Gson().fromJson(environment.getProperty("trial.data." + module)
-                        , new TypeToken<DataJsonResult>() {
-                        }.getType());
-        }
+        return new DataJsonResult(false);
     }
 
     /**
@@ -136,7 +129,7 @@ public class TrialDataService {
                 }
             }
             //将响应时间属性填充入模拟结果数据中与TrialData注解中responseTime参数的值相同的属性中
-            ((LinkedTreeMap) result.getData()).put(responseTime, responseTimeValue);
+            ((LinkedHashMap)result.getData()).put(responseTime, responseTimeValue);
         }
         String json = new Gson().toJson(result);
         //各模块的数据进一步加工逻辑

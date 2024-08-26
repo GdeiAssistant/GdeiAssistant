@@ -62,13 +62,15 @@ public class TrialDataAspect implements EnvironmentAware {
               将在请求参数中获取对应的属性值，该属性的名称与注解中RequestTime的值相同，将作为时间属性被用于获取模拟数据或模拟数据后加工的过程中
               当该属性值为空时，系统将设置为默认时间属性值
              */
-            Object requestTimeValue = null;
+            int requestTimeValue = 0;
             if (StringUtils.isNotBlank(trialData.requestTime())) {
                 //获取方法的所有参数值和名称，拦截具有时间信息的属性字段
                 String[] parameterNames = ((MethodSignature) proceedingJoinPoint.getSignature()).getParameterNames();
                 for (int i = 0; i < parameterNames.length; i++) {
                     if (trialData.requestTime().equals(parameterNames[i])) {
-                        requestTimeValue = args[i];
+                        if (args[i] != null) {
+                            requestTimeValue = (int) args[i];
+                        }
                         break;
                     }
                 }
@@ -84,7 +86,9 @@ public class TrialDataAspect implements EnvironmentAware {
                 String[] parameterNames = ((MethodSignature) proceedingJoinPoint.getSignature()).getParameterNames();
                 for (int i = 0; i < parameterNames.length; i++) {
                     if (trialData.responseTime().equals(parameterNames[i])) {
-                        responseTimeValue = args[i];
+                        if (args[i] != null) {
+                            responseTimeValue = args[i];
+                        }
                         break;
                     }
                 }
@@ -94,7 +98,7 @@ public class TrialDataAspect implements EnvironmentAware {
                     , trialData.requestTime(), requestTimeValue, trialData.responseTime()
                     , responseTimeValue);
         }
-        //若非体验用户，则进行网络请求，返回真实数据
+        //若未设置模拟教务查询数据，则进行网络请求，返回真实数据
         if (trialData.base()) {
             return new DataJsonResult((JsonResult) proceedingJoinPoint.proceed(args));
         }

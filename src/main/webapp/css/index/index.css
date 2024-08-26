@@ -121,3 +121,8 @@ body {
 img {
     max-width: 100%;
 }
+
+.weui-dialog {
+    left: 50%;
+    width: 80%;
+}

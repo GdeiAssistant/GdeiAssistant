@@ -40,11 +40,6 @@ public class PrivacyRestController {
     @RequestMapping(value = "/api/privacy", method = RequestMethod.POST)
     public JsonResult UpdateUserPrivacySetting(HttpServletRequest request, String tag, boolean state) throws Exception {
         switch (tag.toUpperCase()) {
-            case "GENDER":
-                //性别
-                privacyService.UpdateGender(state, request.getSession().getId());
-                break;
-
             case "FACULTY":
                 //院系
                 privacyService.UpdateFaculty(state, request.getSession().getId());

@@ -54,18 +54,6 @@ public class PrivacyService {
     }
 
     /**
-     * 更新性别隐私设置
-     *
-     * @param state
-     * @param sessionId
-     * @return
-     */
-    public void UpdateGender(boolean state, String sessionId) throws Exception {
-        User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        privacyMapper.updateGender(state, user.getUsername());
-    }
-
-    /**
      * 更新院系隐私设置
      *
      * @param state

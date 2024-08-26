@@ -57,13 +57,6 @@ public class ProfileController {
             modelAndView.addObject("NickName", profile.getNickname());
             IPAddressRecord ipAddressRecord = ipAddressService.GetSelfUserLatestPostTypeIPAddress(request.getSession().getId());
             modelAndView.addObject("IPAddressArea", ipAddressRecord.getArea());
-            if (profile.getGender() != null && profile.getGender() != 0) {
-                if (profile.getGender() == 3) {
-                    modelAndView.addObject("Gender", profile.getCustomGenderName());
-                } else {
-                    modelAndView.addObject("Gender", UserProfileService.getGenderMap().get(profile.getGender()));
-                }
-            }
             if (profile.getFaculty() != null && !profile.getFaculty().equals(0)) {
                 modelAndView.addObject("Faculty", UserProfileService.getFacultyMap().get(profile.getFaculty()));
             }
@@ -162,15 +155,6 @@ public class ProfileController {
             modelAndView.addObject("NickName", profile.getNickname());
             IPAddressRecord ipAddressRecord = ipAddressService.GetOtherUserLatestPostTypeIPAddress(username);
             modelAndView.addObject("IPAddressArea", ipAddressRecord.getArea());
-            if (Boolean.TRUE.equals(privacy.isGenderOpen())) {
-                if (profile.getGender() != null && profile.getGender() != 0) {
-                    if (profile.getGender() == 3) {
-                        modelAndView.addObject("Gender", profile.getCustomGenderName());
-                    } else {
-                        modelAndView.addObject("Gender", UserProfileService.getGenderMap().get(profile.getGender()));
-                    }
-                }
-            }
             if (Boolean.TRUE.equals(privacy.isFacultyOpen().equals(Boolean.TRUE))) {
                 if (profile.getFaculty() != null && !profile.getFaculty().equals(0)) {
                     modelAndView.addObject("Faculty", UserProfileService.getFacultyMap().get(profile.getFaculty()));

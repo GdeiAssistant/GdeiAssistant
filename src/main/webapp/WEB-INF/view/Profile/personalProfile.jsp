@@ -79,19 +79,6 @@
         </div>
     </div>
 
-    <c:if test="${Gender!=null}">
-
-        <div class="weui-cell">
-            <div class="weui-cell__bd">
-                <p>性别</p>
-            </div>
-            <div class="weui-cell__ft">
-                    ${Gender}
-            </div>
-        </div>
-
-    </c:if>
-
     <c:if test="${Faculty!=null}">
 
         <div class="weui-cell">

@@ -2,8 +2,6 @@ package cn.gdeiassistant.Constant;
 
 public class OptionConstantUtils {
 
-    public static final String[] GENDER_OPTIONS = {"未选择", "男", "女", "自定义"};
-
     public static final String[] DEGREE_OPTIONS = {"未选择", "小学", "初中", "中专/职高/技校", "高中"
             , "专科", "本科", "硕士", "博士"};
 

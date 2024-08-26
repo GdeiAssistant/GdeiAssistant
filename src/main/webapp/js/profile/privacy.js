@@ -10,9 +10,6 @@ $(function () {
             type: 'get',
             success: function (result) {
                 if (result.success === true) {
-                    if (result.data.genderOpen === true) {
-                        $("#gender").prop("checked", true);
-                    }
                     if (result.data.facultyOpen === true) {
                         $("#faculty").prop("checked", true);
                     }

@@ -15,8 +15,6 @@
     // 家乡选择器选项
     var hometownPickerItems = [];
 
-    var genderMap = [];
-
     var professionMap = [];
 
     var degreeMap = [];
@@ -198,12 +196,6 @@
     //加载个人资料
     function loadProfile() {
 
-        <c:forEach items="${profile:getGenderMap()}" var="genderEntry">
-
-        genderMap[${genderEntry.key}] = "${genderEntry.value}";
-
-        </c:forEach>
-
         <c:forEach items="${profile:getProfessionMap()}" var="professionEntry">
 
         professionMap[${professionEntry.key}] = "${professionEntry.value}";
@@ -233,14 +225,6 @@
                     $("#nickname_text").text(result.data.nickname);
                     $("#nickname_val").val(result.data.nickname);
                     $("#nickname").val(result.data.nickname);
-                    //性别
-                    let gender = result.data.gender == null ? 0 : result.data.gender;
-                    if (gender == 3) {
-                        $("#gender").text(result.data.customGenderName);
-                        $("#gender_val").val(result.data.customGenderName);
-                    } else {
-                        $("#gender").text(genderMap[gender]);
-                    }
                     //所在地
                     var location = result.data.locationRegion;
                     if (location != null) {
@@ -404,12 +388,6 @@
         $("#changeNickname").popup();
     }
 
-    //弹出自定义性别窗口
-    function showCustomGenderDialog() {
-        $("#customGenderName").val($("#gender_val").val());
-        $("#customGender").popup();
-    }
-
     //弹出专业修改窗口
     function showMajorDialog() {
         $("#major").val($("#major_val").val());
@@ -517,76 +495,6 @@
                 }
             });
         }
-    }
-
-    //提交自定义性别
-    function submitCustomGender() {
-        if ($("#customGenderName").val().length > 0) {
-            $.closePopup();
-            $.ajax({
-                url: "/api/profile/gender",
-                data: {
-                    gender: 3,
-                    customGenderName: $("#customGenderName").val()
-                },
-                type: 'post',
-                success: function (updateResult) {
-                    if (updateResult.success === true) {
-                        loadProfile();
-                    } else {
-                        showCustomErrorTip(updateResult.message);
-                    }
-                },
-                error: function (result) {
-                    if (result.status) {
-                        showCustomErrorTip(result.responseJSON.message);
-                    } else {
-                        showNetworkErrorTip();
-                    }
-                }
-            });
-        }
-    }
-
-    //修改性别
-    function changeGender() {
-        var genderPicker = [];
-        for (var i = 0; i < genderMap.length; i++) {
-            genderPicker[i] = {
-                label: genderMap[i],
-                value: i
-            }
-        }
-        weui.picker(genderPicker, {
-            defaultValue: [0],
-            onConfirm: function (gender) {
-                if (gender == 3) {
-                    showCustomGenderDialog();
-                } else {
-                    $.ajax({
-                        url: "/api/profile/gender",
-                        data: {
-                            gender: gender[0].value
-                        },
-                        type: 'post',
-                        success: function (updateResult) {
-                            if (updateResult.success === true) {
-                                loadProfile();
-                            } else {
-                                showCustomErrorTip(updateResult.message);
-                            }
-                        },
-                        error: function (result) {
-                            if (result.status) {
-                                showCustomErrorTip(result.responseJSON.message);
-                            } else {
-                                showNetworkErrorTip();
-                            }
-                        }
-                    });
-                }
-            }
-        });
     }
 
     //弹出生日信息选择框

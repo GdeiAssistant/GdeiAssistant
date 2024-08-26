@@ -11,20 +11,6 @@ import java.util.Map;
 public class ProfileOptionConfig {
 
     /**
-     * 个人资料性别字典
-     *
-     * @return
-     */
-    @Bean
-    public Map<Integer, String> genderMap() {
-        Map<Integer, String> genderMap = new HashMap<>();
-        for (int i = 0; i < OptionConstantUtils.GENDER_OPTIONS.length; i++) {
-            genderMap.put(i, OptionConstantUtils.GENDER_OPTIONS[i]);
-        }
-        return genderMap;
-    }
-
-    /**
      * 职业字典
      *
      * @return

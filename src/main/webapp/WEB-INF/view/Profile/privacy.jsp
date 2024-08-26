@@ -29,13 +29,6 @@
 <div class="weui-cells__title">个人资料</div>
 <div class="weui-cells weui-cells_form">
     <div class="weui-cell weui-cell_switch">
-        <div class="weui-cell__bd">公开我的性别</div>
-        <div class="weui-cell__ft">
-            <input id="gender" class="weui-switch" type="checkbox"
-                   onchange="changePrivacySetting(this)">
-        </div>
-    </div>
-    <div class="weui-cell weui-cell_switch">
         <div class="weui-cell__bd">公开我的院系</div>
         <div class="weui-cell__ft">
             <input id="faculty" class="weui-switch" type="checkbox"

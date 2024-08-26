@@ -35,8 +35,6 @@ public class UserProfileService {
         UserProfileService.professionMap = professionMap;
     }
 
-    private static Map<Integer, String> genderMap;
-
     private static Map<Integer, String> professionMap;
 
     private static Map<Integer, String> facultyMap;
@@ -45,11 +43,6 @@ public class UserProfileService {
 
     @Autowired
     public AsyncRestTemplate asyncRestTemplate;
-
-    @Resource(name = "genderMap")
-    public void setGenderMap(Map<Integer, String> genderMap) {
-        UserProfileService.genderMap = genderMap;
-    }
 
     /**
      * 获取职业字典
@@ -284,26 +277,6 @@ public class UserProfileService {
     }
 
     /**
-     * 更新性别个人资料
-     *
-     * @param sessionId
-     * @param gender
-     * @return
-     */
-    @Transactional("appTransactionManager")
-    public void UpdateGender(String sessionId, int gender, String customGenderName) throws Exception {
-        User user = userCertificateService.GetUserLoginCertificate(sessionId);
-        Profile profile = profileMapper.selectUserProfile(user.getUsername());
-        if (profile != null) {
-            profile.setGender(gender);
-            profile.setCustomGenderName(customGenderName);
-            profileMapper.updateGender(profile);
-            return;
-        }
-        throw new UserNotExistException("查询的用户不存在");
-    }
-
-    /**
      * 更新生日日期
      *
      * @param sessionId
@@ -429,15 +402,6 @@ public class UserProfileService {
             return;
         }
         throw new UserNotExistException("查询的用户不存在");
-    }
-
-    /**
-     * 获取性别字典
-     *
-     * @return
-     */
-    public static Map getGenderMap() {
-        return genderMap;
     }
 
     /**

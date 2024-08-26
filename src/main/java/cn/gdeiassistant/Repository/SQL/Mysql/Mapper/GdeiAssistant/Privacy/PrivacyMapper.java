@@ -8,7 +8,6 @@ public interface PrivacyMapper {
     @Select("select * from privacy where username=#{username}")
     @Results(id = "Privacy", value = {
             @Result(property = "username", column = "username"),
-            @Result(property = "genderOpen", column = "is_gender_open", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
             @Result(property = "locationOpen", column = "is_location_open", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
             @Result(property = "hometownOpen", column = "is_hometown_open", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
             @Result(property = "introductionOpen", column = "is_introduction_open", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
@@ -26,20 +25,6 @@ public interface PrivacyMapper {
 
     @Update("update privacy set is_cache_allow=0 where username=#{username}")
     void resetPrivacy(String username);
-
-    @Update("<script>" +
-            "update privacy" +
-            "        <choose>" +
-            "            <when test='genderOpen'>" +
-            "                set is_gender_open='1'" +
-            "            </when>" +
-            "            <otherwise>" +
-            "                set is_gender_open='0'" +
-            "            </otherwise>" +
-            "        </choose>" +
-            "        where username=#{username}" +
-            "</script>")
-    void updateGender(@Param("genderOpen") Boolean gender, @Param("username") String username);
 
     @Update("<script>" +
             "update privacy" +

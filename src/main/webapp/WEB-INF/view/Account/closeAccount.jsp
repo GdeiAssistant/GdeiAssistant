@@ -13,6 +13,7 @@
     </c:if>
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/common.css">
     <link title="default" type="text/css" rel="stylesheet" href="/css/common/weui.min.css">
+    <link title="default" type="text/css" rel="stylesheet" href="/css/close/close.css">
     <script type="text/javascript" src="/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/common/weui.min.js"></script>
     <script>document.write("<script type='text/javascript' src='/js/account/close.js?time=" + Date.now() + "'><\/script>");</script>

@@ -317,16 +317,6 @@ public class UserDataService {
                     String degree = (String) UserProfileService.getDegreeMap().get(object.get("degree"));
                     object.put("degree", degree);
                 }
-                if (object.containsKey("gender")) {
-                    if (object.get("gender").equals(3)) {
-                        String gender = (String) object.get("customGenderName");
-                        object.put("gender", gender);
-                        object.remove("customGenderName");
-                    } else {
-                        String gender = (String) UserProfileService.getGenderMap().get(object.get("gender"));
-                        object.put("gender", gender);
-                    }
-                }
                 if (object.containsKey("profession")) {
                     String profession = (String) UserProfileService.getProfessionMap().get(object.get("profession"));
                     object.put("profession", profession);

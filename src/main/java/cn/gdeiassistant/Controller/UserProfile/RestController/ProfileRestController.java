@@ -220,22 +220,6 @@ public class ProfileRestController {
     }
 
     /**
-     * 更新用户性别
-     *
-     * @param request
-     * @param gender
-     * @return
-     */
-    @RequestMapping(value = "/api/profile/gender", method = RequestMethod.POST)
-    public JsonResult UpdateGender(HttpServletRequest request, int gender, @Validated @Nullable @Max(16) String customGenderName) throws Exception {
-        if (gender < 0 || gender >= UserProfileService.getGenderMap().size() || (gender == 3 && StringUtils.isBlank(customGenderName))) {
-            return new JsonResult(false, "请求参数不合法");
-        }
-        userProfileService.UpdateGender(request.getSession().getId(), gender, customGenderName);
-        return new JsonResult(true);
-    }
-
-    /**
      * 更新生日日期
      *
      * @param request

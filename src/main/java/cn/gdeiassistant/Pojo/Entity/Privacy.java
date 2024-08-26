@@ -13,8 +13,6 @@ public class Privacy implements Serializable, Entity {
 
     private String username;
 
-    private Boolean genderOpen;
-
     private Boolean locationOpen;
 
     private Boolean hometownOpen;
@@ -39,14 +37,6 @@ public class Privacy implements Serializable, Entity {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public Boolean isGenderOpen() {
-        return genderOpen;
-    }
-
-    public void setGenderOpen(Boolean genderOpen) {
-        this.genderOpen = genderOpen;
     }
 
     public Boolean isLocationOpen() {

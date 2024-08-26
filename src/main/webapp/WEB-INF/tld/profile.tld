@@ -8,14 +8,6 @@
     <short-name>profile</short-name>
 
     <function>
-        <description>获取性别字典</description>
-        <name>getGenderMap</name>
-        <function-class>cn.gdeiassistant.Service.Profile.UserProfileService</function-class>
-        <function-signature>java.util.Map getGenderMap()</function-signature>
-        <example>${profile:getGenderMap()}</example>
-    </function>
-
-    <function>
         <description>获取职业字典</description>
         <name>getProfessionMap</name>
         <function-class>cn.gdeiassistant.Service.Profile.UserProfileService</function-class>

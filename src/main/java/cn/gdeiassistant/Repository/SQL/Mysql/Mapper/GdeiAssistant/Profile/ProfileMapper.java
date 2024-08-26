@@ -14,8 +14,6 @@ public interface ProfileMapper {
     @Results(id = "Profile", value = {
             @Result(property = "username", column = "username"),
             @Result(property = "nickname", column = "nickname"),
-            @Result(property = "gender", column = "gender"),
-            @Result(property = "customGenderName", column = "custom_gender"),
             @Result(property = "birthday", column = "birthday", javaType = Date.class, jdbcType = JdbcType.DATE),
             @Result(property = "degree", column = "degree"),
             @Result(property = "faculty", column = "faculty"),
@@ -50,9 +48,6 @@ public interface ProfileMapper {
 
     @Update("update profile set nickname=#{nickname} where username=#{username}")
     void updateNickname(Profile profile);
-
-    @Update("update profile set gender=#{gender},custom_gender=#{customGenderName} where username=#{username}")
-    void updateGender(Profile profile);
 
     @Update("update profile set birthday=#{birthday} where username=#{username}")
     void updateBirthday(Profile profile);
@@ -90,7 +85,7 @@ public interface ProfileMapper {
     @Update("update profile set primary_school=#{primarySchool} where username=#{username}")
     void updatePrimarySchool(Profile profile);
 
-    @Update("update profile set nickname=#{nickname},gender=null,birthday=null,enrollment=null,profession=null,location_region=null" +
+    @Update("update profile set nickname=#{nickname},birthday=null,enrollment=null,profession=null,location_region=null" +
             ",location_state=null,location_city=null,hometown_region=null,hometown_state=null,hometown_city=null,high_school=null,junior_high_school=null,primary_school=null where username=#{username}")
     void resetUserProfile(@Param("username") String username, @Param("nickname") String nickname);
 

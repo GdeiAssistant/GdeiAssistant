@@ -18,8 +18,6 @@ public class Profile implements Serializable, Entity {
 
     private String nickname;
 
-    private Integer gender;
-
     private Date birthday;
 
     private Integer faculty;
@@ -27,8 +25,6 @@ public class Profile implements Serializable, Entity {
     private Integer enrollment;
 
     private String major;
-
-    private String customGenderName;
 
     private String locationRegion;
 
@@ -41,14 +37,6 @@ public class Profile implements Serializable, Entity {
     private String hometownState;
 
     private String hometownCity;
-
-    public Integer getGender() {
-        return gender;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
-    }
 
     public String getLocationRegion() {
         return locationRegion;
@@ -104,14 +92,6 @@ public class Profile implements Serializable, Entity {
 
     public void setHometownCity(String hometownCity) {
         this.hometownCity = hometownCity;
-    }
-
-    public String getCustomGenderName() {
-        return customGenderName;
-    }
-
-    public void setCustomGenderName(String customGenderName) {
-        this.customGenderName = customGenderName;
     }
 
     public String getMajor() {

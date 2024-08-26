@@ -426,7 +426,6 @@ COMMIT;
 DROP TABLE IF EXISTS `privacy`;
 CREATE TABLE `privacy` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `is_gender_open` tinyint(1) DEFAULT NULL COMMENT '公开性别',
   `is_location_open` tinyint(1) DEFAULT NULL COMMENT '公开国家/地区',
   `is_hometown_open` tinyint(1) DEFAULT NULL COMMENT '公开家乡',
   `is_introduction_open` tinyint(1) DEFAULT NULL COMMENT '公开个人简介',
@@ -444,7 +443,7 @@ CREATE TABLE `privacy` (
 -- Records of privacy
 -- ----------------------------
 BEGIN;
-INSERT INTO `privacy` (`username`, `is_gender_open`, `is_location_open`, `is_hometown_open`, `is_introduction_open`, `is_faculty_open`, `is_major_open`, `is_enrollment_open`, `is_age_open`, `is_degree_open`, `is_cache_allow`, `is_robots_index_allow`) VALUES ('gdeiassistant', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `privacy` (`username`, `is_location_open`, `is_hometown_open`, `is_introduction_open`, `is_faculty_open`, `is_major_open`, `is_enrollment_open`, `is_age_open`, `is_degree_open`, `is_cache_allow`, `is_robots_index_allow`) VALUES ('gdeiassistant', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 COMMIT;
 
 -- ----------------------------
@@ -454,8 +453,6 @@ DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `username` varchar(24) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `nickname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
-  `gender` tinyint(1) DEFAULT NULL COMMENT '性别',
-  `custom_gender` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '自定义性别',
   `birthday` date DEFAULT NULL COMMENT '生日',
   `degree` tinyint(1) DEFAULT NULL COMMENT '学历',
   `faculty` tinyint(1) DEFAULT NULL COMMENT '院系',
@@ -479,7 +476,7 @@ CREATE TABLE `profile` (
 -- Records of profile
 -- ----------------------------
 BEGIN;
-INSERT INTO `profile` (`username`, `nickname`, `gender`, `custom_gender`, `birthday`, `degree`, `faculty`, `profession`, `major`, `location_region`, `location_state`, `location_city`, `hometown_region`, `hometown_state`, `hometown_city`, `enrollment`, `primary_school`, `junior_high_school`, `high_school`, `colleges`) VALUES ('gdeiassistant', 'gdeiassistant', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `profile` (`username`, `nickname`, `birthday`, `degree`, `faculty`, `profession`, `major`, `location_region`, `location_state`, `location_city`, `hometown_region`, `hometown_state`, `hometown_city`, `enrollment`, `primary_school`, `junior_high_school`, `high_school`, `colleges`) VALUES ('gdeiassistant', 'gdeiassistant', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------

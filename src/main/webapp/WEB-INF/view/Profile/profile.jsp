@@ -34,12 +34,6 @@
         </div>
         <div id="nickname_text" class="weui-cell__ft"></div>
     </div>
-    <div class="weui-cell" href="javascript:" onclick="changeGender()">
-        <div class="weui-cell__bd">
-            <p>性别</p>
-        </div>
-        <div id="gender" class="weui-cell__ft"></div>
-    </div>
     <div class="weui-cell" href="javascript:" onclick="changeBirthday()">
         <div class="weui-cell__bd">
             <p>年龄</p>
@@ -67,7 +61,6 @@
 </div>
 
 <input type="hidden" id="nickname_val" name="nickname_val">
-<input type="hidden" id="gender_val" name="gender_val">
 <input type="hidden" id="major_val" name="major_val">
 
 <div class="weui-cells">
@@ -253,36 +246,6 @@
             <!-- 提交按钮 -->
             <div class="weui-btn_area">
                 <a class="weui-btn weui-btn_primary" href="javascript:" onclick="changeNickname()">确认</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 自定义性别窗口 -->
-<div id="customGender" class="weui-popup__container">
-    <div class="weui-popup__overlay"></div>
-    <div class="weui-popup__modal">
-        <div class="toolbar">
-            <div class="toolbar-inner">
-                <a href="javascript:" style="left:0" class="picker-button close-popup">取消</a>
-                <h1 class="title">自定义性别</h1>
-            </div>
-        </div>
-        <div class="modal-content">
-            <div class="weui-cells__title">请输入你的性别</div>
-            <div class="weui-cells">
-                <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">性别</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input id="customGenderName" class="weui-input" type="text" onkeyup="inputLengthCheck(this,16)">
-                    </div>
-                </div>
-            </div>
-            <!-- 提交按钮 -->
-            <div class="weui-btn_area">
-                <a class="weui-btn weui-btn_primary" href="javascript:" onclick="submitCustomGender()">确认</a>
             </div>
         </div>
     </div>

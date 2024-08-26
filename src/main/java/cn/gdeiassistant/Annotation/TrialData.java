@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface TrialData {
 
     /**
-     * 功能模块名，对应data.properties配置文件中的Key：trial.data.[value]中的Value值
+     * 功能模块名，对应MongoDB中的type属性
      *
      * @return
      */

@@ -175,44 +175,11 @@
 
 - [广东二师助手官网](https://gdeiassistant.cn)
 
-## 环境
+## 客户端
 
-### 操作系统
-
-- Windows 10.0.10240
-- macOS Mojave 10.14.3
-
-### 开发工具
-
-- Intellij Idea 2018.3.5 Ultimate
-- Visual Studio Code 1.32
-- Navicat for MySQL version 12.1
-
-### 软件环境
-
-- Git 2.21.0
-- Gradle 5.1.1
-- Tomcat 8.5.75
-- JDK 1.8.0
-- Mysql 5.7.32
-- MongoDB 4.0.4
-- Redis 5.0.3
-
-### 框架组件
-
-- WeUI 1.1.1
-- BootStrap 4.0.0
-- Spring 4.3.14
-- Mybatis 3.4.4
-- JQuery 3.2.1
-- JQuery WeUI 1.0.1
-- JQuery Mobile 1.4.5
-- AmazeUI 2.7.2
-- Layer Mobile 2.0.0
-- Logback 1.2.3
-- Jsoup 1.10.3
-- HttpClient 4.5.3
-- OkHttp 3.8.1
+- [Android客户端](https://github.com/GdeiAssistant/GdeiAssistant-Android)
+- [iOS客户端](https://github.com/GdeiAssistant/GdeiAssistant-iOS)
+- [微信小程序](https://github.com/GdeiAssistant/GdeiAssistant-WechatApp)
 
 ## 初始化
 

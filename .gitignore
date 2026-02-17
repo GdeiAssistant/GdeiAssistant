@@ -15,3 +15,66 @@ lib/
 gdeiassistant-webapp.iml
 local.properties
 src/main/resources/rebel.xml
+/gdei-frontend/.vscode/
+/gdei-frontend/node_modules
+
+# --- Frontend Directory (gdeiassistant-frontend) ---
+
+# Dependencies
+frontend/node_modules
+
+# Build output
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+
+# Logs
+frontend/logs
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+# Environment variables
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Cache & temp
+frontend/.cache
+frontend/.vite
+frontend/*.tsbuildinfo
+frontend/.turbo
+frontend/.pnpm-store
+
+# Test
+frontend/coverage
+frontend/*.lcov
+
+# Editor directories and files
+frontend/.vscode/*
+!frontend/.vscode/extensions.json
+frontend/.idea
+frontend/*.suo
+frontend/*.ntvs*
+frontend/*.njsproj
+frontend/*.sln
+frontend/*.sw?
+frontend/.cursor
+frontend/.vscode
+
+# OS
+frontend/.DS_Store
+frontend/Thumbs.db
+frontend/ehthumbs.db
+frontend/Desktop.ini
+
+# Script / 生成物
+frontend/location-tree-output.txt
+frontend/scripts/*-generated.js
+!frontend/scripts/build-*.cjs

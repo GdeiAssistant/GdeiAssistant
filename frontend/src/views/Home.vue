@@ -1,6 +1,9 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onMounted, onActivated, ref, computed } from 'vue'
+import { ALL_FEATURES, FEATURE_ICON_SRC } from '@/constants/features'
+
+const STORAGE_KEY = 'user_features_config'
 
 const router = useRouter()
 
@@ -8,51 +11,41 @@ const router = useRouter()
 const topTipMsg = ref('')
 const showTopTip = ref(false)
 
-// TopTips 显示方法
 const showWeuiTopTip = (msg) => {
   topTipMsg.value = msg
   showTopTip.value = true
   setTimeout(() => {
     showTopTip.value = false
-  }, 2000) // 2秒后自动消失
+  }, 2000)
 }
-const menuList = [
-  { title: '成绩查询', icon: '/img/function/grade.png', path: '/grade' },
-  { title: '课表查询', icon: '/img/function/schedule.png', path: '/schedule' },
-  { title: '四六级查询', icon: '/img/function/cet.png', path: '/cet' },
-  { title: '馆藏查询', icon: '/img/function/collection.png', path: '/collection' },
-  { title: '我的图书馆', icon: '/img/function/library.png', path: '/book' },
-  { title: '消费查询', icon: '/img/function/card.png', path: '/card' },
-  { title: '我的饭卡', icon: '/img/function/cardInfo.png', path: '/card/info' },
-  { title: '教学评价', icon: '/img/function/evaluate.png', path: '/evaluate' },
-  { title: '教室查询', icon: '/img/function/spare.png', path: '/spare' },
-  { title: '考研查询', icon: '/img/function/kaoyan.png', path: '/kaoyan' },
-  { title: '体测查询', icon: '/img/function/sport.png', path: '/pe' },
-  { title: '新闻通知', icon: '/img/function/news.png', path: '/news' },
-  { title: '信息查询', icon: '/img/function/data.png', path: '/data' },
-  { title: '二手交易', icon: '/img/function/ershou.png', path: '/ershou' },
-  { title: '失物招领', icon: '/img/function/lostandfound.png', path: '/lostandfound' },
-  { title: '校园树洞', icon: '/img/function/secret.png', path: '/secret' },
-  { title: '拍好校园', icon: '/img/function/photograph.png', path: '/photograph' },
-  { title: '表白墙', icon: '/img/function/express.png', path: '/express' },
-  { title: '卖室友', icon: '/img/function/dating.png', path: '/dating' },
-  { title: '话题', icon: '/img/function/topic.png', path: '/topic' },
-  { title: '全民快递', icon: '/img/function/delivery.png', path: '/delivery' },
-  { title: '学期校历', icon: '/img/function/calendar.png', type: 'external', key: 'calendar' },
-  { title: '政务服务', icon: '/img/function/goverment.png', type: 'external', key: 'government' },
-  { title: '学信网', icon: '/img/function/student.png', type: 'external', key: 'student' },
-  { title: 'i志愿', icon: '/img/function/volunteer.png', type: 'external', key: 'volunteer' },
-  { title: '粤康码', icon: '/img/function/healthcode.png', type: 'external', key: 'healthcode' },
-  { title: '通信行程码', icon: '/img/function/travelcode.png', type: 'external', key: 'travelcode' },
-  { title: '疫情动态', icon: '/img/function/ncov.png', type: 'external', key: 'ncov' },
-  { title: '关于应用', icon: '/img/function/about.png', path: '/about' }
-]
 
-// 组件挂载时输出 menuList 用于调试
-onMounted(() => {
-  console.log('Home.vue mounted, menuList:', menuList)
-  const healthcodeItem = menuList.find(item => item.key === 'healthcode')
-  console.log('粤康码配置项:', healthcodeItem)
+// 从 localStorage 实时读取功能开关；无配置时按 defaultVisible 兜底显示
+const featuresConfig = ref(null)
+function loadFeaturesConfig() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    featuresConfig.value = raw ? JSON.parse(raw) : {}
+  } catch (_) {
+    featuresConfig.value = {}
+  }
+}
+onMounted(loadFeaturesConfig)
+onActivated(loadFeaturesConfig)
+
+// 首页展示列表：基于 ALL_FEATURES，仅展示在缓存中为 true 的项；无配置时按 defaultVisible 显示
+const visibleMenuList = computed(() => {
+  const config = featuresConfig.value
+  return ALL_FEATURES.filter((f) => {
+    if (!config || Object.keys(config).length === 0) return f.defaultVisible !== false
+    return config[f.id] !== false
+  }).map((f) => ({
+    id: f.id,
+    title: f.name,
+    icon: FEATURE_ICON_SRC[f.id] || '/img/function/data.png',
+    path: f.path,
+    type: f.type,
+    key: f.key,
+  }))
 })
 
 function handleMenuClick(item) {
@@ -155,8 +148,8 @@ function handleExternalJump(type) {
 
     <div class="weui-grids">
       <a
-        v-for="(item, index) in menuList"
-        :key="item.path || item.key || index"
+        v-for="(item, index) in visibleMenuList"
+        :key="item.id || item.path || item.key || index"
         href="javascript:;"
         class="weui-grid"
         @click.prevent.stop="handleMenuClick(item)"

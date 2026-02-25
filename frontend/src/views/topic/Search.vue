@@ -2,21 +2,12 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 const keyword = ref('')
 const searchResults = ref([])
 const searching = ref(false)
-
-function showToast(message) {
-  const toast = document.createElement('div')
-  toast.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.7);color:#fff;padding:12px 20px;border-radius:4px;z-index:9999;font-size:14px;'
-  toast.textContent = message
-  document.body.appendChild(toast)
-  setTimeout(() => {
-    if (toast.parentNode) document.body.removeChild(toast)
-  }, 2000)
-}
 
 function handleLike(item) {
   if (item.isLiked === undefined) item.isLiked = false
@@ -37,7 +28,7 @@ function handleLike(item) {
 function doSearch() {
   const trimmedKeyword = keyword.value && keyword.value.trim()
   if (!trimmedKeyword) {
-    showToast('请输入您要搜索的话题或内容！')
+    showErrorTopTips('请输入您要搜索的话题或内容！')
     return
   }
   searching.value = true

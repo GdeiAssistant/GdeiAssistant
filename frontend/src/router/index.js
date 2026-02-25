@@ -9,6 +9,7 @@ import Profile from '../views/Profile.vue'
 import Grade from '../views/grade/Grade.vue'
 import Cet from '../views/cet/Cet.vue'
 import CetSave from '../views/cet/CetSave.vue'
+import Collection from '../views/collection/Collection.vue'
 import CollectionSearch from '../views/collection/CollectionSearch.vue'
 import CollectionList from '../views/collection/CollectionList.vue'
 import CollectionDetail from '../views/collection/CollectionDetail.vue'
@@ -17,14 +18,14 @@ import CardSearch from '../views/card/CardSearch.vue'
 import CardList from '../views/card/CardList.vue'
 import CardInfo from '../views/card/CardInfo.vue'
 import Evaluate from '../views/evaluate/Evaluate.vue'
-import SpareSearch from '../views/spare/SpareSearch.vue'
-import SpareList from '../views/spare/SpareList.vue'
+import Spare from '../views/spare/Spare.vue'
 import KaoyanSearch from '../views/kaoyan/KaoyanSearch.vue'
 import KaoyanResult from '../views/kaoyan/KaoyanResult.vue'
 import PeIndex from '../views/pe/PeIndex.vue'
 import NewsList from '../views/news/NewsList.vue'
 import Info from '../views/Info.vue'
 import WechatAccountList from '../views/wechat/WechatAccountList.vue'
+import ReadingList from '../views/reading/ReadingList.vue'
 import UserPrivacy from '../views/user/Privacy.vue'
 import UserPrivacySetting from '../views/user/PrivacySetting.vue'
 import UserFunctions from '../views/user/Functions.vue'
@@ -39,7 +40,6 @@ import UserBindEmail from '../views/user/BindEmail.vue'
 import UserDelete from '../views/user/DeleteAccount.vue'
 import UserDownload from '../views/user/Download.vue'
 import UserFeedback from '../views/user/Feedback.vue'
-import UserAvatar from '../views/user/Avatar.vue'
 import DataIndex from '../views/data/DataIndex.vue'
 import ElectricityFees from '../views/data/ElectricityFees.vue'
 import YellowPage from '../views/data/YellowPage.vue'
@@ -128,6 +128,11 @@ const routes = [
   },
   {
     path: '/collection',
+    name: 'Collection',
+    component: Collection
+  },
+  {
+    path: '/collection/search',
     name: 'CollectionSearch',
     component: CollectionSearch
   },
@@ -168,13 +173,12 @@ const routes = [
   },
   {
     path: '/spare',
-    name: 'SpareSearch',
-    component: SpareSearch
+    name: 'Spare',
+    component: Spare
   },
   {
     path: '/spare/list',
-    name: 'SpareList',
-    component: SpareList
+    redirect: '/spare'
   },
   {
     path: '/kaoyan',
@@ -190,6 +194,11 @@ const routes = [
     path: '/pe',
     name: 'PeIndex',
     component: PeIndex
+  },
+  {
+    path: '/reading',
+    name: 'ReadingList',
+    component: ReadingList
   },
   {
     path: '/news',
@@ -267,11 +276,6 @@ const routes = [
     path: '/user/download',
     name: 'UserDownload',
     component: UserDownload
-  },
-  {
-    path: '/user/avatar',
-    name: 'UserAvatar',
-    component: UserAvatar
   },
   {
     path: '/user/avatar-edit',
@@ -529,6 +533,40 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+// 与后端 SettingConstantUtils.LOGIN_INTERCEPTOR_EXCEPTION_LIST 同步：无需登录即可访问的路径前缀
+const AUTH_WHITELIST = ['/login', '/logout', '/about', '/agreement', '/policy', '/license', '/announcement', '/download', '/covid19']
+
+function hasToken() {
+  return !!localStorage.getItem('token')
+}
+
+function isWhitelisted(path) {
+  if (path === '/') return true
+  return AUTH_WHITELIST.some(prefix => path === prefix || path.startsWith(prefix + '/'))
+}
+
+router.beforeEach((to, from, next) => {
+  const path = to.path
+  const loggedIn = hasToken()
+  if (path === '/') {
+    next(loggedIn ? '/home' : '/login')
+    return
+  }
+  if (path === '/login') {
+    next(loggedIn ? '/home' : undefined)
+    return
+  }
+  if (isWhitelisted(path)) {
+    next()
+    return
+  }
+  if (!loggedIn) {
+    next('/login')
+    return
+  }
+  next()
 })
 
 // 固定浏览器标题，禁止根据路由动态修改

@@ -7,11 +7,20 @@ import { useScrollLoad } from '../../composables/useScrollLoad'
 const router = useRouter()
 const activeArea = ref(0) // 0 小姐姐 1 小哥哥
 
+const PAGE_SIZE = 10
 const fetchDatingData = async (page) => {
-  const res = await request.get('/dating/items', {
-    params: { page, limit: 10, area: activeArea.value }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const res = await request.get(`/dating/profile/area/${activeArea.value}/start/${start}`)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map((p) => ({
+    id: p.profileId,
+    name: p.nickname,
+    image: p.pictureURL,
+    grade: p.grade,
+    faculty: p.faculty,
+    content: p.content
+  })) : []
+  return { list, hasMore: list.length >= PAGE_SIZE }
 }
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchDatingData)
@@ -27,12 +36,6 @@ function goDetail(id) {
   router.push(`/dating/detail/${id}`)
 }
 
-function handleLike(item) {
-  if (item.isLiked === undefined) item.isLiked = false
-  item.isLiked = !item.isLiked
-  item.likeCount = (item.likeCount || 0) + (item.isLiked ? 1 : -1)
-  if (item.likeCount < 0) item.likeCount = 0
-}
 
 function getGradeText(grade) {
   const map = { 1: '大一', 2: '大二', 3: '大三', 4: '大四' }

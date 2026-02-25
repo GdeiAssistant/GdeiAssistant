@@ -40,6 +40,7 @@
 import { ref, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import Cropper from 'cropperjs'
+import request from '../../utils/request'
 
 const router = useRouter()
 const defaultAvatar = '/img/login/qq.png'
@@ -96,22 +97,46 @@ const initCropper = () => {
   })
 }
 
-const confirmCrop = () => {
+const confirmCrop = async () => {
   if (!cropperInstance) return
   const canvas = cropperInstance.getCroppedCanvas({ width: 200, height: 200 })
-  const base64 = canvas.toDataURL('image/jpeg')
+  if (!canvas) return
 
-  localStorage.setItem('user_avatar', base64)
-  if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('avatar-changed'))
-
-  if (cropperInstance) {
-    cropperInstance.destroy()
-    cropperInstance = null
+  const weui = getWeui()
+  if (weui && typeof weui.loading === 'function') {
+    weui.loading('正在上传头像...')
   }
-  isCropping.value = false
-  tempImage.value = ''
-  showToast('更新头像完成')
-  router.back()
+
+  try {
+    // 将裁剪结果转为 Blob，并通过 FormData 真实上传到后端 /api/avatar
+    const blob = await new Promise((resolve, reject) => {
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('裁剪失败'))), 'image/jpeg')
+    })
+    const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })
+    const formData = new FormData()
+    formData.append('avatar', file)
+    formData.append('avatar_hd', file)
+
+    await request.post('/avatar', formData)
+
+    // 仅在后端成功时提示并返回上一页（错误由全局拦截器统一处理）
+    showToast('更新头像完成')
+    router.back()
+  } catch (e) {
+    // 交由全局 Axios 拦截器展示错误，这里不再重复提示
+    console.error('头像上传失败', e)
+  } finally {
+    if (weui && typeof weui.hideLoading === 'function') {
+      weui.hideLoading()
+    }
+    if (cropperInstance) {
+      cropperInstance.destroy()
+      cropperInstance = null
+    }
+    isCropping.value = false
+    tempImage.value = ''
+    if (fileInput.value) fileInput.value.value = ''
+  }
 }
 
 const cancelCrop = () => {
@@ -121,20 +146,42 @@ const cancelCrop = () => {
     cropperInstance.destroy()
     cropperInstance = null
   }
-  if (fileInput.value) fileInput.value.value = ''
+  if (fileInput.value) fileInput.value = ''
 }
 
-const handleDelete = () => {
+const handleDelete = async () => {
   if (!confirm('确定要删除头像并恢复默认吗？')) return
-  currentAvatar.value = defaultAvatar
-  localStorage.removeItem('user_avatar')
-  if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('avatar-changed'))
-  router.back()
+  const weui = getWeui()
+  if (weui && typeof weui.loading === 'function') {
+    weui.loading('正在删除头像...')
+  }
+  try {
+    await request.post('/avatar/remove')
+    currentAvatar.value = defaultAvatar
+    showToast('已恢复默认头像')
+    router.back()
+  } catch (e) {
+    console.error('删除头像失败', e)
+    showToast('删除头像失败，请稍后再试')
+  } finally {
+    if (weui && typeof weui.hideLoading === 'function') {
+      weui.hideLoading()
+    }
+  }
 }
 
-onMounted(() => {
-  const saved = localStorage.getItem('user_avatar')
-  if (saved) currentAvatar.value = saved
+onMounted(async () => {
+  // 从后端拉取当前头像 URL，避免依赖本地缓存
+  try {
+    const res = await request.get('/avatar')
+    if (res && res.success && typeof res.data === 'string' && res.data) {
+      currentAvatar.value = res.data
+    } else {
+      currentAvatar.value = defaultAvatar
+    }
+  } catch (_) {
+    currentAvatar.value = defaultAvatar
+  }
 })
 </script>
 

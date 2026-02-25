@@ -11,7 +11,6 @@
   "dependencies": {
     "axios": "^1.13.5",
     "cropperjs": "^1.6.2",
-    "mockjs": "^1.1.0",
     "vue": "^3.5.25",
     "vue-router": "^4.6.4",
     "weui": "^2.6.25"

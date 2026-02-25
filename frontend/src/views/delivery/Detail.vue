@@ -6,12 +6,13 @@ import request from '../../utils/request'
 const route = useRoute()
 const router = useRouter()
 const item = ref(null)
+const detailType = ref(null)
+const trade = ref(null)
 const accepting = ref(false)
 const completing = ref(false)
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const confirmCompleteVisible = ref(false)
-const currentUserId = ref('user123') // Mock: 当前用户ID（与Mock数据保持一致）
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -39,44 +40,29 @@ function getSizeText(size) {
 }
 
 function handleAccept() {
-  if (accepting.value) return
+  if (accepting.value || !item.value) return
   accepting.value = true
-  request.post('/delivery/accept', { id: route.params.id })
+  request.post('/delivery/acceptorder', null, { params: { orderId: item.value.orderId } })
     .then(() => {
-      item.value.status = 1
-      item.value.runnerId = currentUserId.value
+      item.value.state = 1
       showDialog('接单成功！')
-      setTimeout(() => {
-        router.push('/delivery/mine')
-      }, 1500)
+      setTimeout(() => router.push('/delivery/mine'), 1500)
     })
-    .catch(() => {
-      accepting.value = false
-    })
-}
-
-function isOwner() {
-  return item.value && item.value.publisherId === currentUserId.value
-}
-
-function isRunner() {
-  return item.value && item.value.runnerId === currentUserId.value
+    .catch(() => { accepting.value = false })
 }
 
 function getUserRole() {
-  if (!item.value) return null
-  if (isOwner()) return 'publisher' // 发布者
-  if (isRunner()) return 'runner' // 接单者
-  return 'visitor' // 访客
+  if (detailType.value === 0) return 'publisher'
+  if (detailType.value === 3) return 'runner'
+  return null
 }
 
 function canAccept() {
-  return item.value && item.value.status === 0 && !isOwner() && !isRunner()
+  return detailType.value === 1
 }
 
 function canComplete() {
-  // 只有发布者可以完成订单，且订单状态必须是配送中
-  return item.value && item.value.status === 1 && isOwner()
+  return detailType.value === 0 && item.value && item.value.state === 1
 }
 
 function showCompleteConfirm() {
@@ -85,27 +71,44 @@ function showCompleteConfirm() {
 
 function handleComplete() {
   confirmCompleteVisible.value = false
-  if (completing.value) return
+  if (completing.value || !trade.value || trade.value.tradeId == null) return
   completing.value = true
-  request.post('/delivery/complete', { id: route.params.id })
+  request.post(`/delivery/trade/id/${trade.value.tradeId}/finishtrade`)
     .then(() => {
-      item.value.status = 2
+      item.value.state = 2
       showDialog('订单已完成！')
-      setTimeout(() => {
-        router.push('/delivery/mine')
-      }, 1500)
+      setTimeout(() => router.push('/delivery/mine'), 1500)
     })
-    .catch(() => {
-      completing.value = false
-    })
+    .catch(() => { completing.value = false })
 }
 
 onMounted(async () => {
   try {
-    const res = await request.get(`/delivery/item/${route.params.id}`)
-    item.value = res?.data || res
+    const res = await request.get(`/delivery/order/id/${route.params.id}`)
+    const data = res?.data
+    if (data && res.success !== false) {
+      const o = data.order || {}
+      item.value = {
+        orderId: o.orderId,
+        id: o.orderId,
+        status: o.state,
+        state: o.state,
+        reward: o.price ?? 0,
+        time: o.orderTime,
+        size: '小件',
+        type: 'express',
+        pickupAddress: o.company ? `${o.company} 取件` : '取件',
+        deliveryAddress: o.address || '',
+        remarks: o.remarks,
+        description: o.remarks
+      }
+      detailType.value = data.detailType
+      trade.value = data.trade || null
+    } else {
+      item.value = null
+    }
   } catch (e) {
-    showDialog('加载失败')
+    item.value = null
   }
 })
 </script>

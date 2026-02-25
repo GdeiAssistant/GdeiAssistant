@@ -1,0 +1,27 @@
+# Stage 1: Build
+FROM eclipse-temurin:17-jdk-alpine AS builder
+WORKDIR /app
+COPY . .
+# 赋予 gradlew 执行权限并打包（跳过耗时的测试）
+RUN chmod +x gradlew
+RUN ./gradlew clean bootJar -x test
+
+# Stage 2: Runtime
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+
+# Alpine 系统的标准新建用户方式
+RUN addgroup -g 1000 appgroup && \
+    adduser -u 1000 -G appgroup -s /bin/sh -D appuser
+
+# 从 builder 阶段拷贝打好的 Spring Boot 3 jar 包
+# 注意：SpringBoot3 默认生成的通常在 build/libs/ 目录下
+COPY --from=builder /app/build/libs/*.jar app.jar
+
+# 赋予权限并切换到非 root 用户
+RUN chown -R appuser:appgroup /app
+USER appuser
+
+# 暴露端口并启动
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

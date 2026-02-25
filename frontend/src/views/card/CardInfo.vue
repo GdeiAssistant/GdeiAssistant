@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+import { queryCardInfo, reportCardLost } from '@/api/card'
+import { showErrorTopTips } from '@/utils/toast'
 
 const router = useRouter()
 const info = ref(null)
@@ -9,6 +10,8 @@ const loading = ref(false)
 const submitLoading = ref(false)
 const toastMsg = ref('')
 const showToast = ref(false)
+const showPasswordDialog = ref(false)
+const verifyPassword = ref('')
 let toastTimer = null
 
 function goBack() {
@@ -16,19 +19,31 @@ function goBack() {
 }
 
 function onReportLoss() {
-  if (!window.confirm('确定要挂失校园卡吗？')) return
+  verifyPassword.value = ''
+  showPasswordDialog.value = true
+}
+
+function closePasswordDialog() {
+  showPasswordDialog.value = false
+  verifyPassword.value = ''
+}
+
+function confirmReportLoss() {
+  const pwd = (verifyPassword.value || '').trim()
+  if (!pwd) {
+    showErrorTopTips('密码不能为空')
+    return
+  }
+  closePasswordDialog()
   submitLoading.value = true
-  request.post('/card/report_loss')
+  reportCardLost(pwd)
     .then(() => {
-      setTimeout(() => {
-        submitLoading.value = false
-        toastMsg.value = '挂失成功'
-        showToast.value = true
-        if (toastTimer) clearTimeout(toastTimer)
-        toastTimer = setTimeout(() => {
-          showToast.value = false
-        }, 2000)
-      }, 1500)
+      submitLoading.value = false
+      toastMsg.value = '挂失成功'
+      showToast.value = true
+      if (toastTimer) clearTimeout(toastTimer)
+      toastTimer = setTimeout(() => { showToast.value = false }, 2000)
+      info.value = { ...info.value, cardLostState: '已挂失' }
     })
     .catch(() => {
       submitLoading.value = false
@@ -37,20 +52,22 @@ function onReportLoss() {
 
 onMounted(() => {
   loading.value = true
-  request.get('/card/info')
+  queryCardInfo()
     .then((res) => {
-      loading.value = false
-      if (res && (res.name || res.studentId || res.cardNo != null)) {
-        info.value = res
-      } else if (res && res.data) {
-        info.value = res.data
-      } else {
-        info.value = {}
-      }
+      const body = res && res.data ? res.data : res
+      const data =
+        body && typeof body === 'object'
+          ? body.data !== undefined
+            ? body.data
+            : body
+          : null
+      info.value = data || {}
     })
     .catch(() => {
-      loading.value = false
       info.value = {}
+    })
+    .finally(() => {
+      loading.value = false
     })
 })
 </script>
@@ -98,11 +115,11 @@ onMounted(() => {
         </div>
         <div class="weui-cell info-cell">
           <div class="weui-cell__bd"><span class="info-label">学号</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.studentId || '—' }}</span></div>
+          <div class="weui-cell__ft"><span class="info-value">{{ info.number ?? '—' }}</span></div>
         </div>
         <div class="weui-cell info-cell">
           <div class="weui-cell__bd"><span class="info-label">校园卡号</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.cardNo ?? '—' }}</span></div>
+          <div class="weui-cell__ft"><span class="info-value">{{ info.cardNumber ?? '—' }}</span></div>
         </div>
       </div>
 
@@ -110,11 +127,11 @@ onMounted(() => {
       <div class="weui-cells info-cells">
         <div class="weui-cell info-cell">
           <div class="weui-cell__bd"><span class="info-label">校园卡余额</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.balance ?? '—' }}</span></div>
+          <div class="weui-cell__ft"><span class="info-value">{{ info.cardBalance ?? '—' }}</span></div>
         </div>
         <div class="weui-cell info-cell">
           <div class="weui-cell__bd"><span class="info-label">校园卡过渡余额</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.transitionBalance ?? '—' }}</span></div>
+          <div class="weui-cell__ft"><span class="info-value">{{ info.cardInterimBalance ?? '—' }}</span></div>
         </div>
       </div>
 
@@ -122,11 +139,11 @@ onMounted(() => {
       <div class="weui-cells info-cells">
         <div class="weui-cell info-cell">
           <div class="weui-cell__bd"><span class="info-label">校园卡挂失状态</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.lossStatus ?? '—' }}</span></div>
+          <div class="weui-cell__ft"><span class="info-value">{{ info.cardLostState ?? '—' }}</span></div>
         </div>
         <div class="weui-cell info-cell">
           <div class="weui-cell__bd"><span class="info-label">校园卡冻结状态</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.freezeStatus ?? '—' }}</span></div>
+          <div class="weui-cell__ft"><span class="info-value">{{ info.cardFreezeState ?? '—' }}</span></div>
         </div>
       </div>
     </template>
@@ -134,6 +151,29 @@ onMounted(() => {
     <div class="card-info-footer">
       <span class="card-info-footer-text">校园卡遗失？点击 </span>
       <a href="javascript:" class="card-info-footer-link" @click.prevent="onReportLoss">校园卡挂失</a>
+    </div>
+
+    <!-- 挂失验证弹窗：直接输入密码，无前置确认 -->
+    <div v-if="showPasswordDialog" class="weui-mask" @click="closePasswordDialog"></div>
+    <div v-if="showPasswordDialog" class="weui-dialog weui-dialog--password">
+      <div class="weui-dialog__hd">
+        <strong class="weui-dialog__title">挂失校园卡验证</strong>
+      </div>
+      <div class="weui-dialog__bd">
+        <p class="weui-dialog__tip">请输入查询密码进行验证</p>
+        <input
+          v-model="verifyPassword"
+          type="password"
+          class="weui-input weui-dialog__input"
+          placeholder="校园卡查询密码"
+          maxlength="20"
+          @keyup.enter="confirmReportLoss"
+        />
+      </div>
+      <div class="weui-dialog__ft">
+        <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="closePasswordDialog">取消</a>
+        <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmReportLoss">确定</a>
+      </div>
     </div>
   </div>
 </template>
@@ -246,4 +286,80 @@ onMounted(() => {
   color: #09bb07;
   text-decoration: none;
 }
+
+.weui-mask {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.weui-dialog--password.weui-dialog {
+  position: fixed;
+  z-index: 5000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 12px;
+  width: 320px;
+  overflow: hidden;
+}
+
+.weui-dialog__hd {
+  padding: 24px 20px 12px;
+  text-align: center;
+}
+
+.weui-dialog__title {
+  font-size: 17px;
+  color: #333;
+}
+
+.weui-dialog__bd {
+  padding: 12px 20px 20px;
+}
+
+.weui-dialog__tip {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.weui-dialog__input {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.weui-dialog__ft {
+  display: flex;
+  border-top: 1px solid #e5e5e5;
+}
+
+.weui-dialog__btn {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  color: #333;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.weui-dialog__btn_primary {
+  color: #09bb07;
+  border-left: 1px solid #e5e5e5;
+}
+
+.weui-dialog__btn_default {
+  color: #888;
+}
 </style>
+

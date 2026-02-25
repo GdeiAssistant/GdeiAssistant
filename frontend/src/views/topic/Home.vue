@@ -9,29 +9,33 @@ const scrollContainer = ref({ get scrollTop() { return window.pageYOffset || doc
 const previewImage = ref('')
 const previewVisible = ref(false)
 
+const PAGE_SIZE = 10
 const fetchTopicData = async (page) => {
-  const res = await request.get('/topic/items', {
-    params: { page, limit: 10 }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const res = await request.get(`/topic/start/${start}/size/${PAGE_SIZE}`)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map((t) => ({
+    id: t.id,
+    topicTag: t.topic,
+    content: t.content,
+    userName: t.username || '匿名',
+    userAvatar: '/img/avatar/default.png',
+    time: t.publishTime,
+    images: t.firstImageUrl ? [t.firstImageUrl] : [],
+    likeCount: t.likeCount ?? 0,
+    isLiked: t.liked === true
+  })) : []
+  return { list, hasMore: list.length >= PAGE_SIZE }
 }
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchTopicData)
 
 function handleLike(item) {
-  if (item.isLiked === undefined) item.isLiked = false
-  item.isLiked = !item.isLiked
-  const delta = item.isLiked ? 1 : -1
-  item.likeCount = (item.likeCount || 0) + delta
-  if (item.likeCount < 0) item.likeCount = 0
-  
-  // 调用点赞接口
-  request.post('/topic/like', { id: item.id, like: item.isLiked })
-    .catch(() => {
-      // 失败回滚
-      item.isLiked = !item.isLiked
-      item.likeCount = (item.likeCount || 0) - delta
-    })
+  if (item.isLiked) return
+  request.post(`/topic/id/${item.id}/like`).then(() => {
+    item.isLiked = true
+    item.likeCount++
+  })
 }
 
 function openImagePreview(url) {

@@ -1,0 +1,63 @@
+# =============================================================================
+# GdeiAssistant 生产环境（仅后端，Native Image 瘦身镜像）
+# MySQL / Redis / MongoDB 由云平台或外部服务提供，通过 environment 注入
+#
+# 构建 Native 镜像：docker build -f Dockerfile.native -t gdeiassistant-native:latest .
+# 启动：DB_HOST=xxx REDIS_HOST=xxx MONGO_HOST=xxx DB_PASSWORD=xxx JWT_SECRET=xxx \
+#       docker compose -f docker-compose.prod.yml up -d
+# =============================================================================
+
+services:
+  gdeiassistant-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.native
+    image: gdeiassistant-native:latest
+    container_name: gdeiassistant-backend
+    environment:
+      # 激活 prod Profile
+      SPRING_PROFILES_ACTIVE: prod
+
+      # MySQL（通过环境变量注入，prod 不给默认主机）
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_NAME: "${DB_NAME:-gdeiassistant}"
+      DB_NAME_LOG: "${DB_NAME_LOG:-gdeiassistant_log}"
+      DB_NAME_DATA: "${DB_NAME_DATA:-gdeiassistant_data}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+
+      # Redis
+      REDIS_HOST: "${REDIS_HOST}"
+      REDIS_PORT: "${REDIS_PORT:-6379}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
+      REDIS_DATABASE: "${REDIS_DATABASE:-0}"
+
+      # MongoDB
+      MONGO_HOST: "${MONGO_HOST}"
+      MONGO_PORT: "${MONGO_PORT:-27017}"
+      MONGO_DATABASE: "${MONGO_DATABASE:-gdeiassistant}"
+
+      # JWT 密钥必须由外部注入
+      JWT_SECRET: "${JWT_SECRET}"
+
+      # 可选：邮件 / 微信 / R2 等按需注入
+      EMAIL_SMTP_HOST: "${EMAIL_SMTP_HOST:-}"
+      EMAIL_SMTP_PORT: "${EMAIL_SMTP_PORT:-465}"
+      EMAIL_SMTP_USERNAME: "${EMAIL_SMTP_USERNAME:-}"
+      EMAIL_SMTP_PASSWORD: "${EMAIL_SMTP_PASSWORD:-}"
+      EMAIL_FEEDBACK: "${EMAIL_FEEDBACK:-}"
+      EMAIL_TICKET: "${EMAIL_TICKET:-}"
+
+      WECHAT_APP_APPID: "${WECHAT_APP_APPID:-}"
+      WECHAT_APP_SECRET: "${WECHAT_APP_SECRET:-}"
+
+      R2_ENDPOINT: "${R2_ENDPOINT:-}"
+      R2_ACCESS_KEY_ID: "${R2_ACCESS_KEY_ID:-}"
+      R2_SECRET_ACCESS_KEY: "${R2_SECRET_ACCESS_KEY:-}"
+      R2_BUCKET_NAME: "${R2_BUCKET_NAME:-gdeiassistant-userdata}"
+      R2_CUSTOM_DOMAIN: "${R2_CUSTOM_DOMAIN:-}"
+
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+

@@ -2,11 +2,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 
-// 当前已绑定邮箱（mock 初始值，实际从接口获取）
-const currentEmail = ref('123***@qq.com')
+const currentEmail = ref('')
 const isEditing = ref(false)
 
 const formEmail = ref('')
@@ -63,7 +63,7 @@ async function handleSendCode() {
 
   sending.value = true
   try {
-    await request.post('/api/user/send-email-code', { email: formEmail.value })
+    await request.post(`/email/verification?email=${encodeURIComponent(formEmail.value)}`)
     countdown.value = 60
     timerId = setInterval(() => {
       if (countdown.value > 0) {
@@ -94,7 +94,7 @@ async function handleSubmit() {
 
   isBinding.value = true
   try {
-    await request.post('/api/user/bind-email', { email: formEmail.value, code: vcode.value })
+    await request.post(`/email/bind?email=${encodeURIComponent(formEmail.value)}&randomCode=${encodeURIComponent(vcode.value)}`)
     currentEmail.value = maskEmail(formEmail.value)
     showToast('绑定成功')
     // 绑定成功后返回状态页
@@ -137,15 +137,15 @@ async function confirmUnbind() {
   if (isUnbinding.value) return
   isUnbinding.value = true
   try {
-    await request.post('/api/user/unbind-email')
+    await request.post('/email/unbind')
     currentEmail.value = ''
     formEmail.value = ''
     vcode.value = ''
     isEditing.value = false
-    showToast('已解除绑定')
+    showSuccess('已解除绑定')
     showUnbindDialog.value = false
   } catch (e) {
-    showToast('解除绑定失败，请稍后重试')
+    // 错误由 request.js 全局拦截器统一提示
   } finally {
     isUnbinding.value = false
   }
@@ -153,8 +153,8 @@ async function confirmUnbind() {
 
 onMounted(async () => {
   try {
-    const res = await request.get('/api/user/email-status')
-    const data = res && (res.data || res.email)
+    const res = await request.get('/email/status')
+    const data = res && res.data
     if (typeof data === 'string') {
       currentEmail.value = maskEmail(data)
     }

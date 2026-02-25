@@ -76,20 +76,19 @@ function submit() {
   }
 
   submitting.value = true
-  const payload = new FormData()
-  payload.append('type', formData.value.type)
-  payload.append('pickupAddress', formData.value.pickupAddress.trim())
-  if (formData.value.pickupCode) payload.append('pickupCode', formData.value.pickupCode.trim())
-  if (pickupImageFile.value) payload.append('pickupImage', pickupImageFile.value)
-  payload.append('deliveryAddress', formData.value.deliveryAddress.trim())
-  payload.append('contactPhone', formData.value.contactPhone.trim())
-  payload.append('size', formData.value.size)
-  if (formData.value.description) payload.append('description', formData.value.description.trim())
-  payload.append('reward', reward.toFixed(2))
-
-  request.post('/delivery/publish', payload)
+  const payload = {
+    name: '代收',
+    number: '00000000000',
+    phone: formData.value.contactPhone.trim(),
+    price: reward,
+    company: formData.value.pickupAddress.trim() || '代取快递',
+    address: formData.value.deliveryAddress.trim(),
+    remarks: formData.value.description?.trim() || ''
+  }
+  request.post('/delivery/order', payload)
     .then(() => {
-      showDialog('发布成功')
+      const weui = typeof window !== 'undefined' && window.weui
+      if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
       setTimeout(() => router.push('/delivery/home'), 1500)
     })
     .catch(() => { submitting.value = false })

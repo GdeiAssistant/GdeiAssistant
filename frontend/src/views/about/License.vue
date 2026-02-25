@@ -12,7 +12,7 @@ const router = useRouter()
     </div>
     <div class="weui-article">
       <h2>MIT License</h2>
-      <p>Copyright (c) [2016-2023] [GdeiAssistant]</p>
+      <p>Copyright (c) [2016-2026] [GdeiAssistant]</p>
       <p>Permission is hereby granted, free of charge, to any person obtaining a copy
         of this software and associated documentation files (the "Software"), to deal
         in the Software without restriction, including without limitation the rights
@@ -29,7 +29,7 @@ const router = useRouter()
         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
         SOFTWARE.</p>
       <h2>Anti 996 License Version 1.0 (Draft)</h2>
-      <p>Copyright (c) [2016-2023] [GdeiAssistant]</p>
+      <p>Copyright (c) [2016-2026] [GdeiAssistant]</p>
       <p>Permission is hereby granted to any individual or legal entity
         obtaining a copy of this licensed work (including the source code,
         documentation and/or related items, hereinafter collectively referred

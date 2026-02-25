@@ -40,6 +40,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import request from '../../utils/request'
 
 const router = useRouter()
 
@@ -47,55 +48,41 @@ const router = useRouter()
 const records = ref([])
 const isLoading = ref(true)
 
-// Mock 数据生成函数
-const generateMockData = () => {
-  const mockRecords = [
-    {
-      id: 1,
-      loginTime: '2025-02-19 14:30:00',
-      ip: '113.116.12.34',
-      device: 'iPhone 14 Pro / Safari',
-      location: '广东深圳'
-    },
-    {
-      id: 2,
-      loginTime: '2025-02-18 09:15:22',
-      ip: '120.197.45.67',
-      device: 'Windows 11 / Chrome',
-      location: '广东广州'
-    },
-    {
-      id: 3,
-      loginTime: '2025-02-17 20:45:10',
-      ip: '183.62.88.123',
-      device: 'Android 13 / Chrome',
-      location: '广东东莞'
-    },
-    {
-      id: 4,
-      loginTime: '2025-02-16 16:22:33',
-      ip: '113.116.12.34',
-      device: 'iPhone 14 Pro / Safari',
-      location: '广东深圳'
-    },
-    {
-      id: 5,
-      loginTime: '2025-02-15 11:08:55',
-      ip: '120.197.45.67',
-      device: 'Windows 11 / Chrome',
-      location: '广东广州'
-    }
-  ]
-  return mockRecords
+function formatTime(time) {
+  if (!time) return ''
+  try {
+    const d = new Date(time)
+    if (Number.isNaN(d.getTime())) return String(time)
+    const y = d.getFullYear()
+    const m = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    const h = String(d.getHours()).padStart(2, '0')
+    const mi = String(d.getMinutes()).padStart(2, '0')
+    const s = String(d.getSeconds()).padStart(2, '0')
+    return `${y}-${m}-${day} ${h}:${mi}:${s}`
+  } catch {
+    return String(time)
+  }
 }
 
 // 加载数据
 const loadRecords = async () => {
   isLoading.value = true
-  // 模拟 500ms 网络请求延迟
-  await new Promise(resolve => setTimeout(resolve, 500))
-  records.value = generateMockData()
-  isLoading.value = false
+  try {
+    const res = await request.get('/ip/start/0/size/20')
+    const list = (res && res.data) || []
+    records.value = list.map((item, index) => ({
+      id: item.id ?? index,
+      loginTime: formatTime(item.time),
+      ip: item.ip || '',
+      location: item.area || [item.country, item.province, item.city].filter(Boolean).join(''),
+      device: item.network ? `${item.network} 客户端` : '未知设备'
+    }))
+  } catch (e) {
+    records.value = []
+  } finally {
+    isLoading.value = false
+  }
 }
 
 // 返回上一页

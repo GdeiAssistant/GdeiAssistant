@@ -6,12 +6,26 @@ import { useScrollLoad } from '../../composables/useScrollLoad'
 
 const router = useRouter()
 const scrollContainer = ref(null)
+const PAGE_SIZE = 10
+
+function mapSecretItem(s) {
+  return {
+    id: s.id,
+    content: s.content,
+    type: s.type,
+    theme: s.theme,
+    likeCount: s.likeCount ?? 0,
+    commentCount: s.commentCount ?? 0,
+    liked: s.liked === 1
+  }
+}
 
 const fetchSecretData = async (page) => {
-  const res = await request.get('/secret/items', {
-    params: { page, limit: 10 }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const res = await request.get(`/secret/info/start/${start}/size/${PAGE_SIZE}`)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map(mapSecretItem) : []
+  return { list, hasMore: list.length >= PAGE_SIZE }
 }
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleScroll, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchSecretData)
@@ -22,14 +36,12 @@ function goDetail(id) {
 
 function toggleLike(item) {
   if (item.liked) {
-    // 取消点赞
-    request.post(`/secret/like/${item.id}`, { like: 0 }).then(() => {
+    request.post(`/secret/id/${item.id}/like`, null, { params: { like: 0 } }).then(() => {
       item.liked = false
       item.likeCount--
     })
   } else {
-    // 点赞
-    request.post(`/secret/like/${item.id}`, { like: 1 }).then(() => {
+    request.post(`/secret/id/${item.id}/like`, null, { params: { like: 1 } }).then(() => {
       item.liked = true
       item.likeCount++
     })

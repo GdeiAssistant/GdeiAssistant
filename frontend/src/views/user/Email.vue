@@ -2,6 +2,7 @@
 import { ref, computed, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 
@@ -12,15 +13,9 @@ const sending = ref(false)
 const submitting = ref(false)
 let timerId = null
 
-function showToast(message) {
-  const toast = document.createElement('div')
-  toast.style.cssText =
-    'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.75);color:#fff;padding:12px 22px;border-radius:6px;z-index:9999;font-size:14px;max-width:80%;text-align:center;'
-  toast.textContent = message
-  document.body.appendChild(toast)
-  setTimeout(() => {
-    if (toast.parentNode) document.body.removeChild(toast)
-  }, 2000)
+function showSuccess(msg) {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.toast === 'function') weui.toast(msg, { duration: 2000 })
 }
 
 const codeButtonText = computed(() => {
@@ -40,7 +35,7 @@ function validateEmail(value) {
 async function handleSendCode() {
   if (!canSendCode.value) return
   if (!validateEmail(email.value)) {
-    showToast('邮箱格式不正确')
+    showErrorTopTips('邮箱格式不正确')
     return
   }
 
@@ -56,9 +51,9 @@ async function handleSendCode() {
         timerId = null
       }
     }, 1000)
-    showToast('验证码已发送，请检查邮箱')
+    showSuccess('验证码已发送，请检查邮箱')
   } catch (e) {
-    showToast('发送验证码失败，请稍后重试')
+    // 错误由 request.js 全局拦截器统一提示
   } finally {
     sending.value = false
   }
@@ -67,23 +62,23 @@ async function handleSendCode() {
 async function handleSubmit() {
   if (submitting.value) return
   if (!validateEmail(email.value)) {
-    showToast('邮箱格式不正确')
+    showErrorTopTips('邮箱格式不正确')
     return
   }
   if (!code.value) {
-    showToast('请输入验证码')
+    showErrorTopTips('请输入验证码')
     return
   }
 
   submitting.value = true
   try {
     await request.post('/user/bind-email', { email: email.value, code: code.value })
-    showToast('绑定成功')
+    showSuccess('绑定成功')
     setTimeout(() => {
       router.back()
     }, 800)
   } catch (e) {
-    showToast('绑定失败，请稍后重试')
+    // 错误由 request.js 全局拦截器统一提示
   } finally {
     submitting.value = false
   }

@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import request from '../../utils/request'
+import { queryCardRecord } from '@/api/card'
+import { showErrorTopTips } from '@/utils/toast'
 
 const router = useRouter()
 const route = useRoute()
@@ -18,22 +19,45 @@ function reQuery() {
   router.back()
 }
 
+function parseDateToPayload(dateStr) {
+  const s = (dateStr || '').trim()
+  if (!s) return null
+  // 期望格式：YYYY-MM-DD
+  const m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s)
+  if (!m) return null
+  const year = parseInt(m[1], 10)
+  const month = parseInt(m[2], 10)
+  const date = parseInt(m[3], 10)
+  if (!year || !month || !date) return null
+  return { year, month, date }
+}
+
 function fetchList() {
+  const payload = parseDateToPayload(queryDate.value)
+  if (!payload) {
+    showErrorTopTips('查询日期格式不正确，请重新选择')
+    list.value = []
+    return
+  }
+
   loading.value = true
-  request.get('/card/query', { params: { date: queryDate.value } })
+  queryCardRecord(payload)
     .then((res) => {
-      loading.value = false
-      if (res && Array.isArray(res)) {
-        list.value = res
-      } else if (res && res.data && Array.isArray(res.data)) {
-        list.value = res.data
-      } else {
-        list.value = []
-      }
+      const body = res && res.data ? res.data : res
+      const result =
+        body && typeof body === 'object'
+          ? body.data !== undefined
+            ? body.data
+            : body
+          : null
+      const records = result && Array.isArray(result.cardList) ? result.cardList : []
+      list.value = records
     })
     .catch(() => {
-      loading.value = false
       list.value = []
+    })
+    .finally(() => {
+      loading.value = false
     })
 }
 
@@ -98,11 +122,11 @@ onMounted(() => {
           class="weui-cell card-cell"
         >
           <div class="weui-cell__bd">
-            <div class="card-cell__line1">{{ item.location }} 【{{ item.type }}】</div>
-            <div class="card-cell__line2">{{ item.time }}</div>
+            <div class="card-cell__line1">{{ item.merchantName || '未知商户' }} 【{{ item.tradeName || '未知类型' }}】</div>
+            <div class="card-cell__line2">{{ item.tradeTime || '' }}</div>
           </div>
           <div class="weui-cell__ft">
-            <span :class="amountClass(item.amount)">{{ amountText(item.amount) }}</span>
+            <span :class="amountClass(item.tradePrice)">{{ amountText(item.tradePrice) }}</span>
           </div>
         </div>
       </div>

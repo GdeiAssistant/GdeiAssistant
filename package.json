@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "cropperjs": "^2.1.0"
+  }
+}

@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+import { submitFeedback } from '@/api/feedback'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 
@@ -101,15 +102,17 @@ function removeScreenshot(index) {
   if (url) URL.revokeObjectURL(url)
 }
 
-function showToast(message) {
+function showToast(message, isSuccess = false) {
   const toast = document.createElement('div')
+  toast.setAttribute('role', 'alert')
   toast.style.cssText =
-    'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.75);color:#fff;padding:12px 22px;border-radius:6px;z-index:9999;font-size:14px;max-width:80%;text-align:center;'
+    'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;padding:12px 22px;border-radius:6px;z-index:9999;font-size:14px;max-width:80%;text-align:center;'
+  toast.style.background = isSuccess ? '#10b981' : 'rgba(0,0,0,0.75)'
   toast.textContent = message
   document.body.appendChild(toast)
   setTimeout(() => {
     if (toast.parentNode) document.body.removeChild(toast)
-  }, 2000)
+  }, isSuccess ? 1500 : 2000)
 }
 
 const submitting = ref(false)
@@ -117,33 +120,28 @@ const submitting = ref(false)
 async function handleSubmit() {
   const trimmedContent = content.value.trim()
   if (!trimmedContent) {
-    showToast('请填写反馈内容')
+    showErrorTopTips('请填写反馈内容')
     return
   }
 
   submitting.value = true
   try {
-    const formData = new FormData()
-    formData.append('type', feedbackType.value)
-    formData.append('content', trimmedContent)
-    if (contact.value && contact.value.trim()) {
-      formData.append('contact', contact.value.trim())
-    }
-    screenshots.value.forEach((file, index) => {
-      formData.append(`screenshot${index + 1}`, file)
+    await submitFeedback({
+      content: trimmedContent,
+      contact: contact.value?.trim() || undefined,
+      type: feedbackType.value || undefined
     })
-
-    await request.post('/user/feedback', formData)
-    showToast('感谢您的反馈！')
-
-    // 清空表单
-    content.value = ''
-    contact.value = ''
-    screenshots.value = []
-    screenshotPreviews.value.forEach((url) => URL.revokeObjectURL(url))
-    screenshotPreviews.value = []
+    showToast('提交成功', true)
+    setTimeout(() => {
+      content.value = ''
+      contact.value = ''
+      screenshots.value = []
+      screenshotPreviews.value.forEach((url) => URL.revokeObjectURL(url))
+      screenshotPreviews.value = []
+      router.back()
+    }, 1500)
   } catch (e) {
-    // 错误已由全局拦截器提示
+    // 错误由 request.js 全局拦截器统一提示
   } finally {
     submitting.value = false
   }

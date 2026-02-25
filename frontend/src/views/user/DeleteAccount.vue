@@ -2,21 +2,16 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 const agreed = ref(false)
 const showConfirmDialog = ref(false)
 const deleting = ref(false)
 
-function showToast(message) {
-  const toast = document.createElement('div')
-  toast.style.cssText =
-    'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.75);color:#fff;padding:12px 22px;border-radius:6px;z-index:9999;font-size:14px;max-width:80%;text-align:center;'
-  toast.textContent = message
-  document.body.appendChild(toast)
-  setTimeout(() => {
-    if (toast.parentNode) document.body.removeChild(toast)
-  }, 2000)
+function showSuccess(msg) {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.toast === 'function') weui.toast(msg, { duration: 2000 })
 }
 
 function handleDeleteClick() {
@@ -33,8 +28,8 @@ async function handleConfirmDelete() {
   deleting.value = true
   
   try {
-    await request.post('/user/delete')
-    showToast('账号已注销')
+    await request.post('/close/submit')
+    showSuccess('账号已注销')
     
     // 清除登录态
     localStorage.clear()
@@ -46,7 +41,7 @@ async function handleConfirmDelete() {
     }, 1500)
   } catch (e) {
     deleting.value = false
-    showToast('注销失败，请重试')
+    // 错误由 request.js 全局拦截器统一提示
   }
 }
 </script>

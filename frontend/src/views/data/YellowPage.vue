@@ -65,7 +65,7 @@ const groupedData = computed(() => {
 function loadYellowPage() {
   loading.value = true
   request
-    .get('/api/data/yellowpage')
+    .get('/data/yellowpage')
     .then((res) => {
       loading.value = false
       if (res.success && res.data) {

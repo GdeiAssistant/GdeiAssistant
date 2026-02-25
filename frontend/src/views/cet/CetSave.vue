@@ -1,55 +1,61 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+import { getCetNumber, saveCetNumber } from '@/api/cet'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 
 const examNumber = ref('')
 const name = ref('')
 const saving = ref(false)
-const toastMessage = ref('')
-const showToast = ref(false)
+
+function getWeui() {
+  return typeof window !== 'undefined' ? window.weui : null
+}
 
 function goBack() {
   router.back()
-}
-
-function showWeuiToast(message) {
-  toastMessage.value = message
-  showToast.value = true
-  setTimeout(() => {
-    showToast.value = false
-  }, 2000)
 }
 
 function submitSave() {
   const num = (examNumber.value || '').trim()
   const n = (name.value || '').trim()
   if (!num) {
-    showWeuiToast('请输入15位准考证号')
+    showErrorTopTips('请输入15位准考证号')
     return
   }
   if (num.length !== 15) {
-    showWeuiToast('准考证号长度不正确！')
+    showErrorTopTips('准考证号必须为15位')
     return
   }
   saving.value = true
-  request.post('/cet/save', { number: num, name: n }).then((res) => {
-    saving.value = false
+  saveCetNumber({ number: num, name: n }).then((res) => {
     if (res && res.success) {
-      showWeuiToast('保存成功')
-      setTimeout(() => {
-        router.back()
-      }, 800)
+      const weui = getWeui()
+      if (weui && typeof weui.toast === 'function') {
+        weui.toast('保存成功')
+      }
+      setTimeout(() => router.back(), 800)
     } else {
-      showWeuiToast(res && res.message ? res.message : '保存失败')
+      showErrorTopTips(res && res.message ? res.message : '保存失败')
     }
   }).catch(() => {
+    // 错误由 request.js 全局拦截器统一提示，此处仅关闭 Loading
+  }).finally(() => {
     saving.value = false
-    showWeuiToast('网络异常，请重试')
   })
 }
+
+onMounted(() => {
+  getCetNumber().then((res) => {
+    if (res && res.success && res.data) {
+      const d = res.data
+      if (d.number != null) examNumber.value = String(d.number)
+      if (d.name != null && d.name !== '') name.value = d.name
+    }
+  }).catch(() => {})
+})
 </script>
 
 <template>
@@ -104,15 +110,6 @@ function submitSave() {
     <div class="weui-btn_area">
       <button type="button" class="weui-btn weui-btn_primary" @click="submitSave">保存</button>
     </div>
-
-    <template v-if="showToast">
-      <div class="weui-mask_transparent" aria-hidden="true"></div>
-      <div class="weui-toast__wrp">
-        <div class="weui-toast weui-toast_text">
-          <p class="weui-toast__content">{{ toastMessage }}</p>
-        </div>
-      </div>
-    </template>
   </div>
 </template>
 

@@ -8,11 +8,23 @@ const router = useRouter()
 const scrollContainer = ref(null)
 const activeType = ref(1) // 1: 最美生活照, 2: 最美校园照
 
+const PAGE_SIZE = 10
 const fetchPhotographList = async (page) => {
-  const res = await request.get('/photograph/items', {
-    params: { page, limit: 10, type: activeType.value }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const type = activeType.value === 1 ? 1 : 0
+  const res = await request.get(`/photograph/type/${type}/start/${start}/size/${PAGE_SIZE}`)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map((p) => ({
+    id: p.id,
+    title: p.title,
+    description: p.content,
+    imgUrl: p.firstImageUrl,
+    photoCount: p.count,
+    likeCount: p.likeCount ?? 0,
+    commentCount: p.commentCount ?? 0,
+    isLiked: p.liked === true
+  })) : []
+  return { list, hasMore: list.length >= PAGE_SIZE }
 }
 
 const {
@@ -37,15 +49,13 @@ const setType = (type) => {
 const toggleLike = (item, e) => {
   if (e) e.stopPropagation()
   if (!item) return
-  if (!Object.prototype.hasOwnProperty.call(item, 'isLiked')) {
-    item.isLiked = false
+  if (item.isLiked) {
+    return
   }
-  if (!Object.prototype.hasOwnProperty.call(item, 'likeCount')) {
-    item.likeCount = item.likes ?? 0
-  }
-  item.isLiked = !item.isLiked
-  item.likeCount += item.isLiked ? 1 : -1
-  if (item.likeCount < 0) item.likeCount = 0
+  request.post(`/photograph/id/${item.id}/like`).then(() => {
+    item.isLiked = true
+    item.likeCount++
+  })
 }
 
 const goDetail = (id) => {
@@ -122,7 +132,7 @@ onMounted(() => {
                 >{{ item.likeCount ?? item.likes }} 点赞
               </a>
               <a class="am-btn am-btn-photo" href="javascript:;" role="button">
-                <i class="am-icon-th-list"></i>0 评论
+                <i class="am-icon-th-list"></i>{{ item.commentCount ?? 0 }} 评论
               </a>
             </div>
           </div>

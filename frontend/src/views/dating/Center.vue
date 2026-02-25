@@ -26,39 +26,73 @@ function switchTab(index) {
 
 function loadData() {
   loading.value = true
-  let api = ''
-  if (activeTab.value === 0) api = '/dating/my/received'
-  else if (activeTab.value === 1) api = '/dating/my/sent'
-  else api = '/dating/my/posts'
-  
-  request.get(api)
-    .then((res) => {
-      const data = res.data || res
-      const list = Array.isArray(data) ? data : (data.list || [])
-      if (activeTab.value === 0) receivedList.value = list
-      else if (activeTab.value === 1) sentList.value = list
-      else postsList.value = list
-      loading.value = false
-    })
-    .catch(() => {
-      loading.value = false
-    })
+  if (activeTab.value === 0) {
+    request.get('/dating/message/start/0')
+      .then((res) => {
+        const raw = res?.data || []
+        receivedList.value = Array.isArray(raw) ? raw.map((m) => {
+          const pick = m.datingPick || {}
+          const profile = pick.datingProfile || {}
+          return {
+            id: pick.pickId,
+            senderName: profile.nickname || '匿名',
+            content: pick.content || '',
+            time: pick.createTime || m.createTime || '',
+            status: pick.state,
+            avatar: null
+          }
+        }) : []
+        loading.value = false
+      })
+      .catch(() => { loading.value = false })
+  } else if (activeTab.value === 1) {
+    request.get('/dating/pick/my/sent')
+      .then((res) => {
+        const raw = res?.data || []
+        sentList.value = Array.isArray(raw) ? raw.map((p) => {
+          const profile = p.datingProfile || {}
+          return {
+            id: p.pickId,
+            targetName: profile.nickname || '匿名',
+            content: p.content || '',
+            status: p.state,
+            targetQq: profile.qq,
+            targetWechat: profile.wechat,
+            targetAvatar: profile.pictureURL
+          }
+        }) : []
+        loading.value = false
+      })
+      .catch(() => { loading.value = false })
+  } else {
+    request.get('/dating/profile/my')
+      .then((res) => {
+        const raw = res?.data || []
+        postsList.value = Array.isArray(raw) ? raw.map((p) => ({
+          id: p.profileId,
+          name: p.nickname,
+          image: p.pictureURL,
+          publishTime: ''
+        })) : []
+        loading.value = false
+      })
+      .catch(() => { loading.value = false })
+  }
 }
 
 function handleAccept(item) {
-  request.post('/dating/action/accept', { id: item.id })
+  request.post(`/dating/pick/id/${item.id}`, null, { params: { state: 1 } })
     .then(() => {
       item.status = 1
-      item.contactVisible = true
       showDialog('已同意，联系方式已展示')
     })
     .catch(() => {})
 }
 
 function handleReject(item) {
-  request.post('/dating/action/reject', { id: item.id })
+  request.post(`/dating/pick/id/${item.id}`, null, { params: { state: -1 } })
     .then(() => {
-      item.status = 2
+      item.status = -1
       showDialog('已拒绝')
     })
     .catch(() => {})
@@ -66,9 +100,9 @@ function handleReject(item) {
 
 function confirmDelete() {
   if (!deleteTargetId.value) return
-  request.post('/dating/action/delete', { id: deleteTargetId.value })
+  request.post(`/dating/profile/id/${deleteTargetId.value}/state`, null, { params: { state: 0 } })
     .then(() => {
-      postsList.value = postsList.value.filter(item => item.id !== deleteTargetId.value)
+      postsList.value = postsList.value.filter((item) => item.id !== deleteTargetId.value)
       deleteDialogVisible.value = false
       deleteTargetId.value = null
       showDialog('已隐藏')
@@ -82,13 +116,13 @@ function openDeleteDialog(id) {
 }
 
 function getStatusText(status) {
-  const map = { 0: '待处理', 1: '已同意', 2: '已拒绝' }
-  return map[status] || '未知'
+  const map = { 0: '待处理', 1: '已同意', 2: '已拒绝', '-1': '已拒绝' }
+  return map[status] ?? map[String(status)] ?? '未知'
 }
 
 function getStatusClass(status) {
-  const map = { 0: 'status-pending', 1: 'status-accepted', 2: 'status-rejected' }
-  return map[status] || ''
+  const map = { 0: 'status-pending', 1: 'status-accepted', 2: 'status-rejected', '-1': 'status-rejected' }
+  return map[status] ?? map[String(status)] ?? ''
 }
 
 onMounted(() => {
@@ -151,7 +185,7 @@ onMounted(() => {
           <div v-else-if="item.status === 1" class="dating-card__status">
             <span class="status-text status-accepted">已同意，已展示联系方式</span>
           </div>
-          <div v-else class="dating-card__status">
+          <div v-else-if="item.status === -1 || item.status === 2" class="dating-card__status">
             <span class="status-text status-rejected">已拒绝</span>
           </div>
         </div>

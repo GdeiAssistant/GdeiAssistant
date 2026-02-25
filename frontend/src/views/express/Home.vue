@@ -3,16 +3,38 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 // 用于下拉刷新：模拟 scrollTop 为 window 的滚动位置
 const scrollContainer = ref({ get scrollTop() { return window.pageYOffset || document.documentElement.scrollTop } })
 
+const PAGE_SIZE = 10
+function mapGender(g) {
+  if (g === 0) return 'male'
+  if (g === 1) return 'female'
+  return 'secret'
+}
 const fetchExpressData = async (page) => {
-  const res = await request.get('/express/items', {
-    params: { page, limit: 10 }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const res = await request.get(`/express/start/${start}/size/${PAGE_SIZE}`)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map((e) => ({
+    id: e.id,
+    content: e.content,
+    senderName: e.nickname,
+    receiverName: e.name,
+    senderGender: mapGender(e.selfGender),
+    receiverGender: mapGender(e.personGender),
+    time: e.publishTime,
+    likeCount: e.likeCount ?? 0,
+    commentCount: e.commentCount ?? 0,
+    isLiked: e.liked === true,
+    canGuess: e.canGuess === true,
+    guessCount: e.guessSum ?? 0,
+    correctCount: e.guessCount ?? 0
+  })) : []
+  return { list, hasMore: list.length >= PAGE_SIZE }
 }
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchExpressData)
@@ -40,10 +62,15 @@ function openGuessDialog(item) {
   guessDialogVisible.value = true
 }
 
+function showSuccess(msg) {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.toast === 'function') weui.toast(msg, { duration: 2000 })
+}
+
 function confirmGuess() {
   const guessName = guessInputValue.value && guessInputValue.value.trim()
   if (!guessName) {
-    showToast('请输入你猜的真实姓名')
+    showErrorTopTips('请输入你猜的真实姓名')
     return
   }
   const currentItem = guessTargetItem.value
@@ -51,20 +78,18 @@ function confirmGuess() {
     guessDialogVisible.value = false
     return
   }
-  
-  // 无论对错，总猜测次数都要 +1
-  currentItem.guessCount = (currentItem.guessCount || 0) + 1
-  
-  // 校验答案
-  if (guessName === currentItem.senderTrueName) {
-    // 猜对了
-    currentItem.correctCount = (currentItem.correctCount || 0) + 1
-    showToast('恭喜你，猜对了！')
-  } else {
-    // 猜错了
-    showToast('猜错了，再试试看吧！')
-  }
-  
+  request.post(`/express/id/${currentItem.id}/guess`, null, { params: { name: guessName } })
+    .then((res) => {
+      const correct = res?.data === true
+      if (correct) {
+        currentItem.correctCount = (currentItem.correctCount || 0) + 1
+        showSuccess('恭喜你，猜对了！')
+      } else {
+        showErrorTopTips('猜错了，再试试看吧！')
+      }
+      currentItem.guessCount = (currentItem.guessCount || 0) + 1
+    })
+    .catch(() => {})
   guessDialogVisible.value = false
   guessTargetItem.value = null
   guessInputValue.value = ''
@@ -73,20 +98,10 @@ function confirmGuess() {
 function handleGuess(item) {
   // 拦截无效的猜测点击
   if (!item.canGuess) {
-    showToast('TA很神秘，没有留下真名让人猜哦~')
+    showErrorTopTips('TA很神秘，没有留下真名让人猜哦~')
     return
   }
   openGuessDialog(item)
-}
-
-function showToast(message) {
-  const toast = document.createElement('div')
-  toast.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.7);color:#fff;padding:12px 20px;border-radius:4px;z-index:9999;font-size:14px;'
-  toast.textContent = message
-  document.body.appendChild(toast)
-  setTimeout(() => {
-    document.body.removeChild(toast)
-  }, 2000)
 }
 
 function handleComment(item) {

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+import { getGrade, updateGradeCache } from '@/api/grade'
 
 const router = useRouter()
 
@@ -24,10 +24,12 @@ async function fetchGrade() {
   loading.value = true
   gradeResult.value = null
   try {
-    const res = await request.post('/gradequery', { year: activeYear.value })
-    if (res && res.data) {
+    const res = await getGrade(activeYear.value)
+    if (res && res.success && res.data != null) {
       gradeResult.value = res.data
     }
+  } catch (e) {
+    // 报错 Toast 由 request.js 全局拦截器处理
   } finally {
     loading.value = false
   }
@@ -43,7 +45,7 @@ function goBack() {
   router.back()
 }
 
-/** 显示更多菜单（与旧版 grade.js showOptionMenu 一致：管理缓存配置、更新实时数据 + 取消） */
+/** 显示更多菜单（与旧版 grade.js showOptionMenu 一致：管理缓存配置、更新缓存数据 + 取消） */
 function showOptionMenu() {
   showActionSheet.value = true
 }
@@ -52,16 +54,44 @@ function closeActionSheet() {
   showActionSheet.value = false
 }
 
-/** 管理缓存配置：旧版跳转 /privacy，Mock 阶段用 Toast 提示 */
+/** 管理缓存配置：跳转到隐私设置页 */
 function onManageCache() {
   closeActionSheet()
-  showWeuiToast('该功能将在后续模块迁移中实现')
+  router.push('/user/privacy-setting')
 }
 
-/** 更新实时数据：旧版 refreshGradeData，这里触发 fetchGrade 并显示加载动画 */
-function onRefreshGrade() {
+// 统一获取 weui 对象（若存在）
+const getWeui = () => (typeof window !== 'undefined' ? window.weui : null)
+
+/** 更新缓存数据：调用后端 /api/grade/update，成功后静默刷新当前学年成绩 */
+async function handleUpdateCache() {
   closeActionSheet()
-  fetchGrade()
+  const weui = getWeui()
+  let loadingInstance = null
+  if (weui && typeof weui.loading === 'function') {
+    loadingInstance = weui.loading('正在同步教务系统...')
+  } else {
+    loading.value = true
+  }
+  try {
+    const res = await updateGradeCache()
+    if (res && res.success) {
+      if (weui && typeof weui.toast === 'function') {
+        weui.toast('更新成功', { duration: 1500 })
+      } else {
+        showWeuiToast('更新成功')
+      }
+      await fetchGrade()
+    }
+  } catch (e) {
+    // 错误文案（含测试账号受限）由全局拦截器统一提示
+  } finally {
+    if (loadingInstance && typeof loadingInstance.hide === 'function') {
+      loadingInstance.hide()
+    } else {
+      loading.value = false
+    }
+  }
 }
 
 function showWeuiToast(message) {
@@ -102,10 +132,10 @@ onMounted(() => {
     <template v-if="showActionSheet">
       <div class="weui-mask" @click="closeActionSheet" aria-hidden="true"></div>
       <div class="weui-actionsheet weui-actionsheet_toggle" role="dialog" aria-label="更多选项">
-        <div class="weui-actionsheet__menu">
-          <div class="weui-actionsheet__cell" @click="onManageCache">管理缓存配置</div>
-          <div class="weui-actionsheet__cell" @click="onRefreshGrade">更新实时数据</div>
-        </div>
+      <div class="weui-actionsheet__menu">
+        <div class="weui-actionsheet__cell" @click="onManageCache">管理缓存配置</div>
+        <div class="weui-actionsheet__cell" @click="handleUpdateCache">更新缓存数据</div>
+      </div>
         <div class="weui-actionsheet__action">
           <div class="weui-actionsheet__cell" @click="closeActionSheet">取消</div>
         </div>

@@ -19,12 +19,18 @@
           <div class="weui-cell__ft news-date">{{ item.date }}</div>
         </a>
       </div>
-      <div v-if="isLoading" class="weui-loadmore">
+      <div v-if="loadError && newsList.length === 0" class="weui-loadmore">
+        <span class="weui-loadmore__tips">加载失败，请稍后重试</span>
+      </div>
+      <div v-else-if="isLoading" class="weui-loadmore">
         <i class="weui-loading"></i>
         <span class="weui-loadmore__tips">正在加载</span>
       </div>
       <div v-else-if="finished && newsList.length > 0" class="weui-loadmore weui-loadmore_line">
         <span class="weui-loadmore__tips">没有更多数据了</span>
+      </div>
+      <div v-else-if="!isLoading && finished && newsList.length === 0 && !loadError" class="weui-loadmore">
+        <span class="weui-loadmore__tips">暂无新闻</span>
       </div>
     </div>
     <div class="weui-tabbar news-tabbar">
@@ -62,11 +68,13 @@ const tabs = [
   { type: 5, label: '综合信息', icon: '/img/news/school.png' }
 ]
 
+const PAGE_SIZE = 15
 const activeType = ref(1)
 const newsList = ref([])
 const page = ref(1)
 const isLoading = ref(false)
 const finished = ref(false)
+const loadError = ref(false)
 
 function goBack() {
   router.back()
@@ -75,14 +83,26 @@ function goBack() {
 function loadNews() {
   if (isLoading.value || finished.value) return
   isLoading.value = true
+  loadError.value = false
+  const start = (page.value - 1) * PAGE_SIZE
+  const type = activeType.value
   request
-    .get(`/news/list?type=${activeType.value}&page=${page.value}`)
+    .get(`/news/type/${type}/start/${start}/size/${PAGE_SIZE}`)
     .then((res) => {
-      const list = res.data?.list || []
-      newsList.value.push(...list)
-      if (res.data?.hasMore === false) {
+      const list = res?.data ?? []
+      const mapped = list.map((item) => ({
+        id: item.id,
+        title: item.title,
+        date: item.publishDate || ''
+      }))
+      newsList.value.push(...mapped)
+      if (mapped.length < PAGE_SIZE) {
         finished.value = true
       }
+    })
+    .catch(() => {
+      loadError.value = true
+      if (page.value === 1) finished.value = true
     })
     .finally(() => {
       isLoading.value = false
@@ -95,6 +115,7 @@ function switchTab(type) {
   newsList.value = []
   page.value = 1
   finished.value = false
+  loadError.value = false
   loadNews()
 }
 

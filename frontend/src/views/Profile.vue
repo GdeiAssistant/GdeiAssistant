@@ -24,32 +24,32 @@
 
       <div class="weui-cell weui-cell_access" @click="openBirthdayPicker">
         <div class="weui-cell__bd"><p>生日</p></div>
-        <div class="weui-cell__ft">{{ userInfo.birthday || '请选择' }}</div>
+        <div class="weui-cell__ft">{{ userInfo.birthday || '未选择' }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openFacultyPicker">
         <div class="weui-cell__bd"><p>院系</p></div>
-        <div class="weui-cell__ft">{{ userInfo.faculty || facultyPlaceholder }}</div>
+        <div class="weui-cell__ft">{{ userInfo.faculty || '未选择' }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openMajorPicker">
         <div class="weui-cell__bd"><p>专业</p></div>
-        <div class="weui-cell__ft">{{ userInfo.major || '请选择专业' }}</div>
+        <div class="weui-cell__ft">{{ userInfo.major || '未选择' }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openEnrollmentPicker">
         <div class="weui-cell__bd"><p>入学年份</p></div>
-        <div class="weui-cell__ft">{{ userInfo.enrollment || '请选择年份' }}</div>
+        <div class="weui-cell__ft">{{ userInfo.enrollment || '未选择' }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openLocationPicker">
         <div class="weui-cell__bd"><p>所在地</p></div>
-        <div class="weui-cell__ft">{{ userInfo.location || '请选择所在地' }}</div>
+        <div class="weui-cell__ft">{{ userInfo.location || '未选择' }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openHometownPicker">
         <div class="weui-cell__bd"><p>家乡</p></div>
-        <div class="weui-cell__ft">{{ userInfo.hometown || '请选择家乡' }}</div>
+        <div class="weui-cell__ft">{{ userInfo.hometown || '未选择' }}</div>
       </div>
 
       <a class="weui-cell weui-cell_access relative-cell" href="javascript:" @click.prevent="openIntroDialog">
@@ -59,7 +59,7 @@
 
       <div class="weui-cell">
         <div class="weui-cell__bd"><p>IP属地</p></div>
-        <div class="weui-cell__ft">{{ userInfo.ipArea || '中国广东广州' }}</div>
+        <div class="weui-cell__ft">{{ userInfo.ipArea || '-' }}</div>
       </div>
     </div>
 
@@ -201,37 +201,44 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
-// 全量地理数据（由 location.xml 迁移，国家 -> 省/州 -> 城市，含所有国家）
-import locationTree from '../data/locationTree.js'
+import {
+  getCurrentUserProfile,
+  logout,
+  getLocationList,
+  updateIntroduction,
+  updateBirthday,
+  updateFaculty,
+  updateLocation,
+  updateHometown,
+  updateMajor,
+  updateEnrollment,
+  updateNickname
+} from '../api/user.js'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 
-// 与头像编辑页同步：从 localStorage 读取 user_avatar 更新 userInfo.avatar
-const AVATAR_STORAGE_KEY = 'user_avatar'
-const defaultAvatarUrl = '/img/login/qq.png'
-function getStoredAvatar() {
-  if (typeof localStorage === 'undefined') return defaultAvatarUrl
-  return localStorage.getItem(AVATAR_STORAGE_KEY) || defaultAvatarUrl
-}
-function refreshAvatar() {
-  userInfo.value.avatar = getStoredAvatar()
-}
-
-// === 用户核心数据 ===
+// === 用户核心数据（location/hometown 展示用；*Region/*State/*City 为后端地区代码，提交接口用） ===
 const userInfo = ref({
-  avatar: getStoredAvatar(),
-  username: '测试用户',
-  nickname: '二师小助手',
-  birthday: '2002-05-15',
+  avatar: '/img/login/qq.png',
+  username: '-',
+  nickname: '',
+  birthday: '',
   faculty: '',
   major: '',
-  enrollment: '2022',
+  enrollment: '',
   location: '',
   hometown: '',
+  locationRegion: '',
+  locationState: '',
+  locationCity: '',
+  hometownRegion: '',
+  hometownState: '',
+  hometownCity: '',
   introduction: '',
-  ipArea: '中国广东广州'
+  ipArea: ''
 })
 
 // === 弹窗控制与临时变量 ===
@@ -270,18 +277,42 @@ const majorList = ref([])
 const updateMajorListByFaculty = () => {
   majorList.value = (facultyData[userInfo.value.faculty] || ['未选择']).slice()
 }
-// 院系变化时立即将专业重置为「未选择」
-watch(() => userInfo.value.faculty, () => {
-  userInfo.value.major = '未选择'
-  updateMajorListByFaculty()
-})
+// 不在 watch 里重置 major，避免拉取 profile 后 faculty 赋值触发把 major 清掉；仅在选择院系弹窗确认时重置
 
 // 年份列表
 const yearList = ref([])
 
-// 所在地/家乡使用 locationTree（见顶部 import），结构：国家 -> 省/州 -> 城市
-const getLocationFlatOptions = () =>
-  locationTree.flatMap(c => (c.children || []).flatMap(s => (s.children || []).map(city => `${c.label} ${s.label} ${city.label}`)))
+// 所在地/家乡：使用后端 GET /api/locationList 返回的代码树（value=code，label=中文名）
+const locationListTree = ref([])
+const locationFlatOptions = ref([])
+const locationFlatMap = ref({})
+
+/** 将后端 Region[] 转为 weui 三列 picker 所需格式 [{ label, value, children }]，并生成扁平列表与 display->codes 映射 */
+function buildLocationPickerTree(list) {
+  if (!list || !Array.isArray(list)) return []
+  const flat = []
+  const flatMap = {}
+  const tree = list.map(region => {
+    const regionLabel = region.name || region.aliasesName || region.code || ''
+    const states = region.stateMap ? Object.values(region.stateMap) : []
+    const children = states.map(state => {
+      const stateLabel = state.name || state.aliasesName || state.code || ''
+      const cities = state.cityMap ? Object.values(state.cityMap) : []
+      const stateChildren = cities.map(city => {
+        const cityLabel = city.name || city.aliasesName || city.code || ''
+        const display = `${regionLabel} ${stateLabel} ${cityLabel}`.trim()
+        flat.push(display)
+        flatMap[display] = { region: region.code, state: state.code, city: city.code }
+        return { label: cityLabel, value: city.code }
+      })
+      return { label: stateLabel, value: state.code, children: stateChildren }
+    })
+    return { label: regionLabel, value: region.code, children }
+  })
+  locationFlatOptions.value = flat
+  locationFlatMap.value = flatMap
+  return tree
+}
 
 const initYearList = () => {
   const currentYear = new Date().getFullYear()
@@ -294,19 +325,75 @@ const todayStr = (() => {
 })()
 
 // ==========================================
-// 核心逻辑 3：自动保存与 Picker 打开
+// 核心逻辑 3：保存到后端（真实 API，application/json）
 // ==========================================
 
-const handleAutoSave = () => {
-  const payload = { ...userInfo.value }
-  if (payload.location) payload.location = String(payload.location).trim()
-  if (payload.hometown) payload.hometown = String(payload.hometown).trim()
-  console.log('自动保存的数据:', payload)
+const getWeuiToast = () => (typeof window !== 'undefined' ? window.weui : null)
+const showSuccess = (msg = '保存成功') => {
+  const weui = getWeuiToast()
+  if (weui && typeof weui.toast === 'function') weui.toast(msg, { duration: 1500 })
+}
+/** 地区展示层洗数据：剔除国旗/Emoji，按空格拆分后移除相邻重复词（如「卢旺达 卢旺达」→「卢旺达」），适配 varchar(5) */
+const formatLocationDisplay = (str) => {
+  if (!str) return ''
+  const cleanStr = str.replace(/[\uD83C-\uDBFF\uDC00-\uDFFF]+/g, '')
+  const words = cleanStr.split(' ').filter(w => w.trim() !== '')
+  return words.filter((word, index) => word !== words[index - 1]).join(' ')
+}
+
+/** 保存生日：body { year, month, date }，全 null 表示清空 */
+function saveBirthday(year, month, date) {
+  return updateBirthday({ year, month, date })
+    .then(() => { showSuccess() })
+}
+
+/** 保存院系：body { faculty } 为院系在 facultyList 中的索引；成功后本地强制清空专业与后端一致 */
+function saveFaculty() {
+  const idx = facultyList.indexOf(userInfo.value.faculty)
+  if (idx < 0) return Promise.resolve()
+  return updateFaculty({ faculty: idx })
+    .then(() => {
+      userInfo.value.major = ''
+      updateMajorListByFaculty()
+      showSuccess()
+    })
+}
+
+/** 保存专业：body { major } */
+function saveMajor() {
+  const major = userInfo.value.major
+  if (!major || major === '未选择') return Promise.resolve()
+  return updateMajor({ major })
+    .then(() => { showSuccess() })
+}
+
+/** 保存入学年份：body { year }，null 表示清空 */
+function saveEnrollment() {
+  const y = userInfo.value.enrollment
+  const year = y ? parseInt(String(y), 10) : null
+  return updateEnrollment({ year })
+    .then(() => { showSuccess() })
+}
+
+/** 保存所在地：严格提交地区代码 { region, state, city }，适配后端 varchar(5)；value 来自 picker 的 code */
+function saveLocation() {
+  const { locationRegion, locationState, locationCity } = userInfo.value
+  if (!locationRegion) return Promise.resolve()
+  const payload = { region: locationRegion, state: locationState || undefined, city: locationCity || undefined }
+  return updateLocation(payload).then(() => { showSuccess() })
+}
+
+/** 保存家乡：严格提交地区代码 { region, state, city }，适配后端 varchar(5) */
+function saveHometown() {
+  const { hometownRegion, hometownState, hometownCity } = userInfo.value
+  if (!hometownRegion) return Promise.resolve()
+  const payload = { region: hometownRegion, state: hometownState || undefined, city: hometownCity || undefined }
+  return updateHometown(payload).then(() => { showSuccess() })
 }
 
 const getWeui = () => (typeof window !== 'undefined' ? window.weui : null)
 
-// 生日：weui.datePicker，start 1900、end 今日，禁止选择未来日期
+// 生日：只用 picker 返回的 year/month/date，不经过 Date 或 toISOString，避免时区差一天
 const openBirthdayPicker = () => {
   const weui = getWeui()
   if (weui && typeof weui.datePicker === 'function') {
@@ -315,10 +402,15 @@ const openBirthdayPicker = () => {
       start: new Date(1900, 0, 1),
       end: new Date(),
       onConfirm: (result) => {
-        const val = result && result.length >= 3 ? `${result[0]}-${String(result[1]).padStart(2, '0')}-${String(result[2]).padStart(2, '0')}` : ''
-        if (val) {
+        if (result && result.length >= 3) {
+          const y = parseInt(result[0], 10)
+          let m = parseInt(result[1], 10)
+          const d = parseInt(result[2], 10)
+          if (!Number.isNaN(m) && m >= 0 && m <= 11) m = m + 1
+          if (Number.isNaN(m) || m < 1 || m > 12) m = 1
+          const val = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`
           userInfo.value.birthday = val
-          handleAutoSave()
+          saveBirthday(y, m, d)
         }
       }
     })
@@ -340,7 +432,7 @@ const openFacultyPicker = () => {
           userInfo.value.faculty = result[0].value
           userInfo.value.major = '未选择'
           updateMajorListByFaculty()
-          handleAutoSave()
+          saveFaculty()
         }
       }
     })
@@ -350,22 +442,17 @@ const openFacultyPicker = () => {
     userInfo.value.faculty = val
     userInfo.value.major = '未选择'
     updateMajorListByFaculty()
-    handleAutoSave()
+    saveFaculty()
   })
 }
 
-// 专业：weui.picker 单列；未选院系时 weui.alert 提示并中止
+// 专业：未选院系时强拦截，禁止越级选择
 const openMajorPicker = () => {
-  const faculty = userInfo.value.faculty
-  if (!faculty || faculty === '未选择') {
-    const weui = getWeui()
-    if (weui && typeof weui.alert === 'function') {
-      weui.alert('请先选择院系')
-    } else {
-      alert('请先选择院系')
-    }
+  if (userInfo.value.faculty === null || userInfo.value.faculty === undefined || userInfo.value.faculty === '请选择院系' || userInfo.value.faculty === '未选择') {
+    showErrorTopTips('请先选择院系')
     return
   }
+  const faculty = userInfo.value.faculty
   const weui = getWeui()
   const list = majorList.value.length ? majorList.value : ['未选择']
   const items = list.map(label => ({ label, value: label }))
@@ -375,7 +462,7 @@ const openMajorPicker = () => {
       onConfirm: (result) => {
         if (result && result[0]) {
           userInfo.value.major = result[0].value
-          handleAutoSave()
+          saveMajor()
         }
       }
     })
@@ -383,7 +470,7 @@ const openMajorPicker = () => {
   }
   openListFallback('请选择专业', majorList.value, (val) => {
     userInfo.value.major = val
-    handleAutoSave()
+    saveMajor()
   })
 }
 
@@ -397,7 +484,7 @@ const openEnrollmentPicker = () => {
       onConfirm: (result) => {
         if (result && result[0]) {
           userInfo.value.enrollment = result[0].value
-          handleAutoSave()
+          saveEnrollment()
         }
       }
     })
@@ -405,51 +492,79 @@ const openEnrollmentPicker = () => {
   }
   openListFallback('请选择年份', yearList.value.map(String), (val) => {
     userInfo.value.enrollment = val
-    handleAutoSave()
+    saveEnrollment()
   })
 }
 
-// 所在地：weui.picker 三列（国家-省份-城市），结果格式「中国 天津 和平」
+// 所在地：使用后端地区代码树，picker 的 value 即 code，提交 region/state/city 为代码
 const openLocationPicker = () => {
+  const tree = locationListTree.value
+  if (!tree || tree.length === 0) {
+    const weui = getWeui()
+    if (weui && weui.toast) weui.toast('地区列表加载中，请稍后再试', { duration: 2000 })
+    return
+  }
   const weui = getWeui()
   if (weui && typeof weui.picker === 'function') {
-    weui.picker(locationTree, {
+    weui.picker(tree, {
       container: 'body',
       onConfirm: (result) => {
         if (result && result.length >= 3) {
-          const str = result.map(r => r.label).join(' ')
-          userInfo.value.location = str
-          handleAutoSave()
+          userInfo.value.locationRegion = result[0].value
+          userInfo.value.locationState = result[1].value
+          userInfo.value.locationCity = result[2].value
+          userInfo.value.location = formatLocationDisplay(result.map(r => r.label).join(' '))
+          saveLocation()
         }
       }
     })
     return
   }
-  openListFallback('请选择所在地', getLocationFlatOptions(), (val) => {
-    userInfo.value.location = val
-    handleAutoSave()
+  openListFallback('请选择所在地', locationFlatOptions.value, (val) => {
+    const item = locationFlatMap.value[val]
+    if (item) {
+      userInfo.value.locationRegion = item.region
+      userInfo.value.locationState = item.state || ''
+      userInfo.value.locationCity = item.city || ''
+      userInfo.value.location = formatLocationDisplay(val)
+      saveLocation()
+    }
   })
 }
 
-// 家乡：同上，三列，结果「中国 省份 城市」
+// 家乡：同上，使用后端地区代码树
 const openHometownPicker = () => {
+  const tree = locationListTree.value
+  if (!tree || tree.length === 0) {
+    const weui = getWeui()
+    if (weui && weui.toast) weui.toast('地区列表加载中，请稍后再试', { duration: 2000 })
+    return
+  }
   const weui = getWeui()
   if (weui && typeof weui.picker === 'function') {
-    weui.picker(locationTree, {
+    weui.picker(tree, {
       container: 'body',
       onConfirm: (result) => {
         if (result && result.length >= 3) {
-          const str = result.map(r => r.label).join(' ')
-          userInfo.value.hometown = str
-          handleAutoSave()
+          userInfo.value.hometownRegion = result[0].value
+          userInfo.value.hometownState = result[1].value
+          userInfo.value.hometownCity = result[2].value
+          userInfo.value.hometown = formatLocationDisplay(result.map(r => r.label).join(' '))
+          saveHometown()
         }
       }
     })
     return
   }
-  openListFallback('请选择家乡', getLocationFlatOptions(), (val) => {
-    userInfo.value.hometown = val
-    handleAutoSave()
+  openListFallback('请选择家乡', locationFlatOptions.value, (val) => {
+    const item = locationFlatMap.value[val]
+    if (item) {
+      userInfo.value.hometownRegion = item.region
+      userInfo.value.hometownState = item.state || ''
+      userInfo.value.hometownCity = item.city || ''
+      userInfo.value.hometown = formatLocationDisplay(val)
+      saveHometown()
+    }
   })
 }
 
@@ -475,27 +590,43 @@ const tempDate = ref('')
 const confirmDateFallback = () => {
   if (tempDate.value) {
     userInfo.value.birthday = tempDate.value
-    handleAutoSave()
+    const parts = tempDate.value.split('-')
+    const y = parseInt(parts[0], 10)
+    const m = parseInt(parts[1], 10)
+    const d = parseInt(parts[2], 10)
+    if (!Number.isNaN(y) && !Number.isNaN(m) && !Number.isNaN(d)) {
+      saveBirthday(y, m, d)
+    }
   }
   showDateFallback.value = false
 }
 
 // 昵称弹窗与保存
-const openNicknameDialog = () => { tempNickname.value = userInfo.value.nickname; showNicknameDialog.value = true }
+const openNicknameDialog = () => { tempNickname.value = userInfo.value.nickname || ''; showNicknameDialog.value = true }
 const confirmNickname = () => {
-  if (tempNickname.value.trim()) {
-    userInfo.value.nickname = tempNickname.value
-    handleAutoSave() // 修改完立即保存
+  const nickname = (tempNickname.value || '').trim()
+  if (!nickname) {
+    showNicknameDialog.value = false
+    return
   }
-  showNicknameDialog.value = false
+  updateNickname({ nickname })
+    .then(() => {
+      userInfo.value.nickname = nickname
+      showSuccess()
+      showNicknameDialog.value = false
+    })
 }
 
 // 简介弹窗与保存
-const openIntroDialog = () => { tempIntro.value = userInfo.value.introduction; showIntroDialog.value = true }
+const openIntroDialog = () => { tempIntro.value = userInfo.value.introduction || ''; showIntroDialog.value = true }
 const confirmIntro = () => {
-  userInfo.value.introduction = tempIntro.value.trim()
-  handleAutoSave()
-  showIntroDialog.value = false
+  const introduction = (tempIntro.value || '').trim()
+  userInfo.value.introduction = introduction
+  updateIntroduction({ introduction: introduction || null })
+    .then(() => {
+      showSuccess()
+      showIntroDialog.value = false
+    })
 }
 
 // ==========================================
@@ -505,10 +636,21 @@ const handleNav = (path) => { if (path) router.push(path) }
 const handlePasswordClick = () => { showPwdDialog.value = true }
 const handleReport = () => { window.location.href = 'https://www.wjx.top/m/47687434.aspx' }
 
-const doLogout = () => {
-  localStorage.clear()
+const doLogout = async () => {
+  try {
+    await logout()
+  } catch (_) {
+    // 无论成功与否都清理前端并跳转，防止网络卡死
+  }
+  localStorage.removeItem('token')
   sessionStorage.clear()
-  router.replace('/login')
+  const weui = getWeui()
+  if (weui && typeof weui.toast === 'function') {
+    weui.toast('已成功退出登录', { duration: 2000 })
+    setTimeout(() => router.replace('/login'), 600)
+  } else {
+    router.replace('/login')
+  }
 }
 
 const handleLogoutClick = () => {
@@ -530,15 +672,44 @@ const confirmLogout = () => {
   doLogout()
 }
 
+// 进入个人中心时调用：GET /api/user/profile（需携带 Token），结果赋值给 userInfo
+async function fetchUserProfile() {
+  try {
+    const res = await getCurrentUserProfile()
+    const ok = res && (res.success === true || res.code === 200) && res.data
+    if (ok) {
+      const d = res.data
+      userInfo.value.username = d.username ?? userInfo.value.username
+      userInfo.value.nickname = d.nickname ?? userInfo.value.nickname
+      userInfo.value.avatar = (d.avatar && String(d.avatar).trim()) ? d.avatar : userInfo.value.avatar
+      userInfo.value.faculty = d.faculty ?? ''
+      userInfo.value.major = d.major ?? ''
+      userInfo.value.enrollment = d.enrollment != null ? String(d.enrollment) : userInfo.value.enrollment
+      userInfo.value.location = formatLocationDisplay(d.location ?? '')
+      userInfo.value.hometown = formatLocationDisplay(d.hometown ?? '')
+      userInfo.value.introduction = d.introduction ?? ''
+      userInfo.value.birthday = d.birthday ?? ''
+      userInfo.value.ipArea = d.ipArea ?? userInfo.value.ipArea
+    }
+  } catch (_) {
+    // 401 等由 request 拦截器统一处理（清 token、跳转登录）
+  }
+}
+
 onMounted(() => {
   initYearList()
   updateMajorListByFaculty()
-  refreshAvatar()
-  window.addEventListener('avatar-changed', refreshAvatar)
+  fetchUserProfile()
+  getLocationList()
+    .then(res => {
+      if (res && res.success && res.data) {
+        locationListTree.value = buildLocationPickerTree(res.data)
+      }
+    })
+    .catch(() => {})
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('avatar-changed', refreshAvatar)
 })
 </script>
 

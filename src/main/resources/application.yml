@@ -1,0 +1,37 @@
+# =============================================================================
+# GdeiAssistant - Spring Boot 2.7 主配置
+# 多环境由 application-{profile}.yml 提供，默认激活 dev
+# =============================================================================
+
+spring:
+  application:
+    name: GdeiAssistant
+  profiles:
+    active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+# MyBatis 基础配置
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    default-statement-timeout: 30
+  type-handlers-package: cn.gdeiassistant.common.typehandler
+
+# 日志：路径与格式由各环境或 logback 指定，此处仅占位
+logging:
+  level:
+    root: INFO
+  file:
+    name: logs/gdeiassistant.log
+
+# 服务器端口（可被环境文件覆盖）
+server:
+  port: 8080
+  servlet:
+    context-path: /

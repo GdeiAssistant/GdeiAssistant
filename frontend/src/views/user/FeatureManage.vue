@@ -14,7 +14,7 @@
       <div
         class="weui-cell weui-cell_active weui-cell_switch"
         v-for="item in featureList"
-        :key="item.key"
+        :key="item.id"
       >
         <div class="weui-cell__bd">{{ item.name }}</div>
         <div class="weui-cell__ft">
@@ -22,73 +22,81 @@
             class="weui-switch"
             type="checkbox"
             v-model="item.visible"
-            @change="handleToggle(item)"
+            @change="handleToggle"
           />
         </div>
       </div>
     </div>
+
+    <!-- weui toast：修改已保存 -->
+    <Teleport to="body">
+      <div v-show="showToast" role="alert" class="weui-toast-wrap">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast__wrp">
+          <div class="weui-toast weui-toast_text">
+            <p class="weui-toast__content">{{ toastMessage }}</p>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { ALL_FEATURES } from '@/constants/features'
+
+const STORAGE_KEY = 'user_features_config'
 
 const router = useRouter()
+const featureList = ref([])
+const showToast = ref(false)
+const toastMessage = ref('')
 
-const featureList = ref([
-  // 学习相关功能
-  { key: 'grade', name: '成绩查询', visible: true },
-  { key: 'schedule', name: '课表查询', visible: true },
-  { key: 'cet', name: '四六级查询', visible: true },
-  { key: 'collection', name: '馆藏查询', visible: true },
-  { key: 'book', name: '我的图书馆', visible: true },
-  { key: 'evaluate', name: '教学评价', visible: true },
-  { key: 'spare', name: '教室查询', visible: true },
-  { key: 'kaoyan', name: '考研查询', visible: true },
-  { key: 'pe', name: '体测查询', visible: true },
-  // 生活服务功能
-  { key: 'card', name: '消费查询', visible: true },
-  { key: 'cardInfo', name: '我的饭卡', visible: true },
-  { key: 'news', name: '新闻通知', visible: true },
-  { key: 'data', name: '信息查询', visible: true },
-  // 社交功能模块
-  { key: 'ershou', name: '二手交易', visible: true },
-  { key: 'lostandfound', name: '失物招领', visible: true },
-  { key: 'secret', name: '校园树洞', visible: true },
-  { key: 'photograph', name: '拍好校园', visible: true },
-  { key: 'express', name: '表白墙', visible: true },
-  { key: 'dating', name: '卖室友', visible: true },
-  { key: 'topic', name: '话题', visible: true },
-  { key: 'delivery', name: '全民快递', visible: true },
-  // 外部链接功能
-  { key: 'calendar', name: '学期校历', visible: true },
-  { key: 'government', name: '政务服务', visible: true },
-  { key: 'student', name: '学信网', visible: true },
-  { key: 'volunteer', name: 'i志愿', visible: true },
-  { key: 'healthcode', name: '粤康码', visible: true },
-  { key: 'travelcode', name: '通信行程码', visible: true },
-  { key: 'ncov', name: '疫情动态', visible: true },
-])
-
-const STORAGE_PREFIX = 'gdei_feature_'
-
-const loadFromStorage = () => {
-  featureList.value.forEach((item) => {
-    const savedStatus = localStorage.getItem(`${STORAGE_PREFIX}${item.key}`)
-    if (savedStatus !== null) {
-      item.visible = savedStatus === 'true'
+/** 初始化：从 localStorage 读取；没有则按 ALL_FEATURES 的 defaultVisible 初始化并保存 */
+function loadFromStorage() {
+  let config = {}
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      config = JSON.parse(raw)
     } else {
-      item.visible = true
+      // 未读到则按 defaultVisible 初始化并写入
+      config = {}
+      ALL_FEATURES.forEach((f) => {
+        config[f.id] = f.defaultVisible !== false
+      })
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
     }
+  } catch (_) {
+    config = {}
+    ALL_FEATURES.forEach((f) => {
+      config[f.id] = f.defaultVisible !== false
+    })
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
+  }
+  featureList.value = ALL_FEATURES.map((item) => ({
+    ...item,
+    visible: config[item.id] !== false,
+  }))
+}
+
+/** 用户点击开关：更新布尔值并立即同步到 localStorage，再弹出 toast */
+function handleToggle() {
+  const config = {}
+  featureList.value.forEach((item) => {
+    config[item.id] = item.visible
   })
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
+  toastMessage.value = '修改已保存，首页将实时生效'
+  showToast.value = true
+  setTimeout(() => {
+    showToast.value = false
+  }, 2000)
 }
 
-const handleToggle = (item) => {
-  localStorage.setItem(`${STORAGE_PREFIX}${item.key}`, String(item.visible))
-}
-
-const goBack = () => {
+function goBack() {
   router.back()
 }
 
@@ -156,5 +164,33 @@ onMounted(() => {
   font-size: 16px;
   color: #333;
 }
-</style>
 
+.weui-toast-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+.weui-mask_transparent {
+  position: absolute;
+  inset: 0;
+}
+.weui-toast__wrp {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.weui-toast {
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+}
+.weui-toast__content {
+  margin: 0;
+}
+</style>

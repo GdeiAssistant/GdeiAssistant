@@ -38,15 +38,35 @@ function goDetail(id) {
 async function loadData() {
   loading.value = true
   try {
-    if (activeTab.value === 'published') {
-      const res = await request.get('/delivery/my/published')
-      publishedList.value = res?.data || res || []
-    } else {
-      const res = await request.get('/delivery/my/accepted')
-      acceptedList.value = res?.data || res || []
-    }
+    const res = await request.get('/delivery/mine')
+    const data = res?.data || {}
+    const published = data.published || []
+    const accepted = data.accepted || []
+    publishedList.value = Array.isArray(published) ? published.map((o) => ({
+      id: o.orderId,
+      orderId: o.orderId,
+      status: o.state,
+      state: o.state,
+      reward: o.price ?? 0,
+      time: o.orderTime,
+      type: 'express',
+      pickupAddress: o.company ? `${o.company} 取件` : '取件',
+      deliveryAddress: o.address || ''
+    })) : []
+    acceptedList.value = Array.isArray(accepted) ? accepted.map((o) => ({
+      id: o.orderId,
+      orderId: o.orderId,
+      status: o.state,
+      state: o.state,
+      reward: o.price ?? 0,
+      time: o.orderTime,
+      type: 'express',
+      pickupAddress: o.company ? `${o.company} 取件` : '取件',
+      deliveryAddress: o.address || ''
+    })) : []
   } catch (e) {
-    console.error(e)
+    publishedList.value = []
+    acceptedList.value = []
   } finally {
     loading.value = false
   }

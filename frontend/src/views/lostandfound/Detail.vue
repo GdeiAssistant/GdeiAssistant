@@ -7,15 +7,42 @@ const route = useRoute()
 const router = useRouter()
 const id = route.params.id
 const detail = ref(null)
-const loading = ref(false)
+const loading = ref(true)
+
+function mapDetail(info) {
+  const item = info?.lostAndFoundItem || {}
+  const profile = info?.profile || {}
+  return {
+    title: item.name,
+    desc: item.description,
+    location: item.location,
+    type: item.lostType,
+    time: item.publishTime || '',
+    images: Array.isArray(item.pictureURL) ? item.pictureURL : [],
+    seller: {
+      name: profile.nickname || profile.username || '匿名',
+      avatar: profile.avatarURL || '/img/avatar/default.png'
+    },
+    contact: {
+      qq: item.qq || '',
+      wechat: item.wechat || '',
+      phone: item.phone || ''
+    }
+  }
+}
 
 onMounted(async () => {
   loading.value = true
   try {
-    const res = await request.get(`/lostandfound/item/${id}`)
-    detail.value = res?.data || res
+    const res = await request.get(`/lostandfound/item/id/${id}`)
+    const info = res?.data
+    if (info && res.success !== false) {
+      detail.value = mapDetail(info)
+    } else {
+      detail.value = null
+    }
   } catch (e) {
-    console.error(e)
+    detail.value = null
   } finally {
     loading.value = false
   }

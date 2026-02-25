@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -10,6 +11,12 @@ const comments = ref([])
 const commentInput = ref('')
 const submitting = ref(false)
 
+function mapGender(g) {
+  if (g === 0) return 'male'
+  if (g === 1) return 'female'
+  return 'secret'
+}
+
 function getGenderClass(gender) {
   if (gender === 'male') return 'gender-male'
   if (gender === 'female') return 'gender-female'
@@ -17,10 +24,11 @@ function getGenderClass(gender) {
 }
 
 function handleLike() {
-  if (item.value.isLiked === undefined) item.value.isLiked = false
-  item.value.isLiked = !item.value.isLiked
-  item.value.likeCount = (item.value.likeCount || 0) + (item.value.isLiked ? 1 : -1)
-  if (item.value.likeCount < 0) item.value.likeCount = 0
+  if (!item.value || item.value.isLiked) return
+  request.post(`/express/id/${item.value.id}/like`).then(() => {
+    item.value.isLiked = true
+    item.value.likeCount++
+  })
 }
 
 const guessDialogVisible = ref(false)
@@ -31,26 +39,29 @@ function openGuessDialog() {
   guessDialogVisible.value = true
 }
 
+function showSuccess(msg) {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.toast === 'function') weui.toast(msg, { duration: 2000 })
+}
+
 function confirmGuess() {
   const guessName = guessInputValue.value && guessInputValue.value.trim()
   if (!guessName) {
-    showToast('请输入你猜的真实姓名')
+    showErrorTopTips('请输入你猜的真实姓名')
     return
   }
-  
-  // 无论对错，总猜测次数都要 +1
-  item.value.guessCount = (item.value.guessCount || 0) + 1
-  
-  // 校验答案
-  if (guessName === item.value.senderTrueName) {
-    // 猜对了
-    item.value.correctCount = (item.value.correctCount || 0) + 1
-    showToast('恭喜你，猜对了！')
-  } else {
-    // 猜错了
-    showToast('猜错了，再试试看吧！')
-  }
-  
+  request.post(`/express/id/${item.value.id}/guess`, null, { params: { name: guessName } })
+    .then((res) => {
+      const correct = res?.data === true
+      if (correct) {
+        item.value.correctCount = (item.value.correctCount || 0) + 1
+        showSuccess('恭喜你，猜对了！')
+      } else {
+        showErrorTopTips('猜错了，再试试看吧！')
+      }
+      item.value.guessCount = (item.value.guessCount || 0) + 1
+    })
+    .catch(() => {})
   guessDialogVisible.value = false
   guessInputValue.value = ''
 }
@@ -58,56 +69,83 @@ function confirmGuess() {
 function handleGuess() {
   // 拦截无效的猜测点击
   if (!item.value.canGuess) {
-    showToast('TA很神秘，没有留下真名让人猜哦~')
+    showErrorTopTips('TA很神秘，没有留下真名让人猜哦~')
     return
   }
   openGuessDialog()
 }
 
-function showToast(message) {
-  const toast = document.createElement('div')
-  toast.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.7);color:#fff;padding:12px 20px;border-radius:4px;z-index:9999;font-size:14px;'
-  toast.textContent = message
-  document.body.appendChild(toast)
-  setTimeout(() => {
-    document.body.removeChild(toast)
-  }, 2000)
-}
-
 function submitComment() {
   if (!commentInput.value || commentInput.value.trim() === '') {
-    showToast('请输入评论内容')
+    showErrorTopTips('请输入评论内容')
+    return
+  }
+  if (commentInput.value.trim().length > 50) {
+    showErrorTopTips('评论不能超过50字')
     return
   }
   submitting.value = true
-  request.post(`/express/id/${route.params.id}/comment`, {
-    comment: commentInput.value.trim()
-  })
+  request.post(`/express/id/${route.params.id}/comment`, null, { params: { comment: commentInput.value.trim() } })
     .then(() => {
-      const newComment = {
+      comments.value.push({
         id: comments.value.length + 1,
         nickname: '我',
         comment: commentInput.value.trim(),
         publishTime: '刚刚'
-      }
-      comments.value.push(newComment)
+      })
       commentInput.value = ''
       item.value.commentCount = (item.value.commentCount || 0) + 1
       submitting.value = false
     })
-    .catch(() => {
-      submitting.value = false
-    })
+    .catch(() => { submitting.value = false })
+}
+
+async function loadDetail() {
+  try {
+    const res = await request.get(`/express/id/${route.params.id}`)
+    const e = res?.data
+    if (e && res.success !== false) {
+      item.value = {
+        id: e.id,
+        content: e.content,
+        senderName: e.nickname,
+        receiverName: e.name,
+        senderGender: mapGender(e.selfGender),
+        receiverGender: mapGender(e.personGender),
+        time: e.publishTime,
+        likeCount: e.likeCount ?? 0,
+        commentCount: e.commentCount ?? 0,
+        isLiked: e.liked === true,
+        canGuess: e.canGuess === true,
+        guessCount: e.guessSum ?? 0,
+        correctCount: e.guessCount ?? 0
+      }
+    } else {
+      item.value = null
+    }
+  } catch (err) {
+    item.value = null
+  }
+}
+
+async function loadComments() {
+  try {
+    const res = await request.get(`/express/id/${route.params.id}/comment`)
+    const raw = res?.data || []
+    comments.value = Array.isArray(raw) ? raw.map((c) => ({
+      id: c.id,
+      nickname: c.nickname || '匿名',
+      comment: c.comment,
+      publishTime: c.publishTime || c.createTime || ''
+    })) : []
+  } catch (err) {
+    comments.value = []
+  }
 }
 
 onMounted(async () => {
-  try {
-    const res = await request.get(`/express/item/${route.params.id}`)
-    item.value = res.data || res
-    comments.value = item.value.comments || []
-  } catch (e) {
-    showToast('加载失败')
-  }
+  await loadDetail()
+  if (item.value) await loadComments()
 })
 </script>
 

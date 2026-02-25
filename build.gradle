@@ -1,18 +1,15 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.1.4'
+    // GraalVM Native Image：需 JDK 17+ 执行 nativeCompile，本地可用 Docker 构建
+    id 'org.graalvm.buildtools.native' version '0.10.1'
 }
-apply plugin: 'java'
-apply plugin: 'war'
 
 repositories {
-    flatDir {
-        dirs 'libs'
-    }
-    maven {
-        url 'https://maven.aliyun.com/repository/central'
-    }
+    flatDir { dirs 'libs' }
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
 }
 
 configurations.all {
@@ -21,81 +18,119 @@ configurations.all {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.3'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-    implementation group: 'xstream', name: 'xstream', version: '1.2.2'
-    implementation group: 'dom4j', name: 'dom4j', version: '1.6.1'
-    implementation group: 'com.aliyun.oss', name: 'aliyun-sdk-oss', version: '2.7.0'
-    implementation group: 'com.aliyun', name: 'aliyun-java-sdk-core', version: '4.4.4'
-    implementation group: 'com.aliyun', name: 'aliyun-java-sdk-sts', version: '3.0.1'
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.8.1'
-    implementation group: 'org.apache.httpcomponents', name: 'httpasyncclient', version: '4.1.3'
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
-    implementation group: 'org.jsoup', name: 'jsoup', version: '1.10.3'
-    implementation group: 'jstl', name: 'jstl', version: '1.2'
-    implementation group: 'taglibs', name: 'standard', version: '1.1.2'
-    implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.23'
-    implementation group: 'org.springframework', name: 'spring-context-support', version: '4.3.14.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-context', version: '4.3.14.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-core', version: '4.3.14.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-beans', version: '4.3.14.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-web', version: '4.3.14.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: '4.3.14.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: '4.3.14.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-aop', version: '4.3.14.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-test', version: '4.3.14.RELEASE'
-    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '5.4.1.Final'
-    implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.13'
-    implementation group: 'org.aspectj', name: 'aspectjrt', version: '1.8.13'
-    implementation group: 'cglib', name: 'cglib-nodep', version: '3.2.6'
-    implementation group: 'redis.clients', name: 'jedis', version: '2.9.0'
-    implementation group: 'org.mybatis', name: 'mybatis', version: '3.4.4'
-    implementation group: 'org.mybatis', name: 'mybatis-spring', version: '1.3.1'
-    implementation group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.13'
-    implementation group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.30'
-    implementation group: 'org.logback-extensions', name: 'logback-ext-spring', version: '0.1.5'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.9'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.9'
-    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.6.3'
-    implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: '2.1.1.RELEASE'
-    implementation group: 'org.springframework.data', name: 'spring-data-redis', version: '2.1.1.RELEASE'
-    implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0.1'
-    implementation group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0.1'
-    implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
-    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-    implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
-    implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
-    implementation group: 'com.auth0', name: 'java-jwt', version: '3.4.1'
-    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.12'
-    implementation group: 'org.apache.poi', name: 'poi', version: '4.0.0'
-    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.0.0'
-    implementation group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.60'
-    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.54'
-    implementation group: 'net.sf.json-lib', name: 'json-lib', version: '2.4', classifier: 'jdk15'
-    implementation group: 'com.alipay.sdk', name: 'alipay-sdk-java', version: '3.6.0.ALL'
-    implementation group: 'javax.el', name: 'javax.el-api', version: '3.0.0'
-    implementation group: 'org.glassfish.web', name: 'javax.el', version: '2.2.6'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
-    implementation group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.80'
-    implementation group: 'com.google.cloud', name: 'google-cloud-logging-logback', version: '0.117.0-alpha'
-    implementation group: 'com.google.cloud.sql', name: 'mysql-socket-factory-connector-j-8', version: '1.0.16'
-    implementation group: 'com.tencentcloudapi', name: 'tencentcloud-sdk-java', version: '3.1.628'
-    implementation group: 'com.qcloud', name: 'cos_api', version: '5.6.110'
-    compileOnly group: 'junit', name: 'junit', version: '4.12'
-    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-    compileOnly group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.3'
-    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.5'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+    implementation platform('software.amazon.awssdk:bom:2.20.26')
+    implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:auth'
+
+    implementation 'com.auth0:java-jwt:3.4.1'
+
+    implementation 'org.apache.commons:commons-lang3:3.8.1'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'org.apache.httpcomponents:httpasyncclient:4.1.3'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    implementation 'org.jsoup:jsoup:1.10.3'
+    implementation 'xstream:xstream:1.2.2'
+    implementation 'dom4j:dom4j:1.6.1'
+    implementation 'com.google.code.gson:gson'
+    implementation 'com.alibaba.fastjson2:fastjson2:2.0.47'
+
+    // 邮件发送（Jakarta Mail）
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.apache.pdfbox:pdfbox:2.0.12'
+    implementation 'org.apache.poi:poi:4.0.0'
+    implementation 'org.apache.poi:poi-ooxml:4.0.0'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
+    implementation 'com.alipay.sdk:alipay-sdk-java:3.6.0.ALL'
+    implementation 'com.aliyun:aliyun-java-sdk-core:4.5.30'
+    implementation 'com.tencentcloudapi:tencentcloud-sdk-java:3.1.628'
+    implementation 'com.qcloud:cos_api:5.6.110'
+    implementation 'com.google.appengine:appengine-api-1.0-sdk:1.9.80'
+    implementation 'com.google.cloud:google-cloud-logging-logback:0.117.0-alpha'
+    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.0.16'
+
+    // Jakarta 注解（PostConstruct / PreDestroy / Resource）
+    implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+
+    // MapStruct 映射框架
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
+    // Lombok 与 MapStruct 的编译期绑定
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'junit:junit:4.13.2'
 }
 
-tasks.withType(JavaCompile){
-    options.encoding = "UTF-8"
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
-group 'cn.gdeiassistant'
-version '1.0-SNAPSHOT'
+group = 'cn.gdeiassistant'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+// =============================================================================
+// bootRun 自动加载项目根目录 .env，使 Spring 能读到 DB_*、REDIS_*、MONGO_*、JWT_SECRET 等
+// 修改 .env 后无需 export，直接 ./gradlew bootRun 即可
+// =============================================================================
+def envFile = file("${rootProject.projectDir}/.env")
+def env = [:]
+if (envFile.exists()) {
+    envFile.readLines("UTF-8").each { line ->
+        def trimmed = line.trim()
+        if (trimmed && !trimmed.startsWith("#") && trimmed.contains("=")) {
+            def idx = trimmed.indexOf("=")
+            def key = trimmed.substring(0, idx).trim()
+            def value = trimmed.substring(idx + 1).trim()
+            if (value.startsWith("\"") && value.endsWith("\"") && value.length() >= 2) {
+                value = value.substring(1, value.length() - 1)
+            } else if (value.startsWith("'") && value.endsWith("'") && value.length() >= 2) {
+                value = value.substring(1, value.length() - 1)
+            }
+            env[key] = value
+        }
+    }
+}
+tasks.named("bootRun") {
+    if (!env.isEmpty()) {
+        environment env
+    }
+}
+
+// =============================================================================
+// GraalVM Native Image：保持 AOT 默认，仅压制 Netty 早期日志与放宽 classpath
+// =============================================================================
+graalvmNative {
+    binaries {
+        main {
+            buildArgs.add('--allow-incomplete-classpath')
+            buildArgs.add('--initialize-at-run-time=io.netty,org.apache.ibatis.logging.LogFactory,org.mybatis.spring.mapper.ClassPathMapperScanner')
+        }
+    }
+}
+
+tasks.withType(Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+tasks.withType(Copy) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

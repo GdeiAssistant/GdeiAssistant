@@ -8,11 +8,22 @@ const router = useRouter()
 const activeStatus = ref('all') // all, pending, delivering, completed
 const scrollContainer = ref({ get scrollTop() { return window.pageYOffset || document.documentElement.scrollTop } })
 
+const PAGE_SIZE = 10
 const fetchDeliveryData = async (page) => {
-  const res = await request.get('/delivery/items', {
-    params: { page, limit: 10, status: activeStatus.value === 'all' ? '' : activeStatus.value }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const res = await request.get(`/delivery/order/start/${start}/size/${PAGE_SIZE}`)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map((o) => ({
+    id: o.orderId,
+    status: o.state,
+    reward: o.price ?? 0,
+    time: o.orderTime,
+    size: '小件',
+    type: 'express',
+    pickupAddress: o.company ? `${o.company} 取件` : '取件',
+    deliveryAddress: o.address || ''
+  })) : []
+  return { list, hasMore: list.length >= PAGE_SIZE }
 }
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchDeliveryData)
@@ -22,6 +33,7 @@ function switchStatus(status) {
   list.value = []
   loadData(true)
 }
+// 后端列表接口暂无状态筛选，前端保留 Tab 切换 UI，数据仍为全部
 
 function goDetail(id) {
   router.push(`/delivery/detail/${id}`)

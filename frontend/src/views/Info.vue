@@ -30,17 +30,27 @@ function handleViewAllTopics() {
 }
 
 onMounted(() => {
-  request.get('/information/list').then((res) => {
-    if (res.success && res.data) {
-      const d = new Date()
-      const month = d.getMonth() + 1
-      const day = d.getDate()
-      infoData.value = {
-        ...res.data,
-        todayLabel: `${month}月${day}日`
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.loading === 'function') {
+    weui.loading('正在加载资讯...')
+  }
+  request.get('/information/list')
+    .then((res) => {
+      if (res.success && res.data) {
+        const d = new Date()
+        const month = d.getMonth() + 1
+        const day = d.getDate()
+        infoData.value = {
+          ...res.data,
+          todayLabel: `${month}月${day}日`
+        }
       }
-    }
-  })
+    })
+    .finally(() => {
+      if (weui && typeof weui.hideLoading === 'function') {
+        weui.hideLoading()
+      }
+    })
 })
 </script>
 

@@ -1,4 +1,3 @@
-import './mock/index.js'
 import 'weui'
 import { createApp } from 'vue'
 import './style.css'

@@ -1,42 +1,41 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import service from '../utils/request.js'
+import { login } from '../api/user.js'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 
 const username = ref('')
 const password = ref('')
 const showToast = ref(false)
-const toastMessage = ref('模拟登录中...')
+const toastMessage = ref('登录中...')
 
 async function handleLogin() {
   if (!username.value.trim() || !password.value.trim()) {
-    toastMessage.value = '请将信息填写完整'
-    showToast.value = true
-    setTimeout(() => { showToast.value = false }, 2000)
+    showErrorTopTips('请将信息填写完整')
     return
   }
-  toastMessage.value = '模拟登录中...'
+  toastMessage.value = '登录中...'
   showToast.value = true
   try {
-    const res = await service.post('/userlogin', {
-      username: username.value.trim(),
-      password: password.value
-    })
+    const res = await login(username.value.trim(), password.value)
     showToast.value = false
-    if (res && res.success) {
+    // 仅当后端返回 code === 200 时存 Token 并跳转；401 或其他错误码展示后端 message 并停留在登录页
+    if (res && res.code === 200 && res.data && res.data.token) {
+      localStorage.setItem('token', res.data.token)
       router.push('/home')
+    } else {
+      showErrorTopTips(res?.message || '登录失败')
     }
-  } catch {
+  } catch (err) {
     showToast.value = false
+    // 错误提示由 request.js 全局拦截器统一展示（如账号或密码错误、网络连接失败等），此处仅关闭加载态
   }
 }
 
 function handleThirdPartyLogin(type) {
-  toastMessage.value = '该登录方式暂未开放'
-  showToast.value = true
-  setTimeout(() => { showToast.value = false }, 2000)
+  showErrorTopTips('该登录方式暂未开放')
 }
 </script>
 
@@ -111,8 +110,8 @@ function handleThirdPartyLogin(type) {
       <div v-show="showToast" role="alert" class="weui-toast-wrap">
         <div class="weui-mask_transparent"></div>
         <div class="weui-toast__wrp">
-          <div class="weui-toast" :class="{ 'weui-toast_text': toastMessage !== '模拟登录中...' }">
-            <template v-if="toastMessage === '模拟登录中...'">
+          <div class="weui-toast" :class="{ 'weui-toast_text': toastMessage !== '登录中...' }">
+            <template v-if="toastMessage === '登录中...'">
               <span class="weui-primary-loading weui-icon_toast">
                 <span class="weui-primary-loading__dot"></span>
               </span>

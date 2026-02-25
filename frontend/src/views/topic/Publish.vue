@@ -17,6 +17,16 @@ function showDialog(msg) {
   dialogVisible.value = true
 }
 
+function showLoading(text = '正在上传...') {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.loading === 'function') weui.loading(text)
+}
+
+function hideLoading() {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
+}
+
 function onFileChange(e) {
   const files = Array.from(e.target.files)
   if (images.value.length + files.length > 9) {
@@ -57,22 +67,25 @@ function submit() {
   }
   
   submitting.value = true
-  const formData = new FormData()
-  formData.append('topicTag', topicTag.value.trim())
-  formData.append('content', content.value.trim())
-  imageFiles.value.forEach((file, idx) => {
-    formData.append(`image${idx}`, file)
-  })
-  
-  request.post('/topic/publish', formData)
+  const topic = topicTag.value.trim()
+  const contentVal = content.value.trim()
+  const count = imageFiles.value.length
+  showLoading(count > 0 ? '正在上传...' : '正在发布...')
+  const fd = new FormData()
+  fd.append('topic', topic)
+  fd.append('content', contentVal)
+  fd.append('count', String(count))
+  imageFiles.value.forEach((file) => { fd.append('images', file) })
+  request.post('/topic', fd)
     .then(() => {
-      showDialog('发布成功')
-      setTimeout(() => {
-        router.push('/topic/home')
-      }, 1500)
+      hideLoading()
+      const weui = typeof window !== 'undefined' && window.weui
+      if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
+      setTimeout(() => router.push('/topic/home'), 1500)
     })
     .catch(() => {
       submitting.value = false
+      hideLoading()
     })
 }
 </script>

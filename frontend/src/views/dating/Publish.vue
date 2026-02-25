@@ -38,6 +38,16 @@ function showDialog(msg) {
   dialogVisible.value = true
 }
 
+function showLoading(text = '正在上传...') {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.loading === 'function') weui.loading(text)
+}
+
+function hideLoading() {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
+}
+
 function onFileChange(e) {
   const file = e.target.files[0]
   if (!file) return
@@ -79,10 +89,6 @@ function openAreaPicker() {
 }
 
 function submit() {
-  if (!imagePreview.value) {
-    showDialog('上传一张美美的照片吧')
-    return
-  }
   if (!formData.value.nickname || formData.value.nickname.trim().length === 0 || formData.value.nickname.trim().length > 15) {
     showDialog('昵称长度不合法（1-15字）')
     return
@@ -123,6 +129,7 @@ function submit() {
   }
 
   submitting.value = true
+  showLoading(imageFile.value ? '正在上传...' : '正在发布...')
   const payload = new FormData()
   if (imageFile.value) payload.append('image', imageFile.value)
   payload.append('nickname', formData.value.nickname.trim())
@@ -134,12 +141,17 @@ function submit() {
   if (hasQq) payload.append('qq', formData.value.qq.trim())
   if (hasWechat) payload.append('wechat', formData.value.wechat.trim())
 
-  request.post('/dating/publish', payload)
+  request.post('/dating/profile', payload)
     .then(() => {
-      showDialog('发布成功')
+      hideLoading()
+      const weui = typeof window !== 'undefined' && window.weui
+      if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
       setTimeout(() => router.push('/dating/home'), 1500)
     })
-    .catch(() => { submitting.value = false })
+    .catch(() => {
+      submitting.value = false
+      hideLoading()
+    })
 }
 </script>
 

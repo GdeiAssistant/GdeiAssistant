@@ -22,12 +22,36 @@ const showDialog = (msg) => {
 const loadDetail = async () => {
   try {
     loading.value = true
-    const res = await request.get(`/photograph/item/${route.params.id}`)
-    work.value = res.data
-    const imgs = res.data.images && res.data.images.length ? res.data.images : [res.data.imgUrl]
-    images.value = imgs
+    const res = await request.get(`/photograph/id/${route.params.id}`)
+    const data = res?.data
+    if (data && res.success !== false) {
+      work.value = {
+        id: data.id,
+        title: data.title,
+        content: data.content,
+        description: data.content,
+        count: data.count,
+        photoCount: data.count,
+        createTime: data.createTime,
+        time: data.createTime,
+        likeCount: data.likeCount ?? 0,
+        commentCount: data.commentCount ?? 0,
+        isLiked: data.liked === true,
+        photographCommentList: data.photographCommentList || [],
+        comments: (data.photographCommentList || []).map((c) => ({
+          id: c.commentId,
+          author: c.nickname || '匿名',
+          avatar: '/img/avatar/default.png',
+          text: c.comment,
+          time: c.createTime || ''
+        }))
+      }
+      images.value = data.imageUrls && data.imageUrls.length ? data.imageUrls : (data.firstImageUrl ? [data.firstImageUrl] : [])
+    } else {
+      work.value = null
+    }
   } catch (e) {
-    showDialog('加载失败')
+    work.value = null
   } finally {
     loading.value = false
   }
@@ -49,31 +73,30 @@ const submitComment = () => {
     showDialog('评论内容不能为空')
     return
   }
-  if (!work.value.comments) {
-    work.value.comments = []
+  if (newComment.value.trim().length > 50) {
+    showDialog('评论不能超过50字')
+    return
   }
-  work.value.comments.unshift({
-    id: Date.now(),
-    author: '匿名同学',
-    avatar: '/img/avatar/default.png',
-    text: newComment.value.trim(),
-    time: new Date().toLocaleString('zh-CN')
-  })
-  work.value.commentCount = (work.value.commentCount || 0) + 1
-  newComment.value = ''
+  request.post(`/photograph/id/${route.params.id}/comment`, null, { params: { comment: newComment.value.trim() } }).then(() => {
+    if (!work.value.comments) work.value.comments = []
+    work.value.comments.unshift({
+      id: Date.now(),
+      author: '我',
+      avatar: '/img/avatar/default.png',
+      text: newComment.value.trim(),
+      time: new Date().toLocaleString('zh-CN')
+    })
+    work.value.commentCount = (work.value.commentCount || 0) + 1
+    newComment.value = ''
+  }).catch(() => {})
 }
 
 const toggleLike = () => {
-  if (!work.value) return
-  if (work.value.isLiked === undefined) {
-    work.value.isLiked = false
-  }
-  if (work.value.likeCount === undefined) {
-    work.value.likeCount = work.value.likes ?? 0
-  }
-  work.value.isLiked = !work.value.isLiked
-  work.value.likeCount += work.value.isLiked ? 1 : -1
-  if (work.value.likeCount < 0) work.value.likeCount = 0
+  if (!work.value || work.value.isLiked) return
+  request.post(`/photograph/id/${work.value.id}/like`).then(() => {
+    work.value.isLiked = true
+    work.value.likeCount++
+  })
 }
 
 onMounted(() => {
@@ -139,14 +162,14 @@ onMounted(() => {
           <div class="author">
             <img
               class="author-avatar"
-              :src="work.author?.avatar || '/img/avatar/default.png'"
-              :alt="work.author?.name || '作者'"
+              src="/img/avatar/default.png"
+              alt="作者"
             />
-            <span class="author-name">{{ work.author?.name || '匿名作者' }}</span>
+            <span class="author-name">匿名作者</span>
           </div>
         </div>
-        <p class="detail-time">{{ work.time }}</p>
-        <p class="detail-desc">{{ work.description }}</p>
+        <p class="detail-time">{{ work.time || work.createTime }}</p>
+        <p class="detail-desc">{{ work.description || work.content }}</p>
 
         <div class="card-btn-group">
           <div class="am-btn-group am-btn-group-justify">

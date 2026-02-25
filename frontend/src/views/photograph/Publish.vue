@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import request from '../../utils/request'
 
 const router = useRouter()
 
@@ -12,54 +13,90 @@ const form = ref({
 
 const mainImageUrl = ref('')
 const subImages = ref(['', '', ''])
+const mainImageFile = ref(null)
+const subImageFiles = ref([null, null, null])
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
-const toastVisible = ref(false)
+const submitting = ref(false)
 
 const showDialog = (msg) => {
   dialogMessage.value = msg
   dialogVisible.value = true
 }
 
-const showToast = (msg) => {
-  dialogMessage.value = msg
-  toastVisible.value = true
-  setTimeout(() => {
-    toastVisible.value = false
-  }, 1200)
-}
-
 const goBack = () => {
   router.back()
 }
 
+const showLoading = (text = '正在上传...') => {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.loading === 'function') weui.loading(text)
+}
+
+const hideLoading = () => {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
+}
+
 const onMainImageChange = (e) => {
   const file = e.target.files?.[0]
-  if (file) mainImageUrl.value = URL.createObjectURL(file)
+  if (file) {
+    mainImageFile.value = file
+    mainImageUrl.value = URL.createObjectURL(file)
+  }
   e.target.value = ''
 }
 
 const onSubImageChange = (e, idx) => {
   const file = e.target.files?.[0]
-  if (file) subImages.value[idx] = URL.createObjectURL(file)
+  if (file) {
+    subImageFiles.value[idx] = file
+    subImages.value[idx] = URL.createObjectURL(file)
+  }
   e.target.value = ''
 }
 
 const clearImages = () => {
   mainImageUrl.value = ''
   subImages.value = ['', '', '']
+  mainImageFile.value = null
+  subImageFiles.value = [null, null, null]
 }
 
 const submit = () => {
   const title = form.value.title?.trim()
-  if (!title || !mainImageUrl.value) {
-    showDialog('标题和主图不能为空')
+  if (!title) {
+    showDialog('标题不能为空')
     return
   }
-  showToast('发布成功')
-  setTimeout(() => {
-    router.push('/photograph/home')
-  }, 1200)
+  if (!mainImageFile.value) {
+    showDialog('请选择主图')
+    return
+  }
+  if (submitting.value) return
+  submitting.value = true
+  showLoading('正在上传...')
+  const count = 1 + subImageFiles.value.filter(Boolean).length
+  const fd = new FormData()
+  fd.append('title', title)
+  fd.append('content', form.value.content?.trim() || '')
+  fd.append('count', String(count))
+  fd.append('type', String(Number(form.value.type) || 1))
+  fd.append('image1', mainImageFile.value)
+  subImageFiles.value.forEach((file, i) => {
+    if (file) fd.append(`image${i + 2}`, file)
+  })
+  request.post('/photograph', fd)
+    .then(() => {
+      hideLoading()
+      const weui = typeof window !== 'undefined' && window.weui
+      if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
+      setTimeout(() => router.push('/photograph/home'), 1500)
+    })
+    .catch(() => {
+      submitting.value = false
+      hideLoading()
+    })
 }
 </script>
 

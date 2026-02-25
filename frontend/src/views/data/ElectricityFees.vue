@@ -218,7 +218,7 @@ const submitQuery = () => {
   isLoading.value = true
   
   request
-    .post('/api/data/electricfees', {
+    .post('/data/electricfees', {
       name: name,
       number: number,
       year: year
@@ -236,8 +236,7 @@ const submitQuery = () => {
     .catch((err) => {
       console.error('请求失败', err)
       isLoading.value = false
-      const errorMsg = err?.response?.data?.message || err?.message || '网络连接异常，请检查并重试'
-      showError(errorMsg)
+      // 错误由 request.js 全局拦截器统一提示
     })
 }
 

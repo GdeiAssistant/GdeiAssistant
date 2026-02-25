@@ -17,16 +17,31 @@ function showDialog(msg) {
 }
 
 const keyword = computed(() => route.query.keyword ?? '')
+const PAGE_SIZE = 10
+
+function mapErshouItemToCard(item) {
+  return {
+    id: item.id,
+    title: item.name,
+    desc: item.description,
+    price: item.price,
+    coverImg: Array.isArray(item.pictureURL) && item.pictureURL.length > 0 ? item.pictureURL[0] : ''
+  }
+}
 
 const fetchSearchData = async (page) => {
   const k = (route.query.keyword ?? '').trim()
   if (k === '') {
-    return { data: { list: [], hasMore: false } }
+    return { list: [], hasMore: false }
   }
-  const res = await request.get('/ershou/items', {
-    params: { page, limit: 10, keyword: k }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const res = await request.get(`/ershou/keyword/${encodeURIComponent(k)}/start/${start}`)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map(mapErshouItemToCard) : []
+  return {
+    list,
+    hasMore: list.length >= PAGE_SIZE
+  }
 }
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleScroll, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchSearchData)

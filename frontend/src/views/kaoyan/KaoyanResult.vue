@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import request from '../../utils/request'
+import { queryKaoyanScore } from '@/api/kaoyan'
 
 const router = useRouter()
 const route = useRoute()
@@ -23,10 +23,21 @@ onMounted(() => {
     isLoading.value = false
     return
   }
+
   isLoading.value = true
-  request.get('/kaoyan/query', { params: route.query })
+  const payload = {
+    name,
+    examNumber: candidateNo,
+    idNumber: idNo
+  }
+
+  queryKaoyanScore(payload)
     .then((res) => {
-      const targetData = res?.data?.data ?? res?.data ?? res
+      const body = res && res.data ? res.data : res
+      const targetData = body && typeof body === 'object'
+        ? (body.data !== undefined ? body.data : body)
+        : null
+
       if (targetData && targetData.totalScore !== undefined) {
         scoreData.value = targetData
         hasData.value = true

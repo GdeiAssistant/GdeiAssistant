@@ -33,7 +33,10 @@ function submitPick() {
     return
   }
   pickSubmitting.value = true
-  request.post('/dating/pick', { profileId: route.params.id, content: text })
+  const params = new URLSearchParams()
+  params.append('profileId', String(route.params.id))
+  params.append('content', text)
+  request.post('/dating/pick', params)
     .then(() => {
       pickSuccessVisible.value = true
       pickContent.value = ''
@@ -45,10 +48,29 @@ function submitPick() {
 
 onMounted(async () => {
   try {
-    const res = await request.get(`/dating/item/${route.params.id}`)
-    item.value = res.data || res
+    const res = await request.get(`/dating/profile/id/${route.params.id}`)
+    const data = res?.data
+    if (data && res.success !== false) {
+      const profile = data.profile || {}
+      item.value = {
+        id: profile.profileId,
+        name: profile.nickname,
+        image: data.pictureURL,
+        images: data.pictureURL ? [data.pictureURL] : [],
+        bio: profile.content,
+        content: profile.content,
+        grade: profile.grade,
+        faculty: profile.faculty,
+        hometown: profile.hometown,
+        qq: profile.qq,
+        wechat: profile.wechat,
+        contactVisible: data.isContactVisible === true
+      }
+    } else {
+      item.value = null
+    }
   } catch (e) {
-    showDialog('加载失败')
+    item.value = null
   }
 })
 </script>

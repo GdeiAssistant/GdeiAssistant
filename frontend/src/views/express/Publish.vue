@@ -28,6 +28,16 @@ function showDialog(msg) {
   dialogVisible.value = true
 }
 
+function showLoading(text = '正在发布...') {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.loading === 'function') weui.loading(text)
+}
+
+function hideLoading() {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
+}
+
 function submit() {
   if (!formData.value.nickname || formData.value.nickname.trim() === '') {
     showDialog('请输入昵称')
@@ -51,21 +61,27 @@ function submit() {
     return
   }
 
-  submitting.value = true
-  // 根据是否填写真实姓名，设置 canGuess 标识
+  const mapGender = (v) => { if (v === 'male') return 0; if (v === 'female') return 1; return 2 }
   const payload = {
-    ...formData.value,
-    canGuess: !!formData.value.realName && formData.value.realName.trim() !== ''
+    nickname: formData.value.nickname.trim(),
+    realname: formData.value.realName?.trim() || '',
+    selfGender: mapGender(formData.value.myGender),
+    name: formData.value.receiverName.trim(),
+    personGender: mapGender(formData.value.receiverGender),
+    content: formData.value.content.trim()
   }
-  request.post('/express/publish', payload)
+  submitting.value = true
+  showLoading('正在发布...')
+  request.post('/express', payload)
     .then(() => {
-      showDialog('发布成功')
-      setTimeout(() => {
-        router.push('/express/home')
-      }, 1500)
+      hideLoading()
+      const weui = typeof window !== 'undefined' && window.weui
+      if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
+      setTimeout(() => router.push('/express/home'), 1500)
     })
     .catch(() => {
       submitting.value = false
+      hideLoading()
     })
 }
 </script>

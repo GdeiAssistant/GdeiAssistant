@@ -23,8 +23,8 @@ const playing = ref(false)
 
 const playAudio = () => {
   if (!secret.value || secret.value.type === 0) return
-  if (!audio.value) {
-    audio.value = new Audio(secret.value.audioUrl)
+  if (!audio.value && secret.value.voiceURL) {
+    audio.value = new Audio(secret.value.voiceURL)
   }
   if (audio.value.paused) {
     audio.value.play()
@@ -38,12 +38,12 @@ const playAudio = () => {
 // 点赞/取消点赞
 const toggleLike = () => {
   if (secret.value.liked) {
-    request.post(`/secret/like/${secret.value.id}`, { like: 0 }).then(() => {
+    request.post(`/secret/id/${secret.value.id}/like`, null, { params: { like: 0 } }).then(() => {
       secret.value.liked = false
       secret.value.likeCount--
     })
   } else {
-    request.post(`/secret/like/${secret.value.id}`, { like: 1 }).then(() => {
+    request.post(`/secret/id/${secret.value.id}/like`, null, { params: { like: 1 } }).then(() => {
       secret.value.liked = true
       secret.value.likeCount++
     })
@@ -60,40 +60,43 @@ const submitComment = () => {
     showDialog('评论内容不能超过50字')
     return
   }
-  request.post(`/secret/item/${route.params.id}/comment`, {
-    comment: commentText.value
-  }).then(() => {
+  request.post(`/secret/id/${route.params.id}/comment`, null, { params: { comment: commentText.value.trim() } }).then(() => {
     commentText.value = ''
     loadComments()
-  }).catch(err => {
-    showDialog(err.response?.data?.message || '评论失败')
-  })
+  }).catch(() => {})
 }
 
-// 加载详情
+// 加载详情：后端返回 Secret（content, type, theme, likeCount, commentCount, liked, voiceURL 等）
 const loadDetail = async () => {
   try {
     loading.value = true
-    const res = await request.get(`/secret/item/${route.params.id}`)
-    secret.value = res.data
-    // 创建音频对象
-    if (secret.value.type !== 0 && secret.value.audioUrl) {
-      audio.value = new Audio(secret.value.audioUrl)
+    const res = await request.get(`/secret/id/${route.params.id}`)
+    const data = res?.data
+    if (data && res.success !== false) {
+      secret.value = {
+        ...data,
+        liked: data.liked === 1
+      }
+      if (secret.value.type !== 0 && secret.value.voiceURL) {
+        audio.value = new Audio(secret.value.voiceURL)
+      }
+    } else {
+      secret.value = null
     }
   } catch (err) {
-    showDialog('加载失败')
+    secret.value = null
   } finally {
     loading.value = false
   }
 }
 
-// 加载评论
+// 加载评论：后端返回 List<SecretComment>
 const loadComments = async () => {
   try {
-    const res = await request.get(`/secret/item/${route.params.id}/comments`)
-    comments.value = res.data || []
+    const res = await request.get(`/secret/id/${route.params.id}/comments`)
+    comments.value = res?.data || []
   } catch (err) {
-    console.error('加载评论失败', err)
+    comments.value = []
   }
 }
 

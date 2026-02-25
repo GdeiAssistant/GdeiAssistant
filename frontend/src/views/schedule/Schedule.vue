@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+import { getSchedule, updateScheduleCache, addCustomSchedule, deleteCustomSchedule } from '@/api/schedule'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 
@@ -15,7 +16,31 @@ const toastMessage = ref('')
 const showToast = ref(false)
 let toastTimer = null
 
+// 添加自定义课程弹窗
+const showAddCustomDialog = ref(false)
+const addCustomSubmitting = ref(false)
+const addCustomForm = ref({
+  scheduleName: '',
+  scheduleLocation: '',
+  dayOfWeek: 1,      // 1-7，对应周一到周日
+  startSection: 1,   // 1-10，对应第1到第10节
+  scheduleLength: 1,
+  minScheduleWeek: 1,
+  maxScheduleWeek: 20
+})
+
 const dayLabels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+
+// 开始节数变化时，若当前占用节数超出当天剩余节数，自动重置为合法最大值
+watch(
+  () => addCustomForm.value.startSection,
+  (newStart) => {
+    const maxLen = Math.min(5, 11 - (newStart || 1))
+    if (addCustomForm.value.scheduleLength > maxLen) {
+      addCustomForm.value.scheduleLength = maxLen
+    }
+  }
+)
 
 // 周次选择器数据：与 schedule.js 的 weekPicker 一致，1-20 周
 const weekPickerOptions = Array.from({ length: 20 }, (_, i) => ({ label: `第${i + 1}周`, value: i + 1 }))
@@ -43,10 +68,10 @@ async function fetchSchedule() {
   loading.value = true
   scheduleResult.value = null
   try {
-    const res = await request.post('/schedulequery', { week: currentWeek.value })
-    if (res && res.data) {
+    const res = await getSchedule(currentWeek.value)
+    if (res && res.success && res.data) {
       scheduleResult.value = res.data
-      currentWeek.value = res.data.week
+      currentWeek.value = res.data.week != null ? res.data.week : currentWeek.value
     }
   } finally {
     loading.value = false
@@ -79,19 +104,168 @@ function closeActionSheet() {
   showActionSheet.value = false
 }
 
+// 统一获取 weui 对象（若存在）
+const getWeui = () => (typeof window !== 'undefined' ? window.weui : null)
+
 function onManageCache() {
   closeActionSheet()
-  showWeuiToast('该功能将在后续模块迁移中实现')
+  router.push('/user/privacy-setting')
 }
 
-function onRefreshSchedule() {
+async function onRefreshSchedule() {
   closeActionSheet()
-  fetchSchedule()
+  const weui = getWeui()
+  let loadingInstance = null
+  if (weui && typeof weui.loading === 'function') {
+    loadingInstance = weui.loading('正在同步课表...')
+  } else {
+    loading.value = true
+  }
+  try {
+    const res = await updateScheduleCache()
+    if (res && res.success) {
+      if (weui && typeof weui.toast === 'function') {
+        weui.toast('更新成功', { duration: 1500 })
+      } else {
+        showWeuiToast('更新成功')
+      }
+      await fetchSchedule()
+    }
+  } catch (e) {
+    // 错误文案（含测试账号受限）由全局拦截器统一提示
+  } finally {
+    if (loadingInstance && typeof loadingInstance.hide === 'function') {
+      loadingInstance.hide()
+    } else {
+      loading.value = false
+    }
+  }
 }
 
 function onAddCustomCourse() {
   closeActionSheet()
-  showWeuiToast('该功能将在后续模块迁移中实现')
+  addCustomForm.value = {
+    scheduleName: '',
+    scheduleLocation: '',
+    dayOfWeek: 1,
+    startSection: 1,
+    scheduleLength: 1,
+    minScheduleWeek: currentWeek.value,
+    maxScheduleWeek: currentWeek.value
+  }
+  showAddCustomDialog.value = true
+}
+
+function closeAddCustomDialog() {
+  if (!addCustomSubmitting.value) showAddCustomDialog.value = false
+}
+
+async function submitAddCustom() {
+  const f = addCustomForm.value
+  const name = (f.scheduleName || '').trim()
+  const location = (f.scheduleLocation || '').trim()
+  if (!name) {
+    showErrorTopTips('请输入课程名称')
+    return
+  }
+  if (!location) {
+    showErrorTopTips('请输入上课地点')
+    return
+  }
+
+  const dayOfWeek = Math.max(1, Math.min(7, parseInt(f.dayOfWeek, 10) || 1))
+  const startSection = Math.max(1, Math.min(10, parseInt(f.startSection, 10) || 1))
+  const row = startSection - 1
+  const column = dayOfWeek - 1
+  const position = row * 7 + column
+
+  const scheduleLength = Math.max(1, Math.min(5, parseInt(f.scheduleLength, 10) || 1))
+  const minWeek = Math.max(1, Math.min(20, parseInt(f.minScheduleWeek, 10) || 1))
+  const maxWeek = Math.max(1, Math.min(20, parseInt(f.maxScheduleWeek, 10) || 1))
+  if (minWeek > maxWeek) {
+    showErrorTopTips('开始周不能大于结束周')
+    return
+  }
+  if (startSection + scheduleLength - 1 > 10) {
+    showErrorTopTips('课程结束节数不能超过全天最大节数(10节)')
+    return
+  }
+
+  const list = scheduleResult.value?.scheduleList
+  if (Array.isArray(list)) {
+    const newCol = position % 7
+    const newRowEnd = row + scheduleLength - 1
+    for (const s of list) {
+      const exPos = s.position
+      if (exPos == null) continue
+      const exCol = exPos % 7
+      if (newCol !== exCol) continue
+      const exRow = s.row != null ? s.row : Math.floor(exPos / 7)
+      const exLen = (s.scheduleLength != null ? s.scheduleLength : 1)
+      const exRowEnd = exRow + exLen - 1
+      if (newRowEnd < exRow || exRowEnd < row) continue
+      const exMin = s.minScheduleWeek != null ? s.minScheduleWeek : 1
+      const exMax = s.maxScheduleWeek != null ? s.maxScheduleWeek : 20
+      if (minWeek <= exMax && maxWeek >= exMin) {
+        showErrorTopTips('该时间段已存在课程')
+        return
+      }
+    }
+  }
+
+  const payload = {
+    scheduleName: name,
+    scheduleLocation: location,
+    scheduleLength,
+    position,
+    minScheduleWeek: minWeek,
+    maxScheduleWeek: maxWeek
+  }
+
+  addCustomSubmitting.value = true
+  const weui = getWeui()
+  try {
+    await addCustomSchedule(payload)
+    if (weui && typeof weui.toast === 'function') {
+      weui.toast('添加成功', { duration: 1500 })
+    } else {
+      showWeuiToast('添加成功')
+    }
+    showAddCustomDialog.value = false
+    await fetchSchedule()
+  } catch (e) {
+    // 错误由 request.js 全局拦截器统一提示
+  } finally {
+    addCustomSubmitting.value = false
+  }
+}
+
+async function handleDeleteCustomCourse() {
+  if (!selectedCourse.value || !isCustomCourse(selectedCourse.value)) return
+  const position = selectedCourse.value.position
+  closeCourseDetail()
+  const weui = getWeui()
+  const doDelete = async () => {
+    try {
+      await deleteCustomSchedule(position)
+      if (weui && typeof weui.toast === 'function') {
+        weui.toast('删除成功', { duration: 1500 })
+      } else {
+        showWeuiToast('删除成功')
+      }
+      await fetchSchedule()
+    } catch (e) {
+      // 错误由 request.js 全局拦截器统一提示
+    }
+  }
+
+  if (weui && typeof weui.confirm === 'function') {
+    weui.confirm('确定要删除这节自定义课程吗？', async () => {
+      await doDelete()
+    })
+  } else if (window.confirm && window.confirm('确定要删除这节自定义课程吗？')) {
+    await doDelete()
+  }
 }
 
 function showWeuiToast(message) {
@@ -102,6 +276,11 @@ function showWeuiToast(message) {
     showToast.value = false
     toastTimer = null
   }, 2000)
+}
+
+/** 仅自定义课程可删除：只认后端下发的显式标记 isCustom === true */
+function isCustomCourse(course) {
+  return course && course.isCustom === true
 }
 
 function openCourseDetail(course) {
@@ -258,12 +437,108 @@ onMounted(() => {
           </div>
           <div class="weui-form-preview__item">
             <label class="weui-form-preview__label">任课教师</label>
-            <span class="weui-form-preview__value">{{ selectedCourse.scheduleTeacher || '—' }}</span>
+            <span class="weui-form-preview__value">{{ (selectedCourse.scheduleTeacher && String(selectedCourse.scheduleTeacher).trim() !== '' && String(selectedCourse.scheduleTeacher).trim() !== '—' && String(selectedCourse.scheduleTeacher).trim() !== '-') ? selectedCourse.scheduleTeacher : '无' }}</span>
           </div>
           <div class="weui-form-preview__item">
             <label class="weui-form-preview__label">上课周次</label>
             <span class="weui-form-preview__value">第{{ selectedCourse.minScheduleWeek }}周至第{{ selectedCourse.maxScheduleWeek }}周</span>
           </div>
+        </div>
+        <div class="schedule-detail-dialog__ft">
+          <button
+            v-if="isCustomCourse(selectedCourse)"
+            type="button"
+            class="schedule-detail-dialog__btn schedule-detail-dialog__btn_delete"
+            @click="handleDeleteCustomCourse"
+          >
+            删除
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <!-- 添加自定义课程弹窗 -->
+    <template v-if="showAddCustomDialog">
+      <div class="weui-mask" @click="closeAddCustomDialog" aria-hidden="true"></div>
+      <div class="schedule-detail-dialog add-custom-dialog" role="dialog" aria-label="添加自定义课程">
+        <div class="schedule-detail-dialog__hd">
+          <h3 class="schedule-detail-dialog__title">添加自定义课程</h3>
+          <div class="schedule-detail-dialog__close" @click="closeAddCustomDialog">关闭</div>
+        </div>
+        <div class="schedule-detail-dialog__bd weui-cells weui-cells_form">
+          <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">课程名称</label></div>
+            <div class="weui-cell__bd weui-cell_primary">
+              <input v-model="addCustomForm.scheduleName" class="weui-input" type="text" maxlength="50" placeholder="请输入课程名称" />
+            </div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">上课地点</label></div>
+            <div class="weui-cell__bd weui-cell_primary">
+              <input v-model="addCustomForm.scheduleLocation" class="weui-input" type="text" maxlength="25" placeholder="请输入上课地点" />
+            </div>
+          </div>
+          <div class="weui-cell weui-cell_select weui-cell_select-after">
+            <div class="weui-cell__hd">
+              <label class="weui-label">星期几</label>
+            </div>
+            <div class="weui-cell__bd">
+              <select class="weui-select" v-model.number="addCustomForm.dayOfWeek">
+                <option v-for="d in 7" :key="d" :value="d">周{{ ['一','二','三','四','五','六','日'][d-1] }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="weui-cell weui-cell_select weui-cell_select-after">
+            <div class="weui-cell__hd">
+              <label class="weui-label">开始节数</label>
+            </div>
+            <div class="weui-cell__bd">
+              <select class="weui-select" v-model.number="addCustomForm.startSection">
+                <option v-for="s in 10" :key="s" :value="s">第{{ s }}节</option>
+              </select>
+            </div>
+          </div>
+          <div class="weui-cell weui-cell_select weui-cell_select-after">
+            <div class="weui-cell__hd">
+              <label class="weui-label">占用节数</label>
+            </div>
+            <div class="weui-cell__bd">
+              <select class="weui-select" v-model.number="addCustomForm.scheduleLength">
+                <option v-for="len in Math.max(1, Math.min(5, 11 - (addCustomForm.startSection || 1)))" :key="len" :value="len">{{ len }}节</option>
+              </select>
+            </div>
+          </div>
+          <div class="weui-cell weui-cell_select weui-cell_select-after">
+            <div class="weui-cell__hd">
+              <label class="weui-label">开始周</label>
+            </div>
+            <div class="weui-cell__bd">
+              <select class="weui-select" v-model.number="addCustomForm.minScheduleWeek">
+                <option v-for="w in 20" :key="w" :value="w">第{{ w }}周</option>
+              </select>
+            </div>
+          </div>
+          <div class="weui-cell weui-cell_select weui-cell_select-after">
+            <div class="weui-cell__hd">
+              <label class="weui-label">结束周</label>
+            </div>
+            <div class="weui-cell__bd">
+              <select class="weui-select" v-model.number="addCustomForm.maxScheduleWeek">
+                <option v-for="w in 20" :key="w" :value="w">第{{ w }}周</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="weui-btn_area" style="margin: 15px auto;">
+          <button
+            type="button"
+            class="weui-btn weui-btn_primary"
+            style="width: 50%; height: 40px; line-height: 40px; padding: 0; font-size: 16px; border-radius: 20px;"
+            :disabled="addCustomSubmitting"
+            @click="submitAddCustom"
+          >
+            {{ addCustomSubmitting ? '提交中...' : '添加' }}
+          </button>
         </div>
       </div>
     </template>
@@ -338,6 +613,33 @@ onMounted(() => {
   font-weight: 400;
   margin: 10px 0 20px 0;
   line-height: 1.2;
+}
+
+.add-custom-dialog .weui-cells {
+  margin-top: 0;
+}
+
+.schedule-detail-dialog__ft {
+  padding: 10px 15px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.schedule-detail-dialog__btn_delete {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  padding: 8px 16px;
+  border: 1px solid #fa5151;
+  border-radius: 4px;
+  background: #fff;
+  color: #fa5151;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
 }
 
 .schedule-week {

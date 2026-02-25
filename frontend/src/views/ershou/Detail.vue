@@ -55,13 +55,34 @@ function callPhone() {
   if (phone) window.location.href = `tel:${phone}`
 }
 
+function mapErshouDetail(info) {
+  const item = info?.ershouItem || {}
+  const profile = info?.profile || {}
+  return {
+    images: Array.isArray(item.pictureURL) ? item.pictureURL : [],
+    price: item.price,
+    title: item.name,
+    location: item.location,
+    desc: item.description,
+    seller: {
+      name: profile.nickname || profile.username || '—',
+      publishTime: item.publishTime || '',
+      avatar: profile.avatarURL || '/img/avatar/default.png'
+    },
+    contact: {
+      qq: item.qq || '',
+      phone: item.phone || ''
+    }
+  }
+}
+
 onMounted(async () => {
   loading.value = true
   try {
-    const res = await request.get(`/ershou/item/${id}`)
-    const data = res?.data
-    if (data && (res.success !== false)) {
-      detail.value = data
+    const res = await request.get(`/ershou/item/id/${id}`)
+    const info = res?.data
+    if (info && res.success !== false) {
+      detail.value = mapErshouDetail(info)
     } else {
       detail.value = null
     }

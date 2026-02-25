@@ -1,13 +1,14 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+import request from '@/utils/request'
 
 const router = useRouter()
 const isDirectSubmit = ref(false)
 const loading = ref(false)
 const toastMsg = ref('')
 const showToast = ref(false)
+const showEvaluateConfirmDialog = ref(false)
 let toastTimer = null
 
 function goBack() {
@@ -15,19 +16,26 @@ function goBack() {
 }
 
 function doEvaluate() {
-  if (!window.confirm('确定要进行一键评教吗？此操作不可逆。')) return
+  showEvaluateConfirmDialog.value = true
+}
+
+function closeEvaluateConfirmDialog() {
+  showEvaluateConfirmDialog.value = false
+}
+
+function confirmEvaluate() {
+  closeEvaluateConfirmDialog()
   loading.value = true
-  request.post('/evaluate', { directSubmit: isDirectSubmit.value })
-    .then(() => {
-      setTimeout(() => {
-        loading.value = false
-        toastMsg.value = '评教完成'
-        showToast.value = true
-        if (toastTimer) clearTimeout(toastTimer)
-        toastTimer = setTimeout(() => {
-          showToast.value = false
-        }, 2000)
-      }, 1500)
+  const formData = { directSubmit: isDirectSubmit.value }
+  request.post('/evaluate/submit', formData)
+    .then((res) => {
+      loading.value = false
+      toastMsg.value = '评价提交成功！'
+      showToast.value = true
+      if (toastTimer) clearTimeout(toastTimer)
+      toastTimer = setTimeout(() => {
+        showToast.value = false
+      }, 2500)
     })
     .catch(() => {
       loading.value = false
@@ -74,6 +82,19 @@ function doEvaluate() {
     </div>
 
     <p class="evaluate-tip">注意：评教信息提交后，将不能再作修改。</p>
+
+    <!-- 一键评教确认弹窗（WeUI 风格） -->
+    <div v-if="showEvaluateConfirmDialog" class="weui-mask" @click="closeEvaluateConfirmDialog"></div>
+    <div v-if="showEvaluateConfirmDialog" class="weui-dialog weui-dialog--confirm">
+      <div class="weui-dialog__hd">
+        <strong class="weui-dialog__title">提示</strong>
+      </div>
+      <div class="weui-dialog__bd">确定要进行一键评教吗？此操作不可逆。</div>
+      <div class="weui-dialog__ft">
+        <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click.prevent="closeEvaluateConfirmDialog">取消</a>
+        <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click.prevent="confirmEvaluate">确定</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -142,7 +163,6 @@ function doEvaluate() {
   line-height: 1.5;
 }
 
-/* WEUI 风格开关 */
 .weui-switch {
   appearance: none;
   width: 51px;
@@ -181,5 +201,68 @@ function doEvaluate() {
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 6000;
+}
+
+.weui-mask {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.weui-dialog--confirm.weui-dialog {
+  position: fixed;
+  z-index: 5000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 12px;
+  width: 320px;
+  overflow: hidden;
+}
+
+.weui-dialog--confirm .weui-dialog__hd {
+  padding: 24px 20px 12px;
+  text-align: center;
+}
+
+.weui-dialog--confirm .weui-dialog__title {
+  font-size: 17px;
+  color: #333;
+}
+
+.weui-dialog--confirm .weui-dialog__bd {
+  padding: 12px 20px 24px;
+  font-size: 15px;
+  color: #666;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.weui-dialog--confirm .weui-dialog__ft {
+  display: flex;
+  border-top: 1px solid #e5e5e5;
+}
+
+.weui-dialog--confirm .weui-dialog__btn {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  color: #333;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.weui-dialog--confirm .weui-dialog__btn_default {
+  color: #888;
+  border-right: 1px solid #e5e5e5;
+}
+
+.weui-dialog--confirm .weui-dialog__btn_primary {
+  color: #09bb07;
 }
 </style>

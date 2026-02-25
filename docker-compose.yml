@@ -1,0 +1,136 @@
+# =============================================================================
+# GdeiAssistant 开发环境全栈（五大组件）
+# 启动：docker compose up -d
+# 说明：MySQL / MongoDB / Redis / Backend (Spring Boot) / Frontend (Vue)，网络与数据卷已配置
+# =============================================================================
+
+networks:
+  gdei-dev:
+    name: gdei-dev
+    driver: bridge
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: gdei-mysql
+    networks:
+      - gdei-dev
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:-123456}"
+      MYSQL_CHARSET: utf8mb4
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db-init/mysql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "sh", "-c", "mysqladmin ping -h localhost -uroot -p\"$$MYSQL_ROOT_PASSWORD\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:alpine
+    container_name: gdei-redis
+    networks:
+      - gdei-dev
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:latest
+    container_name: gdei-mongo
+    networks:
+      - gdei-dev
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./db-init/mongodb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    image: gdeiassistant-backend:dev
+    container_name: gdeiassistant-backend-dev
+    networks:
+      - gdei-dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    # ⚠️ 仅限本地开发环境使用，生产环境请使用 docker-compose-template.yml 并配合 .env 文件！
+    environment:
+      # Spring Profile
+      SPRING_PROFILES_ACTIVE: dev
+
+      # MySQL（三库：主库 / log / data）
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: gdeiassistant
+      DB_NAME_LOG: gdeiassistant_log
+      DB_NAME_DATA: gdeiassistant_data
+      DB_PASSWORD: "${DB_PASSWORD:-123456}"
+
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
+      REDIS_DATABASE: 0
+
+      # MongoDB
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_DATABASE: gdeiassistant
+
+      # JWT
+      JWT_SECRET: "${JWT_SECRET:-dev_jwt_secret_please_change}"
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: node:20-alpine
+    container_name: gdeiassistant-frontend-dev
+    networks:
+      - gdei-dev
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    volumes:
+      - ./frontend:/app
+      - frontend-node-modules:/app/node_modules
+    environment:
+      # Vite Dev Server 直接以宿主 8080 为后端 API 地址
+      VITE_APP_BASE_API: "http://localhost:8080/api"
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  mysql-data:
+  mongo-data:
+  redis-data:
+  frontend-node-modules:
+

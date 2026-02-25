@@ -1,80 +1,110 @@
-# Created by .ignore support plugin (hsz.mobi)
-### Example user template template
-### Example user template
+# ==================================
+# IDE & OS Files
+# ==================================
+.idea/
+*.iml
+*.iws
+.ipr
+.vscode/
+.classpath
+.project
+.settings/
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+docs
 
-# IntelliJ project files
-.idea
-out
-gradlew
-gradlew.bat
-src/test/
-.gradle/
+# ==================================
+# Spring Boot & Java
+# ==================================
+out/
 build/
-gradle/
-lib/
-gdeiassistant-webapp.iml
+target/
+*.class
+*.jar
+*.war
+*.log
+*.zip
+*.ps1
 local.properties
 src/main/resources/rebel.xml
-/gdei-frontend/.vscode/
-/gdei-frontend/node_modules
 
-# --- Frontend Directory (gdeiassistant-frontend) ---
+# ==================================
+# Gradle
+# ==================================
+.gradle/
+.gradle_local/
+.java_local/
 
-# Dependencies
-frontend/node_modules
-
-# Build output
-frontend/dist
-frontend/dist-ssr
-frontend/*.local
-
-# Logs
-frontend/logs
-frontend/*.log
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
-frontend/pnpm-debug.log*
-frontend/lerna-debug.log*
-
-# Environment variables
-frontend/.env
+# ==================================
+# Frontend
+# ==================================
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.npm/
 frontend/.env.local
 frontend/.env.*.local
 frontend/.env.development.local
 frontend/.env.test.local
 frontend/.env.production.local
 
-# Cache & temp
-frontend/.cache
-frontend/.vite
+# Frontend Cache & Temp
+frontend/.cache/
+frontend/.vite/
 frontend/*.tsbuildinfo
-frontend/.turbo
-frontend/.pnpm-store
-
-# Test
-frontend/coverage
-frontend/*.lcov
-
-# Editor directories and files
-frontend/.vscode/*
-!frontend/.vscode/extensions.json
-frontend/.idea
-frontend/*.suo
-frontend/*.ntvs*
-frontend/*.njsproj
-frontend/*.sln
-frontend/*.sw?
-frontend/.cursor
-frontend/.vscode
-
-# OS
-frontend/.DS_Store
-frontend/Thumbs.db
-frontend/ehthumbs.db
-frontend/Desktop.ini
-
-# Script / 生成物
+frontend/.turbo/
+frontend/.pnpm-store/
 frontend/location-tree-output.txt
 frontend/scripts/*-generated.js
 !frontend/scripts/build-*.cjs
+
+# Frontend Logs & Test
+frontend/logs/
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+frontend/coverage/
+frontend/*.lcov
+
+# ==================================
+# 敏感配置（勿提交）- 可提交的模板见下方「例外规则」
+# ==================================
+
+# ---------- 1. 环境变量文件 ----------
+# 禁止提交任何包含真实数据的环境文件
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.prod
+.env.*.prod
+# 例外：允许提交，供其他用户参考
+!.env.template
+
+# ---------- 2. 后端配置文件 (Spring Boot) ----------
+# 包含真实密码的 profile 配置
+src/main/resources/application-dev.yml
+src/main/resources/application-prod.yml
+# 例外：允许提交
+!src/main/resources/application-template.yml
+
+# ---------- 3. Docker 编排 ----------
+# docker-compose.prod.yml 为生产模板示例，可提交；真实的生产覆盖文件（如
+# docker-compose.local.yml）已忽略，请勿提交含敏感信息的本地/生产 compose。
+docker-compose.local.yml
+
+# ==================================
+# 根目录日志与原生编译产物
+# ==================================
+logs/
+build/native/
+**/nativeCompile/

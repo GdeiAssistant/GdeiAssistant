@@ -9,6 +9,7 @@ const router = useRouter()
 const scrollContainer = ref(null)
 
 const TYPE_NAMES = ['校园代步', '手机', '电脑', '数码配件', '数码', '电器', '运动健身', '衣物伞帽', '图书教材', '租赁', '生活娱乐', '其他']
+const PAGE_SIZE = 10
 
 const typeId = computed(() => {
   const t = route.query.type
@@ -21,14 +22,28 @@ const typeName = computed(() => {
   return TYPE_NAMES[typeId.value] ?? '分类'
 })
 
+function mapErshouItemToCard(item) {
+  return {
+    id: item.id,
+    title: item.name,
+    desc: item.description,
+    price: item.price,
+    coverImg: Array.isArray(item.pictureURL) && item.pictureURL.length > 0 ? item.pictureURL[0] : ''
+  }
+}
+
 const fetchTypeData = async (page) => {
   if (typeId.value === null) {
-    return { data: { list: [], hasMore: false } }
+    return { list: [], hasMore: false }
   }
-  const res = await request.get('/ershou/items', {
-    params: { page, limit: 10, type: typeId.value }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const res = await request.get(`/ershou/item/type/${typeId.value}/start/${start}`)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map(mapErshouItemToCard) : []
+  return {
+    list,
+    hasMore: list.length >= PAGE_SIZE
+  }
 }
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleScroll, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchTypeData)

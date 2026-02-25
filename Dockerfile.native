@@ -1,0 +1,36 @@
+# =============================================================================
+# GdeiAssistant 生产环境 - GraalVM Native Image 多阶段构建
+# 构建：docker build -f Dockerfile.native -t gdeiassistant-native:latest .
+# =============================================================================
+
+# Stage 1: 使用带有 GraalVM 的官方构建环境
+FROM ghcr.io/graalvm/native-image-community:17 AS builder
+WORKDIR /app
+
+# 安装 gradlew 所需的底层 Linux 工具 (xargs 和 unzip)
+RUN microdnf install -y findutils unzip
+
+# 拷贝项目所有文件到容器内
+COPY . .
+
+# 赋予 Gradle 执行权限
+RUN chmod +x gradlew
+
+# 先拉取依赖并写入 Gradle 缓存，利用 Docker 层缓存：未改 build.gradle 时此层可复用
+RUN ./gradlew help --no-daemon
+
+# 执行原生编译，跳过测试和守护进程以节省内存
+RUN ./gradlew nativeCompile -x test --no-daemon
+
+# Stage 2: 极简运行环境（Distroless，极度安全且体积小）
+FROM gcr.io/distroless/base
+WORKDIR /app
+
+# 从 builder 阶段把编译好的二进制文件拿过来
+# 路径默认在 build/native/nativeCompile/ 下，应用名为 gdeiassistant
+COPY --from=builder /app/build/native/nativeCompile/gdeiassistant /app/gdeiassistant
+
+EXPOSE 8080
+
+# 直接执行二进制文件！不需要 java -jar！
+ENTRYPOINT ["/app/gdeiassistant"]

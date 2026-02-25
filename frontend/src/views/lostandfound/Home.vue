@@ -7,12 +7,27 @@ import { useScrollLoad } from '../../composables/useScrollLoad'
 const router = useRouter()
 const activeType = ref(0) // 0: 寻物, 1: 招领
 const scrollContainer = ref(null)
+const PAGE_SIZE = 10
+
+function mapItemToCard(item) {
+  return {
+    id: item.id,
+    title: item.name,
+    desc: item.description,
+    type: item.lostType,
+    images: Array.isArray(item.pictureURL) ? item.pictureURL : []
+  }
+}
 
 const fetchLostData = async (page) => {
-  const res = await request.get('/lostandfound/items', {
-    params: { page, limit: 10, type: activeType.value }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const path = activeType.value === 0
+    ? `/lostandfound/lostitem/start/${start}`
+    : `/lostandfound/founditem/start/${start}`
+  const res = await request.get(path)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map(mapItemToCard) : []
+  return { list, hasMore: list.length >= PAGE_SIZE }
 }
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleScroll, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchLostData)

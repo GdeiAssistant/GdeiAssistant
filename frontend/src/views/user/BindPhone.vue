@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 
@@ -23,15 +24,9 @@ const showUnbindDialog = ref(false)
 const isUnbinding = ref(false)
 let timerId = null
 
-function showToast(message) {
-  const toast = document.createElement('div')
-  toast.style.cssText =
-    'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.75);color:#fff;padding:12px 22px;border-radius:6px;z-index:9999;font-size:14px;max-width:80%;text-align:center;'
-  toast.textContent = message
-  document.body.appendChild(toast)
-  setTimeout(() => {
-    if (toast.parentNode) document.body.removeChild(toast)
-  }, 2000)
+function showSuccess(msg) {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.toast === 'function') weui.toast(msg, { duration: 2000 })
 }
 
 const codeButtonText = computed(() => {
@@ -157,19 +152,17 @@ async function handleSendCode() {
   if (!canSendCode.value) return
   if (!validatePhone(formPhone.value, currentCountryCode.value)) {
     if (currentCountryCode.value === '+86') {
-      showToast('请输入正确的国内手机号')
+      showErrorTopTips('请输入正确的国内手机号')
     } else {
-      showToast('请输入正确的国际手机号')
+      showErrorTopTips('请输入正确的国际手机号')
     }
     return
   }
 
   sending.value = true
   try {
-    await request.post('/api/user/send-phone-code', {
-      phone: formPhone.value,
-      countryCode: currentCountryCode.value
-    })
+    const numericCode = parseInt((currentCountryCode.value || '+86').replace('+', ''), 10) || 86
+    await request.post(`/phone/verification?code=${encodeURIComponent(numericCode)}&phone=${encodeURIComponent(formPhone.value)}`)
     countdown.value = 60
     timerId = setInterval(() => {
       if (countdown.value > 0) {
@@ -179,9 +172,9 @@ async function handleSendCode() {
         timerId = null
       }
     }, 1000)
-    showToast('验证码已发送，请查看短信')
+    showSuccess('验证码已发送，请查看短信')
   } catch (e) {
-    showToast('发送验证码失败，请稍后重试')
+    // 错误由 request.js 全局拦截器统一提示
   } finally {
     sending.value = false
   }
@@ -191,31 +184,28 @@ async function handleSubmit() {
   if (isBinding.value) return
   if (!validatePhone(formPhone.value, currentCountryCode.value)) {
     if (currentCountryCode.value === '+86') {
-      showToast('请输入正确的国内手机号')
+      showErrorTopTips('请输入正确的国内手机号')
     } else {
-      showToast('请输入正确的国际手机号')
+      showErrorTopTips('请输入正确的国际手机号')
     }
     return
   }
   if (!vcode.value) {
-    showToast('请输入验证码')
+    showErrorTopTips('请输入验证码')
     return
   }
 
   isBinding.value = true
   try {
-    await request.post('/api/user/bind-phone', {
-      phone: formPhone.value,
-      countryCode: currentCountryCode.value,
-      code: vcode.value
-    })
+    const numericCode = parseInt((currentCountryCode.value || '+86').replace('+', ''), 10) || 86
+    await request.post(`/phone/attach?code=${encodeURIComponent(numericCode)}&phone=${encodeURIComponent(formPhone.value)}&randomCode=${encodeURIComponent(vcode.value)}`)
     currentPhone.value = maskPhone(formPhone.value)
     boundCountryCode.value = currentCountryCode.value
-    showToast('绑定成功')
+    showSuccess('绑定成功')
     // 绑定成功后返回状态页
     isEditing.value = false
   } catch (e) {
-    showToast('绑定失败，请稍后重试')
+    // 错误由 request.js 全局拦截器统一提示
   } finally {
     isBinding.value = false
   }
@@ -254,16 +244,16 @@ async function confirmUnbind() {
   if (isUnbinding.value) return
   isUnbinding.value = true
   try {
-    await request.post('/api/user/unbind-phone')
+    await request.post('/phone/unattach')
     currentPhone.value = ''
     boundCountryCode.value = '+86'
     formPhone.value = ''
     vcode.value = ''
     isEditing.value = false
-    showToast('已解除绑定')
+    showSuccess('已解除绑定')
     showUnbindDialog.value = false
   } catch (e) {
-    showToast('解除绑定失败，请稍后重试')
+    // 错误由 request.js 全局拦截器统一提示
   } finally {
     isUnbinding.value = false
   }
@@ -273,23 +263,20 @@ onMounted(async () => {
   // 加载区号列表
   await loadCountryCodes()
   
-  // 加载绑定状态
+  // 加载绑定状态（真实接口）
   try {
-    const res = await request.get('/api/user/phone-status')
-    const data = res && (res.data || res)
+    const res = await request.get('/phone/status')
+    const data = res && res.data
     if (data && typeof data === 'object') {
       if (data.phone) {
-        currentPhone.value = maskPhone(data.phone)
+        currentPhone.value = maskPhone(String(data.phone))
       }
-      if (data.countryCode) {
-        boundCountryCode.value = data.countryCode
+      if (typeof data.code === 'number') {
+        boundCountryCode.value = `+${data.code}`
       }
-    } else if (typeof data === 'string') {
-      currentPhone.value = maskPhone(data)
-      boundCountryCode.value = '+86'
     }
   } catch (e) {
-    // ignore, use default mock
+    // ignore，保持默认未绑定状态
   }
 })
 

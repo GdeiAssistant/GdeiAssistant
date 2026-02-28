@@ -26,6 +26,8 @@ GdeiAssistant/                 # 仓库根目录
 ├── docker-compose.yml         # 基础设施全栈编排
 └── .env.template              # 环境变量配置模板
 
+```
+
 ---
 
 ## 快速入门
@@ -47,6 +49,8 @@ cp .env.template .env
 - **全栈（Docker）**：`docker compose up -d`（后端 8080，前端 5173）。
 - **仅后端**：`./gradlew bootRun`（自动加载根目录 `.env`）。
 - **仅前端**：进入前端目录安装依赖并启动开发服务器：
+
+
 
 ```bash
 cd frontend
@@ -81,7 +85,7 @@ npm run dev
 
 | 路径 | 说明 |
 |------|------|
-| `src/main/java` | 后端 |
+| `src/main/java` | Spring Boot 后端 |
 | `frontend/` | Vue 前端 |
 | `db-init/mysql/` | MySQL 初始化（含 Mock 数据） |
 | `db-init/mongodb/` | MongoDB 初始化（含 Mock 数据） |

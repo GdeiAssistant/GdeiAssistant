@@ -90,16 +90,13 @@ frontend/*.lcov
 # 例外：允许提交，供其他用户参考
 !.env.template
 
-# ---------- 2. 后端配置文件 (Spring Boot) ----------
-# 包含真实密码的 profile 配置
+# ---------- 2. 后端本地配置 ----------
+# 本地 profile 配置文件
 src/main/resources/application-dev.yml
 src/main/resources/application-prod.yml
-# 例外：允许提交
-!src/main/resources/application-template.yml
 
 # ---------- 3. Docker 编排 ----------
-# docker-compose.prod.yml 为生产模板示例，可提交；真实的生产覆盖文件（如
-# docker-compose.local.yml）已忽略，请勿提交含敏感信息的本地/生产 compose。
+# 生产模板可提交；本地或敏感覆盖文件忽略
 docker-compose.local.yml
 
 # ==================================

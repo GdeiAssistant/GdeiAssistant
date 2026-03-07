@@ -4,13 +4,16 @@
 # =============================================================================
 FROM node:20-alpine AS builder
 WORKDIR /app
+ARG VITE_APP_BASE_API=/api
+ARG VITE_PE_EXTERNAL_URL=
 
 COPY package.json package-lock.json* ./
 RUN npm ci
 
 COPY . .
-# 使用默认 /api，部署时由 Nginx 将 /api 代理到 gdeiassistant-backend
-ENV VITE_APP_BASE_API=/api
+# 生产构建变量统一由根目录 .env 传入；默认仍使用相对路径 /api。
+ENV VITE_APP_BASE_API=${VITE_APP_BASE_API}
+ENV VITE_PE_EXTERNAL_URL=${VITE_PE_EXTERNAL_URL}
 RUN npm run build
 
 # -----------------------------------------------------------------------------

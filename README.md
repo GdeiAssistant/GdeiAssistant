@@ -36,7 +36,7 @@ GdeiAssistant/                 # 仓库根目录
 安装 Docker + Docker Compose。
 
 **2. 配置**  
-复制并编辑环境变量：
+复制并编辑环境变量，后端、前端、Docker 都统一读取这一份 `.env`：
 
 ```bash
 cp .env.template .env
@@ -47,6 +47,7 @@ cp .env.template .env
 **3. 运行**
 
 - **全栈（Docker）**：`docker compose up -d`（后端 8080，前端 5173）。
+- **生产编排**：`docker compose -f docker-compose-prod.yml up -d`。
 - **仅后端**：`./gradlew bootRun`（自动加载根目录 `.env`）。
 - **仅前端**：进入前端目录安装依赖并启动开发服务器：
 

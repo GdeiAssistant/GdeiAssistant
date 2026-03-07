@@ -1,12 +1,12 @@
 # =============================================================================
-# GdeiAssistant 开发环境全栈（五大组件）
+# GdeiAssistant 开发环境全栈
+# 单一配置入口：项目根目录 .env
 # 启动：docker compose up -d
-# 说明：MySQL / MongoDB / Redis / Backend (Spring Boot) / Frontend (Vue)，网络与数据卷已配置
 # =============================================================================
 
 networks:
   gdei-dev:
-    name: gdei-dev
+    name: ${DEV_COMPOSE_NETWORK_NAME:-gdei-dev}
     driver: bridge
 
 services:
@@ -16,7 +16,7 @@ services:
     networks:
       - gdei-dev
     ports:
-      - "${DB_PORT:-3306}:3306"
+      - "${MYSQL_EXPOSE_PORT:-3306}:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:-123456}"
       MYSQL_CHARSET: utf8mb4
@@ -38,13 +38,30 @@ services:
     container_name: gdei-redis
     networks:
       - gdei-dev
+    env_file:
+      - .env
     ports:
-      - "${REDIS_PORT:-6379}:6379"
-    command: ["redis-server", "--appendonly", "yes"]
+      - "${REDIS_EXPOSE_PORT:-6379}:6379"
+    command:
+      - sh
+      - -c
+      - |
+        if [ -n "$$REDIS_PASSWORD" ]; then
+          exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD";
+        else
+          exec redis-server --appendonly yes;
+        fi
     volumes:
       - redis-data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test:
+        - CMD-SHELL
+        - |
+          if [ -n "$$REDIS_PASSWORD" ]; then
+            redis-cli -a "$$REDIS_PASSWORD" ping;
+          else
+            redis-cli ping;
+          fi
       interval: 10s
       timeout: 5s
       retries: 5
@@ -55,7 +72,7 @@ services:
     networks:
       - gdei-dev
     ports:
-      - "${MONGO_PORT:-27017}:27017"
+      - "${MONGO_EXPOSE_PORT:-27017}:27017"
     volumes:
       - mongo-data:/data/db
       - ./db-init/mongodb:/docker-entrypoint-initdb.d:ro
@@ -81,50 +98,44 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_healthy
-    # ⚠️ 仅限本地开发环境使用，生产环境请使用 docker-compose-template.yml 并配合 .env 文件！
+    env_file:
+      - .env
     environment:
-      # Spring Profile
       SPRING_PROFILES_ACTIVE: dev
-
-      # MySQL（三库：主库 / log / data）
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_NAME: gdeiassistant
-      DB_NAME_LOG: gdeiassistant_log
-      DB_NAME_DATA: gdeiassistant_data
+      DB_NAME: "${DB_NAME:-gdeiassistant}"
+      DB_NAME_LOG: "${DB_NAME_LOG:-gdeiassistant_log}"
+      DB_NAME_DATA: "${DB_NAME_DATA:-gdeiassistant_data}"
       DB_PASSWORD: "${DB_PASSWORD:-123456}"
-
-      # Redis
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
-      REDIS_DATABASE: 0
-
-      # MongoDB
+      REDIS_DATABASE: "${REDIS_DATABASE:-0}"
       MONGO_HOST: mongodb
       MONGO_PORT: 27017
-      MONGO_DATABASE: gdeiassistant
-
-      # JWT
+      MONGO_DATABASE: "${MONGO_DATABASE:-gdeiassistant}"
+      SERVER_PORT: 8080
       JWT_SECRET: "${JWT_SECRET:-dev_jwt_secret_please_change}"
     ports:
-      - "8080:8080"
+      - "${BACKEND_EXPOSE_PORT:-8080}:8080"
 
   frontend:
     image: node:20-alpine
     container_name: gdeiassistant-frontend-dev
     networks:
       - gdei-dev
+    env_file:
+      - .env
     working_dir: /app
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
     volumes:
       - ./frontend:/app
       - frontend-node-modules:/app/node_modules
     environment:
-      # Vite Dev Server 直接以宿主 8080 为后端 API 地址
-      VITE_APP_BASE_API: "http://localhost:8080/api"
+      VITE_APP_BASE_API: "${VITE_APP_BASE_API:-http://localhost:8080/api}"
     ports:
-      - "5173:5173"
+      - "${FRONTEND_EXPOSE_PORT:-5173}:5173"
     depends_on:
       - backend
 

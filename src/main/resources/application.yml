@@ -1,13 +1,13 @@
 # =============================================================================
-# GdeiAssistant - Spring Boot 2.7 主配置
-# 多环境由 application-{profile}.yml 提供，默认激活 dev
+# GdeiAssistant 主配置
+# 统一使用一份 application.yml，并通过环境变量或 .env 注入环境差异。
 # =============================================================================
 
 spring:
   application:
     name: GdeiAssistant
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai
@@ -15,23 +15,176 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 50MB
+  datasource:
+    app:
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:gdeiassistant}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      username: root
+      password: ${DB_PASSWORD:}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 10
+        minimum-idle: 2
+    log:
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_LOG:gdeiassistant_log}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      username: root
+      password: ${DB_PASSWORD:}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 5
+    data:
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_DATA:gdeiassistant_data}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      username: root
+      password: ${DB_PASSWORD:}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 5
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    database: ${REDIS_DATABASE:0}
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_HOST:localhost}:${MONGO_PORT:27017}
+      database: ${MONGO_DATABASE:gdeiassistant}
 
-# MyBatis 基础配置
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
     default-statement-timeout: 30
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-handlers-package: cn.gdeiassistant.common.typehandler
 
-# 日志：路径与格式由各环境或 logback 指定，此处仅占位
 logging:
   level:
-    root: INFO
+    root: ${LOG_LEVEL_ROOT:INFO}
+    cn.gdeiassistant: ${LOG_LEVEL_APP:DEBUG}
+    org.springframework.web: ${LOG_LEVEL_WEB:DEBUG}
+    org.mybatis: ${LOG_LEVEL_MYBATIS:DEBUG}
+    java.sql: ${LOG_LEVEL_SQL:DEBUG}
+    org.apache.ibatis: ${LOG_LEVEL_IBATIS:DEBUG}
   file:
     name: logs/gdeiassistant.log
 
-# 服务器端口（可被环境文件覆盖）
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
   servlet:
     context-path: /
+
+jwt:
+  secret: ${JWT_SECRET:YOUR_SECURE_JWT_SECRET_AT_LEAST_32_CHARS}
+
+email:
+  smtp:
+    host: ${EMAIL_SMTP_HOST:}
+    port: ${EMAIL_SMTP_PORT:465}
+    username: ${EMAIL_SMTP_USERNAME:}
+    password: ${EMAIL_SMTP_PASSWORD:}
+    auth: true
+    timeout: 5000
+  ssl:
+    encryption: true
+  feedback: ${EMAIL_FEEDBACK:}
+  ticket: ${EMAIL_TICKET:}
+
+wechat:
+  dev:
+    app:
+      appid: ${WECHAT_DEV_APP_APPID:}
+      secret: ${WECHAT_DEV_APP_SECRET:}
+    account:
+      appid: ${WECHAT_DEV_ACCOUNT_APPID:}
+      appsecret: ${WECHAT_DEV_ACCOUNT_SECRET:}
+      token: ${WECHAT_DEV_ACCOUNT_TOKEN:}
+  pro:
+    app:
+      appid: ${WECHAT_PRO_APP_APPID:}
+      secret: ${WECHAT_PRO_APP_SECRET:}
+    account:
+      appid: ${WECHAT_PRO_ACCOUNT_APPID:}
+      appsecret: ${WECHAT_PRO_ACCOUNT_SECRET:}
+      token: ${WECHAT_PRO_ACCOUNT_TOKEN:}
+  app:
+    appid: ${WECHAT_APP_APPID:}
+    secret: ${WECHAT_APP_SECRET:}
+
+encrypt:
+  enable: false
+  type: aes
+  private:
+    key: ${ENCRYPT_PRIVATE_KEY:}
+  app:
+    key: ${ENCRYPT_APP_KEY:}
+  config:
+    location: ${ENCRYPT_CONFIG_LOCATION:}
+
+news:
+  admin:
+    account: ${NEWS_ADMIN_ACCOUNT:}
+    password: ${NEWS_ADMIN_PASSWORD:}
+
+api:
+  ai:
+    ocr:
+      provider: ${AI_OCR_PROVIDER:openai}
+      openai:
+        api-key: ${OPENAI_API_KEY:}
+        model: ${OPENAI_OCR_MODEL:gpt-4.1-mini}
+      gemini:
+        api-key: ${GEMINI_API_KEY:}
+        model: ${GEMINI_OCR_MODEL:gemini-2.0-flash}
+      doubao:
+        api-key: ${DOUBAO_API_KEY:}
+        model: ${DOUBAO_OCR_MODEL:doubao-1.5-vision-pro-32k}
+        base-url: ${DOUBAO_OCR_BASE_URL:https://ark.cn-beijing.volces.com/api/v3}
+
+sms:
+  provider: ${SMS_PROVIDER:tencent}
+  tencent:
+    secret-id: ${TENCENT_SMS_SECRET_ID:}
+    secret-key: ${TENCENT_SMS_SECRET_KEY:}
+    region: ${TENCENT_SMS_REGION:ap-guangzhou}
+    app-id: ${TENCENT_SMS_APP_ID:}
+    sign-name: ${TENCENT_SMS_SIGN_NAME:}
+    template:
+      china: ${TENCENT_SMS_TEMPLATE_CHINA:}
+      global: ${TENCENT_SMS_TEMPLATE_GLOBAL:}
+  aliyun:
+    userid: ${ALIYUN_SMS_USERID:}
+    accesskey:
+      id: ${ALIYUN_SMS_ACCESSKEY_ID:}
+      secret: ${ALIYUN_SMS_ACCESSKEY_SECRET:}
+    china:
+      templatecode: ${ALIYUN_SMS_CHINA_TEMPLATE:}
+    global:
+      templatecode: ${ALIYUN_SMS_GLOBAL_TEMPLATE:}
+  huawei:
+    app-key: ${HUAWEI_SMS_APP_KEY:}
+    app-secret: ${HUAWEI_SMS_APP_SECRET:}
+    endpoint: ${HUAWEI_SMS_ENDPOINT:https://smsapi.cn-north-4.myhuaweicloud.com:443}
+    sender: ${HUAWEI_SMS_SENDER:}
+    signature: ${HUAWEI_SMS_SIGNATURE:}
+    template:
+      china: ${HUAWEI_SMS_TEMPLATE_CHINA:}
+      global: ${HUAWEI_SMS_TEMPLATE_GLOBAL:}
+
+request:
+  validate:
+    token: ${REQUEST_VALIDATE_TOKEN:}
+
+trial:
+  test-accounts:
+    - gdeiassistant
+
+app:
+  test-accounts: gdeiassistant
+
+r2:
+  endpoint: ${R2_ENDPOINT:}
+  accessKeyId: ${R2_ACCESS_KEY_ID:}
+  secretAccessKey: ${R2_SECRET_ACCESS_KEY:}
+  bucketName: ${R2_BUCKET_NAME:gdeiassistant-userdata}
+  customDomain: ${R2_CUSTOM_DOMAIN:}
+
+theme:
+  grayscale: ${THEME_GRAYSCALE:0}

@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 
 const router = useRouter()
 
@@ -63,7 +64,7 @@ const clearImages = () => {
   subImageFiles.value = [null, null, null]
 }
 
-const submit = () => {
+const submit = async () => {
   const title = form.value.title?.trim()
   if (!title) {
     showDialog('标题不能为空')
@@ -76,27 +77,26 @@ const submit = () => {
   if (submitting.value) return
   submitting.value = true
   showLoading('正在上传...')
-  const count = 1 + subImageFiles.value.filter(Boolean).length
-  const fd = new FormData()
-  fd.append('title', title)
-  fd.append('content', form.value.content?.trim() || '')
-  fd.append('count', String(count))
-  fd.append('type', String(Number(form.value.type) || 1))
-  fd.append('image1', mainImageFile.value)
-  subImageFiles.value.forEach((file, i) => {
-    if (file) fd.append(`image${i + 2}`, file)
-  })
-  request.post('/photograph', fd)
-    .then(() => {
-      hideLoading()
-      const weui = typeof window !== 'undefined' && window.weui
-      if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
-      setTimeout(() => router.push('/photograph/home'), 1500)
+  try {
+    const files = [mainImageFile.value, ...subImageFiles.value.filter(Boolean)]
+    const imageKeys = await uploadFilesByPresignedUrl(files)
+    const fd = new FormData()
+    fd.append('title', title)
+    fd.append('content', form.value.content?.trim() || '')
+    fd.append('count', String(imageKeys.length))
+    fd.append('type', String(Number(form.value.type) || 1))
+    imageKeys.forEach((imageKey) => {
+      fd.append('imageKeys', imageKey)
     })
-    .catch(() => {
-      submitting.value = false
-      hideLoading()
-    })
+    await request.post('/photograph', fd)
+    hideLoading()
+    const weui = typeof window !== 'undefined' && window.weui
+    if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
+    setTimeout(() => router.push('/photograph/home'), 1500)
+  } catch (_) {
+    submitting.value = false
+    hideLoading()
+  }
 }
 </script>
 

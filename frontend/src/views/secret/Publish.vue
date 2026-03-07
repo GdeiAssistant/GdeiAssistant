@@ -1,17 +1,21 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
 
 const router = useRouter()
 
-// 模式：0=文字，1=语音
-const mode = ref('text') // 'text' or 'voice'
+const MAX_RECORD_SECONDS = 60
+const MAX_VOICE_SIZE = 1024 * 1024
+
+const mode = ref('text')
 const formData = ref({
   content: '',
-  theme: 1, // 默认主题1
-  timer: 0 // 0=不删除，1=24小时后删除
+  theme: 1,
+  timer: 0
 })
+const submitting = ref(false)
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const showDialog = (msg) => {
@@ -19,50 +23,281 @@ const showDialog = (msg) => {
   dialogVisible.value = true
 }
 
-// 语音相关状态
 const recording = ref(false)
 const voiceState = ref('未录音')
 const voiceVolume = ref(0)
 const showThemes = ref(false)
+const previewPlaying = ref(false)
+const recordedAudioUrl = ref('')
+const recordedAudioFile = ref(null)
+const recordSeconds = ref(0)
 
-// 切换到文字树洞
+let mediaRecorder = null
+let mediaStream = null
+let audioContext = null
+let analyser = null
+let volumeAnimationId = 0
+let recordTimer = null
+let previewAudio = null
+let recordedChunks = []
+
+function showLoading(text = '正在提交...') {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.loading === 'function') weui.loading(text)
+}
+
+function hideLoading() {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
+}
+
 const switchToWord = () => {
+  stopPreviewAudio()
+  if (recording.value) stopRecord()
   mode.value = 'text'
 }
 
-// 切换到语音树洞
 const switchToVoice = () => {
   mode.value = 'voice'
 }
 
-// 开始录音
-const startRecord = () => {
-  recording.value = true
-  voiceState.value = '正在录音，还剩60秒'
-  // 模拟录音音量
-  const interval = setInterval(() => {
-    if (recording.value) {
-      voiceVolume.value = Math.min(voiceVolume.value + 5, 100)
-    } else {
-      clearInterval(interval)
-    }
-  }, 200)
+function getSupportedAudioMimeType() {
+  if (typeof MediaRecorder === 'undefined') {
+    return ''
+  }
+  const candidates = [
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'audio/mp4',
+    'audio/ogg;codecs=opus',
+    'audio/ogg'
+  ]
+  return candidates.find((mimeType) => MediaRecorder.isTypeSupported?.(mimeType)) || ''
 }
 
-// 停止录音
-const stopRecord = () => {
-  recording.value = false
-  voiceState.value = '播放录音'
-  voiceVolume.value = 0
+function mimeTypeToExtension(mimeType) {
+  const normalized = String(mimeType || '').toLowerCase()
+  if (normalized.includes('webm')) return '.webm'
+  if (normalized.includes('ogg')) return '.ogg'
+  if (normalized.includes('mp4')) return '.mp4'
+  if (normalized.includes('wav')) return '.wav'
+  if (normalized.includes('mpeg') || normalized.includes('mp3')) return '.mp3'
+  return '.webm'
 }
 
-// 选择主题
+function formatSeconds(seconds) {
+  const total = Math.max(0, Number(seconds) || 0)
+  const minute = String(Math.floor(total / 60)).padStart(2, '0')
+  const second = String(total % 60).padStart(2, '0')
+  return `${minute}:${second}`
+}
+
+const voiceHint = computed(() => {
+  if (recording.value) {
+    return `正在录音，已录制 ${formatSeconds(recordSeconds.value)}`
+  }
+  if (recordedAudioFile.value) {
+    return `已录音 ${formatSeconds(recordSeconds.value)}，可试听或重新录制`
+  }
+  return '按住开始录音，最长不超过60秒'
+})
+
 const selectTheme = (themeNum) => {
   formData.value.theme = themeNum
 }
 
-// 提交
-const submit = () => {
+function resetRecordTimer() {
+  if (recordTimer) {
+    clearInterval(recordTimer)
+    recordTimer = null
+  }
+}
+
+function stopMediaStream() {
+  if (mediaStream) {
+    mediaStream.getTracks().forEach((track) => track.stop())
+    mediaStream = null
+  }
+}
+
+function stopVolumeMonitor() {
+  if (volumeAnimationId) {
+    cancelAnimationFrame(volumeAnimationId)
+    volumeAnimationId = 0
+  }
+  voiceVolume.value = 0
+  if (audioContext) {
+    audioContext.close().catch(() => {})
+    audioContext = null
+  }
+  analyser = null
+}
+
+function stopPreviewAudio() {
+  if (previewAudio) {
+    previewAudio.pause()
+    previewAudio.currentTime = 0
+  }
+  previewPlaying.value = false
+}
+
+function revokeRecordedAudio() {
+  stopPreviewAudio()
+  if (recordedAudioUrl.value) {
+    URL.revokeObjectURL(recordedAudioUrl.value)
+    recordedAudioUrl.value = ''
+  }
+  recordedAudioFile.value = null
+}
+
+function updateVoiceStateAfterRecording() {
+  if (recordedAudioFile.value) {
+    voiceState.value = `录音完成（${formatSeconds(recordSeconds.value)}）`
+  } else {
+    voiceState.value = '未录音'
+  }
+}
+
+async function ensureMediaStream() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    throw new Error('当前浏览器不支持录音')
+  }
+  mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+  return mediaStream
+}
+
+function startVolumeMonitor(stream) {
+  stopVolumeMonitor()
+  const AudioContextCtor = window.AudioContext || window.webkitAudioContext
+  if (!AudioContextCtor) {
+    return
+  }
+  audioContext = new AudioContextCtor()
+  const source = audioContext.createMediaStreamSource(stream)
+  analyser = audioContext.createAnalyser()
+  analyser.fftSize = 256
+  source.connect(analyser)
+  const dataArray = new Uint8Array(analyser.frequencyBinCount)
+  const tick = () => {
+    if (!analyser) return
+    analyser.getByteFrequencyData(dataArray)
+    const total = dataArray.reduce((sum, value) => sum + value, 0)
+    voiceVolume.value = Math.min(100, Math.round(total / dataArray.length))
+    volumeAnimationId = requestAnimationFrame(tick)
+  }
+  tick()
+}
+
+const startRecord = async () => {
+  if (recording.value || submitting.value) return
+  stopPreviewAudio()
+  try {
+    const stream = await ensureMediaStream()
+    const mimeType = getSupportedAudioMimeType()
+    mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream)
+    recordedChunks = []
+    recordSeconds.value = 0
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data && event.data.size > 0) {
+        recordedChunks.push(event.data)
+      }
+    }
+    mediaRecorder.onstop = () => {
+      stopMediaStream()
+      stopVolumeMonitor()
+      const finalMimeType = mediaRecorder?.mimeType || mimeType || 'audio/webm'
+      const blob = new Blob(recordedChunks, { type: finalMimeType })
+      if (!blob.size) {
+        revokeRecordedAudio()
+        voiceState.value = '未录音'
+        return
+      }
+      if (blob.size > MAX_VOICE_SIZE) {
+        revokeRecordedAudio()
+        voiceState.value = '未录音'
+        showDialog('语音文件大小过大，请缩短录音时长')
+        return
+      }
+      revokeRecordedAudio()
+      recordedAudioUrl.value = URL.createObjectURL(blob)
+      recordedAudioFile.value = new File(
+        [blob],
+        `secret-voice${mimeTypeToExtension(finalMimeType)}`,
+        { type: finalMimeType }
+      )
+      updateVoiceStateAfterRecording()
+    }
+    mediaRecorder.start(200)
+    recording.value = true
+    voiceState.value = `正在录音，还剩${MAX_RECORD_SECONDS}秒`
+    startVolumeMonitor(stream)
+    resetRecordTimer()
+    recordTimer = setInterval(() => {
+      recordSeconds.value += 1
+      const remain = MAX_RECORD_SECONDS - recordSeconds.value
+      if (remain <= 0) {
+        stopRecord()
+        return
+      }
+      voiceState.value = `正在录音，还剩${remain}秒`
+    }, 1000)
+  } catch (error) {
+    stopMediaStream()
+    stopVolumeMonitor()
+    showDialog(error?.message || '麦克风权限获取失败')
+  }
+}
+
+const stopRecord = () => {
+  if (!recording.value) return
+  recording.value = false
+  resetRecordTimer()
+  voiceState.value = '录音处理中...'
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop()
+  } else {
+    stopMediaStream()
+    stopVolumeMonitor()
+    updateVoiceStateAfterRecording()
+  }
+}
+
+const togglePreviewAudio = () => {
+  if (recording.value) {
+    stopRecord()
+    return
+  }
+  if (!recordedAudioUrl.value) {
+    showDialog('未采集到任何录音信息')
+    return
+  }
+  if (!previewAudio || previewAudio.src !== recordedAudioUrl.value) {
+    previewAudio = new Audio(recordedAudioUrl.value)
+    previewAudio.onended = () => {
+      previewPlaying.value = false
+      updateVoiceStateAfterRecording()
+    }
+  }
+  if (previewPlaying.value) {
+    stopPreviewAudio()
+    updateVoiceStateAfterRecording()
+  } else {
+    previewAudio.play().then(() => {
+      previewPlaying.value = true
+      voiceState.value = '正在试听录音'
+    }).catch(() => {
+      previewPlaying.value = false
+      showDialog('当前浏览器暂不支持播放该录音')
+    })
+  }
+}
+
+const submit = async () => {
+  if (submitting.value) return
+  if (recording.value) {
+    showDialog('请先结束当前录音')
+    return
+  }
   if (mode.value === 'text') {
     if (!formData.value.content || formData.value.content.trim() === '') {
       showDialog('树洞内容不能为空！')
@@ -72,36 +307,67 @@ const submit = () => {
       showDialog('树洞内容长度超过限制！')
       return
     }
-    // 提交文字树洞
-    request.post('/secret/info', {
-      content: formData.value.content,
-      theme: formData.value.theme,
-      type: 0,
-      timer: formData.value.timer
-    }).then(() => {
+    try {
+      submitting.value = true
+      showLoading('正在发布...')
+      await request.post('/secret/info', {
+        content: formData.value.content,
+        theme: formData.value.theme,
+        type: 0,
+        timer: formData.value.timer
+      })
       router.push('/secret/home')
-    }).catch(err => {
-      showDialog(err.response?.data?.message || '提交失败')
-    })
+    } catch (err) {
+      showDialog(err?.message || '提交失败')
+    } finally {
+      submitting.value = false
+      hideLoading()
+    }
   } else {
-    // 语音树洞（模拟）
-    if (voiceState.value === '未录音') {
+    if (!recordedAudioFile.value) {
       showDialog('未采集到任何录音信息')
       return
     }
-    showDialog('语音树洞功能需要真实录音API支持')
+    try {
+      submitting.value = true
+      showLoading('正在上传语音...')
+      const voiceKey = await uploadFileByPresignedUrl(recordedAudioFile.value, {
+        fileName: recordedAudioFile.value.name
+      })
+      const payload = new FormData()
+      payload.append('theme', String(formData.value.theme))
+      payload.append('type', '1')
+      payload.append('timer', String(formData.value.timer))
+      payload.append('voiceKey', voiceKey)
+      await request.post('/secret/info', payload)
+      router.push('/secret/home')
+    } catch (err) {
+      showDialog(err?.message || '提交失败')
+    } finally {
+      submitting.value = false
+      hideLoading()
+    }
   }
 }
 
-// 字数统计
 const remainingChars = computed(() => {
   return 100 - formData.value.content.length
 })
 
 onMounted(() => {
-  // 随机初始主题
   const rand = Math.ceil(Math.random() * 12)
   formData.value.theme = rand
+})
+
+onBeforeUnmount(() => {
+  stopPreviewAudio()
+  if (recording.value) {
+    stopRecord()
+  }
+  resetRecordTimer()
+  stopMediaStream()
+  stopVolumeMonitor()
+  revokeRecordedAudio()
 })
 </script>
 
@@ -120,7 +386,7 @@ onMounted(() => {
         <header>
           <i class="back" @click="router.back()"></i>
           <span>小秘密</span>
-          <label class="btn" @click="submit">发布</label>
+          <label class="btn" @click="submit">{{ submitting ? '发布中' : '发布' }}</label>
         </header>
         <div class="edit" style="text-align: center">
           <!-- 语音树洞 -->
@@ -128,10 +394,10 @@ onMounted(() => {
             v-if="mode === 'voice'"
             id="voice"
             class="voice-record-area"
-            @touchstart.prevent="startRecord"
-            @touchend.prevent="stopRecord"
-            @mousedown.prevent="startRecord"
-            @mouseup.prevent="stopRecord"
+            @pointerdown.prevent="startRecord"
+            @pointerup.prevent="stopRecord"
+            @pointercancel.prevent="stopRecord"
+            @pointerleave.prevent="stopRecord"
           >
             <img
               id="record"
@@ -142,7 +408,7 @@ onMounted(() => {
             />
             <br>
             <text id="voice_tip" :style="{ color: formData.theme === 1 ? '#bfbfbf' : '#fff' }">
-              长按开始录音，最长不超过60秒
+              {{ voiceHint }}
             </text>
           </div>
           <!-- 文字树洞 -->
@@ -167,7 +433,7 @@ onMounted(() => {
       <!-- 操作栏：参考原版 .bar -->
       <div class="bar">
         <div style="height:30px">
-          <div v-if="mode === 'voice'" @click="stopRecord">
+          <div v-if="mode === 'voice'" @click="togglePreviewAudio">
             <img
               id="voice_button"
               width="20px"
@@ -179,7 +445,7 @@ onMounted(() => {
             <p
               id="voice_state"
               style="position:relative;top:5px;left:5px;width:150px;float:left;"
-            >{{ voiceState }}</p>
+            >{{ previewPlaying ? '正在试听录音' : voiceState }}</p>
           </div>
           <i
             :class="{ 'gray-pallet': showThemes }"

@@ -2,27 +2,20 @@ package cn.gdeiassistant.common.tools.SpringUtils;
 
 import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
 import cn.gdeiassistant.common.pojo.Config.R2Config;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -34,66 +27,35 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class R2StorageService {
 
-    private static final Logger logger = LoggerFactory.getLogger(R2StorageService.class);
-
     @Autowired
     private R2Config r2Config;
 
+    @Autowired(required = false)
     private S3Client s3Client;
+
+    @Autowired(required = false)
     private S3Presigner s3Presigner;
 
-    @PostConstruct
-    public void init() {
-        if (!r2Config.isEnabled()) {
-            return;
-        }
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(r2Config.getAccessKeyId(), r2Config.getSecretAccessKey());
-        S3Configuration serviceConfiguration = S3Configuration.builder()
-                .pathStyleAccessEnabled(true)
-                .chunkedEncodingEnabled(false)
-                .build();
-
-        this.s3Client = S3Client.builder()
-                .endpointOverride(URI.create(r2Config.getEndpoint()))
-                .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                .region(Region.of("auto"))
-                .serviceConfiguration(serviceConfiguration)
-                .build();
-
-        this.s3Presigner = S3Presigner.builder()
-                .endpointOverride(URI.create(r2Config.getEndpoint()))
-                .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                .region(Region.of("auto"))
-                .serviceConfiguration(S3Configuration.builder()
-                        .pathStyleAccessEnabled(true)
-                        .build())
-                .build();
-    }
-
-    @PreDestroy
-    public void destroy() {
-        if (s3Client != null) {
-            s3Client.close();
-        }
-        if (s3Presigner != null) {
-            s3Presigner.close();
-        }
-    }
-
     public boolean isEnabled() {
-        return r2Config.isEnabled() && s3Client != null;
+        return r2Config.isEnabled() && s3Client != null && s3Presigner != null;
+    }
+
+    public String getBucketName() {
+        return r2Config.getBucketName();
     }
 
     /**
      * 上传对象（根据 key 后缀设置 Content-Type）；未配置 R2 时抛出 FeatureNotEnabledException。
      */
+    public void uploadObject(String key, InputStream inputStream) {
+        uploadObject(null, key, inputStream);
+    }
+
     public void uploadObject(String bucket, String key, InputStream inputStream) {
         if (inputStream == null) {
             return;
         }
-        boolean enabled = isEnabled();
-        logger.warn("========= 当前 R2 状态: isEnabled = {} =========", enabled);
-        if (!enabled) {
+        if (!isEnabled()) {
             throw new FeatureNotEnabledException("对象存储未开启，无法上传图片");
         }
         byte[] bytes;
@@ -110,7 +72,7 @@ public class R2StorageService {
         }
         String contentType = contentTypeFromKey(key);
         PutObjectRequest request = PutObjectRequest.builder()
-                .bucket(bucket)
+                .bucket(resolveBucket(bucket))
                 .key(key)
                 .contentType(contentType)
                 .contentLength((long) bytes.length)
@@ -121,12 +83,16 @@ public class R2StorageService {
     /**
      * 下载对象，不存在返回 null
      */
+    public InputStream downloadObject(String key) {
+        return downloadObject(null, key);
+    }
+
     public InputStream downloadObject(String bucket, String key) {
         if (!isEnabled()) {
             return null;
         }
         try {
-            return s3Client.getObject(GetObjectRequest.builder().bucket(bucket).key(key).build());
+            return s3Client.getObject(GetObjectRequest.builder().bucket(resolveBucket(bucket)).key(key).build());
         } catch (NoSuchKeyException e) {
             return null;
         }
@@ -135,34 +101,67 @@ public class R2StorageService {
     /**
      * 删除对象（存在则删）
      */
+    public void deleteObject(String key) {
+        deleteObject(null, key);
+    }
+
     public void deleteObject(String bucket, String key) {
         if (!isEnabled()) {
             return;
         }
         try {
-            s3Client.deleteObject(DeleteObjectRequest.builder().bucket(bucket).key(key).build());
+            s3Client.deleteObject(DeleteObjectRequest.builder().bucket(resolveBucket(bucket)).key(key).build());
         } catch (Exception ignored) {
             // 忽略不存在等情况
         }
     }
 
     /**
+     * 复制对象并删除源对象，适用于前端先上传临时对象、后端再归档到业务路径。
+     */
+    public void moveObject(String sourceKey, String targetKey) {
+        moveObject(null, sourceKey, targetKey);
+    }
+
+    public void moveObject(String bucket, String sourceKey, String targetKey) {
+        if (!isEnabled()) {
+            throw new FeatureNotEnabledException("对象存储未开启，无法归档上传文件");
+        }
+        String resolvedBucket = resolveBucket(bucket);
+        s3Client.copyObject(CopyObjectRequest.builder()
+                .sourceBucket(resolvedBucket)
+                .sourceKey(sourceKey)
+                .destinationBucket(resolvedBucket)
+                .destinationKey(targetKey)
+                .build());
+        s3Client.deleteObject(DeleteObjectRequest.builder()
+                .bucket(resolvedBucket)
+                .key(sourceKey)
+                .build());
+    }
+
+    /**
      * 生成预签名 GET URL；若配置了 customDomain 则替换 host 为自定义域名。
      * 对象不存在时返回空字符串（与原有 OSS 行为一致）。
      */
+    public String generatePresignedUrl(String key, long expire, TimeUnit unit) {
+        return generatePresignedUrl(null, key, expire, unit);
+    }
+
     public String generatePresignedUrl(String bucket, String key, long expire, TimeUnit unit) {
         if (!isEnabled()) {
             return "";
         }
+        String resolvedBucket = resolveBucket(bucket);
         try {
-            s3Client.headObject(HeadObjectRequest.builder().bucket(bucket).key(key).build());
+            s3Client.headObject(HeadObjectRequest.builder().bucket(resolvedBucket).key(key).build());
         } catch (NoSuchKeyException e) {
             return "";
         } catch (Exception e) {
             return "";
         }
         Duration duration = Duration.ofMillis(unit.toMillis(expire));
-        GetObjectRequest getRequest = GetObjectRequest.builder().bucket(bucket).key(key).build();
+        GetObjectRequest getRequest = GetObjectRequest.builder().bucket(resolvedBucket).key(key).build();
         PresignedGetObjectRequest presigned = s3Presigner.presignGetObject(
                 GetObjectPresignRequest.builder().signatureDuration(duration).getObjectRequest(getRequest).build());
         String url = presigned.url().toString().replace("http://", "https://");
@@ -181,6 +180,31 @@ public class R2StorageService {
         return url;
     }
 
+    /**
+     * 生成预签名 PUT URL，供前端直传到 Cloudflare R2。
+     */
+    public String generatePutPresignedUrl(String key, String contentType, long expire, TimeUnit unit) {
+        return generatePutPresignedUrl(null, key, contentType, expire, unit);
+    }
+
+    public String generatePutPresignedUrl(String bucket, String key, String contentType, long expire, TimeUnit unit) {
+        if (!isEnabled()) {
+            throw new FeatureNotEnabledException("对象存储未开启，无法生成上传地址");
+        }
+        Duration duration = Duration.ofMillis(unit.toMillis(expire));
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(resolveBucket(bucket))
+                .key(key)
+                .contentType(contentType)
+                .build();
+        PresignedPutObjectRequest presigned = s3Presigner.presignPutObject(
+                PutObjectPresignRequest.builder()
+                        .signatureDuration(duration)
+                        .putObjectRequest(putObjectRequest)
+                        .build());
+        return presigned.url().toString().replace("http://", "https://");
+    }
+
     private static String contentTypeFromKey(String key) {
         if (key == null) return "application/octet-stream";
         String lower = key.toLowerCase();
@@ -190,6 +214,17 @@ public class R2StorageService {
         if (lower.endsWith(".mp3")) return "audio/mpeg";
         if (lower.endsWith(".zip")) return "application/zip";
         return "application/octet-stream";
+    }
+
+    private String resolveBucket(String bucket) {
+        String resolvedBucket = bucket;
+        if (resolvedBucket == null || resolvedBucket.trim().isEmpty()) {
+            resolvedBucket = r2Config.getBucketName();
+        }
+        if (resolvedBucket == null || resolvedBucket.trim().isEmpty()) {
+            throw new FeatureNotEnabledException("对象存储未配置 bucketName");
+        }
+        return resolvedBucket;
     }
 
 }

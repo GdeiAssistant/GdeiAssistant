@@ -106,6 +106,10 @@ public class RoommateService {
         }
     }
 
+    public void movePictureFromTempObject(int id, String objectKey) {
+        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "dating/" + id + ".jpg");
+    }
+
     public RoommatePickVO queryRoommatePick(Integer profileId, String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         RoommatePickEntity entity = roommateMapper.selectRoommatePick(profileId, user.getUsername());

@@ -5,6 +5,7 @@ import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.lostandfound.pojo.dto.LostAndFoundPublishDTO;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundDetailVO;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundItemVO;
@@ -90,20 +91,45 @@ public class LostAndFoundController {
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addLostAndFoundInfo(HttpServletRequest request,
             @Validated LostAndFoundPublishDTO dto, MultipartFile image1,
-            MultipartFile image2, MultipartFile image3, MultipartFile image4) throws Exception {
-        if (image1 == null || image1.getSize() <= 0 || image1.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
+            MultipartFile image2, MultipartFile image3, MultipartFile image4,
+            @RequestParam(value = "imageKeys", required = false) String[] imageKeys) throws Exception {
+        MultipartFile[] images = new MultipartFile[]{image1, image2, image3, image4};
+        int uploadedFileCount = 0;
+        for (MultipartFile image : images) {
+            if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                uploadedFileCount++;
+            }
+        }
+        int uploadedKeyCount = 0;
+        if (imageKeys != null) {
+            for (String imageKey : imageKeys) {
+                if (StringUtils.isBlank(imageKey)) {
+                    return new JsonResult(false, "不合法的图片文件");
+                }
+                uploadedKeyCount++;
+            }
+        }
+        if (uploadedKeyCount > 4) {
             return new JsonResult(false, "不合法的图片文件");
+        }
+        if (uploadedFileCount == 0 && uploadedKeyCount == 0) {
+            return new JsonResult(false, "不合法的图片文件");
+        }
+        if (uploadedKeyCount > 0 && uploadedFileCount > 0) {
+            return new JsonResult(false, "不支持混合上传图片参数");
         }
         String sessionId = (String) request.getAttribute("sessionId");
         LostAndFoundItemVO vo = lostAndFoundService.addLostAndFoundItem(dto, sessionId);
-        lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), 1, image1.getInputStream());
-        if (image2 != null && image2.getSize() > 0 && image2.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-            lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), 2, image2.getInputStream());
-            if (image3 != null && image3.getSize() > 0 && image3.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), 3, image3.getInputStream());
-                if (image4 != null && image4.getSize() > 0 && image4.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                    lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), 4, image4.getInputStream());
+        if (uploadedFileCount > 0) {
+            int imageIndex = 1;
+            for (MultipartFile image : images) {
+                if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                    lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), imageIndex++, image.getInputStream());
                 }
+            }
+        } else {
+            for (int i = 1; i <= imageKeys.length; i++) {
+                lostAndFoundService.moveLostAndFoundItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
             }
         }
         return new JsonResult(true);

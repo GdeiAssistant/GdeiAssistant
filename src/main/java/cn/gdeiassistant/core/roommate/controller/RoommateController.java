@@ -87,11 +87,16 @@ public class RoommateController {
 
     @RequestMapping(value = "/api/dating/profile", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
-    public JsonResult addRoommateProfile(HttpServletRequest request, @Validated RoommatePublishDTO dto, MultipartFile image) throws IOException {
+    public JsonResult addRoommateProfile(HttpServletRequest request, @Validated RoommatePublishDTO dto,
+                                         MultipartFile image,
+                                         String imageKey) throws IOException {
         String sessionId = (String) request.getAttribute("sessionId");
         Integer id = roommateService.addRoommateProfile(sessionId, dto);
-        if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE)
+        if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
             roommateService.uploadPicture(id, image.getInputStream());
+        } else if (StringUtils.isNotBlank(imageKey)) {
+            roommateService.movePictureFromTempObject(id, imageKey);
+        }
         return new JsonResult(true);
     }
 

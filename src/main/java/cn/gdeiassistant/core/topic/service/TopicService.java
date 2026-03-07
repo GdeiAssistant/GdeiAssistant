@@ -121,4 +121,8 @@ public class TopicService {
             logger.error("关闭话题图片上传流失败，id={}，index={}", id, index, e);
         }
     }
+
+    public void moveTopicItemPictureFromTempObject(int id, int index, String objectKey) {
+        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "topic/" + id + "_" + index + ".jpg");
+    }
 }

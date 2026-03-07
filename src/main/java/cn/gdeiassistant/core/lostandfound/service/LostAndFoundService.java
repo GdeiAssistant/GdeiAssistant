@@ -160,6 +160,10 @@ public class LostAndFoundService {
         }
     }
 
+    public void moveLostAndFoundItemPictureFromTempObject(int id, int index, String objectKey) {
+        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "lostandfound/" + id + "_" + index + ".jpg");
+    }
+
     public List<String> getLostAndFoundItemPictureURL(int id) {
         List<String> pictureURL = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {

@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 
 const router = useRouter()
 const formData = ref({
@@ -18,10 +19,21 @@ const formData = ref({
 })
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
+const submitting = ref(false)
 
 function showDialog(msg) {
   dialogMessage.value = msg
   dialogVisible.value = true
+}
+
+function showLoading(text = '正在上传...') {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.loading === 'function') weui.loading(text)
+}
+
+function hideLoading() {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
 }
 
 function onFileChange(e) {
@@ -40,18 +52,23 @@ function onFileChange(e) {
       return
     }
     const reader = new FileReader()
-    reader.onload = (e) => {
-      formData.value.images.push(e.target.result)
+    reader.onload = (event) => {
+      formData.value.images.push({
+        previewUrl: event.target.result,
+        file
+      })
     }
     reader.readAsDataURL(file)
   })
+  e.target.value = ''
 }
 
 function removeImage(index) {
   formData.value.images.splice(index, 1)
 }
 
-function submit() {
+async function submit() {
+  if (submitting.value) return
   if (!formData.value.title || formData.value.title.trim() === '') {
     showDialog('请填写物品名称')
     return
@@ -84,13 +101,29 @@ function submit() {
     showDialog('联系方式至少需要填写一项')
     return
   }
-
-  // TODO: 提交表单
-  console.log('提交表单', formData.value)
-  showDialog('发布成功')
-  setTimeout(() => {
-    router.push('/lostandfound/home')
-  }, 1500)
+  submitting.value = true
+  showLoading('正在上传...')
+  try {
+    const imageKeys = await uploadFilesByPresignedUrl(formData.value.images.map(item => item.file).filter(Boolean))
+    const payload = new FormData()
+    payload.append('name', formData.value.title.trim())
+    payload.append('description', formData.value.desc.trim())
+    payload.append('location', formData.value.location.trim())
+    payload.append('lostType', String(formData.value.type))
+    if (formData.value.contact.qq) payload.append('qq', formData.value.contact.qq.trim())
+    if (formData.value.contact.wechat) payload.append('wechat', formData.value.contact.wechat.trim())
+    if (formData.value.contact.phone) payload.append('phone', formData.value.contact.phone.trim())
+    imageKeys.forEach((imageKey) => payload.append('imageKeys', imageKey))
+    await request.post('/lostandfound/item', payload)
+    hideLoading()
+    showDialog('发布成功')
+    setTimeout(() => {
+      router.push('/lostandfound/home')
+    }, 1500)
+  } catch (_) {
+    submitting.value = false
+    hideLoading()
+  }
 }
 </script>
 
@@ -176,7 +209,7 @@ function submit() {
               <i class="i iclose" :id="index" @click="removeImage(index)"></i>
             </a>
             <i class="img">
-              <img :src="img" alt="预览" />
+              <img :src="img.previewUrl" alt="预览" />
             </i>
           </div>
           <span v-if="formData.images.length < 4" class="addimg">

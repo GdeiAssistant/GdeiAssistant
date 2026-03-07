@@ -85,8 +85,11 @@ public class SecretService {
     }
 
     public String getSecretVoiceURL(int id) {
-        return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "secret/voice/" + id + ".mp3"
-                , 30, TimeUnit.MINUTES);
+        String voiceObjectKey = findSecretVoiceObjectKey(id);
+        if (voiceObjectKey == null) {
+            return "";
+        }
+        return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", voiceObjectKey, 30, TimeUnit.MINUTES);
     }
 
     public void uploadVoiceSecret(int id, InputStream inputStream) {
@@ -98,6 +101,29 @@ public class SecretService {
         } catch (IOException e) {
             logger.error("关闭树洞语音上传流失败，id={}", id, e);
         }
+    }
+
+    public void moveVoiceSecretFromTempObject(int id, String objectKey) {
+        String extension = extractExtension(objectKey);
+        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "secret/voice/" + id + extension);
+    }
+
+    public String findSecretVoiceObjectKey(int id) {
+        String[] candidates = new String[]{
+                "secret/voice/" + id + ".mp3",
+                "secret/voice/" + id + ".webm",
+                "secret/voice/" + id + ".ogg",
+                "secret/voice/" + id + ".wav",
+                "secret/voice/" + id + ".m4a",
+                "secret/voice/" + id + ".mp4"
+        };
+        for (String candidate : candidates) {
+            String url = r2StorageService.generatePresignedUrl("gdeiassistant-userdata", candidate, 1, TimeUnit.MINUTES);
+            if (url != null && !url.isEmpty()) {
+                return candidate;
+            }
+        }
+        return null;
     }
 
     public SecretVO getSecretDetailInfo(int id, String sessionId) throws Exception {
@@ -165,5 +191,17 @@ public class SecretService {
         e.setType(dto.getType());
         e.setTimer(dto.getTimer());
         return e;
+    }
+
+    private String extractExtension(String objectKey) {
+        if (objectKey == null) {
+            return ".mp3";
+        }
+        int dotIndex = objectKey.lastIndexOf('.');
+        if (dotIndex < 0 || dotIndex == objectKey.length() - 1) {
+            return ".mp3";
+        }
+        String extension = objectKey.substring(dotIndex).toLowerCase();
+        return extension.matches("\\.[a-z0-9]{1,10}") ? extension : ".mp3";
     }
 }

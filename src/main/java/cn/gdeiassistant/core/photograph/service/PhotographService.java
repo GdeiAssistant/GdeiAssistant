@@ -141,6 +141,10 @@ public class PhotographService {
         }
     }
 
+    public void movePhotographItemPictureFromTempObject(int id, int index, String objectKey) {
+        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "photograph/" + id + "_" + index + ".jpg");
+    }
+
     public String getPhotographItemPictureURL(int id, int index) {
         return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
     }

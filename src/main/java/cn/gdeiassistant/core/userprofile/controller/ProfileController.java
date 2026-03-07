@@ -92,16 +92,27 @@ public class ProfileController {
      */
     @RequestMapping(value = "/api/avatar", method = RequestMethod.POST)
     public JsonResult UpdateUserAvatar(HttpServletRequest request
-            , @RequestParam("avatar") MultipartFile avatar, @RequestParam("avatar_hd") MultipartFile avatarHD) throws Exception {
+            , @RequestParam(value = "avatar", required = false) MultipartFile avatar
+            , @RequestParam(value = "avatar_hd", required = false) MultipartFile avatarHD
+            , @RequestParam(value = "avatarKey", required = false) String avatarKey
+            , @RequestParam(value = "avatarHdKey", required = false) String avatarHdKey) throws Exception {
         JsonResult jsonResult = new JsonResult();
-        if (avatar == null || avatar.getSize() <= 0 || avatar.getSize() >= AVATAR_MAX_SIZE
-                || avatarHD == null || avatarHD.getSize() <= 0 || avatarHD.getSize() >= AVATAR_MAX_SIZE) {
+        boolean uploadedByFile = avatar != null && avatar.getSize() > 0 && avatar.getSize() < AVATAR_MAX_SIZE
+                && avatarHD != null && avatarHD.getSize() > 0 && avatarHD.getSize() < AVATAR_MAX_SIZE;
+        boolean uploadedByObjectKey = StringUtils.isNotBlank(avatarKey) && StringUtils.isNotBlank(avatarHdKey);
+        if (!uploadedByFile && !uploadedByObjectKey) {
             jsonResult.setSuccess(false);
             jsonResult.setMessage("上传的图片文件不合法");
         } else {
             try {
-                userProfileService.updateAvatar((String) request.getAttribute("sessionId"), avatar.getInputStream());
-                userProfileService.updateHighDefinitionAvatar((String) request.getAttribute("sessionId"), avatarHD.getInputStream());
+                String sessionId = (String) request.getAttribute("sessionId");
+                if (uploadedByFile) {
+                    userProfileService.updateAvatar(sessionId, avatar.getInputStream());
+                    userProfileService.updateHighDefinitionAvatar(sessionId, avatarHD.getInputStream());
+                } else {
+                    userProfileService.updateAvatarByObjectKey(sessionId, avatarKey);
+                    userProfileService.updateHighDefinitionAvatarByObjectKey(sessionId, avatarHdKey);
+                }
                 jsonResult.setSuccess(true);
             } catch (FeatureNotEnabledException e) {
                 jsonResult.setCode(TrialErrorCode.AVATAR_NOT_CONFIGURED.getCode());

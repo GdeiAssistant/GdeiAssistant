@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import request from '../../utils/request'
+import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 
 const router = useRouter()
 const name = ref('')
@@ -15,10 +17,21 @@ const typePickerVisible = ref(false)
 const frmErrors = ref({}) // 表单项错误状态
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
+const submitting = ref(false)
 
 function showDialog(msg) {
   dialogMessage.value = msg
   dialogVisible.value = true
+}
+
+function showLoading(text = '正在上传...') {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.loading === 'function') weui.loading(text)
+}
+
+function hideLoading() {
+  const weui = typeof window !== 'undefined' && window.weui
+  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
 }
 
 const typeNames = ['校园代步', '手机', '电脑', '数码配件', '数码', '电器', '运动健身', '衣物伞帽', '图书教材', '租赁', '生活娱乐', '其他']
@@ -88,7 +101,8 @@ function validate() {
   return Object.keys(err).length === 0
 }
 
-function submit() {
+async function submit() {
+  if (submitting.value) return
   if (images.value.length < 1) {
     showDialog('请至少选择一张图片')
     return
@@ -117,20 +131,31 @@ function submit() {
     showDialog('请填写QQ号')
     return
   }
-  const formData = new FormData()
-  formData.append('name', name.value.trim())
-  formData.append('description', description.value.trim())
-  formData.append('price', price.value)
-  formData.append('location', location.value.trim())
-  formData.append('type', typeId.value)
-  formData.append('qq', qq.value.trim())
-  formData.append('phone', phone.value.trim())
-  images.value.forEach((item, i) => {
-    if (item.file) formData.append('file[]', item.file)
-  })
-  // 提交时请求 POST /api/ershou/item
-  showDialog('发布成功（演示）')
-  setTimeout(() => router.push('/ershou/home'), 1500)
+  if (!validate()) {
+    showDialog('请检查表单内容')
+    return
+  }
+  submitting.value = true
+  showLoading('正在上传...')
+  try {
+    const imageKeys = await uploadFilesByPresignedUrl(images.value.map(item => item.file).filter(Boolean))
+    const formData = new FormData()
+    formData.append('name', name.value.trim())
+    formData.append('description', description.value.trim())
+    formData.append('price', price.value)
+    formData.append('location', location.value.trim())
+    formData.append('type', String(typeId.value))
+    formData.append('qq', qq.value.trim())
+    formData.append('phone', phone.value.trim())
+    imageKeys.forEach((imageKey) => formData.append('imageKeys', imageKey))
+    await request.post('/ershou/item', formData)
+    hideLoading()
+    showDialog('发布成功')
+    setTimeout(() => router.push('/ershou/home'), 1500)
+  } catch (_) {
+    submitting.value = false
+    hideLoading()
+  }
 }
 </script>
 
@@ -140,7 +165,7 @@ function submit() {
     <div class="unified-header">
       <span class="unified-header__back" @click="router.push('/')">返回</span>
       <h1 class="unified-header__title">发布二手商品</h1>
-      <a href="javascript:;" class="unified-header__submit" @click.prevent="submit">完成</a>
+      <a href="javascript:;" class="unified-header__submit" @click.prevent="submit">{{ submitting ? '提交中' : '完成' }}</a>
     </div>
 
     <section class="picture">

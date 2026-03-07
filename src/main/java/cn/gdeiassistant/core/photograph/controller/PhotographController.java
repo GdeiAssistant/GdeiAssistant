@@ -6,6 +6,7 @@ import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.photograph.pojo.dto.PhotographPublishDTO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographCommentVO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
@@ -17,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -99,13 +101,42 @@ public class PhotographController {
     @RequestMapping(value = "/api/photograph", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addPhotograph(HttpServletRequest request, @Validated PhotographPublishDTO dto
-            , MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4) throws IOException {
+            , MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4
+            , @RequestParam(value = "imageKeys", required = false) String[] imageKeys) throws IOException {
         String sessionId = (String) request.getAttribute("sessionId");
-        int count = dto.getCount() != null ? dto.getCount() : 0;
-        if (image1 == null || image1.isEmpty()) {
-            count = 0;
+        MultipartFile[] images = new MultipartFile[]{image1, image2, image3, image4};
+        int uploadedFileCount = 0;
+        for (MultipartFile image : images) {
+            if (image != null && !image.isEmpty() && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                uploadedFileCount++;
+            }
+        }
+        int uploadedKeyCount = 0;
+        if (imageKeys != null) {
+            for (String imageKey : imageKeys) {
+                if (StringUtils.isNotBlank(imageKey)) {
+                    uploadedKeyCount++;
+                } else {
+                    return new JsonResult(false, "不合法的图片文件");
+                }
+            }
+        }
+        int count = uploadedKeyCount > 0 ? uploadedKeyCount : uploadedFileCount;
+        if (count <= 0) {
+            return new JsonResult(false, "不合法的图片文件");
+        }
+        if (count > 4) {
+            return new JsonResult(false, "不合法的图片文件");
+        }
+        if (uploadedKeyCount > 0 && uploadedFileCount > 0) {
+            return new JsonResult(false, "不支持混合上传图片参数");
+        }
+        if (uploadedFileCount == 0) {
+            dto.setCount(count);
         } else {
-            if (count < 1) count = 1;
+            if (count < 1) {
+                count = 1;
+            }
         }
         PhotographPublishDTO actual = new PhotographPublishDTO();
         actual.setTitle(dto.getTitle());
@@ -113,16 +144,16 @@ public class PhotographController {
         actual.setCount(count);
         actual.setType(dto.getType());
         int id = photographService.addPhotograph(actual, sessionId);
-        if (image1 != null && !image1.isEmpty() && image1.getSize() > 0 && image1.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-            photographService.uploadPhotographItemPicture(id, 1, image1.getInputStream());
-            if (image2 != null && image2.getSize() > 0 && image2.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                photographService.uploadPhotographItemPicture(id, 2, image2.getInputStream());
-                if (image3 != null && image3.getSize() > 0 && image3.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                    photographService.uploadPhotographItemPicture(id, 3, image3.getInputStream());
-                    if (image4 != null && image4.getSize() > 0 && image4.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                        photographService.uploadPhotographItemPicture(id, 4, image4.getInputStream());
-                    }
+        if (uploadedFileCount > 0) {
+            int imageIndex = 1;
+            for (MultipartFile image : images) {
+                if (image != null && !image.isEmpty() && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                    photographService.uploadPhotographItemPicture(id, imageIndex++, image.getInputStream());
                 }
+            }
+        } else if (uploadedKeyCount > 0) {
+            for (int i = 1; i <= imageKeys.length; i++) {
+                photographService.movePhotographItemPictureFromTempObject(id, i, imageKeys[i - 1]);
             }
         }
         return new JsonResult(true);

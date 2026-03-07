@@ -218,6 +218,22 @@ public class UserProfileService {
         }
     }
 
+    public void updateAvatarByObjectKey(String sessionId, String objectKey) throws TokenExpiredException {
+        User user = userCertificateService.getUserLoginCertificate(sessionId);
+        if (user == null) {
+            throw new cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException("登录凭证已过期，请重新登录");
+        }
+        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "avatar/" + user.getUsername() + ".jpg");
+    }
+
+    public void updateHighDefinitionAvatarByObjectKey(String sessionId, String objectKey) throws TokenExpiredException {
+        User user = userCertificateService.getUserLoginCertificate(sessionId);
+        if (user == null) {
+            throw new cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException("登录凭证已过期，请重新登录");
+        }
+        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "avatar/" + user.getUsername() + "_hd.jpg");
+    }
+
     /**
      * 删除用户头像
      *

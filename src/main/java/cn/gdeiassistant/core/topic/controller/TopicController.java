@@ -6,6 +6,7 @@ import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.topic.pojo.dto.TopicPublishDTO;
 import cn.gdeiassistant.core.topic.pojo.vo.TopicVO;
 import cn.gdeiassistant.core.topic.service.TopicService;
@@ -57,22 +58,37 @@ public class TopicController {
 
     @RequestMapping(value = "/api/topic", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
-    public JsonResult addTopic(HttpServletRequest request, @Validated TopicPublishDTO dto, MultipartFile[] images) throws IOException {
+    public JsonResult addTopic(HttpServletRequest request, @Validated TopicPublishDTO dto,
+                               @RequestParam(value = "images", required = false) MultipartFile[] images,
+                               @RequestParam(value = "imageKeys", required = false) String[] imageKeys) throws IOException {
+        int actualImageCount = imageKeys != null && imageKeys.length > 0 ? imageKeys.length : (images == null ? 0 : images.length);
+        if (actualImageCount > 9) {
+            return new JsonResult(false, "不合法的图片文件");
+        }
         if (images != null && images.length > 0) {
-            if (images.length > 9) {
-                return new JsonResult(false, "不合法的图片文件");
-            }
             for (MultipartFile file : images) {
                 if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
                     return new JsonResult(false, "不合法的图片文件");
                 }
             }
         }
+        if (imageKeys != null && imageKeys.length > 0) {
+            for (String imageKey : imageKeys) {
+                if (StringUtils.isBlank(imageKey)) {
+                    return new JsonResult(false, "不合法的图片文件");
+                }
+            }
+        }
         String sessionId = (String) request.getAttribute("sessionId");
+        dto.setCount(actualImageCount);
         TopicVO vo = topicService.addTopic(dto, sessionId);
         if (images != null && images.length > 0) {
             for (int i = 1; i <= images.length; i++) {
                 topicService.uploadTopicItemPicture(vo.getId(), i, images[i - 1].getInputStream());
+            }
+        } else if (imageKeys != null && imageKeys.length > 0) {
+            for (int i = 1; i <= imageKeys.length; i++) {
+                topicService.moveTopicItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
             }
         }
         return new JsonResult(true);

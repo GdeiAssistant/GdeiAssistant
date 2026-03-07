@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 
 const router = useRouter()
 const topicTag = ref('')
@@ -52,7 +53,7 @@ function removeImage(index) {
   imageFiles.value.splice(index, 1)
 }
 
-function submit() {
+async function submit() {
   if (!topicTag.value || !topicTag.value.trim()) {
     showDialog('请输入话题标签')
     return
@@ -71,22 +72,22 @@ function submit() {
   const contentVal = content.value.trim()
   const count = imageFiles.value.length
   showLoading(count > 0 ? '正在上传...' : '正在发布...')
-  const fd = new FormData()
-  fd.append('topic', topic)
-  fd.append('content', contentVal)
-  fd.append('count', String(count))
-  imageFiles.value.forEach((file) => { fd.append('images', file) })
-  request.post('/topic', fd)
-    .then(() => {
-      hideLoading()
-      const weui = typeof window !== 'undefined' && window.weui
-      if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
-      setTimeout(() => router.push('/topic/home'), 1500)
-    })
-    .catch(() => {
-      submitting.value = false
-      hideLoading()
-    })
+  try {
+    const imageKeys = count > 0 ? await uploadFilesByPresignedUrl(imageFiles.value) : []
+    const fd = new FormData()
+    fd.append('topic', topic)
+    fd.append('content', contentVal)
+    fd.append('count', String(imageKeys.length))
+    imageKeys.forEach((imageKey) => fd.append('imageKeys', imageKey))
+    await request.post('/topic', fd)
+    hideLoading()
+    const weui = typeof window !== 'undefined' && window.weui
+    if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
+    setTimeout(() => router.push('/topic/home'), 1500)
+  } catch (_) {
+    submitting.value = false
+    hideLoading()
+  }
 }
 </script>
 

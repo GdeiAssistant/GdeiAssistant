@@ -67,7 +67,8 @@ public class SecretController {
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addSecretInfo(HttpServletRequest request, @Validated SecretPublishDTO dto, String voiceId
-            , @RequestParam(value = "voice", required = false) MultipartFile file) throws Exception {
+            , @RequestParam(value = "voice", required = false) MultipartFile file
+            , @RequestParam(value = "voiceKey", required = false) String voiceKey) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         if (dto.getType() != null && dto.getType() == 0 && StringUtils.isBlank(dto.getContent())) {
             return new JsonResult(false, "树洞信息不能为空");
@@ -76,13 +77,17 @@ public class SecretController {
             secretService.addSecretInfo(sessionId, dto);
             return new JsonResult(true);
         } else if (dto.getType() != null && dto.getType().equals(1)) {
-            if (file == null || file.isEmpty() || file.getSize() == 0) {
+            if ((file == null || file.isEmpty() || file.getSize() == 0) && StringUtils.isBlank(voiceKey)) {
                 return new JsonResult(false, "语音内容不能为空");
-            } else if (file.getSize() > ValueConstantUtils.MAX_VOICE_SIZE) {
+            } else if (file != null && file.getSize() > ValueConstantUtils.MAX_VOICE_SIZE) {
                 return new JsonResult(false, "语音文件大小过大");
             } else {
                 Integer id = secretService.addSecretInfo(sessionId, dto);
-                secretService.uploadVoiceSecret(id, file.getInputStream());
+                if (file != null && !file.isEmpty() && file.getSize() > 0) {
+                    secretService.uploadVoiceSecret(id, file.getInputStream());
+                } else {
+                    secretService.moveVoiceSecretFromTempObject(id, voiceKey);
+                }
                 return new JsonResult(true);
             }
         } else if (dto.getType() != null && dto.getType().equals(2)) {

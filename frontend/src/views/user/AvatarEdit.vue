@@ -41,6 +41,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import Cropper from 'cropperjs'
 import request from '../../utils/request'
+import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
 
 const router = useRouter()
 const defaultAvatar = '/img/login/qq.png'
@@ -108,14 +109,18 @@ const confirmCrop = async () => {
   }
 
   try {
-    // 将裁剪结果转为 Blob，并通过 FormData 真实上传到后端 /api/avatar
+    // 先直传到 R2，再把对象键提交给后端归档到头像正式路径。
     const blob = await new Promise((resolve, reject) => {
       canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('裁剪失败'))), 'image/jpeg')
     })
     const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })
+    const [avatarKey, avatarHdKey] = await Promise.all([
+      uploadFileByPresignedUrl(file),
+      uploadFileByPresignedUrl(file, { fileName: 'avatar_hd.jpg' })
+    ])
     const formData = new FormData()
-    formData.append('avatar', file)
-    formData.append('avatar_hd', file)
+    formData.append('avatarKey', avatarKey)
+    formData.append('avatarHdKey', avatarHdKey)
 
     await request.post('/avatar', formData)
 

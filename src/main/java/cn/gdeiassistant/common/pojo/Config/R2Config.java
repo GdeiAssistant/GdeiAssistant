@@ -2,13 +2,23 @@ package cn.gdeiassistant.common.pojo.Config;
 
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+
+import java.net.URI;
 
 /**
  * Cloudflare R2 对象存储配置（S3 兼容 API）。
- * 配置文件：resources 根目录 r2.properties 或 application.yml 中 r2.* 配置
+ * 从 application.yml 的 r2.* 读取配置，并按需创建 S3 Client / Presigner。
  */
-@Component
+@Configuration
 public class R2Config {
 
     private String endpoint;
@@ -19,27 +29,62 @@ public class R2Config {
 
     @Value("${r2.endpoint:}")
     public void setEndpoint(String endpoint) {
-        this.endpoint = StringUtils.isNotBlank(endpoint) ? endpoint.trim() : null;
+        this.endpoint = normalize(endpoint);
     }
 
     @Value("${r2.accessKeyId:}")
     public void setAccessKeyId(String accessKeyId) {
-        this.accessKeyId = StringUtils.isNotBlank(accessKeyId) ? accessKeyId.trim() : null;
+        this.accessKeyId = normalize(accessKeyId);
     }
 
     @Value("${r2.secretAccessKey:}")
     public void setSecretAccessKey(String secretAccessKey) {
-        this.secretAccessKey = StringUtils.isNotBlank(secretAccessKey) ? secretAccessKey.trim() : null;
+        this.secretAccessKey = normalize(secretAccessKey);
     }
 
     @Value("${r2.bucketName:}")
     public void setBucketName(String bucketName) {
-        this.bucketName = StringUtils.isNotBlank(bucketName) ? bucketName.trim() : null;
+        this.bucketName = normalize(bucketName);
     }
 
     @Value("${r2.customDomain:}")
     public void setCustomDomain(String customDomain) {
-        this.customDomain = StringUtils.isNotBlank(customDomain) ? customDomain.trim() : null;
+        this.customDomain = normalize(customDomain);
+    }
+
+    @Bean(destroyMethod = "close")
+    @ConditionalOnExpression("T(org.springframework.util.StringUtils).hasText('${r2.endpoint:}') and "
+            + "T(org.springframework.util.StringUtils).hasText('${r2.accessKeyId:}') and "
+            + "T(org.springframework.util.StringUtils).hasText('${r2.secretAccessKey:}') and "
+            + "T(org.springframework.util.StringUtils).hasText('${r2.bucketName:}')")
+    public S3Client r2S3Client() {
+        return S3Client.builder()
+                .endpointOverride(URI.create(endpoint))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKeyId, secretAccessKey)))
+                .region(Region.of("auto"))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .chunkedEncodingEnabled(false)
+                        .build())
+                .build();
+    }
+
+    @Bean(destroyMethod = "close")
+    @ConditionalOnExpression("T(org.springframework.util.StringUtils).hasText('${r2.endpoint:}') and "
+            + "T(org.springframework.util.StringUtils).hasText('${r2.accessKeyId:}') and "
+            + "T(org.springframework.util.StringUtils).hasText('${r2.secretAccessKey:}') and "
+            + "T(org.springframework.util.StringUtils).hasText('${r2.bucketName:}')")
+    public S3Presigner r2S3Presigner() {
+        return S3Presigner.builder()
+                .endpointOverride(URI.create(endpoint))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKeyId, secretAccessKey)))
+                .region(Region.of("auto"))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .build())
+                .build();
     }
 
     public String getEndpoint() {
@@ -62,11 +107,14 @@ public class R2Config {
         return customDomain;
     }
 
-    /** 配置是否完整可用 */
     public boolean isEnabled() {
         return StringUtils.isNotBlank(endpoint)
                 && StringUtils.isNotBlank(accessKeyId)
                 && StringUtils.isNotBlank(secretAccessKey)
                 && StringUtils.isNotBlank(bucketName);
+    }
+
+    private String normalize(String value) {
+        return StringUtils.isNotBlank(value) ? value.trim() : null;
     }
 }

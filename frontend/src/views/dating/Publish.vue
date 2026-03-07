@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
 
 const router = useRouter()
 const formData = ref({
@@ -88,7 +89,7 @@ function openAreaPicker() {
   selectArea()
 }
 
-function submit() {
+async function submit() {
   if (!formData.value.nickname || formData.value.nickname.trim().length === 0 || formData.value.nickname.trim().length > 15) {
     showDialog('昵称长度不合法（1-15字）')
     return
@@ -130,28 +131,30 @@ function submit() {
 
   submitting.value = true
   showLoading(imageFile.value ? '正在上传...' : '正在发布...')
-  const payload = new FormData()
-  if (imageFile.value) payload.append('image', imageFile.value)
-  payload.append('nickname', formData.value.nickname.trim())
-  payload.append('grade', String(formData.value.grade))
-  payload.append('area', String(formData.value.area))
-  payload.append('faculty', formData.value.faculty.trim())
-  payload.append('hometown', formData.value.hometown.trim())
-  payload.append('content', formData.value.content.trim())
-  if (hasQq) payload.append('qq', formData.value.qq.trim())
-  if (hasWechat) payload.append('wechat', formData.value.wechat.trim())
+  try {
+    const payload = new FormData()
+    if (imageFile.value) {
+      const imageKey = await uploadFileByPresignedUrl(imageFile.value)
+      payload.append('imageKey', imageKey)
+    }
+    payload.append('nickname', formData.value.nickname.trim())
+    payload.append('grade', String(formData.value.grade))
+    payload.append('area', String(formData.value.area))
+    payload.append('faculty', formData.value.faculty.trim())
+    payload.append('hometown', formData.value.hometown.trim())
+    payload.append('content', formData.value.content.trim())
+    if (hasQq) payload.append('qq', formData.value.qq.trim())
+    if (hasWechat) payload.append('wechat', formData.value.wechat.trim())
 
-  request.post('/dating/profile', payload)
-    .then(() => {
-      hideLoading()
-      const weui = typeof window !== 'undefined' && window.weui
-      if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
-      setTimeout(() => router.push('/dating/home'), 1500)
-    })
-    .catch(() => {
-      submitting.value = false
-      hideLoading()
-    })
+    await request.post('/dating/profile', payload)
+    hideLoading()
+    const weui = typeof window !== 'undefined' && window.weui
+    if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
+    setTimeout(() => router.push('/dating/home'), 1500)
+  } catch (_) {
+    submitting.value = false
+    hideLoading()
+  }
 }
 </script>
 

@@ -11,12 +11,14 @@ import cn.gdeiassistant.core.secondhand.pojo.vo.SecondhandItemVO;
 import cn.gdeiassistant.core.secondhand.service.SecondhandService;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,20 +41,45 @@ public class SecondhandController {
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addItem(HttpServletRequest request,
             @Validated SecondhandPublishDTO dto, MultipartFile image1,
-            MultipartFile image2, MultipartFile image3, MultipartFile image4) throws Exception {
-        if (image1 == null || image1.getSize() <= 0 || image1.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
+            MultipartFile image2, MultipartFile image3, MultipartFile image4,
+            @RequestParam(value = "imageKeys", required = false) String[] imageKeys) throws Exception {
+        MultipartFile[] images = new MultipartFile[]{image1, image2, image3, image4};
+        int uploadedFileCount = 0;
+        for (MultipartFile image : images) {
+            if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                uploadedFileCount++;
+            }
+        }
+        int uploadedKeyCount = 0;
+        if (imageKeys != null) {
+            for (String imageKey : imageKeys) {
+                if (StringUtils.isBlank(imageKey)) {
+                    return new JsonResult(false, "不合法的图片文件");
+                }
+                uploadedKeyCount++;
+            }
+        }
+        if (uploadedKeyCount > 4) {
             return new JsonResult(false, "不合法的图片文件");
+        }
+        if (uploadedFileCount == 0 && uploadedKeyCount == 0) {
+            return new JsonResult(false, "不合法的图片文件");
+        }
+        if (uploadedKeyCount > 0 && uploadedFileCount > 0) {
+            return new JsonResult(false, "不支持混合上传图片参数");
         }
         String sessionId = (String) request.getAttribute("sessionId");
         SecondhandItemEntity entity = secondhandService.publishItem(dto, sessionId);
-        secondhandService.uploadItemPicture(entity.getId(), 1, image1.getInputStream());
-        if (image2 != null && image2.getSize() > 0 && image2.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-            secondhandService.uploadItemPicture(entity.getId(), 2, image2.getInputStream());
-            if (image3 != null && image3.getSize() > 0 && image3.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                secondhandService.uploadItemPicture(entity.getId(), 3, image3.getInputStream());
-                if (image4 != null && image4.getSize() > 0 && image4.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                    secondhandService.uploadItemPicture(entity.getId(), 4, image4.getInputStream());
+        if (uploadedFileCount > 0) {
+            int imageIndex = 1;
+            for (MultipartFile image : images) {
+                if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                    secondhandService.uploadItemPicture(entity.getId(), imageIndex++, image.getInputStream());
                 }
+            }
+        } else {
+            for (int i = 1; i <= imageKeys.length; i++) {
+                secondhandService.moveItemPictureFromTempObject(entity.getId(), i, imageKeys[i - 1]);
             }
         }
         return new JsonResult(true);

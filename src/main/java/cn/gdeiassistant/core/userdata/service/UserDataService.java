@@ -22,6 +22,7 @@ import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.logdata.mapper.LogDataMapper;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
+import cn.gdeiassistant.core.secret.service.SecretService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
 import cn.gdeiassistant.common.tools.Utils.LocationUtils;
@@ -76,6 +77,9 @@ public class UserDataService {
 
     @Autowired
     private R2StorageService r2StorageService;
+
+    @Autowired
+    private SecretService secretService;
 
     /**
      * 检查24小时内有无导出用户数据的记录
@@ -230,9 +234,15 @@ public class UserDataService {
                     }
                     if (secret.getType() != null && secret.getType().equals(1)) {
                         //下载语音信息
-                        InputStream voice = r2StorageService.downloadObject("gdeiassistant-userdata", "secret/voice/" + secret.getId() + ".mp3");
+                        String voiceObjectKey = secretService.findSecretVoiceObjectKey(secret.getId());
+                        InputStream voice = voiceObjectKey == null ? null : r2StorageService.downloadObject("gdeiassistant-userdata", voiceObjectKey);
                         if (voice != null) {
-                            userDataMap.put("secret_voice_" + secret.getId() + ".mp3", voice);
+                            String extension = ".mp3";
+                            int dotIndex = voiceObjectKey.lastIndexOf('.');
+                            if (dotIndex >= 0) {
+                                extension = voiceObjectKey.substring(dotIndex);
+                            }
+                            userDataMap.put("secret_voice_" + secret.getId() + extension, voice);
                         } else {
                             break;
                         }

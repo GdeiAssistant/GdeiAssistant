@@ -185,6 +185,10 @@ public class SecondhandService {
         }
     }
 
+    public void moveItemPictureFromTempObject(int id, int index, String objectKey) {
+        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "ershou/" + id + "_" + index + ".jpg");
+    }
+
     public List<String> getItemPictureURL(int id) {
         List<String> pictureURL = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 
@@ -17,22 +17,133 @@ const showDialog = (msg) => {
   dialogVisible.value = true
 }
 
-// 播放音频
 const audio = ref(null)
 const playing = ref(false)
+const audioLoading = ref(false)
+const audioReady = ref(false)
+const audioError = ref('')
+const audioDuration = ref(0)
+const audioCurrentTime = ref(0)
 
-const playAudio = () => {
-  if (!secret.value || secret.value.type === 0) return
-  if (!audio.value && secret.value.voiceURL) {
-    audio.value = new Audio(secret.value.voiceURL)
+function formatAudioTime(seconds) {
+  const total = Math.max(0, Math.floor(Number(seconds) || 0))
+  const minute = String(Math.floor(total / 60)).padStart(2, '0')
+  const second = String(total % 60).padStart(2, '0')
+  return `${minute}:${second}`
+}
+
+function destroyAudio() {
+  if (audio.value) {
+    audio.value.pause()
+    audio.value.onended = null
+    audio.value.onpause = null
+    audio.value.onplay = null
+    audio.value.ontimeupdate = null
+    audio.value.onloadedmetadata = null
+    audio.value.oncanplay = null
+    audio.value.onerror = null
+    audio.value.src = ''
   }
-  if (audio.value.paused) {
-    audio.value.play()
+  audio.value = null
+  playing.value = false
+  audioLoading.value = false
+  audioReady.value = false
+  audioError.value = ''
+  audioDuration.value = 0
+  audioCurrentTime.value = 0
+}
+
+function bindAudioEvents(audioElement) {
+  audioElement.preload = 'metadata'
+  audioElement.onloadedmetadata = () => {
+    audioDuration.value = Number.isFinite(audioElement.duration) ? audioElement.duration : 0
+  }
+  audioElement.oncanplay = () => {
+    audioReady.value = true
+    audioLoading.value = false
+    audioError.value = ''
+  }
+  audioElement.ontimeupdate = () => {
+    audioCurrentTime.value = audioElement.currentTime || 0
+  }
+  audioElement.onplay = () => {
     playing.value = true
-    audio.value.onended = () => {
-      playing.value = false
-    }
+    audioLoading.value = false
   }
+  audioElement.onpause = () => {
+    playing.value = false
+  }
+  audioElement.onended = () => {
+    playing.value = false
+    audioCurrentTime.value = audioDuration.value
+  }
+  audioElement.onerror = () => {
+    playing.value = false
+    audioLoading.value = false
+    audioReady.value = false
+    audioError.value = '语音加载失败，请稍后重试'
+  }
+}
+
+function ensureAudio() {
+  if (!secret.value?.voiceURL) {
+    return null
+  }
+  if (!audio.value) {
+    const audioElement = new Audio(secret.value.voiceURL)
+    bindAudioEvents(audioElement)
+    audio.value = audioElement
+  }
+  return audio.value
+}
+
+const audioProgress = computed(() => {
+  if (!audioDuration.value) return 0
+  return Math.min(100, Math.max(0, (audioCurrentTime.value / audioDuration.value) * 100))
+})
+
+const audioStatusText = computed(() => {
+  if (audioError.value) return audioError.value
+  if (audioLoading.value && !audioReady.value) return '语音加载中...'
+  if (playing.value) return '点击暂停播放'
+  if (audioReady.value) return '点击继续播放'
+  return '点击播放语音'
+})
+
+const audioTimeText = computed(() => {
+  const current = formatAudioTime(audioCurrentTime.value)
+  const duration = formatAudioTime(audioDuration.value)
+  return `${current} / ${duration}`
+})
+
+const playAudio = async () => {
+  if (!secret.value || secret.value.type === 0) return
+  if (audioError.value && audio.value) {
+    destroyAudio()
+  }
+  const audioElement = ensureAudio()
+  if (!audioElement) return
+  if (playing.value) {
+    audioElement.pause()
+    return
+  }
+  try {
+    audioLoading.value = true
+    await audioElement.play()
+  } catch (_) {
+    audioLoading.value = false
+    audioError.value = '当前浏览器无法播放该语音'
+  }
+}
+
+const seekAudio = (event) => {
+  if (!audio.value || !audioDuration.value) return
+  const target = event.currentTarget
+  if (!target) return
+  const rect = target.getBoundingClientRect()
+  const ratio = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width))
+  audio.value.currentTime = audioDuration.value * ratio
+  audioCurrentTime.value = audio.value.currentTime
 }
 
 // 点赞/取消点赞
@@ -70,6 +181,7 @@ const submitComment = () => {
 const loadDetail = async () => {
   try {
     loading.value = true
+    destroyAudio()
     const res = await request.get(`/secret/id/${route.params.id}`)
     const data = res?.data
     if (data && res.success !== false) {
@@ -78,7 +190,9 @@ const loadDetail = async () => {
         liked: data.liked === 1
       }
       if (secret.value.type !== 0 && secret.value.voiceURL) {
-        audio.value = new Audio(secret.value.voiceURL)
+        audioLoading.value = true
+        const audioElement = ensureAudio()
+        audioElement?.load()
       }
     } else {
       secret.value = null
@@ -107,6 +221,10 @@ const showSubmitBtn = computed(() => {
 onMounted(() => {
   loadDetail()
   loadComments()
+})
+
+onBeforeUnmount(() => {
+  destroyAudio()
 })
 </script>
 
@@ -150,6 +268,11 @@ onMounted(() => {
               class="voice-icon"
               alt="语音"
             />
+            <div class="voice-status">{{ audioStatusText }}</div>
+            <div class="voice-time">{{ audioTimeText }}</div>
+            <div class="voice-progress" @click.stop="seekAudio">
+              <div class="voice-progress__current" :style="{ width: audioProgress + '%' }"></div>
+            </div>
           </template>
         </section>
         <footer>
@@ -303,6 +426,34 @@ onMounted(() => {
   width: 48px;
   height: 48px;
   margin: 0 auto;
+}
+.secret .section .voice-status {
+  margin-top: 12px;
+  font-size: 14px;
+  opacity: 0.95;
+}
+.secret .section .voice-time {
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+.secret .section .voice-progress {
+  width: min(220px, 80%);
+  height: 6px;
+  margin-top: 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  cursor: pointer;
+}
+.secret .section .voice-progress__current {
+  height: 100%;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0.9;
+}
+.theme1 .section .voice-progress {
+  background: rgba(0, 0, 0, 0.12);
 }
 .secret footer {
   height: 42px;

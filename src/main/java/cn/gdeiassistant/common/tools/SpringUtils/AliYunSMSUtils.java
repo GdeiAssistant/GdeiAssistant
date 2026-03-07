@@ -86,7 +86,8 @@ public class AliYunSMSUtils {
         request.setSysVersion("2017-05-25");
         request.setSysAction("SendSms");
         request.putQueryParameter("RegionId", "default");
-        request.putQueryParameter("PhoneNumbers", areaCode + phone);
+        // 阿里云国际短信建议使用 E.164：+<国家码><号码>
+        request.putQueryParameter("PhoneNumbers", "+" + areaCode + phone);
         request.putQueryParameter("SignName", "广东二师助手");
         request.putQueryParameter("TemplateCode", aliyunSMSConfig.getSmsAliyunGlobalTemplateCode());
         request.putQueryParameter("TemplateParam", "{code:\"" + code + "\"}");

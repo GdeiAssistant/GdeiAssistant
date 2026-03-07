@@ -71,7 +71,7 @@ public class AliYunAPIUtils {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("configure", configure);
         jsonObject.put("image", image);
-        ResponseEntity<String> responseEntity = restTemplate.exchange("http://tysbgpu.market.alicloudapi.com/api/predict/ocr_general"
+        ResponseEntity<String> responseEntity = restTemplate.exchange(aliyunAPIConfig.getOcrGeneralEndpoint()
                 , HttpMethod.POST, new HttpEntity<>(jsonObject.toJSONString(), httpHeaders), String.class);
         JSONObject result = JSON.parseObject(responseEntity.getBody());
         if (result.containsKey("success") && result.getBoolean("success")) {

@@ -16,10 +16,6 @@ public class SettingConstantUtils {
             "/license",
             "/announcement",
             "/about",
-            "/rest",
-            "/wechat",
-            "/qq",
-            "/alipay",
             "/covid19"
     };
 }

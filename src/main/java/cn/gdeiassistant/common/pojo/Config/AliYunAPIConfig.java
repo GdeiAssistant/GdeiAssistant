@@ -17,6 +17,19 @@ public class AliYunAPIConfig {
 
     private String official_appCode;
 
+    private String ocrGeneralEndpoint = "https://tysbgpu.market.alicloudapi.com/api/predict/ocr_general";
+
+    public String getOcrGeneralEndpoint() {
+        return ocrGeneralEndpoint;
+    }
+
+    @Value("${api.aliyun.ocr.general-endpoint:https://tysbgpu.market.alicloudapi.com/api/predict/ocr_general}")
+    public void setOcrGeneralEndpoint(String ocrGeneralEndpoint) {
+        if (StringUtils.isNotBlank(ocrGeneralEndpoint)) {
+            this.ocrGeneralEndpoint = ocrGeneralEndpoint;
+        }
+    }
+
     public String getOfficial_appCode() {
         return official_appCode;
     }

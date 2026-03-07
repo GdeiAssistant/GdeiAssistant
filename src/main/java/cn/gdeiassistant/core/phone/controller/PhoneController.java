@@ -10,7 +10,6 @@ import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.phone.service.PhoneService;
 import cn.gdeiassistant.common.tools.Utils.LocationUtils;
-import com.aliyuncs.exceptions.ClientException;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class PhoneController {
      */
     @RequestMapping(value = "/api/phone/verification", method = RequestMethod.POST)
     public JsonResult GetPhoneVerificationCode(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(999) Integer code
-            , @Validated @NotBlank @Length(min = 7, max = 11) @Pattern(regexp = "^[0-9]*$") String phone) throws ClientException, SendSMSException {
+            , @Validated @NotBlank @Length(min = 7, max = 11) @Pattern(regexp = "^[0-9]*$") String phone) throws SendSMSException {
         if (LocationUtils.getAttributionMap().get(code) == null) {
             return new JsonResult(false, "不受支持的国际手机区号");
         }

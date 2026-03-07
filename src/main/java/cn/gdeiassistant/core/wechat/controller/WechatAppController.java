@@ -23,8 +23,8 @@ public class WechatAppController {
      * @param js_code
      * @return
      */
-    @RequestMapping(value = "/wechat/app/userid", method = RequestMethod.POST)
-    public DataJsonResult<WechatUserVO> WechatUser(@Validated @NotBlank @RequestParam("code") String js_code) throws Exception {
+    @RequestMapping(value = "/api/wechat/app/userid", method = RequestMethod.POST)
+    public DataJsonResult<WechatUserVO> wechatUser(@Validated @NotBlank @RequestParam("code") String js_code) throws Exception {
         WechatUserVO vo = wechatAppService.GetWechatUser(js_code);
         return new DataJsonResult<>(true, vo);
     }

@@ -1,14 +1,16 @@
 package cn.gdeiassistant.core.email.service;
 
+import cn.gdeiassistant.common.exception.VerificationException.SendEmailException;
 import cn.gdeiassistant.common.exception.VerificationException.VerificationCodeInvalidException;
 import cn.gdeiassistant.common.pojo.Entity.Email;
 import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.common.redis.VerificationCode.VerificationCodeDao;
 import cn.gdeiassistant.core.email.mapper.EmailMapper;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.core.verificationCode.service.VerificationCodeService;
+import cn.gdeiassistant.core.capability.email.EmailVerificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class EmailService {
@@ -22,8 +24,9 @@ public class EmailService {
     @Autowired
     private UserCertificateService userCertificateService;
 
+
     @Autowired
-    private VerificationCodeService verificationCodeService;
+    private EmailVerificationSender emailVerificationSender;
 
     /**
      * 查询用户绑定的电子邮箱地址信息
@@ -41,14 +44,18 @@ public class EmailService {
      *
      * @param email
      */
-    public void getEmailVerificationCode(String email) {
+    public void getEmailVerificationCode(String email) throws SendEmailException {
         //生成随机数
         int randomCode = (int) ((Math.random() * 9 + 1) * 100000);
         //写入Redis缓存记录
         verificationCodeDao.SaveEmailVerificationCode(email, randomCode);
         //发送电子邮件验证码
-
-        //TODO
+        try {
+            emailVerificationSender.sendVerificationCode(email, randomCode);
+        } catch (SendEmailException e) {
+            verificationCodeDao.DeleteEmailVerificationCode(email);
+            throw e;
+        }
     }
 
     /**

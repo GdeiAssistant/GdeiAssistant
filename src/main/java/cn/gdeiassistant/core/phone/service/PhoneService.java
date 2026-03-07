@@ -10,7 +10,6 @@ import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
 import cn.gdeiassistant.core.phone.pojo.vo.PhoneVO;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.core.verificationCode.service.VerificationCodeService;
-import com.aliyuncs.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +52,7 @@ public class PhoneService {
      * @param code
      * @param phone
      */
-    public void getPhoneVerificationCode(int code, String phone) throws ClientException, SendSMSException {
+    public void getPhoneVerificationCode(int code, String phone) throws SendSMSException {
         //生成随机数
         int randomCode = (int) ((Math.random() * 9 + 1) * 100000);
         //写入Redis缓存记录

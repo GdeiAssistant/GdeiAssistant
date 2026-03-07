@@ -172,9 +172,16 @@ public class LoginTokenService {
                 //若IP地址相同，则不需要重复校验
                 return;
             }
-            //检测IP地址是否为同一省份
+            //检测IP地址是否为同一省份（外部 IP 属地服务异常时采用保守放行，避免误踢登录）
             IPAddressRecord currentLocation = ipAddressService.getInfoByIPAddress(ip);
             IPAddressRecord tokenLocation = ipAddressService.getInfoByIPAddress(device.getIP());
+            boolean locationAvailable = currentLocation != null && tokenLocation != null
+                    && currentLocation.getCountry() != null && tokenLocation.getCountry() != null
+                    && currentLocation.getProvince() != null && tokenLocation.getProvince() != null;
+            if (!locationAvailable) {
+                //属地服务不可用或返回数据不完整，降级为放行
+                return;
+            }
             if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
                     && Objects.equals(currentLocation.getProvince(), tokenLocation.getProvince())) {
                 //IP地址为同一省份，校验通过

@@ -8,7 +8,6 @@ public enum ModuleEnum {
     QQ_MINIPROGRAM("QQ小程序", "/qq/app.properties"),
     ALIYUN_API("阿里云API服务", "/api/aliyun.properties"),
     ALIYUN_SMS("阿里云短信服务", "/aliyun/sms.properties"),
-    JISU("极速数据API服务", "/api/jisu.properties"),
     JWT("JSON Web Token", "/jwt/secret.properties"),
     NEWS("新闻通知", "/news/sms.properties"),
     REPLAY_ATTACKS_VALIDATE("防重放攻击验证", "/validate/token.properties"),

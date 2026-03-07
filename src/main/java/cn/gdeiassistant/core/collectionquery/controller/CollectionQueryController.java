@@ -18,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -94,19 +93,18 @@ public class CollectionQueryController {
     }
 
     /**
-     * 馆藏图书详细信息查询Restful接口
+     * 馆藏图书详细信息查询接口
      */
-    @RequestMapping(value = "/rest/collectiondetail", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/collection/detail/query", method = RequestMethod.POST)
     public DataJsonResult<CollectionDetail> restCollectionDetailQuery(@Validated CollectionDetailQuery collectionDetailQuery) throws ServerErrorException, NetWorkTimeoutException {
         CollectionDetail collectionDetail = collectionQueryService.getCollectionDetailByQuery(collectionDetailQuery);
         return new DataJsonResult<>(true, collectionDetail);
     }
 
     /**
-     * 馆藏信息查询Restful接口
+     * 馆藏信息查询接口
      */
-    @RequestMapping(value = "/rest/collectionquery", method = RequestMethod.POST)
-    @ResponseBody
+    @RequestMapping(value = "/api/collection/query", method = RequestMethod.POST)
     public DataJsonResult<CollectionQueryResult> restfulCollectionQuery(@Validated CollectionQuery collectionQuery) throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException {
         CollectionQueryResult collectionQueryResult = collectionQueryService.collectionQuery(collectionQuery.getPage(), collectionQuery.getBookname());
         if (collectionQueryResult == null || collectionQueryResult.getCollectionList().isEmpty()) {

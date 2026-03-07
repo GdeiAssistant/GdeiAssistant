@@ -2,8 +2,8 @@ package cn.gdeiassistant.core.imageRecognition.service;
 
 import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
-import cn.gdeiassistant.common.tools.SpringUtils.AliYunAPIUtils;
-import cn.gdeiassistant.common.tools.SpringUtils.JiSuAPIUtils;
+import cn.gdeiassistant.core.capability.ocr.CaptchaRecognizer;
+import cn.gdeiassistant.core.capability.ocr.OcrNumberRecognizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 public class ImageRecognitionService {
 
     @Autowired
-    private AliYunAPIUtils aliYunAPIUtils;
+    private CaptchaRecognizer captchaRecognizer;
 
     @Autowired
-    private JiSuAPIUtils jiSuAPIUtils;
+    private OcrNumberRecognizer ocrNumberRecognizer;
 
     /**
      * 神经网络识别验证码图片，返回验证码
@@ -25,7 +25,7 @@ public class ImageRecognitionService {
      * @return
      */
     public String CheckCodeRecognize(String image, CheckCodeTypeEnum checkCodeTypeEnum, int length) throws RecognitionException {
-        return jiSuAPIUtils.CheckCodeRecognize(image, checkCodeTypeEnum, length);
+        return captchaRecognizer.recognize(image, checkCodeTypeEnum, length);
     }
 
     /**
@@ -35,6 +35,6 @@ public class ImageRecognitionService {
      * @return
      */
     public String CharacterNumberRecognize(String image) throws RecognitionException {
-        return aliYunAPIUtils.CharacterNumberRecognize(image);
+        return ocrNumberRecognizer.recognizeNumbers(image);
     }
 }

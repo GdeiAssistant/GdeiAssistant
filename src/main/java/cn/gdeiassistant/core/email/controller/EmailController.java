@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.email.controller;
 
+import cn.gdeiassistant.common.exception.VerificationException.SendEmailException;
 import cn.gdeiassistant.common.exception.VerificationException.VerificationCodeInvalidException;
 import cn.gdeiassistant.common.pojo.Entity.Email;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
@@ -34,7 +35,7 @@ public class EmailController {
      */
     @RequestMapping(value = "/api/email/verification", method = RequestMethod.POST)
     public JsonResult getEmailVerificationCode(HttpServletRequest request
-            , @Validated @NotBlank @Length(min = 5, max = 50) @Pattern(regexp = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$") String email) {
+            , @Validated @NotBlank @Length(min = 5, max = 50) @Pattern(regexp = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$") String email) throws SendEmailException {
         emailService.getEmailVerificationCode(email);
         return new JsonResult(true);
     }

@@ -5,7 +5,7 @@ import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
 import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.core.iPAddress.mapper.IPAddressMapper;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.JiSuAPIUtils;
+import cn.gdeiassistant.core.capability.ip.IPLocationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class IPAddressService {
 
     @Autowired
-    private JiSuAPIUtils jiSuAPIUtils;
+    private IPLocationResolver ipLocationResolver;
 
     @Autowired
     private IPAddressMapper ipAddressMapper;
@@ -31,7 +31,7 @@ public class IPAddressService {
      * @return
      */
     public IPAddressRecord getInfoByIPAddress(String ip) {
-        return jiSuAPIUtils.getInfoByIPAddress(ip);
+        return ipLocationResolver.resolve(ip);
     }
 
     /**

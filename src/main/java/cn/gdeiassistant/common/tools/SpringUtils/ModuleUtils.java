@@ -72,8 +72,8 @@ public class ModuleUtils {
      * @return
      */
     public boolean CheckCoreModuleState(CoreModuleEnum coreModuleEnum) {
-        if (moduleStateMap.containsKey(coreModuleEnum)) {
-            return moduleStateMap.get(coreModuleEnum);
+        if (coreModuleEnumBooleanMap.containsKey(coreModuleEnum)) {
+            return coreModuleEnumBooleanMap.get(coreModuleEnum);
         }
         return true;
     }

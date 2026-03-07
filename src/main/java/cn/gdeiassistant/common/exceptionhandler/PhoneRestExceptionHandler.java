@@ -52,8 +52,9 @@ public class PhoneRestExceptionHandler {
      * @return
      */
     @ExceptionHandler(SendSMSException.class)
-    public ResponseEntity ShowSendSMSExceptionTip() {
-        return ResponseEntity.ok(new JsonResult(false
-                , "发送验证码短信出现异常"));
+    public ResponseEntity ShowSendSMSExceptionTip(SendSMSException e) {
+        String message = (e.getMessage() != null && !e.getMessage().isEmpty())
+                ? e.getMessage() : "发送验证码短信出现异常";
+        return ResponseEntity.ok(new JsonResult(false, message));
     }
 }

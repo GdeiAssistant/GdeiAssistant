@@ -118,15 +118,33 @@ news:
     password: ${NEWS_ADMIN_PASSWORD:}
 
 api:
-  jisu:
-    host: https://api.jisuapi.com
-    ipadress:
-      path: /ip/query
-    recognize:
-      path: /captcha/recognize
-    appkey: ${JISU_APPKEY:}
-
+  # AI 验证码识别服务商显式选择：openai / gemini / doubao
+  ai:
+    ocr:
+      # 注意：默认 openai；若只配置豆包/Google，请同步改 provider，避免误走 openai
+      provider: ${AI_OCR_PROVIDER:openai}
+      openai:
+        api-key: ${OPENAI_API_KEY:}
+        model: ${OPENAI_OCR_MODEL:gpt-4.1-mini}
+      gemini:
+        api-key: ${GEMINI_API_KEY:}
+        model: ${GEMINI_OCR_MODEL:gemini-2.0-flash}
+      doubao:
+        api-key: ${DOUBAO_API_KEY:}
+        model: ${DOUBAO_OCR_MODEL:doubao-1.5-vision-pro-32k}
+        base-url: ${DOUBAO_OCR_BASE_URL:https://ark.cn-beijing.volces.com/api/v3}
 sms:
+  # 可选：tencent / aliyun / huawei（可同时配置多家，但只会使用 provider 指定的一家）
+  provider: ${SMS_PROVIDER:tencent}
+  tencent:
+    secret-id: ${TENCENT_SMS_SECRET_ID:}
+    secret-key: ${TENCENT_SMS_SECRET_KEY:}
+    region: ${TENCENT_SMS_REGION:ap-guangzhou}
+    app-id: ${TENCENT_SMS_APP_ID:}
+    sign-name: ${TENCENT_SMS_SIGN_NAME:}
+    template:
+      china: ${TENCENT_SMS_TEMPLATE_CHINA:}
+      global: ${TENCENT_SMS_TEMPLATE_GLOBAL:}
   aliyun:
     userid: ${ALIYUN_SMS_USERID:}
     accesskey:
@@ -136,6 +154,15 @@ sms:
       templatecode: ${ALIYUN_SMS_CHINA_TEMPLATE:}
     global:
       templatecode: ${ALIYUN_SMS_GLOBAL_TEMPLATE:}
+  huawei:
+    app-key: ${HUAWEI_SMS_APP_KEY:}
+    app-secret: ${HUAWEI_SMS_APP_SECRET:}
+    endpoint: ${HUAWEI_SMS_ENDPOINT:https://smsapi.cn-north-4.myhuaweicloud.com:443}
+    sender: ${HUAWEI_SMS_SENDER:}
+    signature: ${HUAWEI_SMS_SIGNATURE:}
+    template:
+      china: ${HUAWEI_SMS_TEMPLATE_CHINA:}
+      global: ${HUAWEI_SMS_TEMPLATE_GLOBAL:}
 
 request:
   validate:

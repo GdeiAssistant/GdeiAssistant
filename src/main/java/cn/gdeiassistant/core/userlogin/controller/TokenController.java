@@ -33,7 +33,7 @@ public class TokenController {
      * @param accessTokenSignature
      * @return
      */
-    @RequestMapping(value = "/rest/token/expire", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/token/expire", method = RequestMethod.POST)
     public JsonResult expireToken(HttpServletRequest request
             , @RequestParam("token") String accessTokenSignature) throws Exception {
         loginTokenService.expireToken(accessTokenSignature);
@@ -47,7 +47,7 @@ public class TokenController {
      * @param refreshTokenSignature
      * @return
      */
-    @RequestMapping(value = "/rest/token/refresh", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/token/refresh", method = RequestMethod.POST)
     @DeviceUpdateRequirement
     @RecordIPAddress(type = IPAddressEnum.LOGIN, rest = true)
     public TokenRefreshJsonResult refreshToken(HttpServletRequest request

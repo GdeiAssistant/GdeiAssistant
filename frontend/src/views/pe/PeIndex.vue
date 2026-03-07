@@ -18,7 +18,8 @@ import { ref, onMounted } from 'vue'
 
 const isWechat = ref(true) // 默认设为 true 避免渲染闪烁
 
-const PE_EXTERNAL_URL = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa2d196aa4b8a7600&redirect_uri=http%3A%2F%2F5itsn.com%2FWeixin%2FOAuth2%2FUserInfoCallback&response_type=code&scope=snsapi_userinfo&state=TestUrlTestResult&connect_redirect=1#wechat_redirect'
+const PE_EXTERNAL_URL = import.meta.env.VITE_PE_EXTERNAL_URL
+  ?? 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa2d196aa4b8a7600&redirect_uri=http%3A%2F%2F5itsn.com%2FWeixin%2FOAuth2%2FUserInfoCallback&response_type=code&scope=snsapi_userinfo&state=TestUrlTestResult&connect_redirect=1#wechat_redirect'
 
 onMounted(() => {
   const ua = navigator.userAgent.toLowerCase()

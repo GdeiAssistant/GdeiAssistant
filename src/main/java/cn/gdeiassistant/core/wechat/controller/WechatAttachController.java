@@ -24,8 +24,8 @@ public class WechatAttachController {
     @Autowired
     private WechatUserDataService wechatUserDataService;
 
-    @RequestMapping(value = "/wechat/userattach", method = RequestMethod.POST)
-    public JsonResult WechatUserAttach(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user) throws Exception {
+    @RequestMapping(value = "/api/wechat/userattach", method = RequestMethod.POST)
+    public JsonResult wechatUserAttach(HttpServletRequest request, @Validated(value = UserLoginValidGroup.class) User user) throws Exception {
         JsonResult result = new JsonResult();
         String wechatUserID = (String) request.getAttribute("wechatUserID");
         if (StringUtils.isBlank(wechatUserID)) {

@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.cetquery.controller;
 
-import cn.gdeiassistant.common.annotation.RestAuthentication;
 import cn.gdeiassistant.common.pojo.Entity.Cet;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
@@ -63,14 +62,5 @@ public class CetQueryController {
         String sessionId = (String) request.getAttribute("sessionId");
         String checkCode = cetQueryService.cetIndex(sessionId);
         return new DataJsonResult<>(true, checkCode);
-    }
-
-    @RequestMapping(value = "/api/cet/query", method = RequestMethod.POST)
-    public DataJsonResult<Cet> cetQueryRest(HttpServletRequest request,
-                                            @RequestParam("token") String token,
-                                            @Validated CetQueryDTO dto) throws Exception {
-        String sessionId = (String) request.getAttribute("sessionId");
-        Cet cet = cetQueryService.cetQuery(sessionId, dto);
-        return new DataJsonResult<>(true, cet);
     }
 }

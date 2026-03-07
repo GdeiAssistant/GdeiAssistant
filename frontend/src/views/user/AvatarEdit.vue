@@ -122,7 +122,7 @@ const confirmCrop = async () => {
     formData.append('avatarKey', avatarKey)
     formData.append('avatarHdKey', avatarHdKey)
 
-    await request.post('/avatar', formData)
+    await request.post('/profile/avatar', formData)
 
     // 仅在后端成功时提示并返回上一页（错误由全局拦截器统一处理）
     showToast('更新头像完成')
@@ -161,7 +161,7 @@ const handleDelete = async () => {
     weui.loading('正在删除头像...')
   }
   try {
-    await request.post('/avatar/remove')
+    await request.delete('/profile/avatar')
     currentAvatar.value = defaultAvatar
     showToast('已恢复默认头像')
     router.back()
@@ -178,7 +178,7 @@ const handleDelete = async () => {
 onMounted(async () => {
   // 从后端拉取当前头像 URL，避免依赖本地缓存
   try {
-    const res = await request.get('/avatar')
+    const res = await request.get('/profile/avatar')
     if (res && res.success && typeof res.data === 'string' && res.data) {
       currentAvatar.value = res.data
     } else {

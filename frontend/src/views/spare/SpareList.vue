@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import request from '../../utils/request'
+import { querySpareRoom } from '@/api/spare'
 
 const router = useRouter()
 const route = useRoute()
@@ -15,10 +15,10 @@ function goBack() {
 onMounted(() => {
   console.log('🚀 发起空课室请求，参数:', route.query)
   isLoading.value = true
-  request.get('/spare/query', { params: route.query })
+  querySpareRoom(route.query)
     .then((res) => {
       console.log('📦 收到原始响应数据:', res)
-      const targetData = res?.data?.data ?? res?.data ?? res
+      const targetData = res?.data?.data ?? res?.data ?? []
       if (Array.isArray(targetData)) {
         spareList.value = targetData
       } else {

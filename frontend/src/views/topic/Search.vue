@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { showErrorTopTips } from '@/utils/toast.js'
@@ -10,18 +10,11 @@ const searchResults = ref([])
 const searching = ref(false)
 
 function handleLike(item) {
-  if (item.isLiked === undefined) item.isLiked = false
-  item.isLiked = !item.isLiked
-  const delta = item.isLiked ? 1 : -1
-  item.likeCount = (item.likeCount || 0) + delta
-  if (item.likeCount < 0) item.likeCount = 0
-  
-  // 调用点赞接口
-  request.post('/topic/like', { id: item.id, like: item.isLiked })
-    .catch(() => {
-      // 失败回滚
-      item.isLiked = !item.isLiked
-      item.likeCount = (item.likeCount || 0) - delta
+  if (item.isLiked) return
+  request.post(`/topic/id/${item.id}/like`)
+    .then(() => {
+      item.isLiked = true
+      item.likeCount = (item.likeCount || 0) + 1
     })
 }
 
@@ -32,12 +25,20 @@ function doSearch() {
     return
   }
   searching.value = true
-  request.get('/topic/search', {
-    params: { keyword: trimmedKeyword }
-  })
+  request.get(`/topic/keyword/${encodeURIComponent(trimmedKeyword)}/start/0/size/50`)
     .then((res) => {
-      const data = res.data || res
-      searchResults.value = Array.isArray(data) ? data : (data.list || [])
+      const rawList = res?.data || []
+      searchResults.value = Array.isArray(rawList) ? rawList.map((item) => ({
+        id: item.id,
+        topicTag: item.topic,
+        content: item.content,
+        userName: item.username || '匿名',
+        userAvatar: '/img/avatar/default.png',
+        time: item.publishTime,
+        images: item.firstImageUrl ? [item.firstImageUrl] : [],
+        likeCount: item.likeCount ?? 0,
+        isLiked: item.liked === true
+      })) : []
       searching.value = false
     })
     .catch(() => {

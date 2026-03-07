@@ -10,6 +10,7 @@ const keywordInput = ref('')
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const scrollContainer = ref(null)
+const PAGE_SIZE = 10
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -21,12 +22,26 @@ const keyword = computed(() => route.query.keyword ?? '')
 const fetchSearchData = async (page) => {
   const k = (route.query.keyword ?? '').trim()
   if (k === '') {
-    return { data: { list: [], hasMore: false } }
+    return { list: [], hasMore: false }
   }
-  const res = await request.get('/express/items', {
-    params: { page, limit: 10, keyword: k }
-  })
-  return res
+  const start = (page - 1) * PAGE_SIZE
+  const res = await request.get(`/express/keyword/${encodeURIComponent(k)}/start/${start}/size/${PAGE_SIZE}`)
+  const rawList = res?.data || []
+  const list = Array.isArray(rawList) ? rawList.map((item) => ({
+    id: item.id,
+    content: item.content,
+    senderName: item.nickname,
+    receiverName: item.name,
+    senderGender: item.selfGender === 0 ? 'male' : item.selfGender === 1 ? 'female' : 'secret',
+    receiverGender: item.personGender === 0 ? 'male' : item.personGender === 1 ? 'female' : 'secret',
+    time: item.publishTime,
+    likeCount: item.likeCount ?? 0,
+    commentCount: item.commentCount ?? 0,
+    isLiked: item.liked === true,
+    canGuess: item.canGuess === true,
+    guessCount: item.guessSum ?? 0
+  })) : []
+  return { list, hasMore: list.length >= PAGE_SIZE }
 }
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleScroll, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchSearchData)
@@ -47,15 +62,19 @@ function doSearch() {
 }
 
 function handleLike(item) {
-  item.likeCount = (item.likeCount || 0) + 1
+  if (item.isLiked) return
+  request.post(`/express/id/${item.id}/like`).then(() => {
+    item.isLiked = true
+    item.likeCount = (item.likeCount || 0) + 1
+  })
 }
 
 function handleGuess(item) {
-  item.guessCount = (item.guessCount || 0) + 1
+  router.push(`/express/detail/${item.id}`)
 }
 
 function handleComment(item) {
-  // TODO: 跳转评论页
+  router.push(`/express/detail/${item.id}`)
 }
 
 onMounted(() => {

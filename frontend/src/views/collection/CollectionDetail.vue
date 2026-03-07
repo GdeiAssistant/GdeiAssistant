@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
-import request from '../../utils/request'
+import { getCollectionDetail } from '@/api/collection'
 
 const router = useRouter()
 const route = useRoute()
@@ -13,14 +13,14 @@ function goBack() {
 }
 
 onMounted(() => {
-  const id = route.params.id
-  if (!id) {
+  const detailURL = typeof route.query.detailURL === 'string' ? route.query.detailURL.trim() : ''
+  if (!detailURL) {
     loading.value = false
     return
   }
-  request.get(`/collection/detail/${id}`).then((res) => {
+  getCollectionDetail(detailURL).then((res) => {
     loading.value = false
-    if (res && (res.id || res.title)) detail.value = res
+    if (res?.success && res.data) detail.value = res.data
   }).catch(() => {
     loading.value = false
   })
@@ -48,9 +48,10 @@ onMounted(() => {
       <div class="weui-panel">
         <div class="weui-panel__bd">
           <div class="weui-media-box weui-media-box_text">
-            <h4 class="weui-media-box__title">{{ detail.title }}</h4>
+            <h4 class="weui-media-box__title">{{ detail.bookname || '—' }}</h4>
             <p class="weui-media-box__desc">著者: {{ detail.author || '—' }}</p>
-            <p class="weui-media-box__desc">出版者: {{ detail.publisher || '—' }}</p>
+            <p class="weui-media-box__desc">题名/责任者: {{ detail.principal || '—' }}</p>
+            <p class="weui-media-box__desc">出版者: {{ detail.publishingHouse || '—' }}</p>
           </div>
         </div>
       </div>

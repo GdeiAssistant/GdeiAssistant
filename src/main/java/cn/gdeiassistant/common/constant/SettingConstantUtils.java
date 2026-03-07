@@ -7,7 +7,6 @@ public class SettingConstantUtils {
             "/login",
             "/logout",
             "/cron",
-            "/api/userlogin",
             "/api/auth",
             "/api/module",
             "/download",

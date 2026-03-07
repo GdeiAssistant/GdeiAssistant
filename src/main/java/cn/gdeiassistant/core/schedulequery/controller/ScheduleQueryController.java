@@ -1,17 +1,12 @@
 package cn.gdeiassistant.core.schedulequery.controller;
 
 import cn.gdeiassistant.common.annotation.QueryLogPersistence;
-import cn.gdeiassistant.common.annotation.RestQueryLogPersistence;
 import cn.gdeiassistant.common.annotation.TrialData;
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.common.exception.CustomScheduleException.CountOverLimitException;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateScheduleException;
 import cn.gdeiassistant.common.exception.CommonException.TestAccountException;
 import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
-import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
 import cn.gdeiassistant.common.pojo.Entity.CustomSchedule;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
@@ -22,9 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 
 @RestController
 public class ScheduleQueryController {
@@ -82,47 +74,5 @@ public class ScheduleQueryController {
         String sessionId = (String) request.getAttribute("sessionId");
         scheduleService.deleteCustomSchedule(sessionId, position);
         return new JsonResult(true);
-    }
-
-    @RequestMapping(value = "/api/schedulequery", method = RequestMethod.POST)
-    @QueryLogPersistence
-    public DataJsonResult<ScheduleQueryResult> scheduleQuery(HttpServletRequest request
-            , @Valid @Min(0) @Max(20) Integer week) throws Exception {
-        String sessionId = (String) request.getAttribute("sessionId");
-        ScheduleQueryResult scheduleQueryResult = scheduleService.querySchedule(sessionId, week);
-        return new DataJsonResult<>(true, scheduleQueryResult);
-    }
-
-    /**
-     * 更新实时课表信息
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/api/refreshschedule", method = RequestMethod.POST)
-    public DataJsonResult<ScheduleQueryResult> refreshScheduleData(HttpServletRequest request
-            , @Valid @Min(0) @Max(20) Integer week) throws TimeStampIncorrectException, NetWorkTimeoutException, PasswordIncorrectException, ServerErrorException {
-        String sessionId = (String) request.getAttribute("sessionId");
-        scheduleService.clearSchedule(sessionId);
-        ScheduleQueryResult scheduleQueryResult = scheduleService.querySchedule(sessionId, week);
-        return new DataJsonResult<>(true, scheduleQueryResult);
-    }
-
-    /**
-     * 课表查询Rest接口
-     *
-     * @param request
-     * @param token
-     * @param week
-     * @return
-     */
-    @RequestMapping(value = "/api/schedule/query", method = RequestMethod.POST)
-    @RestQueryLogPersistence
-    public DataJsonResult<ScheduleQueryResult> scheduleQueryRest(HttpServletRequest request
-            , @RequestParam("token") String token
-            , @Valid @Min(0) @Max(20) Integer week) throws Exception {
-        String sessionId = (String) request.getAttribute("sessionId");
-        ScheduleQueryResult scheduleQueryResult = scheduleService.querySchedule(sessionId, week);
-        return new DataJsonResult<>(true, scheduleQueryResult);
     }
 }

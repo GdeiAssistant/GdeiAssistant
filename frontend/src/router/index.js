@@ -142,7 +142,7 @@ const routes = [
     component: CollectionList
   },
   {
-    path: '/collection/detail/:id',
+    path: '/collection/detail',
     name: 'CollectionDetail',
     component: CollectionDetail
   },

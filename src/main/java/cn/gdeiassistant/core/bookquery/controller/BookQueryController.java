@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.bookquery.controller;
 
-import cn.gdeiassistant.common.annotation.RestQueryLogPersistence;
 import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.common.pojo.Entity.Book;
 import cn.gdeiassistant.common.pojo.Entity.Collection;
@@ -8,9 +7,7 @@ import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.bookquery.service.BookQueryService;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -96,70 +93,6 @@ public class BookQueryController {
         String sessionId = (String) request.getAttribute("sessionId");
         bookQueryService.bookquery(sessionId, password);
         bookQueryService.renewBook(sessionId, sn, code);
-        return new JsonResult(true);
-    }
-
-    /**
-     * 查询借阅的图书（旧接口保留）
-     */
-    @RequestMapping(value = "/api/bookquery", method = RequestMethod.POST)
-    @TrialData(value = "book")
-    public DataJsonResult<List<Book>> BookQuery(HttpServletRequest request
-            , @RequestParam(value = "password") String password) throws Exception {
-        String sessionId = (String) request.getAttribute("sessionId");
-        List<Book> bookList = bookQueryService.bookquery(sessionId, password);
-        return new DataJsonResult<>(true, bookList);
-    }
-
-    /**
-     * 查询借阅的图书Restful接口
-     *
-     * @param request
-     * @param password
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/api/book/query", method = RequestMethod.POST)
-    @RestQueryLogPersistence
-    @TrialData(value = "book")
-    public DataJsonResult<List<Book>> RestBookQuery(HttpServletRequest request
-            , @RequestParam("token") String token, @RequestParam(value = "password") String password) throws Exception {
-        String sessionId = (String) request.getAttribute("sessionId");
-        List<Book> bookList = bookQueryService.bookquery(sessionId, password);
-        return new DataJsonResult<>(true, bookList);
-    }
-
-    /**
-     * 图书续借（Session 版，无密码校验，仅兼容旧调用）
-     * 主入口为 POST /api/book/renew（JSON body 含 password）；移动端 JWT 使用 POST /api/bookrenew。
-     */
-    @RequestMapping(value = "/api/bookrenew/legacy", method = RequestMethod.POST)
-    @TrialData(value = "bookrenew")
-    public JsonResult BookRenew(HttpServletRequest request, @Validated @NotBlank String code, @Validated @NotBlank String sn) throws Exception {
-        String sessionId = (String) request.getAttribute("sessionId");
-        bookQueryService.bookRenew(sessionId, sn, code);
-        return new JsonResult(true);
-    }
-
-    /**
-     * 图书续借Restful接口
-     *
-     * @param request
-     * @param password
-     * @param code
-     * @param sn
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/api/bookrenew", method = RequestMethod.POST)
-    @RestQueryLogPersistence
-    @TrialData(value = "bookrenew")
-    public JsonResult RestBookRenew(HttpServletRequest request, @RequestParam("token") String token
-            , @Validated @NotBlank @RequestParam(value = "password") String password
-            , @Validated @NotBlank String code, @Validated @NotBlank String sn) throws Exception {
-        String sessionId = (String) request.getAttribute("sessionId");
-        bookQueryService.bookquery(sessionId, password);
-        bookQueryService.bookRenew(sessionId, sn, code);
         return new JsonResult(true);
     }
 }

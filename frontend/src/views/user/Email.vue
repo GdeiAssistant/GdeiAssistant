@@ -41,7 +41,7 @@ async function handleSendCode() {
 
   sending.value = true
   try {
-    await request.post('/user/send-email-code', { email: email.value })
+    await request.post(`/email/verification?email=${encodeURIComponent(email.value)}`)
     countdown.value = 60
     timerId = setInterval(() => {
       if (countdown.value > 0) {
@@ -72,7 +72,7 @@ async function handleSubmit() {
 
   submitting.value = true
   try {
-    await request.post('/user/bind-email', { email: email.value, code: code.value })
+    await request.post(`/email/bind?email=${encodeURIComponent(email.value)}&randomCode=${encodeURIComponent(code.value)}`)
     showSuccess('绑定成功')
     setTimeout(() => {
       router.back()

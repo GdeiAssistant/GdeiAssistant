@@ -46,10 +46,11 @@ function getGenderClass(gender) {
 }
 
 function handleLike(item) {
-  if (item.isLiked === undefined) item.isLiked = false
-  item.isLiked = !item.isLiked
-  item.likeCount = (item.likeCount || 0) + (item.isLiked ? 1 : -1)
-  if (item.likeCount < 0) item.likeCount = 0
+  if (item.isLiked) return
+  request.post(`/express/id/${item.id}/like`).then(() => {
+    item.isLiked = true
+    item.likeCount = (item.likeCount || 0) + 1
+  })
 }
 
 const guessDialogVisible = ref(false)

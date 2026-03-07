@@ -34,7 +34,6 @@ public class ChargeRequestController {
     @ReplayAttacksProtection
     @RequireSecurity
     public DataJsonResult<ChargeVO> ChargeRequest(HttpServletRequest request
-            , @RequestParam("token") String token
             , @Validated @NotNull @Min(1) @Max(500) Integer amount
             , @Validated ChargeRequestDTO requestParams
             , @Validated RequestValidation requestValidation

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import request from '../../utils/request'
+import { searchBooks } from '@/api/collection'
 
 const router = useRouter()
 const route = useRoute()
@@ -15,25 +15,22 @@ function goBack() {
 }
 
 function openDetail(item) {
-  router.push(`/collection/detail/${item.id}`)
+  if (!item?.detailURL) return
+  router.push({ path: '/collection/detail', query: { detailURL: item.detailURL } })
 }
 
 function fetchList() {
   loading.value = true
-  request.get('/collection/search', { params: { keyword: keyword.value } })
+  searchBooks(keyword.value, 1)
     .then((res) => {
-      loading.value = false
-      if (res && Array.isArray(res)) {
-        list.value = res
-      } else if (res && res.data && Array.isArray(res.data)) {
-        list.value = res.data
-      } else {
-        list.value = []
-      }
+      const result = res?.data
+      list.value = Array.isArray(result?.collectionList) ? result.collectionList : []
     })
     .catch(() => {
-      loading.value = false
       list.value = []
+    })
+    .finally(() => {
+      loading.value = false
     })
 }
 
@@ -75,17 +72,17 @@ onMounted(() => {
         <div class="weui-panel__bd">
           <a
             v-for="item in list"
-            :key="item.id"
+            :key="item.detailURL || item.bookname"
             href="javascript:"
             class="weui-media-box weui-media-box_text"
             @click.prevent="openDetail(item)"
           >
-            <h4 class="weui-media-box__title">{{ item.title }}</h4>
+            <h4 class="weui-media-box__title">{{ item.bookname || '—' }}</h4>
             <p class="weui-media-box__meta">
               <span class="weui-media-box__label">著者: </span><span class="weui-media-box__value">{{ item.author || '—' }}</span>
             </p>
             <p class="weui-media-box__meta">
-              <span class="weui-media-box__label">出版者: </span><span class="weui-media-box__value">{{ item.publisher || '—' }}</span>
+              <span class="weui-media-box__label">出版者: </span><span class="weui-media-box__value">{{ item.publishingHouse || '—' }}</span>
             </p>
           </a>
         </div>

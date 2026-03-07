@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.userProfile.controller;
 
-import cn.gdeiassistant.common.annotation.RestAuthentication;
 import cn.gdeiassistant.common.pojo.Entity.City;
 import cn.gdeiassistant.common.pojo.Entity.Introduction;
 import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
@@ -53,7 +52,7 @@ public class ProfileController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/api/avatar", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/profile/avatar", method = RequestMethod.GET)
     public DataJsonResult<String> GetUserAvatar(HttpServletRequest request) throws Exception {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
         String url = userProfileService.getSelfUserAvatar((String) request.getAttribute("sessionId"));
@@ -75,7 +74,7 @@ public class ProfileController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/api/avatar/remove", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/profile/avatar", method = RequestMethod.DELETE)
     public JsonResult DeleteUserAvatar(HttpServletRequest request) throws Exception {
         userProfileService.deleteAvatar((String) request.getAttribute("sessionId"));
         return new JsonResult(true);
@@ -90,7 +89,7 @@ public class ProfileController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/api/avatar", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/profile/avatar", method = RequestMethod.POST)
     public JsonResult UpdateUserAvatar(HttpServletRequest request
             , @RequestParam(value = "avatar", required = false) MultipartFile avatar
             , @RequestParam(value = "avatar_hd", required = false) MultipartFile avatarHD
@@ -121,77 +120,6 @@ public class ProfileController {
             }
         }
         return jsonResult;
-    }
-
-    /**
-     * 获取用户个人资料
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/api/profile", method = RequestMethod.GET)
-    public DataJsonResult<ProfileVO> GetUserProfile(HttpServletRequest request) throws Exception {
-        DataJsonResult<ProfileVO> result = new DataJsonResult<>();
-        ProfileVO profile = userProfileService.getSelfUserProfile((String) request.getAttribute("sessionId"));
-        if (profile != null) {
-            if (!LocationUtils.getRegionMap().containsKey(profile.getLocationRegion())) {
-                profile.setLocationRegion("未选择");
-            } else {
-                Region locationRegion = LocationUtils.getRegionMap().get(profile.getLocationRegion());
-                if (locationRegion == null) {
-                    profile.setLocationRegion("未选择");
-                    profile.setLocationState("");
-                    profile.setLocationCity("");
-                } else {
-                    profile.setLocationRegion(locationRegion.getName());
-                    State locationState = locationRegion.getStateMap().get(profile.getLocationState());
-                    if (locationState == null) {
-                        profile.setLocationState("");
-                        profile.setLocationCity("");
-                    } else {
-                        if (locationState.getName().equals(locationRegion.getName())) {
-                            profile.setLocationState(locationRegion.getName());
-                        } else {
-                            profile.setLocationState(locationState.getName());
-                        }
-                        City locationCity = locationState.getCityMap().get(profile.getLocationCity());
-                        if (locationCity == null) {
-                            profile.setLocationCity("");
-                        } else {
-                            profile.setLocationCity(locationCity.getName());
-                        }
-                    }
-                }
-                Region hometownRegion = LocationUtils.getRegionMap().get(profile.getHometownRegion());
-                if (hometownRegion == null) {
-                    profile.setHometownRegion("未选择");
-                    profile.setHometownState("");
-                    profile.setHometownCity("");
-                } else {
-                    profile.setHometownRegion(hometownRegion.getName());
-                    State hometownState = hometownRegion.getStateMap().get(profile.getHometownState());
-                    if (hometownState == null) {
-                        profile.setHometownState("");
-                        profile.setHometownCity("");
-                    } else {
-                        if (hometownState.getName().equals(hometownRegion.getName())) {
-                            profile.setHometownState(hometownRegion.getName());
-                        } else {
-                            profile.setHometownState(hometownState.getName());
-                        }
-                        City hometownCity = hometownState.getCityMap().get(profile.getHometownCity());
-                        if (hometownCity == null) {
-                            profile.setHometownCity("");
-                        } else {
-                            profile.setHometownCity(hometownCity.getName());
-                        }
-                    }
-                }
-            }
-            result.setSuccess(true);
-            result.setData(profile);
-        }
-        return result;
     }
 
     /**
@@ -543,86 +471,11 @@ public class ProfileController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/profile/nickname", method = RequestMethod.GET)
-    public DataJsonResult<String> GetUserNickname(HttpServletRequest request
-            , @RequestParam("token") String token) throws Exception {
+    public DataJsonResult<String> GetUserNickname(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         ProfileVO profile = userProfileService.getSelfUserProfile(sessionId);
         String nickname = profile.getNickname();
         return new DataJsonResult<>(true, nickname);
-    }
-
-    /**
-     * 获取头像信息接口
-     *
-     * @param request
-     * @param token
-     * @return
-     */
-    @RequestMapping(value = "/api/profile/avatar", method = RequestMethod.GET)
-    public DataJsonResult<String> GetUserAvatar(HttpServletRequest request
-            , @RequestParam("token") String token) throws Exception {
-        DataJsonResult<String> jsonResult = new DataJsonResult<>();
-        String sessionId = (String) request.getAttribute("sessionId");
-        String url = userProfileService.getSelfUserAvatar(sessionId);
-        if (StringUtils.isBlank(url)) {
-            //未上传自定义头像
-            jsonResult.setSuccess(true);
-            jsonResult.setData("");
-        } else {
-            //已上传自定义头像
-            jsonResult.setSuccess(true);
-            jsonResult.setData(url);
-        }
-        return jsonResult;
-    }
-
-
-    /**
-     * 获取用户个人资料Rest接口
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/api/profile", method = RequestMethod.POST)
-    @RestAuthentication
-    public DataJsonResult<ProfileVO> GetUserProfile(HttpServletRequest request
-            , @RequestParam("token") String token) throws Exception {
-        DataJsonResult<ProfileVO> jsonResult = new DataJsonResult<>();
-        String sessionId = (String) request.getAttribute("sessionId");
-        ProfileVO profile = userProfileService.getSelfUserProfile(sessionId);
-        if (!LocationUtils.getRegionMap().containsKey(profile.getLocationRegion())) {
-            profile.setLocationRegion(null);
-        } else {
-            Region region = LocationUtils.getRegionMap().get(profile.getLocationRegion());
-            if (region == null) {
-                profile.setLocationRegion(null);
-                profile.setLocationState(null);
-                profile.setLocationCity(null);
-            } else {
-                profile.setLocationRegion(region.getName());
-                State state = region.getStateMap().get(profile.getLocationState());
-                if (state == null) {
-                    profile.setLocationState(null);
-                    profile.setLocationCity(null);
-                } else {
-                    if (!state.getName().equals(region.getName())) {
-                        profile.setLocationState(region.getName());
-                    } else {
-                        profile.setLocationState(state.getName());
-                    }
-                    //获取市/直辖市
-                    City city = state.getCityMap().get(profile.getLocationCity());
-                    if (city == null) {
-                        profile.setLocationCity(null);
-                    } else {
-                        profile.setLocationCity(city.getName());
-                    }
-                }
-            }
-            jsonResult.setSuccess(true);
-            jsonResult.setData(profile);
-        }
-        return jsonResult;
     }
 
     // ==================== 修改资料 POST 接口的 JSON 请求体 DTO ====================

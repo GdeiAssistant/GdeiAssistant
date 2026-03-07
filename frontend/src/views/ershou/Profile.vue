@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-// Mock 用户信息（对接 /api/avatar、/api/profile、/api/introduction）
+// Mock 用户信息（对接 /api/profile/avatar、/api/user/profile、/api/introduction）
 const avatar = ref('/img/avatar/default.png')
 const nickname = ref('二手用户')
 const introduction = ref('这个人很懒，什么都没写_(:3 」∠)_')

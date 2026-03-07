@@ -4,8 +4,6 @@ import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
-import cn.gdeiassistant.core.collectionquery.pojo.CollectionDetailQuery;
-import cn.gdeiassistant.core.collectionquery.pojo.CollectionQuery;
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.common.pojo.Entity.Book;
 import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
@@ -14,7 +12,6 @@ import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.bookquery.service.BookQueryService;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,26 +87,5 @@ public class CollectionQueryController {
         String sessionId = (String) request.getAttribute("sessionId");
         bookQueryService.renewBook(sessionId, sn, code);
         return new JsonResult(true);
-    }
-
-    /**
-     * 馆藏图书详细信息查询接口
-     */
-    @RequestMapping(value = "/api/collection/detail/query", method = RequestMethod.POST)
-    public DataJsonResult<CollectionDetail> restCollectionDetailQuery(@Validated CollectionDetailQuery collectionDetailQuery) throws ServerErrorException, NetWorkTimeoutException {
-        CollectionDetail collectionDetail = collectionQueryService.getCollectionDetailByQuery(collectionDetailQuery);
-        return new DataJsonResult<>(true, collectionDetail);
-    }
-
-    /**
-     * 馆藏信息查询接口
-     */
-    @RequestMapping(value = "/api/collection/query", method = RequestMethod.POST)
-    public DataJsonResult<CollectionQueryResult> restfulCollectionQuery(@Validated CollectionQuery collectionQuery) throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException {
-        CollectionQueryResult collectionQueryResult = collectionQueryService.collectionQuery(collectionQuery.getPage(), collectionQuery.getBookname());
-        if (collectionQueryResult == null || collectionQueryResult.getCollectionList().isEmpty()) {
-            return new DataJsonResult<>(new JsonResult(false, "查询结果为空"));
-        }
-        return new DataJsonResult<>(true, collectionQueryResult);
     }
 }

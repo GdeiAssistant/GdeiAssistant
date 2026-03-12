@@ -1,6 +1,6 @@
 import request from './request'
 
-function resolveFileName(file, overrideFileName) {
+export function resolveFileName(file, overrideFileName) {
   if (overrideFileName && String(overrideFileName).trim()) {
     return String(overrideFileName).trim()
   }
@@ -12,17 +12,19 @@ function resolveFileName(file, overrideFileName) {
   return 'upload' + fallbackExt
 }
 
-function resolveContentType(file) {
+export function resolveContentType(file) {
   return file?.type && String(file.type).includes('/') ? file.type : 'application/octet-stream'
 }
 
-export async function uploadFileByPresignedUrl(file, options = {}) {
+export async function uploadFileByPresignedUrl(file, options = {}, deps = {}) {
   if (!file) {
     throw new Error('缺少待上传文件')
   }
+  const requestClient = deps.requestClient ?? request
+  const fetchFn = deps.fetchFn ?? fetch
   const fileName = resolveFileName(file, options.fileName)
   const contentType = resolveContentType(file)
-  const response = await request.get('/upload/presignedUrl', {
+  const response = await requestClient.get('/upload/presignedUrl', {
     params: {
       fileName,
       contentType
@@ -33,7 +35,7 @@ export async function uploadFileByPresignedUrl(file, options = {}) {
   if (!uploadUrl || !objectKey) {
     throw new Error('未获取到上传地址')
   }
-  const uploadResponse = await fetch(uploadUrl, {
+  const uploadResponse = await fetchFn(uploadUrl, {
     method: 'PUT',
     headers: {
       'Content-Type': contentType
@@ -46,6 +48,6 @@ export async function uploadFileByPresignedUrl(file, options = {}) {
   return objectKey
 }
 
-export async function uploadFilesByPresignedUrl(files) {
-  return Promise.all((files || []).filter(Boolean).map((file) => uploadFileByPresignedUrl(file)))
+export async function uploadFilesByPresignedUrl(files, options = {}, deps = {}) {
+  return Promise.all((files || []).filter(Boolean).map((file) => uploadFileByPresignedUrl(file, options, deps)))
 }

@@ -178,6 +178,8 @@ trial:
 
 app:
   test-accounts: gdeiassistant
+  cors:
+    allowed-origin-patterns: ${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173}
 
 r2:
   endpoint: ${R2_ENDPOINT:}

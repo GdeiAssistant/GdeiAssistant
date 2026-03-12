@@ -66,7 +66,7 @@ const baseURL = import.meta.env.VITE_APP_BASE_API ?? '/api'
 const service = axios.create({
   baseURL,
   timeout: 15000,
-  withCredentials: true  // 若后端用 Cookie 也携带；当前后端主要认 Header
+  withCredentials: false  // 当前前后端鉴权仅依赖 Authorization Header，不发送 Cookie
 })
 
 const LOGIN_PATH = '/login'

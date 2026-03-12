@@ -707,15 +707,25 @@ textarea::-webkit-input-placeholder {
   cursor: pointer;
 }
 .selected {
-  background-image: url(/img/schedule/select.png);
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 1.5rem;
   height: 1.5rem;
-  background-size: 1.5rem;
-  background-position: center;
   position: absolute;
   right: -0.5rem;
   top: -0.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  box-shadow: 0 0.2rem 0.5rem rgba(5, 150, 105, 0.28);
+}
+.selected::before {
+  content: '';
+  width: 0.38rem;
+  height: 0.72rem;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg) translate(-8%, -8%);
 }
 
 /* 主题颜色：参考原版 secret-publish.css */

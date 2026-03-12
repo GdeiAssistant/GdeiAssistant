@@ -2,6 +2,7 @@ package cn.gdeiassistant.common.config.Application;
 
 import cn.gdeiassistant.common.constant.SettingConstantUtils;
 import cn.gdeiassistant.common.interceptor.ApiAuthInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -23,6 +24,16 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 public class ApplicationWebMvcConfig implements WebMvcConfigurer {
+
+    private static final String[] DEFAULT_ALLOWED_ORIGIN_PATTERNS = {
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:4173",
+            "http://127.0.0.1:4173"
+    };
+
+    @Value("${app.cors.allowed-origin-patterns:}")
+    private String allowedOriginPatterns;
 
     /**
      * API 鉴权放行的 URL 前缀或路径（无状态，不依赖 Session）
@@ -49,11 +60,22 @@ public class ApplicationWebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOriginPatterns("*")
+                .allowedOriginPatterns(resolveAllowedOriginPatterns())
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("Authorization", "token", "X-Client-Type", "Content-Type")
-                .allowCredentials(true)
+                .allowCredentials(false)
                 .maxAge(3600);
+    }
+
+    private String[] resolveAllowedOriginPatterns() {
+        if (allowedOriginPatterns == null || allowedOriginPatterns.trim().isEmpty()) {
+            return DEFAULT_ALLOWED_ORIGIN_PATTERNS;
+        }
+        String[] patterns = Arrays.stream(allowedOriginPatterns.split(","))
+                .map(String::trim)
+                .filter(pattern -> !pattern.isEmpty())
+                .toArray(String[]::new);
+        return patterns.length == 0 ? DEFAULT_ALLOWED_ORIGIN_PATTERNS : patterns;
     }
 
     /**

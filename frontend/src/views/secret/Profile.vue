@@ -175,13 +175,13 @@ onMounted(() => {
 }
 .toggle {
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-image: url(/img/common/arrow-right.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.5;
+  width: 10px;
+  height: 10px;
+  margin-left: 12px;
+  border-top: 2px solid #b8bcc6;
+  border-right: 2px solid #b8bcc6;
+  transform: rotate(45deg);
+  opacity: 0.8;
 }
 
 .empty {

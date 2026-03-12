@@ -421,11 +421,33 @@ watch(() => route.fullPath, () => {
 }
 
 .nostatus {
-  background: url(/img/lostandfound/nostatus.png) no-repeat center 60px;
-  background-size: 88px;
+  position: relative;
   padding-top: 170px;
   min-height: 200px;
   text-align: center;
+}
+.nostatus::before {
+  content: '';
+  position: absolute;
+  top: 44px;
+  left: 50%;
+  width: 88px;
+  height: 88px;
+  transform: translateX(-50%);
+  border-radius: 28px;
+  background: linear-gradient(180deg, #eefcf8 0%, #daf4ec 100%);
+  box-shadow: inset 0 0 0 1px #c7ebe0;
+}
+.nostatus::after {
+  content: '';
+  position: absolute;
+  top: 77px;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 3px solid rgba(68, 193, 165, 0.6);
+  border-bottom: 3px solid rgba(68, 193, 165, 0.6);
 }
 .nostatus .tip {
   text-align: center;

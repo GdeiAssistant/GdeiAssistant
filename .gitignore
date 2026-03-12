@@ -74,6 +74,13 @@ frontend/lerna-debug.log*
 frontend/coverage/
 frontend/*.lcov
 
+# Local Test Sources
+src/test/java/
+frontend/test/
+frontend/tests/
+frontend/src/**/*.test.*
+frontend/src/**/*.spec.*
+
 # ==================================
 # 敏感配置（勿提交）- 可提交的模板见下方「例外规则」
 # ==================================

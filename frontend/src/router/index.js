@@ -1,105 +1,114 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MainLayout from '../layout/MainLayout.vue'
-import Login from '../views/Login.vue'
-import About from '../views/About.vue'
-import Home from '../views/Home.vue'
-import Schedule from '../views/schedule/Schedule.vue'
-import Discover from '../views/discover/Discover.vue'
-import Profile from '../views/Profile.vue'
-import Grade from '../views/grade/Grade.vue'
-import Cet from '../views/cet/Cet.vue'
-import CetSave from '../views/cet/CetSave.vue'
-import Collection from '../views/collection/Collection.vue'
-import CollectionSearch from '../views/collection/CollectionSearch.vue'
-import CollectionList from '../views/collection/CollectionList.vue'
-import CollectionDetail from '../views/collection/CollectionDetail.vue'
-import Book from '../views/book/Book.vue'
-import CardSearch from '../views/card/CardSearch.vue'
-import CardList from '../views/card/CardList.vue'
-import CardInfo from '../views/card/CardInfo.vue'
-import Evaluate from '../views/evaluate/Evaluate.vue'
-import Spare from '../views/spare/Spare.vue'
-import KaoyanSearch from '../views/kaoyan/KaoyanSearch.vue'
-import KaoyanResult from '../views/kaoyan/KaoyanResult.vue'
-import PeIndex from '../views/pe/PeIndex.vue'
-import NewsList from '../views/news/NewsList.vue'
-import Info from '../views/Info.vue'
-import WechatAccountList from '../views/wechat/WechatAccountList.vue'
-import ReadingList from '../views/reading/ReadingList.vue'
-import UserPrivacy from '../views/user/Privacy.vue'
-import UserPrivacySetting from '../views/user/PrivacySetting.vue'
-import UserFunctions from '../views/user/Functions.vue'
-import UserFeatureManage from '../views/user/FeatureManage.vue'
-import UserPassword from '../views/user/Password.vue'
-import UserLoginHistory from '../views/user/LoginHistory.vue'
-import UserLoginRecord from '../views/user/LoginRecord.vue'
-import UserRealname from '../views/user/RealName.vue'
-import UserPhone from '../views/user/Phone.vue'
-import UserBindPhone from '../views/user/BindPhone.vue'
-import UserBindEmail from '../views/user/BindEmail.vue'
-import UserDelete from '../views/user/DeleteAccount.vue'
-import UserDownload from '../views/user/Download.vue'
-import UserFeedback from '../views/user/Feedback.vue'
-import DataIndex from '../views/data/DataIndex.vue'
-import ElectricityFees from '../views/data/ElectricityFees.vue'
-import YellowPage from '../views/data/YellowPage.vue'
-// About 相关静态页面
-import Security from '../views/about/Security.vue'
-import Account from '../views/about/Account.vue'
-import UserAgreement from '../views/about/UserAgreement.vue'
-import PrivacyPolicy from '../views/about/PrivacyPolicy.vue'
-import CookiePolicy from '../views/about/CookiePolicy.vue'
-import SocialPolicy from '../views/about/SocialPolicy.vue'
-import License from '../views/about/License.vue'
-import IntellectualProperty from '../views/about/IntellectualProperty.vue'
-// 二手交易模块（嵌套路由 + Tabbar）
-import ErshouIndex from '../views/ershou/Index.vue'
-import ErshouHome from '../views/ershou/Home.vue'
-import ErshouPublish from '../views/ershou/Publish.vue'
-import ErshouProfile from '../views/ershou/Profile.vue'
-// 独立全屏页（不显示底部 Tabbar）
-import ErshouDetail from '../views/ershou/Detail.vue'
-import ErshouType from '../views/ershou/Type.vue'
-import ErshouSearch from '../views/ershou/Search.vue'
-// 失物招领模块（嵌套路由 + Tabbar）
-import LostAndFoundIndex from '../views/lostandfound/Index.vue'
-import LostAndFoundHome from '../views/lostandfound/Home.vue'
-import LostAndFoundPublish from '../views/lostandfound/Publish.vue'
-import LostAndFoundProfile from '../views/lostandfound/Profile.vue'
-// 独立全屏页（不显示底部 Tabbar）
-import LostAndFoundDetail from '../views/lostandfound/Detail.vue'
-// 校园树洞模块
-import SecretHome from '../views/secret/Home.vue'
-import SecretPublish from '../views/secret/Publish.vue'
-import SecretDetail from '../views/secret/Detail.vue'
-import SecretProfile from '../views/secret/Profile.vue'
-// 校园表白墙模块（express：嵌套路由 + 黑底 Tabbar）
-import ExpressIndex from '../views/express/Index.vue'
-import ExpressHome from '../views/express/Home.vue'
-import ExpressPublish from '../views/express/Publish.vue'
-import ExpressSearch from '../views/express/Search.vue'
-import ExpressDetail from '../views/express/Detail.vue'
-// 卖室友/交友模块（对应后端 Dating）
-import DatingHome from '../views/dating/Home.vue'
-import DatingPublish from '../views/dating/Publish.vue'
-import DatingDetail from '../views/dating/Detail.vue'
-import DatingCenter from '../views/dating/Center.vue'
-// 校园话题模块（现代化社交卡片风格）
-import TopicIndex from '../views/topic/Index.vue'
-import TopicHome from '../views/topic/Home.vue'
-import TopicPublish from '../views/topic/Publish.vue'
-import TopicSearch from '../views/topic/Search.vue'
-import TopicDetail from '../views/topic/Detail.vue'
-// 拍好校园模块
-import PhotographHome from '../views/photograph/Home.vue'
-import PhotographDetail from '../views/photograph/Detail.vue'
-import PhotographPublish from '../views/photograph/Publish.vue'
-// 全民快递/校园跑腿模块（现代化O2O任务卡片风格）
-import DeliveryIndex from '../views/delivery/Index.vue'
-import DeliveryHome from '../views/delivery/Home.vue'
-import DeliveryPublish from '../views/delivery/Publish.vue'
-import DeliveryDetail from '../views/delivery/Detail.vue'
-import DeliveryMine from '../views/delivery/Mine.vue'
+
+const layoutModules = import.meta.glob('../layout/**/*.vue')
+const viewModules = import.meta.glob('../views/**/*.vue')
+
+function lazyModule(modules, modulePath) {
+  const loader = modules[modulePath]
+  if (!loader) {
+    throw new Error(`Failed to resolve route component: ${modulePath}`)
+  }
+  return loader
+}
+
+function lazyLayout(relativePath) {
+  return lazyModule(layoutModules, `../layout/${relativePath}.vue`)
+}
+
+function lazyView(relativePath) {
+  return lazyModule(viewModules, `../views/${relativePath}.vue`)
+}
+
+const MainLayout = lazyLayout('MainLayout')
+const Login = lazyView('Login')
+const About = lazyView('About')
+const Home = lazyView('Home')
+const Schedule = lazyView('schedule/Schedule')
+const Discover = lazyView('discover/Discover')
+const Profile = lazyView('Profile')
+const Grade = lazyView('grade/Grade')
+const Cet = lazyView('cet/Cet')
+const CetSave = lazyView('cet/CetSave')
+const Collection = lazyView('collection/Collection')
+const CollectionSearch = lazyView('collection/CollectionSearch')
+const CollectionList = lazyView('collection/CollectionList')
+const CollectionDetail = lazyView('collection/CollectionDetail')
+const Book = lazyView('book/Book')
+const CardSearch = lazyView('card/CardSearch')
+const CardList = lazyView('card/CardList')
+const CardInfo = lazyView('card/CardInfo')
+const Evaluate = lazyView('evaluate/Evaluate')
+const Spare = lazyView('spare/Spare')
+const KaoyanSearch = lazyView('kaoyan/KaoyanSearch')
+const KaoyanResult = lazyView('kaoyan/KaoyanResult')
+const PeIndex = lazyView('pe/PeIndex')
+const NewsList = lazyView('news/NewsList')
+const Info = lazyView('Info')
+const WechatAccountList = lazyView('wechat/WechatAccountList')
+const ReadingList = lazyView('reading/ReadingList')
+const UserPrivacy = lazyView('user/Privacy')
+const UserPrivacySetting = lazyView('user/PrivacySetting')
+const UserFunctions = lazyView('user/Functions')
+const UserFeatureManage = lazyView('user/FeatureManage')
+const UserPassword = lazyView('user/Password')
+const UserLoginHistory = lazyView('user/LoginHistory')
+const UserLoginRecord = lazyView('user/LoginRecord')
+const UserRealname = lazyView('user/RealName')
+const UserPhone = lazyView('user/Phone')
+const UserBindPhone = lazyView('user/BindPhone')
+const UserBindEmail = lazyView('user/BindEmail')
+const UserDelete = lazyView('user/DeleteAccount')
+const UserDownload = lazyView('user/Download')
+const UserFeedback = lazyView('user/Feedback')
+const DataIndex = lazyView('data/DataIndex')
+const ElectricityFees = lazyView('data/ElectricityFees')
+const YellowPage = lazyView('data/YellowPage')
+const Security = lazyView('about/Security')
+const Account = lazyView('about/Account')
+const UserAgreement = lazyView('about/UserAgreement')
+const PrivacyPolicy = lazyView('about/PrivacyPolicy')
+const CookiePolicy = lazyView('about/CookiePolicy')
+const SocialPolicy = lazyView('about/SocialPolicy')
+const License = lazyView('about/License')
+const IntellectualProperty = lazyView('about/IntellectualProperty')
+const ErshouIndex = lazyView('ershou/Index')
+const ErshouHome = lazyView('ershou/Home')
+const ErshouPublish = lazyView('ershou/Publish')
+const ErshouProfile = lazyView('ershou/Profile')
+const ErshouDetail = lazyView('ershou/Detail')
+const ErshouType = lazyView('ershou/Type')
+const ErshouSearch = lazyView('ershou/Search')
+const LostAndFoundIndex = lazyView('lostandfound/Index')
+const LostAndFoundHome = lazyView('lostandfound/Home')
+const LostAndFoundPublish = lazyView('lostandfound/Publish')
+const LostAndFoundProfile = lazyView('lostandfound/Profile')
+const LostAndFoundDetail = lazyView('lostandfound/Detail')
+const SecretHome = lazyView('secret/Home')
+const SecretPublish = lazyView('secret/Publish')
+const SecretDetail = lazyView('secret/Detail')
+const SecretProfile = lazyView('secret/Profile')
+const ExpressIndex = lazyView('express/Index')
+const ExpressHome = lazyView('express/Home')
+const ExpressPublish = lazyView('express/Publish')
+const ExpressSearch = lazyView('express/Search')
+const ExpressDetail = lazyView('express/Detail')
+const DatingHome = lazyView('dating/Home')
+const DatingPublish = lazyView('dating/Publish')
+const DatingDetail = lazyView('dating/Detail')
+const DatingCenter = lazyView('dating/Center')
+const TopicIndex = lazyView('topic/Index')
+const TopicHome = lazyView('topic/Home')
+const TopicPublish = lazyView('topic/Publish')
+const TopicSearch = lazyView('topic/Search')
+const TopicDetail = lazyView('topic/Detail')
+const PhotographHome = lazyView('photograph/Home')
+const PhotographDetail = lazyView('photograph/Detail')
+const PhotographPublish = lazyView('photograph/Publish')
+const DeliveryIndex = lazyView('delivery/Index')
+const DeliveryHome = lazyView('delivery/Home')
+const DeliveryPublish = lazyView('delivery/Publish')
+const DeliveryDetail = lazyView('delivery/Detail')
+const DeliveryMine = lazyView('delivery/Mine')
 
 const routes = [
   {
@@ -542,43 +551,45 @@ const router = createRouter({
 })
 
 // 与后端 SettingConstantUtils.LOGIN_INTERCEPTOR_EXCEPTION_LIST 同步：无需登录即可访问的路径前缀
-const AUTH_WHITELIST = ['/login', '/logout', '/about', '/agreement', '/policy', '/license', '/announcement', '/download', '/covid19']
+export const AUTH_WHITELIST = ['/login', '/logout', '/about', '/agreement', '/policy', '/license', '/announcement', '/download', '/covid19']
 
-function hasToken() {
-  return !!localStorage.getItem('token')
+export function hasToken(storage = globalThis?.localStorage) {
+  return !!storage?.getItem?.('token')
 }
 
-function isWhitelisted(path) {
+export function isWhitelisted(path) {
   if (path === '/') return true
   return AUTH_WHITELIST.some(prefix => path === prefix || path.startsWith(prefix + '/'))
 }
 
-router.beforeEach((to, from, next) => {
-  const path = to.path
-  const loggedIn = hasToken()
+export function resolveNavigationTarget(path, loggedIn) {
   if (path === '/') {
-    next(loggedIn ? '/home' : '/login')
-    return
+    return loggedIn ? '/home' : '/login'
   }
   if (path === '/login') {
-    next(loggedIn ? '/home' : undefined)
-    return
+    return loggedIn ? '/home' : null
   }
   if (isWhitelisted(path)) {
+    return null
+  }
+  return loggedIn ? null : '/login'
+}
+
+router.beforeEach((to, from, next) => {
+  const redirectTarget = resolveNavigationTarget(to.path, hasToken())
+  if (redirectTarget == null) {
     next()
     return
   }
-  if (!loggedIn) {
-    next('/login')
-    return
-  }
-  next()
+  next(redirectTarget)
 })
 
 // 固定浏览器标题，禁止根据路由动态修改
-const FIXED_TITLE = '广东第二师范学院校园助手系统'
+export const FIXED_TITLE = '广东第二师范学院校园助手系统'
 router.afterEach(() => {
-  document.title = FIXED_TITLE
+  if (typeof document !== 'undefined') {
+    document.title = FIXED_TITLE
+  }
 })
 
 export default router

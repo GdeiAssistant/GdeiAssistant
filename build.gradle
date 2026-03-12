@@ -6,12 +6,6 @@ plugins {
     id 'org.graalvm.buildtools.native' version '0.10.1'
 }
 
-repositories {
-    flatDir { dirs 'libs' }
-    mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
-}
-
 configurations.all {
     exclude group: "commons-logging", module: "commons-logging"
 }
@@ -81,8 +75,11 @@ tasks.withType(JavaCompile) {
 
 group = 'cn.gdeiassistant'
 version = '1.0-SNAPSHOT'
-sourceCompatibility = '17'
-targetCompatibility = '17'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 tasks.withType(Test) {
     useJUnitPlatform()

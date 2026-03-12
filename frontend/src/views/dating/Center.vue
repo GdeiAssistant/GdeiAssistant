@@ -70,10 +70,6 @@ function applyRouteState() {
   activeTab.value = getInteractionTabIndex()
 }
 
-function getPick(message) {
-  return message?.roommatePick || message?.datingPick || {}
-}
-
 function getProfile(item) {
   return item?.roommateProfile || item?.datingProfile || {}
 }
@@ -86,17 +82,16 @@ async function loadData() {
   loading.value = true
   try {
     if (activeTab.value === 0) {
-      const res = await request.get('/dating/message/start/0')
+      const res = await request.get('/dating/pick/my/received')
       const raw = res?.data || []
-      receivedList.value = Array.isArray(raw) ? raw.map((m) => {
-        const pick = getPick(m)
-        const profile = getProfile(pick)
+      receivedList.value = Array.isArray(raw) ? raw.map((p) => {
+        const profile = getProfile(p)
         return {
-          id: normalizeId(pick.pickId || m.messageId),
-          senderName: profile.nickname || pick.username || m.username || '匿名',
-          content: pick.content || '',
-          time: pick.createTime || m.createTime || '最近更新',
-          status: pick.state,
+          id: normalizeId(p.pickId),
+          senderName: profile.nickname || p.username || '匿名',
+          content: p.content || '',
+          time: p.createTime || '最近更新',
+          status: p.state,
           avatar: profile.pictureURL || null
         }
       }) : []

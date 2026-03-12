@@ -34,7 +34,12 @@
 
       <section class="info-section">
         <div class="section-title">互动消息</div>
-        <InteractionBlock :items="interactionItems" :unread-count="interactionUnreadCount" @select-item="handleInteractionSelect" />
+        <InteractionBlock
+          :items="interactionItems"
+          :unread-count="interactionUnreadCount"
+          @select-item="handleInteractionSelect"
+          @mark-all="handleMarkAllInteractionsRead"
+        />
       </section>
     </div>
   </div>
@@ -161,55 +166,13 @@ function resolveDatingInteractionLocation(item) {
 }
 
 function resolveDeliveryInteractionLocation(item) {
-  if (item?.type === 'order_accepted' && item?.targetId) {
-    return {
-      path: `/delivery/detail/${item.targetId}`,
-      query: buildInteractionQuery(item)
-    }
-  }
-  if (item?.type === 'order_finished' || item?.targetType === 'accepted') {
-    return {
-      path: '/delivery/mine',
-      query: buildInteractionQuery(item, { tab: 'accepted' })
-    }
-  }
-  if (item?.targetType === 'published') {
-    return {
-      path: '/delivery/mine',
-      query: buildInteractionQuery(item, { tab: 'published' })
-    }
-  }
   return {
-    path: '/delivery/mine',
+    path: item?.targetId ? `/delivery/detail/${item.targetId}` : '/delivery/home',
     query: buildInteractionQuery(item)
   }
 }
 
 function resolveMarketplaceInteractionLocation(item) {
-  if (item?.targetType === 'sold') {
-    return {
-      path: '/ershou/profile',
-      query: buildInteractionQuery(item, { tab: 'sold' })
-    }
-  }
-  if (item?.targetType === 'off') {
-    return {
-      path: '/ershou/profile',
-      query: buildInteractionQuery(item, { tab: 'off' })
-    }
-  }
-  if (item?.targetType === 'published' || item?.targetType === 'doing') {
-    return {
-      path: '/ershou/profile',
-      query: buildInteractionQuery(item, { tab: 'doing' })
-    }
-  }
-  if (item?.targetId) {
-    return {
-      path: `/ershou/detail/${item.targetId}`,
-      query: buildInteractionQuery(item)
-    }
-  }
   return {
     path: '/ershou/home',
     query: buildInteractionQuery(item)
@@ -217,30 +180,6 @@ function resolveMarketplaceInteractionLocation(item) {
 }
 
 function resolveLostAndFoundInteractionLocation(item) {
-  if (item?.targetType === 'didfound') {
-    return {
-      path: '/lostandfound/profile',
-      query: buildInteractionQuery(item, { tab: 'didfound' })
-    }
-  }
-  if (item?.targetType === 'found') {
-    return {
-      path: '/lostandfound/profile',
-      query: buildInteractionQuery(item, { tab: 'found' })
-    }
-  }
-  if (item?.targetType === 'lost') {
-    return {
-      path: '/lostandfound/profile',
-      query: buildInteractionQuery(item, { tab: 'lost' })
-    }
-  }
-  if (item?.targetId) {
-    return {
-      path: `/lostandfound/detail/${item.targetId}`,
-      query: buildInteractionQuery(item)
-    }
-  }
   return {
     path: '/lostandfound/home',
     query: buildInteractionQuery(item)
@@ -287,6 +226,20 @@ function handleInteractionSelect(item) {
   }
 }
 
+function handleMarkAllInteractionsRead() {
+  if (interactionUnreadCount.value <= 0) {
+    return
+  }
+  interactionUnreadCount.value = 0
+  interactionItems.value = interactionItems.value.map((item) => ({
+    ...item,
+    isRead: true
+  }))
+  request.post('/message/readall').catch(() => {
+    loadInfoPage()
+  })
+}
+
 async function loadInfoPage() {
   const weui = typeof window !== 'undefined' && window.weui
   if (weui && typeof weui.loading === 'function') {
@@ -296,12 +249,8 @@ async function loadInfoPage() {
     const [announcementRes, informationRes, interactionRes, unreadRes] = await Promise.allSettled([
       request.get('/announcement/start/0/size/5'),
       request.get('/information/list'),
-      request.get('/message/interaction/start/0/size/20', {
-        params: { includeLegacyDating: true }
-      }),
-      request.get('/message/unread', {
-        params: { includeLegacyDating: true }
-      })
+      request.get('/message/interaction/start/0/size/20'),
+      request.get('/message/unread')
     ])
 
     if (announcementRes.status === 'fulfilled' && announcementRes.value?.success) {

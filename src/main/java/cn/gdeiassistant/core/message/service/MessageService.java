@@ -13,20 +13,11 @@ public class MessageService {
     private InteractionNotificationService interactionNotificationService;
 
     public List<InteractionMessageVO> queryInteractionMessages(String sessionId, Integer start, Integer size) {
-        return queryInteractionMessages(sessionId, start, size, false);
-    }
-
-    public List<InteractionMessageVO> queryInteractionMessages(String sessionId, Integer start, Integer size,
-            boolean includeLegacyDating) {
-        return interactionNotificationService.queryInteractionMessages(sessionId, start, size, includeLegacyDating);
+        return interactionNotificationService.queryInteractionMessages(sessionId, start, size);
     }
 
     public Integer queryInteractionUnreadCount(String sessionId) {
-        return queryInteractionUnreadCount(sessionId, false);
-    }
-
-    public Integer queryInteractionUnreadCount(String sessionId, boolean includeLegacyDating) {
-        return interactionNotificationService.queryInteractionUnreadCount(sessionId, includeLegacyDating);
+        return interactionNotificationService.queryInteractionUnreadCount(sessionId);
     }
 
     public void markInteractionMessageRead(String sessionId, String id) {
@@ -34,10 +25,6 @@ public class MessageService {
     }
 
     public void markAllInteractionMessagesRead(String sessionId) {
-        markAllInteractionMessagesRead(sessionId, false);
-    }
-
-    public void markAllInteractionMessagesRead(String sessionId, boolean includeLegacyDating) {
-        interactionNotificationService.markAllInteractionNotificationsRead(sessionId, includeLegacyDating);
+        interactionNotificationService.markAllInteractionNotificationsRead(sessionId);
     }
 }

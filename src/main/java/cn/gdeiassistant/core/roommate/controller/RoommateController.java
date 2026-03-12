@@ -11,7 +11,6 @@ import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePickSubmitDTO;
 import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePublishDTO;
-import cn.gdeiassistant.core.roommate.pojo.vo.RoommateMessageVO;
 import cn.gdeiassistant.core.roommate.pojo.vo.RoommatePickVO;
 import cn.gdeiassistant.core.roommate.pojo.vo.RoommateProfileVO;
 import cn.gdeiassistant.core.roommate.service.RoommateService;
@@ -85,6 +84,12 @@ public class RoommateController {
         return new DataJsonResult<>(true, roommateService.queryMySentPicks(sessionId));
     }
 
+    @RequestMapping(value = "/api/dating/pick/my/received", method = RequestMethod.GET)
+    public DataJsonResult<List<RoommatePickVO>> getMyReceivedPicks(HttpServletRequest request) {
+        String sessionId = (String) request.getAttribute("sessionId");
+        return new DataJsonResult<>(true, roommateService.queryMyReceivedPicks(sessionId));
+    }
+
     @RequestMapping(value = "/api/dating/profile", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addRoommateProfile(HttpServletRequest request, @Validated RoommatePublishDTO dto,
@@ -124,19 +129,6 @@ public class RoommateController {
         String sessionId = (String) request.getAttribute("sessionId");
         roommateService.verifyRoommatePickRequestAccess(sessionId, dto.getProfileId());
         roommateService.addRoommatePick(sessionId, dto);
-        return new JsonResult(true);
-    }
-
-    @RequestMapping(value = "/api/dating/message/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<RoommateMessageVO>> queryRoommateMessage(HttpServletRequest request, @PathVariable("start") Integer start) {
-        String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, roommateService.queryUserRoommateMessage(sessionId, start, 10));
-    }
-
-    @RequestMapping(value = "/api/dating/message/id/{id}/read", method = RequestMethod.POST)
-    public JsonResult readRoommateMessage(HttpServletRequest request, @PathVariable("id") Integer id) {
-        String sessionId = (String) request.getAttribute("sessionId");
-        roommateService.updateRoommateMessageState(sessionId, id, 1);
         return new JsonResult(true);
     }
 

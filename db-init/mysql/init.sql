@@ -54,26 +54,6 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
--- Table structure for dating_message
--- ----------------------------
-DROP TABLE IF EXISTS `dating_message`;
-CREATE TABLE `dating_message` (
-  `message_id` int NOT NULL AUTO_INCREMENT COMMENT '消息编号ID',
-  `pick_id` int NOT NULL COMMENT '撩一下编号ID',
-  `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
-  `type` tinyint(1) NOT NULL COMMENT '消息类型',
-  `state` tinyint(1) NOT NULL COMMENT '状态',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '消息创建时间',
-  PRIMARY KEY (`message_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
--- ----------------------------
--- Records of dating_message
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for dating_pick
 -- ----------------------------
 DROP TABLE IF EXISTS `dating_pick`;

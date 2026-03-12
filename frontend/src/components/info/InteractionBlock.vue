@@ -1,8 +1,18 @@
 <template>
   <div class="modern-card">
-    <div class="card-title">
-      统一互动消息
-      <span v-if="unreadCount > 0" class="card-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+    <div class="card-header">
+      <div class="card-title">
+        统一互动消息
+        <span v-if="unreadCount > 0" class="card-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+      </div>
+      <button
+        v-if="unreadCount > 0"
+        type="button"
+        class="card-action"
+        @click="$emit('mark-all')"
+      >
+        全部已读
+      </button>
     </div>
     <div v-if="!items.length" class="interaction-empty">暂无互动消息</div>
     <div v-else class="interaction-list">
@@ -19,7 +29,10 @@
         </div>
         <div class="interaction-item__content">{{ item.content || '你有一条新的互动消息' }}</div>
         <div class="interaction-item__footer">
-          <span class="interaction-item__module">{{ getModuleLabel(item.module) }}</span>
+          <div class="interaction-item__badges">
+            <span class="interaction-item__module">{{ getModuleLabel(item.module) }}</span>
+            <span v-if="getActionLabel(item)" class="interaction-item__action">{{ getActionLabel(item) }}</span>
+          </div>
           <span :class="['interaction-item__state', item.isRead ? 'is-read' : 'is-unread']">
             {{ item.isRead ? '已读' : '未读' }}
           </span>
@@ -41,7 +54,7 @@ defineProps({
   }
 })
 
-defineEmits(['select-item'])
+defineEmits(['select-item', 'mark-all'])
 
 function getModuleLabel(module) {
   if (module === 'marketplace') {
@@ -70,6 +83,43 @@ function getModuleLabel(module) {
   }
   return '互动'
 }
+
+function getActionLabel(item) {
+  if (!item) {
+    return ''
+  }
+  if (item.targetType === 'received') {
+    return '我收到的'
+  }
+  if (item.targetType === 'sent') {
+    return '我发出的'
+  }
+  if (item.targetType === 'posts') {
+    return '我的发布'
+  }
+  if (item.targetType === 'published') {
+    return '我发布的'
+  }
+  if (item.targetType === 'accepted') {
+    return '我接的'
+  }
+  if (item.targetType === 'comment') {
+    return '评论'
+  }
+  if (item.targetType === 'like') {
+    return '点赞'
+  }
+  if (item.targetType === 'guess') {
+    return '猜名字'
+  }
+  if (item.type === 'pick_received') {
+    return '我收到的'
+  }
+  if (item.type === 'pick_accepted' || item.type === 'pick_rejected' || item.type === 'pick_updated') {
+    return '我发出的'
+  }
+  return ''
+}
 </script>
 
 <style scoped>
@@ -81,11 +131,19 @@ function getModuleLabel(module) {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
 .card-title {
   font-size: 17px;
   font-weight: 600;
   color: #333333;
-  margin-bottom: 12px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
 }
@@ -113,6 +171,16 @@ function getModuleLabel(module) {
   background: #09bb07;
   border-radius: 2px;
   margin-right: 8px;
+}
+
+.card-action {
+  border: none;
+  background: transparent;
+  color: #576b95;
+  font-size: 13px;
+  padding: 0;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
 .interaction-empty {
@@ -174,11 +242,27 @@ function getModuleLabel(module) {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+}
+
+.interaction-item__badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .interaction-item__module {
   font-size: 12px;
   color: #576b95;
+}
+
+.interaction-item__action {
+  font-size: 12px;
+  color: #7c8797;
+  background: #eef2f7;
+  border-radius: 999px;
+  padding: 2px 8px;
 }
 
 .interaction-item__state {

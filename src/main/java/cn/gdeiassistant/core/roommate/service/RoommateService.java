@@ -10,10 +10,8 @@ import cn.gdeiassistant.core.roommate.mapper.RoommateMapper;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePickSubmitDTO;
 import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePublishDTO;
-import cn.gdeiassistant.core.roommate.pojo.entity.RoommateMessageEntity;
 import cn.gdeiassistant.core.roommate.pojo.entity.RoommatePickEntity;
 import cn.gdeiassistant.core.roommate.pojo.entity.RoommateProfileEntity;
-import cn.gdeiassistant.core.roommate.pojo.vo.RoommateMessageVO;
 import cn.gdeiassistant.core.roommate.pojo.vo.RoommatePickVO;
 import cn.gdeiassistant.core.roommate.pojo.vo.RoommateProfileVO;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
@@ -174,12 +172,6 @@ public class RoommateService {
         pick.setContent(dto.getContent());
         roommateMapper.insertRoommatePick(pick);
         RoommateProfileEntity profile = roommateMapper.selectRoommateProfileById(dto.getProfileId());
-        RoommateMessageEntity msg = new RoommateMessageEntity();
-        msg.setUsername(profile.getUsername());
-        msg.setRoommatePick(pick);
-        msg.setType(0);
-        msg.setState(0);
-        roommateMapper.insertRoommateMessage(msg);
         interactionNotificationService.createInteractionNotification(
                 "dating",
                 "pick_received",
@@ -201,12 +193,6 @@ public class RoommateService {
         if (entity == null) throw new DataNotExistException("该撩一下记录不存在");
         if (Integer.valueOf(0).equals(entity.getState())) {
             roommateMapper.updateRoommatePickState(id, state);
-            RoommateMessageEntity msg = new RoommateMessageEntity();
-            msg.setUsername(entity.getUsername());
-            msg.setType(1);
-            msg.setRoommatePick(entity);
-            msg.setState(0);
-            roommateMapper.insertRoommateMessage(msg);
             String nickname = entity.getRoommateProfile() != null && StringUtils.isNotBlank(entity.getRoommateProfile().getNickname())
                     ? entity.getRoommateProfile().getNickname()
                     : "对方";
@@ -239,26 +225,17 @@ public class RoommateService {
         }).collect(Collectors.toList());
     }
 
-    public List<RoommateMessageVO> queryUserRoommateMessage(String sessionId, Integer start, Integer size) {
+    public List<RoommatePickVO> queryMyReceivedPicks(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<RoommateMessageEntity> list = roommateMapper.selectUserRoommateMessagePage(user.getUsername(), start, size);
+        List<RoommatePickEntity> list = roommateMapper.selectReceivedRoommatePickListByProfileOwner(user.getUsername());
         if (list == null) return new ArrayList<>();
-        return list.stream().map(this::messageEntityToVO).collect(Collectors.toList());
-    }
-
-    public Integer queryUserUnReadRoommateMessageCount(String sessionId) {
-        User user = userCertificateService.getUserLoginCertificate(sessionId);
-        Integer n = roommateMapper.selectUserUnReadRoommateMessageCount(user.getUsername());
-        return n != null ? n : 0;
-    }
-
-    public void updateRoommateMessageState(Integer id, Integer state) {
-        roommateMapper.updateRoommateMessageState(id, state);
-    }
-
-    public void updateRoommateMessageState(String sessionId, Integer id, Integer state) {
-        User user = userCertificateService.getUserLoginCertificate(sessionId);
-        roommateMapper.updateRoommateMessageStateByUsername(id, state, user.getUsername());
+        return list.stream().map(e -> {
+            RoommatePickVO vo = pickEntityToVO(e);
+            if (e.getRoommateProfile() != null && e.getRoommateProfile().getProfileId() != null) {
+                vo.getRoommateProfile().setPictureURL(getRoommateProfilePictureURL(e.getRoommateProfile().getProfileId()));
+            }
+            return vo;
+        }).collect(Collectors.toList());
     }
 
     public String getRoommateProfilePictureURL(int id) {
@@ -299,17 +276,6 @@ public class RoommateService {
         vo.setContent(e.getContent());
         vo.setState(e.getState());
         if (e.getRoommateProfile() != null) vo.setRoommateProfile(profileEntityToVO(e.getRoommateProfile()));
-        return vo;
-    }
-
-    private RoommateMessageVO messageEntityToVO(RoommateMessageEntity e) {
-        RoommateMessageVO vo = new RoommateMessageVO();
-        vo.setMessageId(e.getMessageId());
-        vo.setUsername(e.getUsername());
-        vo.setType(e.getType());
-        vo.setState(e.getState());
-        vo.setCreateTime(e.getCreateTime());
-        if (e.getRoommatePick() != null) vo.setRoommatePick(pickEntityToVO(e.getRoommatePick()));
         return vo;
     }
 

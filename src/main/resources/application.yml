@@ -126,13 +126,21 @@ news:
 api:
   ai:
     ocr:
-      provider: ${AI_OCR_PROVIDER:openai}
+      provider: ${AI_OCR_PROVIDER:deepseek}
       openai:
         api-key: ${OPENAI_API_KEY:}
         model: ${OPENAI_OCR_MODEL:gpt-4.1-mini}
       gemini:
         api-key: ${GEMINI_API_KEY:}
         model: ${GEMINI_OCR_MODEL:gemini-2.0-flash}
+      claude:
+        api-key: ${CLAUDE_API_KEY:}
+        model: ${CLAUDE_OCR_MODEL:claude-sonnet-4-20250514}
+        api-url: ${CLAUDE_OCR_API_URL:https://api.anthropic.com/v1/messages}
+      deepseek:
+        api-key: ${DEEPSEEK_API_KEY:}
+        model: ${DEEPSEEK_OCR_MODEL:deepseek-chat}
+        base-url: ${DEEPSEEK_OCR_BASE_URL:https://api.deepseek.com/v1}
       doubao:
         api-key: ${DOUBAO_API_KEY:}
         model: ${DOUBAO_OCR_MODEL:doubao-1.5-vision-pro-32k}

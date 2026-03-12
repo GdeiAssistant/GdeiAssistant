@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.3'
     id 'io.spring.dependency-management' version '1.1.4'
-    // GraalVM Native Image：需 JDK 17+ 执行 nativeCompile，本地可用 Docker 构建
+    // GraalVM Native Image：nativeCompile 需 JDK 17+
     id 'org.graalvm.buildtools.native' version '0.10.1'
 }
 
@@ -86,8 +86,7 @@ tasks.withType(Test) {
 }
 
 // =============================================================================
-// bootRun 自动加载项目根目录 .env，使 Spring 能读到 DB_*、REDIS_*、MONGO_*、JWT_SECRET 等
-// 修改 .env 后无需 export，直接 ./gradlew bootRun 即可
+// bootRun 将项目根目录 .env 注入进程环境
 // =============================================================================
 def envFile = file("${rootProject.projectDir}/.env")
 def env = [:]
@@ -114,7 +113,7 @@ tasks.named("bootRun") {
 }
 
 // =============================================================================
-// GraalVM Native Image：保持 AOT 默认，仅压制 Netty 早期日志与放宽 classpath
+// GraalVM Native Image：保持 AOT 默认，并放宽 classpath
 // =============================================================================
 graalvmNative {
     binaries {

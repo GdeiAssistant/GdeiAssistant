@@ -72,7 +72,7 @@ watch(
   width: 28px !important;
   height: 28px !important;
 }
-/* 选中态：原版 PNG 无高亮图，用滤镜高亮为绿色 #09bb07 */
+/* 选中态图标使用滤镜高亮，替代缺失的高亮素材 */
 .weui-tabbar .weui-bar__item_on .weui-tabbar__icon {
   filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg);
 }

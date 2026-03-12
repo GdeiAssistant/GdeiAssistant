@@ -215,7 +215,7 @@ const routes = [
     name: 'NewsList',
     component: NewsList
   },
-  // 校园公众号列表（后端 /wechataccount）
+  // 校园公众号列表，对应后端 /wechataccount
   {
     path: '/wechataccount',
     name: 'WechatAccountList',
@@ -309,7 +309,7 @@ const routes = [
     name: 'YellowPage',
     component: YellowPage
   },
-  // About 相关静态页面路由
+  // About 相关静态页面
   {
     path: '/about/security',
     name: 'Security',
@@ -350,7 +350,7 @@ const routes = [
     name: 'IntellectualProperty',
     component: IntellectualProperty
   },
-  // 二手：详情/分类/搜索为独立路由，进入时不显示底部 Tabbar
+  // 二手模块：详情、分类、搜索使用独立路由
   {
     path: '/ershou/detail/:id',
     name: 'ErshouDetail',
@@ -376,7 +376,7 @@ const routes = [
       { path: 'profile', name: 'ErshouProfile', component: ErshouProfile }
     ]
   },
-  // 失物招领：详情为独立路由，进入时不显示底部 Tabbar
+  // 失物招领模块：详情使用独立路由
   {
     path: '/lostandfound/detail/:id',
     name: 'LostAndFoundDetail',
@@ -392,13 +392,13 @@ const routes = [
       { path: 'profile', name: 'LostAndFoundProfile', component: LostAndFoundProfile }
     ]
   },
-  // 校园表白墙：详情页为独立路由（不显示底部 Tabbar）
+  // 校园表白墙：详情使用独立路由
   {
     path: '/express/detail/:id',
     name: 'ExpressDetail',
     component: ExpressDetail
   },
-  // 校园表白墙：专属黑底 Tabbar
+  // 校园表白墙主路由，使用黑色 Tabbar 主题
   {
     path: '/express',
     component: ExpressIndex,
@@ -434,7 +434,7 @@ const routes = [
     name: 'DatingCenter',
     component: DatingCenter
   },
-  // 校园话题模块：专属亮绿色 Tabbar
+  // 校园话题主路由，使用绿色 Tabbar 主题
   {
     path: '/topic/detail/:id',
     name: 'TopicDetail',
@@ -450,7 +450,7 @@ const routes = [
       { path: 'search', name: 'TopicSearch', component: TopicSearch }
     ]
   },
-  // 全民快递/校园跑腿模块（现代化O2O任务卡片风格）
+  // 全民快递 / 校园跑腿主路由
   {
     path: '/delivery',
     component: DeliveryIndex,
@@ -486,7 +486,7 @@ const routes = [
     name: 'PhotographPublish',
     component: PhotographPublish
   },
-  // 校园树洞：所有页面都是独立路由（无底部 Tabbar）
+  // 校园树洞：所有页面均为独立路由
   {
     path: '/secret',
     redirect: '/secret/home'

@@ -15,6 +15,7 @@ public class DeliveryTradeEntity implements Serializable, Entity {
     private Date createTime;
     private String username;
     private Integer state;
+    private DeliveryOrderEntity deliveryOrder;
 
     public Integer getTradeId() { return tradeId; }
     public void setTradeId(Integer tradeId) { this.tradeId = tradeId; }
@@ -26,4 +27,6 @@ public class DeliveryTradeEntity implements Serializable, Entity {
     public void setUsername(String username) { this.username = username; }
     public Integer getState() { return state; }
     public void setState(Integer state) { this.state = state; }
+    public DeliveryOrderEntity getDeliveryOrder() { return deliveryOrder; }
+    public void setDeliveryOrder(DeliveryOrderEntity deliveryOrder) { this.deliveryOrder = deliveryOrder; }
 }

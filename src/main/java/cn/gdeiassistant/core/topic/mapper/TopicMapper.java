@@ -68,4 +68,16 @@ public interface TopicMapper {
 
     @Insert("insert into topic_like (topic_id,username,create_time) values(#{topicId},#{username},now())")
     void insertTopicLike(@Param("topicId") int id, @Param("username") String username);
+
+    @Select("select tl.id,tl.topic_id,tl.username,tl.create_time from topic_like tl " +
+            "inner join topic t on tl.topic_id=t.id where t.username=#{username} and tl.username!=#{username} " +
+            "order by tl.create_time desc, tl.id desc limit #{start},#{size}")
+    @Results(id = "TopicLikeReceived", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "topicId", column = "topic_id"),
+            @Result(property = "username", column = "username"),
+            @Result(property = "createTime", column = "create_time")
+    })
+    List<TopicLikeEntity> selectReceivedTopicLikePage(@Param("username") String username,
+            @Param("start") int start, @Param("size") int size);
 }

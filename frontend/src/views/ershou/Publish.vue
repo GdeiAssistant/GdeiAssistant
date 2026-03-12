@@ -1,9 +1,10 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 
+const route = useRoute()
 const router = useRouter()
 const name = ref('')
 const description = ref('')
@@ -12,12 +13,19 @@ const location = ref('')
 const typeId = ref(-1)
 const qq = ref('')
 const phone = ref('')
-const images = ref([]) // 图片 Base64 或 File 列表，最多 4 张
+const images = ref([])
 const typePickerVisible = ref(false)
-const frmErrors = ref({}) // 表单项错误状态
+const frmErrors = ref({})
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const submitting = ref(false)
+const pageLoading = ref(false)
+
+const editItemId = computed(() => {
+  const value = Number(route.query.id)
+  return Number.isInteger(value) && value > 0 ? value : null
+})
+const isEditMode = computed(() => route.query.edit === '1' && editItemId.value !== null)
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -41,12 +49,25 @@ const MAX_IMAGES = 4
 const MAX_SIZE = 5 * 1024 * 1024
 const ALLOW_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
+function goBack() {
+  router.push(isEditMode.value ? '/ershou/profile' : '/ershou/home')
+}
+
 function triggerFileInput() {
+  if (isEditMode.value) {
+    showDialog('编辑模式暂不支持修改商品图片')
+    return
+  }
   if (images.value.length >= MAX_IMAGES) return
-  document.getElementById('publish_file_input').click()
+  const input = document.getElementById('publish_file_input')
+  if (input) input.click()
 }
 
 function onFileChange(e) {
+  if (isEditMode.value) {
+    e.target.value = ''
+    return
+  }
   const files = e.target.files
   if (!files || files.length === 0) return
   const file = files[0]
@@ -59,7 +80,7 @@ function onFileChange(e) {
     return
   }
   if (images.value.length >= MAX_IMAGES) {
-    showDialog('最多只能选择四张图片！')
+    showDialog('最多只能选择四张图片')
     return
   }
   const reader = new FileReader()
@@ -71,6 +92,10 @@ function onFileChange(e) {
 }
 
 function removeImage(index) {
+  if (isEditMode.value) {
+    showDialog('编辑模式暂不支持修改商品图片')
+    return
+  }
   images.value = images.value.filter((_, i) => i !== index)
 }
 
@@ -87,7 +112,6 @@ function selectType(id) {
   closeTypePicker()
 }
 
-
 function validate() {
   const err = {}
   if (!name.value.trim()) err.name = true
@@ -101,9 +125,53 @@ function validate() {
   return Object.keys(err).length === 0
 }
 
+function buildPayload() {
+  const formData = new FormData()
+  formData.append('name', name.value.trim())
+  formData.append('description', description.value.trim())
+  formData.append('price', price.value)
+  formData.append('location', location.value.trim())
+  formData.append('type', String(typeId.value))
+  formData.append('qq', qq.value.trim())
+  formData.append('phone', phone.value.trim())
+  return formData
+}
+
+function populateForm(item) {
+  name.value = item?.name || ''
+  description.value = item?.description || ''
+  price.value = item?.price != null ? String(item.price) : ''
+  location.value = item?.location || ''
+  typeId.value = Number.isInteger(item?.type) ? item.type : -1
+  qq.value = item?.qq || ''
+  phone.value = item?.phone || ''
+  images.value = Array.isArray(item?.pictureURL) ? item.pictureURL.map((url) => ({ dataUrl: url, readonly: true })) : []
+}
+
+async function loadEditItem() {
+  if (!isEditMode.value) return
+  pageLoading.value = true
+  try {
+    const res = await request.get('/ershou/profile')
+    const data = res?.data || {}
+    const list = []
+      .concat(Array.isArray(data.doing) ? data.doing : [])
+      .concat(Array.isArray(data.sold) ? data.sold : [])
+      .concat(Array.isArray(data.off) ? data.off : [])
+    const item = list.find((entry) => Number(entry.id) === editItemId.value)
+    if (!item) {
+      showDialog('未找到要编辑的商品')
+      return
+    }
+    populateForm(item)
+  } finally {
+    pageLoading.value = false
+  }
+}
+
 async function submit() {
-  if (submitting.value) return
-  if (images.value.length < 1) {
+  if (submitting.value || pageLoading.value) return
+  if (!isEditMode.value && images.value.length < 1) {
     showDialog('请至少选择一张图片')
     return
   }
@@ -136,17 +204,17 @@ async function submit() {
     return
   }
   submitting.value = true
-  showLoading('正在上传...')
+  showLoading(isEditMode.value ? '正在保存...' : '正在上传...')
   try {
+    const formData = buildPayload()
+    if (isEditMode.value) {
+      await request.post(`/ershou/item/id/${editItemId.value}`, formData)
+      hideLoading()
+      showDialog('保存成功')
+      setTimeout(() => router.push('/ershou/profile'), 1200)
+      return
+    }
     const imageKeys = await uploadFilesByPresignedUrl(images.value.map(item => item.file).filter(Boolean))
-    const formData = new FormData()
-    formData.append('name', name.value.trim())
-    formData.append('description', description.value.trim())
-    formData.append('price', price.value)
-    formData.append('location', location.value.trim())
-    formData.append('type', String(typeId.value))
-    formData.append('qq', qq.value.trim())
-    formData.append('phone', phone.value.trim())
     imageKeys.forEach((imageKey) => formData.append('imageKeys', imageKey))
     await request.post('/ershou/item', formData)
     hideLoading()
@@ -157,32 +225,38 @@ async function submit() {
     hideLoading()
   }
 }
+
+onMounted(() => {
+  loadEditItem()
+})
 </script>
 
 <template>
   <div class="ershou-publish body1">
-    <!-- 与 Home 一致的灰底统一头部，右侧绿色「完成」按钮 -->
     <div class="unified-header">
-      <span class="unified-header__back" @click="router.push('/')">返回</span>
-      <h1 class="unified-header__title">发布二手商品</h1>
-      <a href="javascript:;" class="unified-header__submit" @click.prevent="submit">{{ submitting ? '提交中' : '完成' }}</a>
+      <span class="unified-header__back" @click="goBack">返回</span>
+      <h1 class="unified-header__title">{{ isEditMode ? '编辑二手商品' : '发布二手商品' }}</h1>
+      <a href="javascript:;" class="unified-header__submit" @click.prevent="submit">
+        {{ submitting ? '提交中' : (isEditMode ? '保存' : '完成') }}
+      </a>
     </div>
 
     <section class="picture">
       <div class="images">
         <div v-for="(img, index) in images" :key="index" class="image">
-          <a href="javascript:;" @click.prevent="removeImage(index)"><i class="i iclose"></i></a>
+          <a v-if="!isEditMode" href="javascript:;" @click.prevent="removeImage(index)"><i class="i iclose"></i></a>
           <i class="img"><img :src="img.dataUrl" alt=""></i>
         </div>
-        <span v-if="images.length < MAX_IMAGES" class="addimg" @click="triggerFileInput">
+        <span v-if="!isEditMode && images.length < MAX_IMAGES" class="addimg" @click="triggerFileInput">
           <i class="i iadd"><i class="i i1"></i><i class="i i2"></i></i>
           <input type="file" accept="image/*" id="publish_file_input" @change="onFileChange">
         </span>
       </div>
-      <p class="tip">最多可上传4张图片</p>
+      <p class="tip">{{ isEditMode ? '编辑模式暂不支持修改商品图片' : '最多可上传4张图片' }}</p>
     </section>
 
     <section class="form">
+      <p v-if="pageLoading" class="form-loading">正在加载商品信息...</p>
       <div class="frm" :class="{ frmerr: frmErrors.name }">
         <p class="frmt">商品名称</p>
         <div class="frmc">
@@ -236,7 +310,6 @@ async function submit() {
       </div>
     </section>
 
-    <!-- WEUI Dialog 对话框 -->
     <div v-if="dialogVisible">
       <div class="weui-mask" @click="dialogVisible = false"></div>
       <div class="weui-dialog">
@@ -267,7 +340,6 @@ async function submit() {
 
 <style scoped>
 .body1 { background: #fff; }
-/* 与 Home.vue 一致的灰底统一头部，右侧绿色「完成」 */
 .unified-header {
   display: flex;
   align-items: center;
@@ -317,7 +389,7 @@ async function submit() {
   vertical-align: top;
 }
 .images .image .img { width: 70px; height: 70px; overflow: hidden; display: block; }
-.images .image img { width: 100%; display: block; }
+.images .image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .images .image a {
   display: block;
   position: absolute;
@@ -359,6 +431,12 @@ async function submit() {
 .picture .tip { height: 24px; line-height: 24px; text-align: center; color: #fff; font-size: 14px; padding-bottom: 3px; }
 
 .form { padding: 0 20px; }
+.form-loading {
+  margin: 16px 0 0;
+  color: #999;
+  font-size: 14px;
+  text-align: center;
+}
 .form .frm {
   position: relative;
   padding-left: 90px;
@@ -394,7 +472,6 @@ async function submit() {
 .sky .mwc li { line-height: 30px; height: 30px; text-align: center; color: #666; font-size: 14px; }
 .sky .mwc li a { color: #666; display: block; text-decoration: none; }
 
-/* WEUI Dialog 样式 */
 .weui-mask {
   position: fixed;
   top: 0;

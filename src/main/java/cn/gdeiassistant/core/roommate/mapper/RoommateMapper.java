@@ -110,17 +110,18 @@ public interface RoommateMapper {
     })
     List<RoommatePickEntity> selectRoommatePickListByUsername(@Param("username") String username);
 
-    @Select("select message_id as datingMessageMessageId,dating_message.username as datingMessageUsername,type as datingMessageType,dating_message.state as datingMessageState," +
+    @Select("select message_id as datingMessageMessageId,dating_message.username as datingMessageUsername,type as datingMessageType,dating_message.state as datingMessageState,dating_message.create_time as datingMessageCreateTime," +
             "dating_pick.pick_id as datingPickPickId,dating_pick.username as datingPickUsername,dating_pick.content as datingPickContent,dating_pick.state as datingPickState," +
             "dating_profile.username as datingProfileUsername,dating_profile.nickname as datingProfileNickname,dating_profile.profile_id as datingProfileProfileId " +
             "from dating_message,dating_pick,dating_profile " +
             "where dating_message.pick_id=dating_pick.pick_id and dating_pick.profile_id=dating_profile.profile_id " +
-            "and dating_message.username=#{username} limit #{start},#{size}")
+            "and dating_message.username=#{username} order by dating_message.create_time desc, dating_message.message_id desc limit #{start},#{size}")
     @Results(id = "RoommateMessage", value = {
             @Result(property = "messageId", column = "datingMessageMessageId"),
             @Result(property = "username", column = "datingMessageUsername"),
             @Result(property = "type", column = "datingMessageType"),
             @Result(property = "state", column = "datingMessageState"),
+            @Result(property = "createTime", column = "datingMessageCreateTime"),
             @Result(property = "roommatePick.pickId", column = "datingPickPickId"),
             @Result(property = "roommatePick.username", column = "datingPickUsername"),
             @Result(property = "roommatePick.content", column = "datingPickContent"),
@@ -140,11 +141,24 @@ public interface RoommateMapper {
     List<RoommateMessageEntity> selectUserRoommateMessagePage(@Param("username") String username
             , @Param("start") Integer start, @Param("size") Integer size);
 
+    /**
+     * interaction 聚合接口专用分页查询。
+     */
+    @Select("select message_id as datingMessageMessageId,dating_message.username as datingMessageUsername,type as datingMessageType,dating_message.state as datingMessageState,dating_message.create_time as datingMessageCreateTime," +
+            "dating_pick.pick_id as datingPickPickId,dating_pick.username as datingPickUsername,dating_pick.content as datingPickContent,dating_pick.state as datingPickState," +
+            "dating_profile.username as datingProfileUsername,dating_profile.nickname as datingProfileNickname,dating_profile.profile_id as datingProfileProfileId " +
+            "from dating_message,dating_pick,dating_profile " +
+            "where dating_message.pick_id=dating_pick.pick_id and dating_pick.profile_id=dating_profile.profile_id " +
+            "and dating_message.username=#{username} order by dating_message.create_time desc, dating_message.message_id desc limit #{start},#{size}")
+    @ResultMap("RoommateMessage")
+    List<RoommateMessageEntity> selectUserRoommateMessageInteractionPage(@Param("username") String username,
+            @Param("start") Integer start, @Param("size") Integer size);
+
     @Select("select count(message_id) from dating_message where username=#{username} and state=0")
     @ResultType(Integer.class)
     Integer selectUserUnReadRoommateMessageCount(String username);
 
-    @Insert("insert into dating_message (username,pick_id,type,state) values(#{username},#{roommatePick.pickId},#{type},#{state})")
+    @Insert("insert into dating_message (username,pick_id,type,state,create_time) values(#{username},#{roommatePick.pickId},#{type},#{state},now())")
     void insertRoommateMessage(RoommateMessageEntity entity);
 
     @Update("update dating_message set state=#{state} where message_id=#{messageId}")

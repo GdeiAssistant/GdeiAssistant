@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 
@@ -13,6 +13,9 @@ const dialogMessage = ref('')
 const images = ref([])
 const currentIndex = ref(0)
 const newComment = ref('')
+const commentRefs = new Map()
+const actionRef = ref(null)
+const commentListRef = ref(null)
 
 const showDialog = (msg) => {
   dialogMessage.value = msg
@@ -99,8 +102,54 @@ const toggleLike = () => {
   })
 }
 
-onMounted(() => {
-  loadDetail()
+function notificationTargetType() {
+  return route.query?.targetType ? String(route.query.targetType) : ''
+}
+
+function notificationTargetSubId() {
+  return route.query?.targetSubId ? String(route.query.targetSubId) : ''
+}
+
+function openedFromNotification() {
+  return !!route.query?.notificationId
+}
+
+function setCommentRef(id, element) {
+  const key = String(id)
+  if (element) {
+    commentRefs.set(key, element)
+    return
+  }
+  commentRefs.delete(key)
+}
+
+function isHighlightedComment(id) {
+  return notificationTargetType() === 'comment' && notificationTargetSubId() === String(id)
+}
+
+function isHighlightedAction(type) {
+  return openedFromNotification() && notificationTargetType() === type
+}
+
+async function focusNotificationTarget() {
+  if (!openedFromNotification()) {
+    return
+  }
+  await nextTick()
+  if (notificationTargetType() === 'comment' && notificationTargetSubId()) {
+    const commentElement = commentRefs.get(notificationTargetSubId())
+    if (commentElement?.scrollIntoView) {
+      commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
+    }
+  }
+  const fallbackElement = notificationTargetType() === 'comment' ? commentListRef.value : actionRef.value
+  fallbackElement?.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
+}
+
+onMounted(async () => {
+  await loadDetail()
+  await focusNotificationTarget()
 })
 </script>
 
@@ -171,20 +220,20 @@ onMounted(() => {
         <p class="detail-time">{{ work.time || work.createTime }}</p>
         <p class="detail-desc">{{ work.description || work.content }}</p>
 
-        <div class="card-btn-group">
+        <div ref="actionRef" class="card-btn-group">
           <div class="am-btn-group am-btn-group-justify">
-            <a class="am-btn am-btn-photo" :class="{ liked: work.isLiked }" href="javascript:;" role="button" @click.stop="toggleLike">
+            <a class="am-btn am-btn-photo" :class="{ liked: work.isLiked, 'is-highlighted': isHighlightedAction('like') }" href="javascript:;" role="button" @click.stop="toggleLike">
               <i :class="work.isLiked ? 'am-icon-check-square' : 'am-icon-check-square-o'"></i
               >{{ work.likeCount ?? work.likes }} 点赞
             </a>
-            <a class="am-btn am-btn-photo" href="javascript:;" role="button">
+            <a class="am-btn am-btn-photo" :class="{ 'is-highlighted': isHighlightedAction('comment') }" href="javascript:;" role="button">
               <i class="am-icon-th-list"></i>{{ work.commentCount || (work.comments ? work.comments.length : 0) }} 评论
             </a>
           </div>
         </div>
 
-        <div class="comment-list" v-if="work.comments && work.comments.length">
-          <div class="comment-item" v-for="comment in work.comments" :key="comment.id">
+        <div ref="commentListRef" class="comment-list" :class="{ 'section-highlight': openedFromNotification() && notificationTargetType() === 'comment' && !notificationTargetSubId() }" v-if="work.comments && work.comments.length">
+          <div class="comment-item" v-for="comment in work.comments" :key="comment.id" :ref="(el) => setCommentRef(comment.id, el)" :class="{ 'comment-highlight': isHighlightedComment(comment.id) }">
             <img class="comment-avatar" :src="comment.avatar" alt="avatar" />
             <div class="comment-bubble">
               <p class="comment-author">{{ comment.author }}</p>
@@ -490,6 +539,13 @@ onMounted(() => {
   color: #999;
 }
 
+.am-btn-photo.is-highlighted,
+.comment-item.comment-highlight,
+.comment-list.section-highlight {
+  box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.16), 0 10px 20px rgba(39, 174, 96, 0.08);
+  border-radius: 10px;
+}
+
 /* 底部评论输入栏 */
 .comment-input-bar {
   position: fixed;
@@ -574,4 +630,3 @@ onMounted(() => {
   color: #0bb20c;
 }
 </style>
-

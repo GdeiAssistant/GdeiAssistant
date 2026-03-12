@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.photograph.mapper;
 
+import cn.gdeiassistant.common.pojo.Entity.PhotographLike;
 import cn.gdeiassistant.core.photograph.pojo.entity.PhotographCommentEntity;
 import cn.gdeiassistant.core.photograph.pojo.entity.PhotographEntity;
 import org.apache.ibatis.annotations.*;
@@ -90,6 +91,13 @@ public interface PhotographMapper {
     @Insert("insert into photograph_comment (photo_id,comment,username,create_time) values(#{photoId},#{comment},#{username},now())")
     void insertPhotographComment(PhotographCommentEntity photographComment);
 
+    @Select("select pc.comment_id,pc.photo_id,pc.comment,pc.username,p.nickname,pc.create_time from photograph_comment pc " +
+            "inner join photograph ph on pc.photo_id=ph.id inner join profile p on pc.username=p.username " +
+            "where ph.username=#{username} and pc.username!=#{username} order by pc.create_time desc, pc.comment_id desc limit #{start},#{size}")
+    @ResultMap("PhotographComment")
+    List<PhotographCommentEntity> selectReceivedPhotographCommentPage(@Param("username") String username,
+            @Param("start") int start, @Param("size") int size);
+
     @Select("select count(like_id) from photograph_like")
     @ResultType(Integer.class)
     Integer selectPhotographLikeCount();
@@ -97,6 +105,18 @@ public interface PhotographMapper {
     @Select("select count(like_id) from photograph_like where photo_id=#{id} and username=#{username}")
     @ResultType(Integer.class)
     Integer selectPhotographLikeCountByPhotoIdAndUsername(@Param("id") int id, @Param("username") String username);
+
+    @Select("select pl.like_id,pl.photo_id,pl.username,pl.create_time from photograph_like pl " +
+            "inner join photograph ph on pl.photo_id=ph.id where ph.username=#{username} and pl.username!=#{username} " +
+            "order by pl.create_time desc, pl.like_id desc limit #{start},#{size}")
+    @Results(id = "PhotographLike", value = {
+            @Result(property = "likeId", column = "like_id"),
+            @Result(property = "photoId", column = "photo_id"),
+            @Result(property = "username", column = "username"),
+            @Result(property = "createTime", column = "create_time")
+    })
+    List<PhotographLike> selectReceivedPhotographLikePage(@Param("username") String username,
+            @Param("start") int start, @Param("size") int size);
 
     @Insert("insert into photograph_like (photo_id,username,create_time) values(#{id},#{username},now())")
     void insertPhotographLike(@Param("id") int id, @Param("username") String username);

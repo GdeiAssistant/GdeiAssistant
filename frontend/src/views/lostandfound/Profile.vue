@@ -1,35 +1,99 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import request from '../../utils/request'
+import { getCurrentUserProfile } from '../../api/user.js'
 
 const router = useRouter()
-const activeStat = ref('lost') // lost, found, didfound
+const activeStat = ref('lost')
+const avatar = ref('/img/avatar/default.png')
 const nickname = ref('用户')
 const introduction = ref('这个人很懒，什么都没写_(:3 」∠)_')
+const lostList = ref([])
+const foundList = ref([])
+const didFoundList = ref([])
+const loading = ref(false)
+const actionLoading = ref(false)
+const dialogVisible = ref(false)
+const dialogMessage = ref('')
+
+function showDialog(message) {
+  dialogMessage.value = message
+  dialogVisible.value = true
+}
 
 function switchStat(stat) {
   activeStat.value = stat
 }
 
-// Mock 数据
-const lostList = ref([])
-const foundList = ref([])
-const didFoundList = ref([])
+function mapItem(item) {
+  return {
+    id: item.id,
+    name: item.name || '',
+    publishTime: item.publishTime || '',
+    image: Array.isArray(item.pictureURL) && item.pictureURL.length > 0 ? item.pictureURL[0] : '/img/avatar/default.png'
+  }
+}
+
+async function loadUserInfo() {
+  const res = await getCurrentUserProfile()
+  const data = res?.data || {}
+  avatar.value = data.avatar || '/img/avatar/default.png'
+  nickname.value = data.nickname || data.username || '用户'
+  introduction.value = data.introduction || '这个人很懒，什么都没写_(:3 」∠)_'
+}
+
+async function loadItems() {
+  const res = await request.get('/lostandfound/profile')
+  const data = res?.data || {}
+  lostList.value = Array.isArray(data.lost) ? data.lost.map(mapItem) : []
+  foundList.value = Array.isArray(data.found) ? data.found.map(mapItem) : []
+  didFoundList.value = Array.isArray(data.didfound) ? data.didfound.map(mapItem) : []
+}
+
+async function loadPage() {
+  loading.value = true
+  await Promise.allSettled([loadUserInfo(), loadItems()])
+  loading.value = false
+}
+
+function editItem(id) {
+  router.push({ path: '/lostandfound/publish', query: { edit: '1', id: String(id) } })
+}
+
+function goDetail(id) {
+  router.push(`/lostandfound/detail/${id}`)
+}
+
+async function confirmDidFound(id) {
+  if (actionLoading.value) return
+  if (!window.confirm('确定标记为确认寻回吗？')) return
+  actionLoading.value = true
+  try {
+    await request.post(`/lostandfound/item/id/${id}/didfound`)
+    await loadItems()
+    showDialog('已标记为确认寻回')
+  } finally {
+    actionLoading.value = false
+  }
+}
+
+onMounted(() => {
+  loadPage()
+})
 </script>
 
 <template>
   <div class="lostandfound-profile">
-    <!-- 统一顶部导航栏 -->
     <div class="unified-header">
       <span class="unified-header__back" @click="router.push('/lostandfound/home')">返回</span>
       <h1 class="unified-header__title">个人中心</h1>
       <span class="unified-header__placeholder"></span>
     </div>
 
-    <!-- 个人资料：参考原版 personal.jsp 的 .profile 结构 -->
     <section class="profile-section">
       <i class="avt">
-        <img src="/img/avatar/default.png" alt="头像" />
+        <img :src="avatar" alt="头像" />
       </i>
       <span class="nm">{{ nickname }}</span>
       <span class="introduction">
@@ -37,7 +101,6 @@ const didFoundList = ref([])
       </span>
     </section>
 
-    <!-- 个人失物招领信息：参考原版 .status 结构 -->
     <section class="status-section">
       <ul class="tabs">
         <li class="tab" :class="{ on: activeStat === 'lost' }" @click="switchStat('lost')" data-stat="lost">
@@ -52,63 +115,80 @@ const didFoundList = ref([])
       </ul>
 
       <div class="statlists">
-        <!-- 失物列表 -->
         <div class="statlist" :class="{ nodis: activeStat !== 'lost' }" data-statlist="lost">
-          <div v-if="lostList.length === 0" class="nostatus">
-            <p class="tip">暂无失物信息</p>
-          </div>
-          <div v-for="item in lostList" :key="item.id" class="stat">
-            <div class="info">
-              <i class="img">
-                <img :src="item.image || '/img/avatar/default.png'" alt="" />
-              </i>
-              <h5 class="tit">{{ item.name }}</h5>
-              <p class="tm">{{ item.publishTime }}</p>
+          <div v-if="loading" class="nostatus"><p class="tip">加载中...</p></div>
+          <template v-else>
+            <div v-if="lostList.length === 0" class="nostatus">
+              <p class="tip">暂无失物信息</p>
             </div>
-            <p class="btns">
-              <a class="btn" href="javascript:;"><b>编辑</b></a>
-              <a class="btn saled" href="javascript:;"><b>确认寻回</b></a>
-            </p>
-          </div>
+            <div v-for="item in lostList" :key="item.id" class="stat">
+              <div class="info" @click="goDetail(item.id)">
+                <i class="img">
+                  <img :src="item.image" alt="" />
+                </i>
+                <h5 class="tit">{{ item.name }}</h5>
+                <p class="tm">{{ item.publishTime }}</p>
+              </div>
+              <p class="btns">
+                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
+                <a class="btn saled" href="javascript:;" @click.prevent="confirmDidFound(item.id)"><b>确认寻回</b></a>
+              </p>
+            </div>
+          </template>
         </div>
 
-        <!-- 招领列表 -->
         <div class="statlist" :class="{ nodis: activeStat !== 'found' }" data-statlist="found">
-          <div v-if="foundList.length === 0" class="nostatus">
-            <p class="tip">暂无招领信息</p>
-          </div>
-          <div v-for="item in foundList" :key="item.id" class="stat">
-            <div class="info">
-              <i class="img">
-                <img :src="item.image || '/img/avatar/default.png'" alt="" />
-              </i>
-              <h5 class="tit">{{ item.name }}</h5>
-              <p class="tm">{{ item.publishTime }}</p>
+          <div v-if="loading" class="nostatus"><p class="tip">加载中...</p></div>
+          <template v-else>
+            <div v-if="foundList.length === 0" class="nostatus">
+              <p class="tip">暂无招领信息</p>
             </div>
-            <p class="btns">
-              <a class="btn" href="javascript:;"><b>编辑</b></a>
-              <a class="btn saled" href="javascript:;"><b>确认寻回</b></a>
-            </p>
-          </div>
+            <div v-for="item in foundList" :key="item.id" class="stat">
+              <div class="info" @click="goDetail(item.id)">
+                <i class="img">
+                  <img :src="item.image" alt="" />
+                </i>
+                <h5 class="tit">{{ item.name }}</h5>
+                <p class="tm">{{ item.publishTime }}</p>
+              </div>
+              <p class="btns">
+                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
+                <a class="btn saled" href="javascript:;" @click.prevent="confirmDidFound(item.id)"><b>确认寻回</b></a>
+              </p>
+            </div>
+          </template>
         </div>
 
-        <!-- 确认寻回列表 -->
         <div class="statlist" :class="{ nodis: activeStat !== 'didfound' }" data-statlist="didfound">
-          <div v-if="didFoundList.length === 0" class="nostatus">
-            <p class="tip">暂无确认寻回信息</p>
-          </div>
-          <div v-for="item in didFoundList" :key="item.id" class="stat">
-            <div class="info">
-              <i class="img">
-                <img :src="item.image || '/img/avatar/default.png'" alt="" />
-              </i>
-              <h5 class="tit">{{ item.name }}</h5>
-              <p class="tm">{{ item.publishTime }}</p>
+          <div v-if="loading" class="nostatus"><p class="tip">加载中...</p></div>
+          <template v-else>
+            <div v-if="didFoundList.length === 0" class="nostatus">
+              <p class="tip">暂无确认寻回信息</p>
             </div>
-          </div>
+            <div v-for="item in didFoundList" :key="item.id" class="stat">
+              <div class="info">
+                <i class="img">
+                  <img :src="item.image" alt="" />
+                </i>
+                <h5 class="tit">{{ item.name }}</h5>
+                <p class="tm">{{ item.publishTime }}</p>
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </section>
+
+    <div v-if="dialogVisible">
+      <div class="weui-mask" @click="dialogVisible = false"></div>
+      <div class="weui-dialog">
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
+        <div class="weui-dialog__bd">{{ dialogMessage }}</div>
+        <div class="weui-dialog__ft">
+          <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -145,7 +225,6 @@ const didFoundList = ref([])
   min-width: 48px;
 }
 
-/* 个人资料：参考原版 base.css .profile */
 .profile-section {
   position: relative;
   background: #44c1a5;
@@ -191,7 +270,6 @@ const didFoundList = ref([])
   text-overflow: ellipsis;
 }
 
-/* 状态列表：参考原版 base.css .status */
 .status-section {
   margin: 10px;
 }
@@ -258,6 +336,7 @@ const didFoundList = ref([])
   padding: 8px 8px 8px 75px;
   min-height: 60px;
   border-bottom: 1px solid #eee;
+  cursor: pointer;
 }
 .stat .info .img {
   position: absolute;
@@ -318,5 +397,60 @@ const didFoundList = ref([])
   color: #44c1a5;
   margin-bottom: 25px;
   font-size: 14px;
+}
+
+.weui-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+.weui-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  max-width: 300px;
+  background: #fff;
+  border-radius: 8px;
+  z-index: 1001;
+  overflow: hidden;
+}
+.weui-dialog__hd {
+  padding: 20px 20px 10px;
+  text-align: center;
+}
+.weui-dialog__title {
+  font-size: 17px;
+  font-weight: 500;
+  color: #333;
+}
+.weui-dialog__bd {
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 15px;
+  color: #666;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.weui-dialog__ft {
+  display: flex;
+  border-top: 1px solid #d9d9d9;
+}
+.weui-dialog__btn {
+  flex: 1;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 17px;
+  color: #3cc395;
+  text-decoration: none;
+}
+.weui-dialog__btn_primary {
+  color: #3cc395;
+  font-weight: 500;
 }
 </style>

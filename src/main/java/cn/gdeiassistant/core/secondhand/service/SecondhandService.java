@@ -79,6 +79,7 @@ public class SecondhandService {
         }
         for (SecondhandItemEntity e : list) {
             e.setUsername(user.getUsername());
+            e.setPictureURL(getItemPictureURL(e.getId()));
         }
         return list;
     }

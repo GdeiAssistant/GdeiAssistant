@@ -23,7 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class SecondhandController {
@@ -35,6 +38,29 @@ public class SecondhandController {
     public DataJsonResult<List<SecondhandItemEntity>> getItemList(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
         List<SecondhandItemEntity> list = secondhandService.queryItems(start);
         return new DataJsonResult<>(true, list);
+    }
+
+    @RequestMapping(value = "/api/ershou/profile", method = RequestMethod.GET)
+    public DataJsonResult<Map<String, Object>> getMySecondhandItems(HttpServletRequest request) throws Exception {
+        String sessionId = (String) request.getAttribute("sessionId");
+        List<SecondhandItemEntity> list = secondhandService.queryPersonalItems(sessionId);
+        List<SecondhandItemEntity> doing = new ArrayList<>();
+        List<SecondhandItemEntity> sold = new ArrayList<>();
+        List<SecondhandItemEntity> off = new ArrayList<>();
+        for (SecondhandItemEntity item : list) {
+            if (Integer.valueOf(1).equals(item.getState())) {
+                doing.add(item);
+            } else if (Integer.valueOf(0).equals(item.getState())) {
+                sold.add(item);
+            } else if (Integer.valueOf(2).equals(item.getState())) {
+                off.add(item);
+            }
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("doing", doing);
+        data.put("sold", sold);
+        data.put("off", off);
+        return new DataJsonResult<>(true, data);
     }
 
     @RequestMapping(value = "/api/ershou/item", method = RequestMethod.POST)

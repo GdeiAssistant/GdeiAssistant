@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watch, nextTick } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import request from '../../utils/request'
 
 const router = useRouter()
+const route = useRoute()
 const activeTab = ref(0) // 0: 收到的撩, 1: 我发出的, 2: 我的发布
 const receivedList = ref([])
 const sentList = ref([])
@@ -13,6 +14,7 @@ const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const deleteTargetId = ref(null)
 const deleteDialogVisible = ref(false)
+const focusedItemId = ref('')
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -21,62 +23,117 @@ function showDialog(msg) {
 
 function switchTab(index) {
   activeTab.value = index
+  syncFocusedItem()
   loadData()
 }
 
-function loadData() {
+function getQueryValue(key) {
+  const value = route.query[key]
+  if (Array.isArray(value)) {
+    return value[0] || ''
+  }
+  return typeof value === 'string' ? value : ''
+}
+
+function getInteractionTabIndex() {
+  const tab = getQueryValue('tab')
+  if (tab === 'sent') {
+    return 1
+  }
+  if (tab === 'posts') {
+    return 2
+  }
+  return getQueryValue('targetType') === 'sent' ? 1 : 0
+}
+
+function syncFocusedItem() {
+  focusedItemId.value = activeTab.value === 2
+    ? getQueryValue('focusedProfileId')
+    : getQueryValue('focusedPickId')
+}
+
+function applyRouteState() {
+  activeTab.value = getInteractionTabIndex()
+  syncFocusedItem()
+}
+
+function getPick(message) {
+  return message?.roommatePick || message?.datingPick || {}
+}
+
+function getProfile(item) {
+  return item?.roommateProfile || item?.datingProfile || {}
+}
+
+function normalizeId(value) {
+  return value === undefined || value === null ? '' : String(value)
+}
+
+function getItemAnchorId(id) {
+  return `dating-item-${normalizeId(id)}`
+}
+
+function isFocusedItem(id) {
+  return normalizeId(id) !== '' && normalizeId(id) === focusedItemId.value
+}
+
+async function focusHighlightedItem() {
+  if (!focusedItemId.value) {
+    return
+  }
+  await nextTick()
+  const element = document.getElementById(getItemAnchorId(focusedItemId.value))
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+}
+
+async function loadData() {
   loading.value = true
-  if (activeTab.value === 0) {
-    request.get('/dating/message/start/0')
-      .then((res) => {
-        const raw = res?.data || []
-        receivedList.value = Array.isArray(raw) ? raw.map((m) => {
-          const pick = m.datingPick || {}
-          const profile = pick.datingProfile || {}
-          return {
-            id: pick.pickId,
-            senderName: profile.nickname || '匿名',
-            content: pick.content || '',
-            time: pick.createTime || m.createTime || '',
-            status: pick.state,
-            avatar: null
-          }
-        }) : []
-        loading.value = false
-      })
-      .catch(() => { loading.value = false })
-  } else if (activeTab.value === 1) {
-    request.get('/dating/pick/my/sent')
-      .then((res) => {
-        const raw = res?.data || []
-        sentList.value = Array.isArray(raw) ? raw.map((p) => {
-          const profile = p.datingProfile || {}
-          return {
-            id: p.pickId,
-            targetName: profile.nickname || '匿名',
-            content: p.content || '',
-            status: p.state,
-            targetQq: profile.qq,
-            targetWechat: profile.wechat,
-            targetAvatar: profile.pictureURL
-          }
-        }) : []
-        loading.value = false
-      })
-      .catch(() => { loading.value = false })
-  } else {
-    request.get('/dating/profile/my')
-      .then((res) => {
-        const raw = res?.data || []
-        postsList.value = Array.isArray(raw) ? raw.map((p) => ({
-          id: p.profileId,
-          name: p.nickname,
-          image: p.pictureURL,
-          publishTime: ''
-        })) : []
-        loading.value = false
-      })
-      .catch(() => { loading.value = false })
+  try {
+    if (activeTab.value === 0) {
+      const res = await request.get('/dating/message/start/0')
+      const raw = res?.data || []
+      receivedList.value = Array.isArray(raw) ? raw.map((m) => {
+        const pick = getPick(m)
+        const profile = getProfile(pick)
+        return {
+          id: normalizeId(pick.pickId || m.messageId),
+          senderName: profile.nickname || pick.username || m.username || '匿名',
+          content: pick.content || '',
+          time: pick.createTime || m.createTime || '最近更新',
+          status: pick.state,
+          avatar: profile.pictureURL || null
+        }
+      }) : []
+    } else if (activeTab.value === 1) {
+      const res = await request.get('/dating/pick/my/sent')
+      const raw = res?.data || []
+      sentList.value = Array.isArray(raw) ? raw.map((p) => {
+        const profile = getProfile(p)
+        return {
+          id: normalizeId(p.pickId),
+          targetName: profile.nickname || '匿名',
+          content: p.content || '',
+          status: p.state,
+          targetQq: profile.qq,
+          targetWechat: profile.wechat,
+          targetAvatar: profile.pictureURL
+        }
+      }) : []
+    } else {
+      const res = await request.get('/dating/profile/my')
+      const raw = res?.data || []
+      postsList.value = Array.isArray(raw) ? raw.map((p) => ({
+        id: normalizeId(p.profileId),
+        name: p.nickname,
+        image: p.pictureURL,
+        publishTime: p.createTime || ''
+      })) : []
+    }
+  } finally {
+    loading.value = false
+    focusHighlightedItem()
   }
 }
 
@@ -126,6 +183,12 @@ function getStatusClass(status) {
 }
 
 onMounted(() => {
+  applyRouteState()
+  loadData()
+})
+
+watch(() => route.fullPath, () => {
+  applyRouteState()
   loadData()
 })
 </script>
@@ -168,10 +231,11 @@ onMounted(() => {
         <div
           v-for="item in receivedList"
           :key="item.id"
-          class="dating-card"
+          :id="getItemAnchorId(item.id)"
+          :class="['dating-card', { 'dating-card--focused': isFocusedItem(item.id) }]"
         >
           <div class="dating-card__header">
-            <img :src="item.avatar || item.image || '/img/dating/default-avatar.png'" class="dating-card__avatar" />
+            <img :src="item.avatar || '/img/dating/default-avatar.png'" class="dating-card__avatar" />
             <div class="dating-card__info">
               <div class="dating-card__name">{{ item.senderName }}</div>
               <div class="dating-card__time">{{ item.time }}</div>
@@ -200,7 +264,8 @@ onMounted(() => {
         <div
           v-for="item in sentList"
           :key="item.id"
-          class="dating-card"
+          :id="getItemAnchorId(item.id)"
+          :class="['dating-card', { 'dating-card--focused': isFocusedItem(item.id) }]"
         >
           <div class="dating-card__header">
             <img :src="item.targetAvatar || item.targetImage || '/img/dating/default-avatar.png'" class="dating-card__avatar" />
@@ -231,7 +296,8 @@ onMounted(() => {
         <div
           v-for="item in postsList"
           :key="item.id"
-          class="dating-card dating-card--post"
+          :id="getItemAnchorId(item.id)"
+          :class="['dating-card', 'dating-card--post', { 'dating-card--focused': isFocusedItem(item.id) }]"
         >
           <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" class="dating-card__thumb" />
           <div class="dating-card__body">
@@ -338,6 +404,11 @@ onMounted(() => {
   border-radius: 8px;
   padding: 15px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.dating-card--focused {
+  border: 2px solid rgba(109, 203, 189, 0.8);
+  box-shadow: 0 0 0 4px rgba(120, 226, 209, 0.18);
 }
 
 .dating-card__header {

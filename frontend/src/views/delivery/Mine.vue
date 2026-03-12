@@ -8,7 +8,6 @@ const activeTab = ref('published') // published, accepted
 const publishedList = ref([])
 const acceptedList = ref([])
 const loading = ref(false)
-const currentUserId = ref('user123') // Mock: 当前用户ID
 
 function getStatusText(status) {
   const map = { 0: '待接单', 1: '配送中', 2: '已完成' }

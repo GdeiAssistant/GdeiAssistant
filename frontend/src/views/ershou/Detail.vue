@@ -56,7 +56,7 @@ function callPhone() {
 }
 
 function mapErshouDetail(info) {
-  const item = info?.ershouItem || {}
+  const item = info?.secondhandItem || {}
   const profile = info?.profile || {}
   return {
     images: Array.isArray(item.pictureURL) ? item.pictureURL : [],

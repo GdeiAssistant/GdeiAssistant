@@ -1,42 +1,104 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import request from '../../utils/request'
+import { getCurrentUserProfile } from '../../api/user.js'
 
 const router = useRouter()
-// Mock 用户信息（对接 /api/profile/avatar、/api/user/profile、/api/introduction）
+
 const avatar = ref('/img/avatar/default.png')
 const nickname = ref('二手用户')
 const introduction = ref('这个人很懒，什么都没写_(:3 」∠)_')
+const activeStat = ref('doing')
+const doingList = ref([])
+const soldList = ref([])
+const offList = ref([])
+const loading = ref(false)
+const actionLoading = ref(false)
+const dialogVisible = ref(false)
+const dialogMessage = ref('')
 
-const activeStat = ref('doing') // doing | sold | off
-const doingList = ref([])   // 正在出售 Mock
-const soldList = ref([])    // 已下架 Mock
-const offList = ref([])     // 已出售 Mock
-
-const currentList = computed(() => {
-  if (activeStat.value === 'doing') return doingList.value
-  if (activeStat.value === 'sold') return soldList.value
-  return offList.value
+const emptyText = computed(() => {
+  if (activeStat.value === 'doing') return '暂无正在出售的商品'
+  if (activeStat.value === 'sold') return '暂无已下架的商品'
+  return '暂无已出售的商品'
 })
+
+function showDialog(message) {
+  dialogMessage.value = message
+  dialogVisible.value = true
+}
 
 function setStat(stat) {
   activeStat.value = stat
 }
 
+function mapProfileItem(item) {
+  return {
+    id: item.id,
+    name: item.name || '',
+    price: item.price || 0,
+    publishTime: item.publishTime || '',
+    preview: Array.isArray(item.pictureURL) && item.pictureURL.length > 0 ? item.pictureURL[0] : '/img/avatar/default.png'
+  }
+}
+
+async function loadUserInfo() {
+  const res = await getCurrentUserProfile()
+  const data = res?.data || {}
+  avatar.value = data.avatar || '/img/avatar/default.png'
+  nickname.value = data.nickname || data.username || '二手用户'
+  introduction.value = data.introduction || '这个人很懒，什么都没写_(:3 」∠)_'
+}
+
+async function loadItems() {
+  const res = await request.get('/ershou/profile')
+  const data = res?.data || {}
+  doingList.value = Array.isArray(data.doing) ? data.doing.map(mapProfileItem) : []
+  soldList.value = Array.isArray(data.sold) ? data.sold.map(mapProfileItem) : []
+  offList.value = Array.isArray(data.off) ? data.off.map(mapProfileItem) : []
+}
+
+async function loadPage() {
+  loading.value = true
+  await Promise.allSettled([loadUserInfo(), loadItems()])
+  loading.value = false
+}
+
 function goDetail(id) {
   router.push(`/ershou/detail/${id}`)
 }
+
+function editItem(id) {
+  router.push({ path: '/ershou/publish', query: { edit: '1', id: String(id) } })
+}
+
+async function updateItemState(id, state, confirmText, successText) {
+  if (actionLoading.value) return
+  if (confirmText && !window.confirm(confirmText)) return
+  actionLoading.value = true
+  try {
+    await request.post(`/ershou/item/state/id/${id}`, null, { params: { state } })
+    await loadItems()
+    showDialog(successText)
+  } finally {
+    actionLoading.value = false
+  }
+}
+
+onMounted(() => {
+  loadPage()
+})
 </script>
 
 <template>
   <div class="ershou-profile-page">
-    <!-- 统一顶部导航栏：左侧返回到应用首页，标题「个人中心」，无右侧按钮 -->
     <div class="ershou-header unified-header">
-      <span class="ershou-header__back" @click="router.push('/')">返回</span>
+      <span class="ershou-header__back" @click="router.push('/ershou/home')">返回</span>
       <h1 class="ershou-header__title">个人中心</h1>
       <span class="ershou-header__placeholder"></span>
     </div>
-    <!-- 个人资料：原版 ershouPersonal.jsp profile 区块 -->
+
     <section class="profile">
       <i class="avt"><img class="avatar-img" :src="avatar" alt="头像"></i>
       <span class="nm">{{ nickname }}</span>
@@ -45,8 +107,6 @@ function goDetail(id) {
       </span>
     </section>
 
-    <!-- 原版 ershouPersonal.jsp 仅有 profile + status（无「我发布的/我卖出的/我的收藏」列表） -->
-    <!-- 状态 Tab：正在出售 / 已下架 / 已出售 -->
     <section class="status">
       <ul class="tabs">
         <li class="tab" :class="{ on: activeStat === 'doing' }" @click="setStat('doing')">正在出售<i class="line"></i></li>
@@ -56,49 +116,71 @@ function goDetail(id) {
 
       <div class="statlists">
         <div v-show="activeStat === 'doing'" class="statlist">
-          <div v-for="item in doingList" :key="item.id" class="stat">
-            <div class="info" @click="goDetail(item.id)">
-              <i class="img"><img :src="item.preview" :alt="item.name"></i>
-              <h5 class="tit">{{ item.name }}</h5>
-              <em class="price">￥{{ item.price }}</em>
-              <p class="tm">{{ item.publishTime }}</p>
+          <p v-if="loading" class="nostatus-tip">加载中...</p>
+          <template v-else>
+            <div v-for="item in doingList" :key="item.id" class="stat">
+              <div class="info" @click="goDetail(item.id)">
+                <i class="img"><img :src="item.preview" :alt="item.name"></i>
+                <h5 class="tit">{{ item.name }}</h5>
+                <em class="price">￥{{ item.price }}</em>
+                <p class="tm">{{ item.publishTime }}</p>
+              </div>
+              <p class="btns">
+                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
+                <a class="btn" href="javascript:;" @click.prevent="updateItemState(item.id, 0, '确定下架这件商品吗？', '已下架')"><b>下架</b></a>
+                <a class="btn" href="javascript:;" @click.prevent="updateItemState(item.id, 2, '确定标记为已出售吗？', '已标记为已出售')"><b>确认售出</b></a>
+              </p>
             </div>
-            <p class="btns">
-              <a class="btn" href="javascript:;"><b>编辑</b></a>
-              <a class="btn" href="javascript:;"><b>下架</b></a>
-              <a class="btn" href="javascript:;"><b>确认售出</b></a>
-            </p>
-          </div>
-          <p v-if="doingList.length === 0" class="nostatus-tip">暂无正在出售的商品</p>
+            <p v-if="doingList.length === 0" class="nostatus-tip">{{ emptyText }}</p>
+          </template>
         </div>
+
         <div v-show="activeStat === 'sold'" class="statlist">
-          <div v-for="item in soldList" :key="item.id" class="stat">
-            <div class="info" @click="goDetail(item.id)">
-              <i class="img"><img :src="item.preview" :alt="item.name"></i>
-              <h5 class="tit">{{ item.name }}</h5>
-              <em class="price">￥{{ item.price }}</em>
-              <p class="tm">{{ item.publishTime }}</p>
+          <p v-if="loading" class="nostatus-tip">加载中...</p>
+          <template v-else>
+            <div v-for="item in soldList" :key="item.id" class="stat">
+              <div class="info">
+                <i class="img"><img :src="item.preview" :alt="item.name"></i>
+                <h5 class="tit">{{ item.name }}</h5>
+                <em class="price">￥{{ item.price }}</em>
+                <p class="tm">{{ item.publishTime }}</p>
+              </div>
+              <p class="btns">
+                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
+                <a class="btn" href="javascript:;" @click.prevent="updateItemState(item.id, 1, '', '已重新上架')"><b>上架</b></a>
+              </p>
             </div>
-            <p class="btns">
-              <a class="btn" href="javascript:;"><b>编辑</b></a>
-              <a class="btn" href="javascript:;"><b>上架</b></a>
-            </p>
-          </div>
-          <p v-if="soldList.length === 0" class="nostatus-tip">暂无已下架的商品</p>
+            <p v-if="soldList.length === 0" class="nostatus-tip">{{ emptyText }}</p>
+          </template>
         </div>
+
         <div v-show="activeStat === 'off'" class="statlist">
-          <div v-for="item in offList" :key="item.id" class="stat">
-            <div class="info" @click="goDetail(item.id)">
-              <i class="img"><img :src="item.preview" :alt="item.name"></i>
-              <h5 class="tit">{{ item.name }}</h5>
-              <em class="price">￥{{ item.price }}</em>
-              <p class="tm">{{ item.publishTime }}</p>
+          <p v-if="loading" class="nostatus-tip">加载中...</p>
+          <template v-else>
+            <div v-for="item in offList" :key="item.id" class="stat">
+              <div class="info">
+                <i class="img"><img :src="item.preview" :alt="item.name"></i>
+                <h5 class="tit">{{ item.name }}</h5>
+                <em class="price">￥{{ item.price }}</em>
+                <p class="tm">{{ item.publishTime }}</p>
+              </div>
             </div>
-          </div>
-          <p v-if="offList.length === 0" class="nostatus-tip">暂无已出售的商品</p>
+            <p v-if="offList.length === 0" class="nostatus-tip">{{ emptyText }}</p>
+          </template>
         </div>
       </div>
     </section>
+
+    <div v-if="dialogVisible">
+      <div class="weui-mask" @click="dialogVisible = false"></div>
+      <div class="weui-dialog">
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
+        <div class="weui-dialog__bd">{{ dialogMessage }}</div>
+        <div class="weui-dialog__ft">
+          <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+        </div>
+      </div>
+    </div>
 
     <div style="height: 4rem;"></div>
   </div>
@@ -235,7 +317,6 @@ function goDetail(id) {
   padding: 8px 8px 8px 75px;
   min-height: 60px;
   border-bottom: 1px solid #eee;
-  cursor: pointer;
 }
 .status .info .img {
   position: absolute;
@@ -278,5 +359,60 @@ function goDetail(id) {
   margin: 0;
   background: #fff;
   border-radius: 4px;
+}
+
+.weui-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+.weui-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  max-width: 300px;
+  background: #fff;
+  border-radius: 8px;
+  z-index: 1001;
+  overflow: hidden;
+}
+.weui-dialog__hd {
+  padding: 20px 20px 10px;
+  text-align: center;
+}
+.weui-dialog__title {
+  font-size: 17px;
+  font-weight: 500;
+  color: #333;
+}
+.weui-dialog__bd {
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 15px;
+  color: #666;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.weui-dialog__ft {
+  display: flex;
+  border-top: 1px solid #d9d9d9;
+}
+.weui-dialog__btn {
+  flex: 1;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 17px;
+  color: #3cc395;
+  text-decoration: none;
+}
+.weui-dialog__btn_primary {
+  color: #3cc395;
+  font-weight: 500;
 }
 </style>

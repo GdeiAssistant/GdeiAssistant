@@ -15,23 +15,7 @@ CREATE DATABASE IF NOT EXISTS gdeiassistant_log CHARACTER SET utf8mb4 COLLATE ut
 
 USE gdeiassistant;
 
--- ----------------------------
--- Table structure for announcement
--- ----------------------------
-DROP TABLE IF EXISTS `announcement`;
-CREATE TABLE `announcement` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '通知公告ID',
-  `title` varchar(50) NOT NULL COMMENT '通知公告标题',
-  `content` varchar(250) NOT NULL COMMENT '通知公告内容',
-  `publish_time` datetime NOT NULL COMMENT '通知公告发布时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of announcement
--- ----------------------------
-BEGIN;
-COMMIT;
+-- announcement 使用 gdeiassistant_data 库中的结构，避免在 app 库重复建表造成配置歧义。
 
 -- ----------------------------
 -- Table structure for authentication

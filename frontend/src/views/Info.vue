@@ -88,7 +88,7 @@ function normalizeInteractionItems(rawList) {
   }
   return rawList.map((item) => ({
     id: item?.id ?? null,
-    module: item?.module ?? null,
+    module: normalizeInteractionModule(item?.module),
     type: item?.type ?? null,
     title: item?.title ?? '互动消息',
     content: item?.content ?? '你有一条新的互动消息',
@@ -98,6 +98,176 @@ function normalizeInteractionItems(rawList) {
     targetId: item?.targetId ?? null,
     targetSubId: item?.targetSubId ?? null
   }))
+}
+
+function normalizeInteractionModule(module) {
+  if (!module) {
+    return null
+  }
+  const normalized = String(module).trim()
+  if (normalized === 'ershou' || normalized === 'secondhand') {
+    return 'marketplace'
+  }
+  if (normalized === 'lost_found' || normalized === 'lostfound') {
+    return 'lostandfound'
+  }
+  if (normalized === 'roommate') {
+    return 'dating'
+  }
+  return normalized
+}
+
+function resolveDatingCenterTab(item) {
+  if (item?.targetType === 'sent' || ['pick_accepted', 'pick_rejected', 'pick_updated'].includes(item?.type)) {
+    return 'sent'
+  }
+  if (item?.targetType === 'published' || item?.targetType === 'posts') {
+    return 'posts'
+  }
+  return 'received'
+}
+
+function buildInteractionQuery(item, extra = {}) {
+  const query = { ...extra }
+  if (item?.targetType) {
+    query.targetType = item.targetType
+  }
+  if (item?.targetId) {
+    query.targetId = item.targetId
+  }
+  if (item?.targetSubId) {
+    query.targetSubId = item.targetSubId
+  }
+  if (item?.id) {
+    query.notificationId = item.id
+  }
+  return query
+}
+
+function resolveContentInteractionLocation(item, detailPath, fallbackPath) {
+  return {
+    path: item?.targetId ? detailPath(item.targetId) : fallbackPath,
+    query: buildInteractionQuery(item)
+  }
+}
+
+function resolveDatingInteractionLocation(item) {
+  return {
+    path: '/dating/center',
+    query: buildInteractionQuery(item, {
+      tab: resolveDatingCenterTab(item)
+    })
+  }
+}
+
+function resolveDeliveryInteractionLocation(item) {
+  if (item?.type === 'order_accepted' && item?.targetId) {
+    return {
+      path: `/delivery/detail/${item.targetId}`,
+      query: buildInteractionQuery(item)
+    }
+  }
+  if (item?.type === 'order_finished' || item?.targetType === 'accepted') {
+    return {
+      path: '/delivery/mine',
+      query: buildInteractionQuery(item, { tab: 'accepted' })
+    }
+  }
+  if (item?.targetType === 'published') {
+    return {
+      path: '/delivery/mine',
+      query: buildInteractionQuery(item, { tab: 'published' })
+    }
+  }
+  return {
+    path: '/delivery/mine',
+    query: buildInteractionQuery(item)
+  }
+}
+
+function resolveMarketplaceInteractionLocation(item) {
+  if (item?.targetType === 'sold') {
+    return {
+      path: '/ershou/profile',
+      query: buildInteractionQuery(item, { tab: 'sold' })
+    }
+  }
+  if (item?.targetType === 'off') {
+    return {
+      path: '/ershou/profile',
+      query: buildInteractionQuery(item, { tab: 'off' })
+    }
+  }
+  if (item?.targetType === 'published' || item?.targetType === 'doing') {
+    return {
+      path: '/ershou/profile',
+      query: buildInteractionQuery(item, { tab: 'doing' })
+    }
+  }
+  if (item?.targetId) {
+    return {
+      path: `/ershou/detail/${item.targetId}`,
+      query: buildInteractionQuery(item)
+    }
+  }
+  return {
+    path: '/ershou/home',
+    query: buildInteractionQuery(item)
+  }
+}
+
+function resolveLostAndFoundInteractionLocation(item) {
+  if (item?.targetType === 'didfound') {
+    return {
+      path: '/lostandfound/profile',
+      query: buildInteractionQuery(item, { tab: 'didfound' })
+    }
+  }
+  if (item?.targetType === 'found') {
+    return {
+      path: '/lostandfound/profile',
+      query: buildInteractionQuery(item, { tab: 'found' })
+    }
+  }
+  if (item?.targetType === 'lost') {
+    return {
+      path: '/lostandfound/profile',
+      query: buildInteractionQuery(item, { tab: 'lost' })
+    }
+  }
+  if (item?.targetId) {
+    return {
+      path: `/lostandfound/detail/${item.targetId}`,
+      query: buildInteractionQuery(item)
+    }
+  }
+  return {
+    path: '/lostandfound/home',
+    query: buildInteractionQuery(item)
+  }
+}
+
+function resolveInteractionLocation(item) {
+  switch (item?.module) {
+    case 'dating':
+      return resolveDatingInteractionLocation(item)
+    case 'delivery':
+      return resolveDeliveryInteractionLocation(item)
+    case 'secret':
+      return resolveContentInteractionLocation(item, (id) => `/secret/detail/${id}`, '/secret/home')
+    case 'express':
+      return resolveContentInteractionLocation(item, (id) => `/express/detail/${id}`, '/express/home')
+    case 'topic':
+      return resolveContentInteractionLocation(item, (id) => `/topic/detail/${id}`, '/topic/home')
+    case 'photograph':
+      return resolveContentInteractionLocation(item, (id) => `/photograph/detail/${id}`, '/photograph/home')
+    case 'marketplace':
+      return resolveMarketplaceInteractionLocation(item)
+    case 'lostandfound':
+      return resolveLostAndFoundInteractionLocation(item)
+    default:
+      return null
+  }
 }
 
 function markInteractionItemRead(item) {
@@ -111,64 +281,9 @@ function markInteractionItemRead(item) {
 
 function handleInteractionSelect(item) {
   markInteractionItemRead(item)
-  if (item?.module === 'dating') {
-    const query = {
-      tab: item?.targetType === 'sent' ? 'sent' : 'received',
-      targetType: item?.targetType ?? '',
-      notificationId: item?.id ?? ''
-    }
-    if (item?.targetId) {
-      query.focusedPickId = item.targetId
-      query.targetId = item.targetId
-    }
-    if (item?.targetSubId) {
-      query.focusedProfileId = item.targetSubId
-      query.targetSubId = item.targetSubId
-    }
-    router.push({
-      path: '/dating/center',
-      query
-    })
-    return
-  }
-  const moduleRouteMap = {
-    secret: {
-      detail: (id) => `/secret/detail/${id}`,
-      fallback: '/secret/home'
-    },
-    express: {
-      detail: (id) => `/express/detail/${id}`,
-      fallback: '/express/home'
-    },
-    topic: {
-      detail: (id) => `/topic/detail/${id}`,
-      fallback: '/topic/home'
-    },
-    photograph: {
-      detail: (id) => `/photograph/detail/${id}`,
-      fallback: '/photograph/home'
-    },
-    delivery: {
-      detail: (id) => `/delivery/detail/${id}`,
-      fallback: '/delivery/home'
-    }
-  }
-  const moduleRoute = moduleRouteMap[item?.module]
-  if (moduleRoute) {
-    const query = {}
-    if (item?.targetType) {
-      query.targetType = item.targetType
-    }
-    if (item?.targetSubId) {
-      query.targetSubId = item.targetSubId
-    }
-    if (item?.id) {
-      query.notificationId = item.id
-    }
-    router.push({
-      path: item?.targetId ? moduleRoute.detail(item.targetId) : moduleRoute.fallback,
-      query
-    })
+  const location = resolveInteractionLocation(item)
+  if (location) {
+    router.push(location)
   }
 }
 
@@ -181,8 +296,12 @@ async function loadInfoPage() {
     const [announcementRes, informationRes, interactionRes, unreadRes] = await Promise.allSettled([
       request.get('/announcement/start/0/size/5'),
       request.get('/information/list'),
-      request.get('/message/interaction/start/0/size/20'),
-      request.get('/message/unread')
+      request.get('/message/interaction/start/0/size/20', {
+        params: { includeLegacyDating: true }
+      }),
+      request.get('/message/unread', {
+        params: { includeLegacyDating: true }
+      })
     ])
 
     if (announcementRes.status === 'fulfilled' && announcementRes.value?.success) {

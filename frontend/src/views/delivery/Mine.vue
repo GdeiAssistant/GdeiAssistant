@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 
 const router = useRouter()
+const route = useRoute()
 const activeTab = ref('published') // published, accepted
 const publishedList = ref([])
 const acceptedList = ref([])
@@ -24,9 +25,34 @@ function getTypeText(type) {
   return map[type] || '跑腿'
 }
 
+function getQueryTab() {
+  const value = route.query.tab
+  if (Array.isArray(value)) {
+    return value[0] || ''
+  }
+  return typeof value === 'string' ? value : ''
+}
+
+function normalizeTab(tab) {
+  return tab === 'accepted' ? 'accepted' : 'published'
+}
+
+function applyRouteState() {
+  activeTab.value = normalizeTab(getQueryTab())
+}
+
 function switchTab(tab) {
-  activeTab.value = tab
-  loadData()
+  const normalized = normalizeTab(tab)
+  if (activeTab.value === normalized && getQueryTab() === normalized) {
+    return
+  }
+  router.replace({
+    path: '/delivery/mine',
+    query: {
+      ...route.query,
+      tab: normalized
+    }
+  })
 }
 
 function goDetail(id) {
@@ -72,6 +98,12 @@ async function loadData() {
 }
 
 onMounted(() => {
+  applyRouteState()
+  loadData()
+})
+
+watch(() => route.fullPath, () => {
+  applyRouteState()
   loadData()
 })
 </script>

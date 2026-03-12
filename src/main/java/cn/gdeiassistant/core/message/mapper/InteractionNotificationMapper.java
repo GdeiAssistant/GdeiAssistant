@@ -42,6 +42,16 @@ public interface InteractionNotificationMapper {
     @Select("select count(notification_id) from interaction_notification where receiver_username=#{username} and is_read=0")
     Integer selectUnreadInteractionNotificationCount(@Param("username") String username);
 
+    @Select("select module,target_id,target_sub_id,target_type " +
+            "from interaction_notification where receiver_username=#{username} and module in ('dating','roommate')")
+    @Results(id = "InteractionNotificationKey", value = {
+            @Result(property = "module", column = "module"),
+            @Result(property = "targetId", column = "target_id"),
+            @Result(property = "targetSubId", column = "target_sub_id"),
+            @Result(property = "targetType", column = "target_type")
+    })
+    List<InteractionNotificationEntity> selectDatingInteractionNotificationKeys(@Param("username") String username);
+
     @Update("update interaction_notification set is_read=1 where receiver_username=#{username} and notification_id=#{notificationId}")
     int updateInteractionNotificationRead(@Param("username") String username, @Param("notificationId") Long notificationId);
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, onBeforeUnmount, nextTick } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 
@@ -12,9 +12,6 @@ const commentText = ref('')
 const loading = ref(true)
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
-const cardRef = ref(null)
-const footerRef = ref(null)
-const commentRefs = new Map()
 const showDialog = (msg) => {
   dialogMessage.value = msg
   dialogVisible.value = true
@@ -221,55 +218,9 @@ const showSubmitBtn = computed(() => {
   return commentText.value && commentText.value.trim().length > 0
 })
 
-function notificationTargetType() {
-  return route.query?.targetType ? String(route.query.targetType) : ''
-}
-
-function notificationTargetSubId() {
-  return route.query?.targetSubId ? String(route.query.targetSubId) : ''
-}
-
-function openedFromNotification() {
-  return !!route.query?.notificationId
-}
-
-function setCommentRef(id, element) {
-  const key = String(id)
-  if (element) {
-    commentRefs.set(key, element)
-    return
-  }
-  commentRefs.delete(key)
-}
-
-function isHighlightedComment(id) {
-  return notificationTargetType() === 'comment' && notificationTargetSubId() === String(id)
-}
-
-function isHighlightedFooter() {
-  return openedFromNotification() && notificationTargetType() === 'like'
-}
-
-async function focusNotificationTarget() {
-  if (!openedFromNotification()) {
-    return
-  }
-  await nextTick()
-  if (notificationTargetType() === 'comment' && notificationTargetSubId()) {
-    const commentElement = commentRefs.get(notificationTargetSubId())
-    if (commentElement?.scrollIntoView) {
-      commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      return
-    }
-  }
-  const fallbackElement = notificationTargetType() === 'like' ? footerRef.value : cardRef.value
-  fallbackElement?.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
-}
-
 onMounted(async () => {
   await loadDetail()
   await loadComments()
-  await focusNotificationTarget()
 })
 
 onBeforeUnmount(() => {
@@ -293,7 +244,7 @@ onBeforeUnmount(() => {
 
     <div v-else-if="secret" class="all">
       <!-- 树洞信息：参考原版 .secret -->
-      <div :id="secret.id" ref="cardRef" class="secret" :class="[`theme${secret.theme || 1}`, { 'notification-highlight': openedFromNotification() && notificationTargetType() === 'comment' && !notificationTargetSubId() }]">
+      <div :id="secret.id" class="secret" :class="`theme${secret.theme || 1}`">
         <section class="section" @click="playAudio">
           <template v-if="secret.type === 0">
             {{ secret.content }}
@@ -324,7 +275,7 @@ onBeforeUnmount(() => {
             </div>
           </template>
         </section>
-        <footer ref="footerRef" :class="{ 'notification-highlight': isHighlightedFooter() }">
+        <footer>
           <div>
             <i :class="secret.liked ? 'good' : 'pregood'" @click="toggleLike"></i>
             <span>{{ secret.likeCount || 0 }}</span>
@@ -340,8 +291,7 @@ onBeforeUnmount(() => {
       <div
         v-for="(comment, index) in comments"
         :key="comment.id"
-        :ref="(el) => setCommentRef(comment.id, el)"
-        :class="['discuss', { 'notification-highlight': isHighlightedComment(comment.id) }]"
+        class="discuss"
       >
         <img :src="`/img/avatar/${comment.avatarTheme || 1}.png`" alt="" />
         <div class="info">
@@ -630,11 +580,6 @@ onBeforeUnmount(() => {
 .discuss span {
   font-size: 0.8rem;
   color: #6f6f6f;
-}
-
-.notification-highlight {
-  box-shadow: 0 0 0 2px rgba(9, 187, 7, 0.2), 0 10px 20px rgba(9, 187, 7, 0.12);
-  border-radius: 12px;
 }
 
 /* 底部固定输入框：参考原版 secret-detail.css .form */

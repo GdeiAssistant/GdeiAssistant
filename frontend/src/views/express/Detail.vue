@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { showErrorTopTips } from '@/utils/toast.js'
@@ -10,9 +10,6 @@ const item = ref(null)
 const comments = ref([])
 const commentInput = ref('')
 const submitting = ref(false)
-const commentRefs = new Map()
-const actionBarRef = ref(null)
-const commentsSectionRef = ref(null)
 
 function mapGender(g) {
   if (g === 0) return 'male'
@@ -146,57 +143,11 @@ async function loadComments() {
   }
 }
 
-function notificationTargetType() {
-  return route.query?.targetType ? String(route.query.targetType) : ''
-}
-
-function notificationTargetSubId() {
-  return route.query?.targetSubId ? String(route.query.targetSubId) : ''
-}
-
-function openedFromNotification() {
-  return !!route.query?.notificationId
-}
-
-function setCommentRef(id, element) {
-  const key = String(id)
-  if (element) {
-    commentRefs.set(key, element)
-    return
-  }
-  commentRefs.delete(key)
-}
-
-function isHighlightedComment(id) {
-  return notificationTargetType() === 'comment' && notificationTargetSubId() === String(id)
-}
-
-function isHighlightedAction(type) {
-  return openedFromNotification() && notificationTargetType() === type
-}
-
-async function focusNotificationTarget() {
-  if (!openedFromNotification()) {
-    return
-  }
-  await nextTick()
-  if (notificationTargetType() === 'comment' && notificationTargetSubId()) {
-    const commentElement = commentRefs.get(notificationTargetSubId())
-    if (commentElement?.scrollIntoView) {
-      commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      return
-    }
-  }
-  const fallbackElement = notificationTargetType() === 'comment' ? commentsSectionRef.value : actionBarRef.value
-  fallbackElement?.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
-}
-
 onMounted(async () => {
   await loadDetail()
   if (item.value) {
     await loadComments()
   }
-  await focusNotificationTarget()
 })
 </script>
 
@@ -227,21 +178,21 @@ onMounted(async () => {
           {{ item.time || '刚刚' }}
         </div>
 
-        <div ref="actionBarRef" class="card-actions" style="display: flex; border-top: 1px solid #f0f0f0; padding: 10px 0;">
-          <button type="button" class="action-btn" :class="{ 'is-liked': item.isLiked, 'is-highlighted': isHighlightedAction('like') }" @click.stop="handleLike">
+        <div class="card-actions" style="display: flex; border-top: 1px solid #f0f0f0; padding: 10px 0;">
+          <button type="button" class="action-btn" :class="{ 'is-liked': item.isLiked }" @click.stop="handleLike">
             {{ item.isLiked ? '♥' : '♡' }} {{ item.likeCount || 0 }}
           </button>
-          <button type="button" class="action-btn" :class="{ 'is-highlighted': isHighlightedAction('guess') }" :style="{ opacity: item.canGuess ? 1 : 0.4 }" @click.stop="handleGuess">
+          <button type="button" class="action-btn" :style="{ opacity: item.canGuess ? 1 : 0.4 }" @click.stop="handleGuess">
             <span style="margin-right: 4px; position: relative;">☆<sup style="font-size: 10px; position: absolute; top: -4px; right: -6px;">?</sup></span> {{ item.guessCount || 0 }}/{{ item.correctCount || 0 }}
           </button>
-          <button type="button" class="action-btn" :class="{ 'is-highlighted': isHighlightedAction('comment') }" @click.stop>
+          <button type="button" class="action-btn" @click.stop>
             💬 {{ item.commentCount || 0 }}
           </button>
         </div>
       </div>
 
       <!-- 评论区 -->
-      <div ref="commentsSectionRef" class="express-comments" :class="{ 'section-highlight': openedFromNotification() && notificationTargetType() === 'comment' && !notificationTargetSubId() }">
+      <div class="express-comments">
         <h3 class="express-comments__title">评论列表</h3>
         <div v-if="comments.length === 0" class="express-comments__empty">
           <p>暂无评论，快来抢沙发吧！</p>
@@ -250,8 +201,7 @@ onMounted(async () => {
           <div
             v-for="(comment, index) in comments"
             :key="comment.id || index"
-            :ref="(el) => setCommentRef(comment.id || index, el)"
-            :class="['express-comment', { 'comment-highlight': isHighlightedComment(comment.id || index) }]"
+            class="express-comment"
           >
             <div class="express-comment__header">
               <span class="express-comment__floor">{{ index + 1 }}楼</span>
@@ -366,12 +316,6 @@ onMounted(async () => {
   color: #ff5252 !important;
   font-weight: bold;
 }
-.action-btn.is-highlighted {
-  background: rgba(116, 185, 255, 0.12);
-  color: #2d6cdf;
-  font-weight: 600;
-}
-
 /* 猜名字 Dialog */
 .weui-dialog--guess {
   position: fixed;
@@ -463,11 +407,6 @@ onMounted(async () => {
 .express-comment {
   border-bottom: 1px solid #eee;
   padding-bottom: 15px;
-}
-.express-comment.comment-highlight,
-.express-comments.section-highlight {
-  box-shadow: 0 0 0 2px rgba(116, 185, 255, 0.18), 0 10px 20px rgba(116, 185, 255, 0.08);
-  border-radius: 10px;
 }
 .express-comment:last-child {
   border-bottom: none;

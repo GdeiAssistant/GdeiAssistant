@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import request from '../../utils/request'
 
@@ -14,17 +14,34 @@ const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const deleteTargetId = ref(null)
 const deleteDialogVisible = ref(false)
-const focusedItemId = ref('')
 
 function showDialog(msg) {
   dialogMessage.value = msg
   dialogVisible.value = true
 }
 
+function getTabQueryName(index) {
+  if (index === 1) {
+    return 'sent'
+  }
+  if (index === 2) {
+    return 'posts'
+  }
+  return 'received'
+}
+
 function switchTab(index) {
-  activeTab.value = index
-  syncFocusedItem()
-  loadData()
+  const tab = getTabQueryName(index)
+  if (activeTab.value === index && getQueryValue('tab') === tab) {
+    return
+  }
+  router.replace({
+    path: '/dating/center',
+    query: {
+      ...route.query,
+      tab
+    }
+  })
 }
 
 function getQueryValue(key) {
@@ -43,18 +60,14 @@ function getInteractionTabIndex() {
   if (tab === 'posts') {
     return 2
   }
+  if (getQueryValue('targetType') === 'published') {
+    return 2
+  }
   return getQueryValue('targetType') === 'sent' ? 1 : 0
-}
-
-function syncFocusedItem() {
-  focusedItemId.value = activeTab.value === 2
-    ? getQueryValue('focusedProfileId')
-    : getQueryValue('focusedPickId')
 }
 
 function applyRouteState() {
   activeTab.value = getInteractionTabIndex()
-  syncFocusedItem()
 }
 
 function getPick(message) {
@@ -67,25 +80,6 @@ function getProfile(item) {
 
 function normalizeId(value) {
   return value === undefined || value === null ? '' : String(value)
-}
-
-function getItemAnchorId(id) {
-  return `dating-item-${normalizeId(id)}`
-}
-
-function isFocusedItem(id) {
-  return normalizeId(id) !== '' && normalizeId(id) === focusedItemId.value
-}
-
-async function focusHighlightedItem() {
-  if (!focusedItemId.value) {
-    return
-  }
-  await nextTick()
-  const element = document.getElementById(getItemAnchorId(focusedItemId.value))
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  }
 }
 
 async function loadData() {
@@ -133,7 +127,6 @@ async function loadData() {
     }
   } finally {
     loading.value = false
-    focusHighlightedItem()
   }
 }
 
@@ -197,7 +190,7 @@ watch(() => route.fullPath, () => {
   <div class="dating-center">
     <div class="dating-header unified-header">
       <span class="dating-header__back" @click="router.back()">返回</span>
-      <h1 class="dating-header__title">互动中心</h1>
+      <h1 class="dating-header__title">卖室友互动</h1>
       <span class="dating-header__placeholder"></span>
     </div>
 
@@ -231,8 +224,7 @@ watch(() => route.fullPath, () => {
         <div
           v-for="item in receivedList"
           :key="item.id"
-          :id="getItemAnchorId(item.id)"
-          :class="['dating-card', { 'dating-card--focused': isFocusedItem(item.id) }]"
+          class="dating-card"
         >
           <div class="dating-card__header">
             <img :src="item.avatar || '/img/dating/default-avatar.png'" class="dating-card__avatar" />
@@ -264,8 +256,7 @@ watch(() => route.fullPath, () => {
         <div
           v-for="item in sentList"
           :key="item.id"
-          :id="getItemAnchorId(item.id)"
-          :class="['dating-card', { 'dating-card--focused': isFocusedItem(item.id) }]"
+          class="dating-card"
         >
           <div class="dating-card__header">
             <img :src="item.targetAvatar || item.targetImage || '/img/dating/default-avatar.png'" class="dating-card__avatar" />
@@ -296,8 +287,7 @@ watch(() => route.fullPath, () => {
         <div
           v-for="item in postsList"
           :key="item.id"
-          :id="getItemAnchorId(item.id)"
-          :class="['dating-card', 'dating-card--post', { 'dating-card--focused': isFocusedItem(item.id) }]"
+          :class="['dating-card', 'dating-card--post']"
         >
           <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" class="dating-card__thumb" />
           <div class="dating-card__body">
@@ -404,11 +394,6 @@ watch(() => route.fullPath, () => {
   border-radius: 8px;
   padding: 15px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.dating-card--focused {
-  border: 2px solid rgba(109, 203, 189, 0.8);
-  box-shadow: 0 0 0 4px rgba(120, 226, 209, 0.18);
 }
 
 .dating-card__header {

@@ -1,10 +1,11 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { getCurrentUserProfile } from '../../api/user.js'
 
 const router = useRouter()
+const route = useRoute()
 
 const avatar = ref('/img/avatar/default.png')
 const nickname = ref('二手用户')
@@ -29,8 +30,37 @@ function showDialog(message) {
   dialogVisible.value = true
 }
 
+function getQueryTab() {
+  const value = route.query.tab
+  if (Array.isArray(value)) {
+    return value[0] || ''
+  }
+  return typeof value === 'string' ? value : ''
+}
+
+function normalizeStat(stat) {
+  if (stat === 'sold' || stat === 'off') {
+    return stat
+  }
+  return 'doing'
+}
+
+function applyRouteState() {
+  activeStat.value = normalizeStat(getQueryTab())
+}
+
 function setStat(stat) {
-  activeStat.value = stat
+  const normalized = normalizeStat(stat)
+  if (activeStat.value === normalized && getQueryTab() === normalized) {
+    return
+  }
+  router.replace({
+    path: '/ershou/profile',
+    query: {
+      ...route.query,
+      tab: normalized
+    }
+  })
 }
 
 function mapProfileItem(item) {
@@ -87,7 +117,12 @@ async function updateItemState(id, state, confirmText, successText) {
 }
 
 onMounted(() => {
+  applyRouteState()
   loadPage()
+})
+
+watch(() => route.fullPath, () => {
+  applyRouteState()
 })
 </script>
 

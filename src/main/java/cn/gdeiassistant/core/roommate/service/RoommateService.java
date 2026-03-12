@@ -256,6 +256,11 @@ public class RoommateService {
         roommateMapper.updateRoommateMessageState(id, state);
     }
 
+    public void updateRoommateMessageState(String sessionId, Integer id, Integer state) {
+        User user = userCertificateService.getUserLoginCertificate(sessionId);
+        roommateMapper.updateRoommateMessageStateByUsername(id, state, user.getUsername());
+    }
+
     public String getRoommateProfilePictureURL(int id) {
         return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "dating/" + id + ".jpg", 30, TimeUnit.MINUTES);
     }

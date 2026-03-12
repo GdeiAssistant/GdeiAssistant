@@ -20,7 +20,7 @@ public interface AnnouncementMapper {
             @Result(property = "content", column = "content"),
             @Result(property = "publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP)
     })
-    @Select("select * from announcement order by publish_time desc limit 1")
+    @Select("select * from announcement order by publish_time desc, id desc limit 1")
     AnnouncementEntity queryLatestAnnouncement();
 
     @Select("select * from announcement where id=#{id} limit 1")

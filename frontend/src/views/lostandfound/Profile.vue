@@ -1,10 +1,11 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { getCurrentUserProfile } from '../../api/user.js'
 
 const router = useRouter()
+const route = useRoute()
 const activeStat = ref('lost')
 const avatar = ref('/img/avatar/default.png')
 const nickname = ref('用户')
@@ -22,8 +23,37 @@ function showDialog(message) {
   dialogVisible.value = true
 }
 
+function getQueryTab() {
+  const value = route.query.tab
+  if (Array.isArray(value)) {
+    return value[0] || ''
+  }
+  return typeof value === 'string' ? value : ''
+}
+
+function normalizeStat(stat) {
+  if (stat === 'found' || stat === 'didfound') {
+    return stat
+  }
+  return 'lost'
+}
+
+function applyRouteState() {
+  activeStat.value = normalizeStat(getQueryTab())
+}
+
 function switchStat(stat) {
-  activeStat.value = stat
+  const normalized = normalizeStat(stat)
+  if (activeStat.value === normalized && getQueryTab() === normalized) {
+    return
+  }
+  router.replace({
+    path: '/lostandfound/profile',
+    query: {
+      ...route.query,
+      tab: normalized
+    }
+  })
 }
 
 function mapItem(item) {
@@ -79,7 +109,12 @@ async function confirmDidFound(id) {
 }
 
 onMounted(() => {
+  applyRouteState()
   loadPage()
+})
+
+watch(() => route.fullPath, () => {
+  applyRouteState()
 })
 </script>
 

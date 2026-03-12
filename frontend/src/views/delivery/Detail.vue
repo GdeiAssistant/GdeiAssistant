@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 
@@ -13,8 +13,6 @@ const completing = ref(false)
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const confirmCompleteVisible = ref(false)
-const detailCardRef = ref(null)
-const statusRowRef = ref(null)
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -84,18 +82,6 @@ function handleComplete() {
     .catch(() => { completing.value = false })
 }
 
-function openedFromNotification() {
-  return !!route.query?.notificationId
-}
-
-async function focusNotificationTarget() {
-  if (!openedFromNotification()) {
-    return
-  }
-  await nextTick()
-  ;(statusRowRef.value || detailCardRef.value)?.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
-}
-
 onMounted(async () => {
   try {
     const res = await request.get(`/delivery/order/id/${route.params.id}`)
@@ -124,7 +110,6 @@ onMounted(async () => {
   } catch (e) {
     item.value = null
   }
-  await focusNotificationTarget()
 })
 </script>
 
@@ -138,7 +123,7 @@ onMounted(async () => {
 
     <div v-if="item" class="delivery-detail__content">
       <!-- 任务卡片 -->
-      <div ref="detailCardRef" class="detail-card" :class="{ 'notification-highlight': openedFromNotification() }">
+      <div class="detail-card">
         <div class="detail-card__header">
           <div class="detail-card__type">{{ getTypeText(item.type) }}</div>
           <div class="detail-card__reward">
@@ -198,7 +183,7 @@ onMounted(async () => {
             <span class="info-label">发布时间：</span>
             <span class="info-value">{{ item.time }}</span>
           </div>
-          <div ref="statusRowRef" class="info-row" :class="{ 'notification-highlight': openedFromNotification() }">
+          <div class="info-row">
             <span class="info-label">任务状态：</span>
             <div :class="['delivery-badge', getStatusClass(item.status)]">
               {{ getStatusText(item.status) }}
@@ -282,10 +267,6 @@ onMounted(async () => {
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.03);
-}
-
-.notification-highlight {
-  box-shadow: 0 0 0 2px rgba(250, 130, 49, 0.16), 0 12px 24px rgba(250, 130, 49, 0.08);
 }
 
 .detail-card__header {

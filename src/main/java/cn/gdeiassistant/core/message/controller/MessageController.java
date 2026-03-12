@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,15 +22,20 @@ public class MessageController {
 
     @RequestMapping(value = "/api/message/interaction/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<InteractionMessageVO>> getInteractionMessages(HttpServletRequest request,
-            @PathVariable("start") Integer start, @PathVariable("size") Integer size) {
+            @PathVariable("start") Integer start,
+            @PathVariable("size") Integer size,
+            @RequestParam(value = "includeLegacyDating", defaultValue = "false") Boolean includeLegacyDating) {
         String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, messageService.queryInteractionMessages(sessionId, start, size));
+        return new DataJsonResult<>(true,
+                messageService.queryInteractionMessages(sessionId, start, size, Boolean.TRUE.equals(includeLegacyDating)));
     }
 
     @RequestMapping(value = "/api/message/unread", method = RequestMethod.GET)
-    public DataJsonResult<Integer> getInteractionUnreadCount(HttpServletRequest request) {
+    public DataJsonResult<Integer> getInteractionUnreadCount(HttpServletRequest request,
+            @RequestParam(value = "includeLegacyDating", defaultValue = "false") Boolean includeLegacyDating) {
         String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, messageService.queryInteractionUnreadCount(sessionId));
+        return new DataJsonResult<>(true,
+                messageService.queryInteractionUnreadCount(sessionId, Boolean.TRUE.equals(includeLegacyDating)));
     }
 
     @RequestMapping(value = "/api/message/id/{id}/read", method = RequestMethod.POST)
@@ -40,9 +46,10 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/api/message/readall", method = RequestMethod.POST)
-    public JsonResult readAllInteractionMessages(HttpServletRequest request) {
+    public JsonResult readAllInteractionMessages(HttpServletRequest request,
+            @RequestParam(value = "includeLegacyDating", defaultValue = "false") Boolean includeLegacyDating) {
         String sessionId = (String) request.getAttribute("sessionId");
-        messageService.markAllInteractionMessagesRead(sessionId);
+        messageService.markAllInteractionMessagesRead(sessionId, Boolean.TRUE.equals(includeLegacyDating));
         return new JsonResult(true);
     }
 }

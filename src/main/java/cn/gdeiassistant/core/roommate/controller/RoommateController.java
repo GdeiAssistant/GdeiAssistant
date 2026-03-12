@@ -134,8 +134,9 @@ public class RoommateController {
     }
 
     @RequestMapping(value = "/api/dating/message/id/{id}/read", method = RequestMethod.POST)
-    public JsonResult readRoommateMessage(@PathVariable("id") Integer id) {
-        roommateService.updateRoommateMessageState(id, 1);
+    public JsonResult readRoommateMessage(HttpServletRequest request, @PathVariable("id") Integer id) {
+        String sessionId = (String) request.getAttribute("sessionId");
+        roommateService.updateRoommateMessageState(sessionId, id, 1);
         return new JsonResult(true);
     }
 

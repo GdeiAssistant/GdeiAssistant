@@ -44,6 +44,12 @@ defineProps({
 defineEmits(['select-item'])
 
 function getModuleLabel(module) {
+  if (module === 'marketplace') {
+    return '二手交易'
+  }
+  if (module === 'lostandfound') {
+    return '失物招领'
+  }
   if (module === 'dating') {
     return '卖室友'
   }

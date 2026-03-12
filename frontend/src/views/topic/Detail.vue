@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 
@@ -8,7 +8,6 @@ const router = useRouter()
 
 const topic = ref(null)
 const loading = ref(true)
-const likeButtonRef = ref(null)
 
 async function loadDetail() {
   try {
@@ -45,29 +44,8 @@ function handleLike() {
   }).catch(() => {})
 }
 
-function notificationTargetType() {
-  return route.query?.targetType ? String(route.query.targetType) : ''
-}
-
-function openedFromNotification() {
-  return !!route.query?.notificationId
-}
-
-function isHighlightedLike() {
-  return openedFromNotification() && notificationTargetType() === 'like'
-}
-
-async function focusNotificationTarget() {
-  if (!openedFromNotification()) {
-    return
-  }
-  await nextTick()
-  likeButtonRef.value?.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
-}
-
 onMounted(async () => {
   await loadDetail()
-  await focusNotificationTarget()
 })
 </script>
 
@@ -101,7 +79,7 @@ onMounted(async () => {
           >
         </div>
         <div class="topic-card__footer">
-          <button ref="likeButtonRef" type="button" class="topic-like-btn" :class="{ 'is-liked': topic.liked, 'is-highlighted': isHighlightedLike() }" @click="handleLike">
+          <button type="button" class="topic-like-btn" :class="{ 'is-liked': topic.liked }" @click="handleLike">
             {{ topic.liked ? '已点赞' : '点赞' }} {{ topic.likeCount || 0 }}
           </button>
         </div>
@@ -231,7 +209,4 @@ onMounted(async () => {
   background: #f3f4f6;
 }
 
-.topic-like-btn.is-highlighted {
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.18), 0 8px 16px rgba(16, 185, 129, 0.12);
-}
 </style>

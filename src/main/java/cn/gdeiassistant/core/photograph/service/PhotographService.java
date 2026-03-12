@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.photograph.service;
 
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.photograph.converter.PhotographCommentConverter;
 import cn.gdeiassistant.core.photograph.converter.PhotographConverter;
 import cn.gdeiassistant.core.photograph.mapper.PhotographMapper;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +44,9 @@ public class PhotographService {
 
     @Autowired
     private R2StorageService r2StorageService;
+
+    @Autowired
+    private InteractionNotificationService interactionNotificationService;
 
     public int queryPhotoStatisticalData() {
         Integer n = photographMapper.selectPhotographImageCount();
@@ -121,6 +126,7 @@ public class PhotographService {
         return entity.getId();
     }
 
+    @Transactional("appTransactionManager")
     public void addPhotographComment(int id, String comment, String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         PhotographCommentEntity entity = new PhotographCommentEntity();
@@ -128,6 +134,18 @@ public class PhotographService {
         entity.setComment(comment);
         entity.setUsername(user.getUsername());
         photographMapper.insertPhotographComment(entity);
+        PhotographEntity photograph = getNotificationTarget(id, user.getUsername());
+        interactionNotificationService.createInteractionNotification(
+                "photograph",
+                "comment",
+                photograph != null ? photograph.getUsername() : null,
+                user.getUsername(),
+                String.valueOf(id),
+                entity.getCommentId() == null ? null : String.valueOf(entity.getCommentId()),
+                "comment",
+                "作品收到新评论",
+                user.getUsername() + " 评论了你的作品：" + comment
+        );
     }
 
     public void uploadPhotographItemPicture(int id, int index, InputStream inputStream) {
@@ -149,11 +167,24 @@ public class PhotographService {
         return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
     }
 
+    @Transactional("appTransactionManager")
     public void LikePhotograph(int id, String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         Integer count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, user.getUsername());
         if (count == null || count == 0) {
             photographMapper.insertPhotographLike(id, user.getUsername());
+            PhotographEntity photograph = getNotificationTarget(id, user.getUsername());
+            interactionNotificationService.createInteractionNotification(
+                    "photograph",
+                    "like",
+                    photograph != null ? photograph.getUsername() : null,
+                    user.getUsername(),
+                    String.valueOf(id),
+                    null,
+                    "like",
+                    "作品收到新点赞",
+                    user.getUsername() + " 点赞了你的作品"
+            );
         }
     }
 
@@ -165,5 +196,10 @@ public class PhotographService {
         e.setType(dto.getType());
         e.setUsername(username);
         return e;
+    }
+
+    private PhotographEntity getNotificationTarget(int id, String username) {
+        List<PhotographEntity> list = photographMapper.selectPhotographByIdAndUsername(id, username);
+        return list == null || list.isEmpty() ? null : list.get(0);
     }
 }

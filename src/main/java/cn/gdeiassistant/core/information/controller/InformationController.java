@@ -34,12 +34,14 @@ public class InformationController {
     @RequestMapping(value = "/api/information/list", method = RequestMethod.GET)
     public DataJsonResult<InformationVO> loadInformation() {
         AnnouncementVO notice = announcementService.queryLatestAnnouncement();
+        List<AnnouncementVO> notices = announcementService.queryAnnouncementPage(0, 5);
         List<WechatAccount> accounts = WechatAccountUtils.getWechatAccountList();
         List<ReadingVO> topics = readingService.loadLatestReadingList();
         Festival festival = FestivalUtils.getFestivalInfo();
 
         InformationVO information = new InformationVO();
         information.setNotice(notice);
+        information.setNotices(notices);
         information.setAccounts(accounts);
         information.setTopics(topics);
         information.setFestival(festival);
@@ -47,4 +49,3 @@ public class InformationController {
         return new DataJsonResult<>(true, information);
     }
 }
-

@@ -143,7 +143,8 @@ public interface ExpressMapper {
     List<ExpressComment> selectExpressComment(@Param("expressId") int expressId);
 
     @Insert("insert into express_comment (username,express_id,comment,publish_time) values(#{username},#{expressId},#{comment},now())")
-    void insertExpressComment(@Param("expressId") int expressId, @Param("username") String username, @Param("comment") String comment);
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    void insertExpressComment(ExpressComment expressComment);
 
     @Select("select ec.id,ec.username,p.nickname,ec.express_id,ec.comment,ec.publish_time from express_comment ec " +
             "left join profile p on p.username=ec.username inner join express e on ec.express_id=e.id " +

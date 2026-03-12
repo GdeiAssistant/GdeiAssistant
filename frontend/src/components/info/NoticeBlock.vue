@@ -1,19 +1,25 @@
 <template>
-  <div v-if="notice" class="modern-card">
+  <div v-if="notices.length" class="modern-card">
     <div class="card-title">通知公告</div>
-    <div class="notice-content">
-      <div class="notice-title">{{ notice.title }}</div>
-      <div class="notice-date">时间：{{ notice.publishTime }}</div>
-      <div class="notice-body">{{ notice.content }}</div>
+    <div class="notice-list">
+      <div
+        v-for="notice in notices"
+        :key="notice.id || `${notice.title}-${notice.publishTime}`"
+        class="notice-content"
+      >
+        <div class="notice-title">{{ notice.title }}</div>
+        <div class="notice-date">时间：{{ notice.publishTime }}</div>
+        <div class="notice-body">{{ notice.content }}</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  notice: {
-    type: Object,
-    default: null
+  notices: {
+    type: Array,
+    default: () => []
   }
 })
 </script>
@@ -42,6 +48,15 @@ defineProps({
   background: #09bb07;
   border-radius: 2px;
   margin-right: 8px;
+}
+.notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.notice-content + .notice-content {
+  border-top: 1px solid #f2f2f2;
+  padding-top: 14px;
 }
 .notice-title {
   font-size: 16px;

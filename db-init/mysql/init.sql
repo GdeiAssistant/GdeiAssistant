@@ -196,6 +196,34 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
+-- Table structure for interaction_notification
+-- ----------------------------
+DROP TABLE IF EXISTS `interaction_notification`;
+CREATE TABLE `interaction_notification` (
+  `notification_id` bigint NOT NULL AUTO_INCREMENT COMMENT '统一互动通知ID',
+  `module` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '模块',
+  `type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '通知类型',
+  `receiver_username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '接收者用户名',
+  `actor_username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '触发者用户名',
+  `target_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '主目标ID',
+  `target_sub_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '子目标ID',
+  `target_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '目标类型',
+  `title` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '通知标题',
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '通知内容',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `is_read` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已读',
+  PRIMARY KEY (`notification_id`),
+  KEY `idx_interaction_notification_receiver_time` (`receiver_username`,`create_time`,`notification_id`),
+  KEY `idx_interaction_notification_receiver_read` (`receiver_username`,`is_read`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- ----------------------------
+-- Records of interaction_notification
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
 -- Table structure for ershou
 -- ----------------------------
 DROP TABLE IF EXISTS `ershou`;

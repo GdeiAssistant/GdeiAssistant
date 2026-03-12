@@ -8,7 +8,9 @@ import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class AnnouncementService {
@@ -35,5 +37,21 @@ public class AnnouncementService {
     public AnnouncementVO queryLatestAnnouncement() {
         AnnouncementEntity entity = announcementMapper.queryLatestAnnouncement();
         return entity == null ? null : announcementConverter.toVO(entity);
+    }
+
+    public AnnouncementVO queryAnnouncementDetail(Integer id) {
+        if (id == null) {
+            return null;
+        }
+        AnnouncementEntity entity = announcementMapper.queryAnnouncementById(id);
+        return entity == null ? null : announcementConverter.toVO(entity);
+    }
+
+    public List<AnnouncementVO> queryAnnouncementPage(Integer start, Integer size) {
+        if (start == null || start < 0 || size == null || size <= 0) {
+            return new ArrayList<>();
+        }
+        List<AnnouncementEntity> entityList = announcementMapper.queryAnnouncementPage(start, size);
+        return entityList == null ? new ArrayList<>() : announcementConverter.toVOList(entityList);
     }
 }

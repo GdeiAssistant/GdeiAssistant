@@ -105,7 +105,7 @@ public class AccountDeletionService {
             } else if (deliveryOrder.getState().equals(1)) {
                 DeliveryTradeEntity deliveryTrade = deliveryMapper.selectDeliveryTradeByOrderId(deliveryOrder.getOrderId());
                 if (deliveryTrade != null && deliveryTrade.getState().equals(0)) {
-                    deliveryMapper.updateTradeState(deliveryTrade.getTradeId(), 2);
+                    deliveryMapper.updateTradeState(deliveryTrade.getTradeId(), 0, 2);
                 }
             }
         }

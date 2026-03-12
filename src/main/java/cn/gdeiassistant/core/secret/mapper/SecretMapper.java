@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface SecretMapper {
 
-    @Select("select sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state,sc.publish_time,count(scl.id) " +
+    @Select("select sc.id,sc.username,sc.content,sc.theme,sc.type,sc.timer,sc.state,sc.publish_time,count(scl.id) " +
             "as like_count from secret_content sc left outer join secret_like scl on sc.id=scl.content_id " +
-            "where sc.id=#{id} and state=0 group by sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state," +
+            "where sc.id=#{id} and state=0 group by sc.id,sc.username,sc.content,sc.theme,sc.type,sc.timer,sc.state," +
             "sc.publish_time,scl.id limit 1")
     @Results(id = "SecretContent", value = {
             @Result(property = "id", column = "id"),
@@ -89,6 +89,7 @@ public interface SecretMapper {
     void insertSecret(SecretContentEntity secretContent);
 
     @Insert("insert into secret_comment (content_id,username,comment,avatar_theme,publish_time) values(#{contentId},#{username},#{comment},#{avatarTheme},now())")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertSecretComment(SecretCommentEntity secretComment);
 
     @Insert("insert into secret_like (content_id,username,create_time) values(#{content_id},#{username},now())")

@@ -13,6 +13,7 @@ import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryOrderEntity;
 import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryTradeEntity;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryOrderVO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryTradeVO;
+import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class DeliveryService {
 
     @Autowired
     private UserCertificateService userCertificateService;
+
+    @Autowired
+    private InteractionNotificationService interactionNotificationService;
 
     /**
      * 分页查询订单信息
@@ -225,6 +229,19 @@ public class DeliveryService {
             trade.setUsername(username);
             trade.setOrderId(orderId);
             deliveryMapper.insertTradeRecord(trade);
+            DeliveryOrderEntity order = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
+            String company = order != null && StringUtils.isNotBlank(order.getCompany()) ? order.getCompany() : "快递代收";
+            interactionNotificationService.createInteractionNotification(
+                    "delivery",
+                    "order_accepted",
+                    order != null ? order.getUsername() : null,
+                    username,
+                    orderId == null ? null : String.valueOf(orderId),
+                    trade.getTradeId() == null ? null : String.valueOf(trade.getTradeId()),
+                    "published",
+                    "订单已被接单",
+                    username + " 接取了你发布的 " + company + " 订单"
+            );
         } else {
             //抢单失败
             throw new DeliveryOrderTakenException("抢单失败");
@@ -298,6 +315,7 @@ public class DeliveryService {
      * @throws DataNotExistException
      * @throws NoAccessUpdatingException
      */
+    @Transactional("appTransactionManager")
     public void finishTrade(Integer tradeId, String sessionId) throws DataNotExistException, NoAccessUpdatingException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DeliveryTradeEntity deliveryTrade = deliveryMapper.selectDeliveryTradeByTradeId(tradeId);
@@ -306,7 +324,26 @@ public class DeliveryService {
                 DeliveryOrderEntity deliveryOrder = deliveryMapper.selectDeliveryOrderByOrderId(deliveryTrade.getOrderId());
                 if (deliveryOrder != null) {
                     if (deliveryOrder.getUsername().equals(user.getUsername())) {
-                        deliveryMapper.updateTradeState(tradeId, 1);
+                        int orderResult = deliveryMapper.finishOrder(deliveryTrade.getOrderId());
+                        if (orderResult <= 0) {
+                            return;
+                        }
+                        int tradeResult = deliveryMapper.updateTradeState(tradeId, 0, 1);
+                        if (tradeResult <= 0) {
+                            throw new IllegalStateException("快递代收交易状态更新失败");
+                        }
+                        String company = StringUtils.isNotBlank(deliveryOrder.getCompany()) ? deliveryOrder.getCompany() : "快递代收";
+                        interactionNotificationService.createInteractionNotification(
+                                "delivery",
+                                "order_finished",
+                                deliveryTrade.getUsername(),
+                                user.getUsername(),
+                                deliveryTrade.getOrderId() == null ? null : String.valueOf(deliveryTrade.getOrderId()),
+                                tradeId == null ? null : String.valueOf(tradeId),
+                                "accepted",
+                                "订单已完成",
+                                user.getUsername() + " 已确认你接取的 " + company + " 订单完成"
+                        );
                         return;
                     }
                     throw new NoAccessUpdatingException("你没有权限修改该订单状态");

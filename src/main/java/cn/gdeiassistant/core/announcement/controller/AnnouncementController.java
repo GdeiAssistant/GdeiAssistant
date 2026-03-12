@@ -7,11 +7,13 @@ import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
 import cn.gdeiassistant.core.information.service.Announcement.AnnouncementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 public class AnnouncementController {
@@ -26,6 +28,17 @@ public class AnnouncementController {
     public DataJsonResult<AnnouncementVO> queryLatestAnnouncement() {
         AnnouncementVO announcement = announcementService.queryLatestAnnouncement();
         return new DataJsonResult<>(true, announcement);
+    }
+
+    @RequestMapping(value = "/api/announcement/start/{start}/size/{size}", method = RequestMethod.GET)
+    public DataJsonResult<List<AnnouncementVO>> queryAnnouncementPage(@PathVariable("start") Integer start,
+            @PathVariable("size") Integer size) {
+        return new DataJsonResult<>(true, announcementService.queryAnnouncementPage(start, size));
+    }
+
+    @RequestMapping(value = "/api/announcement/id/{id}", method = RequestMethod.GET)
+    public DataJsonResult<AnnouncementVO> queryAnnouncementDetail(@PathVariable("id") Integer id) {
+        return new DataJsonResult<>(true, announcementService.queryAnnouncementDetail(id));
     }
 
     /**

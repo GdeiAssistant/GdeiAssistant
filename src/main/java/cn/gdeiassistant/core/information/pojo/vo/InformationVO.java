@@ -11,6 +11,7 @@ import java.util.List;
 public class InformationVO implements Serializable {
 
     private AnnouncementVO notice;
+    private List<AnnouncementVO> notices;
     private List<WechatAccount> accounts;
     private List<ReadingVO> topics;
     private Festival festival;
@@ -21,6 +22,14 @@ public class InformationVO implements Serializable {
 
     public void setNotice(AnnouncementVO notice) {
         this.notice = notice;
+    }
+
+    public List<AnnouncementVO> getNotices() {
+        return notices;
+    }
+
+    public void setNotices(List<AnnouncementVO> notices) {
+        this.notices = notices;
     }
 
     public List<WechatAccount> getAccounts() {

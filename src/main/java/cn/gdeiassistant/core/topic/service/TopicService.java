@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.topic.service;
 
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.topic.converter.TopicConverter;
 import cn.gdeiassistant.core.topic.mapper.TopicMapper;
 import cn.gdeiassistant.core.topic.pojo.dto.TopicPublishDTO;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +40,9 @@ public class TopicService {
 
     @Autowired
     private R2StorageService r2StorageService;
+
+    @Autowired
+    private InteractionNotificationService interactionNotificationService;
 
     public List<TopicVO> queryTopic(String sessionId, int start, int size) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
@@ -87,6 +92,7 @@ public class TopicService {
         return topicConverter.toVO(entity);
     }
 
+    @Transactional("appTransactionManager")
     public void likeTopic(int id, String sessionId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         TopicEntity entity = topicMapper.selectTopicById(id, user.getUsername());
@@ -94,6 +100,17 @@ public class TopicService {
         TopicLikeEntity like = topicMapper.selectTopicLike(id, user.getUsername());
         if (like == null) {
             topicMapper.insertTopicLike(id, user.getUsername());
+            interactionNotificationService.createInteractionNotification(
+                    "topic",
+                    "like",
+                    entity.getUsername(),
+                    user.getUsername(),
+                    String.valueOf(id),
+                    null,
+                    "like",
+                    "话题收到新点赞",
+                    user.getUsername() + " 点赞了你的话题"
+            );
         }
     }
 

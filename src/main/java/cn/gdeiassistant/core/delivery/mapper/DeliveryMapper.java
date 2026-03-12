@@ -113,8 +113,12 @@ public interface DeliveryMapper {
     @Update("update delivery_order set state=#{state} where order_id=#{id} and state=0")
     int updateOrderState(@Param("id") int id, @Param("state") int state);
 
-    @Update("update delivery_trade set state=#{state} where trade_id=#{tradeId}")
-    void updateTradeState(@Param("tradeId") Integer tradeId, @Param("state") Integer state);
+    @Update("update delivery_trade set state=#{state} where trade_id=#{tradeId} and state=#{expectedState}")
+    int updateTradeState(@Param("tradeId") Integer tradeId, @Param("expectedState") Integer expectedState,
+            @Param("state") Integer state);
+
+    @Update("update delivery_order set state=2 where order_id=#{orderId} and state=1")
+    int finishOrder(@Param("orderId") Integer orderId);
 
     @Update("update delivery_order set state=2 where order_id=#{orderId} and state!=1")
     int deleteOrder(Integer orderId);

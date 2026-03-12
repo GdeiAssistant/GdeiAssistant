@@ -89,6 +89,7 @@ public interface PhotographMapper {
     Integer selectPhotographCommentCount();
 
     @Insert("insert into photograph_comment (photo_id,comment,username,create_time) values(#{photoId},#{comment},#{username},now())")
+    @Options(useGeneratedKeys = true, keyProperty = "commentId", keyColumn = "comment_id")
     void insertPhotographComment(PhotographCommentEntity photographComment);
 
     @Select("select pc.comment_id,pc.photo_id,pc.comment,pc.username,p.nickname,pc.create_time from photograph_comment pc " +

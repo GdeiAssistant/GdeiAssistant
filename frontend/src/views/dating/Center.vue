@@ -128,7 +128,7 @@ async function loadData() {
         id: normalizeId(p.profileId),
         name: p.nickname,
         image: p.pictureURL,
-        publishTime: p.createTime || ''
+        publishTime: p.createTime || '已发布'
       })) : []
     }
   } finally {

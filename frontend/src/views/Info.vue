@@ -27,9 +27,9 @@
 
       <section class="info-section">
         <div class="section-title">系统通知 / 公告</div>
-        <NoticeBlock :notice="systemNotice" />
+        <NoticeBlock :notices="systemNoticeItems" />
         <HistoryBlock :festival="infoData.festival" :today-label="todayLabel" />
-        <div v-if="!systemNotice && !infoData.festival" class="modern-card empty-card">暂无系统通知</div>
+        <div v-if="!systemNoticeItems.length && !infoData.festival" class="modern-card empty-card">暂无系统通知</div>
       </section>
 
       <section class="info-section">
@@ -52,7 +52,7 @@ import InteractionBlock from '../components/info/InteractionBlock.vue'
 
 const router = useRouter()
 const infoData = ref({})
-const announcementData = ref(null)
+const announcementList = ref([])
 const interactionItems = ref([])
 const interactionUnreadCount = ref(0)
 
@@ -61,7 +61,18 @@ const todayLabel = computed(() => {
   return `${d.getMonth() + 1}月${d.getDate()}日`
 })
 
-const systemNotice = computed(() => announcementData.value || infoData.value.notice || null)
+const systemNoticeItems = computed(() => {
+  if (Array.isArray(announcementList.value) && announcementList.value.length > 0) {
+    return announcementList.value
+  }
+  if (Array.isArray(infoData.value?.notices) && infoData.value.notices.length > 0) {
+    return infoData.value.notices
+  }
+  if (infoData.value?.notice) {
+    return [infoData.value.notice]
+  }
+  return []
+})
 
 function handleViewAllAccounts() {
   router.push('/wechataccount')
@@ -89,20 +100,30 @@ function normalizeInteractionItems(rawList) {
   }))
 }
 
+function markInteractionItemRead(item) {
+  if (!item?.id || item?.isRead) {
+    return
+  }
+  item.isRead = true
+  interactionUnreadCount.value = Math.max(0, Number(interactionUnreadCount.value || 0) - 1)
+  request.post(`/message/id/${item.id}/read`).catch(() => {})
+}
+
 function handleInteractionSelect(item) {
+  markInteractionItemRead(item)
   if (item?.module === 'dating') {
     const query = {
       tab: item?.targetType === 'sent' ? 'sent' : 'received',
-      targetType: item?.targetType ?? ''
+      targetType: item?.targetType ?? '',
+      notificationId: item?.id ?? ''
     }
     if (item?.targetId) {
       query.focusedPickId = item.targetId
+      query.targetId = item.targetId
     }
     if (item?.targetSubId) {
       query.focusedProfileId = item.targetSubId
-    }
-    if (item?.id) {
-      query.messageId = item.id
+      query.targetSubId = item.targetSubId
     }
     router.push({
       path: '/dating/center',
@@ -158,14 +179,14 @@ async function loadInfoPage() {
   }
   try {
     const [announcementRes, informationRes, interactionRes, unreadRes] = await Promise.allSettled([
-      request.get('/announcement'),
+      request.get('/announcement/start/0/size/5'),
       request.get('/information/list'),
       request.get('/message/interaction/start/0/size/20'),
       request.get('/message/unread')
     ])
 
-    if (announcementRes.status === 'fulfilled' && announcementRes.value?.success && announcementRes.value?.data) {
-      announcementData.value = announcementRes.value.data
+    if (announcementRes.status === 'fulfilled' && announcementRes.value?.success) {
+      announcementList.value = Array.isArray(announcementRes.value?.data) ? announcementRes.value.data : []
     }
     if (informationRes.status === 'fulfilled' && informationRes.value?.success && informationRes.value?.data) {
       infoData.value = informationRes.value.data

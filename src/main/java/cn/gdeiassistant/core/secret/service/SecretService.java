@@ -10,6 +10,7 @@ import cn.gdeiassistant.core.secret.pojo.entity.SecretCommentEntity;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretContentEntity;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
+import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
 import org.slf4j.Logger;
@@ -46,6 +47,9 @@ public class SecretService {
 
     @Autowired
     private R2StorageService r2StorageService;
+
+    @Autowired
+    private InteractionNotificationService interactionNotificationService;
 
     public List<SecretVO> getSecretInfo(int start, int size, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
@@ -149,6 +153,7 @@ public class SecretService {
         return entity.getId();
     }
 
+    @Transactional("appTransactionManager")
     public void addSecretComment(int id, String sessionId, String comment) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         SecretCommentEntity entity = new SecretCommentEntity();
@@ -157,12 +162,40 @@ public class SecretService {
         entity.setComment(comment);
         entity.setAvatarTheme((int) (Math.random() * 50));
         secretMapper.insertSecretComment(entity);
+        SecretContentEntity contentEntity = secretMapper.selectSecretByID(id);
+        interactionNotificationService.createInteractionNotification(
+                "secret",
+                "comment",
+                contentEntity != null ? contentEntity.getUsername() : null,
+                user.getUsername(),
+                String.valueOf(id),
+                entity.getId() == null ? null : String.valueOf(entity.getId()),
+                "comment",
+                "树洞收到新评论",
+                user.getUsername() + " 评论了你的树洞：" + comment
+        );
     }
 
+    @Transactional("appTransactionManager")
     public void changeUserLikeState(boolean like, int id, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (like) {
-            secretMapper.insertSecretLike(id, user.getUsername());
+            Integer existingLikeCount = secretMapper.selectSecretLike(id, user.getUsername());
+            if (existingLikeCount == null || existingLikeCount == 0) {
+                secretMapper.insertSecretLike(id, user.getUsername());
+                SecretContentEntity contentEntity = secretMapper.selectSecretByID(id);
+                interactionNotificationService.createInteractionNotification(
+                        "secret",
+                        "like",
+                        contentEntity != null ? contentEntity.getUsername() : null,
+                        user.getUsername(),
+                        String.valueOf(id),
+                        null,
+                        "like",
+                        "树洞收到新点赞",
+                        user.getUsername() + " 点赞了你的树洞"
+                );
+            }
         } else {
             secretMapper.deleteSecretLike(id, user.getUsername());
         }

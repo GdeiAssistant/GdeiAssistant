@@ -5,7 +5,9 @@ import cn.gdeiassistant.common.exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.common.exception.DatingException.RepeatPickException;
 import cn.gdeiassistant.common.exception.DatingException.SelfPickException;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.roommate.mapper.RoommateMapper;
+import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePickSubmitDTO;
 import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePublishDTO;
 import cn.gdeiassistant.core.roommate.pojo.entity.RoommateMessageEntity;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Resource;
 import java.io.IOException;
@@ -41,6 +44,9 @@ public class RoommateService {
 
     @Autowired
     private R2StorageService r2StorageService;
+
+    @Autowired
+    private InteractionNotificationService interactionNotificationService;
 
     public RoommateProfileVO queryRoommateProfile(Integer id) throws DataNotExistException {
         RoommateProfileEntity entity = roommateMapper.selectRoommateProfileById(id);
@@ -157,6 +163,7 @@ public class RoommateService {
         throw new NoAccessException("没有权限查看该撩一下信息");
     }
 
+    @Transactional("appTransactionManager")
     public void addRoommatePick(String sessionId, RoommatePickSubmitDTO dto) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         RoommatePickEntity pick = new RoommatePickEntity();
@@ -173,8 +180,22 @@ public class RoommateService {
         msg.setType(0);
         msg.setState(0);
         roommateMapper.insertRoommateMessage(msg);
+        interactionNotificationService.createInteractionNotification(
+                "dating",
+                "pick_received",
+                profile != null ? profile.getUsername() : null,
+                user.getUsername(),
+                toStringValue(pick.getPickId()),
+                toStringValue(profile != null ? profile.getProfileId() : null),
+                "received",
+                "收到新的撩一下",
+                StringUtils.isNotBlank(dto.getContent())
+                        ? user.getUsername() + " 向你发起了撩一下：" + dto.getContent()
+                        : user.getUsername() + " 向你发起了撩一下"
+        );
     }
 
+    @Transactional("appTransactionManager")
     public void updateRoommatePickState(Integer id, Integer state) throws DataNotExistException, NoAccessException {
         RoommatePickEntity entity = roommateMapper.selectRoommatePickById(id);
         if (entity == null) throw new DataNotExistException("该撩一下记录不存在");
@@ -186,6 +207,21 @@ public class RoommateService {
             msg.setRoommatePick(entity);
             msg.setState(0);
             roommateMapper.insertRoommateMessage(msg);
+            String nickname = entity.getRoommateProfile() != null && StringUtils.isNotBlank(entity.getRoommateProfile().getNickname())
+                    ? entity.getRoommateProfile().getNickname()
+                    : "对方";
+            boolean accepted = Integer.valueOf(1).equals(state);
+            interactionNotificationService.createInteractionNotification(
+                    "dating",
+                    accepted ? "pick_accepted" : "pick_rejected",
+                    entity.getUsername(),
+                    entity.getRoommateProfile() != null ? entity.getRoommateProfile().getUsername() : null,
+                    toStringValue(entity.getPickId()),
+                    toStringValue(entity.getRoommateProfile() != null ? entity.getRoommateProfile().getProfileId() : null),
+                    "sent",
+                    accepted ? "撩一下已通过" : "撩一下未通过",
+                    accepted ? nickname + " 通过了你的请求" : nickname + " 拒绝了你的请求"
+            );
             return;
         }
         throw new NoAccessException("该撩一下记录已处理，请勿重复提交");
@@ -270,5 +306,9 @@ public class RoommateService {
         vo.setCreateTime(e.getCreateTime());
         if (e.getRoommatePick() != null) vo.setRoommatePick(pickEntityToVO(e.getRoommatePick()));
         return vo;
+    }
+
+    private String toStringValue(Integer value) {
+        return value == null ? null : String.valueOf(value);
     }
 }

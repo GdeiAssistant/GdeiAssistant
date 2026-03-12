@@ -11,10 +11,12 @@ import cn.gdeiassistant.core.express.mapper.ExpressMapper;
 import cn.gdeiassistant.core.express.pojo.dto.ExpressPublishDTO;
 import cn.gdeiassistant.core.express.pojo.entity.ExpressEntity;
 import cn.gdeiassistant.core.express.pojo.vo.ExpressVO;
+import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,9 @@ public class ExpressService {
 
     @Autowired
     private UserCertificateService userCertificateService;
+
+    @Autowired
+    private InteractionNotificationService interactionNotificationService;
 
     public List<ExpressVO> queryExpressPage(int start, int size, String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
@@ -65,13 +70,29 @@ public class ExpressService {
         return list == null || list.isEmpty() ? new ArrayList<>() : list;
     }
 
+    @Transactional("appTransactionManager")
     public void addExpressComment(int expressId, String sessionId, String comment) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
         if (entity == null) {
             throw new DataNotExistException("表白信息不存在");
         }
-        expressMapper.insertExpressComment(expressId, user.getUsername(), comment);
+        ExpressComment expressComment = new ExpressComment();
+        expressComment.setExpressId(expressId);
+        expressComment.setUsername(user.getUsername());
+        expressComment.setComment(comment);
+        expressMapper.insertExpressComment(expressComment);
+        interactionNotificationService.createInteractionNotification(
+                "express",
+                "comment",
+                entity.getUsername(),
+                user.getUsername(),
+                String.valueOf(expressId),
+                expressComment.getId() == null ? null : String.valueOf(expressComment.getId()),
+                "comment",
+                "表白墙收到新评论",
+                user.getUsername() + " 评论了你的表白：" + comment
+        );
     }
 
     public void addExpress(ExpressPublishDTO dto, String sessionId) {
@@ -87,6 +108,7 @@ public class ExpressService {
         expressMapper.insertExpress(entity);
     }
 
+    @Transactional("appTransactionManager")
     public void likeExpress(int expressId, String sessionId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
@@ -96,9 +118,21 @@ public class ExpressService {
         ExpressLike like = expressMapper.selectExpressLike(expressId, user.getUsername());
         if (like == null) {
             expressMapper.insertExpressLike(expressId, user.getUsername());
+            interactionNotificationService.createInteractionNotification(
+                    "express",
+                    "like",
+                    entity.getUsername(),
+                    user.getUsername(),
+                    String.valueOf(expressId),
+                    null,
+                    "like",
+                    "表白墙收到新点赞",
+                    user.getUsername() + " 点赞了你的表白"
+            );
         }
     }
 
+    @Transactional("appTransactionManager")
     public boolean guessExpress(int expressId, String sessionId, String name) throws NoRealNameException, DataNotExistException, CorrectRecordException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
@@ -113,11 +147,23 @@ public class ExpressService {
         if (StringUtils.isBlank(realname)) {
             throw new NoRealNameException("表白者未填写真实姓名");
         }
+        boolean correct = realname.equals(name);
         if (realname.equals(name)) {
             expressMapper.insertExpressGuess(expressId, user.getUsername(), 1);
-            return true;
+        } else {
+            expressMapper.insertExpressGuess(expressId, user.getUsername(), 0);
         }
-        expressMapper.insertExpressGuess(expressId, user.getUsername(), 0);
-        return false;
+        interactionNotificationService.createInteractionNotification(
+                "express",
+                "guess",
+                entity.getUsername(),
+                user.getUsername(),
+                String.valueOf(expressId),
+                null,
+                "guess",
+                correct ? "表白墙有人猜中了" : "表白墙有人参与猜名字",
+                correct ? user.getUsername() + " 猜中了你的表白对象" : user.getUsername() + " 参与了你的猜名字"
+        );
+        return correct;
     }
 }

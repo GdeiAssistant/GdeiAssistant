@@ -39,7 +39,7 @@ public class DeliveryController {
         Map<String, Object> data = new HashMap<>();
         data.put("order", order);
         data.put("detailType", detailType);
-        if (order.getState() != null && order.getState().equals(1)) {
+        if (order.getState() != null && !order.getState().equals(0)) {
             DeliveryTradeVO trade = deliveryService.queryDeliveryTradeByOrderId(order.getOrderId());
             data.put("trade", trade);
         }

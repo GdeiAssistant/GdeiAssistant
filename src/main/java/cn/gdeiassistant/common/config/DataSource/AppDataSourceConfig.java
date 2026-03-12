@@ -24,6 +24,7 @@ import java.io.IOException;
         "cn.gdeiassistant.core.roommate.mapper",
         "cn.gdeiassistant.core.delivery.mapper",
         "cn.gdeiassistant.core.email.mapper",
+        "cn.gdeiassistant.core.message.mapper",
         "cn.gdeiassistant.core.secondhand.mapper",
         "cn.gdeiassistant.core.express.mapper",
         "cn.gdeiassistant.core.feedback.mapper",

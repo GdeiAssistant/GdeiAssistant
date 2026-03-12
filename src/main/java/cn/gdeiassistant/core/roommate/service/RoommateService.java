@@ -267,6 +267,7 @@ public class RoommateService {
         vo.setUsername(e.getUsername());
         vo.setType(e.getType());
         vo.setState(e.getState());
+        vo.setCreateTime(e.getCreateTime());
         if (e.getRoommatePick() != null) vo.setRoommatePick(pickEntityToVO(e.getRoommatePick()));
         return vo;
     }

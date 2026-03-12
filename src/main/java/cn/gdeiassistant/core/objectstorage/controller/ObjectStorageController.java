@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.objectStorage.controller;
 
 import cn.gdeiassistant.common.annotation.RestAuthentication;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.objectStorage.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;

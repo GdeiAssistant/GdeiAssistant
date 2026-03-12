@@ -89,6 +89,7 @@ import TopicIndex from '../views/topic/Index.vue'
 import TopicHome from '../views/topic/Home.vue'
 import TopicPublish from '../views/topic/Publish.vue'
 import TopicSearch from '../views/topic/Search.vue'
+import TopicDetail from '../views/topic/Detail.vue'
 // 拍好校园模块
 import PhotographHome from '../views/photograph/Home.vue'
 import PhotographDetail from '../views/photograph/Detail.vue'
@@ -425,6 +426,11 @@ const routes = [
     component: DatingCenter
   },
   // 校园话题模块：专属亮绿色 Tabbar
+  {
+    path: '/topic/detail/:id',
+    name: 'TopicDetail',
+    component: TopicDetail
+  },
   {
     path: '/topic',
     component: TopicIndex,

@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.roommate.pojo.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 卖室友消息视图。
@@ -11,6 +12,7 @@ public class RoommateMessageVO implements Serializable {
     private String username;
     private Integer type;
     private Integer state;
+    private Date createTime;
     private RoommatePickVO roommatePick;
 
     public Integer getMessageId() { return messageId; }
@@ -21,6 +23,8 @@ public class RoommateMessageVO implements Serializable {
     public void setType(Integer type) { this.type = type; }
     public Integer getState() { return state; }
     public void setState(Integer state) { this.state = state; }
+    public Date getCreateTime() { return createTime; }
+    public void setCreateTime(Date createTime) { this.createTime = createTime; }
     public RoommatePickVO getRoommatePick() { return roommatePick; }
     public void setRoommatePick(RoommatePickVO roommatePick) { this.roommatePick = roommatePick; }
 }

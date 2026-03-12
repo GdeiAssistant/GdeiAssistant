@@ -1,12 +1,14 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 
+const route = useRoute()
 const router = useRouter()
 const formData = ref({
-  type: 0, // 0: 寻物, 1: 招领
+  type: 0,
+  itemType: -1,
   title: '',
   desc: '',
   location: '',
@@ -20,6 +22,18 @@ const formData = ref({
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const submitting = ref(false)
+const itemTypePickerVisible = ref(false)
+const pageLoading = ref(false)
+
+const editItemId = computed(() => {
+  const value = Number(route.query.id)
+  return Number.isInteger(value) && value > 0 ? value : null
+})
+const isEditMode = computed(() => route.query.edit === '1' && editItemId.value !== null)
+const itemTypeNames = ['手机', '校园卡', '身份证', '银行卡', '书', '钥匙', '包包', '衣帽', '校园代步', '运动健身', '数码配件', '其他']
+const itemTypeDisplay = computed(() => formData.value.itemType >= 0 && formData.value.itemType <= 11
+  ? itemTypeNames[formData.value.itemType]
+  : '')
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -36,7 +50,28 @@ function hideLoading() {
   if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
 }
 
+function goBack() {
+  router.push(isEditMode.value ? '/lostandfound/profile' : '/lostandfound/home')
+}
+
+function openItemTypePicker() {
+  itemTypePickerVisible.value = true
+}
+
+function closeItemTypePicker() {
+  itemTypePickerVisible.value = false
+}
+
+function selectItemType(index) {
+  formData.value.itemType = index
+  closeItemTypePicker()
+}
+
 function onFileChange(e) {
+  if (isEditMode.value) {
+    e.target.value = ''
+    return
+  }
   const files = Array.from(e.target.files)
   if (files.length + formData.value.images.length > 4) {
     showDialog('最多只能上传4张图片')
@@ -64,11 +99,64 @@ function onFileChange(e) {
 }
 
 function removeImage(index) {
+  if (isEditMode.value) {
+    showDialog('编辑模式暂不支持修改图片')
+    return
+  }
   formData.value.images.splice(index, 1)
 }
 
+function populateForm(item) {
+  formData.value.type = Number.isInteger(item?.lostType) ? item.lostType : 0
+  formData.value.itemType = Number.isInteger(item?.itemType) ? item.itemType : -1
+  formData.value.title = item?.name || ''
+  formData.value.desc = item?.description || ''
+  formData.value.location = item?.location || ''
+  formData.value.contact.qq = item?.qq || ''
+  formData.value.contact.wechat = item?.wechat || ''
+  formData.value.contact.phone = item?.phone || ''
+  formData.value.images = Array.isArray(item?.pictureURL) ? item.pictureURL.map((url) => ({
+    previewUrl: url,
+    readonly: true
+  })) : []
+}
+
+async function loadEditItem() {
+  if (!isEditMode.value) return
+  pageLoading.value = true
+  try {
+    const res = await request.get('/lostandfound/profile')
+    const data = res?.data || {}
+    const list = []
+      .concat(Array.isArray(data.lost) ? data.lost : [])
+      .concat(Array.isArray(data.found) ? data.found : [])
+      .concat(Array.isArray(data.didfound) ? data.didfound : [])
+    const item = list.find((entry) => Number(entry.id) === editItemId.value)
+    if (!item) {
+      showDialog('未找到要编辑的信息')
+      return
+    }
+    populateForm(item)
+  } finally {
+    pageLoading.value = false
+  }
+}
+
+function buildPayload() {
+  const payload = new FormData()
+  payload.append('name', formData.value.title.trim())
+  payload.append('description', formData.value.desc.trim())
+  payload.append('location', formData.value.location.trim())
+  payload.append('lostType', String(formData.value.type))
+  payload.append('itemType', String(formData.value.itemType))
+  if (formData.value.contact.qq) payload.append('qq', formData.value.contact.qq.trim())
+  if (formData.value.contact.wechat) payload.append('wechat', formData.value.contact.wechat.trim())
+  if (formData.value.contact.phone) payload.append('phone', formData.value.contact.phone.trim())
+  return payload
+}
+
 async function submit() {
-  if (submitting.value) return
+  if (submitting.value || pageLoading.value) return
   if (!formData.value.title || formData.value.title.trim() === '') {
     showDialog('请填写物品名称')
     return
@@ -93,7 +181,11 @@ async function submit() {
     showDialog('地点不能超过30个字符')
     return
   }
-  if (formData.value.images.length === 0) {
+  if (formData.value.itemType < 0 || formData.value.itemType > 11) {
+    showDialog('请选择物品分类')
+    return
+  }
+  if (!isEditMode.value && formData.value.images.length === 0) {
     showDialog('请至少上传一张图片')
     return
   }
@@ -102,17 +194,19 @@ async function submit() {
     return
   }
   submitting.value = true
-  showLoading('正在上传...')
+  showLoading(isEditMode.value ? '正在保存...' : '正在上传...')
   try {
+    const payload = buildPayload()
+    if (isEditMode.value) {
+      await request.post(`/lostandfound/item/id/${editItemId.value}`, payload)
+      hideLoading()
+      showDialog('保存成功')
+      setTimeout(() => {
+        router.push('/lostandfound/profile')
+      }, 1200)
+      return
+    }
     const imageKeys = await uploadFilesByPresignedUrl(formData.value.images.map(item => item.file).filter(Boolean))
-    const payload = new FormData()
-    payload.append('name', formData.value.title.trim())
-    payload.append('description', formData.value.desc.trim())
-    payload.append('location', formData.value.location.trim())
-    payload.append('lostType', String(formData.value.type))
-    if (formData.value.contact.qq) payload.append('qq', formData.value.contact.qq.trim())
-    if (formData.value.contact.wechat) payload.append('wechat', formData.value.contact.wechat.trim())
-    if (formData.value.contact.phone) payload.append('phone', formData.value.contact.phone.trim())
     imageKeys.forEach((imageKey) => payload.append('imageKeys', imageKey))
     await request.post('/lostandfound/item', payload)
     hideLoading()
@@ -125,32 +219,45 @@ async function submit() {
     hideLoading()
   }
 }
+
+onMounted(() => {
+  loadEditItem()
+})
 </script>
 
 <template>
   <div class="lostandfound-publish">
-    <!-- 统一顶部导航栏 -->
     <div class="unified-header">
-      <span class="unified-header__back" @click="router.push('/lostandfound/home')">返回</span>
-      <h1 class="unified-header__title">发布信息</h1>
-      <a href="javascript:;" class="unified-header__submit" @click.prevent="submit">完成</a>
+      <span class="unified-header__back" @click="goBack">返回</span>
+      <h1 class="unified-header__title">{{ isEditMode ? '编辑信息' : '发布信息' }}</h1>
+      <a href="javascript:;" class="unified-header__submit" @click.prevent="submit">
+        {{ submitting ? '提交中' : (isEditMode ? '保存' : '完成') }}
+      </a>
     </div>
 
     <div class="publish-form">
-      <!-- 类型选择：参考原版 publish.jsp 的 .which 结构 -->
+      <p v-if="pageLoading" class="page-loading">正在加载信息...</p>
+
       <div class="form-frm">
         <p class="form-frmt">寻找类型</p>
         <div class="form-which">
           <label>
-            <input type="radio" name="lostType" value="0" v-model="formData.type" />寻物
+            <input type="radio" name="lostType" :value="0" v-model="formData.type" />寻物
           </label>
           <label>
-            <input type="radio" name="lostType" value="1" v-model="formData.type" />寻主
+            <input type="radio" name="lostType" :value="1" v-model="formData.type" />寻主
           </label>
         </div>
       </div>
 
-      <!-- 物品名称 -->
+      <div class="form-frm">
+        <p class="form-frmt">物品分类</p>
+        <div class="form-frmc form-frmc--select" @click="openItemTypePicker">
+          <span class="select-value">{{ itemTypeDisplay || '请选择' }}</span>
+          <i class="select-arrow"></i>
+        </div>
+      </div>
+
       <div class="form-frm">
         <p class="form-frmt">物品名称</p>
         <div class="form-frmc">
@@ -158,7 +265,6 @@ async function submit() {
         </div>
       </div>
 
-      <!-- 物品描述 -->
       <div class="form-frm">
         <p class="form-frmt">物品描述</p>
         <div class="form-frmc">
@@ -166,7 +272,6 @@ async function submit() {
         </div>
       </div>
 
-      <!-- 地点 -->
       <div class="form-frm">
         <p class="form-frmt place">{{ formData.type === 0 ? '丢失地点' : '捡到地点' }}</p>
         <div class="form-frmc">
@@ -174,10 +279,8 @@ async function submit() {
         </div>
       </div>
 
-      <!-- 联系方式提示 -->
       <div class="contact-tip">QQ号/微信/手机号任填其中一项即可</div>
 
-      <!-- QQ号 -->
       <div class="form-frm">
         <p class="form-frmt">QQ号</p>
         <div class="form-frmc">
@@ -185,7 +288,6 @@ async function submit() {
         </div>
       </div>
 
-      <!-- 微信 -->
       <div class="form-frm">
         <p class="form-frmt">微信</p>
         <div class="form-frmc">
@@ -193,7 +295,6 @@ async function submit() {
         </div>
       </div>
 
-      <!-- 手机号 -->
       <div class="form-frm">
         <p class="form-frmt">手机号</p>
         <div class="form-frmc">
@@ -201,18 +302,17 @@ async function submit() {
         </div>
       </div>
 
-      <!-- 图片上传：参考原版 publish.jsp 的 .picture 结构 -->
       <section class="picture-section">
         <div class="picture-images">
           <div v-for="(img, index) in formData.images" :key="index" class="picture-image">
-            <a href="#">
+            <a v-if="!isEditMode" href="javascript:;">
               <i class="i iclose" :id="index" @click="removeImage(index)"></i>
             </a>
             <i class="img">
               <img :src="img.previewUrl" alt="预览" />
             </i>
           </div>
-          <span v-if="formData.images.length < 4" class="addimg">
+          <span v-if="!isEditMode && formData.images.length < 4" class="addimg">
             <i class="i iadd">
               <i class="i i1"></i>
               <i class="i i2"></i>
@@ -220,11 +320,10 @@ async function submit() {
             <input type="file" accept="image/*" id="file_input" @change="onFileChange" />
           </span>
         </div>
-        <p class="picture-tip">最多可上传4张图片</p>
+        <p class="picture-tip">{{ isEditMode ? '编辑模式暂不支持修改图片' : '最多可上传4张图片' }}</p>
       </section>
     </div>
 
-    <!-- WEUI Dialog 对话框 -->
     <div v-if="dialogVisible">
       <div class="weui-mask" @click="dialogVisible = false"></div>
       <div class="weui-dialog">
@@ -232,6 +331,21 @@ async function submit() {
         <div class="weui-dialog__bd">{{ dialogMessage }}</div>
         <div class="weui-dialog__ft">
           <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="itemTypePickerVisible">
+      <div class="weui-mask" @click="closeItemTypePicker"></div>
+      <div class="weui-dialog weui-dialog--list">
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title">选择物品分类</strong></div>
+        <div class="weui-dialog__bd weui-dialog__bd--scroll">
+          <div v-for="(label, index) in itemTypeNames" :key="label" class="weui-dialog__item" @click="selectItemType(index)">
+            {{ label }}
+          </div>
+        </div>
+        <div class="weui-dialog__ft">
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="closeItemTypePicker">取消</a>
         </div>
       </div>
     </div>
@@ -280,13 +394,19 @@ async function submit() {
   background: #e3eeec;
 }
 
-/* 表单样式：参考原版 publish.css */
+.page-loading {
+  margin: 16px 0 0;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
 .form-frm {
   position: relative;
   padding-left: 90px;
   font-size: 16px;
   border-bottom: 2px solid #3cc2a5;
-  height: 70px;
+  min-height: 70px;
   background: #fff;
   margin: 0 10px;
   border-radius: 0;
@@ -313,8 +433,28 @@ async function submit() {
   border: none;
   outline: none;
 }
+.form-frmc--select {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding-top: 0;
+}
+.select-value {
+  color: #202020;
+  font-size: 16px;
+}
+.select-arrow {
+  position: absolute;
+  right: 10px;
+  top: 29px;
+  width: 8px;
+  height: 12px;
+  background: url(/img/ershou/arrow.png) no-repeat;
+  background-size: 8px;
+}
 
-/* 单选框样式：参考原版 .which */
 .form-which {
   padding-top: 18px;
   line-height: 34px;
@@ -341,7 +481,6 @@ async function submit() {
   padding: 10px;
 }
 
-/* 图片上传样式：参考原版 publish.css .picture */
 .picture-section {
   background: #3cc2a5;
   border-top: 1px solid #39b89d;
@@ -431,7 +570,6 @@ async function submit() {
   padding-bottom: 3px;
 }
 
-/* WEUI Dialog 样式 */
 .weui-mask {
   position: fixed;
   top: 0;
@@ -453,6 +591,9 @@ async function submit() {
   z-index: 1001;
   overflow: hidden;
 }
+.weui-dialog--list {
+  max-width: 320px;
+}
 .weui-dialog__hd {
   padding: 20px 20px 10px;
   text-align: center;
@@ -469,6 +610,20 @@ async function submit() {
   color: #666;
   word-wrap: break-word;
   word-break: break-all;
+}
+.weui-dialog__bd--scroll {
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 0;
+}
+.weui-dialog__item {
+  padding: 14px 20px;
+  border-top: 1px solid #f0f0f0;
+  color: #333;
+  cursor: pointer;
+}
+.weui-dialog__item:first-child {
+  border-top: none;
 }
 .weui-dialog__ft {
   display: flex;

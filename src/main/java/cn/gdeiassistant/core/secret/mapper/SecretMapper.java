@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.secret.mapper;
 
 import cn.gdeiassistant.core.secret.pojo.entity.SecretCommentEntity;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretContentEntity;
+import cn.gdeiassistant.core.secret.pojo.entity.SecretLikeEntity;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
@@ -49,6 +50,25 @@ public interface SecretMapper {
     @ResultType(Integer.class)
     Integer selectSecretLike(@Param("contentId") int contentId, @Param("username") String username);
 
+    @Select("select sc.id,sc.content_id,sc.username,sc.comment,sc.publish_time,sc.avatar_theme from secret_comment sc " +
+            "inner join secret_content s on sc.content_id=s.id where s.username=#{username} and sc.username!=#{username} " +
+            "order by sc.publish_time desc, sc.id desc limit #{start},#{size}")
+    @ResultMap("SecretComment")
+    List<SecretCommentEntity> selectReceivedSecretCommentPage(@Param("username") String username,
+            @Param("start") int start, @Param("size") int size);
+
+    @Select("select sl.id,sl.content_id,sl.username,sl.create_time from secret_like sl " +
+            "inner join secret_content s on sl.content_id=s.id where s.username=#{username} and sl.username!=#{username} " +
+            "order by sl.create_time desc, sl.id desc limit #{start},#{size}")
+    @Results(id = "SecretLike", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "contentId", column = "content_id"),
+            @Result(property = "username", column = "username"),
+            @Result(property = "createTime", column = "create_time"),
+    })
+    List<SecretLikeEntity> selectReceivedSecretLikePage(@Param("username") String username,
+            @Param("start") int start, @Param("size") int size);
+
     @Select("select * from secret_comment where content_id=#{contentId} order by id")
     @Results(id = "SecretComment", value = {
             @Result(property = "id", column = "id"),
@@ -71,7 +91,7 @@ public interface SecretMapper {
     @Insert("insert into secret_comment (content_id,username,comment,avatar_theme,publish_time) values(#{contentId},#{username},#{comment},#{avatarTheme},now())")
     void insertSecretComment(SecretCommentEntity secretComment);
 
-    @Insert("insert into secret_like (content_id,username) values(#{content_id},#{username})")
+    @Insert("insert into secret_like (content_id,username,create_time) values(#{content_id},#{username},now())")
     void insertSecretLike(@Param("content_id") int contentId, @Param("username") String username);
 
     @Update("update secret_content set state=1 where id=#{id}")

@@ -102,11 +102,31 @@ public interface ExpressMapper {
     @Insert("insert into express_like (express_id,username,create_time) values(#{expressId},#{username},now())")
     void insertExpressLike(@Param("expressId") int expressId, @Param("username") String username);
 
+    @Select("select el.id,el.express_id,el.username,el.create_time from express_like el " +
+            "inner join express e on el.express_id=e.id where e.username=#{username} and el.username!=#{username} " +
+            "order by el.create_time desc, el.id desc limit #{start},#{size}")
+    @ResultMap("expressLike")
+    List<ExpressLike> selectReceivedExpressLikePage(@Param("username") String username,
+            @Param("start") int start, @Param("size") int size);
+
     @Select("select count(id) from express_guess where username=#{username} and result=1")
     Integer selectCorrectExpressGuessRecord(String username);
 
     @Insert("insert into express_guess (express_id,username,result,create_time) values(#{expressId},#{username},#{result},now())")
     void insertExpressGuess(@Param("expressId") int expressId, @Param("username") String username, @Param("result") int result);
+
+    @Select("select eg.id,eg.express_id,eg.username,eg.result,eg.create_time from express_guess eg " +
+            "inner join express e on eg.express_id=e.id where e.username=#{username} and eg.username!=#{username} " +
+            "order by eg.create_time desc, eg.id desc limit #{start},#{size}")
+    @Results(id = "expressGuess", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "expressId", column = "express_id"),
+            @Result(property = "username", column = "username"),
+            @Result(property = "result", column = "result"),
+            @Result(property = "createTime", column = "create_time")
+    })
+    List<cn.gdeiassistant.common.pojo.Entity.ExpressGuess> selectReceivedExpressGuessPage(@Param("username") String username,
+            @Param("start") int start, @Param("size") int size);
 
     @Select("select ec.id,ec.username,p.nickname,ec.express_id,ec.comment,ec.publish_time" +
             " from express_comment ec" +
@@ -124,4 +144,11 @@ public interface ExpressMapper {
 
     @Insert("insert into express_comment (username,express_id,comment,publish_time) values(#{username},#{expressId},#{comment},now())")
     void insertExpressComment(@Param("expressId") int expressId, @Param("username") String username, @Param("comment") String comment);
+
+    @Select("select ec.id,ec.username,p.nickname,ec.express_id,ec.comment,ec.publish_time from express_comment ec " +
+            "left join profile p on p.username=ec.username inner join express e on ec.express_id=e.id " +
+            "where e.username=#{username} and ec.username!=#{username} order by ec.publish_time desc, ec.id desc limit #{start},#{size}")
+    @ResultMap("expressComment")
+    List<ExpressComment> selectReceivedExpressCommentPage(@Param("username") String username,
+            @Param("start") int start, @Param("size") int size);
 }

@@ -79,6 +79,7 @@ CREATE TABLE `dating_message` (
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
   `type` tinyint(1) NOT NULL COMMENT '消息类型',
   `state` tinyint(1) NOT NULL COMMENT '状态',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '消息创建时间',
   PRIMARY KEY (`message_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
@@ -531,6 +532,7 @@ CREATE TABLE `secret_like` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '校园树洞点赞编号ID',
   `content_id` int unsigned NOT NULL COMMENT '校园树洞信息编号ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '点赞时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 

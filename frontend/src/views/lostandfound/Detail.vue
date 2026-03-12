@@ -10,7 +10,7 @@ const detail = ref(null)
 const loading = ref(true)
 
 function mapDetail(info) {
-  const item = info?.lostAndFoundItem || {}
+  const item = info?.item || {}
   const profile = info?.profile || {}
   return {
     title: item.name,

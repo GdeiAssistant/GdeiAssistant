@@ -58,6 +58,25 @@ public interface DeliveryMapper {
     @ResultMap("DeliveryTrade")
     List<DeliveryTradeEntity> selectDeliveryTradeByUsername(String username);
 
+    @Select("select t.trade_id as trade_id,t.order_id as order_id,t.create_time as create_time,t.username as username,t.state as state," +
+            "o.order_id as deliveryOrderId,o.username as deliveryOrderUsername,o.company as deliveryOrderCompany,o.address as deliveryOrderAddress,o.state as deliveryOrderState " +
+            "from delivery_trade t,delivery_order o where t.order_id=o.order_id and o.username=#{username} and o.state!=2 " +
+            "order by t.create_time desc,t.trade_id desc limit #{start},#{size}")
+    @Results(id = "DeliveryInteractionTrade", value = {
+            @Result(property = "tradeId", column = "trade_id"),
+            @Result(property = "orderId", column = "order_id"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "username", column = "username"),
+            @Result(property = "state", column = "state"),
+            @Result(property = "deliveryOrder.orderId", column = "deliveryOrderId"),
+            @Result(property = "deliveryOrder.username", column = "deliveryOrderUsername"),
+            @Result(property = "deliveryOrder.company", column = "deliveryOrderCompany"),
+            @Result(property = "deliveryOrder.address", column = "deliveryOrderAddress"),
+            @Result(property = "deliveryOrder.state", column = "deliveryOrderState"),
+    })
+    List<DeliveryTradeEntity> selectPersonalDeliveryInteractionPage(@Param("username") String username,
+            @Param("start") Integer start, @Param("size") Integer size);
+
     @Select("select * from delivery_order where username=#{username}")
     @Results(id = "DeliveryOrder", value = {
             @Result(property = "orderId", column = "order_id"),

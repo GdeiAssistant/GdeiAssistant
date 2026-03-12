@@ -76,6 +76,7 @@ public class LostAndFoundService {
         List<LostAndFoundItemVO> voList = new ArrayList<>();
         for (LostAndFoundItemEntity e : list) {
             e.setUsername(user.getUsername());
+            e.setPictureURL(getLostAndFoundItemPictureURL(e.getId()));
             voList.add(lostAndFoundItemConverter.toVO(e));
         }
         return voList;

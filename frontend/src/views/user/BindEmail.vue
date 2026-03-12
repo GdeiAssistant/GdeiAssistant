@@ -159,7 +159,7 @@ onMounted(async () => {
       currentEmail.value = maskEmail(data)
     }
   } catch (e) {
-    // ignore, use default mock
+    // ignore，保持默认未绑定状态
   }
 })
 
@@ -539,4 +539,3 @@ onUnmounted(() => {
   font-weight: 500;
 }
 </style>
-

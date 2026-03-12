@@ -6,10 +6,10 @@ import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
 
-// 当前已绑定手机号（mock 初始值，实际从接口获取）
-const currentPhone = ref('138****1234')
+const currentPhone = ref('')
 const boundCountryCode = ref('+86')
 const isEditing = ref(false)
+const loadingStatus = ref(true)
 
 // 区号相关
 const countryCodes = ref([])
@@ -277,6 +277,8 @@ onMounted(async () => {
     }
   } catch (e) {
     // ignore，保持默认未绑定状态
+  } finally {
+    loadingStatus.value = false
   }
 })
 
@@ -298,8 +300,20 @@ onUnmounted(() => {
     </div>
 
     <div class="phone-content">
+      <div v-if="loadingStatus" class="status-view">
+        <div class="weui-msg">
+          <div class="weui-msg__icon-area">
+            <i class="weui-loading weui-icon_msg"></i>
+          </div>
+          <div class="weui-msg__text-area">
+            <h2 class="weui-msg__title">加载中</h2>
+            <p class="weui-msg__desc">正在获取当前绑定状态，请稍候。</p>
+          </div>
+        </div>
+      </div>
+
       <!-- 已绑定状态视图 -->
-      <div v-if="currentPhone && !isEditing" class="status-view">
+      <div v-else-if="currentPhone && !isEditing" class="status-view">
         <div class="weui-msg">
           <div class="weui-msg__icon-area">
             <i class="weui-icon-success weui-icon_msg"></i>

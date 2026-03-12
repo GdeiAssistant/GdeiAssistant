@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class LostAndFoundController {
@@ -31,6 +34,29 @@ public class LostAndFoundController {
     public DataJsonResult<List<LostAndFoundItemVO>> getLostItem(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
         List<LostAndFoundItemVO> list = lostAndFoundService.queryLostItems(start);
         return new DataJsonResult<>(true, list);
+    }
+
+    @RequestMapping(value = "/api/lostandfound/profile", method = RequestMethod.GET)
+    public DataJsonResult<Map<String, Object>> getMyLostAndFoundItems(HttpServletRequest request) throws Exception {
+        String sessionId = (String) request.getAttribute("sessionId");
+        List<LostAndFoundItemVO> list = lostAndFoundService.queryPersonalLostAndFoundItems(sessionId);
+        List<LostAndFoundItemVO> lost = new ArrayList<>();
+        List<LostAndFoundItemVO> found = new ArrayList<>();
+        List<LostAndFoundItemVO> didfound = new ArrayList<>();
+        for (LostAndFoundItemVO item : list) {
+            if (Integer.valueOf(1).equals(item.getState())) {
+                didfound.add(item);
+            } else if (Integer.valueOf(0).equals(item.getState()) && Integer.valueOf(0).equals(item.getLostType())) {
+                lost.add(item);
+            } else if (Integer.valueOf(0).equals(item.getState()) && Integer.valueOf(1).equals(item.getLostType())) {
+                found.add(item);
+            }
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("lost", lost);
+        data.put("found", found);
+        data.put("didfound", didfound);
+        return new DataJsonResult<>(true, data);
     }
 
     @RequestMapping(value = "/api/lostandfound/founditem/start/{start}", method = RequestMethod.GET)

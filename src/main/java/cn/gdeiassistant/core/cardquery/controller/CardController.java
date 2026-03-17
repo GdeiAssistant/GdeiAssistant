@@ -13,7 +13,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Pattern;
+
+import java.util.Map;
 
 @RestController
 public class CardController {
@@ -39,12 +40,16 @@ public class CardController {
     }
 
     /**
-     * 设置校园卡挂失。Web 端使用，依赖业务密码（cardPassword）核验，不走移动端设备校验。
+     * 设置校园卡挂失。依赖业务密码（cardPassword）核验。
      */
     @PostMapping("/api/card/lost")
     @TrialData(value = "cardlost")
     public JsonResult cardLost(HttpServletRequest request,
-                               @Validated @Pattern(regexp = "^[0-9]*$") @RequestParam("cardPassword") String cardPassword) throws Exception {
+                               @Validated @RequestBody Map<String, String> body) throws Exception {
+        String cardPassword = body.get("cardPassword");
+        if (cardPassword == null || !cardPassword.matches("^[0-9]*$")) {
+            throw new IllegalArgumentException("cardPassword must be numeric");
+        }
         String sessionId = (String) request.getAttribute("sessionId");
         cardQueryService.cardLost(sessionId, cardPassword);
         return new JsonResult(true);

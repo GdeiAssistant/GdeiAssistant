@@ -4,7 +4,7 @@ import cn.gdeiassistant.common.annotation.ExcelField;
 import cn.gdeiassistant.common.tools.Utils.ReflectionUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -188,9 +188,9 @@ public class ImportExcel {
                 if (cell.getCellType() == CellType.NUMERIC) {
                     // val = cell.getNumericCellValue();
                     // 当excel 中的数据为数值或日期是需要特殊处理
-                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                    if (DateUtil.isCellDateFormatted(cell)) {
                         double d = cell.getNumericCellValue();
-                        Date date = HSSFDateUtil.getJavaDate(d);
+                        Date date = DateUtil.getJavaDate(d);
                         SimpleDateFormat dformat = new SimpleDateFormat(
                                 "yyyy-MM-dd");
                         val = dformat.format(date);

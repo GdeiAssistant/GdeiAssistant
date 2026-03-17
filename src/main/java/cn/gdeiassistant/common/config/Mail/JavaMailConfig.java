@@ -3,7 +3,7 @@ package cn.gdeiassistant.common.config.Mail;
 import cn.gdeiassistant.common.enums.Module.ModuleEnum;
 import cn.gdeiassistant.common.tools.SpringUtils.ModuleUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
-import org.jsoup.helper.StringUtil;
+import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;

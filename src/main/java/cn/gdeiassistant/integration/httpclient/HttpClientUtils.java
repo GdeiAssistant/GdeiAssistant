@@ -7,9 +7,9 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -37,25 +37,27 @@ public class HttpClientUtils {
     }
 
     /**
-     * 忽略服务器证书，采用信任策略
+     * 使用 JVM 默认信任库进行证书验证，仅允许 TLSv1.2 和 TLSv1.3
      *
      * @return
      */
     private static HttpClientConnectionManager getHttpClientConnectionManager() {
         try {
-            SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null,
-                    (arg0, arg1) -> true).build();
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
-                    new String[]{"TLSv1.2", "TLSv1.1", "TLSv1"}, null,
-                    SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            Registry registry = RegistryBuilder.create().register("http",
-                    PlainConnectionSocketFactory.INSTANCE).
-                    register("https", sslsf).build();
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, null, null);
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                    sslContext,
+                    new String[]{"TLSv1.2", "TLSv1.3"}, null,
+                    SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+            Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register("http", PlainConnectionSocketFactory.INSTANCE)
+                    .register("https", sslsf)
+                    .build();
             return new PoolingHttpClientConnectionManager(registry);
         } catch (Exception e) {
             logger.error("创建 HttpClientConnectionManager 失败", e);
         }
-        return null;
+        return new PoolingHttpClientConnectionManager();
     }
 
     /**

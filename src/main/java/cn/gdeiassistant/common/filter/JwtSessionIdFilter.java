@@ -23,7 +23,7 @@ import java.util.Map;
 public class JwtSessionIdFilter implements Filter {
 
     private static final String AUTHORIZATION = "Authorization";
-    private static final String HEADER_TOKEN = "token";
+    private static final String BEARER_PREFIX = "bearer ";
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -42,14 +42,8 @@ public class JwtSessionIdFilter implements Filter {
         String auth = req.getHeader(AUTHORIZATION);
         if (auth != null && !auth.isEmpty()) {
             auth = auth.trim();
-            if (auth.toLowerCase().startsWith("bearer")) {
-                jwtString = auth.length() > 6 ? auth.substring(6).trim() : "";
-            }
-        }
-        if ((jwtString == null || jwtString.isEmpty()) && req.getHeader(HEADER_TOKEN) != null) {
-            String tokenHeader = req.getHeader(HEADER_TOKEN).trim();
-            if (!tokenHeader.isEmpty()) {
-                jwtString = tokenHeader;
+            if (auth.toLowerCase().startsWith(BEARER_PREFIX)) {
+                jwtString = auth.substring(BEARER_PREFIX.length()).trim();
             }
         }
         if (jwtString != null && !jwtString.isEmpty()) {

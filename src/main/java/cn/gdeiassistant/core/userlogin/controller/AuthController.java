@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.userLogin.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.constant.ErrorConstantUtils;
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.core.user.pojo.dto.UserLoginDTO;
@@ -53,6 +54,7 @@ public class AuthController {
      * 返回格式：{ "code": 200, "message": "success", "data": { "token": "eyJhb..." } }
      */
     @PostMapping("/login")
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     public DataJsonResult<Map<String, String>> login(
             @Validated(UserLoginValidGroup.class) @RequestBody UserLoginDTO dto,
             HttpServletResponse response) {

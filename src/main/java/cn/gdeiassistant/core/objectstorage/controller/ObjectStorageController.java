@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.objectStorage.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RestAuthentication;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
@@ -25,6 +26,7 @@ public class ObjectStorageController {
      */
     @RequestMapping(value = "/api/upload/presignedUrl", method = RequestMethod.GET)
     @RestAuthentication
+    @RateLimit(maxRequests = 20, windowSeconds = 60)
     public DataJsonResult<Map<String, String>> getPresignedUploadUrl(HttpServletRequest request,
                                                                      @RequestParam("fileName") String fileName,
                                                                      @RequestParam("contentType") String contentType) {

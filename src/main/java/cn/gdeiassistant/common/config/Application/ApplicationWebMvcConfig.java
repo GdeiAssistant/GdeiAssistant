@@ -2,6 +2,7 @@ package cn.gdeiassistant.common.config.Application;
 
 import cn.gdeiassistant.common.constant.SettingConstantUtils;
 import cn.gdeiassistant.common.interceptor.ApiAuthInterceptor;
+import cn.gdeiassistant.common.interceptor.RateLimitInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,8 +49,14 @@ public class ApplicationWebMvcConfig implements WebMvcConfigurer {
         return new ApiAuthInterceptor(apiAuthExceptionList());
     }
 
+    @Bean
+    public RateLimitInterceptor rateLimitInterceptor() {
+        return new RateLimitInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(rateLimitInterceptor());
         registry.addInterceptor(apiAuthInterceptor());
     }
 
@@ -62,7 +69,7 @@ public class ApplicationWebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/api/**")
                 .allowedOriginPatterns(resolveAllowedOriginPatterns())
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-                .allowedHeaders("Authorization", "token", "X-Client-Type", "Content-Type")
+                .allowedHeaders("Authorization", "X-Client-Type", "Content-Type")
                 .allowCredentials(false)
                 .maxAge(3600);
     }

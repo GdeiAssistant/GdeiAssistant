@@ -10,7 +10,6 @@ import cn.gdeiassistant.core.secret.pojo.dto.SecretPublishDTO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
 import cn.gdeiassistant.core.secret.service.SecretService;
-import cn.gdeiassistant.core.wechat.service.WechatService;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -29,9 +28,6 @@ public class SecretController {
 
     @Autowired
     private SecretService secretService;
-
-    @Autowired
-    private WechatService wechatService;
 
     @RequestMapping(value = "/api/secret/id/{id}", method = RequestMethod.GET)
     public DataJsonResult<SecretVO> getSecretDetail(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
@@ -66,7 +62,7 @@ public class SecretController {
 
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
-    public JsonResult addSecretInfo(HttpServletRequest request, @Validated SecretPublishDTO dto, String voiceId
+    public JsonResult addSecretInfo(HttpServletRequest request, @Validated SecretPublishDTO dto
             , @RequestParam(value = "voice", required = false) MultipartFile file
             , @RequestParam(value = "voiceKey", required = false) String voiceKey) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
@@ -90,14 +86,6 @@ public class SecretController {
                 }
                 return new JsonResult(true);
             }
-        } else if (dto.getType() != null && dto.getType().equals(2)) {
-            InputStream inputStream = wechatService.downloadWechatVoiceRecord(voiceId);
-            if (inputStream != null) {
-                Integer id = secretService.addSecretInfo(sessionId, dto);
-                secretService.uploadVoiceSecret(id, inputStream);
-                return new JsonResult(true);
-            }
-            return new JsonResult(false, "音频的服务器端ID无效");
         } else {
             return new JsonResult(false, "树洞信息类型不合法");
         }

@@ -44,17 +44,13 @@ const KaoyanResult = lazyView('kaoyan/KaoyanResult')
 const PeIndex = lazyView('pe/PeIndex')
 const NewsList = lazyView('news/NewsList')
 const Info = lazyView('Info')
-const WechatAccountList = lazyView('wechat/WechatAccountList')
 const ReadingList = lazyView('reading/ReadingList')
-const UserPrivacy = lazyView('user/Privacy')
 const UserPrivacySetting = lazyView('user/PrivacySetting')
 const UserFunctions = lazyView('user/Functions')
 const UserFeatureManage = lazyView('user/FeatureManage')
 const UserPassword = lazyView('user/Password')
-const UserLoginHistory = lazyView('user/LoginHistory')
 const UserLoginRecord = lazyView('user/LoginRecord')
 const UserRealname = lazyView('user/RealName')
-const UserPhone = lazyView('user/Phone')
 const UserBindPhone = lazyView('user/BindPhone')
 const UserBindEmail = lazyView('user/BindEmail')
 const UserDelete = lazyView('user/DeleteAccount')
@@ -215,18 +211,7 @@ const routes = [
     name: 'NewsList',
     component: NewsList
   },
-  // 校园公众号列表，对应后端 /wechataccount
-  {
-    path: '/wechataccount',
-    name: 'WechatAccountList',
-    component: WechatAccountList
-  },
   // 用户相关页面
-  {
-    path: '/user/privacy',
-    name: 'UserPrivacy',
-    component: UserPrivacy
-  },
   {
     path: '/user/privacy-setting',
     name: 'UserPrivacySetting',
@@ -246,11 +231,6 @@ const routes = [
     path: '/user/password',
     name: 'UserPassword',
     component: UserPassword
-  },
-  {
-    path: '/user/login-history',
-    name: 'UserLoginHistory',
-    component: UserLoginHistory
   },
   {
     path: '/user/login-record',

@@ -1,7 +1,6 @@
 package cn.gdeiassistant.core.information.pojo.vo;
 
 import cn.gdeiassistant.common.pojo.Entity.Festival;
-import cn.gdeiassistant.common.pojo.Entity.WechatAccount;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
@@ -12,7 +11,6 @@ public class InformationVO implements Serializable {
 
     private AnnouncementVO notice;
     private List<AnnouncementVO> notices;
-    private List<WechatAccount> accounts;
     private List<ReadingVO> topics;
     private Festival festival;
 
@@ -30,14 +28,6 @@ public class InformationVO implements Serializable {
 
     public void setNotices(List<AnnouncementVO> notices) {
         this.notices = notices;
-    }
-
-    public List<WechatAccount> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<WechatAccount> accounts) {
-        this.accounts = accounts;
     }
 
     public List<ReadingVO> getTopics() {

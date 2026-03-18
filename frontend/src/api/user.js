@@ -1,4 +1,4 @@
-import request from '../utils/request.js'
+import request from '@/utils/request'
 
 /**
  * 用户登录（对接真实后端）

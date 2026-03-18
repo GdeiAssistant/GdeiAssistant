@@ -28,7 +28,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+import request from '@/utils/request'
 
 const router = useRouter()
 const list = ref([])
@@ -45,6 +45,9 @@ onMounted(() => {
       if (res && res.success && Array.isArray(res.data)) {
         list.value = res.data
       }
+    })
+    .catch(() => {
+      // 错误由全局拦截器统一处理
     })
     .finally(() => {
       loading.value = false

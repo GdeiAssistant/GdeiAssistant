@@ -34,6 +34,10 @@ function confirmReportLoss() {
     showErrorTopTips('密码不能为空')
     return
   }
+  if (!/^\d+$/.test(pwd)) {
+    showErrorTopTips('密码只能包含数字')
+    return
+  }
   closePasswordDialog()
   submitLoading.value = true
   reportCardLost(pwd)

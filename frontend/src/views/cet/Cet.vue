@@ -115,11 +115,11 @@ function onSaveNumber() {
 }
 
 function openChsi() {
-  window.open('http://www.chsi.com.cn/cet/', '_blank')
+  window.open('https://www.chsi.com.cn/cet/', '_blank')
 }
 
 function openNeea() {
-  window.open('http://cet.neea.edu.cn/cet/', '_blank')
+  window.open('https://cet.neea.edu.cn/cet/', '_blank')
 }
 
 onMounted(() => {

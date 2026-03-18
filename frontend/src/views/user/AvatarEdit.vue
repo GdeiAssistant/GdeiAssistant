@@ -40,8 +40,8 @@
 import { ref, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import Cropper from 'cropperjs'
-import request from '../../utils/request'
-import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
+import request from '@/utils/request'
+import { uploadFileByPresignedUrl } from '@/utils/presignedUpload'
 
 const router = useRouter()
 const defaultAvatar = '/img/login/qq.png'
@@ -151,7 +151,7 @@ const cancelCrop = () => {
     cropperInstance.destroy()
     cropperInstance = null
   }
-  if (fileInput.value) fileInput.value = ''
+  if (fileInput.value) fileInput.value.value = ''
 }
 
 const handleDelete = async () => {

@@ -1,4 +1,4 @@
-import request from '../utils/request.js'
+import request from '@/utils/request'
 
 /**
  * 获取当前用户隐私设置

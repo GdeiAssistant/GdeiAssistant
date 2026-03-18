@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Resource;
 import java.io.IOException;
@@ -118,6 +119,7 @@ public class SecondhandService {
     }
 
     /** 发布：DTO -> Entity -> 持久化，返回带 id 的 Entity 供上传图片使用 */
+    @Transactional
     public SecondhandItemEntity publishItem(SecondhandPublishDTO dto, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         SecondhandItemEntity entity = new SecondhandItemEntity();

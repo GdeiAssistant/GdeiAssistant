@@ -12,17 +12,17 @@ import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryOrderVO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryTradeVO;
 import cn.gdeiassistant.core.delivery.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Min;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@Validated
 public class DeliveryController {
 
     @Autowired
@@ -68,8 +68,8 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(value = "/api/delivery/order/start/{start}/size/{size}", method = RequestMethod.GET)
-    public DataJsonResult<List<DeliveryOrderVO>> queryDeliveryOrderPage(HttpServletRequest request, @PathVariable("start") Integer start
-            , @PathVariable("size") Integer size) {
+    public DataJsonResult<List<DeliveryOrderVO>> queryDeliveryOrderPage(HttpServletRequest request, @PathVariable("start") @Min(0) Integer start
+            , @PathVariable("size") @Min(1) Integer size) {
         List<DeliveryOrderVO> list = deliveryService.queryDeliveryOrderPage(start, size);
         return new DataJsonResult<>(true, list);
     }
@@ -83,7 +83,7 @@ public class DeliveryController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/delivery/acceptorder", method = RequestMethod.POST)
-    public JsonResult acceptOrder(HttpServletRequest request, Integer orderId) throws Exception {
+    public JsonResult acceptOrder(HttpServletRequest request, @RequestParam Integer orderId) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         deliveryService.acceptOrder(orderId, sessionId);
         return new JsonResult(true);
@@ -131,7 +131,7 @@ public class DeliveryController {
      */
     @RequestMapping(value = "/api/delivery/order", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
-    public JsonResult addDeliveryOrder(HttpServletRequest request, DeliveryPublishDTO dto) {
+    public JsonResult addDeliveryOrder(HttpServletRequest request, @Validated DeliveryPublishDTO dto) {
         String sessionId = (String) request.getAttribute("sessionId");
         deliveryService.addDeliveryOrder(sessionId, dto);
         return new JsonResult(true);

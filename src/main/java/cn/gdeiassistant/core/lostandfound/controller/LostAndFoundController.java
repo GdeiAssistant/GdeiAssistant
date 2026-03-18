@@ -19,19 +19,21 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@Validated
 public class LostAndFoundController {
 
     @Autowired
     private LostAndFoundService lostAndFoundService;
 
     @RequestMapping(value = "/api/lostandfound/lostitem/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<LostAndFoundItemVO>> getLostItem(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
+    public DataJsonResult<List<LostAndFoundItemVO>> getLostItem(HttpServletRequest request, @PathVariable("start") @Min(0) int start) throws Exception {
         List<LostAndFoundItemVO> list = lostAndFoundService.queryLostItems(start);
         return new DataJsonResult<>(true, list);
     }
@@ -60,7 +62,7 @@ public class LostAndFoundController {
     }
 
     @RequestMapping(value = "/api/lostandfound/founditem/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<LostAndFoundItemVO>> getFoundInfo(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
+    public DataJsonResult<List<LostAndFoundItemVO>> getFoundInfo(HttpServletRequest request, @PathVariable("start") @Min(0) int start) throws Exception {
         List<LostAndFoundItemVO> list = lostAndFoundService.queryFoundItems(start);
         return new DataJsonResult<>(true, list);
     }

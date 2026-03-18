@@ -2,6 +2,8 @@ package cn.gdeiassistant.core.secret.pojo.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -10,13 +12,16 @@ import java.io.Serializable;
  */
 public class SecretPublishDTO implements Serializable {
 
+    @NotNull(message = "主题不能为空")
     @Min(1)
     @Max(12)
     private Integer theme;
 
-    @Size(max = 100)
+    @NotBlank(message = "树洞内容不能为空")
+    @Size(min = 1, max = 100)
     private String content;
 
+    @NotNull(message = "类型不能为空")
     @Min(0)
     @Max(2)
     private Integer type;

@@ -2,6 +2,8 @@ package cn.gdeiassistant.core.delivery.pojo.dto;
 
 import org.hibernate.validator.constraints.Length;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -24,6 +26,8 @@ public class DeliveryPublishDTO implements Serializable {
     private String phone;
 
     @NotNull
+    @DecimalMin(value = "0.01", message = "价格必须大于零")
+    @DecimalMax(value = "9999.99", message = "价格超出限制")
     private Float price;
 
     @NotBlank

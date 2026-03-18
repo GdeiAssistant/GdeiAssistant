@@ -18,13 +18,11 @@ export function queryCardRecord(payload) {
 }
 
 /**
- * 校园卡挂失。后端 POST /api/card/lost，@RequestParam("cardPassword")，仅数字。
+ * 校园卡挂失。后端 POST /api/card/lost，@RequestBody，仅数字。
  * @param {string} cardPassword - 校园卡查询密码（仅数字）
  * @returns {Promise<import('axios').AxiosResponse>}
  */
 export function reportCardLost(cardPassword) {
-  return request.post('/card/lost', null, {
-    params: { cardPassword }
-  })
+  return request.post('/card/lost', { cardPassword })
 }
 

@@ -49,45 +49,33 @@ const visibleMenuList = computed(() => {
 })
 
 function handleMenuClick(item) {
-  console.log('handleMenuClick called with item:', item)
-  console.log('item.type:', item.type, 'item.key:', item.key, 'item.path:', item.path)
-  
   // 外链项需带正确标识
   if (item.type === 'external' && item.key) {
-    console.log('External link detected, key:', item.key)
     handleExternalJump(item.key)
     return
   }
-  
+
   // 内部路由跳转
   if (item.path) {
-    console.log('Internal route, path:', item.path)
     router.push(item.path)
     return
   }
-  
-  // 如果都不匹配，输出警告
-  console.warn('Menu item clicked but no action taken:', item)
 }
 
 function handleExternalJump(type) {
-  console.log('handleExternalJump called with type:', type)
-  
   if (!type) {
-    console.error('handleExternalJump called without type!')
     showWeuiTopTip('跳转参数错误，请重试')
     return
   }
-  
+
   // 微信环境：userAgent 含 micromessenger
   const ua = navigator.userAgent.toLowerCase()
   const isWechat = ua.indexOf('micromessenger') !== -1
-  console.log('isWechat:', isWechat, 'userAgent:', navigator.userAgent)
-  
+
   switch (type) {
     case 'calendar':
       // 学期校历
-      window.location.href = 'http://msg.weixiao.qq.com/t/bca2e28bc30ce67907e032f483e82d7f'
+      window.location.href = 'https://msg.weixiao.qq.com/t/bca2e28bc30ce67907e032f483e82d7f'
       break
     case 'government':
       // 政务服务
@@ -103,12 +91,9 @@ function handleExternalJump(type) {
       break
     case 'healthcode':
       // 粤康码（需要微信环境判断）
-      console.log('healthcode clicked, isWechat:', isWechat)
       if (isWechat) {
-        console.log('Jumping to WeChat mini program...')
         window.location.href = 'weixin://app/wxd930ea5d5a258f4f/jumpWxa/?userName=gh_1ac06b5a8f4e&path=operation_plus/pages/yiqing/daka/user/index/index.html'
       } else {
-        console.log('Not WeChat environment, showing TopTip')
         showWeuiTopTip('请使用微信客户端访问以启用该功能')
       }
       break
@@ -121,7 +106,6 @@ function handleExternalJump(type) {
       window.location.href = 'https://ncov.dxy.cn/ncovh5/view/pneumonia'
       break
     default:
-      console.error('Unknown external jump type:', type)
       showWeuiTopTip('未知的跳转类型：' + type)
       break
   }

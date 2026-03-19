@@ -20,7 +20,6 @@ import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
-import cn.gdeiassistant.core.wechatUser.mapper.WechatUserMapper;
 import cn.gdeiassistant.core.close.mapper.CloseMapper;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
@@ -65,9 +64,6 @@ public class AccountDeletionService {
 
     @Autowired
     private PhoneMapper phoneMapper;
-
-    @Autowired
-    private WechatUserMapper wechatUserMapper;
 
     @Autowired
     private ProfileMapper profileMapper;
@@ -190,8 +186,6 @@ public class AccountDeletionService {
         //删除教务缓存信息
         gradeDao.removeGrade(user.getUsername());
         scheduleDao.removeSchedule(user.getUsername());
-        //移除易班和微信绑定状态
-        wechatUserMapper.resetWechatUser(user.getUsername());
         //删除用户资料信息
         profileMapper.resetUserProfile(user.getUsername(), "已注销");
         profileMapper.resetUserIntroduction(user.getUsername());

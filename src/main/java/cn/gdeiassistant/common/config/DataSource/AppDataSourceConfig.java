@@ -35,8 +35,7 @@ import java.io.IOException;
         "cn.gdeiassistant.core.profile.mapper",
         "cn.gdeiassistant.core.secret.mapper",
         "cn.gdeiassistant.core.topic.mapper",
-        "cn.gdeiassistant.core.user.mapper",
-        "cn.gdeiassistant.core.wechatUser.mapper"
+        "cn.gdeiassistant.core.user.mapper"
 }, sqlSessionFactoryRef = "appSqlSessionFactory")
 public class AppDataSourceConfig {
 

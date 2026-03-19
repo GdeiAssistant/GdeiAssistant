@@ -70,12 +70,12 @@ public class SchoolNewsCornService {
     private void collectCategoryNews(int type, String listUrl, Map<String, NewInfo> resultMap) {
         String currentPageUrl = listUrl;
         int pageCount = 0;
-        int categoryCount = 0;
+        int categorySavedCount = 0;
         int consecutiveKnownPages = 0;
 
         while (currentPageUrl != null
                 && pageCount < MAX_PAGES_PER_CATEGORY
-                && categoryCount < MAX_ITEMS_PER_CATEGORY) {
+                && categorySavedCount < MAX_ITEMS_PER_CATEGORY) {
             pageCount++;
             Document listPage;
             try {
@@ -94,7 +94,7 @@ public class SchoolNewsCornService {
                 break;
             }
 
-            int pageNewCount = 0;
+            int pageChangedCount = 0;
             for (Element item : items) {
                 Element linkElement = item.selectFirst("a[href]");
                 if (linkElement == null) {
@@ -105,23 +105,27 @@ public class SchoolNewsCornService {
                     continue;
                 }
                 String id = DigestUtils.sha1Hex(detailUrl);
-                if (resultMap.containsKey(id) || newDao.queryNewInfo(id) != null) {
+                NewInfo existing = resultMap.get(id);
+                if (existing == null) {
+                    existing = newDao.queryNewInfo(id);
+                }
+                if (resultMap.containsKey(id) && existing != null) {
                     continue;
                 }
 
                 try {
                     NewInfo newInfo = buildNewsItem(type, item, linkElement, detailUrl, id);
-                    if (newInfo != null) {
+                    if (newInfo != null && shouldSaveNews(existing, newInfo)) {
                         resultMap.put(id, newInfo);
-                        pageNewCount++;
-                        categoryCount++;
+                        pageChangedCount++;
+                        categorySavedCount++;
                     }
                 } catch (Exception e) {
                     logger.error("解析校园新闻详情失败，type={}, href={}", type, detailUrl, e);
                 }
             }
 
-            consecutiveKnownPages = pageNewCount == 0 ? consecutiveKnownPages + 1 : 0;
+            consecutiveKnownPages = pageChangedCount == 0 ? consecutiveKnownPages + 1 : 0;
             if (consecutiveKnownPages >= 2) {
                 break;
             }
@@ -154,7 +158,32 @@ public class SchoolNewsCornService {
         newInfo.setTitle(title);
         newInfo.setPublishDate(publishDate);
         newInfo.setContent(firstNonBlank(content, "暂无详细内容"));
+        newInfo.setSourceUrl(detailUrl);
         return newInfo;
+    }
+
+    private boolean shouldSaveNews(NewInfo existing, NewInfo next) {
+        if (existing == null) {
+            return true;
+        }
+        return !sameText(existing.getTitle(), next.getTitle())
+                || !sameDate(existing.getPublishDate(), next.getPublishDate())
+                || !sameText(existing.getContent(), next.getContent())
+                || !sameText(existing.getSourceUrl(), next.getSourceUrl());
+    }
+
+    private boolean sameText(String left, String right) {
+        return firstNonBlank(left, "").equals(firstNonBlank(right, ""));
+    }
+
+    private boolean sameDate(Date left, Date right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        return left.equals(right);
     }
 
     private String extractPublishDateText(Element listItem) {

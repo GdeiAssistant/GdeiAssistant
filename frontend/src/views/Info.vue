@@ -2,7 +2,7 @@
   <div class="weui-tab info-weui-tab">
     <div class="weui-tab__panel info-container">
       <section class="info-section">
-        <div class="section-title">新闻 / 阅读</div>
+        <div class="section-title">新闻</div>
         <div class="modern-card entry-card">
           <button type="button" class="entry-link" @click="router.push('/news')">
             <div class="entry-link__icon">新闻</div>
@@ -12,17 +12,7 @@
             </div>
             <div class="entry-link__ft"></div>
           </button>
-          <button type="button" class="entry-link" @click="router.push('/reading')">
-            <div class="entry-link__icon">阅读</div>
-            <div class="entry-link__bd">
-              <div class="entry-link__title">专题阅读</div>
-              <div class="entry-link__desc">查看阅读专题与内容推荐</div>
-            </div>
-            <div class="entry-link__ft"></div>
-          </button>
         </div>
-        <TopicBlock :topics="infoData.topics || []" @view-all-topics="handleViewAllTopics" />
-        <AccountBlock :accounts="infoData.accounts || []" @view-all-accounts="handleViewAllAccounts" />
       </section>
 
       <section class="info-section">
@@ -50,8 +40,6 @@ import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../utils/request'
 import NoticeBlock from '../components/info/NoticeBlock.vue'
-import AccountBlock from '../components/info/AccountBlock.vue'
-import TopicBlock from '../components/info/TopicBlock.vue'
 import HistoryBlock from '../components/info/HistoryBlock.vue'
 import InteractionBlock from '../components/info/InteractionBlock.vue'
 
@@ -78,14 +66,6 @@ const systemNoticeItems = computed(() => {
   }
   return []
 })
-
-function handleViewAllAccounts() {
-  router.push('/wechataccount')
-}
-
-function handleViewAllTopics() {
-  router.push('/reading')
-}
 
 function normalizeInteractionItems(rawList) {
   if (!Array.isArray(rawList)) {

@@ -28,6 +28,8 @@ public class NewInfo implements Serializable, Entity {
 
     private String content;
 
+    private String sourceUrl;
+
     public String getId() {
         return id;
     }
@@ -66,5 +68,13 @@ public class NewInfo implements Serializable, Entity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
     }
 }

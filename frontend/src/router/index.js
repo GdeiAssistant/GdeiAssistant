@@ -43,6 +43,7 @@ const KaoyanSearch = lazyView('kaoyan/KaoyanSearch')
 const KaoyanResult = lazyView('kaoyan/KaoyanResult')
 const PeIndex = lazyView('pe/PeIndex')
 const NewsList = lazyView('news/NewsList')
+const NewsDetail = lazyView('news/NewsDetail')
 const Info = lazyView('Info')
 const UserPrivacySetting = lazyView('user/PrivacySetting')
 const UserFunctions = lazyView('user/Functions')
@@ -204,6 +205,11 @@ const routes = [
     path: '/news',
     name: 'NewsList',
     component: NewsList
+  },
+  {
+    path: '/news/id/:id',
+    name: 'NewsDetail',
+    component: NewsDetail
   },
   // 用户相关页面
   {

@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.schoolNews.controller;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Entity.NewInfo;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.information.service.SchoolNews.SchoolNewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,18 @@ public class SchoolNewsController {
             return new DataJsonResult<>(true, newInfoList);
         } catch (DataNotExistException e) {
             return new DataJsonResult<>(true, Collections.emptyList());
+        }
+    }
+
+    /**
+     * 获取新闻详情。GET /api/news/id/{id}
+     */
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
+    public DataJsonResult<NewInfo> queryNewInfoDetail(@PathVariable("id") String id) {
+        try {
+            return new DataJsonResult<>(true, schoolNewsService.queryNewDetailInfo(id));
+        } catch (DataNotExistException e) {
+            return new DataJsonResult<>(new JsonResult(false, e.getMessage()));
         }
     }
 }

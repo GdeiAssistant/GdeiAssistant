@@ -14,6 +14,7 @@
           :key="item.id"
           class="weui-cell weui-cell_access"
           href="javascript:;"
+          @click="openDetail(item)"
         >
           <div class="weui-cell__bd">{{ item.title }}</div>
           <div class="weui-cell__ft news-date">{{ item.date }}</div>
@@ -77,6 +78,19 @@ const loadError = ref(false)
 
 function goBack() {
   router.back()
+}
+
+function openDetail(item) {
+  if (!item?.id) return
+  router.push({
+    name: 'NewsDetail',
+    params: { id: item.id },
+    query: {
+      type: String(activeType.value),
+      title: item.title || '',
+      date: item.date || ''
+    }
+  })
 }
 
 function loadNews() {

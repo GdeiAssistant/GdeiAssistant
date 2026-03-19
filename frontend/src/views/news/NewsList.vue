@@ -61,11 +61,10 @@ import request from '../../utils/request'
 const router = useRouter()
 
 const tabs = [
-  { type: 1, label: '教学信息', icon: '/img/news/course.png' },
-  { type: 2, label: '考试信息', icon: '/img/news/examine.png' },
-  { type: 3, label: '教务信息', icon: '/img/news/study.png' },
-  { type: 4, label: '行政通知', icon: '/img/news/admin.png' },
-  { type: 5, label: '综合信息', icon: '/img/news/school.png' }
+  { type: 1, label: '学校要闻', icon: '/img/news/school.png' },
+  { type: 2, label: '院部通知', icon: '/img/news/admin.png' },
+  { type: 3, label: '通知公告', icon: '/img/news/course.png' },
+  { type: 4, label: '学术动态', icon: '/img/news/study.png' }
 ]
 
 const PAGE_SIZE = 15

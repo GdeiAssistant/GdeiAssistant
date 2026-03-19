@@ -20,7 +20,7 @@ public class NewDaoImpl implements NewDao {
     public void saveNewInfoList(List<NewInfo> newInfoList){
         if (mongoTemplate != null) {
             for (NewInfo newInfo : newInfoList) {
-                mongoTemplate.insert(newInfo, "new");
+                mongoTemplate.save(newInfo, "new");
             }
         }
     }

@@ -1,6 +1,5 @@
 package cn.gdeiassistant.common.config.Application;
 
-import cn.gdeiassistant.common.converter.HttpMessageConvert.WeChatMappingJackson2HttpMessageConverter;
 import cn.gdeiassistant.common.errorhandler.RestTemplateResponseErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,7 +25,6 @@ public class ApplicationContextConfig {
     @Bean
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new WeChatMappingJackson2HttpMessageConverter());
         restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
         return restTemplate;
     }

@@ -26,7 +26,7 @@ public class SchoolNewsController {
 
     /**
      * 分页获取新闻列表。GET /api/news/type/{type}/start/{start}/size/{size}
-     * type: 1教学信息 2考试信息 3教务信息 4行政通知 5综合信息
+     * type: 1学校要闻 2院部通知 3通知公告 4学术动态
      */
     @RequestMapping(value = "/type/{type}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<NewInfo>> queryNewInfoList(@PathVariable("type") Integer type

@@ -34,6 +34,62 @@ const displayDate = computed(() => detail.value?.publishDate || fallbackDate.val
 const displayContent = computed(() => detail.value?.content || '')
 const sourceUrl = computed(() => detail.value?.sourceUrl || '')
 
+function splitParagraphs(content) {
+  return content
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+}
+
+function parseAttachmentLine(line) {
+  const match = line.trim().match(/^(.*?)(https?:\/\/\S+)$/)
+  if (!match) {
+    return null
+  }
+  const url = match[2]
+  const title = match[1].trim().replace(/[：:]+$/, '') || '打开附件'
+  return { title, url }
+}
+
+const parsedContent = computed(() => {
+  const content = displayContent.value.trim()
+  if (!content) {
+    return { paragraphs: [], attachments: [] }
+  }
+
+  const markerMatch = content.match(/^([\s\S]*?)附件链接[：:]\s*([\s\S]*)$/)
+  if (!markerMatch) {
+    return {
+      paragraphs: splitParagraphs(content),
+      attachments: [],
+    }
+  }
+
+  const bodyText = markerMatch[1].trim()
+  const attachmentLines = markerMatch[2]
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  const attachments = attachmentLines
+    .map(parseAttachmentLine)
+    .filter(Boolean)
+
+  if (!attachments.length) {
+    return {
+      paragraphs: splitParagraphs(content),
+      attachments: [],
+    }
+  }
+
+  return {
+    paragraphs: splitParagraphs(bodyText),
+    attachments,
+  }
+})
+
+const contentParagraphs = computed(() => parsedContent.value.paragraphs)
+const attachmentItems = computed(() => parsedContent.value.attachments)
+
 async function loadDetail() {
   loading.value = true
   error.value = ''
@@ -89,8 +145,34 @@ onMounted(() => {
         >
           打开原文链接
         </a>
-        <p v-if="displayContent" class="news-detail-content">{{ displayContent }}</p>
-        <p v-else class="news-detail-empty">暂无详细内容</p>
+        <div v-if="contentParagraphs.length" class="news-detail-content">
+          <p
+            v-for="(paragraph, index) in contentParagraphs"
+            :key="`paragraph-${index}`"
+            class="news-detail-paragraph"
+          >
+            {{ paragraph }}
+          </p>
+        </div>
+        <div v-if="attachmentItems.length" class="news-detail-attachments">
+          <p class="news-detail-attachment-title">附件链接</p>
+          <a
+            v-for="(item, index) in attachmentItems"
+            :key="`attachment-${index}`"
+            :href="item.url"
+            class="news-detail-attachment-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ item.title }}
+          </a>
+        </div>
+        <p
+          v-if="!contentParagraphs.length && !attachmentItems.length"
+          class="news-detail-empty"
+        >
+          暂无详细内容
+        </p>
       </div>
     </div>
   </div>
@@ -190,10 +272,44 @@ onMounted(() => {
   color: #333;
   font-size: 15px;
   line-height: 1.9;
-  white-space: pre-wrap;
 }
 
 .news-detail-empty {
   color: #999;
+}
+
+.news-detail-paragraph {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.news-detail-paragraph + .news-detail-paragraph {
+  margin-top: 16px;
+}
+
+.news-detail-attachments {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #f4fbf8;
+}
+
+.news-detail-attachment-title {
+  margin: 0 0 10px;
+  color: #0f8f5f;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.news-detail-attachment-link {
+  display: block;
+  color: #0f8f5f;
+  text-decoration: none;
+  line-height: 1.7;
+  word-break: break-all;
+}
+
+.news-detail-attachment-link + .news-detail-attachment-link {
+  margin-top: 8px;
 }
 </style>

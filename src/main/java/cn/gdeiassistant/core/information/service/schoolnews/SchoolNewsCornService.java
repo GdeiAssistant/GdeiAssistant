@@ -114,7 +114,7 @@ public class SchoolNewsCornService {
                 }
 
                 try {
-                    NewInfo newInfo = buildNewsItem(type, item, linkElement, detailUrl, id);
+                    NewInfo newInfo = buildNewsItem(type, item, linkElement, detailUrl, id, existing);
                     if (newInfo != null && shouldSaveNews(existing, newInfo)) {
                         resultMap.put(id, newInfo);
                         pageChangedCount++;
@@ -133,15 +133,16 @@ public class SchoolNewsCornService {
         }
     }
 
-    private NewInfo buildNewsItem(int type, Element listItem, Element linkElement, String detailUrl, String id)
+    private NewInfo buildNewsItem(int type, Element listItem, Element linkElement, String detailUrl, String id,
+            NewInfo existing)
             throws Exception {
         String fallbackTitle = firstNonBlank(linkElement.attr("title"), linkElement.text(), "新闻通知");
-        Date publishDate = toDate(parsePublishDate(extractPublishDateText(listItem)));
         String content = "暂无详细内容";
         String title = fallbackTitle;
+        Document detailPage = null;
 
         if (isArticlePage(detailUrl)) {
-            Document detailPage = newsClient.fetchPage(detailUrl);
+            detailPage = newsClient.fetchPage(detailUrl);
             title = firstNonBlank(
                     extractText(detailPage.selectFirst(".arti_title")),
                     detailPage.title(),
@@ -151,6 +152,7 @@ public class SchoolNewsCornService {
         } else {
             content = buildAttachmentContent(detailUrl, fallbackTitle);
         }
+        Date publishDate = resolvePublishDate(extractPublishDateText(listItem), detailPage, existing);
 
         NewInfo newInfo = new NewInfo();
         newInfo.setId(id);
@@ -194,7 +196,32 @@ public class SchoolNewsCornService {
         return listItem.text();
     }
 
+    private String extractDetailPublishDateText(Document detailPage) {
+        return firstNonBlank(
+                extractText(detailPage.selectFirst(".arti_metas .arti_update")),
+                extractText(detailPage.selectFirst(".arti_update")),
+                extractText(detailPage.selectFirst(".arti_metas")),
+                extractText(detailPage.selectFirst(".article-info")),
+                extractText(detailPage.selectFirst(".article_info")),
+                extractText(detailPage.selectFirst(".meta"))
+        );
+    }
+
+    private Date resolvePublishDate(String listDateText, Document detailPage, NewInfo existing) {
+        LocalDate publishDate = parsePublishDate(listDateText);
+        if (publishDate == null && detailPage != null) {
+            publishDate = parsePublishDate(extractDetailPublishDateText(detailPage));
+        }
+        if (publishDate != null) {
+            return toDate(publishDate);
+        }
+        return existing == null ? null : existing.getPublishDate();
+    }
+
     private LocalDate parsePublishDate(String text) {
+        if (text == null || text.trim().isEmpty()) {
+            return null;
+        }
         Matcher matcher = DATE_PATTERN.matcher(text);
         if (matcher.find()) {
             try {
@@ -202,10 +229,13 @@ public class SchoolNewsCornService {
             } catch (DateTimeParseException ignored) {
             }
         }
-        return LocalDate.now();
+        return null;
     }
 
     private Date toDate(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 

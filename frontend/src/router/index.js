@@ -44,7 +44,6 @@ const KaoyanResult = lazyView('kaoyan/KaoyanResult')
 const PeIndex = lazyView('pe/PeIndex')
 const NewsList = lazyView('news/NewsList')
 const Info = lazyView('Info')
-const ReadingList = lazyView('reading/ReadingList')
 const UserPrivacySetting = lazyView('user/PrivacySetting')
 const UserFunctions = lazyView('user/Functions')
 const UserFeatureManage = lazyView('user/FeatureManage')
@@ -200,11 +199,6 @@ const routes = [
     path: '/pe',
     name: 'PeIndex',
     component: PeIndex
-  },
-  {
-    path: '/reading',
-    name: 'ReadingList',
-    component: ReadingList
   },
   {
     path: '/news',

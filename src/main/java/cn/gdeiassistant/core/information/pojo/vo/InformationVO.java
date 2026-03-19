@@ -11,7 +11,6 @@ public class InformationVO implements Serializable {
 
     private AnnouncementVO notice;
     private List<AnnouncementVO> notices;
-    private List<ReadingVO> topics;
     private Festival festival;
 
     public AnnouncementVO getNotice() {
@@ -28,14 +27,6 @@ public class InformationVO implements Serializable {
 
     public void setNotices(List<AnnouncementVO> notices) {
         this.notices = notices;
-    }
-
-    public List<ReadingVO> getTopics() {
-        return topics;
-    }
-
-    public void setTopics(List<ReadingVO> topics) {
-        this.topics = topics;
     }
 
     public Festival getFestival() {

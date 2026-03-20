@@ -123,6 +123,11 @@ const routes = [
     component: Grade
   },
   {
+    path: '/schedule',
+    name: 'Schedule',
+    component: Schedule
+  },
+  {
     path: '/cet',
     name: 'Cet',
     component: Cet
@@ -511,11 +516,6 @@ const routes = [
         path: 'home',
         name: 'Home',
         component: Home
-      },
-      {
-        path: 'schedule',
-        name: 'Schedule',
-        component: Schedule
       },
       {
         path: 'info',

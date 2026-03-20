@@ -71,8 +71,8 @@ function submit() {
     return
   }
   const reward = parseFloat(formData.value.reward)
-  if (!reward || reward <= 0 || reward > 99) {
-    showDialog('请输入有效的跑腿费（0-99元）')
+  if (!reward || reward < 0.01 || reward > 9999.99) {
+    showDialog('请输入有效的跑腿费（0.01-9999.99元）')
     return
   }
 

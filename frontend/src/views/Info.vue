@@ -154,7 +154,7 @@ function resolveDeliveryInteractionLocation(item) {
 
 function resolveMarketplaceInteractionLocation(item) {
   return {
-    path: item?.targetId ? `/ershou/detail/${item.targetId}` : '/ershou/home',
+    path: item?.targetId ? `/marketplace/detail/${item.targetId}` : '/marketplace/home',
     query: buildInteractionQuery(item)
   }
 }

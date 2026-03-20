@@ -132,6 +132,12 @@ const routes = [
     name: 'CetSave',
     component: CetSave
   },
+  // 旧路由兼容重定向：/collection/* → /library/*, /book → /library/borrow
+  { path: '/collection', redirect: '/library' },
+  { path: '/collection/search', redirect: '/library/search' },
+  { path: '/collection/list', redirect: '/library/list' },
+  { path: '/collection/detail', redirect: '/library/detail' },
+  { path: '/book', redirect: '/library/borrow' },
   {
     path: '/library',
     name: 'Collection',

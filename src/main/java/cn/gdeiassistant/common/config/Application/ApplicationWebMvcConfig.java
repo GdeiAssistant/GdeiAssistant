@@ -18,8 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 前后端分离：后端仅提供 REST API，鉴权依赖 JwtSessionIdFilter 从 Header 读取
- * Authorization: Bearer &lt;JWT&gt; 或 token: &lt;JWT&gt;，不依赖 Cookie/Session。
+ * 前后端分离：后端仅提供 REST API，鉴权依赖 JwtSessionIdFilter 从 Authorization: Bearer &lt;JWT&gt; 读取，
+ * 不依赖 Cookie/Session。
  */
 
 @Configuration
@@ -61,7 +61,7 @@ public class ApplicationWebMvcConfig implements WebMvcConfigurer {
     }
 
     /**
-     * CORS：允许前端跨域请求时携带 Authorization、token 等头，避免 401。
+     * CORS：允许前端跨域请求时携带 Authorization 等头，避免 401。
      * 开发时若用 Vite 代理则同源无 CORS；生产或直连后端时需此配置。
      */
     @Override

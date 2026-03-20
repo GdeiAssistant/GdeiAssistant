@@ -1,0 +1,13 @@
+{
+  "code": null,
+  "success": true,
+  "message": null,
+  "data": [
+    {
+      "id": "announcement-1",
+      "title": "系统维护通知",
+      "content": "信息中心将于今晚 23:00 维护。",
+      "publishTime": "2026年03月20日"
+    }
+  ]
+}

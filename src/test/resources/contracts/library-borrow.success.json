@@ -1,0 +1,17 @@
+{
+  "code": null,
+  "success": true,
+  "message": null,
+  "data": [
+    {
+      "id": "BK-001",
+      "sn": "SN-001",
+      "code": "CODE-001",
+      "name": "计算机网络",
+      "author": "谢希仁",
+      "borrowDate": "2026-03-01",
+      "returnDate": "2026-03-28",
+      "renewTime": 1
+    }
+  ]
+}

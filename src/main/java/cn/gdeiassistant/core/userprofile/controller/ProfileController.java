@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.userProfile.controller;
 
+import cn.gdeiassistant.common.constant.OptionConstantUtils;
 import cn.gdeiassistant.common.pojo.Entity.City;
 import cn.gdeiassistant.common.pojo.Entity.Introduction;
 import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
@@ -11,6 +12,8 @@ import cn.gdeiassistant.core.profile.pojo.LocationComparator;
 import cn.gdeiassistant.common.constant.TrialErrorCode;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.userProfile.pojo.DictionaryOptionVO;
+import cn.gdeiassistant.core.userProfile.pojo.ProfileOptionsVO;
 import cn.gdeiassistant.core.userProfile.pojo.UserProfileVO;
 import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
@@ -32,6 +35,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -252,12 +256,26 @@ public class ProfileController {
      *
      * @return
      */
-    @RequestMapping(value = "/api/locationList", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/profile/locations", method = RequestMethod.GET)
     public DataJsonResult<List<Region>> GetRegionList() {
         DataJsonResult<List<Region>> result = new DataJsonResult<>();
         List<Region> locationList = new ArrayList<>(LocationUtils.getRegionMap().values());
         locationList.sort(new LocationComparator());
         return new DataJsonResult<>(true, locationList);
+    }
+
+    /**
+     * 获取资料与社区统一字典。
+     * GET /api/profile/options
+     */
+    @RequestMapping(value = "/api/profile/options", method = RequestMethod.GET)
+    public DataJsonResult<ProfileOptionsVO> getProfileOptions() {
+        ProfileOptionsVO options = new ProfileOptionsVO();
+        options.setFaculties(buildFacultyOptions());
+        options.setMarketplaceItemTypes(buildDictionaryOptions(OptionConstantUtils.MARKETPLACE_ITEM_TYPE_OPTIONS));
+        options.setLostFoundItemTypes(buildDictionaryOptions(OptionConstantUtils.LOST_FOUND_ITEM_TYPE_OPTIONS));
+        options.setLostFoundModes(buildDictionaryOptions(OptionConstantUtils.LOST_FOUND_MODE_OPTIONS));
+        return new DataJsonResult<>(true, options);
     }
 
     /**
@@ -544,5 +562,28 @@ public class ProfileController {
         private String nickname;
         public String getNickname() { return nickname; }
         public void setNickname(String nickname) { this.nickname = nickname; }
+    }
+
+    private List<ProfileOptionsVO.FacultyOptionVO> buildFacultyOptions() {
+        List<ProfileOptionsVO.FacultyOptionVO> options = new ArrayList<>();
+        for (int i = 0; i < OptionConstantUtils.FACULTY_OPTIONS.length; i++) {
+            String[] majors = i < OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY.length
+                    ? OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY[i]
+                    : new String[]{"未选择"};
+            options.add(new ProfileOptionsVO.FacultyOptionVO(
+                    i,
+                    OptionConstantUtils.FACULTY_OPTIONS[i],
+                    Arrays.asList(majors)
+            ));
+        }
+        return options;
+    }
+
+    private List<DictionaryOptionVO> buildDictionaryOptions(String[] values) {
+        List<DictionaryOptionVO> options = new ArrayList<>();
+        for (int i = 0; i < values.length; i++) {
+            options.add(new DictionaryOptionVO(i, values[i]));
+        }
+        return options;
     }
 }

@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/information/announcement")
 public class AnnouncementController {
 
     @Autowired
@@ -24,19 +25,19 @@ public class AnnouncementController {
     /**
      * 获取通知公告信息
      */
-    @RequestMapping(value = "/api/announcement", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public DataJsonResult<AnnouncementVO> queryLatestAnnouncement() {
         AnnouncementVO announcement = announcementService.queryLatestAnnouncement();
         return new DataJsonResult<>(true, announcement);
     }
 
-    @RequestMapping(value = "/api/announcement/start/{start}/size/{size}", method = RequestMethod.GET)
+    @RequestMapping(value = "/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<AnnouncementVO>> queryAnnouncementPage(@PathVariable("start") Integer start,
             @PathVariable("size") Integer size) {
         return new DataJsonResult<>(true, announcementService.queryAnnouncementPage(start, size));
     }
 
-    @RequestMapping(value = "/api/announcement/id/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public DataJsonResult<AnnouncementVO> queryAnnouncementDetail(@PathVariable("id") Integer id) {
         return new DataJsonResult<>(true, announcementService.queryAnnouncementDetail(id));
     }
@@ -48,7 +49,7 @@ public class AnnouncementController {
      * @param announcement
      * @return
      */
-    @RequestMapping(value = "/api/announcement", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public JsonResult saveAnnouncement(HttpServletRequest request, @Validated Announcement announcement) {
         announcementService.saveAnnouncement(announcement);
         return new JsonResult(true);

@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/information/message")
 public class MessageController {
 
     @Autowired
     private MessageService messageService;
 
-    @RequestMapping(value = "/api/message/interaction/start/{start}/size/{size}", method = RequestMethod.GET)
+    @RequestMapping(value = "/interaction/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<InteractionMessageVO>> getInteractionMessages(HttpServletRequest request,
             @PathVariable("start") Integer start,
             @PathVariable("size") Integer size) {
@@ -27,20 +28,20 @@ public class MessageController {
         return new DataJsonResult<>(true, messageService.queryInteractionMessages(sessionId, start, size));
     }
 
-    @RequestMapping(value = "/api/message/unread", method = RequestMethod.GET)
+    @RequestMapping(value = "/unread", method = RequestMethod.GET)
     public DataJsonResult<Integer> getInteractionUnreadCount(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
         return new DataJsonResult<>(true, messageService.queryInteractionUnreadCount(sessionId));
     }
 
-    @RequestMapping(value = "/api/message/id/{id}/read", method = RequestMethod.POST)
+    @RequestMapping(value = "/id/{id}/read", method = RequestMethod.POST)
     public JsonResult readInteractionMessage(HttpServletRequest request, @PathVariable("id") String id) {
         String sessionId = (String) request.getAttribute("sessionId");
         messageService.markInteractionMessageRead(sessionId, id);
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = "/api/message/readall", method = RequestMethod.POST)
+    @RequestMapping(value = "/readall", method = RequestMethod.POST)
     public JsonResult readAllInteractionMessages(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
         messageService.markAllInteractionMessagesRead(sessionId);

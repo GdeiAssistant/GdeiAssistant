@@ -40,36 +40,29 @@ function hideLoading() {
 }
 
 function submit() {
-  if (!formData.value.nickname || formData.value.nickname.trim() === '') {
-    showDialog('请输入昵称')
-    return
-  }
-  // 真名为可选，不验证
-  if (!formData.value.myGender) {
-    showDialog('请选择你的性别')
-    return
-  }
-  if (!formData.value.receiverName || formData.value.receiverName.trim() === '') {
-    showDialog('请输入TA的名字')
-    return
-  }
-  if (!formData.value.receiverGender) {
-    showDialog('请选择TA的性别')
-    return
-  }
-  if (!formData.value.content || formData.value.content.trim() === '') {
-    showDialog('请填写表白内容')
-    return
-  }
+  const nickname = (formData.value.nickname || '').trim()
+  const realname = (formData.value.realName || '').trim()
+  const receiverName = (formData.value.receiverName || '').trim()
+  const content = (formData.value.content || '').trim()
+
+  if (!nickname) { showDialog('请输入昵称'); return }
+  if (nickname.length > 10) { showDialog('昵称不能超过 10 个字'); return }
+  if (realname.length > 10) { showDialog('真实姓名不能超过 10 个字'); return }
+  if (!formData.value.myGender) { showDialog('请选择你的性别'); return }
+  if (!receiverName) { showDialog('请输入TA的名字'); return }
+  if (receiverName.length > 10) { showDialog('TA的名字不能超过 10 个字'); return }
+  if (!formData.value.receiverGender) { showDialog('请选择TA的性别'); return }
+  if (!content) { showDialog('请填写表白内容'); return }
+  if (content.length > 250) { showDialog('表白内容不能超过 250 个字'); return }
 
   const mapGender = (v) => { if (v === 'male') return 0; if (v === 'female') return 1; return 2 }
   const payload = {
-    nickname: formData.value.nickname.trim(),
-    realname: formData.value.realName?.trim() || '',
+    nickname,
+    realname,
     selfGender: mapGender(formData.value.myGender),
-    name: formData.value.receiverName.trim(),
+    name: receiverName,
     personGender: mapGender(formData.value.receiverGender),
-    content: formData.value.content.trim()
+    content
   }
   submitting.value = true
   showLoading('正在发布...')

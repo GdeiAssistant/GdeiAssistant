@@ -1,0 +1,16 @@
+{
+  "code": null,
+  "success": true,
+  "message": null,
+  "data": {
+    "sumPage": 3,
+    "collectionList": [
+      {
+        "bookname": "算法导论",
+        "author": "Thomas H. Cormen",
+        "publishingHouse": "机械工业出版社",
+        "detailURL": "https://library.example/detail/algorithms"
+      }
+    ]
+  }
+}

@@ -6,6 +6,7 @@ import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
 import cn.gdeiassistant.core.information.service.Announcement.AnnouncementService;
 import cn.gdeiassistant.core.information.service.SchoolNews.SchoolNewsService;
 import cn.gdeiassistant.core.message.controller.MessageController;
+import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import cn.gdeiassistant.core.message.service.MessageService;
 import cn.gdeiassistant.core.schoolNews.controller.SchoolNewsController;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,6 +92,56 @@ class InformationCenterContractTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         ContractResourceSupport.loadJson("contracts/information-message-unread.success.json")
+                ));
+    }
+
+    @Test
+    void interactionMessagesReturnCanonicalPayload() throws Exception {
+        InteractionMessageVO message = new InteractionMessageVO();
+        message.setId("message-1");
+        message.setModule("marketplace");
+        message.setType("comment");
+        message.setTitle("有人评论了你的二手帖子");
+        message.setContent("这台计算器还在吗？");
+        message.setCreatedAt("2026-03-20 20:30:00");
+        message.setIsRead(false);
+        message.setTargetType("post");
+        message.setTargetId("marketplace-post-1");
+        message.setTargetSubId("comment-1");
+
+        when(messageService.queryInteractionMessages("session-1", 0, 20))
+                .thenReturn(List.of(message));
+
+        mockMvc.perform(get("/api/information/message/interaction/start/0/size/20")
+                        .requestAttr("sessionId", "session-1"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        ContractResourceSupport.loadJson("contracts/information-message-list.success.json")
+                ));
+    }
+
+    @Test
+    void interactionMessagesReturnStableEmptyPayload() throws Exception {
+        when(messageService.queryInteractionMessages("session-1", 20, 20))
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/api/information/message/interaction/start/20/size/20")
+                        .requestAttr("sessionId", "session-1"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        ContractResourceSupport.loadJson("contracts/information-message-list.empty.json")
+                ));
+    }
+
+    @Test
+    void newsDetailReturnsStableNotFoundPayload() throws Exception {
+        when(schoolNewsService.queryNewDetailInfo("news-missing"))
+                .thenThrow(new DataNotExistException("没有对应的新闻通知信息"));
+
+        mockMvc.perform(get("/api/information/news/id/news-missing"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        ContractResourceSupport.loadJson("contracts/information-news-detail.not-found.json")
                 ));
     }
 }

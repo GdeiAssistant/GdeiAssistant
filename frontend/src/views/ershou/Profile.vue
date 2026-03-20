@@ -21,8 +21,8 @@ const dialogMessage = ref('')
 
 const emptyText = computed(() => {
   if (activeStat.value === 'doing') return '暂无正在出售的商品'
-  if (activeStat.value === 'sold') return '暂无已下架的商品'
-  return '暂无已出售的商品'
+  if (activeStat.value === 'sold') return '暂无已售出的商品'
+  return '暂无已下架的商品'
 })
 
 function showDialog(message) {
@@ -145,8 +145,8 @@ watch(() => route.fullPath, () => {
     <section class="status">
       <ul class="tabs">
         <li class="tab" :class="{ on: activeStat === 'doing' }" @click="setStat('doing')">正在出售<i class="line"></i></li>
-        <li class="tab" :class="{ on: activeStat === 'sold' }" @click="setStat('sold')">已下架<i class="line"></i></li>
-        <li class="tab" :class="{ on: activeStat === 'off' }" @click="setStat('off')">已出售<i class="line"></i></li>
+        <li class="tab" :class="{ on: activeStat === 'sold' }" @click="setStat('sold')">已售出<i class="line"></i></li>
+        <li class="tab" :class="{ on: activeStat === 'off' }" @click="setStat('off')">已下架<i class="line"></i></li>
       </ul>
 
       <div class="statlists">
@@ -181,8 +181,7 @@ watch(() => route.fullPath, () => {
                 <p class="tm">{{ item.publishTime }}</p>
               </div>
               <p class="btns">
-                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
-                <a class="btn" href="javascript:;" @click.prevent="updateItemState(item.id, 1, '', '已重新上架')"><b>上架</b></a>
+                <span class="btn"><b class="readonly-hint">已售出的商品不再支持编辑或重新上架</b></span>
               </p>
             </div>
             <p v-if="soldList.length === 0" class="nostatus-tip">{{ emptyText }}</p>
@@ -193,12 +192,16 @@ watch(() => route.fullPath, () => {
           <p v-if="loading" class="nostatus-tip">加载中...</p>
           <template v-else>
             <div v-for="item in offList" :key="item.id" class="stat">
-              <div class="info">
+              <div class="info" @click="goDetail(item.id)">
                 <i class="img"><img :src="item.preview" :alt="item.name"></i>
                 <h5 class="tit">{{ item.name }}</h5>
                 <em class="price">￥{{ item.price }}</em>
                 <p class="tm">{{ item.publishTime }}</p>
               </div>
+              <p class="btns">
+                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
+                <a class="btn" href="javascript:;" @click.prevent="updateItemState(item.id, 1, '', '已重新上架')"><b>重新上架</b></a>
+              </p>
             </div>
             <p v-if="offList.length === 0" class="nostatus-tip">{{ emptyText }}</p>
           </template>
@@ -385,6 +388,12 @@ watch(() => route.fullPath, () => {
   font-weight: normal;
 }
 .status .btns .btn:first-child b { border-left: none; }
+.readonly-hint {
+  color: #aaa;
+  font-weight: normal;
+  font-size: 12px;
+  border-left: none;
+}
 
 .nostatus-tip {
   text-align: center;

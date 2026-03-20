@@ -2,8 +2,14 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+function getTodayYYYYMMDD() {
+  const d = new Date()
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
+}
+
 const router = useRouter()
-const keyword = ref('')
+const today = getTodayYYYYMMDD()
+const queryDate = ref(today)
 const showTopTips = ref(false)
 const errorMsg = ref('')
 let topTipsTimer = null
@@ -11,21 +17,19 @@ let topTipsTimer = null
 const showWeuiTopTips = (msg) => {
   errorMsg.value = msg
   showTopTips.value = true
-
   if (topTipsTimer) clearTimeout(topTipsTimer)
-
   topTipsTimer = setTimeout(() => {
     showTopTips.value = false
   }, 2000)
 }
 
 const doSearch = () => {
-  const k = keyword.value.trim()
-  if (!k) {
-    showWeuiTopTips('请输入查询关键词！')
+  const d = (queryDate.value || '').trim()
+  if (!d) {
+    showWeuiTopTips('请选择查询日期！')
     return
   }
-  router.push({ path: '/library/list', query: { keyword: k } })
+  router.push({ path: '/card/list', query: { date: d } })
 }
 
 function goBack() {
@@ -35,25 +39,25 @@ function goBack() {
 
 <template>
   <div class="weui-toptips weui-toptips_warn" v-show="showTopTips">{{ errorMsg }}</div>
-  <div class="collection-search-page">
+  <div class="card-search-page">
     <div class="top-nav-bar">
       <div class="nav-btn-back" @click="goBack">返回</div>
     </div>
-    <h1 class="page-title-green">馆藏检索</h1>
-    <p class="page-subtitle">按书名、作者和出版社搜索图书馆馆藏</p>
+    <h1 class="page-title-green">消费记录</h1>
+    <p class="page-subtitle">选择日期后查询当日校园卡流水</p>
 
     <div class="weui-cells weui-cells_form">
       <div class="weui-cell">
         <div class="weui-cell__hd">
-          <label class="weui-label">关键词</label>
+          <label class="weui-label">查询日期</label>
         </div>
         <div class="weui-cell__bd weui-cell_primary">
           <input
-            v-model="keyword"
+            v-model="queryDate"
             class="weui-input"
-            type="text"
-            placeholder="请输入书名、作者等"
-            @keyup.enter="doSearch"
+            type="date"
+            :max="today"
+            placeholder="请选择日期"
           />
         </div>
       </div>
@@ -66,7 +70,7 @@ function goBack() {
 </template>
 
 <style scoped>
-.collection-search-page {
+.card-search-page {
   background-color: #fff;
   min-height: 100vh;
   padding-bottom: 24px;
@@ -94,7 +98,7 @@ function goBack() {
   font-size: 34px;
   color: #09bb07;
   font-weight: 400;
-  margin: 10px 0 4px 0;
+  margin: 10px 0 6px 0;
   line-height: 1.2;
 }
 
@@ -105,16 +109,16 @@ function goBack() {
   margin: 0 0 20px 0;
 }
 
-.collection-search-page .weui-cells_form {
+.card-search-page .weui-cells_form {
   margin-top: 0;
 }
 
-.collection-search-page .weui-btn_area {
+.card-search-page .weui-btn_area {
   margin-top: 24px;
   padding: 0 15px;
 }
 
-.collection-search-page .weui-btn_area .weui-btn {
+.card-search-page .weui-btn_area .weui-btn {
   width: 100%;
 }
 
@@ -130,7 +134,8 @@ function goBack() {
   background-color: #E64340 !important;
   z-index: 99999 !important;
   opacity: 1 !important;
-  display: block; /* 可见时覆盖 WEUI 默认，隐藏由 v-show 的 display:none 控制 */
+  visibility: visible !important;
+  display: block;
   transition: opacity 0.3s;
   word-wrap: break-word;
   word-break: break-all;

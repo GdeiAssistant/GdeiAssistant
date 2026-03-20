@@ -207,6 +207,7 @@ import {
   getCurrentUserProfile,
   logout,
   getLocationList,
+  getProfileOptions,
   updateIntroduction,
   updateBirthday,
   updateFaculty,
@@ -249,33 +250,14 @@ const showLogoutDialog = ref(false)
 const tempNickname = ref('')
 const tempIntro = ref('')
 
-// ==========================================
-// 院系-专业字典（与后端 OptionConstantUtils 一致）
-// ==========================================
-const facultyData = {
-  '未选择': ['未选择'],
-  '教育学院': ['未选择', '教育学', '学前教育', '小学教育', '特殊教育'],
-  '政法系': ['未选择', '法学', '思想政治教育', '社会工作'],
-  '中文系': ['未选择', '汉语言文学', '历史学', '秘书学'],
-  '数学系': ['未选择', '数学与应用数学', '信息与计算科学', '统计学'],
-  '外语系': ['未选择', '英语', '商务英语', '日语', '翻译'],
-  '物理与信息工程系': ['未选择', '物理学', '电子信息工程', '通信工程'],
-  '化学系': ['未选择', '化学', '应用化学', '材料化学'],
-  '生物与食品工程学院': ['未选择', '生物科学', '生物技术', '食品科学与工程'],
-  '体育学院': ['未选择', '体育教育', '社会体育指导与管理'],
-  '美术学院': ['未选择', '美术学', '视觉传达设计', '环境设计'],
-  '计算机科学系': ['未选择', '软件工程', '网络工程', '计算机科学与技术', '物联网工程'],
-  '音乐系': ['未选择', '音乐学', '音乐表演', '舞蹈学'],
-  '教师研修学院': ['未选择', '教育学', '教育技术学'],
-  '成人教育学院': ['未选择', '汉语言文学', '学前教育', '行政管理'],
-  '网络教育学院': ['未选择', '计算机科学与技术', '工商管理', '会计学'],
-  '马克思主义学院': ['未选择', '思想政治教育', '马克思主义理论']
-}
-const facultyList = Object.keys(facultyData)
+const unselectedOption = '未选择'
+const facultyList = ref([unselectedOption])
+const facultyCodeMap = ref({})
+const facultyMajorMap = ref({ [unselectedOption]: [unselectedOption] })
 const facultyPlaceholder = '请选择院系'
 const majorList = ref([])
 const updateMajorListByFaculty = () => {
-  majorList.value = (facultyData[userInfo.value.faculty] || ['未选择']).slice()
+  majorList.value = (facultyMajorMap.value[userInfo.value.faculty] || [unselectedOption]).slice()
 }
 // 不在 watch 里重置 major，避免拉取 profile 后 faculty 赋值触发把 major 清掉；仅在选择院系弹窗确认时重置
 
@@ -314,6 +296,31 @@ function buildLocationPickerTree(list) {
   return tree
 }
 
+function applyProfileOptions(data) {
+  const faculties = Array.isArray(data?.faculties) ? data.faculties : []
+  const nextFacultyList = [unselectedOption]
+  const nextFacultyCodeMap = { [unselectedOption]: 0 }
+  const nextFacultyMajorMap = { [unselectedOption]: [unselectedOption] }
+
+  faculties.forEach((faculty) => {
+    const label = typeof faculty?.label === 'string' ? faculty.label.trim() : ''
+    if (!label) {
+      return
+    }
+    const majors = Array.isArray(faculty?.majors)
+      ? faculty.majors.map((major) => String(major || '').trim()).filter(Boolean)
+      : []
+    nextFacultyList.push(label)
+    nextFacultyCodeMap[label] = Number.isInteger(faculty?.code) ? faculty.code : null
+    nextFacultyMajorMap[label] = [unselectedOption, ...majors.filter((major) => major !== unselectedOption)]
+  })
+
+  facultyList.value = nextFacultyList
+  facultyCodeMap.value = nextFacultyCodeMap
+  facultyMajorMap.value = nextFacultyMajorMap
+  updateMajorListByFaculty()
+}
+
 const initYearList = () => {
   const currentYear = new Date().getFullYear()
   for (let i = 2014; i <= currentYear; i++) yearList.value.push(i)
@@ -349,9 +356,9 @@ function saveBirthday(year, month, date) {
 
 /** 保存院系：body { faculty } 为院系在 facultyList 中的索引；成功后本地强制清空专业与后端一致 */
 function saveFaculty() {
-  const idx = facultyList.indexOf(userInfo.value.faculty)
-  if (idx < 0) return Promise.resolve()
-  return updateFaculty({ faculty: idx })
+  const code = facultyCodeMap.value[userInfo.value.faculty]
+  if (!Number.isInteger(code)) return Promise.resolve()
+  return updateFaculty({ faculty: code })
     .then(() => {
       userInfo.value.major = ''
       updateMajorListByFaculty()
@@ -423,14 +430,14 @@ const openBirthdayPicker = () => {
 // 院系：weui.picker 单列，选中后立即将专业重置为「未选择」
 const openFacultyPicker = () => {
   const weui = getWeui()
-  const items = facultyList.map(label => ({ label, value: label }))
+  const items = facultyList.value.map(label => ({ label, value: label }))
   if (weui && typeof weui.picker === 'function') {
     weui.picker(items, {
-      defaultValue: [userInfo.value.faculty || facultyList[0]],
+      defaultValue: [userInfo.value.faculty || facultyList.value[0]],
       onConfirm: (result) => {
         if (result && result[0]) {
           userInfo.value.faculty = result[0].value
-          userInfo.value.major = '未选择'
+          userInfo.value.major = unselectedOption
           updateMajorListByFaculty()
           saveFaculty()
         }
@@ -438,9 +445,9 @@ const openFacultyPicker = () => {
     })
     return
   }
-  openListFallback('请选择院系', facultyList, (val) => {
+  openListFallback('请选择院系', facultyList.value, (val) => {
     userInfo.value.faculty = val
-    userInfo.value.major = '未选择'
+    userInfo.value.major = unselectedOption
     updateMajorListByFaculty()
     saveFaculty()
   })
@@ -448,17 +455,16 @@ const openFacultyPicker = () => {
 
 // 专业：未选院系时强拦截，禁止越级选择
 const openMajorPicker = () => {
-  if (userInfo.value.faculty === null || userInfo.value.faculty === undefined || userInfo.value.faculty === '请选择院系' || userInfo.value.faculty === '未选择') {
+  if (userInfo.value.faculty === null || userInfo.value.faculty === undefined || userInfo.value.faculty === facultyPlaceholder || userInfo.value.faculty === unselectedOption) {
     showErrorTopTips('请先选择院系')
     return
   }
-  const faculty = userInfo.value.faculty
   const weui = getWeui()
-  const list = majorList.value.length ? majorList.value : ['未选择']
+  const list = majorList.value.length ? majorList.value : [unselectedOption]
   const items = list.map(label => ({ label, value: label }))
   if (weui && typeof weui.picker === 'function') {
     weui.picker(items, {
-      defaultValue: [userInfo.value.major || '未选择'],
+      defaultValue: [userInfo.value.major || unselectedOption],
       onConfirm: (result) => {
         if (result && result[0]) {
           userInfo.value.major = result[0].value
@@ -690,15 +696,28 @@ async function fetchUserProfile() {
       userInfo.value.introduction = d.introduction ?? ''
       userInfo.value.birthday = d.birthday ?? ''
       userInfo.value.ipArea = d.ipArea ?? userInfo.value.ipArea
+      updateMajorListByFaculty()
     }
   } catch (_) {
     // 401 等由 request 拦截器统一处理（清 token、跳转登录）
   }
 }
 
+async function fetchProfileDictionary() {
+  try {
+    const res = await getProfileOptions()
+    if (res && res.success && res.data) {
+      applyProfileOptions(res.data)
+    }
+  } catch (_) {
+    applyProfileOptions(null)
+  }
+}
+
 onMounted(() => {
   initYearList()
   updateMajorListByFaculty()
+  fetchProfileDictionary()
   fetchUserProfile()
   getLocationList()
     .then(res => {

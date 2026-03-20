@@ -185,7 +185,7 @@ watch(() => route.fullPath, () => {
   <div class="dating-center">
     <div class="dating-header unified-header">
       <span class="dating-header__back" @click="router.back()">返回</span>
-      <h1 class="dating-header__title">卖室友互动</h1>
+      <h1 class="dating-header__title">互动中心</h1>
       <span class="dating-header__placeholder"></span>
     </div>
 

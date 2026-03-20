@@ -1,0 +1,19 @@
+{
+  "code": null,
+  "success": true,
+  "message": null,
+  "data": [
+    {
+      "id": "message-1",
+      "module": "marketplace",
+      "type": "comment",
+      "title": "有人评论了你的二手帖子",
+      "content": "这台计算器还在吗？",
+      "createdAt": "2026-03-20 20:30:00",
+      "isRead": false,
+      "targetType": "post",
+      "targetId": "marketplace-post-1",
+      "targetSubId": "comment-1"
+    }
+  ]
+}

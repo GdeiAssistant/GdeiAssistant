@@ -1,0 +1,19 @@
+{
+  "code": 200,
+  "success": true,
+  "message": "success",
+  "data": {
+    "username": "20231234",
+    "nickname": "测试同学",
+    "avatar": "https://cdn.gdeiassistant.cn/avatar/test-user.png",
+    "faculty": null,
+    "major": null,
+    "enrollment": "2023",
+    "location": "",
+    "hometown": "",
+    "introduction": "喜欢图书馆和校园摄影。",
+    "birthday": null,
+    "ipArea": "广东省",
+    "age": null
+  }
+}

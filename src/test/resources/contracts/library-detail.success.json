@@ -1,0 +1,24 @@
+{
+  "code": null,
+  "success": true,
+  "message": null,
+  "data": {
+    "collectionDistributionList": [
+      {
+        "location": "图书馆四楼",
+        "callNumber": "TP301.6/C67",
+        "barcode": "A00001",
+        "state": "在馆"
+      }
+    ],
+    "bookname": "算法导论",
+    "author": "Thomas H. Cormen",
+    "principal": "Thomas H. Cormen",
+    "publishingHouse": "机械工业出版社",
+    "price": "128.00",
+    "physicalDescriptionArea": "730页",
+    "personalPrincipal": "Thomas H. Cormen 等著",
+    "subjectTheme": "算法设计",
+    "chineseLibraryClassification": "TP301.6"
+  }
+}

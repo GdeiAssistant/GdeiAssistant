@@ -45,6 +45,14 @@ export function updateFaculty(data) {
   return request.post('/profile/faculty', data)
 }
 
+/**
+ * 获取资料统一字典
+ * GET /api/profile/options
+ */
+export function getProfileOptions() {
+  return request.get('/profile/options')
+}
+
 /** POST /api/profile/location  body: { region: string, state?: string, city?: string } */
 export function updateLocation(data) {
   return request.post('/profile/location', data)

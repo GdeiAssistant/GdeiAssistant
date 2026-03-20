@@ -82,7 +82,7 @@ public class CollectionQueryService {
     }
 
     /**
-     * 根据 detailURL（查询字符串）查询馆藏详情。用于 GET /api/book/detail。
+     * 根据 detailURL（查询字符串）查询馆藏详情。用于 GET /api/library/detail。
      */
     public CollectionDetail getCollectionDetailByDetailURL(String detailURL) throws NetWorkTimeoutException, ServerErrorException {
         if (detailURL == null || detailURL.trim().isEmpty()) {

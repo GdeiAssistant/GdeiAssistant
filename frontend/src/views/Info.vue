@@ -7,8 +7,8 @@
           <button type="button" class="entry-link" @click="router.push('/news')">
             <div class="entry-link__icon">新闻</div>
             <div class="entry-link__bd">
-              <div class="entry-link__title">新闻通知</div>
-              <div class="entry-link__desc">查看校园新闻与通知列表</div>
+              <div class="entry-link__title">新闻</div>
+              <div class="entry-link__desc">查看学校公开发布的校园新闻</div>
             </div>
             <div class="entry-link__ft"></div>
           </button>
@@ -16,10 +16,10 @@
       </section>
 
       <section class="info-section">
-        <div class="section-title">系统通知 / 公告</div>
+        <div class="section-title">系统公告</div>
         <NoticeBlock :notices="systemNoticeItems" />
         <HistoryBlock :festival="infoData.festival" :today-label="todayLabel" />
-        <div v-if="!systemNoticeItems.length && !infoData.festival" class="modern-card empty-card">暂无系统通知</div>
+        <div v-if="!systemNoticeItems.length && !infoData.festival" class="modern-card empty-card">暂无系统公告</div>
       </section>
 
       <section class="info-section">
@@ -154,14 +154,14 @@ function resolveDeliveryInteractionLocation(item) {
 
 function resolveMarketplaceInteractionLocation(item) {
   return {
-    path: '/ershou/home',
+    path: item?.targetId ? `/ershou/detail/${item.targetId}` : '/ershou/home',
     query: buildInteractionQuery(item)
   }
 }
 
 function resolveLostAndFoundInteractionLocation(item) {
   return {
-    path: '/lostandfound/home',
+    path: item?.targetId ? `/lostandfound/detail/${item.targetId}` : '/lostandfound/home',
     query: buildInteractionQuery(item)
   }
 }

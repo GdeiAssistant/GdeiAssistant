@@ -4,15 +4,50 @@ import { onMounted, onActivated, ref, computed } from 'vue'
 import { ALL_FEATURES, FEATURE_ICON_SRC } from '@/constants/features'
 
 const STORAGE_KEY = 'user_features_config'
+const MIGRATION_KEY = 'user_features_migrated_v2'
 
 const router = useRouter()
+
+/**
+ * 迁移旧版 feature toggle 配置：
+ * - 旧版 id `book` / `cardInfo` 已合并到 `collection`（图书馆）/ `card`（校园卡），
+ *   如果用户曾隐藏 book 或 collection 之一，合并后的入口不应被意外隐藏，重置为可见。
+ * - 移除已废弃的旧 id 键，避免残留数据干扰。
+ */
+function migrateFeatureConfig(config) {
+  if (!config || typeof config !== 'object') return config
+  if (localStorage.getItem(MIGRATION_KEY)) return config
+
+  const oldLibraryIds = ['book', 'collection']
+  const oldCardIds = ['cardInfo', 'card']
+  const hasOldLibrary = oldLibraryIds.some((k) => k in config)
+  const hasOldCard = oldCardIds.some((k) => k in config)
+
+  if (hasOldLibrary) {
+    // 只要任一旧入口曾可见，合并后保持可见
+    const anyVisible = oldLibraryIds.some((k) => config[k] !== false)
+    config['collection'] = anyVisible
+    delete config['book']
+  }
+  if (hasOldCard) {
+    const anyVisible = oldCardIds.some((k) => config[k] !== false)
+    config['card'] = anyVisible
+    delete config['cardInfo']
+  }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
+  localStorage.setItem(MIGRATION_KEY, '1')
+  return config
+}
 
 // 从 localStorage 实时读取功能开关；无配置时按 defaultVisible 兜底显示
 const featuresConfig = ref(null)
 function loadFeaturesConfig() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    featuresConfig.value = raw ? JSON.parse(raw) : {}
+    let config = raw ? JSON.parse(raw) : {}
+    config = migrateFeatureConfig(config)
+    featuresConfig.value = config
   } catch (_) {
     featuresConfig.value = {}
   }
@@ -36,7 +71,7 @@ const visibleMenuList = computed(() => {
   }))
 })
 
-const SERVICE_FEATURE_IDS = new Set(['grade', 'schedule', 'cet', 'kaoyan', 'spare', 'collection', 'card', 'data', 'evaluate'])
+const SERVICE_FEATURE_IDS = new Set(['grade', 'schedule', 'cet', 'kaoyan', 'spare', 'collection', 'card', 'pe', 'data', 'evaluate', 'about'])
 const LIFE_FEATURE_IDS = new Set(['ershou', 'delivery', 'lostandfound', 'secret', 'dating', 'express', 'topic', 'photograph'])
 
 const featureSections = computed(() => {

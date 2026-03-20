@@ -116,7 +116,7 @@ onMounted(async () => {
 
 <template>
   <div class="delivery-detail" style="--module-color: #f59e0b">
-    <CommunityHeader title="任务详情" moduleColor="#f59e0b" />
+    <CommunityHeader title="任务详情" moduleColor="#f59e0b" @back="router.back()" backTo="" />
 
     <div v-if="item" class="delivery-detail__content">
       <!-- 任务卡片 -->

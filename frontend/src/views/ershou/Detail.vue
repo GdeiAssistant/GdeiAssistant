@@ -10,6 +10,7 @@ const id = route.params.id
 
 const loading = ref(true)
 const detail = ref(null)
+const errorMessage = ref('')
 const tipVisible = ref(false)
 const tipText = ref('')
 
@@ -86,9 +87,11 @@ onMounted(async () => {
       detail.value = mapErshouDetail(info)
     } else {
       detail.value = null
+      errorMessage.value = res?.message || '商品不存在'
     }
   } catch (e) {
     detail.value = null
+    errorMessage.value = '加载失败，请稍后重试'
   } finally {
     loading.value = false
   }
@@ -164,7 +167,7 @@ onMounted(async () => {
     </template>
 
     <div v-else class="community-empty">
-      <p class="community-empty__text">加载失败或商品不存在</p>
+      <p class="community-empty__text">{{ errorMessage || '加载失败或商品不存在' }}</p>
     </div>
 
     <!-- 底部悬浮操作栏 -->

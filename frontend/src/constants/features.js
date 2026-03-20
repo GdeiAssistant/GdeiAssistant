@@ -10,8 +10,10 @@ export const ALL_FEATURES = [
   { id: 'spare', name: '教室查询', icon: 'icon-spare', path: '/spare', defaultVisible: true },
   { id: 'collection', name: '图书馆', icon: 'icon-collection', path: '/library', defaultVisible: true },
   { id: 'card', name: '校园卡', icon: 'icon-card', path: '/card', defaultVisible: true },
+  { id: 'pe', name: '体测查询', icon: 'icon-pe', path: '/pe', defaultVisible: true },
   { id: 'data', name: '数据查询', icon: 'icon-data', path: '/data', defaultVisible: true },
   { id: 'evaluate', name: '教学评价', icon: 'icon-evaluate', path: '/evaluate', defaultVisible: true },
+  { id: 'about', name: '关于应用', icon: 'icon-about', path: '/about', defaultVisible: true },
   { id: 'ershou', name: '二手交易', icon: 'icon-ershou', path: '/ershou', defaultVisible: true },
   { id: 'delivery', name: '全民快递', icon: 'icon-delivery', path: '/delivery', defaultVisible: true },
   { id: 'lostandfound', name: '失物招领', icon: 'icon-lostandfound', path: '/lostandfound', defaultVisible: true },
@@ -41,4 +43,6 @@ export const FEATURE_ICON_SRC = {
   dating: '/img/function/dating.png',
   topic: '/img/function/topic.png',
   delivery: '/img/function/delivery.png',
+  pe: '/img/function/pe.png',
+  about: '/img/function/about.png',
 }

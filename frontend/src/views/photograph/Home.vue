@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const scrollContainer = ref(null)
@@ -68,13 +69,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="photograph-home">
-    <!-- 统一顶部导航栏：左侧返回，中间标题，右侧留空 -->
-    <div class="unified-header">
-      <div class="header-left" @click="router.push('/')">‹</div>
-      <div class="header-title">拍好校园</div>
-      <div class="header-right"></div>
-    </div>
+  <div class="community-page photograph-home" :style="{ '--module-color': '#06b6d4' }">
+    <CommunityHeader title="拍好校园" moduleColor="#06b6d4" backTo="/" />
 
     <!-- 列表滚动容器：单列卡片列表 -->
     <div
@@ -86,20 +82,21 @@ onMounted(() => {
       @touchend="handleTouchEnd"
     >
       <!-- 下拉刷新指示器 -->
-      <div class="pull-refresh-indicator" :style="{ height: pullY + 'px' }">
-        <span v-if="refreshing" class="pull-refresh-text">
-          <i class="weui-loading"></i> 正在刷新...
+      <div class="community-pull-refresh" :style="{ height: pullY + 'px' }">
+        <span v-if="refreshing" class="community-pull-refresh__text">
+          <i class="community-loading-spinner"></i> 正在刷新...
         </span>
-        <span v-else-if="pullY > 50" class="pull-refresh-text">释放立即刷新</span>
-        <span v-else-if="pullY > 0" class="pull-refresh-text">下拉刷新</span>
+        <span v-else-if="pullY > 50" class="community-pull-refresh__text">释放立即刷新</span>
+        <span v-else-if="pullY > 0" class="community-pull-refresh__text">下拉刷新</span>
       </div>
 
-      <!-- 照片卡片列表：参考 .card 结构 -->
-      <div id="card-box">
+      <!-- 照片卡片列表 -->
+      <div class="card-list">
         <div
-          v-for="item in list"
+          v-for="(item, index) in list"
           :key="item.id"
-          class="card"
+          class="community-card card"
+          :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
           @click="goDetail(item.id)"
         >
           <div class="card-img">
@@ -120,9 +117,9 @@ onMounted(() => {
 
           <!-- 卡片下方按钮组：点赞 + 评论 -->
           <div class="card-btn-group">
-            <div class="am-btn-group am-btn-group-justify">
+            <div class="btn-group-justify">
               <a
-                class="am-btn am-btn-photo"
+                class="btn-action"
                 :class="{ liked: item.isLiked }"
                 href="javascript:;"
                 role="button"
@@ -131,7 +128,7 @@ onMounted(() => {
                 <i :class="item.isLiked ? 'am-icon-check-square' : 'am-icon-check-square-o'"></i
                 >{{ item.likeCount ?? item.likes }} 点赞
               </a>
-              <a class="am-btn am-btn-photo" href="javascript:;" role="button">
+              <a class="btn-action" href="javascript:;" role="button">
                 <i class="am-icon-th-list"></i>{{ item.commentCount ?? 0 }} 评论
               </a>
             </div>
@@ -141,17 +138,18 @@ onMounted(() => {
       </div>
 
       <!-- 空状态 -->
-      <div v-if="!loading && !refreshing && list.length === 0" class="photograph-empty">
-        <p>暂无照片作品</p>
+      <div v-if="!loading && !refreshing && list.length === 0" class="community-empty">
+        <div class="community-empty__icon">📷</div>
+        <p class="community-empty__text">暂无照片作品</p>
       </div>
 
       <!-- 上拉加载更多 -->
-      <div v-if="loading && !refreshing" class="photograph-loadmore">
-        <i class="weui-loading"></i>
-        <span class="weui-loadmore__tips">正在加载</span>
+      <div v-if="loading && !refreshing" class="community-loadmore">
+        <i class="community-loading-spinner"></i>
+        <span>正在加载</span>
       </div>
-      <div v-if="finished && list.length > 0" class="photograph-loadmore">
-        <span class="weui-loadmore__tips">没有更多了</span>
+      <div v-if="finished && list.length > 0" class="community-loadmore">
+        <span>没有更多了</span>
       </div>
     </div>
 
@@ -171,102 +169,25 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.photograph-home {
-  min-height: 100vh;
-  background: #f8f8f8;
-}
-
-/* 统一顶部导航栏 */
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.header-left {
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  min-width: 48px;
-  font-size: 24px;
-  font-weight: 300 !important;
-  color: #333;
-}
-.header-left i,
-.header-left svg,
-.header-left img {
-  font-size: 24px !important;
-  width: 24px !important;
-  height: 24px !important;
-  font-weight: 300 !important;
-  transform: scale(1.4);
-  transform-origin: center center;
-}
-.header-left svg {
-  stroke-width: 1 !important;
-}
-.header-right {
-  width: 48px;
-  text-align: center;
-}
-.header-title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-}
-
 /* 滚动容器 */
 .photograph-scroll-container {
-  height: calc(100vh - 44px - 80px);
+  height: calc(100vh - 51px - 80px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 80px;
 }
 
-/* 下拉刷新指示器 */
-.pull-refresh-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  transition: height 0.3s;
-}
-.pull-refresh-text {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #999;
-}
-.pull-refresh-text .weui-loading {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #e5e5e5;
-  border-top-color: #3cb395;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* 卡片列表 */
+.card-list {
+  padding: var(--space-md);
 }
 
-/* 卡片样式：参考 photograph/index.css .card */
+/* 卡片样式 */
 .card {
-  background-color: #fff;
-  border: 1px solid transparent;
-  border-radius: 0;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.28);
-  width: 95%;
-  height: auto;
-  margin: 0 auto 30px auto;
+  width: 100%;
+  margin-bottom: var(--space-lg);
+  overflow: hidden;
+  animation: community-slide-up 0.4s ease both;
 }
 .card-img-tag img {
   width: 100%;
@@ -276,68 +197,66 @@ onMounted(() => {
 .card-img {
   position: relative;
 }
-.card-img {
-  position: relative;
-}
 .card-name {
-  margin: 10px;
-  font-size: 20px;
-  font-family: sans-serif;
+  margin: var(--space-md);
+  font-size: var(--font-2xl);
+  font-weight: 600;
+  color: var(--c-text-1);
   clear: both;
 }
 .card-say {
-  margin: 10px;
-  font-size: 15px;
+  margin: 0 var(--space-md) var(--space-md);
+  font-size: var(--font-md);
+  color: var(--c-text-2);
+  line-height: 1.5;
 }
 
-/* 多图角标：参考 .tags + .img-num */
+/* 多图角标 */
 .tags {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  right: var(--space-sm);
+  bottom: var(--space-sm);
   display: inline-flex;
 }
 .img-num {
-  background: #f39c12;
+  background: var(--c-photograph);
   color: #fff;
-  border-radius: 2px;
-  padding: 2px 6px;
-  font-size: 12px;
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  font-size: var(--font-sm);
+  font-weight: 500;
 }
 
-/* 卡片按钮组：参考 .card-btn-group + .am-btn-photo */
+/* 卡片按钮组 */
 .card-btn-group {
-  font-size: 20px;
-  padding: 0 10px 10px 10px;
+  padding: 0 var(--space-md) var(--space-md);
 }
-.am-btn-group-justify {
+.btn-group-justify {
   display: flex;
+  gap: var(--space-sm);
 }
-.am-btn {
+.btn-action {
   flex: 1;
   text-align: center;
-  padding: 8px 0;
+  padding: var(--space-sm) 0;
   border: none;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-}
-.am-btn-photo {
   color: #fff;
-  background-color: #518379;
-  border-color: #ffffff;
-  font-size: 80%;
+  background-color: var(--c-photograph);
+  font-size: var(--font-base);
+  text-decoration: none;
+  transition: opacity 0.2s;
 }
-.am-btn-photo:hover {
-  color: #ffeb3b !important;
+.btn-action:active {
+  opacity: 0.85;
 }
-.am-btn-photo.liked {
-  background-color: #2e8b57 !important;
-  color: #fff !important;
+.btn-action.liked {
+  background-color: #0592aa;
+  background-color: color-mix(in srgb, var(--c-photograph) 80%, #000);
 }
-.am-btn-photo.liked:hover {
-  color: #fff !important;
-}
-.am-btn-photo i {
-  margin-right: 4px;
+.btn-action i {
+  margin-right: var(--space-xs);
 }
 
 /* 底部三色操作栏 */
@@ -347,53 +266,40 @@ onMounted(() => {
   left: 0;
   right: 0;
   display: flex;
-  box-shadow: 0 -1px 5px #989898;
+  box-shadow: var(--shadow-lg);
+  border-top: 1px solid var(--c-border);
 }
 .photo-toolbar .toolbar-btn {
   flex: 1;
   text-align: center;
-  padding: 8px 0;
+  padding: var(--space-sm) 0;
   color: #fff;
-  font-size: 14px;
+  font-size: var(--font-base);
+  font-weight: 500;
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+.photo-toolbar .toolbar-btn:active {
+  opacity: 0.85;
 }
 .photo-toolbar .life {
-  background-color: #e84c3d; /* 类似 am-btn-danger */
+  background-color: #e84c3d;
+}
+.photo-toolbar .life.active {
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
 }
 .photo-toolbar .campus {
-  background-color: #3498db; /* 类似 am-btn-primary */
+  background-color: #3498db;
+}
+.photo-toolbar .campus.active {
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
 }
 .photo-toolbar .upload {
-  background-color: #27ae60; /* 类似 am-btn-success */
+  background-color: var(--c-photograph);
 }
 
-/* 空状态与加载更多 */
-.photograph-empty {
-  text-align: center;
-  padding: 60px 20px;
-  color: #999;
-  font-size: 14px;
-}
-.photograph-loadmore {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  color: #999;
-  font-size: 14px;
-  gap: 8px;
-}
-.photograph-loadmore .weui-loading {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #e5e5e5;
-  border-top-color: #3cb395;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-.weui-loadmore__tips {
-  font-size: 14px;
-  color: #999;
+.card-img-tag {
+  margin: 0;
+  padding: 0;
 }
 </style>
-

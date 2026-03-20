@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { showErrorTopTips } from '@/utils/toast.js'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const keyword = ref('')
@@ -49,11 +50,7 @@ function doSearch() {
 
 <template>
   <div class="topic-search">
-    <div class="topic-header unified-header">
-      <span class="topic-header__back" @click="router.back()">返回</span>
-      <h1 class="topic-header__title">搜索话题</h1>
-      <span class="topic-header__placeholder"></span>
-    </div>
+    <CommunityHeader title="搜索话题" moduleColor="#6366f1" @back="router.back()" backTo="" showBack />
 
     <div class="topic-search__bar">
       <input
@@ -66,13 +63,16 @@ function doSearch() {
       <button type="button" class="topic-search__btn" @click="doSearch">搜索</button>
     </div>
 
-    <div v-if="searching" class="topic-search__loading">搜索中...</div>
-    <div v-else-if="searchResults.length === 0 && keyword" class="topic-search__empty">暂无结果</div>
+    <div v-if="searching" class="community-loadmore"><i class="community-loading-spinner"></i> 搜索中...</div>
+    <div v-else-if="searchResults.length === 0 && keyword" class="community-empty">
+      <div class="community-empty__text">暂无结果</div>
+    </div>
     <div v-else class="topic-list">
       <div
-        v-for="item in searchResults"
+        v-for="(item, index) in searchResults"
         :key="item.id"
         class="topic-card"
+        :style="{ animationDelay: (index * 0.05) + 's' }"
       >
         <div class="topic-card__header">
           <img :src="item.userAvatar || '/img/avatar/default.png'" class="topic-card__avatar" />
@@ -107,60 +107,39 @@ function doSearch() {
 
 <style scoped>
 .topic-search {
-  background: #f5f5f5;
+  background: var(--c-bg);
   min-height: 100vh;
   padding-bottom: 60px;
 }
-
-.topic-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
-}
-.topic-header__back { color: #333; cursor: pointer; min-width: 48px; font-size: 14px; }
-.topic-header__title { flex: 1; text-align: center; font-size: 16px; font-weight: 500; margin: 0; color: #333; }
-.topic-header__placeholder { min-width: 48px; }
 
 .topic-search__bar {
   display: flex;
   gap: 10px;
   padding: 15px;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
+  background: var(--c-card);
+  border-bottom: 1px solid var(--c-border);
 }
 .topic-search__input {
   flex: 1;
   height: 36px;
   padding: 0 12px;
-  border: 1px solid #e5e5e5;
-  border-radius: 18px;
-  font-size: 14px;
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-full);
+  font-size: var(--font-base);
   outline: none;
 }
 .topic-search__input:focus {
-  border-color: #10b981;
+  border-color: var(--c-topic);
 }
 .topic-search__btn {
   padding: 0 20px;
   height: 36px;
-  background: #10b981;
+  background: var(--c-topic);
   color: #fff;
   border: none;
-  border-radius: 18px;
-  font-size: 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-base);
   cursor: pointer;
-}
-
-.topic-search__loading,
-.topic-search__empty {
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
-  font-size: 14px;
 }
 
 .topic-list {
@@ -171,10 +150,11 @@ function doSearch() {
 }
 
 .topic-card {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--c-card);
+  border-radius: var(--radius-md);
   padding: 15px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  box-shadow: var(--shadow-sm);
+  animation: community-slide-up 0.3s ease both;
 }
 
 .topic-card__header {
@@ -193,30 +173,30 @@ function doSearch() {
   flex: 1;
 }
 .topic-card__name {
-  font-size: 15px;
+  font-size: var(--font-md);
   font-weight: 600;
-  color: #333;
+  color: var(--c-text-1);
   margin-bottom: 4px;
 }
 .topic-card__time {
-  font-size: 12px;
-  color: #999;
+  font-size: var(--font-sm);
+  color: var(--c-text-3);
 }
 
 .topic-card__content {
   margin-bottom: 12px;
   line-height: 1.6;
-  font-size: 15px;
-  color: #333;
+  font-size: var(--font-md);
+  color: var(--c-text-1);
 }
 .topic-card__tag {
-  color: #10b981;
-  font-size: 16px;
+  color: var(--c-topic);
+  font-size: var(--font-lg);
   font-weight: 500;
   margin-right: 6px;
 }
 .topic-card__text {
-  color: #333;
+  color: var(--c-text-1);
 }
 
 .topic-card__images {
@@ -249,7 +229,7 @@ function doSearch() {
   display: flex;
   justify-content: flex-end;
   padding-top: 8px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--c-border);
 }
 .topic-like-btn {
   display: flex;
@@ -257,26 +237,22 @@ function doSearch() {
   gap: 4px;
   background: none;
   border: none;
-  font-size: 14px;
-  color: #666;
+  font-size: var(--font-base);
+  color: var(--c-text-2);
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
   transition: all 0.2s;
 }
 .topic-like-btn__icon {
-  font-size: 18px;
+  font-size: var(--font-xl);
   transition: transform 0.2s;
 }
 .topic-like-btn.is-liked {
-  color: #10b981;
+  color: var(--c-topic);
 }
 .topic-like-btn.is-liked .topic-like-btn__icon {
   transform: scale(1.2);
-  animation: like-bounce 0.3s ease;
-}
-@keyframes like-bounce {
-  0%, 100% { transform: scale(1.2); }
-  50% { transform: scale(1.4); }
+  animation: community-like-bounce 0.3s ease;
 }
 </style>

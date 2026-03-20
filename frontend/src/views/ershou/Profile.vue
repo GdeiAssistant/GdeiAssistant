@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { getCurrentUserProfile } from '../../api/user.js'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -128,11 +129,7 @@ watch(() => route.fullPath, () => {
 
 <template>
   <div class="ershou-profile-page">
-    <div class="ershou-header unified-header">
-      <span class="ershou-header__back" @click="router.push('/ershou/home')">返回</span>
-      <h1 class="ershou-header__title">个人中心</h1>
-      <span class="ershou-header__placeholder"></span>
-    </div>
+    <CommunityHeader title="个人中心" moduleColor="#10b981" backTo="/ershou/home" />
 
     <section class="profile">
       <i class="avt"><img class="avatar-img" :src="avatar" alt="头像"></i>
@@ -153,7 +150,7 @@ watch(() => route.fullPath, () => {
         <div v-show="activeStat === 'doing'" class="statlist">
           <p v-if="loading" class="nostatus-tip">加载中...</p>
           <template v-else>
-            <div v-for="item in doingList" :key="item.id" class="stat">
+            <div v-for="item in doingList" :key="item.id" class="stat community-card">
               <div class="info" @click="goDetail(item.id)">
                 <i class="img"><img :src="item.preview" :alt="item.name"></i>
                 <h5 class="tit">{{ item.name }}</h5>
@@ -173,7 +170,7 @@ watch(() => route.fullPath, () => {
         <div v-show="activeStat === 'sold'" class="statlist">
           <p v-if="loading" class="nostatus-tip">加载中...</p>
           <template v-else>
-            <div v-for="item in soldList" :key="item.id" class="stat">
+            <div v-for="item in soldList" :key="item.id" class="stat community-card">
               <div class="info">
                 <i class="img"><img :src="item.preview" :alt="item.name"></i>
                 <h5 class="tit">{{ item.name }}</h5>
@@ -191,7 +188,7 @@ watch(() => route.fullPath, () => {
         <div v-show="activeStat === 'off'" class="statlist">
           <p v-if="loading" class="nostatus-tip">加载中...</p>
           <template v-else>
-            <div v-for="item in offList" :key="item.id" class="stat">
+            <div v-for="item in offList" :key="item.id" class="stat community-card">
               <div class="info" @click="goDetail(item.id)">
                 <i class="img"><img :src="item.preview" :alt="item.name"></i>
                 <h5 class="tit">{{ item.name }}</h5>
@@ -210,12 +207,12 @@ watch(() => route.fullPath, () => {
     </section>
 
     <div v-if="dialogVisible">
-      <div class="weui-mask" @click="dialogVisible = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-        <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-        <div class="weui-dialog__ft">
-          <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
+      <div class="community-dialog">
+        <div class="community-dialog__title">提示</div>
+        <div class="community-dialog__body">{{ dialogMessage }}</div>
+        <div class="community-dialog__footer">
+          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
@@ -227,37 +224,8 @@ watch(() => route.fullPath, () => {
 <style scoped>
 .ershou-profile-page {
   min-height: 100vh;
-  background: #e3eeec;
+  background: var(--c-bg);
   padding-bottom: 60px;
-}
-
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.ershou-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-  text-align: left;
-}
-.ershou-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.ershou-header__placeholder {
-  min-width: 48px;
-  text-align: right;
 }
 
 .avatar-img {
@@ -270,9 +238,7 @@ watch(() => route.fullPath, () => {
 
 .profile {
   position: relative;
-  background: #44c1a5;
-  border-top: 1px solid #39b89d;
-  border-bottom: 4px solid #3cab93;
+  background: linear-gradient(135deg, #10b981, #059669);
   padding: 30px 20px 20px 140px;
   min-height: 90px;
 }
@@ -293,7 +259,7 @@ watch(() => route.fullPath, () => {
   border-radius: 50%;
 }
 .profile .nm {
-  font-size: 20px;
+  font-size: var(--font-2xl);
   color: #fff;
   display: block;
   margin-bottom: 5px;
@@ -301,7 +267,7 @@ watch(() => route.fullPath, () => {
 .profile .introduction {
   color: #fff;
   line-height: 21px;
-  font-size: 12px;
+  font-size: var(--font-sm);
   display: block;
 }
 .profile .intro-p {
@@ -314,47 +280,45 @@ watch(() => route.fullPath, () => {
 .status .tabs {
   display: flex;
   margin-bottom: 10px;
-  background: #fff;
-  border-radius: 4px;
+  background: var(--c-card);
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: 0 0 2px #d6e0de;
+  box-shadow: var(--shadow-sm);
 }
 .status .tab {
   flex: 1;
   display: block;
   position: relative;
-  color: #44c1a5;
+  color: var(--c-ershou);
   text-align: center;
   height: 32px;
   line-height: 32px;
-  font-size: 14px;
+  font-size: var(--font-base);
   cursor: pointer;
 }
 .status .tab .line {
   width: 28px;
-  height: 1px;
-  background: #44c1a5;
+  height: 2px;
+  background: var(--c-ershou);
   position: absolute;
   left: 50%;
   margin-left: -14px;
   bottom: 0;
   display: none;
+  border-radius: 1px;
 }
 .status .tabs .on .line { display: block; }
 .status .tabs .on { font-weight: 600; }
 
 .status .stat {
-  background: #fff;
   margin-bottom: 8px;
-  border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 0 2px #d6e0de;
 }
 .status .stat .info {
   position: relative;
   padding: 8px 8px 8px 75px;
   min-height: 60px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--c-border);
 }
 .status .info .img {
   position: absolute;
@@ -363,11 +327,12 @@ watch(() => route.fullPath, () => {
   height: 60px;
   overflow: hidden;
   top: 8px;
+  border-radius: var(--radius-sm);
 }
 .status .info img { width: 100%; height: 100%; object-fit: cover; }
-.status .info h5 { color: #1c826c; font-size: 14px; line-height: 20px; margin: 0 0 4px; }
+.status .info h5 { color: var(--c-ershou); font-size: var(--font-base); line-height: 20px; margin: 0 0 4px; }
 .status .info .price { color: #eb5055; line-height: 18px; font-style: normal; }
-.status .info .tm { color: #999; font-size: 12px; margin: 0; }
+.status .info .tm { color: var(--c-text-3); font-size: var(--font-sm); margin: 0; }
 .status .stat .btns {
   display: flex;
 }
@@ -381,82 +346,27 @@ watch(() => route.fullPath, () => {
 }
 .status .btns .btn b {
   display: block;
-  color: #999;
-  border-left: 1px solid #ddd;
+  color: var(--c-text-3);
+  border-left: 1px solid var(--c-border);
   line-height: 16px;
   height: 16px;
   font-weight: normal;
 }
 .status .btns .btn:first-child b { border-left: none; }
 .readonly-hint {
-  color: #aaa;
+  color: var(--c-text-3);
   font-weight: normal;
-  font-size: 12px;
+  font-size: var(--font-sm);
   border-left: none;
 }
 
 .nostatus-tip {
   text-align: center;
-  color: #999;
-  font-size: 14px;
+  color: var(--c-text-3);
+  font-size: var(--font-base);
   padding: 24px;
   margin: 0;
-  background: #fff;
-  border-radius: 4px;
-}
-
-.weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__hd {
-  padding: 20px 20px 10px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  font-weight: 500;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #d9d9d9;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 15px 0;
-  text-align: center;
-  font-size: 17px;
-  color: #3cc395;
-  text-decoration: none;
-}
-.weui-dialog__btn_primary {
-  color: #3cc395;
-  font-weight: 500;
+  background: var(--c-card);
+  border-radius: var(--radius-sm);
 }
 </style>

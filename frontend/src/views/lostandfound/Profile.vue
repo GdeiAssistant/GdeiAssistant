@@ -3,6 +3,7 @@ import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { getCurrentUserProfile } from '../../api/user.js'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -120,11 +121,7 @@ watch(() => route.fullPath, () => {
 
 <template>
   <div class="lostandfound-profile">
-    <div class="unified-header">
-      <span class="unified-header__back" @click="router.push('/lostandfound/home')">返回</span>
-      <h1 class="unified-header__title">个人中心</h1>
-      <span class="unified-header__placeholder"></span>
-    </div>
+    <CommunityHeader title="个人中心" moduleColor="#3b82f6" backTo="/lostandfound/home" />
 
     <section class="profile-section">
       <i class="avt">
@@ -156,7 +153,7 @@ watch(() => route.fullPath, () => {
             <div v-if="lostList.length === 0" class="nostatus">
               <p class="tip">暂无寻物信息</p>
             </div>
-            <div v-for="item in lostList" :key="item.id" class="stat">
+            <div v-for="item in lostList" :key="item.id" class="stat community-card">
               <div class="info" @click="goDetail(item.id)">
                 <i class="img">
                   <img :src="item.image" alt="" />
@@ -178,7 +175,7 @@ watch(() => route.fullPath, () => {
             <div v-if="foundList.length === 0" class="nostatus">
               <p class="tip">暂无招领信息</p>
             </div>
-            <div v-for="item in foundList" :key="item.id" class="stat">
+            <div v-for="item in foundList" :key="item.id" class="stat community-card">
               <div class="info" @click="goDetail(item.id)">
                 <i class="img">
                   <img :src="item.image" alt="" />
@@ -200,7 +197,7 @@ watch(() => route.fullPath, () => {
             <div v-if="didFoundList.length === 0" class="nostatus">
               <p class="tip">暂无已找回信息</p>
             </div>
-            <div v-for="item in didFoundList" :key="item.id" class="stat">
+            <div v-for="item in didFoundList" :key="item.id" class="stat community-card">
               <div class="info">
                 <i class="img">
                   <img :src="item.image" alt="" />
@@ -215,12 +212,12 @@ watch(() => route.fullPath, () => {
     </section>
 
     <div v-if="dialogVisible">
-      <div class="weui-mask" @click="dialogVisible = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-        <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-        <div class="weui-dialog__ft">
-          <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
+      <div class="community-dialog" style="--module-color: #3b82f6">
+        <div class="community-dialog__title">提示</div>
+        <div class="community-dialog__body">{{ dialogMessage }}</div>
+        <div class="community-dialog__footer">
+          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
@@ -230,41 +227,12 @@ watch(() => route.fullPath, () => {
 <style scoped>
 .lostandfound-profile {
   min-height: 100vh;
-  background: #e3eeec;
-}
-
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.unified-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-}
-.unified-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.unified-header__placeholder {
-  min-width: 48px;
+  background: var(--c-bg);
 }
 
 .profile-section {
   position: relative;
-  background: #44c1a5;
-  border-top: 1px solid #39b89d;
-  border-bottom: 4px solid #3cab93;
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
   padding: 30px 20px 20px 140px;
   min-height: 90px;
 }
@@ -293,7 +261,7 @@ watch(() => route.fullPath, () => {
   margin-bottom: 5px;
 }
 .profile-section .introduction {
-  color: #fff;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 21px;
   font-size: 12px;
   display: block;
@@ -310,7 +278,6 @@ watch(() => route.fullPath, () => {
 }
 .status-section .tabs {
   display: flex;
-  margin-bottom: 10px;
   list-style: none;
   padding: 0;
   margin: 10px 0;
@@ -319,14 +286,14 @@ watch(() => route.fullPath, () => {
   flex: 1;
   display: block;
   position: relative;
-  color: #44c1a5;
+  color: var(--c-lostandfound);
   text-align: center;
   height: 32px;
   line-height: 32px;
   font-size: 14px;
   cursor: pointer;
-  background: #fff;
-  border-radius: 4px 4px 0 0;
+  background: var(--c-card);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   margin-right: 5px;
 }
 .status-section .tab:last-child {
@@ -335,7 +302,7 @@ watch(() => route.fullPath, () => {
 .status-section .tab .line {
   width: 28px;
   height: 1px;
-  background: #44c1a5;
+  background: var(--c-lostandfound);
   position: absolute;
   left: 50%;
   margin-left: -14px;
@@ -343,7 +310,7 @@ watch(() => route.fullPath, () => {
   display: none;
 }
 .status-section .tab.on {
-  background: #44c1a5;
+  background: var(--c-lostandfound);
   color: #fff;
 }
 .status-section .tab.on .line {
@@ -362,15 +329,14 @@ watch(() => route.fullPath, () => {
 }
 
 .stat {
-  background: #fff;
   margin-bottom: 8px;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
 }
 .stat .info {
   position: relative;
   padding: 8px 8px 8px 75px;
   min-height: 60px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--c-border);
   cursor: pointer;
 }
 .stat .info .img {
@@ -380,6 +346,7 @@ watch(() => route.fullPath, () => {
   height: 60px;
   overflow: hidden;
   display: block;
+  border-radius: var(--radius-sm);
 }
 .stat .info .img img {
   width: 100%;
@@ -387,14 +354,14 @@ watch(() => route.fullPath, () => {
   object-fit: cover;
 }
 .stat .info h5.tit {
-  color: #1c826c;
+  color: var(--c-lostandfound);
   font-size: 14px;
   line-height: 20px;
   margin: 0 0 4px 0;
   padding: 0;
 }
 .stat .info .tm {
-  color: #999;
+  color: var(--c-text-3);
   font-size: 12px;
   margin: 0;
   padding: 0;
@@ -410,8 +377,8 @@ watch(() => route.fullPath, () => {
 }
 .stat .btns .btn b {
   display: block;
-  color: #999;
-  border-left: 1px solid #ddd;
+  color: var(--c-text-3);
+  border-left: 1px solid var(--c-divider);
   text-align: center;
   line-height: 16px;
   height: 16px;
@@ -435,8 +402,8 @@ watch(() => route.fullPath, () => {
   height: 88px;
   transform: translateX(-50%);
   border-radius: 28px;
-  background: linear-gradient(180deg, #eefcf8 0%, #daf4ec 100%);
-  box-shadow: inset 0 0 0 1px #c7ebe0;
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+  box-shadow: inset 0 0 0 1px #bfdbfe;
 }
 .nostatus::after {
   content: '';
@@ -446,68 +413,13 @@ watch(() => route.fullPath, () => {
   width: 30px;
   height: 30px;
   transform: translateX(-50%) rotate(45deg);
-  border-right: 3px solid rgba(68, 193, 165, 0.6);
-  border-bottom: 3px solid rgba(68, 193, 165, 0.6);
+  border-right: 3px solid rgba(59, 130, 246, 0.6);
+  border-bottom: 3px solid rgba(59, 130, 246, 0.6);
 }
 .nostatus .tip {
   text-align: center;
-  color: #44c1a5;
+  color: var(--c-lostandfound);
   margin-bottom: 25px;
   font-size: 14px;
-}
-
-.weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__hd {
-  padding: 20px 20px 10px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  font-weight: 500;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #d9d9d9;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 15px 0;
-  text-align: center;
-  font-size: 17px;
-  color: #3cc395;
-  text-decoration: none;
-}
-.weui-dialog__btn_primary {
-  color: #3cc395;
-  font-weight: 500;
 }
 </style>

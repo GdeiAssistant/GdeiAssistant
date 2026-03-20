@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -114,20 +115,16 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="delivery-detail">
-    <div class="delivery-header unified-header">
-      <span class="delivery-header__back" @click="router.back()">返回</span>
-      <h1 class="delivery-header__title">任务详情</h1>
-      <span class="delivery-header__placeholder"></span>
-    </div>
+  <div class="delivery-detail" style="--module-color: #f59e0b">
+    <CommunityHeader title="任务详情" moduleColor="#f59e0b" />
 
     <div v-if="item" class="delivery-detail__content">
       <!-- 任务卡片 -->
-      <div class="detail-card">
+      <div class="detail-card community-card">
         <div class="detail-card__header">
           <div class="detail-card__type">{{ getTypeText(item.type) }}</div>
           <div class="detail-card__reward">
-            <span class="reward-symbol">￥</span>
+            <span class="reward-symbol">&#xffe5;</span>
             <span class="reward-amount">{{ item.reward.toFixed(2) }}</span>
           </div>
         </div>
@@ -216,23 +213,23 @@ onMounted(async () => {
     </div>
 
     <!-- 提示对话框 -->
-    <div v-if="dialogVisible" class="weui-mask" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="weui-dialog">
-      <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-      <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+    <div v-if="dialogVisible" class="community-dialog-mask" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="community-dialog">
+      <div class="community-dialog__title">提示</div>
+      <div class="community-dialog__body">{{ dialogMessage }}</div>
+      <div class="community-dialog__footer">
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
       </div>
     </div>
 
     <!-- 确认完成对话框 -->
-    <div v-if="confirmCompleteVisible" class="weui-mask" @click="confirmCompleteVisible = false"></div>
-    <div v-if="confirmCompleteVisible" class="weui-dialog">
-      <div class="weui-dialog__hd"><strong class="weui-dialog__title">确认完成</strong></div>
-      <div class="weui-dialog__bd">确定要完成这个订单吗？完成后将无法撤销。</div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:;" class="weui-dialog__btn" @click="confirmCompleteVisible = false">取消</a>
-        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="handleComplete">确定</a>
+    <div v-if="confirmCompleteVisible" class="community-dialog-mask" @click="confirmCompleteVisible = false"></div>
+    <div v-if="confirmCompleteVisible" class="community-dialog">
+      <div class="community-dialog__title">确认完成</div>
+      <div class="community-dialog__body">确定要完成这个订单吗？完成后将无法撤销。</div>
+      <div class="community-dialog__footer">
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--cancel" @click="confirmCompleteVisible = false">取消</a>
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="handleComplete">确定</a>
       </div>
     </div>
   </div>
@@ -240,55 +237,39 @@ onMounted(async () => {
 
 <style scoped>
 .delivery-detail {
-  background: #f5f5f5;
+  background: var(--c-bg);
   min-height: 100vh;
-  padding-bottom: 60px;
 }
-
-.delivery-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
-}
-.delivery-header__back { color: #333; cursor: pointer; min-width: 48px; font-size: 14px; }
-.delivery-header__title { flex: 1; text-align: center; font-size: 16px; font-weight: 500; margin: 0; color: #333; }
-.delivery-header__placeholder { min-width: 48px; }
 
 .delivery-detail__content {
-  padding: 15px;
+  padding: var(--space-lg);
+  animation: community-slide-up 0.4s ease both;
 }
 
 .detail-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  padding: var(--space-xl);
 }
 
 .detail-card__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--c-border);
 }
 .detail-card__type {
-  font-size: 18px;
+  font-size: var(--font-xl);
   font-weight: 600;
-  color: #333;
+  color: var(--c-text-1);
 }
 .detail-card__reward {
   display: flex;
   align-items: baseline;
-  color: #ff5252;
+  color: #ef4444;
 }
 .reward-symbol {
-  font-size: 18px;
+  font-size: var(--font-xl);
   font-weight: bold;
   margin-right: 2px;
 }
@@ -298,15 +279,15 @@ onMounted(async () => {
 }
 
 .detail-card__route {
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
+  margin-bottom: var(--space-xl);
+  padding: var(--space-lg);
+  background: var(--c-bg);
+  border-radius: var(--radius-sm);
 }
 .route-item {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 15px;
+  margin-bottom: var(--space-lg);
 }
 .route-item:last-child {
   margin-bottom: 0;
@@ -314,45 +295,45 @@ onMounted(async () => {
 .route-icon {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 13px;
   font-weight: bold;
   color: #fff;
-  margin-right: 12px;
+  margin-right: var(--space-md);
   flex-shrink: 0;
   margin-top: 2px;
 }
 .route-icon--pickup {
-  background: #4a90e2;
+  background: #3b82f6;
 }
 .route-icon--delivery {
-  background: #fa8231;
+  background: var(--c-delivery);
 }
 .route-content {
   flex: 1;
 }
 .route-text {
-  font-size: 16px;
-  color: #333;
+  font-size: var(--font-lg);
+  color: var(--c-text-1);
   line-height: 1.5;
   margin-bottom: 6px;
   font-weight: 500;
 }
 .route-code,
 .route-phone {
-  font-size: 14px;
-  color: #666;
-  margin-top: 4px;
+  font-size: var(--font-base);
+  color: var(--c-text-2);
+  margin-top: var(--space-xs);
 }
 
 .detail-card__image {
-  margin-bottom: 20px;
-  border-radius: 8px;
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  background: #f0f0f0;
+  background: var(--c-border);
 }
 .detail-card__image img {
   width: 100%;
@@ -362,89 +343,89 @@ onMounted(async () => {
 }
 
 .detail-card__info {
-  padding-top: 15px;
-  border-top: 1px solid #f0f0f0;
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--c-border);
 }
 .info-row {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-md);
 }
 .info-row:last-child {
   margin-bottom: 0;
 }
 .info-label {
-  font-size: 14px;
-  color: #666;
+  font-size: var(--font-base);
+  color: var(--c-text-2);
   min-width: 80px;
 }
 .info-value {
   flex: 1;
-  font-size: 14px;
-  color: #333;
+  font-size: var(--font-base);
+  color: var(--c-text-1);
 }
 .info-row--role {
-  margin-bottom: 15px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--c-border);
 }
 .role-badge {
   padding: 6px 14px;
-  border-radius: 16px;
+  border-radius: var(--radius-full);
   font-size: 13px;
   font-weight: 500;
 }
 .role-publisher {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: #dbeafe;
+  color: #1e40af;
 }
 .role-runner {
-  background: #fff3e0;
-  color: #f57c00;
+  background: #fef3c7;
+  color: #92400e;
 }
 .delivery-badge {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: var(--font-sm);
   font-weight: 500;
 }
 .delivery-badge.status-pending {
-  background: #fff3cd;
-  color: #856404;
+  background: #fef3c7;
+  color: #92400e;
 }
 .delivery-badge.status-delivering {
-  background: #d1ecf1;
-  color: #0c5460;
+  background: #dbeafe;
+  color: #1e40af;
 }
 .delivery-badge.status-completed {
-  background: #d4edda;
-  color: #155724;
+  background: #d1fae5;
+  color: #065f46;
 }
 
 .detail-card__actions {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #f0f0f0;
+  margin-top: var(--space-xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--c-border);
   display: flex;
-  gap: 12px;
+  gap: var(--space-md);
 }
 .action-btn {
   flex: 1;
   height: 44px;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-lg);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
 }
 .action-btn--accept {
-  background: linear-gradient(135deg, #fa8231 0%, #ff6b35 100%);
+  background: linear-gradient(135deg, var(--c-delivery) 0%, #d97706 100%);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(250, 130, 49, 0.25);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
 }
 .action-btn--accept:hover {
-  box-shadow: 0 4px 12px rgba(250, 130, 49, 0.35);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
 }
 .action-btn--accept:disabled {
   opacity: 0.6;
@@ -461,50 +442,5 @@ onMounted(async () => {
 .action-btn--complete:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.weui-mask {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__hd {
-  padding: 16px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #eee;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 14px;
-  text-align: center;
-  color: #fa8231;
-  text-decoration: none;
-  font-weight: 500;
 }
 </style>

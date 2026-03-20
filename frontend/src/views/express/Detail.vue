@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { showErrorTopTips } from '@/utils/toast.js'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -153,32 +154,27 @@ onMounted(async () => {
 
 <template>
   <div class="express-detail">
-    <!-- 统一顶部导航栏 -->
-    <div class="express-header unified-header">
-      <span class="express-header__back" @click="router.back()">返回</span>
-      <h1 class="express-header__title">表白详情</h1>
-      <span class="express-header__placeholder"></span>
-    </div>
+    <CommunityHeader title="表白详情" moduleColor="#f43f5e" backTo="/express/home" />
 
-    <!-- 主体容器：padding-bottom 防遮挡底部输入框 -->
+    <!-- 主体容器 -->
     <div class="express-detail__container">
-      <!-- 表白卡片：与 Home 一致的 DOM 结构 -->
-      <div v-if="item" class="dating-card" style="background: #fff; border-radius: 8px; margin: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden;">
-        <div class="card-header" style="text-align: center; font-size: 18px; padding: 20px 15px 10px; line-height: 1.5;">
+      <!-- 表白卡片 -->
+      <div v-if="item" class="community-card express-detail-card" style="animation: community-slide-up 0.4s ease both;">
+        <div class="card-header">
           <span :class="getGenderClass(item.senderGender)">{{ item.senderName }}</span>
-          <span style="color: #666; margin: 0 5px;"> ≡❤ </span>
+          <span class="card-connector"> ≡❤ </span>
           <span :class="getGenderClass(item.receiverGender)">{{ item.receiverName }}</span>
         </div>
 
-        <div class="card-body" style="text-align: center; font-size: 16px; padding: 10px 20px 20px; color: #333;">
+        <div class="card-body">
           {{ item.content }}
         </div>
 
-        <div class="card-time" style="text-align: right; font-size: 12px; color: #b2b2b2; padding: 0 15px 15px;">
+        <div class="card-time">
           {{ item.time || '刚刚' }}
         </div>
 
-        <div class="card-actions" style="display: flex; border-top: 1px solid #f0f0f0; padding: 10px 0;">
+        <div class="card-actions">
           <button type="button" class="action-btn" :class="{ 'is-liked': item.isLiked }" @click.stop="handleLike">
             {{ item.isLiked ? '♥' : '♡' }} {{ item.likeCount || 0 }}
           </button>
@@ -192,7 +188,7 @@ onMounted(async () => {
       </div>
 
       <!-- 评论区 -->
-      <div class="express-comments">
+      <div class="express-comments community-card">
         <h3 class="express-comments__title">评论列表</h3>
         <div v-if="comments.length === 0" class="express-comments__empty">
           <p>暂无评论，快来抢沙发吧！</p>
@@ -214,22 +210,22 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- 猜名字 WEUI Dialog -->
-    <div v-if="guessDialogVisible" class="weui-mask" @click="guessDialogVisible = false"></div>
-    <div v-if="guessDialogVisible" class="weui-dialog weui-dialog--guess">
-      <div class="weui-dialog__hd"><strong class="weui-dialog__title">猜名字</strong></div>
-      <div class="weui-dialog__bd">
+    <!-- 猜名字 Dialog -->
+    <div v-if="guessDialogVisible" class="community-dialog-mask" @click="guessDialogVisible = false"></div>
+    <div v-if="guessDialogVisible" class="community-dialog">
+      <div class="community-dialog__title">猜名字</div>
+      <div class="community-dialog__body">
         <input
           type="text"
-          class="weui-input weui-dialog__input"
+          class="express-dialog-input"
           placeholder="请输入你猜的真实姓名："
           v-model="guessInputValue"
           @keyup.enter="confirmGuess"
         />
       </div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="guessDialogVisible = false">取消</a>
-        <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmGuess">确定</a>
+      <div class="community-dialog__footer">
+        <button class="community-dialog__btn community-dialog__btn--cancel" @click="guessDialogVisible = false">取消</button>
+        <button class="community-dialog__btn community-dialog__btn--confirm" @click="confirmGuess">确定</button>
       </div>
     </div>
 
@@ -256,45 +252,53 @@ onMounted(async () => {
 
 <style scoped>
 .express-detail {
-  background: #f5f5f5;
+  background: var(--c-bg);
   padding-bottom: 60px;
-}
-
-.express-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.express-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-  text-align: left;
-}
-.express-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.express-header__placeholder {
-  min-width: 48px;
-  text-align: right;
 }
 
 .express-detail__container {
-  padding: 15px;
+  padding: var(--space-lg);
   padding-bottom: 60px;
 }
 
-/* 操作栏按钮：点赞高亮 */
+.express-detail-card {
+  overflow: hidden;
+  margin-bottom: var(--space-lg);
+}
+
+.card-header {
+  text-align: center;
+  font-size: 18px;
+  padding: 20px var(--space-lg) 10px;
+  line-height: 1.5;
+}
+
+.card-connector {
+  color: var(--c-text-2);
+  margin: 0 5px;
+}
+
+.card-body {
+  text-align: center;
+  font-size: var(--font-lg);
+  padding: 10px 20px 20px;
+  color: var(--c-text-1);
+}
+
+.card-time {
+  text-align: right;
+  font-size: var(--font-sm);
+  color: var(--c-text-3);
+  padding: 0 var(--space-lg) var(--space-lg);
+}
+
+.card-actions {
+  display: flex;
+  border-top: 1px solid var(--c-border);
+  padding: 10px 0;
+}
+
+/* 操作栏按钮 */
 .action-btn {
   flex: 1;
   display: flex;
@@ -304,66 +308,17 @@ onMounted(async () => {
   padding: 10px 0;
   background: transparent;
   border: none;
-  border-right: 1px solid #f0f0f0;
-  font-size: 14px;
-  color: #666;
+  border-right: 1px solid var(--c-border);
+  font-size: var(--font-base);
+  color: var(--c-text-2);
   cursor: pointer;
 }
 .action-btn:last-child {
   border-right: none;
 }
 .action-btn.is-liked {
-  color: #ff5252 !important;
+  color: #f43f5e !important;
   font-weight: bold;
-}
-/* 猜名字 Dialog */
-.weui-dialog--guess {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 320px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-.express-detail .weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #d9d9d9;
-}
-.express-detail .weui-dialog__btn {
-  flex: 1;
-  padding: 15px 0;
-  text-align: center;
-  font-size: 17px;
-  color: #333;
-  text-decoration: none;
-}
-.express-detail .weui-dialog__btn_primary {
-  color: #4fc3f7;
-  font-weight: 500;
-}
-.express-detail .weui-dialog__btn_default {
-  color: #999;
-}
-.express-detail .weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
 }
 
 /* 性别虚线样式 */
@@ -376,37 +331,49 @@ onMounted(async () => {
   color: #ff8a80;
 }
 .gender-secret {
-  border-bottom: 2px dashed #333333;
-  color: #333333;
+  border-bottom: 2px dashed var(--c-text-1);
+  color: var(--c-text-1);
+}
+
+/* 猜名字 Dialog 输入框 */
+.express-dialog-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-base);
+  box-sizing: border-box;
+  outline: none;
+}
+.express-dialog-input:focus {
+  border-color: #f43f5e;
 }
 
 /* 评论区 */
 .express-comments {
-  background: #fff;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 .express-comments__title {
-  margin: 0 0 15px;
-  font-size: 16px;
+  margin: 0 0 var(--space-lg);
+  font-size: var(--font-lg);
   font-weight: 500;
-  color: #333;
+  color: var(--c-text-1);
 }
 .express-comments__empty {
   text-align: center;
   padding: 40px 0;
-  color: #999;
-  font-size: 14px;
+  color: var(--c-text-3);
+  font-size: var(--font-base);
 }
 .express-comments__list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: var(--space-lg);
 }
 .express-comment {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 15px;
+  border-bottom: 1px solid var(--c-border);
+  padding-bottom: var(--space-lg);
 }
 .express-comment:last-child {
   border-bottom: none;
@@ -416,32 +383,32 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-sm);
 }
 .express-comment__floor {
-  padding: 4px 8px;
-  background: #eee;
-  color: #000;
-  font-size: 12px;
-  border-radius: 2px;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-bg);
+  color: var(--c-text-1);
+  font-size: var(--font-sm);
+  border-radius: var(--radius-sm);
 }
 .express-comment__nickname {
-  color: #b3b3b3;
-  font-size: 12px;
+  color: var(--c-text-3);
+  font-size: var(--font-sm);
 }
 .express-comment__content {
-  margin: 10px 0 8px;
+  margin: 10px 0 var(--space-sm);
   padding-left: 2em;
-  font-size: 14px;
-  color: #333;
+  font-size: var(--font-base);
+  color: var(--c-text-1);
   line-height: 1.6;
   word-break: break-word;
 }
 .express-comment__time {
   margin: 0;
   text-align: right;
-  color: #b3b3b3;
-  font-size: 12px;
+  color: var(--c-text-3);
+  font-size: var(--font-sm);
 }
 
 /* 底部固定评论输入框 */
@@ -452,33 +419,39 @@ onMounted(async () => {
   right: 0;
   display: flex;
   align-items: center;
-  padding: 10px 15px;
-  background: #fff;
-  border-top: 1px solid #eee;
+  padding: 10px var(--space-lg);
+  background: var(--c-card);
+  border-top: 1px solid var(--c-border);
   z-index: 500;
 }
 .express-comment-input__field {
   flex: 1;
   height: 36px;
   padding: 0 12px;
-  border: 1px solid #ddd;
-  border-radius: 18px;
-  font-size: 14px;
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-full);
+  font-size: var(--font-base);
   outline: none;
+  color: var(--c-text-1);
+  background: var(--c-bg);
 }
 .express-comment-input__field:focus {
-  border-color: #74b9ff;
+  border-color: #f43f5e;
 }
 .express-comment-input__btn {
   margin-left: 10px;
   padding: 0 20px;
   height: 36px;
-  background-color: #74b9ff;
+  background-color: #f43f5e;
   color: #fff;
   border: none;
-  border-radius: 18px;
-  font-size: 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-base);
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+.express-comment-input__btn:active {
+  opacity: 0.85;
 }
 .express-comment-input__btn:disabled {
   opacity: 0.6;

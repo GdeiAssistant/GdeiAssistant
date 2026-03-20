@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const formData = ref({
@@ -96,18 +97,18 @@ function submit() {
 </script>
 
 <template>
-  <div class="delivery-publish">
-    <div class="delivery-publish__header">
-      <span class="delivery-publish__cancel" @click="router.back()">取消</span>
-      <h1 class="delivery-publish__title">发布任务</h1>
-      <button type="button" class="delivery-publish__submit" :disabled="submitting" @click="submit">
-        {{ submitting ? '提交中...' : '确认发布' }}
-      </button>
-    </div>
+  <div class="delivery-publish" style="--module-color: #f59e0b">
+    <CommunityHeader title="发布任务" moduleColor="#f59e0b" :showBack="false">
+      <template #right>
+        <button type="button" class="delivery-publish__submit" :disabled="submitting" @click="submit">
+          {{ submitting ? '提交中...' : '确认发布' }}
+        </button>
+      </template>
+    </CommunityHeader>
 
     <div class="delivery-publish__content">
       <!-- 取件信息区 -->
-      <div class="form-block">
+      <div class="form-block community-card">
         <div class="form-block__title">取件信息</div>
         <div class="form-item">
           <label class="form-label">取件地点</label>
@@ -131,7 +132,7 @@ function submit() {
           <label class="form-label">取件凭证图片（可选）</label>
           <div v-if="pickupImagePreview" class="image-preview">
             <img :src="pickupImagePreview" />
-            <button type="button" class="image-remove" @click="removePickupImage">×</button>
+            <button type="button" class="image-remove" @click="removePickupImage">x</button>
           </div>
           <div v-else class="image-upload-btn" @click="$refs.pickupImageInput.click()">
             <input
@@ -148,7 +149,7 @@ function submit() {
       </div>
 
       <!-- 送达信息区 -->
-      <div class="form-block">
+      <div class="form-block community-card">
         <div class="form-block__title">送达信息</div>
         <div class="form-item">
           <label class="form-label">送达地址</label>
@@ -172,7 +173,7 @@ function submit() {
       </div>
 
       <!-- 物品描述区 -->
-      <div class="form-block">
+      <div class="form-block community-card">
         <div class="form-block__title">物品描述</div>
         <div class="form-item">
           <label class="form-label">重量/体积</label>
@@ -206,7 +207,7 @@ function submit() {
     <div class="delivery-publish__footer">
       <div class="footer-reward">
         <span class="reward-label">跑腿费：</span>
-        <span class="reward-symbol">￥</span>
+        <span class="reward-symbol">&#xffe5;</span>
         <input
           type="number"
           class="reward-input"
@@ -223,12 +224,12 @@ function submit() {
     </div>
 
     <!-- 提示对话框 -->
-    <div v-if="dialogVisible" class="weui-mask" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="weui-dialog">
-      <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-      <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+    <div v-if="dialogVisible" class="community-dialog-mask" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="community-dialog">
+      <div class="community-dialog__title">提示</div>
+      <div class="community-dialog__body">{{ dialogMessage }}</div>
+      <div class="community-dialog__footer">
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>
@@ -236,40 +237,18 @@ function submit() {
 
 <style scoped>
 .delivery-publish {
-  background: #f5f5f5;
+  background: var(--c-bg);
   min-height: 100vh;
   padding-bottom: 80px;
 }
 
-.delivery-publish__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 15px;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
-}
-.delivery-publish__cancel {
-  color: #666;
-  font-size: 14px;
-  cursor: pointer;
-}
-.delivery-publish__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
 .delivery-publish__submit {
   padding: 6px 20px;
-  background: #fa8231;
+  background: var(--c-delivery);
   color: #fff;
   border: none;
-  border-radius: 20px;
-  font-size: 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-base);
   cursor: pointer;
   transition: opacity 0.3s;
 }
@@ -279,49 +258,49 @@ function submit() {
 }
 
 .delivery-publish__content {
-  padding: 15px;
+  padding: var(--space-lg);
+  animation: community-slide-up 0.4s ease both;
 }
 
 .form-block {
-  background: #fff;
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 15px;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
 }
 .form-block__title {
-  font-size: 16px;
+  font-size: var(--font-lg);
   font-weight: 600;
-  color: #333;
-  margin-bottom: 15px;
+  color: var(--c-text-1);
+  margin-bottom: var(--space-lg);
   padding-bottom: 10px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--c-border);
 }
 .form-item {
-  margin-bottom: 15px;
+  margin-bottom: var(--space-lg);
 }
 .form-item:last-child {
   margin-bottom: 0;
 }
 .form-label {
   display: block;
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
+  font-size: var(--font-base);
+  color: var(--c-text-2);
+  margin-bottom: var(--space-sm);
 }
 .form-input,
 .form-textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  font-size: 15px;
-  color: #333;
+  padding: var(--space-md);
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-md);
+  color: var(--c-text-1);
   outline: none;
   box-sizing: border-box;
+  transition: border-color 0.2s;
 }
 .form-input:focus,
 .form-textarea:focus {
-  border-color: #fa8231;
+  border-color: var(--c-delivery);
 }
 .form-textarea {
   resize: none;
@@ -332,9 +311,9 @@ function submit() {
   position: relative;
   width: 100px;
   height: 100px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  background: #f0f0f0;
+  background: var(--c-border);
 }
 .image-preview img {
   width: 100%;
@@ -350,8 +329,8 @@ function submit() {
   background: rgba(0,0,0,0.6);
   color: #fff;
   border: none;
-  border-radius: 50%;
-  font-size: 18px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-xl);
   line-height: 1;
   cursor: pointer;
   display: flex;
@@ -361,23 +340,27 @@ function submit() {
 .image-upload-btn {
   width: 100px;
   height: 100px;
-  border: 2px dashed #ddd;
-  border-radius: 8px;
+  border: 2px dashed var(--c-divider);
+  border-radius: var(--radius-sm);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: #fafafa;
+  background: var(--c-bg);
+  transition: border-color 0.2s;
+}
+.image-upload-btn:active {
+  border-color: var(--c-delivery);
 }
 .upload-icon {
   font-size: 32px;
-  color: #999;
-  margin-bottom: 4px;
+  color: var(--c-text-3);
+  margin-bottom: var(--space-xs);
 }
 .upload-text {
-  font-size: 12px;
-  color: #999;
+  font-size: var(--font-sm);
+  color: var(--c-text-3);
 }
 
 .size-tags {
@@ -386,71 +369,72 @@ function submit() {
   flex-wrap: wrap;
 }
 .size-tag {
-  padding: 8px 16px;
-  border: 1px solid #e5e5e5;
-  border-radius: 20px;
-  background: #fff;
-  color: #666;
-  font-size: 14px;
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-full);
+  background: var(--c-card);
+  color: var(--c-text-2);
+  font-size: var(--font-base);
   cursor: pointer;
   transition: all 0.3s;
 }
 .size-tag.active {
-  background: #fa8231;
+  background: var(--c-delivery);
   color: #fff;
-  border-color: #fa8231;
+  border-color: var(--c-delivery);
 }
 
 .delivery-publish__footer {
   position: fixed;
-  bottom: 60px;
+  bottom: 56px;
   left: 0;
   right: 0;
   display: flex;
   align-items: center;
-  padding: 12px 15px;
-  background: #fff;
-  border-top: 1px solid #e5e5e5;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--c-card);
+  border-top: 1px solid var(--c-border);
   z-index: 100;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
 }
 .footer-reward {
   display: flex;
   align-items: center;
-  margin-right: 15px;
+  margin-right: var(--space-lg);
 }
 .reward-label {
-  font-size: 14px;
-  color: #666;
-  margin-right: 4px;
+  font-size: var(--font-base);
+  color: var(--c-text-2);
+  margin-right: var(--space-xs);
 }
 .reward-symbol {
-  font-size: 16px;
-  color: #ff5252;
+  font-size: var(--font-lg);
+  color: #ef4444;
   font-weight: bold;
 }
 .reward-input {
   width: 80px;
-  padding: 6px 8px;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  font-size: 16px;
-  color: #ff5252;
+  padding: 6px var(--space-sm);
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-lg);
+  color: #ef4444;
   font-weight: bold;
   outline: none;
-  margin-left: 4px;
+  margin-left: var(--space-xs);
+  transition: border-color 0.2s;
 }
 .reward-input:focus {
-  border-color: #fa8231;
+  border-color: var(--c-delivery);
 }
 .footer-submit {
   flex: 1;
   height: 44px;
-  background: #fa8231;
+  background: var(--c-delivery);
   color: #fff;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-lg);
   font-weight: 500;
   cursor: pointer;
   transition: opacity 0.3s;
@@ -458,50 +442,5 @@ function submit() {
 .footer-submit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.weui-mask {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__hd {
-  padding: 16px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #eee;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 14px;
-  text-align: center;
-  color: #fa8231;
-  text-decoration: none;
-  font-weight: 500;
 }
 </style>

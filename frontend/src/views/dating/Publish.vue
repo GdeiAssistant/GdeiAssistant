@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const formData = ref({
@@ -159,14 +160,10 @@ async function submit() {
 </script>
 
 <template>
-  <div class="dating-publish">
-    <div class="dating-header unified-header">
-      <span class="dating-header__back" @click="router.push('/dating/home')">返回</span>
-      <h1 class="dating-header__title">发布资料</h1>
-      <span class="dating-header__placeholder"></span>
-    </div>
+  <div class="community-page dating-publish">
+    <CommunityHeader title="发布资料" moduleColor="#ec4899" backTo="/dating/home" />
 
-    <div class="dating-publish__box">
+    <div class="community-card dating-publish__box" style="--module-color: #ec4899">
       <div class="dating-publish__title">发布资料</div>
 
       <div class="dating-photo" @click="$refs.fileInput.click()">
@@ -200,66 +197,77 @@ async function submit() {
       </div>
     </div>
 
-    <div v-if="dialogVisible" class="weui-mask" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="weui-dialog">
-      <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-      <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+    <div v-if="dialogVisible" class="community-dialog-mask" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="community-dialog" style="--module-color: #ec4899">
+      <div class="community-dialog__title">提示</div>
+      <div class="community-dialog__body">{{ dialogMessage }}</div>
+      <div class="community-dialog__footer">
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.dating-publish { background: #eee; min-height: 100vh; padding-bottom: 40px; }
-.dating-header.unified-header {
-  display: flex; align-items: center; justify-content: space-between;
-  height: 44px; padding: 0 12px;
-  background: linear-gradient(180deg, #78e2d1 0%, #6dcbbd 100%);
-  color: #fff;
-}
-.dating-header__back { color: #fff; cursor: pointer; min-width: 48px; font-size: 14px; }
-.dating-header__title { flex: 1; text-align: center; font-size: 16px; margin: 0; }
-.dating-header__placeholder { min-width: 48px; }
+.dating-publish { padding-bottom: 40px; }
 
-.dating-publish__box { width: 90%; margin: 0 auto; background: #fff; overflow: hidden; padding: 15px; margin-top: 10px; border-radius: 8px; }
-.dating-publish__title { font-size: 22px; color: #6dcbbd; font-weight: bold; margin-bottom: 15px; padding-left: 8px; }
+.dating-publish__box {
+  width: 90%;
+  margin: var(--space-md) auto 0;
+  padding: var(--space-lg);
+  overflow: hidden;
+  animation: community-slide-up 0.4s ease both;
+}
+.dating-publish__title {
+  font-size: 22px;
+  color: var(--c-dating);
+  font-weight: bold;
+  margin-bottom: var(--space-lg);
+  padding-left: var(--space-sm);
+}
 
 .dating-photo {
-  width: 100%; min-height: 200px; background: #eee; border-radius: 8px; margin-bottom: 15px;
+  width: 100%; min-height: 200px; background: var(--c-bg); border-radius: var(--radius-sm); margin-bottom: var(--space-lg);
   display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
 }
 .dating-photo__img { width: 100%; height: auto; max-height: 320px; object-fit: cover; }
 .dating-photo__placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .dating-photo__input { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; }
-.dating-photo__btn { padding: 10px 24px; background: #2ee9d0; color: #fff; border-radius: 20px; }
-.dating-photo-hint { text-align: center; margin-bottom: 15px; }
-.circle-btn { padding: 10px 28px; background: #2ee9d0; color: #fff; border: none; border-radius: 24px; font-size: 16px; cursor: pointer; }
+.dating-photo__btn {
+  padding: 10px 24px;
+  background: var(--c-dating);
+  color: #fff;
+  border-radius: var(--radius-full);
+}
+.dating-photo-hint { text-align: center; margin-bottom: var(--space-lg); }
+.circle-btn {
+  padding: 10px 28px;
+  background: var(--c-dating);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: var(--font-lg);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.circle-btn:active { opacity: 0.85; }
 .circle-btn:disabled { opacity: 0.6; }
-.circle-btn--submit { width: 80px; height: 80px; border-radius: 50%; font-size: 18px; margin-top: 15px; }
+.circle-btn--submit { width: 80px; height: 80px; border-radius: 50%; font-size: var(--font-xl); margin-top: var(--space-lg); }
 
-.dating-form { margin: 15px 0; }
+.dating-form { margin: var(--space-lg) 0; }
 .input-box {
-  width: 100%; max-width: 320px; margin: 8px auto; display: block;
-  height: 44px; padding: 0 12px; border: none; border-bottom: 2px solid #2ee8d0; background: #fff; font-size: 14px;
+  width: 100%; max-width: 320px; margin: var(--space-sm) auto; display: block;
+  height: 44px; padding: 0 var(--space-md); border: none; border-bottom: 2px solid var(--c-dating); background: var(--c-card); font-size: var(--font-base);
+  color: var(--c-text-1);
 }
-.dating-hint { text-align: center; margin: 10px 15px; font-size: 12px; color: #666; }
+.input-box::placeholder { color: var(--c-text-3); }
+.dating-hint { text-align: center; margin: var(--space-md) var(--space-lg); font-size: var(--font-sm); color: var(--c-text-2); }
 .dating-hint__warn { color: #e53935; }
-.dating-textarea-wrap { border-top: 2px dashed #eee; padding-top: 15px; text-align: center; }
+.dating-textarea-wrap { border-top: 2px dashed var(--c-divider); padding-top: var(--space-lg); text-align: center; }
 .dating-textarea {
-  width: 100%; max-width: 320px; margin: 0 auto 15px; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
-  font-size: 14px; min-height: 100px; display: block; box-sizing: border-box;
+  width: 100%; max-width: 320px; margin: 0 auto var(--space-lg); padding: var(--space-md); border: 1px solid var(--c-divider); border-radius: var(--radius-sm);
+  font-size: var(--font-base); min-height: 100px; display: block; box-sizing: border-box;
+  color: var(--c-text-1);
 }
-
-.weui-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; }
-.weui-dialog {
-  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 85%; max-width: 300px; background: #fff; border-radius: 8px; z-index: 1001; overflow: hidden;
-}
-.weui-dialog__hd { padding: 16px; text-align: center; }
-.weui-dialog__title { font-size: 17px; color: #333; }
-.weui-dialog__bd { padding: 10px 20px; text-align: center; font-size: 15px; color: #666; }
-.weui-dialog__ft { display: flex; border-top: 1px solid #eee; }
-.weui-dialog__btn { flex: 1; padding: 14px; text-align: center; color: #6dcbbd; text-decoration: none; }
+.dating-textarea::placeholder { color: var(--c-text-3); }
 </style>

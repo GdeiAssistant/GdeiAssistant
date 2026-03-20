@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -97,22 +98,18 @@ onMounted(async () => {
 <template>
   <div class="ershou-detail-page">
     <!-- 统一顶部导航栏 -->
-    <div class="unified-header">
-      <span class="unified-header__back" @click="router.back()">返回</span>
-      <h1 class="unified-header__title">商品详情</h1>
-      <span class="unified-header__placeholder"></span>
-    </div>
+    <CommunityHeader title="商品详情" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
 
     <!-- 加载中 -->
     <div v-if="loading" class="detail-loading">
-      <div class="weui-loading"></div>
+      <div class="community-loading-spinner" style="width: 24px; height: 24px;"></div>
       <p>加载中</p>
     </div>
 
     <template v-else-if="detail">
-      <!-- 主体：复刻 ershouDetail.jsp 的 section.detail + section.userinfo -->
+      <!-- 主体 -->
       <section class="detail">
-        <!-- 多图：原版为轮播，此处上下堆叠展示 -->
+        <!-- 多图 -->
         <div class="detail-images">
           <img
             v-for="(img, idx) in detail.images"
@@ -123,7 +120,7 @@ onMounted(async () => {
           />
         </div>
 
-        <!-- 商品基本信息：价格（圆形）、标题、发布时间 -->
+        <!-- 商品基本信息 -->
         <div class="info">
           <em class="price"><b>￥</b>{{ detail.price }}</em>
           <h5 class="tit">{{ detail.title }}</h5>
@@ -149,7 +146,7 @@ onMounted(async () => {
           <p class="w">商品描述：{{ detail.desc || '—' }}</p>
         </div>
 
-        <!-- 联系方式：QQ、手机（打电话/发短信） -->
+        <!-- 联系方式 -->
         <div class="contact">
           <i class="i icontact"></i>
           <p class="qq">qq：<b>{{ detail.contact?.qq || '—' }}</b></p>
@@ -166,55 +163,30 @@ onMounted(async () => {
       </section>
     </template>
 
-    <div v-else class="detail-empty">
-      <p>加载失败或商品不存在</p>
+    <div v-else class="community-empty">
+      <p class="community-empty__text">加载失败或商品不存在</p>
     </div>
 
-    <!-- 底部悬浮操作栏：复制QQ、拨打电话 -->
+    <!-- 底部悬浮操作栏 -->
     <div v-if="detail && !loading" class="detail-action-bar">
       <button type="button" class="action-btn" @click="copyQQ">复制QQ</button>
       <button v-if="detail.contact?.phone" type="button" class="action-btn primary" @click="callPhone">拨打电话</button>
     </div>
 
-    <!-- 底部栏占位，避免内容被遮挡 -->
+    <!-- 底部栏占位 -->
     <div v-if="detail && !loading" class="detail-action-bar-placeholder"></div>
 
-    <!-- WEUI TopTips -->
-    <div v-show="tipVisible" class="weui-toptips weui-toptips_warn">{{ tipText }}</div>
+    <!-- TopTips -->
+    <div v-show="tipVisible" class="toptips">{{ tipText }}</div>
   </div>
 </template>
 
 <style scoped>
 .ershou-detail-page {
   min-height: 100vh;
-  background: #e3eeec;
+  background: var(--c-bg);
   padding-bottom: 20px;
 }
-
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.unified-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-}
-.unified-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.unified-header__placeholder { min-width: 48px; }
 
 .detail-loading {
   display: flex;
@@ -222,45 +194,28 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   padding: 60px 20px;
-  color: #999;
+  color: var(--c-text-3);
 }
-.weui-loading {
-  width: 24px;
-  height: 24px;
-  border: 2px solid #e5e5e5;
-  border-top-color: #3cb395;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-.detail-loading p { margin: 12px 0 0; font-size: 14px; }
-
-.detail-empty {
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
-}
+.detail-loading p { margin: 12px 0 0; font-size: var(--font-base); }
 
 /* 复刻 ershou-base.css .detail */
 .detail { margin: 0 10px 10px; }
 .detail-images {
-  background: #fff;
-  border-radius: 8px;
+  background: var(--c-card);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 0 2px #d6e0de;
+  box-shadow: var(--shadow-sm);
 }
 .detail-img {
   width: 100%;
   display: block;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-top: 10px;
 }
 .detail-img:first-child { margin-top: 0; }
 
 .detail .info {
-  background: #44c1a5;
+  background: #10b981;
   padding: 10px 70px 10px 12px;
   position: relative;
 }
@@ -270,7 +225,7 @@ onMounted(async () => {
   margin: 0 0 4px;
 }
 .detail .info .tm {
-  font-size: 14px;
+  font-size: var(--font-base);
   color: #fff;
   margin: 0;
 }
@@ -293,7 +248,7 @@ onMounted(async () => {
 .detail .info .price b {
   position: absolute;
   top: 4px;
-  font-size: 12px;
+  font-size: var(--font-sm);
   line-height: 12px;
   left: 50%;
   margin-left: -5px;
@@ -301,11 +256,11 @@ onMounted(async () => {
 }
 
 .detail .site {
-  background: #fff;
+  background: var(--c-card);
   padding: 8px 10px 8px 98px;
-  color: #45c1a6;
+  color: var(--c-ershou);
   line-height: 20px;
-  font-size: 14px;
+  font-size: var(--font-base);
   position: relative;
   margin: 0;
 }
@@ -330,9 +285,9 @@ onMounted(async () => {
 .userinfo .info,
 .userinfo .contact {
   margin: 10px 0 0;
-  background: #fff;
-  box-shadow: 0 0 2px #d6e0de;
-  border-radius: 4px;
+  background: var(--c-card);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 .userinfo .user {
@@ -357,16 +312,16 @@ onMounted(async () => {
 }
 .userinfo .user .nm {
   line-height: 30px;
-  font-size: 16px;
-  color: #565656;
+  font-size: var(--font-lg);
+  color: var(--c-text-2);
 }
 
 .userinfo .info,
 .userinfo .contact {
   position: relative;
   padding: 15px 15px 15px 60px;
-  font-size: 14px;
-  color: #666;
+  font-size: var(--font-base);
+  color: var(--c-text-2);
 }
 .userinfo .info p,
 .userinfo .contact p { line-height: 20px; margin: 0 0 2px; }
@@ -382,15 +337,15 @@ onMounted(async () => {
 }
 .userinfo .contact .icontact { background-position: 0 -30px; }
 .userinfo .contact .cont a { margin-left: 5px; }
-.userinfo .contact .phone a { color: #565656; }
+.userinfo .contact .phone a { color: var(--c-text-2); }
 
 .footer {
   text-align: center;
   line-height: 38px;
   height: 38px;
   margin-top: 20px;
-  color: #999;
-  font-size: 12px;
+  color: var(--c-text-3);
+  font-size: var(--font-sm);
 }
 
 /* 底部悬浮操作栏 */
@@ -404,7 +359,7 @@ onMounted(async () => {
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  background: #fff;
+  background: var(--c-card);
   box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
   z-index: 400;
 }
@@ -412,10 +367,10 @@ onMounted(async () => {
   flex: 1;
   height: 44px;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  background: #f0f0f0;
-  color: #333;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-lg);
+  background: var(--c-bg);
+  color: var(--c-text-1);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -424,26 +379,24 @@ onMounted(async () => {
   line-height: 1;
 }
 .action-btn.primary {
-  background: #3cb395;
+  background: #10b981;
   color: #fff;
 }
 .detail-action-bar-placeholder {
   height: 70px;
 }
 
-/* WEUI TopTips */
-.weui-toptips {
+/* TopTips */
+.toptips {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   padding: 10px;
   text-align: center;
-  font-size: 14px;
+  font-size: var(--font-base);
   z-index: 6000;
   transition: opacity 0.3s;
-}
-.weui-toptips_warn {
   background: rgba(0,0,0,0.7);
   color: #fff;
 }

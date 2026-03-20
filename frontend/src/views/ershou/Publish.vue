@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -233,13 +234,13 @@ onMounted(() => {
 
 <template>
   <div class="ershou-publish body1">
-    <div class="unified-header">
-      <span class="unified-header__back" @click="goBack">返回</span>
-      <h1 class="unified-header__title">{{ isEditMode ? '编辑二手商品' : '发布二手商品' }}</h1>
-      <a href="javascript:;" class="unified-header__submit" @click.prevent="submit">
-        {{ submitting ? '提交中' : (isEditMode ? '保存' : '完成') }}
-      </a>
-    </div>
+    <CommunityHeader :title="isEditMode ? '编辑二手商品' : '发布二手商品'" moduleColor="#10b981" :showBack="true" :backTo="isEditMode ? '/ershou/profile' : '/ershou/home'">
+      <template #right>
+        <a href="javascript:;" class="header-submit" @click.prevent="submit">
+          {{ submitting ? '提交中' : (isEditMode ? '保存' : '完成') }}
+        </a>
+      </template>
+    </CommunityHeader>
 
     <section class="picture">
       <div class="images">
@@ -311,12 +312,12 @@ onMounted(() => {
     </section>
 
     <div v-if="dialogVisible">
-      <div class="weui-mask" @click="dialogVisible = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-        <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-        <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
+      <div class="community-dialog">
+        <div class="community-dialog__title">提示</div>
+        <div class="community-dialog__body">{{ dialogMessage }}</div>
+        <div class="community-dialog__footer">
+          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
@@ -339,46 +340,23 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.body1 { background: #fff; }
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.unified-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-  text-align: left;
-}
-.unified-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.unified-header__submit {
+.body1 { background: var(--c-card); }
+
+.header-submit {
   min-width: 48px;
   text-align: right;
-  font-size: 14px;
-  color: #3cb395;
+  font-size: var(--font-base);
+  color: var(--c-ershou);
   text-decoration: none;
   font-weight: 500;
 }
-.unified-header__submit:hover {
-  color: #2a9d82;
+.header-submit:hover {
+  color: #059669;
 }
 
 .picture {
-  background: #3cc2a5;
-  border-top: 1px solid #39b89d;
+  background: #10b981;
+  border-top: 1px solid #0d9668;
 }
 .picture .images { padding: 25px 16px 0; margin-bottom: 5px; }
 .images .image {
@@ -388,7 +366,7 @@ onMounted(() => {
   margin: 0 6px 10px;
   vertical-align: top;
 }
-.images .image .img { width: 70px; height: 70px; overflow: hidden; display: block; }
+.images .image .img { width: 70px; height: 70px; overflow: hidden; display: block; border-radius: var(--radius-sm); }
 .images .image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .images .image a {
   display: block;
@@ -406,6 +384,7 @@ onMounted(() => {
 .images .addimg {
   width: 68px; height: 68px;
   border: 2px solid #fff;
+  border-radius: var(--radius-sm);
   display: inline-block;
   margin: 0 6px 10px;
   vertical-align: top;
@@ -428,34 +407,34 @@ onMounted(() => {
 }
 .images .addimg .iadd .i1 { width: 100%; height: 2px; position: absolute; top: 11px; background: #fff; }
 .images .addimg .iadd .i2 { height: 100%; width: 2px; position: absolute; left: 11px; background: #fff; }
-.picture .tip { height: 24px; line-height: 24px; text-align: center; color: #fff; font-size: 14px; padding-bottom: 3px; }
+.picture .tip { height: 24px; line-height: 24px; text-align: center; color: #fff; font-size: var(--font-base); padding-bottom: 3px; }
 
 .form { padding: 0 20px; }
 .form-loading {
   margin: 16px 0 0;
-  color: #999;
-  font-size: 14px;
+  color: var(--c-text-3);
+  font-size: var(--font-base);
   text-align: center;
 }
 .form .frm {
   position: relative;
   padding-left: 90px;
-  font-size: 16px;
-  border-bottom: 2px solid #3cc2a5;
+  font-size: var(--font-lg);
+  border-bottom: 2px solid var(--c-ershou);
   min-height: 70px;
   padding-bottom: 10px;
 }
-.form .frm .frm-input { resize: none; border: none; background: none; width: 100%; font-size: 16px; color: #202020; padding: 0; margin-top: 14px; }
-.form .frmt { position: absolute; left: 0; color: #202020; height: 70px; line-height: 70px; }
+.form .frm .frm-input { resize: none; border: none; background: none; width: 100%; font-size: var(--font-lg); color: var(--c-text-1); padding: 0; margin-top: 14px; }
+.form .frmt { position: absolute; left: 0; color: var(--c-text-1); height: 70px; line-height: 70px; }
 .form .frmc { padding-top: 18px; }
-.form .frmc input { color: #202020; background: none; height: 34px; line-height: 34px; font-size: 16px; width: 100%; border: none; }
-.form .frmc b { height: 34px; line-height: 34px; font-size: 16px; width: 100%; color: #202020; display: block; position: relative; cursor: pointer; }
+.form .frmc input { color: var(--c-text-1); background: none; height: 34px; line-height: 34px; font-size: var(--font-lg); width: 100%; border: none; }
+.form .frmc b { height: 34px; line-height: 34px; font-size: var(--font-lg); width: 100%; color: var(--c-text-1); display: block; position: relative; cursor: pointer; }
 .form .frmc b .iarrow {
   background: url(/img/ershou/arrow.png) no-repeat;
   width: 8px; height: 12px; background-size: 8px;
   position: absolute; right: 10px; top: 10px;
 }
-.form .frmtip { position: absolute; bottom: 0; left: 0; background: #fe6a7c; height: 15px; line-height: 15px; font-size: 12px; color: #fff; padding: 0 3px; display: none; }
+.form .frmtip { position: absolute; bottom: 0; left: 0; background: #fe6a7c; height: 15px; line-height: 15px; font-size: var(--font-sm); color: #fff; padding: 0 3px; display: none; }
 .form .frmerr { border-color: #fe6a7c; }
 .form .frmerr .frmtip { display: block; }
 
@@ -463,71 +442,12 @@ onMounted(() => {
 .sky.show { display: block; pointer-events: auto; }
 .sky .mark { background: #000; opacity: .5; width: 100%; height: 100%; position: absolute; top: 0; display: none; z-index: 99; }
 .sky .mark.show { display: block; }
-.sky .mw { width: 225px; position: fixed; background: #fff; left: 50%; margin-left: -112px; top: 50%; margin-top: -210px; display: none; z-index: 999; pointer-events: auto; border-radius: 4px; overflow: hidden; }
+.sky .mw { width: 225px; position: fixed; background: var(--c-card); left: 50%; margin-left: -112px; top: 50%; margin-top: -210px; display: none; z-index: 999; pointer-events: auto; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-lg); }
 .sky .mw.show { display: block; }
-.sky .mwt { border-top: 4px solid #3cc3a5; height: 40px; border-bottom: 1px solid #eee; position: relative; line-height: 40px; font-size: 16px; color: #333; text-align: center; }
+.sky .mwt { border-top: 4px solid var(--c-ershou); height: 40px; border-bottom: 1px solid var(--c-divider); position: relative; line-height: 40px; font-size: var(--font-lg); color: var(--c-text-1); text-align: center; }
 .sky .mwt .mwclose { position: absolute; right: 6px; top: 0; display: block; padding: 10px; }
 .sky .mwt .imwclose { background: url(/img/ershou/mwclose.png) no-repeat; background-size: 11px; width: 11px; height: 13px; display: block; }
 .sky .mwc ul { padding: 10px 0; }
-.sky .mwc li { line-height: 30px; height: 30px; text-align: center; color: #666; font-size: 14px; }
-.sky .mwc li a { color: #666; display: block; text-decoration: none; }
-
-.weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__hd {
-  padding: 20px 20px 10px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  font-weight: 500;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #d9d9d9;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 15px 0;
-  text-align: center;
-  font-size: 17px;
-  color: #3cc395;
-  text-decoration: none;
-  border-right: 1px solid #d9d9d9;
-}
-.weui-dialog__btn:last-child {
-  border-right: none;
-}
-.weui-dialog__btn_primary {
-  color: #3cc395;
-  font-weight: 500;
-}
+.sky .mwc li { line-height: 30px; height: 30px; text-align: center; color: var(--c-text-2); font-size: var(--font-base); }
+.sky .mwc li a { color: var(--c-text-2); display: block; text-decoration: none; }
 </style>

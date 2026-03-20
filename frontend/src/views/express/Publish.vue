@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const formData = ref({
@@ -87,39 +88,34 @@ function submit() {
 </script>
 
 <template>
-  <div class="dating-publish">
-    <!-- 标准 .unified-header：左侧返回 -->
-    <div class="dating-header unified-header">
-      <span class="dating-header__back" @click="router.push('/express/home')">返回</span>
-      <h1 class="dating-header__title"></h1>
-      <span class="dating-header__placeholder"></span>
-    </div>
+  <div class="express-publish">
+    <CommunityHeader title="发布表白" moduleColor="#f43f5e" backTo="/express/home" />
 
-    <!-- 巨大的浅粉色粗体标题 -->
-    <h2 class="dating-main-title">广东第二师范学院表白墙</h2>
+    <!-- 浅粉色粗体标题 -->
+    <h2 class="express-main-title">广东第二师范学院表白墙</h2>
 
     <!-- 手账风表单：蓝色虚线表单框 -->
-    <div class="dating-form">
+    <div class="express-form">
       <!-- 第一个 form-section：你的信息 -->
       <div class="form-section">
         <span class="form-section-title">你的信息</span>
-        <div class="weui-cells weui-cells_form">
-          <div class="weui-cell">
-            <div class="weui-cell__hd"><label class="weui-label">昵称</label></div>
-            <div class="weui-cell__bd">
+        <div class="form-cells">
+          <div class="form-cell">
+            <div class="form-cell__hd"><label class="form-label">昵称</label></div>
+            <div class="form-cell__bd">
               <input
-                class="weui-input"
+                class="form-input"
                 type="text"
                 placeholder="请输入昵称"
                 v-model="formData.nickname"
               />
             </div>
           </div>
-          <div class="weui-cell">
-            <div class="weui-cell__hd"><label class="weui-label">真名</label></div>
-            <div class="weui-cell__bd">
+          <div class="form-cell">
+            <div class="form-cell__hd"><label class="form-label">真名</label></div>
+            <div class="form-cell__bd">
               <input
-                class="weui-input"
+                class="form-input"
                 type="text"
                 placeholder="请输入真名"
                 v-model="formData.realName"
@@ -127,10 +123,10 @@ function submit() {
               <div class="hint-text">注：真实姓名可选填，默认保密不显示！填写即可参加紧张刺激的猜名字游戏！</div>
             </div>
           </div>
-          <div class="weui-cell weui-cell_select">
-            <div class="weui-cell__hd"><label class="weui-label">性别</label></div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model="formData.myGender">
+          <div class="form-cell">
+            <div class="form-cell__hd"><label class="form-label">性别</label></div>
+            <div class="form-cell__bd">
+              <select class="form-select" v-model="formData.myGender">
                 <option value="">请选择</option>
                 <option value="male">男</option>
                 <option value="female">女</option>
@@ -144,22 +140,22 @@ function submit() {
       <!-- 第二个 form-section：TA的信息 -->
       <div class="form-section">
         <span class="form-section-title">TA的信息</span>
-        <div class="weui-cells weui-cells_form">
-          <div class="weui-cell">
-            <div class="weui-cell__hd"><label class="weui-label">名字</label></div>
-            <div class="weui-cell__bd">
+        <div class="form-cells">
+          <div class="form-cell">
+            <div class="form-cell__hd"><label class="form-label">名字</label></div>
+            <div class="form-cell__bd">
               <input
-                class="weui-input"
+                class="form-input"
                 type="text"
                 placeholder="请输入TA的名字"
                 v-model="formData.receiverName"
               />
             </div>
           </div>
-          <div class="weui-cell weui-cell_select">
-            <div class="weui-cell__hd"><label class="weui-label">性别</label></div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model="formData.receiverGender">
+          <div class="form-cell">
+            <div class="form-cell__hd"><label class="form-label">性别</label></div>
+            <div class="form-cell__bd">
+              <select class="form-select" v-model="formData.receiverGender">
                 <option value="">请选择</option>
                 <option value="male">男</option>
                 <option value="female">女</option>
@@ -173,11 +169,11 @@ function submit() {
       <!-- 表白内容 -->
       <div class="form-section">
         <span class="form-section-title">表白内容</span>
-        <div class="weui-cells weui-cells_form">
-          <div class="weui-cell">
-            <div class="weui-cell__bd">
+        <div class="form-cells">
+          <div class="form-cell">
+            <div class="form-cell__bd">
               <textarea
-                class="weui-textarea"
+                class="form-textarea"
                 placeholder="写下你想对TA说的话..."
                 rows="4"
                 v-model="formData.content"
@@ -187,7 +183,7 @@ function submit() {
         </div>
       </div>
 
-      <div class="dating-submit-wrap">
+      <div class="express-submit-wrap">
         <button
           type="button"
           class="btn-submit"
@@ -201,12 +197,12 @@ function submit() {
 
     <!-- 提示对话框 -->
     <div v-if="dialogVisible">
-      <div class="weui-mask" @click="dialogVisible = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-        <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-        <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
+      <div class="community-dialog">
+        <div class="community-dialog__title">提示</div>
+        <div class="community-dialog__body">{{ dialogMessage }}</div>
+        <div class="community-dialog__footer">
+          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
@@ -214,46 +210,17 @@ function submit() {
 </template>
 
 <style scoped>
-.dating-publish {
-  background: #f5f5f5;
+.express-publish {
+  background: var(--c-bg);
   padding-bottom: 80px;
 }
 
-.dating-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.dating-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-  text-align: left;
-}
-.dating-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.dating-header__placeholder {
-  min-width: 48px;
-  text-align: right;
-}
-
-.dating-main-title {
+.express-main-title {
   text-align: center;
   font-size: 22px;
   font-weight: bold;
   color: #ffb3ba;
-  margin: 16px 15px 20px;
+  margin: var(--space-lg) var(--space-lg) var(--space-xl);
   padding: 0;
   line-height: 1.3;
 }
@@ -261,11 +228,12 @@ function submit() {
 /* 手账风：蓝色虚线表单框 */
 .form-section {
   border: 2px dashed #81d4fa;
-  border-radius: 8px;
-  padding: 25px 15px 15px;
-  margin: 25px 15px 15px;
+  border-radius: var(--radius-md);
+  padding: 25px var(--space-lg) var(--space-lg);
+  margin: 25px var(--space-lg) var(--space-lg);
   position: relative;
-  background-color: #fff;
+  background-color: var(--c-card);
+  box-shadow: var(--shadow-sm);
 }
 .form-section-title {
   position: absolute;
@@ -275,47 +243,60 @@ function submit() {
   color: white;
   padding: 4px 10px;
   border-radius: 2px;
-  font-size: 14px;
+  font-size: var(--font-base);
   font-weight: 500;
 }
 
-/* WEUI 风格输入框 */
-.weui-cells {
+/* 表单输入框 */
+.form-cells {
   margin-top: 0;
   background-color: transparent;
 }
-.weui-cell {
-  padding: 12px 0;
-  border-bottom: 1px solid #e5e5e5;
+.form-cell {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--c-divider);
 }
-.weui-cell:last-child {
+.form-cell:last-child {
   border-bottom: none;
 }
-.weui-label {
+.form-label {
   width: 70px;
-  font-size: 14px;
-  color: #333;
+  font-size: var(--font-base);
+  color: var(--c-text-1);
+  line-height: 2;
 }
-.weui-input,
-.weui-select,
-.weui-textarea {
-  font-size: 14px;
-  color: #333;
+.form-cell__bd {
+  flex: 1;
 }
-.weui-textarea {
-  min-height: 80px;
-  padding: 8px 0;
-}
-.weui-select {
+.form-input,
+.form-select,
+.form-textarea {
+  font-size: var(--font-base);
+  color: var(--c-text-1);
   width: 100%;
   border: none;
+  outline: none;
   background: transparent;
+  box-sizing: border-box;
+}
+.form-input {
+  height: 28px;
+}
+.form-textarea {
+  min-height: 80px;
+  padding: var(--space-sm) 0;
+  resize: vertical;
+}
+.form-select {
+  width: 100%;
   appearance: none;
   -webkit-appearance: none;
 }
 
-.dating-submit-wrap {
-  padding: 20px 15px 40px;
+.express-submit-wrap {
+  padding: var(--space-xl) var(--space-lg) 40px;
 }
 .btn-submit {
   width: 100%;
@@ -323,12 +304,17 @@ function submit() {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #74b9ff;
+  background-color: #f43f5e;
   color: #fff;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-lg);
+  font-weight: 500;
   border: none;
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-submit:active {
+  opacity: 0.85;
 }
 .btn-submit:disabled {
   opacity: 0.6;
@@ -336,61 +322,9 @@ function submit() {
 }
 
 .hint-text {
-  font-size: 12px;
-  color: #999;
+  font-size: var(--font-sm);
+  color: var(--c-text-3);
   margin-top: 5px;
   line-height: 1.4;
-}
-
-.weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__hd {
-  padding: 20px 20px 10px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  font-weight: 500;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #d9d9d9;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 15px 0;
-  text-align: center;
-  font-size: 17px;
-  color: #4fc3f7;
-  text-decoration: none;
-}
-.weui-dialog__btn_primary {
-  font-weight: 500;
 }
 </style>

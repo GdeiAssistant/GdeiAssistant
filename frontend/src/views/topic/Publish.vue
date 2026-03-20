@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const topicTag = ref('')
@@ -66,7 +67,7 @@ async function submit() {
     showDialog('内容不能超过250字')
     return
   }
-  
+
   submitting.value = true
   const topic = topicTag.value.trim()
   const contentVal = content.value.trim()
@@ -93,13 +94,13 @@ async function submit() {
 
 <template>
   <div class="topic-publish">
-    <div class="topic-publish__header">
-      <span class="topic-publish__cancel" @click="router.back()">取消</span>
-      <h1 class="topic-publish__title">发布话题</h1>
-      <button type="button" class="topic-publish__submit" :disabled="submitting" @click="submit">
-        {{ submitting ? '提交中...' : '提交' }}
-      </button>
-    </div>
+    <CommunityHeader title="发布话题" moduleColor="#6366f1" @back="router.back()" backTo="">
+      <template #right>
+        <button type="button" class="topic-publish__submit" :disabled="submitting" @click="submit">
+          {{ submitting ? '提交中...' : '提交' }}
+        </button>
+      </template>
+    </CommunityHeader>
 
     <div class="topic-publish__content">
       <!-- 话题输入区 -->
@@ -157,12 +158,12 @@ async function submit() {
     </div>
 
     <!-- 提示对话框 -->
-    <div v-if="dialogVisible" class="weui-mask" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="weui-dialog">
-      <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-      <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+    <div v-if="dialogVisible" class="community-dialog-mask" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="community-dialog">
+      <div class="community-dialog__title">提示</div>
+      <div class="community-dialog__body">{{ dialogMessage }}</div>
+      <div class="community-dialog__footer">
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>
@@ -170,40 +171,18 @@ async function submit() {
 
 <style scoped>
 .topic-publish {
-  background: #f5f5f5;
+  background: var(--c-bg);
   min-height: 100vh;
   padding-bottom: 60px;
 }
 
-.topic-publish__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 15px;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
-}
-.topic-publish__cancel {
-  color: #666;
-  font-size: 14px;
-  cursor: pointer;
-}
-.topic-publish__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
 .topic-publish__submit {
   padding: 6px 20px;
-  background: #10b981;
+  background: var(--c-topic);
   color: #fff;
   border: none;
-  border-radius: 20px;
-  font-size: 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-base);
   cursor: pointer;
   transition: opacity 0.3s;
 }
@@ -219,14 +198,14 @@ async function submit() {
 .topic-input-wrap {
   display: flex;
   align-items: center;
-  background: #fff;
-  border-radius: 8px;
+  background: var(--c-card);
+  border-radius: var(--radius-sm);
   padding: 12px 15px;
   margin-bottom: 15px;
 }
 .topic-input__prefix {
-  font-size: 18px;
-  color: #10b981;
+  font-size: var(--font-xl);
+  color: var(--c-topic);
   font-weight: 600;
   margin-right: 8px;
 }
@@ -234,15 +213,15 @@ async function submit() {
   flex: 1;
   border: none;
   outline: none;
-  font-size: 15px;
-  color: #333;
+  font-size: var(--font-md);
+  color: var(--c-text-1);
   background: transparent;
 }
 
 .content-input-wrap {
   position: relative;
-  background: #fff;
-  border-radius: 8px;
+  background: var(--c-card);
+  border-radius: var(--radius-sm);
   padding: 15px;
   margin-bottom: 15px;
 }
@@ -250,8 +229,8 @@ async function submit() {
   width: 100%;
   border: none;
   outline: none;
-  font-size: 16px;
-  color: #333;
+  font-size: var(--font-lg);
+  color: var(--c-text-1);
   line-height: 1.6;
   resize: none;
   background: transparent;
@@ -261,16 +240,16 @@ async function submit() {
   position: absolute;
   bottom: 10px;
   right: 15px;
-  font-size: 12px;
-  color: #999;
+  font-size: var(--font-sm);
+  color: var(--c-text-3);
 }
 .content-counter.is-over {
   color: #e53935;
 }
 
 .image-upload-wrap {
-  background: #fff;
-  border-radius: 8px;
+  background: var(--c-card);
+  border-radius: var(--radius-sm);
   padding: 15px;
 }
 .image-grid {
@@ -281,7 +260,7 @@ async function submit() {
 .image-item {
   position: relative;
   aspect-ratio: 1;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   background: #f0f0f0;
 }
@@ -309,14 +288,14 @@ async function submit() {
 }
 .image-upload-btn {
   aspect-ratio: 1;
-  border: 2px dashed #ddd;
-  border-radius: 8px;
+  border: 2px dashed var(--c-divider);
+  border-radius: var(--radius-sm);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: #fafafa;
+  background: var(--c-bg);
   position: relative;
 }
 .image-upload-btn input {
@@ -327,56 +306,11 @@ async function submit() {
 }
 .upload-icon {
   font-size: 32px;
-  color: #999;
+  color: var(--c-text-3);
   margin-bottom: 4px;
 }
 .upload-text {
-  font-size: 12px;
-  color: #999;
-}
-
-.weui-mask {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__hd {
-  padding: 16px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #eee;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 14px;
-  text-align: center;
-  color: #10b981;
-  text-decoration: none;
-  font-weight: 500;
+  font-size: var(--font-sm);
+  color: var(--c-text-3);
 }
 </style>

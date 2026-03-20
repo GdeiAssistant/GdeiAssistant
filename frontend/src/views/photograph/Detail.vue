@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -105,22 +106,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="photograph-detail">
-    <!-- 统一顶部导航栏 -->
-    <div class="unified-header">
-      <div class="header-left" @click="goBack">‹</div>
-      <div class="header-title">作品详情</div>
-      <div class="header-right"></div>
-    </div>
+  <div class="community-page photograph-detail" :style="{ '--module-color': '#06b6d4' }">
+    <CommunityHeader title="作品详情" moduleColor="#06b6d4" @back="goBack" :backTo="''" :showBack="true" />
 
-    <div v-if="loading" class="loading">
-      <i class="weui-loading"></i>
+    <div v-if="loading" class="community-loadmore" style="padding: 60px var(--space-xl);">
+      <i class="community-loading-spinner"></i>
       <span>加载中...</span>
     </div>
 
     <div v-else-if="work" class="detail-main">
       <!-- 顶部数据看板 -->
-      <div class="photo-stats">
+      <div class="community-card photo-stats" style="animation: community-slide-up 0.3s ease both;">
         <div class="stat-item">
           <div class="num">{{ work.photoCount || (images.length || 1) }}</div>
           <div class="label">照片总数</div>
@@ -156,7 +152,7 @@ onMounted(async () => {
       </div>
 
       <!-- 作品信息与互动区 -->
-          <div class="detail-info">
+      <div class="community-card detail-info" style="animation: community-slide-up 0.4s ease both; animation-delay: 0.1s;">
         <h2 class="detail-title">{{ work.title }}</h2>
         <div class="detail-meta">
           <div class="author">
@@ -172,12 +168,12 @@ onMounted(async () => {
         <p class="detail-desc">{{ work.description || work.content }}</p>
 
         <div class="card-btn-group">
-          <div class="am-btn-group am-btn-group-justify">
-            <a class="am-btn am-btn-photo" :class="{ liked: work.isLiked }" href="javascript:;" role="button" @click.stop="toggleLike">
+          <div class="btn-group-justify">
+            <a class="btn-action" :class="{ liked: work.isLiked }" href="javascript:;" role="button" @click.stop="toggleLike">
               <i :class="work.isLiked ? 'am-icon-check-square' : 'am-icon-check-square-o'"></i
               >{{ work.likeCount ?? work.likes }} 点赞
             </a>
-            <a class="am-btn am-btn-photo" href="javascript:;" role="button">
+            <a class="btn-action" href="javascript:;" role="button">
               <i class="am-icon-th-list"></i>{{ work.commentCount || (work.comments ? work.comments.length : 0) }} 评论
             </a>
           </div>
@@ -207,16 +203,14 @@ onMounted(async () => {
       <button type="button" @click="submitComment">发送</button>
     </div>
 
-    <!-- WEUI 对话框 -->
+    <!-- 对话框 -->
     <div v-if="dialogVisible">
-      <div class="weui-mask" @click="dialogVisible = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd">
-          <strong class="weui-dialog__title">提示</strong>
-        </div>
-        <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-        <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
+      <div class="community-dialog">
+        <div class="community-dialog__title">提示</div>
+        <div class="community-dialog__body">{{ dialogMessage }}</div>
+        <div class="community-dialog__footer">
+          <a href="javascript:" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
         </div>
       </div>
     </div>
@@ -224,103 +218,32 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.photograph-detail {
-  min-height: 100vh;
-  background: #f8f8f8;
-}
-
-/* 统一顶部导航栏 */
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.header-left {
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  min-width: 48px;
-  font-size: 24px;
-  font-weight: 300 !important;
-  color: #333;
-}
-.header-left i,
-.header-left svg,
-.header-left img {
-  font-size: 24px !important;
-  width: 24px !important;
-  height: 24px !important;
-  font-weight: 300 !important;
-  transform: scale(1.4);
-  transform-origin: center center;
-}
-.header-left svg {
-  stroke-width: 1 !important;
-}
-.header-title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.header-right {
-  min-width: 48px;
-  text-align: right;
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  gap: 10px;
-  color: #999;
-}
-.loading .weui-loading {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #e5e5e5;
-  border-top-color: #3cb395;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .detail-main {
-  padding-bottom: 80px; /* 预留底部输入框高度 */
+  padding-bottom: 80px;
 }
 
 /* 顶部数据看板 */
 .photo-stats {
-  margin: 12px 15px;
-  border-radius: 8px;
+  margin: var(--space-md) var(--space-lg);
   display: flex;
-  overflow: hidden; /* 确保圆角生效 */
+  overflow: hidden;
 }
 .photo-stats .stat-item {
   flex: 1;
   text-align: center;
 }
 .photo-stats .num {
-  font-size: 24px;
+  font-size: var(--font-2xl);
   font-weight: bold;
-  background: #009688;
+  padding: var(--space-sm) 0;
+  background: var(--c-photograph);
   color: #fff;
 }
 .photo-stats .label {
-  font-size: 14px;
-  background: #05574f;
+  font-size: var(--font-base);
+  padding: var(--space-xs) 0;
+  background: #058da0;
+  background: color-mix(in srgb, var(--c-photograph) 70%, #000);
   color: #fff;
 }
 
@@ -346,32 +269,35 @@ onMounted(async () => {
 .carousel-dots {
   display: flex;
   justify-content: center;
-  margin: 8px 0 4px 0;
+  margin: var(--space-sm) 0 var(--space-xs) 0;
 }
 .carousel-dots span {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
-  background: #ccc;
+  border-radius: var(--radius-full);
+  background: var(--c-divider);
   margin: 0 3px;
+  transition: background 0.2s;
 }
 .carousel-dots .active {
-  background: #009688;
+  background: var(--c-photograph);
 }
 
 .detail-info {
-  padding: 15px;
-  background: #fff;
+  margin: var(--space-md) var(--space-lg);
+  padding: var(--space-lg);
 }
 .detail-title {
-  font-size: 20px;
-  margin: 0 0 10px 0;
+  font-size: var(--font-2xl);
+  font-weight: 600;
+  color: var(--c-text-1);
+  margin: 0 0 var(--space-md) 0;
 }
 .detail-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-sm);
 }
 .author {
   display: flex;
@@ -380,87 +306,77 @@ onMounted(async () => {
 .author-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  margin-right: 8px;
+  border-radius: var(--radius-full);
+  margin-right: var(--space-sm);
 }
 .author-name {
-  font-size: 14px;
-  color: #555;
-}
-.likes {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  color: #e91e63;
-}
-.likes i {
-  margin-right: 4px;
+  font-size: var(--font-base);
+  color: var(--c-text-2);
 }
 .detail-time {
-  font-size: 12px;
-  color: #999;
-  margin-bottom: 10px;
+  font-size: var(--font-sm);
+  color: var(--c-text-3);
+  margin-bottom: var(--space-md);
 }
 .detail-desc {
-  font-size: 15px;
-  color: #333;
+  font-size: var(--font-md);
+  color: var(--c-text-1);
   line-height: 1.6;
 }
 
-/* 互动按钮样式：复用 am-btn-photo */
+/* 互动按钮 */
 .card-btn-group {
-  font-size: 20px;
-  padding: 10px 0;
+  padding: var(--space-md) 0;
 }
-.am-btn-group-justify {
+.btn-group-justify {
   display: flex;
+  gap: var(--space-sm);
 }
-.am-btn {
+.btn-action {
   flex: 1;
   text-align: center;
-  padding: 8px 0;
+  padding: var(--space-sm) 0;
   border: none;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-}
-.am-btn-photo {
   color: #fff;
-  background-color: #518379;
-  border-color: #ffffff;
-  font-size: 80%;
+  background-color: var(--c-photograph);
+  font-size: var(--font-base);
+  text-decoration: none;
+  transition: opacity 0.2s;
 }
-.am-btn-photo:hover {
-  color: #ffeb3b !important;
+.btn-action:active {
+  opacity: 0.85;
 }
-.am-btn-photo.liked {
-  background-color: #2e8b57 !important;
-  color: #fff !important;
+.btn-action.liked {
+  background-color: #0592aa;
+  background-color: color-mix(in srgb, var(--c-photograph) 80%, #000);
 }
-.am-btn-photo.liked:hover {
-  color: #fff !important;
-}
-.am-btn-photo i {
-  margin-right: 4px;
+.btn-action i {
+  margin-right: var(--space-xs);
 }
 
-/* 评论列表：头像+气泡框 */
+/* 评论列表 */
 .comment-list {
-  margin-top: 10px;
+  margin-top: var(--space-md);
+  border-top: 1px solid var(--c-border);
+  padding-top: var(--space-md);
 }
 .comment-item {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: var(--space-md);
 }
 .comment-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  margin-right: 8px;
+  border-radius: var(--radius-full);
+  margin-right: var(--space-sm);
 }
 .comment-bubble {
-  background: #f5f5f5;
-  border-radius: 4px;
-  padding: 6px 10px;
+  background: var(--c-bg);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
   position: relative;
   max-width: 80%;
 }
@@ -471,23 +387,23 @@ onMounted(async () => {
   top: 10px;
   border-width: 6px;
   border-style: solid;
-  border-color: transparent #f5f5f5 transparent transparent;
+  border-color: transparent var(--c-bg) transparent transparent;
 }
 .comment-author {
   margin: 0;
-  font-size: 13px;
-  font-weight: bold;
-  color: #555;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--c-text-2);
 }
 .comment-text {
   margin: 2px 0;
-  font-size: 14px;
-  color: #333;
+  font-size: var(--font-base);
+  color: var(--c-text-1);
 }
 .comment-time {
   margin: 0;
-  font-size: 12px;
-  color: #999;
+  font-size: var(--font-xs);
+  color: var(--c-text-3);
 }
 
 /* 底部评论输入栏 */
@@ -498,79 +414,37 @@ onMounted(async () => {
   right: 0;
   display: flex;
   align-items: center;
-  padding: 8px 10px;
-  background: #fff;
-  border-top: 1px solid #ddd;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-card);
+  border-top: 1px solid var(--c-border);
+  box-shadow: var(--shadow-sm);
 }
 .comment-input-bar input {
   flex: 1;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 6px 8px;
-  font-size: 14px;
-  margin-right: 8px;
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-full);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-base);
+  margin-right: var(--space-sm);
+  color: var(--c-text-1);
+  transition: border-color 0.2s;
+}
+.comment-input-bar input:focus {
+  outline: none;
+  border-color: var(--c-photograph);
 }
 .comment-input-bar button {
-  padding: 6px 12px;
+  padding: var(--space-sm) var(--space-lg);
   border: none;
-  border-radius: 4px;
-  background: #27ae60;
+  border-radius: var(--radius-full);
+  background: var(--c-photograph);
   color: #fff;
-  font-size: 14px;
+  font-size: var(--font-base);
+  font-weight: 500;
   cursor: pointer;
+  transition: opacity 0.2s;
 }
-
-/* WEUI 对话框样式（简化版） */
-.weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-}
-.weui-dialog__hd {
-  padding: 1.2em 1.6em 0.5em;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-weight: 400;
-  font-size: 18px;
-}
-.weui-dialog__bd {
-  padding: 0 1.6em 0.8em;
-  min-height: 40px;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #999;
-  text-align: center;
-}
-.weui-dialog__ft {
-  position: relative;
-  line-height: 42px;
-  display: flex;
-  border-top: 1px solid #d5d5d6;
-}
-.weui-dialog__btn {
-  flex: 1;
-  text-align: center;
-  text-decoration: none;
-  color: #3cc51f;
-  font-size: 17px;
-}
-.weui-dialog__btn_primary {
-  color: #0bb20c;
+.comment-input-bar button:active {
+  opacity: 0.85;
 }
 </style>

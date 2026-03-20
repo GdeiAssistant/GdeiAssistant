@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -76,14 +77,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="dating-detail">
-    <div class="dating-header unified-header">
-      <span class="dating-header__back" @click="router.back()">返回</span>
-      <h1 class="dating-header__title">卖室友</h1>
-      <span class="dating-header__placeholder"></span>
-    </div>
+  <div class="community-page dating-detail">
+    <CommunityHeader title="卖室友" moduleColor="#ec4899" backTo="/dating/home" />
 
-    <div v-if="item" class="dating-detail__box">
+    <div v-if="item" class="community-card dating-detail__box" style="--module-color: #ec4899; animation: community-slide-up 0.4s ease both;">
       <div class="dating-detail__name">{{ item.name }}</div>
       <div class="dating-detail__photo">
         <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" />
@@ -102,55 +99,102 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div v-if="pickSuccessVisible" class="weui-mask_transparent"></div>
-    <div v-if="pickSuccessVisible" class="weui-toast weui-toast_text">
-      <p class="weui-toast__content">发送成功，请耐心等待对方回复</p>
+    <div v-if="pickSuccessVisible" class="community-dialog-mask" style="background: transparent;"></div>
+    <div v-if="pickSuccessVisible" class="dating-toast">
+      <p class="dating-toast__content">发送成功，请耐心等待对方回复</p>
     </div>
 
-    <div v-if="dialogVisible" class="weui-mask" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="weui-dialog">
-      <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-      <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+    <div v-if="dialogVisible" class="community-dialog-mask" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="community-dialog" style="--module-color: #ec4899">
+      <div class="community-dialog__title">提示</div>
+      <div class="community-dialog__body">{{ dialogMessage }}</div>
+      <div class="community-dialog__footer">
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.dating-detail { background: #eee; min-height: 100vh; padding-bottom: 40px; }
-.dating-header.unified-header {
-  display: flex; align-items: center; justify-content: space-between;
-  height: 44px; padding: 0 12px;
-  background: linear-gradient(180deg, #78e2d1 0%, #6dcbbd 100%);
-  color: #fff;
-}
-.dating-header__back { color: #fff; cursor: pointer; min-width: 48px; font-size: 14px; }
-.dating-header__title { flex: 1; text-align: center; font-size: 16px; margin: 0; }
-.dating-header__placeholder { min-width: 48px; }
+.dating-detail { padding-bottom: 40px; }
 
-.dating-detail__box { width: 90%; margin: 10px auto; background: #fff; overflow: hidden; padding: 15px; border-radius: 8px; }
-.dating-detail__name { font-size: 22px; color: #6dcbbd; font-weight: bold; margin-bottom: 12px; }
-.dating-detail__photo { width: 100%; border-radius: 8px; overflow: hidden; background: #eee; margin-bottom: 12px; }
+.dating-detail__box {
+  width: 90%;
+  margin: var(--space-md) auto;
+  padding: var(--space-lg);
+  overflow: hidden;
+}
+.dating-detail__name {
+  font-size: 22px;
+  color: var(--c-dating);
+  font-weight: bold;
+  margin-bottom: var(--space-md);
+}
+.dating-detail__photo {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--c-bg);
+  margin-bottom: var(--space-md);
+}
 .dating-detail__photo img { width: 100%; height: auto; max-height: 360px; object-fit: cover; }
-.dating-detail__bio { padding: 12px 0; line-height: 1.6; color: #333; font-size: 15px; }
+.dating-detail__bio {
+  padding: var(--space-md) 0;
+  line-height: 1.6;
+  color: var(--c-text-1);
+  font-size: var(--font-md);
+}
 .dating-detail__info { list-style: none; margin: 0; padding: 0; width: 90%; margin: 0 auto; }
-.dating-detail__info li { height: 44px; line-height: 44px; border-bottom: 1px dashed #ccc; font-size: 14px; color: #333; }
-.dating-detail__info li span { font-weight: bold; margin-right: 8px; color: #000; }
-.dating-detail__pick { border-top: 2px dashed #eee; padding-top: 15px; margin-top: 15px; text-align: center; }
-.dating-textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; min-height: 80px; box-sizing: border-box; margin-bottom: 12px; }
-.circle-btn { padding: 10px 28px; background: #2ee9d0; color: #fff; border: none; border-radius: 24px; font-size: 16px; cursor: pointer; }
+.dating-detail__info li {
+  height: 44px;
+  line-height: 44px;
+  border-bottom: 1px dashed var(--c-divider);
+  font-size: var(--font-base);
+  color: var(--c-text-1);
+}
+.dating-detail__info li span { font-weight: bold; margin-right: var(--space-sm); color: var(--c-text-1); }
+.dating-detail__pick {
+  border-top: 2px dashed var(--c-divider);
+  padding-top: var(--space-lg);
+  margin-top: var(--space-lg);
+  text-align: center;
+}
+.dating-textarea {
+  width: 100%;
+  padding: var(--space-md);
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-base);
+  min-height: 80px;
+  box-sizing: border-box;
+  margin-bottom: var(--space-md);
+  color: var(--c-text-1);
+}
+.dating-textarea::placeholder { color: var(--c-text-3); }
+.circle-btn {
+  padding: 10px 28px;
+  background: var(--c-dating);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: var(--font-lg);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.circle-btn:active { opacity: 0.85; }
 .circle-btn:disabled { opacity: 0.6; }
 
-.weui-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; }
-.weui-dialog { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 300px; background: #fff; border-radius: 8px; z-index: 1001; overflow: hidden; }
-.weui-dialog__hd { padding: 16px; text-align: center; }
-.weui-dialog__title { font-size: 17px; color: #333; }
-.weui-dialog__bd { padding: 10px 20px; text-align: center; font-size: 15px; color: #666; }
-.weui-dialog__ft { display: flex; border-top: 1px solid #eee; }
-.weui-dialog__btn { flex: 1; padding: 14px; text-align: center; color: #6dcbbd; text-decoration: none; }
-.weui-mask_transparent { position: fixed; inset: 0; z-index: 1002; }
-.weui-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: #fff; padding: 16px 24px; border-radius: 8px; z-index: 1003; }
-.weui-toast__content { margin: 0; font-size: 14px; }
+.dating-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: var(--space-lg) var(--space-xl);
+  border-radius: var(--radius-sm);
+  z-index: 1003;
+  animation: community-fade-in 0.2s ease;
+}
+.dating-toast__content { margin: 0; font-size: var(--font-base); }
 </style>

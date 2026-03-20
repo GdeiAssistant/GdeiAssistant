@@ -3,6 +3,7 @@ import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 
@@ -372,16 +373,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="secret-publish">
-    <!-- 统一顶部导航栏：与二手交易模块一致 -->
-    <div class="ershou-header unified-header">
-      <span class="ershou-header__back" @click="router.back()">返回</span>
-      <h1 class="ershou-header__title">发布小秘密</h1>
-      <span class="ershou-header__placeholder"></span>
-    </div>
+  <div class="community-page secret-publish" style="--module-color: #8b5cf6">
+    <CommunityHeader title="发布小秘密" moduleColor="#8b5cf6" backTo="/secret/home" />
 
     <!-- 树洞发布框：参考原版 secretPublish.jsp -->
-    <div class="form" :class="`theme${formData.theme}`" :style="{ color: formData.theme === 1 ? '#000' : '#fff' }">
+    <div class="form community-card" :class="`theme${formData.theme}`" :style="{ color: formData.theme === 1 ? '#000' : '#fff' }">
       <form>
         <header>
           <i class="back" @click="router.back()"></i>
@@ -457,7 +453,7 @@ onBeforeUnmount(() => {
             id="voice_volume"
             style="position:relative;height:25px;margin-top:5px;right:10px;width:85px;background:#cdcdcd;float: right"
           >
-            <div id="volume" :style="{ width: voiceVolume + '%', height: '100%', background: '#3cb395' }"></div>
+            <div id="volume" :style="{ width: voiceVolume + '%', height: '100%', background: 'var(--c-secret)' }"></div>
           </div>
         </div>
         <div style="float:right;margin-top:15px">
@@ -520,16 +516,14 @@ onBeforeUnmount(() => {
     </div>
   </div>
 
-  <!-- WEUI 对话框 -->
+  <!-- 对话框 -->
   <div v-if="dialogVisible">
-    <div class="weui-mask" @click="dialogVisible = false"></div>
-    <div class="weui-dialog">
-      <div class="weui-dialog__hd">
-        <strong class="weui-dialog__title">提示</strong>
-      </div>
-      <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+    <div class="community-dialog-mask" @click="dialogVisible = false"></div>
+    <div class="community-dialog" style="--module-color: #8b5cf6">
+      <div class="community-dialog__title">提示</div>
+      <div class="community-dialog__body">{{ dialogMessage }}</div>
+      <div class="community-dialog__footer">
+        <a href="javascript:" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>
@@ -538,47 +532,17 @@ onBeforeUnmount(() => {
 <style scoped>
 .secret-publish {
   min-height: 100vh;
-  background: #f5f5f5;
+  background: var(--c-bg);
   position: relative;
-}
-
-/* 统一顶部导航栏：复用二手交易样式 */
-.ershou-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.ershou-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-  text-align: left;
-}
-.ershou-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.ershou-header__placeholder {
-  min-width: 48px;
-  text-align: right;
 }
 
 /* 表单容器：参考原版 secret-publish.css .form */
 .form {
   position: relative;
-  background-color: #fff;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin: 10px;
   padding-bottom: 20px;
+  border-left: 4px solid var(--c-secret);
 }
 
 header {
@@ -616,7 +580,7 @@ header span {
   right: 1rem;
   top: 0;
   cursor: pointer;
-  color: #3cb395;
+  color: var(--c-secret);
 }
 
 .edit {
@@ -642,7 +606,7 @@ header span {
   width: 100%;
   margin: 0 auto;
   border: none;
-  font-size: 18px;
+  font-size: var(--font-xl);
   overflow-x: hidden;
   line-height: 24px;
   background-color: inherit;
@@ -660,16 +624,16 @@ textarea::-webkit-input-placeholder {
   position: absolute;
   bottom: 0.6rem;
   right: 1rem;
-  font-size: 14px;
-  color: #999;
+  font-size: var(--font-base);
+  color: var(--c-text-3);
 }
 
 .bar {
-  border: solid #d5d5d5;
+  border: solid var(--c-divider);
   border-width: 1px 0;
   padding: 10px;
   overflow: hidden;
-  background: #fff;
+  background: var(--c-card);
 }
 .bar i {
   width: 23px;
@@ -690,7 +654,7 @@ textarea::-webkit-input-placeholder {
   position: relative;
   z-index: 10 !important;
   pointer-events: auto !important;
-  background-color: #f5f5f5;
+  background-color: var(--c-bg);
 }
 
 .themes {
@@ -703,7 +667,7 @@ textarea::-webkit-input-placeholder {
   flex: 1;
   height: 2.7rem;
   position: relative;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
 .selected {
@@ -716,8 +680,8 @@ textarea::-webkit-input-placeholder {
   right: -0.5rem;
   top: -0.5rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-  box-shadow: 0 0.2rem 0.5rem rgba(5, 150, 105, 0.28);
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+  box-shadow: 0 0.2rem 0.5rem rgba(139, 92, 246, 0.28);
 }
 .selected::before {
   content: '';
@@ -730,7 +694,7 @@ textarea::-webkit-input-placeholder {
 
 /* 主题颜色：参考原版 secret-publish.css */
 .theme1 {
-  background-color: #fff;
+  background-color: var(--c-card);
   color: #000;
 }
 .theme2 {
@@ -769,68 +733,12 @@ textarea::-webkit-input-placeholder {
 
 .switch-text {
   margin-top: 1rem;
-  color: grey;
+  color: var(--c-text-3);
   text-align: center;
 }
 .switch-link {
   display: inline;
-  color: deepskyblue;
+  color: var(--c-secret);
   cursor: pointer;
-}
-
-/* WEUI 对话框样式 */
-.weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-}
-.weui-dialog__hd {
-  padding: 1.2em 1.6em 0.5em;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-weight: 400;
-  font-size: 18px;
-}
-.weui-dialog__bd {
-  padding: 0 1.6em 0.8em;
-  min-height: 40px;
-  font-size: 15px;
-  line-height: 1.5;
-  word-wrap: break-word;
-  word-break: break-all;
-  color: #999;
-  text-align: center;
-}
-.weui-dialog__ft {
-  position: relative;
-  line-height: 42px;
-  display: flex;
-  border-top: 1px solid #d5d5d6;
-}
-.weui-dialog__btn {
-  flex: 1;
-  text-align: center;
-  text-decoration: none;
-  color: #3cc51f;
-  font-size: 17px;
-}
-.weui-dialog__btn_primary {
-  color: #0bb20c;
 }
 </style>

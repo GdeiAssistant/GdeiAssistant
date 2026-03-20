@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -51,14 +52,10 @@ onMounted(async () => {
 
 <template>
   <div class="topic-detail">
-    <div class="topic-header unified-header">
-      <span class="topic-header__back" @click="router.back()">返回</span>
-      <h1 class="topic-header__title">话题详情</h1>
-      <span class="topic-header__placeholder"></span>
-    </div>
+    <CommunityHeader title="话题详情" moduleColor="#6366f1" @back="router.back()" backTo="" />
 
-    <div v-if="loading" class="topic-loading">
-      <i class="weui-loading"></i>
+    <div v-if="loading" class="community-loadmore">
+      <i class="community-loading-spinner"></i>
       <span>加载中...</span>
     </div>
 
@@ -86,66 +83,27 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div v-else class="topic-empty">话题不存在或已被删除</div>
+    <div v-else class="community-empty">
+      <div class="community-empty__text">话题不存在或已被删除</div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .topic-detail {
   min-height: 100vh;
-  background: #f5f5f5;
-}
-
-.topic-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.topic-header__back {
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-  font-size: 14px;
-}
-
-.topic-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-
-.topic-header__placeholder {
-  min-width: 48px;
-}
-
-.topic-loading,
-.topic-empty {
-  padding: 40px 16px;
-  color: #999;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  background: var(--c-bg);
 }
 
 .topic-detail__content {
-  padding: 16px;
+  padding: var(--space-lg);
 }
 
 .topic-card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  background: var(--c-card);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .topic-card__meta {
@@ -156,27 +114,27 @@ onMounted(async () => {
 }
 
 .topic-card__tag {
-  color: #10b981;
-  font-size: 16px;
+  color: var(--c-topic);
+  font-size: var(--font-lg);
   font-weight: 600;
 }
 
 .topic-card__time {
-  color: #999;
-  font-size: 12px;
+  color: var(--c-text-3);
+  font-size: var(--font-sm);
   flex-shrink: 0;
 }
 
 .topic-card__text {
-  margin-top: 16px;
-  font-size: 15px;
+  margin-top: var(--space-lg);
+  font-size: var(--font-md);
   line-height: 1.7;
-  color: #333;
+  color: var(--c-text-1);
   white-space: pre-wrap;
 }
 
 .topic-card__images {
-  margin-top: 16px;
+  margin-top: var(--space-lg);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
@@ -184,29 +142,31 @@ onMounted(async () => {
 
 .topic-card__image {
   width: 100%;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
-  background: #f3f4f6;
+  background: var(--c-bg);
 }
 
 .topic-card__footer {
-  margin-top: 16px;
+  margin-top: var(--space-lg);
   display: flex;
   justify-content: flex-end;
 }
 
 .topic-like-btn {
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   padding: 8px 14px;
-  font-size: 13px;
-  color: #10b981;
-  background: #ecfdf5;
+  font-size: var(--font-base);
+  color: var(--c-topic);
+  background: #eeeff8;
+  background: color-mix(in srgb, var(--c-topic) 10%, white);
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .topic-like-btn.is-liked {
-  color: #999;
-  background: #f3f4f6;
+  color: var(--c-text-3);
+  background: var(--c-bg);
 }
-
 </style>

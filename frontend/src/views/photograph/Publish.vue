@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 
@@ -101,53 +102,43 @@ const submit = async () => {
 </script>
 
 <template>
-  <div class="photograph-publish">
-    <!-- 统一顶部导航栏 -->
-    <div class="unified-header">
-      <div class="header-left" @click="goBack">‹</div>
-      <div class="header-title">拍好校园</div>
-      <div class="header-right"></div>
-    </div>
+  <div class="community-page photograph-publish" :style="{ '--module-color': '#06b6d4' }">
+    <CommunityHeader title="拍好校园" moduleColor="#06b6d4" @back="goBack" :backTo="''" :showBack="true" />
 
-    <!-- 上传表单：参考 upload.jsp 结构 -->
-    <section id="upload">
-      <div class="am-form-group">
-        <label>标题/名字<span class="red-text">*</span> </label>
+    <!-- 上传表单 -->
+    <section class="publish-form">
+      <div class="form-group">
+        <label class="form-label">标题/名字<span class="required">*</span></label>
         <input
           type="text"
           maxlength="25"
-          id="title"
-          class="am-form-field am-round"
+          class="form-input"
           placeholder="输入照片标题或你的名字"
           v-model="form.title"
         />
       </div>
-      <div class="am-form-group">
-        <label>照片类型</label>
-        <label>
-          <input type="radio" name="type" value="1" v-model="form.type" />
-          生活照
-        </label>
-        <label>
-          <input type="radio" name="type" value="2" v-model="form.type" />
-          校园照
-        </label>
+      <div class="form-group">
+        <label class="form-label">照片类型</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="type" value="1" v-model="form.type" />
+            <span>生活照</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="type" value="2" v-model="form.type" />
+            <span>校园照</span>
+          </label>
+        </div>
       </div>
 
-      <div style="margin-bottom: 10px">
-        <i class="am-icon-picture-o"></i>选择主图<span class="red-text">*</span>
-      </div>
+      <label class="form-label upload-label">选择主图<span class="required">*</span></label>
       <div class="main-upload-box">
         <input type="file" accept="image/*" class="hidden-file-input" @change="onMainImageChange" />
         <div v-if="!mainImageUrl" class="upload-plus">+</div>
         <img v-else :src="mainImageUrl" class="preview-img" alt="主图预览" />
       </div>
 
-      <br />
-
-      <div style="margin-bottom: 10px">
-        <i class="am-icon-picture-o"></i>选择副图(选填，可多选，最多三张)
-      </div>
+      <label class="form-label upload-label">选择副图（选填，最多三张）</label>
       <div class="sub-upload-list">
         <div v-for="(_, idx) in 3" :key="idx" class="sub-upload-box">
           <input type="file" accept="image/*" class="hidden-file-input" @change="onSubImageChange($event, idx)" />
@@ -156,39 +147,30 @@ const submit = async () => {
         </div>
       </div>
 
-      <br />
+      <button class="btn-clear" type="button" @click="clearImages">清空图片</button>
 
-      <button class="weui-btn weui-btn_default clear-button" type="button" @click="clearImages">
-        <i class="am-icon-trash"></i>清空图片
-      </button>
-
-      <div class="am-form-group" id="say-something">
-        <label>说点什么吧</label>
+      <div class="form-group" style="margin-top: var(--space-lg);">
+        <label class="form-label">说点什么吧</label>
         <textarea
-          class="am-form-field am-radius"
+          class="form-textarea"
           rows="4"
-          id="content"
           placeholder="选填，可以填写感慨/对大学的期待..."
           v-model="form.content"
         ></textarea>
-        <span id="word-count">{{ (form.content || '').length }}/150字</span>
+        <span class="word-count">{{ (form.content || '').length }}/150字</span>
       </div>
 
-      <br />
-
-      <button type="button" class="weui-btn weui-btn_primary submit-button" @click="submit">确认提交</button>
+      <button type="button" class="btn-submit" @click="submit">确认提交</button>
     </section>
 
-    <!-- WEUI 对话框 -->
+    <!-- 对话框 -->
     <div v-if="dialogVisible">
-      <div class="weui-mask" @click="dialogVisible = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd">
-          <strong class="weui-dialog__title">提示</strong>
-        </div>
-        <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-        <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
+      <div class="community-dialog">
+        <div class="community-dialog__title">提示</div>
+        <div class="community-dialog__body">{{ dialogMessage }}</div>
+        <div class="community-dialog__footer">
+          <a href="javascript:" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
         </div>
       </div>
     </div>
@@ -205,70 +187,62 @@ const submit = async () => {
 </template>
 
 <style scoped>
-.photograph-publish {
-  min-height: 100vh;
-  background: #f8f8f8;
+.publish-form {
+  padding: var(--space-xl);
 }
 
-/* 统一顶部导航栏 */
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #eee;
+.form-group {
+  margin-bottom: var(--space-lg);
 }
-.header-left {
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  min-width: 48px;
-  font-size: 24px;
-  font-weight: 300 !important;
-  color: #333;
-}
-.header-left i,
-.header-left svg,
-.header-left img {
-  font-size: 24px !important;
-  width: 24px !important;
-  height: 24px !important;
-  font-weight: 300 !important;
-  transform: scale(1.4);
-  transform-origin: center center;
-}
-.header-left svg {
-  stroke-width: 1 !important;
-}
-.header-title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
+
+.form-label {
+  display: block;
+  font-size: var(--font-md);
   font-weight: 500;
-  color: #333;
-}
-.header-right {
-  width: 48px;
-  text-align: center;
+  color: var(--c-text-1);
+  margin-bottom: var(--space-sm);
 }
 
-#upload {
-  padding: 20px;
+.upload-label {
+  margin-bottom: var(--space-md);
 }
 
-.am-form-group {
-  margin-bottom: 15px;
+.required {
+  color: #ef4444;
+  font-weight: bold;
+  margin-left: 2px;
 }
-.am-form-field {
+
+.form-input {
   width: 100%;
   box-sizing: border-box;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-base);
+  color: var(--c-text-1);
+  background: var(--c-card);
+  transition: border-color 0.2s;
 }
-.red-text {
-  color: red;
-  font-weight: bold;
+.form-input:focus {
+  outline: none;
+  border-color: var(--c-photograph);
+}
+
+.radio-group {
+  display: flex;
+  gap: var(--space-lg);
+}
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-base);
+  color: var(--c-text-2);
+  cursor: pointer;
+}
+.radio-item input[type="radio"] {
+  accent-color: var(--c-photograph);
 }
 
 .main-upload-box,
@@ -277,14 +251,15 @@ const submit = async () => {
   overflow: hidden;
 }
 .main-upload-box {
-  border: 2px dashed #4fc3f7;
-  border-radius: 4px;
+  border: 2px dashed var(--c-photograph);
+  border-radius: var(--radius-md);
   height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-lg);
   cursor: pointer;
+  transition: border-color 0.2s;
 }
 .hidden-file-input {
   position: absolute;
@@ -298,7 +273,7 @@ const submit = async () => {
 }
 .upload-plus {
   font-size: 40px;
-  color: #ccc;
+  color: var(--c-text-3);
   z-index: 1;
   pointer-events: none;
 }
@@ -313,18 +288,22 @@ const submit = async () => {
 
 .sub-upload-list {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
 }
 .sub-upload-box {
-  width: 31%;
+  flex: 1;
   aspect-ratio: 1 / 1;
-  border: 2px dashed #aed581;
-  border-radius: 4px;
+  border: 2px dashed var(--c-divider);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: border-color 0.2s;
+}
+.sub-upload-box:hover {
+  border-color: var(--c-photograph);
 }
 .sub-upload-box .upload-plus {
   font-size: 24px;
@@ -338,101 +317,60 @@ const submit = async () => {
   inset: 0;
 }
 
-.clear-button {
+.btn-clear {
   width: 100%;
-  background-color: #f5f5f5;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  font-size: 14px;
+  background-color: var(--c-bg);
+  color: var(--c-text-2);
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-base);
   cursor: pointer;
+  transition: background-color 0.2s;
 }
-.clear-button:hover {
-  background-color: #e8e8e8;
-}
-
-#say-something {
-  margin-top: 20px;
-}
-#word-count {
-  float: right;
-  font-size: 14px;
-  color: #777;
+.btn-clear:active {
+  background-color: var(--c-border);
 }
 
-.submit-button {
-  display: block;
-  margin: 0 auto;
+.form-textarea {
   width: 100%;
-  background-color: #27ae60;
+  box-sizing: border-box;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-base);
+  color: var(--c-text-1);
+  background: var(--c-card);
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--c-photograph);
+}
+
+.word-count {
+  float: right;
+  font-size: var(--font-sm);
+  color: var(--c-text-3);
+  margin-top: var(--space-xs);
+}
+
+.btn-submit {
+  display: block;
+  margin: var(--space-xl) auto 0;
+  width: 100%;
+  background-color: var(--c-photograph);
   color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 12px;
-  font-size: 16px;
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  font-size: var(--font-lg);
   font-weight: 500;
   cursor: pointer;
+  transition: opacity 0.2s;
 }
-.submit-button:hover {
-  background-color: #229954;
-}
-.submit-button:active {
-  background-color: #1e8449;
-}
-
-/* WEUI 对话框样式（简化版） */
-.weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-}
-.weui-dialog__hd {
-  padding: 1.2em 1.6em 0.5em;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-weight: 400;
-  font-size: 18px;
-}
-.weui-dialog__bd {
-  padding: 0 1.6em 0.8em;
-  min-height: 40px;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #999;
-  text-align: center;
-}
-.weui-dialog__ft {
-  position: relative;
-  line-height: 42px;
-  display: flex;
-  border-top: 1px solid #d5d5d6;
-}
-.weui-dialog__btn {
-  flex: 1;
-  text-align: center;
-  text-decoration: none;
-  color: #3cc51f;
-  font-size: 17px;
-}
-.weui-dialog__btn_primary {
-  color: #0bb20c;
+.btn-submit:active {
+  opacity: 0.85;
 }
 </style>
-

@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const scrollContainer = ref({ get scrollTop() { return window.pageYOffset || document.documentElement.scrollTop } })
@@ -80,23 +81,20 @@ onUnmounted(() => {
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
   >
-    <div class="topic-header unified-header">
-      <span class="topic-header__back" @click="router.push('/')">返回</span>
-      <h1 class="topic-header__title">话题</h1>
-      <span class="topic-header__placeholder"></span>
-    </div>
+    <CommunityHeader title="话题" moduleColor="#6366f1" />
 
-    <div class="pull-refresh-indicator" :style="{ height: pullY + 'px' }">
-      <span v-if="refreshing" class="pull-refresh-text"><i class="weui-loading"></i> 正在刷新...</span>
-      <span v-else-if="pullY > 50" class="pull-refresh-text">释放立即刷新</span>
-      <span v-else-if="pullY > 0" class="pull-refresh-text">下拉刷新</span>
+    <div class="community-pull-refresh" :style="{ height: pullY + 'px' }">
+      <span v-if="refreshing" class="community-pull-refresh__text"><i class="community-loading-spinner"></i> 正在刷新...</span>
+      <span v-else-if="pullY > 50" class="community-pull-refresh__text">释放立即刷新</span>
+      <span v-else-if="pullY > 0" class="community-pull-refresh__text">下拉刷新</span>
     </div>
 
     <div class="topic-list">
       <div
-        v-for="item in list"
+        v-for="(item, index) in list"
         :key="item.id"
         class="topic-card"
+        :style="{ animationDelay: (index * 0.05) + 's' }"
       >
         <!-- 卡片头部 -->
         <div class="topic-card__header">
@@ -140,44 +138,25 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div v-if="!loading && !refreshing && list.length === 0" class="topic-empty">暂无话题</div>
-    <div v-if="loading && !refreshing" class="topic-loadmore"><i class="weui-loading"></i> 正在加载</div>
-    <div v-if="finished && list.length > 0" class="topic-loadmore">没有更多了</div>
+    <div v-if="!loading && !refreshing && list.length === 0" class="community-empty">
+      <div class="community-empty__text">暂无话题</div>
+    </div>
+    <div v-if="loading && !refreshing" class="community-loadmore"><i class="community-loading-spinner"></i> 正在加载</div>
+    <div v-if="finished && list.length > 0" class="community-loadmore">没有更多了</div>
 
     <!-- 图片预览 Lightbox -->
-    <div v-if="previewVisible" class="topic-lightbox" @click="closeImagePreview">
-      <img :src="previewImage" class="topic-lightbox__img" />
+    <div v-if="previewVisible" class="community-lightbox" @click="closeImagePreview">
+      <img :src="previewImage" />
     </div>
   </div>
 </template>
 
 <style scoped>
 .topic-home {
-  background: #f5f5f5;
+  background: var(--c-bg);
   min-height: 100vh;
   padding-bottom: 60px;
 }
-
-.topic-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
-}
-.topic-header__back { color: #333; cursor: pointer; min-width: 48px; font-size: 14px; }
-.topic-header__title { flex: 1; text-align: center; font-size: 16px; font-weight: 500; margin: 0; color: #333; }
-.topic-header__placeholder { min-width: 48px; }
-
-.pull-refresh-indicator { display: flex; align-items: center; justify-content: center; overflow: hidden; transition: height 0.3s; }
-.pull-refresh-text { font-size: 14px; color: #999; }
-.pull-refresh-text .weui-loading {
-  width: 16px; height: 16px; border: 2px solid #e5e5e5; border-top-color: #10b981; border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
 
 .topic-list {
   padding: 15px;
@@ -187,10 +166,11 @@ onUnmounted(() => {
 }
 
 .topic-card {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--c-card);
+  border-radius: var(--radius-md);
   padding: 15px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  box-shadow: var(--shadow-sm);
+  animation: community-slide-up 0.3s ease both;
 }
 
 .topic-card__header {
@@ -209,30 +189,30 @@ onUnmounted(() => {
   flex: 1;
 }
 .topic-card__name {
-  font-size: 15px;
+  font-size: var(--font-md);
   font-weight: 600;
-  color: #333;
+  color: var(--c-text-1);
   margin-bottom: 4px;
 }
 .topic-card__time {
-  font-size: 12px;
-  color: #999;
+  font-size: var(--font-sm);
+  color: var(--c-text-3);
 }
 
 .topic-card__content {
   margin-bottom: 12px;
   line-height: 1.6;
-  font-size: 15px;
-  color: #333;
+  font-size: var(--font-md);
+  color: var(--c-text-1);
 }
 .topic-card__tag {
-  color: #10b981;
-  font-size: 16px;
+  color: var(--c-topic);
+  font-size: var(--font-lg);
   font-weight: 500;
   margin-right: 6px;
 }
 .topic-card__text {
-  color: #333;
+  color: var(--c-text-1);
 }
 
 .topic-card__images {
@@ -281,7 +261,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: flex-end;
   padding-top: 8px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--c-border);
 }
 .topic-like-btn {
   display: flex;
@@ -289,55 +269,22 @@ onUnmounted(() => {
   gap: 4px;
   background: none;
   border: none;
-  font-size: 14px;
-  color: #666;
+  font-size: var(--font-base);
+  color: var(--c-text-2);
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
   transition: all 0.2s;
 }
 .topic-like-btn__icon {
-  font-size: 18px;
+  font-size: var(--font-xl);
   transition: transform 0.2s;
 }
 .topic-like-btn.is-liked {
-  color: #10b981;
+  color: var(--c-topic);
 }
 .topic-like-btn.is-liked .topic-like-btn__icon {
   transform: scale(1.2);
-  animation: like-bounce 0.3s ease;
-}
-@keyframes like-bounce {
-  0%, 100% { transform: scale(1.2); }
-  50% { transform: scale(1.4); }
-}
-
-.topic-empty,
-.topic-loadmore {
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
-  font-size: 14px;
-}
-.topic-loadmore .weui-loading {
-  width: 16px; height: 16px; border: 2px solid #e5e5e5; border-top-color: #10b981; border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  display: inline-block; vertical-align: middle; margin-right: 6px;
-}
-
-.topic-lightbox {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.topic-lightbox__img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  animation: community-like-bounce 0.3s ease;
 }
 </style>

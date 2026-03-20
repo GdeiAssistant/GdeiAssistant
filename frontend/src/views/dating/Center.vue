@@ -2,6 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -182,12 +183,8 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="dating-center">
-    <div class="dating-header unified-header">
-      <span class="dating-header__back" @click="router.back()">返回</span>
-      <h1 class="dating-header__title">互动中心</h1>
-      <span class="dating-header__placeholder"></span>
-    </div>
+  <div class="community-page dating-center">
+    <CommunityHeader title="互动中心" moduleColor="#ec4899" backTo="/dating/home" />
 
     <!-- 顶部 Tabs -->
     <div class="dating-tabs">
@@ -213,13 +210,17 @@ watch(() => route.fullPath, () => {
 
     <!-- Tab 1: 收到的撩 -->
     <div v-if="activeTab === 0" class="dating-content">
-      <div v-if="loading" class="dating-loading">加载中...</div>
-      <div v-else-if="receivedList.length === 0" class="dating-empty">暂无收到的请求</div>
+      <div v-if="loading" class="community-loadmore"><i class="community-loading-spinner" style="--module-color: #ec4899"></i> 加载中</div>
+      <div v-else-if="receivedList.length === 0" class="community-empty">
+        <div class="community-empty__icon">💕</div>
+        <div class="community-empty__text">暂无收到的请求</div>
+      </div>
       <div v-else class="dating-list">
         <div
-          v-for="item in receivedList"
+          v-for="(item, index) in receivedList"
           :key="item.id"
-          class="dating-card"
+          class="community-card dating-card"
+          :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         >
           <div class="dating-card__header">
             <img :src="item.avatar || '/img/dating/default-avatar.png'" class="dating-card__avatar" />
@@ -245,13 +246,17 @@ watch(() => route.fullPath, () => {
 
     <!-- Tab 2: 我发出的 -->
     <div v-if="activeTab === 1" class="dating-content">
-      <div v-if="loading" class="dating-loading">加载中...</div>
-      <div v-else-if="sentList.length === 0" class="dating-empty">暂无发出的请求</div>
+      <div v-if="loading" class="community-loadmore"><i class="community-loading-spinner" style="--module-color: #ec4899"></i> 加载中</div>
+      <div v-else-if="sentList.length === 0" class="community-empty">
+        <div class="community-empty__icon">💕</div>
+        <div class="community-empty__text">暂无发出的请求</div>
+      </div>
       <div v-else class="dating-list">
         <div
-          v-for="item in sentList"
+          v-for="(item, index) in sentList"
           :key="item.id"
-          class="dating-card"
+          class="community-card dating-card"
+          :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         >
           <div class="dating-card__header">
             <img :src="item.targetAvatar || item.targetImage || '/img/dating/default-avatar.png'" class="dating-card__avatar" />
@@ -276,13 +281,17 @@ watch(() => route.fullPath, () => {
 
     <!-- Tab 3: 我的发布 -->
     <div v-if="activeTab === 2" class="dating-content">
-      <div v-if="loading" class="dating-loading">加载中...</div>
-      <div v-else-if="postsList.length === 0" class="dating-empty">暂无发布</div>
+      <div v-if="loading" class="community-loadmore"><i class="community-loading-spinner" style="--module-color: #ec4899"></i> 加载中</div>
+      <div v-else-if="postsList.length === 0" class="community-empty">
+        <div class="community-empty__icon">💕</div>
+        <div class="community-empty__text">暂无发布</div>
+      </div>
       <div v-else class="dating-list">
         <div
-          v-for="item in postsList"
+          v-for="(item, index) in postsList"
           :key="item.id"
-          :class="['dating-card', 'dating-card--post']"
+          class="community-card dating-card dating-card--post"
+          :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         >
           <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" class="dating-card__thumb" />
           <div class="dating-card__body">
@@ -295,23 +304,23 @@ watch(() => route.fullPath, () => {
     </div>
 
     <!-- 提示对话框 -->
-    <div v-if="dialogVisible" class="weui-mask" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="weui-dialog">
-      <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-      <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+    <div v-if="dialogVisible" class="community-dialog-mask" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="community-dialog" style="--module-color: #ec4899">
+      <div class="community-dialog__title">提示</div>
+      <div class="community-dialog__body">{{ dialogMessage }}</div>
+      <div class="community-dialog__footer">
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
       </div>
     </div>
 
     <!-- 隐藏确认对话框 -->
-    <div v-if="deleteDialogVisible" class="weui-mask" @click="deleteDialogVisible = false"></div>
-    <div v-if="deleteDialogVisible" class="weui-dialog">
-      <div class="weui-dialog__hd"><strong class="weui-dialog__title">确认隐藏</strong></div>
-      <div class="weui-dialog__bd">确定要隐藏这条发布吗？隐藏后他人将无法在卖室友大厅看到此内容。</div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_default" @click="deleteDialogVisible = false">取消</a>
-        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmDelete">确定</a>
+    <div v-if="deleteDialogVisible" class="community-dialog-mask" @click="deleteDialogVisible = false"></div>
+    <div v-if="deleteDialogVisible" class="community-dialog" style="--module-color: #ec4899">
+      <div class="community-dialog__title">确认隐藏</div>
+      <div class="community-dialog__body">确定要隐藏这条发布吗？隐藏后他人将无法在卖室友大厅看到此内容。</div>
+      <div class="community-dialog__footer">
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--cancel" @click="deleteDialogVisible = false">取消</a>
+        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="confirmDelete">确定</a>
       </div>
     </div>
   </div>
@@ -319,41 +328,28 @@ watch(() => route.fullPath, () => {
 
 <style scoped>
 .dating-center {
-  background: #eee;
+  background: var(--c-bg);
   min-height: 100vh;
-  padding-bottom: 20px;
+  padding-bottom: var(--space-lg);
 }
-
-.dating-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: linear-gradient(180deg, #78e2d1 0%, #6dcbbd 100%);
-  color: #fff;
-}
-.dating-header__back { color: #fff; cursor: pointer; min-width: 48px; font-size: 14px; }
-.dating-header__title { flex: 1; text-align: center; font-size: 16px; margin: 0; }
-.dating-header__placeholder { min-width: 48px; }
 
 .dating-tabs {
   display: flex;
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--c-card);
+  border-bottom: 1px solid var(--c-border);
 }
 .dating-tab {
   flex: 1;
   text-align: center;
-  padding: 12px 0;
-  font-size: 15px;
-  color: #666;
+  padding: var(--space-sm) 0;
+  font-size: var(--font-base);
+  color: var(--c-text-2);
   cursor: pointer;
   position: relative;
   transition: all 0.3s;
 }
 .dating-tab.active {
-  color: #6dcbbd;
+  color: var(--c-dating);
   font-weight: bold;
 }
 .dating-tab.active::after {
@@ -363,64 +359,54 @@ watch(() => route.fullPath, () => {
   left: 0;
   right: 0;
   height: 3px;
-  background: #78e2d1;
+  background: var(--c-dating);
 }
 
 .dating-content {
-  padding: 15px;
-}
-
-.dating-loading,
-.dating-empty {
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
-  font-size: 14px;
+  padding: var(--space-md);
 }
 
 .dating-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-sm);
 }
 
 .dating-card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: var(--space-md);
+  animation: community-slide-up 0.4s ease both;
 }
 
 .dating-card__header {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-sm);
   position: relative;
 }
 .dating-card__avatar {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   object-fit: cover;
-  margin-right: 12px;
+  margin-right: var(--space-sm);
 }
 .dating-card__info {
   flex: 1;
 }
 .dating-card__name {
-  font-size: 16px;
+  font-size: var(--font-md);
   font-weight: 500;
-  color: #333;
+  color: var(--c-text-1);
   margin-bottom: 4px;
 }
 .dating-card__time {
-  font-size: 12px;
-  color: #999;
+  font-size: var(--font-xs);
+  color: var(--c-text-3);
 }
 .dating-badge {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
+  padding: 4px var(--space-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--font-xs);
   font-weight: 500;
 }
 .dating-badge.status-pending {
@@ -437,26 +423,26 @@ watch(() => route.fullPath, () => {
 }
 
 .dating-card__message {
-  padding: 12px;
-  background: #f5f5f5;
-  border-radius: 6px;
-  font-size: 14px;
-  color: #666;
+  padding: var(--space-sm);
+  background: var(--c-bg);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+  color: var(--c-text-2);
   line-height: 1.6;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-sm);
 }
 
 .dating-card__actions {
   display: flex;
-  gap: 10px;
-  margin-top: 12px;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
 }
 .dating-btn {
   flex: 1;
-  padding: 10px 0;
+  padding: var(--space-sm) 0;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
   cursor: pointer;
   transition: opacity 0.3s;
 }
@@ -464,70 +450,70 @@ watch(() => route.fullPath, () => {
   opacity: 0.7;
 }
 .dating-btn--accept {
-  background: #6dcbbd;
+  background: var(--c-dating);
   color: #fff;
 }
 .dating-btn--reject {
-  background: #e0e0e0;
-  color: #666;
+  background: var(--c-border);
+  color: var(--c-text-2);
 }
 .dating-btn--hide {
   width: 100%;
-  padding: 10px 0;
-  background-color: #f8f8f8;
-  color: #666666;
-  border: 1px solid #e5e5e5;
-  border-radius: 6px;
-  font-size: 14px;
-  margin-top: 10px;
+  padding: var(--space-sm) 0;
+  background-color: var(--c-bg);
+  color: var(--c-text-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+  margin-top: var(--space-sm);
 }
 .dating-btn--hide:active {
-  background-color: #eeeeee;
+  background-color: var(--c-border);
 }
 
 .dating-card__status {
-  margin-top: 12px;
+  margin-top: var(--space-sm);
   text-align: center;
 }
 .status-text {
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 500;
 }
 .status-text.status-accepted {
-  color: #6dcbbd;
+  color: var(--c-dating);
 }
 .status-text.status-rejected {
-  color: #999;
+  color: var(--c-text-3);
 }
 
 .dating-card__contact {
-  margin-top: 12px;
-  padding: 12px;
-  background: #e8f5e9;
-  border-radius: 6px;
-  border-left: 3px solid #6dcbbd;
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  background: #fdf2f8;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--c-dating);
 }
 .contact-label {
-  font-size: 13px;
-  color: #666;
+  font-size: var(--font-xs);
+  color: var(--c-text-2);
   margin-bottom: 6px;
 }
 .contact-info {
-  font-size: 14px;
-  color: #6dcbbd;
+  font-size: var(--font-sm);
+  color: var(--c-dating);
   font-weight: 500;
   line-height: 1.8;
 }
 
 .dating-card--post {
   display: flex;
-  gap: 12px;
+  gap: var(--space-sm);
   align-items: center;
 }
 .dating-card__thumb {
   width: 80px;
   height: 80px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -539,57 +525,5 @@ watch(() => route.fullPath, () => {
 }
 .dating-card__body .dating-card__name {
   margin-bottom: 0;
-}
-
-.weui-mask {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__hd {
-  padding: 16px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-  line-height: 1.5;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #eee;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 14px;
-  text-align: center;
-  color: #6dcbbd;
-  text-decoration: none;
-}
-.weui-dialog__btn_default {
-  color: #999;
-}
-.weui-dialog__btn_primary {
-  font-weight: 500;
-  color: #6dcbbd;
 }
 </style>

@@ -1,0 +1,407 @@
+/* ============================================================
+   社区功能统一设计令牌 (Community Design Tokens)
+   仅作用于社区模块，不影响教务系统/主系统的 WeUI 样式
+   ============================================================ */
+
+:root {
+  /* 模块专属色 */
+  --c-ershou: #10b981;
+  --c-lostandfound: #3b82f6;
+  --c-secret: #8b5cf6;
+  --c-express: #f43f5e;
+  --c-topic: #6366f1;
+  --c-delivery: #f59e0b;
+  --c-dating: #ec4899;
+  --c-photograph: #06b6d4;
+
+  /* 中性色 */
+  --c-text-1: #1f2937;
+  --c-text-2: #4b5563;
+  --c-text-3: #9ca3af;
+  --c-bg: #f9fafb;
+  --c-card: #ffffff;
+  --c-border: #f3f4f6;
+  --c-divider: #e5e7eb;
+
+  /* 圆角 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* 间距 */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+
+  /* 字号 */
+  --font-xs: 11px;
+  --font-sm: 12px;
+  --font-base: 14px;
+  --font-md: 15px;
+  --font-lg: 16px;
+  --font-xl: 18px;
+  --font-2xl: 20px;
+}
+
+/* ============================================================
+   社区页面基础样式
+   ============================================================ */
+
+.community-page {
+  min-height: 100vh;
+  background-color: var(--c-bg);
+}
+
+.community-page *,
+.community-page *::before,
+.community-page *::after {
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   社区卡片
+   ============================================================ */
+
+.community-card {
+  background: var(--c-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.community-card:active {
+  transform: scale(0.985);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================================
+   图片网格
+   ============================================================ */
+
+.community-image-grid {
+  display: grid;
+  gap: 4px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.community-image-grid[data-count="1"] {
+  grid-template-columns: 1fr;
+  max-width: 70%;
+}
+
+.community-image-grid[data-count="2"] {
+  grid-template-columns: 1fr 1fr;
+}
+
+.community-image-grid[data-count="3"],
+.community-image-grid[data-count="4"],
+.community-image-grid[data-count="5"],
+.community-image-grid[data-count="6"],
+.community-image-grid[data-count="7"],
+.community-image-grid[data-count="8"],
+.community-image-grid[data-count="9"] {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.community-image-grid .grid-image-item {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+
+.community-image-grid[data-count="1"] .grid-image-item {
+  aspect-ratio: auto;
+}
+
+.community-image-grid .grid-image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.community-image-grid[data-count="1"] .grid-image-item img {
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+/* ============================================================
+   加载状态
+   ============================================================ */
+
+.community-loading-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--c-border);
+  border-top-color: var(--module-color, var(--c-topic));
+  border-radius: 50%;
+  animation: community-spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes community-spin {
+  to { transform: rotate(360deg); }
+}
+
+.community-loadmore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  gap: var(--space-sm);
+  color: var(--c-text-3);
+  font-size: var(--font-base);
+}
+
+/* ============================================================
+   下拉刷新
+   ============================================================ */
+
+.community-pull-refresh {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+.community-pull-refresh__text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-base);
+  color: var(--c-text-3);
+}
+
+/* ============================================================
+   空状态
+   ============================================================ */
+
+.community-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px var(--space-xl);
+  color: var(--c-text-3);
+}
+
+.community-empty__icon {
+  font-size: 48px;
+  margin-bottom: var(--space-lg);
+  opacity: 0.5;
+}
+
+.community-empty__text {
+  font-size: var(--font-md);
+  margin-bottom: var(--space-xl);
+}
+
+.community-empty__action {
+  padding: 8px 24px;
+  border-radius: var(--radius-full);
+  border: none;
+  font-size: var(--font-base);
+  font-weight: 500;
+  color: #fff;
+  background: var(--module-color, var(--c-topic));
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.community-empty__action:active {
+  opacity: 0.85;
+}
+
+/* ============================================================
+   对话框 (覆盖 WeUI Dialog 以匹配社区风格)
+   ============================================================ */
+
+.community-dialog-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  animation: community-fade-in 0.2s ease;
+}
+
+.community-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  max-width: 320px;
+  background: var(--c-card);
+  border-radius: var(--radius-lg);
+  z-index: 1001;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: community-scale-in 0.2s ease;
+}
+
+.community-dialog__title {
+  padding: 20px 20px 8px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--c-text-1);
+}
+
+.community-dialog__body {
+  padding: 8px 20px 20px;
+  text-align: center;
+  font-size: var(--font-md);
+  color: var(--c-text-2);
+  line-height: 1.5;
+}
+
+.community-dialog__footer {
+  display: flex;
+  border-top: 1px solid var(--c-border);
+}
+
+.community-dialog__btn {
+  flex: 1;
+  padding: 14px 0;
+  text-align: center;
+  font-size: var(--font-lg);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+  background: none;
+}
+
+.community-dialog__btn:active {
+  background: var(--c-bg);
+}
+
+.community-dialog__btn--cancel {
+  color: var(--c-text-2);
+  border-right: 1px solid var(--c-border);
+}
+
+.community-dialog__btn--confirm {
+  color: var(--module-color, var(--c-topic));
+  font-weight: 500;
+}
+
+/* ============================================================
+   图片预览
+   ============================================================ */
+
+.community-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: community-fade-in 0.2s ease;
+}
+
+.community-lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ============================================================
+   动画
+   ============================================================ */
+
+@keyframes community-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes community-scale-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes community-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes community-like-bounce {
+  0%, 100% { transform: scale(1.2); }
+  50% { transform: scale(1.5); }
+}
+
+/* ============================================================
+   骨架屏 (Skeleton Loading)
+   ============================================================ */
+
+.community-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: community-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+.community-skeleton--circle {
+  border-radius: 50%;
+}
+
+.community-skeleton--text {
+  height: 14px;
+  margin-bottom: 8px;
+}
+
+.community-skeleton--text:last-child {
+  width: 60%;
+}
+
+.community-skeleton--image {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes community-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ============================================================
+   图片懒加载淡入
+   ============================================================ */
+
+.community-img-lazy {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.community-img-lazy.loaded {
+  opacity: 1;
+}

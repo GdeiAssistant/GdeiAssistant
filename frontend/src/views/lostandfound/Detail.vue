@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -67,14 +68,10 @@ function copyText(text) {
 <template>
   <div class="lostandfound-detail">
     <!-- 统一顶部导航栏 -->
-    <div class="unified-header">
-      <span class="unified-header__back" @click="router.back()">返回</span>
-      <h1 class="unified-header__title">详情</h1>
-      <span class="unified-header__placeholder"></span>
-    </div>
+    <CommunityHeader title="详情" moduleColor="#3b82f6" @back="router.back()" backTo="" />
 
     <div v-if="loading" class="lostandfound-detail-loading">
-      <div class="weui-loading"></div>
+      <span class="community-loading-spinner" style="--module-color: #3b82f6"></span>
       <p>加载中</p>
     </div>
 
@@ -93,13 +90,13 @@ function copyText(text) {
       </div>
 
       <!-- 基本信息 -->
-      <div class="detail-info">
+      <div class="detail-info community-card">
         <h5 class="detail-title">{{ detail.title }}</h5>
         <p class="detail-time">发布时间：<b>{{ detail.time }}</b></p>
       </div>
 
-      <!-- 地点信息：参考原版 ItemDetail.jsp 的 .site 结构 -->
-      <p class="detail-site">
+      <!-- 地点信息 -->
+      <p class="detail-site community-card">
         <span>
           <i class="i isite"></i>
           {{ detail.type === 0 ? '丢失地点' : '捡到地点' }}：
@@ -107,8 +104,8 @@ function copyText(text) {
         {{ detail.location }}
       </p>
 
-      <!-- 发布者信息：参考原版 .userinfo .user 结构 -->
-      <div class="detail-userinfo">
+      <!-- 发布者信息 -->
+      <div class="detail-userinfo community-card">
         <a class="user" href="javascript:;">
           <i class="avt">
             <img :src="detail.seller?.avatar || '/img/avatar/default.png'" alt="头像" />
@@ -117,14 +114,14 @@ function copyText(text) {
         </a>
       </div>
 
-      <!-- 物品描述：参考原版 .userinfo .info 结构 -->
-      <div class="detail-desc">
+      <!-- 物品描述 -->
+      <div class="detail-desc community-card">
         <i class="i iinfo"></i>
         <p class="w">物品描述：{{ detail.desc }}</p>
       </div>
 
-      <!-- 联系方式：参考原版 .userinfo .contact 结构 -->
-      <div class="detail-contact">
+      <!-- 联系方式 -->
+      <div class="detail-contact community-card">
         <i class="i icontact"></i>
         <span>联系方式：</span>
         <div v-if="detail.contact?.qq" class="contact-item">
@@ -148,34 +145,7 @@ function copyText(text) {
 <style scoped>
 .lostandfound-detail {
   min-height: 100vh;
-  background: #f5f5f5;
-}
-
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.unified-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-}
-.unified-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.unified-header__placeholder {
-  min-width: 48px;
+  background: var(--c-bg);
 }
 
 .lostandfound-detail-loading {
@@ -184,23 +154,12 @@ function copyText(text) {
   align-items: center;
   justify-content: center;
   padding: 60px 20px;
-  color: #999;
-}
-.weui-loading {
-  width: 24px;
-  height: 24px;
-  border: 2px solid #e5e5e5;
-  border-top-color: #3cb395;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
+  color: var(--c-text-3);
 }
 
 .detail-slider {
   width: 100%;
-  background: #fff;
+  background: var(--c-card);
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -216,34 +175,35 @@ function copyText(text) {
 }
 
 .detail-info {
-  background: #fff;
   padding: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--c-border);
+  border-radius: 0;
+  margin: 0;
 }
 .detail-title {
   font-size: 18px;
   font-weight: 500;
-  color: #333;
+  color: var(--c-text-1);
   margin: 0 0 10px 0;
   padding: 0;
 }
 .detail-time {
   font-size: 13px;
-  color: #999;
+  color: var(--c-text-3);
   margin: 0;
   padding: 0;
 }
 
-/* 地点信息：参考原版 ershou-base.css .detail .site */
+/* 地点信息 */
 .detail-site {
-  background: #fff;
   padding: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--c-border);
   font-size: 14px;
-  color: #666;
+  color: var(--c-text-2);
   margin: 0;
   display: flex;
   align-items: center;
+  border-radius: 0;
 }
 .detail-site .i {
   display: inline-block;
@@ -259,18 +219,18 @@ function copyText(text) {
   vertical-align: middle;
 }
 
-/* 发布者信息：参考原版 ershou-base.css .userinfo .user */
+/* 发布者信息 */
 .detail-userinfo {
-  background: #fff;
   padding: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--c-border);
+  border-radius: 0;
 }
 .detail-userinfo .user {
   display: flex;
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: #333;
+  color: var(--c-text-1);
 }
 .detail-userinfo .avt {
   width: 40px;
@@ -287,20 +247,20 @@ function copyText(text) {
 }
 .detail-userinfo .nm {
   font-size: 14px;
-  color: #333;
+  color: var(--c-text-1);
 }
 
-/* 物品描述：参考原版 ershou-base.css .userinfo .info */
+/* 物品描述 */
 .detail-desc {
   position: relative;
-  background: #fff;
   padding: 15px 15px 15px 50px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--c-border);
   font-size: 14px;
-  color: #666;
+  color: var(--c-text-2);
   min-height: 50px;
   display: flex;
   align-items: center;
+  border-radius: 0;
 }
 .detail-desc .i {
   display: inline-block;
@@ -324,14 +284,14 @@ function copyText(text) {
   line-height: 1.6;
 }
 
-/* 联系方式：参考原版 ershou-base.css .userinfo .contact */
+/* 联系方式 */
 .detail-contact {
   position: relative;
-  background: #fff;
   padding: 15px 15px 15px 50px;
   font-size: 14px;
-  color: #666;
+  color: var(--c-text-2);
   min-height: 50px;
+  border-radius: 0;
 }
 .detail-contact .i {
   display: inline-block;
@@ -359,7 +319,7 @@ function copyText(text) {
   align-items: center;
   justify-content: space-between;
   padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--c-border);
 }
 .contact-item:last-child {
   border-bottom: none;
@@ -368,10 +328,10 @@ function copyText(text) {
 .contact-item a {
   padding: 4px 12px;
   font-size: 13px;
-  color: #3cb395;
+  color: #3b82f6;
   background: transparent;
-  border: 1px solid #3cb395;
-  border-radius: 4px;
+  border: 1px solid #3b82f6;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   text-decoration: none;
 }

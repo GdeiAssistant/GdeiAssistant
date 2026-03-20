@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
 const secretList = ref([])
@@ -29,37 +30,30 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="secret-profile">
-    <!-- 顶部标题行：左侧返回 + 中间标题 -->
-    <div class="custom-secret-header">
-      <div class="header-left" @click="goBack">
-        <i class="weui-icon-back"></i>
-      </div>
-
-      <div class="header-center">
-        <!-- 如需铃铛图标，可启用下行 -->
-        <!-- <img src="/img/secret/msg.png" class="bell-icon" alt="bell" /> -->
-        <span>我的树洞</span>
-      </div>
-
-      <div class="header-right"></div>
-    </div>
+  <div class="community-page secret-profile" style="--module-color: #8b5cf6">
+    <CommunityHeader title="我的树洞" moduleColor="#8b5cf6" backTo="/secret/home" />
 
     <div v-if="loading" class="loading">
-      <i class="weui-loading"></i>
+      <i class="community-loading-spinner"></i>
       <span>加载中...</span>
     </div>
 
     <!-- 发布的树洞消息列表：参考原版 secretProfile.jsp -->
     <div v-else class="msg-list">
-      <div v-for="secret in secretList" :key="secret.id" class="msg">
+      <div
+        v-for="(secret, index) in secretList"
+        :key="secret.id"
+        class="msg community-card"
+        :style="{ animationDelay: index * 0.05 + 's' }"
+      >
         <a href="javascript:;" @click.prevent="router.push(`/secret/detail/${secret.id}`)">
           <p>{{ secret.type === 0 ? secret.content : '语音消息' }}</p>
         </a>
         <i class="toggle"></i>
       </div>
-      <div v-if="secretList.length === 0" class="empty">
-        <p>暂无发布的树洞</p>
+      <div v-if="secretList.length === 0" class="community-empty">
+        <div class="community-empty__icon">📭</div>
+        <p class="community-empty__text">暂无发布的树洞</p>
       </div>
     </div>
   </div>
@@ -68,63 +62,7 @@ onMounted(() => {
 <style scoped>
 .secret-profile {
   min-height: 100vh;
-  background: #ececec;
-}
-
-/* 顶部标题行（三段式 Flex 布局） */
-.custom-secret-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 15px;
-  background-color: #fff;
-  border-bottom: 1px solid #f0f0f0;
-}
-.custom-secret-header .header-left {
-  width: 40px;
-  cursor: pointer;
-  color: #333;
-  display: flex;
-  align-items: center;
-}
-.custom-secret-header .header-center {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  font-weight: bold;
-  color: #3b3f5c;
-}
-.custom-secret-header .header-center i,
-.custom-secret-header .header-center img,
-.custom-secret-header .header-center svg {
-  width: 20px;
-  height: 20px;
-  margin-right: 6px;
-}
-.custom-secret-header .header-right {
-  width: 40px;
-}
-
-.notice {
-  padding: 15px;
-  background: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  border-bottom: 1px solid #e5e5e5;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.inotice {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-image: url(/img/secret/msg.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background: var(--c-bg);
 }
 
 .loading {
@@ -133,41 +71,33 @@ onMounted(() => {
   justify-content: center;
   padding: 60px 20px;
   gap: 10px;
-  color: #999;
-}
-.loading .weui-loading {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #e5e5e5;
-  border-top-color: #3cb395;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
+  color: var(--c-text-3);
 }
 
 .msg-list {
-  padding: 10px;
+  padding: var(--space-sm);
 }
 .msg {
-  background: #fff;
-  margin-bottom: 10px;
-  padding: 15px;
-  border-radius: 8px;
+  background: var(--c-card);
+  margin-bottom: var(--space-sm);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--c-secret);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: 80px;
+  animation: community-slide-up 0.3s ease both;
 }
 .msg a {
   flex: 1;
   text-decoration: none;
-  color: #333;
+  color: var(--c-text-1);
 }
 .msg p {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--font-base);
   line-height: 1.5;
   display: flex;
   align-items: center;
@@ -178,16 +108,9 @@ onMounted(() => {
   width: 10px;
   height: 10px;
   margin-left: 12px;
-  border-top: 2px solid #b8bcc6;
-  border-right: 2px solid #b8bcc6;
+  border-top: 2px solid var(--c-text-3);
+  border-right: 2px solid var(--c-text-3);
   transform: rotate(45deg);
   opacity: 0.8;
-}
-
-.empty {
-  text-align: center;
-  padding: 60px 20px;
-  color: #999;
-  font-size: 14px;
 }
 </style>

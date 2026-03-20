@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
+import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -227,13 +228,18 @@ onMounted(() => {
 
 <template>
   <div class="lostandfound-publish">
-    <div class="unified-header">
-      <span class="unified-header__back" @click="goBack">返回</span>
-      <h1 class="unified-header__title">{{ isEditMode ? '编辑信息' : '发布信息' }}</h1>
-      <a href="javascript:;" class="unified-header__submit" @click.prevent="submit">
-        {{ submitting ? '提交中' : (isEditMode ? '保存' : '完成') }}
-      </a>
-    </div>
+    <CommunityHeader
+      :title="isEditMode ? '编辑信息' : '发布信息'"
+      moduleColor="#3b82f6"
+      @back="goBack()"
+      backTo=""
+    >
+      <template #right>
+        <a href="javascript:;" class="publish-submit-btn" @click.prevent="submit">
+          {{ submitting ? '提交中' : (isEditMode ? '保存' : '完成') }}
+        </a>
+      </template>
+    </CommunityHeader>
 
     <div class="publish-form">
       <p v-if="pageLoading" class="page-loading">正在加载信息...</p>
@@ -325,27 +331,27 @@ onMounted(() => {
     </div>
 
     <div v-if="dialogVisible">
-      <div class="weui-mask" @click="dialogVisible = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-        <div class="weui-dialog__bd">{{ dialogMessage }}</div>
-        <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialogVisible = false">确定</a>
+      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
+      <div class="community-dialog" style="--module-color: #3b82f6">
+        <div class="community-dialog__title">提示</div>
+        <div class="community-dialog__body">{{ dialogMessage }}</div>
+        <div class="community-dialog__footer">
+          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
 
     <div v-if="itemTypePickerVisible">
-      <div class="weui-mask" @click="closeItemTypePicker"></div>
-      <div class="weui-dialog weui-dialog--list">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">选择物品分类</strong></div>
-        <div class="weui-dialog__bd weui-dialog__bd--scroll">
-          <div v-for="(label, index) in itemTypeNames" :key="label" class="weui-dialog__item" @click="selectItemType(index)">
+      <div class="community-dialog-mask" @click="closeItemTypePicker"></div>
+      <div class="community-dialog community-dialog--list" style="--module-color: #3b82f6">
+        <div class="community-dialog__title">选择物品分类</div>
+        <div class="community-dialog__body community-dialog__body--scroll">
+          <div v-for="(label, index) in itemTypeNames" :key="label" class="community-dialog__item" @click="selectItemType(index)">
             {{ label }}
           </div>
         </div>
-        <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="closeItemTypePicker">取消</a>
+        <div class="community-dialog__footer">
+          <button class="community-dialog__btn community-dialog__btn--cancel" @click="closeItemTypePicker">取消</button>
         </div>
       </div>
     </div>
@@ -355,49 +361,24 @@ onMounted(() => {
 <style scoped>
 .lostandfound-publish {
   min-height: 100vh;
-  background: #e3eeec;
+  background: var(--c-bg);
 }
 
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #eee;
-}
-.unified-header__back {
+.publish-submit-btn {
   font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-}
-.unified-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.unified-header__submit {
-  font-size: 14px;
-  color: #3cb395;
+  color: #3b82f6;
   text-decoration: none;
-  min-width: 48px;
-  text-align: right;
+  font-weight: 500;
 }
 
 .publish-form {
   padding: 0;
-  background: #e3eeec;
 }
 
 .page-loading {
   margin: 16px 0 0;
   text-align: center;
-  color: #999;
+  color: var(--c-text-3);
   font-size: 14px;
 }
 
@@ -405,16 +386,16 @@ onMounted(() => {
   position: relative;
   padding-left: 90px;
   font-size: 16px;
-  border-bottom: 2px solid #3cc2a5;
+  border-bottom: 1px solid var(--c-divider);
   min-height: 70px;
-  background: #fff;
+  background: var(--c-card);
   margin: 0 10px;
   border-radius: 0;
 }
 .form-frmt {
   position: absolute;
   left: 0;
-  color: #202020;
+  color: var(--c-text-1);
   height: 70px;
   line-height: 70px;
   padding-left: 15px;
@@ -424,7 +405,7 @@ onMounted(() => {
   padding-top: 18px;
 }
 .form-frmc input {
-  color: #202020;
+  color: var(--c-text-1);
   background: none;
   height: 34px;
   line-height: 34px;
@@ -442,7 +423,7 @@ onMounted(() => {
   padding-top: 0;
 }
 .select-value {
-  color: #202020;
+  color: var(--c-text-1);
   font-size: 16px;
 }
 .select-arrow {
@@ -482,8 +463,8 @@ onMounted(() => {
 }
 
 .picture-section {
-  background: #3cc2a5;
-  border-top: 1px solid #39b89d;
+  background: #3b82f6;
+  border-top: 1px solid #2563eb;
   margin-top: 20px;
 }
 .picture-images {
@@ -570,79 +551,23 @@ onMounted(() => {
   padding-bottom: 3px;
 }
 
-.weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #fff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog--list {
+/* Dialog overrides for picker list */
+.community-dialog--list {
   max-width: 320px;
 }
-.weui-dialog__hd {
-  padding: 20px 20px 10px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  font-weight: 500;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-.weui-dialog__bd--scroll {
+.community-dialog__body--scroll {
   max-height: 280px;
   overflow-y: auto;
   padding: 0;
+  text-align: left;
 }
-.weui-dialog__item {
+.community-dialog__item {
   padding: 14px 20px;
-  border-top: 1px solid #f0f0f0;
-  color: #333;
+  border-top: 1px solid var(--c-border);
+  color: var(--c-text-1);
   cursor: pointer;
 }
-.weui-dialog__item:first-child {
+.community-dialog__item:first-child {
   border-top: none;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #d9d9d9;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 15px 0;
-  text-align: center;
-  font-size: 17px;
-  color: #3cc395;
-  text-decoration: none;
-  border-right: 1px solid #d9d9d9;
-}
-.weui-dialog__btn:last-child {
-  border-right: none;
-}
-.weui-dialog__btn_primary {
-  color: #3cc395;
-  font-weight: 500;
 }
 </style>

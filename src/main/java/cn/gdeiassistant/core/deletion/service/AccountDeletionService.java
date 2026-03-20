@@ -11,8 +11,8 @@ import cn.gdeiassistant.core.delivery.mapper.DeliveryMapper;
 import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryOrderEntity;
 import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryTradeEntity;
 import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
-import cn.gdeiassistant.core.secondhand.mapper.SecondhandMapper;
-import cn.gdeiassistant.core.secondhand.pojo.entity.SecondhandItemEntity;
+import cn.gdeiassistant.core.marketplace.mapper.MarketplaceMapper;
+import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.lostandfound.mapper.LostAndFoundMapper;
 import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundItemEntity;
 import cn.gdeiassistant.core.phone.mapper.PhoneMapper;
@@ -51,7 +51,7 @@ public class AccountDeletionService {
     private UserMapper userMapper;
 
     @Autowired
-    private SecondhandMapper secondhandMapper;
+    private MarketplaceMapper marketplaceMapper;
 
     @Autowired
     private LostAndFoundMapper lostAndFoundMapper;
@@ -79,11 +79,11 @@ public class AccountDeletionService {
      */
     @Transactional("appTranscationManager")
     public void CloseSocialDataState(String username) throws Exception {
-        List<SecondhandItemEntity> secondhandItemList = secondhandMapper
+        List<MarketplaceItemEntity> secondhandItemList = marketplaceMapper
                 .selectItemsByUsername(username);
-        for (SecondhandItemEntity secondhandItem : secondhandItemList) {
+        for (MarketplaceItemEntity secondhandItem : secondhandItemList) {
             if (secondhandItem.getState().equals(1)) {
-                secondhandMapper.updateItemState(secondhandItem.getId(), 3);
+                marketplaceMapper.updateItemState(secondhandItem.getId(), 3);
             }
         }
         List<LostAndFoundItemEntity> lostAndFoundItemList = lostAndFoundMapper
@@ -129,9 +129,9 @@ public class AccountDeletionService {
             throw new PasswordIncorrectException("用户账号密码不匹配");
         }
         //检查有无待处理的社区功能信息
-        List<SecondhandItemEntity> secondhandItemList = secondhandMapper
+        List<MarketplaceItemEntity> secondhandItemList = marketplaceMapper
                 .selectItemsByUsername(user.getUsername());
-        for (SecondhandItemEntity secondhandItem : secondhandItemList) {
+        for (MarketplaceItemEntity secondhandItem : secondhandItemList) {
             if (secondhandItem.getState().equals(1)) {
                 map.put("二手交易平台存在未交易完成的物品", "请下架或确认出售账号下的所有二手交易物品");
             }

@@ -39,8 +39,8 @@ const CardList = lazyView('card/CardList')
 const CardInfo = lazyView('card/CardInfo')
 const Evaluate = lazyView('evaluate/Evaluate')
 const Spare = lazyView('spare/Spare')
-const KaoyanSearch = lazyView('kaoyan/KaoyanSearch')
-const KaoyanResult = lazyView('kaoyan/KaoyanResult')
+const KaoyanSearch = lazyView('graduateExam/GraduateExamSearch')
+const KaoyanResult = lazyView('graduateExam/GraduateExamResult')
 const PeIndex = lazyView('pe/PeIndex')
 const NewsList = lazyView('news/NewsList')
 const NewsDetail = lazyView('news/NewsDetail')
@@ -67,13 +67,13 @@ const CookiePolicy = lazyView('about/CookiePolicy')
 const SocialPolicy = lazyView('about/SocialPolicy')
 const License = lazyView('about/License')
 const IntellectualProperty = lazyView('about/IntellectualProperty')
-const ErshouIndex = lazyView('ershou/Index')
-const ErshouHome = lazyView('ershou/Home')
-const ErshouPublish = lazyView('ershou/Publish')
-const ErshouProfile = lazyView('ershou/Profile')
-const ErshouDetail = lazyView('ershou/Detail')
-const ErshouType = lazyView('ershou/Type')
-const ErshouSearch = lazyView('ershou/Search')
+const ErshouIndex = lazyView('marketplace/Index')
+const ErshouHome = lazyView('marketplace/Home')
+const ErshouPublish = lazyView('marketplace/Publish')
+const ErshouProfile = lazyView('marketplace/Profile')
+const ErshouDetail = lazyView('marketplace/Detail')
+const ErshouType = lazyView('marketplace/Type')
+const ErshouSearch = lazyView('marketplace/Search')
 const LostAndFoundIndex = lazyView('lostandfound/Index')
 const LostAndFoundHome = lazyView('lostandfound/Home')
 const LostAndFoundPublish = lazyView('lostandfound/Publish')
@@ -343,24 +343,24 @@ const routes = [
   },
   // 二手模块：详情、分类、搜索使用独立路由
   {
-    path: '/ershou/detail/:id',
+    path: '/marketplace/detail/:id',
     name: 'ErshouDetail',
     component: ErshouDetail
   },
   {
-    path: '/ershou/type',
+    path: '/marketplace/type',
     name: 'ErshouType',
     component: ErshouType
   },
   {
-    path: '/ershou/search',
+    path: '/marketplace/search',
     name: 'ErshouSearch',
     component: ErshouSearch
   },
   {
     path: '/ershou',
     component: ErshouIndex,
-    redirect: '/ershou/home',
+    redirect: '/marketplace/home',
     children: [
       { path: 'home', name: 'ErshouHome', component: ErshouHome },
       { path: 'publish', name: 'ErshouPublish', component: ErshouPublish },

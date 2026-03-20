@@ -282,7 +282,7 @@ const updateMajorListByFaculty = () => {
 // 年份列表
 const yearList = ref([])
 
-// 所在地/家乡：使用后端 GET /api/locationList 返回的代码树（value=code，label=中文名）
+// 所在地/家乡：使用后端 GET /api/profile/locations 返回的代码树（value=code，label=中文名）
 const locationListTree = ref([])
 const locationFlatOptions = ref([])
 const locationFlatMap = ref({})

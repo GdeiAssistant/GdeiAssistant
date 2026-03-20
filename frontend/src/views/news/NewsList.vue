@@ -100,7 +100,7 @@ function loadNews() {
   const start = (page.value - 1) * PAGE_SIZE
   const type = activeType.value
   request
-    .get(`/news/type/${type}/start/${start}/size/${PAGE_SIZE}`)
+    .get(`/information/news/type/${type}/start/${start}/size/${PAGE_SIZE}`)
     .then((res) => {
       const list = res?.data ?? []
       const mapped = list.map((item) => ({

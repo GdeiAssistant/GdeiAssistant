@@ -72,9 +72,9 @@ export function updateNickname(data) {
 
 /**
  * 获取地区字典树（后端代码，用于所在地/家乡选择器）
- * GET /api/locationList
+ * GET /api/profile/locations
  * @returns {Promise<{ success, data: Array<{ code, name, stateMap: Object }> }>}
  */
 export function getLocationList() {
-  return request.get('/locationList')
+  return request.get('/profile/locations')
 }

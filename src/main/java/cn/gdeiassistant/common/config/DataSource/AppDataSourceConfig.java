@@ -21,7 +21,7 @@ import java.io.IOException;
         "cn.gdeiassistant.core.cetquery.mapper",
         "cn.gdeiassistant.core.cron.mapper",
         "cn.gdeiassistant.core.data.mapper",
-        "cn.gdeiassistant.core.roommate.mapper",
+        "cn.gdeiassistant.core.dating.mapper",
         "cn.gdeiassistant.core.delivery.mapper",
         "cn.gdeiassistant.core.email.mapper",
         "cn.gdeiassistant.core.message.mapper",

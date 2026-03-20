@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.postgraduate.pojo;
+package cn.gdeiassistant.core.kaoyanquery.pojo;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;

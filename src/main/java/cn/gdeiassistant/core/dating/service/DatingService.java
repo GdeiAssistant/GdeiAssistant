@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.roommate.service;
+package cn.gdeiassistant.core.dating.service;
 
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.exception.DatabaseException.NoAccessException;
@@ -6,14 +6,14 @@ import cn.gdeiassistant.common.exception.DatingException.RepeatPickException;
 import cn.gdeiassistant.common.exception.DatingException.SelfPickException;
 import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
-import cn.gdeiassistant.core.roommate.mapper.RoommateMapper;
+import cn.gdeiassistant.core.dating.mapper.DatingMapper;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
-import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePickSubmitDTO;
-import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePublishDTO;
-import cn.gdeiassistant.core.roommate.pojo.entity.RoommatePickEntity;
-import cn.gdeiassistant.core.roommate.pojo.entity.RoommateProfileEntity;
-import cn.gdeiassistant.core.roommate.pojo.vo.RoommatePickVO;
-import cn.gdeiassistant.core.roommate.pojo.vo.RoommateProfileVO;
+import cn.gdeiassistant.core.dating.pojo.dto.DatingPickSubmitDTO;
+import cn.gdeiassistant.core.dating.pojo.dto.DatingPublishDTO;
+import cn.gdeiassistant.core.dating.pojo.entity.DatingPickEntity;
+import cn.gdeiassistant.core.dating.pojo.entity.DatingProfileEntity;
+import cn.gdeiassistant.core.dating.pojo.vo.DatingPickVO;
+import cn.gdeiassistant.core.dating.pojo.vo.DatingProfileVO;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +31,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
-public class RoommateService {
+public class DatingService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RoommateService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DatingService.class);
     @Autowired
     private UserCertificateService userCertificateService;
 
-    @Resource(name = "roommateMapper")
-    private RoommateMapper roommateMapper;
+    @Resource(name = "datingMapper")
+    private DatingMapper datingMapper;
 
     @Autowired
     private R2StorageService r2StorageService;
@@ -46,58 +46,58 @@ public class RoommateService {
     @Autowired
     private InteractionNotificationService interactionNotificationService;
 
-    public RoommateProfileVO queryRoommateProfile(Integer id) throws DataNotExistException {
-        RoommateProfileEntity entity = roommateMapper.selectRoommateProfileById(id);
+    public DatingProfileVO queryDatingProfile(Integer id) throws DataNotExistException {
+        DatingProfileEntity entity = datingMapper.selectDatingProfileById(id);
         if (entity == null) throw new DataNotExistException("该卖室友信息不存在");
         return profileEntityToVO(entity);
     }
 
-    public List<RoommateProfileVO> queryRoommateProfile(Integer start, Integer size, Integer area) {
-        List<RoommateProfileEntity> list = roommateMapper.selectRoommateProfilePage(start, size, area);
+    public List<DatingProfileVO> queryDatingProfile(Integer start, Integer size, Integer area) {
+        List<DatingProfileEntity> list = datingMapper.selectDatingProfilePage(start, size, area);
         if (list == null) return new ArrayList<>();
         return list.stream().map(e -> {
-            RoommateProfileVO vo = profileEntityToVO(e);
+            DatingProfileVO vo = profileEntityToVO(e);
             vo.setQq("请进入详情页查看");
             vo.setWechat("请进入详情页查看");
             return vo;
         }).collect(Collectors.toList());
     }
 
-    public List<RoommateProfileVO> queryMyRoommateProfiles(String sessionId) {
+    public List<DatingProfileVO> queryMyRoommateProfiles(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<RoommateProfileEntity> list = roommateMapper.selectRoommateProfileByUsername(user.getUsername());
+        List<DatingProfileEntity> list = datingMapper.selectDatingProfileByUsername(user.getUsername());
         if (list == null) return new ArrayList<>();
         return list.stream().map(e -> {
-            RoommateProfileVO vo = profileEntityToVO(e);
+            DatingProfileVO vo = profileEntityToVO(e);
             vo.setPictureURL(getRoommateProfilePictureURL(e.getProfileId()));
             return vo;
         }).collect(Collectors.toList());
     }
 
-    public void updateRoommateProfile(RoommatePublishDTO dto, Integer profileId) {
-        RoommateProfileEntity entity = roommateMapper.selectRoommateProfileById(profileId);
+    public void updateRoommateProfile(DatingPublishDTO dto, Integer profileId) {
+        DatingProfileEntity entity = datingMapper.selectDatingProfileById(profileId);
         if (entity == null) return;
         dtoToProfileEntity(dto, entity);
-        roommateMapper.updateRoommateProfile(entity);
+        datingMapper.updateRoommateProfile(entity);
     }
 
     public void updateRoommateProfileState(Integer id, Integer state) {
-        roommateMapper.updateRoommateProfileState(id, state);
+        datingMapper.updateRoommateProfileState(id, state);
     }
 
     public void verifyRoommateProfileOwner(String sessionId, Integer profileId) throws DataNotExistException, NoAccessException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        RoommateProfileEntity profile = roommateMapper.selectRoommateProfileById(profileId);
+        DatingProfileEntity profile = datingMapper.selectDatingProfileById(profileId);
         if (profile == null) throw new DataNotExistException("该卖室友信息不存在");
         if (!user.getUsername().equals(profile.getUsername())) throw new NoAccessException("无权限操作");
     }
 
-    public Integer addRoommateProfile(String sessionId, RoommatePublishDTO dto) {
+    public Integer addRoommateProfile(String sessionId, DatingPublishDTO dto) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        RoommateProfileEntity entity = new RoommateProfileEntity();
+        DatingProfileEntity entity = new DatingProfileEntity();
         entity.setUsername(user.getUsername());
         dtoToProfileEntity(dto, entity);
-        roommateMapper.insertRoommateProfile(entity);
+        datingMapper.insertRoommateProfile(entity);
         return entity.getProfileId();
     }
 
@@ -114,15 +114,15 @@ public class RoommateService {
         r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "dating/" + id + ".jpg");
     }
 
-    public RoommatePickVO queryRoommatePick(Integer profileId, String sessionId) {
+    public DatingPickVO queryRoommatePick(Integer profileId, String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        RoommatePickEntity entity = roommateMapper.selectRoommatePick(profileId, user.getUsername());
+        DatingPickEntity entity = datingMapper.selectDatingPick(profileId, user.getUsername());
         return entity == null ? null : pickEntityToVO(entity);
     }
 
     public boolean checkIsPickPageHidden(String sessionId, int pickId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        RoommatePickEntity entity = queryRoommatePickById(pickId);
+        DatingPickEntity entity = queryRoommatePickById(pickId);
         if (entity != null) {
             if (Integer.valueOf(1).equals(entity.getState())) return true;
             return entity.getUsername().equals(user.getUsername());
@@ -130,13 +130,13 @@ public class RoommateService {
         return false;
     }
 
-    public RoommatePickEntity queryRoommatePickById(int id) {
-        return roommateMapper.selectRoommatePickById(id);
+    public DatingPickEntity queryRoommatePickById(int id) {
+        return datingMapper.selectDatingPickById(id);
     }
 
     /** 按 ID 查询撩一下记录并转为 VO（供 Controller 详情页使用） */
-    public RoommatePickVO getRoommatePickDetailVo(int id) {
-        RoommatePickEntity e = roommateMapper.selectRoommatePickById(id);
+    public DatingPickVO getRoommatePickDetailVo(int id) {
+        DatingPickEntity e = datingMapper.selectDatingPickById(id);
         return e == null ? null : pickEntityToVO(e);
     }
 
@@ -144,17 +144,17 @@ public class RoommateService {
     public void verifyRoommatePickRequestAccess(String sessionId, Integer profileId) throws RepeatPickException, SelfPickException {
         if (profileId == null) return;
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        RoommateProfileEntity profile = roommateMapper.selectRoommateProfileById(profileId);
+        DatingProfileEntity profile = datingMapper.selectDatingProfileById(profileId);
         if (profile != null && user.getUsername().equals(profile.getUsername()))
             throw new SelfPickException("不能向自己发布的卖室友信息发送撩一下请求");
-        RoommatePickEntity existing = roommateMapper.selectRoommatePick(profileId, user.getUsername());
+        DatingPickEntity existing = datingMapper.selectDatingPick(profileId, user.getUsername());
         if (existing != null && !Integer.valueOf(-1).equals(existing.getState()))
             throw new RepeatPickException("重复的撩一下请求");
     }
 
     public void verifyRoommatePickViewAccess(String sessionId, int id) throws DataNotExistException, NoAccessException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        RoommatePickEntity entity = roommateMapper.selectRoommatePickById(id);
+        DatingPickEntity entity = datingMapper.selectDatingPickById(id);
         if (entity == null) throw new DataNotExistException("该撩一下信息不存在");
         if (entity.getRoommateProfile() != null && entity.getRoommateProfile().getUsername().equals(user.getUsername()))
             return;
@@ -162,16 +162,16 @@ public class RoommateService {
     }
 
     @Transactional("appTransactionManager")
-    public void addRoommatePick(String sessionId, RoommatePickSubmitDTO dto) {
+    public void addRoommatePick(String sessionId, DatingPickSubmitDTO dto) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        RoommatePickEntity pick = new RoommatePickEntity();
-        RoommateProfileEntity ref = new RoommateProfileEntity();
+        DatingPickEntity pick = new DatingPickEntity();
+        DatingProfileEntity ref = new DatingProfileEntity();
         ref.setProfileId(dto.getProfileId());
         pick.setRoommateProfile(ref);
         pick.setUsername(user.getUsername());
         pick.setContent(dto.getContent());
-        roommateMapper.insertRoommatePick(pick);
-        RoommateProfileEntity profile = roommateMapper.selectRoommateProfileById(dto.getProfileId());
+        datingMapper.insertRoommatePick(pick);
+        DatingProfileEntity profile = datingMapper.selectDatingProfileById(dto.getProfileId());
         interactionNotificationService.createInteractionNotification(
                 "dating",
                 "pick_received",
@@ -189,10 +189,10 @@ public class RoommateService {
 
     @Transactional("appTransactionManager")
     public void updateRoommatePickState(Integer id, Integer state) throws DataNotExistException, NoAccessException {
-        RoommatePickEntity entity = roommateMapper.selectRoommatePickById(id);
+        DatingPickEntity entity = datingMapper.selectDatingPickById(id);
         if (entity == null) throw new DataNotExistException("该撩一下记录不存在");
         if (Integer.valueOf(0).equals(entity.getState())) {
-            roommateMapper.updateRoommatePickState(id, state);
+            datingMapper.updateRoommatePickState(id, state);
             String nickname = entity.getRoommateProfile() != null && StringUtils.isNotBlank(entity.getRoommateProfile().getNickname())
                     ? entity.getRoommateProfile().getNickname()
                     : "对方";
@@ -213,24 +213,24 @@ public class RoommateService {
         throw new NoAccessException("该撩一下记录已处理，请勿重复提交");
     }
 
-    public List<RoommatePickVO> queryMySentPicks(String sessionId) {
+    public List<DatingPickVO> queryMySentPicks(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<RoommatePickEntity> list = roommateMapper.selectRoommatePickListByUsername(user.getUsername());
+        List<DatingPickEntity> list = datingMapper.selectDatingPickListByUsername(user.getUsername());
         if (list == null) return new ArrayList<>();
         return list.stream().map(e -> {
-            RoommatePickVO vo = pickEntityToVO(e);
+            DatingPickVO vo = pickEntityToVO(e);
             if (e.getRoommateProfile() != null && e.getRoommateProfile().getProfileId() != null)
                 vo.getRoommateProfile().setPictureURL(getRoommateProfilePictureURL(e.getRoommateProfile().getProfileId()));
             return vo;
         }).collect(Collectors.toList());
     }
 
-    public List<RoommatePickVO> queryMyReceivedPicks(String sessionId) {
+    public List<DatingPickVO> queryMyReceivedPicks(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<RoommatePickEntity> list = roommateMapper.selectReceivedRoommatePickListByProfileOwner(user.getUsername());
+        List<DatingPickEntity> list = datingMapper.selectReceivedRoommatePickListByProfileOwner(user.getUsername());
         if (list == null) return new ArrayList<>();
         return list.stream().map(e -> {
-            RoommatePickVO vo = pickEntityToVO(e);
+            DatingPickVO vo = pickEntityToVO(e);
             if (e.getRoommateProfile() != null && e.getRoommateProfile().getProfileId() != null) {
                 vo.getRoommateProfile().setPictureURL(getRoommateProfilePictureURL(e.getRoommateProfile().getProfileId()));
             }
@@ -242,7 +242,7 @@ public class RoommateService {
         return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "dating/" + id + ".jpg", 30, TimeUnit.MINUTES);
     }
 
-    private void dtoToProfileEntity(RoommatePublishDTO dto, RoommateProfileEntity entity) {
+    private void dtoToProfileEntity(DatingPublishDTO dto, DatingProfileEntity entity) {
         entity.setNickname(dto.getNickname());
         entity.setGrade(dto.getGrade());
         entity.setFaculty(dto.getFaculty());
@@ -253,8 +253,8 @@ public class RoommateService {
         entity.setArea(dto.getArea());
     }
 
-    private RoommateProfileVO profileEntityToVO(RoommateProfileEntity e) {
-        RoommateProfileVO vo = new RoommateProfileVO();
+    private DatingProfileVO profileEntityToVO(DatingProfileEntity e) {
+        DatingProfileVO vo = new DatingProfileVO();
         vo.setProfileId(e.getProfileId());
         vo.setUsername(e.getUsername());
         vo.setNickname(e.getNickname());
@@ -269,8 +269,8 @@ public class RoommateService {
         return vo;
     }
 
-    private RoommatePickVO pickEntityToVO(RoommatePickEntity e) {
-        RoommatePickVO vo = new RoommatePickVO();
+    private DatingPickVO pickEntityToVO(DatingPickEntity e) {
+        DatingPickVO vo = new DatingPickVO();
         vo.setPickId(e.getPickId());
         vo.setUsername(e.getUsername());
         vo.setContent(e.getContent());

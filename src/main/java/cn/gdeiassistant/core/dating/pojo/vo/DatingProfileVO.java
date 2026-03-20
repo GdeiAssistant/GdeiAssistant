@@ -1,13 +1,11 @@
-package cn.gdeiassistant.core.roommate.pojo.entity;
-
-import cn.gdeiassistant.common.pojo.Entity.Entity;
+package cn.gdeiassistant.core.dating.pojo.vo;
 
 import java.io.Serializable;
 
 /**
- * 卖室友信息表 dating_profile 持久化实体。@Result column 与库表列名一致。
+ * 卖室友信息视图。
  */
-public class RoommateProfileEntity implements Serializable, Entity {
+public class DatingProfileVO implements Serializable {
 
     private Integer profileId;
     private String username;
@@ -20,6 +18,7 @@ public class RoommateProfileEntity implements Serializable, Entity {
     private String wechat;
     private Integer area;
     private Integer state;
+    private String pictureURL;
 
     public Integer getProfileId() { return profileId; }
     public void setProfileId(Integer profileId) { this.profileId = profileId; }
@@ -43,4 +42,6 @@ public class RoommateProfileEntity implements Serializable, Entity {
     public void setArea(Integer area) { this.area = area; }
     public Integer getState() { return state; }
     public void setState(Integer state) { this.state = state; }
+    public String getPictureURL() { return pictureURL; }
+    public void setPictureURL(String pictureURL) { this.pictureURL = pictureURL; }
 }

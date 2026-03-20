@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.roommate.controller;
+package cn.gdeiassistant.core.dating.controller;
 
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
@@ -9,11 +9,11 @@ import cn.gdeiassistant.common.exception.DatingException.RepeatPickException;
 import cn.gdeiassistant.common.exception.DatingException.SelfPickException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePickSubmitDTO;
-import cn.gdeiassistant.core.roommate.pojo.dto.RoommatePublishDTO;
-import cn.gdeiassistant.core.roommate.pojo.vo.RoommatePickVO;
-import cn.gdeiassistant.core.roommate.pojo.vo.RoommateProfileVO;
-import cn.gdeiassistant.core.roommate.service.RoommateService;
+import cn.gdeiassistant.core.dating.pojo.dto.DatingPickSubmitDTO;
+import cn.gdeiassistant.core.dating.pojo.dto.DatingPublishDTO;
+import cn.gdeiassistant.core.dating.pojo.vo.DatingPickVO;
+import cn.gdeiassistant.core.dating.pojo.vo.DatingProfileVO;
+import cn.gdeiassistant.core.dating.service.DatingService;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -33,20 +33,20 @@ import java.util.Map;
  * 卖室友 REST 接口。统一 /api/dating/...（路径保留兼容），使用 Roommate* 类型。
  */
 @RestController
-public class RoommateController {
+public class DatingController {
 
     @Autowired
-    private RoommateService roommateService;
+    private DatingService datingService;
 
     @RequestMapping(value = "/api/dating/profile/id/{id}", method = RequestMethod.GET)
     public DataJsonResult<Map<String, Object>> getRoommateProfileDetail(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException {
         String sessionId = (String) request.getAttribute("sessionId");
-        RoommateProfileVO profile = roommateService.queryRoommateProfile(id);
-        String pictureURL = roommateService.getRoommateProfilePictureURL(id);
-        RoommatePickVO pick = roommateService.queryRoommatePick(id, sessionId);
+        DatingProfileVO profile = datingService.queryDatingProfile(id);
+        String pictureURL = datingService.getRoommateProfilePictureURL(id);
+        DatingPickVO pick = datingService.queryRoommatePick(id, sessionId);
         boolean isContactVisible = false, isPickNotAvailable = false;
         if (pick != null) {
-            isPickNotAvailable = roommateService.checkIsPickPageHidden(sessionId, pick.getPickId());
+            isPickNotAvailable = datingService.checkIsPickPageHidden(sessionId, pick.getPickId());
             isContactVisible = isPickNotAvailable;
         }
         Map<String, Object> data = new HashMap<>();
@@ -58,57 +58,57 @@ public class RoommateController {
     }
 
     @RequestMapping(value = "/api/dating/profile/area/{area}/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<RoommateProfileVO>> queryRoommateProfile(@PathVariable("start") Integer start, @PathVariable("area") Integer area) {
-        List<RoommateProfileVO> list = roommateService.queryRoommateProfile(start, 10, area);
-        for (RoommateProfileVO p : list) {
-            if (p.getProfileId() != null) p.setPictureURL(roommateService.getRoommateProfilePictureURL(p.getProfileId()));
+    public DataJsonResult<List<DatingProfileVO>> queryDatingProfile(@PathVariable("start") Integer start, @PathVariable("area") Integer area) {
+        List<DatingProfileVO> list = datingService.queryDatingProfile(start, 10, area);
+        for (DatingProfileVO p : list) {
+            if (p.getProfileId() != null) p.setPictureURL(datingService.getRoommateProfilePictureURL(p.getProfileId()));
         }
         return new DataJsonResult<>(true, list);
     }
 
     @RequestMapping(value = "/api/dating/profile/id/{id}/picture", method = RequestMethod.GET)
     public DataJsonResult<String> getRoommateProfilePicture(@PathVariable("id") Integer id) {
-        String url = roommateService.getRoommateProfilePictureURL(id);
+        String url = datingService.getRoommateProfilePictureURL(id);
         return StringUtils.isNotBlank(url) ? new DataJsonResult<>(true, url) : new DataJsonResult<>(new JsonResult(false));
     }
 
     @RequestMapping(value = "/api/dating/profile/my", method = RequestMethod.GET)
-    public DataJsonResult<List<RoommateProfileVO>> getMyRoommateProfiles(HttpServletRequest request) {
+    public DataJsonResult<List<DatingProfileVO>> getMyRoommateProfiles(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, roommateService.queryMyRoommateProfiles(sessionId));
+        return new DataJsonResult<>(true, datingService.queryMyRoommateProfiles(sessionId));
     }
 
     @RequestMapping(value = "/api/dating/pick/my/sent", method = RequestMethod.GET)
-    public DataJsonResult<List<RoommatePickVO>> getMySentPicks(HttpServletRequest request) {
+    public DataJsonResult<List<DatingPickVO>> getMySentPicks(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, roommateService.queryMySentPicks(sessionId));
+        return new DataJsonResult<>(true, datingService.queryMySentPicks(sessionId));
     }
 
     @RequestMapping(value = "/api/dating/pick/my/received", method = RequestMethod.GET)
-    public DataJsonResult<List<RoommatePickVO>> getMyReceivedPicks(HttpServletRequest request) {
+    public DataJsonResult<List<DatingPickVO>> getMyReceivedPicks(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, roommateService.queryMyReceivedPicks(sessionId));
+        return new DataJsonResult<>(true, datingService.queryMyReceivedPicks(sessionId));
     }
 
     @RequestMapping(value = "/api/dating/profile", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
-    public JsonResult addRoommateProfile(HttpServletRequest request, @Validated RoommatePublishDTO dto,
+    public JsonResult addRoommateProfile(HttpServletRequest request, @Validated DatingPublishDTO dto,
                                          MultipartFile image,
                                          String imageKey) throws IOException {
         String sessionId = (String) request.getAttribute("sessionId");
-        Integer id = roommateService.addRoommateProfile(sessionId, dto);
+        Integer id = datingService.addRoommateProfile(sessionId, dto);
         if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-            roommateService.uploadPicture(id, image.getInputStream());
+            datingService.uploadPicture(id, image.getInputStream());
         } else if (StringUtils.isNotBlank(imageKey)) {
-            roommateService.movePictureFromTempObject(id, imageKey);
+            datingService.movePictureFromTempObject(id, imageKey);
         }
         return new JsonResult(true);
     }
 
     @RequestMapping(value = "/api/dating/pick/id/{id}", method = RequestMethod.GET)
-    public DataJsonResult<RoommatePickVO> getRoommatePickDetail(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException, NoAccessException {
-        roommateService.verifyRoommatePickViewAccess((String) request.getAttribute("sessionId"), id);
-        RoommatePickVO vo = roommateService.getRoommatePickDetailVo(id);
+    public DataJsonResult<DatingPickVO> getRoommatePickDetail(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException, NoAccessException {
+        datingService.verifyRoommatePickViewAccess((String) request.getAttribute("sessionId"), id);
+        DatingPickVO vo = datingService.getRoommatePickDetailVo(id);
         return new DataJsonResult<>(true, vo);
     }
 
@@ -116,27 +116,27 @@ public class RoommateController {
     public JsonResult updateRoommatePickState(HttpServletRequest request, @PathVariable("id") Integer id, Integer state) throws DataNotExistException, NoAccessException {
         if (state == null || (!state.equals(-1) && !state.equals(1))) return new JsonResult(false, "请求参数不合法");
         String sessionId = (String) request.getAttribute("sessionId");
-        roommateService.verifyRoommatePickViewAccess(sessionId, id);
-        roommateService.updateRoommatePickState(id, state);
+        datingService.verifyRoommatePickViewAccess(sessionId, id);
+        datingService.updateRoommatePickState(id, state);
         return new JsonResult(true);
     }
 
     @RequestMapping(value = "/api/dating/pick", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
-    public JsonResult addRoommatePick(HttpServletRequest request, @Validated RoommatePickSubmitDTO dto) throws SelfPickException, RepeatPickException {
+    public JsonResult addRoommatePick(HttpServletRequest request, @Validated DatingPickSubmitDTO dto) throws SelfPickException, RepeatPickException {
         if (dto.getProfileId() == null) return new JsonResult(false, "请求参数不合法");
         if (dto.getContent() != null && dto.getContent().length() > 50) return new JsonResult(false, "文本内容超过限制");
         String sessionId = (String) request.getAttribute("sessionId");
-        roommateService.verifyRoommatePickRequestAccess(sessionId, dto.getProfileId());
-        roommateService.addRoommatePick(sessionId, dto);
+        datingService.verifyRoommatePickRequestAccess(sessionId, dto.getProfileId());
+        datingService.addRoommatePick(sessionId, dto);
         return new JsonResult(true);
     }
 
     @RequestMapping(value = "/api/dating/profile/id/{id}/state", method = RequestMethod.POST)
     public JsonResult updateMyRoommateProfileState(HttpServletRequest request, @PathVariable("id") Integer id, Integer state) throws DataNotExistException, NoAccessException {
         String sessionId = (String) request.getAttribute("sessionId");
-        roommateService.verifyRoommateProfileOwner(sessionId, id);
-        roommateService.updateRoommateProfileState(id, state);
+        datingService.verifyRoommateProfileOwner(sessionId, id);
+        datingService.updateRoommateProfileState(id, state);
         return new JsonResult(true);
     }
 }

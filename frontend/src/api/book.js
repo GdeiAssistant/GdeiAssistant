@@ -20,8 +20,8 @@ export function getBookDetail(detailURL) {
 }
 
 /**
- * 我的借阅。GET /api/library/borrow
- * @param {string} [password] 正常账号可传图书馆密码
+ * 我的借阅。GET /api/library/borrow?password=xxx
+ * @param {string} password 图书馆密码，查询借阅时应随请求一起提交
  * @returns {Promise<{ success: boolean, data: Array<Book> }>} Book: name, author, borrowDate, returnDate, renewTime, id, sn, code
  */
 export function getBorrowedBooks(password) {

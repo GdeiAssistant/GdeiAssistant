@@ -16,7 +16,7 @@ function goBack() {
 
 function openDetail(item) {
   if (!item?.detailURL) return
-  router.push({ path: '/collection/detail', query: { detailURL: item.detailURL } })
+  router.push({ path: '/library/detail', query: { detailURL: item.detailURL } })
 }
 
 function fetchList() {
@@ -38,7 +38,7 @@ const showNoResult = computed(() => !loading.value && list.value.length === 0 &&
 
 onMounted(() => {
   if (!keyword.value) {
-    router.replace('/collection')
+    router.replace('/library')
     return
   }
   fetchList()
@@ -63,11 +63,11 @@ onMounted(() => {
       </div>
 
       <div class="page-header">
-        <h1 class="page-title-green">馆藏图书查询</h1>
-        <p class="page-subtitle">广东第二师范学院移动图书馆</p>
+        <h1 class="page-title-green">馆藏检索</h1>
+        <p class="page-subtitle">图书馆馆藏检索结果</p>
       </div>
 
-      <div class="weui-cells__title">馆藏查询结果</div>
+      <div class="weui-cells__title">馆藏检索结果</div>
       <div class="weui-panel weui-panel_access">
         <div class="weui-panel__bd">
           <a

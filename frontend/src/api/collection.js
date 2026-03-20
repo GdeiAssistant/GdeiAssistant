@@ -24,8 +24,8 @@ export function getCollectionDetail(detailURL) {
 
 /**
  * 查询我的借阅
- * GET /api/library/borrow?password=xxx（测试账号可省略）
- * @param {string} [password] - 图书馆密码，正常账号必填
+ * GET /api/library/borrow?password=xxx
+ * @param {string} password - 图书馆密码，查询借阅时应随请求一起提交
  * @returns {Promise<{ success: boolean, data: Array<Book> }>} data 为借阅列表，字段 name, author, borrowDate, returnDate, renewTime, sn, code, id
  */
 export function getBorrowedBooks(password) {
@@ -37,7 +37,7 @@ export function getBorrowedBooks(password) {
 
 /**
  * 图书续借
- * POST /api/library/renew，body: { sn, code, password }
+ * POST /api/library/renew，body: { sn, code, password }，续借时再次校验图书馆密码
  * @param {object} payload - { sn, code, password }
  */
 export function renewBook(payload) {

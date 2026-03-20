@@ -2,7 +2,7 @@
   <div class="weui-tab news-weui-tab">
     <div class="page-header">
       <a href="javascript:;" class="news-back" @click="goBack">返回</a>
-      <h1 class="news-title">新闻通知</h1>
+      <h1 class="news-title">新闻</h1>
     </div>
     <div
       class="weui-tab__panel"

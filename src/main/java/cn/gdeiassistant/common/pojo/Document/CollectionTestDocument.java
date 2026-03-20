@@ -18,10 +18,10 @@ public class CollectionTestDocument {
 
     private String username;
 
-    /** 馆藏检索列表（对应 GET /api/book/search） */
+    /** 馆藏检索列表（对应 GET /api/library/search） */
     private List<Collection> collectionList;
 
-    /** 馆藏详情列表，按 detailURL 匹配（对应 GET /api/book/detail） */
+    /** 馆藏详情列表，按 detailURL 匹配（对应 GET /api/library/detail） */
     private List<CollectionDetailEntry> collectionDetailList;
 
     public String getId() {

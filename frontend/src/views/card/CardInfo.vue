@@ -107,7 +107,7 @@ onMounted(() => {
     </div>
 
     <div class="page-header">
-      <h1 class="page-title-green">我的校园卡</h1>
+      <h1 class="page-title-green">校园卡信息</h1>
     </div>
 
     <template v-if="info">
@@ -366,4 +366,3 @@ onMounted(() => {
   color: #888;
 }
 </style>
-

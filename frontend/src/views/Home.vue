@@ -7,18 +7,6 @@ const STORAGE_KEY = 'user_features_config'
 
 const router = useRouter()
 
-// TopTips 响应式状态
-const topTipMsg = ref('')
-const showTopTip = ref(false)
-
-const showWeuiTopTip = (msg) => {
-  topTipMsg.value = msg
-  showTopTip.value = true
-  setTimeout(() => {
-    showTopTip.value = false
-  }, 2000)
-}
-
 // 从 localStorage 实时读取功能开关；无配置时按 defaultVisible 兜底显示
 const featuresConfig = ref(null)
 function loadFeaturesConfig() {
@@ -48,150 +36,138 @@ const visibleMenuList = computed(() => {
   }))
 })
 
-function handleMenuClick(item) {
-  // 外链项需带正确标识
-  if (item.type === 'external' && item.key) {
-    handleExternalJump(item.key)
-    return
-  }
+const SERVICE_FEATURE_IDS = new Set(['grade', 'schedule', 'cet', 'kaoyan', 'spare', 'collection', 'card', 'data', 'evaluate'])
+const LIFE_FEATURE_IDS = new Set(['ershou', 'delivery', 'lostandfound', 'secret', 'dating', 'express', 'topic', 'photograph'])
 
-  // 内部路由跳转
+const featureSections = computed(() => {
+  const serviceItems = visibleMenuList.value.filter((item) => SERVICE_FEATURE_IDS.has(item.id))
+  const lifeItems = visibleMenuList.value.filter((item) => LIFE_FEATURE_IDS.has(item.id))
+
+  return [
+    {
+      id: 'service',
+      title: '校园服务',
+      description: '查成绩、课表、四六级、图书馆、校园卡和常用查询工具',
+      items: serviceItems
+    },
+    {
+      id: 'life',
+      title: '校园生活',
+      description: '二手交易、快递代取、失物招领、树洞、卖室友、表白墙、话题和校园摄影',
+      items: lifeItems
+    }
+  ].filter((section) => section.items.length > 0)
+})
+
+function handleMenuClick(item) {
   if (item.path) {
     router.push(item.path)
-    return
-  }
-}
-
-function handleExternalJump(type) {
-  if (!type) {
-    showWeuiTopTip('跳转参数错误，请重试')
-    return
-  }
-
-  // 微信环境：userAgent 含 micromessenger
-  const ua = navigator.userAgent.toLowerCase()
-  const isWechat = ua.indexOf('micromessenger') !== -1
-
-  switch (type) {
-    case 'calendar':
-      // 学期校历
-      window.location.href = 'https://msg.weixiao.qq.com/t/bca2e28bc30ce67907e032f483e82d7f'
-      break
-    case 'government':
-      // 政务服务
-      window.location.href = 'https://www.gdzwfw.gov.cn/portal/personal/hot'
-      break
-    case 'student':
-      // 学信网
-      window.location.href = 'https://www.chsi.com.cn'
-      break
-    case 'volunteer':
-      // i志愿
-      window.location.href = 'https://www.gdzyz.cn/'
-      break
-    case 'healthcode':
-      // 粤康码（需要微信环境判断）
-      if (isWechat) {
-        window.location.href = 'weixin://app/wxd930ea5d5a258f4f/jumpWxa/?userName=gh_1ac06b5a8f4e&path=operation_plus/pages/yiqing/daka/user/index/index.html'
-      } else {
-        showWeuiTopTip('请使用微信客户端访问以启用该功能')
-      }
-      break
-    case 'travelcode':
-      // 通信行程码（需微信环境，直接跳转）
-      window.location.href = 'https://xc.caict.ac.cn/'
-      break
-    case 'ncov':
-      // 疫情动态
-      window.location.href = 'https://ncov.dxy.cn/ncovh5/view/pneumonia'
-      break
-    default:
-      showWeuiTopTip('未知的跳转类型：' + type)
-      break
   }
 }
 </script>
 
 <template>
-  <!-- WEUI TopTips 提示条 -->
-  <div 
-    class="weui-toptips weui-toptips_warn" 
-    :style="{ 
-      display: showTopTip ? 'block' : 'none',
-      transform: showTopTip ? 'translateY(0)' : 'translateY(-100%)'
-    }"
-  >
-    {{ topTipMsg }}
-  </div>
-  
   <div class="page">
-    <div class="page__hd">
+    <div class="page__hero">
       <h1 class="page__title">广东二师助手</h1>
-      <p class="page__desc">四年时光，广东二师助手陪你一起走过。</p>
+      <p class="page__desc">把校园服务和校园生活统一收在一个首页里，入口和移动端保持一致。</p>
     </div>
 
-    <div class="weui-grids">
-      <a
-        v-for="(item, index) in visibleMenuList"
-        :key="item.id || item.path || item.key || index"
-        href="javascript:;"
-        class="weui-grid"
-        @click.prevent.stop="handleMenuClick(item)"
-      >
-        <div class="weui-grid__icon">
-          <img :src="item.icon" :alt="item.title" />
-        </div>
-        <p class="weui-grid__label">{{ item.title }}</p>
-      </a>
+    <section
+      v-for="section in featureSections"
+      :key="section.id"
+      class="feature-section"
+    >
+      <div class="feature-section__header">
+        <div class="feature-section__title">{{ section.title }}</div>
+        <div class="feature-section__desc">{{ section.description }}</div>
+      </div>
+
+      <div class="weui-grids feature-section__grid">
+        <a
+          v-for="(item, index) in section.items"
+          :key="item.id || item.path || item.key || index"
+          href="javascript:;"
+          class="weui-grid"
+          @click.prevent.stop="handleMenuClick(item)"
+        >
+          <div class="weui-grid__icon">
+            <img :src="item.icon" :alt="item.title" />
+          </div>
+          <p class="weui-grid__label">{{ item.title }}</p>
+        </a>
+      </div>
+    </section>
+    <div v-if="featureSections.length === 0" class="feature-empty">
+      当前没有可展示的功能入口
     </div>
   </div>
 </template>
 
 <style scoped>
-/* WEUI TopTips 样式 - 确保在最顶层显示 */
-.weui-toptips {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  padding: 8px 16px;
-  font-size: 14px;
-  text-align: center;
-  color: #fff;
-  background-color: #fa5151;
-  transition: transform 0.3s ease-out;
-}
-.weui-toptips.weui-toptips_warn {
-  background-color: #fa5151;
+.page {
+  min-height: 100vh;
+  padding: 0 16px 28px;
+  background:
+    radial-gradient(circle at top right, rgba(9, 187, 7, 0.12), transparent 32%),
+    linear-gradient(180deg, #f6fbf6 0%, #ffffff 34%);
 }
 
-.page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
+.page__hero {
+  padding: 28px 4px 18px;
 }
-.page__hd {
-  padding: 24px 0 16px;
-  text-align: center;
-  background-color: #fff;
-}
+
 .page__title {
-  font-size: 22px;
-  font-weight: 400;
+  font-size: 30px;
+  font-weight: 700;
   margin: 0;
-  color: #000;
+  color: #102110;
 }
+
 .page__desc {
   font-size: 14px;
-  color: #999;
-  margin: 8px 0 0;
+  color: #6b766b;
+  margin: 10px 0 0;
+  line-height: 1.7;
 }
-.weui-grids {
+
+.feature-section {
+  margin-top: 16px;
+  padding: 18px 16px 10px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 42px rgba(16, 33, 16, 0.06);
+}
+
+.feature-section__header {
+  margin-bottom: 10px;
+}
+
+.feature-section__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #102110;
+}
+
+.feature-section__desc {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #6b766b;
+}
+
+.feature-section__grid {
   margin-top: 0;
-  background-color: #fff;
+  background-color: transparent;
 }
-/* 确保 weui-grid 可以正常点击 */
+
+.feature-empty {
+  padding: 48px 16px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
 .weui-grid {
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
@@ -199,12 +175,15 @@ function handleExternalJump(type) {
   position: relative;
   z-index: 1;
 }
+
 .weui-grid:active {
   background-color: rgba(0, 0, 0, 0.05);
 }
+
 .weui-grid__icon {
   pointer-events: none;
 }
+
 .weui-grid__icon img {
   width: 100%;
   height: 100%;
@@ -212,7 +191,14 @@ function handleExternalJump(type) {
   object-fit: contain;
   pointer-events: none;
 }
+
 .weui-grid__label {
   pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-bottom: 24px;
+  }
 }
 </style>

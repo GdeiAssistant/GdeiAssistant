@@ -139,13 +139,13 @@ watch(() => route.fullPath, () => {
     <section class="status-section">
       <ul class="tabs">
         <li class="tab" :class="{ on: activeStat === 'lost' }" @click="switchStat('lost')" data-stat="lost">
-          失物<i class="line"></i>
+          寻物<i class="line"></i>
         </li>
         <li class="tab" :class="{ on: activeStat === 'found' }" @click="switchStat('found')" data-stat="found">
           招领<i class="line"></i>
         </li>
         <li class="tab" :class="{ on: activeStat === 'didfound' }" @click="switchStat('didfound')" data-stat="didfound">
-          确认寻回<i class="line"></i>
+          已找回<i class="line"></i>
         </li>
       </ul>
 
@@ -154,7 +154,7 @@ watch(() => route.fullPath, () => {
           <div v-if="loading" class="nostatus"><p class="tip">加载中...</p></div>
           <template v-else>
             <div v-if="lostList.length === 0" class="nostatus">
-              <p class="tip">暂无失物信息</p>
+              <p class="tip">暂无寻物信息</p>
             </div>
             <div v-for="item in lostList" :key="item.id" class="stat">
               <div class="info" @click="goDetail(item.id)">
@@ -198,7 +198,7 @@ watch(() => route.fullPath, () => {
           <div v-if="loading" class="nostatus"><p class="tip">加载中...</p></div>
           <template v-else>
             <div v-if="didFoundList.length === 0" class="nostatus">
-              <p class="tip">暂无确认寻回信息</p>
+              <p class="tip">暂无已找回信息</p>
             </div>
             <div v-for="item in didFoundList" :key="item.id" class="stat">
               <div class="info">

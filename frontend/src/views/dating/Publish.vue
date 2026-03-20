@@ -162,12 +162,12 @@ async function submit() {
   <div class="dating-publish">
     <div class="dating-header unified-header">
       <span class="dating-header__back" @click="router.push('/dating/home')">返回</span>
-      <h1 class="dating-header__title">出卖室友</h1>
+      <h1 class="dating-header__title">发布资料</h1>
       <span class="dating-header__placeholder"></span>
     </div>
 
     <div class="dating-publish__box">
-      <div class="dating-publish__title">发布信息</div>
+      <div class="dating-publish__title">发布资料</div>
 
       <div class="dating-photo" @click="$refs.fileInput.click()">
         <img v-if="imagePreview" :src="imagePreview" class="dating-photo__img" />
@@ -195,7 +195,7 @@ async function submit() {
       <div class="dating-textarea-wrap">
         <textarea class="dating-textarea" v-model="formData.content" placeholder="什么样的TA会让你心动呢？谈谈你的理想对象，不超过100字" rows="4"></textarea>
         <button type="button" class="circle-btn circle-btn--submit" :disabled="submitting" @click="submit">
-          {{ submitting ? '提交中...' : '发布' }}
+          {{ submitting ? '提交中...' : '发布资料' }}
         </button>
       </div>
     </div>

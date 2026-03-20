@@ -24,7 +24,6 @@ const Login = lazyView('Login')
 const About = lazyView('About')
 const Home = lazyView('Home')
 const Schedule = lazyView('schedule/Schedule')
-const Discover = lazyView('discover/Discover')
 const Profile = lazyView('Profile')
 const Grade = lazyView('grade/Grade')
 const Cet = lazyView('cet/Cet')
@@ -35,6 +34,7 @@ const CollectionList = lazyView('collection/CollectionList')
 const CollectionDetail = lazyView('collection/CollectionDetail')
 const Book = lazyView('book/Book')
 const CardSearch = lazyView('card/CardSearch')
+const CardRecordSearch = lazyView('card/CardRecordSearch')
 const CardList = lazyView('card/CardList')
 const CardInfo = lazyView('card/CardInfo')
 const Evaluate = lazyView('evaluate/Evaluate')
@@ -133,27 +133,27 @@ const routes = [
     component: CetSave
   },
   {
-    path: '/collection',
+    path: '/library',
     name: 'Collection',
     component: Collection
   },
   {
-    path: '/collection/search',
+    path: '/library/search',
     name: 'CollectionSearch',
     component: CollectionSearch
   },
   {
-    path: '/collection/list',
+    path: '/library/list',
     name: 'CollectionList',
     component: CollectionList
   },
   {
-    path: '/collection/detail',
+    path: '/library/detail',
     name: 'CollectionDetail',
     component: CollectionDetail
   },
   {
-    path: '/book',
+    path: '/library/borrow',
     name: 'Book',
     component: Book
   },
@@ -161,6 +161,11 @@ const routes = [
     path: '/card',
     name: 'CardSearch',
     component: CardSearch
+  },
+  {
+    path: '/card/records',
+    name: 'CardRecordSearch',
+    component: CardRecordSearch
   },
   {
     path: '/card/list',
@@ -505,11 +510,6 @@ const routes = [
         path: 'schedule',
         name: 'Schedule',
         component: Schedule
-      },
-      {
-        path: 'discover',
-        name: 'Discover',
-        component: Discover
       },
       {
         path: 'info',

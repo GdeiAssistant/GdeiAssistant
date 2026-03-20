@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 查询饭卡基本信息（GET /card/info）
+ * 查询校园卡基本信息（GET /card/info）
  * @returns {Promise<import('axios').AxiosResponse>}
  */
 export function queryCardInfo() {
@@ -9,7 +9,7 @@ export function queryCardInfo() {
 }
 
 /**
- * 查询饭卡消费流水（POST /card/query）
+ * 查询校园卡消费流水（POST /card/query）
  * @param {{ year: number, month: number, date: number }} payload
  * @returns {Promise<import('axios').AxiosResponse>}
  */
@@ -25,4 +25,3 @@ export function queryCardRecord(payload) {
 export function reportCardLost(cardPassword) {
   return request.post('/card/lost', { cardPassword })
 }
-

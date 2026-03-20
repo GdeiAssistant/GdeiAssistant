@@ -85,7 +85,7 @@ function amountText(amount) {
 
 onMounted(() => {
   if (!queryDate.value) {
-    router.replace('/card')
+    router.replace('/card/records')
     return
   }
   fetchList()
@@ -110,7 +110,7 @@ onMounted(() => {
       </div>
 
       <div class="page-header">
-        <h1 class="page-title-green">饭卡消费查询</h1>
+        <h1 class="page-title-green">消费记录</h1>
       </div>
 
       <div class="weui-cells__title">当前查询日期：{{ formatDisplayDate(queryDate) }}</div>

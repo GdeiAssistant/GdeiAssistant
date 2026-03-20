@@ -11,7 +11,7 @@ const error = ref('')
 const detail = ref(null)
 
 const fallbackType = computed(() => Number(route.query.type || 1))
-const fallbackTitle = computed(() => String(route.query.title || '新闻通知'))
+const fallbackTitle = computed(() => String(route.query.title || '新闻'))
 const fallbackDate = computed(() => String(route.query.date || ''))
 
 const sourceLabel = computed(() => {
@@ -25,7 +25,7 @@ const sourceLabel = computed(() => {
     case 4:
       return '学术动态'
     default:
-      return '新闻通知'
+      return '新闻'
   }
 })
 
@@ -97,7 +97,7 @@ async function loadDetail() {
     const res = await request.get(`/information/news/id/${route.params.id}`)
     detail.value = res?.data ?? null
     if (!detail.value) {
-      error.value = '未找到对应的新闻通知'
+      error.value = '未找到对应的新闻'
     }
   } catch (e) {
     detail.value = null

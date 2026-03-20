@@ -1,0 +1,64 @@
+{
+  "code": null,
+  "success": true,
+  "message": null,
+  "data": {
+    "lost": [
+      {
+        "id": 201,
+        "username": "20231234",
+        "name": "校园卡",
+        "description": "图书馆三楼遗失",
+        "location": "图书馆三楼",
+        "itemType": 1,
+        "lostType": 0,
+        "qq": "123456",
+        "wechat": "gdei-user",
+        "phone": "13800138000",
+        "state": 0,
+        "publishTime": null,
+        "pictureURL": [
+          "https://cdn.gdeiassistant.cn/lostandfound/201_1.jpg"
+        ]
+      }
+    ],
+    "found": [
+      {
+        "id": 202,
+        "username": "20231234",
+        "name": "钥匙",
+        "description": "教学楼 A 栋拾获",
+        "location": "教学楼 A 栋",
+        "itemType": 5,
+        "lostType": 1,
+        "qq": "456789",
+        "wechat": "campus-helper",
+        "phone": "13900139000",
+        "state": 0,
+        "publishTime": null,
+        "pictureURL": [
+          "https://cdn.gdeiassistant.cn/lostandfound/202_1.jpg"
+        ]
+      }
+    ],
+    "didfound": [
+      {
+        "id": 203,
+        "username": "20231234",
+        "name": "身份证",
+        "description": "已完成认领",
+        "location": "行政楼",
+        "itemType": 2,
+        "lostType": 0,
+        "qq": "987654",
+        "wechat": "gdei-found",
+        "phone": "13700137000",
+        "state": 1,
+        "publishTime": null,
+        "pictureURL": [
+          "https://cdn.gdeiassistant.cn/lostandfound/203_1.jpg"
+        ]
+      }
+    ]
+  }
+}

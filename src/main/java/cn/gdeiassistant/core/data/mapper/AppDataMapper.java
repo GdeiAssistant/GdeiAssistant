@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.data.mapper;
 
-import cn.gdeiassistant.core.secondhand.pojo.entity.SecondhandItemEntity;
+import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundItemEntity;
 import cn.gdeiassistant.core.express.pojo.entity.ExpressEntity;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretContentEntity;
@@ -46,8 +46,8 @@ public interface AppDataMapper {
     List<DeliveryTradeEntity> selectUserDeliveryTradeList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserErshouItemList")
-    @ResultMap("cn.gdeiassistant.core.secondhand.mapper.SecondhandMapper.SecondhandItemEntity")
-    List<SecondhandItemEntity> selectUserErshouItemList(String username);
+    @ResultMap("cn.gdeiassistant.core.secondhand.mapper.SecondhandMapper.MarketplaceItemEntity")
+    List<MarketplaceItemEntity> selectUserErshouItemList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserLostAndFoundItemList")
     @ResultMap("cn.gdeiassistant.core.lostandfound.mapper.LostAndFoundMapper.LostAndFoundItem")

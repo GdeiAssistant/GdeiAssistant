@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.userData.service;
 
 import cn.gdeiassistant.common.constant.ItemConstantUtils;
-import cn.gdeiassistant.core.secondhand.pojo.entity.SecondhandItemEntity;
+import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundItemEntity;
 import cn.gdeiassistant.core.express.pojo.entity.ExpressEntity;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretCommentEntity;
@@ -184,9 +184,9 @@ public class UserDataService {
                 data.put("deliveryTrades", deliveryTradeList);
             }
             //获取二手交易信息
-            List<SecondhandItemEntity> secondhandItemList = appDataMapper.selectUserErshouItemList(user.getUsername());
+            List<MarketplaceItemEntity> secondhandItemList = appDataMapper.selectUserErshouItemList(user.getUsername());
             if (secondhandItemList != null && !secondhandItemList.isEmpty()) {
-                for (SecondhandItemEntity secondhandItem : secondhandItemList) {
+                for (MarketplaceItemEntity secondhandItem : secondhandItemList) {
                     //下载二手交易图片
                     for (int i = 0; i <= 3; i++) {
                         InputStream image = r2StorageService.downloadObject("gdeiassistant-userdata", "ershou/"

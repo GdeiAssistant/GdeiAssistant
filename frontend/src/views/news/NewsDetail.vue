@@ -94,7 +94,7 @@ async function loadDetail() {
   loading.value = true
   error.value = ''
   try {
-    const res = await request.get(`/news/id/${route.params.id}`)
+    const res = await request.get(`/information/news/id/${route.params.id}`)
     detail.value = res?.data ?? null
     if (!detail.value) {
       error.value = '未找到对应的新闻通知'

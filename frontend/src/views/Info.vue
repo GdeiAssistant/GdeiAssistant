@@ -195,7 +195,7 @@ function markInteractionItemRead(item) {
   }
   item.isRead = true
   interactionUnreadCount.value = Math.max(0, Number(interactionUnreadCount.value || 0) - 1)
-  request.post(`/message/id/${item.id}/read`).catch(() => {})
+  request.post(`/information/message/id/${item.id}/read`).catch(() => {})
 }
 
 function handleInteractionSelect(item) {
@@ -215,7 +215,7 @@ function handleMarkAllInteractionsRead() {
     ...item,
     isRead: true
   }))
-  request.post('/message/readall').catch(() => {
+  request.post('/information/message/readall').catch(() => {
     loadInfoPage()
   })
 }
@@ -227,10 +227,10 @@ async function loadInfoPage() {
   }
   try {
     const [announcementRes, informationRes, interactionRes, unreadRes] = await Promise.allSettled([
-      request.get('/announcement/start/0/size/5'),
-      request.get('/information/list'),
-      request.get('/message/interaction/start/0/size/20'),
-      request.get('/message/unread')
+      request.get('/information/announcement/start/0/size/5'),
+      request.get('/information/overview'),
+      request.get('/information/message/interaction/start/0/size/20'),
+      request.get('/information/message/unread')
     ])
 
     if (announcementRes.status === 'fulfilled' && announcementRes.value?.success) {

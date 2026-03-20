@@ -1,22 +1,22 @@
-package cn.gdeiassistant.core.roommate.pojo.vo;
+package cn.gdeiassistant.core.dating.pojo.vo;
 
 import java.io.Serializable;
 
 /**
  * 撩一下记录视图。
  */
-public class RoommatePickVO implements Serializable {
+public class DatingPickVO implements Serializable {
 
     private Integer pickId;
-    private RoommateProfileVO roommateProfile;
+    private DatingProfileVO datingProfile;
     private String username;
     private String content;
     private Integer state;
 
     public Integer getPickId() { return pickId; }
     public void setPickId(Integer pickId) { this.pickId = pickId; }
-    public RoommateProfileVO getRoommateProfile() { return roommateProfile; }
-    public void setRoommateProfile(RoommateProfileVO roommateProfile) { this.roommateProfile = roommateProfile; }
+    public DatingProfileVO getRoommateProfile() { return datingProfile; }
+    public void setRoommateProfile(DatingProfileVO datingProfile) { this.datingProfile = datingProfile; }
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
     public String getContent() { return content; }

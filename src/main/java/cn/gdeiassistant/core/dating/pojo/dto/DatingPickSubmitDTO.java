@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.roommate.pojo.dto;
+package cn.gdeiassistant.core.dating.pojo.dto;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * 提交撩一下请求入参 DTO。
  */
-public class RoommatePickSubmitDTO implements Serializable {
+public class DatingPickSubmitDTO implements Serializable {
 
     @NotNull
     private Integer profileId;

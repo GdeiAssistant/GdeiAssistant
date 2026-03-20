@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.postgraduate.service;
+package cn.gdeiassistant.core.kaoyan.service;
 
 import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;

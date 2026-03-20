@@ -1,24 +1,24 @@
-package cn.gdeiassistant.core.roommate.pojo.entity;
+package cn.gdeiassistant.core.dating.pojo.entity;
 
 import cn.gdeiassistant.common.pojo.Entity.Entity;
 
 import java.io.Serializable;
 
 /**
- * 撩一下记录表 dating_pick 持久化实体。含嵌套 roommateProfile。
+ * 撩一下记录表 dating_pick 持久化实体。含嵌套 datingProfile。
  */
-public class RoommatePickEntity implements Serializable, Entity {
+public class DatingPickEntity implements Serializable, Entity {
 
     private Integer pickId;
-    private RoommateProfileEntity roommateProfile;
+    private DatingProfileEntity datingProfile;
     private String username;
     private String content;
     private Integer state;
 
     public Integer getPickId() { return pickId; }
     public void setPickId(Integer pickId) { this.pickId = pickId; }
-    public RoommateProfileEntity getRoommateProfile() { return roommateProfile; }
-    public void setRoommateProfile(RoommateProfileEntity roommateProfile) { this.roommateProfile = roommateProfile; }
+    public DatingProfileEntity getRoommateProfile() { return datingProfile; }
+    public void setRoommateProfile(DatingProfileEntity datingProfile) { this.datingProfile = datingProfile; }
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
     public String getContent() { return content; }

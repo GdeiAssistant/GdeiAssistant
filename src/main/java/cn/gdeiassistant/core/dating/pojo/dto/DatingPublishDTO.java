@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.roommate.pojo.dto;
+package cn.gdeiassistant.core.dating.pojo.dto;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * 发布/更新卖室友信息入参 DTO。
  */
-public class RoommatePublishDTO implements Serializable {
+public class DatingPublishDTO implements Serializable {
 
     @NotBlank(message = "昵称不能为空")
     @Length(min = 1, max = 15)

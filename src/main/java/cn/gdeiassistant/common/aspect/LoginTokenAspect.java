@@ -75,16 +75,13 @@ public class LoginTokenAspect {
             , TokenNotMatchingException, SuspiciouseRequestException {
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
-        // 1. 严格执行前后端分离规范：仅从 Header 获取 Token
-        String token = request.getHeader("token");
-        // 2. 支持标准的 Authorization: Bearer xxx 格式
-        if (token == null || token.trim().isEmpty()) {
-            String auth = request.getHeader("Authorization");
-            if (auth != null && auth.toLowerCase().startsWith("bearer ")) {
-                token = auth.substring(7).trim();
-            }
+        // 仅接受标准 Authorization: Bearer xxx 头，不再保留旧 token 头兼容。
+        String token = null;
+        String auth = request.getHeader("Authorization");
+        if (auth != null && auth.toLowerCase().startsWith("bearer ")) {
+            token = auth.substring(7).trim();
         }
-        // 3. 拒绝一切 URL 传参，如果没有获取到，直接抛出异常
+        // 拒绝一切 URL 传参，如果没有获取到，直接抛出异常
         if (token == null || token.trim().isEmpty()) {
             throw new TokenExpiredException("请求未携带有效令牌或令牌已过期");
         }
@@ -116,7 +113,7 @@ public class LoginTokenAspect {
         // 全端通用校验：JWT 防伪造、防篡改校验 (Web 和 App 都要走)
         loginTokenService.validToken(token);
 
-        // 4. 注入 SessionId
+        // 注入 SessionId
         String sessionId = loginTokenService.parseToken(token).get("sessionId").asString();
         request.setAttribute("sessionId", sessionId);
     }

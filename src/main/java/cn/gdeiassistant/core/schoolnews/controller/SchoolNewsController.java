@@ -16,17 +16,17 @@ import java.util.List;
 
 /**
  * 校园新闻/教务通知：从爬虫缓存读取，对真实用户与测试用户完全开放，无 @TrialData 拦截。
- * 统一使用 /api/news，适配无状态 JWT 架构，不依赖 Session。
+ * 统一使用 /api/information/news，适配无状态 JWT 架构，不依赖 Session。
  */
 @RestController
-@RequestMapping("/api/news")
+@RequestMapping("/api/information/news")
 public class SchoolNewsController {
 
     @Autowired
     private SchoolNewsService schoolNewsService;
 
     /**
-     * 分页获取新闻列表。GET /api/news/type/{type}/start/{start}/size/{size}
+     * 分页获取新闻列表。GET /api/information/news/type/{type}/start/{start}/size/{size}
      * type: 1学校要闻 2院部通知 3通知公告 4学术动态
      */
     @RequestMapping(value = "/type/{type}/start/{start}/size/{size}", method = RequestMethod.GET)
@@ -41,7 +41,7 @@ public class SchoolNewsController {
     }
 
     /**
-     * 获取新闻详情。GET /api/news/id/{id}
+     * 获取新闻详情。GET /api/information/news/id/{id}
      */
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public DataJsonResult<NewInfo> queryNewInfoDetail(@PathVariable("id") String id) {

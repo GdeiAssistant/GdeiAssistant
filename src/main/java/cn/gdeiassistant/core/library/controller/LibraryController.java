@@ -1,27 +1,29 @@
-package cn.gdeiassistant.core.collectionquery.controller;
+package cn.gdeiassistant.core.library.controller;
 
 import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
-import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.common.pojo.Entity.Book;
 import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.bookquery.service.BookQueryService;
+import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-public class CollectionQueryController {
+@RequestMapping("/api/library")
+public class LibraryController {
 
     @Autowired
     private CollectionQueryService collectionQueryService;
@@ -30,15 +32,14 @@ public class CollectionQueryController {
     private BookQueryService bookQueryService;
 
     /**
-     * 馆藏全局检索（公共接口）
-     * GET /api/collection/search?keyword=xxx&page=1
-     * 测试账号由 TrialDataAspect 从 MongoDB collection 集合返回，严禁穿透爬虫。
+     * 图书馆检索。GET /api/library/search?keyword=xxx&page=1
      */
     @TrialData(value = "collection")
-    @RequestMapping(value = "/api/collection/search", method = RequestMethod.GET)
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
     public DataJsonResult<CollectionQueryResult> search(HttpServletRequest request,
                                                         @RequestParam("keyword") String keyword,
-                                                        @RequestParam(value = "page", defaultValue = "1") Integer page) throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException {
+                                                        @RequestParam(value = "page", defaultValue = "1") Integer page)
+            throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException {
         if (page == null || page < 1) {
             page = 1;
         }
@@ -52,22 +53,21 @@ public class CollectionQueryController {
     }
 
     /**
-     * 馆藏详情。GET /api/collection/detail?detailURL=xxx
-     * 测试账号由 TrialDataAspect 从 MongoDB collection 集合返回，严禁穿透爬虫。
+     * 图书馆详情。GET /api/library/detail?detailURL=xxx
      */
     @TrialData(value = "collection")
-    @RequestMapping(value = "/api/collection/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public DataJsonResult<CollectionDetail> detail(HttpServletRequest request,
-                                                   @RequestParam("detailURL") String detailURL) throws NetWorkTimeoutException, ServerErrorException {
-        CollectionDetail d = collectionQueryService.getCollectionDetailByDetailURL(detailURL);
-        return new DataJsonResult<>(true, d);
+                                                   @RequestParam("detailURL") String detailURL)
+            throws NetWorkTimeoutException, ServerErrorException {
+        CollectionDetail detail = collectionQueryService.getCollectionDetailByDetailURL(detailURL);
+        return new DataJsonResult<>(true, detail);
     }
 
     /**
-     * 查询我的借阅。测试账号从 MongoDB trial 集合返回；正常账号需传图书馆密码。
-     * GET /api/collection/borrow?password=xxx（测试账号可省略 password）
+     * 我的借阅。GET /api/library/borrow?password=xxx
      */
-    @RequestMapping(value = "/api/collection/borrow", method = RequestMethod.GET)
+    @RequestMapping(value = "/borrow", method = RequestMethod.GET)
     public DataJsonResult<List<Book>> getBorrow(HttpServletRequest request,
                                                 @RequestParam(value = "password", required = false) String password) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
@@ -77,15 +77,52 @@ public class CollectionQueryController {
     }
 
     /**
-     * 图书续借。测试账号抛出 TestAccountException。
-     * POST /api/collection/renew，参数 sn、code
+     * 图书续借。POST /api/library/renew，body: { sn, code, password }
      */
-    @RequestMapping(value = "/api/collection/renew", method = RequestMethod.POST)
-    public JsonResult renew(HttpServletRequest request,
-                            @RequestParam("sn") String sn,
-                            @RequestParam("code") String code) throws Exception {
+    @RequestMapping(value = "/renew", method = RequestMethod.POST)
+    public JsonResult renew(HttpServletRequest request, @RequestBody LibraryRenewRequest body) throws Exception {
+        String sn = body != null ? body.getSn() : null;
+        String code = body != null ? body.getCode() : null;
+        String password = body != null ? body.getPassword() : null;
+        if (sn == null || sn.isEmpty() || code == null || code.isEmpty()) {
+            return new JsonResult(false, "缺少 sn 或 code");
+        }
+        if (password == null || password.isEmpty()) {
+            return new JsonResult(false, "请提供图书馆密码");
+        }
         String sessionId = (String) request.getAttribute("sessionId");
+        bookQueryService.bookquery(sessionId, password);
         bookQueryService.renewBook(sessionId, sn, code);
         return new JsonResult(true);
+    }
+
+    public static class LibraryRenewRequest {
+        private String sn;
+        private String code;
+        private String password;
+
+        public String getSn() {
+            return sn;
+        }
+
+        public void setSn(String sn) {
+            this.sn = sn;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
     }
 }

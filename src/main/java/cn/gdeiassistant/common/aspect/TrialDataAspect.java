@@ -77,7 +77,7 @@ public class TrialDataAspect {
         Object[] args = proceedingJoinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
 
-        // 优先使用 JwtSessionIdFilter 已注入的 sessionId（统一鉴权，支持 Authorization: Bearer 与 token 头）
+        // 优先使用 JwtSessionIdFilter 已注入的 sessionId（统一鉴权，仅接受 Authorization: Bearer）
         String sessionId = (String) request.getAttribute("sessionId");
         if (StringUtils.isBlank(sessionId)) {
             return buildError(TrialErrorCode.INVALID_TOKEN);
@@ -130,4 +130,3 @@ public class TrialDataAspect {
         return new DataJsonResult<>(base);
     }
 }
-

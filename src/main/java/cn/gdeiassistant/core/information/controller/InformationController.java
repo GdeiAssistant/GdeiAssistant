@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 资讯信息聚合接口：
  * 通知公告 / 世界上的今日
- * GET /api/information/list
+ * GET /api/information/overview
  */
 @RestController
 public class InformationController {
@@ -24,7 +24,7 @@ public class InformationController {
     @Autowired
     private AnnouncementService announcementService;
 
-    @RequestMapping(value = "/api/information/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/information/overview", method = RequestMethod.GET)
     public DataJsonResult<InformationVO> loadInformation() {
         AnnouncementVO notice = announcementService.queryLatestAnnouncement();
         List<AnnouncementVO> notices = announcementService.queryAnnouncementPage(0, 5);

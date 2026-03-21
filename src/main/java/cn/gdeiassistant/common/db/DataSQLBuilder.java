@@ -78,7 +78,7 @@ public class DataSQLBuilder {
             FROM("secret_content sc");
             LEFT_OUTER_JOIN("secret_like scl on sc.id=scl.content_id");
             WHERE("sc.username=#{username}");
-            GROUP_BY("sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state,sc.publish_time,scl.content_id");
+            GROUP_BY("sc.id,sc.content,sc.theme,sc.type,sc.timer,sc.state,sc.publish_time");
         }}.toString();
     }
 
@@ -91,7 +91,7 @@ public class DataSQLBuilder {
             LEFT_OUTER_JOIN("photograph_like pl on p.id=pl.photo_id");
             LEFT_OUTER_JOIN("photograph_comment pc on p.id=pc.photo_id");
             WHERE("p.username=#{username}");
-            GROUP_BY("p.id,p.title,p.count,p.content,p.type,p.create_time,pl.like_id,pc.comment_id");
+            GROUP_BY("p.id,p.title,p.count,p.content,p.type,p.create_time");
         }}.toString();
     }
 
@@ -106,7 +106,7 @@ public class DataSQLBuilder {
             LEFT_OUTER_JOIN("express_comment em on e.id=em.express_id");
             LEFT_OUTER_JOIN("express_guess eg on e.id=eg.express_id");
             WHERE("e.username=#{username}");
-            GROUP_BY("e.id");
+            GROUP_BY("e.id,e.nickname,e.realname,e.self_gender,e.name,e.content,e.person_gender,e.publish_time");
         }}.toString();
     }
 }

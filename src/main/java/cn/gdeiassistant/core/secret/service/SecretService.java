@@ -96,11 +96,12 @@ public class SecretService {
         return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", voiceObjectKey, 30, TimeUnit.MINUTES);
     }
 
-    public void uploadVoiceSecret(int id, InputStream inputStream) {
+    public void uploadVoiceSecret(int id, InputStream inputStream) throws RuntimeException {
         try {
             r2StorageService.uploadObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", inputStream);
         } catch (Exception e) {
             logger.error("上传树洞语音失败，id={}", id, e);
+            throw new RuntimeException("语音上传失败", e);
         } finally {
             if (inputStream != null) {
                 try { inputStream.close(); } catch (IOException ignored) {}

@@ -24,7 +24,7 @@ public class DataSQLBuilder {
     public String selectUserPrivacy(String username) {
         return new SQL() {{
             SELECT("p.username,p.is_location_open,p.is_hometown_open,p.is_introduction_open");
-            SELECT("p.is_enrollment_open,p.is_age_open,p.is_degree_open,p.is_primary_school_open,p.is_junior_high_school_open,p.is_high_school_open");
+            SELECT("p.is_enrollment_open,p.is_age_open");
             SELECT("p.is_faculty_open,p.is_major_open,p.is_cache_allow,p.is_robots_index_allow");
             FROM("privacy p");
             WHERE("p.username=#{username}");

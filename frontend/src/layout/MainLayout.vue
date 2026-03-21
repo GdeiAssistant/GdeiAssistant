@@ -68,6 +68,7 @@ watch(
   bottom: 0;
   left: 0;
   z-index: 500;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .weui-tabbar__icon {

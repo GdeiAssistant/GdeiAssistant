@@ -34,6 +34,7 @@
             <span v-if="getActionLabel(item)" class="interaction-item__action">{{ getActionLabel(item) }}</span>
           </div>
           <span :class="['interaction-item__state', item.isRead ? 'is-read' : 'is-unread']">
+            <span v-if="!item.isRead" class="interaction-item__dot" aria-hidden="true"></span>
             {{ item.isRead ? $t('info.read') : $t('info.unread') }}
           </span>
         </div>
@@ -234,6 +235,17 @@ function getActionLabel(item) {
 .interaction-item__state {
   font-size: 12px;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.interaction-item__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #09bb07;
+  flex-shrink: 0;
 }
 
 .interaction-item__state.is-read {

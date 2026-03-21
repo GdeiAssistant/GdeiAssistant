@@ -266,7 +266,7 @@ onMounted(() => {
 
 <style scoped>
 .cet-page {
-  background-color: #fff;
+  background-color: var(--color-surface);
   min-height: 100vh;
   padding-bottom: 24px;
 }
@@ -277,14 +277,14 @@ onMounted(() => {
   align-items: center;
   min-height: 44px;
   padding: 10px 15px;
-  background-color: #fff;
+  background-color: var(--color-surface);
   box-sizing: border-box;
 }
 
 .nav-btn-back {
   font-size: 16px;
   line-height: 24px;
-  color: #888;
+  color: var(--color-text-tertiary);
   cursor: pointer;
 }
 
@@ -314,7 +314,7 @@ onMounted(() => {
   margin-top: 25px;
   text-align: center;
   font-size: 14px;
-  color: #888;
+  color: var(--color-text-tertiary);
 }
 
 .cet-page-desc__link {
@@ -327,7 +327,7 @@ onMounted(() => {
   height: 50px;
   display: block;
   cursor: pointer;
-  background: #f5f5f5;
+  background: var(--color-bg-secondary);
 }
 
 .weui-vcode-placeholder {
@@ -343,7 +343,7 @@ onMounted(() => {
 .cet-result-desc {
   text-align: center;
   font-size: 14px;
-  color: #888;
+  color: var(--color-text-tertiary);
   margin: 0 0 20px 0;
 }
 

@@ -218,7 +218,7 @@ onMounted(() => {
 
 <style scoped>
 .grade-page {
-  background-color: #fff;
+  background-color: var(--color-surface);
   min-height: 100vh;
   padding-bottom: 24px;
 }
@@ -230,7 +230,7 @@ onMounted(() => {
   align-items: center;
   min-height: 44px;
   padding: 10px 15px;
-  background-color: #fff;
+  background-color: var(--color-surface);
   box-sizing: border-box;
 }
 
@@ -238,7 +238,7 @@ onMounted(() => {
 .nav-btn-more {
   font-size: 16px;
   line-height: 24px;
-  color: #888;
+  color: var(--color-text-tertiary);
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -256,8 +256,8 @@ onMounted(() => {
 .grade-navbar {
   display: flex;
   position: relative;
-  background-color: #fff;
-  border-bottom: 1px solid #e5e5e5;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .grade-navbar__item {
@@ -265,14 +265,14 @@ onMounted(() => {
   padding: 16px 0;
   text-align: center;
   font-size: 17px;
-  color: #999;
+  color: var(--color-text-tertiary);
   cursor: pointer;
   position: relative;
   -webkit-tap-highlight-color: transparent;
 }
 
 .grade-navbar__item_on {
-  color: #000;
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 
@@ -306,7 +306,7 @@ onMounted(() => {
 .page_desc {
   margin: 0 0 8px;
   font-size: 14px;
-  color: #999;
+  color: var(--color-text-tertiary);
   text-align: center;
 }
 
@@ -323,9 +323,9 @@ onMounted(() => {
 
 .table thead th {
   font-weight: 600;
-  color: #000;
+  color: var(--color-text-primary);
   padding: 12px 8px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .table .col-course {
@@ -345,9 +345,9 @@ onMounted(() => {
 
 .table tbody td {
   padding: 12px 8px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--color-border);
   font-size: 14px;
-  color: #333;
+  color: var(--color-text-primary);
 }
 
 .table tbody .col-course {

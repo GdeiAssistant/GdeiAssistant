@@ -231,7 +231,7 @@ onMounted(() => {
 
 <style scoped>
 .about-page {
-  background-color: #fff;
+  background-color: var(--color-surface);
   min-height: 100vh;
   padding: 0 0 80px 0;
   display: flex;
@@ -247,7 +247,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   height: 50px;
-  background-color: #fff;
+  background-color: var(--color-surface);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
@@ -263,7 +263,7 @@ onMounted(() => {
 .navbar-title {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: var(--color-text-primary);
 }
 
 .hamburger-btn {
@@ -282,7 +282,7 @@ onMounted(() => {
 .hamburger-btn span {
   width: 24px;
   height: 2px;
-  background-color: #333;
+  background-color: var(--color-text-primary);
   transition: all 0.3s;
 }
 
@@ -303,7 +303,7 @@ onMounted(() => {
   right: -300px;
   width: 300px;
   height: 100vh;
-  background-color: #fff;
+  background-color: var(--color-surface);
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
   z-index: 1002;
   transition: right 0.3s ease;
@@ -319,13 +319,13 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-divider);
 }
 
 .menu-title {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: var(--color-text-primary);
 }
 
 .menu-close {
@@ -334,7 +334,7 @@ onMounted(() => {
   border: none;
   background: transparent;
   font-size: 24px;
-  color: #333;
+  color: var(--color-text-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -346,7 +346,7 @@ onMounted(() => {
 }
 
 .menu-item {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-divider);
 }
 
 .menu-item-header {
@@ -355,17 +355,17 @@ onMounted(() => {
   align-items: center;
   padding: 16px;
   cursor: pointer;
-  color: #333;
+  color: var(--color-text-primary);
   font-size: 15px;
 }
 
 .menu-item-header:hover {
-  background-color: #f5f5f5;
+  background-color: var(--color-bg-secondary);
 }
 
 .menu-arrow {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-tertiary);
   transition: transform 0.3s;
 }
 
@@ -374,20 +374,20 @@ onMounted(() => {
 }
 
 .menu-subitems {
-  background-color: #f9f9f9;
+  background-color: var(--color-bg-secondary);
 }
 
 .menu-subitem {
   display: block;
   padding: 12px 16px 12px 32px;
-  color: #666;
+  color: var(--color-text-secondary);
   text-decoration: none;
   font-size: 14px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-divider);
 }
 
 .menu-subitem:hover {
-  background-color: #f0f0f0;
+  background-color: var(--color-divider);
   color: var(--color-primary);
 }
 
@@ -431,7 +431,7 @@ onMounted(() => {
 .about-title {
   font-size: 18px;
   font-weight: 500;
-  color: #333;
+  color: var(--color-text-primary);
   margin: 0 0 16px 0;
   text-align: center;
   position: relative;
@@ -451,7 +451,7 @@ onMounted(() => {
 
 .about-description {
   line-height: 1.8;
-  color: #666;
+  color: var(--color-text-secondary);
   font-size: 14px;
 }
 
@@ -513,7 +513,7 @@ onMounted(() => {
   text-align: center;
   margin-top: auto;
   padding-top: 40px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--color-divider);
   padding-left: 16px;
   padding-right: 16px;
 }
@@ -540,7 +540,7 @@ onMounted(() => {
 
 .footer-copyright {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-tertiary);
   margin: 8px 0;
 }
 
@@ -554,7 +554,7 @@ onMounted(() => {
 }
 
 .footer-beian a {
-  color: #999;
+  color: var(--color-text-tertiary);
   text-decoration: none;
 }
 

@@ -48,7 +48,7 @@ const visibleNotices = computed(() => {
 
 <style scoped>
 .modern-card {
-  background: #ffffff;
+  background: var(--color-surface);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
@@ -63,7 +63,7 @@ const visibleNotices = computed(() => {
 .card-title {
   font-size: 17px;
   font-weight: 600;
-  color: #333333;
+  color: var(--color-text-primary);
   margin-bottom: 12px;
   display: flex;
   align-items: center;
@@ -94,23 +94,23 @@ const visibleNotices = computed(() => {
   margin-top: 12px;
 }
 .notice-content + .notice-content {
-  border-top: 1px solid #f2f2f2;
+  border-top: 1px solid var(--color-divider);
   padding-top: 14px;
 }
 .notice-title {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary);
   margin-bottom: 6px;
 }
 .notice-date {
   font-size: 13px;
-  color: #999;
+  color: var(--color-text-tertiary);
   margin-bottom: 10px;
 }
 .notice-body {
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 </style>

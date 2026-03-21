@@ -39,8 +39,8 @@ class ExpressServiceTest {
     }
 
     @Test
-    void addExpressCommentThrowsIllegalArgumentExceptionForCommentOver200Chars() {
-        String longComment = "a".repeat(201);
+    void addExpressCommentThrowsIllegalArgumentExceptionForCommentOver50Chars() {
+        String longComment = "a".repeat(51);
 
         assertThrows(IllegalArgumentException.class,
                 () -> expressService.addExpressComment(1, "session1", longComment));

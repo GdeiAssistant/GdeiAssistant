@@ -88,6 +88,12 @@ public class GlobalRestExceptionHandler {
                 "请求参数不合法"));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<JsonResult> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.INCORRECT_REQUEST_PARAM, false,
+                e.getMessage() != null ? e.getMessage() : "请求参数不合法"));
+    }
+
     // ========== 通用业务异常（使用异常自身 message） ==========
 
     @ExceptionHandler(DataNotExistException.class)

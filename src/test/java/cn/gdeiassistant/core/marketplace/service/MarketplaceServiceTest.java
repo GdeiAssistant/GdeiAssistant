@@ -121,13 +121,12 @@ class MarketplaceServiceTest {
     }
 
     @Test
-    void uploadItemPictureLogErrorButDoesNotThrowOnR2Failure() {
+    void uploadItemPictureThrowsOnR2Failure() {
         doThrow(new RuntimeException("R2 down"))
                 .when(r2StorageService).uploadObject(eq("gdeiassistant-userdata"), anyString(), any(InputStream.class));
 
         InputStream stream = new ByteArrayInputStream(new byte[]{1, 2, 3});
 
-        assertDoesNotThrow(() -> marketplaceService.uploadItemPicture(1, 1, stream));
-        verify(r2StorageService).uploadObject(eq("gdeiassistant-userdata"), eq("ershou/1_1.jpg"), any(InputStream.class));
+        assertThrows(RuntimeException.class, () -> marketplaceService.uploadItemPicture(1, 1, stream));
     }
 }

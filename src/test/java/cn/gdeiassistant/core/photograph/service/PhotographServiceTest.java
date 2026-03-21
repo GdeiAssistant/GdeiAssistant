@@ -63,8 +63,8 @@ class PhotographServiceTest {
     }
 
     @Test
-    void addPhotographComment_throwsForCommentExceeding200Chars() {
-        String longComment = "a".repeat(201);
+    void addPhotographComment_throwsForCommentExceeding50Chars() {
+        String longComment = "a".repeat(51);
 
         assertThrows(IllegalArgumentException.class,
                 () -> photographService.addPhotographComment(1, longComment, "session1"));

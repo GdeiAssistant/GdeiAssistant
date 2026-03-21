@@ -173,6 +173,7 @@ public class MarketplaceService {
             r2StorageService.uploadObject("gdeiassistant-userdata", "ershou/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传二手交易图片失败，id={}，index={}", id, index, e);
+            throw new RuntimeException("图片上传失败", e);
         } finally {
             if (inputStream != null) {
                 try { inputStream.close(); } catch (IOException ignored) {}

@@ -44,8 +44,8 @@ class SecretServiceTest {
     }
 
     @Test
-    void addSecretCommentThrowsIllegalArgumentExceptionForCommentOver200Chars() {
-        String longComment = "a".repeat(201);
+    void addSecretCommentThrowsIllegalArgumentExceptionForCommentOver50Chars() {
+        String longComment = "a".repeat(51);
 
         assertThrows(IllegalArgumentException.class,
                 () -> secretService.addSecretComment(1, "session1", longComment));

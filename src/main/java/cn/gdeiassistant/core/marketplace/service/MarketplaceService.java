@@ -169,13 +169,14 @@ public class MarketplaceService {
     }
 
     public void uploadItemPicture(int id, int index, InputStream inputStream) {
-        r2StorageService.uploadObject("gdeiassistant-userdata", "ershou/" + id + "_" + index + ".jpg", inputStream);
         try {
+            r2StorageService.uploadObject("gdeiassistant-userdata", "ershou/" + id + "_" + index + ".jpg", inputStream);
+        } catch (Exception e) {
+            logger.error("上传二手交易图片失败，id={}，index={}", id, index, e);
+        } finally {
             if (inputStream != null) {
-                inputStream.close();
+                try { inputStream.close(); } catch (IOException ignored) {}
             }
-        } catch (IOException e) {
-            logger.error("关闭二手交易图片上传流失败，id={}，index={}", id, index, e);
         }
     }
 

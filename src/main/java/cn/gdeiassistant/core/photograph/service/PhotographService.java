@@ -128,6 +128,9 @@ public class PhotographService {
 
     @Transactional("appTransactionManager")
     public void addPhotographComment(int id, String comment, String sessionId) {
+        if (comment == null || comment.trim().isEmpty() || comment.length() > 200) {
+            throw new IllegalArgumentException("评论内容不能为空且不能超过 200 字");
+        }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         PhotographCommentEntity entity = new PhotographCommentEntity();
         entity.setPhotoId(id);
@@ -149,13 +152,14 @@ public class PhotographService {
     }
 
     public void uploadPhotographItemPicture(int id, int index, InputStream inputStream) {
-        r2StorageService.uploadObject("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", inputStream);
         try {
+            r2StorageService.uploadObject("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", inputStream);
+        } catch (Exception e) {
+            logger.error("上传拍好校园图片失败，id={}, index={}", id, index, e);
+        } finally {
             if (inputStream != null) {
-                inputStream.close();
+                try { inputStream.close(); } catch (IOException ignored) {}
             }
-        } catch (IOException ex) {
-            logger.error("关闭拍好校园图片上传流失败，id={}, index={}", id, index, ex);
         }
     }
 

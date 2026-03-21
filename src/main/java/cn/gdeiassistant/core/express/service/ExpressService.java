@@ -72,6 +72,9 @@ public class ExpressService {
 
     @Transactional("appTransactionManager")
     public void addExpressComment(int expressId, String sessionId, String comment) throws DataNotExistException {
+        if (comment == null || comment.trim().isEmpty() || comment.length() > 200) {
+            throw new IllegalArgumentException("评论内容不能为空且不能超过 200 字");
+        }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
         if (entity == null) {

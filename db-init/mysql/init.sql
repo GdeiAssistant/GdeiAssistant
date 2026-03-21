@@ -424,7 +424,6 @@ CREATE TABLE `privacy` (
   `is_major_open` tinyint(1) DEFAULT NULL COMMENT '公开专业',
   `is_enrollment_open` tinyint(1) DEFAULT NULL COMMENT '公开入学年份',
   `is_age_open` tinyint(1) DEFAULT NULL COMMENT '公开年龄',
-  `is_degree_open` tinyint(1) DEFAULT NULL COMMENT '公开学历',
   `is_cache_allow` tinyint(1) DEFAULT NULL COMMENT '使用教务缓存',
   `is_robots_index_allow` tinyint(1) DEFAULT NULL COMMENT '允许搜索引擎收录',
   PRIMARY KEY (`username`) USING BTREE
@@ -434,8 +433,8 @@ CREATE TABLE `privacy` (
 -- Records of privacy
 -- ----------------------------
 BEGIN;
-INSERT INTO `privacy` (`username`, `is_location_open`, `is_hometown_open`, `is_introduction_open`, `is_faculty_open`, `is_major_open`, `is_enrollment_open`, `is_age_open`, `is_degree_open`, `is_cache_allow`, `is_robots_index_allow`) VALUES
-('gdeiassistant', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `privacy` (`username`, `is_location_open`, `is_hometown_open`, `is_introduction_open`, `is_faculty_open`, `is_major_open`, `is_enrollment_open`, `is_age_open`, `is_cache_allow`, `is_robots_index_allow`) VALUES
+('gdeiassistant', 0, 0, 0, 0, 0, 0, 0, 0, 0);
 COMMIT;
 
 -- ----------------------------
@@ -461,8 +460,6 @@ CREATE TABLE `profile` (
   `junior_high_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '初中',
   `high_school` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '高中/职中',
   `colleges` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '大专院校',
-  `avatar_url` varchar(512) DEFAULT NULL COMMENT '头像URL，开箱即用占位；正式由R2 avatar/{username}.jpg提供',
-  `gender` tinyint(1) DEFAULT NULL COMMENT '性别，0男 1女 2其他',
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
@@ -470,8 +467,8 @@ CREATE TABLE `profile` (
 -- Records of profile（测试账号：GDEI小助手 gdeiassistant）
 -- ----------------------------
 BEGIN;
-INSERT INTO `profile` (`username`, `nickname`, `birthday`, `degree`, `faculty`, `profession`, `major`, `location_region`, `location_state`, `location_city`, `hometown_region`, `hometown_state`, `hometown_city`, `enrollment`, `primary_school`, `junior_high_school`, `high_school`, `colleges`, `avatar_url`, `gender`) VALUES
-('gdeiassistant', 'GDEI小助手', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'https://picsum.photos/id/237/200/200', 0);
+INSERT INTO `profile` (`username`, `nickname`, `birthday`, `degree`, `faculty`, `profession`, `major`, `location_region`, `location_state`, `location_city`, `hometown_region`, `hometown_state`, `hometown_city`, `enrollment`, `primary_school`, `junior_high_school`, `high_school`, `colleges`) VALUES
+('gdeiassistant', 'GDEI小助手', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -589,37 +586,6 @@ BEGIN;
 INSERT INTO `user` (`username`, `password`) VALUES ('gdeiassistant', 'gdeiassistant');
 COMMIT;
 
--- ----------------------------
--- Table structure for wechat_user
--- ----------------------------
-DROP TABLE IF EXISTS `wechat_user`;
-CREATE TABLE `wechat_user` (
-  `wechat_id` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '微信唯一标识ID',
-  `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
-  PRIMARY KEY (`wechat_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
--- ----------------------------
--- Records of wechat_user
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for yiban_user
--- ----------------------------
-DROP TABLE IF EXISTS `yiban_user`;
-CREATE TABLE `yiban_user` (
-  `user_id` int NOT NULL COMMENT '易班唯一标识ID',
-  `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
-  PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
--- ----------------------------
--- Records of yiban_user
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for feedback

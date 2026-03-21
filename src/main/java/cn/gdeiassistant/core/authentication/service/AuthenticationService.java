@@ -68,7 +68,7 @@ public class AuthenticationService {
                 break;
 
             default:
-                throw new UnsupportedOperationException("该证件类型的实名认证暂未开放");
+                throw new InconsistentAuthenticationException("该证件类型的实名认证暂未开放");
         }
     }
 

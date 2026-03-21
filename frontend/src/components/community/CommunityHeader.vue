@@ -49,7 +49,7 @@ function handleBack() {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: #fff;
+  background: var(--c-card);
 }
 
 .community-header__accent {

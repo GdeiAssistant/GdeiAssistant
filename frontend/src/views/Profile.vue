@@ -73,19 +73,9 @@
     </div>
 
     <div class="weui-cells">
-      <div class="weui-cell">
-        <div class="weui-cell__bd"><p>{{ $t('profile.language') }}</p></div>
-        <div class="weui-cell__ft">
-          <select v-model="selectedLocale" class="locale-select" @change="changeLocale">
-            <option value="zh-CN">简体中文</option>
-            <option value="zh-HK">繁體中文（香港）</option>
-            <option value="zh-TW">繁體中文（台灣）</option>
-            <option value="en">English</option>
-            <option value="ja">日本語</option>
-            <option value="ko">한국어</option>
-          </select>
-        </div>
-      </div>
+      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/appearance')">
+        <div class="weui-cell__bd"><p>{{ $t('appearance.title') }}</p></div><div class="weui-cell__ft"></div>
+      </a>
     </div>
 
     <div class="weui-cells">
@@ -730,7 +720,7 @@ onBeforeUnmount(() => {
 .page_title {
   text-align: center;
   font-size: 34px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   padding: 40px 0 20px 0;
   margin: 0;

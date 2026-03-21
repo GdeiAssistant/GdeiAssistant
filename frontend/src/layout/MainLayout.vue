@@ -82,6 +82,10 @@ watch(
   filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg);
 }
 .weui-tabbar .weui-bar__item_on .weui-tabbar__label {
-  color: #09bb07;
+  color: var(--color-primary);
+}
+.weui-tabbar {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-divider);
 }
 </style>

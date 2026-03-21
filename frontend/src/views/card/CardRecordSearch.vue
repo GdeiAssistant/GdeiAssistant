@@ -96,7 +96,7 @@ function goBack() {
 .page-title-green {
   text-align: center;
   font-size: 34px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   margin: 10px 0 6px 0;
   line-height: 1.2;

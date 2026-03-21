@@ -135,7 +135,7 @@ function getActionLabel(item) {
   display: block;
   width: 4px;
   height: 16px;
-  background: #09bb07;
+  background: var(--color-primary);
   border-radius: 2px;
   margin-right: 8px;
 }
@@ -244,7 +244,7 @@ function getActionLabel(item) {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #09bb07;
+  background: var(--color-primary);
   flex-shrink: 0;
 }
 
@@ -253,6 +253,6 @@ function getActionLabel(item) {
 }
 
 .interaction-item__state.is-unread {
-  color: #09bb07;
+  color: var(--color-primary);
 }
 </style>

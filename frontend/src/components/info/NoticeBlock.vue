@@ -76,7 +76,7 @@ const visibleNotices = computed(() => {
   display: block;
   width: 4px;
   height: 16px;
-  background: #09bb07;
+  background: var(--color-primary);
   border-radius: 2px;
   margin-right: 8px;
 }

@@ -291,7 +291,7 @@ onMounted(() => {
 .page-title-green {
   text-align: center;
   font-size: 34px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   margin: 10px 0 20px 0;
   line-height: 1.2;
@@ -318,7 +318,7 @@ onMounted(() => {
 }
 
 .cet-page-desc__link {
-  color: #09bb07;
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -332,7 +332,7 @@ onMounted(() => {
 
 .weui-vcode-placeholder {
   font-size: 14px;
-  color: #09bb07;
+  color: var(--color-primary);
   cursor: pointer;
 }
 

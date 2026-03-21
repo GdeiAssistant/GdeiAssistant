@@ -110,7 +110,7 @@ onMounted(() => {
 
 .page-title-green {
   font-size: 34px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   margin: 0 0 20px 0;
   line-height: 1.2;

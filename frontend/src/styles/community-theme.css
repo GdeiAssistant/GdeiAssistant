@@ -3,7 +3,24 @@
    仅作用于社区模块，不影响教务系统/主系统的 WeUI 样式
    ============================================================ */
 
-:root {
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* 基础主题变量 */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-bg-tertiary: #f3f4f6;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #9ca3af;
+  --color-border: #e5e7eb;
+  --color-divider: #f3f4f6;
+  --color-primary: #047857;
+  --color-primary-hover: #065f46;
+
   /* 模块专属色 */
   --c-ershou: #10b981;
   --c-lostandfound: #3b82f6;
@@ -22,6 +39,7 @@
   --c-card: #ffffff;
   --c-border: #f3f4f6;
   --c-divider: #e5e7eb;
+  --c-shadow: rgba(0, 0, 0, 0.06);
 
   /* 圆角 */
   --radius-sm: 8px;
@@ -49,6 +67,45 @@
   --font-lg: 16px;
   --font-xl: 18px;
   --font-2xl: 20px;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg-primary: #121212;
+  --color-bg-secondary: #1a1a1a;
+  --color-bg-tertiary: #242424;
+  --color-surface: #1e1e1e;
+  --color-surface-raised: #2a2a2a;
+  --color-text-primary: #e5e7eb;
+  --color-text-secondary: #9ca3af;
+  --color-text-tertiary: #9295a0;
+  --color-border: #374151;
+  --color-divider: #2a2a2a;
+  --color-primary: #34D399;
+  --color-primary-hover: #6EE7B7;
+
+  --c-ershou: #34d399;
+  --c-lostandfound: #60a5fa;
+  --c-secret: #a78bfa;
+  --c-express: #fb7185;
+  --c-topic: #818cf8;
+  --c-delivery: #fbbf24;
+  --c-dating: #f472b6;
+  --c-photograph: #22d3ee;
+
+  --c-text-1: #e5e7eb;
+  --c-text-2: #9ca3af;
+  --c-text-3: #9295a0;
+  --c-bg: #121212;
+  --c-card: #1e1e1e;
+  --c-border: #374151;
+  --c-divider: #2a2a2a;
+  --c-shadow: rgba(0, 0, 0, 0.3);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 /* ============================================================
@@ -116,7 +173,7 @@
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: #f0f0f0;
+  background: var(--color-bg-tertiary);
   cursor: pointer;
 }
 
@@ -364,7 +421,7 @@
    ============================================================ */
 
 .community-skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, var(--color-bg-tertiary) 25%, var(--color-surface-raised) 50%, var(--color-bg-tertiary) 75%);
   background-size: 200% 100%;
   animation: community-shimmer 1.5s ease-in-out infinite;
   border-radius: var(--radius-sm);

@@ -89,7 +89,7 @@ onMounted(() => {
 }
 .page-title {
   text-align: center;
-  color: #09bb07;
+  color: var(--color-primary);
   padding: 10px 0;
   margin: 0;
   font-size: 34px;
@@ -103,7 +103,7 @@ onMounted(() => {
   display: inline-block;
   width: 20px;
   height: 20px;
-  border: 2px solid #09bb07;
+  border: 2px solid var(--color-primary);
   border-top-color: transparent;
   border-radius: 50%;
   animation: weui-loading 1s linear infinite;

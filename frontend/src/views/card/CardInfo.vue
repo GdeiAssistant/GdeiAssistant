@@ -214,7 +214,7 @@ onMounted(() => {
 
 .page-title-green {
   font-size: 34px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   margin: 0;
   line-height: 1.2;
@@ -287,7 +287,7 @@ onMounted(() => {
 }
 
 .card-info-footer-link {
-  color: #09bb07;
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -358,7 +358,7 @@ onMounted(() => {
 }
 
 .weui-dialog__btn_primary {
-  color: #09bb07;
+  color: var(--color-primary);
   border-left: 1px solid #e5e5e5;
 }
 

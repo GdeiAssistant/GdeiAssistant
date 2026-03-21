@@ -176,7 +176,7 @@ onMounted(() => {
   font-size: 22px;
   font-weight: 500;
   text-align: center;
-  color: #09bb07;
+  color: var(--color-primary);
 }
 .weui-tab__panel {
   flex: 1;
@@ -210,9 +210,9 @@ onMounted(() => {
   border-top: 1px solid #e5e5e5;
 }
 .news-tabbar .weui-bar__item_on .weui-tabbar__label {
-  color: #09bb07;
+  color: var(--color-primary);
 }
-/* 原版无 _active 图时，用滤镜高亮为绿色 #09bb07 */
+/* 原版无 _active 图时，用滤镜高亮为绿色 var(--color-primary) */
 .news-tabbar .weui-bar__item_on .weui-tabbar__icon {
   filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg);
 }

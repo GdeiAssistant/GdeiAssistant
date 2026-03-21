@@ -16,6 +16,7 @@ export default defineConfig({
     clearMocks: true,
     restoreMocks: true,
     setupFiles: ['./test/setup.js'],
+    exclude: ['e2e/**', 'node_modules/**'],
   },
   server: {
     // /api 代理到 Java 后端

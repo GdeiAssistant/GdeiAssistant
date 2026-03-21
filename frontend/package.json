@@ -19,6 +19,7 @@
     "weui": "^2.6.25"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@vitejs/plugin-vue": "^6.0.2",
     "fast-xml-parser": "^5.3.6",
     "jsdom": "^26.1.0",

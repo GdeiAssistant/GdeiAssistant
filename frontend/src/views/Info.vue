@@ -266,7 +266,7 @@ onMounted(() => {
   overflow: hidden !important;
   display: flex;
   flex-direction: column;
-  background-color: #f3f4f6;
+  background-color: #f6fbf6;
 }
 .weui-tab__panel.info-container {
   flex: 1;
@@ -275,7 +275,7 @@ onMounted(() => {
   box-sizing: border-box;
   padding: 12px;
   padding-bottom: 60px;
-  background-color: #f3f4f6;
+  background-color: #f6fbf6;
   min-height: 100vh;
 }
 

@@ -117,6 +117,7 @@ function handleMenuClick(item) {
           :key="item.id || item.path || item.key || index"
           href="javascript:;"
           class="weui-grid"
+          :aria-label="item.title"
           @click.prevent.stop="handleMenuClick(item)"
         >
           <div class="weui-grid__icon">

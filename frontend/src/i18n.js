@@ -2,7 +2,7 @@ import { createI18n } from 'vue-i18n'
 import zhCN from './locales/zh-CN.json'
 
 function detectBrowserLocale() {
-  const lang = navigator.language
+  const lang = (typeof navigator !== 'undefined' && navigator.language) || 'zh-CN'
   const supported = ['zh-CN', 'zh-HK', 'zh-TW', 'en', 'ja', 'ko']
   if (supported.includes(lang)) return lang
   if (lang.startsWith('zh')) return 'zh-CN'
@@ -12,9 +12,13 @@ function detectBrowserLocale() {
   return 'zh-CN'
 }
 
+function getSavedLocale() {
+  try { return localStorage.getItem('locale') } catch (e) { return null }
+}
+
 const i18n = createI18n({
   legacy: false,
-  locale: localStorage.getItem('locale') || detectBrowserLocale(),
+  locale: getSavedLocale() || detectBrowserLocale(),
   fallbackLocale: 'zh-CN',
   messages: { 'zh-CN': zhCN }
 })

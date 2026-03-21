@@ -15,6 +15,7 @@ export default defineConfig({
     globals: true,
     clearMocks: true,
     restoreMocks: true,
+    setupFiles: ['./test/setup.js'],
   },
   server: {
     // /api 代理到 Java 后端

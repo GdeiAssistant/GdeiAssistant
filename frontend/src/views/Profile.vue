@@ -1,130 +1,146 @@
 <template>
   <div class="profile-page">
-    <h1 class="page_title">个人中心</h1>
+    <h1 class="page_title">{{ $t('profile.title') }}</h1>
 
     <div class="weui-toptips weui_warn js_tooltips" style="display: none;"></div>
 
     <div class="weui-cells" style="margin-top: 0;">
       <div class="weui-cell weui-cell_access" @click="router.push('/user/avatar-edit')">
-        <div class="weui-cell__bd"><p>头像</p></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.avatar') }}</p></div>
         <div class="weui-cell__ft">
-          <img :src="userInfo.avatar" style="width: 50px; height: 50px; border-radius: 50%; display: block;" alt="头像" />
+          <img :src="userInfo.avatar" style="width: 50px; height: 50px; border-radius: 50%; display: block;" :alt="$t('profile.avatar')" />
         </div>
       </div>
 
       <div class="weui-cell">
-        <div class="weui-cell__bd"><p>用户名</p></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.username') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.username }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access relative-cell" @click="openNicknameDialog">
-        <div class="weui-cell__bd"><p>昵称</p></div>
-        <div class="weui-cell__ft">{{ userInfo.nickname || '点击设置' }}</div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.nickname') }}</p></div>
+        <div class="weui-cell__ft">{{ userInfo.nickname || $t('common.clickToSet') }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openBirthdayPicker">
-        <div class="weui-cell__bd"><p>生日</p></div>
-        <div class="weui-cell__ft">{{ userInfo.birthday || '未选择' }}</div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.birthday') }}</p></div>
+        <div class="weui-cell__ft">{{ userInfo.birthday || $t('common.unselected') }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openFacultyPicker">
-        <div class="weui-cell__bd"><p>院系</p></div>
-        <div class="weui-cell__ft">{{ userInfo.faculty || '未选择' }}</div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.faculty') }}</p></div>
+        <div class="weui-cell__ft">{{ userInfo.faculty || $t('common.unselected') }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openMajorPicker">
-        <div class="weui-cell__bd"><p>专业</p></div>
-        <div class="weui-cell__ft">{{ userInfo.major || '未选择' }}</div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.major') }}</p></div>
+        <div class="weui-cell__ft">{{ userInfo.major || $t('common.unselected') }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openEnrollmentPicker">
-        <div class="weui-cell__bd"><p>入学年份</p></div>
-        <div class="weui-cell__ft">{{ userInfo.enrollment || '未选择' }}</div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.enrollmentYear') }}</p></div>
+        <div class="weui-cell__ft">{{ userInfo.enrollment || $t('common.unselected') }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openLocationPicker">
-        <div class="weui-cell__bd"><p>所在地</p></div>
-        <div class="weui-cell__ft">{{ userInfo.location || '未选择' }}</div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.location') }}</p></div>
+        <div class="weui-cell__ft">{{ userInfo.location || $t('common.unselected') }}</div>
       </div>
 
       <div class="weui-cell weui-cell_access" @click="openHometownPicker">
-        <div class="weui-cell__bd"><p>家乡</p></div>
-        <div class="weui-cell__ft">{{ userInfo.hometown || '未选择' }}</div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.hometown') }}</p></div>
+        <div class="weui-cell__ft">{{ userInfo.hometown || $t('common.unselected') }}</div>
       </div>
 
       <a class="weui-cell weui-cell_access relative-cell" href="javascript:" @click.prevent="openIntroDialog">
-        <div class="weui-cell__bd"><p>个人简介</p></div>
-        <div class="weui-cell__ft">{{ userInfo.introduction ? '已填写' : '去填写' }}</div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.introduction') }}</p></div>
+        <div class="weui-cell__ft">{{ userInfo.introduction ? $t('common.filled') : $t('common.notFilled') }}</div>
       </a>
 
       <div class="weui-cell">
-        <div class="weui-cell__bd"><p>IP属地</p></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.ipArea') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.ipArea || '-' }}</div>
       </div>
     </div>
 
     <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/privacy-setting')">
-        <div class="weui-cell__bd"><p>隐私设置</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.privacySetting') }}</p></div><div class="weui-cell__ft"></div>
       </a>
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/feature-manage')">
-        <div class="weui-cell__bd"><p>功能管理</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.featureManage') }}</p></div><div class="weui-cell__ft"></div>
       </a>
     </div>
 
     <div class="weui-cells">
+      <div class="weui-cell">
+        <div class="weui-cell__bd"><p>{{ $t('profile.language') }}</p></div>
+        <div class="weui-cell__ft">
+          <select v-model="selectedLocale" class="locale-select" @change="changeLocale">
+            <option value="zh-CN">简体中文</option>
+            <option value="zh-HK">繁體中文（香港）</option>
+            <option value="zh-TW">繁體中文（台灣）</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="javascript:" @click="handlePasswordClick">
-        <div class="weui-cell__bd"><p>修改密码</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.changePassword') }}</p></div><div class="weui-cell__ft"></div>
       </a>
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/login-record')">
-        <div class="weui-cell__bd"><p>登录记录</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.loginRecord') }}</p></div><div class="weui-cell__ft"></div>
       </a>
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/realname')">
-        <div class="weui-cell__bd"><p>实名认证</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.realname') }}</p></div><div class="weui-cell__ft"></div>
       </a>
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/bind-phone')">
-        <div class="weui-cell__bd"><p>绑定手机</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.bindPhone') }}</p></div><div class="weui-cell__ft"></div>
       </a>
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/bind-email')">
-        <div class="weui-cell__bd"><p>绑定邮箱</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.bindEmail') }}</p></div><div class="weui-cell__ft"></div>
       </a>
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/delete')">
-        <div class="weui-cell__bd"><p>注销账号</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.deleteAccount') }}</p></div><div class="weui-cell__ft"></div>
       </a>
     </div>
 
     <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleReport">
-        <div class="weui-cell__bd"><p>不良"校园贷"举报通道</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.reportChannel') }}</p></div><div class="weui-cell__ft"></div>
       </a>
     </div>
 
     <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/download')">
-        <div class="weui-cell__bd"><p>下载用户数据</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.downloadData') }}</p></div><div class="weui-cell__ft"></div>
       </a>
     </div>
 
     <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/feedback')">
-        <div class="weui-cell__bd"><p>帮助与反馈</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.helpFeedback') }}</p></div><div class="weui-cell__ft"></div>
       </a>
     </div>
 
     <div class="weui-cells logout-cells" style="margin-bottom: 80px;">
       <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleLogoutClick">
-        <div class="weui-cell__bd"><p>退出账号</p></div><div class="weui-cell__ft"></div>
+        <div class="weui-cell__bd"><p>{{ $t('profile.logout') }}</p></div><div class="weui-cell__ft"></div>
       </a>
     </div>
 
     <div v-if="showLogoutDialog" class="dialog-wrapper">
       <div class="weui-mask" @click="showLogoutDialog = false"></div>
       <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-        <div class="weui-dialog__bd">确定要退出账号吗？</div>
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('common.hint') }}</strong></div>
+        <div class="weui-dialog__bd">{{ $t('profile.logoutConfirm') }}</div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showLogoutDialog = false">取消</a>
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmLogout">确定退出</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showLogoutDialog = false">{{ $t('common.cancel') }}</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmLogout">{{ $t('profile.logoutConfirmBtn') }}</a>
         </div>
       </div>
     </div>
@@ -132,13 +148,13 @@
     <div v-if="showNicknameDialog" class="dialog-wrapper">
       <div class="weui-mask" @click="showNicknameDialog = false"></div>
       <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">修改昵称</strong></div>
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('profile.editNickname') }}</strong></div>
         <div class="weui-dialog__bd">
-          <input type="text" class="custom-input" v-model="tempNickname" placeholder="请输入新昵称">
+          <input type="text" class="custom-input" v-model="tempNickname" :placeholder="$t('profile.nicknamePlaceholder')">
         </div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showNicknameDialog = false">取消</a>
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmNickname">确定</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showNicknameDialog = false">{{ $t('common.cancel') }}</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmNickname">{{ $t('common.confirm') }}</a>
         </div>
       </div>
     </div>
@@ -146,13 +162,13 @@
     <div v-if="showIntroDialog" class="dialog-wrapper">
       <div class="weui-mask" @click="showIntroDialog = false"></div>
       <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">修改个人简介</strong></div>
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('profile.editIntro') }}</strong></div>
         <div class="weui-dialog__bd">
-          <textarea class="custom-input" v-model="tempIntro" placeholder="一句话介绍自己..." rows="3"></textarea>
+          <textarea class="custom-input" v-model="tempIntro" :placeholder="$t('profile.introPlaceholder')" rows="3"></textarea>
         </div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showIntroDialog = false">取消</a>
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmIntro">确定</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showIntroDialog = false">{{ $t('common.cancel') }}</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmIntro">{{ $t('common.confirm') }}</a>
         </div>
       </div>
     </div>
@@ -160,30 +176,28 @@
     <div v-if="showPwdDialog" class="dialog-wrapper">
       <div class="weui-mask" @click="showPwdDialog = false"></div>
       <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-        <div class="weui-dialog__bd">修改密码功能暂未开放。如需修改，请前往学校统一身份认证平台或教务系统进行操作。</div>
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('common.hint') }}</strong></div>
+        <div class="weui-dialog__bd">{{ $t('profile.passwordNotAvailable') }}</div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="showPwdDialog = false">我知道了</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="showPwdDialog = false">{{ $t('common.iKnow') }}</a>
         </div>
       </div>
     </div>
 
-    <!-- Fallback: 无 weui 时的日期选择（禁止未来日期） -->
     <div v-if="showDateFallback" class="dialog-wrapper">
       <div class="weui-mask" @click="showDateFallback = false"></div>
       <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">选择生日</strong></div>
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('profile.selectBirthday') }}</strong></div>
         <div class="weui-dialog__bd">
           <input type="date" class="custom-input" v-model="tempDate" min="1900-01-01" :max="todayStr" style="width:100%;box-sizing:border-box;">
         </div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showDateFallback = false">取消</a>
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmDateFallback">确定</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showDateFallback = false">{{ $t('common.cancel') }}</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmDateFallback">{{ $t('common.confirm') }}</a>
         </div>
       </div>
     </div>
 
-    <!-- Fallback: 无 weui 时的列表选择 -->
     <div v-if="showListFallback" class="dialog-wrapper">
       <div class="weui-mask" @click="showListFallback = false"></div>
       <div class="weui-dialog weui-dialog--list">
@@ -192,7 +206,7 @@
           <div v-for="opt in listFallbackOptions" :key="opt" class="weui-dialog__item" @click="confirmListFallback(opt)">{{ opt }}</div>
         </div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showListFallback = false">取消</a>
+          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showListFallback = false">{{ $t('common.cancel') }}</a>
         </div>
       </div>
     </div>
@@ -203,6 +217,8 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { setLocale } from '../i18n'
 import {
   getCurrentUserProfile,
   logout,
@@ -220,8 +236,13 @@ import {
 import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
+const { t } = useI18n()
 
-// === 用户核心数据（location/hometown 展示用；*Region/*State/*City 为后端地区代码，提交接口用） ===
+const selectedLocale = ref(localStorage.getItem('locale') || 'zh-CN')
+const changeLocale = () => {
+  setLocale(selectedLocale.value)
+}
+
 const userInfo = ref({
   avatar: '/img/login/qq.png',
   username: '-',
@@ -242,7 +263,6 @@ const userInfo = ref({
   ipArea: ''
 })
 
-// === 弹窗控制与临时变量 ===
 const showPwdDialog = ref(false)
 const showNicknameDialog = ref(false)
 const showIntroDialog = ref(false)
@@ -259,17 +279,13 @@ const majorList = ref([])
 const updateMajorListByFaculty = () => {
   majorList.value = (facultyMajorMap.value[userInfo.value.faculty] || [unselectedOption]).slice()
 }
-// 不在 watch 里重置 major，避免拉取 profile 后 faculty 赋值触发把 major 清掉；仅在选择院系弹窗确认时重置
 
-// 年份列表
 const yearList = ref([])
 
-// 所在地/家乡：使用后端 GET /api/profile/locations 返回的代码树（value=code，label=中文名）
 const locationListTree = ref([])
 const locationFlatOptions = ref([])
 const locationFlatMap = ref({})
 
-/** 将后端 Region[] 转为 weui 三列 picker 所需格式 [{ label, value, children }]，并生成扁平列表与 display->codes 映射 */
 function buildLocationPickerTree(list) {
   if (!list || !Array.isArray(list)) return []
   const flat = []
@@ -331,16 +347,11 @@ const todayStr = (() => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 })()
 
-// ==========================================
-// 核心逻辑 3：保存到后端（真实 API，application/json）
-// ==========================================
-
 const getWeuiToast = () => (typeof window !== 'undefined' ? window.weui : null)
-const showSuccess = (msg = '保存成功') => {
+const showSuccess = (msg) => {
   const weui = getWeuiToast()
-  if (weui && typeof weui.toast === 'function') weui.toast(msg, { duration: 1500 })
+  if (weui && typeof weui.toast === 'function') weui.toast(msg || t('common.saveSuccess'), { duration: 1500 })
 }
-/** 地区展示层洗数据：剔除国旗/Emoji，按空格拆分后移除相邻重复词（如「卢旺达 卢旺达」→「卢旺达」），适配 varchar(5) */
 const formatLocationDisplay = (str) => {
   if (!str) return ''
   const cleanStr = str.replace(/[\uD83C-\uDBFF\uDC00-\uDFFF]+/g, '')
@@ -348,13 +359,11 @@ const formatLocationDisplay = (str) => {
   return words.filter((word, index) => word !== words[index - 1]).join(' ')
 }
 
-/** 保存生日：body { year, month, date }，全 null 表示清空 */
 function saveBirthday(year, month, date) {
   return updateBirthday({ year, month, date })
     .then(() => { showSuccess() })
 }
 
-/** 保存院系：body { faculty } 为院系在 facultyList 中的索引；成功后本地强制清空专业与后端一致 */
 function saveFaculty() {
   const code = facultyCodeMap.value[userInfo.value.faculty]
   if (!Number.isInteger(code)) return Promise.resolve()
@@ -366,7 +375,6 @@ function saveFaculty() {
     })
 }
 
-/** 保存专业：body { major } */
 function saveMajor() {
   const major = userInfo.value.major
   if (!major || major === '未选择') return Promise.resolve()
@@ -374,7 +382,6 @@ function saveMajor() {
     .then(() => { showSuccess() })
 }
 
-/** 保存入学年份：body { year }，null 表示清空 */
 function saveEnrollment() {
   const y = userInfo.value.enrollment
   const year = y ? parseInt(String(y), 10) : null
@@ -382,7 +389,6 @@ function saveEnrollment() {
     .then(() => { showSuccess() })
 }
 
-/** 保存所在地：严格提交地区代码 { region, state, city }，适配后端 varchar(5)；value 来自 picker 的 code */
 function saveLocation() {
   const { locationRegion, locationState, locationCity } = userInfo.value
   if (!locationRegion) return Promise.resolve()
@@ -390,7 +396,6 @@ function saveLocation() {
   return updateLocation(payload).then(() => { showSuccess() })
 }
 
-/** 保存家乡：严格提交地区代码 { region, state, city }，适配后端 varchar(5) */
 function saveHometown() {
   const { hometownRegion, hometownState, hometownCity } = userInfo.value
   if (!hometownRegion) return Promise.resolve()
@@ -400,7 +405,6 @@ function saveHometown() {
 
 const getWeui = () => (typeof window !== 'undefined' ? window.weui : null)
 
-// 生日：只用 picker 返回的 year/month/date，不经过 Date 或 toISOString，避免时区差一天
 const openBirthdayPicker = () => {
   const weui = getWeui()
   if (weui && typeof weui.datePicker === 'function') {
@@ -427,7 +431,6 @@ const openBirthdayPicker = () => {
   tempDate.value = userInfo.value.birthday || ''
 }
 
-// 院系：weui.picker 单列，选中后立即将专业重置为「未选择」
 const openFacultyPicker = () => {
   const weui = getWeui()
   const items = facultyList.value.map(label => ({ label, value: label }))
@@ -445,7 +448,7 @@ const openFacultyPicker = () => {
     })
     return
   }
-  openListFallback('请选择院系', facultyList.value, (val) => {
+  openListFallback(t('profile.selectFaculty'), facultyList.value, (val) => {
     userInfo.value.faculty = val
     userInfo.value.major = unselectedOption
     updateMajorListByFaculty()
@@ -453,10 +456,9 @@ const openFacultyPicker = () => {
   })
 }
 
-// 专业：未选院系时强拦截，禁止越级选择
 const openMajorPicker = () => {
   if (userInfo.value.faculty === null || userInfo.value.faculty === undefined || userInfo.value.faculty === facultyPlaceholder || userInfo.value.faculty === unselectedOption) {
-    showErrorTopTips('请先选择院系')
+    showErrorTopTips(t('profile.selectFacultyFirst'))
     return
   }
   const weui = getWeui()
@@ -474,13 +476,12 @@ const openMajorPicker = () => {
     })
     return
   }
-  openListFallback('请选择专业', majorList.value, (val) => {
+  openListFallback(t('profile.selectMajor'), majorList.value, (val) => {
     userInfo.value.major = val
     saveMajor()
   })
 }
 
-// 入学年份：weui.picker 单列
 const openEnrollmentPicker = () => {
   const weui = getWeui()
   const items = yearList.value.map(y => ({ label: String(y), value: String(y) }))
@@ -496,18 +497,17 @@ const openEnrollmentPicker = () => {
     })
     return
   }
-  openListFallback('请选择年份', yearList.value.map(String), (val) => {
+  openListFallback(t('profile.selectYear'), yearList.value.map(String), (val) => {
     userInfo.value.enrollment = val
     saveEnrollment()
   })
 }
 
-// 所在地：使用后端地区代码树，picker 的 value 即 code，提交 region/state/city 为代码
 const openLocationPicker = () => {
   const tree = locationListTree.value
   if (!tree || tree.length === 0) {
     const weui = getWeui()
-    if (weui && weui.toast) weui.toast('地区列表加载中，请稍后再试', { duration: 2000 })
+    if (weui && weui.toast) weui.toast(t('common.loadingRegions'), { duration: 2000 })
     return
   }
   const weui = getWeui()
@@ -526,7 +526,7 @@ const openLocationPicker = () => {
     })
     return
   }
-  openListFallback('请选择所在地', locationFlatOptions.value, (val) => {
+  openListFallback(t('profile.selectLocation'), locationFlatOptions.value, (val) => {
     const item = locationFlatMap.value[val]
     if (item) {
       userInfo.value.locationRegion = item.region
@@ -538,12 +538,11 @@ const openLocationPicker = () => {
   })
 }
 
-// 家乡：同上，使用后端地区代码树
 const openHometownPicker = () => {
   const tree = locationListTree.value
   if (!tree || tree.length === 0) {
     const weui = getWeui()
-    if (weui && weui.toast) weui.toast('地区列表加载中，请稍后再试', { duration: 2000 })
+    if (weui && weui.toast) weui.toast(t('common.loadingRegions'), { duration: 2000 })
     return
   }
   const weui = getWeui()
@@ -562,7 +561,7 @@ const openHometownPicker = () => {
     })
     return
   }
-  openListFallback('请选择家乡', locationFlatOptions.value, (val) => {
+  openListFallback(t('profile.selectHometown'), locationFlatOptions.value, (val) => {
     const item = locationFlatMap.value[val]
     if (item) {
       userInfo.value.hometownRegion = item.region
@@ -574,7 +573,6 @@ const openHometownPicker = () => {
   })
 }
 
-// 无 weui 时的列表选择兜底
 const showListFallback = ref(false)
 const listFallbackTitle = ref('')
 const listFallbackOptions = ref([])
@@ -590,7 +588,6 @@ const confirmListFallback = (val) => {
   showListFallback.value = false
 }
 
-// 无 weui 时的日期选择兜底
 const showDateFallback = ref(false)
 const tempDate = ref('')
 const confirmDateFallback = () => {
@@ -607,7 +604,6 @@ const confirmDateFallback = () => {
   showDateFallback.value = false
 }
 
-// 昵称弹窗与保存
 const openNicknameDialog = () => { tempNickname.value = userInfo.value.nickname || ''; showNicknameDialog.value = true }
 const confirmNickname = () => {
   const nickname = (tempNickname.value || '').trim()
@@ -623,7 +619,6 @@ const confirmNickname = () => {
     })
 }
 
-// 简介弹窗与保存
 const openIntroDialog = () => { tempIntro.value = userInfo.value.introduction || ''; showIntroDialog.value = true }
 const confirmIntro = () => {
   const introduction = (tempIntro.value || '').trim()
@@ -635,9 +630,6 @@ const confirmIntro = () => {
     })
 }
 
-// ==========================================
-// 底部功能入口
-// ==========================================
 const handleNav = (path) => { if (path) router.push(path) }
 const handlePasswordClick = () => { showPwdDialog.value = true }
 const handleReport = () => { window.location.href = 'https://www.wjx.top/m/47687434.aspx' }
@@ -646,13 +638,12 @@ const doLogout = async () => {
   try {
     await logout()
   } catch (_) {
-    // 无论成功与否都清理前端并跳转，防止网络卡死
   }
   localStorage.removeItem('token')
   sessionStorage.clear()
   const weui = getWeui()
   if (weui && typeof weui.toast === 'function') {
-    weui.toast('已成功退出登录', { duration: 2000 })
+    weui.toast(t('common.logoutSuccess'), { duration: 2000 })
     setTimeout(() => router.replace('/login'), 600)
   } else {
     router.replace('/login')
@@ -662,10 +653,10 @@ const doLogout = async () => {
 const handleLogoutClick = () => {
   const weui = getWeui()
   if (weui && typeof weui.confirm === 'function') {
-    weui.confirm('确定要退出账号吗？', {
+    weui.confirm(t('profile.logoutConfirm'), {
       buttons: [
-        { label: '取消', type: 'default' },
-        { label: '确定退出', type: 'primary', onClick: () => doLogout() }
+        { label: t('common.cancel'), type: 'default' },
+        { label: t('profile.logoutConfirmBtn'), type: 'primary', onClick: () => doLogout() }
       ]
     })
     return
@@ -678,7 +669,6 @@ const confirmLogout = () => {
   doLogout()
 }
 
-// 进入个人中心时调用：GET /api/user/profile（需携带 Token），结果赋值给 userInfo
 async function fetchUserProfile() {
   try {
     const res = await getCurrentUserProfile()
@@ -699,7 +689,6 @@ async function fetchUserProfile() {
       updateMajorListByFaculty()
     }
   } catch (_) {
-    // 401 等由 request 拦截器统一处理（清 token、跳转登录）
   }
 }
 
@@ -733,13 +722,11 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* 整个页面背景纯白/微灰 */
 .profile-page {
   background-color: #f8f8f8;
   min-height: 100vh;
 }
 
-/* 标题样式保持不变 */
 .page_title {
   text-align: center;
   font-size: 34px;
@@ -749,7 +736,6 @@ onBeforeUnmount(() => {
   margin: 0;
 }
 
-/* 列表区域样式 */
 .profile-page .weui-cells {
   background-color: #fff;
   margin-top: 12px;
@@ -759,7 +745,6 @@ onBeforeUnmount(() => {
 }
 .profile-page .weui-cells::before, .profile-page .weui-cells::after { border: none; }
 
-/* 退出账号：显式顶部分割线 */
 .profile-page .logout-cells .weui-cell::before {
   display: block !important;
   content: " ";
@@ -773,25 +758,20 @@ onBeforeUnmount(() => {
   z-index: 2;
 }
 
-/* 每一行的样式 */
 .profile-page .weui-cell { padding: 16px 15px; position: relative; }
 
-/* 贯穿全屏的浅横线 */
 .profile-page .weui-cell::before {
   content: " "; position: absolute; left: 15px; right: 0; top: 0; height: 1px;
   border-top: 1px solid #f0f0f0; color: #f0f0f0; transform-origin: 0 0; transform: scaleY(0.5); z-index: 2;
 }
 
-/* 左右文字颜色 */
 .profile-page .weui-cell__bd p { color: #333; font-size: 16px; margin: 0;}
 .profile-page .weui-cell__ft { color: #999; font-size: 15px; }
 
-/* Fallback 列表弹窗 */
 .weui-dialog__bd--scroll { max-height: 280px; overflow-y: auto; }
 .weui-dialog__item { padding: 12px 24px; border-bottom: 1px solid #eee; cursor: pointer; }
 .weui-dialog__item:active { background: #f5f5f5; }
 
-/* 弹窗样式 */
 .custom-input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 15px; outline: none; }
 .weui-mask { position: fixed; z-index: 1000; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); }
 .weui-dialog { position: fixed; z-index: 5000; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; text-align: center; border-radius: 12px; width: 320px; overflow: hidden;}
@@ -801,4 +781,16 @@ onBeforeUnmount(() => {
 .weui-dialog__ft { display: flex; border-top: 1px solid #e5e5e5; line-height: 56px; }
 .weui-dialog__btn { flex: 1; color: #07c160; text-decoration: none; border-left: 1px solid #e5e5e5; cursor: pointer;}
 .weui-dialog__btn:first-child { border-left: none; color: #333; }
+
+.locale-select {
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #333;
+  background: #fff;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
 </style>

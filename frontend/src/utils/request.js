@@ -97,6 +97,7 @@ service.interceptors.request.use(
     const token = localStorage.getItem('token')
     if (!config.headers) config.headers = {}
     config.headers['X-Client-Type'] = 'WEB'
+    config.headers['Accept-Language'] = localStorage.getItem('locale') || 'zh-CN'
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + token
     }

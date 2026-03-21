@@ -1,14 +1,16 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
 
 const tabs = [
-  { path: '/home', label: '功能主页', icon: '/img/index/home.png' },
-  { path: '/info', label: '资讯信息', icon: '/img/index/info.png' },
-  { path: '/profile', label: '个人中心', icon: '/img/index/personal.png' }
+  { path: '/home', labelKey: 'tab.home', icon: '/img/index/home.png' },
+  { path: '/info', labelKey: 'tab.info', icon: '/img/index/info.png' },
+  { path: '/profile', labelKey: 'tab.profile', icon: '/img/index/personal.png' }
 ]
 
 const activeIndex = ref(0)
@@ -21,7 +23,7 @@ function goTo(path, index) {
 watch(
   () => route.path,
   (path) => {
-    const i = tabs.findIndex((t) => t.path === path)
+    const i = tabs.findIndex((tab) => tab.path === path)
     if (i >= 0) activeIndex.value = i
   },
   { immediate: true }
@@ -42,7 +44,7 @@ watch(
         @click="goTo(tab.path, index)"
       >
         <img :src="tab.icon" alt="" class="weui-tabbar__icon" />
-        <p class="weui-tabbar__label">{{ tab.label }}</p>
+        <p class="weui-tabbar__label">{{ $t(tab.labelKey) }}</p>
       </div>
     </div>
   </div>
@@ -72,7 +74,6 @@ watch(
   width: 28px !important;
   height: 28px !important;
 }
-/* 选中态图标使用滤镜高亮，替代缺失的高亮素材 */
 .weui-tabbar .weui-bar__item_on .weui-tabbar__icon {
   filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg);
 }

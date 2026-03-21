@@ -1,14 +1,14 @@
 <template>
   <div v-if="props.notices.length" class="modern-card">
     <div class="card-header">
-      <div class="card-title">通知公告</div>
+      <div class="card-title">{{ $t('info.noticeTitle') }}</div>
       <button
         v-if="props.notices.length > defaultVisibleCount"
         type="button"
         class="more-btn"
         @click="expanded = !expanded"
       >
-        {{ expanded ? '收起' : '查看更多' }}
+        {{ expanded ? $t('info.collapse') : $t('info.expand') }}
       </button>
     </div>
     <div class="notice-list">
@@ -18,7 +18,7 @@
         class="notice-content"
       >
         <div class="notice-title">{{ notice.title }}</div>
-        <div class="notice-date">时间：{{ notice.publishTime }}</div>
+        <div class="notice-date">{{ $t('info.noticeTime') }}{{ notice.publishTime }}</div>
         <div class="notice-body">{{ notice.content }}</div>
       </div>
     </div>

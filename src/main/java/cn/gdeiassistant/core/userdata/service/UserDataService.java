@@ -243,8 +243,6 @@ public class UserDataService {
                                 extension = voiceObjectKey.substring(dotIndex);
                             }
                             userDataMap.put("secret_voice_" + secret.getId() + extension, voice);
-                        } else {
-                            break;
                         }
                     }
                 }
@@ -297,42 +295,42 @@ public class UserDataService {
             //使用字符串描述值替换部分参数值
             if (map.containsKey("deliveryOrders")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("deliveryOrders")) {
-                    object.put("state", ItemConstantUtils.DELIVERY_ORDER_STATE_TYPE[(int) object.get("state")]);
+                    replaceWithLabel(object, "state", ItemConstantUtils.DELIVERY_ORDER_STATE_TYPE);
                 }
             }
             if (map.containsKey("deliveryTrades")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("deliveryTrades")) {
-                    object.put("state", ItemConstantUtils.DELIVERY_TRADE_STATE_TYPE[(int) object.get("state")]);
+                    replaceWithLabel(object, "state", ItemConstantUtils.DELIVERY_TRADE_STATE_TYPE);
                 }
             }
             if (map.containsKey("ershouItems")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("ershouItems")) {
-                    object.put("type", ItemConstantUtils.ERSHOU_ITEM_TYPE[(int) object.get("type")]);
-                    object.put("state", ItemConstantUtils.ERSHOU_STATE_TYPE[(int) object.get("state")]);
+                    replaceWithLabel(object, "type", ItemConstantUtils.ERSHOU_ITEM_TYPE);
+                    replaceWithLabel(object, "state", ItemConstantUtils.ERSHOU_STATE_TYPE);
                 }
             }
             if (map.containsKey("lostandfoundItems")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("lostandfoundItems")) {
-                    object.put("itemType", ItemConstantUtils.LOST_AND_FOUND_ITEM_TYPE[(int) object.get("itemType")]);
-                    object.put("lostType", ItemConstantUtils.LOST_AND_FOUND_LOST_TYPE[(int) object.get("lostType")]);
-                    object.put("state", ItemConstantUtils.LOST_AND_FOUND_STATE_TYPE[(int) object.get("state")]);
+                    replaceWithLabel(object, "itemType", ItemConstantUtils.LOST_AND_FOUND_ITEM_TYPE);
+                    replaceWithLabel(object, "lostType", ItemConstantUtils.LOST_AND_FOUND_LOST_TYPE);
+                    replaceWithLabel(object, "state", ItemConstantUtils.LOST_AND_FOUND_STATE_TYPE);
                 }
             }
             if (map.containsKey("secretItems")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("secretItems")) {
-                    object.put("state", ItemConstantUtils.SECRET_STATE_TYPE[(int) object.get("state")]);
-                    object.put("type", ItemConstantUtils.SECRET_ITEM_TYPE[(int) object.get("type")]);
+                    replaceWithLabel(object, "state", ItemConstantUtils.SECRET_STATE_TYPE);
+                    replaceWithLabel(object, "type", ItemConstantUtils.SECRET_ITEM_TYPE);
                 }
             }
             if (map.containsKey("photographItems")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("photographItems")) {
-                    object.put("type", ItemConstantUtils.PHOTOGRAPH_ITEM_TYPE[(int) object.get("type")]);
+                    replaceWithLabel(object, "type", ItemConstantUtils.PHOTOGRAPH_ITEM_TYPE);
                 }
             }
             if (map.containsKey("expressItems")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("expressItems")) {
-                    object.put("selfGender", ItemConstantUtils.EXPRESS_ITEM_GENDER_TYPE[(int) object.get("type")]);
-                    object.put("personGender", ItemConstantUtils.EXPRESS_ITEM_GENDER_TYPE[(int) object.get("type")]);
+                    replaceWithLabel(object, "selfGender", ItemConstantUtils.EXPRESS_ITEM_GENDER_TYPE);
+                    replaceWithLabel(object, "personGender", ItemConstantUtils.EXPRESS_ITEM_GENDER_TYPE);
                 }
             }
             if (map.containsKey("profile")) {
@@ -407,6 +405,9 @@ public class UserDataService {
             //移除导出任务记录
             exportDataDao.RemoveExportingDataToken(user.getUsername());
 
+        } catch (Exception e) {
+            logger.error("导出用户数据失败，username={}", user.getUsername(), e);
+            exportDataDao.RemoveExportingDataToken(user.getUsername());
         } finally {
             if (byteArrayInputStream != null) {
                 byteArrayInputStream.close();
@@ -418,7 +419,6 @@ public class UserDataService {
                 try {
                     zipOutputStream.close();
                 } catch (IOException ignored) {
-
                 }
             }
             for (Map.Entry<String, InputStream> entry : userDataMap.entrySet()) {
@@ -482,6 +482,16 @@ public class UserDataService {
         PrivacyEntity privacy = privacyMapper.selectPrivacy(user.getUsername());
         if (privacy == null) {
             privacyMapper.initPrivacy(user.getUsername());
+        }
+    }
+
+    private static void replaceWithLabel(Map<String, Object> object, String key, String[] labels) {
+        Object value = object.get(key);
+        if (value instanceof Integer) {
+            int index = (int) value;
+            if (index >= 0 && index < labels.length) {
+                object.put(key, labels[index]);
+            }
         }
     }
 }

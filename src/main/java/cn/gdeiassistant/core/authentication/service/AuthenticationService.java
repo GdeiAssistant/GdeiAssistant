@@ -68,22 +68,7 @@ public class AuthenticationService {
                 break;
 
             default:
-                //其他证件类型由人工进行审核
-                if (images == null) {
-                    throw new NullIDPhotoException("证件照片为空");
-                }
-                if (images.length > 3) {
-                    throw new IDPhotoCountLimitationException("证件照片数量超过限制");
-                }
-                for (MultipartFile file : images) {
-                    if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
-                        throw new IDPhotoSizeLimitationException("证件照片文件大小超过限制");
-                    }
-                }
-
-                //TODO
-                //进行人工审核
-                break;
+                throw new UnsupportedOperationException("该证件类型的实名认证暂未开放");
         }
     }
 

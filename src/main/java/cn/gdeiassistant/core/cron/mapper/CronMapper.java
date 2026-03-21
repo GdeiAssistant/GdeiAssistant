@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CronMapper {
 
-    @Select("select u.username,u.password from user u inner join p on u.username=p.username where p.is_caceh_allow=1")
+    @Select("select u.username,u.password from user u inner join privacy p on u.username=p.username where p.is_cache_allow=1")
     List<User> selectCacheAllowUsers();
 }

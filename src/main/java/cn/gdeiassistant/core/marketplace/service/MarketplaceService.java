@@ -90,9 +90,6 @@ public class MarketplaceService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
-        for (MarketplaceItemEntity e : list) {
-            e.setUsername(e.getUsername());
-        }
         return list;
     }
 
@@ -101,9 +98,6 @@ public class MarketplaceService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
-        for (MarketplaceItemEntity e : list) {
-            e.setUsername(e.getUsername());
-        }
         return list;
     }
 
@@ -111,9 +105,6 @@ public class MarketplaceService {
         List<MarketplaceItemEntity> list = marketplaceMapper.selectItemsByType(start, 10, type);
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
-        }
-        for (MarketplaceItemEntity e : list) {
-            e.setUsername(e.getUsername());
         }
         return list;
     }

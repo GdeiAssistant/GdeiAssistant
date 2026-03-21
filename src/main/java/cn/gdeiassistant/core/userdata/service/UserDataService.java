@@ -348,28 +348,10 @@ public class UserDataService {
                     object.put("faculty", faculty);
                 }
                 if (object.containsKey("locationRegion")) {
-                    Map<String, Region> regionMap = LocationUtils.getRegionMap();
-                    String regionCode = (String) object.get("locationRegion");
-                    String stateCode = (String) object.get("locationState");
-                    String cityCode = (String) object.get("locationCity");
-                    String region = regionMap.get(regionCode).getName();
-                    String state = regionMap.get(regionCode).getStateMap().get(stateCode).getName();
-                    String city = regionMap.get(regionCode).getStateMap().get(stateCode).getCityMap().get(cityCode).getName();
-                    object.put("locationRegion", region);
-                    object.put("locationState", state);
-                    object.put("locationCity", city);
+                    resolveLocation(object, "locationRegion", "locationState", "locationCity");
                 }
                 if (object.containsKey("hometownRegion")) {
-                    Map<String, Region> regionMap = LocationUtils.getRegionMap();
-                    String regionCode = (String) object.get("hometownRegion");
-                    String stateCode = (String) object.get("hometownState");
-                    String cityCode = (String) object.get("hometownCity");
-                    String region = regionMap.get(regionCode).getName();
-                    String state = regionMap.get(regionCode).getStateMap().get(stateCode).getName();
-                    String city = regionMap.get(regionCode).getStateMap().get(stateCode).getCityMap().get(cityCode).getName();
-                    object.put("hometownRegion", region);
-                    object.put("hometownState", state);
-                    object.put("hometownCity", city);
+                    resolveLocation(object, "hometownRegion", "hometownState", "hometownCity");
                 }
             }
 
@@ -482,6 +464,28 @@ public class UserDataService {
         PrivacyEntity privacy = privacyMapper.selectPrivacy(user.getUsername());
         if (privacy == null) {
             privacyMapper.initPrivacy(user.getUsername());
+        }
+    }
+
+    private static void resolveLocation(Map<String, Object> object, String regionKey, String stateKey, String cityKey) {
+        try {
+            Map<String, Region> regionMap = LocationUtils.getRegionMap();
+            String regionCode = (String) object.get(regionKey);
+            String stateCode = (String) object.get(stateKey);
+            String cityCode = (String) object.get(cityKey);
+            Region region = regionCode != null ? regionMap.get(regionCode) : null;
+            if (region != null) {
+                object.put(regionKey, region.getName());
+                State state = stateCode != null ? region.getStateMap().get(stateCode) : null;
+                if (state != null) {
+                    object.put(stateKey, state.getName());
+                    City city = cityCode != null ? state.getCityMap().get(cityCode) : null;
+                    if (city != null) {
+                        object.put(cityKey, city.getName());
+                    }
+                }
+            }
+        } catch (Exception ignored) {
         }
     }
 

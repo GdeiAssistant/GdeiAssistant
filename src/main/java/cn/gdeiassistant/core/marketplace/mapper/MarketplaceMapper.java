@@ -55,7 +55,7 @@ public interface MarketplaceMapper {
     @ResultMap("MarketplaceItemEntity")
     List<MarketplaceItemEntity> selectItemsByType(@Param("start") int start, @Param("size") int size, @Param("type") int type);
 
-    @Select("select distinct * from ershou where state='1' and (name like '%${keyword}%' or description like '%${keyword}%' or location like '%${keyword}%') order by id desc limit #{start},#{size}")
+    @Select("select distinct * from ershou where state='1' and (name like concat('%',#{keyword},'%') or description like concat('%',#{keyword},'%') or location like concat('%',#{keyword},'%')) order by id desc limit #{start},#{size}")
     @ResultMap("MarketplaceItemEntity")
     List<MarketplaceItemEntity> selectItemsWithKeyword(@Param("start") int start, @Param("size") int size, @Param("keyword") String keyword);
 

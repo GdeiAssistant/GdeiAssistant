@@ -160,14 +160,14 @@ onMounted(() => {
   overflow: hidden !important; /* 关键：锁死外层 */
   display: flex;
   flex-direction: column;
-  background-color: #f8f8f8; /* WEUI 默认底色 */
+  background-color: var(--color-bg-secondary); /* WEUI 默认底色 */
 }
 .page-header {
   flex-shrink: 0;
   padding: 12px 16px 16px;
 }
 .news-back {
-  color: #999;
+  color: var(--color-text-tertiary);
   font-size: 15px;
   text-decoration: none;
 }
@@ -195,19 +195,19 @@ onMounted(() => {
   flex-shrink: 0;
   margin-left: 8px;
   font-size: 13px;
-  color: #999;
+  color: var(--color-text-tertiary);
 }
 .weui-loadmore {
   padding: 16px 0;
   text-align: center;
 }
 .weui-loadmore_line .weui-loadmore__tips {
-  background-color: #fff;
+  background-color: var(--color-surface);
 }
 .news-tabbar {
   flex-shrink: 0;
-  background: #f7f7fa;
-  border-top: 1px solid #e5e5e5;
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
 }
 .news-tabbar .weui-bar__item_on .weui-tabbar__label {
   color: var(--color-primary);

@@ -266,7 +266,7 @@ onMounted(() => {
   overflow: hidden !important;
   display: flex;
   flex-direction: column;
-  background-color: #f6fbf6;
+  background-color: var(--color-bg-secondary);
 }
 .weui-tab__panel.info-container {
   flex: 1;
@@ -275,7 +275,7 @@ onMounted(() => {
   box-sizing: border-box;
   padding: 12px;
   padding-bottom: 60px;
-  background-color: #f6fbf6;
+  background-color: var(--color-bg-secondary);
   min-height: 100vh;
 }
 
@@ -286,12 +286,12 @@ onMounted(() => {
 .section-title {
   font-size: 18px;
   font-weight: 700;
-  color: #2f3b52;
+  color: var(--color-text-primary);
   margin: 4px 4px 12px;
 }
 
 .modern-card {
-  background: #ffffff;
+  background: var(--color-surface);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
@@ -310,7 +310,7 @@ onMounted(() => {
   gap: 12px;
   padding: 12px 0;
   border: none;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-divider);
   background: transparent;
   text-align: left;
   cursor: pointer;
@@ -342,13 +342,13 @@ onMounted(() => {
 .entry-link__title {
   font-size: 15px;
   font-weight: 600;
-  color: #333333;
+  color: var(--color-text-primary);
 }
 
 .entry-link__desc {
   margin-top: 4px;
   font-size: 13px;
-  color: #999999;
+  color: var(--color-text-tertiary);
 }
 
 .entry-link__ft {
@@ -362,7 +362,7 @@ onMounted(() => {
 
 .empty-card {
   font-size: 14px;
-  color: #999999;
+  color: var(--color-text-tertiary);
   text-align: center;
 }
 </style>

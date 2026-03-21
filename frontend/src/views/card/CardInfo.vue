@@ -184,7 +184,7 @@ onMounted(() => {
 
 <style scoped>
 .card-info-page {
-  background-color: #fff;
+  background-color: var(--color-surface);
   min-height: 100vh;
   padding-bottom: 32px;
 }
@@ -195,21 +195,21 @@ onMounted(() => {
   align-items: center;
   min-height: 44px;
   padding: 10px 15px;
-  background-color: #fff;
+  background-color: var(--color-surface);
   box-sizing: border-box;
 }
 
 .nav-btn-back {
   font-size: 16px;
   line-height: 24px;
-  color: #888;
+  color: var(--color-text-tertiary);
   cursor: pointer;
 }
 
 .page-header {
   text-align: center;
   padding: 0 0 6px;
-  background-color: #fff;
+  background-color: var(--color-surface);
 }
 
 .page-title-green {
@@ -223,7 +223,7 @@ onMounted(() => {
 .card-info-page .weui-cells__title {
   padding: 12px 15px 8px;
   font-size: 14px;
-  color: #888;
+  color: var(--color-text-tertiary);
 }
 
 .card-info-page .info-cells {
@@ -243,7 +243,7 @@ onMounted(() => {
   right: 15px;
   bottom: 0;
   height: 1px;
-  border-bottom: 1px solid #E5E5E5;
+  border-bottom: 1px solid var(--color-border);
   transform-origin: 0 100%;
   transform: scaleY(0.5);
 }
@@ -253,21 +253,21 @@ onMounted(() => {
 }
 
 .info-cell .weui-cell__bd {
-  color: #888;
+  color: var(--color-text-tertiary);
 }
 
 .info-label {
-  color: #888;
+  color: var(--color-text-tertiary);
 }
 
 .info-cell .weui-cell__ft {
-  color: #000;
+  color: var(--color-text-primary);
   text-align: right;
   flex-shrink: 0;
 }
 
 .info-value {
-  color: #000;
+  color: var(--color-text-primary);
 }
 
 .weui-toast__wrp--text {
@@ -282,7 +282,7 @@ onMounted(() => {
   margin-top: 32px;
   padding: 0 15px;
   font-size: 14px;
-  color: #888;
+  color: var(--color-text-tertiary);
   text-align: center;
 }
 
@@ -307,7 +307,7 @@ onMounted(() => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: var(--color-surface);
   border-radius: 12px;
   width: 320px;
   overflow: hidden;
@@ -320,7 +320,7 @@ onMounted(() => {
 
 .weui-dialog__title {
   font-size: 17px;
-  color: #333;
+  color: var(--color-text-primary);
 }
 
 .weui-dialog__bd {
@@ -330,7 +330,7 @@ onMounted(() => {
 .weui-dialog__tip {
   margin: 0 0 12px;
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
@@ -338,31 +338,31 @@ onMounted(() => {
   width: 100%;
   padding: 12px;
   font-size: 15px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   box-sizing: border-box;
 }
 
 .weui-dialog__ft {
   display: flex;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid var(--color-border);
 }
 
 .weui-dialog__btn {
   flex: 1;
   padding: 14px;
   text-align: center;
-  color: #333;
+  color: var(--color-text-primary);
   text-decoration: none;
   font-size: 17px;
 }
 
 .weui-dialog__btn_primary {
   color: var(--color-primary);
-  border-left: 1px solid #e5e5e5;
+  border-left: 1px solid var(--color-border);
 }
 
 .weui-dialog__btn_default {
-  color: #888;
+  color: var(--color-text-tertiary);
 }
 </style>

@@ -334,7 +334,7 @@ onMounted(() => {
         :style="{
           gridColumn: idx + 2,
           gridRow: 1,
-          backgroundColor: idx === todayIndex ? 'rgba(9, 187, 7, 0.08)' : '#fff'
+          backgroundColor: idx === todayIndex ? 'rgba(9, 187, 7, 0.08)' : undefined
         }"
       >
         <span class="schedule-grid__head-label">{{ label }}</span>
@@ -358,7 +358,7 @@ onMounted(() => {
         :style="{
           gridColumn: (index % 7) + 2,
           gridRow: Math.floor(index / 7) + 2,
-          backgroundColor: (index % 7) === todayIndex ? 'rgba(9, 187, 7, 0.08)' : '#fcfdfe'
+          backgroundColor: (index % 7) === todayIndex ? 'rgba(9, 187, 7, 0.08)' : undefined
         }"
       ></div>
       <!-- 空状态：无课周时作为“超级格子”占据右侧全部区域，与节次列同级 -->
@@ -580,7 +580,7 @@ onMounted(() => {
 
 <style scoped>
 .schedule-page {
-  background-color: #fff;
+  background-color: var(--color-surface);
   min-height: 100vh;
   padding-bottom: 24px;
   width: 100%;
@@ -593,7 +593,7 @@ onMounted(() => {
   align-items: center;
   min-height: 44px;
   padding: 10px 15px;
-  background-color: #fff;
+  background-color: var(--color-surface);
   box-sizing: border-box;
 }
 
@@ -601,7 +601,7 @@ onMounted(() => {
 .nav-btn-more {
   font-size: 16px;
   line-height: 24px;
-  color: #888;
+  color: var(--color-text-tertiary);
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -635,7 +635,7 @@ onMounted(() => {
   padding: 8px 16px;
   border: 1px solid #fa5151;
   border-radius: 4px;
-  background: #fff;
+  background: var(--color-surface);
   color: #fa5151;
   font-size: 14px;
   text-align: center;
@@ -651,7 +651,7 @@ onMounted(() => {
   line-height: 1.2;
   text-align: center;
   margin-bottom: 10px;
-  color: #979797;
+  color: var(--color-text-tertiary);
   font-size: 14px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -671,7 +671,7 @@ onMounted(() => {
   position: relative;
   width: 100%;
   min-height: 500px;
-  background-color: #fff;
+  background-color: var(--color-surface);
 }
 
 /* 课表网格：纸质底色 #fcfdfe，极细网格线 */
@@ -682,30 +682,30 @@ onMounted(() => {
   width: 100%;
   min-height: 500px;
   position: relative;
-  background-color: #fcfdfe;
+  background-color: var(--color-bg-secondary);
 }
 
 .schedule-grid__cell {
-  border: 0.5px solid #f0f0f0;
+  border: 0.5px solid var(--color-divider);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  color: #5a5a5a;
-  background: #fcfdfe;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
   box-sizing: border-box;
 }
 
 .schedule-grid__cell--corner {
-  background: #fcfdfe;
+  background: var(--color-bg-secondary);
 }
 
 .schedule-grid__cell--head {
   padding: 8px 4px;
   font-size: 12px;
-  color: #333;
-  background: #fff;
-  border: 0.5px solid #f0f0f0;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-divider);
   flex-direction: column;
   gap: 4px;
 }
@@ -730,17 +730,17 @@ onMounted(() => {
 
 /* 节次列：纯白背景、灰色文字，始终无高亮 */
 .schedule-grid__cell--index {
-  color: #5a5a5a;
+  color: var(--color-text-secondary);
   font-weight: 500;
-  background: #fff;
-  border: 0.5px solid #f0f0f0;
-  border-right: 1px solid #f2f2f2;
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-divider);
+  border-right: 1px solid var(--color-divider);
   min-width: 30px;
 }
 
 .schedule-grid__cell--slot {
-  background: #fcfdfe;
-  border: 0.5px solid #f0f0f0;
+  background: var(--color-bg-secondary);
+  border: 0.5px solid var(--color-divider);
 }
 
 /* 今日整列：与内联 backgroundColor 双保险，任意星期今日列从第一行起全部显绿 */
@@ -793,7 +793,7 @@ onMounted(() => {
 .empty-state__text {
   margin: 20px 0 0 0;
   font-size: 16px;
-  color: #b0b0b0;
+  color: var(--color-text-tertiary);
   line-height: 1.4;
 }
 
@@ -831,7 +831,7 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   width: calc(100% - 32px);
   max-width: 340px;
-  background: #fff;
+  background: var(--color-surface);
   border-radius: 8px;
   z-index: 5001;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -842,14 +842,14 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .schedule-detail-dialog__title {
   margin: 0;
   font-size: 17px;
   font-weight: 500;
-  color: #000;
+  color: var(--color-text-primary);
 }
 
 .schedule-detail-dialog__close {
@@ -871,12 +871,12 @@ onMounted(() => {
 }
 
 .schedule-detail-dialog__bd .weui-form-preview__label {
-  color: #999;
+  color: var(--color-text-tertiary);
   margin-right: 8px;
 }
 
 .schedule-detail-dialog__bd .weui-form-preview__value {
-  color: #333;
+  color: var(--color-text-primary);
 }
 
 /* 周次选择器（WEUI Picker 风格：底部弹出） */
@@ -885,7 +885,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #fff;
+  background: var(--color-surface);
   border-radius: 12px 12px 0 0;
   z-index: 5001;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
@@ -899,20 +899,20 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
 }
 
 .week-picker__cancel {
   font-size: 16px;
-  color: #888;
+  color: var(--color-text-tertiary);
   cursor: pointer;
 }
 
 .week-picker__title {
   font-size: 17px;
   font-weight: 500;
-  color: #000;
+  color: var(--color-text-primary);
 }
 
 .week-picker__placeholder {
@@ -928,13 +928,13 @@ onMounted(() => {
 .week-picker__item {
   padding: 14px 16px;
   font-size: 17px;
-  color: #333;
+  color: var(--color-text-primary);
   text-align: center;
   cursor: pointer;
 }
 
 .week-picker__item:active {
-  background: #f5f5f5;
+  background: var(--color-bg-secondary);
 }
 
 .week-picker__item--active {

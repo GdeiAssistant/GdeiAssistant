@@ -31,7 +31,7 @@ defineProps({
 
 <style scoped>
 .modern-card {
-  background: #ffffff;
+  background: var(--color-surface);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
@@ -40,7 +40,7 @@ defineProps({
 .card-title {
   font-size: 17px;
   font-weight: 600;
-  color: #333333;
+  color: var(--color-text-primary);
   margin-bottom: 12px;
   display: flex;
   align-items: center;
@@ -56,7 +56,7 @@ defineProps({
 }
 .history-lead {
   font-size: 15px;
-  color: #333;
+  color: var(--color-text-primary);
   margin: 0 0 12px;
   line-height: 1.5;
 }
@@ -66,7 +66,7 @@ defineProps({
 }
 .history-desc {
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0 0 8px;
 }

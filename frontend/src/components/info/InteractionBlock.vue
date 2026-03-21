@@ -91,7 +91,7 @@ function getActionLabel(item) {
 
 <style scoped>
 .modern-card {
-  background: #ffffff;
+  background: var(--color-surface);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
@@ -109,7 +109,7 @@ function getActionLabel(item) {
 .card-title {
   font-size: 17px;
   font-weight: 600;
-  color: #333333;
+  color: var(--color-text-primary);
   margin-bottom: 0;
   display: flex;
   align-items: center;
@@ -153,7 +153,7 @@ function getActionLabel(item) {
 .interaction-empty {
   padding: 12px 0 4px;
   font-size: 14px;
-  color: #999999;
+  color: var(--color-text-tertiary);
   text-align: center;
 }
 
@@ -165,9 +165,9 @@ function getActionLabel(item) {
 
 .interaction-item {
   width: 100%;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--color-divider);
   border-radius: 10px;
-  background: #fafafa;
+  background: var(--color-bg-secondary);
   padding: 12px;
   text-align: left;
   cursor: pointer;
@@ -188,20 +188,20 @@ function getActionLabel(item) {
   min-width: 0;
   font-size: 15px;
   font-weight: 600;
-  color: #333333;
+  color: var(--color-text-primary);
 }
 
 .interaction-item__time {
   flex-shrink: 0;
   font-size: 12px;
-  color: #999999;
+  color: var(--color-text-tertiary);
 }
 
 .interaction-item__content {
   margin-top: 8px;
   font-size: 13px;
   line-height: 1.6;
-  color: #666666;
+  color: var(--color-text-secondary);
 }
 
 .interaction-item__footer {
@@ -249,7 +249,7 @@ function getActionLabel(item) {
 }
 
 .interaction-item__state.is-read {
-  color: #999999;
+  color: var(--color-text-tertiary);
 }
 
 .interaction-item__state.is-unread {

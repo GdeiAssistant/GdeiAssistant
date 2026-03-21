@@ -50,7 +50,7 @@ defineProps({
   display: block;
   width: 4px;
   height: 16px;
-  background: #09bb07;
+  background: var(--color-primary);
   border-radius: 2px;
   margin-right: 8px;
 }
@@ -62,7 +62,7 @@ defineProps({
 }
 .history-date {
   font-weight: 600;
-  color: #09bb07;
+  color: var(--color-primary);
 }
 .history-desc {
   font-size: 14px;

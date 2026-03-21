@@ -150,7 +150,7 @@ onMounted(() => {
   vertical-align: middle;
   animation: weuiLoading 1s linear infinite;
   border: 2px solid #e5e5e5;
-  border-top-color: #09bb07;
+  border-top-color: var(--color-primary);
   border-radius: 50%;
 }
 

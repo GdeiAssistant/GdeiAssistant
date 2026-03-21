@@ -240,7 +240,7 @@ function confirmRenew() {
 .page-title-green {
   text-align: center;
   font-size: 22px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   margin: 0 0 6px 0;
 }

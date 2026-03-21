@@ -128,5 +128,25 @@
   },
   "router": {
     "siteTitle": "광둥제2사범대학교 캠퍼스 어시스턴트"
+  },
+  "appearance": {
+    "title": "인터페이스 및 외관",
+    "theme": {
+      "label": "테마",
+      "system": "시스템 설정 따르기",
+      "light": "라이트 모드",
+      "dark": "다크 모드"
+    },
+    "font": {
+      "label": "글꼴 크기",
+      "small": "작게",
+      "standard": "표준",
+      "large": "크게",
+      "xlarge": "매우 크게",
+      "preview": "미리보기: 광동제2사범학원 캠퍼스 도우미"
+    },
+    "language": {
+      "label": "언어"
+    }
   }
 }

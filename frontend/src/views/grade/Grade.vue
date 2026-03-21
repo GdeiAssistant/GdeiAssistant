@@ -246,7 +246,7 @@ onMounted(() => {
 .page-title-green {
   text-align: center;
   font-size: 34px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   margin: 10px 0 20px 0;
   line-height: 1.2;
@@ -283,7 +283,7 @@ onMounted(() => {
   right: 0;
   bottom: 0;
   height: 3px;
-  background-color: #09bb07;
+  background-color: var(--color-primary);
 }
 
 /* 学期与绩点摘要：居中，第一行绿色，第二行灰色 */
@@ -294,7 +294,7 @@ onMounted(() => {
 .term {
   padding-top: 15px;
   font-size: 16px;
-  color: #09bb07;
+  color: var(--color-primary);
   text-align: center;
   margin-bottom: 4px;
 }

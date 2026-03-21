@@ -388,7 +388,7 @@ onMounted(() => {
 
 .menu-subitem:hover {
   background-color: #f0f0f0;
-  color: #09bb07;
+  color: var(--color-primary);
 }
 
 .menu-subitem:last-child {
@@ -418,7 +418,7 @@ onMounted(() => {
 
 .weui-btn_primary {
   width: 100%;
-  background-color: #09bb07;
+  background-color: var(--color-primary);
 }
 
 .about-content {
@@ -446,7 +446,7 @@ onMounted(() => {
   transform: translateX(-50%);
   width: 40px;
   height: 2px;
-  background-color: #09bb07;
+  background-color: var(--color-primary);
 }
 
 .about-description {
@@ -559,7 +559,7 @@ onMounted(() => {
 }
 
 .footer-beian a:hover {
-  color: #09bb07;
+  color: var(--color-primary);
   text-decoration: underline;
 }
 
@@ -597,7 +597,7 @@ onMounted(() => {
 }
 
 .cookie-link:hover {
-  color: #09bb07;
+  color: var(--color-primary);
 }
 
 .cookie-close {
@@ -616,6 +616,6 @@ onMounted(() => {
 }
 
 .cookie-close:hover {
-  color: #09bb07;
+  color: var(--color-primary);
 }
 </style>

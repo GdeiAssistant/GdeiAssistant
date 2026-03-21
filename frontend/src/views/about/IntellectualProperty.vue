@@ -52,7 +52,7 @@ const router = useRouter()
 }
 
 .back-btn {
-  color: #09bb07;
+  color: var(--color-primary);
   font-size: 15px;
   cursor: pointer;
   margin-right: 16px;
@@ -80,7 +80,7 @@ const router = useRouter()
 }
 
 .weui-article a {
-  color: #09bb07;
+  color: var(--color-primary);
   text-decoration: underline;
 }
 </style>

@@ -128,5 +128,25 @@
   },
   "router": {
     "siteTitle": "広東第二師範学院キャンパスアシスタント"
+  },
+  "appearance": {
+    "title": "インターフェースと外観",
+    "theme": {
+      "label": "テーマ",
+      "system": "システムに従う",
+      "light": "ライトモード",
+      "dark": "ダークモード"
+    },
+    "font": {
+      "label": "フォントサイズ",
+      "small": "小",
+      "standard": "標準",
+      "large": "大",
+      "xlarge": "特大",
+      "preview": "プレビュー：広東第二師範学院キャンパスアシスタント"
+    },
+    "language": {
+      "label": "言語"
+    }
   }
 }

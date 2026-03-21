@@ -130,7 +130,7 @@ function confirmEvaluate() {
 
 .page-title-green {
   font-size: 34px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   margin: 0;
   line-height: 1.2;
@@ -188,8 +188,8 @@ function confirmEvaluate() {
   transition: transform 0.3s;
 }
 .weui-switch:checked {
-  border-color: #09bb07;
-  background-color: #09bb07;
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
 }
 .weui-switch:checked::after {
   transform: translateX(20px);
@@ -263,6 +263,6 @@ function confirmEvaluate() {
 }
 
 .weui-dialog--confirm .weui-dialog__btn_primary {
-  color: #09bb07;
+  color: var(--color-primary);
 }
 </style>

@@ -128,5 +128,25 @@
   },
   "router": {
     "siteTitle": "广东第二师范学院校园助手系统"
+  },
+  "appearance": {
+    "title": "界面和外观",
+    "theme": {
+      "label": "主题",
+      "system": "跟随系统",
+      "light": "浅色模式",
+      "dark": "深色模式"
+    },
+    "font": {
+      "label": "字体大小",
+      "small": "小",
+      "standard": "标准",
+      "large": "大",
+      "xlarge": "超大",
+      "preview": "预览：广东第二师范学院校园助手"
+    },
+    "language": {
+      "label": "语言"
+    }
   }
 }

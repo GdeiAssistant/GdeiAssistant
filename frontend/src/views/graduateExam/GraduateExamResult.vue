@@ -149,7 +149,7 @@ onMounted(() => {
 
 .page-title-green {
   font-size: 34px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   margin: 0 0 20px 0;
   line-height: 1.2;
@@ -158,7 +158,7 @@ onMounted(() => {
 .kaoyan-total {
   text-align: center;
   font-size: 16px;
-  color: #09bb07;
+  color: var(--color-primary);
   margin-bottom: 4px;
 }
 
@@ -166,7 +166,7 @@ onMounted(() => {
   text-align: center;
   font-size: 28px;
   font-weight: 500;
-  color: #09bb07;
+  color: var(--color-primary);
   margin-bottom: 24px;
 }
 

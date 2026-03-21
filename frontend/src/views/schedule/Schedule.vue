@@ -609,7 +609,7 @@ onMounted(() => {
 .page-title-green {
   text-align: center;
   font-size: 34px;
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 400;
   margin: 10px 0 20px 0;
   line-height: 1.2;
@@ -719,11 +719,11 @@ onMounted(() => {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background-color: #09bb07;
+  background-color: var(--color-primary);
 }
 
 .schedule-grid__cell--head.today-highlight {
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 500;
   background: rgba(9, 187, 7, 0.08) !important;
 }
@@ -854,7 +854,7 @@ onMounted(() => {
 
 .schedule-detail-dialog__close {
   font-size: 16px;
-  color: #09bb07;
+  color: var(--color-primary);
   cursor: pointer;
 }
 
@@ -938,7 +938,7 @@ onMounted(() => {
 }
 
 .week-picker__item--active {
-  color: #09bb07;
+  color: var(--color-primary);
   font-weight: 500;
 }
 </style>

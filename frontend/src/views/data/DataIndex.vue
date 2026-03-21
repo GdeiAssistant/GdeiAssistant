@@ -42,7 +42,7 @@ const router = useRouter()
 }
 .page-title {
   text-align: center;
-  color: #09bb07;
+  color: var(--color-primary);
   padding: 10px 0;
   margin: 0;
   font-size: 34px;

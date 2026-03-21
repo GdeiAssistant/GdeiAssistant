@@ -128,5 +128,25 @@
   },
   "router": {
     "siteTitle": "廣東第二師範學院校園助手系統"
+  },
+  "appearance": {
+    "title": "介面和外觀",
+    "theme": {
+      "label": "主題",
+      "system": "跟隨系統",
+      "light": "淺色模式",
+      "dark": "深色模式"
+    },
+    "font": {
+      "label": "字體大小",
+      "small": "小",
+      "standard": "標準",
+      "large": "大",
+      "xlarge": "超大",
+      "preview": "預覽：廣東第二師範學院校園助手"
+    },
+    "language": {
+      "label": "語言"
+    }
   }
 }

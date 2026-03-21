@@ -51,8 +51,8 @@ function goTo(path) {
   right: 0;
   width: 100%;
   height: 56px;
-  background: #fff;
-  border-top: 1px solid #f3f4f6;
+  background: var(--c-card);
+  border-top: 1px solid var(--c-border);
   display: flex;
   z-index: 500;
   box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.04);
@@ -64,7 +64,7 @@ function goTo(path) {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
+  color: var(--c-text-3);
   text-decoration: none;
   font-size: 12px;
   padding: 6px 0;

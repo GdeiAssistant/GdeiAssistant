@@ -119,6 +119,12 @@ const routes = [
     component: About
   },
   {
+    path: '/appearance',
+    name: 'Appearance',
+    component: () => import('../views/AppearancePage.vue'),
+    meta: { titleKey: 'appearance.title' }
+  },
+  {
     path: '/grade',
     name: 'Grade',
     component: Grade

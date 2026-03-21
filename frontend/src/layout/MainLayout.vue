@@ -35,10 +35,13 @@ watch(
     <div class="weui-tab__panel">
       <router-view />
     </div>
-    <div class="weui-tabbar">
+    <div class="weui-tabbar" role="tablist">
       <div
         v-for="(tab, index) in tabs"
         :key="tab.path"
+        role="tab"
+        :aria-label="$t(tab.labelKey)"
+        :aria-selected="activeIndex === index"
         class="weui-tabbar__item"
         :class="{ 'weui-bar__item_on': activeIndex === index }"
         @click="goTo(tab.path, index)"

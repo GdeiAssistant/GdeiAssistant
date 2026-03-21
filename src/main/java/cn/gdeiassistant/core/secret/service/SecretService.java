@@ -97,13 +97,14 @@ public class SecretService {
     }
 
     public void uploadVoiceSecret(int id, InputStream inputStream) {
-        r2StorageService.uploadObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", inputStream);
         try {
+            r2StorageService.uploadObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", inputStream);
+        } catch (Exception e) {
+            logger.error("上传树洞语音失败，id={}", id, e);
+        } finally {
             if (inputStream != null) {
-                inputStream.close();
+                try { inputStream.close(); } catch (IOException ignored) {}
             }
-        } catch (IOException e) {
-            logger.error("关闭树洞语音上传流失败，id={}", id, e);
         }
     }
 
@@ -155,6 +156,9 @@ public class SecretService {
 
     @Transactional("appTransactionManager")
     public void addSecretComment(int id, String sessionId, String comment) throws Exception {
+        if (comment == null || comment.trim().isEmpty() || comment.length() > 200) {
+            throw new IllegalArgumentException("评论内容不能为空且不能超过 200 字");
+        }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         SecretCommentEntity entity = new SecretCommentEntity();
         entity.setContentId(id);

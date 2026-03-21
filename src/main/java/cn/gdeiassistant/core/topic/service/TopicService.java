@@ -131,11 +131,14 @@ public class TopicService {
 
     @Async
     public void uploadTopicItemPicture(int id, int index, InputStream inputStream) {
-        r2StorageService.uploadObject("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg", inputStream);
         try {
-            if (inputStream != null) inputStream.close();
-        } catch (IOException e) {
-            logger.error("关闭话题图片上传流失败，id={}，index={}", id, index, e);
+            r2StorageService.uploadObject("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg", inputStream);
+        } catch (Exception e) {
+            logger.error("上传话题图片失败，id={}，index={}", id, index, e);
+        } finally {
+            if (inputStream != null) {
+                try { inputStream.close(); } catch (IOException ignored) {}
+            }
         }
     }
 

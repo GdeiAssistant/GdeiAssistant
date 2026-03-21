@@ -102,11 +102,14 @@ public class DatingService {
     }
 
     public void uploadPicture(int id, InputStream inputStream) {
-        r2StorageService.uploadObject("gdeiassistant-userdata", "dating/" + id + ".jpg", inputStream);
         try {
-            if (inputStream != null) inputStream.close();
-        } catch (IOException e) {
-            logger.error("关闭室友信息图片上传流失败，id={}", id, e);
+            r2StorageService.uploadObject("gdeiassistant-userdata", "dating/" + id + ".jpg", inputStream);
+        } catch (Exception e) {
+            logger.error("上传室友信息图片失败，id={}", id, e);
+        } finally {
+            if (inputStream != null) {
+                try { inputStream.close(); } catch (IOException ignored) {}
+            }
         }
     }
 

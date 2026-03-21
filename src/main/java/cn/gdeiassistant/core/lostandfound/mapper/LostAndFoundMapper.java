@@ -64,8 +64,8 @@ public interface LostAndFoundMapper {
     List<LostAndFoundItemEntity> selectItemByItemType(@Param("lostType") Integer lostType,
             @Param("itemType") Integer itemType, @Param("start") Integer start, @Param("size") Integer size);
 
-    @Select("select distinct * from lostandfound where state='0' and lost_type=#{lostType} and (name like '%${keyword}%' or description like '%${keyword}%' " +
-            "or location like '%${keyword}%') order by id desc limit #{start},#{size}")
+    @Select("select distinct * from lostandfound where state='0' and lost_type=#{lostType} and (name like concat('%',#{keyword},'%') or description like concat('%',#{keyword},'%') " +
+            "or location like concat('%',#{keyword},'%')) order by id desc limit #{start},#{size}")
     @ResultMap("LostAndFoundItem")
     List<LostAndFoundItemEntity> selectItemWithKeyword(@Param("lostType") Integer lostType,
             @Param("keyword") String keyword, @Param("start") Integer start, @Param("size") Integer size);

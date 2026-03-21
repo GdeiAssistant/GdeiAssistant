@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    app:
+      jdbc-url: jdbc:h2:mem:gdeiassistant;MODE=MYSQL;DB_CLOSE_DELAY=-1
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+    log:
+      jdbc-url: jdbc:h2:mem:gdeiassistant_log;MODE=MYSQL;DB_CLOSE_DELAY=-1
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+    data:
+      jdbc-url: jdbc:h2:mem:gdeiassistant_data;MODE=MYSQL;DB_CLOSE_DELAY=-1
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: gdeiassistant_test
+    redis:
+      host: localhost
+      port: 6379
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+jwt:
+  secret: test-secret-key-for-mapper-integration-tests-only
+
+i18n:
+  deepl:
+    api-key:

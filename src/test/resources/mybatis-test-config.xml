@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <environments default="test">
+        <environment id="test">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="org.h2.Driver"/>
+                <property name="url" value="jdbc:h2:mem:gdeiassistant_test;MODE=MYSQL;DB_CLOSE_DELAY=-1"/>
+                <property name="username" value="sa"/>
+                <property name="password" value=""/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper class="cn.gdeiassistant.core.marketplace.mapper.MarketplaceMapper"/>
+        <mapper class="cn.gdeiassistant.core.lostandfound.mapper.LostAndFoundMapper"/>
+        <mapper class="cn.gdeiassistant.core.express.mapper.ExpressMapper"/>
+        <mapper class="cn.gdeiassistant.core.delivery.mapper.DeliveryMapper"/>
+        <mapper class="cn.gdeiassistant.core.secret.mapper.SecretMapper"/>
+        <mapper class="cn.gdeiassistant.core.topic.mapper.TopicMapper"/>
+    </mappers>
+</configuration>

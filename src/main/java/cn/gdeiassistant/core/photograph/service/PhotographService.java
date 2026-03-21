@@ -128,8 +128,8 @@ public class PhotographService {
 
     @Transactional("appTransactionManager")
     public void addPhotographComment(int id, String comment, String sessionId) {
-        if (comment == null || comment.trim().isEmpty() || comment.length() > 200) {
-            throw new IllegalArgumentException("评论内容不能为空且不能超过 200 字");
+        if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {
+            throw new IllegalArgumentException("评论内容不能为空且不能超过 50 字");
         }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         PhotographCommentEntity entity = new PhotographCommentEntity();

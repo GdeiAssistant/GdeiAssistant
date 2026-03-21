@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import i18n from '../i18n'
 
 const layoutModules = import.meta.glob('../layout/**/*.vue')
 const viewModules = import.meta.glob('../views/**/*.vue')
@@ -571,10 +572,9 @@ router.beforeEach((to, from, next) => {
 })
 
 // 固定浏览器标题，禁止根据路由动态修改
-export const FIXED_TITLE = '广东第二师范学院校园助手系统'
 router.afterEach(() => {
   if (typeof document !== 'undefined') {
-    document.title = FIXED_TITLE
+    document.title = i18n.global.t('router.siteTitle')
   }
 })
 

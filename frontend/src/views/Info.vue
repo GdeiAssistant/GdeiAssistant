@@ -2,13 +2,13 @@
   <div class="weui-tab info-weui-tab">
     <div class="weui-tab__panel info-container">
       <section class="info-section">
-        <div class="section-title">新闻</div>
+        <div class="section-title">{{ $t('info.news') }}</div>
         <div class="modern-card entry-card">
           <button type="button" class="entry-link" @click="router.push('/news')">
-            <div class="entry-link__icon">新闻</div>
+            <div class="entry-link__icon">{{ $t('info.news') }}</div>
             <div class="entry-link__bd">
-              <div class="entry-link__title">新闻</div>
-              <div class="entry-link__desc">查看学校公开发布的校园新闻</div>
+              <div class="entry-link__title">{{ $t('info.news') }}</div>
+              <div class="entry-link__desc">{{ $t('info.newsDesc') }}</div>
             </div>
             <div class="entry-link__ft"></div>
           </button>
@@ -16,14 +16,14 @@
       </section>
 
       <section class="info-section">
-        <div class="section-title">系统公告</div>
+        <div class="section-title">{{ $t('info.systemNotice') }}</div>
         <NoticeBlock :notices="systemNoticeItems" />
         <HistoryBlock :festival="infoData.festival" :today-label="todayLabel" />
-        <div v-if="!systemNoticeItems.length && !infoData.festival" class="modern-card empty-card">暂无系统公告</div>
+        <div v-if="!systemNoticeItems.length && !infoData.festival" class="modern-card empty-card">{{ $t('info.noNotice') }}</div>
       </section>
 
       <section class="info-section">
-        <div class="section-title">互动消息</div>
+        <div class="section-title">{{ $t('info.interaction') }}</div>
         <InteractionBlock
           :items="interactionItems"
           :unread-count="interactionUnreadCount"
@@ -38,12 +38,14 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../utils/request'
 import NoticeBlock from '../components/info/NoticeBlock.vue'
 import HistoryBlock from '../components/info/HistoryBlock.vue'
 import InteractionBlock from '../components/info/InteractionBlock.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const infoData = ref({})
 const announcementList = ref([])
 const interactionItems = ref([])
@@ -75,8 +77,8 @@ function normalizeInteractionItems(rawList) {
     id: item?.id ?? null,
     module: normalizeInteractionModule(item?.module),
     type: item?.type ?? null,
-    title: item?.title ?? '互动消息',
-    content: item?.content ?? '你有一条新的互动消息',
+    title: item?.title ?? t('info.defaultInteractionTitle'),
+    content: item?.content ?? t('info.defaultInteractionContent'),
     createdAt: item?.createdAt ?? '',
     isRead: item?.isRead === true,
     targetType: item?.targetType ?? null,
@@ -223,7 +225,7 @@ function handleMarkAllInteractionsRead() {
 async function loadInfoPage() {
   const weui = typeof window !== 'undefined' && window.weui
   if (weui && typeof weui.loading === 'function') {
-    weui.loading('正在加载资讯信息...')
+    weui.loading(t('info.loadingInfo'))
   }
   try {
     const [announcementRes, informationRes, interactionRes, unreadRes] = await Promise.allSettled([

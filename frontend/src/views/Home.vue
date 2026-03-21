@@ -1,19 +1,15 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { onMounted, onActivated, ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ALL_FEATURES, FEATURE_ICON_SRC } from '@/constants/features'
 
 const STORAGE_KEY = 'user_features_config'
 const MIGRATION_KEY = 'user_features_migrated_v2'
 
 const router = useRouter()
+const { t } = useI18n()
 
-/**
- * 迁移旧版 feature toggle 配置：
- * - 旧版 id `book` / `cardInfo` 已合并到 `collection`（图书馆）/ `card`（校园卡），
- *   如果用户曾隐藏 book 或 collection 之一，合并后的入口不应被意外隐藏，重置为可见。
- * - 移除已废弃的旧 id 键，避免残留数据干扰。
- */
 function migrateFeatureConfig(config) {
   if (!config || typeof config !== 'object') return config
   if (localStorage.getItem(MIGRATION_KEY)) return config
@@ -24,7 +20,6 @@ function migrateFeatureConfig(config) {
   const hasOldCard = oldCardIds.some((k) => k in config)
 
   if (hasOldLibrary) {
-    // 只要任一旧入口曾可见，合并后保持可见
     const anyVisible = oldLibraryIds.some((k) => config[k] !== false)
     config['collection'] = anyVisible
     delete config['book']
@@ -40,7 +35,6 @@ function migrateFeatureConfig(config) {
   return config
 }
 
-// 从 localStorage 实时读取功能开关；无配置时按 defaultVisible 兜底显示
 const featuresConfig = ref(null)
 function loadFeaturesConfig() {
   try {
@@ -55,7 +49,6 @@ function loadFeaturesConfig() {
 onMounted(loadFeaturesConfig)
 onActivated(loadFeaturesConfig)
 
-// 首页展示列表：基于 ALL_FEATURES，仅展示在缓存中为 true 的项；无配置时按 defaultVisible 显示
 const visibleMenuList = computed(() => {
   const config = featuresConfig.value
   return ALL_FEATURES.filter((f) => {
@@ -81,14 +74,14 @@ const featureSections = computed(() => {
   return [
     {
       id: 'service',
-      title: '校园服务',
-      description: '查成绩、课表、四六级、图书馆、校园卡和常用查询工具',
+      title: t('home.sectionService'),
+      description: t('home.sectionServiceDesc'),
       items: serviceItems
     },
     {
       id: 'life',
-      title: '校园生活',
-      description: '二手交易、快递代取、失物招领、树洞、卖室友、表白墙、话题和校园摄影',
+      title: t('home.sectionLife'),
+      description: t('home.sectionLifeDesc'),
       items: lifeItems
     }
   ].filter((section) => section.items.length > 0)
@@ -104,8 +97,8 @@ function handleMenuClick(item) {
 <template>
   <div class="page">
     <div class="page__hero">
-      <h1 class="page__title">广东二师助手</h1>
-      <p class="page__desc">把校园服务和校园生活统一收在一个首页里，入口和移动端保持一致。</p>
+      <h1 class="page__title">{{ $t('home.title') }}</h1>
+      <p class="page__desc">{{ $t('home.subtitle') }}</p>
     </div>
 
     <section
@@ -134,7 +127,7 @@ function handleMenuClick(item) {
       </div>
     </section>
     <div v-if="featureSections.length === 0" class="feature-empty">
-      当前没有可展示的功能入口
+      {{ $t('home.noFeatures') }}
     </div>
   </div>
 </template>

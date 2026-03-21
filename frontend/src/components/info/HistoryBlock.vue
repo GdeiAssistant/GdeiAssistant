@@ -1,9 +1,9 @@
 <template>
   <div v-if="festival" class="modern-card">
-    <div class="card-title">世界上的今日</div>
+    <div class="card-title">{{ $t('info.todayInWorld') }}</div>
     <div class="history-content">
       <p class="history-lead">
-        你知道吗？每年的<span class="history-date">{{ todayLabel }}</span>，是{{ festival.name }}
+        {{ $t('info.todayIntro') }}<span class="history-date">{{ todayLabel }}</span>{{ $t('info.todayIs') }}{{ festival.name }}
       </p>
       <p
         v-for="(line, idx) in festival.description"

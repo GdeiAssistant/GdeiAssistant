@@ -2,7 +2,7 @@
   <div class="modern-card">
     <div class="card-header">
       <div class="card-title">
-        统一互动消息
+        {{ $t('info.interactionTitle') }}
         <span v-if="unreadCount > 0" class="card-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
       </div>
       <button
@@ -11,10 +11,10 @@
         class="card-action"
         @click="$emit('mark-all')"
       >
-        全部已读
+        {{ $t('info.markAllRead') }}
       </button>
     </div>
-    <div v-if="!items.length" class="interaction-empty">暂无互动消息</div>
+    <div v-if="!items.length" class="interaction-empty">{{ $t('info.noInteraction') }}</div>
     <div v-else class="interaction-list">
       <button
         v-for="item in items"
@@ -24,17 +24,17 @@
         @click="$emit('select-item', item)"
       >
         <div class="interaction-item__header">
-          <div class="interaction-item__title">{{ item.title || '互动消息' }}</div>
-          <div class="interaction-item__time">{{ item.createdAt || '最近更新' }}</div>
+          <div class="interaction-item__title">{{ item.title || $t('info.defaultInteractionTitle') }}</div>
+          <div class="interaction-item__time">{{ item.createdAt || $t('common.recentUpdate') }}</div>
         </div>
-        <div class="interaction-item__content">{{ item.content || '你有一条新的互动消息' }}</div>
+        <div class="interaction-item__content">{{ item.content || $t('info.defaultInteractionContent') }}</div>
         <div class="interaction-item__footer">
           <div class="interaction-item__badges">
             <span class="interaction-item__module">{{ getModuleLabel(item.module) }}</span>
             <span v-if="getActionLabel(item)" class="interaction-item__action">{{ getActionLabel(item) }}</span>
           </div>
           <span :class="['interaction-item__state', item.isRead ? 'is-read' : 'is-unread']">
-            {{ item.isRead ? '已读' : '未读' }}
+            {{ item.isRead ? $t('info.read') : $t('info.unread') }}
           </span>
         </div>
       </button>
@@ -43,6 +43,10 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
   items: {
     type: Array,
@@ -57,67 +61,29 @@ defineProps({
 defineEmits(['select-item', 'mark-all'])
 
 function getModuleLabel(module) {
-  if (module === 'marketplace') {
-    return '二手交易'
-  }
-  if (module === 'lostandfound') {
-    return '失物招领'
-  }
-  if (module === 'dating') {
-    return '卖室友'
-  }
-  if (module === 'delivery') {
-    return '全民快递'
-  }
-  if (module === 'secret') {
-    return '树洞'
-  }
-  if (module === 'express') {
-    return '表白墙'
-  }
-  if (module === 'topic') {
-    return '话题'
-  }
-  if (module === 'photograph') {
-    return '拍好校园'
-  }
-  return '互动'
+  if (module === 'marketplace') return t('info.moduleMarketplace')
+  if (module === 'lostandfound') return t('info.moduleLostAndFound')
+  if (module === 'dating') return t('info.moduleDating')
+  if (module === 'delivery') return t('info.moduleDelivery')
+  if (module === 'secret') return t('info.moduleSecret')
+  if (module === 'express') return t('info.moduleExpress')
+  if (module === 'topic') return t('info.moduleTopic')
+  if (module === 'photograph') return t('info.modulePhotograph')
+  return t('info.moduleDefault')
 }
 
 function getActionLabel(item) {
-  if (!item) {
-    return ''
-  }
-  if (item.targetType === 'received') {
-    return '我收到的'
-  }
-  if (item.targetType === 'sent') {
-    return '我发出的'
-  }
-  if (item.targetType === 'posts') {
-    return '我的发布'
-  }
-  if (item.targetType === 'published') {
-    return '我发布的'
-  }
-  if (item.targetType === 'accepted') {
-    return '我接的'
-  }
-  if (item.targetType === 'comment') {
-    return '评论'
-  }
-  if (item.targetType === 'like') {
-    return '点赞'
-  }
-  if (item.targetType === 'guess') {
-    return '猜名字'
-  }
-  if (item.type === 'pick_received') {
-    return '我收到的'
-  }
-  if (item.type === 'pick_accepted' || item.type === 'pick_rejected' || item.type === 'pick_updated') {
-    return '我发出的'
-  }
+  if (!item) return ''
+  if (item.targetType === 'received') return t('info.targetReceived')
+  if (item.targetType === 'sent') return t('info.targetSent')
+  if (item.targetType === 'posts') return t('info.targetPosts')
+  if (item.targetType === 'published') return t('info.targetPublished')
+  if (item.targetType === 'accepted') return t('info.targetAccepted')
+  if (item.targetType === 'comment') return t('info.targetComment')
+  if (item.targetType === 'like') return t('info.targetLike')
+  if (item.targetType === 'guess') return t('info.targetGuess')
+  if (item.type === 'pick_received') return t('info.targetReceived')
+  if (item.type === 'pick_accepted' || item.type === 'pick_rejected' || item.type === 'pick_updated') return t('info.targetSent')
   return ''
 }
 </script>

@@ -78,6 +78,15 @@ public class AccountDeletionService {
     @Autowired(required = false)
     private DatingMapper datingMapper;
 
+    @Autowired(required = false)
+    private cn.gdeiassistant.core.topic.mapper.TopicMapper topicMapper;
+
+    @Autowired(required = false)
+    private cn.gdeiassistant.core.secret.mapper.SecretMapper secretMapper;
+
+    @Autowired(required = false)
+    private cn.gdeiassistant.core.photograph.mapper.PhotographMapper photographMapper;
+
     /**
      * 关闭待处理的社区功能信息
      */
@@ -209,8 +218,19 @@ public class AccountDeletionService {
         Integer count = userMapper.selectDeletedUserCount("del_"
                 + StringEncryptUtils.sha1HexString(user.getUsername()).substring(0, 15));
         count = count == null ? 0 : count;
-        userMapper.closeUser("del_" + StringEncryptUtils.sha1HexString(user.getUsername())
-                .substring(0, 15) + "_" + count, user.getUsername());
+        String deletedUsername = "del_" + StringEncryptUtils.sha1HexString(user.getUsername())
+                .substring(0, 15) + "_" + count;
+        //匿名化社区内容的 username
+        if (topicMapper != null) {
+            topicMapper.anonymizeUsername(user.getUsername(), deletedUsername);
+        }
+        if (secretMapper != null) {
+            secretMapper.anonymizeUsername(user.getUsername(), deletedUsername);
+        }
+        if (photographMapper != null) {
+            photographMapper.anonymizeUsername(user.getUsername(), deletedUsername);
+        }
+        userMapper.closeUser(deletedUsername, user.getUsername());
         //保存注销日志
         SaveCloseLog(user.getUsername(), count);
     }

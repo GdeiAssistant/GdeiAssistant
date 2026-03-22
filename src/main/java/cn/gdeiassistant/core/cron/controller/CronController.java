@@ -36,7 +36,7 @@ public class CronController {
      * Returns true if authentication passes, false if a 403 response was sent.
      */
     private boolean authenticateCron(String secret, HttpServletResponse response) throws IOException {
-        if (secret == null || !secret.equals(cronSecret)) {
+        if (cronSecret == null || cronSecret.isEmpty() || secret == null || !secret.equals(cronSecret)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");

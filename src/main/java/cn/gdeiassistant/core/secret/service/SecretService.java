@@ -160,9 +160,12 @@ public class SecretService {
     }
 
     public void deleteSecretVoice(int id) {
-        try {
-            r2StorageService.deleteObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3");
-        } catch (Exception ignored) {}
+        String[] extensions = new String[]{".mp3", ".webm", ".ogg", ".wav", ".m4a", ".mp4"};
+        for (String ext : extensions) {
+            try {
+                r2StorageService.deleteObject("gdeiassistant-userdata", "secret/voice/" + id + ext);
+            } catch (Exception ignored) {}
+        }
     }
 
     @Transactional("appTransactionManager")

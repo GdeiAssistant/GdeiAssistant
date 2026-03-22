@@ -49,6 +49,9 @@ public class DatingService {
     public DatingProfileVO queryDatingProfile(Integer id) throws DataNotExistException {
         DatingProfileEntity entity = datingMapper.selectDatingProfileById(id);
         if (entity == null) throw new DataNotExistException("该卖室友信息不存在");
+        if (entity.getState() != null && entity.getState() == 0) {
+            throw new DataNotExistException("该卖室友信息不存在");
+        }
         return profileEntityToVO(entity);
     }
 

@@ -40,7 +40,7 @@ public interface TopicMapper {
             "count(distinct tl.topic_id) as like_count " +
             "from topic t " +
             "left join topic_like tl on t.id=tl.topic_id " +
-            "where t.topic like concat(concat('%',#{keyword}),'%') group by t.id order by t.id limit #{start},#{size}")
+            "where (t.topic like concat(concat('%',#{keyword}),'%') or t.content like concat(concat('%',#{keyword}),'%')) group by t.id order by t.id limit #{start},#{size}")
     @ResultMap("Topic")
     List<TopicEntity> selectTopicPageByKeyword(@Param("start") int start, @Param("size") int size, @Param("username") String username, @Param("keyword") String keyword);
 

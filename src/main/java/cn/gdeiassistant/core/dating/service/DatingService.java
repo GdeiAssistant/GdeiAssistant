@@ -67,11 +67,13 @@ public class DatingService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<DatingProfileEntity> list = datingMapper.selectDatingProfileByUsername(user.getUsername());
         if (list == null) return new ArrayList<>();
-        return list.stream().map(e -> {
-            DatingProfileVO vo = profileEntityToVO(e);
-            vo.setPictureURL(getRoommateProfilePictureURL(e.getProfileId()));
-            return vo;
-        }).collect(Collectors.toList());
+        return list.stream()
+                .filter(e -> e.getState() == null || e.getState() != 0)
+                .map(e -> {
+                    DatingProfileVO vo = profileEntityToVO(e);
+                    vo.setPictureURL(getRoommateProfilePictureURL(e.getProfileId()));
+                    return vo;
+                }).collect(Collectors.toList());
     }
 
     public void updateRoommateProfile(DatingPublishDTO dto, Integer profileId) {

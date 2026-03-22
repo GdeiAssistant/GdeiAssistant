@@ -81,7 +81,12 @@ public class InteractionNotificationService {
         }
         List<InteractionMessageVO> list = new ArrayList<>(entityList.size());
         for (InteractionNotificationEntity entity : entityList) {
-            if (deletedActors.contains(entity.getActorUsername())) {
+            String originalActor = entity.getActorUsername();
+            if (deletedActors.contains(originalActor)) {
+                // Replace original username in content, then mark actor as anonymous
+                if (entity.getContent() != null) {
+                    entity.setContent(entity.getContent().replace(originalActor, AnonymizeUtils.sanitizeUsername("del_")));
+                }
                 entity.setActorUsername("del_legacy");
             }
             list.add(toInteractionMessageVO(entity));

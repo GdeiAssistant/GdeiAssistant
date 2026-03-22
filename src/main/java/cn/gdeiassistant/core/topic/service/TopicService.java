@@ -61,7 +61,15 @@ public class TopicService {
     public List<TopicVO> queryTopicByKeyword(String sessionId, int start, int size, String keyword) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<TopicEntity> list = topicMapper.selectTopicPageByKeyword(start, size, user.getUsername(), keyword);
-        return list == null || list.isEmpty() ? new ArrayList<>() : topicConverter.toVOList(list);
+        if (list == null || list.isEmpty()) return new ArrayList<>();
+        List<TopicVO> voList = new ArrayList<>();
+        for (TopicEntity e : list) {
+            if (e.getCount() != null && e.getCount() >= 1) {
+                e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
+            }
+            voList.add(topicConverter.toVO(e));
+        }
+        return voList;
     }
 
     public List<TopicVO> queryMyTopicList(String sessionId, int start, int size) {

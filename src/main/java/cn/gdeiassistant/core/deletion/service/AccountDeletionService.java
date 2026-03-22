@@ -90,6 +90,9 @@ public class AccountDeletionService {
     @Autowired(required = false)
     private cn.gdeiassistant.core.message.mapper.InteractionNotificationMapper interactionNotificationMapper;
 
+    @Autowired(required = false)
+    private cn.gdeiassistant.core.express.mapper.ExpressMapper expressMapper;
+
     /**
      * 关闭待处理的社区功能信息
      */
@@ -235,6 +238,9 @@ public class AccountDeletionService {
         }
         if (interactionNotificationMapper != null) {
             interactionNotificationMapper.anonymizeActorUsername(user.getUsername(), deletedUsername, "已注销用户");
+        }
+        if (expressMapper != null) {
+            expressMapper.anonymizeByUsername(user.getUsername(), deletedUsername);
         }
         userMapper.closeUser(deletedUsername, user.getUsername());
         //保存注销日志

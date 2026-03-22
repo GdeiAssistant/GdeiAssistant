@@ -109,7 +109,7 @@ wechat:
     secret: ${WECHAT_APP_SECRET:}
 
 encrypt:
-  enable: false
+  enable: ${ENCRYPT_ENABLE:false}
   type: aes
   private:
     key: ${ENCRYPT_PRIVATE_KEY:}

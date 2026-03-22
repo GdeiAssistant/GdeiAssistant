@@ -71,6 +71,14 @@ public class StringEncryptionConfig implements EnvironmentAware {
             }
         }
         //安全加密功能模块未启用
+        //生产环境下拒绝启动，防止敏感字段静默落成明文
+        for (String profile : environment.getActiveProfiles()) {
+            if ("production".equalsIgnoreCase(profile) || "prod".equalsIgnoreCase(profile)) {
+                throw new IllegalStateException(
+                        "Field encryption must be enabled in production. " +
+                        "Set ENCRYPT_ENABLE=true and ENCRYPT_PRIVATE_KEY in environment.");
+            }
+        }
         return null;
     }
 

@@ -94,6 +94,7 @@ class DatingContractTest {
 
         mockMvc.perform(get("/api/dating/profile/id/99"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(40401));
     }
 }

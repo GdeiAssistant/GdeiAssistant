@@ -316,10 +316,10 @@ onMounted(() => {
     </div>
     <h1 class="page-title-green">我的课程表</h1>
 
-    <div class="schedule-week" @click="openWeekPicker" role="button" tabindex="0">
+    <button type="button" class="schedule-week btn-reset" @click="openWeekPicker">
       <span class="schedule-week__text">{{ scheduleResult ? `第${scheduleResult.week}周` : '选择周数' }}</span>
       <span class="schedule-week__chevron" aria-hidden="true">▼</span>
-    </div>
+    </button>
 
     <div class="schedule-grid-wrap">
       <div class="schedule-grid">

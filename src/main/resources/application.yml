@@ -72,7 +72,7 @@ server:
     context-path: /
 
 jwt:
-  secret: ${JWT_SECRET:YOUR_SECURE_JWT_SECRET_AT_LEAST_32_CHARS}
+  secret: ${JWT_SECRET:}
 
 email:
   smtp:

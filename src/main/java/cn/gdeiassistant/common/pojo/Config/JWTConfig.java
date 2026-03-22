@@ -17,9 +17,11 @@ public class JWTConfig {
     @Autowired
     private ModuleUtils moduleUtils;
 
+    private static final String INSECURE_PLACEHOLDER = "YOUR_SECURE_JWT_SECRET_AT_LEAST_32_CHARS";
+
     @Value("${jwt.secret:}")
     public void setSecret(String secret) {
-        if (StringUtils.isNotBlank(secret)) {
+        if (StringUtils.isNotBlank(secret) && !INSECURE_PLACEHOLDER.equals(secret)) {
             this.secret = secret;
         } else {
             moduleUtils.DisableModule(ModuleEnum.JWT);

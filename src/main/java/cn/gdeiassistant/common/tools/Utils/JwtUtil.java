@@ -34,7 +34,15 @@ public class JwtUtil {
      * @param username  用户唯一标识（学号/校园网账号）
      * @return JWT 字符串
      */
+    private void ensureSecretConfigured() {
+        String secret = jwtConfig.getSecret();
+        if (secret == null || secret.isEmpty()) {
+            throw new IllegalStateException("JWT secret is not configured. Set the JWT_SECRET environment variable.");
+        }
+    }
+
     public String createToken(String sessionId, String username) {
+        ensureSecretConfigured();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expireTime = now.plusDays(EXPIRE_DAYS);
         return JWT.create()
@@ -54,6 +62,7 @@ public class JwtUtil {
      * @throws JWTVerificationException 签名无效或已过期
      */
     public Map<String, Claim> verifyAndParse(String token) throws JWTVerificationException {
+        ensureSecretConfigured();
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(jwtConfig.getSecret()))
                 .withIssuer(ISSUER)
                 .build();

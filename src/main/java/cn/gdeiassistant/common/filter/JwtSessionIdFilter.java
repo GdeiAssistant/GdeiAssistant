@@ -1,7 +1,6 @@
 package cn.gdeiassistant.common.filter;
 
 import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.redis.LoginToken.LoginTokenDao;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.Utils.JwtUtil;
 import com.auth0.jwt.interfaces.Claim;
@@ -15,9 +14,8 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * 当请求头带有 Authorization: Bearer &lt;JWT&gt; 时，校验 JWT 并将 sessionId、user 注入请求 attribute（无状态，不依赖 HttpSession）。
- * 逻辑：校验 JWT 签名与过期 → 若 payload 含 "token" 则用该 token 查 Redis 取 sessionId（无则拦截）；
- * 若仅含 "sessionId"（移动端兼容）则直接使用。再将 sessionId、user 写入 request.setAttribute，供 ApiAuthInterceptor 与业务使用。
+ * 当请求头带有 Authorization: Bearer <JWT> 时，校验 JWT 签名并从 claims 中提取 sessionId，
+ * 将 sessionId 和 user 注入 request attribute，供后续拦截器与业务使用。
  */
 @Component("jwtSessionIdFilter")
 public class JwtSessionIdFilter implements Filter {
@@ -30,9 +28,6 @@ public class JwtSessionIdFilter implements Filter {
 
     @Autowired
     private UserCertificateService userCertificateService;
-
-    @Autowired
-    private LoginTokenDao loginTokenDao;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -49,12 +44,18 @@ public class JwtSessionIdFilter implements Filter {
         if (jwtString != null && !jwtString.isEmpty()) {
             try {
                 Map<String, Claim> claims = jwtUtil.verifyAndParse(jwtString);
-                String sessionId = resolveSessionId(claims);
-                if (sessionId != null && !sessionId.isEmpty()) {
-                    req.setAttribute("sessionId", sessionId);
-                    User certificate = userCertificateService.getUserLoginCertificate(sessionId);
-                    if (certificate != null) {
-                        req.setAttribute("user", certificate);
+                Claim sessionIdClaim = claims.get("sessionId");
+                if (sessionIdClaim != null && !sessionIdClaim.isNull()) {
+                    String sessionId = sessionIdClaim.asString();
+                    if (sessionId != null && !sessionId.isEmpty()) {
+                        // 验证 session 在 Redis 中仍然存在（用户未注销）
+                        // 若 session 已被 clearUserLoginAndSession 清除，则不注入 sessionId，
+                        // 后续 ApiAuthInterceptor 会返回 401
+                        User certificate = userCertificateService.getUserLoginCertificate(sessionId);
+                        if (certificate != null) {
+                            req.setAttribute("sessionId", sessionId);
+                            req.setAttribute("user", certificate);
+                        }
                     }
                 }
             } catch (JWTVerificationException ignored) {
@@ -62,22 +63,5 @@ public class JwtSessionIdFilter implements Filter {
             }
         }
         chain.doFilter(req, response);
-    }
-
-    /**
-     * 从 JWT payload 解析 sessionId：优先 token -> Redis；兼容仅含 sessionId 的移动端 JWT。
-     */
-    private String resolveSessionId(Map<String, Claim> claims) {
-        Claim tokenClaim = claims.get("token");
-        if (tokenClaim != null && !tokenClaim.isNull()) {
-            String loginToken = tokenClaim.asString();
-            String sessionId = loginTokenDao.QuerySessionIdByWebToken(loginToken);
-            return sessionId;
-        }
-        Claim sessionIdClaim = claims.get("sessionId");
-        if (sessionIdClaim != null && !sessionIdClaim.isNull()) {
-            return sessionIdClaim.asString();
-        }
-        return null;
     }
 }

@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { setLocale as setI18nLocale } from '@/i18n'
 import { getThemeMode, setThemeMode, getFontScaleStep, setFontScaleStep } from '@/theme'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const theme = ref(getThemeMode())
 const fontStep = ref(getFontScaleStep())
@@ -33,7 +33,7 @@ const locales = [
   { code: 'ko', label: '한국어' },
 ]
 
-const selectedLocale = ref(localStorage.getItem('locale') || 'zh-CN')
+const selectedLocale = computed(() => locale.value)
 
 function onThemeChange(value) {
   theme.value = value
@@ -47,7 +47,6 @@ function onFontChange(e) {
 }
 
 function onLocaleChange(code) {
-  selectedLocale.value = code
   setI18nLocale(code)
 }
 </script>

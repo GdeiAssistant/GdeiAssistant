@@ -219,17 +219,5 @@ public class LoginTokenService {
         }
     }
 
-    /**
-     * 验证令牌有效期（移动端专属：仅校验 Redis 中的 AccessToken）。
-     * 查不到则视为已过期或非移动端签发，直接抛异常。
-     *
-     * @param token 签名（JWT 字符串）
-     */
-    public void validExpiration(String token) throws TokenExpiredException {
-        AccessToken accessToken = loginTokenDao.QueryAccessToken(token);
-        if (accessToken == null) {
-            throw new TokenExpiredException("令牌已过期");
-        }
-    }
 
 }

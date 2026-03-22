@@ -47,25 +47,6 @@ public class JwtUtil {
     }
 
     /**
-     * 为 Web 登录签发“可撤销” JWT：载荷仅含 loginToken 与 username，sessionId 由 Redis token->sessionId 解析。
-     *
-     * @param loginToken 唯一 token，已写入 Redis（token -> sessionId）
-     * @param username   用户唯一标识（学号/校园网账号）
-     * @return JWT 字符串
-     */
-    public String createTokenWithLoginToken(String loginToken, String username) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expireTime = now.plusDays(EXPIRE_DAYS);
-        return JWT.create()
-                .withIssuer(ISSUER)
-                .withClaim("username", username)
-                .withClaim("token", loginToken)
-                .withClaim("createTime", now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-                .withClaim("expireTime", expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-                .sign(Algorithm.HMAC256(jwtConfig.getSecret()));
-    }
-
-    /**
      * 校验并解析 JWT，校验签名与过期时间
      *
      * @param token JWT 字符串
@@ -84,10 +65,4 @@ public class JwtUtil {
         return decoded.getClaims();
     }
 
-    /**
-     * 仅解析 JWT 载荷（不校验签名与过期），用于已由其他逻辑校验过的场景
-     */
-    public Map<String, Claim> parseToken(String token) {
-        return JWT.decode(token).getClaims();
-    }
 }

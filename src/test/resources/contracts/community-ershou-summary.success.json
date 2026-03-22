@@ -23,24 +23,6 @@
     ],
     "sold": [
       {
-        "id": 102,
-        "username": "20231234",
-        "name": "二手风扇",
-        "description": "宿舍清仓",
-        "price": 25.0,
-        "location": "白云校区",
-        "type": 5,
-        "qq": "654321",
-        "phone": "13900139000",
-        "state": 0,
-        "publishTime": null,
-        "pictureURL": [
-          "https://cdn.gdeiassistant.cn/ershou/102_1.jpg"
-        ]
-      }
-    ],
-    "off": [
-      {
         "id": 103,
         "username": "20231234",
         "name": "旧教材",
@@ -54,6 +36,24 @@
         "publishTime": null,
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/ershou/103_1.jpg"
+        ]
+      }
+    ],
+    "off": [
+      {
+        "id": 102,
+        "username": "20231234",
+        "name": "二手风扇",
+        "description": "宿舍清仓",
+        "price": 25.0,
+        "location": "白云校区",
+        "type": 5,
+        "qq": "654321",
+        "phone": "13900139000",
+        "state": 0,
+        "publishTime": null,
+        "pictureURL": [
+          "https://cdn.gdeiassistant.cn/ershou/102_1.jpg"
         ]
       }
     ]

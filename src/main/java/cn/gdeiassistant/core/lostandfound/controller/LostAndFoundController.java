@@ -68,8 +68,8 @@ public class LostAndFoundController {
     }
 
     @RequestMapping(value = "/api/lostandfound/lostitem/type/{type}/start/{start}", method = RequestMethod.POST)
-    public DataJsonResult<List<LostAndFoundItemVO>> searchLostAndFoundInfo(HttpServletRequest request, @PathVariable("type") Integer lostType,
-            @Validated @Range(min = 0, max = 1) @PathVariable("start") Integer start,
+    public DataJsonResult<List<LostAndFoundItemVO>> searchLostAndFoundInfo(HttpServletRequest request, @Validated @Range(min = 0, max = 1) @PathVariable("type") Integer lostType,
+            @PathVariable("start") @Min(0) Integer start,
             @Validated @NotBlank @Length(min = 1, max = 50) @RequestParam("keyword") String keywords) throws Exception {
         List<LostAndFoundItemVO> list = lostType.equals(0)
                 ? lostAndFoundService.queryLostItemsWithKeyword(keywords, start)
@@ -111,7 +111,8 @@ public class LostAndFoundController {
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult updateLostAndFoundInfo(HttpServletRequest request, @PathVariable("id") Integer id,
             @Validated LostAndFoundPublishDTO dto) throws Exception {
-        lostAndFoundService.updateLostAndFoundItem(dto, id);
+        String sessionId = (String) request.getAttribute("sessionId");
+        lostAndFoundService.updateLostAndFoundItem(dto, id, sessionId);
         return new JsonResult(true);
     }
 

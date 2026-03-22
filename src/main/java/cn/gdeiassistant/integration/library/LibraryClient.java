@@ -23,6 +23,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +152,8 @@ public class LibraryClient {
                 .readTimeout(OKHTTP_TIMEOUT_SEC, TimeUnit.SECONDS)
                 .writeTimeout(OKHTTP_TIMEOUT_SEC, TimeUnit.SECONDS)
                 .build();
-        String url = OPAC_SEARCH_BASE + "/showhome/searchlist/opacSearchList?search=" + keyword
+        String url = OPAC_SEARCH_BASE + "/showhome/searchlist/opacSearchList?search="
+                + URLEncoder.encode(keyword, StandardCharsets.UTF_8)
                 + "&xc=3&schoolId=705&centerDomain=&searchtype=title";
         if (page != null && page != 1) {
             url = url + "&page=" + page;
@@ -182,9 +184,13 @@ public class LibraryClient {
                 .readTimeout(OKHTTP_TIMEOUT_SEC, TimeUnit.SECONDS)
                 .writeTimeout(OKHTTP_TIMEOUT_SEC, TimeUnit.SECONDS)
                 .build();
-        String u = OPAC_SEARCH_BASE + "/showhome/searchdetail/opacSearchDetail?opacUrl=" + opacUrl + "&search=" + search
-                + "&schoolId=" + (schoolId != null ? schoolId : "705") + "&searchtype=" + (searchtype != null ? searchtype : "title")
-                + "&page=" + (page != null ? page : "1") + "&xc=" + (xc != null ? xc : "3");
+        String u = OPAC_SEARCH_BASE + "/showhome/searchdetail/opacSearchDetail?opacUrl="
+                + URLEncoder.encode(opacUrl, StandardCharsets.UTF_8)
+                + "&search=" + URLEncoder.encode(search, StandardCharsets.UTF_8)
+                + "&schoolId=" + URLEncoder.encode(schoolId != null ? schoolId : "705", StandardCharsets.UTF_8)
+                + "&searchtype=" + URLEncoder.encode(searchtype != null ? searchtype : "title", StandardCharsets.UTF_8)
+                + "&page=" + URLEncoder.encode(page != null ? page : "1", StandardCharsets.UTF_8)
+                + "&xc=" + URLEncoder.encode(xc != null ? xc : "3", StandardCharsets.UTF_8);
         Request request = new Request.Builder().url(u).build();
         Response response = okHttpClient.newCall(request).execute();
         if (!response.isSuccessful()) {

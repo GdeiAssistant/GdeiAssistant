@@ -41,8 +41,8 @@ public class RequestLogAspect {
         //记录请求头信息
         stringBuilder.append(" . RequestHeaders: ");
         stringBuilder.append(StringUtils.isBlank(request.getHeader("User-Agent")) ? "" : "User-Agent:" + request.getHeader("User-Agent") + " , ");
-        stringBuilder.append(StringUtils.isBlank(request.getHeader("Client-Type")) ? "" : "Client-Type:" + request.getHeader("Client-Type") + " , ");
-        stringBuilder.append(StringUtils.isBlank(request.getHeader("Version-Code")) ? "" : "Version-Code:" + request.getHeader(request.getHeader("Version-Code")));
+        stringBuilder.append(StringUtils.isBlank(request.getHeader("X-Client-Type")) ? "" : "X-Client-Type:" + request.getHeader("X-Client-Type") + " , ");
+        stringBuilder.append(StringUtils.isBlank(request.getHeader("Version-Code")) ? "" : "Version-Code:" + request.getHeader("Version-Code"));
         //记录非敏感请求参数信息
         stringBuilder.append(". RequestParameters: ");
         for (int i = 1; i < args.length; i++) {

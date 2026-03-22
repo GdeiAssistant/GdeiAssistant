@@ -66,8 +66,6 @@ public class DelayTaskUtils {
      * @param task
      */
     private void processTask(DelayTask task) {
-        //根据DelayTask中的DelayTaskElement的数据类型来处理相关逻辑
-        // if (task.getDelayTaskElement() instanceof XXX) {}
         if (task.getDelayTaskElement() instanceof SessionAttributeExpireDelayTaskElement) {
             //延时清除Session中的属性值
             servletContext.removeAttribute(((SessionAttributeExpireDelayTaskElement)

@@ -3,7 +3,6 @@ package cn.gdeiassistant.common.web;
 import cn.gdeiassistant.common.filter.JwtSessionIdFilter;
 import cn.gdeiassistant.common.interceptor.ApiAuthInterceptor;
 import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.redis.LoginToken.LoginTokenDao;
 import cn.gdeiassistant.common.tools.Utils.JwtUtil;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -41,9 +40,6 @@ class AuthWebFlowIntegrationTest {
     @Mock
     private UserCertificateService userCertificateService;
 
-    @Mock
-    private LoginTokenDao loginTokenDao;
-
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -51,7 +47,6 @@ class AuthWebFlowIntegrationTest {
         JwtSessionIdFilter jwtSessionIdFilter = new JwtSessionIdFilter();
         ReflectionTestUtils.setField(jwtSessionIdFilter, "jwtUtil", jwtUtil);
         ReflectionTestUtils.setField(jwtSessionIdFilter, "userCertificateService", userCertificateService);
-        ReflectionTestUtils.setField(jwtSessionIdFilter, "loginTokenDao", loginTokenDao);
 
         ApiAuthInterceptor apiAuthInterceptor = new ApiAuthInterceptor(List.of("/api/auth"));
         mockMvc = MockMvcBuilders.standaloneSetup(new TestAuthController())
@@ -77,11 +72,10 @@ class AuthWebFlowIntegrationTest {
 
     @Test
     void shouldAllowProtectedRouteWhenBearerTokenResolvesSession() throws Exception {
-        Claim tokenClaim = mock(Claim.class);
-        when(tokenClaim.isNull()).thenReturn(false);
-        when(tokenClaim.asString()).thenReturn("login-token");
-        when(jwtUtil.verifyAndParse("good-token")).thenReturn(Map.of("token", tokenClaim));
-        when(loginTokenDao.QuerySessionIdByWebToken("login-token")).thenReturn("session-1");
+        Claim sessionIdClaim = mock(Claim.class);
+        when(sessionIdClaim.isNull()).thenReturn(false);
+        when(sessionIdClaim.asString()).thenReturn("session-1");
+        when(jwtUtil.verifyAndParse("good-token")).thenReturn(Map.of("sessionId", sessionIdClaim));
         when(userCertificateService.getUserLoginCertificate("session-1")).thenReturn(new User("20240001"));
 
         mockMvc.perform(get("/api/protected/session")
@@ -96,6 +90,22 @@ class AuthWebFlowIntegrationTest {
     void shouldRejectLegacyTokenHeaderForProtectedRoute() throws Exception {
         mockMvc.perform(get("/api/protected/header")
                         .header("token", "legacy-token"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"code\":401,\"message\":\"Unauthorized\"}"));
+    }
+
+    @Test
+    void shouldRejectProtectedRouteWhenSessionRevokedAfterLogout() throws Exception {
+        // JWT signature is valid, but session was cleared from Redis (user logged out)
+        Claim sessionIdClaim = mock(Claim.class);
+        when(sessionIdClaim.isNull()).thenReturn(false);
+        when(sessionIdClaim.asString()).thenReturn("revoked-session");
+        when(jwtUtil.verifyAndParse("revoked-token")).thenReturn(Map.of("sessionId", sessionIdClaim));
+        // Simulate logout: Redis returns null for this session
+        when(userCertificateService.getUserLoginCertificate("revoked-session")).thenReturn(null);
+
+        mockMvc.perform(get("/api/protected/session")
+                        .header("Authorization", "Bearer revoked-token"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().json("{\"code\":401,\"message\":\"Unauthorized\"}"));
     }

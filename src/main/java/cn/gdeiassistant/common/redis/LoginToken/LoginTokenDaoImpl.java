@@ -21,12 +21,6 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
 
     private final String DEVICE_DATA_PREFIX = "DEVICE_DATA_";
 
-    private final String WEB_LOGIN_TOKEN_PREFIX = "WEB_LOGIN_TOKEN_";
-
-    private final String WEB_SESSION_TO_TOKEN_PREFIX = "WEB_SESSION_TO_TOKEN_";
-
-    private final int WEB_TOKEN_EXPIRE_DAYS = 7;
-
     @Autowired
     private RedisDaoUtils redisDaoUtils;
 
@@ -137,42 +131,5 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
         redisDaoUtils.expire(key, 7, TimeUnit.DAYS);
     }
 
-    @Override
-    public void InsertWebLoginToken(String token, String sessionId) {
-        String tokenKey = WEB_LOGIN_TOKEN_PREFIX + token;
-        String sessionKey = WEB_SESSION_TO_TOKEN_PREFIX + sessionId;
-        redisDaoUtils.set(tokenKey, sessionId);
-        redisDaoUtils.expire(tokenKey, WEB_TOKEN_EXPIRE_DAYS, TimeUnit.DAYS);
-        redisDaoUtils.set(sessionKey, token);
-        redisDaoUtils.expire(sessionKey, WEB_TOKEN_EXPIRE_DAYS, TimeUnit.DAYS);
-    }
-
-    @Override
-    public String QuerySessionIdByWebToken(String token) {
-        return redisDaoUtils.get(WEB_LOGIN_TOKEN_PREFIX + token);
-    }
-
-    @Override
-    public String QueryWebTokenBySessionId(String sessionId) {
-        return redisDaoUtils.get(WEB_SESSION_TO_TOKEN_PREFIX + sessionId);
-    }
-
-    @Override
-    public void DeleteWebLoginToken(String token) {
-        String sessionId = redisDaoUtils.get(WEB_LOGIN_TOKEN_PREFIX + token);
-        redisDaoUtils.delete(WEB_LOGIN_TOKEN_PREFIX + token);
-        if (sessionId != null && !sessionId.isEmpty()) {
-            redisDaoUtils.delete(WEB_SESSION_TO_TOKEN_PREFIX + sessionId);
-        }
-    }
-
-    @Override
-    public void DeleteWebLoginTokenBySessionId(String sessionId) {
-        String token = redisDaoUtils.get(WEB_SESSION_TO_TOKEN_PREFIX + sessionId);
-        redisDaoUtils.delete(WEB_SESSION_TO_TOKEN_PREFIX + sessionId);
-        if (token != null && !token.isEmpty()) {
-            redisDaoUtils.delete(WEB_LOGIN_TOKEN_PREFIX + token);
-        }
-    }
 
 }

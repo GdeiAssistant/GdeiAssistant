@@ -1,8 +1,10 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
+const { t } = useI18n()
 
 // Cookie 横幅状态
 const showCookieBanner = ref(false)
@@ -12,27 +14,27 @@ const showMenu = ref(false)
 const expandedMenu = ref('')
 
 // 菜单数据结构（从 top.jsp 提取）
-const menuItems = [
+const menuItems = computed(() => [
   {
-    title: '使用帮助',
+    title: t('about.menuHelp'),
     items: [
-      { text: '安全技术规格说明', href: '/about/security' },
-      { text: '校园网络账号说明', href: '/about/account' }
+      { text: t('about.menuSecuritySpec'), href: '/about/security' },
+      { text: t('about.menuAccountSpec'), href: '/about/account' }
     ]
   },
   {
-    title: '协议与政策',
+    title: t('about.menuPolicies'),
     items: [
-      { text: '用户协议', href: '/agreement' },
-      { text: '隐私政策', href: '/policy/privacy' },
-      { text: '社区准则', href: '/policy/social' },
-      { text: '开源协议', href: '/license' },
-      { text: 'Cookie政策', href: '/policy/cookie' },
-      { text: '知识产权声明', href: '/policy/intellectualproperty' }
+      { text: t('about.menuUserAgreement'), href: '/agreement' },
+      { text: t('about.menuPrivacyPolicy'), href: '/policy/privacy' },
+      { text: t('about.menuCommunityGuidelines'), href: '/policy/social' },
+      { text: t('about.menuOpenSourceLicense'), href: '/license' },
+      { text: t('about.menuCookiePolicy'), href: '/policy/cookie' },
+      { text: t('about.menuIPDeclaration'), href: '/policy/intellectualproperty' }
     ]
   },
   {
-    title: '友情链接',
+    title: t('about.menuFriendlyLinks'),
     items: [
       { text: '教育部', href: 'http://www.moe.gov.cn', external: true },
       { text: '广东省教育厅', href: 'https://edu.gd.gov.cn', external: true },
@@ -50,7 +52,7 @@ const menuItems = [
     ]
   },
   {
-    title: '智慧党建',
+    title: t('about.menuSmartPartyBuilding'),
     items: [
       { text: '中国共产党新闻网', href: 'http://cpc.people.com.cn/index.html', external: true },
       { text: '"不忘初心、牢记使命"主题教育', href: 'http://chuxin.people.cn/GB/index.html', external: true },
@@ -60,7 +62,7 @@ const menuItems = [
       { text: '二十大专题报道', href: 'http://cpc.people.com.cn/20th', external: true }
     ]
   }
-]
+])
 
 function goToLogin() {
   router.push('/login')
@@ -109,7 +111,7 @@ onMounted(() => {
     <!-- 顶部导航栏 -->
     <div class="top-navbar">
       <div class="navbar-content">
-        <span class="navbar-title">广东二师助手</span>
+        <span class="navbar-title">{{ t('about.appName') }}</span>
         <button class="hamburger-btn" @click="toggleMenu">
           <span></span>
           <span></span>
@@ -122,7 +124,7 @@ onMounted(() => {
     <div class="menu-overlay" v-if="showMenu" @click="toggleMenu"></div>
     <div class="side-menu" :class="{ 'menu-open': showMenu }">
       <div class="menu-header">
-        <span class="menu-title">广东二师助手</span>
+        <span class="menu-title">{{ t('about.appName') }}</span>
         <button class="menu-close" @click="toggleMenu">×</button>
       </div>
       <div class="menu-list">
@@ -152,36 +154,34 @@ onMounted(() => {
 
     <!-- Logo 区域 -->
     <div class="app-logo">
-      <img src="/img/about/application/logo.png" alt="广东二师助手" width="120" height="120" />
+      <img src="/img/about/application/logo.png" :alt="t('about.appName')" width="120" height="120" />
     </div>
 
     <!-- 进入系统按钮 -->
     <div class="weui-btn_area">
       <a href="javascript:;" class="weui-btn weui-btn_primary" @click.prevent="goToLogin">
-        进入系统
+        {{ t('about.enterSystem') }}
       </a>
     </div>
 
     <!-- 应用介绍 -->
     <div class="about-content">
-      <h2 class="about-title">应用介绍</h2>
+      <h2 class="about-title">{{ t('about.appIntroTitle') }}</h2>
       <div class="about-description">
-        <p>
-          广东第二师范学院校园助手，是为广东第二师范学院专属打造的校园服务应用。它不仅提供了课表查询、成绩查询、四六级考试成绩查询、空课室查询、图书馆检索、我的借阅、教学质量评价、电费查询、黄页查询、校园卡信息、消费记录、校园卡挂失等综合性的教务功能，还提供了二手交易、失物招领、校园树洞、恋爱交友、表白墙、全民快递、拍好校园、话题、匿名评教等社区交流平台。广东二师助手旨在为广东第二师范学院的在校师生们提供最优质的教育教学、校园生活、社团活动、文化娱乐和教务服务等信息。四年时光，广东二师助手陪你一起走过。
-        </p>
+        <p>{{ t('about.appIntroContent') }}</p>
       </div>
     </div>
 
     <!-- 应用截图（横向滚动 - 画廊模式） -->
     <div class="about-screenshots">
-      <h2 class="about-title">应用截图</h2>
+      <h2 class="about-title">{{ t('about.screenshotsTitle') }}</h2>
       <div class="screenshot-wrapper">
         <div class="screenshot-container">
           <img
             v-for="i in 5"
             :key="i"
             :src="`/img/about/application/preview_${i - 1}.jpg`"
-            :alt="`应用截图 ${i}`"
+            :alt="t('about.screenshotAlt', { n: i })"
           />
         </div>
       </div>
@@ -220,8 +220,12 @@ onMounted(() => {
     <div class="cookie-banner" v-if="showCookieBanner">
       <div class="cookie-content">
         <div class="cookie-text">
-          本网站使用Cookie的目的是为您提供更加简捷和个性化的上网体验。Cookie将有用的信息存储在您的电脑上，可帮助我们改善您浏览我们网站的效率以及对您的实用性。在某些情况下，它们是网站正常运行所必不可少的。如果您访问本网站，即表示您同意我们使用Cookie。
-          请点击<a href="/policy/cookie" class="cookie-link">Cookie政策</a>了解更多信息。
+          {{ t('about.cookieNotice') }}
+          <i18n-t keypath="about.cookieLearnMore" tag="span">
+            <template #link>
+              <a href="/policy/cookie" class="cookie-link">{{ t('about.cookiePolicy') }}</a>
+            </template>
+          </i18n-t>
         </div>
         <button class="cookie-close" @click="closeCookieBanner">×</button>
       </div>

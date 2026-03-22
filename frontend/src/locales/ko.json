@@ -129,6 +129,29 @@
   "router": {
     "siteTitle": "광둥제2사범대학교 캠퍼스 어시스턴트"
   },
+  "about": {
+    "appName": "광둥이사 어시스턴트",
+    "enterSystem": "시스템 진입",
+    "appIntroTitle": "앱 소개",
+    "appIntroContent": "광둥제2사범대학교 캠퍼스 어시스턴트는 광둥제2사범대학교를 위해 특별히 제작된 캠퍼스 서비스 애플리케이션입니다. 시간표 조회, 성적 조회, CET 성적 조회, 빈 강의실 조회, 도서관 검색, 대출 기록, 교육 품질 평가, 전기 요금 조회, 옐로 페이지, 캠퍼스 카드 정보, 소비 기록, 카드 분실 신고 등 종합적인 교무 기능뿐만 아니라 중고 거래, 분실물, 캠퍼스 게시판, 연애, 고백 게시판, 배달 대행, 캠퍼스 사진, 토픽, 익명 교수 평가 등 커뮤니티 플랫폼도 제공합니다.",
+    "screenshotsTitle": "스크린샷",
+    "screenshotAlt": "스크린샷 {n}",
+    "cookieNotice": "본 웹사이트는 보다 편리하고 개인화된 브라우징 경험을 제공하기 위해 쿠키를 사용합니다. 쿠키는 컴퓨터에 유용한 정보를 저장하여 웹사이트의 효율성과 유용성을 개선하는 데 도움을 줍니다. 경우에 따라 웹사이트의 정상적인 작동에 필수적입니다. 본 웹사이트를 방문하면 쿠키 사용에 동의한 것으로 간주됩니다.",
+    "cookieLearnMore": "자세한 내용은 {link}을 클릭하세요.",
+    "cookiePolicy": "쿠키 정책",
+    "menuHelp": "도움말",
+    "menuSecuritySpec": "보안 기술 사양",
+    "menuAccountSpec": "캠퍼스 네트워크 계정 안내",
+    "menuPolicies": "약관 및 정책",
+    "menuUserAgreement": "이용 약관",
+    "menuPrivacyPolicy": "개인정보 처리방침",
+    "menuCommunityGuidelines": "커뮤니티 가이드라인",
+    "menuOpenSourceLicense": "오픈 소스 라이선스",
+    "menuCookiePolicy": "쿠키 정책",
+    "menuIPDeclaration": "지식재산권 선언",
+    "menuFriendlyLinks": "링크 모음",
+    "menuSmartPartyBuilding": "스마트 당건설"
+  },
   "appearance": {
     "title": "인터페이스 및 외관",
     "theme": {
@@ -148,5 +171,20 @@
     "language": {
       "label": "언어"
     }
+  },
+  "graduateExam": {
+    "title": "대학원 시험 성적 조회",
+    "back": "뒤로",
+    "name": "이름",
+    "namePlaceholder": "이름을 입력하세요",
+    "candidateNo": "수험번호",
+    "candidateNoPlaceholder": "수험번호를 입력하세요",
+    "idNo": "신분증 번호",
+    "idNoPlaceholder": "신분증 번호를 입력하세요",
+    "search": "조회",
+    "fillAllFields": "조회 정보를 모두 입력해 주세요!",
+    "wish": "2019 대학원 수험생 여러분의 합격을 기원합니다",
+    "altEntry": "대체 조회 포털",
+    "chsiLink": "CHSI 석사 초시 성적 조회"
   }
 }

@@ -21,15 +21,4 @@ public interface LoginTokenDao {
     Device QueryDeviceData(String signature);
 
     void SaveDeviceData(String signature, Device device);
-
-    // --------------- Web 登录（可撤销 Stateful JWT）：JWT 内为 token，Redis 存 token -> sessionId ---------------
-    void InsertWebLoginToken(String token, String sessionId);
-
-    String QuerySessionIdByWebToken(String token);
-
-    String QueryWebTokenBySessionId(String sessionId);
-
-    void DeleteWebLoginToken(String token);
-
-    void DeleteWebLoginTokenBySessionId(String sessionId);
 }

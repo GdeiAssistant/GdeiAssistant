@@ -96,17 +96,23 @@ public class MarketplaceController {
         }
         String sessionId = (String) request.getAttribute("sessionId");
         MarketplaceItemEntity entity = marketplaceService.publishItem(dto, sessionId);
-        if (uploadedFileCount > 0) {
-            int imageIndex = 1;
-            for (MultipartFile image : images) {
-                if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                    marketplaceService.uploadItemPicture(entity.getId(), imageIndex++, image.getInputStream());
+        try {
+            if (uploadedFileCount > 0) {
+                int imageIndex = 1;
+                for (MultipartFile image : images) {
+                    if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                        marketplaceService.uploadItemPicture(entity.getId(), imageIndex++, image.getInputStream());
+                    }
+                }
+            } else {
+                for (int i = 1; i <= imageKeys.length; i++) {
+                    marketplaceService.moveItemPictureFromTempObject(entity.getId(), i, imageKeys[i - 1]);
                 }
             }
-        } else {
-            for (int i = 1; i <= imageKeys.length; i++) {
-                marketplaceService.moveItemPictureFromTempObject(entity.getId(), i, imageKeys[i - 1]);
-            }
+        } catch (Exception e) {
+            marketplaceService.deleteItemImages(entity.getId(), 4);
+            marketplaceService.deleteItem(entity.getId());
+            return new JsonResult(false, "上传失败");
         }
         return new JsonResult(true);
     }

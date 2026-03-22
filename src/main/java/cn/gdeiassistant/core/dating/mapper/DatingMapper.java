@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.dating.mapper;
 
 import cn.gdeiassistant.core.dating.pojo.entity.DatingPickEntity;
 import cn.gdeiassistant.core.dating.pojo.entity.DatingProfileEntity;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
@@ -123,4 +124,7 @@ public interface DatingMapper {
             "where d.username=#{username} order by p.pick_id desc")
     @ResultMap("RoommatePickSent")
     List<DatingPickEntity> selectReceivedRoommatePickListByProfileOwner(@Param("username") String username);
+
+    @Delete("delete from dating_profile where profile_id=#{profileId}")
+    void deleteRoommateProfile(@Param("profileId") int profileId);
 }

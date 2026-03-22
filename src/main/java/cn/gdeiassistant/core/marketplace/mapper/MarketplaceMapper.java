@@ -68,4 +68,7 @@ public interface MarketplaceMapper {
 
     @Update("update ershou set state=#{state} where id=#{id}")
     void updateItemState(@Param("id") int id, @Param("state") int state);
+
+    @Delete("delete from ershou where id=#{id}")
+    void deleteItem(@Param("id") int id);
 }

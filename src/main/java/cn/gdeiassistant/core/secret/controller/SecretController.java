@@ -86,6 +86,7 @@ public class SecretController {
                         secretService.moveVoiceSecretFromTempObject(id, voiceKey);
                     }
                 } catch (Exception e) {
+                    secretService.deleteSecretVoice(id);
                     secretService.deleteSecretById(id);
                     return new JsonResult(false, "语音上传失败");
                 }

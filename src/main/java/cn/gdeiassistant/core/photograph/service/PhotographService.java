@@ -176,6 +176,14 @@ public class PhotographService {
         photographMapper.deletePhotograph(id);
     }
 
+    public void deletePhotographImages(int id, int count) {
+        for (int i = 1; i <= count; i++) {
+            try {
+                r2StorageService.deleteObject("gdeiassistant-userdata", "photograph/" + id + "_" + i + ".jpg");
+            } catch (Exception ignored) {}
+        }
+    }
+
     public String getPhotographItemPictureURL(int id, int index) {
         return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
     }

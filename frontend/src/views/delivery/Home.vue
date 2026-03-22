@@ -6,7 +6,6 @@ import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
-const activeStatus = ref('all') // all, pending, delivering, completed
 const scrollContainer = ref({ get scrollTop() { return window.pageYOffset || document.documentElement.scrollTop } })
 
 const PAGE_SIZE = 10
@@ -29,12 +28,7 @@ const fetchDeliveryData = async (page) => {
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchDeliveryData)
 
-function switchStatus(status) {
-  activeStatus.value = status
-  list.value = []
-  loadData(true)
-}
-// 后端列表接口暂无状态筛选，前端保留 Tab 切换 UI，数据仍为全部
+// 后端仅返回 state=0（待接单）订单，无需状态筛选
 
 function goDetail(id) {
   router.push(`/delivery/detail/${id}`)
@@ -85,34 +79,6 @@ onUnmounted(() => {
       <span v-if="refreshing" class="community-pull-refresh__text"><i class="community-loading-spinner"></i> 正在刷新...</span>
       <span v-else-if="pullY > 50" class="community-pull-refresh__text">释放立即刷新</span>
       <span v-else-if="pullY > 0" class="community-pull-refresh__text">下拉刷新</span>
-    </div>
-
-    <!-- 状态筛选 Tab -->
-    <div class="delivery-status-tabs">
-      <div
-        :class="['status-tab', { active: activeStatus === 'all' }]"
-        @click="switchStatus('all')"
-      >
-        全部
-      </div>
-      <div
-        :class="['status-tab', { active: activeStatus === 'pending' }]"
-        @click="switchStatus('pending')"
-      >
-        待接单
-      </div>
-      <div
-        :class="['status-tab', { active: activeStatus === 'delivering' }]"
-        @click="switchStatus('delivering')"
-      >
-        配送中
-      </div>
-      <div
-        :class="['status-tab', { active: activeStatus === 'completed' }]"
-        @click="switchStatus('completed')"
-      >
-        已完成
-      </div>
     </div>
 
     <!-- 任务卡片列表 -->
@@ -171,37 +137,6 @@ onUnmounted(() => {
   background: var(--c-bg);
   min-height: 100vh;
   --module-color: #f59e0b;
-}
-
-.delivery-status-tabs {
-  display: flex;
-  background: var(--c-card);
-  border-bottom: 1px solid var(--c-divider);
-  padding: 0 var(--space-lg);
-}
-.status-tab {
-  flex: 1;
-  text-align: center;
-  padding: var(--space-md) 0;
-  font-size: var(--font-md);
-  color: var(--c-text-2);
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s;
-}
-.status-tab.active {
-  color: var(--c-delivery);
-  font-weight: 500;
-}
-.status-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--c-delivery);
-  border-radius: 3px 3px 0 0;
 }
 
 .delivery-list {

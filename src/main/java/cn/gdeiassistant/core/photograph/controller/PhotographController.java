@@ -85,7 +85,7 @@ public class PhotographController {
     @RequestMapping(value = "/api/photograph/id/{id}/comment", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addPhotographComment(HttpServletRequest request, @PathVariable("id") Integer id
-            , @Validated @NotBlank @Length(min = 1, max = 50) String comment) {
+            , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws DataNotExistException {
         photographService.addPhotographComment(id, comment, (String) request.getAttribute("sessionId"));
         return new JsonResult(true);
     }
@@ -144,23 +144,28 @@ public class PhotographController {
         actual.setCount(count);
         actual.setType(dto.getType());
         int id = photographService.addPhotograph(actual, sessionId);
-        if (uploadedFileCount > 0) {
-            int imageIndex = 1;
-            for (MultipartFile image : images) {
-                if (image != null && !image.isEmpty() && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                    photographService.uploadPhotographItemPicture(id, imageIndex++, image.getInputStream());
+        try {
+            if (uploadedFileCount > 0) {
+                int imageIndex = 1;
+                for (MultipartFile image : images) {
+                    if (image != null && !image.isEmpty() && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                        photographService.uploadPhotographItemPicture(id, imageIndex++, image.getInputStream());
+                    }
+                }
+            } else if (uploadedKeyCount > 0) {
+                for (int i = 1; i <= imageKeys.length; i++) {
+                    photographService.movePhotographItemPictureFromTempObject(id, i, imageKeys[i - 1]);
                 }
             }
-        } else if (uploadedKeyCount > 0) {
-            for (int i = 1; i <= imageKeys.length; i++) {
-                photographService.movePhotographItemPictureFromTempObject(id, i, imageKeys[i - 1]);
-            }
+        } catch (Exception e) {
+            photographService.deletePhotograph(id);
+            return new JsonResult(false, "拍好校园图片上传失败");
         }
         return new JsonResult(true);
     }
 
     @RequestMapping(value = "/api/photograph/id/{id}/like", method = RequestMethod.POST)
-    public JsonResult LikePhotograph(HttpServletRequest request, @PathVariable("id") int id) {
+    public JsonResult LikePhotograph(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
         photographService.LikePhotograph(id, (String) request.getAttribute("sessionId"));
         return new JsonResult(true);
     }

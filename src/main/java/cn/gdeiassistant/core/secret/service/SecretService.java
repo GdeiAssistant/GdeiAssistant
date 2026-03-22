@@ -155,6 +155,10 @@ public class SecretService {
         return entity.getId();
     }
 
+    public void deleteSecretById(int id) {
+        secretMapper.deleteSecret(id);
+    }
+
     @Transactional("appTransactionManager")
     public void addSecretComment(int id, String sessionId, String comment) throws Exception {
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {

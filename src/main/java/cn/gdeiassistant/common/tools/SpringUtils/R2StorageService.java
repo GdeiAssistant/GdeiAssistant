@@ -116,6 +116,25 @@ public class R2StorageService {
         }
     }
 
+    private static final String TEMP_UPLOAD_PREFIX = "upload/";
+
+    /**
+     * 校验 sourceKey 是否为合法的临时上传路径。
+     * 仅允许以 "upload/" 开头且不含路径穿越字符的 key，防止攻击者通过
+     * 客户端提交任意 objectKey 来移动或删除其他用户的对象。
+     */
+    private void validateSourceKey(String sourceKey) {
+        if (sourceKey == null || sourceKey.isEmpty()) {
+            throw new IllegalArgumentException("sourceKey 不能为空");
+        }
+        if (sourceKey.contains("..")) {
+            throw new IllegalArgumentException("sourceKey 包含非法路径穿越字符: " + sourceKey);
+        }
+        if (!sourceKey.startsWith(TEMP_UPLOAD_PREFIX)) {
+            throw new IllegalArgumentException("sourceKey 必须位于临时上传目录 (upload/): " + sourceKey);
+        }
+    }
+
     /**
      * 复制对象并删除源对象，适用于前端先上传临时对象、后端再归档到业务路径。
      */
@@ -127,6 +146,7 @@ public class R2StorageService {
         if (!isEnabled()) {
             throw new FeatureNotEnabledException("对象存储未开启，无法归档上传文件");
         }
+        validateSourceKey(sourceKey);
         String resolvedBucket = resolveBucket(bucket);
         s3Client.copyObject(CopyObjectRequest.builder()
                 .sourceBucket(resolvedBucket)

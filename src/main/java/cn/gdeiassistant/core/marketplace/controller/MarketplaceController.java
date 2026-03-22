@@ -51,9 +51,9 @@ public class MarketplaceController {
             if (Integer.valueOf(1).equals(item.getState())) {
                 doing.add(item);
             } else if (Integer.valueOf(0).equals(item.getState())) {
-                sold.add(item);
-            } else if (Integer.valueOf(2).equals(item.getState())) {
                 off.add(item);
+            } else if (Integer.valueOf(2).equals(item.getState())) {
+                sold.add(item);
             }
         }
         Map<String, Object> data = new HashMap<>();

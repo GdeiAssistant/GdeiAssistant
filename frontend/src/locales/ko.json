@@ -153,7 +153,12 @@
     "menuSmartPartyBuilding": "스마트 당건설",
     "menuOpen": "메뉴 열기",
     "menuClose": "메뉴 닫기",
-    "closeCookie": "닫기"
+    "closeCookie": "닫기",
+    "back": "뒤로",
+    "securityTitle": "보안 기술 사양",
+    "privacyPolicyTitle": "개인정보 처리방침",
+    "userAgreementTitle": "이용 약관",
+    "chineseOnlyNotice": "이 페이지는 현재 중국어로만 제공됩니다."
   },
   "appearance": {
     "title": "인터페이스 및 외관",

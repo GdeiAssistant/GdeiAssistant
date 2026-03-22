@@ -153,7 +153,12 @@
     "menuSmartPartyBuilding": "智慧黨建",
     "menuOpen": "開啟選單",
     "menuClose": "關閉選單",
-    "closeCookie": "關閉"
+    "closeCookie": "關閉",
+    "back": "返回",
+    "securityTitle": "安全技術規格說明",
+    "privacyPolicyTitle": "隱私政策",
+    "userAgreementTitle": "使用者協議",
+    "chineseOnlyNotice": "本頁面目前僅提供中文版本。"
   },
   "appearance": {
     "title": "介面和外觀",

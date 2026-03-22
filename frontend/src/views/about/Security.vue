@@ -1,16 +1,24 @@
 <script setup>
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
+const { t, locale } = useI18n()
+
+const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 </script>
 
 <template>
   <div class="article-page">
     <div class="article-header">
-      <span class="back-btn" @click="router.back()">返回</span>
-      <h2 class="article-title">安全技术规格说明</h2>
+      <span class="back-btn" @click="router.back()">{{ t('about.back') }}</span>
+      <h2 class="article-title">{{ t('about.securityTitle') }}</h2>
     </div>
     <div class="weui-article">
+      <div v-if="isNonChinese" class="lang-notice">
+        {{ t('about.chineseOnlyNotice') }}
+      </div>
       <p style="text-align:center">《广东二师助手安全技术规格说明》</p>
       <p style="text-align:center">更新日期：2019年2月18日</p>
       <p style="text-align:right"><br/></p>
@@ -198,5 +206,16 @@ const router = useRouter()
 
 .weui-article strong {
   font-weight: 600;
+}
+
+.lang-notice {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.6;
 }
 </style>

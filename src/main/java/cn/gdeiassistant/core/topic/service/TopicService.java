@@ -14,7 +14,6 @@ import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -137,12 +136,12 @@ public class TopicService {
         return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg", 90, TimeUnit.MINUTES);
     }
 
-    @Async
     public void uploadTopicItemPicture(int id, int index, InputStream inputStream) {
         try {
             r2StorageService.uploadObject("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传话题图片失败，id={}，index={}", id, index, e);
+            throw new RuntimeException("话题图片上传失败", e);
         } finally {
             if (inputStream != null) {
                 try { inputStream.close(); } catch (IOException ignored) {}
@@ -152,5 +151,9 @@ public class TopicService {
 
     public void moveTopicItemPictureFromTempObject(int id, int index, String objectKey) {
         r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "topic/" + id + "_" + index + ".jpg");
+    }
+
+    public void deleteTopic(int id) {
+        topicMapper.deleteTopic(id);
     }
 }

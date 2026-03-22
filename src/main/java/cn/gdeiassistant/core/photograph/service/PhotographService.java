@@ -127,9 +127,13 @@ public class PhotographService {
     }
 
     @Transactional("appTransactionManager")
-    public void addPhotographComment(int id, String comment, String sessionId) {
+    public void addPhotographComment(int id, String comment, String sessionId) throws DataNotExistException {
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {
             throw new IllegalArgumentException("评论内容不能为空且不能超过 50 字");
+        }
+        Integer photographCount = photographMapper.selectPhotographCountById(id);
+        if (photographCount == null || photographCount == 0) {
+            throw new DataNotExistException("照片信息不存在");
         }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         PhotographCommentEntity entity = new PhotographCommentEntity();
@@ -156,6 +160,7 @@ public class PhotographService {
             r2StorageService.uploadObject("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传拍好校园图片失败，id={}, index={}", id, index, e);
+            throw new RuntimeException("拍好校园图片上传失败", e);
         } finally {
             if (inputStream != null) {
                 try { inputStream.close(); } catch (IOException ignored) {}
@@ -167,12 +172,20 @@ public class PhotographService {
         r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "photograph/" + id + "_" + index + ".jpg");
     }
 
+    public void deletePhotograph(int id) {
+        photographMapper.deletePhotograph(id);
+    }
+
     public String getPhotographItemPictureURL(int id, int index) {
         return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
     }
 
     @Transactional("appTransactionManager")
-    public void LikePhotograph(int id, String sessionId) {
+    public void LikePhotograph(int id, String sessionId) throws DataNotExistException {
+        Integer photographCount = photographMapper.selectPhotographCountById(id);
+        if (photographCount == null || photographCount == 0) {
+            throw new DataNotExistException("照片信息不存在");
+        }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         Integer count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, user.getUsername());
         if (count == null || count == 0) {

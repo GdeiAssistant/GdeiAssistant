@@ -274,12 +274,11 @@ onMounted(async () => {
 }
 .detail .site .isite {
   display: inline-block;
-  background: url(/img/marketplace/site.png) no-repeat;
-  background-size: 10px;
   width: 10px;
   height: 14px;
   margin-right: 4px;
   vertical-align: middle;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512' fill='%2310b981'%3E%3Cpath d='M192 0C86 0 0 86 0 192c0 77.4 27 99 172.3 309.7a24 24 0 0 0 39.4 0C357 291 384 269.4 384 192 384 86 298 0 192 0zm0 272a80 80 0 1 1 0-160 80 80 0 0 1 0 160z'/%3E%3C/svg%3E") no-repeat center/contain;
 }
 
 /* 复刻 .userinfo */
@@ -335,10 +334,11 @@ onMounted(async () => {
   top: 15px;
   width: 30px;
   height: 30px;
-  background: url(/img/marketplace/info.png) no-repeat;
-  background-size: 30px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%2310b981'%3E%3Cpath d='M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 110a42 42 0 1 1 0 84 42 42 0 0 1 0-84zm56 254c0 7-5 12-12 12h-88c-7 0-12-5-12-12v-24c0-7 5-12 12-12h12v-64h-12c-7 0-12-5-12-12v-24c0-7 5-12 12-12h64c7 0 12 5 12 12v100h12c7 0 12 5 12 12v24z'/%3E%3C/svg%3E") no-repeat center/contain;
 }
-.userinfo .contact .icontact { background-position: 0 -30px; }
+.userinfo .contact .icontact {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%2310b981'%3E%3Cpath d='M497 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.7 370.7 0 0 1 131.6 205l60.6-49.6a24 24 0 0 0 6.9-28l-48-112A24.2 24.2 0 0 0 123.4.3L11.4 24.3A24 24 0 0 0-5.2e-7 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.7-11.4l24-112a24.2 24.2 0 0 0-14.7-27.6z'/%3E%3C/svg%3E") no-repeat center/contain;
+}
 .userinfo .contact .cont a { margin-left: 5px; }
 .userinfo .contact .phone a { color: var(--c-text-2); }
 

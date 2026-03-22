@@ -97,7 +97,7 @@ const router = useRouter()
         header发送给服务端，服务端使用自己保存的key计算、验证签名以判断该JWT是否可信。该Token被设计为紧凑且安全的，特别适用于分布式站点的单点登录（SSO）场景。
         JWT的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息。
         无状态的JWT具有跨语言支持、便于传输、易于扩展、具一定安全性等特别。为了加强用户对登录凭证的控制，应用使用了有状态的JWT机制。
-        应用会将JWT的消息摘要保存到Redis中，用户携带JWT访问Restful API时，应用都会检测Redis中有无该令牌的消息摘要，若不存在，表示该令牌无效（令牌过期或用户主动结束会话）。
+        JWT中包含用户的会话标识（sessionId），用户携带JWT访问RESTful API时，应用会验证JWT签名并提取sessionId，再检查Redis中对应的登录会话是否仍然存在，若不存在，表示该令牌无效（令牌过期或用户主动结束会话）。
         JWT的签名可以有效保证JWT数据不被恶意篡改，应用使用的JWT的签名算法使用了HMAC-SHA256算法。</p>
       <p style="text-indent:28px">HMAC算法：密钥散列消息认证码（英语：Keyed-hash message authentication code），又称散列消息认证码（Hash-based message
         authentication

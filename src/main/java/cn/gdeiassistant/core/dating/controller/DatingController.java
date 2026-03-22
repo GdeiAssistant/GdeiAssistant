@@ -123,7 +123,7 @@ public class DatingController {
 
     @RequestMapping(value = "/api/dating/pick", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
-    public JsonResult addRoommatePick(HttpServletRequest request, @Validated DatingPickSubmitDTO dto) throws SelfPickException, RepeatPickException {
+    public JsonResult addRoommatePick(HttpServletRequest request, @Validated DatingPickSubmitDTO dto) throws SelfPickException, RepeatPickException, DataNotExistException {
         if (dto.getProfileId() == null) return new JsonResult(false, "请求参数不合法");
         if (dto.getContent() != null && dto.getContent().length() > 50) return new JsonResult(false, "文本内容超过限制");
         String sessionId = (String) request.getAttribute("sessionId");

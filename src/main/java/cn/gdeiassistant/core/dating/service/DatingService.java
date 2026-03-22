@@ -87,6 +87,9 @@ public class DatingService {
     }
 
     public void updateRoommateProfileState(Integer id, Integer state) {
+        if (state == null || (state != 0 && state != 1)) {
+            throw new IllegalArgumentException("state must be 0 (hidden) or 1 (visible)");
+        }
         datingMapper.updateRoommateProfileState(id, state);
     }
 
@@ -148,12 +151,14 @@ public class DatingService {
         return e == null ? null : pickEntityToVO(e);
     }
 
-    /** 提交撩一下前校验：非本人发布、未重复撩。 */
-    public void verifyRoommatePickRequestAccess(String sessionId, Integer profileId) throws RepeatPickException, SelfPickException {
+    /** 提交撩一下前校验：资料未隐藏、非本人发布、未重复撩。 */
+    public void verifyRoommatePickRequestAccess(String sessionId, Integer profileId) throws RepeatPickException, SelfPickException, DataNotExistException {
         if (profileId == null) return;
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DatingProfileEntity profile = datingMapper.selectDatingProfileById(profileId);
-        if (profile != null && user.getUsername().equals(profile.getUsername()))
+        if (profile == null || (profile.getState() != null && profile.getState() == 0))
+            throw new DataNotExistException("该卖室友信息不存在");
+        if (user.getUsername().equals(profile.getUsername()))
             throw new SelfPickException("不能向自己发布的卖室友信息发送撩一下请求");
         DatingPickEntity existing = datingMapper.selectDatingPick(profileId, user.getUsername());
         if (existing != null && !Integer.valueOf(-1).equals(existing.getState()))

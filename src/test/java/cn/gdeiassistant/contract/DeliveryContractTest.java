@@ -52,7 +52,26 @@ class DeliveryContractTest {
     }
 
     @Test
-    void detailEndpointReturnsExpectedFields() throws Exception {
+    void detailEndpointReturnsFullFieldsForOwner() throws Exception {
+        DeliveryOrderVO order = mockDeliveryOrderVO();
+        order.setState(0);
+
+        when(deliveryService.queryDeliveryOrderByOrderId(1)).thenReturn(order);
+        when(deliveryService.queryDeliveryOrderDetailType("test-session", 1)).thenReturn(0);
+
+        mockMvc.perform(get("/api/delivery/order/id/1")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.order.orderId").exists())
+                .andExpect(jsonPath("$.data.order.number").value("SF123456"))
+                .andExpect(jsonPath("$.data.order.phone").value("13800138000"))
+                .andExpect(jsonPath("$.data.order.price").exists())
+                .andExpect(jsonPath("$.data.detailType").value(0));
+    }
+
+    @Test
+    void detailEndpointStripsSensitiveFieldsForThirdParty() throws Exception {
         DeliveryOrderVO order = mockDeliveryOrderVO();
         order.setState(0);
 
@@ -63,16 +82,10 @@ class DeliveryContractTest {
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.order").exists())
                 .andExpect(jsonPath("$.data.order.orderId").exists())
-                .andExpect(jsonPath("$.data.order.name").exists())
-                .andExpect(jsonPath("$.data.order.number").exists())
-                .andExpect(jsonPath("$.data.order.phone").exists())
-                .andExpect(jsonPath("$.data.order.price").exists())
-                .andExpect(jsonPath("$.data.order.company").exists())
-                .andExpect(jsonPath("$.data.order.address").exists())
-                .andExpect(jsonPath("$.data.order.state").exists())
-                .andExpect(jsonPath("$.data.detailType").isNumber());
+                .andExpect(jsonPath("$.data.order.number").doesNotExist())
+                .andExpect(jsonPath("$.data.order.phone").doesNotExist())
+                .andExpect(jsonPath("$.data.detailType").value(1));
     }
 
     private static DeliveryOrderVO mockDeliveryOrderVO() {

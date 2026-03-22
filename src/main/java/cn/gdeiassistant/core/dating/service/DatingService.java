@@ -234,6 +234,11 @@ public class DatingService {
             DatingPickVO vo = pickEntityToVO(e);
             if (e.getRoommateProfile() != null && e.getRoommateProfile().getProfileId() != null)
                 vo.getRoommateProfile().setPictureURL(getRoommateProfilePictureURL(e.getRoommateProfile().getProfileId()));
+            // Only expose target's contact info if the pick has been accepted (state == 1)
+            if (!Integer.valueOf(1).equals(e.getState()) && vo.getRoommateProfile() != null) {
+                vo.getRoommateProfile().setQq(null);
+                vo.getRoommateProfile().setWechat(null);
+            }
             return vo;
         }).collect(Collectors.toList());
     }

@@ -49,6 +49,10 @@ public class DatingController {
             isPickNotAvailable = datingService.checkIsPickPageHidden(sessionId, pick.getPickId());
             isContactVisible = isPickNotAvailable;
         }
+        if (!isContactVisible) {
+            profile.setQq(null);
+            profile.setWechat(null);
+        }
         Map<String, Object> data = new HashMap<>();
         data.put("profile", profile);
         data.put("pictureURL", pictureURL);

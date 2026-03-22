@@ -1,5 +1,7 @@
 package cn.gdeiassistant.common.aspect;
 
+import cn.gdeiassistant.common.pojo.Entity.RequestSecurity;
+import cn.gdeiassistant.common.pojo.Entity.RequestValidation;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
 import org.aspectj.lang.JoinPoint;
@@ -50,8 +52,12 @@ public class RequestLogAspect {
                 if (i != 1) {
                     stringBuilder.append(" , ");
                 }
-                stringBuilder.append(parameterName[i])
-                        .append(":").append(JSON.toJSONString(args[i]));
+                if (args[i] instanceof RequestValidation || args[i] instanceof RequestSecurity) {
+                    stringBuilder.append(parameterName[i]).append(":[REDACTED]");
+                } else {
+                    stringBuilder.append(parameterName[i])
+                            .append(":").append(JSON.toJSONString(args[i]));
+                }
             }
         }
         stringBuilder.append(" . ");

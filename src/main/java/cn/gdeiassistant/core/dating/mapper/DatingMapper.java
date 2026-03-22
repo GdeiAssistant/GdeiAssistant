@@ -127,4 +127,11 @@ public interface DatingMapper {
 
     @Delete("delete from dating_profile where profile_id=#{profileId}")
     void deleteRoommateProfile(@Param("profileId") int profileId);
+
+    /**
+     * Hide all dating profiles for a given user by setting state=0.
+     * Used during account deletion to clean up dating data.
+     */
+    @Update("update dating_profile set state=0 where username=#{username} and state=1")
+    void hideDatingProfilesByUsername(@Param("username") String username);
 }

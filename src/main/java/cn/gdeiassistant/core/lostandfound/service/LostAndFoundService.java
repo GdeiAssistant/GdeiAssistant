@@ -156,16 +156,32 @@ public class LostAndFoundService {
     }
 
     public void uploadLostAndFoundItemPicture(int id, int index, InputStream inputStream) {
-        r2StorageService.uploadObject("gdeiassistant-userdata", "lostandfound/" + id + "_" + index + ".jpg", inputStream);
         try {
-            if (inputStream != null) inputStream.close();
-        } catch (IOException e) {
-            logger.error("关闭失物招领图片上传流失败，id={}, index={}", id, index, e);
+            r2StorageService.uploadObject("gdeiassistant-userdata", "lostandfound/" + id + "_" + index + ".jpg", inputStream);
+        } catch (Exception e) {
+            logger.error("上传失物招领图片失败，id={}，index={}", id, index, e);
+            throw new RuntimeException("上传失败", e);
+        } finally {
+            if (inputStream != null) {
+                try { inputStream.close(); } catch (IOException ignored) {}
+            }
         }
     }
 
     public void moveLostAndFoundItemPictureFromTempObject(int id, int index, String objectKey) {
         r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "lostandfound/" + id + "_" + index + ".jpg");
+    }
+
+    public void deleteLostAndFoundItemImages(int id, int count) {
+        for (int i = 1; i <= count; i++) {
+            try {
+                r2StorageService.deleteObject("gdeiassistant-userdata", "lostandfound/" + id + "_" + i + ".jpg");
+            } catch (Exception ignored) {}
+        }
+    }
+
+    public void deleteLostAndFoundItem(int id) {
+        lostAndFoundMapper.deleteItem(id);
     }
 
     public List<String> getLostAndFoundItemPictureURL(int id) {

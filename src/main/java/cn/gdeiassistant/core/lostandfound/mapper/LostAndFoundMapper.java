@@ -80,4 +80,7 @@ public interface LostAndFoundMapper {
 
     @Update("update lostandfound set state=#{state} where id=#{id}")
     void updateItemState(@Param("id") Integer id, @Param("state") Integer state);
+
+    @Delete("delete from lostandfound where id=#{id}")
+    void deleteItem(@Param("id") int id);
 }

@@ -78,12 +78,12 @@ class DatingServiceTest {
     }
 
     @Test
-    void uploadPicture_logsErrorButDoesNotThrowOnR2Failure() {
+    void uploadPicture_throwsRuntimeExceptionOnR2Failure() {
         InputStream stream = new ByteArrayInputStream("fake".getBytes());
         doThrow(new RuntimeException("R2 unavailable"))
                 .when(r2StorageService).uploadObject(anyString(), anyString(), any(InputStream.class));
 
-        assertDoesNotThrow(() -> datingService.uploadPicture(1, stream));
+        assertThrows(RuntimeException.class, () -> datingService.uploadPicture(1, stream));
     }
 
     @Test

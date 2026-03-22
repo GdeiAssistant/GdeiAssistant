@@ -149,17 +149,23 @@ public class LostAndFoundController {
         }
         String sessionId = (String) request.getAttribute("sessionId");
         LostAndFoundItemVO vo = lostAndFoundService.addLostAndFoundItem(dto, sessionId);
-        if (uploadedFileCount > 0) {
-            int imageIndex = 1;
-            for (MultipartFile image : images) {
-                if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                    lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), imageIndex++, image.getInputStream());
+        try {
+            if (uploadedFileCount > 0) {
+                int imageIndex = 1;
+                for (MultipartFile image : images) {
+                    if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                        lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), imageIndex++, image.getInputStream());
+                    }
+                }
+            } else {
+                for (int i = 1; i <= imageKeys.length; i++) {
+                    lostAndFoundService.moveLostAndFoundItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
                 }
             }
-        } else {
-            for (int i = 1; i <= imageKeys.length; i++) {
-                lostAndFoundService.moveLostAndFoundItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
-            }
+        } catch (Exception e) {
+            lostAndFoundService.deleteLostAndFoundItemImages(vo.getId(), 4);
+            lostAndFoundService.deleteLostAndFoundItem(vo.getId());
+            return new JsonResult(false, "上传失败");
         }
         return new JsonResult(true);
     }

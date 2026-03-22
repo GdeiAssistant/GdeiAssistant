@@ -44,6 +44,14 @@ cp .env.template .env
 
 填写数据库密码、Redis、JWT 等（见模板注释）。
 
+> **生产环境必填变量：**
+> - `JWT_SECRET` — JWT 签名密钥（至少 32 位随机串）
+> - `CRON_SECRET` — 定时任务触发密钥（任意随机串）
+> - `ENCRYPT_ENABLE=true` — 启用敏感字段加密
+> - `ENCRYPT_PRIVATE_KEY` — AES 加密密钥
+>
+> 缺少以上变量时，生产环境会拒绝启动。
+
 **3. 运行**
 
 - **全栈（Docker）**：`docker compose up -d`（后端 8080，前端 5173）。

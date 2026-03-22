@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.message.service;
 import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.message.mapper.InteractionNotificationMapper;
 import cn.gdeiassistant.core.message.pojo.entity.InteractionNotificationEntity;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
@@ -27,6 +28,9 @@ public class InteractionNotificationService {
 
     @Resource(name = "interactionNotificationMapper")
     private InteractionNotificationMapper interactionNotificationMapper;
+
+    @Autowired(required = false)
+    private UserMapper userMapper;
 
     public void createInteractionNotification(String module, String type, String receiverUsername, String actorUsername,
             String targetId, String targetSubId, String targetType, String title, String content) {
@@ -60,8 +64,26 @@ public class InteractionNotificationService {
         if (entityList == null || entityList.isEmpty()) {
             return new ArrayList<>();
         }
+        // Batch check which actor usernames are deleted (pre-fix historical data)
+        java.util.Set<String> deletedActors = new java.util.HashSet<>();
+        if (userMapper != null) {
+            java.util.Set<String> uniqueActors = new java.util.HashSet<>();
+            for (InteractionNotificationEntity e : entityList) {
+                if (e.getActorUsername() != null && !e.getActorUsername().startsWith("del_")) {
+                    uniqueActors.add(e.getActorUsername());
+                }
+            }
+            for (String actor : uniqueActors) {
+                if (userMapper.selectUser(actor) == null) {
+                    deletedActors.add(actor);
+                }
+            }
+        }
         List<InteractionMessageVO> list = new ArrayList<>(entityList.size());
         for (InteractionNotificationEntity entity : entityList) {
+            if (deletedActors.contains(entity.getActorUsername())) {
+                entity.setActorUsername("del_legacy");
+            }
             list.add(toInteractionMessageVO(entity));
         }
         return list;

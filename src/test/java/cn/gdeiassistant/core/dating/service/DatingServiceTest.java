@@ -148,6 +148,18 @@ class DatingServiceTest {
     }
 
     @Test
+    void deleteDatingProfile_callsMapperDelete() {
+        datingService.deleteDatingProfile(42);
+        verify(datingMapper).deleteRoommateProfile(42);
+    }
+
+    @Test
+    void deleteDatingImage_callsR2DeleteObject() {
+        datingService.deleteDatingImage(42);
+        verify(r2StorageService).deleteObject(eq("gdeiassistant-userdata"), eq("dating/42.jpg"));
+    }
+
+    @Test
     void updateRoommateProfileState_acceptsValidStates() {
         assertDoesNotThrow(() -> datingService.updateRoommateProfileState(1, 0));
         assertDoesNotThrow(() -> datingService.updateRoommateProfileState(1, 1));

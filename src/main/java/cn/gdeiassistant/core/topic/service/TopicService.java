@@ -11,6 +11,7 @@ import cn.gdeiassistant.core.topic.pojo.entity.TopicLikeEntity;
 import cn.gdeiassistant.core.topic.pojo.vo.TopicVO;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class TopicService {
             if (e.getCount() != null && e.getCount() >= 1) {
                 e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
             }
+            sanitizeEntity(e);
             voList.add(topicConverter.toVO(e));
         }
         return voList;
@@ -66,6 +68,7 @@ public class TopicService {
             if (e.getCount() != null && e.getCount() >= 1) {
                 e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
             }
+            sanitizeEntity(e);
             voList.add(topicConverter.toVO(e));
         }
         return voList;
@@ -80,6 +83,7 @@ public class TopicService {
             if (e.getCount() != null && e.getCount() >= 1) {
                 e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
             }
+            sanitizeEntity(e);
             voList.add(topicConverter.toVO(e));
         }
         return voList;
@@ -96,6 +100,7 @@ public class TopicService {
             }
             entity.setImageUrls(urls);
         }
+        sanitizeEntity(entity);
         return topicConverter.toVO(entity);
     }
 
@@ -129,6 +134,7 @@ public class TopicService {
         entity.setContent(dto.getContent());
         entity.setCount(dto.getCount());
         topicMapper.insertTopic(entity);
+        sanitizeEntity(entity);
         return topicConverter.toVO(entity);
     }
 
@@ -155,6 +161,10 @@ public class TopicService {
 
     public void deleteTopic(int id) {
         topicMapper.deleteTopic(id);
+    }
+
+    private void sanitizeEntity(TopicEntity e) {
+        e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername()));
     }
 
     public void deleteTopicImages(int id, int count) {

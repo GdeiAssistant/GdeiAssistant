@@ -10,6 +10,7 @@ import cn.gdeiassistant.core.secret.pojo.entity.SecretCommentEntity;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretContentEntity;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
@@ -59,6 +60,7 @@ public class SecretService {
         }
         List<SecretVO> result = new ArrayList<>();
         for (SecretContentEntity entity : list) {
+            entity.setUsername(AnonymizeUtils.sanitizeUsername(entity.getUsername()));
             SecretVO vo = secretConverter.toVO(entity);
             vo.setCommentCount(secretMapper.selectSecretCommentCount(entity.getId()));
             vo.setLikeCount(secretMapper.selectSecretLikeCount(entity.getId()));
@@ -74,12 +76,14 @@ public class SecretService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
+        list.forEach(e -> e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername())));
         return secretConverter.toVOList(list);
     }
 
     public List<SecretCommentVO> getSecretComments(int contentId) throws Exception {
         List<SecretCommentEntity> list = secretMapper.selectSecretCommentsByContentId(contentId);
         if (list == null) return new ArrayList<>();
+        list.forEach(e -> e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername())));
         return secretCommentConverter.toVOList(list);
     }
 
@@ -138,6 +142,7 @@ public class SecretService {
         if (entity == null) {
             throw new DataNotExistException("查询的树洞消息不存在");
         }
+        entity.setUsername(AnonymizeUtils.sanitizeUsername(entity.getUsername()));
         SecretVO vo = secretConverter.toVO(entity);
         if (entity.getType() != null && entity.getType() == 1) {
             vo.setVoiceURL(getSecretVoiceURL(entity.getId()));

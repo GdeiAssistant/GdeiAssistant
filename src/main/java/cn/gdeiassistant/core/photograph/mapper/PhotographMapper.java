@@ -128,4 +128,7 @@ public interface PhotographMapper {
 
     @Delete("delete from photograph where id=#{id}")
     void deletePhotograph(@Param("id") int id);
+
+    @Update("update photograph set username=#{newUsername} where username=#{oldUsername}")
+    void anonymizeUsername(@Param("oldUsername") String oldUsername, @Param("newUsername") String newUsername);
 }

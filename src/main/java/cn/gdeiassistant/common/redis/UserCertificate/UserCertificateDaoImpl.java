@@ -45,7 +45,11 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
             Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
             User user = new User();
             user.setUsername(map.get("username"));
-            user.setPassword(map.get("password"));
+            try {
+                user.setPassword(StringEncryptUtils.decryptString(map.get("password")));
+            } catch (Exception e2) {
+                user.setPassword(map.get("password"));
+            }
             return user;
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Redis 登录凭证反序列化失败", e);
@@ -56,7 +60,11 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
     public void saveUserCookieCertificate(String cookieId, String username, String password) {
         Map<String, String> map = new HashMap<>();
         map.put("username", username);
-        map.put("password", password);
+        try {
+            map.put("password", StringEncryptUtils.encryptString(password));
+        } catch (Exception e) {
+            map.put("password", password);
+        }
         String key = StringEncryptUtils.sha256HexString(COOKIE_PREFIX + cookieId);
         try {
             redisDaoUtils.set(key, objectMapper.writeValueAsString(map));
@@ -81,7 +89,11 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
                     Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
                     User user = new User();
                     user.setUsername(map.get("username"));
-                    user.setPassword(map.get("password"));
+                    try {
+                        user.setPassword(StringEncryptUtils.decryptString(map.get("password")));
+                    } catch (Exception e2) {
+                        user.setPassword(map.get("password"));
+                    }
                     return user;
                 }
             } catch (Exception e) {
@@ -111,7 +123,11 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         if (redisTemplate == null) return;
         Map<String, String> map = new HashMap<>();
         map.put("username", username);
-        map.put("password", password);
+        try {
+            map.put("password", StringEncryptUtils.encryptString(password));
+        } catch (Exception e) {
+            map.put("password", password);
+        }
         String finalKey = StringEncryptUtils.sha256HexString(LOGIN_PREFIX + sessionId);
         try {
             redisTemplate.opsForValue().set(finalKey, objectMapper.writeValueAsString(map));
@@ -131,7 +147,11 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
             UserCertificateEntity entity = new UserCertificateEntity();
             User user = new User();
             user.setUsername(map.get("username"));
-            user.setPassword(map.get("password"));
+            try {
+                user.setPassword(StringEncryptUtils.decryptString(map.get("password")));
+            } catch (Exception e2) {
+                user.setPassword(map.get("password"));
+            }
             entity.setUser(user);
             entity.setKeycode(map.get("keycode"));
             entity.setNumber(map.get("number"));
@@ -146,7 +166,11 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
     public void saveUserSessionCertificate(String sessionId, UserCertificateEntity userCertificate) {
         Map<String, String> map = new HashMap<>();
         map.put("username", userCertificate.getUser().getUsername());
-        map.put("password", userCertificate.getUser().getPassword());
+        try {
+            map.put("password", StringEncryptUtils.encryptString(userCertificate.getUser().getPassword()));
+        } catch (Exception e) {
+            map.put("password", userCertificate.getUser().getPassword());
+        }
         map.put("keycode", userCertificate.getKeycode());
         map.put("number", userCertificate.getNumber());
         map.put("timestamp", String.valueOf(userCertificate.getTimestamp()));

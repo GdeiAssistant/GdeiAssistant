@@ -37,11 +37,19 @@ public class DeliveryController {
         DeliveryOrderVO order = deliveryService.queryDeliveryOrderByOrderId(id);
         int detailType = deliveryService.queryDeliveryOrderDetailType(sessionId, id);
         Map<String, Object> data = new HashMap<>();
-        data.put("order", order);
         data.put("detailType", detailType);
-        if (order.getState() != null && !order.getState().equals(0)) {
-            DeliveryTradeVO trade = deliveryService.queryDeliveryTradeByOrderId(order.getOrderId());
-            data.put("trade", trade);
+        if (detailType == 1 || detailType == 2) {
+            // Unauthorized viewers: strip sensitive fields and omit trade info
+            order.setNumber(null);
+            order.setPhone(null);
+            data.put("order", order);
+        } else {
+            // Owner (0) or runner (3): return full data including trade
+            data.put("order", order);
+            if (order.getState() != null && !order.getState().equals(0)) {
+                DeliveryTradeVO trade = deliveryService.queryDeliveryTradeByOrderId(order.getOrderId());
+                data.put("trade", trade);
+            }
         }
         return new DataJsonResult<>(true, data);
     }

@@ -378,8 +378,7 @@ onMounted(() => {
 }
 .images .image .iclose {
   width: 18px; height: 18px;
-  background: url(/img/marketplace/close.png) no-repeat;
-  background-size: 18px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 352 512' fill='%23fff'%3E%3Cpath d='M242.7 256l100.1-100.1c12.3-12.3 12.3-32.2 0-44.5l-22.2-22.2c-12.3-12.3-32.2-12.3-44.5 0L176 189.3 75.9 89.2c-12.3-12.3-32.2-12.3-44.5 0L9.2 111.4c-12.3 12.3-12.3 32.2 0 44.5L109.3 256 9.2 356.1c-12.3 12.3-12.3 32.2 0 44.5l22.2 22.2c12.3 12.3 32.2 12.3 44.5 0L176 322.7l100.1 100.1c12.3 12.3 32.2 12.3 44.5 0l22.2-22.2c12.3-12.3 12.3-32.2 0-44.5L242.7 256z'/%3E%3C/svg%3E") no-repeat center/contain;
 }
 .images .addimg {
   width: 68px; height: 68px;
@@ -430,8 +429,8 @@ onMounted(() => {
 .form .frmc input { color: var(--c-text-1); background: none; height: 34px; line-height: 34px; font-size: var(--font-lg); width: 100%; border: none; }
 .form .frmc b { height: 34px; line-height: 34px; font-size: var(--font-lg); width: 100%; color: var(--c-text-1); display: block; position: relative; cursor: pointer; }
 .form .frmc b .iarrow {
-  background: url(/img/marketplace/arrow.png) no-repeat;
-  width: 8px; height: 12px; background-size: 8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512' fill='%2310b981'%3E%3Cpath d='M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z'/%3E%3C/svg%3E") no-repeat center/contain;
+  width: 8px; height: 12px;
   position: absolute; right: 10px; top: 10px;
 }
 .form .frmtip { position: absolute; bottom: 0; left: 0; background: #fe6a7c; height: 15px; line-height: 15px; font-size: var(--font-sm); color: #fff; padding: 0 3px; display: none; }
@@ -446,7 +445,7 @@ onMounted(() => {
 .sky .mw.show { display: block; }
 .sky .mwt { border-top: 4px solid var(--c-ershou); height: 40px; border-bottom: 1px solid var(--c-divider); position: relative; line-height: 40px; font-size: var(--font-lg); color: var(--c-text-1); text-align: center; }
 .sky .mwt .mwclose { position: absolute; right: 6px; top: 0; display: block; padding: 10px; }
-.sky .mwt .imwclose { background: url(/img/marketplace/mwclose.png) no-repeat; background-size: 11px; width: 11px; height: 13px; display: block; }
+.sky .mwt .imwclose { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 352 512' fill='%23999'%3E%3Cpath d='M242.7 256l100.1-100.1c12.3-12.3 12.3-32.2 0-44.5l-22.2-22.2c-12.3-12.3-32.2-12.3-44.5 0L176 189.3 75.9 89.2c-12.3-12.3-32.2-12.3-44.5 0L9.2 111.4c-12.3 12.3-12.3 32.2 0 44.5L109.3 256 9.2 356.1c-12.3 12.3-12.3 32.2 0 44.5l22.2 22.2c12.3 12.3 32.2 12.3 44.5 0L176 322.7l100.1 100.1c12.3 12.3 32.2 12.3 44.5 0l22.2-22.2c12.3-12.3 12.3-32.2 0-44.5L242.7 256z'/%3E%3C/svg%3E") no-repeat center/contain; width: 11px; height: 13px; display: block; }
 .sky .mwc ul { padding: 10px 0; }
 .sky .mwc li { line-height: 30px; height: 30px; text-align: center; color: var(--c-text-2); font-size: var(--font-base); }
 .sky .mwc li a { color: var(--c-text-2); display: block; text-decoration: none; }

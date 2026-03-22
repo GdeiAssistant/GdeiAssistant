@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.express.service;
 
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.exception.ExpressException.CorrectRecordException;
 import cn.gdeiassistant.common.exception.ExpressException.NoRealNameException;
@@ -67,7 +68,15 @@ public class ExpressService {
 
     public List<ExpressComment> queryExpressComment(int expressId) {
         List<ExpressComment> list = expressMapper.selectExpressComment(expressId);
-        return list == null || list.isEmpty() ? new ArrayList<>() : list;
+        if (list == null || list.isEmpty()) return new ArrayList<>();
+        for (ExpressComment c : list) {
+            String sanitized = AnonymizeUtils.sanitizeUsername(c.getUsername());
+            if (c.getNickname() == null || c.getNickname().isEmpty()) {
+                c.setNickname(sanitized);
+            }
+            c.setUsername(sanitized);
+        }
+        return list;
     }
 
     @Transactional("appTransactionManager")

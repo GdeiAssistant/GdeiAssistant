@@ -100,4 +100,7 @@ public interface SecretMapper {
 
     @Delete("delete from secret_like where content_id=#{content_id} and username=#{username}")
     void deleteSecretLike(@Param("content_id") int contentId, @Param("username") String username);
+
+    @Update("update secret_content set username=#{newUsername} where username=#{oldUsername}")
+    void anonymizeUsername(@Param("oldUsername") String oldUsername, @Param("newUsername") String newUsername);
 }

@@ -72,6 +72,9 @@ public interface TopicMapper {
     @Delete("delete from topic where id=#{id}")
     void deleteTopic(@Param("id") int id);
 
+    @Update("update topic set username=#{newUsername} where username=#{oldUsername}")
+    void anonymizeUsername(@Param("oldUsername") String oldUsername, @Param("newUsername") String newUsername);
+
     @Select("select tl.id,tl.topic_id,tl.username,tl.create_time from topic_like tl " +
             "inner join topic t on tl.topic_id=t.id where t.username=#{username} and tl.username!=#{username} " +
             "order by tl.create_time desc, tl.id desc limit #{start},#{size}")

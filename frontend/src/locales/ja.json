@@ -129,6 +129,29 @@
   "router": {
     "siteTitle": "広東第二師範学院キャンパスアシスタント"
   },
+  "about": {
+    "appName": "広東二師アシスタント",
+    "enterSystem": "システムに入る",
+    "appIntroTitle": "アプリ紹介",
+    "appIntroContent": "広東第二師範学院キャンパスアシスタントは、広東第二師範学院のために作られたキャンパスサービスアプリです。時間割検索、成績検索、CET成績検索、空き教室検索、図書館検索、貸出記録、教育品質評価、電気料金検索、イエローページ検索、キャンパスカード情報、消費記録、カード紛失届などの総合的な教務機能に加え、フリマ、落とし物、キャンパス掲示板、出会い、告白ウォール、宅配代行、キャンパス写真、トピック、匿名教員評価などのコミュニティプラットフォームも提供しています。",
+    "screenshotsTitle": "スクリーンショット",
+    "screenshotAlt": "スクリーンショット {n}",
+    "cookieNotice": "本ウェブサイトは、より便利でパーソナライズされたブラウジング体験を提供するためにCookieを使用しています。Cookieはお使いのコンピュータに有用な情報を保存し、ウェブサイトの効率性と有用性の向上に役立ちます。場合によっては、ウェブサイトの正常な動作に不可欠です。本ウェブサイトにアクセスすることにより、Cookieの使用に同意したものとみなされます。",
+    "cookieLearnMore": "詳細については{link}をクリックしてください。",
+    "cookiePolicy": "Cookieポリシー",
+    "menuHelp": "ヘルプ",
+    "menuSecuritySpec": "セキュリティ技術仕様",
+    "menuAccountSpec": "キャンパスネットワークアカウント説明",
+    "menuPolicies": "契約とポリシー",
+    "menuUserAgreement": "利用規約",
+    "menuPrivacyPolicy": "プライバシーポリシー",
+    "menuCommunityGuidelines": "コミュニティガイドライン",
+    "menuOpenSourceLicense": "オープンソースライセンス",
+    "menuCookiePolicy": "Cookieポリシー",
+    "menuIPDeclaration": "知的財産権宣言",
+    "menuFriendlyLinks": "リンク集",
+    "menuSmartPartyBuilding": "スマート党建"
+  },
   "appearance": {
     "title": "インターフェースと外観",
     "theme": {
@@ -148,5 +171,20 @@
     "language": {
       "label": "言語"
     }
+  },
+  "graduateExam": {
+    "title": "大学院入試成績照会",
+    "back": "戻る",
+    "name": "氏名",
+    "namePlaceholder": "氏名を入力してください",
+    "candidateNo": "受験番号",
+    "candidateNoPlaceholder": "受験番号を入力してください",
+    "idNo": "証明書番号",
+    "idNoPlaceholder": "証明書番号を入力してください",
+    "search": "検索",
+    "fillAllFields": "すべての項目を入力してください！",
+    "wish": "2019年大学院受験生の合格をお祈りします",
+    "altEntry": "代替照会ポータル",
+    "chsiLink": "CHSI修士初試成績照会"
   }
 }

@@ -205,7 +205,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { setLocale } from '../i18n'
@@ -226,11 +226,11 @@ import {
 import { showErrorTopTips } from '@/utils/toast.js'
 
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
-const selectedLocale = ref(localStorage.getItem('locale') || 'zh-CN')
+const selectedLocale = computed(() => locale.value)
 const changeLocale = () => {
-  setLocale(selectedLocale.value)
+  setLocale(locale.value)
 }
 
 const userInfo = ref({

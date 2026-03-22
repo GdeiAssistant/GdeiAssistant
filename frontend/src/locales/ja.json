@@ -153,7 +153,12 @@
     "menuSmartPartyBuilding": "スマート党建",
     "menuOpen": "メニューを開く",
     "menuClose": "メニューを閉じる",
-    "closeCookie": "閉じる"
+    "closeCookie": "閉じる",
+    "back": "戻る",
+    "securityTitle": "セキュリティ技術仕様",
+    "privacyPolicyTitle": "プライバシーポリシー",
+    "userAgreementTitle": "利用規約",
+    "chineseOnlyNotice": "このページは現在中国語版のみ提供されています。"
   },
   "appearance": {
     "title": "インターフェースと外観",

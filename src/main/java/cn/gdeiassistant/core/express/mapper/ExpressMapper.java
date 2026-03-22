@@ -155,4 +155,7 @@ public interface ExpressMapper {
 
     @Update("update express set username=#{newUsername}, nickname='已注销用户', realname=null where username=#{oldUsername}")
     void anonymizeByUsername(@Param("oldUsername") String oldUsername, @Param("newUsername") String newUsername);
+
+    @Update("update express_comment set username=#{newUsername} where username=#{oldUsername}")
+    void anonymizeCommentsByUsername(@Param("oldUsername") String oldUsername, @Param("newUsername") String newUsername);
 }

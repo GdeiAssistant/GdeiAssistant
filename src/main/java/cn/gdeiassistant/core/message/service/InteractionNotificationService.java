@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.message.service;
 
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.message.mapper.InteractionNotificationMapper;
 import cn.gdeiassistant.core.message.pojo.entity.InteractionNotificationEntity;
@@ -92,7 +93,7 @@ public class InteractionNotificationService {
         vo.setModule(normalizeModule(entity.getModule()));
         vo.setType(entity.getType());
         vo.setTitle(entity.getTitle());
-        vo.setContent(entity.getContent());
+        vo.setContent(anonymizeContent(entity.getContent(), entity.getActorUsername()));
         vo.setCreatedAt(formatDate(entity.getCreateTime()));
         vo.setIsRead(entity.getIsRead() != null && entity.getIsRead() != 0);
         vo.setTargetType(entity.getTargetType());
@@ -103,6 +104,13 @@ public class InteractionNotificationService {
 
     private String formatDate(java.util.Date value) {
         return value == null ? "" : value.toInstant().atZone(ZONE_ID).toLocalDateTime().format(DATETIME_FORMATTER);
+    }
+
+    private String anonymizeContent(String content, String actorUsername) {
+        if (content != null && actorUsername != null && actorUsername.startsWith("del_")) {
+            return content.replace(actorUsername, AnonymizeUtils.sanitizeUsername(actorUsername));
+        }
+        return content;
     }
 
     private String normalizeModule(String module) {

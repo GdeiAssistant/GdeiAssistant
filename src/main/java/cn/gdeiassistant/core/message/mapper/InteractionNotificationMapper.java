@@ -19,6 +19,13 @@ public interface InteractionNotificationMapper {
     @Options(useGeneratedKeys = true, keyProperty = "notificationId", keyColumn = "notification_id")
     void insertInteractionNotification(InteractionNotificationEntity entity);
 
+    @Update("update interaction_notification set actor_username=#{newUsername}, " +
+            "content=replace(content, #{oldUsername}, #{anonymousLabel}) " +
+            "where actor_username=#{oldUsername}")
+    void anonymizeActorUsername(@Param("oldUsername") String oldUsername,
+                                @Param("newUsername") String newUsername,
+                                @Param("anonymousLabel") String anonymousLabel);
+
     @Select("select notification_id,module,type,receiver_username,actor_username,target_id,target_sub_id,target_type,title,content,create_time,is_read " +
             "from interaction_notification where receiver_username=#{username} " +
             "order by create_time desc, notification_id desc limit #{start},#{size}")

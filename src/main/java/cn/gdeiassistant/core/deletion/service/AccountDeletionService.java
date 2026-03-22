@@ -241,6 +241,7 @@ public class AccountDeletionService {
         }
         if (expressMapper != null) {
             expressMapper.anonymizeByUsername(user.getUsername(), deletedUsername);
+            expressMapper.anonymizeCommentsByUsername(user.getUsername(), deletedUsername);
         }
         userMapper.closeUser(deletedUsername, user.getUsername());
         //保存注销日志

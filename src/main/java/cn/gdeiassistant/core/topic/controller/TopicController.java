@@ -93,6 +93,7 @@ public class TopicController {
                 }
             }
         } catch (Exception e) {
+            topicService.deleteTopicImages(vo.getId(), dto.getCount());
             topicService.deleteTopic(vo.getId());
             return new JsonResult(false, "话题图片上传失败");
         }

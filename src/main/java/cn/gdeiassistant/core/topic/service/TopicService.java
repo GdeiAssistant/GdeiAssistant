@@ -156,4 +156,12 @@ public class TopicService {
     public void deleteTopic(int id) {
         topicMapper.deleteTopic(id);
     }
+
+    public void deleteTopicImages(int id, int count) {
+        for (int i = 1; i <= count; i++) {
+            try {
+                r2StorageService.deleteObject("gdeiassistant-userdata", "topic/" + id + "_" + i + ".jpg");
+            } catch (Exception ignored) {}
+        }
+    }
 }

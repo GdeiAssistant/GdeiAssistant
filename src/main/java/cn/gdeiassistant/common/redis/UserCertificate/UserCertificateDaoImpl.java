@@ -113,11 +113,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
                     Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
                     User user = new User();
                     user.setUsername(map.get("username"));
-                    try {
-                        user.setPassword(StringEncryptUtils.decryptString(map.get("password")));
-                    } catch (Exception e2) {
-                        user.setPassword(map.get("password"));
-                    }
+                    user.setPassword(decryptPassword(map.get("password")));
                     return user;
                 }
             } catch (Exception e) {

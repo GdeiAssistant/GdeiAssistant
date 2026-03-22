@@ -29,17 +29,17 @@ function goTo(path) {
 
 <template>
   <div class="community-tabbar" :style="{ '--module-color': moduleColor }">
-    <a
+    <button
       v-for="tab in tabs"
       :key="tab.key"
-      href="javascript:;"
+      type="button"
       class="community-tabbar__item"
       :class="{ active: activeTab === tab.key }"
-      @click.prevent="goTo(tab.path)"
+      @click="goTo(tab.path)"
     >
       <i class="community-tabbar__icon" v-html="tab.icon"></i>
       <p class="community-tabbar__label">{{ tab.label }}</p>
-    </a>
+    </button>
   </div>
 </template>
 
@@ -70,6 +70,15 @@ function goTo(path) {
   padding: 6px 0;
   transition: color 0.25s ease;
   -webkit-tap-highlight-color: transparent;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.community-tabbar__item:focus-visible {
+  outline: 2px solid var(--module-color, #6366f1);
+  outline-offset: -2px;
 }
 
 .community-tabbar__item.active {

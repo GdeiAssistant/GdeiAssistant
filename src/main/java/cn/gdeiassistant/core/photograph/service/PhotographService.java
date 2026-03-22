@@ -13,6 +13,7 @@ import cn.gdeiassistant.core.photograph.pojo.vo.PhotographCommentVO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,7 @@ public class PhotographService {
         List<PhotographVO> result = new ArrayList<>();
         for (PhotographEntity e : list) {
             if (e.getId() == null) continue;
+            e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername()));
             PhotographVO vo = photographConverter.toVO(e);
             vo.setFirstImageUrl(getPhotographItemPictureURL(e.getId(), 1));
             result.add(vo);
@@ -84,6 +86,7 @@ public class PhotographService {
         List<PhotographVO> result = new ArrayList<>();
         for (PhotographEntity e : list) {
             if (e.getId() == null) continue;
+            e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername()));
             PhotographVO vo = photographConverter.toVO(e);
             if (e.getCount() != null && e.getCount() >= 1) {
                 vo.setFirstImageUrl(getPhotographItemPictureURL(e.getId(), 1));
@@ -100,6 +103,7 @@ public class PhotographService {
             throw new DataNotExistException("照片信息不存在");
         }
         PhotographEntity e = list.get(0);
+        e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername()));
         PhotographVO vo = photographConverter.toVO(e);
         List<String> urls = new ArrayList<>();
         int count = e.getCount() != null ? e.getCount() : 0;
@@ -108,6 +112,7 @@ public class PhotographService {
         }
         vo.setImageUrls(urls);
         if (e.getPhotographCommentList() != null) {
+            e.getPhotographCommentList().forEach(c -> c.setUsername(AnonymizeUtils.sanitizeUsername(c.getUsername())));
             vo.setPhotographCommentList(photographCommentConverter.toVOList(e.getPhotographCommentList()));
         }
         return vo;
@@ -116,6 +121,7 @@ public class PhotographService {
     public List<PhotographCommentVO> queryPhotographCommentList(int id) {
         List<PhotographCommentEntity> list = photographMapper.selectPhotographCommentByPhotoId(id);
         if (list == null) return new ArrayList<>();
+        list.forEach(e -> e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername())));
         return photographCommentConverter.toVOList(list);
     }
 

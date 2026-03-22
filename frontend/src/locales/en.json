@@ -150,7 +150,10 @@
     "menuCookiePolicy": "Cookie Policy",
     "menuIPDeclaration": "Intellectual Property Notice",
     "menuFriendlyLinks": "Friendly Links",
-    "menuSmartPartyBuilding": "Smart Party Building"
+    "menuSmartPartyBuilding": "Smart Party Building",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu",
+    "closeCookie": "Close"
   },
   "appearance": {
     "title": "Interface & Appearance",

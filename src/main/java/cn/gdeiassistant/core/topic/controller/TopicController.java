@@ -82,14 +82,19 @@ public class TopicController {
         String sessionId = (String) request.getAttribute("sessionId");
         dto.setCount(actualImageCount);
         TopicVO vo = topicService.addTopic(dto, sessionId);
-        if (images != null && images.length > 0) {
-            for (int i = 1; i <= images.length; i++) {
-                topicService.uploadTopicItemPicture(vo.getId(), i, images[i - 1].getInputStream());
+        try {
+            if (images != null && images.length > 0) {
+                for (int i = 1; i <= images.length; i++) {
+                    topicService.uploadTopicItemPicture(vo.getId(), i, images[i - 1].getInputStream());
+                }
+            } else if (imageKeys != null && imageKeys.length > 0) {
+                for (int i = 1; i <= imageKeys.length; i++) {
+                    topicService.moveTopicItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
+                }
             }
-        } else if (imageKeys != null && imageKeys.length > 0) {
-            for (int i = 1; i <= imageKeys.length; i++) {
-                topicService.moveTopicItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
-            }
+        } catch (Exception e) {
+            topicService.deleteTopic(vo.getId());
+            return new JsonResult(false, "话题图片上传失败");
         }
         return new JsonResult(true);
     }

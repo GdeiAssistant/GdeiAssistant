@@ -71,8 +71,9 @@ class PhotographServiceTest {
     }
 
     @Test
-    void addPhotographComment_succeedsWithValidComment() {
+    void addPhotographComment_succeedsWithValidComment() throws DataNotExistException {
         User user = new User("testuser");
+        when(photographMapper.selectPhotographCountById(1)).thenReturn(1);
         when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
         when(photographMapper.selectPhotographByIdAndUsername(eq(1), eq("testuser")))
                 .thenReturn(null);
@@ -86,12 +87,33 @@ class PhotographServiceTest {
     }
 
     @Test
-    void uploadPhotographItemPicture_logsErrorButDoesNotThrowOnR2Failure() {
+    void addPhotographComment_throwsDataNotExistExceptionForNonExistentPhotograph() {
+        when(photographMapper.selectPhotographCountById(999)).thenReturn(0);
+
+        assertThrows(DataNotExistException.class,
+                () -> photographService.addPhotographComment(999, "nice photo", "session1"));
+
+        verify(photographMapper, never()).insertPhotographComment(any());
+    }
+
+    @Test
+    void likePhotograph_throwsDataNotExistExceptionForNonExistentPhotograph() {
+        when(photographMapper.selectPhotographCountById(999)).thenReturn(0);
+
+        assertThrows(DataNotExistException.class,
+                () -> photographService.LikePhotograph(999, "session1"));
+
+        verify(photographMapper, never()).insertPhotographLike(anyInt(), anyString());
+    }
+
+    @Test
+    void uploadPhotographItemPicture_throwsRuntimeExceptionOnR2Failure() {
         InputStream stream = new ByteArrayInputStream("fake".getBytes());
         doThrow(new RuntimeException("R2 unavailable"))
                 .when(r2StorageService).uploadObject(anyString(), anyString(), any(InputStream.class));
 
-        assertDoesNotThrow(() -> photographService.uploadPhotographItemPicture(1, 1, stream));
+        assertThrows(RuntimeException.class,
+                () -> photographService.uploadPhotographItemPicture(1, 1, stream));
     }
 
     @Test
@@ -106,8 +128,9 @@ class PhotographServiceTest {
     }
 
     @Test
-    void likePhotograph_insertsLikeForFirstTimeLiker() {
+    void likePhotograph_insertsLikeForFirstTimeLiker() throws DataNotExistException {
         User user = new User("testuser");
+        when(photographMapper.selectPhotographCountById(1)).thenReturn(1);
         when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
         when(photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(1, "testuser"))
                 .thenReturn(0);

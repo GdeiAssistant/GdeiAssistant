@@ -79,10 +79,15 @@ public class SecretController {
                 return new JsonResult(false, "语音文件大小过大");
             } else {
                 Integer id = secretService.addSecretInfo(sessionId, dto);
-                if (file != null && !file.isEmpty() && file.getSize() > 0) {
-                    secretService.uploadVoiceSecret(id, file.getInputStream());
-                } else {
-                    secretService.moveVoiceSecretFromTempObject(id, voiceKey);
+                try {
+                    if (file != null && !file.isEmpty() && file.getSize() > 0) {
+                        secretService.uploadVoiceSecret(id, file.getInputStream());
+                    } else {
+                        secretService.moveVoiceSecretFromTempObject(id, voiceKey);
+                    }
+                } catch (Exception e) {
+                    secretService.deleteSecretById(id);
+                    return new JsonResult(false, "语音上传失败");
                 }
                 return new JsonResult(true);
             }

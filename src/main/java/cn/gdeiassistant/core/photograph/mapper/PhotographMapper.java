@@ -121,4 +121,11 @@ public interface PhotographMapper {
 
     @Insert("insert into photograph_like (photo_id,username,create_time) values(#{id},#{username},now())")
     void insertPhotographLike(@Param("id") int id, @Param("username") String username);
+
+    @Select("select count(id) from photograph where id=#{id}")
+    @ResultType(Integer.class)
+    Integer selectPhotographCountById(@Param("id") int id);
+
+    @Delete("delete from photograph where id=#{id}")
+    void deletePhotograph(@Param("id") int id);
 }

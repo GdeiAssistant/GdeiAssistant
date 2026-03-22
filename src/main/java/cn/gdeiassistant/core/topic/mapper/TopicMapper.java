@@ -69,6 +69,9 @@ public interface TopicMapper {
     @Insert("insert into topic_like (topic_id,username,create_time) values(#{topicId},#{username},now())")
     void insertTopicLike(@Param("topicId") int id, @Param("username") String username);
 
+    @Delete("delete from topic where id=#{id}")
+    void deleteTopic(@Param("id") int id);
+
     @Select("select tl.id,tl.topic_id,tl.username,tl.create_time from topic_like tl " +
             "inner join topic t on tl.topic_id=t.id where t.username=#{username} and tl.username!=#{username} " +
             "order by tl.create_time desc, tl.id desc limit #{start},#{size}")

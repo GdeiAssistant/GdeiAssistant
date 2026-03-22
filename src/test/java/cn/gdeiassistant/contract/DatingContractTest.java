@@ -1,9 +1,11 @@
 package cn.gdeiassistant.contract;
 
+import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.dating.controller.DatingController;
 import cn.gdeiassistant.core.dating.pojo.vo.DatingPickVO;
 import cn.gdeiassistant.core.dating.pojo.vo.DatingProfileVO;
 import cn.gdeiassistant.core.dating.service.DatingService;
+import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +36,9 @@ class DatingContractTest {
     void setUp() {
         DatingController controller = new DatingController();
         ReflectionTestUtils.setField(controller, "datingService", datingService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new GlobalRestExceptionHandler())
+                .build();
     }
 
     @Test
@@ -81,5 +85,15 @@ class DatingContractTest {
                 .andExpect(jsonPath("$.data.pictureURL").exists())
                 .andExpect(jsonPath("$.data.isContactVisible").value(false))
                 .andExpect(jsonPath("$.data.isPickNotAvailable").value(false));
+    }
+
+    @Test
+    void getProfileById_hiddenProfileReturnsDataNotExistError() throws Exception {
+        when(datingService.queryDatingProfile(Integer.valueOf(99)))
+                .thenThrow(new DataNotExistException("该卖室友信息不存在"));
+
+        mockMvc.perform(get("/api/dating/profile/id/99"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
     }
 }

@@ -106,7 +106,10 @@ services:
       MONGO_PORT: 27017
       MONGO_DATABASE: "${MONGO_DATABASE:-gdeiassistant}"
       SERVER_PORT: 8080
-      JWT_SECRET: "${JWT_SECRET:-YOUR_SECURE_JWT_SECRET_AT_LEAST_32_CHARS}"
+      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET is required for production}"
+      CRON_SECRET: "${CRON_SECRET:?CRON_SECRET is required for production}"
+      ENCRYPT_ENABLE: "true"
+      ENCRYPT_PRIVATE_KEY: "${ENCRYPT_PRIVATE_KEY:?ENCRYPT_PRIVATE_KEY is required for production}"
     restart: unless-stopped
 
   gdeiassistant-frontend:

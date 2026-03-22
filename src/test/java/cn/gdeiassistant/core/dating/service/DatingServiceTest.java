@@ -110,4 +110,47 @@ class DatingServiceTest {
         assertEquals(42, id);
         verify(datingMapper).insertRoommateProfile(any(DatingProfileEntity.class));
     }
+
+    @Test
+    void verifyRoommatePickRequestAccess_throwsDataNotExistExceptionWhenProfileHidden() {
+        User user = new User("picker");
+        when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
+
+        DatingProfileEntity profile = new DatingProfileEntity();
+        profile.setProfileId(10);
+        profile.setUsername("author");
+        profile.setState(0);
+        when(datingMapper.selectDatingProfileById(10)).thenReturn(profile);
+
+        assertThrows(DataNotExistException.class,
+                () -> datingService.verifyRoommatePickRequestAccess("session1", 10));
+    }
+
+    @Test
+    void queryDatingProfile_throwsDataNotExistExceptionWhenProfileHidden() {
+        DatingProfileEntity profile = new DatingProfileEntity();
+        profile.setProfileId(10);
+        profile.setState(0);
+        when(datingMapper.selectDatingProfileById(10)).thenReturn(profile);
+
+        assertThrows(DataNotExistException.class,
+                () -> datingService.queryDatingProfile(10));
+    }
+
+    @Test
+    void updateRoommateProfileState_rejectsInvalidState() {
+        assertThrows(IllegalArgumentException.class,
+                () -> datingService.updateRoommateProfileState(1, 5));
+        assertThrows(IllegalArgumentException.class,
+                () -> datingService.updateRoommateProfileState(1, -1));
+        assertThrows(IllegalArgumentException.class,
+                () -> datingService.updateRoommateProfileState(1, null));
+    }
+
+    @Test
+    void updateRoommateProfileState_acceptsValidStates() {
+        assertDoesNotThrow(() -> datingService.updateRoommateProfileState(1, 0));
+        assertDoesNotThrow(() -> datingService.updateRoommateProfileState(1, 1));
+        verify(datingMapper, times(2)).updateRoommateProfileState(anyInt(), anyInt());
+    }
 }

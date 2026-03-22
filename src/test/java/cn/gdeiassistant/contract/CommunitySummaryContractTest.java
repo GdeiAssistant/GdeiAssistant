@@ -55,31 +55,31 @@ class CommunitySummaryContractTest {
         doingItem.setState(1);
         doingItem.setPictureURL(List.of("https://cdn.gdeiassistant.cn/ershou/101_1.jpg"));
 
-        MarketplaceItemEntity soldItem = new MarketplaceItemEntity();
-        soldItem.setId(102);
-        soldItem.setUsername("20231234");
-        soldItem.setName("二手风扇");
-        soldItem.setDescription("宿舍清仓");
-        soldItem.setPrice(25.0f);
-        soldItem.setLocation("白云校区");
-        soldItem.setType(5);
-        soldItem.setQq("654321");
-        soldItem.setPhone("13900139000");
-        soldItem.setState(0);
-        soldItem.setPictureURL(List.of("https://cdn.gdeiassistant.cn/ershou/102_1.jpg"));
-
         MarketplaceItemEntity offItem = new MarketplaceItemEntity();
-        offItem.setId(103);
+        offItem.setId(102);
         offItem.setUsername("20231234");
-        offItem.setName("旧教材");
-        offItem.setDescription("已停止出售");
-        offItem.setPrice(12.0f);
-        offItem.setLocation("花都校区");
-        offItem.setType(8);
-        offItem.setQq("777888");
-        offItem.setPhone("13700137000");
-        offItem.setState(2);
-        offItem.setPictureURL(List.of("https://cdn.gdeiassistant.cn/ershou/103_1.jpg"));
+        offItem.setName("二手风扇");
+        offItem.setDescription("宿舍清仓");
+        offItem.setPrice(25.0f);
+        offItem.setLocation("白云校区");
+        offItem.setType(5);
+        offItem.setQq("654321");
+        offItem.setPhone("13900139000");
+        offItem.setState(0);
+        offItem.setPictureURL(List.of("https://cdn.gdeiassistant.cn/ershou/102_1.jpg"));
+
+        MarketplaceItemEntity soldItem = new MarketplaceItemEntity();
+        soldItem.setId(103);
+        soldItem.setUsername("20231234");
+        soldItem.setName("旧教材");
+        soldItem.setDescription("已停止出售");
+        soldItem.setPrice(12.0f);
+        soldItem.setLocation("花都校区");
+        soldItem.setType(8);
+        soldItem.setQq("777888");
+        soldItem.setPhone("13700137000");
+        soldItem.setState(2);
+        soldItem.setPictureURL(List.of("https://cdn.gdeiassistant.cn/ershou/103_1.jpg"));
 
         when(marketplaceService.queryPersonalItems("session-1"))
                 .thenReturn(List.of(doingItem, soldItem, offItem));

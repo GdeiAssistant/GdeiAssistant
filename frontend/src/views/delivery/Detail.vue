@@ -101,7 +101,9 @@ onMounted(async () => {
         pickupAddress: o.company ? `${o.company} 取件` : '取件',
         deliveryAddress: o.address || '',
         remarks: o.remarks,
-        description: o.remarks
+        description: o.remarks,
+        pickupCode: o.number || null,
+        contactPhone: o.phone || null
       }
       detailType.value = data.detailType
       trade.value = data.trade || null
@@ -134,7 +136,7 @@ onMounted(async () => {
             <span class="route-icon route-icon--pickup">取</span>
             <div class="route-content">
               <div class="route-text">{{ item.pickupAddress }}</div>
-              <div v-if="item.pickupCode && (isOwner() || isRunner() || item.status !== 0)" class="route-code">
+              <div v-if="item.pickupCode && (detailType === 0 || detailType === 3)" class="route-code">
                 取件码：{{ item.pickupCode }}
               </div>
               <div v-else-if="item.pickupCode" class="route-code">
@@ -146,7 +148,7 @@ onMounted(async () => {
             <span class="route-icon route-icon--delivery">送</span>
             <div class="route-content">
               <div class="route-text">{{ item.deliveryAddress }}</div>
-              <div v-if="item.contactPhone && (isOwner() || isRunner() || item.status !== 0)" class="route-phone">
+              <div v-if="item.contactPhone && (detailType === 0 || detailType === 3)" class="route-phone">
                 联系电话：{{ item.contactPhone }}
               </div>
               <div v-else-if="item.contactPhone" class="route-phone">

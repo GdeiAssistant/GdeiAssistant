@@ -1,7 +1,6 @@
 package cn.gdeiassistant.common.filter;
 
 import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.redis.LoginToken.LoginTokenDao;
 import cn.gdeiassistant.common.tools.Utils.JwtUtil;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -22,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,9 +33,6 @@ class JwtSessionIdFilterTest {
     @Mock
     private UserCertificateService userCertificateService;
 
-    @Mock
-    private LoginTokenDao loginTokenDao;
-
     private JwtSessionIdFilter filter;
 
     @BeforeEach
@@ -45,7 +40,6 @@ class JwtSessionIdFilterTest {
         filter = new JwtSessionIdFilter();
         ReflectionTestUtils.setField(filter, "jwtUtil", jwtUtil);
         ReflectionTestUtils.setField(filter, "userCertificateService", userCertificateService);
-        ReflectionTestUtils.setField(filter, "loginTokenDao", loginTokenDao);
     }
 
     @Test
@@ -55,11 +49,10 @@ class JwtSessionIdFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         FilterChain chain = mock(FilterChain.class);
 
-        Claim tokenClaim = mock(Claim.class);
-        when(tokenClaim.isNull()).thenReturn(false);
-        when(tokenClaim.asString()).thenReturn("login-token");
-        when(jwtUtil.verifyAndParse("jwt-token")).thenReturn(Map.of("token", tokenClaim));
-        when(loginTokenDao.QuerySessionIdByWebToken("login-token")).thenReturn("session-1");
+        Claim sessionIdClaim = mock(Claim.class);
+        when(sessionIdClaim.isNull()).thenReturn(false);
+        when(sessionIdClaim.asString()).thenReturn("session-1");
+        when(jwtUtil.verifyAndParse("jwt-token")).thenReturn(Map.of("sessionId", sessionIdClaim));
         User user = new User("20240001");
         when(userCertificateService.getUserLoginCertificate("session-1")).thenReturn(user);
 
@@ -67,25 +60,6 @@ class JwtSessionIdFilterTest {
 
         assertEquals("session-1", request.getAttribute("sessionId"));
         assertSame(user, request.getAttribute("user"));
-        verify(chain).doFilter(request, response);
-    }
-
-    @Test
-    void shouldResolveMobileJwtWithSessionIdClaim() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("Authorization", "Bearer mobile-jwt-token");
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain chain = mock(FilterChain.class);
-
-        Claim sessionIdClaim = mock(Claim.class);
-        when(sessionIdClaim.isNull()).thenReturn(false);
-        when(sessionIdClaim.asString()).thenReturn("session-2");
-        when(jwtUtil.verifyAndParse("mobile-jwt-token")).thenReturn(Map.of("sessionId", sessionIdClaim));
-
-        filter.doFilter(request, response, chain);
-
-        assertEquals("session-2", request.getAttribute("sessionId"));
-        verify(loginTokenDao, never()).QuerySessionIdByWebToken("mobile-jwt-token");
         verify(chain).doFilter(request, response);
     }
 
@@ -99,6 +73,29 @@ class JwtSessionIdFilterTest {
         filter.doFilter(request, response, chain);
 
         assertNull(request.getAttribute("sessionId"));
+        verify(chain).doFilter(request, response);
+    }
+
+    @Test
+    void shouldNotInjectSessionIdWhenSessionDeletedFromRedis() throws Exception {
+        // Simulate: JWT is valid but user has logged out (session cleared from Redis)
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer valid-but-revoked-token");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        FilterChain chain = mock(FilterChain.class);
+
+        Claim sessionIdClaim = mock(Claim.class);
+        when(sessionIdClaim.isNull()).thenReturn(false);
+        when(sessionIdClaim.asString()).thenReturn("logged-out-session");
+        when(jwtUtil.verifyAndParse("valid-but-revoked-token")).thenReturn(Map.of("sessionId", sessionIdClaim));
+        // Session no longer exists in Redis after logout
+        when(userCertificateService.getUserLoginCertificate("logged-out-session")).thenReturn(null);
+
+        filter.doFilter(request, response, chain);
+
+        // Neither sessionId nor user should be set — downstream interceptor will return 401
+        assertNull(request.getAttribute("sessionId"));
+        assertNull(request.getAttribute("user"));
         verify(chain).doFilter(request, response);
     }
 

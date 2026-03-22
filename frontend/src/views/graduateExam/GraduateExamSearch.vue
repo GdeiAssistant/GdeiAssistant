@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
+const { t } = useI18n()
 const name = ref('')
 const candidateNo = ref('')
 const idNo = ref('')
@@ -25,7 +27,7 @@ function goBack() {
 
 function doQuery() {
   if (!name.value.trim() || !candidateNo.value.trim() || !idNo.value.trim()) {
-    showWeuiTopTips('请完整填写查询信息！')
+    showWeuiTopTips(t('graduateExam.fillAllFields'))
     return
   }
   router.push({
@@ -40,27 +42,27 @@ function doQuery() {
     <div class="weui-toptips weui-toptips_warn" v-show="showTopTips">{{ errorMsg }}</div>
     <div class="kaoyan-search-page">
     <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
+      <div class="nav-btn-back" @click="goBack">{{ t('graduateExam.back') }}</div>
     </div>
-    <h1 class="page-title-green">考研成绩查询</h1>
+    <h1 class="page-title-green">{{ t('graduateExam.title') }}</h1>
 
     <div class="weui-cells weui-cells_form">
       <div class="weui-cell">
         <div class="weui-cell__hd">
-          <label class="weui-label">姓名</label>
+          <label class="weui-label">{{ t('graduateExam.name') }}</label>
         </div>
         <div class="weui-cell__bd weui-cell_primary">
           <input
             v-model="name"
             class="weui-input"
             type="text"
-            placeholder="请输入姓名"
+            :placeholder="t('graduateExam.namePlaceholder')"
           />
         </div>
       </div>
       <div class="weui-cell">
         <div class="weui-cell__hd">
-          <label class="weui-label">考号</label>
+          <label class="weui-label">{{ t('graduateExam.candidateNo') }}</label>
         </div>
         <div class="weui-cell__bd weui-cell_primary">
           <input
@@ -68,13 +70,13 @@ function doQuery() {
             class="weui-input"
             type="text"
             maxlength="15"
-            placeholder="请输入准考证号"
+            :placeholder="t('graduateExam.candidateNoPlaceholder')"
           />
         </div>
       </div>
       <div class="weui-cell">
         <div class="weui-cell__hd">
-          <label class="weui-label">证件号</label>
+          <label class="weui-label">{{ t('graduateExam.idNo') }}</label>
         </div>
         <div class="weui-cell__bd weui-cell_primary">
           <input
@@ -82,18 +84,18 @@ function doQuery() {
             class="weui-input"
             type="text"
             maxlength="18"
-            placeholder="请输入证件号码"
+            :placeholder="t('graduateExam.idNoPlaceholder')"
           />
         </div>
       </div>
     </div>
 
     <div class="weui-btn_area">
-      <button type="button" class="weui-btn weui-btn_primary" @click="doQuery">查询</button>
+      <button type="button" class="weui-btn weui-btn_primary" @click="doQuery">{{ t('graduateExam.search') }}</button>
     </div>
-    <p class="kaoyan-wish">祝2019考研er金榜题名</p>
+    <p class="kaoyan-wish">{{ t('graduateExam.wish') }}</p>
 
-    <div class="weui-cells__title">备用查询入口</div>
+    <div class="weui-cells__title">{{ t('graduateExam.altEntry') }}</div>
     <div class="weui-cells">
       <a
         class="weui-cell weui-cell_access"
@@ -102,7 +104,7 @@ function doQuery() {
         rel="noopener noreferrer"
       >
         <div class="weui-cell__bd">
-          <p>研招网硕士初试成绩查询</p>
+          <p>{{ t('graduateExam.chsiLink') }}</p>
         </div>
         <div class="weui-cell__ft"></div>
       </a>

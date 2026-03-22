@@ -1,6 +1,9 @@
 import axios from 'axios'
 import router from '../router'
 import { showErrorTopTips } from './toast.js'
+import i18n from '../i18n'
+
+const _t = (key) => i18n.global.t(key)
 
 /**
  * 仅允许纯中文友好文案进入 UI，严禁 500、Request、status code、Error 等原始报错泄露
@@ -9,13 +12,13 @@ import { showErrorTopTips } from './toast.js'
  */
 function sanitizeMessage(raw) {
   const s = String(raw || '').trim()
-  if (!s) return '操作失败'
+  if (!s) return _t('common.saveFailed')
   const lower = s.toLowerCase()
   if (/status\s*code|request\s*failed|500|502|503|504|econnrefused|network\s*error|timeout|error\s*message/i.test(lower) || /^\d{3}\s/.test(s)) {
-    return '系统繁忙，请稍后再试'
+    return _t('common.systemBusy')
   }
   if (/^[a-z][a-z\s\d_-]+$/i.test(s) && !/[\u4e00-\u9fa5]/.test(s)) {
-    return '操作失败'
+    return _t('common.saveFailed')
   }
   return s
 }
@@ -40,24 +43,24 @@ function mapErrorToMessage(error, options = {}) {
     msg.includes('timeout') ||
     error.code === 'ECONNABORTED'
   if (isNetworkOrTimeout) {
-    return '网络连接失败，请检查服务器状态'
+    return _t('common.networkError')
   }
 
   // 有 status 时按状态码严格区分
   switch (status) {
     case 401:
-      return isLoginRequest ? '账号或密码错误' : '登录状态已过期，请重新登录'
+      return isLoginRequest ? _t('common.wrongCredentials') : _t('common.loginExpired')
     case 403:
-      return '您没有权限访问该功能'
+      return _t('common.noPermission')
     case 404:
-      return '请求的资源不存在'
+      return _t('common.resourceNotFound')
     case 500:
     case 502:
     case 503:
     case 504:
-      return '系统繁忙，请稍后再试'
+      return _t('common.systemBusy')
     default:
-      return '网络连接异常，请稍后重试'
+      return _t('common.networkException')
   }
 }
 
@@ -78,7 +81,7 @@ const AUTH_EXPIRED_CODE = 400302
  * @param {string} rawMessage
  */
 function handleLogout(rawMessage) {
-  const safeMessage = sanitizeMessage(rawMessage || '登录状态已失效，请重新登录')
+  const safeMessage = sanitizeMessage(rawMessage || _t('common.loginExpiredDefault'))
   showErrorTopTips(safeMessage)
   try {
     localStorage.removeItem('token')
@@ -97,7 +100,7 @@ service.interceptors.request.use(
     const token = localStorage.getItem('token')
     if (!config.headers) config.headers = {}
     config.headers['X-Client-Type'] = 'WEB'
-    config.headers['Accept-Language'] = localStorage.getItem('locale') || 'zh-CN'
+    config.headers['Accept-Language'] = i18n.global.locale.value || 'zh-CN'
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + token
     }
@@ -115,7 +118,7 @@ service.interceptors.response.use(
       if (typeof res.code === 'number' && res.code >= 400300 && res.code < 400400) {
         // 400302：无效令牌 -> 自动登出并回到登录页（文案由后端驱动）
         if (res.code === AUTH_EXPIRED_CODE) {
-          handleLogout(res.message || '未检测到有效令牌')
+          handleLogout(res.message || _t('common.invalidToken'))
           return Promise.reject(new Error(sanitizeMessage(res.message)))
         }
         const safeMessage = sanitizeMessage(res.message)
@@ -141,20 +144,20 @@ service.interceptors.response.use(
     if (status === 401) {
       if (!isLoginRequest) {
         const backendMsg = error.response?.data?.message
-        handleLogout(backendMsg || '登录状态已失效，请重新登录')
+        handleLogout(backendMsg || _t('common.loginExpiredDefault'))
       }
       return Promise.reject(error)
     }
 
     // 404：接口不存在
     if (status === 404) {
-      showErrorTopTips('请求的接口不存在')
+      showErrorTopTips(_t('common.apiNotFound'))
       return Promise.reject(error)
     }
 
     // 500：服务器错误
     if (status === 500) {
-      showErrorTopTips('服务器开小差了，请稍后再试')
+      showErrorTopTips(_t('common.serverError'))
       return Promise.reject(error)
     }
 

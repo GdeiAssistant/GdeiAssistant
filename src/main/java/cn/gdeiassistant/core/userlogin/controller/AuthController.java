@@ -5,8 +5,6 @@ import cn.gdeiassistant.common.constant.ErrorConstantUtils;
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.core.user.pojo.dto.UserLoginDTO;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.common.redis.LoginToken.LoginTokenDao;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.core.userLogin.service.UserLoginService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
@@ -45,9 +43,6 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
-    private LoginTokenDao loginTokenDao;
-
     /**
      * 用户登录（JWT）
      * 账号密码校验通过后签发 JWT，载荷包含用户唯一标识（学号 username）。
@@ -60,7 +55,6 @@ public class AuthController {
             HttpServletResponse response) {
         String username = dto.getUsername();
         String password = dto.getPassword();
-        // 可撤销 Stateful JWT：sessionId 与用户凭证存 Redis；再生成唯一 token，写入 Redis token->sessionId，JWT 仅携带该 token
         String sessionId = UUID.randomUUID().toString().replace("-", "");
         try {
             userLoginService.userLogin(sessionId, username, password);
@@ -78,9 +72,7 @@ public class AuthController {
             err.setMessage("系统繁忙，登录失败，请稍后重试");
             return err;
         }
-        String loginToken = UUID.randomUUID().toString().replace("-", "");
-        loginTokenDao.InsertWebLoginToken(loginToken, sessionId);
-        String jwt = jwtUtil.createTokenWithLoginToken(loginToken, username);
+        String jwt = jwtUtil.createToken(sessionId, username);
         Map<String, String> data = new HashMap<>();
         data.put("token", jwt);
         DataJsonResult<Map<String, String>> result = new DataJsonResult<>(true, data);
@@ -97,7 +89,6 @@ public class AuthController {
     public DataJsonResult<Void> logout(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
         if (sessionId != null && !sessionId.isEmpty()) {
-            loginTokenDao.DeleteWebLoginTokenBySessionId(sessionId);
             HttpClientUtils.clearHttpClientCookieStore(sessionId);
             userCertificateService.clearUserLoginAndSession(sessionId);
         }

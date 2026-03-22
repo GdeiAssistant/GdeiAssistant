@@ -382,12 +382,11 @@ onMounted(() => {
         <p class="empty-state__text">本周暂无课程，好好休息吧</p>
       </div>
       <!-- 课程块：显式定位，column+2 跳过节次列，row+2 跳过表头行 -->
-      <div
+      <button
         v-for="(course, index) in filteredList"
         :key="'course-' + index"
-        class="schedule-grid__course"
-        role="button"
-        tabindex="0"
+        type="button"
+        class="schedule-grid__course btn-reset"
         :style="{
           gridColumn: course.column + 2,
           gridRow: `${course.row + 2} / span ${course.scheduleLength}`,
@@ -399,7 +398,7 @@ onMounted(() => {
           <span class="schedule-grid__course-name">{{ course.scheduleName }}</span>
           <span class="schedule-grid__course-location">{{ course.scheduleLocation }}</span>
         </div>
-      </div>
+      </button>
     </div>
     </div>
 

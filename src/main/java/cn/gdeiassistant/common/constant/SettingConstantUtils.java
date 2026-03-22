@@ -6,7 +6,7 @@ public class SettingConstantUtils {
     public static final String[] LOGIN_INTERCEPTOR_EXCEPTION_LIST = {
             "/login",
             "/logout",
-            "/cron",
+            // "/cron" — removed: cron endpoints now require X-Cron-Secret header authentication
             "/api/auth",
             "/api/module",
             "/download",

@@ -186,6 +186,8 @@ trial:
 
 app:
   test-accounts: gdeiassistant
+  cron:
+    secret: ${CRON_SECRET:changeme-generate-a-real-secret}
   cors:
     allowed-origin-patterns: ${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173}
 

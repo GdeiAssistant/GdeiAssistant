@@ -21,6 +21,7 @@ import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
 import cn.gdeiassistant.core.close.mapper.CloseMapper;
+import cn.gdeiassistant.core.dating.mapper.DatingMapper;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.Utils.StringEncryptUtils;
@@ -74,6 +75,9 @@ public class AccountDeletionService {
     @Autowired
     private CloseMapper closeMapper;
 
+    @Autowired(required = false)
+    private DatingMapper datingMapper;
+
     /**
      * 关闭待处理的社区功能信息
      */
@@ -104,6 +108,10 @@ public class AccountDeletionService {
                     deliveryMapper.updateTradeState(deliveryTrade.getTradeId(), 0, 2);
                 }
             }
+        }
+        //隐藏用户的交友资料
+        if (datingMapper != null) {
+            datingMapper.hideDatingProfilesByUsername(username);
         }
     }
 
@@ -186,6 +194,10 @@ public class AccountDeletionService {
         //删除教务缓存信息
         gradeDao.removeGrade(user.getUsername());
         scheduleDao.removeSchedule(user.getUsername());
+        //隐藏用户的交友资料
+        if (datingMapper != null) {
+            datingMapper.hideDatingProfilesByUsername(user.getUsername());
+        }
         //删除用户资料信息
         profileMapper.resetUserProfile(user.getUsername(), "已注销");
         profileMapper.resetUserIntroduction(user.getUsername());

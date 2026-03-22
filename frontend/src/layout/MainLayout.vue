@@ -36,9 +36,10 @@ watch(
       <router-view />
     </div>
     <div class="weui-tabbar" role="tablist">
-      <div
+      <button
         v-for="(tab, index) in tabs"
         :key="tab.path"
+        type="button"
         role="tab"
         :aria-label="$t(tab.labelKey)"
         :aria-selected="activeIndex === index"
@@ -48,7 +49,7 @@ watch(
       >
         <img :src="tab.icon" alt="" class="weui-tabbar__icon" />
         <p class="weui-tabbar__label">{{ $t(tab.labelKey) }}</p>
-      </div>
+      </button>
     </div>
   </div>
 </template>
@@ -87,5 +88,17 @@ watch(
 .weui-tabbar {
   background: var(--color-surface);
   border-top: 1px solid var(--color-divider);
+}
+.weui-tabbar__item {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+}
+.weui-tabbar__item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
 }
 </style>

@@ -54,22 +54,23 @@ function onLocaleChange(code) {
 <template>
   <div class="appearance-page">
     <div class="appearance-header">
-      <a class="back-link" @click="$router.back()">←</a>
+      <button type="button" class="back-link" @click="$router.back()">←</button>
       <h2>{{ t('appearance.title') }}</h2>
     </div>
 
     <div class="appearance-section">
       <h3 class="section-title">{{ t('appearance.theme.label') }}</h3>
       <div class="option-list">
-        <div
+        <button
           v-for="opt in themeOptions"
           :key="opt.value"
+          type="button"
           class="option-item"
           @click="onThemeChange(opt.value)"
         >
           <span>{{ t(opt.labelKey) }}</span>
           <span v-if="theme === opt.value" class="check-icon">✓</span>
-        </div>
+        </button>
       </div>
     </div>
 
@@ -97,15 +98,16 @@ function onLocaleChange(code) {
     <div class="appearance-section">
       <h3 class="section-title">{{ t('appearance.language.label') }}</h3>
       <div class="option-list">
-        <div
+        <button
           v-for="loc in locales"
           :key="loc.code"
+          type="button"
           class="option-item"
           @click="onLocaleChange(loc.code)"
         >
           <span>{{ loc.label }}</span>
           <span v-if="selectedLocale === loc.code" class="check-icon">✓</span>
-        </div>
+        </button>
       </div>
     </div>
   </div>
@@ -131,6 +133,14 @@ function onLocaleChange(code) {
   cursor: pointer;
   color: var(--color-primary);
   text-decoration: none;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+}
+.back-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 .section-title {
   font-size: 0.85rem;
@@ -142,12 +152,22 @@ function onLocaleChange(code) {
   background: var(--color-surface);
 }
 .option-item {
+  width: 100%;
   padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  border: none;
   border-bottom: 1px solid var(--color-divider);
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+.option-item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
 }
 .option-item:hover {
   background: var(--color-bg-tertiary);

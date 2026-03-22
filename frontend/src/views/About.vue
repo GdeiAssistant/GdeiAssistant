@@ -133,20 +133,20 @@ onMounted(() => {
           :key="menu.title"
           class="menu-item"
         >
-          <div class="menu-item-header" @click="toggleSubMenu(menu.title)">
+          <button type="button" class="menu-item-header" @click="toggleSubMenu(menu.title)">
             <span>{{ menu.title }}</span>
             <span class="menu-arrow" :class="{ 'arrow-down': expandedMenu === menu.title }">▼</span>
-          </div>
+          </button>
           <div class="menu-subitems" v-if="expandedMenu === menu.title">
-            <a
+            <button
               v-for="item in menu.items"
               :key="item.text"
-              href="javascript:;"
+              type="button"
               class="menu-subitem"
               @click="handleMenuClick(item)"
             >
               {{ item.text }}
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -159,9 +159,9 @@ onMounted(() => {
 
     <!-- 进入系统按钮 -->
     <div class="weui-btn_area">
-      <a href="javascript:;" class="weui-btn weui-btn_primary" @click.prevent="goToLogin">
+      <button type="button" class="weui-btn weui-btn_primary" @click="goToLogin">
         {{ t('about.enterSystem') }}
-      </a>
+      </button>
     </div>
 
     <!-- 应用介绍 -->
@@ -361,10 +361,20 @@ onMounted(() => {
   cursor: pointer;
   color: var(--color-text-primary);
   font-size: 15px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: left;
 }
 
 .menu-item-header:hover {
   background-color: var(--color-bg-secondary);
+}
+
+.menu-item-header:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
 }
 
 .menu-arrow {
@@ -383,16 +393,27 @@ onMounted(() => {
 
 .menu-subitem {
   display: block;
+  width: 100%;
   padding: 12px 16px 12px 32px;
   color: var(--color-text-secondary);
   text-decoration: none;
   font-size: 14px;
+  border: none;
   border-bottom: 1px solid var(--color-divider);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .menu-subitem:hover {
   background-color: var(--color-divider);
   color: var(--color-primary);
+}
+
+.menu-subitem:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
 }
 
 .menu-subitem:last-child {
@@ -423,6 +444,14 @@ onMounted(() => {
 .weui-btn_primary {
   width: 100%;
   background-color: var(--color-primary);
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: #fff;
+}
+.weui-btn_primary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .about-content {

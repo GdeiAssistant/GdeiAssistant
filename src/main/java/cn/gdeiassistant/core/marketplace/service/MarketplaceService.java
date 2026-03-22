@@ -185,6 +185,18 @@ public class MarketplaceService {
         r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "ershou/" + id + "_" + index + ".jpg");
     }
 
+    public void deleteItemImages(int id, int count) {
+        for (int i = 1; i <= count; i++) {
+            try {
+                r2StorageService.deleteObject("gdeiassistant-userdata", "ershou/" + id + "_" + i + ".jpg");
+            } catch (Exception ignored) {}
+        }
+    }
+
+    public void deleteItem(int id) {
+        marketplaceMapper.deleteItem(id);
+    }
+
     public List<String> getItemPictureURL(int id) {
         List<String> pictureURL = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {

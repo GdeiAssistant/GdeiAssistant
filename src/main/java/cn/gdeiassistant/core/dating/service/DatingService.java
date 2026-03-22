@@ -114,6 +114,7 @@ public class DatingService {
             r2StorageService.uploadObject("gdeiassistant-userdata", "dating/" + id + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传室友信息图片失败，id={}", id, e);
+            throw new RuntimeException("上传失败", e);
         } finally {
             if (inputStream != null) {
                 try { inputStream.close(); } catch (IOException ignored) {}
@@ -254,6 +255,16 @@ public class DatingService {
             }
             return vo;
         }).collect(Collectors.toList());
+    }
+
+    public void deleteDatingImage(int id) {
+        try {
+            r2StorageService.deleteObject("gdeiassistant-userdata", "dating/" + id + ".jpg");
+        } catch (Exception ignored) {}
+    }
+
+    public void deleteDatingProfile(int id) {
+        datingMapper.deleteRoommateProfile(id);
     }
 
     public String getRoommateProfilePictureURL(int id) {

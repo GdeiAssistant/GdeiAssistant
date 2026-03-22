@@ -101,10 +101,16 @@ public class DatingController {
                                          String imageKey) throws IOException {
         String sessionId = (String) request.getAttribute("sessionId");
         Integer id = datingService.addRoommateProfile(sessionId, dto);
-        if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-            datingService.uploadPicture(id, image.getInputStream());
-        } else if (StringUtils.isNotBlank(imageKey)) {
-            datingService.movePictureFromTempObject(id, imageKey);
+        try {
+            if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
+                datingService.uploadPicture(id, image.getInputStream());
+            } else if (StringUtils.isNotBlank(imageKey)) {
+                datingService.movePictureFromTempObject(id, imageKey);
+            }
+        } catch (Exception e) {
+            datingService.deleteDatingImage(id);
+            datingService.deleteDatingProfile(id);
+            return new JsonResult(false, "上传失败");
         }
         return new JsonResult(true);
     }

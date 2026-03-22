@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="unified-header">
-      <div class="header-left" @click="goBack">返回</div>
+      <button type="button" class="header-left btn-reset" @click="goBack">返回</button>
       <div class="header-title">功能管理</div>
       <div class="header-right"></div>
     </div>
@@ -106,6 +106,22 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.btn-reset {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+}
+.btn-reset:focus-visible {
+  outline: 2px solid var(--color-primary, #07c160);
+  outline-offset: -2px;
+}
+
 .page-container {
   background-color: #f8f8f8;
   min-height: 100vh;

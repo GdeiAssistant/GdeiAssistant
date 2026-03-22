@@ -311,8 +311,8 @@ onMounted(() => {
     </template>
 
     <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
-      <div class="nav-btn-more" @click="showOptionMenu">更多</div>
+      <button type="button" class="nav-btn-back btn-reset" @click="goBack">返回</button>
+      <button type="button" class="nav-btn-more btn-reset" @click="showOptionMenu">更多</button>
     </div>
     <h1 class="page-title-green">我的课程表</h1>
 
@@ -408,12 +408,12 @@ onMounted(() => {
       <div class="weui-mask" @click="closeActionSheet" aria-hidden="true"></div>
       <div class="weui-actionsheet weui-actionsheet_toggle" role="dialog" aria-label="更多选项">
         <div class="weui-actionsheet__menu">
-          <div class="weui-actionsheet__cell" @click="onManageCache">管理缓存配置</div>
-          <div class="weui-actionsheet__cell" @click="onRefreshSchedule">更新实时数据</div>
-          <div class="weui-actionsheet__cell" @click="onAddCustomCourse">添加自定义课程</div>
+          <button type="button" class="weui-actionsheet__cell btn-reset" @click="onManageCache">管理缓存配置</button>
+          <button type="button" class="weui-actionsheet__cell btn-reset" @click="onRefreshSchedule">更新实时数据</button>
+          <button type="button" class="weui-actionsheet__cell btn-reset" @click="onAddCustomCourse">添加自定义课程</button>
         </div>
         <div class="weui-actionsheet__action">
-          <div class="weui-actionsheet__cell" @click="closeActionSheet">取消</div>
+          <button type="button" class="weui-actionsheet__cell btn-reset" @click="closeActionSheet">取消</button>
         </div>
       </div>
     </template>
@@ -424,7 +424,7 @@ onMounted(() => {
       <div class="schedule-detail-dialog" role="dialog" aria-label="课程详情">
         <div class="schedule-detail-dialog__hd">
           <h3 class="schedule-detail-dialog__title">课程详细信息</h3>
-          <div class="schedule-detail-dialog__close" @click="closeCourseDetail">关闭</div>
+          <button type="button" class="schedule-detail-dialog__close btn-reset" @click="closeCourseDetail">关闭</button>
         </div>
         <div class="schedule-detail-dialog__bd weui-form-preview__bd">
           <div class="weui-form-preview__item">
@@ -463,7 +463,7 @@ onMounted(() => {
       <div class="schedule-detail-dialog add-custom-dialog" role="dialog" aria-label="添加自定义课程">
         <div class="schedule-detail-dialog__hd">
           <h3 class="schedule-detail-dialog__title">添加自定义课程</h3>
-          <div class="schedule-detail-dialog__close" @click="closeAddCustomDialog">关闭</div>
+          <button type="button" class="schedule-detail-dialog__close btn-reset" @click="closeAddCustomDialog">关闭</button>
         </div>
         <div class="schedule-detail-dialog__bd weui-cells weui-cells_form">
           <div class="weui-cell">
@@ -548,20 +548,21 @@ onMounted(() => {
       <div class="weui-mask" @click="closeWeekPicker" aria-hidden="true"></div>
       <div class="week-picker" role="dialog" aria-label="选择周数">
         <div class="week-picker__hd">
-          <div class="week-picker__cancel" @click="closeWeekPicker">取消</div>
+          <button type="button" class="week-picker__cancel btn-reset" @click="closeWeekPicker">取消</button>
           <div class="week-picker__title">选择周数</div>
           <div class="week-picker__placeholder"></div>
         </div>
         <div class="week-picker__bd">
-          <div
+          <button
+            type="button"
             v-for="opt in weekPickerOptions"
             :key="opt.value"
-            class="week-picker__item"
+            class="week-picker__item btn-reset"
             :class="{ 'week-picker__item--active': opt.value === currentWeek }"
             @click="selectWeek(opt.value)"
           >
             {{ opt.label }}
-          </div>
+          </button>
         </div>
       </div>
     </template>
@@ -579,6 +580,27 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.btn-reset {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+}
+.btn-reset:focus-visible {
+  outline: 2px solid var(--color-primary, #07c160);
+  outline-offset: -2px;
+}
+
+.weui-actionsheet__cell.btn-reset {
+  width: 100%;
+  text-align: center;
+}
+
 .schedule-page {
   background-color: var(--color-surface);
   min-height: 100vh;
@@ -931,6 +953,7 @@ onMounted(() => {
   color: var(--color-text-primary);
   text-align: center;
   cursor: pointer;
+  width: 100%;
 }
 
 .week-picker__item:active {

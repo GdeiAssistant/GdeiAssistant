@@ -5,57 +5,57 @@
     <div class="weui-toptips weui_warn js_tooltips" style="display: none;"></div>
 
     <div class="weui-cells" style="margin-top: 0;">
-      <div class="weui-cell weui-cell_access" @click="router.push('/user/avatar-edit')">
+      <RouterLink class="weui-cell weui-cell_access" to="/user/avatar-edit">
         <div class="weui-cell__bd"><p>{{ $t('profile.avatar') }}</p></div>
         <div class="weui-cell__ft">
           <img :src="userInfo.avatar" style="width: 50px; height: 50px; border-radius: 50%; display: block;" :alt="$t('profile.avatar')" />
         </div>
-      </div>
+      </RouterLink>
 
       <div class="weui-cell">
         <div class="weui-cell__bd"><p>{{ $t('profile.username') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.username }}</div>
       </div>
 
-      <div class="weui-cell weui-cell_access relative-cell" @click="openNicknameDialog">
+      <button type="button" class="weui-cell weui-cell_access relative-cell btn-reset" @click="openNicknameDialog">
         <div class="weui-cell__bd"><p>{{ $t('profile.nickname') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.nickname || $t('common.clickToSet') }}</div>
-      </div>
+      </button>
 
-      <div class="weui-cell weui-cell_access" @click="openBirthdayPicker">
+      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openBirthdayPicker">
         <div class="weui-cell__bd"><p>{{ $t('profile.birthday') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.birthday || $t('common.unselected') }}</div>
-      </div>
+      </button>
 
-      <div class="weui-cell weui-cell_access" @click="openFacultyPicker">
+      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openFacultyPicker">
         <div class="weui-cell__bd"><p>{{ $t('profile.faculty') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.faculty || $t('common.unselected') }}</div>
-      </div>
+      </button>
 
-      <div class="weui-cell weui-cell_access" @click="openMajorPicker">
+      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openMajorPicker">
         <div class="weui-cell__bd"><p>{{ $t('profile.major') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.major || $t('common.unselected') }}</div>
-      </div>
+      </button>
 
-      <div class="weui-cell weui-cell_access" @click="openEnrollmentPicker">
+      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openEnrollmentPicker">
         <div class="weui-cell__bd"><p>{{ $t('profile.enrollmentYear') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.enrollment || $t('common.unselected') }}</div>
-      </div>
+      </button>
 
-      <div class="weui-cell weui-cell_access" @click="openLocationPicker">
+      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openLocationPicker">
         <div class="weui-cell__bd"><p>{{ $t('profile.location') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.location || $t('common.unselected') }}</div>
-      </div>
+      </button>
 
-      <div class="weui-cell weui-cell_access" @click="openHometownPicker">
+      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openHometownPicker">
         <div class="weui-cell__bd"><p>{{ $t('profile.hometown') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.hometown || $t('common.unselected') }}</div>
-      </div>
+      </button>
 
-      <a class="weui-cell weui-cell_access relative-cell" href="javascript:" @click.prevent="openIntroDialog">
+      <button type="button" class="weui-cell weui-cell_access relative-cell btn-reset" @click="openIntroDialog">
         <div class="weui-cell__bd"><p>{{ $t('profile.introduction') }}</p></div>
         <div class="weui-cell__ft">{{ userInfo.introduction ? $t('common.filled') : $t('common.notFilled') }}</div>
-      </a>
+      </button>
 
       <div class="weui-cell">
         <div class="weui-cell__bd"><p>{{ $t('profile.ipArea') }}</p></div>
@@ -64,63 +64,63 @@
     </div>
 
     <div class="weui-cells">
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/privacy-setting')">
+      <RouterLink class="weui-cell weui-cell_access" to="/user/privacy-setting">
         <div class="weui-cell__bd"><p>{{ $t('profile.privacySetting') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/feature-manage')">
+      </RouterLink>
+      <RouterLink class="weui-cell weui-cell_access" to="/user/feature-manage">
         <div class="weui-cell__bd"><p>{{ $t('profile.featureManage') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
+      </RouterLink>
     </div>
 
     <div class="weui-cells">
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/appearance')">
+      <RouterLink class="weui-cell weui-cell_access" to="/appearance">
         <div class="weui-cell__bd"><p>{{ $t('appearance.title') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
+      </RouterLink>
     </div>
 
     <div class="weui-cells">
-      <a class="weui-cell weui-cell_access" href="javascript:" @click="handlePasswordClick">
+      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="handlePasswordClick">
         <div class="weui-cell__bd"><p>{{ $t('profile.changePassword') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/login-record')">
+      </button>
+      <RouterLink class="weui-cell weui-cell_access" to="/user/login-record">
         <div class="weui-cell__bd"><p>{{ $t('profile.loginRecord') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/realname')">
+      </RouterLink>
+      <RouterLink class="weui-cell weui-cell_access" to="/user/realname">
         <div class="weui-cell__bd"><p>{{ $t('profile.realname') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/bind-phone')">
+      </RouterLink>
+      <RouterLink class="weui-cell weui-cell_access" to="/user/bind-phone">
         <div class="weui-cell__bd"><p>{{ $t('profile.bindPhone') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/bind-email')">
+      </RouterLink>
+      <RouterLink class="weui-cell weui-cell_access" to="/user/bind-email">
         <div class="weui-cell__bd"><p>{{ $t('profile.bindEmail') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/delete')">
+      </RouterLink>
+      <RouterLink class="weui-cell weui-cell_access" to="/user/delete">
         <div class="weui-cell__bd"><p>{{ $t('profile.deleteAccount') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
+      </RouterLink>
     </div>
 
     <div class="weui-cells">
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleReport">
+      <a class="weui-cell weui-cell_access" href="https://www.wjx.top/m/47687434.aspx" target="_blank" rel="noopener noreferrer">
         <div class="weui-cell__bd"><p>{{ $t('profile.reportChannel') }}</p></div><div class="weui-cell__ft"></div>
       </a>
     </div>
 
     <div class="weui-cells">
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/download')">
+      <RouterLink class="weui-cell weui-cell_access" to="/user/download">
         <div class="weui-cell__bd"><p>{{ $t('profile.downloadData') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
+      </RouterLink>
     </div>
 
     <div class="weui-cells">
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleNav('/user/feedback')">
+      <RouterLink class="weui-cell weui-cell_access" to="/user/feedback">
         <div class="weui-cell__bd"><p>{{ $t('profile.helpFeedback') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
+      </RouterLink>
     </div>
 
     <div class="weui-cells logout-cells" style="margin-bottom: 80px;">
-      <a class="weui-cell weui-cell_access" href="javascript:" @click.prevent="handleLogoutClick">
+      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="handleLogoutClick">
         <div class="weui-cell__bd"><p>{{ $t('profile.logout') }}</p></div><div class="weui-cell__ft"></div>
-      </a>
+      </button>
     </div>
 
     <div v-if="showLogoutDialog" class="dialog-wrapper">
@@ -129,8 +129,8 @@
         <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('common.hint') }}</strong></div>
         <div class="weui-dialog__bd">{{ $t('profile.logoutConfirm') }}</div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showLogoutDialog = false">{{ $t('common.cancel') }}</a>
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmLogout">{{ $t('profile.logoutConfirmBtn') }}</a>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showLogoutDialog = false">{{ $t('common.cancel') }}</button>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="confirmLogout">{{ $t('profile.logoutConfirmBtn') }}</button>
         </div>
       </div>
     </div>
@@ -143,8 +143,8 @@
           <input type="text" class="custom-input" v-model="tempNickname" :placeholder="$t('profile.nicknamePlaceholder')">
         </div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showNicknameDialog = false">{{ $t('common.cancel') }}</a>
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmNickname">{{ $t('common.confirm') }}</a>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showNicknameDialog = false">{{ $t('common.cancel') }}</button>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="confirmNickname">{{ $t('common.confirm') }}</button>
         </div>
       </div>
     </div>
@@ -157,8 +157,8 @@
           <textarea class="custom-input" v-model="tempIntro" :placeholder="$t('profile.introPlaceholder')" rows="3"></textarea>
         </div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showIntroDialog = false">{{ $t('common.cancel') }}</a>
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmIntro">{{ $t('common.confirm') }}</a>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showIntroDialog = false">{{ $t('common.cancel') }}</button>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="confirmIntro">{{ $t('common.confirm') }}</button>
         </div>
       </div>
     </div>
@@ -169,7 +169,7 @@
         <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('common.hint') }}</strong></div>
         <div class="weui-dialog__bd">{{ $t('profile.passwordNotAvailable') }}</div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="showPwdDialog = false">{{ $t('common.iKnow') }}</a>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="showPwdDialog = false">{{ $t('common.iKnow') }}</button>
         </div>
       </div>
     </div>
@@ -182,8 +182,8 @@
           <input type="date" class="custom-input" v-model="tempDate" min="1900-01-01" :max="todayStr" style="width:100%;box-sizing:border-box;">
         </div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showDateFallback = false">{{ $t('common.cancel') }}</a>
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmDateFallback">{{ $t('common.confirm') }}</a>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showDateFallback = false">{{ $t('common.cancel') }}</button>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="confirmDateFallback">{{ $t('common.confirm') }}</button>
         </div>
       </div>
     </div>
@@ -193,10 +193,10 @@
       <div class="weui-dialog weui-dialog--list">
         <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ listFallbackTitle }}</strong></div>
         <div class="weui-dialog__bd weui-dialog__bd--scroll">
-          <div v-for="opt in listFallbackOptions" :key="opt" class="weui-dialog__item" @click="confirmListFallback(opt)">{{ opt }}</div>
+          <button type="button" v-for="opt in listFallbackOptions" :key="opt" class="weui-dialog__item btn-reset" @click="confirmListFallback(opt)">{{ opt }}</button>
         </div>
         <div class="weui-dialog__ft">
-          <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="showListFallback = false">{{ $t('common.cancel') }}</a>
+          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showListFallback = false">{{ $t('common.cancel') }}</button>
         </div>
       </div>
     </div>
@@ -620,9 +620,7 @@ const confirmIntro = () => {
     })
 }
 
-const handleNav = (path) => { if (path) router.push(path) }
 const handlePasswordClick = () => { showPwdDialog.value = true }
-const handleReport = () => { window.location.href = 'https://www.wjx.top/m/47687434.aspx' }
 
 const doLogout = async () => {
   try {
@@ -712,6 +710,24 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.btn-reset {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  width: 100%;
+}
+.btn-reset:focus-visible {
+  outline: 2px solid var(--color-primary, #07c160);
+  outline-offset: -2px;
+}
+
 .profile-page {
   background-color: #f8f8f8;
   min-height: 100vh;
@@ -758,8 +774,18 @@ onBeforeUnmount(() => {
 .profile-page .weui-cell__bd p { color: #333; font-size: 16px; margin: 0;}
 .profile-page .weui-cell__ft { color: #999; font-size: 15px; }
 
+.profile-page .weui-cell_access:focus-visible {
+  outline: 2px solid var(--color-primary, #07c160);
+  outline-offset: -2px;
+}
+
+.profile-page a.weui-cell_access {
+  text-decoration: none;
+  color: inherit;
+}
+
 .weui-dialog__bd--scroll { max-height: 280px; overflow-y: auto; }
-.weui-dialog__item { padding: 12px 24px; border-bottom: 1px solid #eee; cursor: pointer; }
+.weui-dialog__item { padding: 12px 24px; border-bottom: 1px solid #eee; cursor: pointer; width: 100%; text-align: left; }
 .weui-dialog__item:active { background: #f5f5f5; }
 
 .custom-input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 15px; outline: none; }

@@ -128,7 +128,8 @@ public class LostAndFoundService {
         return lostAndFoundItemConverter.toVO(item);
     }
 
-    public void updateLostAndFoundItem(LostAndFoundPublishDTO dto, int id) throws Exception {
+    public void updateLostAndFoundItem(LostAndFoundPublishDTO dto, int id, String sessionId) throws Exception {
+        verifyLostAndFoundInfoEditAccess(sessionId, id);
         LostAndFoundItemEntity item = dtoToEntity(dto);
         item.setId(id);
         LostAndFoundDetailEntity detail = lostAndFoundMapper.selectInfoByID(id);

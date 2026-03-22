@@ -8,6 +8,7 @@ const route = useRoute()
 
 const list = ref([])
 const loading = ref(false)
+const currentPage = ref(1)
 const keyword = computed(() => (route.query.keyword || '').trim())
 
 function goBack() {
@@ -21,7 +22,7 @@ function openDetail(item) {
 
 function fetchList() {
   loading.value = true
-  searchBooks(keyword.value, 1)
+  searchBooks(keyword.value, currentPage.value)
     .then((res) => {
       const result = res?.data
       list.value = Array.isArray(result?.collectionList) ? result.collectionList : []
@@ -32,6 +33,18 @@ function fetchList() {
     .finally(() => {
       loading.value = false
     })
+}
+
+function prevPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--
+    fetchList()
+  }
+}
+
+function nextPage() {
+  currentPage.value++
+  fetchList()
 }
 
 const showNoResult = computed(() => !loading.value && list.value.length === 0 && !!keyword.value)
@@ -86,6 +99,12 @@ onMounted(() => {
             </p>
           </a>
         </div>
+      </div>
+
+      <div v-if="list.length > 0" class="pagination-bar">
+        <button class="pagination-btn" :disabled="currentPage <= 1" @click="prevPage">上一页</button>
+        <span class="pagination-info">第 {{ currentPage }} 页</span>
+        <button class="pagination-btn" @click="nextPage">下一页</button>
       </div>
 
       <div v-if="showNoResult" class="collection-list-empty">
@@ -213,6 +232,34 @@ onMounted(() => {
 }
 
 .collection-list-page .weui-media-box__value {
+  color: #666;
+}
+
+.pagination-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 15px;
+}
+
+.pagination-btn {
+  padding: 6px 18px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+.pagination-btn:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 14px;
   color: #666;
 }
 

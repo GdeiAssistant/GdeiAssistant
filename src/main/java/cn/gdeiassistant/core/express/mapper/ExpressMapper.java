@@ -152,4 +152,7 @@ public interface ExpressMapper {
     @ResultMap("expressComment")
     List<ExpressComment> selectReceivedExpressCommentPage(@Param("username") String username,
             @Param("start") int start, @Param("size") int size);
+
+    @Update("update express set username=#{newUsername}, nickname='已注销用户', realname=null where username=#{oldUsername}")
+    void anonymizeByUsername(@Param("oldUsername") String oldUsername, @Param("newUsername") String newUsername);
 }

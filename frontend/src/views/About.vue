@@ -112,7 +112,7 @@ onMounted(() => {
     <div class="top-navbar">
       <div class="navbar-content">
         <span class="navbar-title">{{ t('about.appName') }}</span>
-        <button class="hamburger-btn" @click="toggleMenu">
+        <button class="hamburger-btn" :aria-label="t('about.menuOpen')" @click="toggleMenu">
           <span></span>
           <span></span>
           <span></span>
@@ -125,7 +125,7 @@ onMounted(() => {
     <div class="side-menu" :class="{ 'menu-open': showMenu }">
       <div class="menu-header">
         <span class="menu-title">{{ t('about.appName') }}</span>
-        <button class="menu-close" @click="toggleMenu">×</button>
+        <button class="menu-close" :aria-label="t('about.menuClose')" @click="toggleMenu">×</button>
       </div>
       <div class="menu-list">
         <div
@@ -227,7 +227,7 @@ onMounted(() => {
             </template>
           </i18n-t>
         </div>
-        <button class="cookie-close" @click="closeCookieBanner">×</button>
+        <button class="cookie-close" :aria-label="t('about.closeCookie')" @click="closeCookieBanner">×</button>
       </div>
     </div>
   </div>

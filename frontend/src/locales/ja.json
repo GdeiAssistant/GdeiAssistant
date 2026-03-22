@@ -150,7 +150,10 @@
     "menuCookiePolicy": "Cookieポリシー",
     "menuIPDeclaration": "知的財産権宣言",
     "menuFriendlyLinks": "リンク集",
-    "menuSmartPartyBuilding": "スマート党建"
+    "menuSmartPartyBuilding": "スマート党建",
+    "menuOpen": "メニューを開く",
+    "menuClose": "メニューを閉じる",
+    "closeCookie": "閉じる"
   },
   "appearance": {
     "title": "インターフェースと外観",

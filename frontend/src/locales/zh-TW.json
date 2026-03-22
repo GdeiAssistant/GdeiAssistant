@@ -150,7 +150,10 @@
     "menuCookiePolicy": "Cookie政策",
     "menuIPDeclaration": "智慧財產權聲明",
     "menuFriendlyLinks": "友情連結",
-    "menuSmartPartyBuilding": "智慧黨建"
+    "menuSmartPartyBuilding": "智慧黨建",
+    "menuOpen": "開啟選單",
+    "menuClose": "關閉選單",
+    "closeCookie": "關閉"
   },
   "appearance": {
     "title": "介面和外觀",

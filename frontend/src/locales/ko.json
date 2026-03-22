@@ -150,7 +150,10 @@
     "menuCookiePolicy": "쿠키 정책",
     "menuIPDeclaration": "지식재산권 선언",
     "menuFriendlyLinks": "링크 모음",
-    "menuSmartPartyBuilding": "스마트 당건설"
+    "menuSmartPartyBuilding": "스마트 당건설",
+    "menuOpen": "메뉴 열기",
+    "menuClose": "메뉴 닫기",
+    "closeCookie": "닫기"
   },
   "appearance": {
     "title": "인터페이스 및 외관",

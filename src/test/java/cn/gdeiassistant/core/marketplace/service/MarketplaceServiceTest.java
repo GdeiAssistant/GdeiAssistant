@@ -129,4 +129,18 @@ class MarketplaceServiceTest {
 
         assertThrows(RuntimeException.class, () -> marketplaceService.uploadItemPicture(1, 1, stream));
     }
+
+    @Test
+    void deleteItem_callsMapperDelete() {
+        marketplaceService.deleteItem(99);
+        verify(marketplaceMapper).deleteItem(99);
+    }
+
+    @Test
+    void deleteItemImages_callsR2DeleteForEachIndex() {
+        marketplaceService.deleteItemImages(99, 3);
+        verify(r2StorageService).deleteObject(eq("gdeiassistant-userdata"), eq("ershou/99_1.jpg"));
+        verify(r2StorageService).deleteObject(eq("gdeiassistant-userdata"), eq("ershou/99_2.jpg"));
+        verify(r2StorageService).deleteObject(eq("gdeiassistant-userdata"), eq("ershou/99_3.jpg"));
+    }
 }

@@ -158,6 +158,7 @@ public class PhotographController {
                 }
             }
         } catch (Exception e) {
+            photographService.deletePhotographImages(id, count);
             photographService.deletePhotograph(id);
             return new JsonResult(false, "拍好校园图片上传失败");
         }

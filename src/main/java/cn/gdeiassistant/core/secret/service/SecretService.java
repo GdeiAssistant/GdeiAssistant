@@ -159,6 +159,12 @@ public class SecretService {
         secretMapper.deleteSecret(id);
     }
 
+    public void deleteSecretVoice(int id) {
+        try {
+            r2StorageService.deleteObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3");
+        } catch (Exception ignored) {}
+    }
+
     @Transactional("appTransactionManager")
     public void addSecretComment(int id, String sessionId, String comment) throws Exception {
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {

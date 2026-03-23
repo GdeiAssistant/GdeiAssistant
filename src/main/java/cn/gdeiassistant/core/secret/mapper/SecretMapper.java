@@ -8,6 +8,7 @@ import org.apache.ibatis.type.JdbcType;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface SecretMapper {
 
@@ -103,4 +104,57 @@ public interface SecretMapper {
 
     @Update("update secret_content set username=#{newUsername} where username=#{oldUsername}")
     void anonymizeUsername(@Param("oldUsername") String oldUsername, @Param("newUsername") String newUsername);
+
+    // ---- Lightweight list queries (no eager comment loading) ----
+
+    @Select("select * from secret_content where state=0 order by id desc limit #{start},#{size}")
+    @Results(id = "SecretContentLight", value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "username", column = "username"),
+            @Result(property = "theme", column = "theme"),
+            @Result(property = "content", column = "content"),
+            @Result(property = "type", column = "type"),
+            @Result(property = "timer", column = "timer"),
+            @Result(property = "state", column = "state"),
+            @Result(property = "publishTime", column = "publish_time")
+    })
+    List<SecretContentEntity> selectSecretLight(@Param("start") int start, @Param("size") int size);
+
+    @Select("select * from secret_content where username=#{username} and state=0 order by id desc")
+    @ResultMap("SecretContentLight")
+    List<SecretContentEntity> selectSecretByUsernameLight(String username);
+
+    // ---- Batch count/like queries ----
+
+    @Select("<script>" +
+            "select content_id, count(id) as cnt from secret_comment " +
+            "where content_id in " +
+            "<foreach item='id' collection='contentIds' open='(' separator=',' close=')'>" +
+            "#{id}" +
+            "</foreach>" +
+            " group by content_id" +
+            "</script>")
+    @MapKey("content_id")
+    List<Map<String, Object>> selectSecretCommentCounts(@Param("contentIds") List<Integer> contentIds);
+
+    @Select("<script>" +
+            "select content_id, count(id) as cnt from secret_like " +
+            "where content_id in " +
+            "<foreach item='id' collection='contentIds' open='(' separator=',' close=')'>" +
+            "#{id}" +
+            "</foreach>" +
+            " group by content_id" +
+            "</script>")
+    @MapKey("content_id")
+    List<Map<String, Object>> selectSecretLikeCounts(@Param("contentIds") List<Integer> contentIds);
+
+    @Select("<script>" +
+            "select content_id from secret_like " +
+            "where username=#{username} and content_id in " +
+            "<foreach item='id' collection='contentIds' open='(' separator=',' close=')'>" +
+            "#{id}" +
+            "</foreach>" +
+            "</script>")
+    List<Integer> selectLikedSecretContentIds(@Param("username") String username,
+                                              @Param("contentIds") List<Integer> contentIds);
 }

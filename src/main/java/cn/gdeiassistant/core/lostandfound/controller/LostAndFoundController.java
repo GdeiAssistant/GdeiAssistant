@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -38,7 +39,6 @@ public class LostAndFoundController {
         return new DataJsonResult<>(true, list);
     }
 
-    // TODO(perf): unpaged — see docs/ops/unbounded-endpoints-inventory
     @RequestMapping(value = "/api/lostandfound/profile", method = RequestMethod.GET)
     public DataJsonResult<Map<String, Object>> getMyLostAndFoundItems(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");

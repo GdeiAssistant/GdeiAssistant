@@ -37,7 +37,7 @@ public interface LostAndFoundMapper {
     })
     LostAndFoundDetailEntity selectInfoByID(Integer id);
 
-    @Select("select * from lostandfound where username=#{username} order by id desc")
+    @Select("select * from lostandfound where username=#{username} order by id desc limit 500")
     @Results(id = "LostAndFoundItem", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "username", column = "username"),

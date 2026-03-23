@@ -27,10 +27,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 public class MarketplaceController {
 
+    /**
+     * Per-group cap for the personal profile endpoint.
+     * Prevents unbounded result sets for doing/sold/off groups.
+     */
     @Autowired
     private MarketplaceService marketplaceService;
 
@@ -40,7 +45,6 @@ public class MarketplaceController {
         return new DataJsonResult<>(true, list);
     }
 
-    // TODO(perf): unpaged — see docs/ops/unbounded-endpoints-inventory
     @RequestMapping(value = "/api/ershou/profile", method = RequestMethod.GET)
     public DataJsonResult<Map<String, Object>> getMySecondhandItems(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");

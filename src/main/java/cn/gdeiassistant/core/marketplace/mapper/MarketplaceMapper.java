@@ -31,7 +31,7 @@ public interface MarketplaceMapper {
     })
     MarketplaceItemVO selectInfoByID(int id);
 
-    @Select("select * from ershou where username=#{username} order by id desc")
+    @Select("select * from ershou where username=#{username} order by id desc limit 500")
     @Results(id = "MarketplaceItemEntity", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "username", column = "username"),

@@ -77,7 +77,7 @@ public interface DeliveryMapper {
     List<DeliveryTradeEntity> selectPersonalDeliveryInteractionPage(@Param("username") String username,
             @Param("start") Integer start, @Param("size") Integer size);
 
-    @Select("select * from delivery_order where username=#{username}")
+    @Select("select * from delivery_order where username=#{username} order by order_id desc limit 500")
     @Results(id = "DeliveryOrder", value = {
             @Result(property = "orderId", column = "order_id"),
             @Result(property = "username", column = "username"),
@@ -89,7 +89,7 @@ public interface DeliveryMapper {
     })
     List<DeliveryOrderEntity> selectDeliveryOrderByUsername(String username);
 
-    @Select("select o.order_id as order_id,o.username as username,order_time,price,company,address,o.state from delivery_order o,delivery_trade t where o.order_id = t.order_id and t.username=#{username}")
+    @Select("select o.order_id as order_id,o.username as username,order_time,price,company,address,o.state from delivery_order o,delivery_trade t where o.order_id = t.order_id and t.username=#{username} order by o.order_id desc limit 500")
     @Results(id = "AcceptedDeliveryOrder", value = {
             @Result(property = "orderId", column = "order_id"),
             @Result(property = "username", column = "username"),

@@ -5,7 +5,17 @@ import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
+import java.util.List;
+
 public interface UserMapper {
+
+    @Select("<script>" +
+            "select username from user where username in " +
+            "<foreach item='u' collection='usernames' open='(' separator=',' close=')'>" +
+            "#{u}" +
+            "</foreach>" +
+            "</script>")
+    List<String> selectExistingUsernames(@Param("usernames") List<String> usernames);
 
     @Select("select * from user where username=#{username} limit 1")
     @Results(id = "UserEntity", value = {

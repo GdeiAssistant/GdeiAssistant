@@ -15,7 +15,10 @@ import jakarta.annotation.Resource;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class InteractionNotificationService {
@@ -65,18 +68,19 @@ public class InteractionNotificationService {
             return new ArrayList<>();
         }
         // Batch check which actor usernames are deleted (pre-fix historical data)
-        java.util.Set<String> deletedActors = new java.util.HashSet<>();
+        Set<String> deletedActors = new HashSet<>();
         if (userMapper != null) {
-            java.util.Set<String> uniqueActors = new java.util.HashSet<>();
+            Set<String> uniqueActors = new HashSet<>();
             for (InteractionNotificationEntity e : entityList) {
                 if (e.getActorUsername() != null && !e.getActorUsername().startsWith("del_")) {
                     uniqueActors.add(e.getActorUsername());
                 }
             }
-            for (String actor : uniqueActors) {
-                if (userMapper.selectUser(actor) == null) {
-                    deletedActors.add(actor);
-                }
+            if (!uniqueActors.isEmpty()) {
+                Set<String> existingUsers = new HashSet<>(userMapper.selectExistingUsernames(new ArrayList<>(uniqueActors)));
+                deletedActors = uniqueActors.stream()
+                        .filter(a -> !existingUsers.contains(a))
+                        .collect(Collectors.toSet());
             }
         }
         List<InteractionMessageVO> list = new ArrayList<>(entityList.size());

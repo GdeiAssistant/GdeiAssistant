@@ -116,6 +116,27 @@ class InteractionNotificationServiceTest {
         verify(userMapper, never()).selectExistingUsernames(anyList());
     }
 
+    /**
+     * Performance contract: interaction pagination must use batch user lookup
+     * (selectExistingUsernames) and NEVER call per-item selectUser.
+     */
+    @Test
+    void interactionPaginationUsesBatchUserLookup() {
+        when(userCertificateService.getUserLoginCertificate("sess1")).thenReturn(stubUser("receiver"));
+        InteractionNotificationEntity e1 = makeEntity(1L, "alice", "alice 点赞了");
+        InteractionNotificationEntity e2 = makeEntity(2L, "bob", "bob 评论了");
+        when(interactionNotificationMapper.selectInteractionNotificationPage("receiver", 0, 10))
+                .thenReturn(List.of(e1, e2));
+        when(userMapper.selectExistingUsernames(anyList())).thenReturn(List.of("alice", "bob"));
+
+        interactionNotificationService.queryInteractionMessages("sess1", 0, 10);
+
+        // selectUser must NEVER be called — only the batch selectExistingUsernames is allowed
+        verify(userMapper, never()).selectUser(anyString());
+        // Batch lookup should be called exactly once
+        verify(userMapper).selectExistingUsernames(anyList());
+    }
+
     @Test
     void mixedActors_batchQueryOnlyForNonDelActors() {
         when(userCertificateService.getUserLoginCertificate("sess1")).thenReturn(stubUser("receiver"));

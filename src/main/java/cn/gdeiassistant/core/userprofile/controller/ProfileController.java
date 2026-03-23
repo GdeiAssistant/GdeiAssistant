@@ -1,10 +1,7 @@
 package cn.gdeiassistant.core.userProfile.controller;
 
-import cn.gdeiassistant.common.constant.OptionConstantUtils;
-import cn.gdeiassistant.common.pojo.Entity.City;
-import cn.gdeiassistant.common.pojo.Entity.Introduction;
 import cn.gdeiassistant.common.pojo.Entity.Region;
-import cn.gdeiassistant.common.pojo.Entity.State;
+import cn.gdeiassistant.common.pojo.Entity.Introduction;
 import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.pojo.LocationComparator;
@@ -13,10 +10,11 @@ import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.userProfile.controller.mapper.ProfileResponseMapper;
 import cn.gdeiassistant.core.userProfile.controller.request.*;
-import cn.gdeiassistant.core.userProfile.pojo.DictionaryOptionVO;
+import cn.gdeiassistant.core.userProfile.controller.support.ProfileLocationValidator;
 import cn.gdeiassistant.core.userProfile.pojo.ProfileOptionsVO;
 import cn.gdeiassistant.core.userProfile.pojo.UserProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
+import cn.gdeiassistant.core.userProfile.service.ProfileOptionsFacade;
 import cn.gdeiassistant.common.tools.Utils.LocationUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +30,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ProfileController {
@@ -44,6 +40,12 @@ public class ProfileController {
 
     @Autowired
     private ProfileResponseMapper profileResponseMapper;
+
+    @Autowired
+    private ProfileOptionsFacade profileOptionsFacade;
+
+    @Autowired
+    private ProfileLocationValidator profileLocationValidator;
 
     private final int AVATAR_MAX_SIZE = 1024 * 1024 * 2;
 
@@ -196,12 +198,7 @@ public class ProfileController {
      */
     @RequestMapping(value = "/api/profile/options", method = RequestMethod.GET)
     public DataJsonResult<ProfileOptionsVO> getProfileOptions() {
-        ProfileOptionsVO options = new ProfileOptionsVO();
-        options.setFaculties(buildFacultyOptions());
-        options.setMarketplaceItemTypes(buildDictionaryOptions(OptionConstantUtils.MARKETPLACE_ITEM_TYPE_OPTIONS));
-        options.setLostFoundItemTypes(buildDictionaryOptions(OptionConstantUtils.LOST_FOUND_ITEM_TYPE_OPTIONS));
-        options.setLostFoundModes(buildDictionaryOptions(OptionConstantUtils.LOST_FOUND_MODE_OPTIONS));
-        return new DataJsonResult<>(true, options);
+        return new DataJsonResult<>(true, profileOptionsFacade.buildProfileOptions());
     }
 
     /**
@@ -259,39 +256,14 @@ public class ProfileController {
         if (body == null || StringUtils.isBlank(body.getRegion())) {
             return new JsonResult(false, "不合法的国家/地区代码");
         }
-        String region = body.getRegion();
-        String state = body.getState();
-        String city = body.getCity();
-        //判断国家/地区代码是否合法
-        if (LocationUtils.getRegionMap().containsKey(region)) {
-            if (LocationUtils.getRegionMap().get(region).getStateMap() == null
-                    || LocationUtils.getRegionMap().get(region).getStateMap().size() == 0) {
-                //省/州为空
-                userProfileService.updateLocation((String) request.getAttribute("sessionId"), region, null, null);
-                return new JsonResult(true);
-            } else {
-                Map<String, State> stateMap = LocationUtils.getRegionMap().get(region).getStateMap();
-                //判断省/州代码是否合法
-                if (state != null && stateMap.containsKey(state)) {
-                    if (stateMap.get(state).getCityMap() == null || stateMap.get(state).getCityMap().size() == 0) {
-                        //市/直辖市为空
-                        userProfileService.updateLocation((String) request.getAttribute("sessionId"), region, state, null);
-                        return new JsonResult(true);
-                    } else {
-                        Map<String, City> cityMap = stateMap.get(state).getCityMap();
-                        //判断市/直辖市代码是否合法
-                        if (city != null && cityMap.containsKey(city)) {
-                            userProfileService.updateLocation((String) request.getAttribute("sessionId"), region, state, city);
-                            return new JsonResult(true);
-                        } else {
-                            return new JsonResult(false, "不合法的市/直辖市代码");
-                        }
-                    }
-                }
-                return new JsonResult(false, "不合法的省/州代码");
-            }
+        ProfileLocationValidator.ValidationResult vr = profileLocationValidator.validate(
+                body.getRegion(), body.getState(), body.getCity());
+        if (!vr.isValid()) {
+            return new JsonResult(false, vr.getErrorMessage());
         }
-        return new JsonResult(false, "不合法的国家/地区代码");
+        userProfileService.updateLocation(
+                (String) request.getAttribute("sessionId"), vr.getRegion(), vr.getState(), vr.getCity());
+        return new JsonResult(true);
     }
 
     /**
@@ -307,39 +279,14 @@ public class ProfileController {
         if (body == null || StringUtils.isBlank(body.getRegion())) {
             return new JsonResult(false, "不合法的国家/地区代码");
         }
-        String region = body.getRegion();
-        String state = body.getState();
-        String city = body.getCity();
-        //判断国家/地区代码是否合法
-        if (LocationUtils.getRegionMap().containsKey(region)) {
-            if (LocationUtils.getRegionMap().get(region).getStateMap() == null
-                    || LocationUtils.getRegionMap().get(region).getStateMap().size() == 0) {
-                //省/州为空
-                userProfileService.updateHometown((String) request.getAttribute("sessionId"), region, null, null);
-                return new JsonResult(true);
-            } else {
-                Map<String, State> stateMap = LocationUtils.getRegionMap().get(region).getStateMap();
-                //判断省/州代码是否合法
-                if (state != null && stateMap.containsKey(state)) {
-                    if (stateMap.get(state).getCityMap() == null || stateMap.get(state).getCityMap().size() == 0) {
-                        //市/直辖市为空
-                        userProfileService.updateHometown((String) request.getAttribute("sessionId"), region, state, null);
-                        return new JsonResult(true);
-                    } else {
-                        Map<String, City> cityMap = stateMap.get(state).getCityMap();
-                        //判断市/直辖市代码是否合法
-                        if (city != null && cityMap.containsKey(city)) {
-                            userProfileService.updateHometown((String) request.getAttribute("sessionId"), region, state, city);
-                            return new JsonResult(true);
-                        } else {
-                            return new JsonResult(false, "不合法的市/直辖市代码");
-                        }
-                    }
-                }
-                return new JsonResult(false, "不合法的省/州代码");
-            }
+        ProfileLocationValidator.ValidationResult vr = profileLocationValidator.validate(
+                body.getRegion(), body.getState(), body.getCity());
+        if (!vr.isValid()) {
+            return new JsonResult(false, vr.getErrorMessage());
         }
-        return new JsonResult(false, "不合法的国家/地区代码");
+        userProfileService.updateHometown(
+                (String) request.getAttribute("sessionId"), vr.getRegion(), vr.getState(), vr.getCity());
+        return new JsonResult(true);
     }
 
     /**
@@ -413,28 +360,5 @@ public class ProfileController {
         ProfileVO profile = userProfileService.getSelfUserProfile(sessionId);
         String nickname = profile.getNickname();
         return new DataJsonResult<>(true, nickname);
-    }
-
-    private List<ProfileOptionsVO.FacultyOptionVO> buildFacultyOptions() {
-        List<ProfileOptionsVO.FacultyOptionVO> options = new ArrayList<>();
-        for (int i = 0; i < OptionConstantUtils.FACULTY_OPTIONS.length; i++) {
-            String[] majors = i < OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY.length
-                    ? OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY[i]
-                    : new String[]{"未选择"};
-            options.add(new ProfileOptionsVO.FacultyOptionVO(
-                    i,
-                    OptionConstantUtils.FACULTY_OPTIONS[i],
-                    Arrays.asList(majors)
-            ));
-        }
-        return options;
-    }
-
-    private List<DictionaryOptionVO> buildDictionaryOptions(String[] values) {
-        List<DictionaryOptionVO> options = new ArrayList<>();
-        for (int i = 0; i < values.length; i++) {
-            options.add(new DictionaryOptionVO(i, values[i]));
-        }
-        return options;
     }
 }

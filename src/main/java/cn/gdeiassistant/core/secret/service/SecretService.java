@@ -26,9 +26,9 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class SecretService {
@@ -54,30 +54,26 @@ public class SecretService {
 
     public List<SecretVO> getSecretInfo(int start, int size, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<SecretContentEntity> list = secretMapper.selectSecret(start, size);
+        List<SecretContentEntity> list = secretMapper.selectSecretLight(start, size);
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
-        List<SecretVO> result = new ArrayList<>();
-        for (SecretContentEntity entity : list) {
-            entity.setUsername(AnonymizeUtils.sanitizeUsername(entity.getUsername()));
-            SecretVO vo = secretConverter.toVO(entity);
-            vo.setCommentCount(secretMapper.selectSecretCommentCount(entity.getId()));
-            vo.setLikeCount(secretMapper.selectSecretLikeCount(entity.getId()));
-            vo.setLiked(secretMapper.selectSecretLike(entity.getId(), user.getUsername()));
-            result.add(vo);
-        }
+        list.forEach(e -> e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername())));
+        List<SecretVO> result = secretConverter.toVOList(list);
+        enrichVOsWithBatchCounts(result, list, user.getUsername());
         return result;
     }
 
     public List<SecretVO> getSecretInfo(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<SecretContentEntity> list = secretMapper.selectSecretByUsername(user.getUsername());
+        List<SecretContentEntity> list = secretMapper.selectSecretByUsernameLight(user.getUsername());
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
         list.forEach(e -> e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername())));
-        return secretConverter.toVOList(list);
+        List<SecretVO> result = secretConverter.toVOList(list);
+        enrichVOsWithBatchCounts(result, list, user.getUsername());
+        return result;
     }
 
     public List<SecretCommentVO> getSecretComments(int contentId) throws Exception {
@@ -236,6 +232,57 @@ public class SecretService {
             if (ChronoUnit.HOURS.between(time, now) >= 24) {
                 secretMapper.deleteSecret(entity.getId());
             }
+        }
+    }
+
+    /**
+     * Batch-enrich a list of SecretVOs with commentCount, likeCount, and liked fields.
+     * Replaces the previous per-item N+1 queries with 3 batch queries.
+     */
+    private void enrichVOsWithBatchCounts(List<SecretVO> vos, List<SecretContentEntity> entities, String username) {
+        List<Integer> contentIds = entities.stream()
+                .map(SecretContentEntity::getId)
+                .collect(Collectors.toList());
+        if (contentIds.isEmpty()) {
+            return;
+        }
+
+        // Batch comment counts
+        Map<Integer, Integer> commentCounts = new HashMap<>();
+        List<Map<String, Object>> commentRows = secretMapper.selectSecretCommentCounts(contentIds);
+        if (commentRows != null) {
+            for (Map<String, Object> row : commentRows) {
+                Integer contentId = ((Number) row.get("content_id")).intValue();
+                Integer cnt = ((Number) row.get("cnt")).intValue();
+                commentCounts.put(contentId, cnt);
+            }
+        }
+
+        // Batch like counts
+        Map<Integer, Integer> likeCounts = new HashMap<>();
+        List<Map<String, Object>> likeRows = secretMapper.selectSecretLikeCounts(contentIds);
+        if (likeRows != null) {
+            for (Map<String, Object> row : likeRows) {
+                Integer contentId = ((Number) row.get("content_id")).intValue();
+                Integer cnt = ((Number) row.get("cnt")).intValue();
+                likeCounts.put(contentId, cnt);
+            }
+        }
+
+        // Batch liked state
+        Set<Integer> likedIds = new HashSet<>();
+        List<Integer> likedList = secretMapper.selectLikedSecretContentIds(username, contentIds);
+        if (likedList != null) {
+            likedIds.addAll(likedList);
+        }
+
+        // Map onto VOs
+        for (int i = 0; i < vos.size(); i++) {
+            SecretVO vo = vos.get(i);
+            Integer id = entities.get(i).getId();
+            vo.setCommentCount(commentCounts.getOrDefault(id, 0));
+            vo.setLikeCount(likeCounts.getOrDefault(id, 0));
+            vo.setLiked(likedIds.contains(id) ? 1 : 0);
         }
     }
 

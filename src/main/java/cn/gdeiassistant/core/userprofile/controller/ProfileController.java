@@ -3,19 +3,19 @@ package cn.gdeiassistant.core.userProfile.controller;
 import cn.gdeiassistant.common.constant.OptionConstantUtils;
 import cn.gdeiassistant.common.pojo.Entity.City;
 import cn.gdeiassistant.common.pojo.Entity.Introduction;
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
-import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
-import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.common.pojo.Entity.Region;
 import cn.gdeiassistant.common.pojo.Entity.State;
+import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
+import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.pojo.LocationComparator;
 import cn.gdeiassistant.common.constant.TrialErrorCode;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.userProfile.controller.mapper.ProfileResponseMapper;
+import cn.gdeiassistant.core.userProfile.controller.request.*;
 import cn.gdeiassistant.core.userProfile.pojo.DictionaryOptionVO;
 import cn.gdeiassistant.core.userProfile.pojo.ProfileOptionsVO;
 import cn.gdeiassistant.core.userProfile.pojo.UserProfileVO;
-import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.common.tools.Utils.LocationUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
@@ -30,10 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +43,7 @@ public class ProfileController {
     private UserProfileService userProfileService;
 
     @Autowired
-    private IPAddressService ipAddressService;
+    private ProfileResponseMapper profileResponseMapper;
 
     private final int AVATAR_MAX_SIZE = 1024 * 1024 * 2;
 
@@ -140,89 +137,18 @@ public class ProfileController {
             err.setMessage("用户不存在或未登录");
             return err;
         }
-        if (profile.getFaculty() == null) {
-            profile.setMajor(null);
-        }
-        UserProfileVO vo = new UserProfileVO();
-        vo.setUsername(profile.getUsername());
-        vo.setNickname(profile.getNickname());
-        vo.setMajor(profile.getMajor());
-        vo.setEnrollment(profile.getEnrollment() != null ? String.valueOf(profile.getEnrollment()) : null);
-        if (profile.getFaculty() != null && profile.getFaculty() != 0 && UserProfileService.getFacultyMap() != null) {
-            vo.setFaculty((String) UserProfileService.getFacultyMap().get(profile.getFaculty()));
-        } else {
-            vo.setFaculty(null);
-            vo.setMajor(null);
-        }
-        String avatarUrl = userProfileService.getSelfUserAvatar(sessionId);
-        vo.setAvatar(StringUtils.isBlank(avatarUrl) ? "" : avatarUrl);
-        Introduction introduction = userProfileService.getSelfUserIntroduction(sessionId);
-        vo.setIntroduction(introduction != null && StringUtils.isNotBlank(introduction.getIntroductionContent())
-                ? introduction.getIntroductionContent() : "");
-        if (profile.getBirthday() != null) {
-            vo.setBirthday(new SimpleDateFormat("yyyy-MM-dd").format(profile.getBirthday()));
-            vo.setAge((int) ChronoUnit.YEARS.between(profile.getBirthday().toInstant()
-                    .atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()));
-        }
-        vo.setLocation(buildLocationDisplayString(profile));
-        vo.setHometown(buildHometownDisplayString(profile));
-        try {
-            IPAddressRecord ipRecord = ipAddressService.getSelfUserLatestPostTypeIPAddress(sessionId);
-            vo.setIpArea(ipRecord != null && StringUtils.isNotBlank(ipRecord.getArea()) ? ipRecord.getArea() : "");
-        } catch (Exception ignored) {
-            vo.setIpArea("");
-        }
+        UserProfileVO vo = profileResponseMapper.toUserProfileVO(profile, sessionId);
         DataJsonResult<UserProfileVO> result = new DataJsonResult<>(true, vo);
         result.setCode(200);
         result.setMessage("success");
         return result;
     }
 
-    private String buildLocationDisplayString(ProfileVO profile) {
-        if (profile == null || StringUtils.isBlank(profile.getLocationRegion())) return "";
-        Region region = LocationUtils.getRegionMap().get(profile.getLocationRegion());
-        if (region == null) return "";
-        StringBuilder sb = new StringBuilder();
-        String name = StringUtils.isBlank(region.getAliasesName()) ? region.getName() : region.getAliasesName();
-        sb.append(name);
-        State state = region.getStateMap() != null ? region.getStateMap().get(profile.getLocationState()) : null;
-        if (state != null) {
-            String temp = StringUtils.isBlank(state.getAliasesName()) ? state.getName() : state.getAliasesName();
-            if (!name.equals(temp)) sb.append(temp);
-            City city = state.getCityMap() != null ? state.getCityMap().get(profile.getLocationCity()) : null;
-            if (city != null) {
-                temp = StringUtils.isBlank(city.getAliasesName()) ? city.getName() : city.getAliasesName();
-                if (!name.equals(temp)) sb.append(temp);
-            }
-        }
-        return (region.getIso() != null ? LocationUtils.convertCountryCodeToEmoji(region.getIso()) : "") + sb.toString();
-    }
-
-    private String buildHometownDisplayString(ProfileVO profile) {
-        if (profile == null || StringUtils.isBlank(profile.getHometownRegion())) return "";
-        Region region = LocationUtils.getRegionMap().get(profile.getHometownRegion());
-        if (region == null) return "";
-        StringBuilder sb = new StringBuilder();
-        String name = StringUtils.isBlank(region.getAliasesName()) ? region.getName() : region.getAliasesName();
-        sb.append(name);
-        State state = region.getStateMap() != null ? region.getStateMap().get(profile.getHometownState()) : null;
-        if (state != null) {
-            String temp = StringUtils.isBlank(state.getAliasesName()) ? state.getName() : state.getAliasesName();
-            if (!name.equals(temp)) sb.append(temp);
-            City city = state.getCityMap() != null ? state.getCityMap().get(profile.getHometownCity()) : null;
-            if (city != null) {
-                temp = StringUtils.isBlank(city.getAliasesName()) ? city.getName() : city.getAliasesName();
-                if (!name.equals(temp)) sb.append(temp);
-            }
-        }
-        return (region.getIso() != null ? LocationUtils.convertCountryCodeToEmoji(region.getIso()) : "") + sb.toString();
-    }
-
     /**
      * 更新用户个人简介
      *
      * @param request
-     * @param introduction
+     * @param body
      * @return
      * @throws UnsupportedEncodingException
      */
@@ -282,9 +208,7 @@ public class ProfileController {
      * 更新生日日期
      *
      * @param request
-     * @param year
-     * @param month
-     * @param date
+     * @param body
      * @return
      */
     @RequestMapping(value = "/api/profile/birthday", method = RequestMethod.POST)
@@ -307,7 +231,7 @@ public class ProfileController {
      * 更新用户院系
      *
      * @param request
-     * @param faculty
+     * @param body
      * @return
      */
     @RequestMapping(value = "/api/profile/faculty", method = RequestMethod.POST)
@@ -326,9 +250,7 @@ public class ProfileController {
      * 更新用户所在地
      *
      * @param request
-     * @param region
-     * @param state
-     * @param city
+     * @param body
      * @return
      * @throws Exception
      */
@@ -376,9 +298,7 @@ public class ProfileController {
      * 更新用户家乡
      *
      * @param request
-     * @param region
-     * @param state
-     * @param city
+     * @param body
      * @return
      * @throws Exception
      */
@@ -426,7 +346,7 @@ public class ProfileController {
      * 更新用户专业
      *
      * @param request
-     * @param major
+     * @param body
      * @return
      * @throws UnsupportedEncodingException
      */
@@ -444,7 +364,7 @@ public class ProfileController {
      * 更新入学年份
      *
      * @param request
-     * @param enrollment
+     * @param body
      * @return
      * @throws Exception
      */
@@ -466,7 +386,7 @@ public class ProfileController {
      * 更新用户昵称
      *
      * @param request
-     * @param nickname
+     * @param body
      * @return
      * @throws UnsupportedEncodingException
      */
@@ -484,7 +404,6 @@ public class ProfileController {
      * 获取昵称信息接口
      *
      * @param request
-     * @param token
      * @return
      * @throws Exception
      */
@@ -494,74 +413,6 @@ public class ProfileController {
         ProfileVO profile = userProfileService.getSelfUserProfile(sessionId);
         String nickname = profile.getNickname();
         return new DataJsonResult<>(true, nickname);
-    }
-
-    // ==================== 修改资料 POST 接口的 JSON 请求体 DTO ====================
-
-    public static class IntroductionUpdateRequest {
-        private String introduction;
-        public String getIntroduction() { return introduction; }
-        public void setIntroduction(String introduction) { this.introduction = introduction; }
-    }
-
-    public static class BirthdayUpdateRequest {
-        private Integer year;
-        private Integer month;
-        private Integer date;
-        public Integer getYear() { return year; }
-        public void setYear(Integer year) { this.year = year; }
-        public Integer getMonth() { return month; }
-        public void setMonth(Integer month) { this.month = month; }
-        public Integer getDate() { return date; }
-        public void setDate(Integer date) { this.date = date; }
-    }
-
-    public static class FacultyUpdateRequest {
-        private Integer faculty;
-        public Integer getFaculty() { return faculty; }
-        public void setFaculty(Integer faculty) { this.faculty = faculty; }
-    }
-
-    public static class LocationUpdateRequest {
-        private String region;
-        private String state;
-        private String city;
-        public String getRegion() { return region; }
-        public void setRegion(String region) { this.region = region; }
-        public String getState() { return state; }
-        public void setState(String state) { this.state = state; }
-        public String getCity() { return city; }
-        public void setCity(String city) { this.city = city; }
-    }
-
-    public static class HometownUpdateRequest {
-        private String region;
-        private String state;
-        private String city;
-        public String getRegion() { return region; }
-        public void setRegion(String region) { this.region = region; }
-        public String getState() { return state; }
-        public void setState(String state) { this.state = state; }
-        public String getCity() { return city; }
-        public void setCity(String city) { this.city = city; }
-    }
-
-    public static class MajorUpdateRequest {
-        private String major;
-        public String getMajor() { return major; }
-        public void setMajor(String major) { this.major = major; }
-    }
-
-    public static class EnrollmentUpdateRequest {
-        private Integer year;
-        public Integer getYear() { return year; }
-        public void setYear(Integer year) { this.year = year; }
-    }
-
-    public static class NicknameUpdateRequest {
-        private String nickname;
-        public String getNickname() { return nickname; }
-        public void setNickname(String nickname) { this.nickname = nickname; }
     }
 
     private List<ProfileOptionsVO.FacultyOptionVO> buildFacultyOptions() {

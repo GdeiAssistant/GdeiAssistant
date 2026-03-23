@@ -245,6 +245,34 @@ class SecretServiceTest {
         verify(secretMapper, never()).selectSecretLike(anyInt(), anyString());
     }
 
+    /**
+     * Performance contract: the list path must use batch queries for comment counts,
+     * like counts, and liked state.  The per-item variants (selectSecretCommentCount,
+     * selectSecretLikeCount, selectSecretLike) must NEVER be called in the list path.
+     */
+    @Test
+    void listPathUsesBatchQueriesNotPerItemCounts() throws Exception {
+        User user = new User("testuser");
+        when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
+        List<SecretContentEntity> entities = buildEntities(1, 2, 3);
+        when(secretMapper.selectSecretLight(0, 10)).thenReturn(entities);
+        List<SecretVO> vos = buildVOs(1, 2, 3);
+        when(secretConverter.toVOList(entities)).thenReturn(vos);
+        stubBatchQueries(List.of(1, 2, 3), Map.of(1, 0, 2, 0, 3, 0), Map.of(), Set.of(), "testuser");
+
+        secretService.getSecretInfo(0, 10, "session1");
+
+        // Per-item queries must NEVER be called — only batch variants are allowed
+        verify(secretMapper, never()).selectSecretCommentCount(anyInt());
+        verify(secretMapper, never()).selectSecretLikeCount(anyInt());
+        verify(secretMapper, never()).selectSecretLike(anyInt(), anyString());
+
+        // Batch queries should be called exactly once each
+        verify(secretMapper).selectSecretCommentCounts(anyList());
+        verify(secretMapper).selectSecretLikeCounts(anyList());
+        verify(secretMapper).selectLikedSecretContentIds(eq("testuser"), anyList());
+    }
+
     @Test
     void profilePathUsesLightweightQueryNotEagerComments() throws Exception {
         User user = new User("testuser");

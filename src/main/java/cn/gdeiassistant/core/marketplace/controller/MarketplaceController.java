@@ -40,6 +40,7 @@ public class MarketplaceController {
         return new DataJsonResult<>(true, list);
     }
 
+    // TODO(perf): unpaged — see docs/ops/unbounded-endpoints-inventory
     @RequestMapping(value = "/api/ershou/profile", method = RequestMethod.GET)
     public DataJsonResult<Map<String, Object>> getMySecondhandItems(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");

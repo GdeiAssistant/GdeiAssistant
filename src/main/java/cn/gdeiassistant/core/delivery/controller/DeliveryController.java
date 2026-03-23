@@ -57,6 +57,7 @@ public class DeliveryController {
     /**
      * 我的跑腿：我发布的 + 我接的单。GET /api/delivery/mine
      */
+    // TODO(perf): unpaged — see docs/ops/unbounded-endpoints-inventory
     @RequestMapping(value = "/api/delivery/mine", method = RequestMethod.GET)
     public DataJsonResult<Map<String, Object>> getMyDelivery(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");

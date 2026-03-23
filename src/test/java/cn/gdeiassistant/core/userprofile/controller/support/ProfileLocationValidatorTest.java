@@ -16,13 +16,21 @@ class ProfileLocationValidatorTest {
     }
 
     @Test
-    void validResult_hasRegionStateCity() {
-        // Use a known region from the location.xml that has states and cities (China)
+    void invalidRegionCode_resultFieldsAreNull() {
         ProfileLocationValidator.ValidationResult result = validator.validate("NONEXISTENT", null, null);
         assertFalse(result.isValid());
-        // We verify that the validator consistently returns failure for unknown codes
         assertNull(result.getRegion());
         assertNull(result.getState());
         assertNull(result.getCity());
+    }
+
+    @Test
+    void validRegionStateCity_returnsSuccess() {
+        // CN = China, State 12 = Tianjin, City 1 = Heping
+        ProfileLocationValidator.ValidationResult result = validator.validate("CN", "12", "1");
+        assertTrue(result.isValid(), "Expected valid result for CN/12/1");
+        assertNotNull(result.getRegion());
+        assertNotNull(result.getState());
+        assertNotNull(result.getCity());
     }
 }

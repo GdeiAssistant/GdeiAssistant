@@ -1,8 +1,9 @@
 package cn.gdeiassistant.common.aspect;
 
+import cn.gdeiassistant.common.constant.ObservabilityConstants;
 import cn.gdeiassistant.common.pojo.Entity.User;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
@@ -38,8 +39,24 @@ public class QueryLogAspect {
 
     }
 
-    @AfterReturning("RestQueryAction()")
-    public void RestSaveQueryLog(JoinPoint joinPoint) {
+    @Pointcut("execution(* cn.gdeiassistant.core.secret.controller.SecretController.*(..)) || "
+            + "execution(* cn.gdeiassistant.core.topic.controller.TopicController.*(..)) || "
+            + "execution(* cn.gdeiassistant.core.express.controller.ExpressController.*(..)) || "
+            + "execution(* cn.gdeiassistant.core.marketplace.controller.MarketplaceController.*(..)) || "
+            + "execution(* cn.gdeiassistant.core.lostandfound.controller.LostAndFoundController.*(..)) || "
+            + "execution(* cn.gdeiassistant.core.delivery.controller.DeliveryController.*(..)) || "
+            + "execution(* cn.gdeiassistant.core.dating.controller.DatingController.*(..)) || "
+            + "execution(* cn.gdeiassistant.core.photograph.controller.PhotographController.*(..))")
+    public void CommunityQueryAction() {
+
+    }
+
+    @Around("RestQueryAction()")
+    public Object RestSaveQueryLog(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        Object result = joinPoint.proceed();
+        long elapsed = System.currentTimeMillis() - start;
+
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
         String username = (Optional.ofNullable((User) request.getAttribute("user"))
@@ -62,10 +79,21 @@ public class QueryLogAspect {
                 logger.info("用户{}于{}查询了消费记录信息", username, dateTime);
                 break;
         }
+
+        if (elapsed > ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS) {
+            logger.warn("Slow REST query detected: {} took {}ms (threshold {}ms), user={}",
+                    functionName, elapsed, ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS, username);
+        }
+
+        return result;
     }
 
-    @AfterReturning("QueryAction()")
-    public void SaveQueryLog(JoinPoint joinPoint) {
+    @Around("QueryAction()")
+    public Object SaveQueryLog(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        Object result = joinPoint.proceed();
+        long elapsed = System.currentTimeMillis() - start;
+
         Object[] args = joinPoint.getArgs();
         String username = Optional.ofNullable((String) WebUtils.getSessionAttribute((HttpServletRequest) args[0]
                 , "username")).orElse("unknown");
@@ -102,5 +130,29 @@ public class QueryLogAspect {
                 logger.info("用户{}于{}查询了空课室信息", username, dateTime);
                 break;
         }
+
+        if (elapsed > ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS) {
+            logger.warn("Slow query detected: {} took {}ms (threshold {}ms), user={}",
+                    functionName, elapsed, ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS, username);
+        }
+
+        return result;
+    }
+
+    @Around("CommunityQueryAction()")
+    public Object CommunityQueryLog(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        Object result = joinPoint.proceed();
+        long elapsed = System.currentTimeMillis() - start;
+
+        String methodName = joinPoint.getSignature().toShortString();
+        logger.info("Community query executed: {} in {}ms", methodName, elapsed);
+
+        if (elapsed > ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS) {
+            logger.warn("Slow community query detected: {} took {}ms (threshold {}ms)",
+                    methodName, elapsed, ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS);
+        }
+
+        return result;
     }
 }

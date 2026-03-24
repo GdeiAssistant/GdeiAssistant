@@ -158,7 +158,7 @@ import { logout } from '../api/user.js'
 import { useToast } from '@/composables/useToast'
 import AppCard from '@/components/ui/AppCard.vue'
 import {
-  Shield, LayoutGrid, Palette, Smartphone, BadgeCheck,
+  Shield, Lock, LayoutGrid, Palette, Smartphone, BadgeCheck,
   Mail, Trash2, Download, MessageSquare, MessageCircle, LogOut, ChevronRight
 } from 'lucide-vue-next'
 

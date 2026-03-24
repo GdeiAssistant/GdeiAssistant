@@ -56,7 +56,7 @@ function isReturnDateUrgent(returnDateStr) {
 function onRenew(item) {
   if (!item || item.sn == null || item.code == null) return
   renewingItem.value = item
-  verifyPassword.value = (borrowPassword.value || '').trim()
+  verifyPassword.value = ''
   showPasswordDialog.value = true
 }
 

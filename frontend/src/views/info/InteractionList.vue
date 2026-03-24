@@ -5,17 +5,6 @@
     </div>
 
     <template v-else>
-      <div
-        v-if="unreadCount > 0"
-        class="flex justify-end"
-      >
-        <button
-          type="button"
-          class="text-xs text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-lg px-3 py-1.5 hover:bg-[var(--c-surface-hover)] transition-colors"
-          @click="markAllRead"
-        >全部已读</button>
-      </div>
-
       <div v-if="!items.length" class="py-16 text-center text-sm text-[var(--c-text-3)]">暂无互动消息</div>
 
       <button
@@ -41,15 +30,23 @@
         </div>
       </button>
 
-      <button
-        v-if="hasMore"
-        type="button"
-        class="w-full py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
-        :disabled="loadingMore"
-        @click="loadMore"
-      >
-        {{ loadingMore ? '加载中...' : '加载更多' }}
-      </button>
+      <div v-if="hasMore || unreadCount > 0" class="flex gap-2">
+        <button
+          v-if="unreadCount > 0"
+          type="button"
+          class="flex-1 py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
+          @click="markAllRead"
+        >全部已读</button>
+        <button
+          v-if="hasMore"
+          type="button"
+          class="flex-1 py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
+          :disabled="loadingMore"
+          @click="loadMore"
+        >
+          {{ loadingMore ? '加载中...' : '加载更多' }}
+        </button>
+      </div>
     </template>
   </div>
 </template>

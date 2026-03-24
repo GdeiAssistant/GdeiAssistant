@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
-import { showErrorTopTips } from '@/utils/toast.js'
 import { useToast } from '@/composables/useToast'
+import { AlertTriangle } from 'lucide-vue-next'
 
 const router = useRouter()
 const { success: toastSuccess } = useToast()
@@ -55,7 +55,7 @@ async function handleConfirmDelete() {
     <div class="max-w-lg mx-auto px-4 py-6">
       <!-- Warning header -->
       <div class="bg-white rounded-xl shadow-sm p-8 text-center mb-3">
-        <div class="text-6xl text-red-500 mb-5">&#9888;</div>
+        <div class="text-6xl text-red-500 mb-5"><AlertTriangle class="w-16 h-16 mx-auto" /></div>
         <h2 class="text-lg font-semibold text-gray-800 leading-snug">将注销您的广东第二师范学院助手账号</h2>
       </div>
 

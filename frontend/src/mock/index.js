@@ -27,7 +27,8 @@ function readState() {
     cardLostState: '正常',
     renewedBookCodes: [],
     profile: cloneValue(data.BASE_PROFILE),
-    interactionMessages: cloneValue(data.INTERACTION_MESSAGES)
+    interactionMessages: cloneValue(data.INTERACTION_MESSAGES),
+    userdataExportStatus: 0
   }
 
   try {
@@ -45,7 +46,8 @@ function readState() {
         renewedBookCodes: Array.isArray(state.renewedBookCodes) ? state.renewedBookCodes : [],
         profile: Object.assign({}, cloneValue(data.BASE_PROFILE), state.profile || {}),
         interactionMessages: Array.isArray(state.interactionMessages) ? state.interactionMessages : cloneValue(data.INTERACTION_MESSAGES),
-        community: state.community || undefined
+        community: state.community || undefined,
+        userdataExportStatus: typeof state.userdataExportStatus === 'number' ? state.userdataExportStatus : 0
       }
     }
   } catch (error) {
@@ -395,12 +397,16 @@ export function handleRequest(options) {
   if (path === '/api/userdata/state' && method === 'GET') {
     const authError = ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess(0))
+    const s = readState()
+    return resolveWithDelay(buildSuccess(s.userdataExportStatus ?? 0))
   }
 
   if (path === '/api/userdata/export' && method === 'POST') {
     const authError = ensureAuthorized(token)
     if (authError) return authError
+    const s = readState()
+    s.userdataExportStatus = 2
+    saveState(s)
     return resolveWithDelay(buildSuccess(null))
   }
 

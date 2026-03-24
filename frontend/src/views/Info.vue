@@ -29,12 +29,16 @@
     <AppCard>
       <template #header>
         <span class="text-sm font-semibold">{{ $t('info.systemNotice') }}</span>
+        <button
+          type="button"
+          class="text-xs text-[var(--c-primary)] bg-transparent border-none cursor-pointer"
+          @click="router.push('/info/announcements')"
+        >查看更多</button>
       </template>
       <div class="p-4">
         <NoticeBlock :notices="systemNoticeItems" />
-        <HistoryBlock :festival="infoData.festival" :today-label="todayLabel" />
         <div
-          v-if="!systemNoticeItems.length && !infoData.festival"
+          v-if="!systemNoticeItems.length"
           class="text-sm text-[var(--c-text-3)] text-center py-8"
         >
           {{ $t('info.noNotice') }}
@@ -45,7 +49,18 @@
     <!-- Interactions section -->
     <AppCard>
       <template #header>
-        <span class="text-sm font-semibold">{{ $t('info.interaction') }}</span>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold">{{ $t('info.interaction') }}</span>
+          <span
+            v-if="interactionUnreadCount > 0"
+            class="min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center"
+          >{{ interactionUnreadCount > 99 ? '99+' : interactionUnreadCount }}</span>
+        </div>
+        <button
+          type="button"
+          class="text-xs text-[var(--c-primary)] bg-transparent border-none cursor-pointer"
+          @click="router.push('/info/interactions')"
+        >查看更多</button>
       </template>
       <div class="p-4">
         <InteractionBlock
@@ -67,7 +82,6 @@ import { useToast } from '@/composables/useToast'
 import request from '../utils/request'
 import AppCard from '../components/ui/AppCard.vue'
 import NoticeBlock from '../components/info/NoticeBlock.vue'
-import HistoryBlock from '../components/info/HistoryBlock.vue'
 import InteractionBlock from '../components/info/InteractionBlock.vue'
 
 const router = useRouter()
@@ -77,11 +91,9 @@ const infoData = ref({})
 const announcementList = ref([])
 const interactionItems = ref([])
 const interactionUnreadCount = ref(0)
-
-const todayLabel = computed(() => {
-  const d = new Date()
-  return `${d.getMonth() + 1}月${d.getDate()}日`
-})
+const interactionHasMore = ref(false)
+const interactionLoadingMore = ref(false)
+const INTERACTION_PAGE_SIZE = 20
 
 const systemNoticeItems = computed(() => {
   if (Array.isArray(announcementList.value) && announcementList.value.length > 0) {
@@ -266,13 +278,28 @@ async function loadInfoPage() {
       infoData.value = informationRes.value.data
     }
     if (interactionRes.status === 'fulfilled') {
-      interactionItems.value = normalizeInteractionItems(interactionRes.value?.data || [])
+      const items = normalizeInteractionItems(interactionRes.value?.data || [])
+      interactionItems.value = items
+      interactionHasMore.value = items.length >= INTERACTION_PAGE_SIZE
     }
     if (unreadRes.status === 'fulfilled') {
       interactionUnreadCount.value = Number(unreadRes.value?.data || 0)
     }
   } finally {
     hideLoading()
+  }
+}
+
+async function loadMoreInteractions() {
+  interactionLoadingMore.value = true
+  try {
+    const start = interactionItems.value.length
+    const res = await request.get(`/information/message/interaction/start/${start}/size/${INTERACTION_PAGE_SIZE}`)
+    const items = normalizeInteractionItems(res?.data || [])
+    interactionItems.value = [...interactionItems.value, ...items]
+    interactionHasMore.value = items.length >= INTERACTION_PAGE_SIZE
+  } finally {
+    interactionLoadingMore.value = false
   }
 }
 

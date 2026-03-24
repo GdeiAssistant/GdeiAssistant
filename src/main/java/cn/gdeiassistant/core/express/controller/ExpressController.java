@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.express.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
@@ -35,6 +36,7 @@ public class ExpressController {
     @RequestMapping(value = "/api/express/profile/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<ExpressVO>> getMyExpressList(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) {
+        if (size > 50) size = 50; // Cap page size
         String sessionId = (String) request.getAttribute("sessionId");
         List<ExpressVO> list = expressService.queryMyExpressList(sessionId, start, size);
         return new DataJsonResult<>(true, list);
@@ -50,6 +52,7 @@ public class ExpressController {
     @RequestMapping(value = "/api/express/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<ExpressVO>> queryExpressPage(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size) {
+        if (size > 50) size = 50; // Cap page size
         String sessionId = (String) request.getAttribute("sessionId");
         List<ExpressVO> list = expressService.queryExpressPage(start, size, sessionId);
         return new DataJsonResult<>(true, list);
@@ -58,11 +61,13 @@ public class ExpressController {
     @RequestMapping(value = "/api/express/keyword/{keyword}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<ExpressVO>> queryExpressPageByKeyWord(HttpServletRequest request, @PathVariable("keyword") String keyword
             , @PathVariable("start") int start, @PathVariable("size") int size) {
+        if (size > 50) size = 50; // Cap page size
         String sessionId = (String) request.getAttribute("sessionId");
         List<ExpressVO> list = expressService.queryExpressPageByKeyword(sessionId, start, size, keyword);
         return new DataJsonResult<>(true, list);
     }
 
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/express", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addExpress(HttpServletRequest request, @Validated ExpressPublishDTO dto) {

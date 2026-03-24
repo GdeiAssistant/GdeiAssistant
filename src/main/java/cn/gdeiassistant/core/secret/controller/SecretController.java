@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.secret.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
@@ -48,6 +49,7 @@ public class SecretController {
     @RequestMapping(value = "/api/secret/info/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<SecretVO>> getMoreSecret(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) throws Exception {
+        if (size > 50) size = 50; // Cap page size
         String sessionId = (String) request.getAttribute("sessionId");
         List<SecretVO> list = secretService.getSecretInfo(start, size, sessionId);
         return new DataJsonResult<>(true, list);
@@ -61,6 +63,7 @@ public class SecretController {
         return new DataJsonResult<>(true, list);
     }
 
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addSecretInfo(HttpServletRequest request, @Validated SecretPublishDTO dto

@@ -220,6 +220,10 @@ public class UserCertificateService {
                         // Validate redirect URL stays within trusted school domains
                         try {
                             java.net.URI uri = java.net.URI.create(casRedirectUrl);
+                            String scheme = uri.getScheme();
+                            if (scheme != null && !scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https")) {
+                                throw new ServerErrorException("CAS重定向地址协议不安全");
+                            }
                             String host = uri.getHost();
                             if (host != null && !host.toLowerCase().endsWith(".gdei.edu.cn") && !host.toLowerCase().equals("gdei.edu.cn")) {
                                 throw new ServerErrorException("CAS重定向地址不在可信域名范围内");
@@ -307,6 +311,10 @@ public class UserCertificateService {
             // Validate redirect URL stays within trusted school domains
             try {
                 java.net.URI uri1 = java.net.URI.create(loginRedirect1);
+                String scheme1 = uri1.getScheme();
+                if (scheme1 != null && !scheme1.equalsIgnoreCase("http") && !scheme1.equalsIgnoreCase("https")) {
+                    throw new ServerErrorException("CAS重定向地址协议不安全");
+                }
                 String host1 = uri1.getHost();
                 if (host1 != null && !host1.toLowerCase().endsWith(".gdei.edu.cn") && !host1.toLowerCase().equals("gdei.edu.cn")) {
                     throw new ServerErrorException("CAS重定向地址不在可信域名范围内");

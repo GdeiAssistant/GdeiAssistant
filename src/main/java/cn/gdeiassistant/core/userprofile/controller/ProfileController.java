@@ -17,6 +17,7 @@ import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userProfile.service.ProfileOptionsFacade;
 import cn.gdeiassistant.common.tools.Utils.LocationUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import org.springframework.web.util.HtmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -160,6 +161,8 @@ public class ProfileController {
         if (introduction != null && introduction.length() <= 80) {
             if (introduction.isEmpty()) {
                 introduction = null;
+            } else {
+                introduction = HtmlUtils.htmlEscape(introduction);
             }
             userProfileService.updateIntroduction((String) request.getAttribute("sessionId"), introduction);
             return new JsonResult(true);
@@ -257,7 +260,9 @@ public class ProfileController {
             return new JsonResult(false, "不合法的国家/地区代码");
         }
         ProfileLocationValidator.ValidationResult vr = profileLocationValidator.validate(
-                body.getRegion(), body.getState(), body.getCity());
+                HtmlUtils.htmlEscape(body.getRegion()),
+                body.getState() != null ? HtmlUtils.htmlEscape(body.getState()) : null,
+                body.getCity() != null ? HtmlUtils.htmlEscape(body.getCity()) : null);
         if (!vr.isValid()) {
             return new JsonResult(false, vr.getErrorMessage());
         }
@@ -280,7 +285,9 @@ public class ProfileController {
             return new JsonResult(false, "不合法的国家/地区代码");
         }
         ProfileLocationValidator.ValidationResult vr = profileLocationValidator.validate(
-                body.getRegion(), body.getState(), body.getCity());
+                HtmlUtils.htmlEscape(body.getRegion()),
+                body.getState() != null ? HtmlUtils.htmlEscape(body.getState()) : null,
+                body.getCity() != null ? HtmlUtils.htmlEscape(body.getCity()) : null);
         if (!vr.isValid()) {
             return new JsonResult(false, vr.getErrorMessage());
         }
@@ -303,6 +310,7 @@ public class ProfileController {
         if (major == null || major.isEmpty() || major.length() > 20) {
             return new JsonResult(false, "专业长度不合法");
         }
+        major = HtmlUtils.htmlEscape(major);
         userProfileService.updateMajor((String) request.getAttribute("sessionId"), major);
         return new JsonResult(true);
     }
@@ -343,6 +351,7 @@ public class ProfileController {
         if (nickname == null || nickname.isEmpty() || nickname.length() > 32) {
             return new JsonResult(false, "昵称长度不合法");
         }
+        nickname = HtmlUtils.htmlEscape(nickname);
         userProfileService.updateNickname((String) request.getAttribute("sessionId"), nickname);
         return new JsonResult(true);
     }

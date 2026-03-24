@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.delivery.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
@@ -79,6 +80,7 @@ public class DeliveryController {
     @RequestMapping(value = "/api/delivery/order/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<DeliveryOrderVO>> queryDeliveryOrderPage(HttpServletRequest request, @PathVariable("start") @Min(0) Integer start
             , @PathVariable("size") @Min(1) Integer size) {
+        if (size > 50) size = 50; // Cap page size
         List<DeliveryOrderVO> list = deliveryService.queryDeliveryOrderPage(start, size);
         return new DataJsonResult<>(true, list);
     }
@@ -138,6 +140,7 @@ public class DeliveryController {
      * @param deliveryOrder
      * @return
      */
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/delivery/order", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addDeliveryOrder(HttpServletRequest request, @Validated DeliveryPublishDTO dto) {

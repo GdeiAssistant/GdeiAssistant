@@ -85,6 +85,10 @@ public class CasClient {
             // Validate redirect URL stays within trusted school domains
             try {
                 java.net.URI uri = java.net.URI.create(redirectUrl);
+                String scheme = uri.getScheme();
+                if (scheme != null && !scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https")) {
+                    throw new ServerErrorException("CAS重定向地址协议不安全");
+                }
                 String host = uri.getHost();
                 if (host != null && !host.toLowerCase().endsWith(".gdei.edu.cn") && !host.toLowerCase().equals("gdei.edu.cn")) {
                     throw new ServerErrorException("CAS重定向地址不在可信域名范围内");

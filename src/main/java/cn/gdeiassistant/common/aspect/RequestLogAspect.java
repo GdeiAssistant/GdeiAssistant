@@ -1,8 +1,6 @@
 package cn.gdeiassistant.common.aspect;
 
 import cn.gdeiassistant.common.constant.ObservabilityConstants;
-import cn.gdeiassistant.common.pojo.Entity.RequestSecurity;
-import cn.gdeiassistant.common.pojo.Entity.RequestValidation;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -81,12 +79,8 @@ public class RequestLogAspect {
                 if (i != 1) {
                     stringBuilder.append(" , ");
                 }
-                if (args[i] instanceof RequestValidation || args[i] instanceof RequestSecurity) {
-                    stringBuilder.append(parameterName[i]).append(":[REDACTED]");
-                } else {
-                    stringBuilder.append(parameterName[i])
-                            .append(":").append(JSON.toJSONString(args[i]));
-                }
+                stringBuilder.append(parameterName[i])
+                        .append(":").append(JSON.toJSONString(args[i]));
             }
         }
         stringBuilder.append(" . ");
@@ -244,13 +238,6 @@ public class RequestLogAspect {
                 continue;
             }
 
-            // Redact RequestValidation / RequestSecurity
-            if (arg instanceof RequestValidation || arg instanceof RequestSecurity) {
-                if (!first) sb.append(", ");
-                sb.append(name).append(":[REDACTED]");
-                first = false;
-                continue;
-            }
 
             if (arg != null) {
                 if (!first) sb.append(", ");

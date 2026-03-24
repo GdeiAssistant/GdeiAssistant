@@ -29,7 +29,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -280,12 +279,9 @@ public class ChargeService {
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     //成功提交请求,检查支付平台实际预留的信息是否一致
-//                    Element bd = document.getElementsByClass("bd").first();
-//                    String name = bd.select("h3").first().text();
-//                        if (!name.equals(chargeXm)) {
-//                            //信息不一致，中止交易
-//                            throw new InconsistentInformationException("用户信息不一致");
-//                        }
+                    Element bd = document.getElementsByClass("bd").first();
+                    String payeeName = (bd != null && bd.select("h3").first() != null)
+                            ? bd.select("h3").first().text() : null;
                     httpGet = new HttpGet("https://epay.gdei.edu.cn:8443/synpay/web/disOrderInfo");
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -294,6 +290,13 @@ public class ChargeService {
                         Element main_hd = document.getElementsByClass("main_hd").first();
                         String confirmNumber = main_hd.select("span").get(0).text();
                         String confirmName = main_hd.select("span").get(1).text();
+                        //校验两个页面返回的用户姓名是否一致，防止会话劫持导致充错账户
+                        if (payeeName != null && !payeeName.isEmpty()
+                                && confirmName != null && !confirmName.isEmpty()
+                                && !payeeName.equals(confirmName)) {
+                            logger.error("校园卡充值信息不一致: payeeName={}, confirmName={}", payeeName, confirmName);
+                            throw new ServerErrorException("充值用户信息不一致，交易已中止");
+                        }
                         String confirmAmount;
                         if (amount <= 100) {
                             //小数额交易
@@ -301,6 +304,16 @@ public class ChargeService {
                         } else {
                             //大数额交易
                             confirmAmount = document.getElementsByClass("pri").first().text().substring(1);
+                        }
+                        //校验确认金额与请求金额是否一致
+                        try {
+                            if (Integer.parseInt(confirmAmount.trim()) != amount) {
+                                logger.error("校园卡充值金额不一致: requested={}, confirmed={}", amount, confirmAmount);
+                                throw new ServerErrorException("充值金额不一致，交易已中止");
+                            }
+                        } catch (NumberFormatException e) {
+                            logger.error("校园卡充值金额解析失败: confirmAmount={}", confirmAmount);
+                            throw new ServerErrorException("充值金额解析异常，交易已中止");
                         }
                         Map<String, String> ecardDataMap = new HashMap<>();
                         Elements ecardDatas = document.getElementsByTag("input");
@@ -380,17 +393,20 @@ public class ChargeService {
     }
 
     /**
-     * 保存用户充值记录日志
+     * 保存用户充值记录日志（同步写入，确保审计记录不丢失）
      *
      * @param sessionId
      * @param amount
      */
-    @Async
-    public void SaveChargeLog(String sessionId, int amount) throws Exception {
-        User user = userCertificateService.getUserLoginCertificate(sessionId);
-        ChargeLogEntity entity = new ChargeLogEntity();
-        entity.setUsername(user.getUsername());
-        entity.setAmount(amount);
-        chargeMapper.insertChargeLog(entity);
+    public void SaveChargeLog(String sessionId, int amount) {
+        try {
+            User user = userCertificateService.getUserLoginCertificate(sessionId);
+            ChargeLogEntity entity = new ChargeLogEntity();
+            entity.setUsername(user.getUsername());
+            entity.setAmount(amount);
+            chargeMapper.insertChargeLog(entity);
+        } catch (Exception e) {
+            logger.error("充值审计日志写入失败: sessionId={}, amount={}", sessionId, amount, e);
+        }
     }
 }

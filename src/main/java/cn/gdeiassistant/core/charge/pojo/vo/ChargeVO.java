@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 充值结果视图：支付宝 URL + Cookie 列表 + 签名（与前端约定）
+ * 充值结果视图：支付宝 URL + Cookie 列表
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChargeVO implements Serializable {
@@ -17,8 +17,6 @@ public class ChargeVO implements Serializable {
 
     @JSONField(ordinal = 2)
     private List<cn.gdeiassistant.common.pojo.Entity.Cookie> cookieList;
-
-    private String signature;
 
     public String getAlipayURL() {
         return alipayURL;
@@ -34,13 +32,5 @@ public class ChargeVO implements Serializable {
 
     public void setCookieList(List<cn.gdeiassistant.common.pojo.Entity.Cookie> cookieList) {
         this.cookieList = cookieList;
-    }
-
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
     }
 }

@@ -48,7 +48,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         }
 
         if (timestamps.size() >= rateLimit.maxRequests()) {
-            log.warn("请求限流: key={}, path={}, 窗口内请求数={}", rateLimitKey, path, timestamps.size());
+            log.warn("请求限流: key={}, path={}, 窗口内请求数={}", sanitizeLogParam(rateLimitKey), sanitizeLogParam(path), timestamps.size());
             response.setStatus(429);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
@@ -59,6 +59,11 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
         timestamps.addLast(now);
         return true;
+    }
+
+    private static String sanitizeLogParam(String value) {
+        if (value == null) return "null";
+        return value.replaceAll("[\\r\\n\\t]", "_");
     }
 
     private String getRateLimitKey(HttpServletRequest request) {

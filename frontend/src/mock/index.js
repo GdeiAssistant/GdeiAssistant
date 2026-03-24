@@ -300,7 +300,7 @@ export function handleRequest(options) {
   }
 
   if (path === '/api/cet/checkcode' && method === 'GET') {
-    return resolveWithDelay(buildSuccess('data:image/png;base64,iVBOR...mockCaptcha'))
+    return resolveWithDelay(buildSuccess('iVBORw0KGgoAAAANSUhEUgAAAFAAAAAUCAIAAACVMluVAAAAMklEQVR4Ae3UMQEAAAjDsEE24S+c1QYLSG56XQsBAQEBAQEBAQEBAQEBAQEBAQEBgbcFi0IAFT8XmTMAAAAASUVORK5CYII='))
   }
 
   if (path === '/api/cet/query' && method === 'GET') {
@@ -328,7 +328,11 @@ export function handleRequest(options) {
   }
 
   // --- Info / Data ---
-  if (path === '/api/kaoyan/query' && method === 'POST') {
+  if (path === '/api/information/overview' && method === 'GET') {
+    return infoHandlers.handleInformationOverview(utils)
+  }
+
+  if (path === '/api/graduate-exam/query' && method === 'POST') {
     return infoHandlers.handleGraduateExam(payload, utils)
   }
 
@@ -375,6 +379,89 @@ export function handleRequest(options) {
 
   if (path === '/api/information/message/readall' && method === 'POST') {
     return messageHandlers.handleMessageReadAll(token, utils)
+  }
+
+  // --- User account: login records, download, phone, email, delete ---
+  if (/^\/api\/ip\/start\/\d+\/size\/\d+$/.test(path) && method === 'GET') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess([
+      { id: 1, time: '2026-03-25T09:12:34', ip: '119.136.42.101', area: '广东广州', network: 'Web' },
+      { id: 2, time: '2026-03-24T18:45:10', ip: '14.23.167.88', area: '广东广州', network: 'iOS' },
+      { id: 3, time: '2026-03-23T14:30:00', ip: '183.6.50.22', area: '广东深圳', network: 'Android' }
+    ]))
+  }
+
+  if (path === '/api/userdata/state' && method === 'GET') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(0))
+  }
+
+  if (path === '/api/userdata/export' && method === 'POST') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(null))
+  }
+
+  if (path === '/api/userdata/download' && method === 'POST') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess('https://example.com/mock-userdata.zip'))
+  }
+
+  if (path === '/api/phone/status' && method === 'GET') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess({ phone: '', code: 86 }))
+  }
+
+  if (/^\/api\/phone\/verification/.test(path) && method === 'POST') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(null))
+  }
+
+  if (/^\/api\/phone\/attach/.test(path) && method === 'POST') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(null))
+  }
+
+  if (path === '/api/phone/unattach' && method === 'POST') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(null))
+  }
+
+  if (path === '/api/email/status' && method === 'GET') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(''))
+  }
+
+  if (/^\/api\/email\/verification/.test(path) && method === 'POST') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(null))
+  }
+
+  if (/^\/api\/email\/bind/.test(path) && method === 'POST') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(null))
+  }
+
+  if (path === '/api/email/unbind' && method === 'POST') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(null))
+  }
+
+  if (path === '/api/close/submit' && method === 'POST') {
+    const authError = ensureAuthorized(token)
+    if (authError) return authError
+    return resolveWithDelay(buildSuccess(null))
   }
 
   // --- Community (delegated to community.js) ---

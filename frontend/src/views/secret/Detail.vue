@@ -153,12 +153,12 @@ const toggleLike = () => {
     request.post(`/secret/id/${secret.value.id}/like`, null, { params: { like: 0 } }).then(() => {
       secret.value.liked = false
       secret.value.likeCount--
-    })
+    }).catch(() => {})
   } else {
     request.post(`/secret/id/${secret.value.id}/like`, null, { params: { like: 1 } }).then(() => {
       secret.value.liked = true
       secret.value.likeCount++
-    })
+    }).catch(() => {})
   }
 }
 

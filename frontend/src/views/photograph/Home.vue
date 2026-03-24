@@ -56,7 +56,7 @@ const toggleLike = (item, e) => {
   request.post(`/photograph/id/${item.id}/like`).then(() => {
     item.isLiked = true
     item.likeCount++
-  })
+  }).catch(() => {})
 }
 
 const goDetail = (id) => {

@@ -28,8 +28,6 @@ const years = computed(() => {
 })
 
 const submitQuery = () => {
-  console.log('submitQuery 被调用', form.value)
-
   // 依次检查所有必填字段，显示具体错误
   if (!form.value.year) {
     showError('请输入年份')

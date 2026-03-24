@@ -19,7 +19,7 @@ public class GraduateExamController {
     @Autowired
     private GraduateExamService graduateExamService;
 
-    @PostMapping("/api/kaoyan/query")
+    @PostMapping("/api/graduate-exam/query")
     public DataJsonResult<Postgraduate> queryPostgraduateScore(@Validated @RequestBody GraduateExamQuery graduateExamQuery)
             throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException {
         Postgraduate postgraduate = graduateExamService.queryPostgraduateScore(

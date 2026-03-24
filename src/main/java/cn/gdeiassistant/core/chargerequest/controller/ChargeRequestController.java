@@ -68,7 +68,9 @@ public class ChargeRequestController {
 
         // 3. 二次验证用户密码
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        if (!userMapper.selectUser(user.getUsername()).getPassword().equals(requestParams.getPassword())) {
+        if (!java.security.MessageDigest.isEqual(
+                userMapper.selectUser(user.getUsername()).getPassword().getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                requestParams.getPassword().getBytes(java.nio.charset.StandardCharsets.UTF_8))) {
             throw new PasswordIncorrectException("充值密码验证失败");
         }
 
@@ -83,8 +85,7 @@ public class ChargeRequestController {
      */
     private void verifyHmac(ChargeRequestDTO requestParams) throws ServerErrorException {
         if (hmacSecret == null || hmacSecret.isBlank()) {
-            // 未配置 HMAC 密钥时跳过校验（开发环境）
-            return;
+            throw new ServerErrorException("充值安全配置缺失，请联系管理员");
         }
         String clientHmac = requestParams.getHmac();
         String clientTimestamp = requestParams.getTimestamp();

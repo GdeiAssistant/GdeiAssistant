@@ -58,10 +58,10 @@ mybatis:
 logging:
   level:
     root: ${LOG_LEVEL_ROOT:INFO}
-    cn.gdeiassistant: ${LOG_LEVEL_APP:DEBUG}
-    org.springframework.web: ${LOG_LEVEL_WEB:DEBUG}
-    org.mybatis: ${LOG_LEVEL_MYBATIS:DEBUG}
-    java.sql: ${LOG_LEVEL_SQL:DEBUG}
+    cn.gdeiassistant: ${LOG_LEVEL_APP:INFO}
+    org.springframework.web: ${LOG_LEVEL_WEB:INFO}
+    org.mybatis: ${LOG_LEVEL_MYBATIS:INFO}
+    java.sql: ${LOG_LEVEL_SQL:INFO}
     org.apache.ibatis: ${LOG_LEVEL_IBATIS:DEBUG}
   file:
     name: logs/gdeiassistant.log

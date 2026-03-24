@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,26 +27,11 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
 
     private final String SESSION_PREFIX = "USER_SESSION_CERTIFICATE_";
 
-    @Autowired
-    private Environment environment;
-
-    private boolean isProduction() {
-        for (String profile : environment.getActiveProfiles()) {
-            if ("production".equalsIgnoreCase(profile) || "prod".equalsIgnoreCase(profile)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private String encryptPassword(String password) {
         try {
             return StringEncryptUtils.encryptString(password);
         } catch (Exception e) {
-            if (isProduction()) {
-                throw new RuntimeException("Password encryption failed in production", e);
-            }
-            return password;
+            throw new RuntimeException("Password encryption failed", e);
         }
     }
 
@@ -55,7 +39,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         try {
             return StringEncryptUtils.decryptString(encrypted);
         } catch (Exception e) {
-            return encrypted;
+            throw new RuntimeException("Password decryption failed", e);
         }
     }
 

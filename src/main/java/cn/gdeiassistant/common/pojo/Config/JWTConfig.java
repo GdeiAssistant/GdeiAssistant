@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
+
 @Component
 @Scope("singleton")
 public class JWTConfig {
@@ -25,6 +27,14 @@ public class JWTConfig {
             this.secret = secret;
         } else {
             moduleUtils.DisableModule(ModuleEnum.JWT);
+        }
+    }
+
+    @PostConstruct
+    public void validateSecret() {
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException(
+                    "JWT secret is not configured. Set the JWT_SECRET environment variable with a secure value of at least 32 characters.");
         }
     }
 

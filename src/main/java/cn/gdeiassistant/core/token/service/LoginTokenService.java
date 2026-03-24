@@ -179,8 +179,11 @@ public class LoginTokenService {
                     && currentLocation.getCountry() != null && tokenLocation.getCountry() != null
                     && currentLocation.getProvince() != null && tokenLocation.getProvince() != null;
             if (!locationAvailable) {
-                //属地服务不可用或返回数据不完整，降级为放行
-                return;
+                //属地服务不可用或返回数据不完整，跳过地理位置校验但仍校验设备UnionID
+                //设备UnionID已在上方判断不匹配，因此此处应拒绝
+                loginTokenDao.DeleteAccessToken(signature);
+                loginTokenDao.DeleteRefreshToken(StringEncryptUtils.sha256HexString(signature));
+                throw new SuspiciouseRequestException("可疑的登录请求");
             }
             if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
                     && Objects.equals(currentLocation.getProvince(), tokenLocation.getProvince())) {

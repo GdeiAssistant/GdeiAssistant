@@ -118,10 +118,10 @@ wechat:
     secret: ${WECHAT_APP_SECRET:}
 
 encrypt:
-  enable: ${ENCRYPT_ENABLE:false}
-  type: aes
+  enable: ${ENCRYPT_ENABLE:true}
+  type: ${ENCRYPT_TYPE:aes}
   private:
-    key: ${ENCRYPT_PRIVATE_KEY:}
+    key: ${ENCRYPT_PRIVATE_KEY:gdei-dev-default-key-change-in-prod}
   app:
     key: ${ENCRYPT_APP_KEY:}
   config:

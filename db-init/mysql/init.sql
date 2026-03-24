@@ -147,7 +147,7 @@ COMMIT;
 DROP TABLE IF EXISTS `email`;
 CREATE TABLE `email` (
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
-  `email` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '电子邮件地址，使用AES加密时需要将varchar长度提升到32及以上',
+  `email` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '电子邮件地址（AES加密存储）',
   `gmt_create` datetime NOT NULL COMMENT '记录创建时间',
   `gmt_modified` datetime NOT NULL COMMENT '记录更新时间',
   PRIMARY KEY (`username`)
@@ -352,7 +352,7 @@ DROP TABLE IF EXISTS `phone`;
 CREATE TABLE `phone` (
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
   `code` smallint NOT NULL COMMENT '国际区号',
-  `phone` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '手机号，使用AES加密时需要将varchar长度提升到32及以上',
+  `phone` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '手机号（AES加密存储）',
   `gmt_create` datetime NOT NULL COMMENT '记录创建时间',
   `gmt_modified` datetime NOT NULL COMMENT '记录更新时间',
   PRIMARY KEY (`username`)
@@ -586,12 +586,14 @@ COMMIT;
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
-  `password` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '密码，使用AES加密时需要将varchar长度提升到32及以上',
+  `password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '密码（AES加密存储）',
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- ----------------------------
--- Records of user（测试账号：gdeiassistant 密码同用户名；未启用 encrypt 时为明文）
+-- Records of user（测试账号：gdeiassistant 密码同用户名）
+-- 注意：启用 AES 加密后，此处的明文密码会在首次登录时由 TypeHandler 自动加密写回数据库。
+-- 初始化时仍用明文插入，应用启动后第一次 updateUser 会将其替换为密文。
 -- ----------------------------
 BEGIN;
 INSERT INTO `user` (`username`, `password`) VALUES ('gdeiassistant', 'gdeiassistant');

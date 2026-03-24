@@ -13,6 +13,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -35,6 +36,7 @@ public class CardClient {
     /**
      * 获取校园卡基本信息页 Document（需已登录 ecard）
      */
+    @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallback")
     public Document fetchCardBasicInfoDocument(String sessionId) throws IOException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
@@ -58,6 +60,7 @@ public class CardClient {
      * @param type      0=当日，1=历史
      * @param pageIndex 页码，从 1 开始
      */
+    @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallback")
     public Document fetchCardTrjnListDocument(String sessionId, int type, int pageIndex) throws IOException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
@@ -80,6 +83,7 @@ public class CardClient {
     /**
      * 获取历史日期消费流水单页
      */
+    @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallback")
     public Document fetchCardTrjnListByDateDocument(String sessionId, int year, int month, int date, int pageIndex) throws IOException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
@@ -103,6 +107,7 @@ public class CardClient {
     /**
      * 挂失流程：拉取挂失页 Document（POST LossCard needHeader=false）
      */
+    @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallback")
     public Document fetchLossCardPageDocument(String sessionId) throws IOException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
@@ -126,6 +131,7 @@ public class CardClient {
     /**
      * 挂失流程：获取安全键盘图片（返回字节数组，避免连接关闭后流不可读）
      */
+    @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallbackBytes")
     public byte[] fetchKeyPadImage(String sessionId) throws IOException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
@@ -146,6 +152,7 @@ public class CardClient {
     /**
      * 挂失流程：获取验证码图片（relativePath 如 /Account/GetCheckCodeImg?xxx）
      */
+    @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallbackBytes")
     public byte[] fetchCheckcodeImage(String sessionId, String relativePath) throws IOException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
@@ -175,7 +182,9 @@ public class CardClient {
     /**
      * 挂失流程：提交挂失请求，返回响应 JSON 字符串（含 ret、msg）
      */
-    public String submitSetCardLost(String sessionId, String passwordMapped, String checkCode) throws IOException, ServerErrorException {
+    @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallbackString")
+    public String submitSetCardLost(String sessionId, String passwordMapped, String checkCode)
+            throws IOException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
@@ -197,5 +206,35 @@ public class CardClient {
             if (httpClient != null) try { httpClient.close(); } catch (IOException ignored) { }
             if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
+    }
+
+    // ---- Circuit breaker fallback methods ----
+
+    private Document cardSystemFallback(String sessionId, Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+    }
+
+    private Document cardSystemFallback(String sessionId, int type, int pageIndex,
+                                        Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+    }
+
+    private Document cardSystemFallback(String sessionId, int year, int month, int date, int pageIndex,
+                                        Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+    }
+
+    private byte[] cardSystemFallbackBytes(String sessionId, Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+    }
+
+    private byte[] cardSystemFallbackBytes(String sessionId, String relativePath,
+                                           Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+    }
+
+    private String cardSystemFallbackString(String sessionId, String passwordMapped, String checkCode,
+                                            Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
     }
 }

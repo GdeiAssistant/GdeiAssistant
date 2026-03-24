@@ -79,12 +79,12 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("登录凭证序列化失败", e);
         }
-        redisDaoUtils.expire(key, 30, TimeUnit.DAYS);
+        redisDaoUtils.expire(key, 7, TimeUnit.DAYS);
     }
 
     @Override
     public void updateUserCookieCertificateExpiration(String cookieId) {
-        redisDaoUtils.expire(StringEncryptUtils.sha256HexString(COOKIE_PREFIX + cookieId), 30, TimeUnit.DAYS);
+        redisDaoUtils.expire(StringEncryptUtils.sha256HexString(COOKIE_PREFIX + cookieId), 7, TimeUnit.DAYS);
     }
 
     @Override

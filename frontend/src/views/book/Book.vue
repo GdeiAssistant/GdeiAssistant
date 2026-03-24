@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getBorrowedBooks, renewBook } from '@/api/book'
+import { getBorrowedBooks, renewBook } from '@/api/collection'
 import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
@@ -96,7 +96,7 @@ function confirmRenew() {
     </div>
 
     <div class="max-w-lg mx-auto px-4 py-6">
-      <p class="text-center text-sm text-[var(--c-text-2)] mb-5">输入图书馆密码后查看借阅记录，续借时会再次校验密码。</p>
+      <p class="text-center text-sm text-[var(--c-text-2)] mb-5">输入图书馆密码后查看借阅记录，续借时会再次校验密码。<br><span class="text-xs text-[var(--c-text-3)]">模拟密码：123456</span></p>
 
       <!-- Password form -->
       <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">

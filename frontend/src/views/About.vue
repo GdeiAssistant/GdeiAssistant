@@ -237,7 +237,7 @@ onMounted(() => {
       <p class="text-xs text-[var(--color-text-tertiary)] my-2">All rights reserved</p>
       <div class="mt-4">
         <p class="my-1 text-xs">
-          <a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener noreferrer" class="text-[var(--color-text-tertiary)] no-underline hover:text-[var(--color-primary)] hover:underline">
+          <a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener noreferrer" class="text-[var(--c-text-1)] no-underline hover:text-[var(--color-primary)] hover:underline">
             粤ICP备17087427号-1
           </a>
         </p>
@@ -246,7 +246,7 @@ onMounted(() => {
             href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44010502001297"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-[var(--color-text-tertiary)] no-underline hover:text-[var(--color-primary)] hover:underline"
+            class="text-[var(--c-text-1)] no-underline hover:text-[var(--color-primary)] hover:underline"
           >
             粤公网安备44010502001297号
           </a>

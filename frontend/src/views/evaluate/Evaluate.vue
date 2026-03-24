@@ -5,7 +5,7 @@ import request from '@/utils/request'
 import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
-const { success, loading: showLoading, hideLoading } = useToast()
+const { success, error: showError, loading: showLoading, hideLoading } = useToast()
 const isDirectSubmit = ref(false)
 const isLoading = ref(false)
 const showEvaluateConfirmDialog = ref(false)
@@ -19,6 +19,7 @@ function closeEvaluateConfirmDialog() {
 }
 
 function confirmEvaluate() {
+  if (isLoading.value) return
   closeEvaluateConfirmDialog()
   isLoading.value = true
   showLoading('自动评教中...')
@@ -32,6 +33,7 @@ function confirmEvaluate() {
     .catch(() => {
       isLoading.value = false
       hideLoading()
+      showError('评教提交失败，请稍后重试')
     })
 }
 </script>
@@ -90,7 +92,8 @@ function confirmEvaluate() {
               @click="closeEvaluateConfirmDialog"
             >取消</button>
             <button
-              class="flex-1 py-3.5 text-center text-[15px] text-[var(--c-primary)] font-medium active:bg-black/5"
+              class="flex-1 py-3.5 text-center text-[15px] text-[var(--c-primary)] font-medium active:bg-black/5 disabled:opacity-40"
+              :disabled="isLoading"
               @click="confirmEvaluate"
             >确定</button>
           </div>

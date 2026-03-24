@@ -36,7 +36,6 @@ const CollectionDetail = lazyView('collection/CollectionDetail')
 const Book = lazyView('book/Book')
 const CardHub = lazyView('card/CardHub')
 const CardSearch = lazyView('card/CardSearch')
-const CardRecordSearch = lazyView('card/CardRecordSearch')
 const CardList = lazyView('card/CardList')
 const CardInfo = lazyView('card/CardInfo')
 const Evaluate = lazyView('evaluate/Evaluate')
@@ -47,6 +46,10 @@ const PeIndex = lazyView('pe/PeIndex')
 const NewsList = lazyView('news/NewsList')
 const NewsDetail = lazyView('news/NewsDetail')
 const Info = lazyView('Info')
+const Settings = lazyView('Settings')
+const AnnouncementList = lazyView('info/AnnouncementList')
+const AnnouncementDetail = lazyView('info/AnnouncementDetail')
+const InteractionList = lazyView('info/InteractionList')
 const UserPrivacySetting = lazyView('user/PrivacySetting')
 const UserFunctions = lazyView('user/Functions')
 const UserFeatureManage = lazyView('user/FeatureManage')
@@ -185,11 +188,6 @@ const routes = [
     path: '/card/records',
     name: 'CardSearch',
     component: CardSearch
-  },
-  {
-    path: '/card/record-search',
-    name: 'CardRecordSearch',
-    component: CardRecordSearch
   },
   {
     path: '/card/list',
@@ -376,7 +374,7 @@ const routes = [
     component: ErshouSearch
   },
   {
-    path: '/ershou',
+    path: '/marketplace',
     component: ErshouIndex,
     redirect: '/marketplace/home',
     children: [
@@ -385,6 +383,7 @@ const routes = [
       { path: 'profile', name: 'ErshouProfile', component: ErshouProfile }
     ]
   },
+  { path: '/ershou', redirect: '/marketplace/home' },
   // 失物招领模块：详情使用独立路由
   {
     path: '/lostandfound/detail/:id',
@@ -541,7 +540,31 @@ const routes = [
         path: 'profile',
         name: 'Profile',
         component: Profile,
-        meta: { title: '个人中心' }
+        meta: { title: '个人资料' }
+      },
+      {
+        path: 'settings',
+        name: 'SettingsPage',
+        component: Settings,
+        meta: { title: '设置' }
+      },
+      {
+        path: 'info/announcements',
+        name: 'AnnouncementList',
+        component: AnnouncementList,
+        meta: { title: '通知公告' }
+      },
+      {
+        path: 'info/announcements/:id',
+        name: 'AnnouncementDetail',
+        component: AnnouncementDetail,
+        meta: { title: '公告详情' }
+      },
+      {
+        path: 'info/interactions',
+        name: 'InteractionList',
+        component: InteractionList,
+        meta: { title: '互动消息' }
       }
     ]
   }

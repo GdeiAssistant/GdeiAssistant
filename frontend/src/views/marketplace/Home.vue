@@ -5,6 +5,10 @@ import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import {
+  Bike, Smartphone, Laptop, Cable, Camera, Zap, Dumbbell,
+  Shirt, BookOpen, Key, Gamepad2, MoreHorizontal
+} from 'lucide-vue-next'
 
 const router = useRouter()
 const keyword = ref('')
@@ -36,20 +40,19 @@ const fetchHomeData = async (page) => {
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleScroll, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchHomeData)
 
-// 菜单图标：inline SVG data URIs (replaced sprite)
 const categories = [
-  { name: '校园代步', iconClass: 'ibicycle', typeId: 0 },
-  { name: '手机', iconClass: 'iphone', typeId: 1 },
-  { name: '电脑', iconClass: 'ipc', typeId: 2 },
-  { name: '数码配件', iconClass: 'iparts', typeId: 3 },
-  { name: '数码', iconClass: 'idigital', typeId: 4 },
-  { name: '电器', iconClass: 'iappliances', typeId: 5 },
-  { name: '运动健身', iconClass: 'isport', typeId: 6 },
-  { name: '衣物伞帽', iconClass: 'iclothes', typeId: 7 },
-  { name: '图书教材', iconClass: 'ibook', typeId: 8 },
-  { name: '租赁', iconClass: 'ilease', typeId: 9 },
-  { name: '生活娱乐', iconClass: 'ilife', typeId: 10 },
-  { name: '其他', iconClass: 'iother', typeId: 11 }
+  { name: '校园代步', icon: Bike, typeId: 0 },
+  { name: '手机', icon: Smartphone, typeId: 1 },
+  { name: '电脑', icon: Laptop, typeId: 2 },
+  { name: '数码配件', icon: Cable, typeId: 3 },
+  { name: '数码', icon: Camera, typeId: 4 },
+  { name: '电器', icon: Zap, typeId: 5 },
+  { name: '运动健身', icon: Dumbbell, typeId: 6 },
+  { name: '衣物伞帽', icon: Shirt, typeId: 7 },
+  { name: '图书教材', icon: BookOpen, typeId: 8 },
+  { name: '租赁', icon: Key, typeId: 9 },
+  { name: '生活娱乐', icon: Gamepad2, typeId: 10 },
+  { name: '其他', icon: MoreHorizontal, typeId: 11 }
 ]
 
 function doSearch() {
@@ -96,7 +99,7 @@ onMounted(() => {
         class="flex flex-col items-center justify-center py-3 min-h-[50px] bg-[var(--c-surface)] cursor-pointer text-center transition-colors active:bg-[var(--c-bg)]"
         @click="goType(cat.typeId)"
       >
-        <i class="w-[22px] h-[22px] mb-1.5 shrink-0 bg-no-repeat bg-center bg-contain" :class="cat.iconClass"></i>
+        <component :is="cat.icon" class="w-[22px] h-[22px] mb-1.5 shrink-0 text-emerald-600" :stroke-width="1.5" />
         <span class="text-[var(--c-text-2)] block leading-3 text-xs">{{ cat.name }}</span>
       </div>
     </div>

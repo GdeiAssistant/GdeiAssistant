@@ -1,21 +1,15 @@
 <template>
-  <div class="modern-card">
-    <div class="card-header">
-      <div class="card-title">
-        {{ $t('info.interactionTitle') }}
-        <span v-if="unreadCount > 0" class="card-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
-      </div>
+  <div>
+    <div class="flex items-center justify-between mb-3" v-if="unreadCount > 0">
+      <span></span>
       <button
-        v-if="unreadCount > 0"
         type="button"
-        class="card-action"
+        class="text-xs text-[var(--c-text-3)] bg-transparent border-none cursor-pointer p-0"
         @click="$emit('mark-all')"
-      >
-        {{ $t('info.markAllRead') }}
-      </button>
+      >{{ $t('info.markAllRead') }}</button>
     </div>
     <div v-if="!items.length" class="interaction-empty">{{ $t('info.noInteraction') }}</div>
-    <div v-else class="interaction-list">
+    <div v-else class="interaction-list" style="margin-top:0">
       <button
         v-for="item in items"
         :key="item.id || `${item.module}-${item.targetId || ''}-${item.targetSubId || ''}`"

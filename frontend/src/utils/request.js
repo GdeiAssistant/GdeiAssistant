@@ -113,7 +113,26 @@ function createMockAdapter(config) {
     statusText: 'OK (Mock)',
     headers: {},
     config
-  }))
+  })).catch((err) => {
+    // Mock handler rejected — wrap as axios-compatible error response
+    const status = err.statusCode || 400
+    const errorResponse = {
+      data: { success: false, message: err.message || '请求失败' },
+      status,
+      statusText: 'Mock Error',
+      headers: {},
+      config
+    }
+    if (status === 401) {
+      // Let axios error interceptor handle 401 normally
+      const axiosError = new Error(err.message)
+      axiosError.response = errorResponse
+      axiosError.config = config
+      return Promise.reject(axiosError)
+    }
+    // For other mock errors, resolve with error payload so response interceptor handles it
+    return errorResponse
+  })
 }
 
 /**

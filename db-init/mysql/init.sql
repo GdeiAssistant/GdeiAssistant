@@ -203,7 +203,18 @@ CREATE TABLE `ershou` (
   `phone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
   `state` tinyint(1) NOT NULL COMMENT '状态',
   `publish_time` datetime NOT NULL COMMENT '发布时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  -- idx_ershou_state_id: enables an index range scan on state=1 for list/keyword queries.
+  -- For keyword LIKE '%kw%' queries, MySQL uses this index to first narrow the scan to
+  -- state=1 rows ordered by id DESC, then applies the LIKE filter on that subset.
+  -- This is significantly cheaper than a full-table scan when state=1 is a minority.
+  KEY `idx_ershou_state_id` (`state`, `id` DESC) COMMENT '支持 state=1 分页列表查询及关键词缩小扫描范围',
+  KEY `idx_ershou_type_state_id` (`type`, `state`, `id` DESC) COMMENT '支持按类型分页查询',
+  KEY `idx_ershou_username` (`username`) COMMENT '支持个人商品查询'
+  -- NOTE: FULLTEXT keyword search (WITH PARSER ngram for Chinese) is the preferred long-term
+  -- solution but requires: (1) MySQL InnoDB with ngram plugin enabled, (2) migrating mapper
+  -- tests away from H2 which lacks MATCH...AGAINST support, (3) verifying minimum token
+  -- size (innodb_ft_min_token_size=2) in production. Tracked as a separate migration task.
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- ----------------------------
@@ -795,7 +806,8 @@ CREATE TABLE `ip_log` (
   `province` varchar(15) DEFAULT NULL COMMENT 'IP地址所属省份',
   `city` varchar(15) DEFAULT NULL COMMENT 'IP所属城市',
   `time` datetime NOT NULL COMMENT 'IP地址记录时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_ip_log_username_type_time` (`username`, `type`, `time` DESC) COMMENT '支持按用户名+类型分页查询'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 SET FOREIGN_KEY_CHECKS = 1;

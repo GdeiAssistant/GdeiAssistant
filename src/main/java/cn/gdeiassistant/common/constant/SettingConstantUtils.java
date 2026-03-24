@@ -7,7 +7,8 @@ public class SettingConstantUtils {
             "/login",
             "/logout",
             // "/cron" — removed: cron endpoints now require X-Cron-Secret header authentication
-            "/api/auth",
+            "/api/auth/login",
+            "/api/auth/logout",
             "/api/module",
             "/download",
             "/agreement",

@@ -4,7 +4,7 @@
     <!-- 控制台标准输出流（使用 encoder 替代已废弃的 layout） -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [rid:%X{requestId:-}] - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>

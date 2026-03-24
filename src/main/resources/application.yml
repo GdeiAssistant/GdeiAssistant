@@ -52,7 +52,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     default-statement-timeout: 30
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: ${MYBATIS_LOG_IMPL:}
   type-handlers-package: cn.gdeiassistant.common.typehandler
 
 logging:
@@ -65,6 +65,15 @@ logging:
     org.apache.ibatis: ${LOG_LEVEL_IBATIS:DEBUG}
   file:
     name: logs/gdeiassistant.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
 
 server:
   port: ${SERVER_PORT:8080}
@@ -200,3 +209,7 @@ r2:
 
 theme:
   grayscale: ${THEME_GRAYSCALE:0}
+
+observability:
+  slow-request-threshold-ms: ${SLOW_REQUEST_THRESHOLD_MS:800}
+  slow-query-threshold-ms: ${SLOW_QUERY_THRESHOLD_MS:1500}

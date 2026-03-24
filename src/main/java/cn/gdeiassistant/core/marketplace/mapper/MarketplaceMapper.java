@@ -13,7 +13,8 @@ import java.util.List;
  */
 public interface MarketplaceMapper {
 
-    @Select("select * from ershou join profile using (username) where id=#{id} limit 1")
+    @Select("select e.id,e.username,e.name,e.description,e.price,e.location,e.type,e.qq,e.phone,e.state,e.publish_time,p.nickname" +
+            " from ershou e join profile p using (username) where e.id=#{id} limit 1")
     @Results(id = "MarketplaceItemVO", value = {
             @Result(property = "marketplaceItem.id", column = "id"),
             @Result(property = "marketplaceItem.username", column = "username"),
@@ -31,7 +32,8 @@ public interface MarketplaceMapper {
     })
     MarketplaceItemVO selectInfoByID(int id);
 
-    @Select("select * from ershou where username=#{username} order by id desc limit 500")
+    @Select("select id,username,name,description,price,location,type,qq,phone,state,publish_time" +
+            " from ershou where username=#{username} order by id desc limit 500")
     @Results(id = "MarketplaceItemEntity", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "username", column = "username"),
@@ -47,15 +49,25 @@ public interface MarketplaceMapper {
     })
     List<MarketplaceItemEntity> selectItemsByUsername(String username);
 
-    @Select("select * from ershou where state='1' order by id desc limit #{start},#{size}")
+    @Select("select id,username,name,description,price,location,type,qq,phone,state,publish_time" +
+            " from ershou where state='1' order by id desc limit #{start},#{size}")
     @ResultMap("MarketplaceItemEntity")
     List<MarketplaceItemEntity> selectAvailableItems(@Param("start") int start, @Param("size") int size);
 
-    @Select("select * from ershou where type=#{type} and state='1' order by id desc limit #{start},#{size}")
+    @Select("select id,username,name,description,price,location,type,qq,phone,state,publish_time" +
+            " from ershou where type=#{type} and state='1' order by id desc limit #{start},#{size}")
     @ResultMap("MarketplaceItemEntity")
     List<MarketplaceItemEntity> selectItemsByType(@Param("start") int start, @Param("size") int size, @Param("type") int type);
 
-    @Select("select distinct * from ershou where state='1' and (name like concat('%',#{keyword},'%') or description like concat('%',#{keyword},'%') or location like concat('%',#{keyword},'%')) order by id desc limit #{start},#{size}")
+    // Keyword search strategy: state='1' predicate uses idx_ershou_state_id to restrict
+    // the scan to available items ordered by id DESC before applying LIKE filters.
+    // The LIKE '%kw%' pattern cannot use a B-tree index prefix scan, but the state
+    // filter substantially narrows the row set first (MySQL ICP applies LIKE at the
+    // index scan layer when ICP is enabled, which is the default).
+    // Long-term migration path: FULLTEXT with ngram parser (see init.sql note).
+    @Select("select distinct id,username,name,description,price,location,type,qq,phone,state,publish_time" +
+            " from ershou where state='1' and (name like concat('%',#{keyword},'%') or description like concat('%',#{keyword},'%') or location like concat('%',#{keyword},'%'))" +
+            " order by id desc limit #{start},#{size}")
     @ResultMap("MarketplaceItemEntity")
     List<MarketplaceItemEntity> selectItemsWithKeyword(@Param("start") int start, @Param("size") int size, @Param("keyword") String keyword);
 

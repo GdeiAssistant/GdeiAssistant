@@ -6,6 +6,7 @@ import cn.gdeiassistant.common.pojo.Entity.Email;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.email.service.EmailService;
+import cn.gdeiassistant.common.annotation.RateLimit;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class EmailController {
      * @param email
      * @return
      */
+    @RateLimit(maxRequests = 3, windowSeconds = 60)
     @RequestMapping(value = "/api/email/verification", method = RequestMethod.POST)
     public JsonResult getEmailVerificationCode(HttpServletRequest request
             , @Validated @NotBlank @Length(min = 5, max = 50) @Pattern(regexp = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$") String email) throws SendEmailException {

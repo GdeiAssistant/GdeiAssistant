@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.lostandfound.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
@@ -117,6 +118,7 @@ public class LostAndFoundController {
         return new JsonResult(true);
     }
 
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/lostandfound/item", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addLostAndFoundInfo(HttpServletRequest request,

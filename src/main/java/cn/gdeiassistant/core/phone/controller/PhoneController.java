@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.phone.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.exception.VerificationException.SendSMSException;
 import cn.gdeiassistant.common.exception.VerificationException.VerificationCodeInvalidException;
 import cn.gdeiassistant.common.pojo.Entity.Attribution;
@@ -54,6 +55,7 @@ public class PhoneController {
      * @param phone
      * @return
      */
+    @RateLimit(maxRequests = 3, windowSeconds = 60)
     @RequestMapping(value = "/api/phone/verification", method = RequestMethod.POST)
     public JsonResult GetPhoneVerificationCode(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(999) Integer code
             , @Validated @NotBlank @Length(min = 7, max = 11) @Pattern(regexp = "^[0-9]*$") String phone) throws SendSMSException {

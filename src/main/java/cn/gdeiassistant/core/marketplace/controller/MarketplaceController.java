@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.marketplace.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
@@ -68,6 +69,7 @@ public class MarketplaceController {
         return new DataJsonResult<>(true, data);
     }
 
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/ershou/item", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addItem(HttpServletRequest request,

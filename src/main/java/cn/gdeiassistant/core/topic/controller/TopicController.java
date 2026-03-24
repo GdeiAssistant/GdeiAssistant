@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.topic.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
@@ -28,6 +29,7 @@ public class TopicController {
     @RequestMapping(value = "/api/topic/profile/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<TopicVO>> getMyTopicList(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) {
+        if (size > 50) size = 50; // Cap page size
         String sessionId = (String) request.getAttribute("sessionId");
         List<TopicVO> list = topicService.queryMyTopicList(sessionId, start, size);
         return new DataJsonResult<>(true, list);
@@ -43,6 +45,7 @@ public class TopicController {
     @RequestMapping(value = "/api/topic/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<TopicVO>> queryTopic(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size) {
+        if (size > 50) size = 50; // Cap page size
         String sessionId = (String) request.getAttribute("sessionId");
         List<TopicVO> list = topicService.queryTopic(sessionId, start, size);
         return new DataJsonResult<>(true, list);
@@ -51,11 +54,13 @@ public class TopicController {
     @RequestMapping(value = "/api/topic/keyword/{keyword}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<TopicVO>> queryTopicByKeyword(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size, @PathVariable("keyword") String keyword) {
+        if (size > 50) size = 50; // Cap page size
         String sessionId = (String) request.getAttribute("sessionId");
         List<TopicVO> list = topicService.queryTopicByKeyword(sessionId, start, size, keyword);
         return new DataJsonResult<>(true, list);
     }
 
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/topic", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addTopic(HttpServletRequest request, @Validated TopicPublishDTO dto,

@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.dating.controller;
 
+import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
@@ -96,6 +97,7 @@ public class DatingController {
         return new DataJsonResult<>(true, datingService.queryMyReceivedPicks(sessionId));
     }
 
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/dating/profile", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addRoommateProfile(HttpServletRequest request, @Validated DatingPublishDTO dto,
@@ -133,6 +135,7 @@ public class DatingController {
         return new JsonResult(true);
     }
 
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/dating/pick", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addRoommatePick(HttpServletRequest request, @Validated DatingPickSubmitDTO dto) throws SelfPickException, RepeatPickException, DataNotExistException {

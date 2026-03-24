@@ -33,9 +33,9 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String clientIp = getClientIp(request);
+        String rateLimitKey = getRateLimitKey(request);
         String path = request.getRequestURI();
-        String key = clientIp + ":" + path;
+        String key = rateLimitKey + ":" + path;
 
         long now = System.currentTimeMillis();
         long windowMillis = rateLimit.windowSeconds() * 1000L;
@@ -48,7 +48,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         }
 
         if (timestamps.size() >= rateLimit.maxRequests()) {
-            log.warn("请求限流: IP={}, path={}, 窗口内请求数={}", clientIp, path, timestamps.size());
+            log.warn("请求限流: key={}, path={}, 窗口内请求数={}", rateLimitKey, path, timestamps.size());
             response.setStatus(429);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
@@ -61,15 +61,13 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private String getClientIp(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
-            return ip.split(",")[0].trim();
+    private String getRateLimitKey(HttpServletRequest request) {
+        // For authenticated requests, use sessionId to prevent IP spoofing
+        Object sessionId = request.getAttribute("sessionId");
+        if (sessionId != null && !sessionId.toString().isEmpty()) {
+            return "session:" + sessionId;
         }
-        ip = request.getHeader("X-Real-IP");
-        if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
-            return ip;
-        }
-        return request.getRemoteAddr();
+        // For unauthenticated requests, use remote addr (not forwarded headers)
+        return "ip:" + request.getRemoteAddr();
     }
 }

@@ -92,20 +92,14 @@
   --font-lg: 16px;
   --font-xl: 18px;
   --font-2xl: 20px;
-
-  /* Aliases for component compatibility */
-  --c-text-primary: var(--c-text-1);
-  --c-text-secondary: var(--c-text-2);
-  --c-text-tertiary: var(--c-text-3);
-  --c-text-quaternary: var(--c-text-3);
 }
 
 /* ── Dark Theme ─────────────────────────────────────────── */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --c-primary: #10B981;
-  --c-primary-hover: #34D399;
+  --c-primary: #34D399;
+  --c-primary-hover: #6EE7B7;
   --c-primary-50: rgba(52,211,153,0.08);
   --c-primary-100: rgba(52,211,153,0.12);
   --c-bg: #0B0E14;

@@ -1,11 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import AppToast from '@/components/ui/AppToast.vue'
 
 const route = useRoute()
 
-const COMMUNITY_PREFIXES = ['/ershou', '/marketplace', '/lostandfound', '/secret', '/express', '/topic', '/delivery', '/dating', '/photograph']
+const COMMUNITY_PREFIXES = ['/ershou', '/lostandfound', '/secret', '/express', '/topic', '/delivery', '/dating', '/photograph']
 
 const transitionName = computed(() => {
   const p = route.path
@@ -21,7 +20,6 @@ const transitionName = computed(() => {
       <component :is="Component" />
     </transition>
   </router-view>
-  <AppToast />
 </template>
 
 <style scoped>

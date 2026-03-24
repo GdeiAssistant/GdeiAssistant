@@ -83,16 +83,6 @@ export function handleGraduateExam(payload, utils) {
   }))
 }
 
-export function handleInformationOverview(utils) {
-  return utils.resolveWithDelay(utils.buildSuccess({
-    festival: {
-      name: '春分',
-      description: '春分时节，昼夜平分，万物复苏，校园里的木棉花正开得热烈。'
-    },
-    notices: []
-  }))
-}
-
 export function handleModuleStateDetail(utils) {
   return utils.resolveWithDelay(utils.buildSuccess({
     extension: {

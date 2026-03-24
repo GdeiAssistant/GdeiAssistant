@@ -6,6 +6,6 @@ import request from '@/utils/request'
  * @returns {Promise<import('axios').AxiosResponse>}
  */
 export function queryKaoyanScore(payload) {
-  return request.post('/graduate-exam/query', payload)
+  return request.post('/graduateExam/query', payload)
 }
 

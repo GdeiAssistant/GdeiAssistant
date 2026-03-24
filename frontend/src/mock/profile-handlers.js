@@ -1,26 +1,8 @@
 // ---------------------------------------------------------------------------
-// Location regions — built from locationTree.js (label/value/children format)
-// converted to the backend stateMap format expected by Profile.vue
+// Location regions — simplified for mock layer (returns location tree from
+// the existing data/locationTree.js if needed, or empty fallback)
 // ---------------------------------------------------------------------------
-import locationTreeRaw from '../data/locationTree.js'
-
-function buildLocationRegions(tree) {
-  return tree.map((region, ri) => {
-    const stateMap = {}
-    ;(region.children || []).forEach((state, si) => {
-      const cityMap = {}
-      ;(state.children || []).forEach((city, ci) => {
-        const cityCode = `${ri}_${si}_${ci}`
-        cityMap[cityCode] = { code: cityCode, name: city.label, aliasesName: city.label }
-      })
-      const stateCode = `${ri}_${si}`
-      stateMap[stateCode] = { code: stateCode, name: state.label, aliasesName: state.label, cityMap }
-    })
-    return { code: String(ri), name: region.label, aliasesName: region.label, stateMap }
-  })
-}
-
-const LOCATION_REGIONS = buildLocationRegions(locationTreeRaw)
+const LOCATION_REGIONS = []
 
 // ---------------------------------------------------------------------------
 // Faculty / major options — inlined from WeChat constants/profile.js
@@ -213,15 +195,13 @@ export function handleBirthdayUpdate(token, payload, utils) {
 }
 
 export function handleFacultyUpdate(token, payload, utils) {
-  // code is 1-based index into non-NOT_SELECTED faculties
-  const code = Number(payload.faculty)
-  const validFaculties = FACULTY_OPTIONS.filter(f => f !== NOT_SELECTED)
-  const faculty = validFaculties[code - 1] || NOT_SELECTED
+  const facultyIndex = Number(payload.faculty)
+  const faculty = FACULTY_OPTIONS[facultyIndex] || FACULTY_OPTIONS[0]
 
   return applyProfileUpdate(token, function(profile) {
-    profile.faculty = faculty === NOT_SELECTED ? '' : faculty
+    profile.faculty = faculty
     if (getMajorOptions(faculty).indexOf(profile.major) === -1) {
-      profile.major = ''
+      profile.major = '未选择'
     }
   }, utils)
 }
@@ -231,7 +211,7 @@ export function handleMajorUpdate(token, payload, utils) {
 
   return applyProfileUpdate(token, function(profile) {
     const majorOptions = getMajorOptions(profile.faculty)
-    profile.major = majorOptions.indexOf(major) !== -1 ? major : ''
+    profile.major = majorOptions.indexOf(major) !== -1 ? major : '未选择'
   }, utils)
 }
 
@@ -273,14 +253,14 @@ export function handleLocationUpdate(token, payload, type, utils) {
 export function handleProfileOptions(token, utils) {
   const authError = utils.ensureAuthorized(token)
   if (authError) return authError
-  const faculties = FACULTY_OPTIONS
-    .filter(f => f !== NOT_SELECTED)
-    .map((name, idx) => ({
-      label: name,
-      code: idx + 1,
-      majors: (MAJOR_OPTIONS_BY_FACULTY[name] || []).filter(m => m !== NOT_SELECTED)
-    }))
-  return utils.resolveWithDelay(utils.buildSuccess({ faculties }))
+  return utils.resolveWithDelay(utils.buildSuccess({
+    faculties: FACULTY_OPTIONS.filter(f => f !== '__not_selected__').map((name, idx) => ({ id: idx + 1, name })),
+    majors: [
+      '教育技术学', '汉语言文学', '数学与应用数学', '英语',
+      '计算机科学与技术', '软件工程', '物理学', '化学', '生物科学',
+      '音乐学', '美术学', '体育教育'
+    ].map((name, idx) => ({ id: idx + 1, name }))
+  }))
 }
 
 const DEFAULT_PRIVACY = {

@@ -34,105 +34,109 @@ export const BASE_PROFILE = {
 export const GRADE_REPORTS = [
   {
     year: 0,
-    firstTermGPA: '3.72',
     firstTermGradeList: [
-      { gradeName: '高等数学', gradeScore: '92', gradeCredit: '4' },
-      { gradeName: '程序设计基础', gradeScore: '95', gradeCredit: '3' },
-      { gradeName: '大学英语', gradeScore: '88', gradeCredit: '3' }
+      { gradeName: '高等数学', gradeScore: '92' },
+      { gradeName: '程序设计基础', gradeScore: '95' },
+      { gradeName: '大学英语', gradeScore: '88' }
     ],
-    secondTermGPA: '3.65',
     secondTermGradeList: [
-      { gradeName: '数据结构', gradeScore: '94', gradeCredit: '4' },
-      { gradeName: '离散数学', gradeScore: '90', gradeCredit: '3' },
-      { gradeName: '大学物理', gradeScore: '85', gradeCredit: '3' }
+      { gradeName: '数据结构', gradeScore: '94' },
+      { gradeName: '离散数学', gradeScore: '90' },
+      { gradeName: '大学物理', gradeScore: '85' }
     ]
   },
   {
     year: 1,
-    firstTermGPA: '3.68',
     firstTermGradeList: [
-      { gradeName: '数据库系统概论', gradeScore: '93', gradeCredit: '3' },
-      { gradeName: '操作系统', gradeScore: '89', gradeCredit: '4' },
-      { gradeName: '计算机网络', gradeScore: '91', gradeCredit: '3' }
+      { gradeName: '数据库系统概论', gradeScore: '93' },
+      { gradeName: '操作系统', gradeScore: '89' },
+      { gradeName: '计算机网络', gradeScore: '91' }
     ],
-    secondTermGPA: '3.55',
     secondTermGradeList: [
-      { gradeName: '软件工程', gradeScore: '95', gradeCredit: '3' },
-      { gradeName: '编译原理', gradeScore: '86', gradeCredit: '4' },
-      { gradeName: '概率论与数理统计', gradeScore: '87', gradeCredit: '3' }
+      { gradeName: '软件工程', gradeScore: '95' },
+      { gradeName: '编译原理', gradeScore: '86' },
+      { gradeName: '概率论与数理统计', gradeScore: '87' }
     ]
   },
   {
     year: 2,
-    firstTermGPA: '3.78',
     firstTermGradeList: [
-      { gradeName: 'iOS 移动开发', gradeScore: '97', gradeCredit: '3' },
-      { gradeName: '前端工程化', gradeScore: '92', gradeCredit: '3' },
-      { gradeName: '计算机图形学', gradeScore: '85', gradeCredit: '3' }
+      { gradeName: 'iOS 移动开发', gradeScore: '97' },
+      { gradeName: '前端工程化', gradeScore: '92' },
+      { gradeName: '计算机图形学', gradeScore: '85' }
     ],
-    secondTermGPA: '3.62',
     secondTermGradeList: [
-      { gradeName: '软件测试', gradeScore: '91', gradeCredit: '3' },
-      { gradeName: '项目管理', gradeScore: '90', gradeCredit: '2' },
-      { gradeName: '人工智能导论', gradeScore: '89', gradeCredit: '3' }
+      { gradeName: '软件测试', gradeScore: '91' },
+      { gradeName: '项目管理', gradeScore: '90' },
+      { gradeName: '人工智能导论', gradeScore: '89' }
     ]
   },
   {
     year: 3,
-    firstTermGPA: null,
     firstTermGradeList: [
-      { gradeName: '毕业实习', gradeScore: '优', gradeCredit: '6' },
-      { gradeName: '创新创业实践', gradeScore: '良', gradeCredit: '2' }
+      { gradeName: '毕业实习', gradeScore: '优' },
+      { gradeName: '创新创业实践', gradeScore: '良' }
     ],
-    secondTermGPA: null,
     secondTermGradeList: [
-      { gradeName: '毕业设计', gradeScore: '进行中', gradeCredit: '8' }
+      { gradeName: '毕业设计', gradeScore: '进行中' }
     ]
   }
 ]
 
 export const SCHEDULE_TEMPLATE = [
   {
-    column: 0, row: 0, scheduleLength: 2, position: 0,
-    scheduleLesson: '第 1-2 节', scheduleName: '移动应用开发',
-    minScheduleWeek: 1, maxScheduleWeek: 16,
-    scheduleTeacher: '陈老师', scheduleLocation: '教学楼 A201'
+    column: 0,
+    scheduleLesson: '第 1-2 节',
+    scheduleName: '移动应用开发',
+    minScheduleWeek: 1,
+    maxScheduleWeek: 16,
+    scheduleTeacher: '陈老师',
+    scheduleLocation: '教学楼 A201'
   },
   {
-    column: 1, row: 2, scheduleLength: 2, position: 15,
-    scheduleLesson: '第 3-4 节', scheduleName: '软件测试',
-    minScheduleWeek: 1, maxScheduleWeek: 16,
-    scheduleTeacher: '张老师', scheduleLocation: '教学楼 C402'
+    column: 1,
+    scheduleLesson: '第 3-4 节',
+    scheduleName: '软件测试',
+    minScheduleWeek: 1,
+    maxScheduleWeek: 16,
+    scheduleTeacher: '张老师',
+    scheduleLocation: '教学楼 C402'
   },
   {
-    column: 2, row: 0, scheduleLength: 2, position: 2,
-    scheduleLesson: '第 1-2 节', scheduleName: '数据库原理',
-    minScheduleWeek: 1, maxScheduleWeek: 16,
-    scheduleTeacher: '李老师', scheduleLocation: '教学楼 B305'
+    column: 2,
+    scheduleLesson: '第 1-2 节',
+    scheduleName: '数据库原理',
+    minScheduleWeek: 1,
+    maxScheduleWeek: 16,
+    scheduleTeacher: '李老师',
+    scheduleLocation: '教学楼 B305'
   },
   {
-    column: 3, row: 4, scheduleLength: 2, position: 31,
-    scheduleLesson: '第 5-6 节', scheduleName: '编译原理',
-    minScheduleWeek: 1, maxScheduleWeek: 16,
-    scheduleTeacher: '王老师', scheduleLocation: '教学楼 B402'
+    column: 3,
+    scheduleLesson: '第 5-6 节',
+    scheduleName: '编译原理',
+    minScheduleWeek: 1,
+    maxScheduleWeek: 16,
+    scheduleTeacher: '王老师',
+    scheduleLocation: '教学楼 B402'
   },
   {
-    column: 4, row: 0, scheduleLength: 2, position: 4,
-    scheduleLesson: '第 1-2 节', scheduleName: '计算机网络',
-    minScheduleWeek: 1, maxScheduleWeek: 16,
-    scheduleTeacher: '周老师', scheduleLocation: '教学楼 D202'
+    column: 4,
+    scheduleLesson: '第 1-2 节',
+    scheduleName: '计算机网络',
+    minScheduleWeek: 1,
+    maxScheduleWeek: 16,
+    scheduleTeacher: '周老师',
+    scheduleLocation: '教学楼 D202'
   },
   {
-    column: 4, row: 6, scheduleLength: 2, position: 46,
-    scheduleLesson: '第 7-8 节', scheduleName: '就业指导',
-    minScheduleWeek: 1, maxScheduleWeek: 16,
-    scheduleTeacher: '辅导员', scheduleLocation: '教学楼 A101'
-  },
-  {
-    column: 5, row: 2, scheduleLength: 2, position: 19,
-    scheduleLesson: '第 3-4 节', scheduleName: '人工智能导论',
-    minScheduleWeek: 2, maxScheduleWeek: 14,
-    scheduleTeacher: '吴老师', scheduleLocation: '教学楼 B101'
+    column: 4,
+    scheduleLesson: '第 7-8 节',
+    scheduleName: '就业指导',
+    minScheduleWeek: 1,
+    maxScheduleWeek: 16,
+    scheduleTeacher: '辅导员',
+    scheduleLocation: '教学楼 A101'
   }
 ]
 

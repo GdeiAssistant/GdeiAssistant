@@ -82,8 +82,9 @@ async function handleUpdateCache() {
 function scoreColorClass(score) {
   const num = parseFloat(score)
   if (isNaN(num)) return 'text-[var(--c-text-1)]'
-  if (num < 60) return 'text-[var(--c-danger)]'
-  return 'text-[var(--c-text-1)]'
+  if (num >= 90) return 'text-[var(--c-primary)]'
+  if (num >= 60) return 'text-[var(--c-text-1)]'
+  return 'text-[var(--c-danger)]'
 }
 
 onMounted(() => {

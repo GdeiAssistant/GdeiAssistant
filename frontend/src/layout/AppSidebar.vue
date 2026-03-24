@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Home, Bell, Settings, Info, ChevronRight } from 'lucide-vue-next'
+import { Home, Bell, User, Settings, Info, ChevronRight } from 'lucide-vue-next'
 import { getCurrentUserProfile } from '@/api/user'
 
 const router = useRouter()
@@ -19,6 +19,7 @@ onMounted(async () => {
 const navItems = [
   { label: '首页', icon: Home, path: '/home' },
   { label: '消息通知', icon: Bell, path: '/info' },
+  { label: '个人中心', icon: User, path: '/profile' },
 ]
 
 const footerItems = [
@@ -41,13 +42,13 @@ function avatarInitial() {
 </script>
 
 <template>
-  <aside class="fixed left-0 top-0 h-full w-[200px] bg-[var(--c-surface)] border-r border-[var(--c-border)] flex flex-col z-40">
+  <aside class="fixed left-0 top-0 h-full w-[200px] bg-white border-r border-gray-200 flex flex-col z-40">
     <!-- Brand -->
     <div class="flex items-center gap-2.5 px-4 py-5">
-      <div class="w-8 h-8 rounded-lg bg-[var(--c-primary)] flex items-center justify-center text-white font-bold text-sm shrink-0">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
         G
       </div>
-      <span class="text-base font-semibold text-[var(--c-text-1)] truncate">广东二师助手</span>
+      <span class="text-base font-semibold text-gray-900 truncate">广东二师助手</span>
     </div>
 
     <!-- Primary nav -->
@@ -58,7 +59,7 @@ function avatarInitial() {
             class="flex items-center gap-2.5 w-full rounded-lg px-2.5 py-2 text-sm font-medium transition-colors"
             :class="isActive(item.path)
               ? 'bg-[var(--c-primary-50)] text-[var(--c-primary)] font-semibold'
-              : 'text-[var(--c-text-2)] hover:bg-[var(--c-surface-hover)]'"
+              : 'text-gray-500 hover:bg-gray-50'"
             @click="navigate(item.path)"
           >
             <component :is="item.icon" class="w-4 h-4 shrink-0" />
@@ -73,10 +74,10 @@ function avatarInitial() {
     </nav>
 
     <!-- Footer -->
-    <div class="border-t border-[var(--c-border)] px-3 py-3 space-y-0.5">
+    <div class="border-t border-gray-200 px-3 py-3 space-y-0.5">
       <li v-for="item in footerItems" :key="item.path" class="list-none">
         <button
-          class="flex items-center gap-2.5 w-full rounded-lg px-2.5 py-2 text-sm font-medium text-[var(--c-text-2)] hover:bg-[var(--c-surface-hover)] transition-colors"
+          class="flex items-center gap-2.5 w-full rounded-lg px-2.5 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
           @click="navigate(item.path)"
         >
           <component :is="item.icon" class="w-4 h-4 shrink-0" />
@@ -86,18 +87,21 @@ function avatarInitial() {
 
       <!-- User card -->
       <div
-        class="flex items-center gap-2.5 mt-2 px-2.5 py-2 rounded-lg hover:bg-[var(--c-surface-hover)] cursor-pointer transition-colors"
+        class="flex items-center gap-2.5 mt-2 px-2.5 py-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
         @click="navigate('/profile')"
       >
-        <div class="w-8 h-8 rounded-full bg-[var(--c-primary)] flex items-center justify-center text-white text-xs font-semibold shrink-0">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-xs font-semibold shrink-0">
           {{ avatarInitial() }}
         </div>
         <div class="flex-1 min-w-0">
-          <p class="text-sm font-semibold text-[var(--c-text-1)] truncate">
+          <p class="text-sm font-semibold text-gray-900 truncate">
             {{ profile?.nickname || profile?.username || '未登录' }}
           </p>
+          <p class="text-[11px] text-gray-400 truncate">
+            {{ profile ? (profile.faculty || '个人中心') : '点击查看' }}
+          </p>
         </div>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)] shrink-0" />
+        <ChevronRight class="w-4 h-4 text-gray-300 shrink-0" />
       </div>
     </div>
   </aside>

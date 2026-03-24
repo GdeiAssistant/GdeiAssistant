@@ -40,12 +40,12 @@ function toggleLike(item) {
     request.post(`/secret/id/${item.id}/like`, null, { params: { like: 0 } }).then(() => {
       item.liked = false
       item.likeCount--
-    }).catch(() => {})
+    })
   } else {
     request.post(`/secret/id/${item.id}/like`, null, { params: { like: 1 } }).then(() => {
       item.liked = true
       item.likeCount++
-    }).catch(() => {})
+    })
   }
 }
 

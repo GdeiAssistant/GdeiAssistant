@@ -17,10 +17,7 @@
             {{ userInfo.nickname || userInfo.username }}
           </p>
           <p class="text-sm text-[var(--c-text-tertiary)] mt-0.5 truncate">
-            {{ $t('profile.username') }}：{{ userInfo.username }}
-          </p>
-          <p class="text-sm text-[var(--c-text-tertiary)] mt-0.5 truncate">
-            {{ $t('profile.ipArea') }}：{{ userInfo.ipArea || '-' }}
+            {{ userInfo.faculty || '' }}{{ userInfo.major ? ' · ' + userInfo.major : '' }}{{ userInfo.enrollment ? ' · ' + userInfo.enrollment : '' }}
           </p>
         </div>
       </div>
@@ -34,6 +31,18 @@
           <span class="text-sm font-medium text-[var(--c-text-secondary)]">{{ $t('profile.title') }}</span>
         </div>
       </template>
+
+      <div class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer"
+           @click="$router.push('/user/avatar-edit')">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.avatar') }}</span>
+        <img :src="userInfo.avatar" class="w-9 h-9 rounded-full object-cover" :alt="$t('profile.avatar')" />
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </div>
+
+      <div class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)]">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.username') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.username }}</span>
+      </div>
 
       <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openNicknameDialog">
@@ -84,14 +93,164 @@
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
-      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-0 text-left font-inherit"
+      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openIntroDialog">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.introduction') }}</span>
         <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.introduction ? $t('common.filled') : $t('common.notFilled') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
+      <div class="flex items-center gap-3 px-4 py-3 last:border-0">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.ipArea') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.ipArea || '-' }}</span>
+      </div>
     </AppCard>
+
+    <!-- Privacy & Features -->
+    <AppCard>
+      <template #header>
+        <div class="flex items-center gap-2">
+          <Shield class="w-4 h-4 text-[var(--c-text-tertiary)]" />
+          <span class="text-sm font-medium text-[var(--c-text-secondary)]">{{ $t('profile.privacySetting') }}</span>
+        </div>
+      </template>
+
+      <RouterLink to="/user/privacy-setting"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Shield class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.privacySetting') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/feature-manage"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Settings class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.featureManage') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+    </AppCard>
+
+    <!-- Appearance -->
+    <AppCard>
+      <RouterLink to="/appearance"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Settings class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('appearance.title') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+    </AppCard>
+
+    <!-- Security -->
+    <AppCard>
+      <template #header>
+        <div class="flex items-center gap-2">
+          <Lock class="w-4 h-4 text-[var(--c-text-tertiary)]" />
+          <span class="text-sm font-medium text-[var(--c-text-secondary)]">{{ $t('profile.changePassword') }}</span>
+        </div>
+      </template>
+
+      <button type="button"
+              class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="handlePasswordClick">
+        <Lock class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.changePassword') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </button>
+
+      <RouterLink to="/user/login-record"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Smartphone class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.loginRecord') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/realname"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Shield class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.realname') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/bind-phone"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Smartphone class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.bindPhone') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/bind-email"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Mail class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.bindEmail') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/delete"
+                  class="flex items-center gap-3 px-4 py-3 last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Trash2 class="w-5 h-5 text-red-400" />
+        <span class="flex-1 text-red-500">{{ $t('profile.deleteAccount') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+    </AppCard>
+
+    <!-- Report -->
+    <AppCard>
+      <a href="https://www.wjx.top/m/47687434.aspx" target="_blank" rel="noopener noreferrer"
+         class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <MessageSquare class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.reportChannel') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </a>
+    </AppCard>
+
+    <!-- Download Data -->
+    <AppCard>
+      <RouterLink to="/user/download"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Download class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.downloadData') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+    </AppCard>
+
+    <!-- Help & Feedback -->
+    <AppCard>
+      <RouterLink to="/user/feedback"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <MessageSquare class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.helpFeedback') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+    </AppCard>
+
+    <!-- Logout -->
+    <AppCard>
+      <button type="button"
+              class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-transparent border-0 cursor-pointer font-inherit"
+              @click="handleLogoutClick">
+        <LogOut class="w-5 h-5 text-red-500" />
+        <span class="text-red-500 font-medium">{{ $t('profile.logout') }}</span>
+      </button>
+    </AppCard>
+
+    <!-- Logout Dialog -->
+    <Teleport to="body">
+      <div v-if="showLogoutDialog" class="fixed inset-0 z-[1000] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/60" @click="showLogoutDialog = false"></div>
+        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
+          <div class="px-6 pt-8 pb-4 text-center">
+            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('common.hint') }}</strong>
+          </div>
+          <div class="px-6 pb-8 text-[15px] text-[var(--c-text-secondary)] text-center">{{ $t('profile.logoutConfirm') }}</div>
+          <div class="flex border-t border-[var(--c-border-light)]">
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
+                    @click="showLogoutDialog = false">{{ $t('common.cancel') }}</button>
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 border-l border-[var(--c-border-light)] cursor-pointer text-red-500 font-medium font-inherit"
+                    @click="confirmLogout">{{ $t('profile.logoutConfirmBtn') }}</button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Nickname Dialog -->
     <Teleport to="body">
@@ -132,6 +291,23 @@
                     @click="showIntroDialog = false">{{ $t('common.cancel') }}</button>
             <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 border-l border-[var(--c-border-light)] cursor-pointer text-[var(--c-primary)] font-medium font-inherit"
                     @click="confirmIntro">{{ $t('common.confirm') }}</button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- Password Not Available Dialog -->
+    <Teleport to="body">
+      <div v-if="showPwdDialog" class="fixed inset-0 z-[1000] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/60" @click="showPwdDialog = false"></div>
+        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
+          <div class="px-6 pt-8 pb-4 text-center">
+            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('common.hint') }}</strong>
+          </div>
+          <div class="px-6 pb-8 text-[15px] text-[var(--c-text-secondary)] text-center">{{ $t('profile.passwordNotAvailable') }}</div>
+          <div class="flex border-t border-[var(--c-border-light)]">
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-primary)] font-medium font-inherit"
+                    @click="showPwdDialog = false">{{ $t('common.iKnow') }}</button>
           </div>
         </div>
       </div>
@@ -179,25 +355,17 @@
         </div>
       </div>
     </Teleport>
-
-    <!-- Location Picker (三级联动) -->
-    <LocationPicker
-      :open="showLocationPicker"
-      :title="locationPickerType === 'hometown' ? $t('profile.selectHometown') : $t('profile.selectLocation')"
-      :tree="locationListTree"
-      @close="showLocationPicker = false"
-      @confirm="onLocationConfirm"
-    />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { setLocale } from '../i18n'
 import {
   getCurrentUserProfile,
+  logout,
   getLocationList,
   getProfileOptions,
   updateIntroduction,
@@ -211,8 +379,10 @@ import {
 } from '../api/user.js'
 import { useToast } from '@/composables/useToast'
 import AppCard from '@/components/ui/AppCard.vue'
-import LocationPicker from '@/components/ui/LocationPicker.vue'
-import { User, ChevronRight } from 'lucide-vue-next'
+import {
+  User, Lock, Shield, Smartphone, Mail, Trash2,
+  Download, MessageSquare, Settings, LogOut, ChevronRight
+} from 'lucide-vue-next'
 
 const router = useRouter()
 const { t, locale } = useI18n()
@@ -243,16 +413,18 @@ const userInfo = ref({
   ipArea: ''
 })
 
+const showPwdDialog = ref(false)
 const showNicknameDialog = ref(false)
 const showIntroDialog = ref(false)
+const showLogoutDialog = ref(false)
 const tempNickname = ref('')
 const tempIntro = ref('')
 
-const unselectedOption = t('common.unselected')
+const unselectedOption = '未选择'
 const facultyList = ref([unselectedOption])
 const facultyCodeMap = ref({})
 const facultyMajorMap = ref({ [unselectedOption]: [unselectedOption] })
-const facultyPlaceholder = t('profile.selectFaculty')
+const facultyPlaceholder = '请选择院系'
 const majorList = ref([])
 const updateMajorListByFaculty = () => {
   majorList.value = (facultyMajorMap.value[userInfo.value.faculty] || [unselectedOption]).slice()
@@ -353,7 +525,7 @@ function saveFaculty() {
 
 function saveMajor() {
   const major = userInfo.value.major
-  if (!major || major === unselectedOption) return Promise.resolve()
+  if (!major || major === '未选择') return Promise.resolve()
   return updateMajor({ major })
     .then(() => { showSuccess() })
 }
@@ -411,44 +583,40 @@ const openEnrollmentPicker = () => {
   })
 }
 
-const showLocationPicker = ref(false)
-const locationPickerType = ref('location') // 'location' | 'hometown'
-
 const openLocationPicker = () => {
-  if (!locationListTree.value || locationListTree.value.length === 0) {
+  const tree = locationListTree.value
+  if (!tree || tree.length === 0) {
     toastError(t('common.loadingRegions'))
     return
   }
-  locationPickerType.value = 'location'
-  showLocationPicker.value = true
+  openListFallback(t('profile.selectLocation'), locationFlatOptions.value, (val) => {
+    const item = locationFlatMap.value[val]
+    if (item) {
+      userInfo.value.locationRegion = item.region
+      userInfo.value.locationState = item.state || ''
+      userInfo.value.locationCity = item.city || ''
+      userInfo.value.location = formatLocationDisplay(val)
+      saveLocation()
+    }
+  })
 }
 
 const openHometownPicker = () => {
-  if (!locationListTree.value || locationListTree.value.length === 0) {
+  const tree = locationListTree.value
+  if (!tree || tree.length === 0) {
     toastError(t('common.loadingRegions'))
     return
   }
-  locationPickerType.value = 'hometown'
-  showLocationPicker.value = true
-}
-
-const onLocationConfirm = ({ region, state, city }) => {
-  const parts = [region?.name, state?.name, city?.name].filter(Boolean)
-  const display = parts.join(' ')
-  if (locationPickerType.value === 'hometown') {
-    userInfo.value.hometownRegion = region?.code || ''
-    userInfo.value.hometownState = state?.code || ''
-    userInfo.value.hometownCity = city?.code || ''
-    userInfo.value.hometown = display
-    saveHometown()
-  } else {
-    userInfo.value.locationRegion = region?.code || ''
-    userInfo.value.locationState = state?.code || ''
-    userInfo.value.locationCity = city?.code || ''
-    userInfo.value.location = display
-    saveLocation()
-  }
-  showLocationPicker.value = false
+  openListFallback(t('profile.selectHometown'), locationFlatOptions.value, (val) => {
+    const item = locationFlatMap.value[val]
+    if (item) {
+      userInfo.value.hometownRegion = item.region
+      userInfo.value.hometownState = item.state || ''
+      userInfo.value.hometownCity = item.city || ''
+      userInfo.value.hometown = formatLocationDisplay(val)
+      saveHometown()
+    }
+  })
 }
 
 const showListFallback = ref(false)
@@ -508,6 +676,28 @@ const confirmIntro = () => {
     })
 }
 
+const handlePasswordClick = () => { showPwdDialog.value = true }
+
+const doLogout = async () => {
+  try {
+    await logout()
+  } catch (_) {
+  }
+  localStorage.removeItem('token')
+  sessionStorage.clear()
+  toastSuccess(t('common.logoutSuccess'))
+  setTimeout(() => router.replace('/login'), 600)
+}
+
+const handleLogoutClick = () => {
+  showLogoutDialog.value = true
+}
+
+const confirmLogout = () => {
+  showLogoutDialog.value = false
+  doLogout()
+}
+
 async function fetchUserProfile() {
   try {
     const res = await getCurrentUserProfile()
@@ -528,7 +718,6 @@ async function fetchUserProfile() {
       updateMajorListByFaculty()
     }
   } catch (_) {
-    toastError(t('common.saveFailed'))
   }
 }
 
@@ -551,10 +740,12 @@ onMounted(() => {
   getLocationList()
     .then(res => {
       if (res && res.success && res.data) {
-        locationListTree.value = res.data
+        locationListTree.value = buildLocationPickerTree(res.data)
       }
     })
     .catch(() => {})
 })
 
+onBeforeUnmount(() => {
+})
 </script>

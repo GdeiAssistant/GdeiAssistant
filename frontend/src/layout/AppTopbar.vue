@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { Moon, Sun, Menu } from 'lucide-vue-next'
+import { Search, Bell, Moon, Sun, Menu } from 'lucide-vue-next'
 
 defineProps({ sidebarOpen: Boolean })
 const route = useRoute()
@@ -51,6 +51,30 @@ function toggleTheme() {
 
     <!-- Right: Actions -->
     <div class="flex items-center gap-2">
+      <!-- Quick-nav / command palette trigger -->
+      <button
+        class="flex items-center gap-1.5 px-3 py-1.5 border border-[var(--c-border)] rounded-lg min-w-[180px] text-xs text-[var(--c-text-3)] bg-[var(--c-surface)] hover:bg-[var(--c-surface-hover)]"
+        @click="emit('open-command-palette')"
+      >
+        <Search class="w-3.5 h-3.5" />
+        <span>快速跳转...</span>
+        <kbd
+          class="ml-auto text-[10px] bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1"
+        >
+          ⌘K
+        </kbd>
+      </button>
+
+      <!-- Notification bell -->
+      <button
+        class="relative w-[34px] h-[34px] rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] flex items-center justify-center text-[var(--c-text-2)] hover:bg-[var(--c-surface-hover)]"
+      >
+        <Bell class="w-4 h-4" />
+        <span
+          class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"
+        />
+      </button>
+
       <!-- Theme toggle -->
       <button
         class="w-[34px] h-[34px] rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] flex items-center justify-center text-[var(--c-text-2)] hover:bg-[var(--c-surface-hover)]"

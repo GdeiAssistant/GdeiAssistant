@@ -15,7 +15,7 @@ const actions = [
     id: 'records',
     title: '消费记录',
     description: '按日期查询校园卡当日消费流水',
-    path: '/card/records',
+    path: '/card',
     badge: '消费'
   }
 ]

@@ -13,6 +13,7 @@ export const ALL_FEATURES = [
   { id: 'pe', name: '体测查询', icon: 'icon-pe', path: '/pe', defaultVisible: true },
   { id: 'data', name: '数据查询', icon: 'icon-data', path: '/data', defaultVisible: true },
   { id: 'evaluate', name: '教学评价', icon: 'icon-evaluate', path: '/evaluate', defaultVisible: true },
+  { id: 'about', name: '关于应用', icon: 'icon-about', path: '/about', defaultVisible: true },
   { id: 'ershou', name: '二手交易', icon: 'icon-ershou', path: '/ershou', defaultVisible: true },
   { id: 'delivery', name: '全民快递', icon: 'icon-delivery', path: '/delivery', defaultVisible: true },
   { id: 'lostandfound', name: '失物招领', icon: 'icon-lostandfound', path: '/lostandfound', defaultVisible: true },

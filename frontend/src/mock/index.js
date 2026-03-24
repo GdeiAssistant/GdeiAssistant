@@ -232,6 +232,24 @@ export function handleRequest(options) {
     return profileHandlers.handleLocationUpdate(token, payload, 'hometown', utils)
   }
 
+  if (path === '/api/profile/options' && method === 'GET') {
+    return profileHandlers.handleProfileOptions(token, utils)
+  }
+
+  if (path === '/api/privacy' && method === 'GET') {
+    return profileHandlers.handlePrivacyGet(token, utils)
+  }
+
+  if (path === '/api/privacy' && method === 'POST') {
+    return profileHandlers.handlePrivacyUpdate(token, payload, utils)
+  }
+
+  if (path === '/api/feedback' && method === 'POST') {
+    const authError = utils.ensureAuthorized(token)
+    if (authError) return authError
+    return utils.resolveWithDelay(utils.buildSuccess(null))
+  }
+
   // --- Campus / Academic ---
   if (path === '/api/grade' && method === 'GET') {
     return campusHandlers.handleGrade(token, query, utils)
@@ -291,6 +309,22 @@ export function handleRequest(options) {
 
   if (path === '/api/spare/query' && method === 'POST') {
     return campusHandlers.handleSpareRoom(token, utils)
+  }
+
+  if (path === '/api/grade/update' && method === 'POST') {
+    return campusHandlers.handleGradeUpdate(token, utils)
+  }
+
+  if (path === '/api/schedule/update' && method === 'POST') {
+    return campusHandlers.handleScheduleUpdate(token, utils)
+  }
+
+  if (path === '/api/schedule/custom' && method === 'POST') {
+    return campusHandlers.handleScheduleCustomAdd(token, payload, utils)
+  }
+
+  if (path === '/api/schedule/custom' && method === 'DELETE') {
+    return campusHandlers.handleScheduleCustomDelete(token, query, utils)
   }
 
   // --- Info / Data ---

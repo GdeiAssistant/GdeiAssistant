@@ -249,3 +249,27 @@ export function handleSpareRoom(token, utils) {
 
   return utils.resolveWithDelay(utils.buildSuccess(utils.cloneValue(data.SPARE_ROOMS)))
 }
+
+export function handleGradeUpdate(token, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  return utils.resolveWithDelay(utils.buildSuccess(null))
+}
+
+export function handleScheduleUpdate(token, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  return utils.resolveWithDelay(utils.buildSuccess(null))
+}
+
+export function handleScheduleCustomAdd(token, payload, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  return utils.resolveWithDelay(utils.buildSuccess(null))
+}
+
+export function handleScheduleCustomDelete(token, query, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  return utils.resolveWithDelay(utils.buildSuccess(null))
+}

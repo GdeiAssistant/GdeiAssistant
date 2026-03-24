@@ -102,10 +102,16 @@ function createMockAdapter(config) {
   const path = (config.baseURL || '') + (config.url || '')
   const token = localStorage.getItem('token') || ''
 
+  // axios 会将 POST body 序列化为 JSON 字符串，需要解析回对象
+  let data = config.data || {}
+  if (typeof data === 'string') {
+    try { data = JSON.parse(data) } catch (_) { /* keep as-is */ }
+  }
+
   return mockHandleRequest({
     path,
     method,
-    data: config.data || {},
+    data,
     token
   }).then((mockData) => ({
     data: mockData,

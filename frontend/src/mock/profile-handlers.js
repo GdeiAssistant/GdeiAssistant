@@ -249,3 +249,40 @@ export function handleLocationUpdate(token, payload, type, utils) {
     profile.location = displayText
   }, utils)
 }
+
+export function handleProfileOptions(token, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  return utils.resolveWithDelay(utils.buildSuccess({
+    faculties: FACULTY_OPTIONS.filter(f => f !== '__not_selected__').map((name, idx) => ({ id: idx + 1, name })),
+    majors: [
+      '教育技术学', '汉语言文学', '数学与应用数学', '英语',
+      '计算机科学与技术', '软件工程', '物理学', '化学', '生物科学',
+      '音乐学', '美术学', '体育教育'
+    ].map((name, idx) => ({ id: idx + 1, name }))
+  }))
+}
+
+const DEFAULT_PRIVACY = {
+  facultyOpen: true, majorOpen: true, locationOpen: false,
+  hometownOpen: false, introductionOpen: true, enrollmentOpen: true,
+  ageOpen: false, cacheAllow: true, robotsIndexAllow: false
+}
+
+export function handlePrivacyGet(token, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  const state = utils.readState()
+  return utils.resolveWithDelay(utils.buildSuccess(
+    Object.assign({}, DEFAULT_PRIVACY, state.privacy || {})
+  ))
+}
+
+export function handlePrivacyUpdate(token, payload, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  const state = utils.readState()
+  state.privacy = Object.assign({}, DEFAULT_PRIVACY, payload)
+  utils.writeState(state)
+  return utils.resolveWithDelay(utils.buildSuccess(null))
+}

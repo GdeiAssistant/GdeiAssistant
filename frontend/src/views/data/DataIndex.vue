@@ -14,22 +14,22 @@ const router = useRouter()
 
     <div class="max-w-lg mx-auto px-4 py-6">
       <div class="bg-[var(--c-surface)] rounded-xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
-        <a
-          href="javascript:"
-          class="flex items-center justify-between px-4 py-3.5 text-sm hover:bg-[var(--c-surface-hover)] transition-colors no-underline text-[var(--c-text)]"
-          @click.prevent="router.push('/data/electricity')"
+        <button
+          type="button"
+          class="w-full flex items-center justify-between px-4 py-3.5 text-sm hover:bg-[var(--c-surface-hover)] transition-colors text-[var(--c-text)]"
+          @click="router.push('/data/electricity')"
         >
           <span>电费查询</span>
-          <span class="text-[var(--c-text-3)]">&rsaquo;</span>
-        </a>
-        <a
-          href="javascript:"
-          class="flex items-center justify-between px-4 py-3.5 text-sm hover:bg-[var(--c-surface-hover)] transition-colors no-underline text-[var(--c-text)]"
-          @click.prevent="router.push('/data/yellowpage')"
+          <span class="text-[var(--c-text-3)]">›</span>
+        </button>
+        <button
+          type="button"
+          class="w-full flex items-center justify-between px-4 py-3.5 text-sm hover:bg-[var(--c-surface-hover)] transition-colors text-[var(--c-text)]"
+          @click="router.push('/data/yellowpage')"
         >
           <span>黄页查询</span>
-          <span class="text-[var(--c-text-3)]">&rsaquo;</span>
-        </a>
+          <span class="text-[var(--c-text-3)]">›</span>
+        </button>
       </div>
     </div>
   </div>

@@ -44,7 +44,7 @@ function openAction(path) {
       <div class="rounded-2xl bg-gradient-to-br from-[var(--c-primary)]/5 to-[var(--c-surface)] p-6 shadow-sm border border-[var(--c-border)]">
         <span class="inline-flex items-center h-7 px-3 rounded-full bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-xs font-semibold">图书馆</span>
         <h1 class="mt-4 text-3xl font-bold text-[var(--c-text)]">图书馆</h1>
-        <p class="mt-2 text-sm leading-relaxed text-[var(--c-text-2)]">馆藏检索和我的借阅统一放在一个模块里，首页不再拆成两个平级入口。</p>
+        <p class="mt-2 text-sm leading-relaxed text-[var(--c-text-2)]">搜索馆藏图书，查看并管理当前借阅记录。</p>
       </div>
 
       <!-- Action grid -->

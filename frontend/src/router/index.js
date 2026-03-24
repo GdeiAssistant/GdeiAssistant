@@ -34,6 +34,7 @@ const CollectionSearch = lazyView('collection/CollectionSearch')
 const CollectionList = lazyView('collection/CollectionList')
 const CollectionDetail = lazyView('collection/CollectionDetail')
 const Book = lazyView('book/Book')
+const CardHub = lazyView('card/CardHub')
 const CardSearch = lazyView('card/CardSearch')
 const CardRecordSearch = lazyView('card/CardRecordSearch')
 const CardList = lazyView('card/CardList')
@@ -177,11 +178,16 @@ const routes = [
   },
   {
     path: '/card',
+    name: 'CardHub',
+    component: CardHub
+  },
+  {
+    path: '/card/records',
     name: 'CardSearch',
     component: CardSearch
   },
   {
-    path: '/card/records',
+    path: '/card/record-search',
     name: 'CardRecordSearch',
     component: CardRecordSearch
   },

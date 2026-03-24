@@ -444,9 +444,12 @@ function buildRoommatePickPayload(pick, communityState) {
 }
 
 function handleSecondhand(path, method, data, token, utils) {
-  if (!/^\/api\/ershou\//.test(path)) {
+  // 前端视图使用 /api/marketplace/* 路径，mock 内部统一用 /api/ershou/* 处理
+  const normalizedPath = path.replace(/^\/api\/marketplace\//, '/api/ershou/')
+  if (!/^\/api\/ershou\//.test(normalizedPath)) {
     return null
   }
+  path = normalizedPath
 
   const authError = utils.ensureAuthorized(token)
   if (authError) {
@@ -726,12 +729,15 @@ function handleSecret(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 
-  if (path === '/api/secret/profile' && method === 'GET') {
+  if (/^\/api\/secret\/profile(\/start\/\d+\/size\/\d+)?$/.test(path) && method === 'GET') {
+    const pageMatch = /\/start\/(\d+)\/size\/(\d+)$/.exec(path)
+    const start = pageMatch ? Number(pageMatch[1]) : 0
+    const size = pageMatch ? Number(pageMatch[2]) : 20
     const list = communityState.secrets.filter(function(item) {
       return item.owner === username
     }).map(function(item) {
       return buildSecretPayload(item, username, communityState.secretComments[item.id] || [])
-    })
+    }).slice(start, start + size)
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 

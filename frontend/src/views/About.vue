@@ -211,14 +211,14 @@ onMounted(() => {
       <h2 class="text-lg font-medium text-[var(--color-text-primary)] m-0 mb-4 text-center relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-10 after:h-0.5 after:bg-[var(--color-primary)]">
         {{ t('about.screenshotsTitle') }}
       </h2>
-      <div class="w-screen max-w-full overflow-hidden mx-auto">
-        <div class="flex flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory gap-[15px] pt-2.5 px-5 pb-5 [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/15 [&::-webkit-scrollbar-thumb]:rounded-sm">
+      <div class="flex justify-center">
+        <div class="flex flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory gap-4 px-6 pb-4 max-w-full [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/15 [&::-webkit-scrollbar-thumb]:rounded-sm">
           <img
             v-for="i in 5"
             :key="i"
             :src="`/img/about/application/preview_${i - 1}.jpg`"
             :alt="t('about.screenshotAlt', { n: i })"
-            class="flex-[0_0_auto] w-60 max-w-[65vw] h-auto object-contain rounded-lg shadow-lg snap-center"
+            class="flex-none w-52 h-auto object-contain rounded-xl shadow-md snap-center"
           />
         </div>
       </div>
@@ -233,7 +233,7 @@ onMounted(() => {
         <img src="/img/about/media/xiaohongshu.png" alt="小红书" class="w-6 h-6 mx-2 align-middle opacity-70 transition-opacity duration-300 hover:opacity-100" />
         <img src="/img/about/media/douyin.png" alt="抖音" class="w-6 h-6 mx-2 align-middle opacity-70 transition-opacity duration-300 hover:opacity-100" />
       </div>
-      <p class="text-xs text-[var(--color-text-tertiary)] my-2">Copyright &copy; 2016 - 2023 GdeiAssistant</p>
+      <p class="text-xs text-[var(--color-text-tertiary)] my-2">Copyright &copy; 2016 - 2026 GdeiAssistant</p>
       <p class="text-xs text-[var(--color-text-tertiary)] my-2">All rights reserved</p>
       <div class="mt-4">
         <p class="my-1 text-xs">

@@ -108,10 +108,14 @@ function createMockAdapter(config) {
     try { data = JSON.parse(data) } catch (_) { /* keep as-is */ }
   }
 
+  // GET 请求的 query params 在 config.params 里，合并进 data 供 mock handler 读取
+  const params = config.params && typeof config.params === 'object' ? config.params : {}
+  const mergedData = Object.assign({}, params, data)
+
   return mockHandleRequest({
     path,
     method,
-    data,
+    data: mergedData,
     token
   }).then((mockData) => ({
     data: mockData,

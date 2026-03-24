@@ -288,6 +288,9 @@ public class ChargeService {
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         //获取存放充值信息的DIV
                         Element main_hd = document.getElementsByClass("main_hd").first();
+                        if (main_hd == null) {
+                            throw new ServerErrorException("支付确认页面解析异常");
+                        }
                         String confirmNumber = main_hd.select("span").get(0).text();
                         String confirmName = main_hd.select("span").get(1).text();
                         //校验两个页面返回的用户姓名是否一致，防止会话劫持导致充错账户

@@ -3,20 +3,15 @@ package cn.gdeiassistant.common.config.Encryption;
 import cn.gdeiassistant.common.enums.Module.ModuleEnum;
 import cn.gdeiassistant.common.pojo.Encryption.AESEncryptConfig;
 import cn.gdeiassistant.common.pojo.Encryption.EncryptConfig;
-import cn.gdeiassistant.common.pojo.Encryption.JAQEncryptConfig;
 import cn.gdeiassistant.common.tools.SpringUtils.ModuleUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @Configuration
 public class StringEncryptionConfig implements EnvironmentAware {
@@ -53,20 +48,6 @@ public class StringEncryptionConfig implements EnvironmentAware {
                         moduleUtils.DisableModule(ModuleEnum.ENCRYPTION);
                         break;
 
-                    case "jaq":
-                        //使用阿里聚安全加密
-                        String appKey = environment.getProperty("encrypt.app.key");
-                        String location = environment.getProperty("encrypt.config.location");
-                        if (StringUtils.isNotBlank(appKey) && StringUtils.isNotBlank(location)) {
-                            JAQEncryptConfig encryptionConfig = new JAQEncryptConfig();
-                            encryptionConfig.setAppKey(environment.getProperty("encrypt.app.key"));
-                            encryptionConfig.setConfigLocation(new ClassPathResource(Objects.requireNonNull(environment
-                                    .getProperty("encrypt.config.location"))).getFile().getAbsolutePath());
-                            return encryptionConfig;
-                        }
-                        //安全加密功能模块未配置
-                        moduleUtils.DisableModule(ModuleEnum.ENCRYPTION);
-                        break;
                 }
             }
         }

@@ -40,12 +40,9 @@ public class StringEncryptUtils {
             , InvalidKeyException {
         if (StringEncryptUtils.encryptConfig != null) {
             switch (StringEncryptUtils.encryptConfig.getClass().getSimpleName()) {
-                case "JAQEncryptConfig":
-                    throw new UnsupportedOperationException("阿里聚安全已停服，不再支持该加密方式");
-
                 case "AESEncryptConfig":
                     //使用AES对称加密算法加密
-                    SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+                    SecureRandom secureRandom = SecureRandom.getInstanceStrong();
                     secureRandom.setSeed(((AESEncryptConfig) StringEncryptUtils.encryptConfig)
                             .getPrivateKey().getBytes(StandardCharsets.UTF_8));
                     byte[] randomBytes = ((AESEncryptConfig) StringEncryptUtils.encryptConfig)
@@ -74,12 +71,9 @@ public class StringEncryptUtils {
             , InvalidKeyException {
         if (StringEncryptUtils.encryptConfig != null) {
             switch (StringEncryptUtils.encryptConfig.getClass().getSimpleName()) {
-                case "JAQEncryptConfig":
-                    throw new UnsupportedOperationException("阿里聚安全已停服，不再支持该加密方式");
-
                 case "AESEncryptConfig":
                     //使用AES对称加密算法解密
-                    SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+                    SecureRandom secureRandom = SecureRandom.getInstanceStrong();
                     secureRandom.setSeed(((AESEncryptConfig) StringEncryptUtils.encryptConfig)
                             .getPrivateKey().getBytes(StandardCharsets.UTF_8));
                     byte[] randomBytes = ((AESEncryptConfig) StringEncryptUtils.encryptConfig)

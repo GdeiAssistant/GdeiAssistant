@@ -1,7 +1,5 @@
-import 'weui'
 import { createApp } from 'vue'
 import './style.css'
-import './styles/community-theme.css'
 import App from './App.vue'
 import router from './router'
 import i18n, { setLocale, detectBrowserLocale, getSavedLocale } from './i18n'

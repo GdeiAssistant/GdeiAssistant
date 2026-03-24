@@ -2,43 +2,33 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCetNumber, saveCetNumber } from '@/api/cet'
-import { showErrorTopTips } from '@/utils/toast.js'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { success: showSuccess, error: showError } = useToast()
 
 const examNumber = ref('')
 const name = ref('')
 const saving = ref(false)
 
-function getWeui() {
-  return typeof window !== 'undefined' ? window.weui : null
-}
-
-function goBack() {
-  router.back()
-}
-
 function submitSave() {
   const num = (examNumber.value || '').trim()
   const n = (name.value || '').trim()
   if (!num) {
-    showErrorTopTips('请输入15位准考证号')
+    showError('请输入15位准考证号')
     return
   }
   if (num.length !== 15) {
-    showErrorTopTips('准考证号必须为15位')
+    showError('准考证号必须为15位')
     return
   }
   saving.value = true
   saveCetNumber({ number: num, name: n }).then((res) => {
     if (res && res.success) {
-      const weui = getWeui()
-      if (weui && typeof weui.toast === 'function') {
-        weui.toast('保存成功')
-      }
+      showSuccess('保存成功')
       setTimeout(() => router.back(), 800)
     } else {
-      showErrorTopTips(res && res.message ? res.message : '保存失败')
+      showError(res && res.message ? res.message : '保存失败')
     }
   }).catch(() => {
     // 错误由 request.js 全局拦截器统一提示，此处仅关闭 Loading
@@ -59,103 +49,51 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="cet-save-page">
-    <template v-if="saving">
-      <div class="weui-mask_transparent" aria-hidden="true"></div>
-      <div class="weui-toast__wrp">
-        <div class="weui-toast">
-          <span class="weui-primary-loading weui-icon_toast" aria-label="加载中"></span>
-          <p class="weui-toast__content">保存中</p>
-        </div>
-      </div>
-    </template>
-
-    <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
-    </div>
-    <h1 class="page-title-green">保存考号</h1>
-
-    <div class="weui-cells weui-cells_form">
-      <div class="weui-cell">
-        <div class="weui-cell__hd">
-          <label class="weui-label">考号</label>
-        </div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <input
-            v-model="examNumber"
-            class="weui-input"
-            type="text"
-            inputmode="numeric"
-            maxlength="15"
-            placeholder="请输入15位准考证号"
-          />
-        </div>
-      </div>
-      <div class="weui-cell">
-        <div class="weui-cell__hd">
-          <label class="weui-label">姓名</label>
-        </div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <input
-            v-model="name"
-            class="weui-input"
-            type="text"
-            maxlength="20"
-            placeholder="姓名超过3个字可只输入前3个"
-          />
-        </div>
-      </div>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">保存考号</span>
+      <div class="w-10"></div>
     </div>
 
-    <div class="weui-btn_area">
-      <button type="button" class="weui-btn weui-btn_primary" @click="submitSave">保存</button>
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+        <div class="space-y-4">
+          <!-- 考号 -->
+          <div>
+            <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">准考证号</label>
+            <input
+              v-model="examNumber"
+              type="text"
+              inputmode="numeric"
+              maxlength="15"
+              placeholder="请输入15位准考证号"
+              class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+            />
+          </div>
+
+          <!-- 姓名 -->
+          <div>
+            <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">姓名</label>
+            <input
+              v-model="name"
+              type="text"
+              maxlength="20"
+              placeholder="姓名超过3个字可只输入前3个"
+              class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+            />
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          :disabled="saving"
+          @click="submitSave"
+        >
+          {{ saving ? '保存中...' : '保存' }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.cet-save-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-title-green {
-  text-align: center;
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 10px 0 20px 0;
-  line-height: 1.2;
-}
-
-.cet-save-page .weui-cells_form {
-  margin-top: 0;
-}
-
-.cet-save-page .weui-btn_area {
-  margin-top: 24px;
-  padding: 0 15px;
-}
-
-.cet-save-page .weui-btn_area .weui-btn {
-  width: 100%;
-}
-</style>

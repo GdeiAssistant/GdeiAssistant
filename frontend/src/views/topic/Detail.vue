@@ -51,122 +51,45 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="topic-detail">
+  <div class="min-h-screen bg-[var(--c-bg)]">
     <CommunityHeader title="话题详情" moduleColor="#6366f1" @back="router.back()" backTo="" />
 
-    <div v-if="loading" class="community-loadmore">
-      <i class="community-loading-spinner"></i>
+    <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i>
       <span>加载中...</span>
     </div>
 
-    <div v-else-if="topic" class="topic-detail__content">
-      <div class="topic-card">
-        <div class="topic-card__meta">
-          <span class="topic-card__tag">#{{ topic.topic || '校园话题' }}</span>
-          <span class="topic-card__time">{{ topic.publishTime || '最近更新' }}</span>
+    <div v-else-if="topic" class="p-4">
+      <div class="bg-[var(--c-surface)] rounded-xl p-4 shadow-sm">
+        <div class="flex items-center justify-between gap-3">
+          <span class="text-[var(--c-topic)] text-base font-semibold">#{{ topic.topic || '校园话题' }}</span>
+          <span class="text-[var(--c-text-3)] text-xs shrink-0">{{ topic.publishTime || '最近更新' }}</span>
         </div>
-        <p class="topic-card__text">{{ topic.content || '暂无内容' }}</p>
-        <div v-if="topic.images.length" class="topic-card__images">
+        <p class="mt-4 text-sm leading-[1.7] text-[var(--c-text-1)] whitespace-pre-wrap">{{ topic.content || '暂无内容' }}</p>
+        <div v-if="topic.images.length" class="mt-4 grid grid-cols-2 gap-2.5">
           <img
             v-for="(image, index) in topic.images"
             :key="`${topic.id}-${index}`"
             :src="image"
             :alt="`${topic.topic || '话题'}-${index + 1}`"
-            class="topic-card__image"
+            class="w-full rounded-lg object-cover bg-[var(--c-bg)]"
           >
         </div>
-        <div class="topic-card__footer">
-          <button type="button" class="topic-like-btn" :class="{ 'is-liked': topic.liked }" @click="handleLike">
+        <div class="mt-4 flex justify-end">
+          <button
+            type="button"
+            class="border-none rounded-full px-3.5 py-2 text-sm cursor-pointer transition-all duration-200"
+            :class="topic.liked ? 'text-[var(--c-text-3)] bg-[var(--c-bg)]' : 'text-[var(--c-topic)] bg-[color-mix(in_srgb,var(--c-topic)_10%,white)]'"
+            @click="handleLike"
+          >
             {{ topic.liked ? '已点赞' : '点赞' }} {{ topic.likeCount || 0 }}
           </button>
         </div>
       </div>
     </div>
 
-    <div v-else class="community-empty">
-      <div class="community-empty__text">话题不存在或已被删除</div>
+    <div v-else class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <p class="text-sm">话题不存在或已被删除</p>
     </div>
   </div>
 </template>
-
-<style scoped>
-.topic-detail {
-  min-height: 100vh;
-  background: var(--c-bg);
-}
-
-.topic-detail__content {
-  padding: var(--space-lg);
-}
-
-.topic-card {
-  background: var(--c-card);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-.topic-card__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.topic-card__tag {
-  color: var(--c-topic);
-  font-size: var(--font-lg);
-  font-weight: 600;
-}
-
-.topic-card__time {
-  color: var(--c-text-3);
-  font-size: var(--font-sm);
-  flex-shrink: 0;
-}
-
-.topic-card__text {
-  margin-top: var(--space-lg);
-  font-size: var(--font-md);
-  line-height: 1.7;
-  color: var(--c-text-1);
-  white-space: pre-wrap;
-}
-
-.topic-card__images {
-  margin-top: var(--space-lg);
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.topic-card__image {
-  width: 100%;
-  border-radius: var(--radius-sm);
-  object-fit: cover;
-  background: var(--c-bg);
-}
-
-.topic-card__footer {
-  margin-top: var(--space-lg);
-  display: flex;
-  justify-content: flex-end;
-}
-
-.topic-like-btn {
-  border: none;
-  border-radius: var(--radius-full);
-  padding: 8px 14px;
-  font-size: var(--font-base);
-  color: var(--c-topic);
-  background: #eeeff8;
-  background: color-mix(in srgb, var(--c-topic) 10%, white);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.topic-like-btn.is-liked {
-  color: var(--c-text-3);
-  background: var(--c-bg);
-}
-</style>

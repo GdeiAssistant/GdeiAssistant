@@ -66,12 +66,13 @@ watch(
 </script>
 
 <template>
-  <div class="ershou-type-page">
+  <div class="min-h-screen bg-[var(--c-bg)] pb-5">
     <CommunityHeader :title="typeName" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
 
     <!-- 滚动容器 -->
     <div
-      class="ershou-scroll-container"
+      class="h-[calc(100vh-51px)] overflow-y-auto overscroll-y-contain"
+      style="-webkit-overflow-scrolling: touch"
       ref="scrollContainer"
       @scroll="handleScroll"
       @touchstart="handleTouchStart"
@@ -79,114 +80,45 @@ watch(
       @touchend="handleTouchEnd"
     >
       <!-- 下拉刷新指示器 -->
-      <div class="community-pull-refresh" :style="{ height: pullY + 'px' }">
-        <span v-if="refreshing" class="community-pull-refresh__text">
-          <i class="community-loading-spinner"></i> 正在刷新...
+      <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
+        <span v-if="refreshing" class="flex items-center gap-2">
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></i> 正在刷新...
         </span>
-        <span v-else-if="pullY > 50" class="community-pull-refresh__text">释放立即刷新</span>
-        <span v-else-if="pullY > 0" class="community-pull-refresh__text">下拉刷新</span>
+        <span v-else-if="pullY > 50">释放立即刷新</span>
+        <span v-else-if="pullY > 0">下拉刷新</span>
       </div>
 
       <!-- 商品双列网格 -->
-      <div v-if="list.length > 0" class="ershou-goods-grid">
+      <div v-if="list.length > 0" class="grid grid-cols-2 gap-2.5 p-2.5">
         <div
           v-for="item in list"
           :key="item.id"
-          class="ershou-goods-card community-card"
+          class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
           @click="goDetail(item.id)"
         >
-          <div class="ershou-goods-card__img-wrap">
-            <img :src="item.coverImg" :alt="item.title" class="ershou-goods-card__img" />
+          <div class="w-full aspect-square overflow-hidden bg-[var(--c-border)]">
+            <img :src="item.coverImg" :alt="item.title" class="w-full h-full object-cover block" />
           </div>
-          <h3 class="ershou-goods-card__title">{{ item.title }}</h3>
-          <p class="ershou-goods-card__desc">{{ item.desc }}</p>
-          <em class="ershou-goods-card__price">￥{{ item.price }}</em>
+          <h3 class="text-sm font-medium text-[var(--c-text-1)] mx-2 mt-2 p-0 line-clamp-2 leading-snug">{{ item.title }}</h3>
+          <p class="text-xs text-[var(--c-text-3)] mx-2 mt-1 p-0 truncate">{{ item.desc }}</p>
+          <em class="block text-base font-semibold text-[#e4393c] mx-2 mt-1.5 mb-2 p-0 not-italic">{{ item.price }}</em>
         </div>
       </div>
 
       <!-- 空状态 -->
-      <div v-if="!loading && !refreshing && list.length === 0" class="community-empty">
-        <div class="community-empty__icon">?</div>
-        <p class="community-empty__text">暂无该分类的商品</p>
+      <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+        <div class="text-3xl mb-3">?</div>
+        <p class="text-sm">暂无该分类的商品</p>
       </div>
 
       <!-- 上拉加载更多 -->
-      <div v-if="loading && !refreshing" class="community-loadmore">
-        <i class="community-loading-spinner"></i>
+      <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></i>
         <span>正在加载</span>
       </div>
-      <div v-if="finished && list.length > 0" class="community-loadmore">
+      <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
         <span>没有更多了</span>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.ershou-type-page {
-  min-height: 100vh;
-  background: var(--c-bg);
-  padding-bottom: 20px;
-}
-
-/* 滚动容器 */
-.ershou-scroll-container {
-  height: calc(100vh - 51px);
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-}
-
-.ershou-goods-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 10px;
-}
-.ershou-goods-card {
-  overflow: hidden;
-  cursor: pointer;
-}
-.ershou-goods-card__img-wrap {
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: var(--c-border);
-}
-.ershou-goods-card__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.ershou-goods-card__title {
-  font-size: var(--font-base);
-  font-weight: 500;
-  color: var(--c-text-1);
-  margin: 8px 8px 0;
-  padding: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.35;
-}
-.ershou-goods-card__desc {
-  font-size: var(--font-sm);
-  color: var(--c-text-3);
-  margin: 4px 8px 0;
-  padding: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.ershou-goods-card__price {
-  display: block;
-  font-size: var(--font-lg);
-  font-weight: 600;
-  color: #e4393c;
-  margin: 6px 8px 8px;
-  padding: 0;
-  font-style: normal;
-}
-</style>

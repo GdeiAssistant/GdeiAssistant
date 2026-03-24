@@ -2,11 +2,13 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { useToast } from '@/composables/useToast'
 import { showErrorTopTips } from '@/utils/toast.js'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { success: toastSuccess } = useToast()
 const item = ref(null)
 const comments = ref([])
 const commentInput = ref('')
@@ -18,10 +20,10 @@ function mapGender(g) {
   return 'secret'
 }
 
-function getGenderClass(gender) {
-  if (gender === 'male') return 'gender-male'
-  if (gender === 'female') return 'gender-female'
-  return 'gender-secret'
+function getGenderColor(gender) {
+  if (gender === 'male') return '#4fc3f7'
+  if (gender === 'female') return '#ff8a80'
+  return 'var(--c-text-1)'
 }
 
 function handleLike() {
@@ -41,8 +43,7 @@ function openGuessDialog() {
 }
 
 function showSuccess(msg) {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.toast === 'function') weui.toast(msg, { duration: 2000 })
+  toastSuccess(msg)
 }
 
 function confirmGuess() {
@@ -153,94 +154,108 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="express-detail">
+  <div class="bg-[var(--c-bg)] pb-[60px]">
     <CommunityHeader title="表白详情" moduleColor="#f43f5e" backTo="/express/home" />
 
     <!-- 主体容器 -->
-    <div class="express-detail__container">
+    <div class="p-4 pb-[60px]">
       <!-- 表白卡片 -->
-      <div v-if="item" class="community-card express-detail-card" style="animation: community-slide-up 0.4s ease both;">
-        <div class="card-header">
-          <span :class="getGenderClass(item.senderGender)">{{ item.senderName }}</span>
-          <span class="card-connector"> ≡❤ </span>
-          <span :class="getGenderClass(item.receiverGender)">{{ item.receiverName }}</span>
+      <div v-if="item" class="bg-[var(--c-surface)] rounded-xl shadow-sm overflow-hidden mb-4 animate-[community-slide-up_0.4s_ease_both]">
+        <div class="text-center text-lg px-4 pt-5 pb-2.5 leading-relaxed">
+          <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.senderGender), color: getGenderColor(item.senderGender) }">{{ item.senderName }}</span>
+          <span class="text-[var(--c-text-2)] mx-1.5"> ≡❤ </span>
+          <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.receiverGender), color: getGenderColor(item.receiverGender) }">{{ item.receiverName }}</span>
         </div>
 
-        <div class="card-body">
+        <div class="text-center text-base px-5 pt-2.5 pb-5 text-[var(--c-text-1)]">
           {{ item.content }}
         </div>
 
-        <div class="card-time">
+        <div class="text-right text-xs text-[var(--c-text-3)] px-4 pb-4">
           {{ item.time || '刚刚' }}
         </div>
 
-        <div class="card-actions">
-          <button type="button" class="action-btn" :class="{ 'is-liked': item.isLiked }" @click.stop="handleLike">
+        <div class="flex border-t border-[var(--c-border)] py-2.5">
+          <button
+            type="button"
+            class="flex-1 flex items-center justify-center gap-0.5 py-2.5 bg-transparent border-none border-r border-[var(--c-border)] text-sm cursor-pointer"
+            :class="item.isLiked ? 'text-[#f43f5e] font-bold' : 'text-[var(--c-text-2)]'"
+            @click.stop="handleLike"
+          >
             {{ item.isLiked ? '♥' : '♡' }} {{ item.likeCount || 0 }}
           </button>
-          <button type="button" class="action-btn" :style="{ opacity: item.canGuess ? 1 : 0.4 }" @click.stop="handleGuess">
-            <span style="margin-right: 4px; position: relative;">☆<sup style="font-size: 10px; position: absolute; top: -4px; right: -6px;">?</sup></span> {{ item.guessCount || 0 }}/{{ item.correctCount || 0 }}
+          <button
+            type="button"
+            class="flex-1 flex items-center justify-center gap-0.5 py-2.5 bg-transparent border-none border-r border-[var(--c-border)] text-sm text-[var(--c-text-2)] cursor-pointer"
+            :style="{ opacity: item.canGuess ? 1 : 0.4 }"
+            @click.stop="handleGuess"
+          >
+            <span class="mr-1 relative">☆<sup class="text-[10px] absolute -top-1 -right-1.5">?</sup></span> {{ item.guessCount || 0 }}/{{ item.correctCount || 0 }}
           </button>
-          <button type="button" class="action-btn" @click.stop>
+          <button
+            type="button"
+            class="flex-1 flex items-center justify-center gap-0.5 py-2.5 bg-transparent border-none text-sm text-[var(--c-text-2)] cursor-pointer"
+            @click.stop
+          >
             💬 {{ item.commentCount || 0 }}
           </button>
         </div>
       </div>
 
       <!-- 评论区 -->
-      <div class="express-comments community-card">
-        <h3 class="express-comments__title">评论列表</h3>
-        <div v-if="comments.length === 0" class="express-comments__empty">
+      <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-4 mb-5">
+        <h3 class="text-base font-medium text-[var(--c-text-1)] mb-4">评论列表</h3>
+        <div v-if="comments.length === 0" class="text-center py-10 text-[var(--c-text-3)] text-sm">
           <p>暂无评论，快来抢沙发吧！</p>
         </div>
-        <div v-else class="express-comments__list">
+        <div v-else class="flex flex-col gap-4">
           <div
             v-for="(comment, index) in comments"
             :key="comment.id || index"
-            class="express-comment"
+            class="border-b border-[var(--c-border)] pb-4 last:border-b-0 last:pb-0"
           >
-            <div class="express-comment__header">
-              <span class="express-comment__floor">{{ index + 1 }}楼</span>
-              <span class="express-comment__nickname">{{ comment.nickname }}</span>
+            <div class="flex items-center gap-2.5 mb-1">
+              <span class="px-2 py-0.5 bg-[var(--c-bg)] text-[var(--c-text-1)] text-xs rounded">{{ index + 1 }}楼</span>
+              <span class="text-[var(--c-text-3)] text-xs">{{ comment.nickname }}</span>
             </div>
-            <p class="express-comment__content">{{ comment.comment }}</p>
-            <p class="express-comment__time">{{ comment.publishTime }}</p>
+            <p class="mt-2.5 mb-1 pl-8 text-sm text-[var(--c-text-1)] leading-relaxed break-words">{{ comment.comment }}</p>
+            <p class="text-right text-[var(--c-text-3)] text-xs">{{ comment.publishTime }}</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 猜名字 Dialog -->
-    <div v-if="guessDialogVisible" class="community-dialog-mask" @click="guessDialogVisible = false"></div>
-    <div v-if="guessDialogVisible" class="community-dialog">
-      <div class="community-dialog__title">猜名字</div>
-      <div class="community-dialog__body">
+    <div v-if="guessDialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="guessDialogVisible = false"></div>
+    <div v-if="guessDialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
+      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">猜名字</div>
+      <div class="px-5 pb-4">
         <input
           type="text"
-          class="express-dialog-input"
+          class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[#f43f5e] focus:ring-2 focus:ring-[#f43f5e]/10"
           placeholder="请输入你猜的真实姓名："
           v-model="guessInputValue"
           @keyup.enter="confirmGuess"
         />
       </div>
-      <div class="community-dialog__footer">
-        <button class="community-dialog__btn community-dialog__btn--cancel" @click="guessDialogVisible = false">取消</button>
-        <button class="community-dialog__btn community-dialog__btn--confirm" @click="confirmGuess">确定</button>
+      <div class="flex border-t border-[var(--c-border)]">
+        <button class="flex-1 py-3 text-center text-sm text-[var(--c-text-2)] bg-transparent border-none border-r border-[var(--c-border)] cursor-pointer" @click="guessDialogVisible = false">取消</button>
+        <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="confirmGuess">确定</button>
       </div>
     </div>
 
     <!-- 底部固定评论输入框 -->
-    <div class="express-comment-input">
+    <div class="fixed bottom-0 left-0 right-0 flex items-center px-4 py-2.5 bg-[var(--c-surface)] border-t border-[var(--c-border)] z-[500]">
       <input
         type="text"
-        class="express-comment-input__field"
+        class="flex-1 h-9 px-3 border border-[var(--c-border)] rounded-full text-sm outline-none text-[var(--c-text-1)] bg-[var(--c-bg)] focus:border-[#f43f5e]"
         placeholder="我想说..."
         v-model="commentInput"
         @keyup.enter="submitComment"
       />
       <button
         type="button"
-        class="express-comment-input__btn"
+        class="ml-2.5 px-5 h-9 bg-[#f43f5e] text-white border-none rounded-full text-sm cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
         :disabled="submitting"
         @click="submitComment"
       >
@@ -249,212 +264,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.express-detail {
-  background: var(--c-bg);
-  padding-bottom: 60px;
-}
-
-.express-detail__container {
-  padding: var(--space-lg);
-  padding-bottom: 60px;
-}
-
-.express-detail-card {
-  overflow: hidden;
-  margin-bottom: var(--space-lg);
-}
-
-.card-header {
-  text-align: center;
-  font-size: 18px;
-  padding: 20px var(--space-lg) 10px;
-  line-height: 1.5;
-}
-
-.card-connector {
-  color: var(--c-text-2);
-  margin: 0 5px;
-}
-
-.card-body {
-  text-align: center;
-  font-size: var(--font-lg);
-  padding: 10px 20px 20px;
-  color: var(--c-text-1);
-}
-
-.card-time {
-  text-align: right;
-  font-size: var(--font-sm);
-  color: var(--c-text-3);
-  padding: 0 var(--space-lg) var(--space-lg);
-}
-
-.card-actions {
-  display: flex;
-  border-top: 1px solid var(--c-border);
-  padding: 10px 0;
-}
-
-/* 操作栏按钮 */
-.action-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  padding: 10px 0;
-  background: transparent;
-  border: none;
-  border-right: 1px solid var(--c-border);
-  font-size: var(--font-base);
-  color: var(--c-text-2);
-  cursor: pointer;
-}
-.action-btn:last-child {
-  border-right: none;
-}
-.action-btn.is-liked {
-  color: #f43f5e !important;
-  font-weight: bold;
-}
-
-/* 性别虚线样式 */
-.gender-male {
-  border-bottom: 2px dashed #4fc3f7;
-  color: #4fc3f7;
-}
-.gender-female {
-  border-bottom: 2px dashed #ff8a80;
-  color: #ff8a80;
-}
-.gender-secret {
-  border-bottom: 2px dashed var(--c-text-1);
-  color: var(--c-text-1);
-}
-
-/* 猜名字 Dialog 输入框 */
-.express-dialog-input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--c-divider);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-base);
-  box-sizing: border-box;
-  outline: none;
-}
-.express-dialog-input:focus {
-  border-color: #f43f5e;
-}
-
-/* 评论区 */
-.express-comments {
-  padding: var(--space-lg);
-  margin-bottom: var(--space-xl);
-}
-.express-comments__title {
-  margin: 0 0 var(--space-lg);
-  font-size: var(--font-lg);
-  font-weight: 500;
-  color: var(--c-text-1);
-}
-.express-comments__empty {
-  text-align: center;
-  padding: 40px 0;
-  color: var(--c-text-3);
-  font-size: var(--font-base);
-}
-.express-comments__list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-}
-.express-comment {
-  border-bottom: 1px solid var(--c-border);
-  padding-bottom: var(--space-lg);
-}
-.express-comment:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-.express-comment__header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: var(--space-sm);
-}
-.express-comment__floor {
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-bg);
-  color: var(--c-text-1);
-  font-size: var(--font-sm);
-  border-radius: var(--radius-sm);
-}
-.express-comment__nickname {
-  color: var(--c-text-3);
-  font-size: var(--font-sm);
-}
-.express-comment__content {
-  margin: 10px 0 var(--space-sm);
-  padding-left: 2em;
-  font-size: var(--font-base);
-  color: var(--c-text-1);
-  line-height: 1.6;
-  word-break: break-word;
-}
-.express-comment__time {
-  margin: 0;
-  text-align: right;
-  color: var(--c-text-3);
-  font-size: var(--font-sm);
-}
-
-/* 底部固定评论输入框 */
-.express-comment-input {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  padding: 10px var(--space-lg);
-  background: var(--c-card);
-  border-top: 1px solid var(--c-border);
-  z-index: 500;
-}
-.express-comment-input__field {
-  flex: 1;
-  height: 36px;
-  padding: 0 12px;
-  border: 1px solid var(--c-divider);
-  border-radius: var(--radius-full);
-  font-size: var(--font-base);
-  outline: none;
-  color: var(--c-text-1);
-  background: var(--c-bg);
-}
-.express-comment-input__field:focus {
-  border-color: #f43f5e;
-}
-.express-comment-input__btn {
-  margin-left: 10px;
-  padding: 0 20px;
-  height: 36px;
-  background-color: #f43f5e;
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-full);
-  font-size: var(--font-base);
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.express-comment-input__btn:active {
-  opacity: 0.85;
-}
-.express-comment-input__btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-</style>

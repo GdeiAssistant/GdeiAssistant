@@ -1,35 +1,53 @@
 <template>
-  <div class="page-container" :class="{ 'is-cropping': isCropping }">
-    <!-- 标准 Header（与实名认证页一致） -->
-    <div class="unified-header">
-      <div class="header-left" @click="goBack">返回</div>
-      <div class="header-title">个人头像</div>
-      <div class="header-right"></div>
+  <div class="min-h-screen bg-gray-50" :class="{ 'bg-black': isCropping }">
+    <!-- Sticky Header -->
+    <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
+      <button type="button" class="w-15 text-base text-gray-700 text-left cursor-pointer" @click="goBack">返回</button>
+      <div class="flex-1 text-center text-lg font-medium text-black">个人头像</div>
+      <div class="w-15"></div>
     </div>
 
-    <!-- 展示态：当前头像 + 垂直排列按钮 -->
+    <!-- Display mode: current avatar + buttons -->
     <template v-if="!isCropping">
-      <div class="avatar-preview-section">
-        <div class="viewer-body">
-          <img :src="currentAvatar" class="main-avatar large-avatar" alt="当前头像" />
-        </div>
-        <div class="footer-bar">
-          <button type="button" class="weui-btn weui-btn_danger" @click="handleDelete">删除头像</button>
-          <button type="button" class="weui-btn weui-btn_primary" @click="triggerSelect">更换头像</button>
+      <div class="max-w-lg mx-auto px-4 py-6">
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex items-center justify-center min-h-[320px] w-full">
+            <img :src="currentAvatar" class="w-[92%] max-w-[92%] h-auto max-h-[70vh] object-contain block" alt="当前头像" />
+          </div>
+          <div class="flex flex-col items-center gap-4 mt-8 px-2">
+            <button
+              type="button"
+              class="w-4/5 max-w-[300px] py-3 px-6 text-base rounded-lg border border-red-500 bg-transparent text-red-500 cursor-pointer"
+              @click="handleDelete"
+            >删除头像</button>
+            <button
+              type="button"
+              class="w-4/5 max-w-[300px] py-3 px-6 text-base rounded-lg border border-green-500 bg-green-500 text-white cursor-pointer"
+              @click="triggerSelect"
+            >更换头像</button>
+          </div>
         </div>
       </div>
-      <input type="file" ref="fileInput" accept="image/*" style="display: none" @change="onFileChange" />
+      <input type="file" ref="fileInput" accept="image/*" class="hidden" @change="onFileChange" />
     </template>
 
-    <!-- 裁剪态：全黑背景 + Cropper + 底部取消/完成 -->
+    <!-- Crop mode -->
     <template v-else>
-      <div class="crop-screen">
-        <div class="crop-box">
-          <img ref="cropperImgRef" :src="tempImage" alt="裁剪" />
+      <div class="bg-black min-h-[calc(100vh-48px)] flex flex-col">
+        <div class="flex-1 min-h-0 w-full">
+          <img ref="cropperImgRef" :src="tempImage" alt="裁剪" class="block max-w-full max-h-full" />
         </div>
-        <div class="crop-footer">
-          <button type="button" class="crop-btn" @click="cancelCrop">取消</button>
-          <button type="button" class="crop-btn primary" @click="confirmCrop">完成</button>
+        <div class="py-5 px-4 flex justify-around bg-black/60">
+          <button
+            type="button"
+            class="min-w-[120px] py-3 px-6 text-base rounded-lg cursor-pointer bg-transparent border border-white text-white"
+            @click="cancelCrop"
+          >取消</button>
+          <button
+            type="button"
+            class="min-w-[120px] py-3 px-6 text-base rounded-lg cursor-pointer bg-green-500 border-green-500 text-white"
+            @click="confirmCrop"
+          >完成</button>
         </div>
       </div>
     </template>
@@ -42,8 +60,10 @@ import { useRouter } from 'vue-router'
 import Cropper from 'cropperjs'
 import request from '@/utils/request'
 import { uploadFileByPresignedUrl } from '@/utils/presignedUpload'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { success: toastSuccess, loading: toastLoading, hideLoading } = useToast()
 const defaultAvatar = '/img/login/qq.png'
 
 const currentAvatar = ref(defaultAvatar)
@@ -54,21 +74,6 @@ const fileInput = ref(null)
 let cropperInstance = null
 
 const goBack = () => router.back()
-
-const getWeui = () => (typeof window !== 'undefined' ? window.weui : null)
-
-function showToast(message) {
-  const weui = getWeui()
-  if (weui && typeof weui.toast === 'function') {
-    weui.toast(message)
-    return
-  }
-  const el = document.createElement('div')
-  el.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.75);color:#fff;padding:12px 22px;border-radius:6px;z-index:9999;font-size:14px;'
-  el.textContent = message
-  document.body.appendChild(el)
-  setTimeout(() => el.remove(), 2000)
-}
 
 const triggerSelect = () => fileInput.value?.click()
 
@@ -103,13 +108,9 @@ const confirmCrop = async () => {
   const canvas = cropperInstance.getCroppedCanvas({ width: 200, height: 200 })
   if (!canvas) return
 
-  const weui = getWeui()
-  if (weui && typeof weui.loading === 'function') {
-    weui.loading('正在上传头像...')
-  }
+  toastLoading('正在上传头像...')
 
   try {
-    // 先直传到 R2，再把对象键提交给后端归档到头像正式路径。
     const blob = await new Promise((resolve, reject) => {
       canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('裁剪失败'))), 'image/jpeg')
     })
@@ -124,16 +125,12 @@ const confirmCrop = async () => {
 
     await request.post('/profile/avatar', formData)
 
-    // 仅在后端成功时提示并返回上一页（错误由全局拦截器统一处理）
-    showToast('更新头像完成')
+    toastSuccess('更新头像完成')
     router.back()
   } catch (e) {
-    // 交由全局 Axios 拦截器展示错误，这里不再重复提示
     console.error('头像上传失败', e)
   } finally {
-    if (weui && typeof weui.hideLoading === 'function') {
-      weui.hideLoading()
-    }
+    hideLoading()
     if (cropperInstance) {
       cropperInstance.destroy()
       cropperInstance = null
@@ -156,27 +153,21 @@ const cancelCrop = () => {
 
 const handleDelete = async () => {
   if (!confirm('确定要删除头像并恢复默认吗？')) return
-  const weui = getWeui()
-  if (weui && typeof weui.loading === 'function') {
-    weui.loading('正在删除头像...')
-  }
+  toastLoading('正在删除头像...')
   try {
     await request.delete('/profile/avatar')
     currentAvatar.value = defaultAvatar
-    showToast('已恢复默认头像')
+    toastSuccess('已恢复默认头像')
     router.back()
   } catch (e) {
     console.error('删除头像失败', e)
-    showToast('删除头像失败，请稍后再试')
+    toastSuccess('删除头像失败，请稍后再试')
   } finally {
-    if (weui && typeof weui.hideLoading === 'function') {
-      weui.hideLoading()
-    }
+    hideLoading()
   }
 }
 
 onMounted(async () => {
-  // 从后端拉取当前头像 URL，避免依赖本地缓存
   try {
     const res = await request.get('/profile/avatar')
     if (res && res.success && typeof res.data === 'string' && res.data) {
@@ -190,145 +181,6 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.page-container {
-  background-color: #f8f8f8;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
-
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 48px;
-  background-color: #fff;
-  border-bottom: 1px solid #e5e5e5;
-  padding: 0 16px;
-}
-
-.header-left {
-  font-size: 16px;
-  color: #333;
-  cursor: pointer;
-  width: 60px;
-}
-
-.header-title {
-  font-size: 18px;
-  font-weight: 500;
-  color: #000;
-  flex: 1;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-}
-
-.header-right {
-  width: 60px;
-}
-
-/* 展示态：头像区域（放大）+ 垂直按钮栏 */
-.avatar-preview-section {
-  padding: 24px 16px;
-  background: #fff;
-  margin-top: 12px;
-  min-height: calc(100vh - 48px - 32px);
-  box-sizing: border-box;
-}
-
-.viewer-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 320px;
-  width: 100%;
-}
-
-.main-avatar.large-avatar {
-  width: 92%;
-  max-width: 92%;
-  height: auto;
-  max-height: 70vh;
-  object-fit: contain;
-  display: block;
-}
-
-.footer-bar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-top: 32px;
-  padding: 0 8px;
-}
-
-.weui-btn {
-  width: 80%;
-  max-width: 300px;
-  padding: 12px 24px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-.weui-btn_danger {
-  background: transparent;
-  color: #e64340;
-  border: 1px solid #e64340;
-}
-
-.weui-btn_primary {
-  background: #07c160;
-  color: #fff;
-  border: 1px solid #07c160;
-}
-
-/* 裁剪态：全黑区域，占满剩余视口 */
-.crop-screen {
-  background: #000;
-  min-height: calc(100vh - 48px);
-  display: flex;
-  flex-direction: column;
-}
-
-.crop-box {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-}
-
-.crop-box img {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.crop-footer {
-  padding: 20px 16px;
-  display: flex;
-  justify-content: space-around;
-  background: rgba(0, 0, 0, 0.6);
-}
-
-.crop-btn {
-  min-width: 120px;
-  padding: 12px 24px;
-  font-size: 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  background: transparent;
-  border: 1px solid #fff;
-  color: #fff;
-}
-
-.crop-btn.primary {
-  background: #07c160;
-  border-color: #07c160;
-  color: #fff;
-}
-</style>
 <style>
 @import 'cropperjs/dist/cropper.css';
 </style>

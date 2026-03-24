@@ -3,9 +3,11 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
+import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
+const { success: toastSuccess, loading: toastLoading, hideLoading } = useToast()
 const formData = ref({
   nickname: '',
   grade: '',
@@ -40,16 +42,6 @@ function showDialog(msg) {
   dialogVisible.value = true
 }
 
-function showLoading(text = '正在上传...') {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.loading === 'function') weui.loading(text)
-}
-
-function hideLoading() {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
-}
-
 function onFileChange(e) {
   const file = e.target.files[0]
   if (!file) return
@@ -67,10 +59,7 @@ function onFileChange(e) {
 }
 
 function selectGrade() {
-  const labels = gradeOptions.map(o => o.label)
   const idx = gradeOptions.findIndex(o => o.value === formData.value.grade)
-  const current = idx >= 0 ? [labels[idx]] : [labels[0]]
-  // 简单模拟选择：点击后选下一项或第一项
   const next = (idx + 1) % gradeOptions.length
   formData.value.grade = gradeOptions[next].value
   formData.value.gradeLabel = gradeOptions[next].label
@@ -131,7 +120,7 @@ async function submit() {
   }
 
   submitting.value = true
-  showLoading(imageFile.value ? '正在上传...' : '正在发布...')
+  toastLoading(imageFile.value ? '正在上传...' : '正在发布...')
   try {
     const payload = new FormData()
     if (imageFile.value) {
@@ -149,8 +138,7 @@ async function submit() {
 
     await request.post('/dating/profile', payload)
     hideLoading()
-    const weui = typeof window !== 'undefined' && window.weui
-    if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
+    toastSuccess('发布成功')
     setTimeout(() => router.push('/dating/home'), 1500)
   } catch (_) {
     submitting.value = false
@@ -160,114 +148,55 @@ async function submit() {
 </script>
 
 <template>
-  <div class="community-page dating-publish">
+  <div class="min-h-screen bg-[var(--c-bg)] pb-10">
     <CommunityHeader title="发布资料" moduleColor="#ec4899" backTo="/dating/home" />
 
-    <div class="community-card dating-publish__box" style="--module-color: #ec4899">
-      <div class="dating-publish__title">发布资料</div>
+    <div class="w-[90%] mx-auto mt-4 p-6 bg-[var(--c-surface)] rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
+      <div class="text-[22px] text-pink-500 font-bold mb-6 pl-2">发布资料</div>
 
-      <div class="dating-photo" @click="$refs.fileInput.click()">
-        <img v-if="imagePreview" :src="imagePreview" class="dating-photo__img" />
-        <div v-else class="dating-photo__placeholder">
-          <span class="dating-photo__btn">上传</span>
+      <!-- Photo upload -->
+      <div class="w-full min-h-[200px] bg-[var(--c-bg)] rounded-lg mb-6 flex items-center justify-center overflow-hidden relative cursor-pointer" @click="$refs.fileInput.click()">
+        <img v-if="imagePreview" :src="imagePreview" class="w-full h-auto max-h-80 object-cover" />
+        <div v-else class="absolute inset-0 flex items-center justify-center">
+          <span class="px-6 py-2.5 bg-pink-500 text-white rounded-full">上传</span>
         </div>
-        <input ref="fileInput" type="file" accept="image/*" class="dating-photo__input" @change="onFileChange" />
+        <input ref="fileInput" type="file" accept="image/*" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer" @change="onFileChange" />
       </div>
 
-      <div class="dating-form">
-        <p><input type="text" class="input-box" v-model="formData.nickname" placeholder="请输入你的昵称" /></p>
-        <p><input type="text" readonly class="input-box" :value="formData.gradeLabel" placeholder="请选择你的年级" @click="openGradePicker" /></p>
-        <p><input type="text" readonly class="input-box" :value="formData.areaLabel" placeholder="请选择你的性别" @click="openAreaPicker" /></p>
-        <p><input type="text" class="input-box" v-model="formData.faculty" placeholder="请输入你的专业" /></p>
-        <p><input type="text" class="input-box" v-model="formData.hometown" placeholder="请输入你的家乡" /></p>
-        <p><input type="text" class="input-box" v-model="formData.qq" placeholder="请输入你的QQ" /></p>
-        <p><input type="text" class="input-box" v-model="formData.wechat" placeholder="请输入你的微信" /></p>
+      <!-- Form inputs -->
+      <div class="my-6 space-y-3">
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-pink-500 bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.nickname" placeholder="请输入你的昵称" />
+        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-pink-500 bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="formData.gradeLabel" placeholder="请选择你的年级" @click="openGradePicker" />
+        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-pink-500 bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="formData.areaLabel" placeholder="请选择你的性别" @click="openAreaPicker" />
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-pink-500 bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.faculty" placeholder="请输入你的专业" />
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-pink-500 bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.hometown" placeholder="请输入你的家乡" />
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-pink-500 bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.qq" placeholder="请输入你的QQ" />
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-pink-500 bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.wechat" placeholder="请输入你的微信" />
       </div>
 
-      <div class="dating-hint">
+      <!-- Hint -->
+      <div class="text-center mx-6 my-4 text-sm text-[var(--c-text-2)]">
         <span>在接受撩一下请求前，QQ和微信不会公开显示</span><br />
-        <span class="dating-hint__warn">请勿违规盗用他人照片或冒充他人，欢迎举报监督</span>
+        <span class="text-red-600">请勿违规盗用他人照片或冒充他人，欢迎举报监督</span>
       </div>
 
-      <div class="dating-textarea-wrap">
-        <textarea class="dating-textarea" v-model="formData.content" placeholder="什么样的TA会让你心动呢？谈谈你的理想对象，不超过100字" rows="4"></textarea>
-        <button type="button" class="circle-btn circle-btn--submit" :disabled="submitting" @click="submit">
+      <!-- Textarea + submit -->
+      <div class="border-t-2 border-dashed border-[var(--c-divider)] pt-6 text-center">
+        <textarea class="w-full max-w-xs mx-auto block p-4 border border-[var(--c-divider)] rounded-lg text-base min-h-[100px] box-border text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.content" placeholder="什么样的TA会让你心动呢？谈谈你的理想对象，不超过100字" rows="4"></textarea>
+        <button type="button" class="mt-6 w-20 h-20 rounded-full bg-pink-500 text-white border-none text-xl cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="submitting" @click="submit">
           {{ submitting ? '提交中...' : '发布资料' }}
         </button>
       </div>
     </div>
 
-    <div v-if="dialogVisible" class="community-dialog-mask" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="community-dialog" style="--module-color: #ec4899">
-      <div class="community-dialog__title">提示</div>
-      <div class="community-dialog__body">{{ dialogMessage }}</div>
-      <div class="community-dialog__footer">
-        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
+    <!-- Dialog -->
+    <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">提示</div>
+      <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
+      <div class="border-t border-[var(--c-border)] flex">
+        <a href="javascript:;" class="flex-1 text-center py-3 text-pink-500 font-medium no-underline" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.dating-publish { padding-bottom: 40px; }
-
-.dating-publish__box {
-  width: 90%;
-  margin: var(--space-md) auto 0;
-  padding: var(--space-lg);
-  overflow: hidden;
-  animation: community-slide-up 0.4s ease both;
-}
-.dating-publish__title {
-  font-size: 22px;
-  color: var(--c-dating);
-  font-weight: bold;
-  margin-bottom: var(--space-lg);
-  padding-left: var(--space-sm);
-}
-
-.dating-photo {
-  width: 100%; min-height: 200px; background: var(--c-bg); border-radius: var(--radius-sm); margin-bottom: var(--space-lg);
-  display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
-}
-.dating-photo__img { width: 100%; height: auto; max-height: 320px; object-fit: cover; }
-.dating-photo__placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.dating-photo__input { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; }
-.dating-photo__btn {
-  padding: 10px 24px;
-  background: var(--c-dating);
-  color: #fff;
-  border-radius: var(--radius-full);
-}
-.dating-photo-hint { text-align: center; margin-bottom: var(--space-lg); }
-.circle-btn {
-  padding: 10px 28px;
-  background: var(--c-dating);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-full);
-  font-size: var(--font-lg);
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.circle-btn:active { opacity: 0.85; }
-.circle-btn:disabled { opacity: 0.6; }
-.circle-btn--submit { width: 80px; height: 80px; border-radius: 50%; font-size: var(--font-xl); margin-top: var(--space-lg); }
-
-.dating-form { margin: var(--space-lg) 0; }
-.input-box {
-  width: 100%; max-width: 320px; margin: var(--space-sm) auto; display: block;
-  height: 44px; padding: 0 var(--space-md); border: none; border-bottom: 2px solid var(--c-dating); background: var(--c-card); font-size: var(--font-base);
-  color: var(--c-text-1);
-}
-.input-box::placeholder { color: var(--c-text-3); }
-.dating-hint { text-align: center; margin: var(--space-md) var(--space-lg); font-size: var(--font-sm); color: var(--c-text-2); }
-.dating-hint__warn { color: #e53935; }
-.dating-textarea-wrap { border-top: 2px dashed var(--c-divider); padding-top: var(--space-lg); text-align: center; }
-.dating-textarea {
-  width: 100%; max-width: 320px; margin: 0 auto var(--space-lg); padding: var(--space-md); border: 1px solid var(--c-divider); border-radius: var(--radius-sm);
-  font-size: var(--font-base); min-height: 100px; display: block; box-sizing: border-box;
-  color: var(--c-text-1);
-}
-.dating-textarea::placeholder { color: var(--c-text-3); }
-</style>

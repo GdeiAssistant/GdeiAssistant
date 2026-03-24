@@ -2,9 +2,11 @@
 import { useRouter, useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { getCollectionDetail } from '@/api/collection'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const route = useRoute()
+const { loading: showLoading, hideLoading } = useToast()
 const detail = ref(null)
 const loading = ref(true)
 
@@ -18,85 +20,49 @@ onMounted(() => {
     loading.value = false
     return
   }
+  showLoading('加载中')
   getCollectionDetail(detailURL).then((res) => {
     loading.value = false
+    hideLoading()
     if (res?.success && res.data) detail.value = res.data
   }).catch(() => {
     loading.value = false
+    hideLoading()
   })
 })
 </script>
 
 <template>
-  <div class="collection-detail-page">
-    <template v-if="loading">
-      <div class="weui-mask_transparent" aria-hidden="true"></div>
-      <div class="weui-toast__wrp">
-        <div class="weui-toast">
-          <span class="weui-primary-loading weui-icon_toast" aria-label="加载中"></span>
-          <p class="weui-toast__content">加载中</p>
-        </div>
-      </div>
-    </template>
-
-    <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">馆藏详情</span>
+      <div class="w-10"></div>
     </div>
-    <h1 class="page-title-green">馆藏详情</h1>
 
-    <template v-if="!loading && detail">
-      <div class="weui-panel">
-        <div class="weui-panel__bd">
-          <div class="weui-media-box weui-media-box_text">
-            <h4 class="weui-media-box__title">{{ detail.bookname || '—' }}</h4>
-            <p class="weui-media-box__desc">著者: {{ detail.author || '—' }}</p>
-            <p class="weui-media-box__desc">题名/责任者: {{ detail.principal || '—' }}</p>
-            <p class="weui-media-box__desc">出版者: {{ detail.publishingHouse || '—' }}</p>
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <template v-if="!loading && detail">
+        <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+          <h2 class="text-lg font-bold text-[var(--c-text)] mb-3">{{ detail.bookname || '—' }}</h2>
+          <div class="divide-y divide-[var(--c-border-light)]">
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">著者</span>
+              <span class="text-sm font-medium text-[var(--c-text)]">{{ detail.author || '—' }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">题名/责任者</span>
+              <span class="text-sm font-medium text-[var(--c-text)] text-right max-w-[60%] break-all">{{ detail.principal || '—' }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">出版者</span>
+              <span class="text-sm font-medium text-[var(--c-text)]">{{ detail.publishingHouse || '—' }}</span>
+            </div>
           </div>
         </div>
+      </template>
+      <div v-else-if="!loading" class="flex items-center justify-center py-10 text-sm text-[var(--c-text-3)]">
+        暂无详情
       </div>
-    </template>
-    <div v-else-if="!loading" class="collection-detail-empty">暂无详情</div>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.collection-detail-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-title-green {
-  text-align: center;
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 10px 0 20px 0;
-  line-height: 1.2;
-}
-
-.collection-detail-empty {
-  text-align: center;
-  padding: 40px 15px;
-  color: #999;
-  font-size: 14px;
-}
-</style>

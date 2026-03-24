@@ -3,19 +3,14 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
+import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
 const keywordInput = ref('')
-const dialogVisible = ref(false)
-const dialogMessage = ref('')
 const scrollContainer = ref(null)
-
-function showDialog(msg) {
-  dialogMessage.value = msg
-  dialogVisible.value = true
-}
+const { toast } = useToast()
 
 const keyword = computed(() => route.query.keyword ?? '')
 const PAGE_SIZE = 10
@@ -49,7 +44,7 @@ const { items: list, loading, finished, refreshing, pullY, loadData, handleScrol
 
 function doSearch() {
   if (!keywordInput.value || keywordInput.value.trim() === '') {
-    showDialog('请输入搜索关键词')
+    toast({ message: '请输入搜索关键词' })
     return
   }
   const k = keywordInput.value.trim()
@@ -80,21 +75,23 @@ watch(
 </script>
 
 <template>
-  <div class="ershou-search-page">
+  <div class="min-h-screen bg-[var(--c-bg)] pb-5">
     <CommunityHeader title="搜索结果" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
 
-    <div class="ershou-search-bar">
-      <div class="search-input-wrap">
-        <i class="search-icon"></i>
-        <input type="text" placeholder="搜搜看" v-model="keywordInput" @keyup.enter="doSearch" />
+    <!-- 搜索栏 -->
+    <div class="flex items-center px-4 py-2.5 bg-[var(--c-bg)]">
+      <div class="flex-1 flex items-center bg-[var(--c-surface)] rounded-full px-3 py-1.5 shadow-sm">
+        <i class="inline-block w-4 h-4 shrink-0 mr-1.5 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27%239ca3af%27%3E%3Cpath%20d=%27M15.5%2014h-.79l-.28-.27C15.41%2012.59%2016%2011.11%2016%209.5%2016%205.91%2013.09%203%209.5%203S3%205.91%203%209.5%205.91%2016%209.5%2016c1.61%200%203.09-.59%204.23-1.57l.27.28v.79l5%204.99L20.49%2019l-4.99-5zm-6%200C7.01%2014%205%2011.99%205%209.5S7.01%205%209.5%205%2014%207.01%2014%209.5%2011.99%2014%209.5%2014z%27/%3E%3C/svg%3E')] bg-center bg-contain bg-no-repeat"></i>
+        <input type="text" placeholder="搜搜看" v-model="keywordInput" @keyup.enter="doSearch" class="flex-1 border-none outline-none text-sm bg-transparent min-w-0 text-[var(--c-text-1)]" />
       </div>
-      <span class="search-btn" @click="doSearch">搜索</span>
+      <span class="text-emerald-500 text-[15px] ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">搜索</span>
     </div>
 
     <!-- 滚动容器 -->
     <div
       v-if="keyword"
-      class="ershou-scroll-container"
+      class="h-[calc(100vh-100px)] overflow-y-auto overscroll-y-contain"
+      style="-webkit-overflow-scrolling: touch"
       ref="scrollContainer"
       @scroll="handleScroll"
       @touchstart="handleTouchStart"
@@ -102,174 +99,50 @@ watch(
       @touchend="handleTouchEnd"
     >
       <!-- 下拉刷新指示器 -->
-      <div class="community-pull-refresh" :style="{ height: pullY + 'px' }">
-        <span v-if="refreshing" class="community-pull-refresh__text">
-          <i class="community-loading-spinner"></i> 正在刷新...
+      <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
+        <span v-if="refreshing" class="flex items-center gap-2">
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></i> 正在刷新...
         </span>
-        <span v-else-if="pullY > 50" class="community-pull-refresh__text">释放立即刷新</span>
-        <span v-else-if="pullY > 0" class="community-pull-refresh__text">下拉刷新</span>
+        <span v-else-if="pullY > 50">释放立即刷新</span>
+        <span v-else-if="pullY > 0">下拉刷新</span>
       </div>
 
       <!-- 商品双列网格 -->
-      <div v-if="list.length > 0" class="ershou-goods-grid">
+      <div v-if="list.length > 0" class="grid grid-cols-2 gap-2.5 p-2.5">
         <div
           v-for="item in list"
           :key="item.id"
-          class="ershou-goods-card community-card"
+          class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
           @click="goDetail(item.id)"
         >
-          <div class="ershou-goods-card__img-wrap">
-            <img :src="item.coverImg" :alt="item.title" class="ershou-goods-card__img" />
+          <div class="w-full aspect-square overflow-hidden bg-[var(--c-border)]">
+            <img :src="item.coverImg" :alt="item.title" class="w-full h-full object-cover block" />
           </div>
-          <h3 class="ershou-goods-card__title">{{ item.title }}</h3>
-          <p class="ershou-goods-card__desc">{{ item.desc }}</p>
-          <em class="ershou-goods-card__price">￥{{ item.price }}</em>
+          <h3 class="text-sm font-medium text-[var(--c-text-1)] mx-2 mt-2 p-0 line-clamp-2 leading-snug">{{ item.title }}</h3>
+          <p class="text-xs text-[var(--c-text-3)] mx-2 mt-1 p-0 truncate">{{ item.desc }}</p>
+          <em class="block text-base font-semibold text-[#e4393c] mx-2 mt-1.5 mb-2 p-0 not-italic">{{ item.price }}</em>
         </div>
       </div>
 
       <!-- 空状态 -->
-      <div v-if="!loading && !refreshing && list.length === 0" class="community-empty">
-        <div class="community-empty__icon">?</div>
-        <p class="community-empty__text">未搜索到相关商品</p>
+      <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+        <div class="text-3xl mb-3">?</div>
+        <p class="text-sm">未搜索到相关商品</p>
       </div>
 
       <!-- 上拉加载更多 -->
-      <div v-if="loading && !refreshing" class="community-loadmore">
-        <i class="community-loading-spinner"></i>
+      <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></i>
         <span>正在加载</span>
       </div>
-      <div v-if="finished && list.length > 0" class="community-loadmore">
+      <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
         <span>没有更多了</span>
       </div>
     </div>
 
     <!-- 未输入关键词提示 -->
-    <div v-if="!keyword" class="community-empty">
-      <p class="community-empty__text">请输入关键词搜索</p>
-    </div>
-
-    <!-- Dialog -->
-    <div v-if="dialogVisible">
-      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
-      <div class="community-dialog">
-        <div class="community-dialog__title">提示</div>
-        <div class="community-dialog__body">{{ dialogMessage }}</div>
-        <div class="community-dialog__footer">
-          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
-        </div>
-      </div>
+    <div v-if="!keyword" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <p class="text-sm">请输入关键词搜索</p>
     </div>
   </div>
 </template>
-
-<style scoped>
-.ershou-search-page {
-  min-height: 100vh;
-  background: var(--c-bg);
-  padding-bottom: 20px;
-}
-
-.ershou-search-bar {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  background-color: var(--c-bg);
-}
-.search-input-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  background-color: var(--c-card);
-  border-radius: var(--radius-full);
-  padding: 5px 12px;
-  box-shadow: var(--shadow-sm);
-}
-.search-icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  font-size: 16px;
-  color: var(--c-text-3);
-  margin-right: 5px;
-  flex-shrink: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239ca3af'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") center/contain no-repeat;
-}
-.search-input-wrap input {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: var(--font-base);
-  background: transparent;
-  min-width: 0;
-  color: var(--c-text-1);
-}
-.search-btn {
-  color: var(--c-ershou);
-  font-size: var(--font-md);
-  margin-left: 15px;
-  white-space: nowrap;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-/* 滚动容器 */
-.ershou-scroll-container {
-  height: calc(100vh - 100px);
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-}
-
-.ershou-goods-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 10px;
-}
-.ershou-goods-card {
-  overflow: hidden;
-  cursor: pointer;
-}
-.ershou-goods-card__img-wrap {
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: var(--c-border);
-}
-.ershou-goods-card__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.ershou-goods-card__title {
-  font-size: var(--font-base);
-  font-weight: 500;
-  color: var(--c-text-1);
-  margin: 8px 8px 0;
-  padding: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.35;
-}
-.ershou-goods-card__desc {
-  font-size: var(--font-sm);
-  color: var(--c-text-3);
-  margin: 4px 8px 0;
-  padding: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.ershou-goods-card__price {
-  display: block;
-  font-size: var(--font-lg);
-  font-weight: 600;
-  color: #e4393c;
-  margin: 6px 8px 8px;
-  padding: 0;
-  font-style: normal;
-}
-</style>

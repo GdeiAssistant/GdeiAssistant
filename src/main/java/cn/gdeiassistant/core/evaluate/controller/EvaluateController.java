@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.evaluate.controller;
 
-import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.evaluate.pojo.dto.EvaluateSubmitDTO;
 import cn.gdeiassistant.core.evaluate.service.EvaluateService;
@@ -21,10 +20,9 @@ public class EvaluateController {
 
     /**
      * 教学评价提交。统一走 /api/evaluate/submit，从请求头 token 鉴权，返回 JSON。
-     * 测试账号由 TrialDataAspect 拦截并返回成功，不执行真实评教。
+     * 执行教学评价提交。
      */
     @RequestMapping(value = "/api/evaluate/submit", method = RequestMethod.POST)
-    @TrialData(value = "evaluate", base = true)
     public JsonResult submit(HttpServletRequest request,
                              @RequestBody(required = false) EvaluateSubmitDTO body) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");

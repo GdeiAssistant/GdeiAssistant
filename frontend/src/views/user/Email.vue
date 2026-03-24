@@ -2,9 +2,10 @@
 import { ref, computed, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
-import { showErrorTopTips } from '@/utils/toast.js'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { success: showSuccess, error: showError } = useToast()
 
 const email = ref('')
 const code = ref('')
@@ -12,11 +13,6 @@ const countdown = ref(0)
 const sending = ref(false)
 const submitting = ref(false)
 let timerId = null
-
-function showSuccess(msg) {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.toast === 'function') weui.toast(msg, { duration: 2000 })
-}
 
 const codeButtonText = computed(() => {
   if (countdown.value > 0) {
@@ -35,7 +31,7 @@ function validateEmail(value) {
 async function handleSendCode() {
   if (!canSendCode.value) return
   if (!validateEmail(email.value)) {
-    showErrorTopTips('邮箱格式不正确')
+    showError('邮箱格式不正确')
     return
   }
 
@@ -62,11 +58,11 @@ async function handleSendCode() {
 async function handleSubmit() {
   if (submitting.value) return
   if (!validateEmail(email.value)) {
-    showErrorTopTips('邮箱格式不正确')
+    showError('邮箱格式不正确')
     return
   }
   if (!code.value) {
-    showErrorTopTips('请输入验证码')
+    showError('请输入验证码')
     return
   }
 
@@ -93,182 +89,66 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="bind-email-page">
-    <!-- 统一头部 -->
-    <div class="email-header unified-header">
-      <span class="email-header__back" @click="router.back()">返回</span>
-      <h1 class="email-header__title">绑定邮箱</h1>
-      <span class="email-header__placeholder"></span>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <!-- Header -->
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">绑定邮箱</span>
+      <div class="w-10"></div>
     </div>
 
-    <div class="email-content">
-      <!-- 表单区域 -->
-      <div class="weui-cells weui-cells_form">
-        <!-- 邮箱输入 -->
-        <div class="weui-cell">
-          <div class="weui-cell__hd">
-            <label class="weui-label">邮箱</label>
-          </div>
-          <div class="weui-cell__bd">
-            <input
-              v-model="email"
-              class="weui-input"
-              type="email"
-              placeholder="请输入您的电子邮箱"
-            />
-          </div>
+    <div class="max-w-lg mx-auto px-4 pt-6">
+      <!-- Form Card -->
+      <div class="rounded-xl bg-[var(--c-surface)] border border-[var(--c-border)] overflow-hidden">
+        <!-- Email input -->
+        <div class="flex items-center px-4 py-3 border-b border-[var(--c-border)]">
+          <label class="w-16 text-sm text-[var(--c-text-2)] shrink-0">邮箱</label>
+          <input
+            v-model="email"
+            type="email"
+            placeholder="请输入您的电子邮箱"
+            class="flex-1 bg-transparent text-sm text-[var(--c-text-primary)] placeholder-[var(--c-text-quaternary)] outline-none"
+          />
         </div>
 
-        <!-- 验证码输入 -->
-        <div class="weui-cell weui-cell_vcode">
-          <div class="weui-cell__hd">
-            <label class="weui-label">验证码</label>
-          </div>
-          <div class="weui-cell__bd">
-            <input
-              v-model="code"
-              class="weui-input"
-              type="number"
-              inputmode="numeric"
-              placeholder="请输入邮箱验证码"
-            />
-          </div>
-          <div class="weui-cell__ft">
-            <button
-              type="button"
-              class="weui-vcode-btn"
-              :class="{ 'weui-vcode-btn--disabled': !canSendCode }"
-              :disabled="!canSendCode"
-              @click="handleSendCode"
-            >
-              {{ codeButtonText }}
-            </button>
-          </div>
+        <!-- Verification code input -->
+        <div class="flex items-center px-4 py-3">
+          <label class="w-16 text-sm text-[var(--c-text-2)] shrink-0">验证码</label>
+          <input
+            v-model="code"
+            type="number"
+            inputmode="numeric"
+            placeholder="请输入邮箱验证码"
+            class="flex-1 bg-transparent text-sm text-[var(--c-text-primary)] placeholder-[var(--c-text-quaternary)] outline-none"
+          />
+          <button
+            type="button"
+            :disabled="!canSendCode"
+            @click="handleSendCode"
+            class="ml-3 pl-3 border-l border-[var(--c-border)] text-sm whitespace-nowrap transition-colors"
+            :class="canSendCode ? 'text-[var(--c-primary)] cursor-pointer' : 'text-[var(--c-text-quaternary)] cursor-not-allowed'"
+          >
+            {{ codeButtonText }}
+          </button>
         </div>
       </div>
 
-      <!-- 底部按钮 -->
-      <div class="weui-btn-area">
-        <a
-          href="javascript:;"
-          class="weui-btn weui-btn_primary"
-          :class="{ 'weui-btn_disabled': submitting }"
-          @click.prevent="handleSubmit"
+      <!-- Submit button -->
+      <div class="mt-8 px-2">
+        <button
+          type="button"
+          :disabled="submitting"
+          @click="handleSubmit"
+          class="w-full py-3 rounded-xl text-white text-base font-medium bg-[var(--c-primary)] transition-opacity"
+          :class="submitting ? 'opacity-60 cursor-not-allowed' : 'active:opacity-80 cursor-pointer'"
         >
-          <span v-if="submitting" class="btn-loading">
-            <span class="weui-loading weui-icon_toast"></span>
-            <span style="margin-left: 8px;">绑定中...</span>
+          <span v-if="submitting" class="flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            绑定中...
           </span>
           <span v-else>确认绑定</span>
-        </a>
+        </button>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.bind-email-page {
-  background: #f8f8f8;
-  min-height: 100vh;
-}
-
-.email-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-}
-.email-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-}
-.email-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.email-header__placeholder {
-  min-width: 48px;
-}
-
-.email-content {
-  padding-top: 10px;
-}
-
-.weui-cells {
-  margin-top: 0;
-}
-
-.weui-label {
-  width: 60px;
-}
-
-.weui-input {
-  font-size: 15px;
-}
-
-/* 让验证码输入区域与邮箱行保持相似宽度 */
-.weui-cell_vcode .weui-cell__bd {
-  flex: 1;
-}
-
-/* 验证码按钮 */
-.weui-vcode-btn {
-  padding: 0 8px;
-  height: 30px;
-  line-height: 30px;
-  font-size: 13px;
-  color: #07c160;
-  border: none;
-  background: transparent;
-  border-left: 1px solid #e5e5e5;
-  outline: none;
-}
-.weui-vcode-btn--disabled {
-  color: #999;
-}
-
-/* 底部按钮区域 */
-.weui-btn-area {
-  margin: 30px 15px 0;
-}
-
-.weui-btn {
-  width: 100%;
-  max-width: 360px;
-  margin: 0 auto;
-  background-color: #07c160;
-  color: #ffffff;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 10px 20px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  cursor: pointer;
-}
-.weui-btn_primary:active {
-  background-color: #06ad56;
-}
-.weui-btn.weui-btn_disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>

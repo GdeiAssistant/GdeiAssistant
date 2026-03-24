@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.gradequery.controller;
 
-import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
@@ -21,7 +20,7 @@ public class GradeQueryController {
 
     /**
      * 成绩查询（RESTful GET，供前端直接调用）
-     * 从 MongoDB 缓存或教务系统获取成绩，测试账号 gdeiassistant 走 MongoDB grade 集合。
+     * 从 MongoDB 缓存或教务系统获取成绩。
      * 异常交由 GlobalRestExceptionHandler 脱敏返回。
      *
      * @param request 当前会话，用于解析登录用户
@@ -29,7 +28,6 @@ public class GradeQueryController {
      * @return DataJsonResult&lt;GradeQueryResult&gt;，data 含 firstTermGradeList、secondTermGradeList 等
      */
     @RequestMapping(value = "/api/grade", method = RequestMethod.GET)
-    @TrialData(value = "grade")
     public DataJsonResult<GradeQueryResult> getGrade(HttpServletRequest request,
                                                       @RequestParam(required = false) Integer year) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
@@ -40,14 +38,13 @@ public class GradeQueryController {
     /**
      * 强制刷新当前用户的成绩缓存（清空 MongoDB 缓存并实时同步一次教务数据）
      * POST /api/grade/update
-     * 测试账号由 TrialDataAspect 拦截，禁止触发真实教务刷新。
+     * 清空缓存并实时同步一次教务数据。
      *
      * @param request
      * @return
-     * @throws Exception 由全局异常处理器进行脱敏处理（含测试账号受限提示）
+     * @throws Exception 由全局异常处理器进行脱敏处理
      */
     @RequestMapping(value = "/api/grade/update", method = RequestMethod.POST)
-    @TrialData(value = "graderefresh")
     public JsonResult updateGradeCache(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         gradeService.updateGradeCache(sessionId);

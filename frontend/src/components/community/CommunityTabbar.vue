@@ -28,93 +28,27 @@ function goTo(path) {
 </script>
 
 <template>
-  <div class="community-tabbar" :style="{ '--module-color': moduleColor }">
+  <div
+    class="fixed bottom-0 left-0 right-0 w-full h-14 bg-[var(--c-surface)] border-t border-[var(--c-border)] flex z-[500] shadow-[0_-1px_8px_rgba(0,0,0,0.04)]"
+    :style="{ '--module-color': moduleColor }"
+  >
     <button
       v-for="tab in tabs"
       :key="tab.key"
       type="button"
-      class="community-tabbar__item"
-      :class="{ active: activeTab === tab.key }"
+      class="flex-1 flex flex-col items-center justify-center text-[var(--c-text-3)] text-xs py-1.5 border-none bg-transparent cursor-pointer font-[inherit] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-[var(--module-color)] focus-visible:outline-offset-[-2px]"
+      :class="{ '!text-[var(--module-color)]': activeTab === tab.key }"
       @click="goTo(tab.path)"
     >
-      <i class="community-tabbar__icon" v-html="tab.icon"></i>
-      <p class="community-tabbar__label">{{ tab.label }}</p>
+      <i
+        class="flex items-center justify-center w-6 h-6 mb-0.5 transition-transform duration-200 [&>svg]:w-[22px] [&>svg]:h-[22px] [&>svg]:fill-current"
+        :class="{ 'scale-110': activeTab === tab.key }"
+        v-html="tab.icon"
+      ></i>
+      <p
+        class="m-0 text-[11px] leading-none text-inherit"
+        :class="{ 'font-medium': activeTab === tab.key }"
+      >{{ tab.label }}</p>
     </button>
   </div>
 </template>
-
-<style scoped>
-.community-tabbar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 56px;
-  background: var(--c-card);
-  border-top: 1px solid var(--c-border);
-  display: flex;
-  z-index: 500;
-  box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.04);
-}
-
-.community-tabbar__item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--c-text-3);
-  text-decoration: none;
-  font-size: 12px;
-  padding: 6px 0;
-  transition: color 0.25s ease;
-  -webkit-tap-highlight-color: transparent;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-}
-
-.community-tabbar__item:focus-visible {
-  outline: 2px solid var(--module-color, #6366f1);
-  outline-offset: -2px;
-}
-
-.community-tabbar__item.active {
-  color: var(--module-color, #6366f1);
-}
-
-.community-tabbar__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  margin-bottom: 3px;
-  transition: transform 0.25s ease, color 0.25s ease;
-}
-
-.community-tabbar__item.active .community-tabbar__icon {
-  transform: scale(1.1);
-  color: var(--module-color, #6366f1);
-}
-
-.community-tabbar__icon :deep(svg) {
-  width: 22px;
-  height: 22px;
-  fill: currentColor;
-}
-
-.community-tabbar__label {
-  margin: 0;
-  font-size: 11px;
-  line-height: 1;
-  color: inherit;
-  font-weight: 400;
-}
-
-.community-tabbar__item.active .community-tabbar__label {
-  font-weight: 500;
-}
-</style>

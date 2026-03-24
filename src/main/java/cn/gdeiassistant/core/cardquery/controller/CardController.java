@@ -1,7 +1,6 @@
 package cn.gdeiassistant.core.cardquery.controller;
 
 import cn.gdeiassistant.common.annotation.RestQueryLogPersistence;
-import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.core.cardquery.pojo.CardQuery;
 import cn.gdeiassistant.core.cardquery.pojo.CardQueryResult;
 import cn.gdeiassistant.common.pojo.Entity.CardInfo;
@@ -31,7 +30,6 @@ public class CardController {
      */
     @PostMapping("/api/card/query")
     @RestQueryLogPersistence
-    @TrialData(value = "card", responseTime = "cardquery")
     public DataJsonResult<CardQueryResult> cardQuery(HttpServletRequest request,
                                                      @Validated @RequestBody CardQuery cardQuery) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
@@ -43,7 +41,6 @@ public class CardController {
      * 设置校园卡挂失。依赖业务密码（cardPassword）核验。
      */
     @PostMapping("/api/card/lost")
-    @TrialData(value = "cardlost")
     public JsonResult cardLost(HttpServletRequest request,
                                @Validated @RequestBody Map<String, String> body) throws Exception {
         String cardPassword = body.get("cardPassword");
@@ -62,7 +59,6 @@ public class CardController {
      * @return
      */
     @GetMapping("/api/card/info")
-    @TrialData(value = "cardinfo")
     public DataJsonResult<CardInfo> cardInfoQuery(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         CardInfo cardInfo = cardQueryService.cardInfoQuery(sessionId);

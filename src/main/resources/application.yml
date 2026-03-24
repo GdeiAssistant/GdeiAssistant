@@ -189,12 +189,7 @@ request:
   validate:
     token: ${REQUEST_VALIDATE_TOKEN:}
 
-trial:
-  test-accounts:
-    - gdeiassistant
-
 app:
-  test-accounts: gdeiassistant
   cron:
     secret: ${CRON_SECRET:}
   cors:

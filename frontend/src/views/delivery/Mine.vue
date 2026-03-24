@@ -17,8 +17,10 @@ function getStatusText(status) {
 }
 
 function getStatusClass(status) {
-  const map = { 0: 'status-pending', 1: 'status-delivering', 2: 'status-completed' }
-  return map[status] || ''
+  if (status === 0) return 'bg-amber-100 text-amber-800'
+  if (status === 1) return 'bg-blue-100 text-blue-800'
+  if (status === 2) return 'bg-green-100 text-green-800'
+  return ''
 }
 
 function getTypeText(type) {
@@ -110,61 +112,67 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="delivery-mine" style="--module-color: #f59e0b">
+  <div class="min-h-screen bg-[var(--c-bg)] pb-16" style="--module-color: #f59e0b">
     <CommunityHeader title="我的跑腿" moduleColor="#f59e0b" backTo="/" />
 
-    <!-- Tab切换 -->
-    <div class="delivery-mine__tabs">
+    <!-- Tabs -->
+    <div class="flex bg-[var(--c-card)] border-b border-[var(--c-divider)] px-4">
       <div
-        :class="['mine-tab', { active: activeTab === 'published' }]"
+        class="flex-1 text-center py-3 text-base cursor-pointer relative transition-all duration-300"
+        :class="activeTab === 'published' ? 'text-amber-500 font-medium' : 'text-[var(--c-text-2)]'"
         @click="switchTab('published')"
       >
         我发布的
+        <div v-if="activeTab === 'published'" class="absolute bottom-0 left-0 right-0 h-[3px] bg-amber-500 rounded-t"></div>
       </div>
       <div
-        :class="['mine-tab', { active: activeTab === 'accepted' }]"
+        class="flex-1 text-center py-3 text-base cursor-pointer relative transition-all duration-300"
+        :class="activeTab === 'accepted' ? 'text-amber-500 font-medium' : 'text-[var(--c-text-2)]'"
         @click="switchTab('accepted')"
       >
         我接的单
+        <div v-if="activeTab === 'accepted'" class="absolute bottom-0 left-0 right-0 h-[3px] bg-amber-500 rounded-t"></div>
       </div>
     </div>
 
-    <!-- 我发布的 -->
-    <div v-if="activeTab === 'published'" class="delivery-mine__content">
-      <div v-if="loading" class="community-loadmore"><i class="community-loading-spinner"></i> 加载中</div>
-      <div v-else-if="publishedList.length === 0" class="community-empty">
-        <div class="community-empty__text">暂无发布的任务</div>
+    <!-- Published list -->
+    <div v-if="activeTab === 'published'" class="p-4 animate-[fade-in_0.3s_ease_both]">
+      <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-amber-500 rounded-full animate-spin"></i> 加载中
       </div>
-      <div v-else class="delivery-list">
+      <div v-else-if="publishedList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+        <div class="text-sm">暂无发布的任务</div>
+      </div>
+      <div v-else class="flex flex-col gap-4">
         <div
           v-for="(item, index) in publishedList"
           :key="item.id"
-          class="delivery-card community-card"
+          class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
           :style="{ animationDelay: (index * 0.05) + 's' }"
           @click="goDetail(item.id)"
         >
-          <div class="delivery-card__header">
-            <div class="delivery-card__type">{{ getTypeText(item.type) }}</div>
-            <div class="delivery-card__reward">
-              <span class="reward-symbol">&#xffe5;</span>
-              <span class="reward-amount">{{ item.reward.toFixed(2) }}</span>
+          <div class="flex justify-between items-center mb-4">
+            <div class="text-lg font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
+            <div class="flex items-baseline text-red-500">
+              <span class="text-lg font-bold mr-0.5">&#xffe5;</span>
+              <span class="text-2xl font-bold">{{ item.reward.toFixed(2) }}</span>
             </div>
           </div>
-          <div class="delivery-card__route">
-            <div class="route-item route-item--pickup">
-              <span class="route-icon route-icon--pickup">取</span>
-              <span class="route-text">{{ item.pickupAddress }}</span>
+          <div class="mb-4 p-3 bg-[var(--c-bg)] rounded-lg">
+            <div class="flex items-center mb-2.5">
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-blue-500">取</span>
+              <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.pickupAddress }}</span>
             </div>
-            <div class="route-item route-item--delivery">
-              <span class="route-icon route-icon--delivery">送</span>
-              <span class="route-text">{{ item.deliveryAddress }}</span>
+            <div class="flex items-center">
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-amber-500">送</span>
+              <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.deliveryAddress }}</span>
             </div>
           </div>
-          <div class="delivery-card__footer">
-            <div class="delivery-card__meta">
-              <span class="meta-time">{{ item.time }}</span>
+          <div class="flex justify-between items-center pt-3 border-t border-[var(--c-border)]">
+            <div class="flex gap-3 text-base text-[var(--c-text-3)]">
+              <span>{{ item.time }}</span>
             </div>
-            <div :class="['delivery-badge', getStatusClass(item.status)]">
+            <div class="px-3 py-1 rounded-full text-sm font-medium" :class="getStatusClass(item.status)">
               {{ getStatusText(item.status) }}
             </div>
           </div>
@@ -172,42 +180,44 @@ watch(() => route.fullPath, () => {
       </div>
     </div>
 
-    <!-- 我接的单 -->
-    <div v-if="activeTab === 'accepted'" class="delivery-mine__content">
-      <div v-if="loading" class="community-loadmore"><i class="community-loading-spinner"></i> 加载中</div>
-      <div v-else-if="acceptedList.length === 0" class="community-empty">
-        <div class="community-empty__text">暂无接单的任务</div>
+    <!-- Accepted list -->
+    <div v-if="activeTab === 'accepted'" class="p-4 animate-[fade-in_0.3s_ease_both]">
+      <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-amber-500 rounded-full animate-spin"></i> 加载中
       </div>
-      <div v-else class="delivery-list">
+      <div v-else-if="acceptedList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+        <div class="text-sm">暂无接单的任务</div>
+      </div>
+      <div v-else class="flex flex-col gap-4">
         <div
           v-for="(item, index) in acceptedList"
           :key="item.id"
-          class="delivery-card community-card"
+          class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
           :style="{ animationDelay: (index * 0.05) + 's' }"
           @click="goDetail(item.id)"
         >
-          <div class="delivery-card__header">
-            <div class="delivery-card__type">{{ getTypeText(item.type) }}</div>
-            <div class="delivery-card__reward">
-              <span class="reward-symbol">&#xffe5;</span>
-              <span class="reward-amount">{{ item.reward.toFixed(2) }}</span>
+          <div class="flex justify-between items-center mb-4">
+            <div class="text-lg font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
+            <div class="flex items-baseline text-red-500">
+              <span class="text-lg font-bold mr-0.5">&#xffe5;</span>
+              <span class="text-2xl font-bold">{{ item.reward.toFixed(2) }}</span>
             </div>
           </div>
-          <div class="delivery-card__route">
-            <div class="route-item route-item--pickup">
-              <span class="route-icon route-icon--pickup">取</span>
-              <span class="route-text">{{ item.pickupAddress }}</span>
+          <div class="mb-4 p-3 bg-[var(--c-bg)] rounded-lg">
+            <div class="flex items-center mb-2.5">
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-blue-500">取</span>
+              <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.pickupAddress }}</span>
             </div>
-            <div class="route-item route-item--delivery">
-              <span class="route-icon route-icon--delivery">送</span>
-              <span class="route-text">{{ item.deliveryAddress }}</span>
+            <div class="flex items-center">
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-amber-500">送</span>
+              <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.deliveryAddress }}</span>
             </div>
           </div>
-          <div class="delivery-card__footer">
-            <div class="delivery-card__meta">
-              <span class="meta-time">{{ item.time }}</span>
+          <div class="flex justify-between items-center pt-3 border-t border-[var(--c-border)]">
+            <div class="flex gap-3 text-base text-[var(--c-text-3)]">
+              <span>{{ item.time }}</span>
             </div>
-            <div :class="['delivery-badge', getStatusClass(item.status)]">
+            <div class="px-3 py-1 rounded-full text-sm font-medium" :class="getStatusClass(item.status)">
               {{ getStatusText(item.status) }}
             </div>
           </div>
@@ -216,160 +226,3 @@ watch(() => route.fullPath, () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.delivery-mine {
-  background: var(--c-bg);
-  min-height: 100vh;
-  padding-bottom: 60px;
-}
-
-.delivery-mine__tabs {
-  display: flex;
-  background: var(--c-card);
-  border-bottom: 1px solid var(--c-divider);
-  padding: 0 var(--space-lg);
-}
-.mine-tab {
-  flex: 1;
-  text-align: center;
-  padding: var(--space-md) 0;
-  font-size: var(--font-md);
-  color: var(--c-text-2);
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s;
-}
-.mine-tab.active {
-  color: var(--c-delivery);
-  font-weight: 500;
-}
-.mine-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--c-delivery);
-  border-radius: 3px 3px 0 0;
-}
-
-.delivery-mine__content {
-  padding: var(--space-lg);
-  animation: community-fade-in 0.3s ease both;
-}
-
-.delivery-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-}
-
-.delivery-card {
-  padding: var(--space-lg);
-  cursor: pointer;
-  animation: community-slide-up 0.4s ease both;
-}
-
-.delivery-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-lg);
-}
-.delivery-card__type {
-  font-size: var(--font-lg);
-  font-weight: 600;
-  color: var(--c-text-1);
-}
-.delivery-card__reward {
-  display: flex;
-  align-items: baseline;
-  color: #ef4444;
-}
-.reward-symbol {
-  font-size: var(--font-lg);
-  font-weight: bold;
-  margin-right: 2px;
-}
-.reward-amount {
-  font-size: var(--font-2xl);
-  font-weight: bold;
-}
-
-.delivery-card__route {
-  margin-bottom: var(--space-lg);
-  padding: var(--space-md);
-  background: var(--c-bg);
-  border-radius: var(--radius-sm);
-}
-.route-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.route-item:last-child {
-  margin-bottom: 0;
-}
-.route-icon {
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-sm);
-  font-weight: bold;
-  color: #fff;
-  margin-right: 10px;
-  flex-shrink: 0;
-}
-.route-icon--pickup {
-  background: #3b82f6;
-}
-.route-icon--delivery {
-  background: var(--c-delivery);
-}
-.route-text {
-  flex: 1;
-  font-size: var(--font-md);
-  color: var(--c-text-1);
-  line-height: 1.5;
-}
-
-.delivery-card__footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--c-border);
-}
-.delivery-card__meta {
-  display: flex;
-  gap: var(--space-md);
-  font-size: var(--font-base);
-  color: var(--c-text-3);
-}
-.meta-time {
-  display: inline-block;
-}
-.delivery-badge {
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-full);
-  font-size: var(--font-sm);
-  font-weight: 500;
-}
-.delivery-badge.status-pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-.delivery-badge.status-delivering {
-  background: #dbeafe;
-  color: #1e40af;
-}
-.delivery-badge.status-completed {
-  background: #d1fae5;
-  color: #065f46;
-}
-</style>

@@ -2,21 +2,15 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { queryCardInfo, reportCardLost } from '@/api/card'
-import { showErrorTopTips } from '@/utils/toast'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { success: showSuccess, error: showError, loading: showLoading, hideLoading } = useToast()
 const info = ref(null)
 const loading = ref(false)
 const submitLoading = ref(false)
-const toastMsg = ref('')
-const showToast = ref(false)
 const showPasswordDialog = ref(false)
 const verifyPassword = ref('')
-let toastTimer = null
-
-function goBack() {
-  router.back()
-}
 
 function onReportLoss() {
   verifyPassword.value = ''
@@ -31,31 +25,32 @@ function closePasswordDialog() {
 function confirmReportLoss() {
   const pwd = (verifyPassword.value || '').trim()
   if (!pwd) {
-    showErrorTopTips('密码不能为空')
+    showError('密码不能为空')
     return
   }
   if (!/^\d+$/.test(pwd)) {
-    showErrorTopTips('密码只能包含数字')
+    showError('密码只能包含数字')
     return
   }
   closePasswordDialog()
   submitLoading.value = true
+  showLoading('提交中')
   reportCardLost(pwd)
     .then(() => {
       submitLoading.value = false
-      toastMsg.value = '挂失成功'
-      showToast.value = true
-      if (toastTimer) clearTimeout(toastTimer)
-      toastTimer = setTimeout(() => { showToast.value = false }, 2000)
+      hideLoading()
+      showSuccess('挂失成功')
       info.value = { ...info.value, cardLostState: '已挂失' }
     })
     .catch(() => {
       submitLoading.value = false
+      hideLoading()
     })
 }
 
 onMounted(() => {
   loading.value = true
+  showLoading('加载中')
   queryCardInfo()
     .then((res) => {
       const body = res && res.data ? res.data : res
@@ -72,297 +67,104 @@ onMounted(() => {
     })
     .finally(() => {
       loading.value = false
+      hideLoading()
     })
 })
 </script>
 
 <template>
-  <div class="card-info-page">
-    <template v-if="loading">
-      <div class="weui-mask_transparent" aria-hidden="true"></div>
-      <div class="weui-toast__wrp">
-        <div class="weui-toast">
-          <span class="weui-primary-loading weui-icon_toast" aria-label="加载中"></span>
-          <p class="weui-toast__content">加载中</p>
-        </div>
-      </div>
-    </template>
-    <template v-if="submitLoading">
-      <div class="weui-mask_transparent" aria-hidden="true"></div>
-      <div class="weui-toast__wrp">
-        <div class="weui-toast">
-          <span class="weui-primary-loading weui-icon_toast" aria-label="提交中"></span>
-          <p class="weui-toast__content">提交中</p>
-        </div>
-      </div>
-    </template>
-    <div v-show="showToast" class="weui-toast__wrp weui-toast__wrp--text">
-      <div class="weui-toast weui-toast_text">
-        <p class="weui-toast__content">{{ toastMsg }}</p>
-      </div>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">校园卡信息</span>
+      <div class="w-10"></div>
     </div>
 
-    <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
+    <div class="max-w-lg mx-auto px-4 py-6" v-if="info">
+      <!-- 余额卡片 -->
+      <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)] mb-4">
+        <div class="text-center">
+          <div class="text-xs text-[var(--c-text-2)] mb-1">校园卡余额</div>
+          <div class="font-mono text-2xl font-bold text-[var(--c-primary)]">{{ info.cardBalance ?? '--' }}</div>
+          <div class="text-xs text-[var(--c-text-3)] mt-1">过渡余额: {{ info.cardInterimBalance ?? '--' }}</div>
+        </div>
+      </div>
+
+      <!-- 基本信息 -->
+      <div class="bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)] mb-4">
+        <div class="px-4 py-2.5 border-b border-[var(--c-border)]">
+          <span class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide">基本信息</span>
+        </div>
+        <div class="divide-y divide-[var(--c-border-light)]">
+          <div class="flex justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-2)]">姓名</span>
+            <span class="text-sm font-medium">{{ info.name || '--' }}</span>
+          </div>
+          <div class="flex justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-2)]">学号</span>
+            <span class="text-sm font-medium">{{ info.number ?? '--' }}</span>
+          </div>
+          <div class="flex justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-2)]">校园卡号</span>
+            <span class="text-sm font-medium">{{ info.cardNumber ?? '--' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 状态信息 -->
+      <div class="bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)] mb-6">
+        <div class="px-4 py-2.5 border-b border-[var(--c-border)]">
+          <span class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide">卡片状态</span>
+        </div>
+        <div class="divide-y divide-[var(--c-border-light)]">
+          <div class="flex justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-2)]">挂失状态</span>
+            <span class="text-sm font-medium">{{ info.cardLostState ?? '--' }}</span>
+          </div>
+          <div class="flex justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-2)]">冻结状态</span>
+            <span class="text-sm font-medium">{{ info.cardFreezeState ?? '--' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-center text-sm text-[var(--c-text-2)]">
+        校园卡遗失？点击
+        <a href="javascript:" class="text-[var(--c-primary)] font-medium" @click.prevent="onReportLoss">校园卡挂失</a>
+      </p>
     </div>
 
-    <div class="page-header">
-      <h1 class="page-title-green">校园卡信息</h1>
-    </div>
-
-    <template v-if="info">
-      <div class="weui-cells__title">校园卡基本信息</div>
-      <div class="weui-cells info-cells">
-        <div class="weui-cell info-cell">
-          <div class="weui-cell__bd"><span class="info-label">姓名</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.name || '—' }}</span></div>
+    <!-- 挂失验证弹窗 -->
+    <Teleport to="body">
+      <template v-if="showPasswordDialog">
+        <div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" @click="closePasswordDialog"></div>
+        <div class="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] bg-[var(--c-surface)] rounded-2xl overflow-hidden shadow-xl">
+          <div class="px-5 pt-6 pb-3 text-center">
+            <h3 class="text-base font-bold">挂失校园卡验证</h3>
+          </div>
+          <div class="px-5 pb-5">
+            <p class="text-sm text-[var(--c-text-2)] mb-3">请输入查询密码进行验证</p>
+            <input
+              v-model="verifyPassword"
+              type="password"
+              placeholder="校园卡查询密码"
+              maxlength="20"
+              class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+              @keyup.enter="confirmReportLoss"
+            />
+          </div>
+          <div class="flex border-t border-[var(--c-border)]">
+            <button
+              class="flex-1 py-3.5 text-center text-sm text-[var(--c-text-2)] border-r border-[var(--c-border)]"
+              @click="closePasswordDialog"
+            >取消</button>
+            <button
+              class="flex-1 py-3.5 text-center text-sm font-semibold text-[var(--c-primary)]"
+              @click="confirmReportLoss"
+            >确定</button>
+          </div>
         </div>
-        <div class="weui-cell info-cell">
-          <div class="weui-cell__bd"><span class="info-label">学号</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.number ?? '—' }}</span></div>
-        </div>
-        <div class="weui-cell info-cell">
-          <div class="weui-cell__bd"><span class="info-label">校园卡号</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.cardNumber ?? '—' }}</span></div>
-        </div>
-      </div>
-
-      <div class="weui-cells__title">校园卡余额</div>
-      <div class="weui-cells info-cells">
-        <div class="weui-cell info-cell">
-          <div class="weui-cell__bd"><span class="info-label">校园卡余额</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.cardBalance ?? '—' }}</span></div>
-        </div>
-        <div class="weui-cell info-cell">
-          <div class="weui-cell__bd"><span class="info-label">校园卡过渡余额</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.cardInterimBalance ?? '—' }}</span></div>
-        </div>
-      </div>
-
-      <div class="weui-cells__title">校园卡状态</div>
-      <div class="weui-cells info-cells">
-        <div class="weui-cell info-cell">
-          <div class="weui-cell__bd"><span class="info-label">校园卡挂失状态</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.cardLostState ?? '—' }}</span></div>
-        </div>
-        <div class="weui-cell info-cell">
-          <div class="weui-cell__bd"><span class="info-label">校园卡冻结状态</span></div>
-          <div class="weui-cell__ft"><span class="info-value">{{ info.cardFreezeState ?? '—' }}</span></div>
-        </div>
-      </div>
-    </template>
-
-    <div class="card-info-footer">
-      <span class="card-info-footer-text">校园卡遗失？点击 </span>
-      <a href="javascript:" class="card-info-footer-link" @click.prevent="onReportLoss">校园卡挂失</a>
-    </div>
-
-    <!-- 挂失验证弹窗：直接输入密码，无前置确认 -->
-    <div v-if="showPasswordDialog" class="weui-mask" @click="closePasswordDialog"></div>
-    <div v-if="showPasswordDialog" class="weui-dialog weui-dialog--password">
-      <div class="weui-dialog__hd">
-        <strong class="weui-dialog__title">挂失校园卡验证</strong>
-      </div>
-      <div class="weui-dialog__bd">
-        <p class="weui-dialog__tip">请输入查询密码进行验证</p>
-        <input
-          v-model="verifyPassword"
-          type="password"
-          class="weui-input weui-dialog__input"
-          placeholder="校园卡查询密码"
-          maxlength="20"
-          @keyup.enter="confirmReportLoss"
-        />
-      </div>
-      <div class="weui-dialog__ft">
-        <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_default" @click="closePasswordDialog">取消</a>
-        <a href="javascript:" class="weui-dialog__btn weui-dialog__btn_primary" @click="confirmReportLoss">确定</a>
-      </div>
-    </div>
+      </template>
+    </Teleport>
   </div>
 </template>
-
-<style scoped>
-.card-info-page {
-  background-color: var(--color-surface);
-  min-height: 100vh;
-  padding-bottom: 32px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: var(--color-surface);
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: var(--color-text-tertiary);
-  cursor: pointer;
-}
-
-.page-header {
-  text-align: center;
-  padding: 0 0 6px;
-  background-color: var(--color-surface);
-}
-
-.page-title-green {
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 0;
-  line-height: 1.2;
-}
-
-.card-info-page .weui-cells__title {
-  padding: 12px 15px 8px;
-  font-size: 14px;
-  color: var(--color-text-tertiary);
-}
-
-.card-info-page .info-cells {
-  margin-top: 0;
-}
-
-.info-cell {
-  position: relative;
-  padding: 12px 15px !important;
-  box-sizing: border-box;
-}
-
-.info-cell::after {
-  content: " ";
-  position: absolute;
-  left: 15px;
-  right: 15px;
-  bottom: 0;
-  height: 1px;
-  border-bottom: 1px solid var(--color-border);
-  transform-origin: 0 100%;
-  transform: scaleY(0.5);
-}
-
-.info-cell:last-child::after {
-  display: none !important;
-}
-
-.info-cell .weui-cell__bd {
-  color: var(--color-text-tertiary);
-}
-
-.info-label {
-  color: var(--color-text-tertiary);
-}
-
-.info-cell .weui-cell__ft {
-  color: var(--color-text-primary);
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.info-value {
-  color: var(--color-text-primary);
-}
-
-.weui-toast__wrp--text {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 6000;
-}
-
-.card-info-footer {
-  margin-top: 32px;
-  padding: 0 15px;
-  font-size: 14px;
-  color: var(--color-text-tertiary);
-  text-align: center;
-}
-
-.card-info-footer-link {
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-.weui-mask {
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-}
-
-.weui-dialog--password.weui-dialog {
-  position: fixed;
-  z-index: 5000;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--color-surface);
-  border-radius: 12px;
-  width: 320px;
-  overflow: hidden;
-}
-
-.weui-dialog__hd {
-  padding: 24px 20px 12px;
-  text-align: center;
-}
-
-.weui-dialog__title {
-  font-size: 17px;
-  color: var(--color-text-primary);
-}
-
-.weui-dialog__bd {
-  padding: 12px 20px 20px;
-}
-
-.weui-dialog__tip {
-  margin: 0 0 12px;
-  font-size: 14px;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
-}
-
-.weui-dialog__input {
-  width: 100%;
-  padding: 12px;
-  font-size: 15px;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  box-sizing: border-box;
-}
-
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid var(--color-border);
-}
-
-.weui-dialog__btn {
-  flex: 1;
-  padding: 14px;
-  text-align: center;
-  color: var(--color-text-primary);
-  text-decoration: none;
-  font-size: 17px;
-}
-
-.weui-dialog__btn_primary {
-  color: var(--color-primary);
-  border-left: 1px solid var(--color-border);
-}
-
-.weui-dialog__btn_default {
-  color: var(--color-text-tertiary);
-}
-</style>

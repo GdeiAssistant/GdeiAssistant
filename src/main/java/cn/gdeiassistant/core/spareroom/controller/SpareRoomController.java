@@ -1,7 +1,6 @@
 package cn.gdeiassistant.core.spareRoom.controller;
 
 import cn.gdeiassistant.common.annotation.QueryLogPersistence;
-import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.spareRoom.pojo.dto.EmptyClassroomQueryDTO;
@@ -29,7 +28,6 @@ public class SpareRoomController {
      */
     @RequestMapping(value = "/api/spare/query", method = RequestMethod.POST)
     @QueryLogPersistence
-    @TrialData(value = "spare")
     public DataJsonResult<List<SpareRoomVO>> querySpareRoomList(HttpServletRequest request,
                                                                 @RequestBody @Validated EmptyClassroomQueryDTO query) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");

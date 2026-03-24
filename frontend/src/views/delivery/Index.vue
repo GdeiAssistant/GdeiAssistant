@@ -9,8 +9,8 @@ const tabs = [
 </script>
 
 <template>
-  <div class="community-page" style="--module-color: #f59e0b">
-    <div class="delivery-container">
+  <div class="min-h-screen" style="--module-color: #f59e0b">
+    <div class="pb-14 box-border">
       <router-view />
     </div>
     <CommunityTabbar
@@ -20,10 +20,3 @@ const tabs = [
     />
   </div>
 </template>
-
-<style scoped>
-.delivery-container {
-  padding-bottom: 56px;
-  box-sizing: border-box;
-}
-</style>

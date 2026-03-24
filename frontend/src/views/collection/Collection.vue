@@ -32,141 +32,35 @@ function openAction(path) {
 </script>
 
 <template>
-  <div class="library-page">
-    <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">图书馆</span>
+      <div class="w-10"></div>
     </div>
 
-    <div class="hero-card">
-      <div class="hero-chip">图书馆</div>
-      <h1 class="hero-title">图书馆</h1>
-      <p class="hero-subtitle">馆藏检索和我的借阅统一放在一个模块里，首页不再拆成两个平级入口。</p>
-    </div>
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <!-- Hero card -->
+      <div class="rounded-2xl bg-gradient-to-br from-[var(--c-primary)]/5 to-[var(--c-surface)] p-6 shadow-sm border border-[var(--c-border)]">
+        <span class="inline-flex items-center h-7 px-3 rounded-full bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-xs font-semibold">图书馆</span>
+        <h1 class="mt-4 text-3xl font-bold text-[var(--c-text)]">图书馆</h1>
+        <p class="mt-2 text-sm leading-relaxed text-[var(--c-text-2)]">馆藏检索和我的借阅统一放在一个模块里，首页不再拆成两个平级入口。</p>
+      </div>
 
-    <div class="action-grid">
-      <button
-        v-for="item in actions"
-        :key="item.id"
-        type="button"
-        class="action-card"
-        @click="openAction(item.path)"
-      >
-        <div class="action-card__badge">{{ item.badge }}</div>
-        <div class="action-card__title">{{ item.title }}</div>
-        <div class="action-card__desc">{{ item.description }}</div>
-      </button>
+      <!-- Action grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-5">
+        <button
+          v-for="item in actions"
+          :key="item.id"
+          type="button"
+          class="flex flex-col items-start min-h-[180px] p-5 rounded-2xl bg-[var(--c-surface)] border border-[var(--c-border)] shadow-sm text-left hover:bg-[var(--c-surface-hover)] transition-colors"
+          @click="openAction(item.path)"
+        >
+          <span class="inline-flex items-center h-7 px-2.5 rounded-full bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-xs font-bold">{{ item.badge }}</span>
+          <span class="mt-4 text-xl font-bold text-[var(--c-text)]">{{ item.title }}</span>
+          <span class="mt-2.5 text-sm leading-relaxed text-[var(--c-text-2)]">{{ item.description }}</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.library-page {
-  min-height: 100vh;
-  padding: 0 16px 28px;
-  background:
-    radial-gradient(circle at top right, rgba(9, 187, 7, 0.14), transparent 34%),
-    linear-gradient(180deg, #f7fbf7 0%, #ffffff 42%);
-  box-sizing: border-box;
-}
-
-.top-nav-bar {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 12px 0 4px;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #5f6b5f;
-  cursor: pointer;
-}
-
-.hero-card {
-  margin-top: 8px;
-  padding: 24px 20px;
-  border-radius: 24px;
-  background: linear-gradient(160deg, #eaf8ea 0%, #ffffff 100%);
-  box-shadow: 0 18px 50px rgba(23, 55, 30, 0.08);
-}
-
-.hero-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 0 12px;
-  border-radius: 999px;
-  background: rgba(9, 187, 7, 0.12);
-  color: #137333;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.hero-title {
-  margin: 18px 0 8px;
-  font-size: 34px;
-  line-height: 1.1;
-  color: #102110;
-}
-
-.hero-subtitle {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.7;
-  color: #5f6b5f;
-}
-
-.action-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 18px;
-}
-
-.action-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  min-height: 180px;
-  padding: 20px 18px;
-  border: 1px solid rgba(19, 115, 51, 0.12);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 14px 36px rgba(26, 52, 32, 0.06);
-  text-align: left;
-}
-
-.action-card__badge {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: rgba(19, 115, 51, 0.1);
-  color: #137333;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.action-card__title {
-  margin-top: 18px;
-  font-size: 22px;
-  line-height: 1.2;
-  color: #102110;
-  font-weight: 700;
-}
-
-.action-card__desc {
-  margin-top: 10px;
-  font-size: 14px;
-  line-height: 1.7;
-  color: #6a756a;
-}
-
-@media (max-width: 640px) {
-  .action-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>

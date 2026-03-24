@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.userLogin.service;
 
-import cn.gdeiassistant.common.config.properties.TrialProperties;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
@@ -31,15 +30,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class UserCertificateService {
 
     private final Logger logger = LoggerFactory.getLogger(UserCertificateService.class);
-
-    @Autowired
-    private TrialProperties trialProperties;
 
     @Autowired
     private UserCertificateDao userCertificateDao;
@@ -166,120 +161,114 @@ public class UserCertificateService {
      * @return
      */
     private void updateSessionCertificate(String sessionId, String username, String password) throws PasswordIncorrectException, NetWorkTimeoutException, ServerErrorException {
-        // 仅对非测试账号执行真实 CAS 会话更新；测试账号（白名单）跳过爬虫
-        if (!isTestAccount(username)) {
-            UserCertificateEntity userCertificate = userCertificateDao.queryUserSessionCertificate(username);
-            if (userCertificate == null) {
-                CloseableHttpClient httpClient = null;
-                CookieStore cookieStore = null;
-                try {
-                    HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
-                            , false, 15);
-                    httpClient = httpClientSession.getCloseableHttpClient();
-                    cookieStore = httpClientSession.getCookieStore();
-                    HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
-                    HttpResponse httpResponse = httpClient.execute(httpGet);
-                    Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                        HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
-                        //封装身份认证需要POST发送的相关数据
-                        List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
-                        basicNameValuePairs.add(new BasicNameValuePair("username", username));
-                        basicNameValuePairs.add(new BasicNameValuePair("password", password));
-                        basicNameValuePairs.add(new BasicNameValuePair("service", "http://portal.gdei.edu.cn:8001/Login"));
-                        basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
-                        basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
-                        Element tokensEl = document.getElementById("tokens");
-                        Element stampEl = document.getElementById("stamp");
-                        if (tokensEl == null || stampEl == null) {
-                            throw new ServerErrorException("CAS 登录页面结构异常，未找到 tokens 或 stamp");
-                        }
-                        basicNameValuePairs.add(new BasicNameValuePair("tokens", tokensEl.val()));
-                        basicNameValuePairs.add(new BasicNameValuePair("stamp", stampEl.val()));
-                        //绑定表单参数
-                        httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
-                        httpResponse = httpClient.execute(httpPost);
-                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                        if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                            //服务器异常
-                            throw new ServerErrorException("教务系统异常");
-                        }
-                        Element bodyElement = document.select("body").first();
-                        if (bodyElement == null || !bodyElement.hasAttr("bgcolor")) {
-                            //认证失败,提示账号或密码错误
-                            throw new PasswordIncorrectException("登录账号密码不正确");
-                        }
-                        Element firstLink = document.select("a").first();
-                        if (firstLink == null) {
-                            throw new ServerErrorException("CAS 登录后未找到跳转链接");
-                        }
-                        String casRedirectUrl = firstLink.attr("href");
-                        if (casRedirectUrl == null || casRedirectUrl.isEmpty()) {
-                            throw new ServerErrorException("CAS login后跳转链接为空");
-                        }
-                        // Validate redirect URL stays within trusted school domains
-                        try {
-                            java.net.URI uri = java.net.URI.create(casRedirectUrl);
-                            String scheme = uri.getScheme();
-                            if (scheme != null && !scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https")) {
-                                throw new ServerErrorException("CAS重定向地址协议不安全");
-                            }
-                            String host = uri.getHost();
-                            if (host != null && !host.toLowerCase().endsWith(".gdei.edu.cn") && !host.toLowerCase().equals("gdei.edu.cn")) {
-                                throw new ServerErrorException("CAS重定向地址不在可信域名范围内");
-                            }
-                        } catch (IllegalArgumentException e) {
-                            throw new ServerErrorException("CAS重定向地址格式异常");
-                        }
-                        httpGet = new HttpGet(casRedirectUrl);
-                        httpResponse = httpClient.execute(httpGet);
-                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                        if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                            if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
-                                //已经通过了认证
-                                LoginCasSystem(sessionId, httpClient, username, password);
-                            } else {
-                                httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                                httpResponse = httpClient.execute(httpGet);
-                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("我的门户")) {
-                                    //登录我的门户成功
-                                    LoginCasSystem(sessionId, httpClient, username, password);
-                                }
-                            }
-                        }
+        UserCertificateEntity userCertificate = userCertificateDao.queryUserSessionCertificate(username);
+        if (userCertificate == null) {
+            CloseableHttpClient httpClient = null;
+            CookieStore cookieStore = null;
+            try {
+                HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
+                        , false, 15);
+                httpClient = httpClientSession.getCloseableHttpClient();
+                cookieStore = httpClientSession.getCookieStore();
+                HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
+                HttpResponse httpResponse = httpClient.execute(httpGet);
+                Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                    HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
+                    //封装身份认证需要POST发送的相关数据
+                    List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
+                    basicNameValuePairs.add(new BasicNameValuePair("username", username));
+                    basicNameValuePairs.add(new BasicNameValuePair("password", password));
+                    basicNameValuePairs.add(new BasicNameValuePair("service", "http://portal.gdei.edu.cn:8001/Login"));
+                    basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
+                    basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
+                    Element tokensEl = document.getElementById("tokens");
+                    Element stampEl = document.getElementById("stamp");
+                    if (tokensEl == null || stampEl == null) {
+                        throw new ServerErrorException("CAS 登录页面结构异常，未找到 tokens 或 stamp");
+                    }
+                    basicNameValuePairs.add(new BasicNameValuePair("tokens", tokensEl.val()));
+                    basicNameValuePairs.add(new BasicNameValuePair("stamp", stampEl.val()));
+                    //绑定表单参数
+                    httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
+                    httpResponse = httpClient.execute(httpPost);
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    if (httpResponse.getStatusLine().getStatusCode() != 200) {
+                        //服务器异常
                         throw new ServerErrorException("教务系统异常");
-                    } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                    }
+                    Element bodyElement = document.select("body").first();
+                    if (bodyElement == null || !bodyElement.hasAttr("bgcolor")) {
+                        //认证失败,提示账号或密码错误
+                        throw new PasswordIncorrectException("登录账号密码不正确");
+                    }
+                    Element firstLink = document.select("a").first();
+                    if (firstLink == null) {
+                        throw new ServerErrorException("CAS 登录后未找到跳转链接");
+                    }
+                    String casRedirectUrl = firstLink.attr("href");
+                    if (casRedirectUrl == null || casRedirectUrl.isEmpty()) {
+                        throw new ServerErrorException("CAS login后跳转链接为空");
+                    }
+                    // Validate redirect URL stays within trusted school domains
+                    try {
+                        java.net.URI uri = java.net.URI.create(casRedirectUrl);
+                        String scheme = uri.getScheme();
+                        if (scheme != null && !scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https")) {
+                            throw new ServerErrorException("CAS重定向地址协议不安全");
+                        }
+                        String host = uri.getHost();
+                        if (host != null && !host.toLowerCase().endsWith(".gdei.edu.cn") && !host.toLowerCase().equals("gdei.edu.cn")) {
+                            throw new ServerErrorException("CAS重定向地址不在可信域名范围内");
+                        }
+                    } catch (IllegalArgumentException e) {
+                        throw new ServerErrorException("CAS重定向地址格式异常");
+                    }
+                    httpGet = new HttpGet(casRedirectUrl);
+                    httpResponse = httpClient.execute(httpGet);
+                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
                         if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
                             //已经通过了认证
                             LoginCasSystem(sessionId, httpClient, username, password);
+                        } else {
+                            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+                            httpResponse = httpClient.execute(httpGet);
+                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
+                            if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("我的门户")) {
+                                //登录我的门户成功
+                                LoginCasSystem(sessionId, httpClient, username, password);
+                            }
                         }
                     }
                     throw new ServerErrorException("教务系统异常");
-                } catch (PasswordIncorrectException ignored) {
-                    throw new PasswordIncorrectException("用户密码错误");
-                } catch (IOException e) {
-                    logger.error("与教务系统同步会话时网络异常", e);
-                    throw new NetWorkTimeoutException("网络连接超时");
-                } catch (Exception e) {
-                    logger.error("与教务系统同步会话时发生异常", e);
-                    throw new ServerErrorException("教务系统异常");
-                } finally {
-                    if (httpClient != null) {
-                        try {
-                            httpClient.close();
-                        } catch (IOException e) {
-                            logger.error("关闭教务系统同步 HttpClient 失败", e);
-                        }
-                    }
-                    if (cookieStore != null) {
-                        HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
+                    if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
+                        //已经通过了认证
+                        LoginCasSystem(sessionId, httpClient, username, password);
                     }
                 }
+                throw new ServerErrorException("教务系统异常");
+            } catch (PasswordIncorrectException ignored) {
+                throw new PasswordIncorrectException("用户密码错误");
+            } catch (IOException e) {
+                logger.error("与教务系统同步会话时网络异常", e);
+                throw new NetWorkTimeoutException("网络连接超时");
+            } catch (Exception e) {
+                logger.error("与教务系统同步会话时发生异常", e);
+                throw new ServerErrorException("教务系统异常");
+            } finally {
+                if (httpClient != null) {
+                    try {
+                        httpClient.close();
+                    } catch (IOException e) {
+                        logger.error("关闭教务系统同步 HttpClient 失败", e);
+                    }
+                }
+                if (cookieStore != null) {
+                    HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                }
             }
-        } else {
-            //模拟登录环境下不允许修改密码
-            throw new PasswordIncorrectException("登录账号密码不正确");
         }
     }
 
@@ -412,21 +401,4 @@ public class UserCertificateService {
         throw new ServerErrorException("教务系统异常");
     }
 
-    /**
-     * 判断用户名是否位于配置的测试账号白名单中（与 TrialDataAspect/TrialProperties 使用同一配置 trial.test-accounts）。
-     */
-    private boolean isTestAccount(String username) {
-        if (username == null) {
-            return false;
-        }
-        List<String> testAccounts = trialProperties.getTestAccounts();
-        if (testAccounts == null) {
-            return false;
-        }
-        return testAccounts.stream()
-                .filter(Objects::nonNull)
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .anyMatch(s -> s.equalsIgnoreCase(username));
-    }
 }

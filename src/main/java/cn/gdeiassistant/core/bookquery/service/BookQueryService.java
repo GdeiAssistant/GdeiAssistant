@@ -40,7 +40,7 @@ public class BookQueryService {
     private LibraryClient libraryClient;
 
     /**
-     * 馆藏检索。测试账号由 TrialDataAspect 拦截并从 MongoDB 返回；此处仅保留爬虫逻辑。
+     * 馆藏检索。
      */
     public CollectionQueryResult searchCollections(String sessionId, Integer page, String keyword) throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException {
         CollectionQueryResult result = collectionQueryService.collectionQuery(page, keyword);
@@ -53,21 +53,21 @@ public class BookQueryService {
     }
 
     /**
-     * 馆藏详情。测试账号由 TrialDataAspect 拦截并从 MongoDB 返回；此处仅保留爬虫逻辑。
+     * 馆藏详情。
      */
     public CollectionDetail getCollectionDetail(String sessionId, String detailURL) throws NetWorkTimeoutException, ServerErrorException {
         return collectionQueryService.getCollectionDetailByDetailURL(detailURL);
     }
 
     /**
-     * 查询我的借阅。测试账号由 TrialDataAspect 拦截并从 MongoDB 返回；此处仅保留爬虫逻辑。
+     * 查询我的借阅。
      */
     public List<Book> getBorrowedBooks(String sessionId, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
         return bookquery(sessionId, password);
     }
 
     /**
-     * 续借图书。测试账号由 TrialDataAspect 拦截并抛 TestAccountException；此处仅保留爬虫逻辑。
+     * 续借图书。
      */
     public void renewBook(String sessionId, String sn, String code) throws NetWorkTimeoutException, ServerErrorException, BookRenewOvertimeException {
         bookRenew(sessionId, sn, code);

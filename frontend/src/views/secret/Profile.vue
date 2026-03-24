@@ -54,127 +54,44 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="community-page secret-profile" style="--module-color: #8b5cf6">
+  <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: #8b5cf6">
     <CommunityHeader title="我的树洞" moduleColor="#8b5cf6" backTo="/secret/home" />
 
-    <div v-if="loading" class="loading">
-      <i class="community-loading-spinner"></i>
+    <div v-if="loading" class="flex items-center justify-center py-16 gap-2.5 text-[var(--c-text-3)]">
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#8b5cf6] rounded-full animate-spin"></i>
       <span>加载中...</span>
     </div>
 
-    <!-- 发布的树洞消息列表：参考原版 secretProfile.jsp -->
-    <div v-else class="msg-list">
+    <!-- 发布的树洞消息列表 -->
+    <div v-else class="p-2">
       <div
         v-for="(secret, index) in secretList"
         :key="secret.id"
-        class="msg community-card"
+        class="bg-[var(--c-surface)] mb-2 p-3 rounded-lg border-l-4 border-[var(--c-secret)] shadow-sm flex items-center justify-between min-h-[80px] animate-[community-slide-up_0.3s_ease_both]"
         :style="{ animationDelay: index * 0.05 + 's' }"
       >
-        <a href="javascript:;" @click.prevent="router.push(`/secret/detail/${secret.id}`)">
-          <p>{{ secret.type === 0 ? secret.content : '语音消息' }}</p>
+        <a href="javascript:;" class="flex-1 no-underline text-[var(--c-text-1)]" @click.prevent="router.push(`/secret/detail/${secret.id}`)">
+          <p class="m-0 text-sm leading-relaxed flex items-center min-h-[50px]">{{ secret.type === 0 ? secret.content : '语音消息' }}</p>
         </a>
-        <i class="toggle"></i>
+        <i class="inline-block w-2.5 h-2.5 ml-3 border-t-2 border-r-2 border-[var(--c-text-3)] rotate-45 opacity-80"></i>
       </div>
-      <div v-if="secretList.length === 0" class="community-empty">
-        <div class="community-empty__icon">📭</div>
-        <p class="community-empty__text">暂无发布的树洞</p>
+      <div v-if="secretList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+        <div class="text-5xl mb-3">📭</div>
+        <p class="text-sm">暂无发布的树洞</p>
       </div>
 
-      <div v-if="secretList.length > 0 && hasMore" class="load-more">
+      <div v-if="secretList.length > 0 && hasMore" class="flex justify-center py-3">
         <button
-          class="load-more__btn"
+          class="px-8 py-2.5 border border-[var(--c-secret)] rounded-lg bg-transparent text-[var(--c-secret)] text-sm cursor-pointer transition-colors duration-200 hover:enabled:bg-[var(--c-secret)] hover:enabled:text-white disabled:opacity-60 disabled:cursor-not-allowed"
           :disabled="loadingMore"
           @click="loadMore"
         >
           {{ loadingMore ? '加载中...' : '加载更多' }}
         </button>
       </div>
-      <div v-if="secretList.length > 0 && !hasMore" class="load-more">
-        <span class="load-more__end">没有更多了</span>
+      <div v-if="secretList.length > 0 && !hasMore" class="flex justify-center py-3">
+        <span class="text-[var(--c-text-3)] text-xs">没有更多了</span>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.secret-profile {
-  min-height: 100vh;
-  background: var(--c-bg);
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  gap: 10px;
-  color: var(--c-text-3);
-}
-
-.msg-list {
-  padding: var(--space-sm);
-}
-.msg {
-  background: var(--c-card);
-  margin-bottom: var(--space-sm);
-  padding: var(--space-md);
-  border-radius: var(--radius-md);
-  border-left: 4px solid var(--c-secret);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 80px;
-  animation: community-slide-up 0.3s ease both;
-}
-.msg a {
-  flex: 1;
-  text-decoration: none;
-  color: var(--c-text-1);
-}
-.msg p {
-  margin: 0;
-  font-size: var(--font-base);
-  line-height: 1.5;
-  display: flex;
-  align-items: center;
-  min-height: 50px;
-}
-.toggle {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-left: 12px;
-  border-top: 2px solid var(--c-text-3);
-  border-right: 2px solid var(--c-text-3);
-  transform: rotate(45deg);
-  opacity: 0.8;
-}
-.load-more {
-  display: flex;
-  justify-content: center;
-  padding: var(--space-md) 0;
-}
-.load-more__btn {
-  padding: 10px 32px;
-  border: 1px solid var(--c-secret);
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--c-secret);
-  font-size: var(--font-base);
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-.load-more__btn:hover:not(:disabled) {
-  background: var(--c-secret);
-  color: #fff;
-}
-.load-more__btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-.load-more__end {
-  color: var(--c-text-3);
-  font-size: var(--font-sm);
-}
-</style>

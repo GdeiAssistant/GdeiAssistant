@@ -66,273 +66,81 @@ function copyText(text) {
 </script>
 
 <template>
-  <div class="lostandfound-detail">
+  <div class="min-h-screen bg-[var(--c-bg)]">
     <!-- 统一顶部导航栏 -->
     <CommunityHeader title="详情" moduleColor="#3b82f6" @back="router.back()" backTo="" />
 
-    <div v-if="loading" class="lostandfound-detail-loading">
-      <span class="community-loading-spinner" style="--module-color: #3b82f6"></span>
-      <p>加载中</p>
+    <!-- Loading -->
+    <div v-if="loading" class="flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
+      <span class="w-6 h-6 border-2 border-[var(--c-border)] border-t-blue-500 rounded-full animate-spin"></span>
+      <p class="mt-3 text-sm">加载中</p>
     </div>
 
     <template v-else-if="detail">
       <!-- 图片轮播 -->
-      <div v-if="detail.images && detail.images.length > 0" class="detail-slider">
-        <div class="slider-wrapper">
+      <div v-if="detail.images && detail.images.length > 0" class="w-full bg-[var(--c-surface)] overflow-x-auto overflow-y-hidden">
+        <div class="flex">
           <img
             v-for="(img, index) in detail.images"
             :key="index"
             :src="img"
             :alt="detail.title"
-            class="slider-img"
+            class="w-screen h-auto shrink-0 block"
           />
         </div>
       </div>
 
       <!-- 基本信息 -->
-      <div class="detail-info community-card">
-        <h5 class="detail-title">{{ detail.title }}</h5>
-        <p class="detail-time">发布时间：<b>{{ detail.time }}</b></p>
+      <div class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform p-4 border-b border-[var(--c-border)] rounded-none m-0">
+        <h5 class="text-lg font-medium text-[var(--c-text-1)] m-0 mb-2.5 p-0">{{ detail.title }}</h5>
+        <p class="text-[13px] text-[var(--c-text-3)] m-0 p-0">发布时间：<b>{{ detail.time }}</b></p>
       </div>
 
       <!-- 地点信息 -->
-      <p class="detail-site community-card">
-        <span>
-          <i class="i isite"></i>
+      <p class="bg-[var(--c-surface)] p-4 border-b border-[var(--c-border)] text-sm text-[var(--c-text-2)] m-0 flex items-center rounded-none">
+        <span class="shrink-0">
+          <i class="inline-block w-2.5 h-3.5 mr-2 align-middle bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20384%20512%27%20fill=%27%233b82f6%27%3E%3Cpath%20d=%27M192%200C86%200%200%2086%200%20192c0%2077.4%2027%2099%20172.3%20309.7a24%2024%200%200%200%2039.4%200C357%20291%20384%20269.4%20384%20192%20384%2086%20298%200%20192%200zm0%20272a80%2080%200%201%201%200-160%2080%2080%200%200%201%200%20160z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
           {{ detail.type === 0 ? '丢失地点' : '捡到地点' }}：
         </span>
         {{ detail.location }}
       </p>
 
       <!-- 发布者信息 -->
-      <div class="detail-userinfo community-card">
-        <a class="user" href="javascript:;">
-          <i class="avt">
-            <img :src="detail.seller?.avatar || '/img/avatar/default.png'" alt="头像" />
+      <div class="bg-[var(--c-surface)] p-4 border-b border-[var(--c-border)] rounded-none">
+        <a class="flex items-center gap-2.5 no-underline text-[var(--c-text-1)]" href="javascript:;">
+          <i class="w-10 h-10 rounded-full overflow-hidden block shrink-0">
+            <img :src="detail.seller?.avatar || '/img/avatar/default.png'" alt="头像" class="w-full h-full object-cover" />
           </i>
-          <span class="nm">发布者：{{ detail.seller?.name || '匿名' }}</span>
+          <span class="text-sm text-[var(--c-text-1)]">发布者：{{ detail.seller?.name || '匿名' }}</span>
         </a>
       </div>
 
       <!-- 物品描述 -->
-      <div class="detail-desc community-card">
-        <i class="i iinfo"></i>
-        <p class="w">物品描述：{{ detail.desc }}</p>
+      <div class="bg-[var(--c-surface)] relative p-4 pl-[50px] border-b border-[var(--c-border)] text-sm text-[var(--c-text-2)] min-h-[50px] flex items-center rounded-none">
+        <i class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20512%20512%27%20fill=%27%233b82f6%27%3E%3Cpath%20d=%27M256%208C119%208%208%20119%208%20256s111%20248%20248%20248%20248-111%20248-248S393%208%20256%208zm0%20110a42%2042%200%201%201%200%2084%2042%2042%200%200%201%200-84zm56%20254c0%207-5%2012-12%2012h-88c-7%200-12-5-12-12v-24c0-7%205-12%2012-12h12v-64h-12c-7%200-12-5-12-12v-24c0-7%205-12%2012-12h64c7%200%2012%205%2012%2012v100h12c7%200%2012%205%2012%2012v24z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
+        <p class="m-0 p-0 leading-relaxed">物品描述：{{ detail.desc }}</p>
       </div>
 
       <!-- 联系方式 -->
-      <div class="detail-contact community-card">
-        <i class="i icontact"></i>
-        <span>联系方式：</span>
-        <div v-if="detail.contact?.qq" class="contact-item">
+      <div class="bg-[var(--c-surface)] relative p-4 pl-[50px] text-sm text-[var(--c-text-2)] min-h-[50px] rounded-none">
+        <i class="absolute left-4 top-4 w-5 h-5 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20512%20512%27%20fill=%27%233b82f6%27%3E%3Cpath%20d=%27M497%20361.8l-112-48a24%2024%200%200%200-28%206.9l-49.6%2060.6A370.7%20370.7%200%200%201%20131.6%20205l60.6-49.6a24%2024%200%200%200%206.9-28l-48-112A24.2%2024.2%200%200%200%20123.4.3L11.4%2024.3A24%2024%200%200%200-5.2e-7%2048c0%20256.5%20207.9%20464%20464%20464a24%2024%200%200%200%2023.7-11.4l24-112a24.2%2024.2%200%200%200-14.7-27.6z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
+        <span class="block mb-2.5">联系方式：</span>
+        <div v-if="detail.contact?.qq" class="flex items-center justify-between py-2 border-b border-[var(--c-border)]">
           <span>QQ号：<b>{{ detail.contact.qq }}</b></span>
-          <button @click="copyText(detail.contact.qq)">复制QQ</button>
+          <button class="px-3 py-1 text-[13px] text-blue-500 bg-transparent border border-blue-500 rounded cursor-pointer no-underline" @click="copyText(detail.contact.qq)">复制QQ</button>
         </div>
-        <div v-if="detail.contact?.wechat" class="contact-item">
+        <div v-if="detail.contact?.wechat" class="flex items-center justify-between py-2 border-b border-[var(--c-border)]">
           <span>微信：<b>{{ detail.contact.wechat }}</b></span>
-          <button @click="copyText(detail.contact.wechat)">复制微信</button>
+          <button class="px-3 py-1 text-[13px] text-blue-500 bg-transparent border border-blue-500 rounded cursor-pointer no-underline" @click="copyText(detail.contact.wechat)">复制微信</button>
         </div>
-        <div v-if="detail.contact?.phone" class="contact-item">
-          <span>手机号：<a>{{ detail.contact.phone }}</a></span>
-          <a :href="`tel:${detail.contact.phone}`">打电话</a>
-          <a :href="`sms:${detail.contact.phone}`">发短信</a>
+        <div v-if="detail.contact?.phone" class="flex items-center justify-between py-2">
+          <span>手机号：<a class="text-[var(--c-text-2)]">{{ detail.contact.phone }}</a></span>
+          <span class="flex gap-2">
+            <a :href="`tel:${detail.contact.phone}`" class="px-3 py-1 text-[13px] text-blue-500 bg-transparent border border-blue-500 rounded cursor-pointer no-underline">打电话</a>
+            <a :href="`sms:${detail.contact.phone}`" class="px-3 py-1 text-[13px] text-blue-500 bg-transparent border border-blue-500 rounded cursor-pointer no-underline">发短信</a>
+          </span>
         </div>
       </div>
     </template>
   </div>
 </template>
-
-<style scoped>
-.lostandfound-detail {
-  min-height: 100vh;
-  background: var(--c-bg);
-}
-
-.lostandfound-detail-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: var(--c-text-3);
-}
-
-.detail-slider {
-  width: 100%;
-  background: var(--c-card);
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-.slider-wrapper {
-  display: flex;
-  gap: 0;
-}
-.slider-img {
-  width: 100vw;
-  height: auto;
-  flex-shrink: 0;
-  display: block;
-}
-
-.detail-info {
-  padding: 15px;
-  border-bottom: 1px solid var(--c-border);
-  border-radius: 0;
-  margin: 0;
-}
-.detail-title {
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--c-text-1);
-  margin: 0 0 10px 0;
-  padding: 0;
-}
-.detail-time {
-  font-size: 13px;
-  color: var(--c-text-3);
-  margin: 0;
-  padding: 0;
-}
-
-/* 地点信息 */
-.detail-site {
-  padding: 15px;
-  border-bottom: 1px solid var(--c-border);
-  font-size: 14px;
-  color: var(--c-text-2);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  border-radius: 0;
-}
-.detail-site .i {
-  display: inline-block;
-  vertical-align: middle;
-  flex-shrink: 0;
-}
-.detail-site .isite {
-  background: url(/img/ershou/site.png) no-repeat;
-  background-size: 10px;
-  width: 10px !important;
-  height: 14px !important;
-  margin-right: 8px;
-  vertical-align: middle;
-}
-
-/* 发布者信息 */
-.detail-userinfo {
-  padding: 15px;
-  border-bottom: 1px solid var(--c-border);
-  border-radius: 0;
-}
-.detail-userinfo .user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--c-text-1);
-}
-.detail-userinfo .avt {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: block;
-  flex-shrink: 0;
-}
-.detail-userinfo .avt img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.detail-userinfo .nm {
-  font-size: 14px;
-  color: var(--c-text-1);
-}
-
-/* 物品描述 */
-.detail-desc {
-  position: relative;
-  padding: 15px 15px 15px 50px;
-  border-bottom: 1px solid var(--c-border);
-  font-size: 14px;
-  color: var(--c-text-2);
-  min-height: 50px;
-  display: flex;
-  align-items: center;
-  border-radius: 0;
-}
-.detail-desc .i {
-  display: inline-block;
-  vertical-align: middle;
-  flex-shrink: 0;
-}
-.detail-desc .iinfo {
-  background: url(/img/ershou/info.png) no-repeat;
-  width: 20px !important;
-  height: 20px !important;
-  background-size: 20px;
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-right: 8px;
-}
-.detail-desc .w {
-  margin: 0;
-  padding: 0;
-  line-height: 1.6;
-}
-
-/* 联系方式 */
-.detail-contact {
-  position: relative;
-  padding: 15px 15px 15px 50px;
-  font-size: 14px;
-  color: var(--c-text-2);
-  min-height: 50px;
-  border-radius: 0;
-}
-.detail-contact .i {
-  display: inline-block;
-  vertical-align: middle;
-  flex-shrink: 0;
-}
-.detail-contact .icontact {
-  background: url(/img/ershou/info.png) no-repeat;
-  width: 20px !important;
-  height: 20px !important;
-  background-size: 20px;
-  background-position: 0 -20px;
-  position: absolute;
-  left: 15px;
-  top: 15px;
-  margin-right: 8px;
-}
-.detail-contact > span {
-  display: block;
-  margin-bottom: 10px;
-  padding-left: 0;
-}
-.contact-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--c-border);
-}
-.contact-item:last-child {
-  border-bottom: none;
-}
-.contact-item button,
-.contact-item a {
-  padding: 4px 12px;
-  font-size: 13px;
-  color: #3b82f6;
-  background: transparent;
-  border: 1px solid #3b82f6;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  text-decoration: none;
-}
-</style>

@@ -2,9 +2,10 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { querySpareRoom } from '@/api/spare'
-import { showErrorTopTips } from '@/utils/toast.js'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { error: showError } = useToast()
 const loading = ref(false)
 const showResult = ref(false)
 const spareList = ref([])
@@ -123,10 +124,6 @@ onMounted(() => {
 })
 const classNumber = ref(0)
 
-function goBack() {
-  router.back()
-}
-
 function buildQuery() {
   const [startTime, endTime] = PERIOD_MAP[classNumber.value] ?? [1, 2]
   const dw = dayOfWeek.value
@@ -174,253 +171,133 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
 </script>
 
 <template>
-  <div class="spare-page">
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <!-- Search view -->
     <template v-if="!showResult">
-      <div class="top-nav-bar">
-        <div class="nav-btn-back" @click="goBack">返回</div>
+      <!-- Sticky header -->
+      <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+        <span class="flex-1 text-center text-sm font-bold">空课室查询</span>
+        <div class="w-10"></div>
       </div>
-      <h1 class="page-title-green">空课室查询</h1>
-      <p class="page-subtitle">广东第二师范学院</p>
 
-      <div class="search-form-wrap">
-        <div class="weui-cells weui-cells_form">
-          <div class="weui-cell spare-form-row spare-row-has-arrow">
-            <div class="weui-cell__hd"><label class="weui-label">校区</label></div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="zone">
-                <option v-for="opt in campusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-              </select>
-            </div>
+      <div class="max-w-lg mx-auto px-4 py-6">
+        <p class="text-center text-xs text-[var(--c-text-secondary)] mb-5">广东第二师范学院</p>
+
+        <!-- Form card -->
+        <div class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+          <!-- Campus -->
+          <div class="flex items-center px-4 h-[52px]">
+            <label class="w-24 shrink-0 text-sm text-[var(--c-text)]">校区</label>
+            <select v-model.number="zone" class="flex-1 text-right text-sm bg-transparent text-[var(--c-text)] outline-none appearance-none pr-1">
+              <option v-for="opt in campusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+            </select>
           </div>
-          <div class="weui-cell spare-form-row spare-row-has-arrow">
-            <div class="weui-cell__hd"><label class="weui-label">教室类别</label></div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="type">
-                <option v-for="opt in roomTypeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-              </select>
-            </div>
+          <!-- Room type -->
+          <div class="flex items-center px-4 h-[52px]">
+            <label class="w-24 shrink-0 text-sm text-[var(--c-text)]">教室类别</label>
+            <select v-model.number="type" class="flex-1 text-right text-sm bg-transparent text-[var(--c-text)] outline-none appearance-none pr-1">
+              <option v-for="opt in roomTypeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+            </select>
           </div>
-          <div class="weui-cell spare-form-row">
-            <div class="weui-cell__hd"><label class="weui-label">座位数≥</label></div>
-            <div class="weui-cell__bd">
-              <input class="weui-input" type="text" inputmode="numeric" placeholder="选填" v-model="seatsMin" @input="seatsMin = ($event.target.value || '').replace(/\D/g, '')" />
-            </div>
+          <!-- Seats min -->
+          <div class="flex items-center px-4 h-[52px]">
+            <label class="w-24 shrink-0 text-sm text-[var(--c-text)]">座位数&ge;</label>
+            <input
+              type="text"
+              inputmode="numeric"
+              placeholder="选填"
+              v-model="seatsMin"
+              @input="seatsMin = ($event.target.value || '').replace(/\D/g, '')"
+              class="flex-1 text-right text-sm bg-transparent text-[var(--c-text)] placeholder:text-[var(--c-text-tertiary)] outline-none"
+            />
           </div>
-          <div class="weui-cell spare-form-row">
-            <div class="weui-cell__hd"><label class="weui-label">座位数≤</label></div>
-            <div class="weui-cell__bd">
-              <input class="weui-input" type="text" inputmode="numeric" placeholder="选填" v-model="seatsMax" @input="seatsMax = ($event.target.value || '').replace(/\D/g, '')" />
-            </div>
+          <!-- Seats max -->
+          <div class="flex items-center px-4 h-[52px]">
+            <label class="w-24 shrink-0 text-sm text-[var(--c-text)]">座位数&le;</label>
+            <input
+              type="text"
+              inputmode="numeric"
+              placeholder="选填"
+              v-model="seatsMax"
+              @input="seatsMax = ($event.target.value || '').replace(/\D/g, '')"
+              class="flex-1 text-right text-sm bg-transparent text-[var(--c-text)] placeholder:text-[var(--c-text-tertiary)] outline-none"
+            />
           </div>
-          <div class="weui-cell spare-form-row spare-row-has-arrow">
-            <div class="weui-cell__hd"><label class="weui-label">星期</label></div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="dayOfWeek">
-                <option v-for="opt in weekDayOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-              </select>
-            </div>
+          <!-- Day of week -->
+          <div class="flex items-center px-4 h-[52px]">
+            <label class="w-24 shrink-0 text-sm text-[var(--c-text)]">星期</label>
+            <select v-model.number="dayOfWeek" class="flex-1 text-right text-sm bg-transparent text-[var(--c-text)] outline-none appearance-none pr-1">
+              <option v-for="opt in weekDayOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+            </select>
           </div>
-          <div class="weui-cell spare-form-row spare-row-has-arrow">
-            <div class="weui-cell__hd"><label class="weui-label">单双周</label></div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="weekType">
-                <option v-for="opt in singleDoubleOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-              </select>
-            </div>
+          <!-- Week type -->
+          <div class="flex items-center px-4 h-[52px]">
+            <label class="w-24 shrink-0 text-sm text-[var(--c-text)]">单双周</label>
+            <select v-model.number="weekType" class="flex-1 text-right text-sm bg-transparent text-[var(--c-text)] outline-none appearance-none pr-1">
+              <option v-for="opt in singleDoubleOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+            </select>
           </div>
-          <div class="weui-cell spare-form-row spare-row-has-arrow">
-            <div class="weui-cell__hd"><label class="weui-label">节数</label></div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="classNumber">
-                <option v-for="opt in periodOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-              </select>
-            </div>
+          <!-- Period -->
+          <div class="flex items-center px-4 h-[52px]">
+            <label class="w-24 shrink-0 text-sm text-[var(--c-text)]">节数</label>
+            <select v-model.number="classNumber" class="flex-1 text-right text-sm bg-transparent text-[var(--c-text)] outline-none appearance-none pr-1">
+              <option v-for="opt in periodOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+            </select>
           </div>
         </div>
-      </div>
 
-      <div class="weui-btn_area">
-        <button type="button" class="weui-btn weui-btn_primary weui-btn_block" @click="doSearch">查询</button>
+        <!-- Search button -->
+        <button
+          type="button"
+          class="mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-white text-[15px] font-medium active:opacity-80 transition-opacity"
+          @click="doSearch"
+        >
+          查询
+        </button>
       </div>
     </template>
 
+    <!-- Result view -->
     <template v-else>
-      <div class="top-nav-bar">
-        <div class="nav-btn-back" @click="backToSearch">返回</div>
+      <!-- Sticky header -->
+      <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+        <button @click="backToSearch" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+        <span class="flex-1 text-center text-sm font-bold">查询结果</span>
+        <div class="w-10"></div>
       </div>
-      <h1 class="page-title-green">查询结果</h1>
 
-      <template v-if="loading">
-        <div class="weui-loadmore">
-          <span class="weui-primary-loading"></span>
-          <span class="weui-loadmore__tips">加载中</span>
+      <div class="max-w-lg mx-auto px-4 py-6">
+        <!-- Loading -->
+        <div v-if="loading" class="flex flex-col items-center justify-center py-16 text-[var(--c-text-secondary)]">
+          <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-3"></div>
+          <span class="text-sm">加载中</span>
         </div>
-      </template>
-      <template v-else>
-        <div class="result-list-wrap">
-          <div class="weui-cells__title">空课室列表</div>
-          <div class="weui-panel weui-panel_access">
-            <div class="weui-panel__bd">
-              <div
-                v-for="(item, index) in spareList"
-                :key="item.number || index"
-                class="weui-media-box weui-media-box_text"
-              >
-                <h4 class="weui-media-box__title">{{ item.name || item.number || '—' }}</h4>
-                <p class="weui-media-box__desc">编号：{{ item.number || '—' }}</p>
-                <p class="weui-media-box__desc">类型：{{ item.type || '—' }}</p>
-                <p class="weui-media-box__desc">校区：{{ item.zone || '—' }}</p>
-                <p class="weui-media-box__desc">座位：{{ item.classSeating || '—' }}</p>
+
+        <!-- Results list -->
+        <template v-else>
+          <p class="text-xs text-[var(--c-text-secondary)] mb-3">空课室列表</p>
+          <div class="space-y-3">
+            <div
+              v-for="(item, index) in spareList"
+              :key="item.number || index"
+              class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] p-4"
+            >
+              <h4 class="text-[15px] font-medium text-[var(--c-text)] mb-2">{{ item.name || item.number || '—' }}</h4>
+              <div class="space-y-1 text-xs text-[var(--c-text-secondary)]">
+                <p>编号：{{ item.number || '—' }}</p>
+                <p>类型：{{ item.type || '—' }}</p>
+                <p>校区：{{ item.zone || '—' }}</p>
+                <p>座位：{{ item.classSeating || '—' }}</p>
               </div>
             </div>
           </div>
-        </div>
-        <div v-if="isEmpty" class="spare-empty">暂无空课室数据</div>
-      </template>
+
+          <div v-if="isEmpty" class="text-center py-16 text-sm text-[var(--c-text-secondary)]">
+            暂无空课室数据
+          </div>
+        </template>
+      </div>
     </template>
   </div>
 </template>
-
-<style scoped>
-.spare-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-title-green {
-  text-align: center;
-  font-size: 22px;
-  color: #3cc51f;
-  font-weight: 400;
-  margin: 0 0 4px 0;
-}
-
-.page-subtitle {
-  text-align: center;
-  font-size: 13px;
-  color: #888;
-  margin: 0 0 16px 0;
-}
-
-.search-form-wrap {
-  padding: 0 16px;
-  margin-top: 8px;
-}
-
-.spare-page .search-form-wrap .weui-cells_form {
-  border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.spare-page .search-form-wrap .weui-cell {
-  padding: 12px 16px;
-}
-
-.spare-page .weui-btn_area {
-  margin-top: 30px;
-  padding: 12px 16px;
-}
-
-.result-list-wrap {
-  padding: 0 16px 12px;
-}
-
-.spare-page .weui-media-box__title {
-  margin-bottom: 8px;
-  line-height: 1.4;
-  white-space: normal;
-}
-
-.spare-page .weui-media-box__desc {
-  margin: 4px 0;
-  line-height: 1.5;
-  font-size: 13px;
-  color: #666;
-}
-
-.spare-empty {
-  text-align: center;
-  padding: 40px 15px;
-  color: #888;
-  font-size: 14px;
-}
-
-.weui-loadmore {
-  padding: 20px;
-  text-align: center;
-}
-
-/* 1. 锁死所有行的物理尺寸，确保高度、内边距绝对一致 */
-.spare-form-row {
-  height: 56px !important;
-  padding: 0 16px !important;
-  display: flex !important;
-  align-items: center !important;
-  background-color: #fff;
-  box-sizing: border-box !important;
-  position: relative;
-}
-/* 2. 锁死左侧标签宽度，解决左边对不齐的顽疾 */
-.spare-form-row :deep(.weui-label) {
-  width: 105px !important;
-  min-width: 105px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  text-align: left !important;
-  color: #333;
-}
-/* 3. 右侧内容区（Select 和 Input）统一对齐 */
-.spare-form-row :deep(.weui-cell__bd) {
-  flex: 1 !important;
-  text-align: right !important;
-}
-.spare-form-row :deep(.weui-select),
-.spare-form-row :deep(.weui-input) {
-  width: 100% !important;
-  height: 56px !important;
-  line-height: 56px !important;
-  text-align: right !important;
-  padding-right: 30px !important;
-  color: #333 !important;
-  border: none !important;
-  background: transparent !important;
-  appearance: none;
-  direction: rtl;
-}
-/* 4. 手动绘制箭头：只给带 spare-row-has-arrow 的行加箭头 */
-.spare-row-has-arrow::after {
-  content: " ";
-  display: inline-block;
-  height: 8px;
-  width: 8px;
-  border-width: 2px 2px 0 0;
-  border-color: #c8c8cd;
-  border-style: solid;
-  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
-  position: absolute;
-  top: 50%;
-  margin-top: -4px;
-  right: 18px;
-}
-/* 5. 占位符颜色 */
-.spare-form-row :deep(.weui-input::-webkit-input-placeholder),
-.spare-form-row :deep(.weui-input::placeholder) {
-  color: #b2b2b2 !important;
-}
-</style>

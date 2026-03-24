@@ -99,308 +99,97 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="ershou-detail-page">
+  <div class="min-h-screen bg-[var(--c-bg)] pb-5">
     <!-- 统一顶部导航栏 -->
     <CommunityHeader title="商品详情" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
 
     <!-- 加载中 -->
-    <div v-if="loading" class="detail-loading">
-      <div class="community-loading-spinner" style="width: 24px; height: 24px;"></div>
-      <p>加载中</p>
+    <div v-if="loading" class="flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
+      <div class="w-6 h-6 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></div>
+      <p class="mt-3 text-sm">加载中</p>
     </div>
 
     <template v-else-if="detail">
       <!-- 主体 -->
-      <section class="detail">
+      <section class="mx-2.5 mb-2.5">
         <!-- 多图 -->
-        <div class="detail-images">
+        <div class="bg-[var(--c-surface)] rounded-lg overflow-hidden shadow-sm">
           <img
             v-for="(img, idx) in detail.images"
             :key="idx"
             :src="img"
             :alt="'商品图' + (idx + 1)"
-            class="detail-img"
+            class="w-full block rounded-lg"
+            :class="idx > 0 ? 'mt-2.5' : ''"
           />
         </div>
 
         <!-- 商品基本信息 -->
-        <div class="info">
-          <em class="price"><b>￥</b>{{ detail.price }}</em>
-          <h5 class="tit">{{ detail.title }}</h5>
-          <p class="tm">发布时间：<b>{{ detail.seller?.publishTime || '—' }}</b></p>
+        <div class="bg-emerald-500 px-3 py-2.5 pr-[70px] relative">
+          <em class="absolute right-4 w-[55px] h-[55px] rounded-full bg-amber-500 text-center leading-[55px] text-white text-lg -top-7 z-10 not-italic">
+            <b class="absolute top-1 text-xs leading-3 left-1/2 -ml-[5px] font-normal">{{ '¥' }}</b>{{ detail.price }}
+          </em>
+          <h5 class="text-lg text-white m-0 mb-1">{{ detail.title }}</h5>
+          <p class="text-sm text-white m-0">发布时间：<b>{{ detail.seller?.publishTime || '—' }}</b></p>
         </div>
 
         <!-- 交易地点 -->
-        <p class="site">
-          <span><i class="i isite"></i>交易地点：</span>{{ detail.location || '—' }}
+        <p class="bg-[var(--c-surface)] py-2 px-2.5 pl-[98px] text-emerald-500 leading-5 text-sm relative m-0">
+          <span class="absolute left-2.5 top-2">
+            <i class="inline-block w-2.5 h-3.5 mr-1 align-middle bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20384%20512%27%20fill=%27%2310b981%27%3E%3Cpath%20d=%27M192%200C86%200%200%2086%200%20192c0%2077.4%2027%2099%20172.3%20309.7a24%2024%200%200%200%2039.4%200C357%20291%20384%20269.4%20384%20192%20384%2086%20298%200%20192%200zm0%20272a80%2080%200%201%201%200-160%2080%2080%200%200%201%200%20160z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
+            交易地点：
+          </span>
+          {{ detail.location || '—' }}
         </p>
       </section>
 
-      <section class="userinfo">
+      <section class="mx-2.5 mb-5">
         <!-- 发布者 -->
-        <div class="user">
-          <i class="avt"><img :src="detail.seller?.avatar || '/img/avatar/default.png'" alt="头像"></i>
-          <span class="nm">发布者：{{ detail.seller?.name || '—' }}</span>
+        <div class="mt-2.5 bg-[var(--c-surface)] shadow-sm rounded overflow-hidden min-h-[30px] py-5 px-4 pl-[60px] relative block">
+          <i class="w-[30px] h-[30px] absolute left-4 top-5 rounded-full overflow-hidden block">
+            <img :src="detail.seller?.avatar || '/img/avatar/default.png'" alt="头像" class="w-full h-full object-cover">
+          </i>
+          <span class="leading-[30px] text-base text-[var(--c-text-2)]">发布者：{{ detail.seller?.name || '—' }}</span>
         </div>
 
         <!-- 商品描述 -->
-        <div class="info">
-          <i class="i iinfo"></i>
-          <p class="w">商品描述：{{ detail.desc || '—' }}</p>
+        <div class="mt-2.5 bg-[var(--c-surface)] shadow-sm rounded overflow-hidden relative py-4 px-4 pl-[60px] text-sm text-[var(--c-text-2)]">
+          <i class="absolute left-4 top-4 w-[30px] h-[30px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20512%20512%27%20fill=%27%2310b981%27%3E%3Cpath%20d=%27M256%208C119%208%208%20119%208%20256s111%20248%20248%20248%20248-111%20248-248S393%208%20256%208zm0%20110a42%2042%200%201%201%200%2084%2042%2042%200%200%201%200-84zm56%20254c0%207-5%2012-12%2012h-88c-7%200-12-5-12-12v-24c0-7%205-12%2012-12h12v-64h-12c-7%200-12-5-12-12v-24c0-7%205-12%2012-12h64c7%200%2012%205%2012%2012v100h12c7%200%2012%205%2012%2012v24z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
+          <p class="m-0 leading-5">商品描述：{{ detail.desc || '—' }}</p>
         </div>
 
         <!-- 联系方式 -->
-        <div class="contact">
-          <i class="i icontact"></i>
-          <p class="qq">qq：<b>{{ detail.contact?.qq || '—' }}</b></p>
-          <p v-if="detail.contact?.phone" class="cont">
-            <span class="phone">手机号：<a>{{ detail.contact.phone }}</a></span>
-            <a :href="'tel:' + detail.contact.phone">打电话</a>
-            <a :href="'sms:' + detail.contact.phone">发短信</a>
+        <div class="mt-2.5 bg-[var(--c-surface)] shadow-sm rounded overflow-hidden relative py-4 px-4 pl-[60px] text-sm text-[var(--c-text-2)]">
+          <i class="absolute left-4 top-4 w-[30px] h-[30px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20512%20512%27%20fill=%27%2310b981%27%3E%3Cpath%20d=%27M497%20361.8l-112-48a24%2024%200%200%200-28%206.9l-49.6%2060.6A370.7%20370.7%200%200%201%20131.6%20205l60.6-49.6a24%2024%200%200%200%206.9-28l-48-112A24.2%2024.2%200%200%200%20123.4.3L11.4%2024.3A24%2024%200%200%200-5.2e-7%2048c0%20256.5%20207.9%20464%20464%20464a24%2024%200%200%200%2023.7-11.4l24-112a24.2%2024.2%200%200%200-14.7-27.6z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
+          <p class="m-0 mb-0.5 leading-5">qq：<b>{{ detail.contact?.qq || '—' }}</b></p>
+          <p v-if="detail.contact?.phone" class="m-0 leading-5">
+            <span>手机号：<a class="text-[var(--c-text-2)]">{{ detail.contact.phone }}</a></span>
+            <a :href="'tel:' + detail.contact.phone" class="ml-1.5">打电话</a>
+            <a :href="'sms:' + detail.contact.phone" class="ml-1.5">发短信</a>
           </p>
         </div>
       </section>
 
-      <section class="footer">
+      <section class="text-center leading-[38px] h-[38px] mt-5 text-[var(--c-text-3)] text-xs">
         <span>网络交易有风险，交易时请自行核实</span>
       </section>
     </template>
 
-    <div v-else class="community-empty">
-      <p class="community-empty__text">{{ errorMessage || '加载失败或商品不存在' }}</p>
+    <!-- Empty State -->
+    <div v-else class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <p class="text-sm">{{ errorMessage || '加载失败或商品不存在' }}</p>
     </div>
 
     <!-- 底部悬浮操作栏 -->
-    <div v-if="detail && !loading" class="detail-action-bar">
-      <button type="button" class="action-btn" @click="copyQQ">复制QQ</button>
-      <button v-if="detail.contact?.phone" type="button" class="action-btn primary" @click="callPhone">拨打电话</button>
+    <div v-if="detail && !loading" class="fixed bottom-0 left-0 right-0 w-full flex items-center gap-3 px-3 py-2.5 bg-[var(--c-surface)] shadow-[0_-2px_10px_rgba(0,0,0,0.08)] z-[400]">
+      <button type="button" class="flex-1 h-11 border-none rounded bg-[var(--c-bg)] text-[var(--c-text-1)] text-base cursor-pointer flex items-center justify-center" @click="copyQQ">复制QQ</button>
+      <button v-if="detail.contact?.phone" type="button" class="flex-1 h-11 border-none rounded bg-emerald-500 text-white text-base cursor-pointer flex items-center justify-center" @click="callPhone">拨打电话</button>
     </div>
 
     <!-- 底部栏占位 -->
-    <div v-if="detail && !loading" class="detail-action-bar-placeholder"></div>
+    <div v-if="detail && !loading" class="h-[70px]"></div>
 
     <!-- TopTips -->
-    <div v-show="tipVisible" class="toptips">{{ tipText }}</div>
+    <div v-show="tipVisible" class="fixed top-0 left-0 right-0 py-2.5 text-center text-sm z-[6000] transition-opacity duration-300 bg-black/70 text-white">{{ tipText }}</div>
   </div>
 </template>
-
-<style scoped>
-.ershou-detail-page {
-  min-height: 100vh;
-  background: var(--c-bg);
-  padding-bottom: 20px;
-}
-
-.detail-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: var(--c-text-3);
-}
-.detail-loading p { margin: 12px 0 0; font-size: var(--font-base); }
-
-/* 复刻 ershou-base.css .detail */
-.detail { margin: 0 10px 10px; }
-.detail-images {
-  background: var(--c-card);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-.detail-img {
-  width: 100%;
-  display: block;
-  border-radius: var(--radius-md);
-  margin-top: 10px;
-}
-.detail-img:first-child { margin-top: 0; }
-
-.detail .info {
-  background: #10b981;
-  padding: 10px 70px 10px 12px;
-  position: relative;
-}
-.detail .info .tit {
-  font-size: 18px;
-  color: #fff;
-  margin: 0 0 4px;
-}
-.detail .info .tm {
-  font-size: var(--font-base);
-  color: #fff;
-  margin: 0;
-}
-.detail .info .price {
-  position: absolute;
-  right: 15px;
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  background: #ffb300;
-  text-align: center;
-  line-height: 55px;
-  color: #fff;
-  font-size: 18px;
-  top: -28px;
-  z-index: 99;
-  margin: 0;
-  font-style: normal;
-}
-.detail .info .price b {
-  position: absolute;
-  top: 4px;
-  font-size: var(--font-sm);
-  line-height: 12px;
-  left: 50%;
-  margin-left: -5px;
-  font-weight: normal;
-}
-
-.detail .site {
-  background: var(--c-card);
-  padding: 8px 10px 8px 98px;
-  color: var(--c-ershou);
-  line-height: 20px;
-  font-size: var(--font-base);
-  position: relative;
-  margin: 0;
-}
-.detail .site span {
-  position: absolute;
-  left: 10px;
-  top: 8px;
-}
-.detail .site .isite {
-  display: inline-block;
-  width: 10px;
-  height: 14px;
-  margin-right: 4px;
-  vertical-align: middle;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512' fill='%2310b981'%3E%3Cpath d='M192 0C86 0 0 86 0 192c0 77.4 27 99 172.3 309.7a24 24 0 0 0 39.4 0C357 291 384 269.4 384 192 384 86 298 0 192 0zm0 272a80 80 0 1 1 0-160 80 80 0 0 1 0 160z'/%3E%3C/svg%3E") no-repeat center/contain;
-}
-
-/* 复刻 .userinfo */
-.userinfo { margin: 0 10px 20px; }
-.userinfo .user,
-.userinfo .info,
-.userinfo .contact {
-  margin: 10px 0 0;
-  background: var(--c-card);
-  box-shadow: var(--shadow-sm);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-.userinfo .user {
-  min-height: 30px;
-  padding: 20px 15px 20px 60px;
-  position: relative;
-  display: block;
-}
-.userinfo .user .avt {
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  left: 15px;
-  top: 20px;
-  border-radius: 50%;
-  overflow: hidden;
-}
-.userinfo .user .avt img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.userinfo .user .nm {
-  line-height: 30px;
-  font-size: var(--font-lg);
-  color: var(--c-text-2);
-}
-
-.userinfo .info,
-.userinfo .contact {
-  position: relative;
-  padding: 15px 15px 15px 60px;
-  font-size: var(--font-base);
-  color: var(--c-text-2);
-}
-.userinfo .info p,
-.userinfo .contact p { line-height: 20px; margin: 0 0 2px; }
-.userinfo .info .iinfo,
-.userinfo .contact .icontact {
-  position: absolute;
-  left: 15px;
-  top: 15px;
-  width: 30px;
-  height: 30px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%2310b981'%3E%3Cpath d='M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 110a42 42 0 1 1 0 84 42 42 0 0 1 0-84zm56 254c0 7-5 12-12 12h-88c-7 0-12-5-12-12v-24c0-7 5-12 12-12h12v-64h-12c-7 0-12-5-12-12v-24c0-7 5-12 12-12h64c7 0 12 5 12 12v100h12c7 0 12 5 12 12v24z'/%3E%3C/svg%3E") no-repeat center/contain;
-}
-.userinfo .contact .icontact {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%2310b981'%3E%3Cpath d='M497 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.7 370.7 0 0 1 131.6 205l60.6-49.6a24 24 0 0 0 6.9-28l-48-112A24.2 24.2 0 0 0 123.4.3L11.4 24.3A24 24 0 0 0-5.2e-7 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.7-11.4l24-112a24.2 24.2 0 0 0-14.7-27.6z'/%3E%3C/svg%3E") no-repeat center/contain;
-}
-.userinfo .contact .cont a { margin-left: 5px; }
-.userinfo .contact .phone a { color: var(--c-text-2); }
-
-.footer {
-  text-align: center;
-  line-height: 38px;
-  height: 38px;
-  margin-top: 20px;
-  color: var(--c-text-3);
-  font-size: var(--font-sm);
-}
-
-/* 底部悬浮操作栏 */
-.detail-action-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  background: var(--c-card);
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
-  z-index: 400;
-}
-.action-btn {
-  flex: 1;
-  height: 44px;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: var(--font-lg);
-  background: var(--c-bg);
-  color: var(--c-text-1);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  line-height: 1;
-}
-.action-btn.primary {
-  background: #10b981;
-  color: #fff;
-}
-.detail-action-bar-placeholder {
-  height: 70px;
-}
-
-/* TopTips */
-.toptips {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 10px;
-  text-align: center;
-  font-size: var(--font-base);
-  z-index: 6000;
-  transition: opacity 0.3s;
-  background: rgba(0,0,0,0.7);
-  color: #fff;
-}
-</style>

@@ -3,8 +3,10 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { submitFeedback } from '@/api/feedback'
 import { showErrorTopTips } from '@/utils/toast.js'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { success: toastSuccess } = useToast()
 
 const activeTab = ref('faq')
 
@@ -13,7 +15,7 @@ const faqList = ref([
   {
     title: '登录应用的用户名和密码是什么？',
     content:
-      '用户名和密码与校园网上网账号、学校教务系统账号保持一致。如果不清楚自己的账号信息，可以在“关于应用-校园网络账号说明”中查看详细指引。'
+      '用户名和密码与校园网上网账号、学校教务系统账号保持一致。如果不清楚自己的账号信息，可以在"关于应用-校园网络账号说明"中查看详细指引。'
   },
   {
     title: '应用账号是否支持修改密码？',
@@ -23,7 +25,7 @@ const faqList = ref([
   {
     title: '为什么成绩/课表查询会提示系统异常？',
     content:
-      '教务查询依赖学校官网和教务系统的稳定性。当源站维护或更新时，可能出现查询异常或暂时不可用的情况，一般会在24小时内恢复。如果长时间异常，可以通过本页的“意见反馈”提交故障工单。'
+      '教务查询依赖学校官网和教务系统的稳定性。当源站维护或更新时，可能出现查询异常或暂时不可用的情况，一般会在24小时内恢复。如果长时间异常，可以通过本页的"意见反馈"提交故障工单。'
   },
   {
     title: '什么是教务数据缓存？开启后是否安全？',
@@ -102,19 +104,6 @@ function removeScreenshot(index) {
   if (url) URL.revokeObjectURL(url)
 }
 
-function showToast(message, isSuccess = false) {
-  const toast = document.createElement('div')
-  toast.setAttribute('role', 'alert')
-  toast.style.cssText =
-    'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;padding:12px 22px;border-radius:6px;z-index:9999;font-size:14px;max-width:80%;text-align:center;'
-  toast.style.background = isSuccess ? '#10b981' : 'rgba(0,0,0,0.75)'
-  toast.textContent = message
-  document.body.appendChild(toast)
-  setTimeout(() => {
-    if (toast.parentNode) document.body.removeChild(toast)
-  }, isSuccess ? 1500 : 2000)
-}
-
 const submitting = ref(false)
 
 async function handleSubmit() {
@@ -131,7 +120,7 @@ async function handleSubmit() {
       contact: contact.value?.trim() || undefined,
       type: feedbackType.value || undefined
     })
-    showToast('提交成功', true)
+    toastSuccess('提交成功')
     setTimeout(() => {
       content.value = ''
       contact.value = ''
@@ -149,452 +138,158 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="feedback-page">
-    <!-- 统一头部 -->
-    <div class="feedback-header unified-header">
-      <span class="feedback-header__back" @click="router.back()">返回</span>
-      <h1 class="feedback-header__title">帮助与反馈</h1>
-      <span class="feedback-header__placeholder"></span>
+  <div class="min-h-screen bg-gray-50 pb-6">
+    <!-- Sticky Header -->
+    <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
+      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">返回</button>
+      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">帮助与反馈</h1>
+      <div class="w-15"></div>
     </div>
 
-    <!-- 顶部 Tab -->
-    <div class="feedback-tabs">
-      <div
-        :class="['feedback-tab', { active: activeTab === 'faq' }]"
+    <!-- Tabs -->
+    <div class="flex bg-white border-b border-gray-200">
+      <button
+        type="button"
+        class="flex-1 text-center py-3 text-[15px] cursor-pointer relative bg-transparent transition-colors"
+        :class="activeTab === 'faq' ? 'text-emerald-500 font-semibold after:content-[\'\'] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-2/5 after:h-[3px] after:rounded-full after:bg-emerald-500' : 'text-gray-400'"
         @click="activeTab = 'faq'"
-      >
-        常见问题
-      </div>
-      <div
-        :class="['feedback-tab', { active: activeTab === 'form' }]"
+      >常见问题</button>
+      <button
+        type="button"
+        class="flex-1 text-center py-3 text-[15px] cursor-pointer relative bg-transparent transition-colors"
+        :class="activeTab === 'form' ? 'text-emerald-500 font-semibold after:content-[\'\'] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-2/5 after:h-[3px] after:rounded-full after:bg-emerald-500' : 'text-gray-400'"
         @click="activeTab = 'form'"
-      >
-        意见反馈
-      </div>
+      >意见反馈</button>
     </div>
 
-    <div class="feedback-content">
-      <!-- 常见问题 -->
-      <section v-if="activeTab === 'faq'" class="feedback-section">
-        <div class="faq-card" v-for="(item, index) in faqList" :key="item.title">
+    <div class="max-w-lg mx-auto px-4 py-4">
+      <!-- FAQ section -->
+      <section v-if="activeTab === 'faq'" class="space-y-3">
+        <div
+          v-for="(item, index) in faqList"
+          :key="item.title"
+          class="bg-white rounded-xl shadow-sm overflow-hidden"
+        >
           <button
             type="button"
-            class="faq-header"
+            class="w-full px-4 py-3.5 bg-white flex items-center justify-between cursor-pointer border-none"
             @click="toggleFaq(index)"
           >
-            <span class="faq-title">{{ item.title }}</span>
+            <span class="text-[15px] text-gray-900 text-left">{{ item.title }}</span>
             <span
-              class="faq-arrow"
-              :class="{ open: openedFaqIndex === index }"
-            >
-              ▾
-            </span>
+              class="text-sm text-gray-400 transition-transform duration-200"
+              :class="{ 'rotate-180': openedFaqIndex === index }"
+            >&#9662;</span>
           </button>
           <div
             v-if="openedFaqIndex === index"
-            class="faq-body"
+            class="px-4 py-3 bg-gray-50 border-t border-gray-100"
           >
-            <p>{{ item.content }}</p>
+            <p class="m-0 text-sm leading-relaxed text-gray-600">{{ item.content }}</p>
           </div>
         </div>
 
-        <p class="faq-tip">
+        <p class="mt-2 text-[13px] text-gray-400 text-center">
           以上未能解决您的问题？请切换到
-          <span class="faq-tip__strong">「意见反馈」</span>
+          <span class="text-emerald-500 font-semibold">「意见反馈」</span>
           告诉我们您的疑问和建议。
         </p>
       </section>
 
-      <!-- 意见反馈表单 -->
-      <section v-else class="feedback-section">
-        <div class="card">
-          <h2 class="card-title">选择反馈类型</h2>
-          <div class="tag-group">
+      <!-- Feedback form section -->
+      <section v-else class="space-y-3">
+        <!-- Type selection -->
+        <div class="bg-white rounded-xl shadow-sm p-3.5">
+          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">选择反馈类型</h2>
+          <div class="flex flex-wrap gap-2">
             <button
               v-for="type in feedbackTypes"
               :key="type"
               type="button"
-              class="tag"
-              :class="{ active: feedbackType === type }"
+              class="rounded-full px-3.5 py-1.5 text-[13px] border cursor-pointer transition-colors"
+              :class="feedbackType === type
+                ? 'border-emerald-500 bg-emerald-50 text-emerald-700 font-medium'
+                : 'border-gray-200 bg-gray-50 text-gray-600'"
               @click="handleSelectType(type)"
-            >
-              {{ type }}
-            </button>
+            >{{ type }}</button>
           </div>
         </div>
 
-        <div class="card">
-          <h2 class="card-title">反馈内容</h2>
-          <div class="textarea-wrap">
+        <!-- Content -->
+        <div class="bg-white rounded-xl shadow-sm p-3.5">
+          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">反馈内容</h2>
+          <div class="relative">
             <textarea
-              class="textarea"
-              :placeholder="'请详细描述您遇到的问题或建议...'"
+              placeholder="请详细描述您遇到的问题或建议..."
               :value="content"
               @input="handleContentInput"
               rows="5"
+              class="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-900 resize-none min-h-[120px] box-border focus:outline-none focus:border-emerald-500 focus:bg-white"
             ></textarea>
             <div
-              class="textarea-counter"
-              :class="{ danger: contentLength > maxLength }"
-            >
-              {{ contentLength }}/{{ maxLength }}
-            </div>
+              class="absolute right-2.5 bottom-2 text-xs"
+              :class="contentLength > maxLength ? 'text-orange-500' : 'text-gray-400'"
+            >{{ contentLength }}/{{ maxLength }}</div>
           </div>
         </div>
 
-        <div class="card">
-          <h2 class="card-title">联系方式（选填）</h2>
+        <!-- Contact -->
+        <div class="bg-white rounded-xl shadow-sm p-3.5">
+          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">联系方式（选填）</h2>
           <input
-            class="input"
             type="text"
             v-model="contact"
             placeholder="请留下您的QQ/微信或手机号，方便我们联系您（选填）"
+            class="w-full rounded-full border border-gray-200 py-2.5 px-3.5 text-sm text-gray-900 box-border placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:bg-white"
           />
         </div>
 
-        <div class="card">
-          <h2 class="card-title">
+        <!-- Screenshots -->
+        <div class="bg-white rounded-xl shadow-sm p-3.5">
+          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">
             截图上传
-            <span class="card-subtitle">（可选，最多 {{ maxScreenshots }} 张）</span>
+            <span class="ml-1 text-xs text-gray-400 font-normal">（可选，最多 {{ maxScreenshots }} 张）</span>
           </h2>
-          <div class="upload-grid">
+          <div class="flex gap-2.5 flex-wrap">
             <div
               v-for="(url, index) in screenshotPreviews"
               :key="url"
-              class="upload-item"
+              class="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100"
             >
-              <img :src="url" alt="截图预览" />
+              <img :src="url" alt="截图预览" class="w-full h-full object-cover" />
               <button
                 type="button"
-                class="upload-remove"
+                class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/50 text-white text-sm leading-none border-none cursor-pointer"
                 @click="removeScreenshot(index)"
-              >
-                ×
-              </button>
+              >&times;</button>
             </div>
             <label
               v-if="screenshots.length < maxScreenshots"
-              class="upload-add"
+              class="w-20 h-20 rounded-lg border border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center text-gray-400 text-xs cursor-pointer"
             >
-              <span class="upload-plus">＋</span>
-              <span class="upload-text">添加图片</span>
+              <span class="text-[22px] leading-none mb-0.5">+</span>
+              <span>添加图片</span>
               <input
                 type="file"
                 accept="image/*"
                 multiple
-                class="upload-input"
+                class="hidden"
                 @change="handleScreenshotChange"
               />
             </label>
           </div>
         </div>
 
-        <div class="submit-wrap">
+        <!-- Submit -->
+        <div class="mt-3">
           <button
             type="button"
-            class="submit-btn"
+            class="w-full h-[46px] rounded-full border-none bg-gradient-to-br from-emerald-500 to-emerald-600 text-white text-base font-semibold shadow-lg shadow-emerald-500/35 cursor-pointer transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
             :disabled="submitting"
             @click="handleSubmit"
-          >
-            {{ submitting ? '提交中...' : '提交反馈' }}
-          </button>
+          >{{ submitting ? '提交中...' : '提交反馈' }}</button>
         </div>
       </section>
     </div>
   </div>
 </template>
-
-<style scoped>
-.feedback-page {
-  background: #f5f5f7;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.feedback-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-}
-.feedback-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-}
-.feedback-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.feedback-header__placeholder {
-  min-width: 48px;
-}
-
-.feedback-tabs {
-  display: flex;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-}
-.feedback-tab {
-  flex: 1;
-  text-align: center;
-  padding: 12px 0;
-  font-size: 15px;
-  color: #777;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s ease;
-}
-.feedback-tab.active {
-  color: #10b981;
-  font-weight: 600;
-}
-.feedback-tab.active::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 40%;
-  height: 3px;
-  border-radius: 999px;
-  background: #10b981;
-}
-
-.feedback-content {
-  padding: 16px;
-}
-
-.feedback-section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.faq-card {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-  overflow: hidden;
-}
-.faq-header {
-  width: 100%;
-  padding: 14px 16px;
-  background: #ffffff;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-}
-.faq-title {
-  font-size: 15px;
-  color: #111827;
-  text-align: left;
-}
-.faq-arrow {
-  font-size: 14px;
-  color: #9ca3af;
-  transition: transform 0.2s ease;
-}
-.faq-arrow.open {
-  transform: rotate(180deg);
-}
-.faq-body {
-  padding: 12px 16px 14px;
-  background: #f9fafb;
-  border-top: 1px solid #f3f4f6;
-}
-.faq-body p {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #4b5563;
-}
-
-.faq-tip {
-  margin-top: 8px;
-  font-size: 13px;
-  color: #6b7280;
-  text-align: center;
-}
-.faq-tip__strong {
-  color: #10b981;
-  font-weight: 600;
-}
-
-.card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 14px 14px 16px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-}
-.card-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 10px;
-}
-.card-subtitle {
-  margin-left: 4px;
-  font-size: 12px;
-  color: #9ca3af;
-  font-weight: 400;
-}
-
-.tag-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.tag {
-  border-radius: 999px;
-  padding: 6px 14px;
-  border: 1px solid #e5e7eb;
-  background: #f9fafb;
-  font-size: 13px;
-  color: #4b5563;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.tag.active {
-  border-color: #10b981;
-  background: #ecfdf5;
-  color: #047857;
-  font-weight: 500;
-}
-
-.textarea-wrap {
-  position: relative;
-}
-.textarea {
-  width: 100%;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: #f9fafb;
-  padding: 12px;
-  font-size: 14px;
-  color: #111827;
-  resize: none;
-  min-height: 120px;
-  box-sizing: border-box;
-}
-.textarea:focus {
-  outline: none;
-  border-color: #10b981;
-  background: #ffffff;
-}
-.textarea-counter {
-  position: absolute;
-  right: 10px;
-  bottom: 8px;
-  font-size: 12px;
-  color: #9ca3af;
-}
-.textarea-counter.danger {
-  color: #f97316;
-}
-
-.input {
-  width: 100%;
-  border-radius: 999px;
-  border: 1px solid #e5e7eb;
-  padding: 10px 14px;
-  font-size: 14px;
-  color: #111827;
-  box-sizing: border-box;
-}
-.input::placeholder {
-  color: #9ca3af;
-}
-.input:focus {
-  outline: none;
-  border-color: #10b981;
-  background: #ffffff;
-}
-
-.upload-grid {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.upload-item {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #f3f4f6;
-}
-.upload-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.upload-remove {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  border: none;
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-}
-.upload-add {
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
-  border: 1px dashed #d1d5db;
-  background: #f9fafb;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #9ca3af;
-  font-size: 12px;
-  cursor: pointer;
-}
-.upload-plus {
-  font-size: 22px;
-  line-height: 1;
-  margin-bottom: 2px;
-}
-.upload-input {
-  display: none;
-}
-
-.submit-wrap {
-  margin-top: 12px;
-}
-.submit-btn {
-  width: 100%;
-  height: 46px;
-  border-radius: 999px;
-  border: none;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-.submit-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-</style>
-

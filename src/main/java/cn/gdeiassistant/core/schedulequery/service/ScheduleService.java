@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.schedulequery.service;
 
-import cn.gdeiassistant.common.config.properties.TrialProperties;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
@@ -8,7 +7,6 @@ import cn.gdeiassistant.common.exception.CustomScheduleException.CountOverLimitE
 import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateScheduleException;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
-import cn.gdeiassistant.common.exception.CommonException.TestAccountException;
 import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
 import cn.gdeiassistant.common.pojo.Document.CustomScheduleDocument;
 import cn.gdeiassistant.common.pojo.Document.ScheduleDocument;
@@ -55,17 +53,6 @@ public class ScheduleService {
 
     @Autowired
     private EduSystemClient eduSystemClient;
-
-    @Autowired
-    private TrialProperties trialProperties;
-
-    /** 配置为空或仅空串时视为无测试账号，全部走真实教务 */
-    private boolean isTestAccountUsername(String username) {
-        if (username == null || trialProperties.getTestAccounts() == null) return false;
-        return trialProperties.getTestAccounts().stream()
-                .filter(s -> s != null && !s.trim().isEmpty())
-                .anyMatch(s -> s.trim().equalsIgnoreCase(username));
-    }
 
     /**
      * 获取自定义课表信息
@@ -154,8 +141,7 @@ public class ScheduleService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         String username = user.getUsername();
         ScheduleDocument scheduleDocument = scheduleDao.querySchedule(username);
-        boolean isTestAccount = isTestAccountUsername(username);
-        if (scheduleDocument == null && !isTestAccount) {
+        if (scheduleDocument == null) {
             UserCertificateEntity userCertificate = userCertificateService.getUserSessionCertificate(sessionId);
             EduSessionCredential credential = toEduCredential(userCertificate);
             try {
@@ -338,20 +324,15 @@ public class ScheduleService {
                 throw new ServerErrorException("教务系统异常");
             }
         } else {
-            //从缓存中获取（包含测试账号只读模式），并做空指针防御
-            if (scheduleDocument != null) {
-                List<Schedule> cachedList = scheduleDocument.getScheduleList();
-                if (cachedList == null) {
-                    cachedList = new ArrayList<>();
-                    scheduleDocument.setScheduleList(cachedList);
-                }
-                ScheduleQueryResult.setScheduleList(cachedList);
-            } else {
-                // 测试账号且当前无缓存时，返回空列表，避免触发实时教务抓取
-                ScheduleQueryResult.setScheduleList(new ArrayList<>());
+            //从缓存中获取，并做空指针防御
+            List<Schedule> cachedList = scheduleDocument.getScheduleList();
+            if (cachedList == null) {
+                cachedList = new ArrayList<>();
+                scheduleDocument.setScheduleList(cachedList);
             }
+            ScheduleQueryResult.setScheduleList(cachedList);
         }
-        // 获取自定义课表信息（空指针防御：测试账号等可能无 CustomScheduleDocument 或 scheduleMap 为空）
+        // 获取自定义课表信息（空指针防御）
         // 合并前对自定义课打标 isCustom=true，教务/缓存课程不设置，前端仅认此标记控制删除按钮
         CustomScheduleDocument customScheduleDocument = getCustomSchedule(sessionId);
         if (customScheduleDocument != null && customScheduleDocument.getScheduleMap() != null) {
@@ -383,17 +364,13 @@ public class ScheduleService {
 
     /**
      * 强制更新当前用户的课表缓存（清空 MongoDB 缓存并实时从教务系统拉取一次）
-     * 测试账号（如 gdeiassistant、test）不允许执行该操作。
+     * 清空 MongoDB 缓存并实时从教务系统拉取一次。
      *
      * @param sessionId
      */
     public void updateScheduleCache(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         String username = user.getUsername();
-        // 测试账号拦截：不允许触发教务实时同步，避免污染演示数据
-        if (isTestAccountUsername(username)) {
-            throw new TestAccountException("测试账号暂不支持更新教务数据");
-        }
         // 清空缓存的课表信息，下次查询时从教务系统实时获取
         scheduleDao.removeSchedule(username);
         // 主动触发一次实时查询，保证本次操作后前端能看到最新课表（结果通过前端后续 getSchedule 再拉取）

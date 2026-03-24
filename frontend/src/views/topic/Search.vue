@@ -46,213 +46,76 @@ function doSearch() {
       searching.value = false
     })
 }
+
+function getImageGridCols(count) {
+  if (count === 1) return 'grid-cols-1'
+  if (count === 2) return 'grid-cols-2'
+  return 'grid-cols-3'
+}
 </script>
 
 <template>
-  <div class="topic-search">
+  <div class="bg-[var(--c-bg)] min-h-screen pb-16">
     <CommunityHeader title="搜索话题" moduleColor="#6366f1" @back="router.back()" backTo="" showBack />
 
-    <div class="topic-search__bar">
+    <div class="flex gap-2.5 p-4 bg-[var(--c-surface)] border-b border-[var(--c-border)]">
       <input
         type="text"
-        class="topic-search__input"
+        class="flex-1 h-9 px-3 border border-[var(--c-border)] rounded-full text-sm outline-none focus:border-[var(--c-topic)]"
         placeholder="搜索话题、内容..."
         v-model="keyword"
         @keyup.enter="doSearch"
       />
-      <button type="button" class="topic-search__btn" @click="doSearch">搜索</button>
+      <button
+        type="button"
+        class="px-5 h-9 bg-[var(--c-topic)] text-white border-none rounded-full text-sm cursor-pointer"
+        @click="doSearch"
+      >搜索</button>
     </div>
 
-    <div v-if="searching" class="community-loadmore"><i class="community-loading-spinner"></i> 搜索中...</div>
-    <div v-else-if="searchResults.length === 0 && keyword" class="community-empty">
-      <div class="community-empty__text">暂无结果</div>
+    <div v-if="searching" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> 搜索中...</div>
+    <div v-else-if="searchResults.length === 0 && keyword" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <p class="text-sm">暂无结果</p>
     </div>
-    <div v-else class="topic-list">
+    <div v-else class="p-4 flex flex-col gap-4">
       <div
         v-for="(item, index) in searchResults"
         :key="item.id"
-        class="topic-card"
+        class="bg-[var(--c-surface)] rounded-xl p-4 shadow-sm animate-[community-slide-up_0.3s_ease_both]"
         :style="{ animationDelay: (index * 0.05) + 's' }"
       >
-        <div class="topic-card__header">
-          <img :src="item.userAvatar || '/img/avatar/default.png'" class="topic-card__avatar" />
-          <div class="topic-card__user">
-            <div class="topic-card__name">{{ item.userName }}</div>
-            <div class="topic-card__time">{{ item.time }}</div>
+        <div class="flex items-center mb-3">
+          <img :src="item.userAvatar || '/img/avatar/default.png'" class="w-10 h-10 rounded-full object-cover mr-3" />
+          <div class="flex-1">
+            <div class="text-sm font-semibold text-[var(--c-text-1)] mb-1">{{ item.userName }}</div>
+            <div class="text-xs text-[var(--c-text-3)]">{{ item.time }}</div>
           </div>
         </div>
-        <div class="topic-card__content">
-          <span class="topic-card__tag">{{ item.topicTag }}</span>
-          <span class="topic-card__text">{{ item.content }}</span>
+        <div class="mb-3 leading-relaxed text-sm text-[var(--c-text-1)]">
+          <span class="text-[var(--c-topic)] text-base font-medium mr-1.5">{{ item.topicTag }}</span>
+          <span class="text-[var(--c-text-1)]">{{ item.content }}</span>
         </div>
-        <div v-if="item.images && item.images.length > 0" :class="['topic-card__images', 'grid-' + Math.min(item.images.length, 3)]">
+        <div v-if="item.images && item.images.length > 0" class="mb-3 grid gap-1.5" :class="[getImageGridCols(Math.min(item.images.length, 3))]">
           <div
             v-for="(img, idx) in item.images.slice(0, 3)"
             :key="idx"
-            class="topic-image-item"
+            class="aspect-square rounded-md overflow-hidden bg-gray-100"
           >
-            <img :src="img" />
+            <img :src="img" class="w-full h-full object-cover" />
           </div>
         </div>
-        <div class="topic-card__actions">
-          <button type="button" class="topic-like-btn" :class="{ 'is-liked': item.isLiked }" @click="handleLike(item)">
-            <span class="topic-like-btn__icon">{{ item.isLiked ? '❤️' : '🤍' }}</span>
-            <span class="topic-like-btn__count">{{ item.likeCount || 0 }}</span>
+        <div class="flex justify-end pt-2 border-t border-[var(--c-border)]">
+          <button
+            type="button"
+            class="flex items-center gap-1 bg-none border-none text-sm cursor-pointer px-2 py-1 rounded transition-all duration-200"
+            :class="item.isLiked ? 'text-[var(--c-topic)]' : 'text-[var(--c-text-2)]'"
+            @click="handleLike(item)"
+          >
+            <span class="text-xl transition-transform duration-200" :class="{ 'scale-120 animate-[community-like-bounce_0.3s_ease]': item.isLiked }">{{ item.isLiked ? '❤️' : '🤍' }}</span>
+            <span>{{ item.likeCount || 0 }}</span>
           </button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.topic-search {
-  background: var(--c-bg);
-  min-height: 100vh;
-  padding-bottom: 60px;
-}
-
-.topic-search__bar {
-  display: flex;
-  gap: 10px;
-  padding: 15px;
-  background: var(--c-card);
-  border-bottom: 1px solid var(--c-border);
-}
-.topic-search__input {
-  flex: 1;
-  height: 36px;
-  padding: 0 12px;
-  border: 1px solid var(--c-divider);
-  border-radius: var(--radius-full);
-  font-size: var(--font-base);
-  outline: none;
-}
-.topic-search__input:focus {
-  border-color: var(--c-topic);
-}
-.topic-search__btn {
-  padding: 0 20px;
-  height: 36px;
-  background: var(--c-topic);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-full);
-  font-size: var(--font-base);
-  cursor: pointer;
-}
-
-.topic-list {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.topic-card {
-  background: var(--c-card);
-  border-radius: var(--radius-md);
-  padding: 15px;
-  box-shadow: var(--shadow-sm);
-  animation: community-slide-up 0.3s ease both;
-}
-
-.topic-card__header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.topic-card__avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 12px;
-}
-.topic-card__user {
-  flex: 1;
-}
-.topic-card__name {
-  font-size: var(--font-md);
-  font-weight: 600;
-  color: var(--c-text-1);
-  margin-bottom: 4px;
-}
-.topic-card__time {
-  font-size: var(--font-sm);
-  color: var(--c-text-3);
-}
-
-.topic-card__content {
-  margin-bottom: 12px;
-  line-height: 1.6;
-  font-size: var(--font-md);
-  color: var(--c-text-1);
-}
-.topic-card__tag {
-  color: var(--c-topic);
-  font-size: var(--font-lg);
-  font-weight: 500;
-  margin-right: 6px;
-}
-.topic-card__text {
-  color: var(--c-text-1);
-}
-
-.topic-card__images {
-  margin-bottom: 12px;
-  display: grid;
-  gap: 6px;
-}
-.topic-card__images.grid-1 {
-  grid-template-columns: 1fr;
-}
-.topic-card__images.grid-2 {
-  grid-template-columns: repeat(2, 1fr);
-}
-.topic-card__images.grid-3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-.topic-image-item {
-  aspect-ratio: 1;
-  border-radius: 6px;
-  overflow: hidden;
-  background: #f0f0f0;
-}
-.topic-image-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.topic-card__actions {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 8px;
-  border-top: 1px solid var(--c-border);
-}
-.topic-like-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  font-size: var(--font-base);
-  color: var(--c-text-2);
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-.topic-like-btn__icon {
-  font-size: var(--font-xl);
-  transition: transform 0.2s;
-}
-.topic-like-btn.is-liked {
-  color: var(--c-topic);
-}
-.topic-like-btn.is-liked .topic-like-btn__icon {
-  transform: scale(1.2);
-  animation: community-like-bounce 0.3s ease;
-}
-</style>

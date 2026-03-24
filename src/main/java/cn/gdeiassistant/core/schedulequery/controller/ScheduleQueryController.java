@@ -1,11 +1,9 @@
 package cn.gdeiassistant.core.schedulequery.controller;
 
 import cn.gdeiassistant.common.annotation.QueryLogPersistence;
-import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.common.exception.CustomScheduleException.CountOverLimitException;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateScheduleException;
-import cn.gdeiassistant.common.exception.CommonException.TestAccountException;
 import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
 import cn.gdeiassistant.common.pojo.Entity.CustomSchedule;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
@@ -26,7 +24,6 @@ public class ScheduleQueryController {
 
     @RequestMapping(value = "/api/schedule", method = RequestMethod.GET)
     @QueryLogPersistence
-    @TrialData(value = "schedule")
     public DataJsonResult<ScheduleQueryResult> getSchedule(HttpServletRequest request
             , @RequestParam(value = "week", required = false) Integer week) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
@@ -37,7 +34,7 @@ public class ScheduleQueryController {
     /**
      * 强制刷新当前用户的课表缓存（清空 MongoDB 缓存并实时同步一次教务数据）
      * POST /api/schedule/update
-     * 测试账号会抛出 TestAccountException，此处捕获后返回成功提示，不阻断前端后续获取课表（含自定义课表）展示。
+     * 清空缓存并实时同步一次教务数据。
      *
      * @param request
      * @return
@@ -45,12 +42,8 @@ public class ScheduleQueryController {
     @RequestMapping(value = "/api/schedule/update", method = RequestMethod.POST)
     public JsonResult updateScheduleCache(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
-        try {
-            scheduleService.updateScheduleCache(sessionId);
-            return new JsonResult(true, "课表数据更新成功");
-        } catch (TestAccountException e) {
-            return new JsonResult(true, "测试账号不更新教务数据，请直接查看课表");
-        }
+        scheduleService.updateScheduleCache(sessionId);
+        return new JsonResult(true, "课表数据更新成功");
     }
 
     /**

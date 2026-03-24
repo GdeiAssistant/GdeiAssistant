@@ -2,8 +2,10 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { success: toastSuccess } = useToast()
 
 const EXPORT_STATUS = {
   NOT_EXPORT: 0,
@@ -16,17 +18,6 @@ const loadingState = ref(true)
 const exporting = ref(false)
 const downloading = ref(false)
 let pollTimerId = null
-
-function showToast(message) {
-  const toast = document.createElement('div')
-  toast.style.cssText =
-    'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.75);color:#fff;padding:12px 22px;border-radius:6px;z-index:9999;font-size:14px;max-width:80%;text-align:center;'
-  toast.textContent = message
-  document.body.appendChild(toast)
-  setTimeout(() => {
-    if (toast.parentNode) document.body.removeChild(toast)
-  }, 2000)
-}
 
 function stopPolling() {
   if (pollTimerId) {
@@ -64,7 +55,7 @@ async function handleStartExport() {
     await request.post('/userdata/export')
     exportStatus.value = EXPORT_STATUS.EXPORTING
     startPolling()
-    showToast('导出任务已提交，请稍候返回下载')
+    toastSuccess('导出任务已提交，请稍候返回下载')
   } catch (e) {
     await loadExportState()
   } finally {
@@ -83,7 +74,7 @@ async function handleDownload() {
     if (!popup) {
       window.location.href = url
     }
-    showToast('下载已开始')
+    toastSuccess('下载已开始')
   } finally {
     downloading.value = false
   }
@@ -117,21 +108,24 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="download-data-page">
-    <div class="download-header unified-header">
-      <span class="download-header__back" @click="router.back()">返回</span>
-      <h1 class="download-header__title">下载个人数据</h1>
-      <span class="download-header__placeholder"></span>
+  <div class="min-h-screen bg-gray-50 pb-6">
+    <!-- Sticky Header -->
+    <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
+      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">返回</button>
+      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">下载个人数据</h1>
+      <div class="w-15"></div>
     </div>
 
-    <div class="download-content">
-      <div class="info-card">
-        <div class="status-icon-wrapper">
-          <i v-if="loadingState || exportStatus === EXPORT_STATUS.EXPORTING" class="weui-loading weui-icon_toast"></i>
-          <svg v-else-if="exportStatus === EXPORT_STATUS.EXPORTED" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <!-- Info card -->
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center mb-4">
+        <!-- Status icon -->
+        <div class="flex justify-center items-center w-20 h-20 mx-auto mb-5">
+          <div v-if="loadingState || exportStatus === EXPORT_STATUS.EXPORTING" class="w-12 h-12 border-3 border-gray-200 border-t-green-500 rounded-full animate-spin"></div>
+          <svg v-else-if="exportStatus === EXPORT_STATUS.EXPORTED" class="w-full h-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 6L9 17L4 12" stroke="#07c160" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          <svg v-else viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg v-else class="w-full h-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#10aeff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M14 2V8H20" stroke="#10aeff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M16 13H8" stroke="#10aeff" stroke-width="2" stroke-linecap="round" />
@@ -139,205 +133,60 @@ onUnmounted(() => {
             <path d="M10 9H8" stroke="#10aeff" stroke-width="2" stroke-linecap="round" />
           </svg>
         </div>
-        <h2 class="hero-title">{{ statusTitle }}</h2>
-        <p class="info-text">
-          {{ statusDescription }}
-        </p>
-        <p class="info-text info-text--highlight">
-          为了保护您的隐私，该文件仅供您本人下载，下载链接有效期为 90 分钟。
-        </p>
-        <p class="info-text info-text--note">
-          注意：24 小时内只能导出一次。若您刚完成导出，后续可直接回到本页继续下载。
-        </p>
+
+        <h2 class="text-lg font-medium text-gray-800 mb-5">{{ statusTitle }}</h2>
+        <p class="text-sm leading-relaxed text-gray-500 text-left mb-3">{{ statusDescription }}</p>
+        <p class="text-sm leading-relaxed text-gray-800 font-medium text-left mb-3">为了保护您的隐私，该文件仅供您本人下载，下载链接有效期为 90 分钟。</p>
+        <p class="text-[13px] leading-relaxed text-gray-400 text-left mt-4 pt-4 border-t border-gray-100">注意：24 小时内只能导出一次。若您刚完成导出，后续可直接回到本页继续下载。</p>
       </div>
 
-      <div class="action-section">
-        <div v-if="loadingState" class="action-card">
-          <div class="weui-btn-area">
-            <a href="javascript:;" class="weui-btn weui-btn_primary weui-btn_disabled" style="cursor: not-allowed;">
-              正在检查状态...
-            </a>
-          </div>
+      <!-- Action area -->
+      <div class="bg-white rounded-xl shadow-sm p-5">
+        <!-- Loading state -->
+        <div v-if="loadingState">
+          <button type="button" class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 opacity-60 cursor-not-allowed" disabled>
+            正在检查状态...
+          </button>
         </div>
 
-        <div v-else-if="exportStatus === EXPORT_STATUS.NOT_EXPORT" class="action-card">
-          <div class="weui-btn-area">
-            <a href="javascript:;" class="weui-btn weui-btn_primary" :class="{ 'weui-btn_disabled': exporting }" @click.prevent="handleStartExport">
-              {{ exporting ? '提交中...' : '开始导出数据' }}
-            </a>
-          </div>
+        <!-- Not exported -->
+        <div v-else-if="exportStatus === EXPORT_STATUS.NOT_EXPORT">
+          <button
+            type="button"
+            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            :disabled="exporting"
+            @click="handleStartExport"
+          >
+            {{ exporting ? '提交中...' : '开始导出数据' }}
+          </button>
         </div>
 
-        <div v-else-if="exportStatus === EXPORT_STATUS.EXPORTING" class="action-card">
-          <div class="weui-btn-area">
-            <a href="javascript:;" class="weui-btn weui-btn_primary weui-btn_disabled" style="cursor: not-allowed;">
-              <span class="btn-loading">
-                <span class="weui-loading weui-icon_toast"></span>
-                <span style="margin-left: 8px;">数据打包中，请稍候...</span>
-              </span>
-            </a>
-          </div>
-          <div class="weui-btn-area secondary-action">
-            <a href="javascript:;" class="weui-btn weui-btn_default" @click.prevent="loadExportState">刷新状态</a>
-          </div>
+        <!-- Exporting -->
+        <div v-else-if="exportStatus === EXPORT_STATUS.EXPORTING" class="space-y-3">
+          <button type="button" class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 opacity-60 cursor-not-allowed flex items-center justify-center" disabled>
+            <span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></span>
+            数据打包中，请稍候...
+          </button>
+          <button
+            type="button"
+            class="w-full rounded-lg bg-white text-gray-700 font-medium py-2.5 border border-gray-300 cursor-pointer"
+            @click="loadExportState"
+          >刷新状态</button>
         </div>
 
-        <div v-else class="action-card">
-          <div class="success-message">
-            <p class="success-text">✅ 您的数据副本已生成完毕，请点击下方按钮下载</p>
-          </div>
-          <div class="weui-btn-area">
-            <a href="javascript:;" class="weui-btn weui-btn_primary" :class="{ 'weui-btn_disabled': downloading }" @click.prevent="handleDownload">
-              {{ downloading ? '正在获取下载链接...' : '点击下载文件' }}
-            </a>
-          </div>
+        <!-- Exported -->
+        <div v-else>
+          <p class="text-sm text-green-500 text-center mb-3">&#10003; 您的数据副本已生成完毕，请点击下方按钮下载</p>
+          <button
+            type="button"
+            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            :disabled="downloading"
+            @click="handleDownload"
+          >
+            {{ downloading ? '正在获取下载链接...' : '点击下载文件' }}
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.download-data-page {
-  background: #f8f8f8;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.download-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.download-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-}
-
-.download-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-
-.download-header__placeholder {
-  min-width: 48px;
-}
-
-.download-content {
-  padding: 0;
-}
-
-.info-card {
-  background: #ffffff;
-  padding: 30px 15px 20px;
-  margin-bottom: 10px;
-  border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
-  text-align: center;
-}
-
-.status-icon-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 30px auto 20px;
-  width: 80px !important;
-  height: 80px !important;
-  overflow: visible !important;
-  box-sizing: border-box;
-}
-
-.status-icon-wrapper svg,
-.status-icon-wrapper img {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 80px !important;
-  max-height: 80px !important;
-  object-fit: contain;
-  display: block;
-}
-
-.status-icon-wrapper .weui-loading {
-  width: 80px !important;
-  height: 80px !important;
-  font-size: 80px !important;
-  color: #07c160;
-  transform: scale(0.8) !important;
-  transform-origin: center center;
-}
-
-.hero-title {
-  font-size: 18px;
-  font-weight: 500;
-  color: #333;
-  margin: 0 0 20px;
-}
-
-.info-text {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #666;
-  margin: 0 0 12px;
-  text-align: left;
-}
-
-.info-text:last-child {
-  margin-bottom: 0;
-}
-
-.info-text--highlight {
-  color: #333;
-  font-weight: 500;
-}
-
-.info-text--note {
-  font-size: 13px;
-  color: #999;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #e5e5e5;
-}
-
-.action-section {
-  padding: 0 15px;
-}
-
-.action-card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 18px 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.secondary-action {
-  margin-top: 10px;
-}
-
-.success-message {
-  margin-bottom: 12px;
-}
-
-.success-text {
-  margin: 0;
-  font-size: 14px;
-  color: #07c160;
-  text-align: center;
-}
-
-.btn-loading {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>

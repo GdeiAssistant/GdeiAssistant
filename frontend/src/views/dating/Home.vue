@@ -62,158 +62,77 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="community-page dating-home"
+    class="min-h-screen bg-[var(--c-bg)] pb-20"
     @touchstart="handleTouchStart"
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
   >
     <CommunityHeader title="卖室友" moduleColor="#ec4899" backTo="/">
       <template #right>
-        <span class="dating-header-right" @click="router.push('/dating/center')">我的</span>
+        <span class="text-[var(--c-text-2)] cursor-pointer text-base" @click="router.push('/dating/center')">我的</span>
       </template>
     </CommunityHeader>
 
-    <div class="community-pull-refresh" :style="{ height: pullY + 'px' }">
-      <span v-if="refreshing" class="community-pull-refresh__text"><i class="community-loading-spinner" style="--module-color: #ec4899"></i> 正在刷新...</span>
-      <span v-else-if="pullY > 50" class="community-pull-refresh__text">释放立即刷新</span>
-      <span v-else-if="pullY > 0" class="community-pull-refresh__text">下拉刷新</span>
+    <!-- Pull refresh -->
+    <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
+      <span v-if="refreshing" class="flex items-center gap-2"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> 正在刷新...</span>
+      <span v-else-if="pullY > 50">释放立即刷新</span>
+      <span v-else-if="pullY > 0">下拉刷新</span>
     </div>
 
-    <!-- 性别 Tab：小姐姐 / 小哥哥（原版 JSP sexTab） -->
-    <div class="dating-sex-tab">
-      <ul>
-        <li :class="['tab-item', { selected: activeArea === 0 }]">
-          <a href="javascript:;" @click.prevent="switchArea(0)">小姐姐</a>
-        </li>
-        <li :class="['tab-item', { selected: activeArea === 1 }]">
-          <a href="javascript:;" @click.prevent="switchArea(1)">小哥哥</a>
-        </li>
-      </ul>
+    <!-- Gender Tab -->
+    <div class="flex bg-[var(--c-card)] mt-2 h-11">
+      <a
+        href="javascript:;"
+        class="flex-1 text-center leading-[44px] text-xl transition-colors duration-300"
+        :class="activeArea === 0 ? 'bg-pink-500 text-white' : 'text-[var(--c-text-2)]'"
+        @click.prevent="switchArea(0)"
+      >小姐姐</a>
+      <a
+        href="javascript:;"
+        class="flex-1 text-center leading-[44px] text-xl transition-colors duration-300"
+        :class="activeArea === 1 ? 'bg-pink-500 text-white' : 'text-[var(--c-text-2)]'"
+        @click.prevent="switchArea(1)"
+      >小哥哥</a>
     </div>
 
-    <div class="dating-list">
+    <!-- Card list -->
+    <div class="p-4">
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="community-card dating-card"
+        class="bg-[var(--c-surface)] rounded-xl shadow-sm mb-4 p-4 overflow-hidden cursor-pointer animate-[slide-up_0.4s_ease_both]"
         :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         @click="goDetail(item.id)"
       >
-        <div class="dating-card__img">
-          <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" />
+        <div class="w-full aspect-square bg-[var(--c-border)] rounded-lg overflow-hidden mb-3">
+          <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" class="w-full h-full object-cover" />
         </div>
-        <h2 class="dating-card__title">{{ item.name }}</h2>
-        <div class="dating-card__info">{{ item.faculty }} {{ getGradeText(item.grade) }}学生</div>
-        <div class="dating-card__info">来自{{ item.hometown || '未知' }}</div>
-        <p class="dating-card__desc">{{ item.content }}</p>
+        <h2 class="m-0 mb-1.5 text-xl font-bold text-pink-500 leading-tight">{{ item.name }}</h2>
+        <div class="text-[var(--c-text-2)] text-base mt-0.5 leading-relaxed">{{ item.faculty }} {{ getGradeText(item.grade) }}学生</div>
+        <div class="text-[var(--c-text-2)] text-base mt-0.5 leading-relaxed">来自{{ item.hometown || '未知' }}</div>
+        <p class="text-[var(--c-text-2)] text-sm mt-2 leading-relaxed">{{ item.content }}</p>
       </div>
     </div>
 
-    <div v-if="!loading && !refreshing && list.length === 0" class="community-empty">
-      <div class="community-empty__icon">💕</div>
-      <div class="community-empty__text">暂无内容</div>
+    <!-- Empty -->
+    <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <div class="text-4xl mb-2">💕</div>
+      <div class="text-sm">暂无内容</div>
     </div>
-    <div v-if="loading && !refreshing" class="community-loadmore"><i class="community-loading-spinner" style="--module-color: #ec4899"></i> 正在加载</div>
-    <div v-if="finished && list.length > 0" class="community-loadmore">已经到底了</div>
 
-    <!-- 右下角发布悬浮按钮（原版 JSP skypub） -->
-    <div class="dating-fab" @click="router.push('/dating/publish')">
-      <span class="dating-fab__icon">+</span>
+    <!-- Loading -->
+    <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> 正在加载
+    </div>
+    <div v-if="finished && list.length > 0" class="text-center py-4 text-sm text-[var(--c-text-3)]">已经到底了</div>
+
+    <!-- FAB -->
+    <div
+      class="fixed right-5 bottom-6 w-12 h-12 rounded-full bg-pink-500 shadow-[0_4px_12px_rgba(236,72,153,0.4)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.92]"
+      @click="router.push('/dating/publish')"
+    >
+      <span class="text-[28px] leading-none text-white font-light">+</span>
     </div>
   </div>
 </template>
-
-<style scoped>
-.dating-home {
-  padding-bottom: 80px;
-}
-
-.dating-header-right {
-  color: var(--c-text-2);
-  cursor: pointer;
-  font-size: var(--font-base);
-}
-
-.dating-sex-tab {
-  background: var(--c-card);
-  margin-top: var(--space-sm);
-  height: 44px;
-}
-.dating-sex-tab ul { display: flex; list-style: none; margin: 0; padding: 0; }
-.dating-sex-tab .tab-item {
-  flex: 1;
-  text-align: center;
-  line-height: 44px;
-  font-size: var(--font-xl);
-  transition: background 0.3s, color 0.3s;
-}
-.dating-sex-tab .tab-item a { color: var(--c-text-2); text-decoration: none; }
-.dating-sex-tab .tab-item.selected { background: var(--c-dating); }
-.dating-sex-tab .tab-item.selected a { color: #fff; }
-
-.dating-list { padding: var(--space-md); }
-.dating-card {
-  margin-bottom: var(--space-md);
-  padding: var(--space-md);
-  overflow: hidden;
-  cursor: pointer;
-  animation: community-slide-up 0.4s ease both;
-}
-.dating-card__img {
-  width: 100%;
-  aspect-ratio: 1;
-  background: var(--c-border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  margin-bottom: var(--space-sm);
-}
-.dating-card__img img { width: 100%; height: 100%; object-fit: cover; }
-.dating-card__title {
-  margin: 0 0 6px;
-  font-size: var(--font-xl);
-  font-weight: bold;
-  color: var(--c-dating);
-  line-height: 1.3;
-}
-.dating-card__info {
-  color: var(--c-text-2);
-  font-size: var(--font-base);
-  margin-top: 2px;
-  line-height: 1.5;
-}
-.dating-card__actions { margin-top: var(--space-md); padding-top: var(--space-sm); border-top: 1px solid var(--c-border); }
-.dating-action-btn {
-  background: none;
-  border: none;
-  font-size: var(--font-base);
-  color: var(--c-text-2);
-  cursor: pointer;
-}
-.dating-action-btn.is-liked { color: var(--c-dating); font-weight: bold; }
-
-.dating-fab {
-  position: fixed;
-  right: 20px;
-  bottom: 24px;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-full);
-  background: var(--c-dating);
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-.dating-fab:active {
-  transform: scale(0.92);
-}
-.dating-fab__icon {
-  font-size: 28px;
-  line-height: 1;
-  color: #fff;
-  font-weight: 300;
-}
-</style>

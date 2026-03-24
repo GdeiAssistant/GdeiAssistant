@@ -178,7 +178,7 @@ const submitComment = () => {
   }).catch(() => {})
 }
 
-// 加载详情：后端返回 Secret（content, type, theme, likeCount, commentCount, liked, voiceURL 等）
+// 加载详情
 const loadDetail = async () => {
   try {
     loading.value = true
@@ -205,7 +205,7 @@ const loadDetail = async () => {
   }
 }
 
-// 加载评论：后端返回 List<SecretComment>
+// 加载评论
 const loadComments = async () => {
   try {
     const res = await request.get(`/secret/id/${route.params.id}/comments`)
@@ -219,6 +219,49 @@ const showSubmitBtn = computed(() => {
   return commentText.value && commentText.value.trim().length > 0
 })
 
+const themeColors = {
+  1: 'var(--c-surface)',
+  2: '#595959',
+  3: '#f5d676',
+  4: '#f69695',
+  5: '#c6a8c1',
+  6: '#89cdcb',
+  7: '#90cce2',
+  8: '#6e7e90',
+  9: '#61ae97',
+  10: '#d3cd72',
+  11: '#e8d5a8',
+  12: '#daa6a1'
+}
+
+function getThemeBg(theme) {
+  return themeColors[theme] || 'var(--c-surface)'
+}
+
+function getThemeTextColor(theme) {
+  return theme === 1 ? '#000' : '#fff'
+}
+
+function getFooterBg(theme) {
+  return theme === 1 ? 'rgba(0,0,0,0.05)' : 'rgba(0,0,0,0.1)'
+}
+
+function getFooterTextColor(theme) {
+  return theme === 1 ? '#000' : '#fff'
+}
+
+function getPregoodIcon(theme) {
+  return theme === 1 ? '/img/secret/grayg.png' : '/img/secret/pregood.png'
+}
+
+function getCommentIcon(theme) {
+  return theme === 1 ? '/img/secret/grayc.png' : '/img/secret/comment.png'
+}
+
+function getProgressBg(theme) {
+  return theme === 1 ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.3)'
+}
+
 onMounted(async () => {
   await loadDetail()
   await loadComments()
@@ -230,350 +273,128 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="community-page secret-detail" style="--module-color: #8b5cf6">
+  <div class="min-h-screen bg-[var(--c-bg)] pb-14" style="--module-color: #8b5cf6">
     <CommunityHeader title="树洞详情" moduleColor="#8b5cf6" backTo="/secret/home" />
 
-    <div v-if="loading" class="loading">
-      <i class="community-loading-spinner"></i>
+    <div v-if="loading" class="flex items-center justify-center py-16 gap-2.5 text-[var(--c-text-3)]">
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#8b5cf6] rounded-full animate-spin"></i>
       <span>加载中...</span>
     </div>
 
-    <div v-else-if="secret" class="all">
-      <!-- 树洞信息：参考原版 .secret -->
-      <div :id="secret.id" class="secret community-card" :class="`theme${secret.theme || 1}`">
-        <section class="section" @click="playAudio">
+    <div v-else-if="secret" class="min-h-full pb-16 pt-4">
+      <!-- 树洞卡片 -->
+      <div
+        :id="secret.id"
+        class="mx-2.5 mt-5 text-center text-[17px] leading-[25px] relative h-[240px] rounded-lg border-l-4 border-[var(--c-secret)] shadow-sm"
+        :style="{ backgroundColor: getThemeBg(secret.theme || 1), color: getThemeTextColor(secret.theme || 1) }"
+      >
+        <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit cursor-pointer" @click="playAudio">
           <template v-if="secret.type === 0">
             {{ secret.content }}
           </template>
           <template v-else>
             <img
               v-if="secret.theme === 1"
-              id="voice"
               width="50px"
               height="50px"
               :src="playing ? '/img/secret/voice_pressed.png' : '/img/secret/voice_normal_white.png'"
-              class="voice-icon"
+              class="w-12 h-12 mx-auto"
               alt="语音"
             />
             <img
               v-else
-              id="voice"
               width="50px"
               height="50px"
               :src="playing ? '/img/secret/voice_pressed.png' : '/img/secret/voice_normal.png'"
-              class="voice-icon"
+              class="w-12 h-12 mx-auto"
               alt="语音"
             />
-            <div class="voice-status">{{ audioStatusText }}</div>
-            <div class="voice-time">{{ audioTimeText }}</div>
-            <div class="voice-progress" @click.stop="seekAudio">
-              <div class="voice-progress__current" :style="{ width: audioProgress + '%' }"></div>
+            <div class="mt-3 text-xs opacity-95">{{ audioStatusText }}</div>
+            <div class="mt-1.5 text-[10px] opacity-80">{{ audioTimeText }}</div>
+            <div
+              class="w-[min(220px,80%)] h-1.5 mt-3.5 rounded-full overflow-hidden cursor-pointer"
+              :style="{ background: getProgressBg(secret.theme || 1) }"
+              @click.stop="seekAudio"
+            >
+              <div class="h-full rounded-full opacity-90" style="background: currentColor" :style="{ width: audioProgress + '%' }"></div>
             </div>
           </template>
         </section>
-        <footer>
-          <div>
-            <i :class="secret.liked ? 'good' : 'pregood'" @click="toggleLike"></i>
+        <footer
+          class="h-[42px] absolute bottom-0 left-0 w-full text-[0] rounded-b-lg"
+          :style="{ backgroundColor: getFooterBg(secret.theme || 1) }"
+        >
+          <div
+            class="w-1/2 inline-block text-base leading-10 cursor-pointer"
+            :style="{ color: getFooterTextColor(secret.theme || 1) }"
+          >
+            <i
+              class="inline-block h-10 w-10 bg-no-repeat bg-[length:1.1rem] bg-center align-middle"
+              :style="{ backgroundImage: `url(${secret.liked ? '/img/secret/good.png' : getPregoodIcon(secret.theme || 1)})`, backgroundPosition: 'center 10px' }"
+              @click="toggleLike"
+            ></i>
             <span>{{ secret.likeCount || 0 }}</span>
           </div>
-          <div>
-            <i class="comment"></i>
+          <div
+            class="w-1/2 inline-block text-base leading-10 cursor-pointer"
+            :style="{ color: getFooterTextColor(secret.theme || 1) }"
+          >
+            <i
+              class="inline-block h-10 w-10 bg-no-repeat bg-[length:1.1rem] bg-center align-middle"
+              :style="{ backgroundImage: `url(${getCommentIcon(secret.theme || 1)})` }"
+            ></i>
             <span>{{ secret.commentCount || 0 }}</span>
           </div>
         </footer>
       </div>
 
-      <!-- 树洞信息评论：参考原版 .discuss -->
+      <!-- 评论列表 -->
       <div
         v-for="(comment, index) in comments"
         :key="comment.id"
-        class="discuss community-card"
+        class="leading-6 mx-2.5 mt-2 bg-[var(--c-surface)] p-2 border-l-4 border-[var(--c-secret)] rounded-lg shadow-sm flex gap-2.5 animate-[community-slide-up_0.3s_ease_both]"
         :style="{ animationDelay: index * 0.05 + 's' }"
       >
-        <img :src="`/img/avatar/${comment.avatarTheme || 1}.png`" alt="" />
-        <div class="info">
-          <p>{{ comment.comment }}</p>
-          <span>{{ index + 1 }}楼 {{ comment.publishTime }}</span>
+        <img :src="`/img/avatar/${comment.avatarTheme || 1}.png`" alt="" class="w-10 h-10 rounded-full shrink-0" />
+        <div class="flex-1">
+          <p class="font-bold mb-1 text-[var(--c-text-1)]">{{ comment.comment }}</p>
+          <span class="text-[10px] text-[var(--c-text-3)]">{{ index + 1 }}楼 {{ comment.publishTime }}</span>
         </div>
       </div>
     </div>
 
-    <div v-else class="community-empty">
-      <div class="community-empty__icon">📭</div>
-      <p class="community-empty__text">树洞不存在或已删除</p>
+    <div v-else class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <div class="text-5xl mb-3">📭</div>
+      <p class="text-sm">树洞不存在或已删除</p>
     </div>
 
-    <!-- 底部固定输入框：参考原版 .form -->
-    <div class="form">
+    <!-- 底部固定输入框 -->
+    <div class="border-t border-[var(--c-border)] p-2 bg-[var(--c-surface)] fixed bottom-0 left-0 right-0 w-full flex items-center gap-2.5 box-border">
       <input
         type="text"
         name="comment"
         placeholder="匿名评论"
+        class="leading-9 border border-[var(--c-border)] flex-1 rounded px-2.5 text-base outline-none"
         v-model="commentText"
         @keyup.enter="submitComment"
       />
-      <div v-if="showSubmitBtn" class="submit" @click="submitComment">发布</div>
+      <div
+        v-if="showSubmitBtn"
+        class="leading-9 border border-[var(--c-border)] w-[20%] rounded text-center text-[var(--c-secret)] cursor-pointer text-base"
+        @click="submitComment"
+      >发布</div>
     </div>
   </div>
 
   <!-- 对话框 -->
   <div v-if="dialogVisible">
-    <div class="community-dialog-mask" @click="dialogVisible = false"></div>
-    <div class="community-dialog" style="--module-color: #8b5cf6">
-      <div class="community-dialog__title">提示</div>
-      <div class="community-dialog__body">{{ dialogMessage }}</div>
-      <div class="community-dialog__footer">
-        <a href="javascript:" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
+    <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: #8b5cf6">
+      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">提示</div>
+      <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
+      <div class="flex border-t border-[var(--c-border)]">
+        <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[#8b5cf6] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.secret-detail {
-  min-height: 100vh;
-  background: var(--c-bg);
-  padding-bottom: 3.3rem;
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  gap: 10px;
-  color: var(--c-text-3);
-}
-
-.all {
-  min-height: 100%;
-  padding-bottom: 3.8rem;
-  padding-top: 15px;
-}
-
-/* 树洞卡片：参考原版 secret-detail.css .secret */
-.secret {
-  margin: 20px 10px 0;
-  text-align: center;
-  font-size: 17px;
-  line-height: 25px;
-  position: relative;
-  color: #fff;
-  height: 240px;
-  border-radius: var(--radius-md);
-  border-left: 4px solid var(--c-secret);
-  box-shadow: var(--shadow-sm);
-}
-
-/* 卡片内容区域强制水平/垂直居中 */
-.secret .section {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center;
-  min-height: 150px;
-  padding: 20px;
-  box-sizing: border-box;
-  color: inherit;
-  cursor: pointer;
-}
-.secret .section .voice-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto;
-}
-.secret .section .voice-status {
-  margin-top: 12px;
-  font-size: var(--font-sm);
-  opacity: 0.95;
-}
-.secret .section .voice-time {
-  margin-top: 6px;
-  font-size: var(--font-xs);
-  opacity: 0.8;
-}
-.secret .section .voice-progress {
-  width: min(220px, 80%);
-  height: 6px;
-  margin-top: 14px;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.3);
-  overflow: hidden;
-  cursor: pointer;
-}
-.secret .section .voice-progress__current {
-  height: 100%;
-  border-radius: inherit;
-  background: currentColor;
-  opacity: 0.9;
-}
-.theme1 .section .voice-progress {
-  background: rgba(0, 0, 0, 0.12);
-}
-.secret footer {
-  height: 42px;
-  background-color: rgba(0, 0, 0, 0.1);
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  font-size: 0;
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-}
-.secret footer div {
-  width: 50%;
-  display: inline-block;
-  font-size: 1rem;
-  line-height: 40px;
-  color: #fff;
-  cursor: pointer;
-}
-.secret footer div i {
-  display: inline-block;
-  height: 40px;
-  width: 40px;
-  background-repeat: no-repeat;
-  background-size: 1.1rem;
-  background-position: center;
-  vertical-align: middle;
-}
-.secret footer div .pregood {
-  background-image: url(/img/secret/pregood.png);
-  background-position: center 10px;
-}
-.secret footer div .good {
-  background-image: url(/img/secret/good.png);
-  background-position: center 10px;
-}
-.secret footer div .comment {
-  background-image: url(/img/secret/comment.png);
-}
-
-/* 主题颜色：参考原版 secret-detail.css */
-.theme1 {
-  background-color: var(--c-card);
-  color: #000;
-}
-.theme1 > footer {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-.theme1 footer div {
-  color: #000;
-}
-.theme1 footer div .pregood {
-  background-image: url(/img/secret/grayg.png);
-  background-position: center 10px;
-}
-.theme1 footer div .comment {
-  background-image: url(/img/secret/grayc.png);
-}
-
-.theme2 {
-  background-color: #595959;
-}
-.theme3 {
-  background-color: #f5d676;
-}
-.theme4 {
-  background-color: #f69695;
-}
-.theme5 {
-  background-color: #c6a8c1;
-}
-.theme6 {
-  background-color: #89cdcb;
-}
-.theme7 {
-  background-color: #90cce2;
-}
-.theme8 {
-  background-color: #6e7e90;
-}
-.theme9 {
-  background-color: #61ae97;
-}
-.theme10 {
-  background-color: #d3cd72;
-}
-.theme11 {
-  background-color: #e8d5a8;
-}
-.theme12 {
-  background-color: #daa6a1;
-}
-
-/* 评论列表：参考原版 secret-detail.css .discuss */
-.discuss {
-  line-height: 1.5rem;
-  margin: var(--space-sm) 10px;
-  background: var(--c-card);
-  padding: var(--space-sm);
-  border-left: 4px solid var(--c-secret);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  gap: 10px;
-  animation: community-slide-up 0.3s ease both;
-}
-.discuss img {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--radius-full);
-  vertical-align: top;
-  flex-shrink: 0;
-}
-.discuss .info {
-  flex: 1;
-  vertical-align: top;
-}
-.discuss p {
-  font-weight: bolder;
-  margin-bottom: 5px;
-  color: var(--c-text-1);
-}
-.discuss span {
-  font-size: var(--font-xs);
-  color: var(--c-text-3);
-}
-
-/* 底部固定输入框：参考原版 secret-detail.css .form */
-.form {
-  border-top: 1px solid var(--c-divider);
-  padding: 0.5rem;
-  background: var(--c-card);
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-sizing: border-box;
-}
-.form input {
-  line-height: 2.2rem;
-  border: 1px solid var(--c-divider);
-  flex: 1;
-  border-radius: var(--radius-sm);
-  text-indent: 5px;
-  font-size: 1rem;
-  padding: 0 10px;
-}
-.form input::-webkit-input-placeholder {
-  font-size: 1rem;
-  line-height: 2.2rem;
-  font-weight: bolder;
-}
-.submit {
-  line-height: 2.2rem;
-  border: 1px solid var(--c-divider);
-  width: 20%;
-  border-radius: var(--radius-sm);
-  text-align: center;
-  color: var(--c-secret);
-  cursor: pointer;
-  font-size: 1rem;
-}
-</style>

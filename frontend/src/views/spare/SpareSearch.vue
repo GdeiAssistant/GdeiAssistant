@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useToast } from '@/composables/useToast'
 
 // 与后端 spare 模块一致的数据字典
 
@@ -105,6 +106,7 @@ const periodOptions = [
 
 // ========== 响应式状态（绑定 value，与 JSP 默认 selected 一致）==========
 const router = useRouter()
+const { error: showError } = useToast()
 const zone = ref('0')
 const type = ref('0')
 const seatsMin = ref('')
@@ -129,19 +131,6 @@ function openEndDatePicker() {
   inputEndDate.value?.click()
 }
 
-const showTopTips = ref(false)
-const errorMsg = ref('')
-let topTipsTimer = null
-
-const showWeuiTopTips = (msg) => {
-  errorMsg.value = msg
-  showTopTips.value = true
-  if (topTipsTimer) clearTimeout(topTipsTimer)
-  topTipsTimer = setTimeout(() => {
-    showTopTips.value = false
-  }, 2000)
-}
-
 function goBack() {
   router.back()
 }
@@ -150,7 +139,7 @@ function doSearch() {
   const start = startDate.value
   const end = endDate.value
   if (end && start && end < start) {
-    showWeuiTopTips('结束时间不能早于起始时间！')
+    showError('结束时间不能早于起始时间！')
     return
   }
   router.push({
@@ -171,176 +160,96 @@ function doSearch() {
 </script>
 
 <template>
-  <div class="weui-toptips weui-toptips_warn" v-show="showTopTips">{{ errorMsg }}</div>
-  <div class="spare-search-page">
-    <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <!-- Header -->
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">← 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">空课室查询</span>
+      <div class="w-10"></div>
     </div>
-    <h1 class="page-title-green">空课室查询</h1>
 
-    <div class="weui-cells__title">查询条件</div>
-    <div class="weui-cells weui-cells_form">
-      <div class="weui-cell weui-cell_select weui-cell_select-after">
-        <div class="weui-cell__hd"><label class="weui-label">校区</label></div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <select class="weui-select spare-select" v-model="zone">
+    <div class="max-w-lg mx-auto px-4 py-4">
+      <p class="text-xs text-[var(--c-text-quaternary)] mb-3 px-1">查询条件</p>
+
+      <!-- Form Card -->
+      <div class="rounded-xl bg-[var(--c-surface)] border border-[var(--c-border)] overflow-hidden">
+        <!-- 校区 -->
+        <div class="flex items-center px-4 py-3 border-b border-[var(--c-border)]">
+          <label class="w-20 text-sm text-[var(--c-text-2)] shrink-0">校区</label>
+          <select v-model="zone" class="flex-1 bg-transparent text-sm text-[var(--c-text-primary)] text-right outline-none appearance-none cursor-pointer">
             <option v-for="opt in campusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
           </select>
         </div>
-      </div>
-      <div class="weui-cell weui-cell_select weui-cell_select-after">
-        <div class="weui-cell__hd"><label class="weui-label">教室类别</label></div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <select class="weui-select spare-select" v-model="type">
+
+        <!-- 教室类别 -->
+        <div class="flex items-center px-4 py-3 border-b border-[var(--c-border)]">
+          <label class="w-20 text-sm text-[var(--c-text-2)] shrink-0">教室类别</label>
+          <select v-model="type" class="flex-1 bg-transparent text-sm text-[var(--c-text-primary)] text-right outline-none appearance-none cursor-pointer">
             <option v-for="opt in roomTypeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
           </select>
         </div>
-      </div>
-      <div class="weui-cell">
-        <div class="weui-cell__hd"><label class="weui-label">座位数</label></div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <input class="weui-input" type="number" v-model="seatsMin" placeholder="大于等于，选填" />
+
+        <!-- 座位数 min -->
+        <div class="flex items-center px-4 py-3 border-b border-[var(--c-border)]">
+          <label class="w-20 text-sm text-[var(--c-text-2)] shrink-0">座位数</label>
+          <input v-model="seatsMin" type="number" placeholder="大于等于，选填" class="flex-1 bg-transparent text-sm text-[var(--c-text-primary)] text-right placeholder-[var(--c-text-quaternary)] outline-none" />
         </div>
-      </div>
-      <div class="weui-cell">
-        <div class="weui-cell__hd"><label class="weui-label">座位数</label></div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <input class="weui-input" type="number" v-model="seatsMax" placeholder="小于等于，选填" />
+
+        <!-- 座位数 max -->
+        <div class="flex items-center px-4 py-3 border-b border-[var(--c-border)]">
+          <label class="w-20 text-sm text-[var(--c-text-2)] shrink-0">座位数</label>
+          <input v-model="seatsMax" type="number" placeholder="小于等于，选填" class="flex-1 bg-transparent text-sm text-[var(--c-text-primary)] text-right placeholder-[var(--c-text-quaternary)] outline-none" />
         </div>
-      </div>
-      <a href="javascript:" class="weui-cell weui-cell_access" @click.prevent="openStartDatePicker">
-        <div class="weui-cell__hd"><label class="weui-label">起始时间</label></div>
-        <div class="weui-cell__bd weui-cell_primary"></div>
-        <div class="weui-cell__ft">{{ startDate }}</div>
-        <input ref="inputStartDate" v-model="startDate" type="date" class="spare-input-date" />
-      </a>
-      <a href="javascript:" class="weui-cell weui-cell_access" @click.prevent="openEndDatePicker">
-        <div class="weui-cell__hd"><label class="weui-label">结束时间</label></div>
-        <div class="weui-cell__bd weui-cell_primary"></div>
-        <div class="weui-cell__ft">{{ endDate }}</div>
-        <input ref="inputEndDate" v-model="endDate" type="date" class="spare-input-date" />
-      </a>
-      <div class="weui-cell weui-cell_select weui-cell_select-after">
-        <div class="weui-cell__hd"><label class="weui-label">星期</label></div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <select class="weui-select spare-select" v-model="minWeek">
+
+        <!-- 起始时间 -->
+        <div class="relative flex items-center px-4 py-3 border-b border-[var(--c-border)] cursor-pointer" @click="openStartDatePicker">
+          <label class="w-20 text-sm text-[var(--c-text-2)] shrink-0">起始时间</label>
+          <span class="flex-1 text-sm text-[var(--c-text-primary)] text-right">{{ startDate }}</span>
+          <input ref="inputStartDate" v-model="startDate" type="date" class="absolute opacity-0 w-0 h-0 pointer-events-none" />
+        </div>
+
+        <!-- 结束时间 -->
+        <div class="relative flex items-center px-4 py-3 border-b border-[var(--c-border)] cursor-pointer" @click="openEndDatePicker">
+          <label class="w-20 text-sm text-[var(--c-text-2)] shrink-0">结束时间</label>
+          <span class="flex-1 text-sm text-[var(--c-text-primary)] text-right">{{ endDate }}</span>
+          <input ref="inputEndDate" v-model="endDate" type="date" class="absolute opacity-0 w-0 h-0 pointer-events-none" />
+        </div>
+
+        <!-- 星期 -->
+        <div class="flex items-center px-4 py-3 border-b border-[var(--c-border)]">
+          <label class="w-20 text-sm text-[var(--c-text-2)] shrink-0">星期</label>
+          <select v-model="minWeek" class="flex-1 bg-transparent text-sm text-[var(--c-text-primary)] text-right outline-none appearance-none cursor-pointer">
             <option v-for="opt in weekDayOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
           </select>
         </div>
-      </div>
-      <div class="weui-cell weui-cell_select weui-cell_select-after">
-        <div class="weui-cell__hd"><label class="weui-label">单双周</label></div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <select class="weui-select spare-select" v-model="weekType">
+
+        <!-- 单双周 -->
+        <div class="flex items-center px-4 py-3 border-b border-[var(--c-border)]">
+          <label class="w-20 text-sm text-[var(--c-text-2)] shrink-0">单双周</label>
+          <select v-model="weekType" class="flex-1 bg-transparent text-sm text-[var(--c-text-primary)] text-right outline-none appearance-none cursor-pointer">
             <option v-for="opt in singleDoubleOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
           </select>
         </div>
-      </div>
-      <div class="weui-cell weui-cell_select weui-cell_select-after">
-        <div class="weui-cell__hd"><label class="weui-label">节数</label></div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <select class="weui-select spare-select" v-model="classNumber">
+
+        <!-- 节数 -->
+        <div class="flex items-center px-4 py-3">
+          <label class="w-20 text-sm text-[var(--c-text-2)] shrink-0">节数</label>
+          <select v-model="classNumber" class="flex-1 bg-transparent text-sm text-[var(--c-text-primary)] text-right outline-none appearance-none cursor-pointer">
             <option v-for="opt in periodOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
           </select>
         </div>
       </div>
-    </div>
 
-    <div class="weui-btn_area">
-      <button type="button" class="weui-btn weui-btn_primary" @click="doSearch">查询</button>
+      <!-- Search button -->
+      <div class="mt-6 px-2">
+        <button
+          type="button"
+          @click="doSearch"
+          class="w-full py-3 rounded-xl text-white text-base font-medium bg-[var(--c-primary)] active:opacity-80 cursor-pointer transition-opacity"
+        >
+          查询
+        </button>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.spare-search-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-title-green {
-  text-align: center;
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 10px 0 20px 0;
-  line-height: 1.2;
-}
-
-.spare-search-page .weui-cells__title {
-  padding: 12px 15px 8px;
-  font-size: 14px;
-  color: #888;
-}
-
-.spare-search-page .weui-cells_form {
-  margin-top: 0;
-}
-
-.spare-search-page .weui-cell__hd .weui-label {
-  width: 5em;
-  min-width: 80px;
-}
-
-.spare-search-page .weui-cell__ft {
-  color: #333;
-}
-
-.spare-select {
-  color: #333;
-  text-align: right;
-  direction: rtl;
-}
-
-.spare-input-date {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-.spare-search-page .weui-btn_area {
-  margin-top: 24px;
-  padding: 0 15px;
-}
-
-.spare-search-page .weui-btn_area .weui-btn {
-  width: 100%;
-}
-
-.weui-toptips {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 10px;
-  font-size: 14px;
-  text-align: center;
-  color: #FFF !important;
-  background-color: #E64340 !important;
-  z-index: 99999 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-</style>

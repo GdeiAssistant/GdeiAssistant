@@ -2,16 +2,14 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { queryKaoyanScore } from '@/api/graduateExam'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const route = useRoute()
+const { loading: showLoading, hideLoading } = useToast()
 const scoreData = ref({})
 const hasData = ref(false)
 const isLoading = ref(true)
-
-function goBack() {
-  router.back()
-}
 
 function reQuery() {
   router.back()
@@ -25,6 +23,7 @@ onMounted(() => {
   }
 
   isLoading.value = true
+  showLoading('加载中...')
   const payload = {
     name,
     examNumber: candidateNo,
@@ -50,157 +49,77 @@ onMounted(() => {
     })
     .finally(() => {
       isLoading.value = false
+      hideLoading()
     })
 })
 </script>
 
 <template>
-  <div class="kaoyan-result-page">
-    <template v-if="isLoading">
-      <div class="weui-mask_transparent" aria-hidden="true"></div>
-      <div class="weui-toast__wrp">
-        <div class="weui-toast">
-          <span class="weui-primary-loading weui-icon_toast" aria-label="加载中"></span>
-          <p class="weui-toast__content">加载中</p>
-        </div>
-      </div>
-    </template>
-
-    <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
-    </div>
-    <div class="page-header">
-      <h1 class="page-title-green">考研成绩查询</h1>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <!-- Sticky header -->
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">考研成绩查询</span>
+      <div class="w-10"></div>
     </div>
 
-    <template v-if="!isLoading && hasData">
-      <div class="kaoyan-total">初试总分</div>
-      <div class="kaoyan-total-value">{{ scoreData.totalScore }}</div>
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <!-- Loading -->
+      <div v-if="isLoading" class="flex flex-col items-center justify-center py-16 text-[var(--c-text-secondary)]">
+        <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-3"></div>
+        <span class="text-sm">加载中</span>
+      </div>
 
-      <div class="weui-form-preview kaoyan-preview">
-        <div class="weui-form-preview__bd">
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">姓名</label>
-            <span class="weui-form-preview__value">{{ scoreData.name ?? '—' }}</span>
+      <!-- Has data -->
+      <template v-if="!isLoading && hasData">
+        <!-- Total score highlight -->
+        <div class="text-center mb-6">
+          <p class="text-sm text-[var(--c-primary)] mb-1">初试总分</p>
+          <p class="text-4xl font-semibold text-[var(--c-primary)]">{{ scoreData.totalScore }}</p>
+        </div>
+
+        <!-- Score details card -->
+        <div class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+          <div class="flex items-center justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-secondary)]">姓名</span>
+            <span class="text-sm text-[var(--c-text)]">{{ scoreData.name ?? '—' }}</span>
           </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">考号</label>
-            <span class="weui-form-preview__value">{{ scoreData.candidateNo ?? '—' }}</span>
+          <div class="flex items-center justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-secondary)]">考号</span>
+            <span class="text-sm text-[var(--c-text)]">{{ scoreData.candidateNo ?? '—' }}</span>
           </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">思想政治理论</label>
-            <span class="weui-form-preview__value">{{ scoreData.politics ?? '—' }}</span>
+          <div class="flex items-center justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-secondary)]">思想政治理论</span>
+            <span class="text-sm text-[var(--c-text)]">{{ scoreData.politics ?? '—' }}</span>
           </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">外国语</label>
-            <span class="weui-form-preview__value">{{ scoreData.foreignLanguage ?? '—' }}</span>
+          <div class="flex items-center justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-secondary)]">外国语</span>
+            <span class="text-sm text-[var(--c-text)]">{{ scoreData.foreignLanguage ?? '—' }}</span>
           </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">业务课一</label>
-            <span class="weui-form-preview__value">{{ scoreData.business1 ?? '—' }}</span>
+          <div class="flex items-center justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-secondary)]">业务课一</span>
+            <span class="text-sm text-[var(--c-text)]">{{ scoreData.business1 ?? '—' }}</span>
           </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">业务课二</label>
-            <span class="weui-form-preview__value">{{ scoreData.business2 ?? '—' }}</span>
+          <div class="flex items-center justify-between px-4 py-3">
+            <span class="text-sm text-[var(--c-text-secondary)]">业务课二</span>
+            <span class="text-sm text-[var(--c-text)]">{{ scoreData.business2 ?? '—' }}</span>
           </div>
         </div>
-      </div>
 
-      <div class="weui-btn_area">
-        <button type="button" class="weui-btn weui-btn_primary" @click="reQuery">重新查询</button>
-      </div>
-    </template>
+        <!-- Re-query button -->
+        <button
+          type="button"
+          class="mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-white text-[15px] font-medium active:opacity-80 transition-opacity"
+          @click="reQuery"
+        >
+          重新查询
+        </button>
+      </template>
 
-    <div v-if="!isLoading && !hasData" class="kaoyan-empty">
-      暂无成绩数据
+      <!-- No data -->
+      <div v-if="!isLoading && !hasData" class="text-center py-16 text-sm text-[var(--c-text-secondary)]">
+        暂无成绩数据
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.kaoyan-result-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-header {
-  text-align: center;
-  padding: 0 0 20px;
-  background-color: #fff;
-}
-
-.page-title-green {
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 0 0 20px 0;
-  line-height: 1.2;
-}
-
-.kaoyan-total {
-  text-align: center;
-  font-size: 16px;
-  color: var(--color-primary);
-  margin-bottom: 4px;
-}
-
-.kaoyan-total-value {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 500;
-  color: var(--color-primary);
-  margin-bottom: 24px;
-}
-
-.kaoyan-preview {
-  margin: 0 15px 24px;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.kaoyan-preview .weui-form-preview__item {
-  padding: 10px 15px;
-}
-
-.kaoyan-preview .weui-form-preview__label {
-  color: #999;
-}
-
-.kaoyan-preview .weui-form-preview__value {
-  color: #333;
-}
-
-.kaoyan-result-page .weui-btn_area {
-  padding: 0 15px;
-}
-
-.kaoyan-result-page .weui-btn_area .weui-btn {
-  width: 100%;
-}
-
-.kaoyan-empty {
-  text-align: center;
-  padding: 40px 15px;
-  font-size: 14px;
-  color: #999;
-}
-</style>

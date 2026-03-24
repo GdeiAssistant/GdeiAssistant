@@ -3,8 +3,8 @@ import CommunityTabbar from '../../components/community/CommunityTabbar.vue'
 </script>
 
 <template>
-  <div class="community-page" style="--module-color: #3b82f6">
-    <div class="lostandfound-container">
+  <div style="--module-color: #3b82f6">
+    <div class="pb-14 box-border">
       <router-view />
     </div>
     <CommunityTabbar
@@ -18,10 +18,3 @@ import CommunityTabbar from '../../components/community/CommunityTabbar.vue'
     />
   </div>
 </template>
-
-<style scoped>
-.lostandfound-container {
-  padding-bottom: 56px;
-  box-sizing: border-box;
-}
-</style>

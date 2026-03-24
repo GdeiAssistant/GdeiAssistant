@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 校园新闻/教务通知：从爬虫缓存读取，对真实用户与测试用户完全开放，无 @TrialData 拦截。
+ * 校园新闻/教务通知：从爬虫缓存读取，对所有用户完全开放。
  * 统一使用 /api/information/news，适配无状态 JWT 架构，不依赖 Session。
  */
 @RestController

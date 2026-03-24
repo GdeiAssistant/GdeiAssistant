@@ -20,7 +20,7 @@ function lazyView(relativePath) {
   return lazyModule(viewModules, `../views/${relativePath}.vue`)
 }
 
-const MainLayout = lazyLayout('MainLayout')
+const AppLayout = lazyLayout('AppLayout')
 const Login = lazyView('Login')
 const About = lazyView('About')
 const Home = lazyView('Home')
@@ -516,23 +516,26 @@ const routes = [
   },
   {
     path: '/',
-    component: MainLayout,
+    component: AppLayout,
     redirect: '/home',
     children: [
       {
         path: 'home',
         name: 'Home',
-        component: Home
+        component: Home,
+        meta: { title: '首页' }
       },
       {
         path: 'info',
         name: 'InfoList',
-        component: Info
+        component: Info,
+        meta: { title: '消息通知' }
       },
       {
         path: 'profile',
         name: 'Profile',
-        component: Profile
+        component: Profile,
+        meta: { title: '个人中心' }
       }
     ]
   }

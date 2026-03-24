@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.deletion.controller;
 
-import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.deletion.service.AccountDeletionService;
@@ -26,7 +25,6 @@ public class AccountDeletionController {
      * @return
      */
     @RequestMapping(value = "/api/close/submit", method = RequestMethod.POST)
-    @TrialData(value = "closeAccount")
     public JsonResult deleteAccount(HttpServletRequest request, String password) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         //检查是否符合删除账号条件

@@ -3,10 +3,12 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
+import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { loading: showLoadingToast, hideLoading } = useToast()
 const formData = ref({
   type: 0,
   itemType: -1,
@@ -39,16 +41,6 @@ const itemTypeDisplay = computed(() => formData.value.itemType >= 0 && formData.
 function showDialog(msg) {
   dialogMessage.value = msg
   dialogVisible.value = true
-}
-
-function showLoading(text = '正在上传...') {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.loading === 'function') weui.loading(text)
-}
-
-function hideLoading() {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
 }
 
 function goBack() {
@@ -195,7 +187,7 @@ async function submit() {
     return
   }
   submitting.value = true
-  showLoading(isEditMode.value ? '正在保存...' : '正在上传...')
+  showLoadingToast(isEditMode.value ? '正在保存...' : '正在上传...')
   try {
     const payload = buildPayload()
     if (isEditMode.value) {
@@ -227,7 +219,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="lostandfound-publish">
+  <div class="min-h-screen bg-[var(--c-bg)]">
     <CommunityHeader
       :title="isEditMode ? '编辑信息' : '发布信息'"
       moduleColor="#3b82f6"
@@ -235,339 +227,142 @@ onMounted(() => {
       backTo=""
     >
       <template #right>
-        <a href="javascript:;" class="publish-submit-btn" @click.prevent="submit">
+        <a href="javascript:;" class="text-sm text-blue-500 no-underline font-medium" @click.prevent="submit">
           {{ submitting ? '提交中' : (isEditMode ? '保存' : '完成') }}
         </a>
       </template>
     </CommunityHeader>
 
-    <div class="publish-form">
-      <p v-if="pageLoading" class="page-loading">正在加载信息...</p>
+    <div class="p-0">
+      <p v-if="pageLoading" class="mt-4 text-center text-[var(--c-text-3)] text-sm">正在加载信息...</p>
 
-      <div class="form-frm">
-        <p class="form-frmt">寻找类型</p>
-        <div class="form-which">
-          <label>
-            <input type="radio" name="lostType" :value="0" v-model="formData.type" />寻物
+      <!-- 寻找类型 -->
+      <div class="relative pl-[90px] text-base min-h-[70px] border-b border-[var(--c-border)] bg-[var(--c-surface)] mx-2.5">
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px] pl-4 text-base">寻找类型</p>
+        <div class="pt-[18px] leading-[34px] text-base w-full">
+          <label class="inline-block mr-8 cursor-pointer">
+            <input type="radio" name="lostType" :value="0" v-model="formData.type" class="mr-1.5 align-middle w-auto h-auto" />寻物
           </label>
-          <label>
-            <input type="radio" name="lostType" :value="1" v-model="formData.type" />寻主
+          <label class="inline-block mr-8 cursor-pointer">
+            <input type="radio" name="lostType" :value="1" v-model="formData.type" class="mr-1.5 align-middle w-auto h-auto" />寻主
           </label>
         </div>
       </div>
 
-      <div class="form-frm">
-        <p class="form-frmt">物品分类</p>
-        <div class="form-frmc form-frmc--select" @click="openItemTypePicker">
-          <span class="select-value">{{ itemTypeDisplay || '请选择' }}</span>
-          <i class="select-arrow"></i>
+      <!-- 物品分类 -->
+      <div class="relative pl-[90px] text-base min-h-[70px] border-b border-[var(--c-border)] bg-[var(--c-surface)] mx-2.5">
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px] pl-4 text-base">物品分类</p>
+        <div class="h-[70px] flex items-center cursor-pointer relative pt-0" @click="openItemTypePicker">
+          <span class="text-[var(--c-text-1)] text-base">{{ itemTypeDisplay || '请选择' }}</span>
+          <i class="absolute right-2.5 top-[29px] w-2 h-3 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20256%20512%27%20fill=%27%233b82f6%27%3E%3Cpath%20d=%27M224.3%20273l-136%20136c-9.4%209.4-24.6%209.4-33.9%200l-22.6-22.6c-9.4-9.4-9.4-24.6%200-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6%200-33.9L54.3%20103c9.4-9.4%2024.6-9.4%2033.9%200l136%20136c9.5%209.4%209.5%2024.6.1%2034z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
         </div>
       </div>
 
-      <div class="form-frm">
-        <p class="form-frmt">物品名称</p>
-        <div class="form-frmc">
-          <input type="text" placeholder="最多25个字" v-model="formData.title" maxlength="25" />
+      <!-- 物品名称 -->
+      <div class="relative pl-[90px] text-base min-h-[70px] border-b border-[var(--c-border)] bg-[var(--c-surface)] mx-2.5">
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px] pl-4 text-base">物品名称</p>
+        <div class="pt-[18px]">
+          <input type="text" placeholder="最多25个字" v-model="formData.title" maxlength="25" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none" />
         </div>
       </div>
 
-      <div class="form-frm">
-        <p class="form-frmt">物品描述</p>
-        <div class="form-frmc">
-          <input type="text" v-model="formData.desc" maxlength="100" />
+      <!-- 物品描述 -->
+      <div class="relative pl-[90px] text-base min-h-[70px] border-b border-[var(--c-border)] bg-[var(--c-surface)] mx-2.5">
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px] pl-4 text-base">物品描述</p>
+        <div class="pt-[18px]">
+          <input type="text" v-model="formData.desc" maxlength="100" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none" />
         </div>
       </div>
 
-      <div class="form-frm">
-        <p class="form-frmt place">{{ formData.type === 0 ? '丢失地点' : '捡到地点' }}</p>
-        <div class="form-frmc">
-          <input type="text" v-model="formData.location" maxlength="30" />
+      <!-- 地点 -->
+      <div class="relative pl-[90px] text-base min-h-[70px] border-b border-[var(--c-border)] bg-[var(--c-surface)] mx-2.5">
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px] pl-4 text-base">{{ formData.type === 0 ? '丢失地点' : '捡到地点' }}</p>
+        <div class="pt-[18px]">
+          <input type="text" v-model="formData.location" maxlength="30" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none" />
         </div>
       </div>
 
-      <div class="contact-tip">QQ号/微信/手机号任填其中一项即可</div>
+      <!-- Contact tip -->
+      <div class="mt-5 text-center text-[#f6383a] text-sm py-2.5">QQ号/微信/手机号任填其中一项即可</div>
 
-      <div class="form-frm">
-        <p class="form-frmt">QQ号</p>
-        <div class="form-frmc">
-          <input type="text" v-model="formData.contact.qq" maxlength="20" />
+      <!-- QQ -->
+      <div class="relative pl-[90px] text-base min-h-[70px] border-b border-[var(--c-border)] bg-[var(--c-surface)] mx-2.5">
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px] pl-4 text-base">QQ号</p>
+        <div class="pt-[18px]">
+          <input type="text" v-model="formData.contact.qq" maxlength="20" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none" />
         </div>
       </div>
 
-      <div class="form-frm">
-        <p class="form-frmt">微信</p>
-        <div class="form-frmc">
-          <input type="text" v-model="formData.contact.wechat" maxlength="20" />
+      <!-- 微信 -->
+      <div class="relative pl-[90px] text-base min-h-[70px] border-b border-[var(--c-border)] bg-[var(--c-surface)] mx-2.5">
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px] pl-4 text-base">微信</p>
+        <div class="pt-[18px]">
+          <input type="text" v-model="formData.contact.wechat" maxlength="20" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none" />
         </div>
       </div>
 
-      <div class="form-frm">
-        <p class="form-frmt">手机号</p>
-        <div class="form-frmc">
-          <input type="tel" v-model="formData.contact.phone" maxlength="11" />
+      <!-- 手机号 -->
+      <div class="relative pl-[90px] text-base min-h-[70px] border-b border-[var(--c-border)] bg-[var(--c-surface)] mx-2.5">
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px] pl-4 text-base">手机号</p>
+        <div class="pt-[18px]">
+          <input type="tel" v-model="formData.contact.phone" maxlength="11" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none" />
         </div>
       </div>
 
-      <section class="picture-section">
-        <div class="picture-images">
-          <div v-for="(img, index) in formData.images" :key="index" class="picture-image">
+      <!-- 图片上传区 -->
+      <section class="bg-blue-500 border-t border-blue-600 mt-5">
+        <div class="px-4 pt-6 mb-1.5">
+          <div v-for="(img, index) in formData.images" :key="index" class="w-[70px] h-[70px] relative inline-block mx-1.5 mb-2.5 align-top">
             <a v-if="!isEditMode" href="javascript:;">
-              <i class="i iclose" :id="index" @click="removeImage(index)"></i>
+              <i class="absolute top-0 right-0 w-[18px] h-[18px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20352%20512%27%20fill=%27%23fff%27%3E%3Cpath%20d=%27M242.7%20256l100.1-100.1c12.3-12.3%2012.3-32.2%200-44.5l-22.2-22.2c-12.3-12.3-32.2-12.3-44.5%200L176%20189.3%2075.9%2089.2c-12.3-12.3-32.2-12.3-44.5%200L9.2%20111.4c-12.3%2012.3-12.3%2032.2%200%2044.5L109.3%20256%209.2%20356.1c-12.3%2012.3-12.3%2032.2%200%2044.5l22.2%2022.2c12.3%2012.3%2032.2%2012.3%2044.5%200L176%20322.7l100.1%20100.1c12.3%2012.3%2032.2%2012.3%2044.5%200l22.2-22.2c12.3-12.3%2012.3-32.2%200-44.5L242.7%20256z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain cursor-pointer z-[1]" @click="removeImage(index)"></i>
             </a>
-            <i class="img">
-              <img :src="img.previewUrl" alt="预览" />
+            <i class="w-[70px] h-[70px] overflow-hidden block">
+              <img :src="img.previewUrl" alt="预览" class="w-full h-full object-cover" />
             </i>
           </div>
-          <span v-if="!isEditMode && formData.images.length < 4" class="addimg">
-            <i class="i iadd">
-              <i class="i i1"></i>
-              <i class="i i2"></i>
+          <span v-if="!isEditMode && formData.images.length < 4" class="w-[68px] h-[68px] border-2 border-white inline-block mx-1.5 mb-2.5 align-top relative">
+            <i class="absolute w-6 h-6 top-1/2 left-1/2 -mt-3 -ml-3">
+              <i class="w-full h-0.5 absolute top-[11px] bg-white block"></i>
+              <i class="h-full w-0.5 absolute left-[11px] bg-white block"></i>
             </i>
-            <input type="file" accept="image/*" id="file_input" @change="onFileChange" />
+            <input type="file" accept="image/*" id="file_input" @change="onFileChange" class="absolute top-0 left-0 w-[68px] h-[68px] opacity-0 z-[1] cursor-pointer" />
           </span>
         </div>
-        <p class="picture-tip">{{ isEditMode ? '编辑模式暂不支持修改图片' : '最多可上传4张图片' }}</p>
+        <p class="h-6 leading-6 text-center text-white text-sm pb-1">{{ isEditMode ? '编辑模式暂不支持修改图片' : '最多可上传4张图片' }}</p>
       </section>
     </div>
 
+    <!-- Dialog -->
     <div v-if="dialogVisible">
-      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
-      <div class="community-dialog" style="--module-color: #3b82f6">
-        <div class="community-dialog__title">提示</div>
-        <div class="community-dialog__body">{{ dialogMessage }}</div>
-        <div class="community-dialog__footer">
-          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
+      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
+        <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">提示</div>
+        <div class="text-center text-sm text-[var(--c-text-2)] px-5 pb-5">{{ dialogMessage }}</div>
+        <div class="border-t border-[var(--c-border)]">
+          <button class="w-full py-3 text-center text-blue-500 font-medium text-base border-none bg-transparent cursor-pointer" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
 
+    <!-- Item Type Picker -->
     <div v-if="itemTypePickerVisible">
-      <div class="community-dialog-mask" @click="closeItemTypePicker"></div>
-      <div class="community-dialog community-dialog--list" style="--module-color: #3b82f6">
-        <div class="community-dialog__title">选择物品分类</div>
-        <div class="community-dialog__body community-dialog__body--scroll">
-          <div v-for="(label, index) in itemTypeNames" :key="label" class="community-dialog__item" @click="selectItemType(index)">
+      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="closeItemTypePicker"></div>
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] max-w-[320px] z-[1001] shadow-lg overflow-hidden">
+        <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">选择物品分类</div>
+        <div class="max-h-[280px] overflow-y-auto p-0 text-left">
+          <div
+            v-for="(label, index) in itemTypeNames"
+            :key="label"
+            class="py-3.5 px-5 border-t border-[var(--c-border)] text-[var(--c-text-1)] cursor-pointer first:border-t-0 hover:bg-[var(--c-bg)]"
+            @click="selectItemType(index)"
+          >
             {{ label }}
           </div>
         </div>
-        <div class="community-dialog__footer">
-          <button class="community-dialog__btn community-dialog__btn--cancel" @click="closeItemTypePicker">取消</button>
+        <div class="border-t border-[var(--c-border)]">
+          <button class="w-full py-3 text-center text-[var(--c-text-3)] font-medium text-base border-none bg-transparent cursor-pointer" @click="closeItemTypePicker">取消</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.lostandfound-publish {
-  min-height: 100vh;
-  background: var(--c-bg);
-}
-
-.publish-submit-btn {
-  font-size: 14px;
-  color: #3b82f6;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.publish-form {
-  padding: 0;
-}
-
-.page-loading {
-  margin: 16px 0 0;
-  text-align: center;
-  color: var(--c-text-3);
-  font-size: 14px;
-}
-
-.form-frm {
-  position: relative;
-  padding-left: 90px;
-  font-size: 16px;
-  border-bottom: 1px solid var(--c-divider);
-  min-height: 70px;
-  background: var(--c-card);
-  margin: 0 10px;
-  border-radius: 0;
-}
-.form-frmt {
-  position: absolute;
-  left: 0;
-  color: var(--c-text-1);
-  height: 70px;
-  line-height: 70px;
-  padding-left: 15px;
-  font-size: 16px;
-}
-.form-frmc {
-  padding-top: 18px;
-}
-.form-frmc input {
-  color: var(--c-text-1);
-  background: none;
-  height: 34px;
-  line-height: 34px;
-  font-size: 16px;
-  width: 100%;
-  border: none;
-  outline: none;
-}
-.form-frmc--select {
-  height: 70px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-  padding-top: 0;
-}
-.select-value {
-  color: var(--c-text-1);
-  font-size: 16px;
-}
-.select-arrow {
-  position: absolute;
-  right: 10px;
-  top: 29px;
-  width: 8px;
-  height: 12px;
-  background: url(/img/ershou/arrow.png) no-repeat;
-  background-size: 8px;
-}
-
-.form-which {
-  padding-top: 18px;
-  line-height: 34px;
-  font-size: 16px;
-  width: 100%;
-}
-.form-which label {
-  display: inline-block;
-  margin-right: 2rem;
-  cursor: pointer;
-}
-.form-which input[type="radio"] {
-  margin-right: 5px;
-  width: auto;
-  height: auto;
-  vertical-align: middle;
-}
-
-.contact-tip {
-  margin-top: 20px;
-  text-align: center;
-  color: #f6383a;
-  font-size: 14px;
-  padding: 10px;
-}
-
-.picture-section {
-  background: #3b82f6;
-  border-top: 1px solid #2563eb;
-  margin-top: 20px;
-}
-.picture-images {
-  padding: 25px 16px 0;
-  margin-bottom: 5px;
-}
-.picture-image {
-  width: 70px;
-  height: 70px;
-  position: relative;
-  display: inline-block;
-  margin: 0 6px 10px;
-  vertical-align: top;
-}
-.picture-image .img {
-  width: 70px;
-  height: 70px;
-  overflow: hidden;
-  display: block;
-}
-.picture-image .img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.picture-image .iclose {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 18px;
-  height: 18px;
-  background: url(/img/lostandfound/close.png) no-repeat;
-  background-size: 18px;
-  cursor: pointer;
-  z-index: 1;
-}
-.addimg {
-  width: 68px;
-  height: 68px;
-  border: 2px solid #fff;
-  display: inline-block;
-  margin: 0 6px 10px;
-  vertical-align: top;
-  position: relative;
-}
-.addimg #file_input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 68px;
-  height: 68px;
-  opacity: 0;
-  z-index: 1;
-  cursor: pointer;
-}
-.addimg .iadd {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  top: 50%;
-  left: 50%;
-  margin: -12px 0 0 -12px;
-}
-.addimg .iadd .i1 {
-  width: 100%;
-  height: 2px;
-  position: absolute;
-  top: 11px;
-  background: #fff;
-}
-.addimg .iadd .i2 {
-  height: 100%;
-  width: 2px;
-  position: absolute;
-  left: 11px;
-  background: #fff;
-}
-.picture-tip {
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
-  color: #fff;
-  font-size: 14px;
-  padding-bottom: 3px;
-}
-
-/* Dialog overrides for picker list */
-.community-dialog--list {
-  max-width: 320px;
-}
-.community-dialog__body--scroll {
-  max-height: 280px;
-  overflow-y: auto;
-  padding: 0;
-  text-align: left;
-}
-.community-dialog__item {
-  padding: 14px 20px;
-  border-top: 1px solid var(--c-border);
-  color: var(--c-text-1);
-  cursor: pointer;
-}
-.community-dialog__item:first-child {
-  border-top: none;
-}
-</style>

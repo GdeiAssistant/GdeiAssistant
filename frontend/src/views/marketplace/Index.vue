@@ -3,8 +3,8 @@ import CommunityTabbar from '../../components/community/CommunityTabbar.vue'
 </script>
 
 <template>
-  <div class="community-page" style="--module-color: #10b981">
-    <div class="ershou-container" style="padding-bottom: 56px">
+  <div style="--module-color: #10b981">
+    <div class="pb-14 box-border">
       <router-view />
     </div>
     <CommunityTabbar
@@ -18,9 +18,3 @@ import CommunityTabbar from '../../components/community/CommunityTabbar.vue'
     />
   </div>
 </template>
-
-<style scoped>
-.ershou-container {
-  box-sizing: border-box;
-}
-</style>

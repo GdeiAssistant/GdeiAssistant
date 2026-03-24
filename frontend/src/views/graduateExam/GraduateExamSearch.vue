@@ -2,32 +2,18 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const { t } = useI18n()
+const { error: showError } = useToast()
 const name = ref('')
 const candidateNo = ref('')
 const idNo = ref('')
-const showTopTips = ref(false)
-const errorMsg = ref('')
-let topTipsTimer = null
-
-const showWeuiTopTips = (msg) => {
-  errorMsg.value = msg
-  showTopTips.value = true
-  if (topTipsTimer) clearTimeout(topTipsTimer)
-  topTipsTimer = setTimeout(() => {
-    showTopTips.value = false
-  }, 2000)
-}
-
-function goBack() {
-  router.back()
-}
 
 function doQuery() {
   if (!name.value.trim() || !candidateNo.value.trim() || !idNo.value.trim()) {
-    showWeuiTopTips(t('graduateExam.fillAllFields'))
+    showError(t('graduateExam.fillAllFields'))
     return
   }
   router.push({
@@ -38,167 +24,75 @@ function doQuery() {
 </script>
 
 <template>
-  <div class="kaoyan-search-root">
-    <div class="weui-toptips weui-toptips_warn" v-show="showTopTips">{{ errorMsg }}</div>
-    <div class="kaoyan-search-page">
-    <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">{{ t('graduateExam.back') }}</div>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <!-- Sticky header -->
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('graduateExam.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('graduateExam.title') }}</span>
+      <div class="w-10"></div>
     </div>
-    <h1 class="page-title-green">{{ t('graduateExam.title') }}</h1>
 
-    <div class="weui-cells weui-cells_form">
-      <div class="weui-cell">
-        <div class="weui-cell__hd">
-          <label class="weui-label">{{ t('graduateExam.name') }}</label>
-        </div>
-        <div class="weui-cell__bd weui-cell_primary">
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <!-- Form card -->
+      <div class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+        <!-- Name -->
+        <div class="flex items-center px-4 h-[52px]">
+          <label class="w-20 shrink-0 text-sm text-[var(--c-text)]">{{ t('graduateExam.name') }}</label>
           <input
             v-model="name"
-            class="weui-input"
             type="text"
             :placeholder="t('graduateExam.namePlaceholder')"
+            class="flex-1 text-sm bg-transparent text-[var(--c-text)] placeholder:text-[var(--c-text-tertiary)] outline-none"
           />
         </div>
-      </div>
-      <div class="weui-cell">
-        <div class="weui-cell__hd">
-          <label class="weui-label">{{ t('graduateExam.candidateNo') }}</label>
-        </div>
-        <div class="weui-cell__bd weui-cell_primary">
+        <!-- Candidate No -->
+        <div class="flex items-center px-4 h-[52px]">
+          <label class="w-20 shrink-0 text-sm text-[var(--c-text)]">{{ t('graduateExam.candidateNo') }}</label>
           <input
             v-model="candidateNo"
-            class="weui-input"
             type="text"
             maxlength="15"
             :placeholder="t('graduateExam.candidateNoPlaceholder')"
+            class="flex-1 text-sm bg-transparent text-[var(--c-text)] placeholder:text-[var(--c-text-tertiary)] outline-none"
           />
         </div>
-      </div>
-      <div class="weui-cell">
-        <div class="weui-cell__hd">
-          <label class="weui-label">{{ t('graduateExam.idNo') }}</label>
-        </div>
-        <div class="weui-cell__bd weui-cell_primary">
+        <!-- ID No -->
+        <div class="flex items-center px-4 h-[52px]">
+          <label class="w-20 shrink-0 text-sm text-[var(--c-text)]">{{ t('graduateExam.idNo') }}</label>
           <input
             v-model="idNo"
-            class="weui-input"
             type="text"
             maxlength="18"
             :placeholder="t('graduateExam.idNoPlaceholder')"
+            class="flex-1 text-sm bg-transparent text-[var(--c-text)] placeholder:text-[var(--c-text-tertiary)] outline-none"
           />
         </div>
       </div>
-    </div>
 
-    <div class="weui-btn_area">
-      <button type="button" class="weui-btn weui-btn_primary" @click="doQuery">{{ t('graduateExam.search') }}</button>
-    </div>
-    <p class="kaoyan-wish">{{ t('graduateExam.wish') }}</p>
-
-    <div class="weui-cells__title">{{ t('graduateExam.altEntry') }}</div>
-    <div class="weui-cells">
-      <a
-        class="weui-cell weui-cell_access"
-        href="https://yz.chsi.com.cn/apply/cjcxa/"
-        target="_blank"
-        rel="noopener noreferrer"
+      <!-- Search button -->
+      <button
+        type="button"
+        class="mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-white text-[15px] font-medium active:opacity-80 transition-opacity"
+        @click="doQuery"
       >
-        <div class="weui-cell__bd">
-          <p>{{ t('graduateExam.chsiLink') }}</p>
-        </div>
-        <div class="weui-cell__ft"></div>
-      </a>
-    </div>
+        {{ t('graduateExam.search') }}
+      </button>
+
+      <p class="mt-4 text-center text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.wish') }}</p>
+
+      <!-- External link -->
+      <div class="mt-8">
+        <p class="text-xs text-[var(--c-text-secondary)] mb-2">{{ t('graduateExam.altEntry') }}</p>
+        <a
+          href="https://yz.chsi.com.cn/apply/cjcxa/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center justify-between bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] px-4 py-3.5 text-sm text-[var(--c-text)] active:bg-black/5 transition-colors"
+        >
+          <span>{{ t('graduateExam.chsiLink') }}</span>
+          <span class="text-[var(--c-text-tertiary)]">&rsaquo;</span>
+        </a>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.kaoyan-search-root {
-  min-height: 100vh;
-}
-
-.kaoyan-search-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-title-green {
-  text-align: center;
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 10px 0 20px 0;
-  line-height: 1.2;
-}
-
-.kaoyan-search-page .weui-cells_form .weui-label {
-  width: 5em;
-}
-
-.kaoyan-search-page .weui-cells_form {
-  margin-top: 0;
-}
-
-.kaoyan-search-page .weui-btn_area {
-  margin-top: 24px;
-  padding: 0 15px;
-}
-
-.kaoyan-search-page .weui-btn_area .weui-btn {
-  width: 100%;
-}
-
-.kaoyan-wish {
-  margin-top: 16px;
-  text-align: center;
-  font-size: 14px;
-  color: #999;
-  padding: 0 15px;
-}
-
-.kaoyan-search-page .weui-cells__title {
-  padding: 12px 15px 8px;
-  font-size: 14px;
-  color: #888;
-}
-
-.kaoyan-search-page .weui-cells {
-  margin-top: 0;
-}
-
-.weui-toptips {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 10px;
-  font-size: 14px;
-  text-align: center;
-  color: #FFF !important;
-  background-color: #E64340 !important;
-  z-index: 99999 !important;
-  opacity: 1 !important;
-  display: block;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-</style>

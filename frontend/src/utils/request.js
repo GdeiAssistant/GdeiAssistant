@@ -2,6 +2,8 @@ import axios from 'axios'
 import router from '../router'
 import { showErrorTopTips } from './toast.js'
 import i18n from '../i18n'
+import { isMockMode } from '../services/data-source.js'
+import { handleRequest as mockHandleRequest } from '../mock/index.js'
 
 const _t = (key) => i18n.global.t(key)
 
@@ -73,7 +75,6 @@ const service = axios.create({
 })
 
 const LOGIN_PATH = '/login'
-// 后端样板间枚举：INVALID_TOKEN = 400302
 const AUTH_EXPIRED_CODE = 400302
 
 /**
@@ -93,7 +94,31 @@ function handleLogout(rawMessage) {
 }
 
 /**
+ * Mock 拦截：mock 模式下不发真实请求，直接返回本地模拟数据。
+ * 通过 axios adapter 实现 — 返回一个 Promise 即可跳过真实网络请求。
+ */
+function createMockAdapter(config) {
+  const method = (config.method || 'GET').toUpperCase()
+  const path = (config.baseURL || '') + (config.url || '')
+  const token = localStorage.getItem('token') || ''
+
+  return mockHandleRequest({
+    path,
+    method,
+    data: config.data || {},
+    token
+  }).then((mockData) => ({
+    data: mockData,
+    status: 200,
+    statusText: 'OK (Mock)',
+    headers: {},
+    config
+  }))
+}
+
+/**
  * 后端仅从标准头 Authorization: Bearer <JWT> 读取 Token，请求拦截器只附加该头。
+ * Mock 模式下通过 adapter 跳过真实网络请求。
  */
 service.interceptors.request.use(
   (config) => {
@@ -103,6 +128,10 @@ service.interceptors.request.use(
     config.headers['Accept-Language'] = i18n.global.locale.value || 'zh-CN'
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + token
+    }
+    // Mock 模式：用自定义 adapter 替代真实请求
+    if (isMockMode()) {
+      config.adapter = createMockAdapter
     }
     return config
   },

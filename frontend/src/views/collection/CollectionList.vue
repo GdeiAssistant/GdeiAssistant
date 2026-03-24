@@ -2,9 +2,11 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { searchBooks } from '@/api/collection'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const route = useRoute()
+const { loading: showLoading, hideLoading } = useToast()
 
 const list = ref([])
 const loading = ref(false)
@@ -22,6 +24,7 @@ function openDetail(item) {
 
 function fetchList() {
   loading.value = true
+  showLoading('加载中')
   searchBooks(keyword.value, currentPage.value)
     .then((res) => {
       const result = res?.data
@@ -32,6 +35,7 @@ function fetchList() {
     })
     .finally(() => {
       loading.value = false
+      hideLoading()
     })
 }
 
@@ -59,219 +63,55 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="collection-list-page">
+  <div class="min-h-screen bg-[var(--c-bg)]">
     <template v-if="keyword">
-      <template v-if="loading">
-        <div class="weui-mask_transparent" aria-hidden="true"></div>
-        <div class="weui-toast__wrp">
-          <div class="weui-toast">
-            <span class="weui-primary-loading weui-icon_toast" aria-label="加载中"></span>
-            <p class="weui-toast__content">加载中</p>
-          </div>
-        </div>
-      </template>
-
-      <div class="top-nav-bar">
-        <div class="nav-btn-back" @click="goBack">返回</div>
+      <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+        <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+        <span class="flex-1 text-center text-sm font-bold">馆藏检索</span>
+        <div class="w-10"></div>
       </div>
 
-      <div class="page-header">
-        <h1 class="page-title-green">馆藏检索</h1>
-        <p class="page-subtitle">图书馆馆藏检索结果</p>
-      </div>
+      <div class="max-w-lg mx-auto px-4 py-6">
+        <p class="text-center text-sm text-[var(--c-text-2)] mb-5">图书馆馆藏检索结果</p>
 
-      <div class="weui-cells__title">馆藏检索结果</div>
-      <div class="weui-panel weui-panel_access">
-        <div class="weui-panel__bd">
+        <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">馆藏检索结果</h3>
+
+        <div class="bg-[var(--c-surface)] rounded-xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
           <a
             v-for="item in list"
             :key="item.detailURL || item.bookname"
             href="javascript:"
-            class="weui-media-box weui-media-box_text"
+            class="block px-4 py-3.5 hover:bg-[var(--c-surface-hover)] transition-colors no-underline"
             @click.prevent="openDetail(item)"
           >
-            <h4 class="weui-media-box__title">{{ item.bookname || '—' }}</h4>
-            <p class="weui-media-box__meta">
-              <span class="weui-media-box__label">著者: </span><span class="weui-media-box__value">{{ item.author || '—' }}</span>
+            <h4 class="text-base font-medium text-[var(--c-text)] break-all leading-snug">{{ item.bookname || '—' }}</h4>
+            <p class="mt-1 text-sm text-[var(--c-text-2)]">
+              <span class="text-[var(--c-text-3)]">著者: </span>{{ item.author || '—' }}
             </p>
-            <p class="weui-media-box__meta">
-              <span class="weui-media-box__label">出版者: </span><span class="weui-media-box__value">{{ item.publishingHouse || '—' }}</span>
+            <p class="text-sm text-[var(--c-text-2)]">
+              <span class="text-[var(--c-text-3)]">出版者: </span>{{ item.publishingHouse || '—' }}
             </p>
           </a>
         </div>
-      </div>
 
-      <div v-if="list.length > 0" class="pagination-bar">
-        <button class="pagination-btn" :disabled="currentPage <= 1" @click="prevPage">上一页</button>
-        <span class="pagination-info">第 {{ currentPage }} 页</span>
-        <button class="pagination-btn" @click="nextPage">下一页</button>
-      </div>
+        <!-- Pagination -->
+        <div v-if="list.length > 0" class="flex items-center justify-center gap-4 mt-5">
+          <button
+            class="px-4 py-1.5 text-sm border border-[var(--c-border)] rounded-lg bg-[var(--c-surface)] hover:bg-[var(--c-surface-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            :disabled="currentPage <= 1"
+            @click="prevPage"
+          >上一页</button>
+          <span class="text-sm text-[var(--c-text-2)]">第 {{ currentPage }} 页</span>
+          <button
+            class="px-4 py-1.5 text-sm border border-[var(--c-border)] rounded-lg bg-[var(--c-surface)] hover:bg-[var(--c-surface-hover)] transition-colors"
+            @click="nextPage"
+          >下一页</button>
+        </div>
 
-      <div v-if="showNoResult" class="collection-list-empty">
-        暂无馆藏结果
+        <div v-if="showNoResult" class="flex items-center justify-center min-h-[120px] py-10 text-sm text-[var(--c-text-3)]">
+          暂无馆藏结果
+        </div>
       </div>
     </template>
   </div>
 </template>
-
-<style scoped>
-.collection-list-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-header {
-  text-align: center;
-  padding: 0 0 6px;
-  background-color: #fff;
-}
-
-.page-title-green {
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 0 0 0 0;
-  line-height: 1.2;
-}
-
-.page-subtitle {
-  font-size: 13px;
-  color: #888;
-  margin: 0;
-  text-align: center;
-}
-
-.collection-list-page .weui-cells__title {
-  padding: 12px 15px 8px;
-  font-size: 14px;
-  color: #888;
-}
-
-.collection-list-page .weui-panel {
-  margin-top: 0;
-  background-color: #FFFFFF;
-}
-
-.collection-list-page .weui-panel__bd {
-  padding: 0;
-}
-
-/* 强制内边距，确保文字绝不贴边 */
-.collection-list-page .weui-media-box {
-  padding: 15px !important;
-  position: relative;
-  display: block;
-  text-decoration: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
-}
-
-/* Retina 0.5px 极细线：伪元素 1px + scaleY(0.5)，左右与文字对齐留白 */
-.collection-list-page .weui-media-box::after {
-  content: " ";
-  position: absolute;
-  left: 15px;
-  right: 15px;
-  bottom: 0;
-  height: 1px;
-  border-bottom: 1px solid #E5E5E5;
-  transform-origin: 0 100%;
-  transform: scaleY(0.5);
-}
-
-.collection-list-page .weui-media-box:last-child::after,
-.collection-list-page .weui-panel__bd .weui-media-box:last-child::after {
-  display: none !important;
-}
-
-.collection-list-page .weui-media-box__title {
-  display: block;
-  color: #000;
-  font-weight: 400;
-  font-size: 17px;
-  white-space: normal;
-  margin: 0 0 6px 0;
-  line-height: 1.4;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-
-.collection-list-page .weui-media-box__meta {
-  font-size: 14px;
-  margin: 1px 0;
-  line-height: 1.45;
-}
-
-.collection-list-page .weui-media-box__title + .weui-media-box__meta {
-  margin-top: 4px;
-}
-
-.collection-list-page .weui-media-box__meta:last-child {
-  margin-bottom: 0;
-}
-
-.collection-list-page .weui-media-box__label {
-  color: #999;
-}
-
-.collection-list-page .weui-media-box__value {
-  color: #666;
-}
-
-.pagination-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 15px;
-}
-
-.pagination-btn {
-  padding: 6px 18px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #fff;
-  color: #333;
-  cursor: pointer;
-}
-
-.pagination-btn:disabled {
-  color: #ccc;
-  cursor: not-allowed;
-}
-
-.pagination-info {
-  font-size: 14px;
-  color: #666;
-}
-
-.collection-list-empty {
-  text-align: center;
-  padding: 40px 15px;
-  font-size: 14px;
-  color: #999;
-  min-height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-</style>

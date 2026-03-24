@@ -3,9 +3,11 @@ import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
+import { useToast } from '@/composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
+const { loading: toastLoading, hideLoading } = useToast()
 
 const MAX_RECORD_SECONDS = 60
 const MAX_VOICE_SIZE = 1024 * 1024
@@ -41,16 +43,6 @@ let volumeAnimationId = 0
 let recordTimer = null
 let previewAudio = null
 let recordedChunks = []
-
-function showLoading(text = '正在提交...') {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.loading === 'function') weui.loading(text)
-}
-
-function hideLoading() {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
-}
 
 const switchToWord = () => {
   stopPreviewAudio()
@@ -310,7 +302,7 @@ const submit = async () => {
     }
     try {
       submitting.value = true
-      showLoading('正在发布...')
+      toastLoading('正在发布...')
       await request.post('/secret/info', {
         content: formData.value.content,
         theme: formData.value.theme,
@@ -331,7 +323,7 @@ const submit = async () => {
     }
     try {
       submitting.value = true
-      showLoading('正在上传语音...')
+      toastLoading('正在上传语音...')
       const voiceKey = await uploadFileByPresignedUrl(recordedAudioFile.value, {
         fileName: recordedAudioFile.value.name
       })
@@ -355,6 +347,25 @@ const remainingChars = computed(() => {
   return 100 - formData.value.content.length
 })
 
+const themeColors = {
+  1: 'var(--c-surface)',
+  2: '#595959',
+  3: '#f5d676',
+  4: '#f69695',
+  5: '#c6a8c1',
+  6: '#89cdcb',
+  7: '#90cce2',
+  8: '#6e7e90',
+  9: '#61ae97',
+  10: '#d3cd72',
+  11: '#e8d5a8',
+  12: '#daa6a1'
+}
+
+function getThemeBg(theme) {
+  return themeColors[theme] || 'var(--c-surface)'
+}
+
 onMounted(() => {
   const rand = Math.ceil(Math.random() * 12)
   formData.value.theme = rand
@@ -373,92 +384,90 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="community-page secret-publish" style="--module-color: #8b5cf6">
+  <div class="min-h-screen bg-[var(--c-bg)] relative" style="--module-color: #8b5cf6">
     <CommunityHeader title="发布小秘密" moduleColor="#8b5cf6" backTo="/secret/home" />
 
-    <!-- 树洞发布框：参考原版 secretPublish.jsp -->
-    <div class="form community-card" :class="`theme${formData.theme}`" :style="{ color: formData.theme === 1 ? '#000' : '#fff' }">
+    <!-- 树洞发布框 -->
+    <div
+      class="relative rounded-lg mx-2.5 pb-5 border-l-4 border-[var(--c-secret)]"
+      :style="{ backgroundColor: getThemeBg(formData.theme), color: formData.theme === 1 ? '#000' : '#fff' }"
+    >
       <form>
-        <header>
-          <i class="back" @click="router.back()"></i>
-          <span>小秘密</span>
-          <label class="btn" @click="submit">{{ submitting ? '发布中' : '发布' }}</label>
+        <header class="leading-10 text-center font-bold text-base border-b border-black/10 relative">
+          <i
+            class="inline-block w-10 h-10 bg-[length:1rem] bg-center bg-no-repeat align-middle absolute left-0 cursor-pointer bg-[url('/img/secret/back1.png')]"
+            @click="router.back()"
+          ></i>
+          <span class="inline-block">小秘密</span>
+          <label class="absolute right-4 top-0 cursor-pointer text-[var(--c-secret)]" @click="submit">{{ submitting ? '发布中' : '发布' }}</label>
         </header>
-        <div class="edit" style="text-align: center">
+        <div class="h-[284px] relative text-center">
           <!-- 语音树洞 -->
           <div
             v-if="mode === 'voice'"
-            id="voice"
-            class="voice-record-area"
+            class="relative h-[250px] flex flex-col items-center justify-center"
             @pointerdown.prevent="startRecord"
             @pointerup.prevent="stopRecord"
             @pointercancel.prevent="stopRecord"
             @pointerleave.prevent="stopRecord"
           >
             <img
-              id="record"
               width="50px"
               height="50px"
               :src="formData.theme === 1 ? '/img/secret/voice_normal_white.png' : '/img/secret/voice_normal.png'"
               alt="录音"
             />
             <br>
-            <text id="voice_tip" :style="{ color: formData.theme === 1 ? '#bfbfbf' : '#fff' }">
+            <span :style="{ color: formData.theme === 1 ? '#bfbfbf' : '#fff' }">
               {{ voiceHint }}
-            </text>
+            </span>
           </div>
           <!-- 文字树洞 -->
-          <div v-else id="word">
+          <div v-else>
             <textarea
               v-model="formData.content"
               name="content"
-              id="text"
               maxlength="100"
               autofocus
               placeholder="说个小秘密"
-              style="text-align: center"
+              class="text-center w-full mx-auto border-none text-lg overflow-x-hidden leading-6 bg-inherit text-inherit h-auto p-5 resize-none outline-none placeholder:text-inherit placeholder:leading-6 placeholder:opacity-60"
             ></textarea>
-            <div class="length">{{ remainingChars }}</div>
+            <div class="absolute bottom-2.5 right-4 text-sm text-[var(--c-text-3)]">{{ remainingChars }}</div>
           </div>
         </div>
       </form>
     </div>
 
-    <!-- 底部控制区：操作栏、主题选择、模式切换 -->
-    <div class="publish-bottom-controls">
-      <!-- 操作栏：参考原版 .bar -->
-      <div class="bar">
-        <div style="height:30px">
+    <!-- 底部控制区 -->
+    <div class="relative z-10 bg-[var(--c-bg)]" style="pointer-events: auto;">
+      <!-- 操作栏 -->
+      <div class="border-y border-[var(--c-border)] p-2.5 overflow-hidden bg-[var(--c-surface)]">
+        <div class="h-[30px]">
           <div v-if="mode === 'voice'" @click="togglePreviewAudio">
             <img
-              id="voice_button"
               width="20px"
               height="20px"
-              style="position: relative;top:7px;float: left;"
+              class="relative top-[7px] float-left"
               :src="recording ? '/img/secret/record.png' : '/img/secret/play.png'"
               alt=""
             />
-            <p
-              id="voice_state"
-              style="position:relative;top:5px;left:5px;width:150px;float:left;"
-            >{{ previewPlaying ? '正在试听录音' : voiceState }}</p>
+            <p class="relative top-[5px] left-[5px] w-[150px] float-left">{{ previewPlaying ? '正在试听录音' : voiceState }}</p>
           </div>
           <i
-            :class="{ 'gray-pallet': showThemes }"
-            style="float: right;position:relative;top:5px"
+            class="w-[23px] h-[23px] block float-right bg-no-repeat bg-center bg-[length:100%] cursor-pointer"
+            :class="showThemes ? 'bg-[url(/img/secret/pallet1.png)]' : 'bg-[url(/img/secret/pallet.png)]'"
+            :style="{ position: 'relative', top: '5px' }"
             @click="showThemes = !showThemes"
           ></i>
           <div
             v-if="mode === 'voice'"
-            id="voice_volume"
-            style="position:relative;height:25px;margin-top:5px;right:10px;width:85px;background:#cdcdcd;float: right"
+            class="relative h-[25px] mt-[5px] right-[10px] w-[85px] bg-[#cdcdcd] float-right"
           >
-            <div id="volume" :style="{ width: voiceVolume + '%', height: '100%', background: 'var(--c-secret)' }"></div>
+            <div :style="{ width: voiceVolume + '%', height: '100%', background: 'var(--c-secret)' }"></div>
           </div>
         </div>
-        <div style="float:right;margin-top:15px">
+        <div class="float-right mt-[15px]">
           <input
-            id="timer"
             type="checkbox"
             v-model="formData.timer"
             :true-value="1"
@@ -468,49 +477,47 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- 主题选择：参考原版 .themes -->
-      <div v-if="showThemes" class="themes">
+      <!-- 主题选择 -->
+      <div v-if="showThemes" class="flex mt-2.5 px-2.5 gap-2.5">
         <div
           v-for="i in 6"
           :key="i"
-          class="theme"
-          :class="`theme${i}`"
+          class="flex-1 h-[2.7rem] relative rounded cursor-pointer"
+          :style="{ backgroundColor: getThemeBg(i) }"
           @click="selectTheme(i)"
         >
-          <i v-if="formData.theme === i" class="selected"></i>
+          <i v-if="formData.theme === i" class="inline-flex items-center justify-center w-6 h-6 absolute -right-2 -top-2 rounded-full bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] shadow-[0_0.2rem_0.5rem_rgba(139,92,246,0.28)] before:content-[''] before:w-[0.38rem] before:h-[0.72rem] before:border-r-2 before:border-b-2 before:border-white before:rotate-45 before:-translate-x-[8%] before:-translate-y-[8%]"></i>
         </div>
       </div>
-      <div v-if="showThemes" class="themes">
+      <div v-if="showThemes" class="flex mt-2.5 px-2.5 gap-2.5">
         <div
           v-for="i in 6"
           :key="i + 6"
-          class="theme"
-          :class="`theme${i + 6}`"
+          class="flex-1 h-[2.7rem] relative rounded cursor-pointer"
+          :style="{ backgroundColor: getThemeBg(i + 6) }"
           @click="selectTheme(i + 6)"
         >
-          <i v-if="formData.theme === i + 6" class="selected"></i>
+          <i v-if="formData.theme === i + 6" class="inline-flex items-center justify-center w-6 h-6 absolute -right-2 -top-2 rounded-full bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] shadow-[0_0.2rem_0.5rem_rgba(139,92,246,0.28)] before:content-[''] before:w-[0.38rem] before:h-[0.72rem] before:border-r-2 before:border-b-2 before:border-white before:rotate-45 before:-translate-x-[8%] before:-translate-y-[8%]"></i>
         </div>
       </div>
 
       <!-- 切换到文字树洞 -->
       <div
         v-if="mode === 'voice'"
-        id="switchToWord"
-        class="switch-text"
+        class="mt-4 text-[var(--c-text-3)] text-center"
       >
         切换到
-        <p class="switch-link" @click="switchToWord">文字树洞</p>
+        <p class="inline text-[var(--c-secret)] cursor-pointer" @click="switchToWord">文字树洞</p>
         ，用文字分享你的小秘密
       </div>
 
       <!-- 切换到语音树洞 -->
       <div
         v-if="mode === 'text'"
-        id="switchToVoice"
-        class="switch-text"
+        class="mt-4 text-[var(--c-text-3)] text-center"
       >
         切换到
-        <p class="switch-link" @click="switchToVoice">语音树洞</p>
+        <p class="inline text-[var(--c-secret)] cursor-pointer" @click="switchToVoice">语音树洞</p>
         ，用语音分享你的小秘密
       </div>
     </div>
@@ -518,227 +525,13 @@ onBeforeUnmount(() => {
 
   <!-- 对话框 -->
   <div v-if="dialogVisible">
-    <div class="community-dialog-mask" @click="dialogVisible = false"></div>
-    <div class="community-dialog" style="--module-color: #8b5cf6">
-      <div class="community-dialog__title">提示</div>
-      <div class="community-dialog__body">{{ dialogMessage }}</div>
-      <div class="community-dialog__footer">
-        <a href="javascript:" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
+    <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: #8b5cf6">
+      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">提示</div>
+      <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
+      <div class="flex border-t border-[var(--c-border)]">
+        <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[#8b5cf6] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.secret-publish {
-  min-height: 100vh;
-  background: var(--c-bg);
-  position: relative;
-}
-
-/* 表单容器：参考原版 secret-publish.css .form */
-.form {
-  position: relative;
-  border-radius: var(--radius-md);
-  margin: 10px;
-  padding-bottom: 20px;
-  border-left: 4px solid var(--c-secret);
-}
-
-header {
-  line-height: 2.5rem;
-  text-align: center;
-  font-weight: bolder;
-  font-size: 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.11);
-  position: relative;
-}
-header i {
-  display: inline-block;
-  width: 2.5rem;
-  height: 2.5rem;
-  background-size: 1rem;
-  background-position: center;
-  background-repeat: no-repeat;
-  vertical-align: middle;
-  position: absolute;
-  cursor: pointer;
-}
-header .back {
-  background-image: url(/img/secret/back1.png);
-  left: 0;
-}
-header .back1 {
-  background-image: url(/img/secret/back.png);
-  left: 0;
-}
-header span {
-  display: inline-block;
-}
-.btn {
-  position: absolute;
-  right: 1rem;
-  top: 0;
-  cursor: pointer;
-  color: var(--c-secret);
-}
-
-.edit {
-  height: 284px;
-  position: relative;
-}
-.voice {
-  height: 284px;
-  position: relative;
-}
-
-/* 录音区域：限制触摸范围，避免遮挡底部点击 */
-.voice-record-area {
-  position: relative;
-  height: 250px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.edit textarea {
-  text-align: center;
-  width: 100%;
-  margin: 0 auto;
-  border: none;
-  font-size: var(--font-xl);
-  overflow-x: hidden;
-  line-height: 24px;
-  background-color: inherit;
-  color: inherit;
-  height: auto;
-  padding: 20px;
-  resize: none;
-}
-textarea::-webkit-input-placeholder {
-  color: inherit;
-  line-height: 1.5rem;
-  opacity: 0.6;
-}
-.length {
-  position: absolute;
-  bottom: 0.6rem;
-  right: 1rem;
-  font-size: var(--font-base);
-  color: var(--c-text-3);
-}
-
-.bar {
-  border: solid var(--c-divider);
-  border-width: 1px 0;
-  padding: 10px;
-  overflow: hidden;
-  background: var(--c-card);
-}
-.bar i {
-  width: 23px;
-  height: 23px;
-  display: block;
-  float: right;
-  background: url(/img/secret/pallet.png) no-repeat center;
-  background-size: 100%;
-  cursor: pointer;
-}
-.bar .gray-pallet {
-  background: url(/img/secret/pallet1.png) no-repeat center;
-  background-size: 100%;
-}
-
-/* 底部控制区域，保证可点击 */
-.publish-bottom-controls {
-  position: relative;
-  z-index: 10 !important;
-  pointer-events: auto !important;
-  background-color: var(--c-bg);
-}
-
-.themes {
-  display: flex;
-  margin-top: 10px;
-  padding: 0 10px;
-  gap: 10px;
-}
-.themes > div {
-  flex: 1;
-  height: 2.7rem;
-  position: relative;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-}
-.selected {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  position: absolute;
-  right: -0.5rem;
-  top: -0.5rem;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  box-shadow: 0 0.2rem 0.5rem rgba(139, 92, 246, 0.28);
-}
-.selected::before {
-  content: '';
-  width: 0.38rem;
-  height: 0.72rem;
-  border-right: 2px solid #fff;
-  border-bottom: 2px solid #fff;
-  transform: rotate(45deg) translate(-8%, -8%);
-}
-
-/* 主题颜色：参考原版 secret-publish.css */
-.theme1 {
-  background-color: var(--c-card);
-  color: #000;
-}
-.theme2 {
-  background-color: #595959;
-}
-.theme3 {
-  background-color: #f5d676;
-}
-.theme4 {
-  background-color: #f69695;
-}
-.theme5 {
-  background-color: #c6a8c1;
-}
-.theme6 {
-  background-color: #89cdcb;
-}
-.theme7 {
-  background-color: #90cce2;
-}
-.theme8 {
-  background-color: #6e7e90;
-}
-.theme9 {
-  background-color: #61ae97;
-}
-.theme10 {
-  background-color: #d3cd72;
-}
-.theme11 {
-  background-color: #e8d5a8;
-}
-.theme12 {
-  background-color: #daa6a1;
-}
-
-.switch-text {
-  margin-top: 1rem;
-  color: var(--c-text-3);
-  text-align: center;
-}
-.switch-link {
-  display: inline;
-  color: var(--c-secret);
-  cursor: pointer;
-}
-</style>

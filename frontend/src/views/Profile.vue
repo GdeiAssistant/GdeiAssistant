@@ -1,206 +1,360 @@
 <template>
-  <div class="profile-page">
-    <h1 class="page_title">{{ $t('profile.title') }}</h1>
-
-    <div class="weui-toptips weui_warn js_tooltips" style="display: none;"></div>
-
-    <div class="weui-cells" style="margin-top: 0;">
-      <RouterLink class="weui-cell weui-cell_access" to="/user/avatar-edit">
-        <div class="weui-cell__bd"><p>{{ $t('profile.avatar') }}</p></div>
-        <div class="weui-cell__ft">
-          <img :src="userInfo.avatar" style="width: 50px; height: 50px; border-radius: 50%; display: block;" :alt="$t('profile.avatar')" />
+  <div class="space-y-4 pb-20">
+    <!-- User Info Card -->
+    <AppCard>
+      <div class="flex items-center gap-4 px-5 py-5">
+        <RouterLink to="/user/avatar-edit" class="shrink-0">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 p-[2px]">
+            <img
+              :src="userInfo.avatar"
+              :alt="$t('profile.avatar')"
+              class="w-full h-full rounded-full object-cover bg-[var(--c-surface)]"
+            />
+          </div>
+        </RouterLink>
+        <div class="min-w-0 flex-1">
+          <p class="text-lg font-semibold text-[var(--c-text-primary)] truncate">
+            {{ userInfo.nickname || userInfo.username }}
+          </p>
+          <p class="text-sm text-[var(--c-text-tertiary)] mt-0.5 truncate">
+            {{ userInfo.faculty || '' }}{{ userInfo.major ? ' · ' + userInfo.major : '' }}{{ userInfo.enrollment ? ' · ' + userInfo.enrollment : '' }}
+          </p>
         </div>
-      </RouterLink>
+      </div>
+    </AppCard>
 
-      <div class="weui-cell">
-        <div class="weui-cell__bd"><p>{{ $t('profile.username') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.username }}</div>
+    <!-- Profile Info -->
+    <AppCard>
+      <template #header>
+        <div class="flex items-center gap-2">
+          <User class="w-4 h-4 text-[var(--c-text-tertiary)]" />
+          <span class="text-sm font-medium text-[var(--c-text-secondary)]">{{ $t('profile.title') }}</span>
+        </div>
+      </template>
+
+      <div class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer"
+           @click="$router.push('/user/avatar-edit')">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.avatar') }}</span>
+        <img :src="userInfo.avatar" class="w-9 h-9 rounded-full object-cover" :alt="$t('profile.avatar')" />
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </div>
 
-      <button type="button" class="weui-cell weui-cell_access relative-cell btn-reset" @click="openNicknameDialog">
-        <div class="weui-cell__bd"><p>{{ $t('profile.nickname') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.nickname || $t('common.clickToSet') }}</div>
-      </button>
-
-      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openBirthdayPicker">
-        <div class="weui-cell__bd"><p>{{ $t('profile.birthday') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.birthday || $t('common.unselected') }}</div>
-      </button>
-
-      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openFacultyPicker">
-        <div class="weui-cell__bd"><p>{{ $t('profile.faculty') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.faculty || $t('common.unselected') }}</div>
-      </button>
-
-      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openMajorPicker">
-        <div class="weui-cell__bd"><p>{{ $t('profile.major') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.major || $t('common.unselected') }}</div>
-      </button>
-
-      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openEnrollmentPicker">
-        <div class="weui-cell__bd"><p>{{ $t('profile.enrollmentYear') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.enrollment || $t('common.unselected') }}</div>
-      </button>
-
-      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openLocationPicker">
-        <div class="weui-cell__bd"><p>{{ $t('profile.location') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.location || $t('common.unselected') }}</div>
-      </button>
-
-      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="openHometownPicker">
-        <div class="weui-cell__bd"><p>{{ $t('profile.hometown') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.hometown || $t('common.unselected') }}</div>
-      </button>
-
-      <button type="button" class="weui-cell weui-cell_access relative-cell btn-reset" @click="openIntroDialog">
-        <div class="weui-cell__bd"><p>{{ $t('profile.introduction') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.introduction ? $t('common.filled') : $t('common.notFilled') }}</div>
-      </button>
-
-      <div class="weui-cell">
-        <div class="weui-cell__bd"><p>{{ $t('profile.ipArea') }}</p></div>
-        <div class="weui-cell__ft">{{ userInfo.ipArea || '-' }}</div>
+      <div class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)]">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.username') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.username }}</span>
       </div>
-    </div>
 
-    <div class="weui-cells">
-      <RouterLink class="weui-cell weui-cell_access" to="/user/privacy-setting">
-        <div class="weui-cell__bd"><p>{{ $t('profile.privacySetting') }}</p></div><div class="weui-cell__ft"></div>
-      </RouterLink>
-      <RouterLink class="weui-cell weui-cell_access" to="/user/feature-manage">
-        <div class="weui-cell__bd"><p>{{ $t('profile.featureManage') }}</p></div><div class="weui-cell__ft"></div>
-      </RouterLink>
-    </div>
-
-    <div class="weui-cells">
-      <RouterLink class="weui-cell weui-cell_access" to="/appearance">
-        <div class="weui-cell__bd"><p>{{ $t('appearance.title') }}</p></div><div class="weui-cell__ft"></div>
-      </RouterLink>
-    </div>
-
-    <div class="weui-cells">
-      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="handlePasswordClick">
-        <div class="weui-cell__bd"><p>{{ $t('profile.changePassword') }}</p></div><div class="weui-cell__ft"></div>
+      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="openNicknameDialog">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.nickname') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.nickname || $t('common.clickToSet') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
-      <RouterLink class="weui-cell weui-cell_access" to="/user/login-record">
-        <div class="weui-cell__bd"><p>{{ $t('profile.loginRecord') }}</p></div><div class="weui-cell__ft"></div>
-      </RouterLink>
-      <RouterLink class="weui-cell weui-cell_access" to="/user/realname">
-        <div class="weui-cell__bd"><p>{{ $t('profile.realname') }}</p></div><div class="weui-cell__ft"></div>
-      </RouterLink>
-      <RouterLink class="weui-cell weui-cell_access" to="/user/bind-phone">
-        <div class="weui-cell__bd"><p>{{ $t('profile.bindPhone') }}</p></div><div class="weui-cell__ft"></div>
-      </RouterLink>
-      <RouterLink class="weui-cell weui-cell_access" to="/user/bind-email">
-        <div class="weui-cell__bd"><p>{{ $t('profile.bindEmail') }}</p></div><div class="weui-cell__ft"></div>
-      </RouterLink>
-      <RouterLink class="weui-cell weui-cell_access" to="/user/delete">
-        <div class="weui-cell__bd"><p>{{ $t('profile.deleteAccount') }}</p></div><div class="weui-cell__ft"></div>
-      </RouterLink>
-    </div>
 
-    <div class="weui-cells">
-      <a class="weui-cell weui-cell_access" href="https://www.wjx.top/m/47687434.aspx" target="_blank" rel="noopener noreferrer">
-        <div class="weui-cell__bd"><p>{{ $t('profile.reportChannel') }}</p></div><div class="weui-cell__ft"></div>
+      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="openBirthdayPicker">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.birthday') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.birthday || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </button>
+
+      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="openFacultyPicker">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.faculty') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.faculty || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </button>
+
+      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="openMajorPicker">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.major') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.major || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </button>
+
+      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="openEnrollmentPicker">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.enrollmentYear') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.enrollment || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </button>
+
+      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="openLocationPicker">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.location') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.location || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </button>
+
+      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="openHometownPicker">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.hometown') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.hometown || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </button>
+
+      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="openIntroDialog">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.introduction') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.introduction ? $t('common.filled') : $t('common.notFilled') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </button>
+
+      <div class="flex items-center gap-3 px-4 py-3 last:border-0">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.ipArea') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.ipArea || '-' }}</span>
+      </div>
+    </AppCard>
+
+    <!-- Privacy & Features -->
+    <AppCard>
+      <template #header>
+        <div class="flex items-center gap-2">
+          <Shield class="w-4 h-4 text-[var(--c-text-tertiary)]" />
+          <span class="text-sm font-medium text-[var(--c-text-secondary)]">{{ $t('profile.privacySetting') }}</span>
+        </div>
+      </template>
+
+      <RouterLink to="/user/privacy-setting"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Shield class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.privacySetting') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/feature-manage"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Settings class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.featureManage') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+    </AppCard>
+
+    <!-- Appearance -->
+    <AppCard>
+      <RouterLink to="/appearance"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Settings class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('appearance.title') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+    </AppCard>
+
+    <!-- Security -->
+    <AppCard>
+      <template #header>
+        <div class="flex items-center gap-2">
+          <Lock class="w-4 h-4 text-[var(--c-text-tertiary)]" />
+          <span class="text-sm font-medium text-[var(--c-text-secondary)]">{{ $t('profile.changePassword') }}</span>
+        </div>
+      </template>
+
+      <button type="button"
+              class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+              @click="handlePasswordClick">
+        <Lock class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.changePassword') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </button>
+
+      <RouterLink to="/user/login-record"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Smartphone class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.loginRecord') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/realname"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Shield class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.realname') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/bind-phone"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Smartphone class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.bindPhone') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/bind-email"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Mail class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.bindEmail') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+
+      <RouterLink to="/user/delete"
+                  class="flex items-center gap-3 px-4 py-3 last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Trash2 class="w-5 h-5 text-red-400" />
+        <span class="flex-1 text-red-500">{{ $t('profile.deleteAccount') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+    </AppCard>
+
+    <!-- Report -->
+    <AppCard>
+      <a href="https://www.wjx.top/m/47687434.aspx" target="_blank" rel="noopener noreferrer"
+         class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <MessageSquare class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.reportChannel') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </a>
-    </div>
+    </AppCard>
 
-    <div class="weui-cells">
-      <RouterLink class="weui-cell weui-cell_access" to="/user/download">
-        <div class="weui-cell__bd"><p>{{ $t('profile.downloadData') }}</p></div><div class="weui-cell__ft"></div>
+    <!-- Download Data -->
+    <AppCard>
+      <RouterLink to="/user/download"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Download class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.downloadData') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </RouterLink>
-    </div>
+    </AppCard>
 
-    <div class="weui-cells">
-      <RouterLink class="weui-cell weui-cell_access" to="/user/feedback">
-        <div class="weui-cell__bd"><p>{{ $t('profile.helpFeedback') }}</p></div><div class="weui-cell__ft"></div>
+    <!-- Help & Feedback -->
+    <AppCard>
+      <RouterLink to="/user/feedback"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] last:border-0 hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <MessageSquare class="w-5 h-5 text-[var(--c-text-tertiary)]" />
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.helpFeedback') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </RouterLink>
-    </div>
+    </AppCard>
 
-    <div class="weui-cells logout-cells" style="margin-bottom: 80px;">
-      <button type="button" class="weui-cell weui-cell_access btn-reset" @click="handleLogoutClick">
-        <div class="weui-cell__bd"><p>{{ $t('profile.logout') }}</p></div><div class="weui-cell__ft"></div>
+    <!-- Logout -->
+    <AppCard>
+      <button type="button"
+              class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-transparent border-0 cursor-pointer font-inherit"
+              @click="handleLogoutClick">
+        <LogOut class="w-5 h-5 text-red-500" />
+        <span class="text-red-500 font-medium">{{ $t('profile.logout') }}</span>
       </button>
-    </div>
+    </AppCard>
 
-    <div v-if="showLogoutDialog" class="dialog-wrapper">
-      <div class="weui-mask" @click="showLogoutDialog = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('common.hint') }}</strong></div>
-        <div class="weui-dialog__bd">{{ $t('profile.logoutConfirm') }}</div>
-        <div class="weui-dialog__ft">
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showLogoutDialog = false">{{ $t('common.cancel') }}</button>
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="confirmLogout">{{ $t('profile.logoutConfirmBtn') }}</button>
+    <!-- Logout Dialog -->
+    <Teleport to="body">
+      <div v-if="showLogoutDialog" class="fixed inset-0 z-[1000] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/60" @click="showLogoutDialog = false"></div>
+        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
+          <div class="px-6 pt-8 pb-4 text-center">
+            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('common.hint') }}</strong>
+          </div>
+          <div class="px-6 pb-8 text-[15px] text-[var(--c-text-secondary)] text-center">{{ $t('profile.logoutConfirm') }}</div>
+          <div class="flex border-t border-[var(--c-border-light)]">
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
+                    @click="showLogoutDialog = false">{{ $t('common.cancel') }}</button>
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 border-l border-[var(--c-border-light)] cursor-pointer text-red-500 font-medium font-inherit"
+                    @click="confirmLogout">{{ $t('profile.logoutConfirmBtn') }}</button>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
 
-    <div v-if="showNicknameDialog" class="dialog-wrapper">
-      <div class="weui-mask" @click="showNicknameDialog = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('profile.editNickname') }}</strong></div>
-        <div class="weui-dialog__bd">
-          <input type="text" class="custom-input" v-model="tempNickname" :placeholder="$t('profile.nicknamePlaceholder')">
-        </div>
-        <div class="weui-dialog__ft">
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showNicknameDialog = false">{{ $t('common.cancel') }}</button>
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="confirmNickname">{{ $t('common.confirm') }}</button>
+    <!-- Nickname Dialog -->
+    <Teleport to="body">
+      <div v-if="showNicknameDialog" class="fixed inset-0 z-[1000] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/60" @click="showNicknameDialog = false"></div>
+        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
+          <div class="px-6 pt-8 pb-4 text-center">
+            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('profile.editNickname') }}</strong>
+          </div>
+          <div class="px-6 pb-8">
+            <input type="text" v-model="tempNickname" :placeholder="$t('profile.nicknamePlaceholder')"
+                   class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-[15px] outline-none bg-[var(--c-surface)] text-[var(--c-text-primary)] box-border focus:border-[var(--c-primary)]" />
+          </div>
+          <div class="flex border-t border-[var(--c-border-light)]">
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
+                    @click="showNicknameDialog = false">{{ $t('common.cancel') }}</button>
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 border-l border-[var(--c-border-light)] cursor-pointer text-[var(--c-primary)] font-medium font-inherit"
+                    @click="confirmNickname">{{ $t('common.confirm') }}</button>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
 
-    <div v-if="showIntroDialog" class="dialog-wrapper">
-      <div class="weui-mask" @click="showIntroDialog = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('profile.editIntro') }}</strong></div>
-        <div class="weui-dialog__bd">
-          <textarea class="custom-input" v-model="tempIntro" :placeholder="$t('profile.introPlaceholder')" rows="3"></textarea>
-        </div>
-        <div class="weui-dialog__ft">
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showIntroDialog = false">{{ $t('common.cancel') }}</button>
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="confirmIntro">{{ $t('common.confirm') }}</button>
+    <!-- Introduction Dialog -->
+    <Teleport to="body">
+      <div v-if="showIntroDialog" class="fixed inset-0 z-[1000] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/60" @click="showIntroDialog = false"></div>
+        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
+          <div class="px-6 pt-8 pb-4 text-center">
+            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('profile.editIntro') }}</strong>
+          </div>
+          <div class="px-6 pb-8">
+            <textarea v-model="tempIntro" :placeholder="$t('profile.introPlaceholder')" rows="3"
+                      class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-[15px] outline-none bg-[var(--c-surface)] text-[var(--c-text-primary)] box-border resize-y focus:border-[var(--c-primary)]"></textarea>
+          </div>
+          <div class="flex border-t border-[var(--c-border-light)]">
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
+                    @click="showIntroDialog = false">{{ $t('common.cancel') }}</button>
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 border-l border-[var(--c-border-light)] cursor-pointer text-[var(--c-primary)] font-medium font-inherit"
+                    @click="confirmIntro">{{ $t('common.confirm') }}</button>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
 
-    <div v-if="showPwdDialog" class="dialog-wrapper">
-      <div class="weui-mask" @click="showPwdDialog = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('common.hint') }}</strong></div>
-        <div class="weui-dialog__bd">{{ $t('profile.passwordNotAvailable') }}</div>
-        <div class="weui-dialog__ft">
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="showPwdDialog = false">{{ $t('common.iKnow') }}</button>
+    <!-- Password Not Available Dialog -->
+    <Teleport to="body">
+      <div v-if="showPwdDialog" class="fixed inset-0 z-[1000] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/60" @click="showPwdDialog = false"></div>
+        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
+          <div class="px-6 pt-8 pb-4 text-center">
+            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('common.hint') }}</strong>
+          </div>
+          <div class="px-6 pb-8 text-[15px] text-[var(--c-text-secondary)] text-center">{{ $t('profile.passwordNotAvailable') }}</div>
+          <div class="flex border-t border-[var(--c-border-light)]">
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-primary)] font-medium font-inherit"
+                    @click="showPwdDialog = false">{{ $t('common.iKnow') }}</button>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
 
-    <div v-if="showDateFallback" class="dialog-wrapper">
-      <div class="weui-mask" @click="showDateFallback = false"></div>
-      <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ $t('profile.selectBirthday') }}</strong></div>
-        <div class="weui-dialog__bd">
-          <input type="date" class="custom-input" v-model="tempDate" min="1900-01-01" :max="todayStr" style="width:100%;box-sizing:border-box;">
-        </div>
-        <div class="weui-dialog__ft">
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showDateFallback = false">{{ $t('common.cancel') }}</button>
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_primary btn-reset" @click="confirmDateFallback">{{ $t('common.confirm') }}</button>
+    <!-- Date Fallback Dialog -->
+    <Teleport to="body">
+      <div v-if="showDateFallback" class="fixed inset-0 z-[1000] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/60" @click="showDateFallback = false"></div>
+        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
+          <div class="px-6 pt-8 pb-4 text-center">
+            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('profile.selectBirthday') }}</strong>
+          </div>
+          <div class="px-6 pb-8">
+            <input type="date" v-model="tempDate" min="1900-01-01" :max="todayStr"
+                   class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-[15px] outline-none bg-[var(--c-surface)] text-[var(--c-text-primary)] box-border focus:border-[var(--c-primary)]" />
+          </div>
+          <div class="flex border-t border-[var(--c-border-light)]">
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
+                    @click="showDateFallback = false">{{ $t('common.cancel') }}</button>
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 border-l border-[var(--c-border-light)] cursor-pointer text-[var(--c-primary)] font-medium font-inherit"
+                    @click="confirmDateFallback">{{ $t('common.confirm') }}</button>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
 
-    <div v-if="showListFallback" class="dialog-wrapper">
-      <div class="weui-mask" @click="showListFallback = false"></div>
-      <div class="weui-dialog weui-dialog--list">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title">{{ listFallbackTitle }}</strong></div>
-        <div class="weui-dialog__bd weui-dialog__bd--scroll">
-          <button type="button" v-for="opt in listFallbackOptions" :key="opt" class="weui-dialog__item btn-reset" @click="confirmListFallback(opt)">{{ opt }}</button>
-        </div>
-        <div class="weui-dialog__ft">
-          <button type="button" class="weui-dialog__btn weui-dialog__btn_default btn-reset" @click="showListFallback = false">{{ $t('common.cancel') }}</button>
+    <!-- List Fallback Dialog -->
+    <Teleport to="body">
+      <div v-if="showListFallback" class="fixed inset-0 z-[1000] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/60" @click="showListFallback = false"></div>
+        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
+          <div class="px-6 pt-8 pb-4 text-center">
+            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ listFallbackTitle }}</strong>
+          </div>
+          <div class="max-h-[280px] overflow-y-auto">
+            <button type="button" v-for="opt in listFallbackOptions" :key="opt"
+                    class="w-full px-6 py-3 border-b border-[var(--c-border-light)] bg-transparent cursor-pointer text-left text-[var(--c-text-primary)] font-inherit hover:bg-[var(--c-surface-hover)] active:bg-[var(--c-surface-hover)]"
+                    @click="confirmListFallback(opt)">{{ opt }}</button>
+          </div>
+          <div class="flex border-t border-[var(--c-border-light)]">
+            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
+                    @click="showListFallback = false">{{ $t('common.cancel') }}</button>
+          </div>
         </div>
       </div>
-    </div>
-
+    </Teleport>
   </div>
 </template>
 
@@ -223,10 +377,16 @@ import {
   updateEnrollment,
   updateNickname
 } from '../api/user.js'
-import { showErrorTopTips } from '@/utils/toast.js'
+import { useToast } from '@/composables/useToast'
+import AppCard from '@/components/ui/AppCard.vue'
+import {
+  User, Lock, Shield, Smartphone, Mail, Trash2,
+  Download, MessageSquare, Settings, LogOut, ChevronRight
+} from 'lucide-vue-next'
 
 const router = useRouter()
 const { t, locale } = useI18n()
+const { success: toastSuccess, error: toastError } = useToast()
 
 const selectedLocale = computed(() => locale.value)
 const changeLocale = () => {
@@ -337,10 +497,8 @@ const todayStr = (() => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 })()
 
-const getWeuiToast = () => (typeof window !== 'undefined' ? window.weui : null)
 const showSuccess = (msg) => {
-  const weui = getWeuiToast()
-  if (weui && typeof weui.toast === 'function') weui.toast(msg || t('common.saveSuccess'), { duration: 1500 })
+  toastSuccess(msg || t('common.saveSuccess'))
 }
 const formatLocationDisplay = (str) => {
   if (!str) return ''
@@ -393,51 +551,12 @@ function saveHometown() {
   return updateHometown(payload).then(() => { showSuccess() })
 }
 
-const getWeui = () => (typeof window !== 'undefined' ? window.weui : null)
-
 const openBirthdayPicker = () => {
-  const weui = getWeui()
-  if (weui && typeof weui.datePicker === 'function') {
-    weui.datePicker({
-      defaultValue: userInfo.value.birthday ? userInfo.value.birthday.split('-') : [],
-      start: new Date(1900, 0, 1),
-      end: new Date(),
-      onConfirm: (result) => {
-        if (result && result.length >= 3) {
-          const y = parseInt(result[0], 10)
-          let m = parseInt(result[1], 10)
-          const d = parseInt(result[2], 10)
-          if (!Number.isNaN(m) && m >= 0 && m <= 11) m = m + 1
-          if (Number.isNaN(m) || m < 1 || m > 12) m = 1
-          const val = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`
-          userInfo.value.birthday = val
-          saveBirthday(y, m, d)
-        }
-      }
-    })
-    return
-  }
   showDateFallback.value = true
   tempDate.value = userInfo.value.birthday || ''
 }
 
 const openFacultyPicker = () => {
-  const weui = getWeui()
-  const items = facultyList.value.map(label => ({ label, value: label }))
-  if (weui && typeof weui.picker === 'function') {
-    weui.picker(items, {
-      defaultValue: [userInfo.value.faculty || facultyList.value[0]],
-      onConfirm: (result) => {
-        if (result && result[0]) {
-          userInfo.value.faculty = result[0].value
-          userInfo.value.major = unselectedOption
-          updateMajorListByFaculty()
-          saveFaculty()
-        }
-      }
-    })
-    return
-  }
   openListFallback(t('profile.selectFaculty'), facultyList.value, (val) => {
     userInfo.value.faculty = val
     userInfo.value.major = unselectedOption
@@ -448,22 +567,7 @@ const openFacultyPicker = () => {
 
 const openMajorPicker = () => {
   if (userInfo.value.faculty === null || userInfo.value.faculty === undefined || userInfo.value.faculty === facultyPlaceholder || userInfo.value.faculty === unselectedOption) {
-    showErrorTopTips(t('profile.selectFacultyFirst'))
-    return
-  }
-  const weui = getWeui()
-  const list = majorList.value.length ? majorList.value : [unselectedOption]
-  const items = list.map(label => ({ label, value: label }))
-  if (weui && typeof weui.picker === 'function') {
-    weui.picker(items, {
-      defaultValue: [userInfo.value.major || unselectedOption],
-      onConfirm: (result) => {
-        if (result && result[0]) {
-          userInfo.value.major = result[0].value
-          saveMajor()
-        }
-      }
-    })
+    toastError(t('profile.selectFacultyFirst'))
     return
   }
   openListFallback(t('profile.selectMajor'), majorList.value, (val) => {
@@ -473,20 +577,6 @@ const openMajorPicker = () => {
 }
 
 const openEnrollmentPicker = () => {
-  const weui = getWeui()
-  const items = yearList.value.map(y => ({ label: String(y), value: String(y) }))
-  if (weui && typeof weui.picker === 'function') {
-    weui.picker(items, {
-      defaultValue: [userInfo.value.enrollment || String(yearList.value[yearList.value.length - 1])],
-      onConfirm: (result) => {
-        if (result && result[0]) {
-          userInfo.value.enrollment = result[0].value
-          saveEnrollment()
-        }
-      }
-    })
-    return
-  }
   openListFallback(t('profile.selectYear'), yearList.value.map(String), (val) => {
     userInfo.value.enrollment = val
     saveEnrollment()
@@ -496,24 +586,7 @@ const openEnrollmentPicker = () => {
 const openLocationPicker = () => {
   const tree = locationListTree.value
   if (!tree || tree.length === 0) {
-    const weui = getWeui()
-    if (weui && weui.toast) weui.toast(t('common.loadingRegions'), { duration: 2000 })
-    return
-  }
-  const weui = getWeui()
-  if (weui && typeof weui.picker === 'function') {
-    weui.picker(tree, {
-      container: 'body',
-      onConfirm: (result) => {
-        if (result && result.length >= 3) {
-          userInfo.value.locationRegion = result[0].value
-          userInfo.value.locationState = result[1].value
-          userInfo.value.locationCity = result[2].value
-          userInfo.value.location = formatLocationDisplay(result.map(r => r.label).join(' '))
-          saveLocation()
-        }
-      }
-    })
+    toastError(t('common.loadingRegions'))
     return
   }
   openListFallback(t('profile.selectLocation'), locationFlatOptions.value, (val) => {
@@ -531,24 +604,7 @@ const openLocationPicker = () => {
 const openHometownPicker = () => {
   const tree = locationListTree.value
   if (!tree || tree.length === 0) {
-    const weui = getWeui()
-    if (weui && weui.toast) weui.toast(t('common.loadingRegions'), { duration: 2000 })
-    return
-  }
-  const weui = getWeui()
-  if (weui && typeof weui.picker === 'function') {
-    weui.picker(tree, {
-      container: 'body',
-      onConfirm: (result) => {
-        if (result && result.length >= 3) {
-          userInfo.value.hometownRegion = result[0].value
-          userInfo.value.hometownState = result[1].value
-          userInfo.value.hometownCity = result[2].value
-          userInfo.value.hometown = formatLocationDisplay(result.map(r => r.label).join(' '))
-          saveHometown()
-        }
-      }
-    })
+    toastError(t('common.loadingRegions'))
     return
   }
   openListFallback(t('profile.selectHometown'), locationFlatOptions.value, (val) => {
@@ -629,26 +685,11 @@ const doLogout = async () => {
   }
   localStorage.removeItem('token')
   sessionStorage.clear()
-  const weui = getWeui()
-  if (weui && typeof weui.toast === 'function') {
-    weui.toast(t('common.logoutSuccess'), { duration: 2000 })
-    setTimeout(() => router.replace('/login'), 600)
-  } else {
-    router.replace('/login')
-  }
+  toastSuccess(t('common.logoutSuccess'))
+  setTimeout(() => router.replace('/login'), 600)
 }
 
 const handleLogoutClick = () => {
-  const weui = getWeui()
-  if (weui && typeof weui.confirm === 'function') {
-    weui.confirm(t('profile.logoutConfirm'), {
-      buttons: [
-        { label: t('common.cancel'), type: 'default' },
-        { label: t('profile.logoutConfirmBtn'), type: 'primary', onClick: () => doLogout() }
-      ]
-    })
-    return
-  }
   showLogoutDialog.value = true
 }
 
@@ -708,105 +749,3 @@ onMounted(() => {
 onBeforeUnmount(() => {
 })
 </script>
-
-<style scoped>
-.btn-reset {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-  color: inherit;
-  text-align: inherit;
-  text-decoration: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  width: 100%;
-}
-.btn-reset:focus-visible {
-  outline: 2px solid var(--color-primary, #07c160);
-  outline-offset: -2px;
-}
-
-.profile-page {
-  background-color: #f8f8f8;
-  min-height: 100vh;
-}
-
-.page_title {
-  text-align: center;
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  padding: 40px 0 20px 0;
-  margin: 0;
-}
-
-.profile-page .weui-cells {
-  background-color: #fff;
-  margin-top: 12px;
-}
-.profile-page .weui-cells:first-child {
-  margin-top: 0;
-}
-.profile-page .weui-cells::before, .profile-page .weui-cells::after { border: none; }
-
-.profile-page .logout-cells .weui-cell::before {
-  display: block !important;
-  content: " ";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 1px;
-  border-top: 1px solid #e0e0e0;
-  background-color: #e0e0e0;
-  z-index: 2;
-}
-
-.profile-page .weui-cell { padding: 16px 15px; position: relative; }
-
-.profile-page .weui-cell::before {
-  content: " "; position: absolute; left: 15px; right: 0; top: 0; height: 1px;
-  border-top: 1px solid #f0f0f0; color: #f0f0f0; transform-origin: 0 0; transform: scaleY(0.5); z-index: 2;
-}
-
-.profile-page .weui-cell__bd p { color: #333; font-size: 16px; margin: 0;}
-.profile-page .weui-cell__ft { color: #999; font-size: 15px; }
-
-.profile-page .weui-cell_access:focus-visible {
-  outline: 2px solid var(--color-primary, #07c160);
-  outline-offset: -2px;
-}
-
-.profile-page a.weui-cell_access {
-  text-decoration: none;
-  color: inherit;
-}
-
-.weui-dialog__bd--scroll { max-height: 280px; overflow-y: auto; }
-.weui-dialog__item { padding: 12px 24px; border-bottom: 1px solid #eee; cursor: pointer; width: 100%; text-align: left; }
-.weui-dialog__item:active { background: #f5f5f5; }
-
-.custom-input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 15px; outline: none; }
-.weui-mask { position: fixed; z-index: 1000; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); }
-.weui-dialog { position: fixed; z-index: 5000; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; text-align: center; border-radius: 12px; width: 320px; overflow: hidden;}
-.weui-dialog__hd { padding: 32px 24px 16px; }
-.weui-dialog__title { font-weight: 700; font-size: 17px; }
-.weui-dialog__bd { padding: 0 24px 32px; font-size: 15px; color: #666; text-align: left; }
-.weui-dialog__ft { display: flex; border-top: 1px solid #e5e5e5; line-height: 56px; }
-.weui-dialog__btn { flex: 1; color: #07c160; text-decoration: none; border-left: 1px solid #e5e5e5; cursor: pointer;}
-.weui-dialog__btn:first-child { border-left: none; color: #333; }
-
-.locale-select {
-  border: 1px solid #e5e5e5;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 14px;
-  color: #333;
-  background: #fff;
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-</style>

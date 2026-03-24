@@ -28,8 +28,6 @@ const fetchDeliveryData = async (page) => {
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchDeliveryData)
 
-// 后端仅返回 state=0（待接单）订单，无需状态筛选
-
 function goDetail(id) {
   router.push(`/delivery/detail/${id}`)
 }
@@ -40,8 +38,10 @@ function getStatusText(status) {
 }
 
 function getStatusClass(status) {
-  const map = { 0: 'status-pending', 1: 'status-delivering', 2: 'status-completed' }
-  return map[status] || ''
+  if (status === 0) return 'bg-amber-100 text-amber-800'
+  if (status === 1) return 'bg-blue-100 text-blue-800'
+  if (status === 2) return 'bg-green-100 text-green-800'
+  return ''
 }
 
 function getTypeText(type) {
@@ -68,189 +68,72 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="delivery-home"
+    class="min-h-screen bg-[var(--c-bg)]"
     @touchstart="handleTouchStart"
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
   >
     <CommunityHeader title="全民快递" moduleColor="#f59e0b" backTo="/" />
 
-    <div class="community-pull-refresh" :style="{ height: pullY + 'px' }">
-      <span v-if="refreshing" class="community-pull-refresh__text"><i class="community-loading-spinner"></i> 正在刷新...</span>
-      <span v-else-if="pullY > 50" class="community-pull-refresh__text">释放立即刷新</span>
-      <span v-else-if="pullY > 0" class="community-pull-refresh__text">下拉刷新</span>
+    <!-- Pull refresh -->
+    <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
+      <span v-if="refreshing" class="flex items-center gap-2"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-amber-500 rounded-full animate-spin"></i> 正在刷新...</span>
+      <span v-else-if="pullY > 50">释放立即刷新</span>
+      <span v-else-if="pullY > 0">下拉刷新</span>
     </div>
 
-    <!-- 任务卡片列表 -->
-    <div class="delivery-list">
+    <!-- Task cards -->
+    <div class="p-4 flex flex-col gap-4">
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="delivery-card community-card"
+        class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
         :style="{ animationDelay: (index * 0.05) + 's' }"
         @click="goDetail(item.id)"
       >
-        <!-- 卡片头部 -->
-        <div class="delivery-card__header">
-          <div class="delivery-card__type">{{ getTypeText(item.type) }}</div>
-          <div class="delivery-card__reward">
-            <span class="reward-symbol">&#xffe5;</span>
-            <span class="reward-amount">{{ item.reward.toFixed(2) }}</span>
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-lg font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
+          <div class="flex items-baseline text-red-500">
+            <span class="text-lg font-bold mr-0.5">&#xffe5;</span>
+            <span class="text-2xl font-bold">{{ item.reward.toFixed(2) }}</span>
           </div>
         </div>
 
-        <!-- 路线区 -->
-        <div class="delivery-card__route">
-          <div class="route-item route-item--pickup">
-            <span class="route-icon route-icon--pickup">取</span>
-            <span class="route-text">{{ item.pickupAddress }}</span>
+        <!-- Route -->
+        <div class="mb-4 p-3 bg-[var(--c-bg)] rounded-lg">
+          <div class="flex items-center mb-2.5">
+            <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-blue-500">取</span>
+            <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.pickupAddress }}</span>
           </div>
-          <div class="route-item route-item--delivery">
-            <span class="route-icon route-icon--delivery">送</span>
-            <span class="route-text">{{ item.deliveryAddress }}</span>
+          <div class="flex items-center">
+            <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-amber-500">送</span>
+            <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.deliveryAddress }}</span>
           </div>
         </div>
 
-        <!-- 卡片底部 -->
-        <div class="delivery-card__footer">
-          <div class="delivery-card__meta">
-            <span class="meta-time">{{ item.time }}</span>
-            <span class="meta-size">{{ item.size || '小件' }}</span>
+        <!-- Footer -->
+        <div class="flex justify-between items-center pt-3 border-t border-[var(--c-border)]">
+          <div class="flex gap-3 text-base text-[var(--c-text-3)]">
+            <span>{{ item.time }}</span>
+            <span>{{ item.size || '小件' }}</span>
           </div>
-          <div :class="['delivery-badge', getStatusClass(item.status)]">
+          <div class="px-3 py-1 rounded-full text-sm font-medium" :class="getStatusClass(item.status)">
             {{ getStatusText(item.status) }}
           </div>
         </div>
       </div>
     </div>
 
-    <div v-if="!loading && !refreshing && list.length === 0" class="community-empty">
-      <div class="community-empty__text">暂无任务</div>
+    <!-- Empty -->
+    <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <div class="text-sm">暂无任务</div>
     </div>
-    <div v-if="loading && !refreshing" class="community-loadmore"><i class="community-loading-spinner"></i> 正在加载</div>
-    <div v-if="finished && list.length > 0" class="community-loadmore">没有更多了</div>
+
+    <!-- Loading -->
+    <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-amber-500 rounded-full animate-spin"></i> 正在加载
+    </div>
+    <div v-if="finished && list.length > 0" class="text-center py-4 text-sm text-[var(--c-text-3)]">没有更多了</div>
   </div>
 </template>
-
-<style scoped>
-.delivery-home {
-  background: var(--c-bg);
-  min-height: 100vh;
-  --module-color: #f59e0b;
-}
-
-.delivery-list {
-  padding: var(--space-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-}
-
-.delivery-card {
-  padding: var(--space-lg);
-  cursor: pointer;
-  animation: community-slide-up 0.4s ease both;
-}
-
-.delivery-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-lg);
-}
-.delivery-card__type {
-  font-size: var(--font-lg);
-  font-weight: 600;
-  color: var(--c-text-1);
-}
-.delivery-card__reward {
-  display: flex;
-  align-items: baseline;
-  color: #ef4444;
-}
-.reward-symbol {
-  font-size: var(--font-lg);
-  font-weight: bold;
-  margin-right: 2px;
-}
-.reward-amount {
-  font-size: var(--font-2xl);
-  font-weight: bold;
-}
-
-.delivery-card__route {
-  margin-bottom: var(--space-lg);
-  padding: var(--space-md);
-  background: var(--c-bg);
-  border-radius: var(--radius-sm);
-}
-.route-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.route-item:last-child {
-  margin-bottom: 0;
-}
-.route-icon {
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-sm);
-  font-weight: bold;
-  color: #fff;
-  margin-right: 10px;
-  flex-shrink: 0;
-}
-.route-icon--pickup {
-  background: #3b82f6;
-}
-.route-icon--delivery {
-  background: var(--c-delivery);
-}
-.route-text {
-  flex: 1;
-  font-size: var(--font-md);
-  color: var(--c-text-1);
-  line-height: 1.5;
-}
-
-.delivery-card__footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--c-border);
-}
-.delivery-card__meta {
-  display: flex;
-  gap: var(--space-md);
-  font-size: var(--font-base);
-  color: var(--c-text-3);
-}
-.meta-time,
-.meta-size {
-  display: inline-block;
-}
-.delivery-badge {
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-full);
-  font-size: var(--font-sm);
-  font-weight: 500;
-}
-.delivery-badge.status-pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-.delivery-badge.status-delivering {
-  background: #dbeafe;
-  color: #1e40af;
-}
-.delivery-badge.status-completed {
-  background: #d1fae5;
-  color: #065f46;
-}
-</style>

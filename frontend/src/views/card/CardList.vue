@@ -2,18 +2,15 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { queryCardRecord } from '@/api/card'
-import { showErrorTopTips } from '@/utils/toast'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const route = useRoute()
+const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const list = ref([])
 const loading = ref(false)
 const queryDate = computed(() => (route.query.date || '').trim())
-
-function goBack() {
-  router.back()
-}
 
 function reQuery() {
   router.back()
@@ -35,12 +32,13 @@ function parseDateToPayload(dateStr) {
 function fetchList() {
   const payload = parseDateToPayload(queryDate.value)
   if (!payload) {
-    showErrorTopTips('查询日期格式不正确，请重新选择')
+    showError('查询日期格式不正确，请重新选择')
     list.value = []
     return
   }
 
   loading.value = true
+  showLoading('加载中')
   queryCardRecord(payload)
     .then((res) => {
       const body = res && res.data ? res.data : res
@@ -58,6 +56,7 @@ function fetchList() {
     })
     .finally(() => {
       loading.value = false
+      hideLoading()
     })
 }
 
@@ -70,10 +69,9 @@ function formatDisplayDate(d) {
   return s
 }
 
-function amountClass(amount) {
+function isPositive(amount) {
   const n = parseFloat(amount)
-  if (isNaN(n)) return 'card-amount'
-  return n >= 0 ? 'card-amount card-amount--positive' : 'card-amount card-amount--negative'
+  return !isNaN(n) && n >= 0
 }
 
 function amountText(amount) {
@@ -93,160 +91,48 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card-list-page">
+  <div class="min-h-screen bg-[var(--c-bg)]">
     <template v-if="queryDate">
-      <template v-if="loading">
-        <div class="weui-mask_transparent" aria-hidden="true"></div>
-        <div class="weui-toast__wrp">
-          <div class="weui-toast">
-            <span class="weui-primary-loading weui-icon_toast" aria-label="加载中"></span>
-            <p class="weui-toast__content">加载中</p>
+      <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+        <span class="flex-1 text-center text-sm font-bold">消费记录</span>
+        <div class="w-10"></div>
+      </div>
+
+      <div class="max-w-lg mx-auto px-4 py-6">
+        <div class="text-sm text-[var(--c-text-2)] mb-4">
+          查询日期：<span class="font-medium text-[var(--c-text)]">{{ formatDisplayDate(queryDate) }}</span>
+        </div>
+
+        <!-- Empty state -->
+        <div v-if="!loading && list.length === 0" class="text-center py-12 text-sm text-[var(--c-text-3)]">
+          当日暂无消费记录
+        </div>
+
+        <!-- Transaction list -->
+        <div v-if="list.length > 0" class="bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)]">
+          <div
+            v-for="(item, index) in list"
+            :key="index"
+            class="flex items-center justify-between px-4 py-3"
+            :class="{ 'border-b border-[var(--c-border-light)]': index < list.length - 1 }"
+          >
+            <div class="min-w-0 flex-1">
+              <div class="text-sm font-medium truncate">{{ item.merchantName || '未知商户' }} <span class="text-[var(--c-text-3)]">{{ item.tradeName || '' }}</span></div>
+              <div class="text-xs text-[var(--c-text-3)] mt-0.5">{{ item.tradeTime || '' }}</div>
+            </div>
+            <div class="shrink-0 ml-3 font-mono text-sm font-semibold"
+                 :class="isPositive(item.tradePrice) ? 'text-green-600' : 'text-[var(--c-text-2)]'"
+            >{{ amountText(item.tradePrice) }}</div>
           </div>
         </div>
-      </template>
 
-      <div class="top-nav-bar">
-        <div class="nav-btn-back" @click="goBack">返回</div>
-      </div>
-
-      <div class="page-header">
-        <h1 class="page-title-green">消费记录</h1>
-      </div>
-
-      <div class="weui-cells__title">当前查询日期：{{ formatDisplayDate(queryDate) }}</div>
-
-      <div class="weui-cells card-cells">
-        <div
-          v-for="(item, index) in list"
-          :key="index"
-          class="weui-cell card-cell"
-        >
-          <div class="weui-cell__bd">
-            <div class="card-cell__line1">{{ item.merchantName || '未知商户' }} 【{{ item.tradeName || '未知类型' }}】</div>
-            <div class="card-cell__line2">{{ item.tradeTime || '' }}</div>
-          </div>
-          <div class="weui-cell__ft">
-            <span :class="amountClass(item.tradePrice)">{{ amountText(item.tradePrice) }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="weui-btn_area">
-        <button type="button" class="weui-btn weui-btn_primary" @click="reQuery">重新查询</button>
+        <button
+          type="button"
+          class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          @click="reQuery"
+        >重新查询</button>
       </div>
     </template>
   </div>
 </template>
-
-<style scoped>
-.card-list-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-header {
-  text-align: center;
-  padding: 0 0 20px;
-  background-color: #fff;
-}
-
-.page-title-green {
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 0 0 20px 0;
-  line-height: 1.2;
-}
-
-.card-list-page .weui-cells__title {
-  padding: 12px 15px 8px;
-  font-size: 14px;
-  color: #888;
-}
-
-.card-list-page .card-cells {
-  margin-top: 0;
-}
-
-.card-cell {
-  position: relative;
-  padding: 12px 15px !important;
-  box-sizing: border-box;
-}
-
-.card-cell::after {
-  content: " ";
-  position: absolute;
-  left: 15px;
-  right: 15px;
-  bottom: 0;
-  height: 1px;
-  border-bottom: 1px solid #E5E5E5;
-  transform-origin: 0 100%;
-  transform: scaleY(0.5);
-}
-
-.card-cell:last-child::after {
-  display: none !important;
-}
-
-.card-cell__line1 {
-  font-size: 16px;
-  color: #000;
-  margin-bottom: 4px;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-
-.card-cell__line2 {
-  font-size: 13px;
-  color: #888;
-  line-height: 1.4;
-}
-
-.card-cell .weui-cell__ft {
-  flex-shrink: 0;
-  margin-left: 10px;
-  text-align: right;
-}
-
-.card-amount {
-  font-size: 15px;
-  white-space: nowrap;
-}
-
-.card-amount--negative {
-  color: #999;
-}
-
-.card-amount--positive {
-  color: #333;
-}
-
-.card-list-page .weui-btn_area {
-  margin-top: 24px;
-  padding: 0 15px;
-}
-
-.card-list-page .weui-btn_area .weui-btn {
-  width: 100%;
-}
-</style>

@@ -10,13 +10,16 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 </script>
 
 <template>
-  <div class="article-page">
-    <div class="article-header">
-      <span class="back-btn" @click="router.back()">{{ t('about.back') }}</span>
-      <h2 class="article-title">{{ t('about.privacyPolicyTitle') }}</h2>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← {{ t('about.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('about.privacyPolicyTitle') }}</span>
+      <div class="w-10"></div>
     </div>
-    <div class="weui-article">
-      <div v-if="isNonChinese" class="lang-notice">
+    <div class="max-w-2xl mx-auto px-4 py-6">
+      <div class="rounded-xl bg-[var(--c-surface)] border border-[var(--c-border)] p-5">
+        <div class="text-sm leading-relaxed text-[var(--c-text-2)] [&_p]:mb-3 [&_strong]:font-semibold">
+      <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
         {{ t('about.chineseOnlyNotice') }}
       </div>
       <p id="policy-common" style="text-align:center">《广东二师助手隐私政策》</p>
@@ -177,70 +180,8 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
       <p>&nbsp;</p>
       <p>特别提示：本《广东二师助手隐私政策》将于发布之日正式生效，除非广东二师助手平台根据相关法律法规及平台运营对本隐私政策作出调整并发布新的隐私政策，否则本隐私政策一直有效。</p>
       <p>&nbsp;</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.article-page {
-  min-height: 100vh;
-  background-color: #fff;
-}
-
-.article-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50px;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  z-index: 1000;
-}
-
-.back-btn {
-  color: var(--color-primary);
-  font-size: 15px;
-  cursor: pointer;
-  margin-right: 16px;
-}
-
-.article-title {
-  flex: 1;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 500;
-  color: #333;
-  margin: 0;
-}
-
-.weui-article {
-  margin-top: 50px;
-  padding: 20px 16px;
-  line-height: 1.8;
-  color: #333;
-  font-size: 14px;
-}
-
-.weui-article p {
-  margin: 12px 0;
-}
-
-.weui-article strong {
-  font-weight: 600;
-}
-
-.lang-notice {
-  background-color: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffc107;
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  font-size: 14px;
-  line-height: 1.6;
-}
-</style>

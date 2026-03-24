@@ -10,7 +10,6 @@ import cn.gdeiassistant.common.exception.CloseAccountException.UserStateErrorExc
 import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.TestAccountException;
 import cn.gdeiassistant.common.exception.CustomScheduleException.CountOverLimitException;
 import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateScheduleException;
 import cn.gdeiassistant.common.exception.DatabaseException.ConfirmedStateException;
@@ -131,12 +130,6 @@ public class GlobalRestExceptionHandler {
     public ResponseEntity<JsonResult> handleUserNotExistException(UserNotExistException e) {
         logger.error("用户不存在：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.USER_NOT_EXIST, false, "当前用户不存在，请尝试重新登录"));
-    }
-
-    @ExceptionHandler(TestAccountException.class)
-    public ResponseEntity<JsonResult> handleTestAccountException(TestAccountException e) {
-        String message = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : "测试用户不支持该功能";
-        return ResponseEntity.ok(new JsonResult(false, message));
     }
 
     @ExceptionHandler(FeatureNotEnabledException.class)

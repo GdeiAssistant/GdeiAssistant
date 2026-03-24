@@ -37,162 +37,47 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="spare-list-page">
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <!-- Loading overlay -->
     <template v-if="isLoading">
-      <div class="weui-mask_transparent" aria-hidden="true"></div>
-      <div class="weui-toast__wrp">
-        <div class="weui-toast">
-          <span class="weui-primary-loading weui-icon_toast" aria-label="加载中"></span>
-          <p class="weui-toast__content">加载中</p>
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
+        <div class="bg-[var(--c-surface)] rounded-xl px-6 py-5 flex flex-col items-center gap-3 shadow-lg">
+          <svg class="animate-spin h-8 w-8 text-[var(--c-primary)]" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+          <p class="text-sm text-[var(--c-text-2)]">加载中</p>
         </div>
       </div>
     </template>
 
-    <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
+    <!-- Header -->
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">← 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">空课室查询</span>
+      <div class="w-10"></div>
     </div>
-    <div class="page-header">
-      <h1 class="page-title-green">空课室查询</h1>
-    </div>
-    <div class="weui-cells__title">查询结果</div>
 
-    <div v-if="spareList.length > 0" class="weui-panel weui-panel_access">
-      <div class="weui-panel__bd">
+    <div class="max-w-2xl mx-auto px-4 py-4">
+      <p class="text-xs text-[var(--c-text-quaternary)] mb-3 px-1">查询结果</p>
+
+      <!-- Results list -->
+      <div v-if="spareList.length > 0" class="rounded-xl bg-[var(--c-surface)] border border-[var(--c-border)] overflow-hidden">
         <div
           v-for="(item, index) in spareList"
           :key="index"
-          class="weui-media-box weui-media-box_text"
+          class="px-4 py-3.5"
+          :class="index < spareList.length - 1 ? 'border-b border-[var(--c-border)]' : ''"
         >
-          <h4 class="weui-media-box__title">{{ item.name }}</h4>
-          <p class="weui-media-box__desc spare-meta">
-            <span class="spare-meta__left">类型: {{ item.type }}</span>
-            <span class="spare-meta__right">座位数: {{ item.seats }}</span>
-          </p>
+          <h4 class="text-base font-medium text-[var(--c-text-primary)] mb-1">{{ item.name }}</h4>
+          <div class="flex justify-between text-sm text-[var(--c-text-2)]">
+            <span>类型: {{ item.type }}</span>
+            <span>座位数: {{ item.seats }}</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div v-if="!isLoading && spareList.length === 0" class="empty-state">
-      暂无空课室数据
+      <!-- Empty state -->
+      <div v-if="!isLoading && spareList.length === 0" class="flex items-center justify-center min-h-[200px] text-sm text-[var(--c-text-quaternary)]">
+        暂无空课室数据
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.spare-list-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-header {
-  text-align: center;
-  padding: 0 0 20px;
-  background-color: #fff;
-}
-
-.page-title-green {
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 0 0 20px 0;
-  line-height: 1.2;
-}
-
-.spare-list-page .weui-cells__title {
-  padding: 12px 15px 8px;
-  font-size: 14px;
-  color: #888;
-}
-
-.spare-list-page .weui-panel {
-  margin-top: 0;
-  background-color: #fff;
-}
-
-.spare-list-page .weui-panel__bd {
-  padding: 0;
-}
-
-.spare-list-page .weui-media-box {
-  position: relative;
-  padding: 15px !important;
-  display: block;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
-}
-
-.spare-list-page .weui-media-box::after {
-  content: " ";
-  position: absolute;
-  left: 15px;
-  right: 15px;
-  bottom: 0;
-  height: 1px;
-  border-bottom: 1px solid #E5E5E5;
-  transform-origin: 0 100%;
-  transform: scaleY(0.5);
-}
-
-.spare-list-page .weui-media-box:last-child::after,
-.spare-list-page .weui-panel__bd .weui-media-box:last-child::after {
-  display: none !important;
-}
-
-.spare-list-page .weui-media-box__title {
-  color: #000;
-  font-weight: 400;
-  font-size: 17px;
-  margin: 0 0 6px 0;
-  line-height: 1.4;
-  white-space: normal;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-
-.spare-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-  color: #666;
-  margin: 4px 0 0 0;
-  line-height: 1.45;
-}
-
-.spare-meta__left {
-  flex-shrink: 0;
-}
-
-.spare-meta__right {
-  flex-shrink: 0;
-  margin-left: 12px;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 40px 15px;
-  font-size: 14px;
-  color: #999;
-  min-height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>

@@ -3,8 +3,8 @@ import CommunityTabbar from '../../components/community/CommunityTabbar.vue'
 </script>
 
 <template>
-  <div class="community-page" style="--module-color: #f43f5e">
-    <div style="padding-bottom: 56px">
+  <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: #f43f5e">
+    <div class="pb-14">
       <router-view />
     </div>
     <CommunityTabbar

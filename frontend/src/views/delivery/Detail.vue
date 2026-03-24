@@ -26,8 +26,10 @@ function getStatusText(status) {
 }
 
 function getStatusClass(status) {
-  const map = { 0: 'status-pending', 1: 'status-delivering', 2: 'status-completed' }
-  return map[status] || ''
+  if (status === 0) return 'bg-amber-100 text-amber-800'
+  if (status === 1) return 'bg-blue-100 text-blue-800'
+  if (status === 2) return 'bg-green-100 text-green-800'
+  return ''
 }
 
 function getTypeText(type) {
@@ -117,85 +119,80 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="delivery-detail" style="--module-color: #f59e0b">
+  <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: #f59e0b">
     <CommunityHeader title="任务详情" moduleColor="#f59e0b" @back="router.back()" backTo="" />
 
-    <div v-if="item" class="delivery-detail__content">
-      <!-- 任务卡片 -->
-      <div class="detail-card community-card">
-        <div class="detail-card__header">
-          <div class="detail-card__type">{{ getTypeText(item.type) }}</div>
-          <div class="detail-card__reward">
-            <span class="reward-symbol">&#xffe5;</span>
-            <span class="reward-amount">{{ item.reward.toFixed(2) }}</span>
+    <div v-if="item" class="p-4 animate-[slide-up_0.4s_ease_both]">
+      <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-5 pb-4 border-b border-[var(--c-border)]">
+          <div class="text-xl font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
+          <div class="flex items-baseline text-red-500">
+            <span class="text-xl font-bold mr-0.5">&#xffe5;</span>
+            <span class="text-[28px] font-bold">{{ item.reward.toFixed(2) }}</span>
           </div>
         </div>
 
-        <div class="detail-card__route">
-          <div class="route-item route-item--pickup">
-            <span class="route-icon route-icon--pickup">取</span>
-            <div class="route-content">
-              <div class="route-text">{{ item.pickupAddress }}</div>
-              <div v-if="item.pickupCode && (detailType === 0 || detailType === 3)" class="route-code">
-                取件码：{{ item.pickupCode }}
-              </div>
-              <div v-else-if="item.pickupCode" class="route-code">
-                取件码：***
-              </div>
+        <!-- Route -->
+        <div class="mb-5 p-4 bg-[var(--c-bg)] rounded-lg">
+          <div class="flex items-start mb-4">
+            <span class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5 bg-blue-500">取</span>
+            <div class="flex-1">
+              <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ item.pickupAddress }}</div>
+              <div v-if="item.pickupCode && (detailType === 0 || detailType === 3)" class="text-base text-[var(--c-text-2)] mt-1">取件码：{{ item.pickupCode }}</div>
+              <div v-else-if="item.pickupCode" class="text-base text-[var(--c-text-2)] mt-1">取件码：***</div>
             </div>
           </div>
-          <div class="route-item route-item--delivery">
-            <span class="route-icon route-icon--delivery">送</span>
-            <div class="route-content">
-              <div class="route-text">{{ item.deliveryAddress }}</div>
-              <div v-if="item.contactPhone && (detailType === 0 || detailType === 3)" class="route-phone">
-                联系电话：{{ item.contactPhone }}
-              </div>
-              <div v-else-if="item.contactPhone" class="route-phone">
-                联系电话：***
-              </div>
+          <div class="flex items-start">
+            <span class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5 bg-amber-500">送</span>
+            <div class="flex-1">
+              <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ item.deliveryAddress }}</div>
+              <div v-if="item.contactPhone && (detailType === 0 || detailType === 3)" class="text-base text-[var(--c-text-2)] mt-1">联系电话：{{ item.contactPhone }}</div>
+              <div v-else-if="item.contactPhone" class="text-base text-[var(--c-text-2)] mt-1">联系电话：***</div>
             </div>
           </div>
         </div>
 
-        <div v-if="item.pickupImage" class="detail-card__image">
-          <img :src="item.pickupImage" alt="取件凭证" />
+        <!-- Pickup image -->
+        <div v-if="item.pickupImage" class="mb-5 rounded-lg overflow-hidden bg-[var(--c-border)]">
+          <img :src="item.pickupImage" alt="取件凭证" class="w-full h-auto max-h-[300px] object-cover" />
         </div>
 
-        <div class="detail-card__info">
-          <!-- 角色标识 -->
-          <div v-if="getUserRole()" class="info-row info-row--role">
-            <span class="info-label">我的角色：</span>
-            <div :class="['role-badge', getUserRole() === 'publisher' ? 'role-publisher' : 'role-runner']">
+        <!-- Info rows -->
+        <div class="pt-4 border-t border-[var(--c-border)]">
+          <!-- Role -->
+          <div v-if="getUserRole()" class="flex items-center mb-4 pb-3 border-b border-[var(--c-border)]">
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">我的角色：</span>
+            <div class="px-3.5 py-1.5 rounded-full text-[13px] font-medium" :class="getUserRole() === 'publisher' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'">
               {{ getUserRole() === 'publisher' ? '发布者' : '接单者' }}
             </div>
           </div>
-          <div class="info-row">
-            <span class="info-label">物品大小：</span>
-            <span class="info-value">{{ getSizeText(item.size) }}</span>
+          <div class="flex items-center mb-3">
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">物品大小：</span>
+            <span class="flex-1 text-base text-[var(--c-text-1)]">{{ getSizeText(item.size) }}</span>
           </div>
-          <div v-if="item.description" class="info-row">
-            <span class="info-label">备注说明：</span>
-            <span class="info-value">{{ item.description }}</span>
+          <div v-if="item.description" class="flex items-center mb-3">
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">备注说明：</span>
+            <span class="flex-1 text-base text-[var(--c-text-1)]">{{ item.description }}</span>
           </div>
-          <div class="info-row">
-            <span class="info-label">发布时间：</span>
-            <span class="info-value">{{ item.time }}</span>
+          <div class="flex items-center mb-3">
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">发布时间：</span>
+            <span class="flex-1 text-base text-[var(--c-text-1)]">{{ item.time }}</span>
           </div>
-          <div class="info-row">
-            <span class="info-label">任务状态：</span>
-            <div :class="['delivery-badge', getStatusClass(item.status)]">
+          <div class="flex items-center">
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">任务状态：</span>
+            <div class="px-3 py-1 rounded-full text-sm font-medium" :class="getStatusClass(item.status)">
               {{ getStatusText(item.status) }}
             </div>
           </div>
         </div>
 
-        <!-- 操作按钮区域（嵌入卡片内部） -->
-        <div v-if="canAccept() || canComplete()" class="detail-card__actions">
+        <!-- Action buttons -->
+        <div v-if="canAccept() || canComplete()" class="mt-6 pt-6 border-t border-[var(--c-border)] flex gap-3">
           <button
             v-if="canAccept()"
             type="button"
-            class="action-btn action-btn--accept"
+            class="flex-1 h-11 border-none rounded-lg text-lg font-medium cursor-pointer transition-all bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-[0_2px_8px_rgba(245,158,11,0.25)] hover:shadow-[0_4px_12px_rgba(245,158,11,0.35)] disabled:opacity-60 disabled:cursor-not-allowed"
             :disabled="accepting"
             @click="handleAccept"
           >
@@ -204,7 +201,7 @@ onMounted(async () => {
           <button
             v-if="canComplete()"
             type="button"
-            class="action-btn action-btn--complete"
+            class="flex-1 h-11 border-none rounded-lg text-lg font-medium cursor-pointer transition-all bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-[0_2px_8px_rgba(16,185,129,0.25)] hover:shadow-[0_4px_12px_rgba(16,185,129,0.35)] disabled:opacity-60 disabled:cursor-not-allowed"
             :disabled="completing"
             @click="showCompleteConfirm"
           >
@@ -214,235 +211,25 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- 提示对话框 -->
-    <div v-if="dialogVisible" class="community-dialog-mask" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="community-dialog">
-      <div class="community-dialog__title">提示</div>
-      <div class="community-dialog__body">{{ dialogMessage }}</div>
-      <div class="community-dialog__footer">
-        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
+    <!-- Info dialog -->
+    <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">提示</div>
+      <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
+      <div class="border-t border-[var(--c-border)] flex">
+        <a href="javascript:;" class="flex-1 text-center py-3 text-amber-500 font-medium no-underline" @click="dialogVisible = false">确定</a>
       </div>
     </div>
 
-    <!-- 确认完成对话框 -->
-    <div v-if="confirmCompleteVisible" class="community-dialog-mask" @click="confirmCompleteVisible = false"></div>
-    <div v-if="confirmCompleteVisible" class="community-dialog">
-      <div class="community-dialog__title">确认完成</div>
-      <div class="community-dialog__body">确定要完成这个订单吗？完成后将无法撤销。</div>
-      <div class="community-dialog__footer">
-        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--cancel" @click="confirmCompleteVisible = false">取消</a>
-        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="handleComplete">确定</a>
+    <!-- Complete confirmation dialog -->
+    <div v-if="confirmCompleteVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="confirmCompleteVisible = false"></div>
+    <div v-if="confirmCompleteVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">确认完成</div>
+      <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">确定要完成这个订单吗？完成后将无法撤销。</div>
+      <div class="border-t border-[var(--c-border)] flex">
+        <a href="javascript:;" class="flex-1 text-center py-3 text-[var(--c-text-2)] no-underline border-r border-[var(--c-border)]" @click="confirmCompleteVisible = false">取消</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-amber-500 font-medium no-underline" @click="handleComplete">确定</a>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.delivery-detail {
-  background: var(--c-bg);
-  min-height: 100vh;
-}
-
-.delivery-detail__content {
-  padding: var(--space-lg);
-  animation: community-slide-up 0.4s ease both;
-}
-
-.detail-card {
-  padding: var(--space-xl);
-}
-
-.detail-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-xl);
-  padding-bottom: var(--space-lg);
-  border-bottom: 1px solid var(--c-border);
-}
-.detail-card__type {
-  font-size: var(--font-xl);
-  font-weight: 600;
-  color: var(--c-text-1);
-}
-.detail-card__reward {
-  display: flex;
-  align-items: baseline;
-  color: #ef4444;
-}
-.reward-symbol {
-  font-size: var(--font-xl);
-  font-weight: bold;
-  margin-right: 2px;
-}
-.reward-amount {
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.detail-card__route {
-  margin-bottom: var(--space-xl);
-  padding: var(--space-lg);
-  background: var(--c-bg);
-  border-radius: var(--radius-sm);
-}
-.route-item {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: var(--space-lg);
-}
-.route-item:last-child {
-  margin-bottom: 0;
-}
-.route-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: bold;
-  color: #fff;
-  margin-right: var(--space-md);
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.route-icon--pickup {
-  background: #3b82f6;
-}
-.route-icon--delivery {
-  background: var(--c-delivery);
-}
-.route-content {
-  flex: 1;
-}
-.route-text {
-  font-size: var(--font-lg);
-  color: var(--c-text-1);
-  line-height: 1.5;
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-.route-code,
-.route-phone {
-  font-size: var(--font-base);
-  color: var(--c-text-2);
-  margin-top: var(--space-xs);
-}
-
-.detail-card__image {
-  margin-bottom: var(--space-xl);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  background: var(--c-border);
-}
-.detail-card__image img {
-  width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: cover;
-}
-
-.detail-card__info {
-  padding-top: var(--space-lg);
-  border-top: 1px solid var(--c-border);
-}
-.info-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--space-md);
-}
-.info-row:last-child {
-  margin-bottom: 0;
-}
-.info-label {
-  font-size: var(--font-base);
-  color: var(--c-text-2);
-  min-width: 80px;
-}
-.info-value {
-  flex: 1;
-  font-size: var(--font-base);
-  color: var(--c-text-1);
-}
-.info-row--role {
-  margin-bottom: var(--space-lg);
-  padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--c-border);
-}
-.role-badge {
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  font-size: 13px;
-  font-weight: 500;
-}
-.role-publisher {
-  background: #dbeafe;
-  color: #1e40af;
-}
-.role-runner {
-  background: #fef3c7;
-  color: #92400e;
-}
-.delivery-badge {
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-full);
-  font-size: var(--font-sm);
-  font-weight: 500;
-}
-.delivery-badge.status-pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-.delivery-badge.status-delivering {
-  background: #dbeafe;
-  color: #1e40af;
-}
-.delivery-badge.status-completed {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.detail-card__actions {
-  margin-top: var(--space-xl);
-  padding-top: var(--space-xl);
-  border-top: 1px solid var(--c-border);
-  display: flex;
-  gap: var(--space-md);
-}
-.action-btn {
-  flex: 1;
-  height: 44px;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: var(--font-lg);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.action-btn--accept {
-  background: linear-gradient(135deg, var(--c-delivery) 0%, #d97706 100%);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
-}
-.action-btn--accept:hover {
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
-}
-.action-btn--accept:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-.action-btn--complete {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
-}
-.action-btn--complete:hover {
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
-}
-.action-btn--complete:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-</style>

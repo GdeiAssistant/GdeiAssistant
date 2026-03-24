@@ -120,90 +120,116 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="lostandfound-profile">
+  <div class="min-h-screen bg-[var(--c-bg)]">
     <CommunityHeader title="个人中心" moduleColor="#3b82f6" backTo="/lostandfound/home" />
 
-    <section class="profile-section">
-      <i class="avt">
-        <img :src="avatar" alt="头像" />
+    <!-- Profile Header -->
+    <section class="relative bg-gradient-to-br from-blue-500 to-blue-400 pt-8 pb-5 pl-[140px] pr-5 min-h-[90px]">
+      <i class="absolute left-[25px] top-[25px] w-16 h-16 rounded-full overflow-hidden block">
+        <img :src="avatar" alt="头像" class="w-16! h-16! rounded-full border-2 border-white object-cover shadow-[0_2px_8px_rgba(0,0,0,0.1)]" />
       </i>
-      <span class="nm">{{ nickname }}</span>
-      <span class="introduction">
-        <p>{{ introduction }}</p>
+      <span class="text-xl text-white block mb-1.5">{{ nickname }}</span>
+      <span class="text-white/90 leading-[21px] text-xs block">
+        <p class="m-0 p-0 overflow-hidden text-ellipsis">{{ introduction }}</p>
       </span>
     </section>
 
-    <section class="status-section">
-      <ul class="tabs">
-        <li class="tab" :class="{ on: activeStat === 'lost' }" @click="switchStat('lost')" data-stat="lost">
-          寻物<i class="line"></i>
+    <!-- Status Section -->
+    <section class="mx-2.5">
+      <ul class="flex list-none p-0 my-2.5">
+        <li
+          class="flex-1 block relative text-center h-8 leading-8 text-sm cursor-pointer bg-[var(--c-surface)] rounded-t mr-1.5"
+          :class="activeStat === 'lost' ? 'bg-blue-500 text-white' : 'text-blue-500'"
+          @click="switchStat('lost')"
+        >
+          寻物
+          <i class="w-7 h-px absolute left-1/2 -ml-3.5 bottom-0" :class="activeStat === 'lost' ? 'block bg-white' : 'hidden bg-blue-500'"></i>
         </li>
-        <li class="tab" :class="{ on: activeStat === 'found' }" @click="switchStat('found')" data-stat="found">
-          招领<i class="line"></i>
+        <li
+          class="flex-1 block relative text-center h-8 leading-8 text-sm cursor-pointer bg-[var(--c-surface)] rounded-t mr-1.5"
+          :class="activeStat === 'found' ? 'bg-blue-500 text-white' : 'text-blue-500'"
+          @click="switchStat('found')"
+        >
+          招领
+          <i class="w-7 h-px absolute left-1/2 -ml-3.5 bottom-0" :class="activeStat === 'found' ? 'block bg-white' : 'hidden bg-blue-500'"></i>
         </li>
-        <li class="tab" :class="{ on: activeStat === 'didfound' }" @click="switchStat('didfound')" data-stat="didfound">
-          已找回<i class="line"></i>
+        <li
+          class="flex-1 block relative text-center h-8 leading-8 text-sm cursor-pointer bg-[var(--c-surface)] rounded-t"
+          :class="activeStat === 'didfound' ? 'bg-blue-500 text-white' : 'text-blue-500'"
+          @click="switchStat('didfound')"
+        >
+          已找回
+          <i class="w-7 h-px absolute left-1/2 -ml-3.5 bottom-0" :class="activeStat === 'didfound' ? 'block bg-white' : 'hidden bg-blue-500'"></i>
         </li>
       </ul>
 
-      <div class="statlists">
-        <div class="statlist" :class="{ nodis: activeStat !== 'lost' }" data-statlist="lost">
-          <div v-if="loading" class="nostatus"><p class="tip">加载中...</p></div>
+      <div class="relative">
+        <!-- Lost list -->
+        <div :class="activeStat !== 'lost' ? 'hidden!' : 'block'">
+          <div v-if="loading" class="relative pt-[170px] min-h-[200px] text-center">
+            <p class="text-center text-blue-500 mb-6 text-sm">加载中...</p>
+          </div>
           <template v-else>
-            <div v-if="lostList.length === 0" class="nostatus">
-              <p class="tip">暂无寻物信息</p>
+            <div v-if="lostList.length === 0" class="relative pt-[170px] min-h-[200px] text-center">
+              <p class="text-center text-blue-500 mb-6 text-sm">暂无寻物信息</p>
             </div>
-            <div v-for="item in lostList" :key="item.id" class="stat community-card">
-              <div class="info" @click="goDetail(item.id)">
-                <i class="img">
-                  <img :src="item.image" alt="" />
+            <div v-for="item in lostList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
+              <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
+                <i class="absolute left-2 w-[60px] h-[60px] overflow-hidden block rounded">
+                  <img :src="item.image" alt="" class="w-full h-full object-cover" />
                 </i>
-                <h5 class="tit">{{ item.name }}</h5>
-                <p class="tm">{{ item.publishTime }}</p>
+                <h5 class="text-blue-500 text-sm leading-5 m-0 mb-1 p-0">{{ item.name }}</h5>
+                <p class="text-[var(--c-text-3)] text-xs m-0 p-0">{{ item.publishTime }}</p>
               </div>
-              <p class="btns">
-                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
-                <a class="btn saled" href="javascript:;" @click.prevent="confirmDidFound(item.id)"><b>确认寻回</b></a>
+              <p class="flex m-0">
+                <a class="flex-1 block py-[7px] no-underline cursor-pointer" href="javascript:;" @click.prevent="editItem(item.id)"><b class="block text-[var(--c-text-3)] text-center leading-4 h-4 font-normal">编辑</b></a>
+                <a class="flex-1 block py-[7px] no-underline cursor-pointer" href="javascript:;" @click.prevent="confirmDidFound(item.id)"><b class="block text-[var(--c-text-3)] border-l border-[var(--c-border)] text-center leading-4 h-4 font-normal">确认寻回</b></a>
               </p>
             </div>
           </template>
         </div>
 
-        <div class="statlist" :class="{ nodis: activeStat !== 'found' }" data-statlist="found">
-          <div v-if="loading" class="nostatus"><p class="tip">加载中...</p></div>
+        <!-- Found list -->
+        <div :class="activeStat !== 'found' ? 'hidden!' : 'block'">
+          <div v-if="loading" class="relative pt-[170px] min-h-[200px] text-center">
+            <p class="text-center text-blue-500 mb-6 text-sm">加载中...</p>
+          </div>
           <template v-else>
-            <div v-if="foundList.length === 0" class="nostatus">
-              <p class="tip">暂无招领信息</p>
+            <div v-if="foundList.length === 0" class="relative pt-[170px] min-h-[200px] text-center">
+              <p class="text-center text-blue-500 mb-6 text-sm">暂无招领信息</p>
             </div>
-            <div v-for="item in foundList" :key="item.id" class="stat community-card">
-              <div class="info" @click="goDetail(item.id)">
-                <i class="img">
-                  <img :src="item.image" alt="" />
+            <div v-for="item in foundList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
+              <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
+                <i class="absolute left-2 w-[60px] h-[60px] overflow-hidden block rounded">
+                  <img :src="item.image" alt="" class="w-full h-full object-cover" />
                 </i>
-                <h5 class="tit">{{ item.name }}</h5>
-                <p class="tm">{{ item.publishTime }}</p>
+                <h5 class="text-blue-500 text-sm leading-5 m-0 mb-1 p-0">{{ item.name }}</h5>
+                <p class="text-[var(--c-text-3)] text-xs m-0 p-0">{{ item.publishTime }}</p>
               </div>
-              <p class="btns">
-                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
-                <a class="btn saled" href="javascript:;" @click.prevent="confirmDidFound(item.id)"><b>确认寻回</b></a>
+              <p class="flex m-0">
+                <a class="flex-1 block py-[7px] no-underline cursor-pointer" href="javascript:;" @click.prevent="editItem(item.id)"><b class="block text-[var(--c-text-3)] text-center leading-4 h-4 font-normal">编辑</b></a>
+                <a class="flex-1 block py-[7px] no-underline cursor-pointer" href="javascript:;" @click.prevent="confirmDidFound(item.id)"><b class="block text-[var(--c-text-3)] border-l border-[var(--c-border)] text-center leading-4 h-4 font-normal">确认寻回</b></a>
               </p>
             </div>
           </template>
         </div>
 
-        <div class="statlist" :class="{ nodis: activeStat !== 'didfound' }" data-statlist="didfound">
-          <div v-if="loading" class="nostatus"><p class="tip">加载中...</p></div>
+        <!-- Did Found list -->
+        <div :class="activeStat !== 'didfound' ? 'hidden!' : 'block'">
+          <div v-if="loading" class="relative pt-[170px] min-h-[200px] text-center">
+            <p class="text-center text-blue-500 mb-6 text-sm">加载中...</p>
+          </div>
           <template v-else>
-            <div v-if="didFoundList.length === 0" class="nostatus">
-              <p class="tip">暂无已找回信息</p>
+            <div v-if="didFoundList.length === 0" class="relative pt-[170px] min-h-[200px] text-center">
+              <p class="text-center text-blue-500 mb-6 text-sm">暂无已找回信息</p>
             </div>
-            <div v-for="item in didFoundList" :key="item.id" class="stat community-card">
-              <div class="info">
-                <i class="img">
-                  <img :src="item.image" alt="" />
+            <div v-for="item in didFoundList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
+              <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)]">
+                <i class="absolute left-2 w-[60px] h-[60px] overflow-hidden block rounded">
+                  <img :src="item.image" alt="" class="w-full h-full object-cover" />
                 </i>
-                <h5 class="tit">{{ item.name }}</h5>
-                <p class="tm">{{ item.publishTime }}</p>
+                <h5 class="text-blue-500 text-sm leading-5 m-0 mb-1 p-0">{{ item.name }}</h5>
+                <p class="text-[var(--c-text-3)] text-xs m-0 p-0">{{ item.publishTime }}</p>
               </div>
             </div>
           </template>
@@ -211,215 +237,16 @@ watch(() => route.fullPath, () => {
       </div>
     </section>
 
+    <!-- Dialog -->
     <div v-if="dialogVisible">
-      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
-      <div class="community-dialog" style="--module-color: #3b82f6">
-        <div class="community-dialog__title">提示</div>
-        <div class="community-dialog__body">{{ dialogMessage }}</div>
-        <div class="community-dialog__footer">
-          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
+      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
+        <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">提示</div>
+        <div class="text-center text-sm text-[var(--c-text-2)] px-5 pb-5">{{ dialogMessage }}</div>
+        <div class="border-t border-[var(--c-border)]">
+          <button class="w-full py-3 text-center text-blue-500 font-medium text-base border-none bg-transparent cursor-pointer" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.lostandfound-profile {
-  min-height: 100vh;
-  background: var(--c-bg);
-}
-
-.profile-section {
-  position: relative;
-  background: linear-gradient(135deg, #3b82f6, #60a5fa);
-  padding: 30px 20px 20px 140px;
-  min-height: 90px;
-}
-.profile-section .avt {
-  position: absolute;
-  left: 25px;
-  top: 25px;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: block;
-}
-.profile-section .avt img {
-  width: 64px !important;
-  height: 64px !important;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  object-fit: cover;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-.profile-section .nm {
-  font-size: 20px;
-  color: #fff;
-  display: block;
-  margin-bottom: 5px;
-}
-.profile-section .introduction {
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 21px;
-  font-size: 12px;
-  display: block;
-}
-.profile-section .introduction p {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.status-section {
-  margin: 10px;
-}
-.status-section .tabs {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 10px 0;
-}
-.status-section .tab {
-  flex: 1;
-  display: block;
-  position: relative;
-  color: var(--c-lostandfound);
-  text-align: center;
-  height: 32px;
-  line-height: 32px;
-  font-size: 14px;
-  cursor: pointer;
-  background: var(--c-card);
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  margin-right: 5px;
-}
-.status-section .tab:last-child {
-  margin-right: 0;
-}
-.status-section .tab .line {
-  width: 28px;
-  height: 1px;
-  background: var(--c-lostandfound);
-  position: absolute;
-  left: 50%;
-  margin-left: -14px;
-  bottom: 0;
-  display: none;
-}
-.status-section .tab.on {
-  background: var(--c-lostandfound);
-  color: #fff;
-}
-.status-section .tab.on .line {
-  display: block;
-  background: #fff;
-}
-
-.statlists {
-  position: relative;
-}
-.statlist {
-  display: block;
-}
-.statlist.nodis {
-  display: none !important;
-}
-
-.stat {
-  margin-bottom: 8px;
-  border-radius: var(--radius-md);
-}
-.stat .info {
-  position: relative;
-  padding: 8px 8px 8px 75px;
-  min-height: 60px;
-  border-bottom: 1px solid var(--c-border);
-  cursor: pointer;
-}
-.stat .info .img {
-  position: absolute;
-  left: 8px;
-  width: 60px;
-  height: 60px;
-  overflow: hidden;
-  display: block;
-  border-radius: var(--radius-sm);
-}
-.stat .info .img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.stat .info h5.tit {
-  color: var(--c-lostandfound);
-  font-size: 14px;
-  line-height: 20px;
-  margin: 0 0 4px 0;
-  padding: 0;
-}
-.stat .info .tm {
-  color: var(--c-text-3);
-  font-size: 12px;
-  margin: 0;
-  padding: 0;
-}
-.stat .btns {
-  display: flex;
-}
-.stat .btns .btn {
-  flex: 1;
-  display: block;
-  padding: 7px 0;
-  text-decoration: none;
-}
-.stat .btns .btn b {
-  display: block;
-  color: var(--c-text-3);
-  border-left: 1px solid var(--c-divider);
-  text-align: center;
-  line-height: 16px;
-  height: 16px;
-}
-.stat .btns .btn:first-child b {
-  border-left: none;
-}
-
-.nostatus {
-  position: relative;
-  padding-top: 170px;
-  min-height: 200px;
-  text-align: center;
-}
-.nostatus::before {
-  content: '';
-  position: absolute;
-  top: 44px;
-  left: 50%;
-  width: 88px;
-  height: 88px;
-  transform: translateX(-50%);
-  border-radius: 28px;
-  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
-  box-shadow: inset 0 0 0 1px #bfdbfe;
-}
-.nostatus::after {
-  content: '';
-  position: absolute;
-  top: 77px;
-  left: 50%;
-  width: 30px;
-  height: 30px;
-  transform: translateX(-50%) rotate(45deg);
-  border-right: 3px solid rgba(59, 130, 246, 0.6);
-  border-bottom: 3px solid rgba(59, 130, 246, 0.6);
-}
-.nostatus .tip {
-  text-align: center;
-  color: var(--c-lostandfound);
-  margin-bottom: 25px;
-  font-size: 14px;
-}
-</style>

@@ -1,28 +1,16 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { error: showError } = useToast()
 const keyword = ref('')
-const showTopTips = ref(false)
-const errorMsg = ref('')
-let topTipsTimer = null
-
-const showWeuiTopTips = (msg) => {
-  errorMsg.value = msg
-  showTopTips.value = true
-
-  if (topTipsTimer) clearTimeout(topTipsTimer)
-
-  topTipsTimer = setTimeout(() => {
-    showTopTips.value = false
-  }, 2000)
-}
 
 const doSearch = () => {
   const k = keyword.value.trim()
   if (!k) {
-    showWeuiTopTips('请输入查询关键词！')
+    showError('请输入查询关键词！')
     return
   }
   router.push({ path: '/library/list', query: { keyword: k } })
@@ -34,105 +22,34 @@ function goBack() {
 </script>
 
 <template>
-  <div class="weui-toptips weui-toptips_warn" v-show="showTopTips">{{ errorMsg }}</div>
-  <div class="collection-search-page">
-    <div class="top-nav-bar">
-      <div class="nav-btn-back" @click="goBack">返回</div>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">馆藏检索</span>
+      <div class="w-10"></div>
     </div>
-    <h1 class="page-title-green">馆藏检索</h1>
-    <p class="page-subtitle">按书名、作者和出版社搜索图书馆馆藏</p>
 
-    <div class="weui-cells weui-cells_form">
-      <div class="weui-cell">
-        <div class="weui-cell__hd">
-          <label class="weui-label">关键词</label>
-        </div>
-        <div class="weui-cell__bd weui-cell_primary">
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <p class="text-center text-sm text-[var(--c-text-2)] mb-5">按书名、作者和出版社搜索图书馆馆藏</p>
+
+      <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+        <div>
+          <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">关键词</label>
           <input
             v-model="keyword"
-            class="weui-input"
             type="text"
             placeholder="请输入书名、作者等"
+            class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
             @keyup.enter="doSearch"
           />
         </div>
-      </div>
-    </div>
 
-    <div class="weui-btn_area">
-      <button type="button" class="weui-btn weui-btn_primary" @click="doSearch">查询</button>
+        <button
+          type="button"
+          class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          @click="doSearch"
+        >查询</button>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.collection-search-page {
-  background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: #888;
-  cursor: pointer;
-}
-
-.page-title-green {
-  text-align: center;
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 10px 0 4px 0;
-  line-height: 1.2;
-}
-
-.page-subtitle {
-  text-align: center;
-  font-size: 14px;
-  color: #888;
-  margin: 0 0 20px 0;
-}
-
-.collection-search-page .weui-cells_form {
-  margin-top: 0;
-}
-
-.collection-search-page .weui-btn_area {
-  margin-top: 24px;
-  padding: 0 15px;
-}
-
-.collection-search-page .weui-btn_area .weui-btn {
-  width: 100%;
-}
-
-.weui-toptips {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 10px;
-  font-size: 14px;
-  text-align: center;
-  color: #FFF !important;
-  background-color: #E64340 !important;
-  z-index: 99999 !important;
-  opacity: 1 !important;
-  display: block; /* 可见时覆盖 WEUI 默认，隐藏由 v-show 的 display:none 控制 */
-  transition: opacity 0.3s;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-</style>

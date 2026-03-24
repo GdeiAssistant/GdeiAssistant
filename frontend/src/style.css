@@ -1,28 +1,150 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Unified Design Tokens
+   Merged from style.css (global) + community-theme.css
+   ============================================================ */
+
+@theme {
+  --color-primary: var(--c-primary);
+  --color-primary-hover: var(--c-primary-hover);
+  --color-primary-50: var(--c-primary-50);
+  --color-primary-100: var(--c-primary-100);
+  --color-surface: var(--c-surface);
+  --color-surface-hover: var(--c-surface-hover);
+  --color-background: var(--c-bg);
+  --color-border: var(--c-border);
+  --color-border-light: var(--c-border-light);
+  --color-text-primary: var(--c-text-1);
+  --color-text-secondary: var(--c-text-2);
+  --color-text-muted: var(--c-text-3);
+  --color-danger: var(--c-danger);
+  --color-warning: var(--c-warning);
+  --color-info: var(--c-info);
+  --color-purple: var(--c-purple);
+  --color-pink: var(--c-pink);
+  --color-cyan: var(--c-cyan);
+  --color-orange: var(--c-orange);
+
+  --font-sans: 'Inter', 'Noto Sans SC', -apple-system, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+
+/* ── Light Theme (default) ──────────────────────────────── */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --c-primary: #047857;
+  --c-primary-hover: #065F46;
+  --c-primary-50: #ECFDF5;
+  --c-primary-100: #D1FAE5;
+  --c-bg: #FAFBFC;
+  --c-surface: #FFFFFF;
+  --c-surface-hover: #F9FAFB;
+  --c-text-1: #111827;
+  --c-text-2: #4B5563;
+  --c-text-3: #9CA3AF;
+  --c-border: #E5E7EB;
+  --c-border-light: #F3F4F6;
+  --c-divider: #F3F4F6;
+  --c-danger: #EF4444;
+  --c-warning: #F59E0B;
+  --c-info: #3B82F6;
+  --c-purple: #8B5CF6;
+  --c-pink: #EC4899;
+  --c-cyan: #06B6D4;
+  --c-orange: #F97316;
+
+  /* Module accent colors (community) */
+  --c-ershou: #10B981;
+  --c-lostandfound: #3B82F6;
+  --c-secret: #8B5CF6;
+  --c-express: #F43F5E;
+  --c-topic: #6366F1;
+  --c-delivery: #F59E0B;
+  --c-dating: #EC4899;
+  --c-photograph: #06B6D4;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+
+  /* Font sizes */
+  --font-xs: 11px;
+  --font-sm: 12px;
+  --font-base: 14px;
+  --font-md: 15px;
+  --font-lg: 16px;
+  --font-xl: 18px;
+  --font-2xl: 20px;
+}
+
+/* ── Dark Theme ─────────────────────────────────────────── */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --c-primary: #34D399;
+  --c-primary-hover: #6EE7B7;
+  --c-primary-50: rgba(52,211,153,0.08);
+  --c-primary-100: rgba(52,211,153,0.12);
+  --c-bg: #0B0E14;
+  --c-surface: #151921;
+  --c-surface-hover: #1A1F2A;
+  --c-text-1: #E8ECF2;
+  --c-text-2: #8B95A8;
+  --c-text-3: #4E5769;
+  --c-border: #1E2433;
+  --c-border-light: #1A1F2A;
+  --c-divider: #1A1F2A;
+  --c-danger: #F87171;
+  --c-warning: #FBBF24;
+  --c-info: #60A5FA;
+  --c-purple: #A78BFA;
+  --c-pink: #F472B6;
+  --c-cyan: #22D3EE;
+  --c-orange: #FB923C;
+
+  --c-ershou: #34D399;
+  --c-lostandfound: #60A5FA;
+  --c-secret: #A78BFA;
+  --c-express: #FB7185;
+  --c-topic: #818CF8;
+  --c-delivery: #FBBF24;
+  --c-dating: #F472B6;
+  --c-photograph: #22D3EE;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+/* ── Base Resets ────────────────────────────────────────── */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
-
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-primary);
-
+  color: var(--c-text-1);
+  background-color: var(--c-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: var(--color-primary);
-  text-decoration: inherit;
-}
-a:hover {
-  color: var(--color-primary-hover);
-}
-
-* {
-  box-sizing: border-box;
 }
 
 body {
@@ -34,38 +156,19 @@ body {
   overflow-x: hidden;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color-surface-raised);
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: var(--color-primary);
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
-}
-
 #app {
   width: 100%;
   max-width: 100%;
   margin: 0;
   padding: 0;
   min-height: 100vh;
+}
+
+a {
+  font-weight: 500;
+  color: var(--c-primary);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--c-primary-hover);
 }

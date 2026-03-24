@@ -47,10 +47,10 @@ const fetchSearchData = async (page) => {
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleScroll, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchSearchData)
 
-function getGenderClass(gender) {
-  if (gender === 'male') return 'gender-male'
-  if (gender === 'female') return 'gender-female'
-  return 'gender-secret'
+function getGenderColor(gender) {
+  if (gender === 'male') return '#4fc3f7'
+  if (gender === 'female') return '#ff8a80'
+  return 'var(--c-text-1)'
 }
 
 function doSearch() {
@@ -98,246 +98,107 @@ watch(
 </script>
 
 <template>
-  <div class="express-search-page">
+  <div class="min-h-screen bg-[var(--c-bg)]">
     <CommunityHeader title="搜索表白" moduleColor="#f43f5e" backTo="/express/home" />
 
     <!-- 搜索栏 -->
-    <div class="express-search-bar">
-      <div class="search-input-wrap">
-        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#9ca3af" width="16" height="16">
+    <div class="flex items-center px-4 py-2.5 bg-[var(--c-bg)]">
+      <div class="flex-1 flex items-center bg-[var(--c-surface)] rounded-full px-3 py-2 shadow-sm">
+        <svg class="shrink-0 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#9ca3af" width="16" height="16">
           <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
         </svg>
-        <input type="text" placeholder="搜索发件人/收件人/内容" v-model="keywordInput" @keyup.enter="doSearch" />
+        <input
+          type="text"
+          class="flex-1 border-none outline-none text-sm bg-transparent min-w-0 text-[var(--c-text-1)]"
+          placeholder="搜索发件人/收件人/内容"
+          v-model="keywordInput"
+          @keyup.enter="doSearch"
+        />
       </div>
-      <span class="search-btn" @click="doSearch">搜索</span>
+      <span class="text-[#f43f5e] text-sm ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">搜索</span>
     </div>
 
     <!-- 浅粉色标题 -->
-    <h2 class="express-main-title">广东第二师范学院表白墙</h2>
+    <h2 class="text-center text-xl font-bold text-[#ffb3ba] mx-4 mt-3 mb-4 leading-tight">广东第二师范学院表白墙</h2>
 
     <!-- 滚动容器 -->
     <div
-      class="express-scroll-container"
+      class="h-[calc(100vh-180px)] overflow-y-auto [-webkit-overflow-scrolling:touch] overscroll-y-contain"
       ref="scrollContainer"
       @scroll="handleScroll"
       @touchstart="handleTouchStart"
       @touchmove="handleTouchMove($event, scrollContainer)"
       @touchend="handleTouchEnd"
     >
-      <div class="community-pull-refresh" :style="{ height: pullY + 'px' }">
-        <span v-if="refreshing" class="community-pull-refresh__text">
-          <i class="community-loading-spinner"></i> 正在刷新...
+      <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
+        <span v-if="refreshing" class="flex items-center gap-2">
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i> 正在刷新...
         </span>
-        <span v-else-if="pullY > 50" class="community-pull-refresh__text">释放立即刷新</span>
-        <span v-else-if="pullY > 0" class="community-pull-refresh__text">下拉刷新</span>
+        <span v-else-if="pullY > 50">释放立即刷新</span>
+        <span v-else-if="pullY > 0">下拉刷新</span>
       </div>
 
-      <div class="express-list">
+      <div class="px-4 pb-5">
         <div
           v-for="(item, index) in list"
           :key="item.id"
-          class="community-card express-card"
+          class="bg-[var(--c-surface)] rounded-xl shadow-sm mb-3 overflow-hidden animate-[community-slide-up_0.4s_ease_both]"
           :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         >
-          <div class="express-card__content">
-            <p class="express-card__names">
-              <span :class="getGenderClass(item.senderGender)">{{ item.senderName }}</span>
-              <span class="express-card__connector">≡❤</span>
-              <span :class="getGenderClass(item.receiverGender)">{{ item.receiverName }}</span>
+          <div class="p-4 pb-3">
+            <p class="mb-2.5 text-base leading-relaxed">
+              <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.senderGender), color: getGenderColor(item.senderGender) }">{{ item.senderName }}</span>
+              <span class="mx-1.5 text-[#f43f5e] font-bold">≡❤</span>
+              <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.receiverGender), color: getGenderColor(item.receiverGender) }">{{ item.receiverName }}</span>
             </p>
-            <p class="express-card__text">{{ item.content }}</p>
-            <p class="express-card__time">{{ item.time }}</p>
+            <p class="text-sm text-[var(--c-text-1)] leading-relaxed break-words mb-1">{{ item.content }}</p>
+            <p class="text-xs text-[var(--c-text-3)]">{{ item.time }}</p>
           </div>
-          <div class="express-card__actions">
-            <button type="button" class="express-action" @click="handleLike(item)">
-              <span class="express-action__icon">♡</span>
-              <span class="express-action__text">{{ item.likeCount || 0 }}</span>
+          <div class="flex border-t border-[var(--c-border)]">
+            <button type="button" class="flex-1 flex items-center justify-center gap-1 py-2.5 bg-transparent border-none border-r border-[var(--c-border)] text-sm text-[var(--c-text-2)] cursor-pointer" @click="handleLike(item)">
+              <span class="text-base">♡</span>
+              <span>{{ item.likeCount || 0 }}</span>
             </button>
-            <button type="button" class="express-action" @click="handleGuess(item)">
-              <span class="express-action__icon">☆</span>
-              <span class="express-action__text">{{ item.guessCount || 0 }}</span>
+            <button type="button" class="flex-1 flex items-center justify-center gap-1 py-2.5 bg-transparent border-none border-r border-[var(--c-border)] text-sm text-[var(--c-text-2)] cursor-pointer" @click="handleGuess(item)">
+              <span class="text-base">☆</span>
+              <span>{{ item.guessCount || 0 }}</span>
             </button>
-            <button type="button" class="express-action" @click="handleComment(item)">
-              <span class="express-action__icon">💬</span>
-              <span class="express-action__text">{{ item.commentCount || 0 }}</span>
+            <button type="button" class="flex-1 flex items-center justify-center gap-1 py-2.5 bg-transparent border-none text-sm text-[var(--c-text-2)] cursor-pointer" @click="handleComment(item)">
+              <span class="text-base">💬</span>
+              <span>{{ item.commentCount || 0 }}</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div class="express-legend">
+      <div class="text-center text-xs text-[var(--c-text-3)] px-4 pt-4 pb-5 leading-relaxed">
         蓝色下划线：男生 / 红色下划线：女生 / 黑色下划线：其他或保密
       </div>
 
-      <div v-if="!loading && !refreshing && list.length === 0" class="community-empty">
-        <div class="community-empty__icon">🔍</div>
-        <p class="community-empty__text">{{ keyword ? '未找到相关表白' : '输入关键词搜索' }}</p>
+      <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+        <div class="text-5xl mb-3">🔍</div>
+        <p class="text-sm">{{ keyword ? '未找到相关表白' : '输入关键词搜索' }}</p>
       </div>
 
-      <div v-if="loading && !refreshing" class="community-loadmore">
-        <i class="community-loading-spinner"></i>
+      <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i>
         <span>正在加载</span>
       </div>
-      <div v-if="finished && list.length > 0" class="community-loadmore">
+      <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
         <span>没有更多了</span>
       </div>
     </div>
 
     <!-- 提示 Dialog -->
     <div v-if="dialogVisible">
-      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
-      <div class="community-dialog">
-        <div class="community-dialog__title">提示</div>
-        <div class="community-dialog__body">{{ dialogMessage }}</div>
-        <div class="community-dialog__footer">
-          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
+      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
+        <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">提示</div>
+        <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
+        <div class="flex border-t border-[var(--c-border)]">
+          <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.express-search-page {
-  min-height: 100vh;
-  background: var(--c-bg);
-}
-
-.express-search-bar {
-  display: flex;
-  align-items: center;
-  padding: 10px var(--space-lg);
-  background-color: var(--c-bg);
-}
-.search-input-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  background-color: var(--c-card);
-  border-radius: var(--radius-full);
-  padding: 8px 12px;
-  box-shadow: var(--shadow-sm);
-}
-.search-icon {
-  flex-shrink: 0;
-  margin-right: 8px;
-}
-.search-input-wrap input {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: var(--font-base);
-  background: transparent;
-  min-width: 0;
-  color: var(--c-text-1);
-}
-.search-btn {
-  color: #f43f5e;
-  font-size: var(--font-md);
-  margin-left: var(--space-lg);
-  white-space: nowrap;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.express-main-title {
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  color: #ffb3ba;
-  margin: var(--space-md) var(--space-lg) var(--space-lg);
-  padding: 0;
-  line-height: 1.3;
-}
-
-.gender-male {
-  border-bottom: 2px dashed #4fc3f7;
-  color: #4fc3f7;
-}
-.gender-female {
-  border-bottom: 2px dashed #ff8a80;
-  color: #ff8a80;
-}
-.gender-secret {
-  border-bottom: 2px dashed var(--c-text-1);
-  color: var(--c-text-1);
-}
-
-.express-scroll-container {
-  height: calc(100vh - 180px);
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-}
-
-.express-list {
-  padding: 0 var(--space-lg) var(--space-xl);
-}
-
-.express-card {
-  margin-bottom: var(--space-md);
-  overflow: hidden;
-  animation: community-slide-up 0.4s ease both;
-}
-.express-card__content {
-  padding: var(--space-lg) var(--space-lg) var(--space-md);
-}
-.express-card__names {
-  margin: 0 0 10px;
-  font-size: var(--font-lg);
-  line-height: 1.5;
-}
-.express-card__names span {
-  display: inline;
-}
-.express-card__connector {
-  margin: 0 6px;
-  color: #f43f5e;
-  font-weight: bold;
-  border: none !important;
-}
-.express-card__text {
-  margin: 0 0 var(--space-sm);
-  font-size: var(--font-md);
-  color: var(--c-text-1);
-  line-height: 1.6;
-  word-break: break-word;
-}
-.express-card__time {
-  margin: 0;
-  font-size: var(--font-sm);
-  color: var(--c-text-3);
-}
-.express-card__actions {
-  display: flex;
-  border-top: 1px solid var(--c-border);
-}
-.express-action {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-xs);
-  padding: 10px 0;
-  background: transparent;
-  border: none;
-  border-right: 1px solid var(--c-border);
-  font-size: var(--font-base);
-  color: var(--c-text-2);
-  cursor: pointer;
-}
-.express-action:last-child {
-  border-right: none;
-}
-.express-action__icon {
-  font-size: var(--font-lg);
-}
-
-.express-legend {
-  text-align: center;
-  font-size: var(--font-sm);
-  color: var(--c-text-3);
-  padding: var(--space-lg) var(--space-lg) var(--space-xl);
-  line-height: 1.5;
-}
-</style>

@@ -1,8 +1,4 @@
 [
-  {"name":"cn.gdeiassistant.common.aspect.TrialDataAspect","allDeclaredConstructors":true,"allPublicConstructors":true,"allDeclaredMethods":true,"allPublicMethods":true},
-  {"name":"cn.gdeiassistant.common.annotation.TrialData","allDeclaredConstructors":true,"allPublicConstructors":true,"allDeclaredMethods":true,"allPublicMethods":true,"allDeclaredFields":true,"allPublicFields":true},
-  {"name":"cn.gdeiassistant.core.trailData.handler.TrialModuleHandler","allDeclaredConstructors":true,"allPublicConstructors":true,"allDeclaredMethods":true,"allPublicMethods":true},
-  {"name":"cn.gdeiassistant.core.trailData.handler.DefaultTrialHandler","allDeclaredConstructors":true,"allPublicConstructors":true,"allDeclaredMethods":true,"allPublicMethods":true},
   {"name":"cn.gdeiassistant.common.pojo.Result.DataJsonResult","allDeclaredConstructors":true,"allPublicConstructors":true,"allDeclaredMethods":true,"allPublicMethods":true,"allDeclaredFields":true,"allPublicFields":true},
   {"name":"cn.gdeiassistant.common.pojo.Result.JsonResult","allDeclaredConstructors":true,"allPublicConstructors":true,"allDeclaredMethods":true,"allPublicMethods":true,"allDeclaredFields":true,"allPublicFields":true}
 ]

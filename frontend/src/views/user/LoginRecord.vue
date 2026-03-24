@@ -1,34 +1,36 @@
 <template>
-  <div class="page-container">
-    <div class="unified-header">
-      <div class="header-left" @click="goBack">返回</div>
-      <div class="header-title">登录记录</div>
-      <div class="header-right"></div>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Sticky Header -->
+    <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
+      <button type="button" class="w-15 text-base text-gray-700 text-left cursor-pointer" @click="goBack">返回</button>
+      <div class="flex-1 text-center text-lg font-medium text-black">登录记录</div>
+      <div class="w-15"></div>
     </div>
 
-    <!-- Loading 状态 -->
-    <div v-if="isLoading" class="loading-wrapper">
-      <div class="weui-loading"></div>
-      <p class="loading-text">加载中...</p>
-    </div>
+    <!-- Content -->
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <!-- Loading -->
+      <div v-if="isLoading" class="flex flex-col items-center justify-center py-16">
+        <div class="w-5 h-5 border-2 border-gray-200 border-t-green-500 rounded-full animate-spin"></div>
+        <p class="mt-3 text-sm text-gray-400">加载中...</p>
+      </div>
 
-    <!-- 空状态 -->
-    <div v-else-if="records.length === 0" class="empty-wrapper">
-      <p class="empty-text">暂无登录记录</p>
-    </div>
+      <!-- Empty -->
+      <div v-else-if="records.length === 0" class="flex items-center justify-center py-16">
+        <p class="text-sm text-gray-400">暂无登录记录</p>
+      </div>
 
-    <!-- 记录列表 -->
-    <div v-else class="weui-cells">
-      <div v-for="record in records" :key="record.id" class="weui-cell record-item">
-        <div class="weui-cell__bd">
-          <div class="record-main">
-            <span class="record-time">{{ record.loginTime }}</span>
-            <span class="record-status">登录成功</span>
+      <!-- Records -->
+      <div v-else class="bg-white rounded-xl shadow-sm divide-y divide-gray-100">
+        <div v-for="record in records" :key="record.id" class="px-4 py-4">
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-base font-medium text-gray-700">{{ record.loginTime }}</span>
+            <span class="text-sm text-green-500">登录成功</span>
           </div>
-          <div class="record-sub">
+          <div class="text-[13px] text-gray-400 leading-relaxed mt-0.5">
             {{ record.location }} · {{ record.ip }}
           </div>
-          <div class="record-sub">
+          <div class="text-[13px] text-gray-400 leading-relaxed mt-0.5">
             {{ record.device }}
           </div>
         </div>
@@ -95,126 +97,3 @@ onMounted(() => {
   loadRecords()
 })
 </script>
-
-<style scoped>
-.page-container {
-  background-color: #f8f8f8;
-  min-height: 100vh;
-}
-
-/* 标准顶部导航栏 */
-.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 48px;
-  background-color: #fff;
-  border-bottom: 1px solid #e5e5e5;
-  padding: 0 16px;
-}
-
-.header-left {
-  font-size: 16px;
-  color: #333;
-  cursor: pointer;
-  width: 60px;
-}
-
-.header-title {
-  font-size: 18px;
-  font-weight: 500;
-  color: #000;
-  flex: 1;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-}
-
-.header-right {
-  width: 60px;
-}
-
-/* Loading 状态 */
-.loading-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-}
-
-.weui-loading {
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  vertical-align: middle;
-  animation: weuiLoading 1s linear infinite;
-  border: 2px solid #e5e5e5;
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-}
-
-@keyframes weuiLoading {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.loading-text {
-  margin-top: 12px;
-  font-size: 14px;
-  color: #999;
-}
-
-/* 空状态 */
-.empty-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-}
-
-.empty-text {
-  font-size: 14px;
-  color: #999;
-}
-
-/* 记录列表 */
-.weui-cells {
-  margin-top: 12px;
-  background-color: #fff;
-}
-
-.record-item {
-  padding: 16px !important;
-  align-items: flex-start !important;
-}
-
-.record-main {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 4px;
-}
-
-.record-time {
-  font-size: 16px;
-  color: #333;
-  font-weight: 500;
-}
-
-.record-status {
-  font-size: 14px;
-  color: #07c160;
-}
-
-.record-sub {
-  font-size: 13px;
-  color: #999;
-  line-height: 1.5;
-  margin-top: 2px;
-}
-</style>

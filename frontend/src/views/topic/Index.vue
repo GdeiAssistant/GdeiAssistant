@@ -3,8 +3,8 @@ import CommunityTabbar from '../../components/community/CommunityTabbar.vue'
 </script>
 
 <template>
-  <div class="community-page" style="--module-color: #6366f1">
-    <div class="topic-container">
+  <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: #6366f1">
+    <div class="pb-14 box-border">
       <router-view />
     </div>
     <CommunityTabbar
@@ -18,10 +18,3 @@ import CommunityTabbar from '../../components/community/CommunityTabbar.vue'
     />
   </div>
 </template>
-
-<style scoped>
-.topic-container {
-  padding-bottom: 56px;
-  box-sizing: border-box;
-}
-</style>

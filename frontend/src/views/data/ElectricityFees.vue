@@ -1,152 +1,11 @@
-<template>
-  <div class="electricity-page">
-    <!-- 顶部错误提示 -->
-    <div class="weui-toptips weui-toptips_warn" :style="{ display: showTopTips ? 'block' : 'none' }">
-      {{ errorMsg }}
-    </div>
-
-    <div class="weui-cells__title" @click="router.back()">返回</div>
-    <div class="hd">
-      <h2 class="page-title">电费查询</h2>
-    </div>
-
-    <!-- 查询表单 -->
-    <div v-if="!isQueried" id="edit">
-      <div class="weui-cells weui-cells_form">
-        <form @submit.prevent="submitQuery">
-          <div class="weui-cell weui-cell_select weui-cell_select-after">
-            <div class="weui-cell__hd">
-              <label class="weui-label">年份</label>
-            </div>
-            <div class="weui-cell__bd weui-cell_primary">
-              <select v-model="form.year" class="weui-select" id="year" name="year">
-                <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="weui-cell">
-            <div class="weui-cell__hd">
-              <label class="weui-label">姓名</label>
-            </div>
-            <div class="weui-cell__bd weui-cell_primary">
-              <input
-                v-model="form.name"
-                id="name"
-                class="weui-input"
-                type="text"
-                maxlength="10"
-                name="name"
-                placeholder="请输入你的姓名"
-              />
-            </div>
-          </div>
-          <div class="weui-cell">
-            <div class="weui-cell__hd">
-              <label class="weui-label">学号</label>
-            </div>
-            <div class="weui-cell__bd weui-cell_primary">
-              <input
-                v-model="form.number"
-                id="number"
-                class="weui-input"
-                type="text"
-                maxlength="11"
-                name="number"
-                placeholder="请输入你的学号"
-                inputmode="numeric"
-              />
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <!-- 查询按钮 -->
-      <div class="weui-btn_area">
-        <a href="javascript:;" class="weui-btn weui-btn_primary" @click="submitQuery">查询</a>
-      </div>
-
-      <!-- 查询中弹框 -->
-      <div id="loadingToast" v-if="isLoading">
-        <div class="weui-mask_transparent"></div>
-        <div class="weui-toast">
-          <i class="weui-loading weui-icon_toast"></i>
-          <p class="weui-toast__content">正在查询</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- 查询结果 -->
-    <div v-if="isQueried" id="result">
-      <div class="weui-cells__title">电费信息</div>
-      <div class="weui-cells">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>年份</p>
-          </div>
-          <div class="weui-cell__ft">{{ result.year }}</div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>宿舍</p>
-          </div>
-          <div class="weui-cell__ft">{{ result.buildingNumber }}{{ result.roomNumber }}</div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>入住人数</p>
-          </div>
-          <div class="weui-cell__ft">{{ result.peopleNumber }}</div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>用电数额</p>
-          </div>
-          <div class="weui-cell__ft">{{ result.usedElectricAmount }}</div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>免费电额</p>
-          </div>
-          <div class="weui-cell__ft">{{ result.freeElectricAmount }}</div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>计费电数</p>
-          </div>
-          <div class="weui-cell__ft">{{ result.feeBasedElectricAmount }}</div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>电价</p>
-          </div>
-          <div class="weui-cell__ft">{{ result.electricPrice }}</div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>总电费</p>
-          </div>
-          <div class="weui-cell__ft">{{ result.totalElectricBill }}</div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>平均电费</p>
-          </div>
-          <div class="weui-cell__ft">{{ result.averageElectricBill }}</div>
-        </div>
-      </div>
-      <div class="weui-btn_area">
-        <a class="weui-btn weui-btn_default" href="javascript:" @click="resetQuery">重新查询</a>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useToast } from '@/composables/useToast'
 import request from '../../utils/request'
 
 const router = useRouter()
+const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const form = ref({
   year: new Date().getFullYear(),
@@ -155,8 +14,6 @@ const form = ref({
 })
 
 const isLoading = ref(false)
-const errorMsg = ref('')
-const showTopTips = ref(false)
 const isQueried = ref(false)
 const result = ref({})
 
@@ -170,31 +27,23 @@ const years = computed(() => {
   return yearList.reverse()
 })
 
-const showError = (msg) => {
-  errorMsg.value = msg
-  showTopTips.value = true
-  setTimeout(() => {
-    showTopTips.value = false
-  }, 2000)
-}
-
 const submitQuery = () => {
   console.log('submitQuery 被调用', form.value)
-  
+
   // 依次检查所有必填字段，显示具体错误
   if (!form.value.year) {
     showError('请输入年份')
     return
   }
-  
+
   const name = String(form.value.name || '').trim()
   const number = String(form.value.number || '').trim()
-  
+
   if (!name) {
     showError('请输入姓名')
     return
   }
-  
+
   if (!number) {
     showError('请输入学号')
     return
@@ -216,7 +65,8 @@ const submitQuery = () => {
   // 开始查询
   console.log('开始发送请求', { name, number, year })
   isLoading.value = true
-  
+  showLoading('正在查询')
+
   request
     .post('/data/electricfees', {
       name: name,
@@ -226,6 +76,7 @@ const submitQuery = () => {
     .then((res) => {
       console.log('请求成功', res)
       isLoading.value = false
+      hideLoading()
       if (res && res.success && res.data) {
         result.value = res.data
         isQueried.value = true
@@ -236,6 +87,7 @@ const submitQuery = () => {
     .catch((err) => {
       console.error('请求失败', err)
       isLoading.value = false
+      hideLoading()
       // 错误由 request.js 全局拦截器统一提示
     })
 }
@@ -251,37 +103,113 @@ const resetQuery = () => {
 }
 </script>
 
-<style scoped>
-.electricity-page {
-  min-height: 100vh;
-  background-color: #fff;
-}
-.page-title {
-  text-align: center;
-  color: var(--color-primary);
-  padding: 10px 0;
-  margin: 0;
-  font-size: 34px;
-  font-weight: 400;
-}
-#loadingToast {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 9999;
-}
-.weui-toptips {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10000;
-  text-align: center;
-  padding: 8px;
-  background-color: #f43530;
-  color: #fff;
-  font-size: 14px;
-}
-</style>
+<template>
+  <div class="min-h-screen bg-[var(--c-bg)]">
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">电费查询</span>
+      <div class="w-10"></div>
+    </div>
+
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <!-- Query form -->
+      <div v-if="!isQueried" class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+        <form class="space-y-4" @submit.prevent="submitQuery">
+          <!-- 年份 -->
+          <div>
+            <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">年份</label>
+            <select
+              v-model="form.year"
+              class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)] appearance-none"
+            >
+              <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+            </select>
+          </div>
+
+          <!-- 姓名 -->
+          <div>
+            <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">姓名</label>
+            <input
+              v-model="form.name"
+              type="text"
+              maxlength="10"
+              placeholder="请输入你的姓名"
+              class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+            />
+          </div>
+
+          <!-- 学号 -->
+          <div>
+            <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">学号</label>
+            <input
+              v-model="form.number"
+              type="text"
+              maxlength="11"
+              placeholder="请输入你的学号"
+              inputmode="numeric"
+              class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+            />
+          </div>
+        </form>
+
+        <button
+          type="button"
+          class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          @click="submitQuery"
+        >查询</button>
+      </div>
+
+      <!-- Query result -->
+      <div v-if="isQueried">
+        <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">电费信息</h3>
+
+        <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+          <div class="divide-y divide-[var(--c-border-light)]">
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">年份</span>
+              <span class="text-sm font-semibold">{{ result.year }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">宿舍</span>
+              <span class="text-sm font-semibold">{{ result.buildingNumber }}{{ result.roomNumber }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">入住人数</span>
+              <span class="text-sm font-semibold">{{ result.peopleNumber }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">用电数额</span>
+              <span class="text-sm font-semibold">{{ result.usedElectricAmount }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">免费电额</span>
+              <span class="text-sm font-semibold">{{ result.freeElectricAmount }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">计费电数</span>
+              <span class="text-sm font-semibold">{{ result.feeBasedElectricAmount }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">电价</span>
+              <span class="text-sm font-semibold">{{ result.electricPrice }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">总电费</span>
+              <span class="text-sm font-semibold">{{ result.totalElectricBill }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">平均电费</span>
+              <span class="text-sm font-semibold">{{ result.averageElectricBill }}</span>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="w-full mt-5 bg-[var(--c-surface)] text-[var(--c-text)] border border-[var(--c-border)] rounded-lg py-2.5 font-semibold transition-opacity hover:opacity-80"
+          @click="resetQuery"
+        >重新查询</button>
+      </div>
+    </div>
+  </div>
+</template>

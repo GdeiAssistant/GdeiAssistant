@@ -69,237 +69,109 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="community-page photograph-home" :style="{ '--module-color': '#06b6d4' }">
+  <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': '#06b6d4' }">
     <CommunityHeader title="拍好校园" moduleColor="#06b6d4" backTo="/" />
 
-    <!-- 列表滚动容器：单列卡片列表 -->
+    <!-- Scrollable container -->
     <div
-      class="photograph-scroll-container"
+      class="h-[calc(100vh-51px-80px)] overflow-y-auto pb-20"
+      style="-webkit-overflow-scrolling: touch;"
       ref="scrollContainer"
       @scroll="handleScroll"
       @touchstart="handleTouchStart"
       @touchmove="handleTouchMove($event, scrollContainer)"
       @touchend="handleTouchEnd"
     >
-      <!-- 下拉刷新指示器 -->
-      <div class="community-pull-refresh" :style="{ height: pullY + 'px' }">
-        <span v-if="refreshing" class="community-pull-refresh__text">
-          <i class="community-loading-spinner"></i> 正在刷新...
+      <!-- Pull refresh -->
+      <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
+        <span v-if="refreshing" class="flex items-center gap-2">
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-cyan-500 rounded-full animate-spin"></i> 正在刷新...
         </span>
-        <span v-else-if="pullY > 50" class="community-pull-refresh__text">释放立即刷新</span>
-        <span v-else-if="pullY > 0" class="community-pull-refresh__text">下拉刷新</span>
+        <span v-else-if="pullY > 50">释放立即刷新</span>
+        <span v-else-if="pullY > 0">下拉刷新</span>
       </div>
 
-      <!-- 照片卡片列表 -->
-      <div class="card-list">
+      <!-- Card list -->
+      <div class="p-4">
         <div
           v-for="(item, index) in list"
           :key="item.id"
-          class="community-card card"
+          class="bg-[var(--c-surface)] rounded-xl shadow-sm w-full mb-4 overflow-hidden animate-[slide-up_0.4s_ease_both] cursor-pointer"
           :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
           @click="goDetail(item.id)"
         >
-          <div class="card-img">
-            <figure class="card-img-tag">
-              <img :src="item.imgUrl" :alt="item.title" />
+          <!-- Image -->
+          <div class="relative">
+            <figure class="m-0 p-0">
+              <img :src="item.imgUrl" :alt="item.title" class="w-full h-auto block" />
             </figure>
-            <!-- 多图角标：右下角显示 N图（仅多图时展示） -->
-            <div class="tags" v-if="(item.photoCount || 1) > 1">
-              <span class="img-num">{{ item.photoCount || 1 }}图</span>
+            <div class="absolute right-2 bottom-2 inline-flex" v-if="(item.photoCount || 1) > 1">
+              <span class="bg-cyan-500 text-white rounded-lg px-2 py-0.5 text-sm font-medium">{{ item.photoCount || 1 }}图</span>
             </div>
           </div>
-          <div class="card-name">
-            {{ item.title }}
-          </div>
-          <div class="card-say">
-            {{ item.description }}
-          </div>
 
-          <!-- 卡片下方按钮组：点赞 + 评论 -->
-          <div class="card-btn-group">
-            <div class="btn-group-justify">
+          <!-- Title -->
+          <div class="mx-4 mt-4 text-2xl font-semibold text-[var(--c-text-1)]">{{ item.title }}</div>
+
+          <!-- Description -->
+          <div class="mx-4 mb-4 mt-1 text-base text-[var(--c-text-2)] leading-relaxed">{{ item.description }}</div>
+
+          <!-- Action buttons -->
+          <div class="px-4 pb-4">
+            <div class="flex gap-2">
               <a
-                class="btn-action"
-                :class="{ liked: item.isLiked }"
+                class="flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85"
+                :class="item.isLiked ? 'bg-[color-mix(in_srgb,var(--c-photograph)_80%,#000)]' : 'bg-cyan-500'"
                 href="javascript:;"
                 role="button"
                 @click.stop="toggleLike(item, $event)"
               >
-                <i :class="item.isLiked ? 'am-icon-check-square' : 'am-icon-check-square-o'"></i
-                >{{ item.likeCount ?? item.likes }} 点赞
+                {{ item.likeCount ?? item.likes }} 点赞
               </a>
-              <a class="btn-action" href="javascript:;" role="button">
-                <i class="am-icon-th-list"></i>{{ item.commentCount ?? 0 }} 评论
+              <a class="flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white bg-cyan-500 text-base no-underline transition-opacity active:opacity-85" href="javascript:;" role="button">
+                {{ item.commentCount ?? 0 }} 评论
               </a>
             </div>
           </div>
-
         </div>
       </div>
 
-      <!-- 空状态 -->
-      <div v-if="!loading && !refreshing && list.length === 0" class="community-empty">
-        <div class="community-empty__icon">📷</div>
-        <p class="community-empty__text">暂无照片作品</p>
+      <!-- Empty -->
+      <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+        <div class="text-4xl mb-2">📷</div>
+        <p class="text-sm">暂无照片作品</p>
       </div>
 
-      <!-- 上拉加载更多 -->
-      <div v-if="loading && !refreshing" class="community-loadmore">
-        <i class="community-loading-spinner"></i>
+      <!-- Loading -->
+      <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-cyan-500 rounded-full animate-spin"></i>
         <span>正在加载</span>
       </div>
-      <div v-if="finished && list.length > 0" class="community-loadmore">
-        <span>没有更多了</span>
-      </div>
+      <div v-if="finished && list.length > 0" class="text-center py-4 text-sm text-[var(--c-text-3)]">没有更多了</div>
     </div>
 
-    <!-- 底部三色操作栏 -->
-    <footer class="photo-toolbar">
-      <div class="toolbar-btn life" :class="{ active: activeType === 1 }" @click="setType(1)">
+    <!-- Bottom toolbar -->
+    <footer class="fixed bottom-0 left-0 right-0 flex shadow-lg border-t border-[var(--c-border)] z-50">
+      <div
+        class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-red-500"
+        :class="{ 'shadow-[inset_0_-3px_0_rgba(0,0,0,0.2)]': activeType === 1 }"
+        @click="setType(1)"
+      >
         <span>最美生活照</span>
       </div>
-      <div class="toolbar-btn campus" :class="{ active: activeType === 2 }" @click="setType(2)">
+      <div
+        class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-blue-500"
+        :class="{ 'shadow-[inset_0_-3px_0_rgba(0,0,0,0.2)]': activeType === 2 }"
+        @click="setType(2)"
+      >
         <span>最美校园照</span>
       </div>
-      <div class="toolbar-btn upload" @click="router.push('/photograph/publish')">
+      <div
+        class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-cyan-500"
+        @click="router.push('/photograph/publish')"
+      >
         <span>我要晒照</span>
       </div>
     </footer>
   </div>
 </template>
-
-<style scoped>
-/* 滚动容器 */
-.photograph-scroll-container {
-  height: calc(100vh - 51px - 80px);
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 80px;
-}
-
-/* 卡片列表 */
-.card-list {
-  padding: var(--space-md);
-}
-
-/* 卡片样式 */
-.card {
-  width: 100%;
-  margin-bottom: var(--space-lg);
-  overflow: hidden;
-  animation: community-slide-up 0.4s ease both;
-}
-.card-img-tag img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-.card-img {
-  position: relative;
-}
-.card-name {
-  margin: var(--space-md);
-  font-size: var(--font-2xl);
-  font-weight: 600;
-  color: var(--c-text-1);
-  clear: both;
-}
-.card-say {
-  margin: 0 var(--space-md) var(--space-md);
-  font-size: var(--font-md);
-  color: var(--c-text-2);
-  line-height: 1.5;
-}
-
-/* 多图角标 */
-.tags {
-  position: absolute;
-  right: var(--space-sm);
-  bottom: var(--space-sm);
-  display: inline-flex;
-}
-.img-num {
-  background: var(--c-photograph);
-  color: #fff;
-  border-radius: var(--radius-sm);
-  padding: 2px 8px;
-  font-size: var(--font-sm);
-  font-weight: 500;
-}
-
-/* 卡片按钮组 */
-.card-btn-group {
-  padding: 0 var(--space-md) var(--space-md);
-}
-.btn-group-justify {
-  display: flex;
-  gap: var(--space-sm);
-}
-.btn-action {
-  flex: 1;
-  text-align: center;
-  padding: var(--space-sm) 0;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: #fff;
-  background-color: var(--c-photograph);
-  font-size: var(--font-base);
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-.btn-action:active {
-  opacity: 0.85;
-}
-.btn-action.liked {
-  background-color: #0592aa;
-  background-color: color-mix(in srgb, var(--c-photograph) 80%, #000);
-}
-.btn-action i {
-  margin-right: var(--space-xs);
-}
-
-/* 底部三色操作栏 */
-.photo-toolbar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  box-shadow: var(--shadow-lg);
-  border-top: 1px solid var(--c-border);
-}
-.photo-toolbar .toolbar-btn {
-  flex: 1;
-  text-align: center;
-  padding: var(--space-sm) 0;
-  color: #fff;
-  font-size: var(--font-base);
-  font-weight: 500;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.photo-toolbar .toolbar-btn:active {
-  opacity: 0.85;
-}
-.photo-toolbar .life {
-  background-color: #e84c3d;
-}
-.photo-toolbar .life.active {
-  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
-}
-.photo-toolbar .campus {
-  background-color: #3498db;
-}
-.photo-toolbar .campus.active {
-  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
-}
-.photo-toolbar .upload {
-  background-color: var(--c-photograph);
-}
-
-.card-img-tag {
-  margin: 0;
-  padding: 0;
-}
-</style>

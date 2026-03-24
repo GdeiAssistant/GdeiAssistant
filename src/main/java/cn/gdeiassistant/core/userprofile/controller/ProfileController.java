@@ -5,7 +5,6 @@ import cn.gdeiassistant.common.pojo.Entity.Introduction;
 import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.pojo.LocationComparator;
-import cn.gdeiassistant.common.constant.TrialErrorCode;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.userProfile.controller.mapper.ProfileResponseMapper;
@@ -118,9 +117,8 @@ public class ProfileController {
                 }
                 jsonResult.setSuccess(true);
             } catch (FeatureNotEnabledException e) {
-                jsonResult.setCode(TrialErrorCode.AVATAR_NOT_CONFIGURED.getCode());
                 jsonResult.setSuccess(false);
-                jsonResult.setMessage(TrialErrorCode.AVATAR_NOT_CONFIGURED.getMessage());
+                jsonResult.setMessage(e.getMessage() != null ? e.getMessage() : "头像功能未启用");
             }
         }
         return jsonResult;

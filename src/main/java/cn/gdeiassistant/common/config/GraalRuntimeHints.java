@@ -5,7 +5,6 @@ import cn.gdeiassistant.common.aspect.IPAddressAspect;
 import cn.gdeiassistant.common.aspect.LoginTokenAspect;
 import cn.gdeiassistant.common.aspect.QueryLogAspect;
 import cn.gdeiassistant.common.aspect.RequestLogAspect;
-import cn.gdeiassistant.common.aspect.TrialDataAspect;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -18,7 +17,6 @@ public class GraalRuntimeHints implements RuntimeHintsRegistrar {
 
     @Override
     public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-        hints.reflection().registerType(TrialDataAspect.class, MemberCategory.values());
         hints.reflection().registerType(LoginTokenAspect.class, MemberCategory.values());
         hints.reflection().registerType(IPAddressAspect.class, MemberCategory.values());
         hints.reflection().registerType(QueryLogAspect.class, MemberCategory.values());

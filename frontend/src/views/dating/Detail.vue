@@ -77,124 +77,44 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="community-page dating-detail">
+  <div class="min-h-screen bg-[var(--c-bg)] pb-10">
     <CommunityHeader title="卖室友" moduleColor="#ec4899" backTo="/dating/home" />
 
-    <div v-if="item" class="community-card dating-detail__box" style="--module-color: #ec4899; animation: community-slide-up 0.4s ease both;">
-      <div class="dating-detail__name">{{ item.name }}</div>
-      <div class="dating-detail__photo">
-        <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" />
+    <div v-if="item" class="w-[90%] mx-auto mt-4 p-6 bg-[var(--c-surface)] rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
+      <div class="text-[22px] text-pink-500 font-bold mb-4">{{ item.name }}</div>
+      <div class="w-full rounded-lg overflow-hidden bg-[var(--c-bg)] mb-4">
+        <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" class="w-full h-auto max-h-[360px] object-cover" />
       </div>
-      <div class="dating-detail__bio">{{ item.bio || item.content }}</div>
-      <ul class="dating-detail__info">
-        <li><span>年级：</span>{{ getGradeText(item.grade) }}</li>
-        <li><span>专业：</span>{{ item.faculty }}</li>
-        <li><span>家乡：</span>{{ item.hometown }}</li>
-        <li><span>QQ：</span>{{ item.contactVisible ? item.qq : '对方接受了撩一下后才可见哦' }}</li>
-        <li><span>微信：</span>{{ item.contactVisible ? item.wechat : '对方接受了撩一下后才可见哦' }}</li>
+      <div class="py-4 leading-relaxed text-[var(--c-text-1)] text-base">{{ item.bio || item.content }}</div>
+      <ul class="list-none m-0 p-0 w-[90%] mx-auto">
+        <li class="h-11 leading-[44px] border-b border-dashed border-[var(--c-divider)] text-base text-[var(--c-text-1)]"><span class="font-bold mr-2 text-[var(--c-text-1)]">年级：</span>{{ getGradeText(item.grade) }}</li>
+        <li class="h-11 leading-[44px] border-b border-dashed border-[var(--c-divider)] text-base text-[var(--c-text-1)]"><span class="font-bold mr-2 text-[var(--c-text-1)]">专业：</span>{{ item.faculty }}</li>
+        <li class="h-11 leading-[44px] border-b border-dashed border-[var(--c-divider)] text-base text-[var(--c-text-1)]"><span class="font-bold mr-2 text-[var(--c-text-1)]">家乡：</span>{{ item.hometown }}</li>
+        <li class="h-11 leading-[44px] border-b border-dashed border-[var(--c-divider)] text-base text-[var(--c-text-1)]"><span class="font-bold mr-2 text-[var(--c-text-1)]">QQ：</span>{{ item.contactVisible ? item.qq : '对方接受了撩一下后才可见哦' }}</li>
+        <li class="h-11 leading-[44px] text-base text-[var(--c-text-1)]"><span class="font-bold mr-2 text-[var(--c-text-1)]">微信：</span>{{ item.contactVisible ? item.wechat : '对方接受了撩一下后才可见哦' }}</li>
       </ul>
-      <div class="dating-detail__pick">
-        <textarea v-model="pickContent" class="dating-textarea" placeholder="来说点什么吧，不超过50字" rows="3"></textarea>
-        <button type="button" class="circle-btn" :disabled="pickSubmitting" @click="submitPick">撩一下</button>
+
+      <!-- Pick section -->
+      <div class="border-t-2 border-dashed border-[var(--c-divider)] pt-6 mt-6 text-center">
+        <textarea v-model="pickContent" class="w-full p-4 border border-[var(--c-divider)] rounded-lg text-base min-h-[80px] box-border mb-4 text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" placeholder="来说点什么吧，不超过50字" rows="3"></textarea>
+        <button type="button" class="px-7 py-2.5 bg-pink-500 text-white border-none rounded-full text-lg cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="pickSubmitting" @click="submitPick">撩一下</button>
       </div>
     </div>
 
-    <div v-if="pickSuccessVisible" class="community-dialog-mask" style="background: transparent;"></div>
-    <div v-if="pickSuccessVisible" class="dating-toast">
-      <p class="dating-toast__content">发送成功，请耐心等待对方回复</p>
+    <!-- Success toast -->
+    <div v-if="pickSuccessVisible" class="fixed inset-0 z-[1002]"></div>
+    <div v-if="pickSuccessVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/70 text-white px-8 py-6 rounded-lg z-[1003] animate-[fade-in_0.2s_ease]">
+      <p class="m-0 text-base">发送成功，请耐心等待对方回复</p>
     </div>
 
-    <div v-if="dialogVisible" class="community-dialog-mask" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="community-dialog" style="--module-color: #ec4899">
-      <div class="community-dialog__title">提示</div>
-      <div class="community-dialog__body">{{ dialogMessage }}</div>
-      <div class="community-dialog__footer">
-        <a href="javascript:;" class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</a>
+    <!-- Dialog -->
+    <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">提示</div>
+      <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
+      <div class="border-t border-[var(--c-border)] flex">
+        <a href="javascript:;" class="flex-1 text-center py-3 text-pink-500 font-medium no-underline" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.dating-detail { padding-bottom: 40px; }
-
-.dating-detail__box {
-  width: 90%;
-  margin: var(--space-md) auto;
-  padding: var(--space-lg);
-  overflow: hidden;
-}
-.dating-detail__name {
-  font-size: 22px;
-  color: var(--c-dating);
-  font-weight: bold;
-  margin-bottom: var(--space-md);
-}
-.dating-detail__photo {
-  width: 100%;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  background: var(--c-bg);
-  margin-bottom: var(--space-md);
-}
-.dating-detail__photo img { width: 100%; height: auto; max-height: 360px; object-fit: cover; }
-.dating-detail__bio {
-  padding: var(--space-md) 0;
-  line-height: 1.6;
-  color: var(--c-text-1);
-  font-size: var(--font-md);
-}
-.dating-detail__info { list-style: none; margin: 0; padding: 0; width: 90%; margin: 0 auto; }
-.dating-detail__info li {
-  height: 44px;
-  line-height: 44px;
-  border-bottom: 1px dashed var(--c-divider);
-  font-size: var(--font-base);
-  color: var(--c-text-1);
-}
-.dating-detail__info li span { font-weight: bold; margin-right: var(--space-sm); color: var(--c-text-1); }
-.dating-detail__pick {
-  border-top: 2px dashed var(--c-divider);
-  padding-top: var(--space-lg);
-  margin-top: var(--space-lg);
-  text-align: center;
-}
-.dating-textarea {
-  width: 100%;
-  padding: var(--space-md);
-  border: 1px solid var(--c-divider);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-base);
-  min-height: 80px;
-  box-sizing: border-box;
-  margin-bottom: var(--space-md);
-  color: var(--c-text-1);
-}
-.dating-textarea::placeholder { color: var(--c-text-3); }
-.circle-btn {
-  padding: 10px 28px;
-  background: var(--c-dating);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-full);
-  font-size: var(--font-lg);
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.circle-btn:active { opacity: 0.85; }
-.circle-btn:disabled { opacity: 0.6; }
-
-.dating-toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.7);
-  color: #fff;
-  padding: var(--space-lg) var(--space-xl);
-  border-radius: var(--radius-sm);
-  z-index: 1003;
-  animation: community-fade-in 0.2s ease;
-}
-.dating-toast__content { margin: 0; font-size: var(--font-base); }
-</style>

@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.library.controller;
 
-import cn.gdeiassistant.common.annotation.TrialData;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
@@ -34,7 +33,6 @@ public class LibraryController {
     /**
      * 图书馆检索。GET /api/library/search?keyword=xxx&page=1
      */
-    @TrialData(value = "collection")
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public DataJsonResult<CollectionQueryResult> search(HttpServletRequest request,
                                                         @RequestParam("keyword") String keyword,
@@ -55,7 +53,6 @@ public class LibraryController {
     /**
      * 图书馆详情。GET /api/library/detail?detailURL=xxx
      */
-    @TrialData(value = "collection")
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public DataJsonResult<CollectionDetail> detail(HttpServletRequest request,
                                                    @RequestParam("detailURL") String detailURL)

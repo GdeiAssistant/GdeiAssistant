@@ -3,8 +3,10 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { showErrorTopTips } from '@/utils/toast.js'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { success: toastSuccess } = useToast()
 
 const currentEmail = ref('')
 const isEditing = ref(false)
@@ -17,17 +19,6 @@ const sending = ref(false)
 const showUnbindDialog = ref(false)
 const isUnbinding = ref(false)
 let timerId = null
-
-function showToast(message) {
-  const toast = document.createElement('div')
-  toast.style.cssText =
-    'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.75);color:#fff;padding:12px 22px;border-radius:6px;z-index:9999;font-size:14px;max-width:80%;text-align:center;'
-  toast.textContent = message
-  document.body.appendChild(toast)
-  setTimeout(() => {
-    if (toast.parentNode) document.body.removeChild(toast)
-  }, 2000)
-}
 
 const codeButtonText = computed(() => {
   if (countdown.value > 0) {
@@ -57,7 +48,7 @@ function maskEmail(email) {
 async function handleSendCode() {
   if (!canSendCode.value) return
   if (!validateEmail(formEmail.value)) {
-    showToast('邮箱格式不正确')
+    showErrorTopTips('邮箱格式不正确')
     return
   }
 
@@ -73,9 +64,9 @@ async function handleSendCode() {
         timerId = null
       }
     }, 1000)
-    showToast('验证码已发送，请检查邮箱')
+    toastSuccess('验证码已发送，请检查邮箱')
   } catch (e) {
-    showToast('发送验证码失败，请稍后重试')
+    showErrorTopTips('发送验证码失败，请稍后重试')
   } finally {
     sending.value = false
   }
@@ -84,11 +75,11 @@ async function handleSendCode() {
 async function handleSubmit() {
   if (isBinding.value) return
   if (!validateEmail(formEmail.value)) {
-    showToast('邮箱格式不正确')
+    showErrorTopTips('邮箱格式不正确')
     return
   }
   if (!vcode.value) {
-    showToast('请输入验证码')
+    showErrorTopTips('请输入验证码')
     return
   }
 
@@ -96,11 +87,10 @@ async function handleSubmit() {
   try {
     await request.post(`/email/bind?email=${encodeURIComponent(formEmail.value)}&randomCode=${encodeURIComponent(vcode.value)}`)
     currentEmail.value = maskEmail(formEmail.value)
-    showToast('绑定成功')
-    // 绑定成功后返回状态页
+    toastSuccess('绑定成功')
     isEditing.value = false
   } catch (e) {
-    showToast('绑定失败，请稍后重试')
+    showErrorTopTips('绑定失败，请稍后重试')
   } finally {
     isBinding.value = false
   }
@@ -142,7 +132,7 @@ async function confirmUnbind() {
     formEmail.value = ''
     vcode.value = ''
     isEditing.value = false
-    showSuccess('已解除绑定')
+    toastSuccess('已解除绑定')
     showUnbindDialog.value = false
   } catch (e) {
     // 错误由 request.js 全局拦截器统一提示
@@ -172,370 +162,137 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="bind-email-page">
-    <!-- 统一头部 -->
-    <div class="email-header unified-header">
-      <span class="email-header__back" @click="router.back()">返回</span>
-      <h1 class="email-header__title">绑定邮箱</h1>
-      <span class="email-header__placeholder"></span>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Sticky Header -->
+    <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
+      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">返回</button>
+      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">绑定邮箱</h1>
+      <div class="w-15"></div>
     </div>
 
-    <div class="email-content">
-      <!-- 已绑定状态视图 -->
-      <div v-if="currentEmail && !isEditing" class="status-view">
-        <div class="weui-msg">
-          <div class="weui-msg__icon-area">
-            <i class="weui-icon-success weui-icon_msg"></i>
-          </div>
-          <div class="weui-msg__text-area">
-            <h2 class="weui-msg__title">已绑定邮箱</h2>
-            <p class="weui-msg__desc">您当前绑定的邮箱为：{{ currentEmail }}</p>
-          </div>
-          <div class="weui-msg__opr-area">
-            <p class="weui-btn-area">
-              <a href="javascript:;" class="weui-btn weui-btn_primary" @click.prevent="startEdit">修改绑定</a>
-              <a href="javascript:;" class="weui-btn weui-btn_default" @click.prevent="openUnbindDialog">解除绑定</a>
-            </p>
-          </div>
+    <div class="max-w-lg mx-auto px-4 py-6">
+      <!-- Bound status -->
+      <div v-if="currentEmail && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
+        <div class="text-5xl text-green-500 mb-4">&#10003;</div>
+        <h2 class="text-lg font-medium text-gray-700">已绑定邮箱</h2>
+        <p class="text-sm text-gray-500 mt-2">您当前绑定的邮箱为：{{ currentEmail }}</p>
+        <div class="mt-8 space-y-3">
+          <button
+            type="button"
+            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer"
+            @click="startEdit"
+          >修改绑定</button>
+          <button
+            type="button"
+            class="w-full rounded-lg bg-white text-gray-700 font-medium py-2.5 border border-gray-300 cursor-pointer"
+            @click="openUnbindDialog"
+          >解除绑定</button>
         </div>
       </div>
 
-      <!-- 未绑定状态视图 -->
-      <div v-else-if="!currentEmail && !isEditing" class="status-view">
-        <div class="weui-msg">
-          <div class="weui-msg__icon-area">
-            <i class="weui-icon-info weui-icon_msg"></i>
-          </div>
-          <div class="weui-msg__text-area">
-            <h2 class="weui-msg__title">未绑定邮箱</h2>
-            <p class="weui-msg__desc">您尚未绑定电子邮箱，绑定后可用于接收重要通知。</p>
-          </div>
-          <div class="weui-msg__opr-area">
-            <p class="weui-btn-area">
-              <a href="javascript:;" class="weui-btn weui-btn_primary" @click.prevent="startBind">立即绑定</a>
-            </p>
-          </div>
+      <!-- Unbound status -->
+      <div v-else-if="!currentEmail && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
+        <div class="text-5xl text-blue-400 mb-4">i</div>
+        <h2 class="text-lg font-medium text-gray-700">未绑定邮箱</h2>
+        <p class="text-sm text-gray-500 mt-2">您尚未绑定电子邮箱，绑定后可用于接收重要通知。</p>
+        <div class="mt-8">
+          <button
+            type="button"
+            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer"
+            @click="startBind"
+          >立即绑定</button>
         </div>
       </div>
 
-      <!-- 表单视图（修改中/绑定中） -->
-      <div v-else class="edit-view">
-        <p v-if="currentEmail" class="edit-tip">请输入新的邮箱地址进行绑定。</p>
+      <!-- Edit/Bind form -->
+      <div v-else>
+        <p v-if="currentEmail" class="text-sm text-gray-400 mb-3">请输入新的邮箱地址进行绑定。</p>
 
-        <!-- 表单区域 -->
-        <div class="weui-cells weui-cells_form">
-          <!-- 邮箱输入 -->
-          <div class="weui-cell weui-cell_active">
-            <div class="weui-cell__hd">
-              <label class="weui-label">邮箱</label>
-            </div>
-            <div class="weui-cell__bd">
-              <input
-                v-model="formEmail"
-                class="weui-input"
-                type="email"
-                :placeholder="currentEmail ? '请输入新的电子邮箱' : '请输入您的电子邮箱'"
-              />
-            </div>
+        <div class="bg-white rounded-xl shadow-sm divide-y divide-gray-100">
+          <!-- Email input -->
+          <div class="flex items-center px-4 py-3 gap-3">
+            <label class="w-[60px] text-sm text-gray-700 shrink-0">邮箱</label>
+            <input
+              v-model="formEmail"
+              type="email"
+              :placeholder="currentEmail ? '请输入新的电子邮箱' : '请输入您的电子邮箱'"
+              class="flex-1 text-sm text-gray-700 outline-none placeholder-gray-400"
+            />
           </div>
 
-          <!-- 验证码输入 -->
-          <div class="weui-cell weui-cell_vcode">
-            <div class="weui-cell__hd">
-              <label class="weui-label">验证码</label>
-            </div>
-            <div class="weui-cell__bd">
-              <input
-                v-model="vcode"
-                class="weui-input"
-                type="number"
-                inputmode="numeric"
-                placeholder="请输入邮箱验证码"
-              />
-            </div>
-            <div class="weui-cell__ft">
-              <button
-                type="button"
-                class="weui-vcode-btn"
-                :class="{ 'weui-vcode-btn--disabled': !canSendCode }"
-                :disabled="!canSendCode"
-                @click="handleSendCode"
-              >
-                {{ codeButtonText }}
-              </button>
-            </div>
+          <!-- Verification code -->
+          <div class="flex items-center px-4 py-3 gap-3">
+            <label class="w-[60px] text-sm text-gray-700 shrink-0">验证码</label>
+            <input
+              v-model="vcode"
+              type="number"
+              inputmode="numeric"
+              placeholder="请输入邮箱验证码"
+              class="flex-1 text-sm text-gray-700 outline-none placeholder-gray-400"
+            />
+            <button
+              type="button"
+              class="shrink-0 text-sm pl-3 border-l border-gray-200 cursor-pointer bg-transparent"
+              :class="canSendCode ? 'text-green-500' : 'text-gray-400'"
+              :disabled="!canSendCode"
+              @click="handleSendCode"
+            >
+              {{ codeButtonText }}
+            </button>
           </div>
         </div>
 
-        <!-- 底部按钮 -->
-        <div class="weui-btn-area">
-          <a
-            href="javascript:;"
-            class="weui-btn weui-btn_primary"
-            :class="{ 'weui-btn_disabled': isBinding, 'weui-btn_loading': isBinding }"
-            @click.prevent="handleSubmit"
+        <!-- Submit -->
+        <div class="mt-8">
+          <button
+            type="button"
+            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 flex items-center justify-center active:bg-green-600 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            :disabled="isBinding"
+            @click="handleSubmit"
           >
-            <span v-if="isBinding" class="btn-loading">
-              <span class="weui-loading"></span>
-              <span class="btn-text">绑定中...</span>
-            </span>
-            <span v-else>确认绑定</span>
-          </a>
+            <template v-if="isBinding">
+              <span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></span>
+              绑定中...
+            </template>
+            <template v-else>确认绑定</template>
+          </button>
         </div>
 
-        <div v-if="currentEmail" class="weui-btn-area edit-cancel-area">
-          <a
-            href="javascript:;"
-            class="weui-btn weui-btn_default"
-            @click.prevent="cancelEdit"
-          >
-            取消
-          </a>
+        <div v-if="currentEmail" class="mt-3">
+          <button
+            type="button"
+            class="w-full rounded-lg bg-white text-gray-700 font-medium py-2.5 border border-gray-300 cursor-pointer"
+            @click="cancelEdit"
+          >取消</button>
         </div>
       </div>
     </div>
 
-    <!-- 解绑二次确认弹窗 -->
-    <div v-if="showUnbindDialog" class="weui-mask" @click="closeUnbindDialog"></div>
-    <div v-if="showUnbindDialog" class="weui-dialog">
-      <div class="weui-dialog__hd">
-        <strong class="weui-dialog__title">解除绑定</strong>
-      </div>
-      <div class="weui-dialog__bd">
-        确定要解除绑定该邮箱吗？解除后将无法使用该邮箱找回账号。
-      </div>
-      <div class="weui-dialog__ft">
-        <a
-          href="javascript:;"
-          class="weui-dialog__btn weui-dialog__btn_default"
-          @click.prevent="closeUnbindDialog"
-        >取消</a>
-        <a
-          href="javascript:;"
-          class="weui-dialog__btn weui-dialog__btn_primary"
-          @click.prevent="confirmUnbind"
-        >确认解绑</a>
-      </div>
-    </div>
+    <!-- Unbind dialog -->
+    <Teleport to="body">
+      <template v-if="showUnbindDialog">
+        <div class="fixed inset-0 bg-black/60 z-[1000]" @click="closeUnbindDialog"></div>
+        <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[300px] bg-white rounded-xl z-[1001] overflow-hidden">
+          <div class="px-5 pt-5 pb-2.5 text-center">
+            <strong class="text-[17px] font-medium text-gray-700">解除绑定</strong>
+          </div>
+          <div class="px-5 pb-5 text-center text-[15px] text-gray-500 leading-relaxed">
+            确定要解除绑定该邮箱吗？解除后将无法使用该邮箱找回账号。
+          </div>
+          <div class="flex border-t border-gray-200">
+            <button
+              type="button"
+              class="flex-1 py-3.5 text-center text-[17px] text-gray-700 border-r border-gray-200 cursor-pointer bg-transparent"
+              @click="closeUnbindDialog"
+            >取消</button>
+            <button
+              type="button"
+              class="flex-1 py-3.5 text-center text-[17px] text-red-500 font-medium cursor-pointer bg-transparent"
+              @click="confirmUnbind"
+            >确认解绑</button>
+          </div>
+        </div>
+      </template>
+    </Teleport>
   </div>
 </template>
-
-<style scoped>
-.bind-email-page {
-  background: #f8f8f8;
-  min-height: 100vh;
-}
-
-.email-header.unified-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 12px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-}
-.email-header__back {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  min-width: 48px;
-}
-.email-header__title {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-.email-header__placeholder {
-  min-width: 48px;
-}
-
-.email-content {
-  padding-top: 10px;
-}
-
-.status-view {
-  padding: 20px 15px 0;
-}
-
-.weui-msg__desc {
-  color: #666;
-}
-
-/* 修复已绑定视图的按钮间距 */
-.weui-msg__opr-area .weui-btn-area .weui-btn + .weui-btn {
-  margin-top: 16px !important;
-}
-
-.edit-view {
-  padding-top: 0;
-}
-
-.edit-tip {
-  margin: 12px 15px 0;
-  font-size: 13px;
-  color: #999;
-}
-
-.weui-cells {
-  margin-top: 0;
-}
-
-.weui-cell {
-  padding: 16px !important;
-}
-
-.weui-label {
-  width: 60px;
-}
-
-.weui-input {
-  font-size: 15px;
-}
-
-/* 让验证码输入区域与邮箱行保持相似宽度 */
-.weui-cell_vcode .weui-cell__bd {
-  flex: 1;
-}
-
-/* 验证码按钮 */
-.weui-vcode-btn {
-  padding: 0 12px;
-  height: auto;
-  line-height: 1.5;
-  font-size: 15px;
-  color: #07c160;
-  border: none;
-  background: transparent;
-  border-left: 1px solid #e5e5e5;
-  outline: none;
-}
-.weui-vcode-btn--disabled {
-  color: #999;
-}
-
-/* 底部按钮区域 */
-.weui-btn-area {
-  margin: 30px 15px 0;
-}
-
-.weui-btn {
-  width: 100%;
-  max-width: 360px;
-  margin: 0 auto;
-  background-color: #07c160;
-  color: #ffffff;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 10px 20px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  cursor: pointer;
-}
-.weui-btn_primary:active {
-  background-color: #06ad56;
-}
-.weui-btn.weui-btn_disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.weui-btn.weui-btn_default {
-  background-color: #ffffff;
-  color: #333;
-  border: 1px solid #d9d9d9;
-}
-
-/* 强制修复 WEUI 按钮 loading 态的居中和尺寸问题 */
-.weui-btn.weui-btn_loading {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  height: auto;
-  min-height: 48px;
-  line-height: 1.4;
-}
-.weui-btn.weui-btn_loading .weui-loading {
-  margin-right: 8px;
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.btn-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-text {
-  font-size: 16px;
-}
-
-/* Dialog 样式，与注销页保持一致的 WEUI 风格 */
-.weui-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-.weui-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 300px;
-  background: #ffffff;
-  border-radius: 8px;
-  z-index: 1001;
-  overflow: hidden;
-}
-.weui-dialog__hd {
-  padding: 20px 20px 10px;
-  text-align: center;
-}
-.weui-dialog__title {
-  font-size: 17px;
-  font-weight: 500;
-  color: #333;
-}
-.weui-dialog__bd {
-  padding: 10px 20px 20px;
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-  line-height: 1.5;
-}
-.weui-dialog__ft {
-  display: flex;
-  border-top: 1px solid #e5e5e5;
-}
-.weui-dialog__btn {
-  flex: 1;
-  padding: 15px 0;
-  text-align: center;
-  font-size: 17px;
-  color: #333;
-  text-decoration: none;
-  border-right: 1px solid #e5e5e5;
-}
-.weui-dialog__btn:last-child {
-  border-right: none;
-}
-.weui-dialog__btn_primary {
-  color: #fa5151;
-  font-weight: 500;
-}
-</style>

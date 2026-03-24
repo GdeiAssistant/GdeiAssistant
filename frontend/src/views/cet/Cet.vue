@@ -2,10 +2,11 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCetNumber, queryCetScore } from '@/api/cet'
-import { showErrorTopTips } from '@/utils/toast.js'
+import { useToast } from '@/composables/useToast'
 import request from '@/utils/request'
 
 const router = useRouter()
+const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const examNumber = ref('')
 const name = ref('')
@@ -14,14 +15,6 @@ const loading = ref(false)
 const vcodeUrl = ref('')
 const cetResult = ref(null)
 const showResult = ref(false)
-
-function getWeui() {
-  return typeof window !== 'undefined' ? window.weui : null
-}
-
-function goBack() {
-  router.back()
-}
 
 function onExamNumberInput(e) {
   const v = (e.target.value || '').replace(/\D/g, '').slice(0, 15)
@@ -41,26 +34,23 @@ function refreshVcode() {
 
 function importNumber() {
   loading.value = true
-  const weui = getWeui()
-  const loadingInstance = weui && typeof weui.loading === 'function' ? weui.loading('导入中') : null
+  showLoading('导入中')
   getCetNumber().then((res) => {
     if (res && res.success && res.data) {
       const d = res.data
       examNumber.value = (d.number != null) ? String(d.number) : ''
       name.value = (d.name != null && d.name !== '') ? d.name : ''
       if (!examNumber.value && !name.value) {
-        showErrorTopTips('你未保存准考证号')
+        showError('你未保存准考证号')
       }
     } else {
-      showErrorTopTips('你未保存准考证号')
+      showError('你未保存准考证号')
     }
   }).catch(() => {
     // 错误由 request.js 全局拦截器统一提示，此处仅关闭 Loading
   }).finally(() => {
     loading.value = false
-    if (loadingInstance && typeof loadingInstance.hide === 'function') {
-      loadingInstance.hide()
-    }
+    hideLoading()
   })
 }
 
@@ -69,21 +59,20 @@ function submitQuery() {
   const n = String(name.value || '').trim()
   const code = String(vcode.value || '').trim()
   if (!num || !n) {
-    showErrorTopTips('请填写准考证号和姓名')
+    showError('请填写准考证号和姓名')
     return
   }
   if (num.length !== 15) {
-    showErrorTopTips('准考证号必须为15位')
+    showError('准考证号必须为15位')
     return
   }
   if (!code) {
-    showErrorTopTips('请输入验证码')
+    showError('请输入验证码')
     return
   }
 
   loading.value = true
-  const weui = getWeui()
-  const loadingInstance = weui && typeof weui.loading === 'function' ? weui.loading('正在查询...') : null
+  showLoading('正在查询...')
   queryCetScore(num, n, code).then((res) => {
     if (res && res.success && res.data) {
       cetResult.value = res.data
@@ -95,9 +84,7 @@ function submitQuery() {
     refreshVcode()
   }).finally(() => {
     loading.value = false
-    if (loadingInstance && typeof loadingInstance.hide === 'function') {
-      loadingInstance.hide()
-    }
+    hideLoading()
   })
 }
 
@@ -128,243 +115,160 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="cet-page">
+  <div class="min-h-screen bg-[var(--c-bg)]">
     <!-- 查询表单 -->
     <template v-if="!showResult">
-      <div class="top-nav-bar">
-        <div class="nav-btn-back" @click="goBack">返回</div>
-      </div>
-      <h1 class="page-title-green">四六级查询</h1>
-
-      <div class="weui-cells weui-cells_form">
-        <div class="weui-cell weui-cell_vcode">
-          <div class="weui-cell__hd">
-            <label class="weui-label" style="width: 65px; flex-shrink: 0;">考号</label>
-          </div>
-          <div class="weui-cell__bd" style="flex: 1; min-width: 0;">
-            <input
-              :value="examNumber"
-              class="weui-input"
-              type="text"
-              inputmode="numeric"
-              maxlength="15"
-              placeholder="请输入15位准考证号"
-              style="width: 100%; box-sizing: border-box;"
-              @input="onExamNumberInput"
-            />
-          </div>
-          <div class="weui-cell__ft" style="white-space: nowrap; flex-shrink: 0;">
-            <button
-              type="button"
-              class="weui-vcode-btn"
-              style="color: #576b95; font-size: 15px; padding: 0 15px; margin: 0; border: none; background: transparent; border-left: 1px solid #e5e5e5;"
-              @click.prevent="importNumber"
-            >
-              导入考号
-            </button>
-          </div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__hd">
-            <label class="weui-label" style="width: 65px; flex-shrink: 0;">姓名</label>
-          </div>
-          <div class="weui-cell__bd" style="flex: 1; min-width: 0;">
-            <input
-              v-model="name"
-              class="weui-input"
-              type="text"
-              maxlength="20"
-              placeholder="姓名超过3个字可只输入前3个"
-              style="width: 100%; box-sizing: border-box;"
-            />
-          </div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__hd">
-            <label class="weui-label" style="width: 65px; flex-shrink: 0;">验证码</label>
-          </div>
-          <div class="weui-cell__bd" style="flex: 1; min-width: 0;">
-            <input
-              v-model="vcode"
-              class="weui-input"
-              type="text"
-              maxlength="10"
-              placeholder="请输入验证码"
-              style="width: 100%; box-sizing: border-box;"
-            />
-          </div>
-          <div class="weui-cell__ft" style="white-space: nowrap; flex-shrink: 0; margin-left: 10px;">
-            <img
-              v-if="vcodeUrl"
-              class="weui-vcode-img"
-              :src="vcodeUrl"
-              alt="验证码"
-              @click="refreshVcode"
-            />
-            <span v-else class="weui-vcode-placeholder" @click="refreshVcode">点击获取</span>
-          </div>
-        </div>
+      <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+        <span class="flex-1 text-center text-sm font-bold">四六级查询</span>
+        <div class="w-10"></div>
       </div>
 
-      <div class="weui-btn_area">
-        <button type="button" class="weui-btn weui-btn_primary" @click="submitQuery">查询</button>
-      </div>
+      <div class="max-w-lg mx-auto px-4 py-6">
+        <!-- Form card -->
+        <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+          <div class="space-y-4">
+            <!-- 考号 -->
+            <div>
+              <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">准考证号</label>
+              <div class="flex gap-2">
+                <input
+                  :value="examNumber"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="15"
+                  placeholder="请输入15位准考证号"
+                  class="flex-1 min-w-0 px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+                  @input="onExamNumberInput"
+                />
+                <button
+                  type="button"
+                  class="shrink-0 px-3 py-2.5 text-sm font-medium text-[var(--c-primary)] border border-[var(--c-primary)]/20 rounded-lg hover:bg-[var(--c-primary)]/5 transition-colors"
+                  @click.prevent="importNumber"
+                >
+                  导入考号
+                </button>
+              </div>
+            </div>
 
-      <p class="cet-page-desc">
-        担心遗忘准考证号？点击
-        <a href="javascript:" class="cet-page-desc__link" @click.prevent="onSaveNumber">保存考号</a>
-      </p>
+            <!-- 姓名 -->
+            <div>
+              <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">姓名</label>
+              <input
+                v-model="name"
+                type="text"
+                maxlength="20"
+                placeholder="姓名超过3个字可只输入前3个"
+                class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+              />
+            </div>
 
-      <div class="weui-cells__title">备用查询入口</div>
-      <div class="weui-cells">
-        <a href="javascript:" class="weui-cell weui-cell_access" @click.prevent="openChsi">
-          <div class="weui-cell__bd">
-            <p>学信网四六级查分</p>
+            <!-- 验证码 -->
+            <div>
+              <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">验证码</label>
+              <div class="flex gap-3 items-center">
+                <input
+                  v-model="vcode"
+                  type="text"
+                  maxlength="10"
+                  placeholder="请输入验证码"
+                  class="flex-1 min-w-0 px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+                />
+                <img
+                  v-if="vcodeUrl"
+                  :src="vcodeUrl"
+                  alt="验证码"
+                  class="h-10 w-[100px] rounded-lg cursor-pointer object-cover border border-[var(--c-border)]"
+                  @click="refreshVcode"
+                />
+                <span
+                  v-else
+                  class="text-sm text-[var(--c-primary)] cursor-pointer shrink-0"
+                  @click="refreshVcode"
+                >点击获取</span>
+              </div>
+            </div>
           </div>
-          <div class="weui-cell__ft"></div>
-        </a>
-        <a href="javascript:" class="weui-cell weui-cell_access" @click.prevent="openNeea">
-          <div class="weui-cell__bd">
-            <p>中国教育考试网查询</p>
+
+          <button
+            type="button"
+            class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+            @click="submitQuery"
+          >查询</button>
+        </div>
+
+        <p class="mt-5 text-center text-sm text-[var(--c-text-2)]">
+          担心遗忘准考证号？点击
+          <a href="javascript:" class="text-[var(--c-primary)] font-medium" @click.prevent="onSaveNumber">保存考号</a>
+        </p>
+
+        <!-- 备用查询入口 -->
+        <div class="mt-6">
+          <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">备用查询入口</h3>
+          <div class="bg-[var(--c-surface)] rounded-xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+            <a href="javascript:" class="flex items-center justify-between px-4 py-3 text-sm" @click.prevent="openChsi">
+              <span>学信网四六级查分</span>
+              <span class="text-[var(--c-text-3)]">&rsaquo;</span>
+            </a>
+            <a href="javascript:" class="flex items-center justify-between px-4 py-3 text-sm" @click.prevent="openNeea">
+              <span>中国教育考试网查询</span>
+              <span class="text-[var(--c-text-3)]">&rsaquo;</span>
+            </a>
           </div>
-          <div class="weui-cell__ft"></div>
-        </a>
+        </div>
       </div>
     </template>
 
     <!-- 查询结果 -->
     <template v-else>
-      <div class="top-nav-bar">
-        <div class="nav-btn-back" @click="goBack">返回</div>
+      <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+        <span class="flex-1 text-center text-sm font-bold">查询结果</span>
+        <div class="w-10"></div>
       </div>
-      <div class="cet-result">
-        <h1 class="page-title-green">查询结果</h1>
-        <p class="cet-result-desc">成绩仅供参考，请以成绩单为准</p>
-        <div class="weui-msg" v-if="cetResult">
-          <div class="weui_text_area">
-            <h2 class="weui-msg_title">{{ cetResult.name }}</h2>
-            <p class="weui-msg_desc">考试类型：{{ cetResult.type }}</p>
-            <p class="weui-msg_desc">考生学校：{{ cetResult.school }}</p>
-            <br />
-            <p class="weui-msg_desc cet-total">考试总分：{{ cetResult.totalScore }}</p>
-            <p class="weui-msg_desc">听力分数：{{ cetResult.listeningScore }}</p>
-            <p class="weui-msg_desc">阅读分数：{{ cetResult.readingScore }}</p>
-            <p class="weui-msg_desc">写作翻译：{{ cetResult.writingAndTranslatingScore }}</p>
+
+      <div class="max-w-lg mx-auto px-4 py-6" v-if="cetResult">
+        <p class="text-center text-sm text-[var(--c-text-2)] mb-5">成绩仅供参考，请以成绩单为准</p>
+
+        <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+          <h2 class="text-lg font-bold text-center mb-1">{{ cetResult.name }}</h2>
+          <p class="text-sm text-[var(--c-text-2)] text-center">{{ cetResult.type }}</p>
+          <p class="text-sm text-[var(--c-text-2)] text-center mb-4">{{ cetResult.school }}</p>
+
+          <div class="bg-[var(--c-primary)]/5 rounded-xl p-4 text-center mb-4">
+            <div class="text-xs text-[var(--c-text-2)] mb-1">考试总分</div>
+            <div class="font-mono text-3xl font-bold text-[var(--c-primary)]">{{ cetResult.totalScore }}</div>
           </div>
-          <br />
-          <div class="weui_opr_area">
-            <p class="weui-btn_area">
-              <button type="button" class="weui-btn weui-btn_primary" @click="reQuery">重新查询</button>
-              <button type="button" class="weui-btn weui-btn_default" @click="router.push('/')">返回主页</button>
-            </p>
+
+          <div class="divide-y divide-[var(--c-border-light)]">
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">听力分数</span>
+              <span class="text-sm font-semibold">{{ cetResult.listeningScore }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">阅读分数</span>
+              <span class="text-sm font-semibold">{{ cetResult.readingScore }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-sm text-[var(--c-text-2)]">写作翻译</span>
+              <span class="text-sm font-semibold">{{ cetResult.writingAndTranslatingScore }}</span>
+            </div>
           </div>
+        </div>
+
+        <div class="mt-5 space-y-3">
+          <button
+            type="button"
+            class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold transition-opacity hover:opacity-90"
+            @click="reQuery"
+          >重新查询</button>
+          <button
+            type="button"
+            class="w-full bg-[var(--c-surface)] text-[var(--c-text)] border border-[var(--c-border)] rounded-lg py-2.5 font-semibold transition-opacity hover:opacity-80"
+            @click="router.push('/')"
+          >返回主页</button>
         </div>
       </div>
     </template>
   </div>
 </template>
-
-<style scoped>
-.cet-page {
-  background-color: var(--color-surface);
-  min-height: 100vh;
-  padding-bottom: 24px;
-}
-
-.top-nav-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: var(--color-surface);
-  box-sizing: border-box;
-}
-
-.nav-btn-back {
-  font-size: 16px;
-  line-height: 24px;
-  color: var(--color-text-tertiary);
-  cursor: pointer;
-}
-
-.page-title-green {
-  text-align: center;
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 10px 0 20px 0;
-  line-height: 1.2;
-}
-
-.cet-page .weui-cells_form {
-  margin-top: 0;
-}
-
-.cet-page .weui-btn_area {
-  margin-top: 24px;
-  padding: 0 15px;
-}
-
-.cet-page .weui-btn_area .weui-btn {
-  width: 100%;
-}
-
-.cet-page-desc {
-  margin-top: 25px;
-  text-align: center;
-  font-size: 14px;
-  color: var(--color-text-tertiary);
-}
-
-.cet-page-desc__link {
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-.weui-vcode-img {
-  width: 120px;
-  height: 50px;
-  display: block;
-  cursor: pointer;
-  background: var(--color-bg-secondary);
-}
-
-.weui-vcode-placeholder {
-  font-size: 14px;
-  color: var(--color-primary);
-  cursor: pointer;
-}
-
-.cet-result {
-  padding: 0 15px;
-}
-
-.cet-result-desc {
-  text-align: center;
-  font-size: 14px;
-  color: var(--color-text-tertiary);
-  margin: 0 0 20px 0;
-}
-
-.cet-result .weui-msg_title {
-  margin-bottom: 8px;
-}
-
-.cet-result .weui-msg_desc {
-  margin: 4px 0;
-}
-
-.cet-total {
-  color: #e64340;
-  font-weight: 500;
-}
-
-.cet-result .weui-btn_area {
-  margin-top: 24px;
-}
-
-.cet-result .weui-btn_area .weui-btn {
-  margin-bottom: 10px;
-}
-</style>

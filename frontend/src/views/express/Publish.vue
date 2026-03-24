@@ -2,9 +2,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
+import { useToast } from '@/composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
+const { success: toastSuccess, loading: toastLoading, hideLoading } = useToast()
 const formData = ref({
   nickname: '',
   realName: '',
@@ -14,12 +16,6 @@ const formData = ref({
   content: ''
 })
 
-// 性别选项：['男', '女', '其他或保密']
-const genderOptions = [
-  { label: '男', value: 'male' },
-  { label: '女', value: 'female' },
-  { label: '其他或保密', value: 'secret' }
-]
 const submitting = ref(false)
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
@@ -27,16 +23,6 @@ const dialogMessage = ref('')
 function showDialog(msg) {
   dialogMessage.value = msg
   dialogVisible.value = true
-}
-
-function showLoading(text = '正在发布...') {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.loading === 'function') weui.loading(text)
-}
-
-function hideLoading() {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.hideLoading === 'function') weui.hideLoading()
 }
 
 function submit() {
@@ -65,12 +51,11 @@ function submit() {
     content
   }
   submitting.value = true
-  showLoading('正在发布...')
+  toastLoading('正在发布...')
   request.post('/express', payload)
     .then(() => {
       hideLoading()
-      const weui = typeof window !== 'undefined' && window.weui
-      if (weui && typeof weui.toast === 'function') weui.toast('发布成功', { duration: 1500 })
+      toastSuccess('发布成功')
       setTimeout(() => router.push('/express/home'), 1500)
     })
     .catch(() => {
@@ -81,45 +66,45 @@ function submit() {
 </script>
 
 <template>
-  <div class="express-publish">
+  <div class="bg-[var(--c-bg)] pb-20">
     <CommunityHeader title="发布表白" moduleColor="#f43f5e" backTo="/express/home" />
 
     <!-- 浅粉色粗体标题 -->
-    <h2 class="express-main-title">广东第二师范学院表白墙</h2>
+    <h2 class="text-center text-[22px] font-bold text-[#ffb3ba] mx-4 mt-4 mb-5 leading-tight">广东第二师范学院表白墙</h2>
 
-    <!-- 手账风表单：蓝色虚线表单框 -->
-    <div class="express-form">
+    <!-- 手账风表单 -->
+    <div>
       <!-- 第一个 form-section：你的信息 -->
-      <div class="form-section">
-        <span class="form-section-title">你的信息</span>
-        <div class="form-cells">
-          <div class="form-cell">
-            <div class="form-cell__hd"><label class="form-label">昵称</label></div>
-            <div class="form-cell__bd">
+      <div class="border-2 border-dashed border-[#81d4fa] rounded-lg pt-6 px-4 pb-4 mx-4 mt-6 mb-4 relative bg-[var(--c-surface)] shadow-sm">
+        <span class="absolute -top-3 -left-0.5 bg-[#4fc3f7] text-white px-2.5 py-1 rounded-sm text-sm font-medium">你的信息</span>
+        <div>
+          <div class="flex items-start py-3 border-b border-[var(--c-border)]">
+            <label class="w-[70px] text-sm text-[var(--c-text-1)] leading-8">昵称</label>
+            <div class="flex-1">
               <input
-                class="form-input"
+                class="w-full h-7 text-sm text-[var(--c-text-1)] border-none outline-none bg-transparent"
                 type="text"
                 placeholder="请输入昵称"
                 v-model="formData.nickname"
               />
             </div>
           </div>
-          <div class="form-cell">
-            <div class="form-cell__hd"><label class="form-label">真名</label></div>
-            <div class="form-cell__bd">
+          <div class="flex items-start py-3 border-b border-[var(--c-border)]">
+            <label class="w-[70px] text-sm text-[var(--c-text-1)] leading-8">真名</label>
+            <div class="flex-1">
               <input
-                class="form-input"
+                class="w-full h-7 text-sm text-[var(--c-text-1)] border-none outline-none bg-transparent"
                 type="text"
                 placeholder="请输入真名"
                 v-model="formData.realName"
               />
-              <div class="hint-text">注：真实姓名可选填，默认保密不显示！填写即可参加紧张刺激的猜名字游戏！</div>
+              <div class="text-xs text-[var(--c-text-3)] mt-1 leading-snug">注：真实姓名可选填，默认保密不显示！填写即可参加紧张刺激的猜名字游戏！</div>
             </div>
           </div>
-          <div class="form-cell">
-            <div class="form-cell__hd"><label class="form-label">性别</label></div>
-            <div class="form-cell__bd">
-              <select class="form-select" v-model="formData.myGender">
+          <div class="flex items-start py-3">
+            <label class="w-[70px] text-sm text-[var(--c-text-1)] leading-8">性别</label>
+            <div class="flex-1">
+              <select class="w-full text-sm text-[var(--c-text-1)] border-none outline-none bg-transparent appearance-none" v-model="formData.myGender">
                 <option value="">请选择</option>
                 <option value="male">男</option>
                 <option value="female">女</option>
@@ -131,24 +116,24 @@ function submit() {
       </div>
 
       <!-- 第二个 form-section：TA的信息 -->
-      <div class="form-section">
-        <span class="form-section-title">TA的信息</span>
-        <div class="form-cells">
-          <div class="form-cell">
-            <div class="form-cell__hd"><label class="form-label">名字</label></div>
-            <div class="form-cell__bd">
+      <div class="border-2 border-dashed border-[#81d4fa] rounded-lg pt-6 px-4 pb-4 mx-4 mt-6 mb-4 relative bg-[var(--c-surface)] shadow-sm">
+        <span class="absolute -top-3 -left-0.5 bg-[#4fc3f7] text-white px-2.5 py-1 rounded-sm text-sm font-medium">TA的信息</span>
+        <div>
+          <div class="flex items-start py-3 border-b border-[var(--c-border)]">
+            <label class="w-[70px] text-sm text-[var(--c-text-1)] leading-8">名字</label>
+            <div class="flex-1">
               <input
-                class="form-input"
+                class="w-full h-7 text-sm text-[var(--c-text-1)] border-none outline-none bg-transparent"
                 type="text"
                 placeholder="请输入TA的名字"
                 v-model="formData.receiverName"
               />
             </div>
           </div>
-          <div class="form-cell">
-            <div class="form-cell__hd"><label class="form-label">性别</label></div>
-            <div class="form-cell__bd">
-              <select class="form-select" v-model="formData.receiverGender">
+          <div class="flex items-start py-3">
+            <label class="w-[70px] text-sm text-[var(--c-text-1)] leading-8">性别</label>
+            <div class="flex-1">
+              <select class="w-full text-sm text-[var(--c-text-1)] border-none outline-none bg-transparent appearance-none" v-model="formData.receiverGender">
                 <option value="">请选择</option>
                 <option value="male">男</option>
                 <option value="female">女</option>
@@ -160,26 +145,24 @@ function submit() {
       </div>
 
       <!-- 表白内容 -->
-      <div class="form-section">
-        <span class="form-section-title">表白内容</span>
-        <div class="form-cells">
-          <div class="form-cell">
-            <div class="form-cell__bd">
-              <textarea
-                class="form-textarea"
-                placeholder="写下你想对TA说的话..."
-                rows="4"
-                v-model="formData.content"
-              ></textarea>
-            </div>
+      <div class="border-2 border-dashed border-[#81d4fa] rounded-lg pt-6 px-4 pb-4 mx-4 mt-6 mb-4 relative bg-[var(--c-surface)] shadow-sm">
+        <span class="absolute -top-3 -left-0.5 bg-[#4fc3f7] text-white px-2.5 py-1 rounded-sm text-sm font-medium">表白内容</span>
+        <div>
+          <div class="py-3">
+            <textarea
+              class="w-full min-h-[80px] text-sm text-[var(--c-text-1)] border-none outline-none bg-transparent py-1 resize-y"
+              placeholder="写下你想对TA说的话..."
+              rows="4"
+              v-model="formData.content"
+            ></textarea>
           </div>
         </div>
       </div>
 
-      <div class="express-submit-wrap">
+      <div class="px-4 pt-5 pb-10">
         <button
           type="button"
-          class="btn-submit"
+          class="w-full h-11 flex justify-center items-center bg-[#f43f5e] text-white rounded-full text-base font-medium border-none cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
           :disabled="submitting"
           @click="submit"
         >
@@ -190,134 +173,14 @@ function submit() {
 
     <!-- 提示对话框 -->
     <div v-if="dialogVisible">
-      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
-      <div class="community-dialog">
-        <div class="community-dialog__title">提示</div>
-        <div class="community-dialog__body">{{ dialogMessage }}</div>
-        <div class="community-dialog__footer">
-          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
+      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
+        <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">提示</div>
+        <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
+        <div class="flex border-t border-[var(--c-border)]">
+          <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.express-publish {
-  background: var(--c-bg);
-  padding-bottom: 80px;
-}
-
-.express-main-title {
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-  color: #ffb3ba;
-  margin: var(--space-lg) var(--space-lg) var(--space-xl);
-  padding: 0;
-  line-height: 1.3;
-}
-
-/* 手账风：蓝色虚线表单框 */
-.form-section {
-  border: 2px dashed #81d4fa;
-  border-radius: var(--radius-md);
-  padding: 25px var(--space-lg) var(--space-lg);
-  margin: 25px var(--space-lg) var(--space-lg);
-  position: relative;
-  background-color: var(--c-card);
-  box-shadow: var(--shadow-sm);
-}
-.form-section-title {
-  position: absolute;
-  top: -12px;
-  left: -2px;
-  background-color: #4fc3f7;
-  color: white;
-  padding: 4px 10px;
-  border-radius: 2px;
-  font-size: var(--font-base);
-  font-weight: 500;
-}
-
-/* 表单输入框 */
-.form-cells {
-  margin-top: 0;
-  background-color: transparent;
-}
-.form-cell {
-  display: flex;
-  align-items: flex-start;
-  padding: var(--space-md) 0;
-  border-bottom: 1px solid var(--c-divider);
-}
-.form-cell:last-child {
-  border-bottom: none;
-}
-.form-label {
-  width: 70px;
-  font-size: var(--font-base);
-  color: var(--c-text-1);
-  line-height: 2;
-}
-.form-cell__bd {
-  flex: 1;
-}
-.form-input,
-.form-select,
-.form-textarea {
-  font-size: var(--font-base);
-  color: var(--c-text-1);
-  width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  box-sizing: border-box;
-}
-.form-input {
-  height: 28px;
-}
-.form-textarea {
-  min-height: 80px;
-  padding: var(--space-sm) 0;
-  resize: vertical;
-}
-.form-select {
-  width: 100%;
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.express-submit-wrap {
-  padding: var(--space-xl) var(--space-lg) 40px;
-}
-.btn-submit {
-  width: 100%;
-  height: 44px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f43f5e;
-  color: #fff;
-  border-radius: var(--radius-full);
-  font-size: var(--font-lg);
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.btn-submit:active {
-  opacity: 0.85;
-}
-.btn-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.hint-text {
-  font-size: var(--font-sm);
-  color: var(--c-text-3);
-  margin-top: 5px;
-  line-height: 1.4;
-}
-</style>

@@ -1,37 +1,61 @@
 <template>
-  <div class="weui-tab info-weui-tab">
-    <div class="weui-tab__panel info-container">
-      <section class="info-section">
-        <div class="section-title">{{ $t('info.news') }}</div>
-        <div class="modern-card entry-card">
-          <button type="button" class="entry-link" @click="router.push('/news')">
-            <div class="entry-link__icon">{{ $t('info.news') }}</div>
-            <div class="entry-link__bd">
-              <div class="entry-link__title">{{ $t('info.news') }}</div>
-              <div class="entry-link__desc">{{ $t('info.newsDesc') }}</div>
-            </div>
-            <div class="entry-link__ft"></div>
-          </button>
-        </div>
-      </section>
+  <div class="flex flex-col gap-5">
+    <!-- News section -->
+    <AppCard>
+      <template #header>
+        <span class="text-sm font-semibold">{{ $t('info.news') }}</span>
+      </template>
+      <div class="p-4">
+        <button
+          type="button"
+          class="w-full flex items-center gap-3 text-left cursor-pointer bg-transparent border-none"
+          @click="router.push('/news')"
+        >
+          <div
+            class="w-[42px] h-[42px] rounded-xl bg-[#e8f7ef] text-[var(--c-primary)] flex items-center justify-center text-[13px] font-bold shrink-0"
+          >
+            {{ $t('info.news') }}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ $t('info.news') }}</div>
+            <div class="mt-1 text-[13px] text-[var(--c-text-3)]">{{ $t('info.newsDesc') }}</div>
+          </div>
+          <div class="w-2 h-2 border-r border-t border-[#c8c8c8] rotate-45 shrink-0" />
+        </button>
+      </div>
+    </AppCard>
 
-      <section class="info-section">
-        <div class="section-title">{{ $t('info.systemNotice') }}</div>
+    <!-- System notices section -->
+    <AppCard>
+      <template #header>
+        <span class="text-sm font-semibold">{{ $t('info.systemNotice') }}</span>
+      </template>
+      <div class="p-4">
         <NoticeBlock :notices="systemNoticeItems" />
         <HistoryBlock :festival="infoData.festival" :today-label="todayLabel" />
-        <div v-if="!systemNoticeItems.length && !infoData.festival" class="modern-card empty-card">{{ $t('info.noNotice') }}</div>
-      </section>
+        <div
+          v-if="!systemNoticeItems.length && !infoData.festival"
+          class="text-sm text-[var(--c-text-3)] text-center py-8"
+        >
+          {{ $t('info.noNotice') }}
+        </div>
+      </div>
+    </AppCard>
 
-      <section class="info-section">
-        <div class="section-title">{{ $t('info.interaction') }}</div>
+    <!-- Interactions section -->
+    <AppCard>
+      <template #header>
+        <span class="text-sm font-semibold">{{ $t('info.interaction') }}</span>
+      </template>
+      <div class="p-4">
         <InteractionBlock
           :items="interactionItems"
           :unread-count="interactionUnreadCount"
           @select-item="handleInteractionSelect"
           @mark-all="handleMarkAllInteractionsRead"
         />
-      </section>
-    </div>
+      </div>
+    </AppCard>
   </div>
 </template>
 
@@ -39,13 +63,16 @@
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useToast } from '@/composables/useToast'
 import request from '../utils/request'
+import AppCard from '../components/ui/AppCard.vue'
 import NoticeBlock from '../components/info/NoticeBlock.vue'
 import HistoryBlock from '../components/info/HistoryBlock.vue'
 import InteractionBlock from '../components/info/InteractionBlock.vue'
 
 const router = useRouter()
 const { t } = useI18n()
+const { loading: showLoading, hideLoading } = useToast()
 const infoData = ref({})
 const announcementList = ref([])
 const interactionItems = ref([])
@@ -223,10 +250,7 @@ function handleMarkAllInteractionsRead() {
 }
 
 async function loadInfoPage() {
-  const weui = typeof window !== 'undefined' && window.weui
-  if (weui && typeof weui.loading === 'function') {
-    weui.loading(t('info.loadingInfo'))
-  }
+  showLoading(t('info.loadingInfo'))
   try {
     const [announcementRes, informationRes, interactionRes, unreadRes] = await Promise.allSettled([
       request.get('/information/announcement/start/0/size/5'),
@@ -248,9 +272,7 @@ async function loadInfoPage() {
       interactionUnreadCount.value = Number(unreadRes.value?.data || 0)
     }
   } finally {
-    if (weui && typeof weui.hideLoading === 'function') {
-      weui.hideLoading()
-    }
+    hideLoading()
   }
 }
 
@@ -258,111 +280,3 @@ onMounted(() => {
   loadInfoPage()
 })
 </script>
-
-<style scoped>
-.info-weui-tab {
-  height: 100vh !important;
-  width: 100vw;
-  overflow: hidden !important;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-bg-secondary);
-}
-.weui-tab__panel.info-container {
-  flex: 1;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch;
-  box-sizing: border-box;
-  padding: 12px;
-  padding-bottom: 60px;
-  background-color: var(--color-bg-secondary);
-  min-height: 100vh;
-}
-
-.info-section {
-  margin-bottom: 8px;
-}
-
-.section-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin: 4px 4px 12px;
-}
-
-.modern-card {
-  background: var(--color-surface);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-}
-
-.entry-card {
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-.entry-link {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  border: none;
-  border-bottom: 1px solid var(--color-divider);
-  background: transparent;
-  text-align: left;
-  cursor: pointer;
-}
-
-.entry-link:last-child {
-  border-bottom: none;
-}
-
-.entry-link__icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: #e8f7ef;
-  color: var(--color-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.entry-link__bd {
-  flex: 1;
-  min-width: 0;
-}
-
-.entry-link__title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.entry-link__desc {
-  margin-top: 4px;
-  font-size: 13px;
-  color: var(--color-text-tertiary);
-}
-
-.entry-link__ft {
-  width: 8px;
-  height: 8px;
-  border-right: 1px solid #c8c8c8;
-  border-top: 1px solid #c8c8c8;
-  transform: rotate(45deg);
-  flex-shrink: 0;
-}
-
-.empty-card {
-  font-size: 14px;
-  color: var(--color-text-tertiary);
-  text-align: center;
-}
-</style>

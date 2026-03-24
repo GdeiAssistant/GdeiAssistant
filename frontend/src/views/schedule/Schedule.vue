@@ -2,9 +2,10 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { getSchedule, updateScheduleCache, addCustomSchedule, deleteCustomSchedule } from '@/api/schedule'
-import { showErrorTopTips } from '@/utils/toast.js'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { success: toastSuccess, error: toastError, loading: toastLoading, hideLoading } = useToast()
 
 const loading = ref(false)
 const scheduleResult = ref(null)
@@ -12,9 +13,6 @@ const currentWeek = ref(1)
 const showActionSheet = ref(false)
 const showCourseDetail = ref(false)
 const selectedCourse = ref(null)
-const toastMessage = ref('')
-const showToast = ref(false)
-let toastTimer = null
 
 // 添加自定义课程弹窗
 const showAddCustomDialog = ref(false)
@@ -64,6 +62,27 @@ const showEmptyState = computed(() => {
   return !!scheduleResult.value && filteredList.value.length === 0
 })
 
+// 课程颜色配置
+const courseColors = [
+  '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6',
+  '#EC4899', '#06B6D4', '#F97316', '#6366F1', '#14B8A6',
+  '#E11D48', '#7C3AED', '#0EA5E9', '#84CC16'
+]
+
+function getCourseColor(course) {
+  return course.colorCode || courseColors[(course.position || 0) % courseColors.length]
+}
+
+function getCourseStyle(course) {
+  const color = getCourseColor(course)
+  return {
+    gridColumn: course.column + 2,
+    gridRow: `${course.row + 2} / span ${course.scheduleLength}`,
+    borderLeftColor: color,
+    backgroundColor: `${color}14`,
+  }
+}
+
 async function fetchSchedule() {
   loading.value = true
   scheduleResult.value = null
@@ -76,10 +95,6 @@ async function fetchSchedule() {
   } finally {
     loading.value = false
   }
-}
-
-function goBack() {
-  router.back()
 }
 
 function openWeekPicker() {
@@ -104,9 +119,6 @@ function closeActionSheet() {
   showActionSheet.value = false
 }
 
-// 统一获取 weui 对象（若存在）
-const getWeui = () => (typeof window !== 'undefined' ? window.weui : null)
-
 function onManageCache() {
   closeActionSheet()
   router.push('/user/privacy-setting')
@@ -114,31 +126,19 @@ function onManageCache() {
 
 async function onRefreshSchedule() {
   closeActionSheet()
-  const weui = getWeui()
-  let loadingInstance = null
-  if (weui && typeof weui.loading === 'function') {
-    loadingInstance = weui.loading('正在同步课表...')
-  } else {
-    loading.value = true
-  }
+  toastLoading('正在同步课表...')
   try {
     const res = await updateScheduleCache()
     if (res && res.success) {
-      if (weui && typeof weui.toast === 'function') {
-        weui.toast('更新成功', { duration: 1500 })
-      } else {
-        showWeuiToast('更新成功')
-      }
+      hideLoading()
+      toastSuccess('更新成功')
       await fetchSchedule()
     }
   } catch (e) {
+    hideLoading()
     // 错误文案（含测试账号受限）由全局拦截器统一提示
   } finally {
-    if (loadingInstance && typeof loadingInstance.hide === 'function') {
-      loadingInstance.hide()
-    } else {
-      loading.value = false
-    }
+    hideLoading()
   }
 }
 
@@ -165,11 +165,11 @@ async function submitAddCustom() {
   const name = (f.scheduleName || '').trim()
   const location = (f.scheduleLocation || '').trim()
   if (!name) {
-    showErrorTopTips('请输入课程名称')
+    toastError('请输入课程名称')
     return
   }
   if (!location) {
-    showErrorTopTips('请输入上课地点')
+    toastError('请输入上课地点')
     return
   }
 
@@ -183,11 +183,11 @@ async function submitAddCustom() {
   const minWeek = Math.max(1, Math.min(20, parseInt(f.minScheduleWeek, 10) || 1))
   const maxWeek = Math.max(1, Math.min(20, parseInt(f.maxScheduleWeek, 10) || 1))
   if (minWeek > maxWeek) {
-    showErrorTopTips('开始周不能大于结束周')
+    toastError('开始周不能大于结束周')
     return
   }
   if (startSection + scheduleLength - 1 > 10) {
-    showErrorTopTips('课程结束节数不能超过全天最大节数(10节)')
+    toastError('课程结束节数不能超过全天最大节数(10节)')
     return
   }
 
@@ -207,7 +207,7 @@ async function submitAddCustom() {
       const exMin = s.minScheduleWeek != null ? s.minScheduleWeek : 1
       const exMax = s.maxScheduleWeek != null ? s.maxScheduleWeek : 20
       if (minWeek <= exMax && maxWeek >= exMin) {
-        showErrorTopTips('该时间段已存在课程')
+        toastError('该时间段已存在课程')
         return
       }
     }
@@ -223,14 +223,9 @@ async function submitAddCustom() {
   }
 
   addCustomSubmitting.value = true
-  const weui = getWeui()
   try {
     await addCustomSchedule(payload)
-    if (weui && typeof weui.toast === 'function') {
-      weui.toast('添加成功', { duration: 1500 })
-    } else {
-      showWeuiToast('添加成功')
-    }
+    toastSuccess('添加成功')
     showAddCustomDialog.value = false
     await fetchSchedule()
   } catch (e) {
@@ -244,38 +239,16 @@ async function handleDeleteCustomCourse() {
   if (!selectedCourse.value || !isCustomCourse(selectedCourse.value)) return
   const position = selectedCourse.value.position
   closeCourseDetail()
-  const weui = getWeui()
-  const doDelete = async () => {
+
+  if (window.confirm && window.confirm('确定要删除这节自定义课程吗？')) {
     try {
       await deleteCustomSchedule(position)
-      if (weui && typeof weui.toast === 'function') {
-        weui.toast('删除成功', { duration: 1500 })
-      } else {
-        showWeuiToast('删除成功')
-      }
+      toastSuccess('删除成功')
       await fetchSchedule()
     } catch (e) {
       // 错误由 request.js 全局拦截器统一提示
     }
   }
-
-  if (weui && typeof weui.confirm === 'function') {
-    weui.confirm('确定要删除这节自定义课程吗？', async () => {
-      await doDelete()
-    })
-  } else if (window.confirm && window.confirm('确定要删除这节自定义课程吗？')) {
-    await doDelete()
-  }
-}
-
-function showWeuiToast(message) {
-  toastMessage.value = message
-  showToast.value = true
-  if (toastTimer) clearTimeout(toastTimer)
-  toastTimer = setTimeout(() => {
-    showToast.value = false
-    toastTimer = null
-  }, 2000)
 }
 
 /** 仅自定义课程可删除：只认后端下发的显式标记 isCustom === true */
@@ -299,668 +272,322 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="schedule-page">
-    <template v-if="loading">
-      <div class="weui-mask_transparent" aria-hidden="true"></div>
-      <div class="weui-toast__wrp">
-        <div class="weui-toast">
-          <span class="weui-primary-loading weui-icon_toast" aria-label="加载中"></span>
-          <p class="weui-toast__content">加载中</p>
-        </div>
-      </div>
-    </template>
-
-    <div class="top-nav-bar">
-      <button type="button" class="nav-btn-back btn-reset" @click="goBack">返回</button>
-      <button type="button" class="nav-btn-more btn-reset" @click="showOptionMenu">更多</button>
+  <div class="min-h-screen bg-[var(--c-bg)] pb-6">
+    <!-- Header -->
+    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">课程表</span>
+      <button @click="showOptionMenu" class="text-[var(--c-primary)] text-sm font-medium w-10 text-right">更多</button>
     </div>
-    <h1 class="page-title-green">我的课程表</h1>
 
-    <button type="button" class="schedule-week btn-reset" @click="openWeekPicker">
-      <span class="schedule-week__text">{{ scheduleResult ? `第${scheduleResult.week}周` : '选择周数' }}</span>
-      <span class="schedule-week__chevron" aria-hidden="true">▼</span>
-    </button>
+    <!-- Loading -->
+    <div v-if="loading" class="flex items-center justify-center py-20">
+      <div class="flex flex-col items-center gap-2">
+        <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
+        <span class="text-xs text-[var(--c-text-3)]">加载中</span>
+      </div>
+    </div>
 
-    <div class="schedule-grid-wrap">
-      <div class="schedule-grid">
-        <!-- 左上角空白：固定 (1,1) -->
-        <div class="schedule-grid__cell schedule-grid__cell--head schedule-grid__cell--corner" style="grid-column: 1; grid-row: 1;"></div>
-      <!-- 表头：周一至周日，今日列内联背景与下方格子一体化 -->
-      <div
-        v-for="(label, idx) in dayLabels"
-        :key="'head-' + label"
-        class="schedule-grid__cell schedule-grid__cell--head"
-        :class="{ 'today-highlight': idx === todayIndex }"
-        :style="{
-          gridColumn: idx + 2,
-          gridRow: 1,
-          backgroundColor: idx === todayIndex ? 'rgba(9, 187, 7, 0.08)' : undefined
-        }"
-      >
-        <span class="schedule-grid__head-label">{{ label }}</span>
-        <span v-if="idx === todayIndex" class="schedule-grid__head-dot" aria-hidden="true"></span>
-      </div>
-      <!-- 节次列：1-12 纯白背景、灰色文字，无高亮 -->
-      <div
-        v-for="row in 12"
-        :key="'index-' + row"
-        class="schedule-grid__cell schedule-grid__cell--index"
-        :style="{ gridColumn: 1, gridRow: row + 1 }"
-      >
-        {{ row }}
-      </div>
-      <!-- 84 格：index 0 = Col2 Row2，内联 backgroundColor 强制今日列（含首格）变绿 -->
-      <div
-        v-for="(_, index) in 84"
-        :key="'slot-' + index"
-        class="schedule-grid__cell schedule-grid__cell--slot"
-        :class="{ 'schedule-grid__cell--today-col': (index % 7) === todayIndex }"
-        :style="{
-          gridColumn: (index % 7) + 2,
-          gridRow: Math.floor(index / 7) + 2,
-          backgroundColor: (index % 7) === todayIndex ? 'rgba(9, 187, 7, 0.08)' : undefined
-        }"
-      ></div>
-      <!-- 空状态：无课周时作为“超级格子”占据右侧全部区域，与节次列同级 -->
-      <div
-        v-if="showEmptyState"
-        class="empty-state"
-        aria-live="polite"
-      >
-        <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#dcdcdc" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-          <path d="M8 14h.01"></path>
-          <path d="M12 14h.01"></path>
-          <path d="M16 14h.01"></path>
-          <path d="M8 18h.01"></path>
-          <path d="M12 18h.01"></path>
-          <path d="M16 18h.01"></path>
-        </svg>
-        <p class="empty-state__text">本周暂无课程，好好休息吧</p>
-      </div>
-      <!-- 课程块：显式定位，column+2 跳过节次列，row+2 跳过表头行 -->
+    <!-- Week selector pill -->
+    <div class="flex justify-center py-3">
       <button
-        v-for="(course, index) in filteredList"
-        :key="'course-' + index"
-        type="button"
-        class="schedule-grid__course btn-reset"
-        :style="{
-          gridColumn: course.column + 2,
-          gridRow: `${course.row + 2} / span ${course.scheduleLength}`,
-          backgroundColor: course.colorCode || '#07b2ff'
-        }"
-        @click="openCourseDetail(course)"
+        @click="openWeekPicker"
+        class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--c-primary)]/8 text-[var(--c-primary)] text-sm font-medium transition active:scale-95"
       >
-        <div class="schedule-grid__course-inner">
-          <span class="schedule-grid__course-name">{{ course.scheduleName }}</span>
-          <span class="schedule-grid__course-location">{{ course.scheduleLocation }}</span>
-        </div>
+        <span>{{ scheduleResult ? `第${scheduleResult.week}周` : '选择周数' }}</span>
+        <svg class="w-3.5 h-3.5 opacity-60" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
       </button>
     </div>
+
+    <!-- Schedule grid -->
+    <div class="relative w-full min-h-[500px] bg-[var(--c-surface)]">
+      <div class="grid w-full min-h-[500px]" style="grid-template-columns: 30px repeat(7, 1fr); grid-template-rows: 36px repeat(12, 1fr);">
+        <!-- Corner cell -->
+        <div class="flex items-center justify-center text-xs text-[var(--c-text-3)] border-[0.5px] border-[var(--c-divider)] bg-[var(--c-surface)]" style="grid-column: 1; grid-row: 1;"></div>
+
+        <!-- Day headers -->
+        <div
+          v-for="(label, idx) in dayLabels"
+          :key="'head-' + label"
+          class="flex flex-col items-center justify-center gap-1 text-xs border-[0.5px] border-[var(--c-divider)] bg-[var(--c-surface)]"
+          :class="idx === todayIndex ? 'text-[var(--c-primary)] font-medium' : 'text-[var(--c-text-1)]'"
+          :style="{
+            gridColumn: idx + 2,
+            gridRow: 1,
+            backgroundColor: idx === todayIndex ? 'rgba(4,120,87,0.06)' : undefined
+          }"
+        >
+          <span>{{ label }}</span>
+          <span v-if="idx === todayIndex" class="w-1 h-1 rounded-full bg-[var(--c-primary)]" aria-hidden="true"></span>
+        </div>
+
+        <!-- Row index (section numbers) -->
+        <div
+          v-for="row in 12"
+          :key="'index-' + row"
+          class="flex items-center justify-center text-xs font-mono text-[var(--c-text-3)] bg-[var(--c-surface)] border-[0.5px] border-[var(--c-divider)] border-r-[1px] min-w-[30px]"
+          :style="{ gridColumn: 1, gridRow: row + 1 }"
+        >
+          {{ row }}
+        </div>
+
+        <!-- 84 empty grid slots -->
+        <div
+          v-for="(_, index) in 84"
+          :key="'slot-' + index"
+          class="border-[0.5px] border-[var(--c-divider)]"
+          :style="{
+            gridColumn: (index % 7) + 2,
+            gridRow: Math.floor(index / 7) + 2,
+            backgroundColor: (index % 7) === todayIndex ? 'rgba(4,120,87,0.06)' : 'var(--c-bg)'
+          }"
+        ></div>
+
+        <!-- Empty state -->
+        <div
+          v-if="showEmptyState"
+          class="flex flex-col items-center justify-center z-10 pointer-events-none"
+          style="grid-column: 2 / -1; grid-row: 2 / -1;"
+          aria-live="polite"
+        >
+          <svg class="shrink-0" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: var(--c-border)">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path>
+            <path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path>
+          </svg>
+          <p class="mt-4 text-sm text-[var(--c-text-3)]">本周暂无课程，好好休息吧</p>
+        </div>
+
+        <!-- Course blocks -->
+        <button
+          v-for="(course, index) in filteredList"
+          :key="'course-' + index"
+          type="button"
+          class="m-[2px] px-1 py-1.5 rounded-r-lg border-l-[3px] overflow-hidden flex items-center justify-center text-center cursor-pointer shadow-sm transition active:scale-[0.97]"
+          :style="getCourseStyle(course)"
+          @click="openCourseDetail(course)"
+        >
+          <div class="flex flex-col items-center justify-center gap-0.5 w-full min-h-0 break-all leading-tight">
+            <span class="text-xs font-semibold text-[var(--c-text-1)]">{{ course.scheduleName }}</span>
+            <span class="text-[10px] text-[var(--c-text-3)]">{{ course.scheduleLocation }}</span>
+          </div>
+        </button>
+      </div>
     </div>
 
-    <!-- 更多 ActionSheet（与旧版 schedule.js showOptionMenu 一致） -->
-    <template v-if="showActionSheet">
-      <div class="weui-mask" @click="closeActionSheet" aria-hidden="true"></div>
-      <div class="weui-actionsheet weui-actionsheet_toggle" role="dialog" aria-label="更多选项">
-        <div class="weui-actionsheet__menu">
-          <button type="button" class="weui-actionsheet__cell btn-reset" @click="onManageCache">管理缓存配置</button>
-          <button type="button" class="weui-actionsheet__cell btn-reset" @click="onRefreshSchedule">更新实时数据</button>
-          <button type="button" class="weui-actionsheet__cell btn-reset" @click="onAddCustomCourse">添加自定义课程</button>
+    <!-- Action Sheet -->
+    <Teleport to="body">
+      <template v-if="showActionSheet">
+        <div class="fixed inset-0 bg-black/40 z-[5000]" @click="closeActionSheet"></div>
+        <div class="fixed inset-x-0 bottom-0 z-[5001] rounded-t-2xl bg-[var(--c-surface)] shadow-2xl animate-slide-up">
+          <div class="py-2">
+            <button
+              @click="onManageCache"
+              class="w-full py-3.5 text-center text-[15px] text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
+            >管理缓存配置</button>
+            <div class="mx-4 border-t border-[var(--c-divider)]"></div>
+            <button
+              @click="onRefreshSchedule"
+              class="w-full py-3.5 text-center text-[15px] text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
+            >更新实时数据</button>
+            <div class="mx-4 border-t border-[var(--c-divider)]"></div>
+            <button
+              @click="onAddCustomCourse"
+              class="w-full py-3.5 text-center text-[15px] text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
+            >添加自定义课程</button>
+          </div>
+          <div class="border-t-[6px] border-[var(--c-bg)]">
+            <button
+              @click="closeActionSheet"
+              class="w-full py-3.5 text-center text-[15px] font-medium text-[var(--c-text-3)] active:bg-[var(--c-bg)] transition"
+            >取消</button>
+          </div>
+          <div class="pb-[env(safe-area-inset-bottom)]"></div>
         </div>
-        <div class="weui-actionsheet__action">
-          <button type="button" class="weui-actionsheet__cell btn-reset" @click="closeActionSheet">取消</button>
-        </div>
-      </div>
-    </template>
+      </template>
+    </Teleport>
 
-    <!-- 课程详情弹窗 -->
-    <template v-if="showCourseDetail && selectedCourse">
-      <div class="weui-mask" @click="closeCourseDetail" aria-hidden="true"></div>
-      <div class="schedule-detail-dialog" role="dialog" aria-label="课程详情">
-        <div class="schedule-detail-dialog__hd">
-          <h3 class="schedule-detail-dialog__title">课程详细信息</h3>
-          <button type="button" class="schedule-detail-dialog__close btn-reset" @click="closeCourseDetail">关闭</button>
+    <!-- Course detail dialog -->
+    <Teleport to="body">
+      <template v-if="showCourseDetail && selectedCourse">
+        <div class="fixed inset-0 bg-black/40 z-[5000]" @click="closeCourseDetail"></div>
+        <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[340px] bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
+          <!-- Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)]">
+            <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">课程详细信息</h3>
+            <button @click="closeCourseDetail" class="text-sm text-[var(--c-primary)] font-medium">关闭</button>
+          </div>
+          <!-- Body -->
+          <div class="px-4 py-4 space-y-3">
+            <div class="flex items-baseline gap-2">
+              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">课程名称</span>
+              <span class="text-sm text-[var(--c-text-1)]">{{ selectedCourse.scheduleName }}</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">上课地点</span>
+              <span class="text-sm text-[var(--c-text-1)]">{{ selectedCourse.scheduleLocation }}</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">任课教师</span>
+              <span class="text-sm text-[var(--c-text-1)]">{{ (selectedCourse.scheduleTeacher && String(selectedCourse.scheduleTeacher).trim() !== '' && String(selectedCourse.scheduleTeacher).trim() !== '—' && String(selectedCourse.scheduleTeacher).trim() !== '-') ? selectedCourse.scheduleTeacher : '无' }}</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">上课周次</span>
+              <span class="text-sm text-[var(--c-text-1)]">第{{ selectedCourse.minScheduleWeek }}周至第{{ selectedCourse.maxScheduleWeek }}周</span>
+            </div>
+          </div>
+          <!-- Footer -->
+          <div v-if="isCustomCourse(selectedCourse)" class="px-4 pb-4 flex justify-center">
+            <button
+              @click="handleDeleteCustomCourse"
+              class="w-full max-w-[200px] py-2 rounded-lg border border-red-500 text-red-500 text-sm font-medium transition active:bg-red-50"
+            >删除</button>
+          </div>
         </div>
-        <div class="schedule-detail-dialog__bd weui-form-preview__bd">
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">课程名称</label>
-            <span class="weui-form-preview__value">{{ selectedCourse.scheduleName }}</span>
-          </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">上课地点</label>
-            <span class="weui-form-preview__value">{{ selectedCourse.scheduleLocation }}</span>
-          </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">任课教师</label>
-            <span class="weui-form-preview__value">{{ (selectedCourse.scheduleTeacher && String(selectedCourse.scheduleTeacher).trim() !== '' && String(selectedCourse.scheduleTeacher).trim() !== '—' && String(selectedCourse.scheduleTeacher).trim() !== '-') ? selectedCourse.scheduleTeacher : '无' }}</span>
-          </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">上课周次</label>
-            <span class="weui-form-preview__value">第{{ selectedCourse.minScheduleWeek }}周至第{{ selectedCourse.maxScheduleWeek }}周</span>
-          </div>
-        </div>
-        <div class="schedule-detail-dialog__ft">
-          <button
-            v-if="isCustomCourse(selectedCourse)"
-            type="button"
-            class="schedule-detail-dialog__btn schedule-detail-dialog__btn_delete"
-            @click="handleDeleteCustomCourse"
-          >
-            删除
-          </button>
-        </div>
-      </div>
-    </template>
+      </template>
+    </Teleport>
 
-    <!-- 添加自定义课程弹窗 -->
-    <template v-if="showAddCustomDialog">
-      <div class="weui-mask" @click="closeAddCustomDialog" aria-hidden="true"></div>
-      <div class="schedule-detail-dialog add-custom-dialog" role="dialog" aria-label="添加自定义课程">
-        <div class="schedule-detail-dialog__hd">
-          <h3 class="schedule-detail-dialog__title">添加自定义课程</h3>
-          <button type="button" class="schedule-detail-dialog__close btn-reset" @click="closeAddCustomDialog">关闭</button>
-        </div>
-        <div class="schedule-detail-dialog__bd weui-cells weui-cells_form">
-          <div class="weui-cell">
-            <div class="weui-cell__hd"><label class="weui-label">课程名称</label></div>
-            <div class="weui-cell__bd weui-cell_primary">
-              <input v-model="addCustomForm.scheduleName" class="weui-input" type="text" maxlength="50" placeholder="请输入课程名称" />
-            </div>
+    <!-- Add custom course dialog -->
+    <Teleport to="body">
+      <template v-if="showAddCustomDialog">
+        <div class="fixed inset-0 bg-black/40 z-[5000]" @click="closeAddCustomDialog"></div>
+        <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[380px] max-h-[85vh] overflow-y-auto bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
+          <!-- Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)] sticky top-0 bg-[var(--c-surface)] rounded-t-2xl">
+            <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">添加自定义课程</h3>
+            <button @click="closeAddCustomDialog" class="text-sm text-[var(--c-primary)] font-medium">关闭</button>
           </div>
-          <div class="weui-cell">
-            <div class="weui-cell__hd"><label class="weui-label">上课地点</label></div>
-            <div class="weui-cell__bd weui-cell_primary">
-              <input v-model="addCustomForm.scheduleLocation" class="weui-input" type="text" maxlength="25" placeholder="请输入上课地点" />
+          <!-- Form -->
+          <div class="px-4 py-4 space-y-4">
+            <!-- 课程名称 -->
+            <div>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">课程名称</label>
+              <input
+                v-model="addCustomForm.scheduleName"
+                type="text"
+                maxlength="50"
+                placeholder="请输入课程名称"
+                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] placeholder-[var(--c-text-3)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
+              />
             </div>
-          </div>
-          <div class="weui-cell weui-cell_select weui-cell_select-after">
-            <div class="weui-cell__hd">
-              <label class="weui-label">星期几</label>
+            <!-- 上课地点 -->
+            <div>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">上课地点</label>
+              <input
+                v-model="addCustomForm.scheduleLocation"
+                type="text"
+                maxlength="25"
+                placeholder="请输入上课地点"
+                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] placeholder-[var(--c-text-3)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
+              />
             </div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="addCustomForm.dayOfWeek">
+            <!-- 星期几 -->
+            <div>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">星期几</label>
+              <select
+                v-model.number="addCustomForm.dayOfWeek"
+                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+              >
                 <option v-for="d in 7" :key="d" :value="d">周{{ ['一','二','三','四','五','六','日'][d-1] }}</option>
               </select>
             </div>
-          </div>
-          <div class="weui-cell weui-cell_select weui-cell_select-after">
-            <div class="weui-cell__hd">
-              <label class="weui-label">开始节数</label>
-            </div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="addCustomForm.startSection">
+            <!-- 开始节数 -->
+            <div>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">开始节数</label>
+              <select
+                v-model.number="addCustomForm.startSection"
+                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+              >
                 <option v-for="s in 10" :key="s" :value="s">第{{ s }}节</option>
               </select>
             </div>
-          </div>
-          <div class="weui-cell weui-cell_select weui-cell_select-after">
-            <div class="weui-cell__hd">
-              <label class="weui-label">占用节数</label>
-            </div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="addCustomForm.scheduleLength">
+            <!-- 占用节数 -->
+            <div>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">占用节数</label>
+              <select
+                v-model.number="addCustomForm.scheduleLength"
+                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+              >
                 <option v-for="len in Math.max(1, Math.min(5, 11 - (addCustomForm.startSection || 1)))" :key="len" :value="len">{{ len }}节</option>
               </select>
             </div>
+            <!-- 周次范围 -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-[var(--c-text-3)] mb-1.5">开始周</label>
+                <select
+                  v-model.number="addCustomForm.minScheduleWeek"
+                  class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+                >
+                  <option v-for="w in 20" :key="w" :value="w">第{{ w }}周</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-[var(--c-text-3)] mb-1.5">结束周</label>
+                <select
+                  v-model.number="addCustomForm.maxScheduleWeek"
+                  class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+                >
+                  <option v-for="w in 20" :key="w" :value="w">第{{ w }}周</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <div class="weui-cell weui-cell_select weui-cell_select-after">
-            <div class="weui-cell__hd">
-              <label class="weui-label">开始周</label>
-            </div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="addCustomForm.minScheduleWeek">
-                <option v-for="w in 20" :key="w" :value="w">第{{ w }}周</option>
-              </select>
-            </div>
-          </div>
-          <div class="weui-cell weui-cell_select weui-cell_select-after">
-            <div class="weui-cell__hd">
-              <label class="weui-label">结束周</label>
-            </div>
-            <div class="weui-cell__bd">
-              <select class="weui-select" v-model.number="addCustomForm.maxScheduleWeek">
-                <option v-for="w in 20" :key="w" :value="w">第{{ w }}周</option>
-              </select>
-            </div>
+          <!-- Submit -->
+          <div class="px-4 pb-4 flex justify-center">
+            <button
+              type="button"
+              :disabled="addCustomSubmitting"
+              @click="submitAddCustom"
+              class="w-full max-w-[200px] py-2.5 rounded-full bg-[var(--c-primary)] text-white text-sm font-semibold transition active:scale-95 disabled:opacity-50"
+            >
+              {{ addCustomSubmitting ? '提交中...' : '添加' }}
+            </button>
           </div>
         </div>
-        <div class="weui-btn_area" style="margin: 15px auto;">
-          <button
-            type="button"
-            class="weui-btn weui-btn_primary"
-            style="width: 50%; height: 40px; line-height: 40px; padding: 0; font-size: 16px; border-radius: 20px;"
-            :disabled="addCustomSubmitting"
-            @click="submitAddCustom"
-          >
-            {{ addCustomSubmitting ? '提交中...' : '添加' }}
-          </button>
-        </div>
-      </div>
-    </template>
+      </template>
+    </Teleport>
 
-    <!-- 周次选择器（WEUI Picker 风格：底部弹出，1-20 周，选择后刷新） -->
-    <template v-if="showWeekPicker">
-      <div class="weui-mask" @click="closeWeekPicker" aria-hidden="true"></div>
-      <div class="week-picker" role="dialog" aria-label="选择周数">
-        <div class="week-picker__hd">
-          <button type="button" class="week-picker__cancel btn-reset" @click="closeWeekPicker">取消</button>
-          <div class="week-picker__title">选择周数</div>
-          <div class="week-picker__placeholder"></div>
+    <!-- Week picker bottom sheet -->
+    <Teleport to="body">
+      <template v-if="showWeekPicker">
+        <div class="fixed inset-0 bg-black/40 z-[5000]" @click="closeWeekPicker"></div>
+        <div class="fixed inset-x-0 bottom-0 z-[5001] rounded-t-2xl bg-[var(--c-surface)] shadow-2xl max-h-[70vh] flex flex-col animate-slide-up">
+          <!-- Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)] shrink-0">
+            <button @click="closeWeekPicker" class="text-sm text-[var(--c-text-3)]">取消</button>
+            <span class="text-[15px] font-semibold text-[var(--c-text-1)]">选择周数</span>
+            <div class="w-10"></div>
+          </div>
+          <!-- Options -->
+          <div class="overflow-y-auto py-2" style="-webkit-overflow-scrolling: touch;">
+            <button
+              v-for="opt in weekPickerOptions"
+              :key="opt.value"
+              type="button"
+              class="w-full py-3 text-center text-[15px] transition active:bg-[var(--c-bg)]"
+              :class="opt.value === currentWeek ? 'text-[var(--c-primary)] font-semibold' : 'text-[var(--c-text-1)]'"
+              @click="selectWeek(opt.value)"
+            >
+              {{ opt.label }}
+            </button>
+          </div>
+          <div class="pb-[env(safe-area-inset-bottom)]"></div>
         </div>
-        <div class="week-picker__bd">
-          <button
-            type="button"
-            v-for="opt in weekPickerOptions"
-            :key="opt.value"
-            class="week-picker__item btn-reset"
-            :class="{ 'week-picker__item--active': opt.value === currentWeek }"
-            @click="selectWeek(opt.value)"
-          >
-            {{ opt.label }}
-          </button>
-        </div>
-      </div>
-    </template>
-
-    <!-- Toast -->
-    <template v-if="showToast">
-      <div class="weui-mask_transparent" aria-hidden="true"></div>
-      <div class="weui-toast__wrp">
-        <div class="weui-toast weui-toast_text">
-          <p class="weui-toast__content">{{ toastMessage }}</p>
-        </div>
-      </div>
-    </template>
+      </template>
+    </Teleport>
   </div>
 </template>
 
-<style scoped>
-.btn-reset {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-  color: inherit;
-  text-align: inherit;
-  text-decoration: none;
-  padding: 0;
-  margin: 0;
+<style>
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
-.btn-reset:focus-visible {
-  outline: 2px solid var(--color-primary, #07c160);
-  outline-offset: -2px;
-}
-
-.weui-actionsheet__cell.btn-reset {
-  width: 100%;
-  text-align: center;
-}
-
-.schedule-page {
-  background-color: var(--color-surface);
-  min-height: 100vh;
-  padding-bottom: 24px;
-  width: 100%;
-}
-
-/* 导航栏：与 Grade 完全一致，返回/更多/标题视觉高度统一 */
-.top-nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  background-color: var(--color-surface);
-  box-sizing: border-box;
-}
-
-.nav-btn-back,
-.nav-btn-more {
-  font-size: 16px;
-  line-height: 24px;
-  color: var(--color-text-tertiary);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.page-title-green {
-  text-align: center;
-  font-size: 34px;
-  color: var(--color-primary);
-  font-weight: 400;
-  margin: 10px 0 20px 0;
-  line-height: 1.2;
-}
-
-.add-custom-dialog .weui-cells {
-  margin-top: 0;
-}
-
-.schedule-detail-dialog__ft {
-  padding: 10px 15px 16px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.schedule-detail-dialog__btn_delete {
-  display: block;
-  width: 100%;
-  max-width: 200px;
-  padding: 8px 16px;
-  border: 1px solid #fa5151;
-  border-radius: 4px;
-  background: var(--color-surface);
-  color: #fa5151;
-  font-size: 14px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.schedule-week {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 3rem;
-  line-height: 1.2;
-  text-align: center;
-  margin-bottom: 10px;
-  color: var(--color-text-tertiary);
-  font-size: 14px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.schedule-week__text {
-  margin: 0;
-}
-
-.schedule-week__chevron {
-  font-size: 10px;
-  opacity: 0.8;
-}
-
-/* 网格外层 */
-.schedule-grid-wrap {
-  position: relative;
-  width: 100%;
-  min-height: 500px;
-  background-color: var(--color-surface);
-}
-
-/* 课表网格：纸质底色 #fcfdfe，极细网格线 */
-.schedule-grid {
-  display: grid;
-  grid-template-columns: 30px repeat(7, 1fr);
-  grid-template-rows: 36px repeat(12, 1fr);
-  width: 100%;
-  min-height: 500px;
-  position: relative;
-  background-color: var(--color-bg-secondary);
-}
-
-.schedule-grid__cell {
-  border: 0.5px solid var(--color-divider);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  background: var(--color-bg-secondary);
-  box-sizing: border-box;
-}
-
-.schedule-grid__cell--corner {
-  background: var(--color-bg-secondary);
-}
-
-.schedule-grid__cell--head {
-  padding: 8px 4px;
-  font-size: 12px;
-  color: var(--color-text-primary);
-  background: var(--color-surface);
-  border: 0.5px solid var(--color-divider);
-  flex-direction: column;
-  gap: 4px;
-}
-
-.schedule-grid__head-label {
-  display: block;
-}
-
-.schedule-grid__head-dot {
-  display: block;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background-color: var(--color-primary);
-}
-
-.schedule-grid__cell--head.today-highlight {
-  color: var(--color-primary);
-  font-weight: 500;
-  background: rgba(9, 187, 7, 0.08) !important;
-}
-
-/* 节次列：纯白背景、灰色文字，始终无高亮 */
-.schedule-grid__cell--index {
-  color: var(--color-text-secondary);
-  font-weight: 500;
-  background: var(--color-surface);
-  border: 0.5px solid var(--color-divider);
-  border-right: 1px solid var(--color-divider);
-  min-width: 30px;
-}
-
-.schedule-grid__cell--slot {
-  background: var(--color-bg-secondary);
-  border: 0.5px solid var(--color-divider);
-}
-
-/* 今日整列：与内联 backgroundColor 双保险，任意星期今日列从第一行起全部显绿 */
-.schedule-grid__cell--slot.schedule-grid__cell--today-col {
-  background-color: rgba(9, 187, 7, 0.08) !important;
-}
-
-/* 加固今日列格子，防止任何规则覆盖首行 */
-.schedule-grid > .schedule-grid__cell.schedule-grid__cell--slot.schedule-grid__cell--today-col {
-  background-color: rgba(9, 187, 7, 0.08) !important;
-}
-
-/* 课程块：便利贴悬浮感，14 色由 Mock colorCode 提供；略透明让今日列绿色透出 */
-.schedule-grid__course {
-  margin: 2px;
-  padding: 6px 4px;
-  border-radius: 6px;
-  color: #fff;
-  font-size: 12px;
-  line-height: 1.3;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-height: 0;
-  box-sizing: border-box;
-  border: none !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  opacity: 0.95;
-}
-
-/* 空状态：网格占位，透明背景，层级高于格子确保插画与文案不被今日列盖住 */
-.empty-state {
-  grid-column: 2 / -1;
-  grid-row: 2 / -1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  pointer-events: none;
-  background: transparent;
-}
-
-.empty-state svg {
-  flex-shrink: 0;
-}
-
-.empty-state__text {
-  margin: 20px 0 0 0;
-  font-size: 16px;
-  color: var(--color-text-tertiary);
-  line-height: 1.4;
-}
-
-.schedule-grid__course-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.3;
-  gap: 2px;
-  width: 100%;
-  min-height: 0;
-  font-size: 12px;
-  white-space: normal;
-  word-break: break-all;
-}
-
-.schedule-grid__course-name {
-  display: block;
-  max-width: 100%;
-  font-weight: 500;
-}
-
-.schedule-grid__course-location {
-  display: block;
-  font-size: 12px;
-  opacity: 0.95;
-}
-
-/* 课程详情弹窗（WEUI 风格） */
-.schedule-detail-dialog {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100% - 32px);
-  max-width: 340px;
-  background: var(--color-surface);
-  border-radius: 8px;
-  z-index: 5001;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.schedule-detail-dialog__hd {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.schedule-detail-dialog__title {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-}
-
-.schedule-detail-dialog__close {
-  font-size: 16px;
-  color: var(--color-primary);
-  cursor: pointer;
-}
-
-.schedule-detail-dialog__bd {
-  padding: 16px;
-}
-
-.schedule-detail-dialog__bd .weui-form-preview__item {
-  margin-top: 8px;
-}
-
-.schedule-detail-dialog__bd .weui-form-preview__item:first-child {
-  margin-top: 0;
-}
-
-.schedule-detail-dialog__bd .weui-form-preview__label {
-  color: var(--color-text-tertiary);
-  margin-right: 8px;
-}
-
-.schedule-detail-dialog__bd .weui-form-preview__value {
-  color: var(--color-text-primary);
-}
-
-/* 周次选择器（WEUI Picker 风格：底部弹出） */
-.week-picker {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--color-surface);
-  border-radius: 12px 12px 0 0;
-  z-index: 5001;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-  max-height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.week-picker__hd {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--color-border);
-  flex-shrink: 0;
-}
-
-.week-picker__cancel {
-  font-size: 16px;
-  color: var(--color-text-tertiary);
-  cursor: pointer;
-}
-
-.week-picker__title {
-  font-size: 17px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-}
-
-.week-picker__placeholder {
-  width: 48px;
-}
-
-.week-picker__bd {
-  overflow-y: auto;
-  padding: 8px 0;
-  -webkit-overflow-scrolling: touch;
-}
-
-.week-picker__item {
-  padding: 14px 16px;
-  font-size: 17px;
-  color: var(--color-text-primary);
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-}
-
-.week-picker__item:active {
-  background: var(--color-bg-secondary);
-}
-
-.week-picker__item--active {
-  color: var(--color-primary);
-  font-weight: 500;
+.animate-slide-up {
+  animation: slide-up 0.25s ease-out;
 }
 </style>

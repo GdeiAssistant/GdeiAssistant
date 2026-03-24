@@ -1,59 +1,3 @@
-<template>
-  <div class="weui-tab news-weui-tab">
-    <div class="page-header">
-      <a href="javascript:;" class="news-back" @click="goBack">返回</a>
-      <h1 class="news-title">新闻</h1>
-    </div>
-    <div
-      class="weui-tab__panel"
-      @scroll="handleScroll"
-    >
-      <div class="weui-cells weui-cells_after-title" style="margin-top: 0;">
-        <a
-          v-for="item in newsList"
-          :key="item.id"
-          class="weui-cell weui-cell_access"
-          href="javascript:;"
-          @click="openDetail(item)"
-        >
-          <div class="weui-cell__bd">{{ item.title }}</div>
-          <div class="weui-cell__ft news-date">{{ item.date }}</div>
-        </a>
-      </div>
-      <div v-if="loadError && newsList.length === 0" class="weui-loadmore">
-        <span class="weui-loadmore__tips">加载失败，请稍后重试</span>
-      </div>
-      <div v-else-if="isLoading" class="weui-loadmore">
-        <i class="weui-loading"></i>
-        <span class="weui-loadmore__tips">正在加载</span>
-      </div>
-      <div v-else-if="finished && newsList.length > 0" class="weui-loadmore weui-loadmore_line">
-        <span class="weui-loadmore__tips">没有更多数据了</span>
-      </div>
-      <div v-else-if="!isLoading && finished && newsList.length === 0 && !loadError" class="weui-loadmore">
-        <span class="weui-loadmore__tips">暂无新闻</span>
-      </div>
-    </div>
-    <div class="weui-tabbar news-tabbar">
-      <a
-        v-for="tab in tabs"
-        :key="tab.type"
-        href="javascript:;"
-        class="weui-tabbar__item"
-        :class="{ 'weui-bar__item_on': activeType === tab.type }"
-        @click="switchTab(tab.type)"
-      >
-        <img
-          :src="tab.icon"
-          alt=""
-          class="weui-tabbar__icon"
-        />
-        <p class="weui-tabbar__label">{{ tab.label }}</p>
-      </a>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -134,13 +78,8 @@ function switchTab(type) {
 
 function handleScroll(e) {
   const { scrollTop, clientHeight, scrollHeight } = e.target
-
-  // 1. 消除小数误差 2. 阈值放宽到 100 防止滑太快漏掉
   const distanceToBottom = scrollHeight - Math.ceil(scrollTop) - clientHeight
   const isBottom = distanceToBottom <= 100
-
-  // 滚动日志（调试用，F12 控制台可见）
-  // console.log(`滚动检测: 距离底部 ${distanceToBottom}px, 触底: ${isBottom}, loading: ${isLoading.value}, finish: ${finished.value}`)
 
   if (isBottom && !isLoading.value && !finished.value) {
     page.value++
@@ -153,73 +92,70 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-.weui-tab.news-weui-tab {
-  height: 100vh !important;
-  width: 100vw;
-  overflow: hidden !important; /* 关键：锁死外层 */
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-bg-secondary); /* WEUI 默认底色 */
-}
-.page-header {
-  flex-shrink: 0;
-  padding: 12px 16px 16px;
-}
-.news-back {
-  color: var(--color-text-tertiary);
-  font-size: 15px;
-  text-decoration: none;
-}
-.news-title {
-  margin: 16px 0 0;
-  font-size: 22px;
-  font-weight: 500;
-  text-align: center;
-  color: var(--color-primary);
-}
-.weui-tab__panel {
-  flex: 1;
-  overflow-y: auto !important; /* 关键：强制内部滚动 */
-  -webkit-overflow-scrolling: touch;
-  box-sizing: border-box;
-}
-.weui-cells {
-  margin-top: 0;
-}
-.weui-cell__bd {
-  white-space: normal;
-  word-break: break-word;
-}
-.news-date {
-  flex-shrink: 0;
-  margin-left: 8px;
-  font-size: 13px;
-  color: var(--color-text-tertiary);
-}
-.weui-loadmore {
-  padding: 16px 0;
-  text-align: center;
-}
-.weui-loadmore_line .weui-loadmore__tips {
-  background-color: var(--color-surface);
-}
-.news-tabbar {
-  flex-shrink: 0;
-  background: var(--color-bg-secondary);
-  border-top: 1px solid var(--color-border);
-}
-.news-tabbar .weui-bar__item_on .weui-tabbar__label {
-  color: var(--color-primary);
-}
-/* 原版无 _active 图时，用滤镜高亮为绿色 var(--color-primary) */
-.news-tabbar .weui-bar__item_on .weui-tabbar__icon {
-  filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg);
-}
-.news-tabbar .weui-tabbar__icon {
-  width: 27px;
-  height: 27px;
-  display: block;
-  margin: 0 auto 2px;
-}
-</style>
+<template>
+  <div class="h-screen w-screen overflow-hidden flex flex-col bg-[var(--c-bg)]">
+    <!-- Sticky header -->
+    <div class="shrink-0 sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
+      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
+      <span class="flex-1 text-center text-sm font-bold">新闻</span>
+      <div class="w-10"></div>
+    </div>
+
+    <!-- Scrollable content area -->
+    <div
+      class="flex-1 overflow-y-auto"
+      style="-webkit-overflow-scrolling: touch;"
+      @scroll="handleScroll"
+    >
+      <div class="max-w-lg mx-auto px-4 py-4">
+        <div class="bg-[var(--c-surface)] rounded-xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+          <a
+            v-for="item in newsList"
+            :key="item.id"
+            href="javascript:;"
+            class="flex items-center justify-between px-4 py-3.5 hover:bg-[var(--c-surface-hover)] transition-colors no-underline"
+            @click="openDetail(item)"
+          >
+            <span class="text-sm text-[var(--c-text)] break-words mr-3">{{ item.title }}</span>
+            <span class="shrink-0 text-xs text-[var(--c-text-3)]">{{ item.date }}</span>
+          </a>
+        </div>
+
+        <!-- Status indicators -->
+        <div v-if="loadError && newsList.length === 0" class="text-center py-6 text-sm text-[var(--c-text-3)]">
+          加载失败，请稍后重试
+        </div>
+        <div v-else-if="isLoading" class="flex items-center justify-center gap-2 py-6 text-sm text-[var(--c-text-2)]">
+          <span class="inline-block w-4 h-4 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></span>
+          正在加载
+        </div>
+        <div v-else-if="finished && newsList.length > 0" class="text-center py-6 text-sm text-[var(--c-text-3)]">
+          没有更多数据了
+        </div>
+        <div v-else-if="!isLoading && finished && newsList.length === 0 && !loadError" class="text-center py-6 text-sm text-[var(--c-text-3)]">
+          暂无新闻
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom tab bar -->
+    <div class="shrink-0 flex border-t border-[var(--c-border)] bg-[var(--c-surface)]">
+      <button
+        v-for="tab in tabs"
+        :key="tab.type"
+        type="button"
+        class="flex-1 flex flex-col items-center py-2 transition-colors"
+        :class="activeType === tab.type ? 'text-[var(--c-primary)]' : 'text-[var(--c-text-3)]'"
+        @click="switchTab(tab.type)"
+      >
+        <img
+          :src="tab.icon"
+          alt=""
+          class="w-[27px] h-[27px] mb-0.5"
+          :class="{ 'brightness-0 saturate-100 invert-[48%] sepia-[79%] saturate-[2476%] hue-rotate-[86deg]': activeType === tab.type }"
+        />
+        <span class="text-xs">{{ tab.label }}</span>
+      </button>
+    </div>
+  </div>
+</template>

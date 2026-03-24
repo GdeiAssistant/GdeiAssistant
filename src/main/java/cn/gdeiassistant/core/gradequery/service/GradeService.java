@@ -1,10 +1,8 @@
 package cn.gdeiassistant.core.gradequery.service;
 
-import cn.gdeiassistant.common.config.properties.TrialProperties;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.CommonException.TestAccountException;
 import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
 import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
 import cn.gdeiassistant.common.pojo.Document.GradeDocument;
@@ -44,17 +42,6 @@ public class GradeService {
     @Autowired
     private EduSystemClient eduSystemClient;
 
-    @Autowired
-    private TrialProperties trialProperties;
-
-    /** 配置为空或仅空串时视为无测试账号，全部走真实教务 */
-    private boolean isTestAccountUsername(String username) {
-        if (username == null || trialProperties.getTestAccounts() == null) return false;
-        return trialProperties.getTestAccounts().stream()
-                .filter(s -> s != null && !s.trim().isEmpty())
-                .anyMatch(s -> s.trim().equalsIgnoreCase(username));
-    }
-
     /**
      * 清空用户缓存的成绩信息
      *
@@ -67,17 +54,13 @@ public class GradeService {
 
     /**
      * 强制更新当前用户的成绩缓存（清空 MongoDB 缓存并实时从教务系统拉取一次）
-     * 测试账号（如 gdeiassistant、test）不允许执行该操作。
+     * 清空 MongoDB 缓存并实时从教务系统拉取一次。
      *
      * @param sessionId
      */
     public void updateGradeCache(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         String username = user.getUsername();
-        // 测试账号拦截：不允许触发教务实时同步，避免污染演示数据
-        if (isTestAccountUsername(username)) {
-            throw new TestAccountException("测试账号暂不支持更新教务数据");
-        }
         // 清空缓存的成绩信息，下次查询时从教务系统实时获取
         gradeDao.removeGrade(username);
         // 主动触发一次实时查询，保证本次操作后前端能看到最新成绩（结果通过前端后续 fetchGrade 再拉取）

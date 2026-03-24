@@ -128,245 +128,128 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="ershou-profile-page">
+  <div class="min-h-screen bg-[var(--c-bg)] pb-16">
     <CommunityHeader title="个人中心" moduleColor="#10b981" backTo="/marketplace/home" />
 
-    <section class="profile">
-      <i class="avt"><img class="avatar-img" :src="avatar" alt="头像"></i>
-      <span class="nm">{{ nickname }}</span>
-      <span class="introduction">
-        <p class="intro-p">{{ introduction }}</p>
+    <!-- Profile Header -->
+    <section class="relative bg-gradient-to-br from-emerald-500 to-emerald-600 pt-8 pb-5 pl-[140px] pr-5 min-h-[90px]">
+      <i class="absolute left-[25px] top-[25px] w-16 h-16 rounded-full overflow-hidden block">
+        <img :src="avatar" alt="头像" class="w-16! h-16! rounded-full object-cover border-2 border-white/30">
+      </i>
+      <span class="text-xl text-white block mb-1.5">{{ nickname }}</span>
+      <span class="text-white/90 leading-[21px] text-xs block">
+        <p class="m-0 overflow-hidden text-ellipsis">{{ introduction }}</p>
       </span>
     </section>
 
-    <section class="status">
-      <ul class="tabs">
-        <li class="tab" :class="{ on: activeStat === 'doing' }" @click="setStat('doing')">正在出售<i class="line"></i></li>
-        <li class="tab" :class="{ on: activeStat === 'sold' }" @click="setStat('sold')">已售出<i class="line"></i></li>
-        <li class="tab" :class="{ on: activeStat === 'off' }" @click="setStat('off')">已下架<i class="line"></i></li>
+    <!-- Status Tabs & Lists -->
+    <section class="mx-2.5">
+      <ul class="flex mb-2.5 mt-2.5 bg-[var(--c-surface)] rounded overflow-hidden shadow-sm list-none p-0">
+        <li
+          class="flex-1 block relative text-emerald-500 text-center h-8 leading-8 text-sm cursor-pointer"
+          :class="{ 'font-semibold': activeStat === 'doing' }"
+          @click="setStat('doing')"
+        >
+          正在出售
+          <i class="w-7 h-0.5 bg-emerald-500 absolute left-1/2 -ml-3.5 bottom-0 rounded-sm" :class="activeStat === 'doing' ? 'block' : 'hidden'"></i>
+        </li>
+        <li
+          class="flex-1 block relative text-emerald-500 text-center h-8 leading-8 text-sm cursor-pointer"
+          :class="{ 'font-semibold': activeStat === 'sold' }"
+          @click="setStat('sold')"
+        >
+          已售出
+          <i class="w-7 h-0.5 bg-emerald-500 absolute left-1/2 -ml-3.5 bottom-0 rounded-sm" :class="activeStat === 'sold' ? 'block' : 'hidden'"></i>
+        </li>
+        <li
+          class="flex-1 block relative text-emerald-500 text-center h-8 leading-8 text-sm cursor-pointer"
+          :class="{ 'font-semibold': activeStat === 'off' }"
+          @click="setStat('off')"
+        >
+          已下架
+          <i class="w-7 h-0.5 bg-emerald-500 absolute left-1/2 -ml-3.5 bottom-0 rounded-sm" :class="activeStat === 'off' ? 'block' : 'hidden'"></i>
+        </li>
       </ul>
 
-      <div class="statlists">
-        <div v-show="activeStat === 'doing'" class="statlist">
-          <p v-if="loading" class="nostatus-tip">加载中...</p>
-          <template v-else>
-            <div v-for="item in doingList" :key="item.id" class="stat community-card">
-              <div class="info" @click="goDetail(item.id)">
-                <i class="img"><img :src="item.preview" :alt="item.name"></i>
-                <h5 class="tit">{{ item.name }}</h5>
-                <em class="price">￥{{ item.price }}</em>
-                <p class="tm">{{ item.publishTime }}</p>
-              </div>
-              <p class="btns">
-                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
-                <a class="btn" href="javascript:;" @click.prevent="updateItemState(item.id, 0, '确定下架这件商品吗？', '已下架')"><b>下架</b></a>
-                <a class="btn" href="javascript:;" @click.prevent="updateItemState(item.id, 2, '确定标记为已出售吗？', '已标记为已出售')"><b>确认售出</b></a>
-              </p>
+      <!-- Doing List -->
+      <div v-show="activeStat === 'doing'">
+        <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">加载中...</p>
+        <template v-else>
+          <div v-for="item in doingList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
+            <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
+              <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
+                <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
+              </i>
+              <h5 class="text-emerald-500 text-sm leading-5 m-0 mb-1">{{ item.name }}</h5>
+              <em class="text-[#eb5055] leading-[18px] not-italic block">{{ item.price }}</em>
+              <p class="text-[var(--c-text-3)] text-xs m-0">{{ item.publishTime }}</p>
             </div>
-            <p v-if="doingList.length === 0" class="nostatus-tip">{{ emptyText }}</p>
-          </template>
-        </div>
+            <p class="flex m-0">
+              <a class="flex-1 block py-[7px] text-center no-underline cursor-pointer" href="javascript:;" @click.prevent="editItem(item.id)"><b class="block text-[var(--c-text-3)] leading-4 h-4 font-normal">编辑</b></a>
+              <a class="flex-1 block py-[7px] text-center no-underline cursor-pointer" href="javascript:;" @click.prevent="updateItemState(item.id, 0, '确定下架这件商品吗？', '已下架')"><b class="block text-[var(--c-text-3)] border-l border-[var(--c-border)] leading-4 h-4 font-normal">下架</b></a>
+              <a class="flex-1 block py-[7px] text-center no-underline cursor-pointer" href="javascript:;" @click.prevent="updateItemState(item.id, 2, '确定标记为已出售吗？', '已标记为已出售')"><b class="block text-[var(--c-text-3)] border-l border-[var(--c-border)] leading-4 h-4 font-normal">确认售出</b></a>
+            </p>
+          </div>
+          <p v-if="doingList.length === 0" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ emptyText }}</p>
+        </template>
+      </div>
 
-        <div v-show="activeStat === 'sold'" class="statlist">
-          <p v-if="loading" class="nostatus-tip">加载中...</p>
-          <template v-else>
-            <div v-for="item in soldList" :key="item.id" class="stat community-card">
-              <div class="info">
-                <i class="img"><img :src="item.preview" :alt="item.name"></i>
-                <h5 class="tit">{{ item.name }}</h5>
-                <em class="price">￥{{ item.price }}</em>
-                <p class="tm">{{ item.publishTime }}</p>
-              </div>
-              <p class="btns">
-                <span class="btn"><b class="readonly-hint">已售出的商品不再支持编辑或重新上架</b></span>
-              </p>
+      <!-- Sold List -->
+      <div v-show="activeStat === 'sold'">
+        <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">加载中...</p>
+        <template v-else>
+          <div v-for="item in soldList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
+            <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)]">
+              <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
+                <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
+              </i>
+              <h5 class="text-emerald-500 text-sm leading-5 m-0 mb-1">{{ item.name }}</h5>
+              <em class="text-[#eb5055] leading-[18px] not-italic block">{{ item.price }}</em>
+              <p class="text-[var(--c-text-3)] text-xs m-0">{{ item.publishTime }}</p>
             </div>
-            <p v-if="soldList.length === 0" class="nostatus-tip">{{ emptyText }}</p>
-          </template>
-        </div>
+            <p class="flex m-0">
+              <span class="flex-1 block py-[7px] text-center"><b class="block text-[var(--c-text-3)] text-xs font-normal">已售出的商品不再支持编辑或重新上架</b></span>
+            </p>
+          </div>
+          <p v-if="soldList.length === 0" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ emptyText }}</p>
+        </template>
+      </div>
 
-        <div v-show="activeStat === 'off'" class="statlist">
-          <p v-if="loading" class="nostatus-tip">加载中...</p>
-          <template v-else>
-            <div v-for="item in offList" :key="item.id" class="stat community-card">
-              <div class="info" @click="goDetail(item.id)">
-                <i class="img"><img :src="item.preview" :alt="item.name"></i>
-                <h5 class="tit">{{ item.name }}</h5>
-                <em class="price">￥{{ item.price }}</em>
-                <p class="tm">{{ item.publishTime }}</p>
-              </div>
-              <p class="btns">
-                <a class="btn" href="javascript:;" @click.prevent="editItem(item.id)"><b>编辑</b></a>
-                <a class="btn" href="javascript:;" @click.prevent="updateItemState(item.id, 1, '', '已重新上架')"><b>重新上架</b></a>
-              </p>
+      <!-- Off List -->
+      <div v-show="activeStat === 'off'">
+        <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">加载中...</p>
+        <template v-else>
+          <div v-for="item in offList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
+            <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
+              <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
+                <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
+              </i>
+              <h5 class="text-emerald-500 text-sm leading-5 m-0 mb-1">{{ item.name }}</h5>
+              <em class="text-[#eb5055] leading-[18px] not-italic block">{{ item.price }}</em>
+              <p class="text-[var(--c-text-3)] text-xs m-0">{{ item.publishTime }}</p>
             </div>
-            <p v-if="offList.length === 0" class="nostatus-tip">{{ emptyText }}</p>
-          </template>
-        </div>
+            <p class="flex m-0">
+              <a class="flex-1 block py-[7px] text-center no-underline cursor-pointer" href="javascript:;" @click.prevent="editItem(item.id)"><b class="block text-[var(--c-text-3)] leading-4 h-4 font-normal">编辑</b></a>
+              <a class="flex-1 block py-[7px] text-center no-underline cursor-pointer" href="javascript:;" @click.prevent="updateItemState(item.id, 1, '', '已重新上架')"><b class="block text-[var(--c-text-3)] border-l border-[var(--c-border)] leading-4 h-4 font-normal">重新上架</b></a>
+            </p>
+          </div>
+          <p v-if="offList.length === 0" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ emptyText }}</p>
+        </template>
       </div>
     </section>
 
+    <!-- Dialog -->
     <div v-if="dialogVisible">
-      <div class="community-dialog-mask" @click="dialogVisible = false"></div>
-      <div class="community-dialog">
-        <div class="community-dialog__title">提示</div>
-        <div class="community-dialog__body">{{ dialogMessage }}</div>
-        <div class="community-dialog__footer">
-          <button class="community-dialog__btn community-dialog__btn--confirm" @click="dialogVisible = false">确定</button>
+      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
+        <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">提示</div>
+        <div class="text-center text-sm text-[var(--c-text-2)] px-5 pb-5">{{ dialogMessage }}</div>
+        <div class="border-t border-[var(--c-border)]">
+          <button class="w-full py-3 text-center text-emerald-500 font-medium text-base border-none bg-transparent cursor-pointer" @click="dialogVisible = false">确定</button>
         </div>
       </div>
     </div>
 
-    <div style="height: 4rem;"></div>
+    <div class="h-16"></div>
   </div>
 </template>
-
-<style scoped>
-.ershou-profile-page {
-  min-height: 100vh;
-  background: var(--c-bg);
-  padding-bottom: 60px;
-}
-
-.avatar-img {
-  width: 64px !important;
-  height: 64px !important;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.profile {
-  position: relative;
-  background: linear-gradient(135deg, #10b981, #059669);
-  padding: 30px 20px 20px 140px;
-  min-height: 90px;
-}
-.profile .avt {
-  position: absolute;
-  left: 25px;
-  top: 25px;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  overflow: hidden;
-}
-.profile .avt img,
-.profile .avt .avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-.profile .nm {
-  font-size: var(--font-2xl);
-  color: #fff;
-  display: block;
-  margin-bottom: 5px;
-}
-.profile .introduction {
-  color: #fff;
-  line-height: 21px;
-  font-size: var(--font-sm);
-  display: block;
-}
-.profile .intro-p {
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.status { margin: 10px; }
-.status .tabs {
-  display: flex;
-  margin-bottom: 10px;
-  background: var(--c-card);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-.status .tab {
-  flex: 1;
-  display: block;
-  position: relative;
-  color: var(--c-ershou);
-  text-align: center;
-  height: 32px;
-  line-height: 32px;
-  font-size: var(--font-base);
-  cursor: pointer;
-}
-.status .tab .line {
-  width: 28px;
-  height: 2px;
-  background: var(--c-ershou);
-  position: absolute;
-  left: 50%;
-  margin-left: -14px;
-  bottom: 0;
-  display: none;
-  border-radius: 1px;
-}
-.status .tabs .on .line { display: block; }
-.status .tabs .on { font-weight: 600; }
-
-.status .stat {
-  margin-bottom: 8px;
-  overflow: hidden;
-}
-.status .stat .info {
-  position: relative;
-  padding: 8px 8px 8px 75px;
-  min-height: 60px;
-  border-bottom: 1px solid var(--c-border);
-}
-.status .info .img {
-  position: absolute;
-  left: 8px;
-  width: 60px;
-  height: 60px;
-  overflow: hidden;
-  top: 8px;
-  border-radius: var(--radius-sm);
-}
-.status .info img { width: 100%; height: 100%; object-fit: cover; }
-.status .info h5 { color: var(--c-ershou); font-size: var(--font-base); line-height: 20px; margin: 0 0 4px; }
-.status .info .price { color: #eb5055; line-height: 18px; font-style: normal; }
-.status .info .tm { color: var(--c-text-3); font-size: var(--font-sm); margin: 0; }
-.status .stat .btns {
-  display: flex;
-}
-.status .btns .btn {
-  flex: 1;
-  display: block;
-  padding: 7px 0;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-}
-.status .btns .btn b {
-  display: block;
-  color: var(--c-text-3);
-  border-left: 1px solid var(--c-border);
-  line-height: 16px;
-  height: 16px;
-  font-weight: normal;
-}
-.status .btns .btn:first-child b { border-left: none; }
-.readonly-hint {
-  color: var(--c-text-3);
-  font-weight: normal;
-  font-size: var(--font-sm);
-  border-left: none;
-}
-
-.nostatus-tip {
-  text-align: center;
-  color: var(--c-text-3);
-  font-size: var(--font-base);
-  padding: 24px;
-  margin: 0;
-  background: var(--c-card);
-  border-radius: var(--radius-sm);
-}
-</style>

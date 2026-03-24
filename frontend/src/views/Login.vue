@@ -1,194 +1,178 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '../api/user.js'
-import { showErrorTopTips } from '@/utils/toast.js'
+import { useToast } from '@/composables/useToast'
+import { isMockMode, toggleDataSourceMode } from '@/services/data-source.js'
+import { MOCK_ACCOUNT_USERNAME, MOCK_ACCOUNT_PASSWORD, getMockCredentialsHint } from '@/constants/mock.js'
 
 const router = useRouter()
+const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const username = ref('')
 const password = ref('')
-const showToast = ref(false)
-const toastMessage = ref('登录中...')
+const mockMode = ref(isMockMode())
+
+function toggleMock() {
+  toggleDataSourceMode()
+  mockMode.value = isMockMode()
+  if (mockMode.value) {
+    username.value = MOCK_ACCOUNT_USERNAME
+    password.value = MOCK_ACCOUNT_PASSWORD
+  } else {
+    username.value = ''
+    password.value = ''
+  }
+}
 
 async function handleLogin() {
   if (!username.value.trim() || !password.value.trim()) {
-    showErrorTopTips('请将信息填写完整')
+    showError('请将信息填写完整')
     return
   }
-  toastMessage.value = '登录中...'
-  showToast.value = true
+  showLoading('登录中...')
   try {
     const res = await login(username.value.trim(), password.value)
-    showToast.value = false
+    hideLoading()
     // 仅当后端返回 code === 200 时存 Token 并跳转；401 或其他错误码展示后端 message 并停留在登录页
     if (res && res.code === 200 && res.data && res.data.token) {
       localStorage.setItem('token', res.data.token)
       router.push('/home')
     } else {
-      showErrorTopTips(res?.message || '登录失败')
+      showError(res?.message || '登录失败')
     }
   } catch (err) {
-    showToast.value = false
+    hideLoading()
     // 错误提示由 request.js 全局拦截器统一展示（如账号或密码错误、网络连接失败等），此处仅关闭加载态
   }
 }
 
 function handleThirdPartyLogin(type) {
-  showErrorTopTips('该登录方式暂未开放')
+  showError('该登录方式暂未开放')
 }
 </script>
 
 <template>
-  <div class="page">
-    <div class="hd">
-      <h1 class="page_title">广东二师助手</h1>
-      <p class="page_desc">请登录校园网系统</p>
-    </div>
+  <div class="min-h-screen flex items-center justify-center bg-[var(--c-bg)] px-4">
+    <div class="bg-[var(--c-surface)] rounded-2xl shadow-lg p-8 w-full max-w-[400px] border border-[var(--c-border)]">
 
-    <div class="weui-cells weui-cells_form">
-      <div class="weui-cell">
-        <div class="weui-cell__hd">
-          <label class="weui-label">账号</label>
+      <!-- Logo / Brand -->
+      <div class="flex flex-col items-center mb-8">
+        <div
+          class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center text-white text-2xl font-bold shadow-md mb-3"
+        >
+          G
         </div>
-        <div class="weui-cell__bd weui-cell_primary">
+        <h1 class="text-xl font-semibold text-[var(--c-text)]">广东二师助手</h1>
+        <p class="text-sm text-[var(--c-text-secondary)] mt-1">请登录校园网系统</p>
+      </div>
+
+      <!-- Form -->
+      <form @submit.prevent="handleLogin" class="space-y-5">
+        <!-- Username -->
+        <div>
+          <label class="block text-sm font-medium text-[var(--c-text-secondary)] mb-1.5">账号</label>
           <input
             v-model="username"
-            class="weui-input"
             type="text"
             maxlength="20"
             placeholder="请输入你的校园网账号"
+            class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3.5 py-2.5 text-sm text-[var(--c-text)] placeholder-[var(--c-text-tertiary)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
           />
         </div>
-      </div>
-      <div class="weui-cell">
-        <div class="weui-cell__hd">
-          <label class="weui-label">密码</label>
-        </div>
-        <div class="weui-cell__bd weui-cell_primary">
+
+        <!-- Password -->
+        <div>
+          <label class="block text-sm font-medium text-[var(--c-text-secondary)] mb-1.5">密码</label>
           <input
             v-model="password"
-            class="weui-input"
             type="password"
             maxlength="35"
             placeholder="请输入你的校园网密码"
+            class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3.5 py-2.5 text-sm text-[var(--c-text)] placeholder-[var(--c-text-tertiary)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
+          />
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold hover:bg-[var(--c-primary-hover)] transition cursor-pointer"
+        >
+          登录
+        </button>
+      </form>
+
+      <!-- Mock mode toggle -->
+      <div class="mt-5 flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="relative w-10 h-5 rounded-full transition-colors"
+            :class="mockMode ? 'bg-[var(--c-primary)]' : 'bg-[var(--c-border)]'"
+            @click="toggleMock"
+          >
+            <span
+              class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform"
+              :class="mockMode ? 'translate-x-5' : 'translate-x-0'"
+            />
+          </button>
+          <span class="text-xs text-[var(--c-text-3)]">模拟数据模式</span>
+        </div>
+        <span v-if="mockMode" class="text-[10px] text-[var(--c-primary)] font-medium">Mock</span>
+      </div>
+      <div v-if="mockMode" class="mt-2 px-3 py-2 rounded-lg bg-[var(--c-primary-50)] text-xs text-[var(--c-primary)]">
+        {{ getMockCredentialsHint() }}（已自动填入）
+      </div>
+
+      <!-- Footer links -->
+      <div class="mt-5 text-center text-xs text-[var(--c-text-tertiary)] leading-relaxed">
+        <p>
+          关于登录账户请阅读
+          <router-link to="/about/account" class="text-[var(--c-primary)] hover:underline">《校园网络账号说明》</router-link>
+        </p>
+        <p class="mt-1">
+          使用前请仔细阅读
+          <router-link to="/agreement" class="text-[var(--c-primary)] hover:underline">《用户协议》</router-link>
+          和
+          <router-link to="/policy/privacy" class="text-[var(--c-primary)] hover:underline">《隐私政策》</router-link>
+        </p>
+      </div>
+
+      <!-- Third-party login -->
+      <div class="mt-8">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="flex-1 h-px bg-[var(--c-border)]"></div>
+          <span class="text-xs text-[var(--c-text-tertiary)] whitespace-nowrap">其他方式登录</span>
+          <div class="flex-1 h-px bg-[var(--c-border)]"></div>
+        </div>
+        <div class="flex justify-center items-center gap-5">
+          <img
+            src="/img/login/wechat.png"
+            alt="WeChat"
+            class="w-8 h-8 rounded-full cursor-pointer transition-opacity hover:opacity-70 active:opacity-50"
+            @click="handleThirdPartyLogin('WeChat')"
+          />
+          <img
+            src="/img/login/qq.png"
+            alt="QQ"
+            class="w-8 h-8 rounded-full cursor-pointer transition-opacity hover:opacity-70 active:opacity-50"
+            @click="handleThirdPartyLogin('QQ')"
+          />
+          <img
+            src="/img/login/weibo.png"
+            alt="Weibo"
+            class="w-8 h-8 rounded-full cursor-pointer transition-opacity hover:opacity-70 active:opacity-50"
+            @click="handleThirdPartyLogin('Weibo')"
+          />
+          <img
+            src="/img/login/apple.png"
+            alt="Apple"
+            class="w-8 h-8 rounded-full cursor-pointer transition-opacity hover:opacity-70 active:opacity-50"
+            @click="handleThirdPartyLogin('Apple')"
           />
         </div>
       </div>
-    </div>
 
-    <div class="weui-btn_area">
-      <a class="weui-btn weui-btn_primary" href="javascript:" @click.prevent="handleLogin">登录</a>
     </div>
-
-    <div class="weui-footer" style="margin-top: 30px; margin-bottom: 20px; text-align: center; width: 100%;">
-      <p class="weui-footer__text">
-        关于登录账户请阅读
-        <a class="weui-footer__link" href="/about/account">《校园网络账号说明》</a>
-        <br/>
-        使用前请仔细阅读
-        <a class="weui-footer__link" href="/agreement">《用户协议》</a>
-        和
-        <a class="weui-footer__link" href="/policy/privacy">《隐私政策》</a>
-      </p>
-    </div>
-
-    <div class="quick-login">
-      <div class="quick-login-text">
-        <p>——&nbsp;&nbsp;&nbsp;其他方式登录&nbsp;&nbsp;&nbsp;——</p>
-      </div>
-      <div class="third-party-login">
-        <img src="/img/login/wechat.png" alt="WeChat" @click="handleThirdPartyLogin('WeChat')" />
-        <img src="/img/login/qq.png" alt="QQ" @click="handleThirdPartyLogin('QQ')" />
-        <img src="/img/login/weibo.png" alt="Weibo" @click="handleThirdPartyLogin('Weibo')" />
-        <img src="/img/login/apple.png" alt="Apple" @click="handleThirdPartyLogin('Apple')" />
-      </div>
-    </div>
-
-    <!-- WEUI Toast：模拟登录中 / 请将信息填写完整 -->
-    <Teleport to="body">
-      <div v-show="showToast" role="alert" class="weui-toast-wrap">
-        <div class="weui-mask_transparent"></div>
-        <div class="weui-toast__wrp">
-          <div class="weui-toast" :class="{ 'weui-toast_text': toastMessage !== '登录中...' }">
-            <template v-if="toastMessage === '登录中...'">
-              <span class="weui-primary-loading weui-icon_toast">
-                <span class="weui-primary-loading__dot"></span>
-              </span>
-            </template>
-            <p class="weui-toast__content">{{ toastMessage }}</p>
-          </div>
-        </div>
-      </div>
-    </Teleport>
   </div>
 </template>
-
-<style scoped>
-.page {
-  padding: 16px;
-  padding-bottom: 120px;
-}
-.hd {
-  padding: 2em 0;
-  text-align: center;
-}
-.page_title {
-  font-size: 22px;
-  font-weight: 400;
-  margin: 0;
-}
-.page_desc {
-  color: #999;
-  font-size: 14px;
-  margin: 0.5em 0 0;
-}
-.weui-footer__text {
-  color: #999;
-  font-size: 14px;
-  margin: 0;
-}
-.weui-footer__link {
-  color: #586c94;
-}
-.quick-login {
-  position: absolute;
-  bottom: 1rem;
-  left: 0;
-  right: 0;
-}
-.quick-login-text {
-  text-align: center;
-}
-.quick-login-text p {
-  color: gray;
-  font-size: 15px;
-}
-.third-party-login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 15px;
-  margin-bottom: 30px;
-}
-.third-party-login img {
-  display: block;
-  width: 32px;
-  height: 32px;
-  margin: 0 12px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.third-party-login img:active {
-  opacity: 0.6;
-}
-.weui-toast-wrap {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 5000;
-}
-</style>

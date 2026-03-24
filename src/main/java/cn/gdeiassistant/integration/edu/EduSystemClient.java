@@ -158,7 +158,11 @@ public class EduSystemClient {
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
                     throw new ServerErrorException("教务系统异常");
                 }
-                Elements xqdOptions = document.getElementsByAttributeValue("name", "xqd").first().select("option");
+                Element xqdElement = document.getElementsByAttributeValue("name", "xqd").first();
+                if (xqdElement == null) {
+                    throw new ServerErrorException("教务系统页面结构异常，未找到学期下拉框");
+                }
+                Elements xqdOptions = xqdElement.select("option");
                 int defaultTerm = 0;
                 for (Element option : xqdOptions) {
                     if (option.hasAttr("selected")) {
@@ -166,7 +170,11 @@ public class EduSystemClient {
                         break;
                     }
                 }
-                Elements xndOptions = document.getElementsByAttributeValue("name", "xnd").first().select("option");
+                Element xndElement = document.getElementsByAttributeValue("name", "xnd").first();
+                if (xndElement == null) {
+                    throw new ServerErrorException("教务系统页面结构异常，未找到学年下拉框");
+                }
+                Elements xndOptions = xndElement.select("option");
                 int defaultYear = 0;
                 for (Element option : xndOptions) {
                     if (option.hasAttr("selected")) {
@@ -175,13 +183,34 @@ public class EduSystemClient {
                     }
                 }
                 if (defaultYear != WeekUtils.getCurrentYear() || defaultTerm != WeekUtils.getCurrentTerm()) {
+                    Element viewStateElement = document.getElementsByAttributeValue("name", "__VIEWSTATE").first();
+                    if (viewStateElement == null) {
+                        throw new ServerErrorException("教务系统页面结构异常，未找到 __VIEWSTATE");
+                    }
+                    Element xndFormElement = document.getElementsByAttributeValue("name", "xnd").first();
+                    if (xndFormElement == null) {
+                        throw new ServerErrorException("教务系统页面结构异常，未找到学年下拉框");
+                    }
+                    Element xndFirstOption = xndFormElement.select("option").first();
+                    if (xndFirstOption == null) {
+                        throw new ServerErrorException("教务系统页面结构异常，学年下拉框无选项");
+                    }
+                    Element xqdFormElement = document.getElementsByAttributeValue("name", "xqd").first();
+                    if (xqdFormElement == null) {
+                        throw new ServerErrorException("教务系统页面结构异常，未找到学期下拉框");
+                    }
+                    Elements xqdFormOptions = xqdFormElement.select("option");
+                    int termIndex = WeekUtils.getCurrentTerm() - 1;
+                    if (termIndex < 0 || termIndex >= xqdFormOptions.size()) {
+                        throw new ServerErrorException("教务系统页面结构异常，学期选项索引越界");
+                    }
                     HttpPost httpPost = new HttpPost(JWGL_BASE + "/xskbcx.aspx?xh=" + credential.getNumber());
                     List<BasicNameValuePair> form = new ArrayList<>();
                     form.add(new BasicNameValuePair("__EVENTTARGET", ""));
                     form.add(new BasicNameValuePair("__EVENTARGUMENT", ""));
-                    form.add(new BasicNameValuePair("__VIEWSTATE", document.getElementsByAttributeValue("name", "__VIEWSTATE").first().val()));
-                    form.add(new BasicNameValuePair("xnd", document.getElementsByAttributeValue("name", "xnd").first().select("option").first().attr("value")));
-                    form.add(new BasicNameValuePair("xqd", document.getElementsByAttributeValue("name", "xqd").first().select("option").get(WeekUtils.getCurrentTerm() - 1).attr("value")));
+                    form.add(new BasicNameValuePair("__VIEWSTATE", viewStateElement.val()));
+                    form.add(new BasicNameValuePair("xnd", xndFirstOption.attr("value")));
+                    form.add(new BasicNameValuePair("xqd", xqdFormOptions.get(termIndex).attr("value")));
                     httpPost.setEntity(new UrlEncodedFormEntity(form, StandardCharsets.UTF_8));
                     httpResponse = httpClient.execute(httpPost);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
@@ -401,9 +430,15 @@ public class EduSystemClient {
                 httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36");
                 httpPost.setHeader("Referer", JWGL_BASE + "/jstjkbcx.aspx?zgh=" + teacherUsername);
                 List<BasicNameValuePair> form = new ArrayList<>();
-                form.add(new BasicNameValuePair("__EVENTTARGET", document.getElementsByAttributeValue("name", "__EVENTTARGET").val()));
-                form.add(new BasicNameValuePair("__EVENTARGUMENT", document.getElementsByAttributeValue("name", "__EVENTARGUMENT").val()));
-                form.add(new BasicNameValuePair("__VIEWSTATE", document.getElementsByAttributeValue("name", "__VIEWSTATE").val()));
+                Elements eventTargetElements = document.getElementsByAttributeValue("name", "__EVENTTARGET");
+                Elements eventArgumentElements = document.getElementsByAttributeValue("name", "__EVENTARGUMENT");
+                Elements viewStateElements = document.getElementsByAttributeValue("name", "__VIEWSTATE");
+                if (viewStateElements.isEmpty()) {
+                    throw new ServerErrorException("教务系统页面结构异常，未找到 __VIEWSTATE");
+                }
+                form.add(new BasicNameValuePair("__EVENTTARGET", eventTargetElements.val()));
+                form.add(new BasicNameValuePair("__EVENTARGUMENT", eventArgumentElements.val()));
+                form.add(new BasicNameValuePair("__VIEWSTATE", viewStateElements.val()));
                 form.add(new BasicNameValuePair("xn", year != null ? year : ""));
                 form.add(new BasicNameValuePair("xq", term != null ? term : ""));
                 form.add(new BasicNameValuePair("bm", ""));

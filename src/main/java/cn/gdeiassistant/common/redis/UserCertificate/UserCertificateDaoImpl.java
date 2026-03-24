@@ -172,6 +172,6 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("会话凭证序列化失败", e);
         }
-        redisDaoUtils.expire(key, 30, TimeUnit.MINUTES);
+        redisDaoUtils.expire(key, 10, TimeUnit.MINUTES);
     }
 }

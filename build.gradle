@@ -18,6 +18,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.2.0'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.5'
     runtimeOnly 'com.mysql:mysql-connector-j'

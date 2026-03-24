@@ -213,3 +213,26 @@ theme:
 observability:
   slow-request-threshold-ms: ${SLOW_REQUEST_THRESHOLD_MS:800}
   slow-query-threshold-ms: ${SLOW_QUERY_THRESHOLD_MS:1500}
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      eduSystem:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        slow-call-duration-threshold: 8s
+        slow-call-rate-threshold: 80
+      cardSystem:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        slow-call-duration-threshold: 10s
+        slow-call-rate-threshold: 80
+    instances:
+      eduSystem:
+        base-config: eduSystem
+      cardSystem:
+        base-config: cardSystem

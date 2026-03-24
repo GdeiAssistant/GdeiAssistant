@@ -19,6 +19,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class EduSystemClient {
      * @param credential 教务会话凭证
      * @return 成绩查询列表页 Jsoup Document
      */
+    @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchGradeListPage(String sessionId, EduSessionCredential credential)
             throws IOException, TimeStampIncorrectException, PasswordIncorrectException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
@@ -97,6 +99,7 @@ public class EduSystemClient {
      * @param yearOptionValue 学年下拉框选项 value（如 "2024-2025"）
      * @return 该学年成绩表页 Jsoup Document（含 datelist 表格）
      */
+    @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchGradeByYear(String sessionId, EduSessionCredential credential,
                                      String viewState, String yearOptionValue)
             throws IOException, PasswordIncorrectException, ServerErrorException {
@@ -133,6 +136,7 @@ public class EduSystemClient {
      * @param credential 教务会话凭证
      * @return 课表页 Jsoup Document（含 Table1）
      */
+    @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchScheduleDocument(String sessionId, EduSessionCredential credential)
             throws IOException, TimeStampIncorrectException, PasswordIncorrectException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
@@ -242,6 +246,7 @@ public class EduSystemClient {
     /**
      * 空闲教室：时间戳校验 + 进入学生主页 + 打开空课室查询页（xxjsjy.aspx），返回初始页 Document，供 Service 解析表单并组 POST 参数。
      */
+    @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchSpareRoomInitialDocument(String sessionId, EduSessionCredential credential)
             throws IOException, TimeStampIncorrectException, PasswordIncorrectException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
@@ -293,6 +298,7 @@ public class EduSystemClient {
      * @param formAction Form1 的 action 相对路径（如 xxjsjy.aspx）
      * @param formParams 表单参数列表（__EVENTTARGET、__VIEWSTATE、xiaoq、jslb 等）
      */
+    @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document submitSpareRoomForm(String sessionId, EduSessionCredential credential,
                                         String formAction, List<BasicNameValuePair> formParams)
             throws IOException, ServerErrorException {
@@ -320,6 +326,7 @@ public class EduSystemClient {
     /**
      * 教务学生主页：时间戳校验 + 进入 xs_main，返回学生主页 Document。供评教等仅需主页菜单的流程使用。
      */
+    @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchEduMainPage(String sessionId, EduSessionCredential credential)
             throws IOException, TimeStampIncorrectException, PasswordIncorrectException, ServerErrorException {
         HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
@@ -365,6 +372,7 @@ public class EduSystemClient {
      *
      * @param relativePath 相对路径，如 xs_jxpj.aspx?xh=xxx，可有或无前导 /
      */
+    @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchEduPage(String sessionId, EduSessionCredential credential, String relativePath)
             throws IOException, ServerErrorException {
         String path = relativePath != null && relativePath.startsWith("/") ? relativePath.substring(1) : relativePath;
@@ -398,6 +406,7 @@ public class EduSystemClient {
      * @param term 学期（POST 时使用，可为空）
      * @return 课表页 Jsoup Document（含 Table6）
      */
+    @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchTeacherScheduleDocument(String sessionId, String teacherUsername, String teacherName,
                                                  String year, String term)
             throws IOException, PasswordIncorrectException, ServerErrorException {
@@ -461,5 +470,35 @@ public class EduSystemClient {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
+    }
+
+    // ---- Circuit breaker fallback methods ----
+
+    private Document eduSystemFallback(String sessionId, EduSessionCredential credential,
+                                       Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
+    }
+
+    private Document eduSystemFallback(String sessionId, EduSessionCredential credential,
+                                       String viewState, String yearOptionValue,
+                                       Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
+    }
+
+    private Document eduSystemFallback(String sessionId, EduSessionCredential credential,
+                                       String formAction, List<BasicNameValuePair> formParams,
+                                       Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
+    }
+
+    private Document eduSystemFallback(String sessionId, EduSessionCredential credential,
+                                       String relativePath, Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
+    }
+
+    private Document eduSystemFallback(String sessionId, String teacherUsername, String teacherName,
+                                       String year, String term,
+                                       Throwable t) throws ServerErrorException {
+        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
     }
 }

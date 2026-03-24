@@ -82,6 +82,20 @@ public class AuthController {
     }
 
     /**
+     * 轻量 session/token 校验端点。
+     * JWT 签名和 Redis session 有效性由 JwtSessionIdFilter + ApiAuthInterceptor 保证——
+     * 请求到达此方法时 token 必然有效。不查询用户资料，返回标准成功响应。
+     * 返回格式：{ "code": 200, "message": "success", "success": true, "data": null }
+     */
+    @GetMapping("/validate")
+    public DataJsonResult<Void> validate() {
+        DataJsonResult<Void> result = new DataJsonResult<>(true, null);
+        result.setCode(200);
+        result.setMessage("success");
+        return result;
+    }
+
+    /**
      * 退出登录：根据当前请求的 sessionId（由 JwtSessionIdFilter 注入）清理 Redis 中的登录/会话凭证，使该 JWT 事实失效。
      * 返回标准 JSON：{ "code": 200, "message": "success", "data": null }。
      */

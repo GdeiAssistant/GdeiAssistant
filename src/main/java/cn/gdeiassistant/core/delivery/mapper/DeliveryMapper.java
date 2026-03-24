@@ -12,7 +12,8 @@ public interface DeliveryMapper {
     @ResultType(String.class)
     String selectDeliveryOrderUsername(Integer orderId);
 
-    @Select("select * from delivery_order where order_id=#{orderId}")
+    @Select("select order_id,username,order_time,name,number,phone,price,company,address,state,remarks" +
+            " from delivery_order where order_id=#{orderId}")
     @Results(id = "DeliveryOrderDetail", value = {
             @Result(property = "orderId", column = "order_id"),
             @Result(property = "username", column = "username"),
@@ -28,7 +29,7 @@ public interface DeliveryMapper {
     })
     DeliveryOrderEntity selectDeliveryOrderByOrderId(Integer orderId);
 
-    @Select("select * from delivery_trade where trade_id=#{tradeId}")
+    @Select("select trade_id,order_id,create_time,username,state from delivery_trade where trade_id=#{tradeId}")
     @Results(id = "DeliveryTrade", value = {
             @Result(property = "tradeId", column = "trade_id"),
             @Result(property = "orderId", column = "order_id"),
@@ -38,7 +39,7 @@ public interface DeliveryMapper {
     })
     DeliveryTradeEntity selectDeliveryTradeByTradeId(Integer tradeId);
 
-    @Select("select * from delivery_trade where order_id=#{orderId}")
+    @Select("select trade_id,order_id,create_time,username,state from delivery_trade where order_id=#{orderId}")
     @ResultMap("DeliveryTrade")
     DeliveryTradeEntity selectDeliveryTradeByOrderId(Integer orderId);
 
@@ -54,7 +55,9 @@ public interface DeliveryMapper {
     @ResultMap("DeliveryOrder")
     List<DeliveryOrderEntity> selectDeliveryOrderPage(@Param("start") Integer start, @Param("size") Integer size);
 
-    @Select("select * from delivery_trade where username=#{username}")
+    /** Returns the most recent trades for the given user, capped at 200 rows. */
+    @Select("select trade_id,order_id,create_time,username,state from delivery_trade" +
+            " where username=#{username} order by create_time desc limit 200")
     @ResultMap("DeliveryTrade")
     List<DeliveryTradeEntity> selectDeliveryTradeByUsername(String username);
 
@@ -77,19 +80,26 @@ public interface DeliveryMapper {
     List<DeliveryTradeEntity> selectPersonalDeliveryInteractionPage(@Param("username") String username,
             @Param("start") Integer start, @Param("size") Integer size);
 
-    @Select("select * from delivery_order where username=#{username} order by order_id desc limit 500")
+    @Select("select order_id,username,order_time,name,number,phone,price,company,address,state,remarks" +
+            " from delivery_order where username=#{username} order by order_id desc limit 200")
     @Results(id = "DeliveryOrder", value = {
             @Result(property = "orderId", column = "order_id"),
             @Result(property = "username", column = "username"),
             @Result(property = "orderTime", column = "order_time"),
+            @Result(property = "name", column = "name"),
+            @Result(property = "number", column = "number"),
+            @Result(property = "phone", column = "phone"),
             @Result(property = "price", column = "price"),
             @Result(property = "company", column = "company"),
             @Result(property = "address", column = "address"),
-            @Result(property = "state", column = "state")
+            @Result(property = "state", column = "state"),
+            @Result(property = "remarks", column = "remarks")
     })
     List<DeliveryOrderEntity> selectDeliveryOrderByUsername(String username);
 
-    @Select("select o.order_id as order_id,o.username as username,order_time,price,company,address,o.state from delivery_order o,delivery_trade t where o.order_id = t.order_id and t.username=#{username} order by o.order_id desc limit 500")
+    @Select("select o.order_id as order_id,o.username as username,o.order_time as order_time,o.name as name,o.price as price,o.company as company,o.address as address,o.state as state" +
+            " from delivery_order o,delivery_trade t where o.order_id = t.order_id and t.username=#{username}" +
+            " order by o.order_id desc limit 200")
     @Results(id = "AcceptedDeliveryOrder", value = {
             @Result(property = "orderId", column = "order_id"),
             @Result(property = "username", column = "username"),

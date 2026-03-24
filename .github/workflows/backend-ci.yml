@@ -1,0 +1,60 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - 'release/**'
+  pull_request:
+    branches:
+      - main
+      - master
+      - 'release/**'
+
+jobs:
+  test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run tests
+        run: ./gradlew test
+        env:
+          # Non-dev: no verbose SQL logging by default in CI
+          MYBATIS_LOG_IMPL: ""
+          LOG_LEVEL_SQL: "WARN"
+          LOG_LEVEL_IBATIS: "WARN"
+          LOG_LEVEL_MYBATIS: "WARN"
+
+      - name: Upload test reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            build/reports/tests/
+            build/test-results/
+          retention-days: 7

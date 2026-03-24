@@ -2,12 +2,15 @@ package cn.gdeiassistant.common.aspect;
 
 import cn.gdeiassistant.common.constant.ObservabilityConstants;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
@@ -28,6 +31,12 @@ public class QueryLogAspect {
     private final Logger logger = LoggerFactory.getLogger(QueryLogAspect.class);
 
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    @Autowired
+    private ObservabilityConstants observabilityConstants;
+
+    @Autowired
+    private MeterRegistry meterRegistry;
 
     @Pointcut("@annotation(cn.gdeiassistant.common.annotation.QueryLogPersistence)")
     public void QueryAction() {
@@ -80,10 +89,7 @@ public class QueryLogAspect {
                 break;
         }
 
-        if (elapsed > ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS) {
-            logger.warn("Slow REST query detected: {} took {}ms (threshold {}ms), user={}",
-                    functionName, elapsed, ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS, username);
-        }
+        recordSlowQueryIfNeeded(functionName, elapsed, "rest");
 
         return result;
     }
@@ -131,10 +137,7 @@ public class QueryLogAspect {
                 break;
         }
 
-        if (elapsed > ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS) {
-            logger.warn("Slow query detected: {} took {}ms (threshold {}ms), user={}",
-                    functionName, elapsed, ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS, username);
-        }
+        recordSlowQueryIfNeeded(functionName, elapsed, "session");
 
         return result;
     }
@@ -148,11 +151,18 @@ public class QueryLogAspect {
         String methodName = joinPoint.getSignature().toShortString();
         logger.info("Community query executed: {} in {}ms", methodName, elapsed);
 
-        if (elapsed > ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS) {
-            logger.warn("Slow community query detected: {} took {}ms (threshold {}ms)",
-                    methodName, elapsed, ObservabilityConstants.QUERY_SLOW_THRESHOLD_MS);
-        }
+        recordSlowQueryIfNeeded(methodName, elapsed, "community");
 
         return result;
+    }
+
+    private void recordSlowQueryIfNeeded(String operation, long elapsedMs, String category) {
+        long threshold = observabilityConstants.getSlowQueryThresholdMs();
+        if (elapsedMs > threshold) {
+            logger.warn("SlowQuery - operation:{} | elapsed:{}ms (threshold:{}ms) | category:{}",
+                    operation, elapsedMs, threshold, category);
+            meterRegistry.counter("query.slow",
+                    Tags.of("operation", operation, "category", category)).increment();
+        }
     }
 }

@@ -1,9 +1,12 @@
 package cn.gdeiassistant.common.aspect;
 
+import cn.gdeiassistant.common.constant.ObservabilityConstants;
 import cn.gdeiassistant.common.pojo.Entity.RequestSecurity;
 import cn.gdeiassistant.common.pojo.Entity.RequestValidation;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -13,6 +16,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -32,10 +36,19 @@ public class RequestLogAspect {
 
     private final Logger logger = LoggerFactory.getLogger(RequestLogAspect.class);
 
+    /** Maximum characters for any single serialized parameter value in the log line. */
+    private static final int MAX_PARAM_SERIALIZED_LENGTH = 512;
+
     /** Sensitive parameter names that must never be logged. */
     private static final Set<String> SENSITIVE_PARAMS = Set.of(
             "password", "token", "secret", "credential", "accesskey"
     );
+
+    @Autowired
+    private ObservabilityConstants observabilityConstants;
+
+    @Autowired
+    private MeterRegistry meterRegistry;
 
     // ----------------------------------------------------------------
     // Existing @RequestLogPersistence behaviour (unchanged)
@@ -91,8 +104,9 @@ public class RequestLogAspect {
 
     /**
      * Logs request correlation ID, HTTP method, path, client IP, parameters
-     * (with sensitive redaction), elapsed time and success/failure for every
-     * controller method invocation.
+     * (with sensitive redaction and size cap), elapsed time and success/failure
+     * for every controller method invocation. Emits a slow-request counter when
+     * the elapsed time exceeds the configured threshold.
      */
     @Around("allControllerMethods()")
     public Object logRequestCorrelation(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -138,6 +152,19 @@ public class RequestLogAspect {
             sb.append(" | status:").append(success ? "OK" : "FAIL");
             sb.append(" | elapsed:").append(elapsed).append("ms");
 
+            if (elapsed > observabilityConstants.getSlowRequestThresholdMs()) {
+                // Use handler (ClassName.method) as the metric tag, NOT path.
+                // Paths such as /api/ershou/keyword/{keyword}/... contain free-text user
+                // input that would cause unbounded metric-label cardinality.
+                // Handler names are a closed, bounded set derived from the codebase.
+                String handler = joinPoint.getSignature().getDeclaringType().getSimpleName()
+                        + '.' + joinPoint.getSignature().getName();
+                logger.warn("SlowRequest - rid:{} | {} {} | handler:{} | elapsed:{}ms (threshold:{}ms)",
+                        requestId, method, path, handler, elapsed, observabilityConstants.getSlowRequestThresholdMs());
+                meterRegistry.counter("http.requests.slow",
+                        Tags.of("method", method, "handler", handler)).increment();
+            }
+
             logger.info(sb.toString());
         }
     }
@@ -179,7 +206,8 @@ public class RequestLogAspect {
      * Appends non-sensitive, non-binary parameters to the log line.
      * Skips {@link MultipartFile}, {@link HttpServletRequest},
      * {@link HttpServletResponse}, and parameters whose name suggests
-     * they contain secrets.
+     * they contain secrets. Serialized values are capped at
+     * {@link #MAX_PARAM_SERIALIZED_LENGTH} characters to prevent giant log lines.
      */
     private void appendSafeParameters(StringBuilder sb, ProceedingJoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
@@ -227,7 +255,11 @@ public class RequestLogAspect {
             if (arg != null) {
                 if (!first) sb.append(", ");
                 try {
-                    sb.append(name).append(':').append(JSON.toJSONString(arg));
+                    String serialized = JSON.toJSONString(arg);
+                    if (serialized.length() > MAX_PARAM_SERIALIZED_LENGTH) {
+                        serialized = serialized.substring(0, MAX_PARAM_SERIALIZED_LENGTH) + "...[truncated]";
+                    }
+                    sb.append(name).append(':').append(serialized);
                 } catch (Exception e) {
                     sb.append(name).append(":[serialization-error]");
                 }
@@ -242,4 +274,5 @@ public class RequestLogAspect {
         String lower = paramName.toLowerCase();
         return SENSITIVE_PARAMS.stream().anyMatch(lower::contains);
     }
+
 }

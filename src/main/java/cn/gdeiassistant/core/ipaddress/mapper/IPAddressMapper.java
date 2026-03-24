@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IPAddressMapper {
 
-    @Select("select * from ip_log where username=#{username} order by time desc limit 1")
+    @Select("select id,type,username,ip,country,province,city,time from ip_log where username=#{username} order by time desc limit 1")
     @Results(id = "IPAddressRecord", value = {
             @Result(column = "id", property = "id"),
             @Result(column = "type", property = "type"),
@@ -20,17 +20,13 @@ public interface IPAddressMapper {
     })
     IPAddressRecord selectLatestIPAddressRecord(String username);
 
-    @Select("select * from ip_log where username=#{username} and type=#{type} order by time desc limit #{start},#{size}")
+    @Select("select id,type,username,ip,country,province,city,time from ip_log where username=#{username} and type=#{type} order by time desc limit #{start},#{size}")
     @ResultMap("IPAddressRecord")
     List<IPAddressRecord> selectIPAddressRecordByType(@Param("username") String username, @Param("type") int type, @Param("start") int start, @Param("size") int size);
 
-    @Select("select * from ip_log where username=#{username} and type=#{type} order by time desc limit 1")
+    @Select("select id,type,username,ip,country,province,city,time from ip_log where username=#{username} and type=#{type} order by time desc limit 1")
     @ResultMap("IPAddressRecord")
     IPAddressRecord selectLatestIPAddressRecordByType(@Param("username") String username, @Param("type") int type);
-
-    @Select("select * from ip_log where username=#{username} order by time desc")
-    @ResultMap("IPAddressRecord")
-    IPAddressRecord selectAllIPAddressRecord(String username);
 
     @Insert("insert into ip_log (type,username,ip,network,country,province,city,time)" +
             " values(#{type},#{username},#{ip},#{network},#{country},#{province},#{city},now())")

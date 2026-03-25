@@ -180,6 +180,63 @@
       "label": "語言"
     }
   },
+  "bindPhonePage": {
+    "loadingTitle": "載入中",
+    "loadingDescription": "正在取得當前綁定狀態，請稍候。",
+    "boundTitle": "已綁定手機",
+    "boundDescription": "您當前綁定的手機號為：{code} {phone}",
+    "changeAction": "更換手機",
+    "unbindAction": "解除綁定",
+    "unboundTitle": "未綁定手機號",
+    "unboundDescription": "您尚未綁定手機號碼，綁定後可提升帳號安全性及用於找回密碼。",
+    "bindNowAction": "立即綁定",
+    "replaceHint": "請輸入新的手機號碼進行綁定。",
+    "phonePlaceholder": "請輸入您的手機號",
+    "phonePlaceholderNew": "請輸入新的手機號",
+    "verificationLabel": "驗證碼",
+    "verificationPlaceholder": "請輸入手機驗證碼",
+    "getCode": "獲取驗證碼",
+    "retryAfter": "{seconds}s 後重試",
+    "invalidCnPhone": "請輸入正確的中國內地手機號",
+    "invalidIntlPhone": "請輸入正確的國際手機號",
+    "verificationRequired": "請輸入驗證碼",
+    "codeSent": "驗證碼已發送，請查看短訊",
+    "bindSuccess": "綁定成功",
+    "unbindSuccess": "已解除綁定",
+    "submitting": "綁定中...",
+    "confirmBind": "確認綁定",
+    "unbindDialogTitle": "解除綁定",
+    "unbindDialogContent": "確定要解除綁定該手機號嗎？解除後將無法使用該手機號找回帳號。",
+    "confirmUnbind": "確認解綁"
+  },
+  "downloadPage": {
+    "status": {
+      "loadingTitle": "正在檢查匯出狀態",
+      "exportingTitle": "正在為您打包數據",
+      "exportedTitle": "數據副本已可下載",
+      "idleTitle": "取得您的帳號數據副本",
+      "loadingDescription": "正在取得當前匯出任務狀態，請稍候。",
+      "exportingDescription": "匯出任務已提交，系統正在整理您的個人資料、發帖記錄和訂單資訊。頁面會自動刷新狀態。",
+      "exportedDescription": "您的數據副本已準備就緒，可直接下載。下載連結有效期為 90 分鐘。",
+      "idleDescription": "我們將把您在廣東第二師範學院助手上的個人資料、互動內容、訂單與記錄打包成壓縮檔。"
+    },
+    "privacyNotice": "為了保護您的私隱，該檔案僅供您本人下載，下載連結有效期為 90 分鐘。",
+    "frequencyNotice": "注意：24 小時內只能匯出一次。若您剛完成匯出，之後可直接回到本頁繼續下載。",
+    "actions": {
+      "checking": "正在檢查狀態...",
+      "start": "開始匯出數據",
+      "starting": "提交中...",
+      "exporting": "數據打包中，請稍候...",
+      "refresh": "刷新狀態",
+      "download": "點擊下載檔案",
+      "downloading": "正在取得下載連結..."
+    },
+    "exportedHint": "您的數據副本已生成完畢，請點擊下方按鈕下載",
+    "toast": {
+      "exportStarted": "匯出任務已提交，請稍候返回下載",
+      "downloadStarted": "下載已開始"
+    }
+  },
   "graduateExam": {
     "title": "考研成績查詢",
     "back": "返回",

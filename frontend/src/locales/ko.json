@@ -180,6 +180,63 @@
       "label": "언어"
     }
   },
+  "bindPhonePage": {
+    "loadingTitle": "불러오는 중",
+    "loadingDescription": "현재 연동 상태를 가져오고 있습니다. 잠시만 기다려 주세요.",
+    "boundTitle": "전화번호 연동됨",
+    "boundDescription": "현재 연동된 전화번호: {code} {phone}",
+    "changeAction": "전화번호 변경",
+    "unbindAction": "연동 해제",
+    "unboundTitle": "전화번호 미연동",
+    "unboundDescription": "아직 전화번호를 연동하지 않았습니다. 연동하면 계정 보안과 비밀번호 찾기에 도움이 됩니다.",
+    "bindNowAction": "지금 연동",
+    "replaceHint": "새 전화번호를 입력해 다시 연동해 주세요.",
+    "phonePlaceholder": "전화번호를 입력해 주세요",
+    "phonePlaceholderNew": "새 전화번호를 입력해 주세요",
+    "verificationLabel": "인증코드",
+    "verificationPlaceholder": "문자 인증코드를 입력해 주세요",
+    "getCode": "인증코드 받기",
+    "retryAfter": "{seconds}s 후 다시 시도",
+    "invalidCnPhone": "올바른 중국 본토 전화번호를 입력해 주세요",
+    "invalidIntlPhone": "올바른 국제 전화번호를 입력해 주세요",
+    "verificationRequired": "인증코드를 입력해 주세요",
+    "codeSent": "인증코드를 전송했습니다. 문자를 확인해 주세요.",
+    "bindSuccess": "전화번호가 연동되었습니다",
+    "unbindSuccess": "전화번호 연동이 해제되었습니다",
+    "submitting": "연동 중...",
+    "confirmBind": "연동 확인",
+    "unbindDialogTitle": "전화번호 연동 해제",
+    "unbindDialogContent": "이 전화번호의 연동을 해제하시겠습니까? 해제 후에는 이 번호로 계정을 복구할 수 없습니다.",
+    "confirmUnbind": "연동 해제"
+  },
+  "downloadPage": {
+    "status": {
+      "loadingTitle": "내보내기 상태 확인 중",
+      "exportingTitle": "데이터를 묶는 중입니다",
+      "exportedTitle": "데이터 사본을 다운로드할 수 있습니다",
+      "idleTitle": "계정 데이터 사본 받기",
+      "loadingDescription": "최신 내보내기 상태를 가져오고 있습니다. 잠시만 기다려 주세요.",
+      "exportingDescription": "내보내기 요청이 접수되었습니다. 프로필, 게시글, 주문, 기록을 정리하고 있으며 페이지가 자동으로 갱신됩니다.",
+      "exportedDescription": "데이터 사본이 준비되었습니다. 다운로드 링크는 90분 동안 유효합니다.",
+      "idleDescription": "광둥제2사범학원 도우미에 있는 프로필, 상호작용, 주문, 기록을 압축 파일로 묶어 드립니다."
+    },
+    "privacyNotice": "개인정보 보호를 위해 이 파일은 본인만 다운로드할 수 있으며, 링크는 90분 동안 유효합니다.",
+    "frequencyNotice": "참고: 데이터 내보내기는 24시간에 한 번만 가능합니다. 이미 생성했다면 나중에 이 페이지로 돌아와 계속 다운로드할 수 있습니다.",
+    "actions": {
+      "checking": "상태 확인 중...",
+      "start": "데이터 내보내기 시작",
+      "starting": "제출 중...",
+      "exporting": "데이터를 묶는 중입니다. 잠시만 기다려 주세요...",
+      "refresh": "상태 새로고침",
+      "download": "파일 다운로드",
+      "downloading": "다운로드 링크를 가져오는 중..."
+    },
+    "exportedHint": "데이터 사본 생성이 완료되었습니다. 아래 버튼을 눌러 다운로드해 주세요.",
+    "toast": {
+      "exportStarted": "내보내기 요청이 제출되었습니다. 잠시 후 다시 와서 다운로드해 주세요.",
+      "downloadStarted": "다운로드가 시작되었습니다"
+    }
+  },
   "graduateExam": {
     "title": "대학원 시험 성적 조회",
     "back": "뒤로",

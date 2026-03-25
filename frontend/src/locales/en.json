@@ -180,6 +180,63 @@
       "label": "Language"
     }
   },
+  "bindPhonePage": {
+    "loadingTitle": "Loading",
+    "loadingDescription": "Fetching the current binding status. Please wait.",
+    "boundTitle": "Phone Linked",
+    "boundDescription": "Your current linked phone number is {code} {phone}.",
+    "changeAction": "Change Phone",
+    "unbindAction": "Unlink Phone",
+    "unboundTitle": "No Phone Linked",
+    "unboundDescription": "You have not linked a phone number yet. Linking one helps with account security and password recovery.",
+    "bindNowAction": "Link Now",
+    "replaceHint": "Enter a new phone number to replace the current one.",
+    "phonePlaceholder": "Enter your phone number",
+    "phonePlaceholderNew": "Enter a new phone number",
+    "verificationLabel": "Verification code",
+    "verificationPlaceholder": "Enter the SMS verification code",
+    "getCode": "Get code",
+    "retryAfter": "Retry in {seconds}s",
+    "invalidCnPhone": "Please enter a valid mainland China phone number",
+    "invalidIntlPhone": "Please enter a valid international phone number",
+    "verificationRequired": "Please enter the verification code",
+    "codeSent": "Verification code sent. Please check your messages.",
+    "bindSuccess": "Phone number linked",
+    "unbindSuccess": "Phone number unlinked",
+    "submitting": "Binding...",
+    "confirmBind": "Confirm binding",
+    "unbindDialogTitle": "Unlink Phone",
+    "unbindDialogContent": "Are you sure you want to unlink this phone number? You will no longer be able to recover your account with it.",
+    "confirmUnbind": "Unlink"
+  },
+  "downloadPage": {
+    "status": {
+      "loadingTitle": "Checking export status",
+      "exportingTitle": "Packaging your data",
+      "exportedTitle": "Your data copy is ready",
+      "idleTitle": "Get your account data copy",
+      "loadingDescription": "Fetching the latest export task status. Please wait.",
+      "exportingDescription": "Your export request has been submitted. We are packaging your profile, posts, orders, and records. This page will refresh automatically.",
+      "exportedDescription": "Your data copy is ready to download. The download link remains valid for 90 minutes.",
+      "idleDescription": "We will package your profile, interactions, orders, and records from GDEI Assistant into a compressed archive."
+    },
+    "privacyNotice": "To protect your privacy, this file is only available to you. The download link remains valid for 90 minutes.",
+    "frequencyNotice": "Note: You can export your data only once every 24 hours. If you already generated a copy, you can return here later and keep downloading it.",
+    "actions": {
+      "checking": "Checking status...",
+      "start": "Start data export",
+      "starting": "Submitting...",
+      "exporting": "Packaging data, please wait...",
+      "refresh": "Refresh status",
+      "download": "Download file",
+      "downloading": "Fetching download link..."
+    },
+    "exportedHint": "Your data copy has been generated. Use the button below to download it.",
+    "toast": {
+      "exportStarted": "Export request submitted. Please come back shortly to download it.",
+      "downloadStarted": "Download started"
+    }
+  },
   "graduateExam": {
     "title": "Graduate Exam Score Query",
     "back": "Back",

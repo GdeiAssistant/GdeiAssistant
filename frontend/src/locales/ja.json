@@ -180,6 +180,63 @@
       "label": "言語"
     }
   },
+  "bindPhonePage": {
+    "loadingTitle": "読み込み中",
+    "loadingDescription": "現在の連携状況を取得しています。しばらくお待ちください。",
+    "boundTitle": "電話番号を連携済み",
+    "boundDescription": "現在連携している電話番号：{code} {phone}",
+    "changeAction": "電話番号を変更",
+    "unbindAction": "連携を解除",
+    "unboundTitle": "電話番号未連携",
+    "unboundDescription": "まだ電話番号を連携していません。連携するとアカウント保護とパスワード再設定に役立ちます。",
+    "bindNowAction": "今すぐ連携",
+    "replaceHint": "新しい電話番号を入力して連携してください。",
+    "phonePlaceholder": "電話番号を入力してください",
+    "phonePlaceholderNew": "新しい電話番号を入力してください",
+    "verificationLabel": "認証コード",
+    "verificationPlaceholder": "SMS 認証コードを入力してください",
+    "getCode": "認証コードを取得",
+    "retryAfter": "{seconds}s 後に再試行",
+    "invalidCnPhone": "有効な中国本土の電話番号を入力してください",
+    "invalidIntlPhone": "有効な国際電話番号を入力してください",
+    "verificationRequired": "認証コードを入力してください",
+    "codeSent": "認証コードを送信しました。SMS をご確認ください。",
+    "bindSuccess": "電話番号を連携しました",
+    "unbindSuccess": "電話番号の連携を解除しました",
+    "submitting": "連携中...",
+    "confirmBind": "連携を確認",
+    "unbindDialogTitle": "電話番号の連携解除",
+    "unbindDialogContent": "この電話番号の連携を解除してもよろしいですか？解除後はこの番号でアカウントを復元できなくなります。",
+    "confirmUnbind": "連携解除"
+  },
+  "downloadPage": {
+    "status": {
+      "loadingTitle": "エクスポート状況を確認中",
+      "exportingTitle": "データをパッケージ化しています",
+      "exportedTitle": "データコピーをダウンロードできます",
+      "idleTitle": "アカウントデータのコピーを取得",
+      "loadingDescription": "最新のエクスポート状況を取得しています。しばらくお待ちください。",
+      "exportingDescription": "エクスポート依頼を送信しました。プロフィール、投稿、注文、記録を整理しています。ページは自動で更新されます。",
+      "exportedDescription": "データコピーの準備が完了しました。ダウンロードリンクの有効期限は 90 分です。",
+      "idleDescription": "広東第二師範学院助手にあるプロフィール、やり取り、注文、記録を圧縮ファイルとしてまとめます。"
+    },
+    "privacyNotice": "プライバシー保護のため、このファイルは本人のみがダウンロードできます。リンクの有効期限は 90 分です。",
+    "frequencyNotice": "注意：データのエクスポートは 24 時間に 1 回のみ可能です。すでに生成済みの場合は、後でこのページに戻って続けてダウンロードできます。",
+    "actions": {
+      "checking": "状態を確認中...",
+      "start": "データのエクスポートを開始",
+      "starting": "送信中...",
+      "exporting": "データをパッケージ化しています。しばらくお待ちください...",
+      "refresh": "状態を更新",
+      "download": "ファイルをダウンロード",
+      "downloading": "ダウンロードリンクを取得中..."
+    },
+    "exportedHint": "データコピーの生成が完了しました。下のボタンからダウンロードしてください。",
+    "toast": {
+      "exportStarted": "エクスポート依頼を送信しました。しばらくしてからダウンロードしてください。",
+      "downloadStarted": "ダウンロードを開始しました"
+    }
+  },
   "graduateExam": {
     "title": "大学院入試成績照会",
     "back": "戻る",

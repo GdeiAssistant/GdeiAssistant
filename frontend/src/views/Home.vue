@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import { onMounted, onActivated, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ALL_FEATURES, FEATURE_ICON_SRC } from '@/constants/features'
+import { ALL_FEATURES, FEATURE_ICON_SRC, getLocalizedFeatures } from '@/constants/features'
 import {
   Star, Calendar, CreditCard, FileText, GraduationCap, BookOpen,
   DoorOpen, Dumbbell, PenLine, Database, ShoppingCart, Search,
@@ -14,6 +14,8 @@ const MIGRATION_KEY = 'user_features_migrated_v2'
 
 const router = useRouter()
 const { t } = useI18n()
+
+const localizedFeatures = computed(() => getLocalizedFeatures(ALL_FEATURES, t))
 
 function migrateFeatureConfig(config) {
   if (!config || typeof config !== 'object') return config
@@ -56,12 +58,13 @@ onActivated(loadFeaturesConfig)
 
 const visibleMenuList = computed(() => {
   const config = featuresConfig.value
-  return ALL_FEATURES.filter((f) => {
+  return localizedFeatures.value.filter((f) => {
     if (!config || Object.keys(config).length === 0) return f.defaultVisible !== false
     return config[f.id] !== false
   }).map((f) => ({
     id: f.id,
     title: f.name,
+    description: f.description,
     icon: FEATURE_ICON_SRC[f.id] || '/img/function/data.png',
     path: f.path,
     type: f.type,
@@ -126,28 +129,6 @@ function iconColorStyle(id) {
   return { color: iconColors[id] || '#6B7280' }
 }
 
-// Feature descriptions
-const featureDescriptions = {
-  grade: '查每学年每学期成绩和绩点',
-  schedule: '一眼看清这周每天上什么课',
-  cet: '输入考号和验证码即可查分',
-  kaoyan: '查询考研成绩和相关信息',
-  spare: '看看现在还有哪些空教室',
-  collection: '搜馆藏、看借阅、办续借',
-  card: '查余额、查消费、办挂失',
-  pe: '查看体测成绩和数据',
-  data: '查电费，也能找校内常用号码',
-  evaluate: '需要评教时直接来这里',
-  about: '关于广东二师助手',
-  ershou: '闲置物品转让，校内面交',
-  delivery: '发跑腿需求，帮取快递',
-  lostandfound: '丢东西、捡东西都来这',
-  secret: '匿名倾诉，说出心里话',
-  dating: '把室友介绍给全世界',
-  express: '勇敢说出你的心意',
-  topic: '热门讨论，校园八卦',
-  photograph: '用镜头记录校园美好',
-}
 </script>
 
 <template>
@@ -186,7 +167,7 @@ const featureDescriptions = {
               />
             </div>
             <div class="text-sm font-bold text-[var(--c-text-1)]">{{ item.title }}</div>
-            <div class="text-[11px] text-[var(--c-text-3)] mt-0.5 line-clamp-2">{{ featureDescriptions[item.id] }}</div>
+            <div class="text-[11px] text-[var(--c-text-3)] mt-0.5 line-clamp-2">{{ item.description }}</div>
           </button>
         </div>
       </div>

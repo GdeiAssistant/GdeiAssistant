@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { showErrorTopTips } from '@/utils/toast.js'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const keyword = ref('')
 const searchResults = ref([])
 const searching = ref(false)
@@ -22,7 +24,7 @@ function handleLike(item) {
 function doSearch() {
   const trimmedKeyword = keyword.value && keyword.value.trim()
   if (!trimmedKeyword) {
-    showErrorTopTips('请输入您要搜索的话题或内容！')
+    showErrorTopTips(t('topic.searchRequired'))
     return
   }
   searching.value = true
@@ -33,7 +35,7 @@ function doSearch() {
         id: item.id,
         topicTag: item.topic,
         content: item.content,
-        userName: item.username || '匿名',
+        userName: item.username || t('topic.anonymousUser'),
         userAvatar: '/img/avatar/default.png',
         time: item.publishTime,
         images: item.firstImageUrl ? [item.firstImageUrl] : [],
@@ -56,13 +58,13 @@ function getImageGridCols(count) {
 
 <template>
   <div class="bg-[var(--c-bg)] min-h-screen pb-16">
-    <CommunityHeader title="搜索话题" moduleColor="#6366f1" @back="router.back()" backTo="" showBack />
+    <CommunityHeader :title="t('topic.searchTitle')" moduleColor="#6366f1" @back="router.back()" backTo="" showBack />
 
     <div class="flex gap-2.5 p-4 bg-[var(--c-surface)] border-b border-[var(--c-border)]">
       <input
         type="text"
         class="flex-1 h-9 px-3 border border-[var(--c-border)] rounded-full text-sm outline-none focus:border-[var(--c-topic)]"
-        placeholder="搜索话题、内容..."
+        :placeholder="t('topic.searchPlaceholder')"
         v-model="keyword"
         @keyup.enter="doSearch"
       />
@@ -70,12 +72,12 @@ function getImageGridCols(count) {
         type="button"
         class="px-5 h-9 bg-[var(--c-topic)] text-white border-none rounded-full text-sm cursor-pointer"
         @click="doSearch"
-      >搜索</button>
+      >{{ t('topic.searchAction') }}</button>
     </div>
 
-    <div v-if="searching" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> 搜索中...</div>
+    <div v-if="searching" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> {{ t('topic.searching') }}</div>
     <div v-else-if="searchResults.length === 0 && keyword" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-      <p class="text-sm">暂无结果</p>
+      <p class="text-sm">{{ t('topic.searchEmpty') }}</p>
     </div>
     <div v-else class="p-4 flex flex-col gap-4">
       <div

@@ -1,17 +1,21 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import { createCommunityPullMessages } from '../community/communityContent'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const keywordInput = ref('')
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const scrollContainer = ref(null)
 const PAGE_SIZE = 10
+const pullMessages = computed(() => createCommunityPullMessages(t))
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -55,7 +59,7 @@ function getGenderColor(gender) {
 
 function doSearch() {
   if (!keywordInput.value || keywordInput.value.trim() === '') {
-    showDialog('请输入搜索关键词')
+    showDialog(t('express.searchRequired'))
     return
   }
   const k = keywordInput.value.trim()
@@ -99,7 +103,7 @@ watch(
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]">
-    <CommunityHeader title="搜索表白" moduleColor="#f43f5e" backTo="/express/home" />
+    <CommunityHeader :title="t('express.searchTitle')" moduleColor="#f43f5e" backTo="/express/home" />
 
     <!-- 搜索栏 -->
     <div class="flex items-center px-4 py-2.5 bg-[var(--c-bg)]">
@@ -110,16 +114,16 @@ watch(
         <input
           type="text"
           class="flex-1 border-none outline-none text-sm bg-transparent min-w-0 text-[var(--c-text-1)]"
-          placeholder="搜索发件人/收件人/内容"
+          :placeholder="t('express.searchPlaceholder')"
           v-model="keywordInput"
           @keyup.enter="doSearch"
         />
       </div>
-      <span class="text-[#f43f5e] text-sm ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">搜索</span>
+      <span class="text-[#f43f5e] text-sm ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">{{ t('express.searchAction') }}</span>
     </div>
 
     <!-- 浅粉色标题 -->
-    <h2 class="text-center text-xl font-bold text-[#ffb3ba] mx-4 mt-3 mb-4 leading-tight">广东第二师范学院表白墙</h2>
+    <h2 class="text-center text-xl font-bold text-[#ffb3ba] mx-4 mt-3 mb-4 leading-tight">{{ t('express.bannerTitle') }}</h2>
 
     <!-- 滚动容器 -->
     <div
@@ -132,10 +136,10 @@ watch(
     >
       <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
         <span v-if="refreshing" class="flex items-center gap-2">
-          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i> 正在刷新...
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
         </span>
-        <span v-else-if="pullY > 50">释放立即刷新</span>
-        <span v-else-if="pullY > 0">下拉刷新</span>
+        <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
+        <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
       </div>
 
       <div class="px-4 pb-5">
@@ -172,20 +176,20 @@ watch(
       </div>
 
       <div class="text-center text-xs text-[var(--c-text-3)] px-4 pt-4 pb-5 leading-relaxed">
-        蓝色下划线：男生 / 红色下划线：女生 / 黑色下划线：其他或保密
+        {{ t('express.legend') }}
       </div>
 
       <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
         <div class="text-5xl mb-3">🔍</div>
-        <p class="text-sm">{{ keyword ? '未找到相关表白' : '输入关键词搜索' }}</p>
+        <p class="text-sm">{{ keyword ? t('express.searchEmpty') : t('express.searchPrompt') }}</p>
       </div>
 
       <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
         <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i>
-        <span>正在加载</span>
+        <span>{{ pullMessages.loading }}</span>
       </div>
       <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
-        <span>没有更多了</span>
+        <span>{{ pullMessages.noMore }}</span>
       </div>
     </div>
 
@@ -193,10 +197,10 @@ watch(
     <div v-if="dialogVisible">
       <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
       <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
-        <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">提示</div>
+        <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
         <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
         <div class="flex border-t border-[var(--c-border)]">
-          <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="dialogVisible = false">确定</button>
+          <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</button>
         </div>
       </div>
     </div>

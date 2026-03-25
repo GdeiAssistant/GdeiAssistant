@@ -1,15 +1,19 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import { createCommunityPullMessages, createMarketplaceCategoryNames } from '../community/communityContent'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const scrollContainer = ref(null)
 
-const TYPE_NAMES = ['校园代步', '手机', '电脑', '数码配件', '数码', '电器', '运动健身', '衣物伞帽', '图书教材', '租赁', '生活娱乐', '其他']
+const typeNames = computed(() => createMarketplaceCategoryNames(t))
+const pullMessages = computed(() => createCommunityPullMessages(t))
 const PAGE_SIZE = 10
 
 const typeId = computed(() => {
@@ -19,8 +23,8 @@ const typeId = computed(() => {
 })
 
 const typeName = computed(() => {
-  if (typeId.value === null) return '分类'
-  return TYPE_NAMES[typeId.value] ?? '分类'
+  if (typeId.value === null) return t('marketplace.categoryTitle')
+  return typeNames.value[typeId.value] ?? t('marketplace.categoryTitle')
 })
 
 function mapErshouItemToCard(item) {
@@ -82,10 +86,10 @@ watch(
       <!-- 下拉刷新指示器 -->
       <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
         <span v-if="refreshing" class="flex items-center gap-2">
-          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></i> 正在刷新...
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
         </span>
-        <span v-else-if="pullY > 50">释放立即刷新</span>
-        <span v-else-if="pullY > 0">下拉刷新</span>
+        <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
+        <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
       </div>
 
       <!-- 商品双列网格 -->
@@ -108,16 +112,16 @@ watch(
       <!-- 空状态 -->
       <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
         <div class="text-3xl mb-3">?</div>
-        <p class="text-sm">暂无该分类的商品</p>
+        <p class="text-sm">{{ t('marketplace.emptyByCategory') }}</p>
       </div>
 
       <!-- 上拉加载更多 -->
       <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
         <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></i>
-        <span>正在加载</span>
+        <span>{{ pullMessages.loading }}</span>
       </div>
       <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
-        <span>没有更多了</span>
+        <span>{{ pullMessages.noMore }}</span>
       </div>
     </div>
   </div>

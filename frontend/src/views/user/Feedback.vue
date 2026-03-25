@@ -1,43 +1,19 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { submitFeedback } from '@/api/feedback'
 import { showErrorTopTips } from '@/utils/toast.js'
 import { useToast } from '@/composables/useToast'
+import { createFaqList, createFeedbackTypes } from './feedbackContent'
 
 const router = useRouter()
 const { success: toastSuccess } = useToast()
+const { t } = useI18n()
 
 const activeTab = ref('faq')
 
-// 常见问题列表（根据旧版 faq.jsp 精选 & 总结）
-const faqList = ref([
-  {
-    title: '登录应用的用户名和密码是什么？',
-    content:
-      '用户名和密码与校园网上网账号、学校教务系统账号保持一致。如果不清楚自己的账号信息，可以在"关于应用-校园网络账号说明"中查看详细指引。'
-  },
-  {
-    title: '应用账号是否支持修改密码？',
-    content:
-      '请前往学校统一身份认证系统修改密码。修改完成后，重新登录广东二师助手即可同步最新密码，本应用不会单独保存你的登录密码。'
-  },
-  {
-    title: '为什么成绩/课表查询会提示系统异常？',
-    content:
-      '教务查询依赖学校官网和教务系统的稳定性。当源站维护或更新时，可能出现查询异常或暂时不可用的情况，一般会在24小时内恢复。如果长时间异常，可以通过本页的"意见反馈"提交故障工单。'
-  },
-  {
-    title: '什么是教务数据缓存？开启后是否安全？',
-    content:
-      '教务数据缓存用于在获得你授权的前提下，定期从学校教务系统同步成绩和课表，以提升查询速度和稳定性。数据仅用于教务展示，不会对外泄露，你可以在隐私设置中随时关闭该功能。'
-  },
-  {
-    title: '如何注销账户？',
-    content:
-      '你可以在个人中心-删除账号中发起注销申请，系统会校验密码并判断是否满足注销条件。如果无法自助注销，可以在此处提交工单或发送邮件至 support@gdeiassistant.cn 联系管理员协助处理。'
-  }
-])
+const faqList = computed(() => createFaqList(t))
 
 const openedFaqIndex = ref(0)
 
@@ -46,16 +22,14 @@ function toggleFaq(index) {
 }
 
 // 反馈表单
-const feedbackType = ref('应用功能异常')
-const feedbackTypes = [
-  '闪退、卡顿或界面错位',
-  '用户登录和密码设置',
-  '个人资料和隐私设置',
-  '实名认证和手机绑定',
-  '账号绑定、管理和注销',
-  '应用功能异常',
-  '其它'
-]
+const feedbackType = ref('')
+const feedbackTypes = computed(() => createFeedbackTypes(t))
+
+watchEffect(() => {
+  if (!feedbackTypes.value.includes(feedbackType.value)) {
+    feedbackType.value = feedbackTypes.value[5] ?? feedbackTypes.value[0] ?? ''
+  }
+})
 
 const content = ref('')
 const contact = ref('')
@@ -109,7 +83,7 @@ const submitting = ref(false)
 async function handleSubmit() {
   const trimmedContent = content.value.trim()
   if (!trimmedContent) {
-    showErrorTopTips('请填写反馈内容')
+    showErrorTopTips(t('feedback.form.contentRequired'))
     return
   }
 
@@ -120,7 +94,7 @@ async function handleSubmit() {
       contact: contact.value?.trim() || undefined,
       type: feedbackType.value || undefined
     })
-    toastSuccess('提交成功')
+    toastSuccess(t('feedback.form.submitSuccess'))
     setTimeout(() => {
       content.value = ''
       contact.value = ''
@@ -141,8 +115,8 @@ async function handleSubmit() {
   <div class="min-h-screen bg-gray-50 pb-6">
     <!-- Sticky Header -->
     <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">返回</button>
-      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">帮助与反馈</h1>
+      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">{{ t('common.back') }}</button>
+      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">{{ t('feedback.title') }}</h1>
       <div class="w-15"></div>
     </div>
 
@@ -153,13 +127,13 @@ async function handleSubmit() {
         class="flex-1 text-center py-3 text-[15px] cursor-pointer relative bg-transparent transition-colors"
         :class="activeTab === 'faq' ? 'text-emerald-500 font-semibold after:content-[\'\'] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-2/5 after:h-[3px] after:rounded-full after:bg-emerald-500' : 'text-gray-400'"
         @click="activeTab = 'faq'"
-      >常见问题</button>
+      >{{ t('feedback.tab.faq') }}</button>
       <button
         type="button"
         class="flex-1 text-center py-3 text-[15px] cursor-pointer relative bg-transparent transition-colors"
         :class="activeTab === 'form' ? 'text-emerald-500 font-semibold after:content-[\'\'] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-2/5 after:h-[3px] after:rounded-full after:bg-emerald-500' : 'text-gray-400'"
         @click="activeTab = 'form'"
-      >意见反馈</button>
+      >{{ t('feedback.tab.form') }}</button>
     </div>
 
     <div class="max-w-lg mx-auto px-4 py-4">
@@ -190,9 +164,9 @@ async function handleSubmit() {
         </div>
 
         <p class="mt-2 text-[13px] text-gray-400 text-center">
-          以上未能解决您的问题？请切换到
-          <span class="text-emerald-500 font-semibold">「意见反馈」</span>
-          告诉我们您的疑问和建议。
+          {{ t('feedback.faq.moreHelpPrefix') }}
+          <span class="text-emerald-500 font-semibold">「{{ t('feedback.tab.form') }}」</span>
+          {{ t('feedback.faq.moreHelpSuffix') }}
         </p>
       </section>
 
@@ -200,7 +174,7 @@ async function handleSubmit() {
       <section v-else class="space-y-3">
         <!-- Type selection -->
         <div class="bg-white rounded-xl shadow-sm p-3.5">
-          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">选择反馈类型</h2>
+          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">{{ t('feedback.form.typeTitle') }}</h2>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="type in feedbackTypes"
@@ -217,10 +191,10 @@ async function handleSubmit() {
 
         <!-- Content -->
         <div class="bg-white rounded-xl shadow-sm p-3.5">
-          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">反馈内容</h2>
+          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">{{ t('feedback.form.contentTitle') }}</h2>
           <div class="relative">
             <textarea
-              placeholder="请详细描述您遇到的问题或建议..."
+              :placeholder="t('feedback.form.contentPlaceholder')"
               :value="content"
               @input="handleContentInput"
               rows="5"
@@ -235,11 +209,11 @@ async function handleSubmit() {
 
         <!-- Contact -->
         <div class="bg-white rounded-xl shadow-sm p-3.5">
-          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">联系方式（选填）</h2>
+          <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">{{ t('feedback.form.contactTitle') }}</h2>
           <input
             type="text"
             v-model="contact"
-            placeholder="请留下您的QQ/微信或手机号，方便我们联系您（选填）"
+            :placeholder="t('feedback.form.contactPlaceholder')"
             class="w-full rounded-full border border-gray-200 py-2.5 px-3.5 text-sm text-gray-900 box-border placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:bg-white"
           />
         </div>
@@ -247,8 +221,8 @@ async function handleSubmit() {
         <!-- Screenshots -->
         <div class="bg-white rounded-xl shadow-sm p-3.5">
           <h2 class="text-[15px] font-semibold text-gray-900 mb-2.5">
-            截图上传
-            <span class="ml-1 text-xs text-gray-400 font-normal">（可选，最多 {{ maxScreenshots }} 张）</span>
+            {{ t('feedback.form.screenshotTitle') }}
+            <span class="ml-1 text-xs text-gray-400 font-normal">{{ t('feedback.form.screenshotLimit', { count: maxScreenshots }) }}</span>
           </h2>
           <div class="flex gap-2.5 flex-wrap">
             <div
@@ -256,7 +230,7 @@ async function handleSubmit() {
               :key="url"
               class="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100"
             >
-              <img :src="url" alt="截图预览" class="w-full h-full object-cover" />
+              <img :src="url" :alt="t('feedback.form.screenshotPreview')" class="w-full h-full object-cover" />
               <button
                 type="button"
                 class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/50 text-white text-sm leading-none border-none cursor-pointer"
@@ -268,7 +242,7 @@ async function handleSubmit() {
               class="w-20 h-20 rounded-lg border border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center text-gray-400 text-xs cursor-pointer"
             >
               <span class="text-[22px] leading-none mb-0.5">+</span>
-              <span>添加图片</span>
+              <span>{{ t('feedback.form.addImage') }}</span>
               <input
                 type="file"
                 accept="image/*"
@@ -287,7 +261,7 @@ async function handleSubmit() {
             class="w-full h-[46px] rounded-full border-none bg-gradient-to-br from-emerald-500 to-emerald-600 text-white text-base font-semibold shadow-lg shadow-emerald-500/35 cursor-pointer transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
             :disabled="submitting"
             @click="handleSubmit"
-          >{{ submitting ? '提交中...' : '提交反馈' }}</button>
+          >{{ submitting ? t('feedback.form.submitting') : t('feedback.form.submit') }}</button>
         </div>
       </section>
     </div>

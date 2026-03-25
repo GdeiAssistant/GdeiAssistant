@@ -1,15 +1,17 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 
 const router = useRouter()
+const { t } = useI18n()
 
 const tabs = [
-  { type: 1, label: '学校要闻', icon: '/img/news/school.png' },
-  { type: 2, label: '院部通知', icon: '/img/news/admin.png' },
-  { type: 3, label: '通知公告', icon: '/img/news/course.png' },
-  { type: 4, label: '学术动态', icon: '/img/news/study.png' }
+  { type: 1, labelKey: 'news.tab.school', icon: '/img/news/school.png' },
+  { type: 2, labelKey: 'news.tab.department', icon: '/img/news/admin.png' },
+  { type: 3, labelKey: 'news.tab.notice', icon: '/img/news/course.png' },
+  { type: 4, labelKey: 'news.tab.academic', icon: '/img/news/study.png' }
 ]
 
 const PAGE_SIZE = 15
@@ -96,8 +98,8 @@ onMounted(() => {
   <div class="h-screen w-screen overflow-hidden flex flex-col bg-[var(--c-bg)]">
     <!-- Sticky header -->
     <div class="shrink-0 sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
-      <span class="flex-1 text-center text-sm font-bold">新闻</span>
+      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('info.news') }}</span>
       <div class="w-10"></div>
     </div>
 
@@ -123,17 +125,17 @@ onMounted(() => {
 
         <!-- Status indicators -->
         <div v-if="loadError && newsList.length === 0" class="text-center py-6 text-sm text-[var(--c-text-3)]">
-          加载失败，请稍后重试
+          {{ t('news.loadFailed') }}
         </div>
         <div v-else-if="isLoading" class="flex items-center justify-center gap-2 py-6 text-sm text-[var(--c-text-2)]">
           <span class="inline-block w-4 h-4 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></span>
-          正在加载
+          {{ t('common.loading') }}
         </div>
         <div v-else-if="finished && newsList.length > 0" class="text-center py-6 text-sm text-[var(--c-text-3)]">
-          没有更多数据了
+          {{ t('news.noMore') }}
         </div>
         <div v-else-if="!isLoading && finished && newsList.length === 0 && !loadError" class="text-center py-6 text-sm text-[var(--c-text-3)]">
-          暂无新闻
+          {{ t('news.empty') }}
         </div>
       </div>
     </div>
@@ -154,7 +156,7 @@ onMounted(() => {
           class="w-[27px] h-[27px] mb-0.5"
           :class="{ 'brightness-0 saturate-100 invert-[48%] sepia-[79%] saturate-[2476%] hue-rotate-[86deg]': activeType === tab.type }"
         />
-        <span class="text-xs">{{ tab.label }}</span>
+        <span class="text-xs">{{ t(tab.labelKey) }}</span>
       </button>
     </div>
   </div>

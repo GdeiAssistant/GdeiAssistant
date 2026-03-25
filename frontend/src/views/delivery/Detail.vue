@@ -1,11 +1,18 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import {
+  createDeliverySizeOptions,
+  createDeliveryStatusMap,
+  createDeliveryTypeMap
+} from '../community/communityContent'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const item = ref(null)
 const detailType = ref(null)
 const trade = ref(null)
@@ -21,8 +28,8 @@ function showDialog(msg) {
 }
 
 function getStatusText(status) {
-  const map = { 0: '待接单', 1: '配送中', 2: '已完成' }
-  return map[status] || '未知'
+  const map = createDeliveryStatusMap(t)
+  return map[status] || t('delivery.unknownStatus')
 }
 
 function getStatusClass(status) {
@@ -33,13 +40,13 @@ function getStatusClass(status) {
 }
 
 function getTypeText(type) {
-  const map = { 'express': '代取快递', 'food': '买饭', 'other': '跑腿' }
-  return map[type] || '跑腿'
+  const map = createDeliveryTypeMap(t)
+  return map[type] || t('delivery.type.other')
 }
 
 function getSizeText(size) {
-  const map = { 'small': '小件(外卖/文件)', 'medium': '中件(鞋服)', 'large': '大件(重物)' }
-  return map[size] || '小件'
+  const map = Object.fromEntries(createDeliverySizeOptions(t).map((option) => [option.value, option.label]))
+  return map[size] || t('delivery.size.small')
 }
 
 function handleAccept() {
@@ -48,7 +55,7 @@ function handleAccept() {
   request.post('/delivery/acceptorder', null, { params: { orderId: item.value.orderId } })
     .then(() => {
       item.value.state = 1
-      showDialog('接单成功！')
+      showDialog(t('delivery.detail.acceptSuccess'))
       setTimeout(() => router.push('/delivery/mine'), 1500)
     })
     .catch(() => { accepting.value = false })
@@ -79,7 +86,7 @@ function handleComplete() {
   request.post(`/delivery/trade/id/${trade.value.tradeId}/finishtrade`)
     .then(() => {
       item.value.state = 2
-      showDialog('订单已完成！')
+      showDialog(t('delivery.detail.completeSuccess'))
       setTimeout(() => router.push('/delivery/mine'), 1500)
     })
     .catch(() => { completing.value = false })
@@ -98,9 +105,9 @@ onMounted(async () => {
         state: o.state,
         reward: o.price ?? 0,
         time: o.orderTime,
-        size: '小件',
+        size: 'small',
         type: 'express',
-        pickupAddress: o.company ? `${o.company} 取件` : '取件',
+        pickupAddress: o.company ? t('delivery.pickupAddressWithCompany', { company: o.company }) : t('delivery.pickupShort'),
         deliveryAddress: o.address || '',
         remarks: o.remarks,
         description: o.remarks,
@@ -120,7 +127,7 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: #f59e0b">
-    <CommunityHeader title="任务详情" moduleColor="#f59e0b" @back="router.back()" backTo="" />
+    <CommunityHeader :title="t('delivery.detail.title')" moduleColor="#f59e0b" @back="router.back()" backTo="" />
 
     <div v-if="item" class="p-4 animate-[slide-up_0.4s_ease_both]">
       <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-6">
@@ -136,51 +143,51 @@ onMounted(async () => {
         <!-- Route -->
         <div class="mb-5 p-4 bg-[var(--c-bg)] rounded-lg">
           <div class="flex items-start mb-4">
-            <span class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5 bg-blue-500">取</span>
+            <span class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5 bg-blue-500">{{ t('delivery.pickupBadge') }}</span>
             <div class="flex-1">
               <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ item.pickupAddress }}</div>
-              <div v-if="item.pickupCode && (detailType === 0 || detailType === 3)" class="text-base text-[var(--c-text-2)] mt-1">取件码：{{ item.pickupCode }}</div>
-              <div v-else-if="item.pickupCode" class="text-base text-[var(--c-text-2)] mt-1">取件码：***</div>
+              <div v-if="item.pickupCode && (detailType === 0 || detailType === 3)" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.pickupCode') }}{{ item.pickupCode }}</div>
+              <div v-else-if="item.pickupCode" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.pickupCode') }}***</div>
             </div>
           </div>
           <div class="flex items-start">
-            <span class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5 bg-amber-500">送</span>
+            <span class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5 bg-amber-500">{{ t('delivery.deliveryBadge') }}</span>
             <div class="flex-1">
               <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ item.deliveryAddress }}</div>
-              <div v-if="item.contactPhone && (detailType === 0 || detailType === 3)" class="text-base text-[var(--c-text-2)] mt-1">联系电话：{{ item.contactPhone }}</div>
-              <div v-else-if="item.contactPhone" class="text-base text-[var(--c-text-2)] mt-1">联系电话：***</div>
+              <div v-if="item.contactPhone && (detailType === 0 || detailType === 3)" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.contactPhone') }}{{ item.contactPhone }}</div>
+              <div v-else-if="item.contactPhone" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.contactPhone') }}***</div>
             </div>
           </div>
         </div>
 
         <!-- Pickup image -->
         <div v-if="item.pickupImage" class="mb-5 rounded-lg overflow-hidden bg-[var(--c-border)]">
-          <img :src="item.pickupImage" alt="取件凭证" class="w-full h-auto max-h-[300px] object-cover" />
+          <img :src="item.pickupImage" :alt="t('delivery.publish.pickupImage')" class="w-full h-auto max-h-[300px] object-cover" />
         </div>
 
         <!-- Info rows -->
         <div class="pt-4 border-t border-[var(--c-border)]">
           <!-- Role -->
           <div v-if="getUserRole()" class="flex items-center mb-4 pb-3 border-b border-[var(--c-border)]">
-            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">我的角色：</span>
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">{{ t('delivery.detail.myRole') }}</span>
             <div class="px-3.5 py-1.5 rounded-full text-[13px] font-medium" :class="getUserRole() === 'publisher' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'">
-              {{ getUserRole() === 'publisher' ? '发布者' : '接单者' }}
+              {{ getUserRole() === 'publisher' ? t('delivery.detail.publisherRole') : t('delivery.detail.runnerRole') }}
             </div>
           </div>
           <div class="flex items-center mb-3">
-            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">物品大小：</span>
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">{{ t('delivery.detail.sizeLabel') }}</span>
             <span class="flex-1 text-base text-[var(--c-text-1)]">{{ getSizeText(item.size) }}</span>
           </div>
           <div v-if="item.description" class="flex items-center mb-3">
-            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">备注说明：</span>
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">{{ t('delivery.detail.descriptionLabel') }}</span>
             <span class="flex-1 text-base text-[var(--c-text-1)]">{{ item.description }}</span>
           </div>
           <div class="flex items-center mb-3">
-            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">发布时间：</span>
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">{{ t('delivery.detail.publishTime') }}</span>
             <span class="flex-1 text-base text-[var(--c-text-1)]">{{ item.time }}</span>
           </div>
           <div class="flex items-center">
-            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">任务状态：</span>
+            <span class="text-base text-[var(--c-text-2)] min-w-[80px]">{{ t('delivery.detail.statusLabel') }}</span>
             <div class="px-3 py-1 rounded-full text-sm font-medium" :class="getStatusClass(item.status)">
               {{ getStatusText(item.status) }}
             </div>
@@ -196,7 +203,7 @@ onMounted(async () => {
             :disabled="accepting"
             @click="handleAccept"
           >
-            {{ accepting ? '接单中...' : '立即抢单' }}
+            {{ accepting ? t('delivery.detail.accepting') : t('delivery.detail.acceptAction') }}
           </button>
           <button
             v-if="canComplete()"
@@ -205,7 +212,7 @@ onMounted(async () => {
             :disabled="completing"
             @click="showCompleteConfirm"
           >
-            {{ completing ? '确认中...' : '确认完成' }}
+            {{ completing ? t('delivery.detail.completing') : t('delivery.detail.completeAction') }}
           </button>
         </div>
       </div>
@@ -214,21 +221,21 @@ onMounted(async () => {
     <!-- Info dialog -->
     <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
     <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
-      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">提示</div>
+      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
       <div class="border-t border-[var(--c-border)] flex">
-        <a href="javascript:;" class="flex-1 text-center py-3 text-amber-500 font-medium no-underline" @click="dialogVisible = false">确定</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-amber-500 font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
       </div>
     </div>
 
     <!-- Complete confirmation dialog -->
     <div v-if="confirmCompleteVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="confirmCompleteVisible = false"></div>
     <div v-if="confirmCompleteVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
-      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">确认完成</div>
-      <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">确定要完成这个订单吗？完成后将无法撤销。</div>
+      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('delivery.detail.completeConfirmTitle') }}</div>
+      <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ t('delivery.detail.completeConfirmMessage') }}</div>
       <div class="border-t border-[var(--c-border)] flex">
-        <a href="javascript:;" class="flex-1 text-center py-3 text-[var(--c-text-2)] no-underline border-r border-[var(--c-border)]" @click="confirmCompleteVisible = false">取消</a>
-        <a href="javascript:;" class="flex-1 text-center py-3 text-amber-500 font-medium no-underline" @click="handleComplete">确定</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-[var(--c-text-2)] no-underline border-r border-[var(--c-border)]" @click="confirmCompleteVisible = false">{{ t('common.cancel') }}</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-amber-500 font-medium no-underline" @click="handleComplete">{{ t('common.confirm') }}</a>
       </div>
     </div>
   </div>

@@ -36,6 +36,6 @@ export function isMockMode() {
   return getDataSourceMode() === DATA_SOURCE_MODES.mock
 }
 
-export function getDataSourceLabel() {
-  return isMockMode() ? 'Mock 数据源' : '远程数据源'
+export function getDataSourceLabel(isMock = isMockMode(), t = (key) => key) {
+  return isMock ? t('dataSource.mock') : t('dataSource.remote')
 }

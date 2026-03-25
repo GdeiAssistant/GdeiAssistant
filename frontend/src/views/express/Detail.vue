@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { useToast } from '@/composables/useToast'
@@ -8,6 +9,7 @@ import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const { success: toastSuccess } = useToast()
 const item = ref(null)
 const comments = ref([])
@@ -49,7 +51,7 @@ function showSuccess(msg) {
 function confirmGuess() {
   const guessName = guessInputValue.value && guessInputValue.value.trim()
   if (!guessName) {
-    showErrorTopTips('请输入你猜的真实姓名')
+    showErrorTopTips(t('express.guessRequired'))
     return
   }
   request.post(`/express/id/${item.value.id}/guess`, null, { params: { name: guessName } })
@@ -57,9 +59,9 @@ function confirmGuess() {
       const correct = res?.data === true
       if (correct) {
         item.value.correctCount = (item.value.correctCount || 0) + 1
-        showSuccess('恭喜你，猜对了！')
+        showSuccess(t('express.guessCorrect'))
       } else {
-        showErrorTopTips('猜错了，再试试看吧！')
+        showErrorTopTips(t('express.guessWrong'))
       }
       item.value.guessCount = (item.value.guessCount || 0) + 1
     })
@@ -71,7 +73,7 @@ function confirmGuess() {
 function handleGuess() {
   // 拦截无效的猜测点击
   if (!item.value.canGuess) {
-    showErrorTopTips('TA很神秘，没有留下真名让人猜哦~')
+    showErrorTopTips(t('express.guessUnavailable'))
     return
   }
   openGuessDialog()
@@ -79,11 +81,11 @@ function handleGuess() {
 
 function submitComment() {
   if (!commentInput.value || commentInput.value.trim() === '') {
-    showErrorTopTips('请输入评论内容')
+    showErrorTopTips(t('express.detail.commentRequired'))
     return
   }
   if (commentInput.value.trim().length > 50) {
-    showErrorTopTips('评论不能超过50字')
+    showErrorTopTips(t('express.detail.commentTooLong'))
     return
   }
   submitting.value = true
@@ -91,9 +93,9 @@ function submitComment() {
     .then(() => {
       comments.value.push({
         id: comments.value.length + 1,
-        nickname: '我',
+        nickname: t('express.detail.me'),
         comment: commentInput.value.trim(),
-        publishTime: '刚刚'
+        publishTime: t('express.justNow')
       })
       commentInput.value = ''
       item.value.commentCount = (item.value.commentCount || 0) + 1
@@ -136,7 +138,7 @@ async function loadComments() {
     const raw = res?.data || []
     comments.value = Array.isArray(raw) ? raw.map((c) => ({
       id: c.id,
-      nickname: c.nickname || '匿名',
+      nickname: c.nickname || t('topic.anonymousUser'),
       comment: c.comment,
       publishTime: c.publishTime || c.createTime || ''
     })) : []
@@ -155,7 +157,7 @@ onMounted(async () => {
 
 <template>
   <div class="bg-[var(--c-bg)] pb-[60px]">
-    <CommunityHeader title="表白详情" moduleColor="#f43f5e" backTo="/express/home" />
+    <CommunityHeader :title="t('express.detail.title')" moduleColor="#f43f5e" backTo="/express/home" />
 
     <!-- 主体容器 -->
     <div class="p-4 pb-[60px]">
@@ -172,7 +174,7 @@ onMounted(async () => {
         </div>
 
         <div class="text-right text-xs text-[var(--c-text-3)] px-4 pb-4">
-          {{ item.time || '刚刚' }}
+          {{ item.time || t('express.justNow') }}
         </div>
 
         <div class="flex border-t border-[var(--c-border)] py-2.5">
@@ -204,9 +206,9 @@ onMounted(async () => {
 
       <!-- 评论区 -->
       <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-4 mb-5">
-        <h3 class="text-base font-medium text-[var(--c-text-1)] mb-4">评论列表</h3>
+        <h3 class="text-base font-medium text-[var(--c-text-1)] mb-4">{{ t('express.detail.commentList') }}</h3>
         <div v-if="comments.length === 0" class="text-center py-10 text-[var(--c-text-3)] text-sm">
-          <p>暂无评论，快来抢沙发吧！</p>
+          <p>{{ t('express.detail.commentEmpty') }}</p>
         </div>
         <div v-else class="flex flex-col gap-4">
           <div
@@ -215,7 +217,7 @@ onMounted(async () => {
             class="border-b border-[var(--c-border)] pb-4 last:border-b-0 last:pb-0"
           >
             <div class="flex items-center gap-2.5 mb-1">
-              <span class="px-2 py-0.5 bg-[var(--c-bg)] text-[var(--c-text-1)] text-xs rounded">{{ index + 1 }}楼</span>
+              <span class="px-2 py-0.5 bg-[var(--c-bg)] text-[var(--c-text-1)] text-xs rounded">{{ t('express.detail.floor', { index: index + 1 }) }}</span>
               <span class="text-[var(--c-text-3)] text-xs">{{ comment.nickname }}</span>
             </div>
             <p class="mt-2.5 mb-1 pl-8 text-sm text-[var(--c-text-1)] leading-relaxed break-words">{{ comment.comment }}</p>
@@ -228,19 +230,19 @@ onMounted(async () => {
     <!-- 猜名字 Dialog -->
     <div v-if="guessDialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="guessDialogVisible = false"></div>
     <div v-if="guessDialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
-      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">猜名字</div>
+      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('express.guessDialogTitle') }}</div>
       <div class="px-5 pb-4">
         <input
           type="text"
           class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[#f43f5e] focus:ring-2 focus:ring-[#f43f5e]/10"
-          placeholder="请输入你猜的真实姓名："
+          :placeholder="t('express.guessPlaceholder')"
           v-model="guessInputValue"
           @keyup.enter="confirmGuess"
         />
       </div>
       <div class="flex border-t border-[var(--c-border)]">
-        <button class="flex-1 py-3 text-center text-sm text-[var(--c-text-2)] bg-transparent border-none border-r border-[var(--c-border)] cursor-pointer" @click="guessDialogVisible = false">取消</button>
-        <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="confirmGuess">确定</button>
+        <button class="flex-1 py-3 text-center text-sm text-[var(--c-text-2)] bg-transparent border-none border-r border-[var(--c-border)] cursor-pointer" @click="guessDialogVisible = false">{{ t('common.cancel') }}</button>
+        <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="confirmGuess">{{ t('common.confirm') }}</button>
       </div>
     </div>
 
@@ -249,7 +251,7 @@ onMounted(async () => {
       <input
         type="text"
         class="flex-1 h-9 px-3 border border-[var(--c-border)] rounded-full text-sm outline-none text-[var(--c-text-1)] bg-[var(--c-bg)] focus:border-[#f43f5e]"
-        placeholder="我想说..."
+        :placeholder="t('express.detail.commentPlaceholder')"
         v-model="commentInput"
         @keyup.enter="submitComment"
       />
@@ -259,7 +261,7 @@ onMounted(async () => {
         :disabled="submitting"
         @click="submitComment"
       >
-        {{ submitting ? '发送中...' : '发送' }}
+        {{ submitting ? t('express.detail.sending') : t('express.detail.send') }}
       </button>
     </div>
   </div>

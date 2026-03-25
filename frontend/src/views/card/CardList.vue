@@ -1,11 +1,14 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { queryCardRecord } from '@/api/card'
 import { useToast } from '@/composables/useToast'
+import { formatCardAmount } from './cardContent'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
 const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const list = ref([])
@@ -32,13 +35,13 @@ function parseDateToPayload(dateStr) {
 function fetchList() {
   const payload = parseDateToPayload(queryDate.value)
   if (!payload) {
-    showError('查询日期格式不正确，请重新选择')
+    showError(t('card.list.invalidDate'))
     list.value = []
     return
   }
 
   loading.value = true
-  showLoading('加载中')
+  showLoading(t('common.loading'))
   queryCardRecord(payload)
     .then((res) => {
       const body = res && res.data ? res.data : res
@@ -75,10 +78,7 @@ function isPositive(amount) {
 }
 
 function amountText(amount) {
-  const n = parseFloat(amount)
-  if (isNaN(n)) return String(amount)
-  if (n >= 0) return `+${n}元`
-  return `${n}元`
+  return formatCardAmount(amount, t)
 }
 
 onMounted(() => {
@@ -94,19 +94,19 @@ onMounted(() => {
   <div class="min-h-screen bg-[var(--c-bg)]">
     <template v-if="queryDate">
       <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
-        <span class="flex-1 text-center text-sm font-bold">消费记录</span>
+        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
+        <span class="flex-1 text-center text-sm font-bold">{{ t('card.action.records.title') }}</span>
         <div class="w-10"></div>
       </div>
 
       <div class="max-w-lg mx-auto px-4 py-6">
         <div class="text-sm text-[var(--c-text-2)] mb-4">
-          查询日期：<span class="font-medium text-[var(--c-text)]">{{ formatDisplayDate(queryDate) }}</span>
+          {{ t('card.list.queryDate') }}<span class="font-medium text-[var(--c-text)]">{{ formatDisplayDate(queryDate) }}</span>
         </div>
 
         <!-- Empty state -->
         <div v-if="!loading && list.length === 0" class="text-center py-12 text-sm text-[var(--c-text-3)]">
-          当日暂无消费记录
+          {{ t('card.list.empty') }}
         </div>
 
         <!-- Transaction list -->
@@ -118,7 +118,7 @@ onMounted(() => {
             :class="{ 'border-b border-[var(--c-border-light)]': index < list.length - 1 }"
           >
             <div class="min-w-0 flex-1">
-              <div class="text-sm font-medium truncate">{{ item.merchantName || '未知商户' }} <span class="text-[var(--c-text-3)]">{{ item.tradeName || '' }}</span></div>
+              <div class="text-sm font-medium truncate">{{ item.merchantName || t('card.list.unknownMerchant') }} <span class="text-[var(--c-text-3)]">{{ item.tradeName || '' }}</span></div>
               <div class="text-xs text-[var(--c-text-3)] mt-0.5">{{ item.tradeTime || '' }}</div>
             </div>
             <div class="shrink-0 ml-3 font-mono text-sm font-semibold"
@@ -131,7 +131,7 @@ onMounted(() => {
           type="button"
           class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
           @click="reQuery"
-        >重新查询</button>
+        >{{ t('card.list.retry') }}</button>
       </div>
     </template>
   </div>

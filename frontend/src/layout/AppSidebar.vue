@@ -1,11 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Home, Bell, Settings, Info, ChevronRight } from 'lucide-vue-next'
+import { useI18n } from 'vue-i18n'
+import { ChevronRight } from 'lucide-vue-next'
 import { getCurrentUserProfile } from '@/api/user'
+import { createFooterItems, createNavItems } from './navigation'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
 
 const profile = ref(null)
 
@@ -16,15 +19,8 @@ onMounted(async () => {
   } catch (_) {}
 })
 
-const navItems = [
-  { label: '首页', icon: Home, path: '/home' },
-  { label: '消息通知', icon: Bell, path: '/info' },
-]
-
-const footerItems = [
-  { label: '设置', icon: Settings, path: '/settings' },
-  { label: '关于', icon: Info, path: '/about' },
-]
+const navItems = computed(() => createNavItems(t))
+const footerItems = computed(() => createFooterItems(t))
 
 function isActive(path) {
   return route.path.startsWith(path)
@@ -35,7 +31,7 @@ function navigate(path) {
 }
 
 function avatarInitial() {
-  const name = profile.value?.nickname || profile.value?.username || '用'
+  const name = profile.value?.nickname || profile.value?.username || t('sidebar.notLoggedIn')
   return name.charAt(0)
 }
 </script>
@@ -47,7 +43,7 @@ function avatarInitial() {
       <div class="w-8 h-8 rounded-lg bg-[var(--c-primary)] flex items-center justify-center text-white font-bold text-sm shrink-0">
         G
       </div>
-      <span class="text-base font-semibold text-[var(--c-text-1)] truncate">广东二师助手</span>
+      <span class="text-base font-semibold text-[var(--c-text-1)] truncate">{{ $t('about.appName') }}</span>
     </div>
 
     <!-- Primary nav -->
@@ -94,7 +90,7 @@ function avatarInitial() {
         </div>
         <div class="flex-1 min-w-0">
           <p class="text-sm font-semibold text-[var(--c-text-1)] truncate">
-            {{ profile?.nickname || profile?.username || '未登录' }}
+            {{ profile?.nickname || profile?.username || $t('sidebar.notLoggedIn') }}
           </p>
         </div>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-3)] shrink-0" />

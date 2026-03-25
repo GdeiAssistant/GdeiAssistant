@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
@@ -7,6 +8,7 @@ import { useToast } from '@/composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const { success: toastSuccess, loading: toastLoading, hideLoading } = useToast()
 const topicTag = ref('')
 const content = ref('')
@@ -24,16 +26,16 @@ function showDialog(msg) {
 function onFileChange(e) {
   const files = Array.from(e.target.files)
   if (images.value.length + files.length > 9) {
-    showDialog('最多只能上传9张图片')
+    showDialog(t('topic.publish.imageLimit'))
     return
   }
   files.forEach(file => {
     if (!file.type.startsWith('image/')) {
-      showDialog('只能上传图片文件')
+      showDialog(t('topic.publish.invalidImageType'))
       return
     }
     if (file.size > 5 * 1024 * 1024) {
-      showDialog('图片大小不能超过5MB')
+      showDialog(t('topic.publish.imageTooLarge'))
       return
     }
     imageFiles.value.push(file)
@@ -48,15 +50,15 @@ function removeImage(index) {
 
 async function submit() {
   if (!topicTag.value || !topicTag.value.trim()) {
-    showDialog('请输入话题标签')
+    showDialog(t('topic.publish.topicRequired'))
     return
   }
   if (!content.value || !content.value.trim()) {
-    showDialog('请输入内容')
+    showDialog(t('topic.publish.contentRequired'))
     return
   }
   if (content.value.trim().length > 250) {
-    showDialog('内容不能超过250字')
+    showDialog(t('topic.publish.contentTooLong'))
     return
   }
 
@@ -64,7 +66,7 @@ async function submit() {
   const topic = topicTag.value.trim()
   const contentVal = content.value.trim()
   const count = imageFiles.value.length
-  toastLoading(count > 0 ? '正在上传...' : '正在发布...')
+  toastLoading(count > 0 ? t('topic.publish.uploading') : t('topic.publish.publishing'))
   try {
     const imageKeys = count > 0 ? await uploadFilesByPresignedUrl(imageFiles.value) : []
     const fd = new FormData()
@@ -74,7 +76,7 @@ async function submit() {
     imageKeys.forEach((imageKey) => fd.append('imageKeys', imageKey))
     await request.post('/topic', fd)
     hideLoading()
-    toastSuccess('发布成功')
+    toastSuccess(t('topic.publish.publishSuccess'))
     setTimeout(() => router.push('/topic/home'), 1500)
   } catch (_) {
     submitting.value = false
@@ -85,7 +87,7 @@ async function submit() {
 
 <template>
   <div class="bg-[var(--c-bg)] min-h-screen pb-16">
-    <CommunityHeader title="发布话题" moduleColor="#6366f1" @back="router.back()" backTo="">
+    <CommunityHeader :title="t('topic.publish.title')" moduleColor="#6366f1" @back="router.back()" backTo="">
       <template #right>
         <button
           type="button"
@@ -93,7 +95,7 @@ async function submit() {
           :disabled="submitting"
           @click="submit"
         >
-          {{ submitting ? '提交中...' : '提交' }}
+          {{ submitting ? t('topic.publish.submitting') : t('topic.publish.submitAction') }}
         </button>
       </template>
     </CommunityHeader>
@@ -105,7 +107,7 @@ async function submit() {
         <input
           type="text"
           class="flex-1 border-none outline-none text-sm text-[var(--c-text-1)] bg-transparent"
-          placeholder="请输入你的话题"
+          :placeholder="t('topic.publish.topicPlaceholder')"
           v-model="topicTag"
           maxlength="20"
         />
@@ -115,7 +117,7 @@ async function submit() {
       <div class="relative bg-[var(--c-surface)] rounded-lg p-4 mb-4">
         <textarea
           class="w-full border-none outline-none text-base text-[var(--c-text-1)] leading-relaxed resize-none bg-transparent min-h-[200px]"
-          placeholder="请输入你的内容..."
+          :placeholder="t('topic.publish.contentPlaceholder')"
           v-model="content"
           maxlength="250"
           rows="8"
@@ -151,7 +153,7 @@ async function submit() {
               class="hidden"
             />
             <span class="text-[32px] text-[var(--c-text-3)] mb-1">+</span>
-            <span class="text-xs text-[var(--c-text-3)]">添加图片</span>
+            <span class="text-xs text-[var(--c-text-3)]">{{ t('topic.publish.addImage') }}</span>
           </div>
         </div>
       </div>
@@ -160,10 +162,10 @@ async function submit() {
     <!-- 提示对话框 -->
     <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
     <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
-      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">提示</div>
+      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
       <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
       <div class="flex border-t border-[var(--c-border)]">
-        <a href="javascript:;" class="flex-1 py-3 text-center text-sm text-[#6366f1] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">确定</a>
+        <a href="javascript:;" class="flex-1 py-3 text-center text-sm text-[#6366f1] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
       </div>
     </div>
   </div>

@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useToast } from '@/composables/useToast'
 import { AlertTriangle } from 'lucide-vue-next'
 
 const router = useRouter()
+const { t } = useI18n()
 const { success: toastSuccess } = useToast()
 const agreed = ref(false)
 const showConfirmDialog = ref(false)
@@ -26,7 +28,7 @@ async function handleConfirmDelete() {
 
   try {
     await request.post('/close/submit')
-    toastSuccess('账号已注销')
+    toastSuccess(t('deleteAccount.success'))
 
     // 清除登录态
     localStorage.clear()
@@ -47,8 +49,8 @@ async function handleConfirmDelete() {
   <div class="min-h-screen bg-gray-50 pb-6">
     <!-- Sticky Header -->
     <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">返回</button>
-      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">注销账户</h1>
+      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">{{ t('common.back') }}</button>
+      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">{{ t('profile.deleteAccount') }}</h1>
       <div class="w-15"></div>
     </div>
 
@@ -56,21 +58,21 @@ async function handleConfirmDelete() {
       <!-- Warning header -->
       <div class="bg-white rounded-xl shadow-sm p-8 text-center mb-3">
         <div class="text-6xl text-red-500 mb-5"><AlertTriangle class="w-16 h-16 mx-auto" /></div>
-        <h2 class="text-lg font-semibold text-gray-800 leading-snug">将注销您的广东第二师范学院助手账号</h2>
+        <h2 class="text-lg font-semibold text-gray-800 leading-snug">{{ t('deleteAccount.warningTitle') }}</h2>
       </div>
 
       <!-- Risk list -->
       <div class="bg-white rounded-xl shadow-sm p-5 mb-3">
-        <p class="text-[15px] font-medium text-gray-800 mb-4">注销后，以下信息将被永久删除且无法恢复：</p>
+        <p class="text-[15px] font-medium text-gray-800 mb-4">{{ t('deleteAccount.riskTitle') }}</p>
         <ul class="space-y-2 mb-4">
-          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">账号及所有个人资料将被清空</li>
-          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">表白墙、话题、跑腿等所有发布内容将被永久删除</li>
-          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">所有互动记录（评论、点赞等）将被清除</li>
-          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">自定义课程以及保存的四六级准考证号信息将被删除</li>
-          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">社交功能平台的用户数据和交易记录将被清空</li>
-          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">绑定的手机号、邮箱地址等身份信息将被删除</li>
+          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">{{ t('deleteAccount.risk.account') }}</li>
+          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">{{ t('deleteAccount.risk.posts') }}</li>
+          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">{{ t('deleteAccount.risk.interactions') }}</li>
+          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">{{ t('deleteAccount.risk.academic') }}</li>
+          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">{{ t('deleteAccount.risk.community') }}</li>
+          <li class="text-sm text-gray-500 leading-relaxed pl-5 relative before:content-['•'] before:absolute before:left-0 before:text-gray-500 before:font-bold">{{ t('deleteAccount.risk.identity') }}</li>
         </ul>
-        <p class="text-[13px] text-red-500 font-medium pt-4 border-t border-gray-100">注销操作不可逆，请谨慎操作。</p>
+        <p class="text-[13px] text-red-500 font-medium pt-4 border-t border-gray-100">{{ t('deleteAccount.irreversible') }}</p>
       </div>
 
       <!-- Agreement checkbox -->
@@ -84,7 +86,7 @@ async function handleConfirmDelete() {
             />
             <div class="w-5 h-5 border border-gray-300 rounded bg-white peer-checked:bg-green-500 peer-checked:border-green-500 flex items-center justify-center after:content-[''] after:hidden peer-checked:after:block after:w-[5px] after:h-[10px] after:border-white after:border-r-2 after:border-b-2 after:rotate-45 after:-mt-0.5"></div>
           </div>
-          <span class="text-sm text-gray-700 leading-relaxed">我已充分阅读并同意上述注销后果</span>
+          <span class="text-sm text-gray-700 leading-relaxed">{{ t('deleteAccount.agreement') }}</span>
         </label>
       </div>
 
@@ -98,9 +100,9 @@ async function handleConfirmDelete() {
       >
         <template v-if="deleting">
           <span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></span>
-          注销中...
+          {{ t('deleteAccount.deleting') }}
         </template>
-        <template v-else>确认注销</template>
+        <template v-else>{{ t('deleteAccount.confirm') }}</template>
       </button>
     </div>
 
@@ -110,22 +112,22 @@ async function handleConfirmDelete() {
         <div class="fixed inset-0 bg-black/60 z-[1000]" @click="handleCancel"></div>
         <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[300px] bg-white rounded-xl z-[1001] overflow-hidden">
           <div class="px-5 pt-5 pb-2.5 text-center">
-            <strong class="text-[17px] font-medium text-gray-700">最后确认</strong>
+            <strong class="text-[17px] font-medium text-gray-700">{{ t('deleteAccount.finalConfirmTitle') }}</strong>
           </div>
           <div class="px-5 pb-5 text-center text-[15px] text-gray-500 leading-relaxed">
-            注销操作不可逆，确定要永久删除该账号吗？
+            {{ t('deleteAccount.finalConfirmDescription') }}
           </div>
           <div class="flex border-t border-gray-200">
             <button
               type="button"
               class="flex-1 py-3.5 text-center text-[17px] text-gray-700 border-r border-gray-200 cursor-pointer bg-transparent"
               @click="handleCancel"
-            >取消</button>
+            >{{ t('common.cancel') }}</button>
             <button
               type="button"
               class="flex-1 py-3.5 text-center text-[17px] text-red-500 font-medium cursor-pointer bg-transparent"
               @click="handleConfirmDelete"
-            >残忍注销</button>
+            >{{ t('deleteAccount.finalConfirmAction') }}</button>
           </div>
         </div>
       </template>

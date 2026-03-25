@@ -30,7 +30,8 @@
     "hint": "お知らせ",
     "noData": "データがありません",
     "loadingRegions": "地域リストを読み込み中です。しばらくお待ちください...",
-    "recentUpdate": "最近の更新"
+    "recentUpdate": "最近の更新",
+    "back": "戻る"
   },
   "tab": {
     "home": "ホーム",
@@ -128,6 +129,11 @@
   },
   "router": {
     "siteTitle": "広東第二師範学院キャンパスアシスタント"
+  },
+  "sidebar": {
+    "settings": "設定",
+    "about": "このアプリについて",
+    "notLoggedIn": "未ログイン"
   },
   "about": {
     "appName": "広東二師アシスタント",
@@ -236,6 +242,10 @@
       "exportStarted": "エクスポート依頼を送信しました。しばらくしてからダウンロードしてください。",
       "downloadStarted": "ダウンロードを開始しました"
     }
+  },
+  "locationPicker": {
+    "title": "地域を選択",
+    "selectFirst": "先に選択してください"
   },
   "graduateExam": {
     "title": "大学院入試成績照会",

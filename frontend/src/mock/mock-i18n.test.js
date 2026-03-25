@@ -29,7 +29,7 @@ describe('mock i18n', () => {
 
   it('localizes option and status values used by mock profile and community data', () => {
     expect(localizeMockValue(['校园代步', '教育学院', '待接单'], 'en')).toEqual([
-      'Campus Ride',
+      'Campus Transportation',
       'School of Education',
       'Pending'
     ])

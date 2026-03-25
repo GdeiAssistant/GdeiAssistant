@@ -43,8 +43,8 @@ public class ProfileResponseMapper {
         vo.setUsername(profile.getUsername());
         vo.setNickname(profile.getNickname());
         vo.setEnrollment(profile.getEnrollment() != null ? String.valueOf(profile.getEnrollment()) : null);
-        vo.setFaculty(profileLocalizationService.buildFacultyValue(profile.getFaculty(), language));
-        vo.setMajor(profileLocalizationService.buildMajorValue(profile.getFaculty(), profile.getMajor(), language));
+        vo.setFacultyCode(profile.getFaculty());
+        vo.setMajorCode(profileLocalizationService.resolveMajorCode(profile.getFaculty(), profile.getMajor()));
         // Avatar
         String avatarUrl = userProfileService.getSelfUserAvatar(sessionId);
         vo.setAvatar(StringUtils.isBlank(avatarUrl) ? "" : avatarUrl);
@@ -59,17 +59,18 @@ public class ProfileResponseMapper {
                     .atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()));
         }
         // Location & hometown
-        vo.setLocation(profileLocalizationService.buildLocationValue(profile, false, language));
-        vo.setHometown(profileLocalizationService.buildLocationValue(profile, true, language));
+        vo.setLocation(profileLocalizationService.buildLocationValue(profile, false));
+        vo.setHometown(profileLocalizationService.buildLocationValue(profile, true));
         // IP area
-        enrichIpArea(vo, sessionId);
+        enrichIpArea(vo, sessionId, language);
         return vo;
     }
 
-    private void enrichIpArea(UserProfileVO vo, String sessionId) {
+    private void enrichIpArea(UserProfileVO vo, String sessionId, String language) {
         try {
             IPAddressRecord ipRecord = ipAddressService.getSelfUserLatestPostTypeIPAddress(sessionId);
-            vo.setIpArea(ipRecord != null && StringUtils.isNotBlank(ipRecord.getArea()) ? ipRecord.getArea() : "");
+            String area = ipRecord != null && StringUtils.isNotBlank(ipRecord.getArea()) ? ipRecord.getArea() : "";
+            vo.setIpArea(profileLocalizationService.localizeText(area, language));
         } catch (Exception ignored) {
             vo.setIpArea("");
         }

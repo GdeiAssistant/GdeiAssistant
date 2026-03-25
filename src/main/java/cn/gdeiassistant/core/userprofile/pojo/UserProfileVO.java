@@ -10,8 +10,8 @@ public class UserProfileVO implements Serializable {
     private String username;
     private String nickname;
     private String avatar;
-    private ProfileFacultyValueVO faculty;
-    private ProfileMajorValueVO major;
+    private Integer facultyCode;
+    private String majorCode;
     private String enrollment;
     private ProfileLocationValueVO location;
     private ProfileLocationValueVO hometown;
@@ -26,10 +26,10 @@ public class UserProfileVO implements Serializable {
     public void setNickname(String nickname) { this.nickname = nickname; }
     public String getAvatar() { return avatar; }
     public void setAvatar(String avatar) { this.avatar = avatar; }
-    public ProfileFacultyValueVO getFaculty() { return faculty; }
-    public void setFaculty(ProfileFacultyValueVO faculty) { this.faculty = faculty; }
-    public ProfileMajorValueVO getMajor() { return major; }
-    public void setMajor(ProfileMajorValueVO major) { this.major = major; }
+    public Integer getFacultyCode() { return facultyCode; }
+    public void setFacultyCode(Integer facultyCode) { this.facultyCode = facultyCode; }
+    public String getMajorCode() { return majorCode; }
+    public void setMajorCode(String majorCode) { this.majorCode = majorCode; }
     public String getEnrollment() { return enrollment; }
     public void setEnrollment(String enrollment) { this.enrollment = enrollment; }
     public ProfileLocationValueVO getLocation() { return location; }

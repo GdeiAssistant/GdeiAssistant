@@ -13,7 +13,7 @@ import {
 } from 'lucide-vue-next'
 
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const keyword = ref('')
 const scrollContainer = ref(null)
 const { toast } = useToast()
@@ -43,7 +43,7 @@ const fetchHomeData = async (page) => {
 
 const { items: list, loading, finished, refreshing, pullY, loadData, handleScroll, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchHomeData)
 const pullMessages = computed(() => createCommunityPullMessages(t))
-const categoryNames = computed(() => createMarketplaceCategoryNames(t))
+const categoryNames = computed(() => createMarketplaceCategoryNames(locale.value))
 
 const categories = [
   { icon: Bike, typeId: 0 },

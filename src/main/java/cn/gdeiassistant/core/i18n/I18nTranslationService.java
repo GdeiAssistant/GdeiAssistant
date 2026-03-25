@@ -59,6 +59,24 @@ public class I18nTranslationService {
         }
     }
 
+    public String translate(String text, String targetLang) {
+        if (text == null || text.isBlank() || targetLang == null || targetLang.isBlank()) {
+            return null;
+        }
+
+        String cached = getCachedTranslation(text, targetLang);
+        if (cached != null) {
+            return cached;
+        }
+
+        String translated = callDeepL(text, targetLang);
+        if (translated != null && !translated.isBlank()) {
+            storeInCache(text, targetLang, translated);
+            return translated;
+        }
+        return null;
+    }
+
     public void enqueueTranslation(String text, String targetLang) {
         if (text == null || text.isBlank() || targetLang == null) return;
 

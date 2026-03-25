@@ -1,23 +1,17 @@
 package cn.gdeiassistant.core.userProfile.service;
 
-import cn.gdeiassistant.common.constant.OptionConstantUtils;
-import cn.gdeiassistant.common.pojo.Entity.City;
 import cn.gdeiassistant.common.pojo.Entity.Region;
-import cn.gdeiassistant.common.pojo.Entity.State;
 import cn.gdeiassistant.common.tools.Utils.LocationUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.i18n.I18nTranslationService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
-import cn.gdeiassistant.core.userProfile.pojo.ProfileFacultyValueVO;
 import cn.gdeiassistant.core.userProfile.pojo.ProfileLocationValueVO;
-import cn.gdeiassistant.core.userProfile.pojo.ProfileMajorValueVO;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ProfileLocalizationService {
@@ -66,25 +60,18 @@ public class ProfileLocalizationService {
         }
     }
 
-    public ProfileFacultyValueVO buildFacultyValue(Integer facultyCode, String language) {
-        if (facultyCode == null || facultyCode <= 0 || facultyCode >= OptionConstantUtils.FACULTY_OPTIONS.length) {
-            return null;
-        }
-        return new ProfileFacultyValueVO(facultyCode, localizeText(OptionConstantUtils.FACULTY_OPTIONS[facultyCode], language));
-    }
-
-    public ProfileMajorValueVO buildMajorValue(Integer facultyCode, String storedMajorValue, String language) {
+    public String resolveMajorCode(Integer facultyCode, String storedMajorValue) {
         if (facultyCode == null || facultyCode <= 0 || StringUtils.isBlank(storedMajorValue)) {
             return null;
         }
         ProfileMajorCatalog.MajorDefinition major = ProfileMajorCatalog.resolveForFaculty(facultyCode, storedMajorValue);
         if (major == null) {
-            return new ProfileMajorValueVO(storedMajorValue, localizeText(storedMajorValue, language));
+            return storedMajorValue;
         }
-        return new ProfileMajorValueVO(major.getCode(), localizeText(major.getLabel(), language));
+        return major.getCode();
     }
 
-    public ProfileLocationValueVO buildLocationValue(ProfileVO profile, boolean hometown, String language) {
+    public ProfileLocationValueVO buildLocationValue(ProfileVO profile, boolean hometown) {
         if (profile == null) {
             return null;
         }
@@ -94,56 +81,26 @@ public class ProfileLocalizationService {
         if (StringUtils.isBlank(regionCode)) {
             return null;
         }
-        return buildLocationValue(regionCode, stateCode, cityCode, language);
+        return new ProfileLocationValueVO(regionCode, stateCode, cityCode);
     }
 
-    public ProfileLocationValueVO buildLocationValue(String regionCode, String stateCode, String cityCode, String language) {
-        Region region = LocationUtils.getRegionMap().get(regionCode);
-        if (region == null) {
-            return null;
-        }
-        State state = region.getStateMap() != null ? region.getStateMap().get(stateCode) : null;
-        City city = state != null && state.getCityMap() != null ? state.getCityMap().get(cityCode) : null;
-
-        List<String> parts = new ArrayList<>();
-        appendLocationPart(parts, baseLocationName(region.getAliasesName(), region.getName()), language);
-        appendLocationPart(parts, state != null ? baseLocationName(state.getAliasesName(), state.getName()) : null, language);
-        appendLocationPart(parts, city != null ? baseLocationName(city.getAliasesName(), city.getName()) : null, language);
-
-        return new ProfileLocationValueVO(regionCode, stateCode, cityCode, joinLocationParts(parts, normalizeLanguage(language)));
-    }
-
-    public List<Region> buildLocalizedRegions(String language) {
-        List<Region> regions = new ArrayList<>();
+    public List<ProfileRegionNodeVO> buildRegionTree() {
+        List<ProfileRegionNodeVO> regions = new ArrayList<>();
         for (Region sourceRegion : LocationUtils.getRegionMap().values()) {
-            Region region = new Region();
-            region.setCode(sourceRegion.getCode());
-            region.setIso(sourceRegion.getIso());
-            region.setName(localizeText(baseLocationName(sourceRegion.getAliasesName(), sourceRegion.getName()), language));
-            region.setAliasesName(null);
-
-            java.util.LinkedHashMap<String, State> states = new java.util.LinkedHashMap<>();
-            for (Map.Entry<String, State> stateEntry : sourceRegion.getStateMap().entrySet()) {
-                State sourceState = stateEntry.getValue();
-                State state = new State();
-                state.setCode(sourceState.getCode());
-                state.setName(localizeText(baseLocationName(sourceState.getAliasesName(), sourceState.getName()), language));
-                state.setAliasesName(null);
-
-                java.util.LinkedHashMap<String, City> cities = new java.util.LinkedHashMap<>();
-                for (Map.Entry<String, City> cityEntry : sourceState.getCityMap().entrySet()) {
-                    City sourceCity = cityEntry.getValue();
-                    City city = new City();
-                    city.setCode(sourceCity.getCode());
-                    city.setName(localizeText(baseLocationName(sourceCity.getAliasesName(), sourceCity.getName()), language));
-                    city.setAliasesName(null);
-                    cities.put(city.getCode(), city);
+            List<ProfileRegionNodeVO> states = new ArrayList<>();
+            if (sourceRegion.getStateMap() != null) {
+                for (var stateEntry : sourceRegion.getStateMap().entrySet()) {
+                    var sourceState = stateEntry.getValue();
+                    List<ProfileRegionNodeVO> cities = new ArrayList<>();
+                    if (sourceState.getCityMap() != null) {
+                        for (var cityEntry : sourceState.getCityMap().entrySet()) {
+                            cities.add(new ProfileRegionNodeVO(cityEntry.getValue().getCode(), List.of()));
+                        }
+                    }
+                    states.add(new ProfileRegionNodeVO(sourceState.getCode(), cities));
                 }
-                state.setCityMap(cities);
-                states.put(state.getCode(), state);
             }
-            region.setStateMap(states);
-            regions.add(region);
+            regions.add(new ProfileRegionNodeVO(sourceRegion.getCode(), states));
         }
         return regions;
     }
@@ -162,33 +119,39 @@ public class ProfileLocalizationService {
         if (translationService == null) {
             return text;
         }
-        String cached = translationService.getCachedTranslation(text, normalizedLanguage);
-        if (cached != null) {
-            return cached;
+        String translated = translationService.translate(text, normalizedLanguage);
+        if (translated != null && !translated.isBlank()) {
+            return translated;
         }
-        translationService.enqueueTranslation(text, normalizedLanguage);
         return text;
     }
 
-    private void appendLocationPart(List<String> parts, String value, String language) {
-        String localized = localizeText(value, language);
-        if (StringUtils.isBlank(localized) || parts.contains(localized)) {
-            return;
-        }
-        parts.add(localized);
-    }
+    public static class ProfileRegionNodeVO {
+        private String code;
+        private List<ProfileRegionNodeVO> children;
 
-    private String baseLocationName(String aliasesName, String name) {
-        return StringUtils.isBlank(aliasesName) ? name : aliasesName;
-    }
+        public ProfileRegionNodeVO() {
+        }
 
-    private String joinLocationParts(List<String> parts, String language) {
-        if (parts.isEmpty()) {
-            return "";
+        public ProfileRegionNodeVO(String code, List<ProfileRegionNodeVO> children) {
+            this.code = code;
+            this.children = children;
         }
-        if ("zh-CN".equals(language) || "zh-HK".equals(language) || "zh-TW".equals(language)) {
-            return String.join("", parts);
+
+        public String getCode() {
+            return code;
         }
-        return String.join(" ", parts);
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public List<ProfileRegionNodeVO> getChildren() {
+            return children;
+        }
+
+        public void setChildren(List<ProfileRegionNodeVO> children) {
+            this.children = children;
+        }
     }
 }

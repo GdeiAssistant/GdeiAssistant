@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { getCetNumber, queryCetScore } from '@/api/cet'
 import { useToast } from '@/composables/useToast'
 import request from '@/utils/request'
 
 const router = useRouter()
+const { t } = useI18n()
 const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const examNumber = ref('')
@@ -34,17 +36,17 @@ function refreshVcode() {
 
 function importNumber() {
   loading.value = true
-  showLoading('导入中')
+  showLoading(t('cetPage.importLoading'))
   getCetNumber().then((res) => {
     if (res && res.success && res.data) {
       const d = res.data
       examNumber.value = (d.number != null) ? String(d.number) : ''
       name.value = (d.name != null && d.name !== '') ? d.name : ''
       if (!examNumber.value && !name.value) {
-        showError('你未保存准考证号')
+        showError(t('cetPage.noSavedNumber'))
       }
     } else {
-      showError('你未保存准考证号')
+      showError(t('cetPage.noSavedNumber'))
     }
   }).catch(() => {
     // 错误由 request.js 全局拦截器统一提示，此处仅关闭 Loading
@@ -59,20 +61,20 @@ function submitQuery() {
   const n = String(name.value || '').trim()
   const code = String(vcode.value || '').trim()
   if (!num || !n) {
-    showError('请填写准考证号和姓名')
+    showError(t('cetPage.missingFields'))
     return
   }
   if (num.length !== 15) {
-    showError('准考证号必须为15位')
+    showError(t('cetPage.invalidNumber'))
     return
   }
   if (!code) {
-    showError('请输入验证码')
+    showError(t('cetPage.captchaRequired'))
     return
   }
 
   loading.value = true
-  showLoading('正在查询...')
+  showLoading(t('cetPage.queryLoading'))
   queryCetScore(num, n, code).then((res) => {
     if (res && res.success && res.data) {
       cetResult.value = res.data
@@ -119,8 +121,8 @@ onMounted(() => {
     <!-- 查询表单 -->
     <template v-if="!showResult">
       <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
-        <span class="flex-1 text-center text-sm font-bold">四六级查询</span>
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('cetPage.title') }}</span>
         <div class="w-10"></div>
       </div>
 
@@ -130,14 +132,14 @@ onMounted(() => {
           <div class="space-y-4">
             <!-- 考号 -->
             <div>
-              <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">准考证号</label>
+              <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('cetPage.examNumberLabel') }}</label>
               <div class="flex gap-2">
                 <input
                   :value="examNumber"
                   type="text"
                   inputmode="numeric"
                   maxlength="15"
-                  placeholder="请输入15位准考证号"
+                  :placeholder="t('cetPage.examNumberPlaceholder')"
                   class="flex-1 min-w-0 px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
                   @input="onExamNumberInput"
                 />
@@ -146,38 +148,38 @@ onMounted(() => {
                   class="shrink-0 px-3 py-2.5 text-sm font-medium text-[var(--c-primary)] border border-[var(--c-primary)]/20 rounded-lg hover:bg-[var(--c-primary)]/5 transition-colors"
                   @click.prevent="importNumber"
                 >
-                  导入考号
+                  {{ t('cetPage.importButton') }}
                 </button>
               </div>
             </div>
 
             <!-- 姓名 -->
             <div>
-              <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">姓名</label>
+              <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('cetPage.nameLabel') }}</label>
               <input
                 v-model="name"
                 type="text"
                 maxlength="20"
-                placeholder="姓名超过3个字可只输入前3个"
+                :placeholder="t('cetPage.namePlaceholder')"
                 class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
               />
             </div>
 
             <!-- 验证码 -->
             <div>
-              <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">验证码</label>
+              <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('cetPage.captchaLabel') }}</label>
               <div class="flex gap-3 items-center">
                 <input
                   v-model="vcode"
                   type="text"
                   maxlength="10"
-                  placeholder="请输入验证码"
+                  :placeholder="t('cetPage.captchaPlaceholder')"
                   class="flex-1 min-w-0 px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
                 />
                 <img
                   v-if="vcodeUrl"
                   :src="vcodeUrl"
-                  alt="验证码"
+                  :alt="t('cetPage.captchaLabel')"
                   class="h-10 w-[100px] rounded-lg cursor-pointer object-cover border border-[var(--c-border)]"
                   @click="refreshVcode"
                 />
@@ -185,7 +187,7 @@ onMounted(() => {
                   v-else
                   class="text-sm text-[var(--c-primary)] cursor-pointer shrink-0"
                   @click="refreshVcode"
-                >点击获取</span>
+                >{{ t('cetPage.refreshCaptcha') }}</span>
               </div>
             </div>
           </div>
@@ -194,24 +196,24 @@ onMounted(() => {
             type="button"
             class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
             @click="submitQuery"
-          >查询</button>
+          >{{ t('cetPage.submit') }}</button>
         </div>
 
         <p class="mt-5 text-center text-sm text-[var(--c-text-2)]">
-          担心遗忘准考证号？点击
-          <a href="javascript:" class="text-[var(--c-primary)] font-medium" @click.prevent="onSaveNumber">保存考号</a>
+          {{ t('cetPage.savePromptPrefix') }}
+          <a href="javascript:" class="text-[var(--c-primary)] font-medium" @click.prevent="onSaveNumber">{{ t('cetPage.savePromptLink') }}</a>
         </p>
 
         <!-- 备用查询入口 -->
         <div class="mt-6">
-          <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">备用查询入口</h3>
+          <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">{{ t('cetPage.fallbackTitle') }}</h3>
           <div class="bg-[var(--c-surface)] rounded-xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
             <a href="javascript:" class="flex items-center justify-between px-4 py-3 text-sm" @click.prevent="openChsi">
-              <span>学信网四六级查分</span>
+              <span>{{ t('cetPage.fallbackChsi') }}</span>
               <span class="text-[var(--c-text-3)]">&rsaquo;</span>
             </a>
             <a href="javascript:" class="flex items-center justify-between px-4 py-3 text-sm" @click.prevent="openNeea">
-              <span>中国教育考试网查询</span>
+              <span>{{ t('cetPage.fallbackNeea') }}</span>
               <span class="text-[var(--c-text-3)]">&rsaquo;</span>
             </a>
           </div>

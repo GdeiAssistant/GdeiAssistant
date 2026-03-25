@@ -1,3 +1,5 @@
+import { getCommunityCatalog } from '../../catalog/communityCatalog'
+
 export function createCommunityPullMessages(t) {
   return {
     refreshing: t('communityCommon.refreshing'),
@@ -8,21 +10,9 @@ export function createCommunityPullMessages(t) {
   }
 }
 
-export function createMarketplaceCategoryNames(t) {
-  return [
-    t('marketplace.category.vehicle'),
-    t('marketplace.category.phone'),
-    t('marketplace.category.computer'),
-    t('marketplace.category.digitalAccessory'),
-    t('marketplace.category.digital'),
-    t('marketplace.category.appliance'),
-    t('marketplace.category.sports'),
-    t('marketplace.category.clothing'),
-    t('marketplace.category.books'),
-    t('marketplace.category.rental'),
-    t('marketplace.category.life'),
-    t('marketplace.category.other')
-  ]
+export function createMarketplaceCategoryNames(locale) {
+  const catalog = getCommunityCatalog(locale)
+  return Array.from({ length: 12 }, (_, code) => catalog.marketplaceLabel(code))
 }
 
 export function createDeliveryStatusMap(t) {
@@ -50,21 +40,9 @@ export function createCommunityGenderOptions(t) {
   ]
 }
 
-export function createLostAndFoundItemTypeNames(t) {
-  return [
-    t('lostandfound.itemType.phone'),
-    t('lostandfound.itemType.campusCard'),
-    t('lostandfound.itemType.idCard'),
-    t('lostandfound.itemType.bankCard'),
-    t('lostandfound.itemType.book'),
-    t('lostandfound.itemType.key'),
-    t('lostandfound.itemType.bag'),
-    t('lostandfound.itemType.clothing'),
-    t('lostandfound.itemType.vehicle'),
-    t('lostandfound.itemType.sports'),
-    t('lostandfound.itemType.digitalAccessory'),
-    t('lostandfound.itemType.other')
-  ]
+export function createLostAndFoundItemTypeNames(locale) {
+  const catalog = getCommunityCatalog(locale)
+  return Array.from({ length: 12 }, (_, code) => catalog.lostFoundItemLabel(code))
 }
 
 export function createDeliverySizeOptions(t) {

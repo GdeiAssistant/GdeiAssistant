@@ -38,6 +38,14 @@
     "info": "お知らせ",
     "profile": "マイページ"
   },
+  "communityTab": {
+    "home": "ホーム",
+    "publish": "投稿",
+    "profile": "マイ",
+    "search": "検索",
+    "hall": "一覧",
+    "confess": "告白"
+  },
   "home": {
     "title": "広東二師アシスタント",
     "subtitle": "4年間のキャンパスライフ、広東二師アシスタントがともに歩みます。",
@@ -241,6 +249,64 @@
     "toast": {
       "exportStarted": "エクスポート依頼を送信しました。しばらくしてからダウンロードしてください。",
       "downloadStarted": "ダウンロードを開始しました"
+    }
+  },
+  "marketplace": {
+    "profile": {
+      "title": "マイページ",
+      "defaultNickname": "フリマユーザー",
+      "defaultIntroduction": "この人は何も書いていません。",
+      "tab": {
+        "doing": "販売中",
+        "sold": "販売済み",
+        "off": "掲載終了"
+      },
+      "empty": {
+        "doing": "販売中の商品はありません",
+        "sold": "販売済みの商品はありません",
+        "off": "掲載終了の商品はありません"
+      },
+      "action": {
+        "off": "掲載終了",
+        "markSold": "販売済みにする",
+        "relist": "再出品"
+      },
+      "confirm": {
+        "off": "この商品を掲載終了にしますか？",
+        "sold": "この商品を販売済みにしますか？"
+      },
+      "success": {
+        "off": "掲載を終了しました",
+        "sold": "販売済みにしました",
+        "relist": "再出品しました"
+      },
+      "soldHint": "販売済みの商品は編集や再出品ができません"
+    }
+  },
+  "lostandfound": {
+    "profile": {
+      "title": "マイページ",
+      "defaultNickname": "ユーザー",
+      "defaultIntroduction": "この人は何も書いていません。",
+      "tab": {
+        "lost": "紛失",
+        "found": "拾得",
+        "didFound": "解決済み"
+      },
+      "empty": {
+        "lost": "紛失投稿はありません",
+        "found": "拾得投稿はありません",
+        "didFound": "解決済みの投稿はありません"
+      },
+      "action": {
+        "didFound": "解決済みにする"
+      },
+      "confirm": {
+        "didFound": "この投稿を解決済みにしますか？"
+      },
+      "success": {
+        "didFound": "解決済みにしました"
+      }
     }
   },
   "locationPicker": {

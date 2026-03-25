@@ -38,6 +38,14 @@
     "info": "알림",
     "profile": "프로필"
   },
+  "communityTab": {
+    "home": "홈",
+    "publish": "게시",
+    "profile": "내 것",
+    "search": "검색",
+    "hall": "목록",
+    "confess": "고백"
+  },
   "home": {
     "title": "광둥이사 어시스턴트",
     "subtitle": "4년의 캠퍼스 생활, 광둥이사 어시스턴트가 함께합니다.",
@@ -241,6 +249,64 @@
     "toast": {
       "exportStarted": "내보내기 요청이 제출되었습니다. 잠시 후 다시 와서 다운로드해 주세요.",
       "downloadStarted": "다운로드가 시작되었습니다"
+    }
+  },
+  "marketplace": {
+    "profile": {
+      "title": "내 센터",
+      "defaultNickname": "중고 사용자",
+      "defaultIntroduction": "아직 아무 소개도 없습니다.",
+      "tab": {
+        "doing": "판매 중",
+        "sold": "판매 완료",
+        "off": "내린 상품"
+      },
+      "empty": {
+        "doing": "판매 중인 상품이 없습니다",
+        "sold": "판매 완료된 상품이 없습니다",
+        "off": "내린 상품이 없습니다"
+      },
+      "action": {
+        "off": "내리기",
+        "markSold": "판매 완료",
+        "relist": "다시 올리기"
+      },
+      "confirm": {
+        "off": "이 상품을 내리시겠습니까?",
+        "sold": "이 상품을 판매 완료로 표시하시겠습니까?"
+      },
+      "success": {
+        "off": "상품을 내렸습니다",
+        "sold": "판매 완료로 표시했습니다",
+        "relist": "다시 올렸습니다"
+      },
+      "soldHint": "판매 완료된 상품은 수정하거나 다시 올릴 수 없습니다"
+    }
+  },
+  "lostandfound": {
+    "profile": {
+      "title": "내 센터",
+      "defaultNickname": "사용자",
+      "defaultIntroduction": "아직 아무 소개도 없습니다.",
+      "tab": {
+        "lost": "분실",
+        "found": "습득",
+        "didFound": "해결됨"
+      },
+      "empty": {
+        "lost": "분실 글이 없습니다",
+        "found": "습득 글이 없습니다",
+        "didFound": "해결된 글이 없습니다"
+      },
+      "action": {
+        "didFound": "해결됨으로 표시"
+      },
+      "confirm": {
+        "didFound": "이 글을 해결됨으로 표시하시겠습니까?"
+      },
+      "success": {
+        "didFound": "해결됨으로 표시했습니다"
+      }
     }
   },
   "locationPicker": {

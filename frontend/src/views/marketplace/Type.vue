@@ -9,10 +9,10 @@ import { createCommunityPullMessages, createMarketplaceCategoryNames } from '../
 
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const scrollContainer = ref(null)
 
-const typeNames = computed(() => createMarketplaceCategoryNames(t))
+const typeNames = computed(() => createMarketplaceCategoryNames(locale.value))
 const pullMessages = computed(() => createCommunityPullMessages(t))
 const PAGE_SIZE = 10
 

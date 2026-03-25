@@ -1,10 +1,8 @@
 package cn.gdeiassistant.core.userProfile.controller;
 
-import cn.gdeiassistant.common.pojo.Entity.Region;
 import cn.gdeiassistant.common.pojo.Entity.Introduction;
 import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
-import cn.gdeiassistant.core.profile.pojo.LocationComparator;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.userProfile.controller.mapper.ProfileResponseMapper;
@@ -16,7 +14,6 @@ import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userProfile.service.ProfileLocalizationService;
 import cn.gdeiassistant.core.userProfile.service.ProfileMajorCatalog;
 import cn.gdeiassistant.core.userProfile.service.ProfileOptionsFacade;
-import cn.gdeiassistant.common.tools.Utils.LocationUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,10 +189,9 @@ public class ProfileController {
      * @return
      */
     @RequestMapping(value = "/api/profile/locations", method = RequestMethod.GET)
-    public DataJsonResult<List<Region>> GetRegionList(HttpServletRequest request) {
-        String language = profileLocalizationService.normalizeLanguage(request.getHeader("Accept-Language"));
-        List<Region> locationList = new ArrayList<>(profileLocalizationService.buildLocalizedRegions(language));
-        locationList.sort(new LocationComparator());
+    public DataJsonResult<List<ProfileLocalizationService.ProfileRegionNodeVO>> GetRegionList() {
+        List<ProfileLocalizationService.ProfileRegionNodeVO> locationList = new ArrayList<>(profileLocalizationService.buildRegionTree());
+        locationList.sort(java.util.Comparator.comparing(ProfileLocalizationService.ProfileRegionNodeVO::getCode));
         return new DataJsonResult<>(true, locationList);
     }
 
@@ -204,9 +200,8 @@ public class ProfileController {
      * GET /api/profile/options
      */
     @RequestMapping(value = "/api/profile/options", method = RequestMethod.GET)
-    public DataJsonResult<ProfileOptionsVO> getProfileOptions(HttpServletRequest request) {
-        String language = profileLocalizationService.normalizeLanguage(request.getHeader("Accept-Language"));
-        return new DataJsonResult<>(true, profileOptionsFacade.buildProfileOptions(language));
+    public DataJsonResult<ProfileOptionsVO> getProfileOptions() {
+        return new DataJsonResult<>(true, profileOptionsFacade.buildProfileOptions());
     }
 
     /**

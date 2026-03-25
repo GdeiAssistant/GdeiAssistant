@@ -20,11 +20,6 @@ describe('community localized content', () => {
     'communityCommon.gender.male': 'Male',
     'communityCommon.gender.female': 'Female',
     'communityCommon.gender.secret': 'Other / Private',
-    'lostandfound.itemType.phone': 'Phone',
-    'lostandfound.itemType.campusCard': 'Campus Card',
-    'lostandfound.itemType.other': 'Other',
-    'marketplace.category.vehicle': 'Campus Ride',
-    'marketplace.category.other': 'Other',
     'delivery.status.pending': 'Pending',
     'delivery.status.inTransit': 'In Transit',
     'delivery.status.completed': 'Completed',
@@ -49,8 +44,8 @@ describe('community localized content', () => {
   })
 
   it('builds marketplace category names', () => {
-    const categories = createMarketplaceCategoryNames(t)
-    expect(categories[0]).toBe('Campus Ride')
+    const categories = createMarketplaceCategoryNames('en')
+    expect(categories[0]).toBe('Campus Transportation')
     expect(categories.at(-1)).toBe('Other')
   })
 
@@ -69,7 +64,7 @@ describe('community localized content', () => {
   })
 
   it('builds lost and found item types', () => {
-    const itemTypes = createLostAndFoundItemTypeNames(t)
+    const itemTypes = createLostAndFoundItemTypeNames('en')
     expect(itemTypes[0]).toBe('Phone')
     expect(itemTypes[1]).toBe('Campus Card')
     expect(itemTypes.at(-1)).toBe('Other')

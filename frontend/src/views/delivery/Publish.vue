@@ -78,11 +78,11 @@ function submit() {
 
   submitting.value = true
   const payload = {
-    name: '代收',
+    name: t('delivery.publish.payloadName'),
     number: '00000000000',
     phone: formData.value.contactPhone.trim(),
     price: reward,
-    company: formData.value.pickupAddress.trim() || '代取快递',
+    company: formData.value.pickupAddress.trim() || t('delivery.publish.defaultCompany'),
     address: formData.value.deliveryAddress.trim(),
     remarks: formData.value.description?.trim() || ''
   }

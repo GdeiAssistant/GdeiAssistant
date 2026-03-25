@@ -4,6 +4,7 @@ import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userProfile.controller.ProfileController;
 import cn.gdeiassistant.core.userProfile.controller.support.ProfileLocationValidator;
+import cn.gdeiassistant.core.userProfile.service.ProfileLocalizationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,6 +33,7 @@ class ProfileLocationContractTest {
         ProfileController controller = new ProfileController();
         ReflectionTestUtils.setField(controller, "userProfileService", userProfileService);
         ReflectionTestUtils.setField(controller, "profileLocationValidator", new ProfileLocationValidator());
+        ReflectionTestUtils.setField(controller, "profileLocalizationService", new ProfileLocalizationService());
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())
                 .build();
@@ -78,5 +81,14 @@ class ProfileLocationContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message").value("不合法的国家/地区代码"));
+    }
+
+    @Test
+    void getLocationList_returnsLocalizedNameFields() throws Exception {
+        mockMvc.perform(get("/api/profile/locations").header("Accept-Language", "zh-Hant"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data[0].code").isNotEmpty())
+                .andExpect(jsonPath("$.data[0].name").isNotEmpty());
     }
 }

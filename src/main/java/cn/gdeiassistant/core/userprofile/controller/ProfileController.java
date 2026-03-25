@@ -13,6 +13,8 @@ import cn.gdeiassistant.core.userProfile.controller.support.ProfileLocationValid
 import cn.gdeiassistant.core.userProfile.pojo.ProfileOptionsVO;
 import cn.gdeiassistant.core.userProfile.pojo.UserProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
+import cn.gdeiassistant.core.userProfile.service.ProfileLocalizationService;
+import cn.gdeiassistant.core.userProfile.service.ProfileMajorCatalog;
 import cn.gdeiassistant.core.userProfile.service.ProfileOptionsFacade;
 import cn.gdeiassistant.common.tools.Utils.LocationUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
@@ -46,6 +48,9 @@ public class ProfileController {
 
     @Autowired
     private ProfileLocationValidator profileLocationValidator;
+
+    @Autowired
+    private ProfileLocalizationService profileLocalizationService;
 
     private final int AVATAR_MAX_SIZE = 1024 * 1024 * 2;
 
@@ -131,6 +136,7 @@ public class ProfileController {
     @RequestMapping(value = "/api/user/profile", method = RequestMethod.GET)
     public DataJsonResult<UserProfileVO> GetCurrentUserProfile(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
+        String language = profileLocalizationService.normalizeLanguage(request.getHeader("Accept-Language"));
         ProfileVO profile = userProfileService.getSelfUserProfile(sessionId);
         if (profile == null) {
             DataJsonResult<UserProfileVO> err = new DataJsonResult<>(false, null);
@@ -138,7 +144,7 @@ public class ProfileController {
             err.setMessage("用户不存在或未登录");
             return err;
         }
-        UserProfileVO vo = profileResponseMapper.toUserProfileVO(profile, sessionId);
+        UserProfileVO vo = profileResponseMapper.toUserProfileVO(profile, sessionId, language);
         DataJsonResult<UserProfileVO> result = new DataJsonResult<>(true, vo);
         result.setCode(200);
         result.setMessage("success");
@@ -186,9 +192,9 @@ public class ProfileController {
      * @return
      */
     @RequestMapping(value = "/api/profile/locations", method = RequestMethod.GET)
-    public DataJsonResult<List<Region>> GetRegionList() {
-        DataJsonResult<List<Region>> result = new DataJsonResult<>();
-        List<Region> locationList = new ArrayList<>(LocationUtils.getRegionMap().values());
+    public DataJsonResult<List<Region>> GetRegionList(HttpServletRequest request) {
+        String language = profileLocalizationService.normalizeLanguage(request.getHeader("Accept-Language"));
+        List<Region> locationList = new ArrayList<>(profileLocalizationService.buildLocalizedRegions(language));
         locationList.sort(new LocationComparator());
         return new DataJsonResult<>(true, locationList);
     }
@@ -198,8 +204,9 @@ public class ProfileController {
      * GET /api/profile/options
      */
     @RequestMapping(value = "/api/profile/options", method = RequestMethod.GET)
-    public DataJsonResult<ProfileOptionsVO> getProfileOptions() {
-        return new DataJsonResult<>(true, profileOptionsFacade.buildProfileOptions());
+    public DataJsonResult<ProfileOptionsVO> getProfileOptions(HttpServletRequest request) {
+        String language = profileLocalizationService.normalizeLanguage(request.getHeader("Accept-Language"));
+        return new DataJsonResult<>(true, profileOptionsFacade.buildProfileOptions(language));
     }
 
     /**
@@ -305,11 +312,16 @@ public class ProfileController {
     @RequestMapping(value = "/api/profile/major", method = RequestMethod.POST)
     public JsonResult UpdateMajor(HttpServletRequest request, @RequestBody MajorUpdateRequest body) throws Exception {
         String major = body != null ? body.getMajor() : null;
-        if (major == null || major.isEmpty() || major.length() > 20) {
-            return new JsonResult(false, "专业长度不合法");
+        if (major == null || major.isEmpty() || major.length() > 64) {
+            return new JsonResult(false, "请求参数异常");
+        }
+        String sessionId = (String) request.getAttribute("sessionId");
+        ProfileVO profile = userProfileService.getSelfUserProfile(sessionId);
+        if (profile == null || profile.getFaculty() == null || !ProfileMajorCatalog.isValidForFaculty(profile.getFaculty(), major)) {
+            return new JsonResult(false, "请求参数异常");
         }
         major = HtmlUtils.htmlEscape(major);
-        userProfileService.updateMajor((String) request.getAttribute("sessionId"), major);
+        userProfileService.updateMajor(sessionId, major);
         return new JsonResult(true);
     }
 

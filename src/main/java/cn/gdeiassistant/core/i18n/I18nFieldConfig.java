@@ -45,21 +45,6 @@ public class I18nFieldConfig {
                 "data.data[].campus",
                 "data.data[].address"
         ));
-        put("/api/user/profile", List.of(
-                "data.faculty",
-                "data.major",
-                "data.location",
-                "data.hometown",
-                "data.introduction",
-                "data.ipArea"
-        ));
-        put("/api/profile/options", List.of(
-                "data.faculties[].label",
-                "data.faculties[].majors[]",
-                "data.marketplaceItemTypes[].label",
-                "data.lostFoundItemTypes[].label",
-                "data.lostFoundModes[].label"
-        ));
         put("/api/ershou/**", List.of("data.name", "data.description", "data[].name", "data[].description"));
         put("/api/lostandfound/**", List.of("data.name", "data.description", "data[].name", "data[].description"));
         put("/api/express/**", List.of("data.nickname", "data.name", "data.content", "data[].nickname", "data[].name", "data[].content"));

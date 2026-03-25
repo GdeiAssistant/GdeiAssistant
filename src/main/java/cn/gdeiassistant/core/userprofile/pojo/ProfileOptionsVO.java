@@ -44,22 +44,52 @@ public class ProfileOptionsVO implements Serializable {
 
     public static class FacultyOptionVO extends DictionaryOptionVO {
 
-        private List<String> majors;
+        private List<MajorOptionVO> majors;
 
         public FacultyOptionVO() {
         }
 
-        public FacultyOptionVO(Integer code, String label, List<String> majors) {
+        public FacultyOptionVO(Integer code, String label, List<MajorOptionVO> majors) {
             super(code, label);
             this.majors = majors;
         }
 
-        public List<String> getMajors() {
+        public List<MajorOptionVO> getMajors() {
             return majors;
         }
 
-        public void setMajors(List<String> majors) {
+        public void setMajors(List<MajorOptionVO> majors) {
             this.majors = majors;
+        }
+    }
+
+    public static class MajorOptionVO implements Serializable {
+
+        private String code;
+        private String label;
+
+        public MajorOptionVO() {
+        }
+
+        public MajorOptionVO(String code, String label) {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
         }
     }
 }

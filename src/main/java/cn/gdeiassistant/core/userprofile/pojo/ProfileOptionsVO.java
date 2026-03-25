@@ -6,9 +6,9 @@ import java.util.List;
 public class ProfileOptionsVO implements Serializable {
 
     private List<FacultyOptionVO> faculties;
-    private List<DictionaryOptionVO> marketplaceItemTypes;
-    private List<DictionaryOptionVO> lostFoundItemTypes;
-    private List<DictionaryOptionVO> lostFoundModes;
+    private List<Integer> marketplaceItemTypes;
+    private List<Integer> lostFoundItemTypes;
+    private List<Integer> lostFoundModes;
 
     public List<FacultyOptionVO> getFaculties() {
         return faculties;
@@ -18,78 +18,58 @@ public class ProfileOptionsVO implements Serializable {
         this.faculties = faculties;
     }
 
-    public List<DictionaryOptionVO> getMarketplaceItemTypes() {
+    public List<Integer> getMarketplaceItemTypes() {
         return marketplaceItemTypes;
     }
 
-    public void setMarketplaceItemTypes(List<DictionaryOptionVO> marketplaceItemTypes) {
+    public void setMarketplaceItemTypes(List<Integer> marketplaceItemTypes) {
         this.marketplaceItemTypes = marketplaceItemTypes;
     }
 
-    public List<DictionaryOptionVO> getLostFoundItemTypes() {
+    public List<Integer> getLostFoundItemTypes() {
         return lostFoundItemTypes;
     }
 
-    public void setLostFoundItemTypes(List<DictionaryOptionVO> lostFoundItemTypes) {
+    public void setLostFoundItemTypes(List<Integer> lostFoundItemTypes) {
         this.lostFoundItemTypes = lostFoundItemTypes;
     }
 
-    public List<DictionaryOptionVO> getLostFoundModes() {
+    public List<Integer> getLostFoundModes() {
         return lostFoundModes;
     }
 
-    public void setLostFoundModes(List<DictionaryOptionVO> lostFoundModes) {
+    public void setLostFoundModes(List<Integer> lostFoundModes) {
         this.lostFoundModes = lostFoundModes;
     }
 
-    public static class FacultyOptionVO extends DictionaryOptionVO {
+    public static class FacultyOptionVO implements Serializable {
 
-        private List<MajorOptionVO> majors;
+        private Integer code;
+
+        private List<String> majors;
 
         public FacultyOptionVO() {
         }
 
-        public FacultyOptionVO(Integer code, String label, List<MajorOptionVO> majors) {
-            super(code, label);
-            this.majors = majors;
-        }
-
-        public List<MajorOptionVO> getMajors() {
-            return majors;
-        }
-
-        public void setMajors(List<MajorOptionVO> majors) {
-            this.majors = majors;
-        }
-    }
-
-    public static class MajorOptionVO implements Serializable {
-
-        private String code;
-        private String label;
-
-        public MajorOptionVO() {
-        }
-
-        public MajorOptionVO(String code, String label) {
+        public FacultyOptionVO(Integer code, List<String> majors) {
             this.code = code;
-            this.label = label;
+            this.majors = majors;
         }
 
-        public String getCode() {
+        public Integer getCode() {
             return code;
         }
 
-        public void setCode(String code) {
+        public void setCode(Integer code) {
             this.code = code;
         }
 
-        public String getLabel() {
-            return label;
+        public List<String> getMajors() {
+            return majors;
         }
 
-        public void setLabel(String label) {
-            this.label = label;
+        public void setMajors(List<String> majors) {
+            this.majors = majors;
         }
     }
 }

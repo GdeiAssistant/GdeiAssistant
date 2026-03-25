@@ -58,6 +58,14 @@
     "info": "资讯信息",
     "profile": "个人中心"
   },
+  "communityTab": {
+    "home": "首页",
+    "publish": "发布",
+    "profile": "我的",
+    "search": "搜索",
+    "hall": "大厅",
+    "confess": "表白"
+  },
   "home": {
     "title": "广东二师助手",
     "subtitle": "四年时光，广东二师助手陪你一起走过。",
@@ -107,6 +115,119 @@
     "selectHometown": "请选择家乡",
     "selectFacultyFirst": "请先选择院系",
     "language": "语言 / Language"
+  },
+  "loginPage": {
+    "title": "广东二师助手",
+    "subtitle": "请登录校园网系统",
+    "usernameLabel": "账号",
+    "usernamePlaceholder": "请输入你的校园网账号",
+    "passwordLabel": "密码",
+    "passwordPlaceholder": "请输入你的校园网密码",
+    "submit": "登录",
+    "mockMode": "模拟数据模式",
+    "autoFilledSuffix": "（已自动填入）",
+    "accountHelpPrefix": "关于登录账户请阅读",
+    "accountHelpLink": "《校园网络账号说明》",
+    "agreementPrefix": "使用前请仔细阅读",
+    "agreementLink": "《用户协议》",
+    "privacyLink": "《隐私政策》",
+    "and": "和",
+    "otherLogin": "其他方式登录",
+    "incompleteFields": "请将信息填写完整",
+    "loading": "登录中...",
+    "failed": "登录失败",
+    "thirdPartyUnavailable": "该登录方式暂未开放"
+  },
+  "libraryPage": {
+    "title": "图书馆",
+    "heroBadge": "图书馆",
+    "heroTitle": "图书馆",
+    "heroDescription": "搜索馆藏图书，查看并管理当前借阅记录。",
+    "home": {
+      "searchTitle": "馆藏检索",
+      "searchDescription": "按书名、作者和出版社检索馆藏图书",
+      "searchBadge": "检索",
+      "borrowTitle": "我的借阅",
+      "borrowDescription": "输入图书馆密码后查看借阅记录并继续续借",
+      "borrowBadge": "借阅"
+    },
+    "search": {
+      "title": "馆藏检索",
+      "description": "按书名、作者和出版社搜索图书馆馆藏",
+      "keywordLabel": "关键词",
+      "keywordPlaceholder": "请输入书名、作者等",
+      "keywordRequired": "请输入查询关键词！",
+      "submit": "查询"
+    },
+    "list": {
+      "title": "馆藏检索",
+      "description": "图书馆馆藏检索结果",
+      "resultTitle": "馆藏检索结果",
+      "author": "著者: ",
+      "publisher": "出版者: ",
+      "prevPage": "上一页",
+      "nextPage": "下一页",
+      "pageText": "第 {page} 页",
+      "empty": "暂无馆藏结果"
+    },
+    "detail": {
+      "title": "馆藏详情",
+      "author": "著者",
+      "principal": "题名/责任者",
+      "publisher": "出版者",
+      "empty": "暂无详情"
+    },
+    "borrow": {
+      "title": "我的借阅",
+      "intro": "输入图书馆密码后查看借阅记录，续借时会再次校验密码。",
+      "mockPassword": "模拟密码：123456",
+      "passwordLabel": "图书馆密码",
+      "passwordPlaceholder": "请输入图书馆密码",
+      "passwordRequired": "请输入图书馆密码",
+      "refresh": "刷新借阅记录",
+      "query": "查询借阅记录",
+      "initialHint": "先输入图书馆密码，再查询当前借阅记录",
+      "recordsTitle": "借阅记录",
+      "bookName": "书名",
+      "author": "作者",
+      "borrowDate": "借出日期",
+      "returnDate": "应还日期",
+      "renewCount": "续借次数",
+      "renew": "续借",
+      "empty": "暂无借阅记录",
+      "renewDialogTitle": "续借图书",
+      "renewDialogDescription": "请输入图书馆密码完成续借校验",
+      "renewDialogPlaceholder": "图书馆密码",
+      "renewLoading": "续借中...",
+      "renewSuccess": "续借成功"
+    }
+  },
+  "cetPage": {
+    "title": "四六级查询",
+    "saveTitle": "保存考号",
+    "examNumberLabel": "准考证号",
+    "examNumberPlaceholder": "请输入15位准考证号",
+    "nameLabel": "姓名",
+    "namePlaceholder": "姓名超过3个字可只输入前3个",
+    "captchaLabel": "验证码",
+    "captchaPlaceholder": "请输入验证码",
+    "refreshCaptcha": "点击获取",
+    "importButton": "导入考号",
+    "submit": "查询",
+    "importLoading": "导入中",
+    "noSavedNumber": "你未保存准考证号",
+    "missingFields": "请填写准考证号和姓名",
+    "invalidNumber": "准考证号必须为15位",
+    "captchaRequired": "请输入验证码",
+    "queryLoading": "正在查询...",
+    "savePromptPrefix": "担心遗忘准考证号？点击",
+    "savePromptLink": "保存考号",
+    "fallbackTitle": "备用查询入口",
+    "fallbackChsi": "学信网四六级查分",
+    "fallbackNeea": "中国教育考试网查询",
+    "saveSuccess": "保存成功",
+    "saveFailed": "保存失败",
+    "saving": "保存中..."
   },
   "settings": {
     "section": {
@@ -316,6 +437,30 @@
       "unknownMerchant": "未知商户",
       "retry": "重新查询",
       "invalidDate": "查询日期格式不正确，请重新选择"
+    },
+    "info": {
+      "title": "校园卡信息",
+      "balanceTitle": "校园卡余额",
+      "interimBalance": "过渡余额: ",
+      "basicInfoTitle": "基本信息",
+      "statusTitle": "卡片状态",
+      "passwordRequired": "密码不能为空",
+      "passwordDigitsOnly": "密码只能包含数字",
+      "submitting": "提交中",
+      "reportSuccess": "挂失成功",
+      "reportedState": "已挂失",
+      "reportPromptPrefix": "校园卡遗失？点击",
+      "reportPromptLink": "校园卡挂失",
+      "dialogTitle": "挂失校园卡验证",
+      "dialogDescription": "请输入查询密码进行验证",
+      "dialogPlaceholder": "校园卡查询密码",
+      "field": {
+        "name": "姓名",
+        "number": "学号",
+        "cardNumber": "校园卡号",
+        "lostState": "挂失状态",
+        "freezeState": "冻结状态"
+      }
     }
   },
   "spare": {
@@ -685,6 +830,36 @@
       "rental": "租赁",
       "life": "生活娱乐",
       "other": "其他"
+    },
+    "profile": {
+      "title": "个人中心",
+      "defaultNickname": "二手用户",
+      "defaultIntroduction": "这个人很懒，什么都没写_(:3 」∠)_",
+      "tab": {
+        "doing": "正在出售",
+        "sold": "已售出",
+        "off": "已下架"
+      },
+      "empty": {
+        "doing": "暂无正在出售的商品",
+        "sold": "暂无已售出的商品",
+        "off": "暂无已下架的商品"
+      },
+      "action": {
+        "off": "下架",
+        "markSold": "确认售出",
+        "relist": "重新上架"
+      },
+      "confirm": {
+        "off": "确定下架这件商品吗？",
+        "sold": "确定标记为已出售吗？"
+      },
+      "success": {
+        "off": "已下架",
+        "sold": "已标记为已出售",
+        "relist": "已重新上架"
+      },
+      "soldHint": "已售出的商品不再支持编辑或重新上架"
     }
   },
   "express": {
@@ -876,6 +1051,30 @@
       "copyWechat": "复制微信",
       "call": "打电话",
       "sms": "发短信"
+    },
+    "profile": {
+      "title": "个人中心",
+      "defaultNickname": "用户",
+      "defaultIntroduction": "这个人很懒，什么都没写_(:3 」∠)_",
+      "tab": {
+        "lost": "寻物",
+        "found": "招领",
+        "didFound": "已找回"
+      },
+      "empty": {
+        "lost": "暂无寻物信息",
+        "found": "暂无招领信息",
+        "didFound": "暂无已找回信息"
+      },
+      "action": {
+        "didFound": "确认寻回"
+      },
+      "confirm": {
+        "didFound": "确定标记为确认寻回吗？"
+      },
+      "success": {
+        "didFound": "已标记为确认寻回"
+      }
     }
   },
   "delivery": {
@@ -929,7 +1128,9 @@
       "deliveryRequired": "请输入送达地址",
       "phoneRequired": "请输入联系人电话",
       "rewardInvalid": "请输入有效的跑腿费（0.01-9999.99元）",
-      "publishSuccess": "发布成功"
+      "publishSuccess": "发布成功",
+      "payloadName": "代收",
+      "defaultCompany": "代取快递"
     },
     "detail": {
       "title": "任务详情",

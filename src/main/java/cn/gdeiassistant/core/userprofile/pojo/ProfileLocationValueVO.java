@@ -4,50 +4,40 @@ import java.io.Serializable;
 
 public class ProfileLocationValueVO implements Serializable {
 
-    private String region;
-    private String state;
-    private String city;
-    private String displayName;
+    private String regionCode;
+    private String stateCode;
+    private String cityCode;
 
     public ProfileLocationValueVO() {
     }
 
-    public ProfileLocationValueVO(String region, String state, String city, String displayName) {
-        this.region = region;
-        this.state = state;
-        this.city = city;
-        this.displayName = displayName;
+    public ProfileLocationValueVO(String regionCode, String stateCode, String cityCode) {
+        this.regionCode = regionCode;
+        this.stateCode = stateCode;
+        this.cityCode = cityCode;
     }
 
-    public String getRegion() {
-        return region;
+    public String getRegionCode() {
+        return regionCode;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
     }
 
-    public String getState() {
-        return state;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
-    public String getCity() {
-        return city;
+    public String getCityCode() {
+        return cityCode;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
     }
 }

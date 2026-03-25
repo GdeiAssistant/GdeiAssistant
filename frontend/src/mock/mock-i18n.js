@@ -196,7 +196,7 @@ const EN_TEXT_MAP = {
   '数学与信息科学学院': 'School of Mathematics and Information Science',
   '佛山': 'Foshan',
   '喜欢长跑和拍落日，周末会去图书馆。': 'Likes long-distance running and sunset photography, and goes to the library on weekends.',
-  '校园代步': 'Campus Ride',
+  '校园代步': 'Campus Transportation',
   '手机': 'Phone',
   '电脑': 'Computer',
   '数码配件': 'Digital Accessories',

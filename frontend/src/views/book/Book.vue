@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { getBorrowedBooks, renewBook } from '@/api/collection'
 import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { t } = useI18n()
 const { error: showError, success: showSuccess, loading: showLoading, hideLoading } = useToast()
 
 const borrowLoading = ref(false)
@@ -22,7 +24,7 @@ function goBack() {
 function fetchBorrowed() {
   const password = (borrowPassword.value || '').trim()
   if (!password) {
-    showError('请输入图书馆密码')
+    showError(t('libraryPage.borrow.passwordRequired'))
     return
   }
   borrowLoading.value = true
@@ -69,17 +71,17 @@ function closePasswordDialog() {
 function confirmRenew() {
   const pwd = (verifyPassword.value || '').trim()
   if (!pwd) {
-    showError('请输入图书馆密码')
+    showError(t('libraryPage.borrow.passwordRequired'))
     return
   }
   const item = renewingItem.value
   if (!item || item.sn == null || item.code == null) return
   closePasswordDialog()
-  showLoading('续借中...')
+  showLoading(t('libraryPage.borrow.renewLoading'))
   renewBook({ sn: item.sn, code: item.code, password: pwd }).then(() => {
     borrowPassword.value = pwd
     hideLoading()
-    showSuccess('续借成功')
+    showSuccess(t('libraryPage.borrow.renewSuccess'))
     fetchBorrowed()
   }).catch(() => {
     hideLoading()
@@ -90,22 +92,22 @@ function confirmRenew() {
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]">
     <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
-      <span class="flex-1 text-center text-sm font-bold">我的借阅</span>
+      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('libraryPage.borrow.title') }}</span>
       <div class="w-10"></div>
     </div>
 
     <div class="max-w-lg mx-auto px-4 py-6">
-      <p class="text-center text-sm text-[var(--c-text-2)] mb-5">输入图书馆密码后查看借阅记录，续借时会再次校验密码。<br><span class="text-xs text-[var(--c-text-3)]">模拟密码：123456</span></p>
+      <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('libraryPage.borrow.intro') }}<br><span class="text-xs text-[var(--c-text-3)]">{{ t('libraryPage.borrow.mockPassword') }}</span></p>
 
       <!-- Password form -->
       <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
         <div>
-          <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">图书馆密码</label>
+          <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('libraryPage.borrow.passwordLabel') }}</label>
           <input
             v-model="borrowPassword"
             type="password"
-            placeholder="请输入图书馆密码"
+            :placeholder="t('libraryPage.borrow.passwordPlaceholder')"
             maxlength="20"
             class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
             @keyup.enter="fetchBorrowed"
@@ -116,25 +118,25 @@ function confirmRenew() {
           type="button"
           class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
           @click="fetchBorrowed"
-        >{{ hasQueriedBorrow ? '刷新借阅记录' : '查询借阅记录' }}</button>
+        >{{ hasQueriedBorrow ? t('libraryPage.borrow.refresh') : t('libraryPage.borrow.query') }}</button>
       </div>
 
       <!-- Loading state -->
       <template v-if="borrowLoading && borrowList.length === 0">
         <div class="flex items-center justify-center gap-2 py-10 text-sm text-[var(--c-text-2)]">
           <span class="inline-block w-5 h-5 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></span>
-          加载中
+          {{ t('common.loading') }}
         </div>
       </template>
 
       <template v-else>
         <!-- Initial prompt -->
         <div v-if="!hasQueriedBorrow" class="flex items-center justify-center py-10 text-sm text-[var(--c-text-3)]">
-          先输入图书馆密码，再查询当前借阅记录
+          {{ t('libraryPage.borrow.initialHint') }}
         </div>
 
         <template v-else>
-          <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mt-6 mb-2">借阅记录</h3>
+          <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mt-6 mb-2">{{ t('libraryPage.borrow.recordsTitle') }}</h3>
 
           <div class="space-y-3">
             <div
@@ -144,26 +146,26 @@ function confirmRenew() {
             >
               <div class="divide-y divide-[var(--c-border-light)]">
                 <div class="flex justify-between py-2.5">
-                  <span class="text-sm text-[var(--c-text-2)] shrink-0">书名</span>
+                  <span class="text-sm text-[var(--c-text-2)] shrink-0">{{ t('libraryPage.borrow.bookName') }}</span>
                   <span class="text-sm font-medium text-[var(--c-text)] text-right ml-3 break-all">{{ item.name || '—' }}</span>
                 </div>
                 <div class="flex justify-between py-2.5">
-                  <span class="text-sm text-[var(--c-text-2)]">作者</span>
+                  <span class="text-sm text-[var(--c-text-2)]">{{ t('libraryPage.borrow.author') }}</span>
                   <span class="text-sm font-medium text-[var(--c-text)]">{{ item.author || '—' }}</span>
                 </div>
                 <div class="flex justify-between py-2.5">
-                  <span class="text-sm text-[var(--c-text-2)]">借出日期</span>
+                  <span class="text-sm text-[var(--c-text-2)]">{{ t('libraryPage.borrow.borrowDate') }}</span>
                   <span class="text-sm font-medium text-[var(--c-text)]">{{ item.borrowDate || '—' }}</span>
                 </div>
                 <div class="flex justify-between py-2.5">
-                  <span class="text-sm text-[var(--c-text-2)]">应还日期</span>
+                  <span class="text-sm text-[var(--c-text-2)]">{{ t('libraryPage.borrow.returnDate') }}</span>
                   <span
                     class="text-sm font-medium"
                     :class="isReturnDateUrgent(item.returnDate) ? 'text-red-500' : 'text-[var(--c-text)]'"
                   >{{ item.returnDate || '—' }}</span>
                 </div>
                 <div class="flex justify-between py-2.5">
-                  <span class="text-sm text-[var(--c-text-2)]">续借次数</span>
+                  <span class="text-sm text-[var(--c-text-2)]">{{ t('libraryPage.borrow.renewCount') }}</span>
                   <span class="text-sm font-medium text-[var(--c-text)]">{{ item.renewTime != null ? item.renewTime : '—' }}</span>
                 </div>
               </div>
@@ -171,12 +173,12 @@ function confirmRenew() {
                 type="button"
                 class="w-full mt-4 py-2 text-sm font-semibold text-[var(--c-primary)] border border-[var(--c-primary)]/20 rounded-lg hover:bg-[var(--c-primary)]/5 transition-colors"
                 @click="onRenew(item)"
-              >续借</button>
+              >{{ t('libraryPage.borrow.renew') }}</button>
             </div>
           </div>
 
           <div v-if="!borrowLoading && borrowList.length === 0" class="flex items-center justify-center py-10 text-sm text-[var(--c-text-3)]">
-            暂无借阅记录
+            {{ t('libraryPage.borrow.empty') }}
           </div>
         </template>
       </template>
@@ -186,12 +188,12 @@ function confirmRenew() {
     <template v-if="showPasswordDialog">
       <div class="fixed inset-0 z-50 bg-black/40" @click="closePasswordDialog"></div>
       <div class="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-48px)] max-w-sm bg-[var(--c-surface)] rounded-2xl p-6 shadow-xl">
-        <h3 class="text-base font-bold text-center text-[var(--c-text)]">续借图书</h3>
-        <p class="mt-2 text-sm text-center text-[var(--c-text-2)]">请输入图书馆密码完成续借校验</p>
+        <h3 class="text-base font-bold text-center text-[var(--c-text)]">{{ t('libraryPage.borrow.renewDialogTitle') }}</h3>
+        <p class="mt-2 text-sm text-center text-[var(--c-text-2)]">{{ t('libraryPage.borrow.renewDialogDescription') }}</p>
         <input
           v-model="verifyPassword"
           type="password"
-          placeholder="图书馆密码"
+          :placeholder="t('libraryPage.borrow.renewDialogPlaceholder')"
           maxlength="20"
           class="mt-4 w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
           @keyup.enter="confirmRenew"
@@ -201,12 +203,12 @@ function confirmRenew() {
             type="button"
             class="flex-1 py-2.5 text-sm font-semibold border border-[var(--c-border)] rounded-lg hover:bg-[var(--c-surface-hover)] transition-colors"
             @click="closePasswordDialog"
-          >取消</button>
+          >{{ t('common.cancel') }}</button>
           <button
             type="button"
             class="flex-1 py-2.5 text-sm font-semibold text-white bg-[var(--c-primary)] rounded-lg hover:opacity-90 transition-opacity"
             @click="confirmRenew"
-          >确定</button>
+          >{{ t('common.confirm') }}</button>
         </div>
       </div>
     </template>

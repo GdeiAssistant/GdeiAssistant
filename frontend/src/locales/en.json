@@ -58,6 +58,14 @@
     "info": "Info",
     "profile": "Profile"
   },
+  "communityTab": {
+    "home": "Home",
+    "publish": "Publish",
+    "profile": "My",
+    "search": "Search",
+    "hall": "Hall",
+    "confess": "Confess"
+  },
   "home": {
     "title": "GdeiAssistant",
     "subtitle": "Four years of campus life — GdeiAssistant walks the journey with you.",
@@ -107,6 +115,119 @@
     "selectHometown": "Select Hometown",
     "selectFacultyFirst": "Please select a faculty first",
     "language": "Language"
+  },
+  "loginPage": {
+    "title": "GdeiAssistant",
+    "subtitle": "Sign in to the campus network system",
+    "usernameLabel": "Account",
+    "usernamePlaceholder": "Enter your campus network account",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your campus network password",
+    "submit": "Login",
+    "mockMode": "Mock data mode",
+    "autoFilledSuffix": " (auto-filled)",
+    "accountHelpPrefix": "For login accounts, please read",
+    "accountHelpLink": "\"Campus Network Account Guide\"",
+    "agreementPrefix": "Please read",
+    "agreementLink": "\"User Agreement\"",
+    "privacyLink": "\"Privacy Policy\"",
+    "and": " and ",
+    "otherLogin": "Other login methods",
+    "incompleteFields": "Please complete all required fields",
+    "loading": "Signing in...",
+    "failed": "Login failed",
+    "thirdPartyUnavailable": "This login method is not available yet"
+  },
+  "libraryPage": {
+    "title": "Library",
+    "heroBadge": "Library",
+    "heroTitle": "Library",
+    "heroDescription": "Search the catalog and manage your current borrowing records.",
+    "home": {
+      "searchTitle": "Catalog Search",
+      "searchDescription": "Search library holdings by title, author, and publisher",
+      "searchBadge": "Search",
+      "borrowTitle": "My Borrowing",
+      "borrowDescription": "Check your borrowing records and renew items with your library password",
+      "borrowBadge": "Borrow"
+    },
+    "search": {
+      "title": "Catalog Search",
+      "description": "Search the library catalog by title, author, and publisher",
+      "keywordLabel": "Keyword",
+      "keywordPlaceholder": "Enter a title, author, and more",
+      "keywordRequired": "Please enter a search keyword",
+      "submit": "Search"
+    },
+    "list": {
+      "title": "Catalog Search",
+      "description": "Library catalog search results",
+      "resultTitle": "Search Results",
+      "author": "Author: ",
+      "publisher": "Publisher: ",
+      "prevPage": "Previous",
+      "nextPage": "Next",
+      "pageText": "Page {page}",
+      "empty": "No results found"
+    },
+    "detail": {
+      "title": "Catalog Details",
+      "author": "Author",
+      "principal": "Title / Responsibility",
+      "publisher": "Publisher",
+      "empty": "No details available"
+    },
+    "borrow": {
+      "title": "My Borrowing",
+      "intro": "Enter your library password to view borrowing records. Renewals will verify the password again.",
+      "mockPassword": "Mock password: 123456",
+      "passwordLabel": "Library Password",
+      "passwordPlaceholder": "Enter your library password",
+      "passwordRequired": "Please enter your library password",
+      "refresh": "Refresh Records",
+      "query": "Load Records",
+      "initialHint": "Enter your library password first, then load your current borrowing records",
+      "recordsTitle": "Borrowing Records",
+      "bookName": "Title",
+      "author": "Author",
+      "borrowDate": "Borrowed On",
+      "returnDate": "Due Date",
+      "renewCount": "Renewals",
+      "renew": "Renew",
+      "empty": "No borrowing records",
+      "renewDialogTitle": "Renew Book",
+      "renewDialogDescription": "Enter your library password to confirm the renewal",
+      "renewDialogPlaceholder": "Library Password",
+      "renewLoading": "Renewing...",
+      "renewSuccess": "Renewed successfully"
+    }
+  },
+  "cetPage": {
+    "title": "CET Scores",
+    "saveTitle": "Save Ticket Number",
+    "examNumberLabel": "Ticket Number",
+    "examNumberPlaceholder": "Enter the 15-digit ticket number",
+    "nameLabel": "Name",
+    "namePlaceholder": "If your name is longer than 3 characters, the first 3 are enough",
+    "captchaLabel": "Captcha",
+    "captchaPlaceholder": "Enter the captcha",
+    "refreshCaptcha": "Tap to refresh",
+    "importButton": "Import",
+    "submit": "Search",
+    "importLoading": "Importing",
+    "noSavedNumber": "No saved ticket number found",
+    "missingFields": "Please enter the ticket number and name",
+    "invalidNumber": "The ticket number must be 15 digits",
+    "captchaRequired": "Please enter the captcha",
+    "queryLoading": "Searching...",
+    "savePromptPrefix": "Afraid you might forget your ticket number? Tap",
+    "savePromptLink": "Save Ticket Number",
+    "fallbackTitle": "Alternative Search Links",
+    "fallbackChsi": "CHSI CET Score Lookup",
+    "fallbackNeea": "NEEA CET Score Lookup",
+    "saveSuccess": "Saved successfully",
+    "saveFailed": "Failed to save",
+    "saving": "Saving..."
   },
   "settings": {
     "section": {
@@ -316,6 +437,30 @@
       "unknownMerchant": "Unknown merchant",
       "retry": "Search Again",
       "invalidDate": "The selected date is invalid. Please choose again."
+    },
+    "info": {
+      "title": "Campus Card Info",
+      "balanceTitle": "Campus Card Balance",
+      "interimBalance": "Transit Balance: ",
+      "basicInfoTitle": "Basic Info",
+      "statusTitle": "Card Status",
+      "passwordRequired": "Password cannot be empty",
+      "passwordDigitsOnly": "Password must contain digits only",
+      "submitting": "Submitting",
+      "reportSuccess": "Reported lost successfully",
+      "reportedState": "Reported Lost",
+      "reportPromptPrefix": "Lost your campus card? Tap",
+      "reportPromptLink": "Report Loss",
+      "dialogTitle": "Verify Loss Report",
+      "dialogDescription": "Enter the query password to continue",
+      "dialogPlaceholder": "Campus card query password",
+      "field": {
+        "name": "Name",
+        "number": "Student ID",
+        "cardNumber": "Campus Card No.",
+        "lostState": "Loss Status",
+        "freezeState": "Freeze Status"
+      }
     }
   },
   "spare": {
@@ -673,7 +818,7 @@
       "loadFailedOrMissing": "Failed to load or item does not exist"
     },
     "category": {
-      "vehicle": "Campus Ride",
+      "vehicle": "Campus Transportation",
       "phone": "Phone",
       "computer": "Computer",
       "digitalAccessory": "Digital Accessories",
@@ -685,6 +830,36 @@
       "rental": "Rental",
       "life": "Lifestyle",
       "other": "Other"
+    },
+    "profile": {
+      "title": "My Center",
+      "defaultNickname": "Marketplace User",
+      "defaultIntroduction": "This person is lazy and left nothing here.",
+      "tab": {
+        "doing": "Selling",
+        "sold": "Sold",
+        "off": "Off Shelf"
+      },
+      "empty": {
+        "doing": "No items currently on sale",
+        "sold": "No sold items yet",
+        "off": "No off-shelf items yet"
+      },
+      "action": {
+        "off": "Take Down",
+        "markSold": "Mark as Sold",
+        "relist": "Relist"
+      },
+      "confirm": {
+        "off": "Take this item off shelf?",
+        "sold": "Mark this item as sold?"
+      },
+      "success": {
+        "off": "Item taken off shelf",
+        "sold": "Item marked as sold",
+        "relist": "Item relisted"
+      },
+      "soldHint": "Sold items can no longer be edited or relisted"
     }
   },
   "express": {
@@ -807,7 +982,7 @@
       "key": "Key",
       "bag": "Bag",
       "clothing": "Clothing",
-      "vehicle": "Campus Ride",
+      "vehicle": "Campus Transportation",
       "sports": "Sports & Fitness",
       "digitalAccessory": "Digital Accessories",
       "other": "Other"
@@ -876,6 +1051,30 @@
       "copyWechat": "Copy WeChat",
       "call": "Call",
       "sms": "Text"
+    },
+    "profile": {
+      "title": "My Center",
+      "defaultNickname": "User",
+      "defaultIntroduction": "This person is lazy and left nothing here.",
+      "tab": {
+        "lost": "Lost",
+        "found": "Found",
+        "didFound": "Recovered"
+      },
+      "empty": {
+        "lost": "No lost-item posts",
+        "found": "No found-item posts",
+        "didFound": "No recovered-item posts"
+      },
+      "action": {
+        "didFound": "Mark as Recovered"
+      },
+      "confirm": {
+        "didFound": "Mark this post as recovered?"
+      },
+      "success": {
+        "didFound": "Marked as recovered"
+      }
     }
   },
   "delivery": {
@@ -929,7 +1128,9 @@
       "deliveryRequired": "Please enter the delivery address",
       "phoneRequired": "Please enter the contact phone number",
       "rewardInvalid": "Please enter a valid reward amount (0.01-9999.99)",
-      "publishSuccess": "Posted successfully"
+      "publishSuccess": "Posted successfully",
+      "payloadName": "Pickup Request",
+      "defaultCompany": "Package Pickup"
     },
     "detail": {
       "title": "Task Details",

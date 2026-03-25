@@ -193,7 +193,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { setLocale } from '../i18n'
 import {
@@ -212,9 +211,11 @@ import {
 import { useToast } from '@/composables/useToast'
 import AppCard from '@/components/ui/AppCard.vue'
 import LocationPicker from '@/components/ui/LocationPicker.vue'
+import { formatProfileOptions } from '@/catalog/profileCatalog'
+import { getLocationCatalog } from '@/catalog/locationCatalog'
+import { formatProfileViewModel } from '@/formatters/profileFormatter'
 import { User, ChevronRight } from 'lucide-vue-next'
 
-const router = useRouter()
 const { t, locale } = useI18n()
 const { success: toastSuccess, error: toastError } = useToast()
 
@@ -228,7 +229,9 @@ const userInfo = ref({
   username: '-',
   nickname: '',
   birthday: '',
+  facultyCode: null,
   faculty: '',
+  majorCode: '',
   major: '',
   enrollment: '',
   location: '',
@@ -252,6 +255,7 @@ const unselectedOption = t('common.unselected')
 const facultyList = ref([unselectedOption])
 const facultyCodeMap = ref({})
 const facultyMajorMap = ref({ [unselectedOption]: [unselectedOption] })
+const majorCodeMapByFaculty = ref({ [unselectedOption]: { [unselectedOption]: '' } })
 const facultyPlaceholder = t('profile.selectFaculty')
 const majorList = ref([])
 const updateMajorListByFaculty = () => {
@@ -261,40 +265,13 @@ const updateMajorListByFaculty = () => {
 const yearList = ref([])
 
 const locationListTree = ref([])
-const locationFlatOptions = ref([])
-const locationFlatMap = ref({})
-
-function buildLocationPickerTree(list) {
-  if (!list || !Array.isArray(list)) return []
-  const flat = []
-  const flatMap = {}
-  const tree = list.map(region => {
-    const regionLabel = region.name || region.aliasesName || region.code || ''
-    const states = region.stateMap ? Object.values(region.stateMap) : []
-    const children = states.map(state => {
-      const stateLabel = state.name || state.aliasesName || state.code || ''
-      const cities = state.cityMap ? Object.values(state.cityMap) : []
-      const stateChildren = cities.map(city => {
-        const cityLabel = city.name || city.aliasesName || city.code || ''
-        const display = `${regionLabel} ${stateLabel} ${cityLabel}`.trim()
-        flat.push(display)
-        flatMap[display] = { region: region.code, state: state.code, city: city.code }
-        return { label: cityLabel, value: city.code }
-      })
-      return { label: stateLabel, value: state.code, children: stateChildren }
-    })
-    return { label: regionLabel, value: region.code, children }
-  })
-  locationFlatOptions.value = flat
-  locationFlatMap.value = flatMap
-  return tree
-}
 
 function applyProfileOptions(data) {
   const faculties = Array.isArray(data?.faculties) ? data.faculties : []
   const nextFacultyList = [unselectedOption]
   const nextFacultyCodeMap = { [unselectedOption]: 0 }
   const nextFacultyMajorMap = { [unselectedOption]: [unselectedOption] }
+  const nextMajorCodeMapByFaculty = { [unselectedOption]: { [unselectedOption]: '' } }
 
   faculties.forEach((faculty) => {
     const label = typeof faculty?.label === 'string' ? faculty.label.trim() : ''
@@ -302,16 +279,21 @@ function applyProfileOptions(data) {
       return
     }
     const majors = Array.isArray(faculty?.majors)
-      ? faculty.majors.map((major) => String(major || '').trim()).filter(Boolean)
+      ? faculty.majors.filter((major) => major?.code && major?.label)
       : []
     nextFacultyList.push(label)
     nextFacultyCodeMap[label] = Number.isInteger(faculty?.code) ? faculty.code : null
-    nextFacultyMajorMap[label] = [unselectedOption, ...majors.filter((major) => major !== unselectedOption)]
+    nextFacultyMajorMap[label] = [unselectedOption, ...majors.map((major) => String(major.label).trim()).filter(Boolean)]
+    nextMajorCodeMapByFaculty[label] = {
+      [unselectedOption]: '',
+      ...Object.fromEntries(majors.map((major) => [major.label, major.code])),
+    }
   })
 
   facultyList.value = nextFacultyList
   facultyCodeMap.value = nextFacultyCodeMap
   facultyMajorMap.value = nextFacultyMajorMap
+  majorCodeMapByFaculty.value = nextMajorCodeMapByFaculty
   updateMajorListByFaculty()
 }
 
@@ -328,12 +310,6 @@ const todayStr = (() => {
 const showSuccess = (msg) => {
   toastSuccess(msg || t('common.saveSuccess'))
 }
-const formatLocationDisplay = (str) => {
-  if (!str) return ''
-  const cleanStr = str.replace(/[\uD83C-\uDBFF\uDC00-\uDFFF]+/g, '')
-  const words = cleanStr.split(' ').filter(w => w.trim() !== '')
-  return words.filter((word, index) => word !== words[index - 1]).join(' ')
-}
 
 function saveBirthday(year, month, date) {
   return updateBirthday({ year, month, date })
@@ -345,7 +321,9 @@ function saveFaculty() {
   if (!Number.isInteger(code)) return Promise.resolve()
   return updateFaculty({ faculty: code })
     .then(() => {
+      userInfo.value.facultyCode = code
       userInfo.value.major = ''
+      userInfo.value.majorCode = ''
       updateMajorListByFaculty()
       showSuccess()
     })
@@ -353,8 +331,9 @@ function saveFaculty() {
 
 function saveMajor() {
   const major = userInfo.value.major
-  if (!major || major === unselectedOption) return Promise.resolve()
-  return updateMajor({ major })
+  const majorCode = userInfo.value.majorCode || majorCodeMapByFaculty.value[userInfo.value.faculty]?.[major] || ''
+  if (!majorCode) return Promise.resolve()
+  return updateMajor({ major: majorCode })
     .then(() => { showSuccess() })
 }
 
@@ -387,7 +366,9 @@ const openBirthdayPicker = () => {
 const openFacultyPicker = () => {
   openListFallback(t('profile.selectFaculty'), facultyList.value, (val) => {
     userInfo.value.faculty = val
+    userInfo.value.facultyCode = facultyCodeMap.value[val] ?? null
     userInfo.value.major = unselectedOption
+    userInfo.value.majorCode = ''
     updateMajorListByFaculty()
     saveFaculty()
   })
@@ -400,6 +381,7 @@ const openMajorPicker = () => {
   }
   openListFallback(t('profile.selectMajor'), majorList.value, (val) => {
     userInfo.value.major = val
+    userInfo.value.majorCode = majorCodeMapByFaculty.value[userInfo.value.faculty]?.[val] || ''
     saveMajor()
   })
 }
@@ -433,8 +415,8 @@ const openHometownPicker = () => {
 }
 
 const onLocationConfirm = ({ region, state, city }) => {
-  const parts = [region?.name, state?.name, city?.name].filter(Boolean)
-  const display = parts.join(' ')
+  const locationCatalog = getLocationCatalog(locale.value)
+  const display = locationCatalog.locationLabel(region?.code, state?.code, city?.code)
   if (locationPickerType.value === 'hometown') {
     userInfo.value.hometownRegion = region?.code || ''
     userInfo.value.hometownState = state?.code || ''
@@ -513,18 +495,7 @@ async function fetchUserProfile() {
     const res = await getCurrentUserProfile()
     const ok = res && (res.success === true || res.code === 200) && res.data
     if (ok) {
-      const d = res.data
-      userInfo.value.username = d.username ?? userInfo.value.username
-      userInfo.value.nickname = d.nickname ?? userInfo.value.nickname
-      userInfo.value.avatar = (d.avatar && String(d.avatar).trim()) ? d.avatar : userInfo.value.avatar
-      userInfo.value.faculty = d.faculty ?? ''
-      userInfo.value.major = d.major ?? ''
-      userInfo.value.enrollment = d.enrollment != null ? String(d.enrollment) : userInfo.value.enrollment
-      userInfo.value.location = formatLocationDisplay(d.location ?? '')
-      userInfo.value.hometown = formatLocationDisplay(d.hometown ?? '')
-      userInfo.value.introduction = d.introduction ?? ''
-      userInfo.value.birthday = d.birthday ?? ''
-      userInfo.value.ipArea = d.ipArea ?? userInfo.value.ipArea
+      Object.assign(userInfo.value, formatProfileViewModel(res.data, locale.value))
       updateMajorListByFaculty()
     }
   } catch (_) {
@@ -536,7 +507,7 @@ async function fetchProfileDictionary() {
   try {
     const res = await getProfileOptions()
     if (res && res.success && res.data) {
-      applyProfileOptions(res.data)
+      applyProfileOptions(formatProfileOptions(res.data, locale.value))
     }
   } catch (_) {
     applyProfileOptions(null)
@@ -551,7 +522,7 @@ onMounted(() => {
   getLocationList()
     .then(res => {
       if (res && res.success && res.data) {
-        locationListTree.value = res.data
+        locationListTree.value = getLocationCatalog(locale.value).toPickerTree(res.data)
       }
     })
     .catch(() => {})

@@ -1,12 +1,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { login } from '../api/user.js'
 import { useToast } from '@/composables/useToast'
 import { isMockMode, toggleDataSourceMode } from '@/services/data-source.js'
 import { MOCK_ACCOUNT_USERNAME, MOCK_ACCOUNT_PASSWORD, getMockCredentialsHint } from '@/constants/mock.js'
 
 const router = useRouter()
+const { t } = useI18n()
 const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const username = ref('')
@@ -27,10 +29,10 @@ function toggleMock() {
 
 async function handleLogin() {
   if (!username.value.trim() || !password.value.trim()) {
-    showError('请将信息填写完整')
+    showError(t('loginPage.incompleteFields'))
     return
   }
-  showLoading('登录中...')
+  showLoading(t('loginPage.loading'))
   try {
     const res = await login(username.value.trim(), password.value)
     hideLoading()
@@ -39,7 +41,7 @@ async function handleLogin() {
       localStorage.setItem('token', res.data.token)
       router.push('/home')
     } else {
-      showError(res?.message || '登录失败')
+      showError(res?.message || t('loginPage.failed'))
     }
   } catch (err) {
     hideLoading()
@@ -48,7 +50,7 @@ async function handleLogin() {
 }
 
 function handleThirdPartyLogin(type) {
-  showError('该登录方式暂未开放')
+  showError(t('loginPage.thirdPartyUnavailable'))
 }
 </script>
 
@@ -63,32 +65,32 @@ function handleThirdPartyLogin(type) {
         >
           G
         </div>
-        <h1 class="text-xl font-semibold text-[var(--c-text)]">广东二师助手</h1>
-        <p class="text-sm text-[var(--c-text-secondary)] mt-1">请登录校园网系统</p>
+        <h1 class="text-xl font-semibold text-[var(--c-text)]">{{ t('loginPage.title') }}</h1>
+        <p class="text-sm text-[var(--c-text-secondary)] mt-1">{{ t('loginPage.subtitle') }}</p>
       </div>
 
       <!-- Form -->
       <form @submit.prevent="handleLogin" class="space-y-5">
         <!-- Username -->
         <div>
-          <label class="block text-sm font-medium text-[var(--c-text-secondary)] mb-1.5">账号</label>
+          <label class="block text-sm font-medium text-[var(--c-text-secondary)] mb-1.5">{{ t('loginPage.usernameLabel') }}</label>
           <input
             v-model="username"
             type="text"
             maxlength="20"
-            placeholder="请输入你的校园网账号"
+            :placeholder="t('loginPage.usernamePlaceholder')"
             class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3.5 py-2.5 text-sm text-[var(--c-text)] placeholder-[var(--c-text-tertiary)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
           />
         </div>
 
         <!-- Password -->
         <div>
-          <label class="block text-sm font-medium text-[var(--c-text-secondary)] mb-1.5">密码</label>
+          <label class="block text-sm font-medium text-[var(--c-text-secondary)] mb-1.5">{{ t('loginPage.passwordLabel') }}</label>
           <input
             v-model="password"
             type="password"
             maxlength="35"
-            placeholder="请输入你的校园网密码"
+            :placeholder="t('loginPage.passwordPlaceholder')"
             class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3.5 py-2.5 text-sm text-[var(--c-text)] placeholder-[var(--c-text-tertiary)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
           />
         </div>
@@ -98,7 +100,7 @@ function handleThirdPartyLogin(type) {
           type="submit"
           class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold hover:bg-[var(--c-primary-hover)] transition cursor-pointer"
         >
-          登录
+          {{ t('loginPage.submit') }}
         </button>
       </form>
 
@@ -116,25 +118,25 @@ function handleThirdPartyLogin(type) {
               :class="mockMode ? 'translate-x-5' : 'translate-x-0'"
             />
           </button>
-          <span class="text-xs text-[var(--c-text-3)]">模拟数据模式</span>
+          <span class="text-xs text-[var(--c-text-3)]">{{ t('loginPage.mockMode') }}</span>
         </div>
         <span v-if="mockMode" class="text-[10px] text-[var(--c-primary)] font-medium">Mock</span>
       </div>
       <div v-if="mockMode" class="mt-2 px-3 py-2 rounded-lg bg-[var(--c-primary-50)] text-xs text-[var(--c-primary)]">
-        {{ getMockCredentialsHint() }}（已自动填入）
+        {{ `${getMockCredentialsHint()}${t('loginPage.autoFilledSuffix')}` }}
       </div>
 
       <!-- Footer links -->
       <div class="mt-5 text-center text-xs text-[var(--c-text-tertiary)] leading-relaxed">
         <p>
-          关于登录账户请阅读
-          <router-link to="/about/account" class="text-[var(--c-primary)] hover:underline">《校园网络账号说明》</router-link>
+          {{ t('loginPage.accountHelpPrefix') }}
+          <router-link to="/about/account" class="text-[var(--c-primary)] hover:underline">{{ t('loginPage.accountHelpLink') }}</router-link>
         </p>
         <p class="mt-1">
-          使用前请仔细阅读
-          <router-link to="/agreement" class="text-[var(--c-primary)] hover:underline">《用户协议》</router-link>
-          和
-          <router-link to="/policy/privacy" class="text-[var(--c-primary)] hover:underline">《隐私政策》</router-link>
+          {{ t('loginPage.agreementPrefix') }}
+          <router-link to="/agreement" class="text-[var(--c-primary)] hover:underline">{{ t('loginPage.agreementLink') }}</router-link>
+          {{ t('loginPage.and') }}
+          <router-link to="/policy/privacy" class="text-[var(--c-primary)] hover:underline">{{ t('loginPage.privacyLink') }}</router-link>
         </p>
       </div>
 
@@ -142,7 +144,7 @@ function handleThirdPartyLogin(type) {
       <div class="mt-8">
         <div class="flex items-center gap-3 mb-5">
           <div class="flex-1 h-px bg-[var(--c-border)]"></div>
-          <span class="text-xs text-[var(--c-text-tertiary)] whitespace-nowrap">其他方式登录</span>
+          <span class="text-xs text-[var(--c-text-tertiary)] whitespace-nowrap">{{ t('loginPage.otherLogin') }}</span>
           <div class="flex-1 h-px bg-[var(--c-border)]"></div>
         </div>
         <div class="flex justify-center items-center gap-5">

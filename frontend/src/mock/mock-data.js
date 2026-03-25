@@ -1,11 +1,5 @@
 import { MOCK_ACCOUNT_USERNAME, MOCK_ACCOUNT_PASSWORD } from '../constants/mock.js'
 
-function formatLocationDisplay(regionName, stateName, cityName) {
-  return [regionName, stateName, cityName].filter(function(item, index, list) {
-    return !!item && item !== list[index - 1]
-  }).join(' ')
-}
-
 export const MOCK_ACCOUNT_DATA = {
   username: MOCK_ACCOUNT_USERNAME,
   password: MOCK_ACCOUNT_PASSWORD
@@ -16,17 +10,19 @@ export const BASE_PROFILE = {
   nickname: '林知远',
   avatar: '',
   birthday: '2004-09-16',
-  faculty: '计算机科学系',
-  major: '软件工程',
+  facultyCode: 11,
+  majorCode: 'software_engineering',
   enrollment: '2023',
-  location: formatLocationDisplay('中国', '广东', '广州'),
-  locationRegion: 'CN',
-  locationState: '44',
-  locationCity: '1',
-  hometown: formatLocationDisplay('中国', '广东', '汕头'),
-  hometownRegion: 'CN',
-  hometownState: '44',
-  hometownCity: '5',
+  location: {
+    regionCode: 'CN',
+    stateCode: '44',
+    cityCode: '1'
+  },
+  hometown: {
+    regionCode: 'CN',
+    stateCode: '44',
+    cityCode: '5'
+  },
   introduction: '喜欢做实用的小工具，也在准备移动端开发实习。',
   ipArea: '广东'
 }

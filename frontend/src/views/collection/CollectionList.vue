@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { searchBooks } from '@/api/collection'
 import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
 const { loading: showLoading, hideLoading } = useToast()
 
 const list = ref([])
@@ -24,7 +26,7 @@ function openDetail(item) {
 
 function fetchList() {
   loading.value = true
-  showLoading('加载中')
+  showLoading(t('common.loading'))
   searchBooks(keyword.value, currentPage.value)
     .then((res) => {
       const result = res?.data
@@ -66,15 +68,15 @@ onMounted(() => {
   <div class="min-h-screen bg-[var(--c-bg)]">
     <template v-if="keyword">
       <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-        <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
-        <span class="flex-1 text-center text-sm font-bold">馆藏检索</span>
+        <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
+        <span class="flex-1 text-center text-sm font-bold">{{ t('libraryPage.list.title') }}</span>
         <div class="w-10"></div>
       </div>
 
       <div class="max-w-lg mx-auto px-4 py-6">
-        <p class="text-center text-sm text-[var(--c-text-2)] mb-5">图书馆馆藏检索结果</p>
+        <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('libraryPage.list.description') }}</p>
 
-        <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">馆藏检索结果</h3>
+        <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">{{ t('libraryPage.list.resultTitle') }}</h3>
 
         <div class="bg-[var(--c-surface)] rounded-xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
           <a
@@ -86,10 +88,10 @@ onMounted(() => {
           >
             <h4 class="text-base font-medium text-[var(--c-text)] break-all leading-snug">{{ item.bookname || '—' }}</h4>
             <p class="mt-1 text-sm text-[var(--c-text-2)]">
-              <span class="text-[var(--c-text-3)]">著者: </span>{{ item.author || '—' }}
+              <span class="text-[var(--c-text-3)]">{{ t('libraryPage.list.author') }}</span>{{ item.author || '—' }}
             </p>
             <p class="text-sm text-[var(--c-text-2)]">
-              <span class="text-[var(--c-text-3)]">出版者: </span>{{ item.publishingHouse || '—' }}
+              <span class="text-[var(--c-text-3)]">{{ t('libraryPage.list.publisher') }}</span>{{ item.publishingHouse || '—' }}
             </p>
           </a>
         </div>
@@ -100,16 +102,16 @@ onMounted(() => {
             class="px-4 py-1.5 text-sm border border-[var(--c-border)] rounded-lg bg-[var(--c-surface)] hover:bg-[var(--c-surface-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             :disabled="currentPage <= 1"
             @click="prevPage"
-          >上一页</button>
-          <span class="text-sm text-[var(--c-text-2)]">第 {{ currentPage }} 页</span>
+          >{{ t('libraryPage.list.prevPage') }}</button>
+          <span class="text-sm text-[var(--c-text-2)]">{{ t('libraryPage.list.pageText', { page: currentPage }) }}</span>
           <button
             class="px-4 py-1.5 text-sm border border-[var(--c-border)] rounded-lg bg-[var(--c-surface)] hover:bg-[var(--c-surface-hover)] transition-colors"
             @click="nextPage"
-          >下一页</button>
+          >{{ t('libraryPage.list.nextPage') }}</button>
         </div>
 
         <div v-if="showNoResult" class="flex items-center justify-center min-h-[120px] py-10 text-sm text-[var(--c-text-3)]">
-          暂无馆藏结果
+          {{ t('libraryPage.list.empty') }}
         </div>
       </div>
     </template>

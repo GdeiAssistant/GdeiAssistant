@@ -10,7 +10,7 @@ import { createLostAndFoundItemTypeNames } from '../community/communityContent'
 
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { loading: showLoadingToast, hideLoading } = useToast()
 const formData = ref({
   type: 0,
@@ -36,7 +36,7 @@ const editItemId = computed(() => {
   return Number.isInteger(value) && value > 0 ? value : null
 })
 const isEditMode = computed(() => route.query.edit === '1' && editItemId.value !== null)
-const itemTypeNames = computed(() => createLostAndFoundItemTypeNames(t))
+const itemTypeNames = computed(() => createLostAndFoundItemTypeNames(locale.value))
 const itemTypeDisplay = computed(() => formData.value.itemType >= 0 && formData.value.itemType <= 11
   ? itemTypeNames.value[formData.value.itemType]
   : '')

@@ -38,6 +38,14 @@
     "info": "資訊信息",
     "profile": "個人中心"
   },
+  "communityTab": {
+    "home": "首頁",
+    "publish": "發佈",
+    "profile": "我的",
+    "search": "搜索",
+    "hall": "大廳",
+    "confess": "表白"
+  },
   "home": {
     "title": "廣東二師助手",
     "subtitle": "四年時光，廣東二師助手陪你一起走過。",
@@ -241,6 +249,64 @@
     "toast": {
       "exportStarted": "匯出任務已提交，請稍候返回下載",
       "downloadStarted": "下載已開始"
+    }
+  },
+  "marketplace": {
+    "profile": {
+      "title": "個人中心",
+      "defaultNickname": "二手用戶",
+      "defaultIntroduction": "這個人很懶，什麼都沒寫。",
+      "tab": {
+        "doing": "正在出售",
+        "sold": "已售出",
+        "off": "已下架"
+      },
+      "empty": {
+        "doing": "暫無正在出售的商品",
+        "sold": "暫無已售出的商品",
+        "off": "暫無已下架的商品"
+      },
+      "action": {
+        "off": "下架",
+        "markSold": "確認售出",
+        "relist": "重新上架"
+      },
+      "confirm": {
+        "off": "確定下架這件商品嗎？",
+        "sold": "確定標記為已售出嗎？"
+      },
+      "success": {
+        "off": "已下架",
+        "sold": "已標記為已售出",
+        "relist": "已重新上架"
+      },
+      "soldHint": "已售出的商品不再支援編輯或重新上架"
+    }
+  },
+  "lostandfound": {
+    "profile": {
+      "title": "個人中心",
+      "defaultNickname": "用戶",
+      "defaultIntroduction": "這個人很懶，什麼都沒寫。",
+      "tab": {
+        "lost": "尋物",
+        "found": "招領",
+        "didFound": "已找回"
+      },
+      "empty": {
+        "lost": "暫無尋物資訊",
+        "found": "暫無招領資訊",
+        "didFound": "暫無已找回資訊"
+      },
+      "action": {
+        "didFound": "確認尋回"
+      },
+      "confirm": {
+        "didFound": "確定標記為確認尋回嗎？"
+      },
+      "success": {
+        "didFound": "已標記為確認尋回"
+      }
     }
   },
   "locationPicker": {

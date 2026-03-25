@@ -1,9 +1,7 @@
 package cn.gdeiassistant.core.userProfile.service;
 
 import cn.gdeiassistant.common.constant.OptionConstantUtils;
-import cn.gdeiassistant.core.userProfile.pojo.DictionaryOptionVO;
 import cn.gdeiassistant.core.userProfile.pojo.ProfileOptionsVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,45 +14,31 @@ import java.util.List;
 @Service
 public class ProfileOptionsFacade {
 
-    @Autowired
-    private ProfileLocalizationService profileLocalizationService;
-
     public ProfileOptionsVO buildProfileOptions() {
-        return buildProfileOptions("zh-CN");
-    }
-
-    public ProfileOptionsVO buildProfileOptions(String language) {
         ProfileOptionsVO options = new ProfileOptionsVO();
-        options.setFaculties(buildFacultyOptions(language));
-        options.setMarketplaceItemTypes(buildDictionaryOptions(OptionConstantUtils.MARKETPLACE_ITEM_TYPE_OPTIONS, language));
-        options.setLostFoundItemTypes(buildDictionaryOptions(OptionConstantUtils.LOST_FOUND_ITEM_TYPE_OPTIONS, language));
-        options.setLostFoundModes(buildDictionaryOptions(OptionConstantUtils.LOST_FOUND_MODE_OPTIONS, language));
+        options.setFaculties(buildFacultyOptions());
+        options.setMarketplaceItemTypes(buildDictionaryOptions(OptionConstantUtils.MARKETPLACE_ITEM_TYPE_OPTIONS));
+        options.setLostFoundItemTypes(buildDictionaryOptions(OptionConstantUtils.LOST_FOUND_ITEM_TYPE_OPTIONS));
+        options.setLostFoundModes(buildDictionaryOptions(OptionConstantUtils.LOST_FOUND_MODE_OPTIONS));
         return options;
     }
 
-    private List<ProfileOptionsVO.FacultyOptionVO> buildFacultyOptions(String language) {
+    private List<ProfileOptionsVO.FacultyOptionVO> buildFacultyOptions() {
         List<ProfileOptionsVO.FacultyOptionVO> options = new ArrayList<>();
         for (int i = 0; i < OptionConstantUtils.FACULTY_OPTIONS.length; i++) {
-            List<ProfileOptionsVO.MajorOptionVO> majors = new ArrayList<>();
+            List<String> majors = new ArrayList<>();
             for (ProfileMajorCatalog.MajorDefinition major : ProfileMajorCatalog.majorsForFaculty(i)) {
-                majors.add(new ProfileOptionsVO.MajorOptionVO(
-                        major.getCode(),
-                        profileLocalizationService.localizeText(major.getLabel(), language)
-                ));
+                majors.add(major.getCode());
             }
-            options.add(new ProfileOptionsVO.FacultyOptionVO(
-                    i,
-                    profileLocalizationService.localizeText(OptionConstantUtils.FACULTY_OPTIONS[i], language),
-                    majors
-            ));
+            options.add(new ProfileOptionsVO.FacultyOptionVO(i, majors));
         }
         return options;
     }
 
-    private List<DictionaryOptionVO> buildDictionaryOptions(String[] values, String language) {
-        List<DictionaryOptionVO> options = new ArrayList<>();
+    private List<Integer> buildDictionaryOptions(String[] values) {
+        List<Integer> options = new ArrayList<>();
         for (int i = 0; i < values.length; i++) {
-            options.add(new DictionaryOptionVO(i, profileLocalizationService.localizeText(values[i], language)));
+            options.add(i);
         }
         return options;
     }

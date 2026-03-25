@@ -10,7 +10,7 @@ import { createMarketplaceCategoryNames } from '../community/communityContent'
 
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { toast, loading: showLoadingToast, hideLoading } = useToast()
 const name = ref('')
 const description = ref('')
@@ -38,7 +38,7 @@ function showDialog(msg) {
   dialogVisible.value = true
 }
 
-const typeNames = computed(() => createMarketplaceCategoryNames(t))
+const typeNames = computed(() => createMarketplaceCategoryNames(locale.value))
 const typeNameDisplay = computed(() => typeId.value >= 0 && typeId.value <= 11 ? typeNames.value[typeId.value] : '')
 
 const MAX_IMAGES = 4

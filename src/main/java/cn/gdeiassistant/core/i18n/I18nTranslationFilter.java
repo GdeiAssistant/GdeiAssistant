@@ -2,7 +2,6 @@ package cn.gdeiassistant.core.i18n;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import jakarta.servlet.*;
@@ -32,7 +31,8 @@ public class I18nTranslationFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String acceptLang = httpRequest.getHeader("Accept-Language");
-        if (acceptLang == null || acceptLang.isBlank() || acceptLang.startsWith("zh-CN") || acceptLang.equals("zh")) {
+        String targetLang = normalizeAcceptLanguage(acceptLang);
+        if ("zh-CN".equals(targetLang)) {
             chain.doFilter(request, response);
             return;
         }
@@ -59,14 +59,11 @@ public class I18nTranslationFilter implements Filter {
         }
 
         try {
-            String targetLang = normalizeAcceptLanguage(acceptLang);
             List<String> fields = I18nFieldConfig.getFieldsForPath(path);
             JsonNode root = objectMapper.readTree(body);
 
-            if (root.isObject()) {
-                for (String fieldPath : fields) {
-                    translateFieldPath((ObjectNode) root, fieldPath, targetLang);
-                }
+            for (String fieldPath : fields) {
+                translateFieldPath(root, fieldPath, targetLang);
             }
 
             byte[] modifiedBody = objectMapper.writeValueAsBytes(root);
@@ -77,51 +74,91 @@ public class I18nTranslationFilter implements Filter {
         }
     }
 
-    private void translateFieldPath(ObjectNode root, String path, String targetLang) {
-        if (path.contains("[]")) {
-            String[] parts = path.split("\\[]\\.", 2);
-            if (parts.length == 2) {
-                JsonNode arrayNode = navigateTo(root, parts[0]);
-                if (arrayNode != null && arrayNode.isArray()) {
-                    for (JsonNode element : arrayNode) {
-                        if (element.isObject()) {
-                            translateSimpleField((ObjectNode) element, parts[1], targetLang);
-                        } else if (element.isTextual()) {
-                            // array of strings (e.g., description[])
-                            translateArrayElements(root, parts[0], targetLang);
-                            break;
-                        }
-                    }
+    private void translateFieldPath(JsonNode root, String path, String targetLang) {
+        translateBySegments(root, path.split("\\."), 0, targetLang);
+    }
+
+    private void translateBySegments(JsonNode currentNode, String[] segments, int index, String targetLang) {
+        if (currentNode == null || index >= segments.length) {
+            return;
+        }
+
+        String segment = segments[index];
+        boolean isArraySegment = segment.endsWith("[]");
+        String fieldName = isArraySegment ? segment.substring(0, segment.length() - 2) : segment;
+
+        if (isArraySegment) {
+            JsonNode arrayNode = resolveChildNode(currentNode, fieldName);
+            if (arrayNode == null || !arrayNode.isArray()) {
+                return;
+            }
+            for (JsonNode element : arrayNode) {
+                if (index == segments.length - 1) {
+                    translateTextNodeInArray(arrayNode, element, targetLang);
+                } else {
+                    translateBySegments(element, segments, index + 1, targetLang);
                 }
-            } else {
-                // path ends with [] — translate array of strings
-                String arrayPath = path.replace("[]", "");
-                translateArrayElements(root, arrayPath, targetLang);
             }
             return;
         }
 
-        int lastDot = path.lastIndexOf('.');
-        if (lastDot < 0) {
-            translateSimpleField(root, path, targetLang);
+        if (index == segments.length - 1) {
+            translateSimpleField(currentNode, fieldName, targetLang);
             return;
         }
 
-        String parentPath = path.substring(0, lastDot);
-        String fieldName = path.substring(lastDot + 1);
-        JsonNode parent = navigateTo(root, parentPath);
-        if (parent != null && parent.isObject()) {
-            translateSimpleField((ObjectNode) parent, fieldName, targetLang);
+        translateBySegments(resolveChildNode(currentNode, fieldName), segments, index + 1, targetLang);
+    }
+
+    private JsonNode resolveChildNode(JsonNode currentNode, String fieldName) {
+        if (currentNode == null) {
+            return null;
+        }
+        if (fieldName == null || fieldName.isEmpty()) {
+            return currentNode;
+        }
+        if (!currentNode.isObject()) {
+            return null;
+        }
+        return currentNode.get(fieldName);
+    }
+
+    private void translateSimpleField(JsonNode node, String fieldName, String targetLang) {
+        if (!(node instanceof ObjectNode objectNode)) {
+            return;
+        }
+        JsonNode fieldNode = objectNode.get(fieldName);
+        if (fieldNode == null || !fieldNode.isTextual()) {
+            return;
+        }
+        translateAndReplace(objectNode, fieldName, fieldNode.asText(), targetLang);
+    }
+
+    private void translateTextNodeInArray(JsonNode arrayNode, JsonNode element, String targetLang) {
+        if (!arrayNode.isArray() || !element.isTextual()) {
+            return;
+        }
+        String original = element.asText();
+        if (original.isBlank()) {
+            return;
+        }
+        String cached = translationService.getCachedTranslation(original, targetLang);
+        if (cached != null) {
+            for (int i = 0; i < arrayNode.size(); i++) {
+                if (arrayNode.get(i) == element) {
+                    ((com.fasterxml.jackson.databind.node.ArrayNode) arrayNode).set(i, new TextNode(cached));
+                    break;
+                }
+            }
+        } else {
+            translationService.enqueueTranslation(original, targetLang);
         }
     }
 
-    private void translateSimpleField(ObjectNode node, String fieldName, String targetLang) {
-        JsonNode fieldNode = node.get(fieldName);
-        if (fieldNode == null || !fieldNode.isTextual()) return;
-
-        String original = fieldNode.asText();
-        if (original.isBlank()) return;
-
+    private void translateAndReplace(ObjectNode node, String fieldName, String original, String targetLang) {
+        if (original.isBlank()) {
+            return;
+        }
         String cached = translationService.getCachedTranslation(original, targetLang);
         if (cached != null) {
             node.set(fieldName, new TextNode(cached));
@@ -130,35 +167,8 @@ public class I18nTranslationFilter implements Filter {
         }
     }
 
-    private void translateArrayElements(ObjectNode root, String arrayPath, String targetLang) {
-        JsonNode arrayNode = navigateTo(root, arrayPath);
-        if (arrayNode == null || !arrayNode.isArray()) return;
-
-        ArrayNode array = (ArrayNode) arrayNode;
-        for (int i = 0; i < array.size(); i++) {
-            JsonNode elem = array.get(i);
-            if (elem.isTextual() && !elem.asText().isBlank()) {
-                String cached = translationService.getCachedTranslation(elem.asText(), targetLang);
-                if (cached != null) {
-                    array.set(i, new TextNode(cached));
-                } else {
-                    translationService.enqueueTranslation(elem.asText(), targetLang);
-                }
-            }
-        }
-    }
-
-    private JsonNode navigateTo(JsonNode root, String dotPath) {
-        JsonNode current = root;
-        for (String segment : dotPath.split("\\.")) {
-            if (current == null) return null;
-            current = current.get(segment);
-        }
-        return current;
-    }
-
     private String normalizeAcceptLanguage(String header) {
-        if (header == null) return "en";
+        if (header == null || header.isBlank()) return "zh-CN";
         String lang = header.split(",")[0].trim().split(";")[0].trim();
         switch (lang) {
             case "zh-HK": case "zh-Hant-HK": return "zh-HK";
@@ -171,7 +181,7 @@ public class I18nTranslationFilter implements Filter {
                 if (lang.startsWith("ja")) return "ja";
                 if (lang.startsWith("ko")) return "ko";
                 if (lang.startsWith("en")) return "en";
-                return "en";
+                return "zh-CN";
         }
     }
 }

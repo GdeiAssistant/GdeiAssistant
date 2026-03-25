@@ -1,10 +1,20 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { getSchedule, updateScheduleCache, addCustomSchedule, deleteCustomSchedule } from '@/api/schedule'
 import { useToast } from '@/composables/useToast'
+import {
+  createScheduleDayLabels,
+  createScheduleDayOptions,
+  createScheduleLengthOptions,
+  createScheduleMessages,
+  createSectionOptions,
+  createWeekOptions
+} from './scheduleContent'
 
 const router = useRouter()
+const { t } = useI18n()
 const { success: toastSuccess, error: toastError, loading: toastLoading, hideLoading } = useToast()
 
 const loading = ref(false)
@@ -27,7 +37,14 @@ const addCustomForm = ref({
   maxScheduleWeek: 20
 })
 
-const dayLabels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+const dayLabels = computed(() => createScheduleDayLabels(t))
+const dayOptions = computed(() => createScheduleDayOptions(t))
+const weekPickerOptions = computed(() => createWeekOptions(t))
+const weekOptions = computed(() => createWeekOptions(t))
+const sectionOptions = computed(() => createSectionOptions(t))
+const lengthOptions = computed(() => createScheduleLengthOptions(addCustomForm.value.startSection, t))
+const scheduleMessages = computed(() => createScheduleMessages(t))
+const currentWeekLabel = computed(() => t('schedule.weekLabel', { week: currentWeek.value }))
 
 // 开始节数变化时，若当前占用节数超出当天剩余节数，自动重置为合法最大值
 watch(
@@ -39,9 +56,6 @@ watch(
     }
   }
 )
-
-// 周次选择器数据：与 schedule.js 的 weekPicker 一致，1-20 周
-const weekPickerOptions = Array.from({ length: 20 }, (_, i) => ({ label: `第${i + 1}周`, value: i + 1 }))
 
 const showWeekPicker = ref(false)
 
@@ -126,12 +140,12 @@ function onManageCache() {
 
 async function onRefreshSchedule() {
   closeActionSheet()
-  toastLoading('正在同步课表...')
+  toastLoading(scheduleMessages.value.syncLoading)
   try {
     const res = await updateScheduleCache()
     if (res && res.success) {
       hideLoading()
-      toastSuccess('更新成功')
+      toastSuccess(scheduleMessages.value.syncSuccess)
       await fetchSchedule()
     }
   } catch (e) {
@@ -165,11 +179,11 @@ async function submitAddCustom() {
   const name = (f.scheduleName || '').trim()
   const location = (f.scheduleLocation || '').trim()
   if (!name) {
-    toastError('请输入课程名称')
+    toastError(scheduleMessages.value.nameRequired)
     return
   }
   if (!location) {
-    toastError('请输入上课地点')
+    toastError(scheduleMessages.value.locationRequired)
     return
   }
 
@@ -183,11 +197,11 @@ async function submitAddCustom() {
   const minWeek = Math.max(1, Math.min(20, parseInt(f.minScheduleWeek, 10) || 1))
   const maxWeek = Math.max(1, Math.min(20, parseInt(f.maxScheduleWeek, 10) || 1))
   if (minWeek > maxWeek) {
-    toastError('开始周不能大于结束周')
+    toastError(scheduleMessages.value.invalidWeekRange)
     return
   }
   if (startSection + scheduleLength - 1 > 10) {
-    toastError('课程结束节数不能超过全天最大节数(10节)')
+    toastError(scheduleMessages.value.invalidSectionRange)
     return
   }
 
@@ -207,7 +221,7 @@ async function submitAddCustom() {
       const exMin = s.minScheduleWeek != null ? s.minScheduleWeek : 1
       const exMax = s.maxScheduleWeek != null ? s.maxScheduleWeek : 20
       if (minWeek <= exMax && maxWeek >= exMin) {
-        toastError('该时间段已存在课程')
+        toastError(scheduleMessages.value.duplicateCourse)
         return
       }
     }
@@ -225,7 +239,7 @@ async function submitAddCustom() {
   addCustomSubmitting.value = true
   try {
     await addCustomSchedule(payload)
-    toastSuccess('添加成功')
+    toastSuccess(scheduleMessages.value.addSuccess)
     showAddCustomDialog.value = false
     await fetchSchedule()
   } catch (e) {
@@ -240,10 +254,10 @@ async function handleDeleteCustomCourse() {
   const position = selectedCourse.value.position
   closeCourseDetail()
 
-  if (window.confirm && window.confirm('确定要删除这节自定义课程吗？')) {
+  if (window.confirm && window.confirm(scheduleMessages.value.deleteConfirm)) {
     try {
       await deleteCustomSchedule(position)
-      toastSuccess('删除成功')
+      toastSuccess(scheduleMessages.value.deleteSuccess)
       await fetchSchedule()
     } catch (e) {
       // 错误由 request.js 全局拦截器统一提示
@@ -261,6 +275,11 @@ function openCourseDetail(course) {
   showCourseDetail.value = true
 }
 
+function getTeacherLabel(teacher) {
+  const normalized = String(teacher ?? '').trim()
+  return normalized && normalized !== '—' && normalized !== '-' ? normalized : t('schedule.noTeacher')
+}
+
 function closeCourseDetail() {
   showCourseDetail.value = false
   selectedCourse.value = null
@@ -275,16 +294,16 @@ onMounted(() => {
   <div class="min-h-screen bg-[var(--c-bg)] pb-6">
     <!-- Header -->
     <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← 返回</button>
-      <span class="flex-1 text-center text-sm font-bold">课程表</span>
-      <button @click="showOptionMenu" class="text-[var(--c-primary)] text-sm font-medium w-10 text-right">更多</button>
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← {{ t('common.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('schedule.pageTitle') }}</span>
+      <button @click="showOptionMenu" class="text-[var(--c-primary)] text-sm font-medium w-10 text-right">{{ t('schedule.more') }}</button>
     </div>
 
     <!-- Loading -->
     <div v-if="loading" class="flex items-center justify-center py-20">
       <div class="flex flex-col items-center gap-2">
         <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
-        <span class="text-xs text-[var(--c-text-3)]">加载中</span>
+        <span class="text-xs text-[var(--c-text-3)]">{{ t('common.loading') }}</span>
       </div>
     </div>
 
@@ -294,7 +313,7 @@ onMounted(() => {
         @click="openWeekPicker"
         class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--c-primary)]/8 text-[var(--c-primary)] text-sm font-medium transition active:scale-95"
       >
-        <span>{{ scheduleResult ? `第${scheduleResult.week}周` : '选择周数' }}</span>
+        <span>{{ scheduleResult ? currentWeekLabel : t('schedule.selectWeek') }}</span>
         <svg class="w-3.5 h-3.5 opacity-60" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
       </button>
     </div>
@@ -358,7 +377,7 @@ onMounted(() => {
             <path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path>
             <path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path>
           </svg>
-          <p class="mt-4 text-sm text-[var(--c-text-3)]">本周暂无课程，好好休息吧</p>
+          <p class="mt-4 text-sm text-[var(--c-text-3)]">{{ t('schedule.empty') }}</p>
         </div>
 
         <!-- Course blocks -->
@@ -387,23 +406,23 @@ onMounted(() => {
             <button
               @click="onManageCache"
               class="w-full py-3.5 text-center text-[15px] text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
-            >管理缓存配置</button>
+            >{{ t('schedule.action.manageCache') }}</button>
             <div class="mx-4 border-t border-[var(--c-divider)]"></div>
             <button
               @click="onRefreshSchedule"
               class="w-full py-3.5 text-center text-[15px] text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
-            >更新实时数据</button>
+            >{{ t('schedule.action.refresh') }}</button>
             <div class="mx-4 border-t border-[var(--c-divider)]"></div>
             <button
               @click="onAddCustomCourse"
               class="w-full py-3.5 text-center text-[15px] text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
-            >添加自定义课程</button>
+            >{{ t('schedule.action.addCustomCourse') }}</button>
           </div>
           <div class="border-t-[6px] border-[var(--c-bg)]">
             <button
               @click="closeActionSheet"
               class="w-full py-3.5 text-center text-[15px] font-medium text-[var(--c-text-3)] active:bg-[var(--c-bg)] transition"
-            >取消</button>
+            >{{ t('common.cancel') }}</button>
           </div>
           <div class="pb-[env(safe-area-inset-bottom)]"></div>
         </div>
@@ -417,26 +436,26 @@ onMounted(() => {
         <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[340px] bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
           <!-- Header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)]">
-            <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">课程详细信息</h3>
-            <button @click="closeCourseDetail" class="text-sm text-[var(--c-primary)] font-medium">关闭</button>
+            <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ t('schedule.detail.title') }}</h3>
+            <button @click="closeCourseDetail" class="text-sm text-[var(--c-primary)] font-medium">{{ t('common.close') }}</button>
           </div>
           <!-- Body -->
           <div class="px-4 py-4 space-y-3">
             <div class="flex items-baseline gap-2">
-              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">课程名称</span>
+              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">{{ t('schedule.detail.name') }}</span>
               <span class="text-sm text-[var(--c-text-1)]">{{ selectedCourse.scheduleName }}</span>
             </div>
             <div class="flex items-baseline gap-2">
-              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">上课地点</span>
+              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">{{ t('schedule.detail.location') }}</span>
               <span class="text-sm text-[var(--c-text-1)]">{{ selectedCourse.scheduleLocation }}</span>
             </div>
             <div class="flex items-baseline gap-2">
-              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">任课教师</span>
-              <span class="text-sm text-[var(--c-text-1)]">{{ (selectedCourse.scheduleTeacher && String(selectedCourse.scheduleTeacher).trim() !== '' && String(selectedCourse.scheduleTeacher).trim() !== '—' && String(selectedCourse.scheduleTeacher).trim() !== '-') ? selectedCourse.scheduleTeacher : '无' }}</span>
+              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">{{ t('schedule.detail.teacher') }}</span>
+              <span class="text-sm text-[var(--c-text-1)]">{{ getTeacherLabel(selectedCourse.scheduleTeacher) }}</span>
             </div>
             <div class="flex items-baseline gap-2">
-              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">上课周次</span>
-              <span class="text-sm text-[var(--c-text-1)]">第{{ selectedCourse.minScheduleWeek }}周至第{{ selectedCourse.maxScheduleWeek }}周</span>
+              <span class="text-xs text-[var(--c-text-3)] shrink-0 w-16">{{ t('schedule.detail.weekRangeTitle') }}</span>
+              <span class="text-sm text-[var(--c-text-1)]">{{ t('schedule.weekRange', { start: selectedCourse.minScheduleWeek, end: selectedCourse.maxScheduleWeek }) }}</span>
             </div>
           </div>
           <!-- Footer -->
@@ -444,7 +463,7 @@ onMounted(() => {
             <button
               @click="handleDeleteCustomCourse"
               class="w-full max-w-[200px] py-2 rounded-lg border border-red-500 text-red-500 text-sm font-medium transition active:bg-red-50"
-            >删除</button>
+            >{{ t('common.delete') }}</button>
           </div>
         </div>
       </template>
@@ -457,81 +476,81 @@ onMounted(() => {
         <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[380px] max-h-[85vh] overflow-y-auto bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
           <!-- Header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)] sticky top-0 bg-[var(--c-surface)] rounded-t-2xl">
-            <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">添加自定义课程</h3>
-            <button @click="closeAddCustomDialog" class="text-sm text-[var(--c-primary)] font-medium">关闭</button>
+            <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ t('schedule.addDialog.title') }}</h3>
+            <button @click="closeAddCustomDialog" class="text-sm text-[var(--c-primary)] font-medium">{{ t('common.close') }}</button>
           </div>
           <!-- Form -->
           <div class="px-4 py-4 space-y-4">
             <!-- 课程名称 -->
             <div>
-              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">课程名称</label>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.name') }}</label>
               <input
                 v-model="addCustomForm.scheduleName"
                 type="text"
                 maxlength="50"
-                placeholder="请输入课程名称"
+                :placeholder="t('schedule.addDialog.namePlaceholder')"
                 class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] placeholder-[var(--c-text-3)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
               />
             </div>
             <!-- 上课地点 -->
             <div>
-              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">上课地点</label>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.location') }}</label>
               <input
                 v-model="addCustomForm.scheduleLocation"
                 type="text"
                 maxlength="25"
-                placeholder="请输入上课地点"
+                :placeholder="t('schedule.addDialog.locationPlaceholder')"
                 class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] placeholder-[var(--c-text-3)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
               />
             </div>
             <!-- 星期几 -->
             <div>
-              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">星期几</label>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.dayOfWeek') }}</label>
               <select
                 v-model.number="addCustomForm.dayOfWeek"
                 class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
               >
-                <option v-for="d in 7" :key="d" :value="d">周{{ ['一','二','三','四','五','六','日'][d-1] }}</option>
+                <option v-for="option in dayOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
             </div>
             <!-- 开始节数 -->
             <div>
-              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">开始节数</label>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.startSection') }}</label>
               <select
                 v-model.number="addCustomForm.startSection"
                 class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
               >
-                <option v-for="s in 10" :key="s" :value="s">第{{ s }}节</option>
+                <option v-for="option in sectionOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
             </div>
             <!-- 占用节数 -->
             <div>
-              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">占用节数</label>
+              <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.scheduleLength') }}</label>
               <select
                 v-model.number="addCustomForm.scheduleLength"
                 class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
               >
-                <option v-for="len in Math.max(1, Math.min(5, 11 - (addCustomForm.startSection || 1)))" :key="len" :value="len">{{ len }}节</option>
+                <option v-for="option in lengthOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
             </div>
             <!-- 周次范围 -->
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <label class="block text-xs text-[var(--c-text-3)] mb-1.5">开始周</label>
+                <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.minWeek') }}</label>
                 <select
                   v-model.number="addCustomForm.minScheduleWeek"
                   class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
                 >
-                  <option v-for="w in 20" :key="w" :value="w">第{{ w }}周</option>
+                  <option v-for="option in weekOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
                 </select>
               </div>
               <div>
-                <label class="block text-xs text-[var(--c-text-3)] mb-1.5">结束周</label>
+                <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.maxWeek') }}</label>
                 <select
                   v-model.number="addCustomForm.maxScheduleWeek"
                   class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
                 >
-                  <option v-for="w in 20" :key="w" :value="w">第{{ w }}周</option>
+                  <option v-for="option in weekOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
                 </select>
               </div>
             </div>
@@ -544,7 +563,7 @@ onMounted(() => {
               @click="submitAddCustom"
               class="w-full max-w-[200px] py-2.5 rounded-full bg-[var(--c-primary)] text-white text-sm font-semibold transition active:scale-95 disabled:opacity-50"
             >
-              {{ addCustomSubmitting ? '提交中...' : '添加' }}
+              {{ addCustomSubmitting ? t('schedule.addDialog.submitting') : t('schedule.addDialog.submit') }}
             </button>
           </div>
         </div>
@@ -558,8 +577,8 @@ onMounted(() => {
         <div class="fixed inset-x-0 bottom-0 z-[5001] rounded-t-2xl bg-[var(--c-surface)] shadow-2xl max-h-[70vh] flex flex-col animate-slide-up">
           <!-- Header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)] shrink-0">
-            <button @click="closeWeekPicker" class="text-sm text-[var(--c-text-3)]">取消</button>
-            <span class="text-[15px] font-semibold text-[var(--c-text-1)]">选择周数</span>
+            <button @click="closeWeekPicker" class="text-sm text-[var(--c-text-3)]">{{ t('common.cancel') }}</button>
+            <span class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ t('schedule.selectWeek') }}</span>
             <div class="w-10"></div>
           </div>
           <!-- Options -->

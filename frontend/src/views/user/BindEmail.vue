@@ -1,11 +1,13 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { showErrorTopTips } from '@/utils/toast.js'
 import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
+const { t } = useI18n()
 const { success: toastSuccess } = useToast()
 
 const currentEmail = ref('')
@@ -22,9 +24,9 @@ let timerId = null
 
 const codeButtonText = computed(() => {
   if (countdown.value > 0) {
-    return `${countdown.value}s 后重试`
+    return t('bindEmail.retryIn', { seconds: countdown.value })
   }
-  return '获取验证码'
+  return t('bindEmail.getCode')
 })
 
 const canSendCode = computed(() => countdown.value === 0 && !sending.value)
@@ -48,7 +50,7 @@ function maskEmail(email) {
 async function handleSendCode() {
   if (!canSendCode.value) return
   if (!validateEmail(formEmail.value)) {
-    showErrorTopTips('邮箱格式不正确')
+    showErrorTopTips(t('bindEmail.invalidEmail'))
     return
   }
 
@@ -64,9 +66,9 @@ async function handleSendCode() {
         timerId = null
       }
     }, 1000)
-    toastSuccess('验证码已发送，请检查邮箱')
+    toastSuccess(t('bindEmail.codeSent'))
   } catch (e) {
-    showErrorTopTips('发送验证码失败，请稍后重试')
+    showErrorTopTips(t('bindEmail.sendFailed'))
   } finally {
     sending.value = false
   }
@@ -75,11 +77,11 @@ async function handleSendCode() {
 async function handleSubmit() {
   if (isBinding.value) return
   if (!validateEmail(formEmail.value)) {
-    showErrorTopTips('邮箱格式不正确')
+    showErrorTopTips(t('bindEmail.invalidEmail'))
     return
   }
   if (!vcode.value) {
-    showErrorTopTips('请输入验证码')
+    showErrorTopTips(t('bindEmail.codeRequired'))
     return
   }
 
@@ -87,10 +89,10 @@ async function handleSubmit() {
   try {
     await request.post(`/email/bind?email=${encodeURIComponent(formEmail.value)}&randomCode=${encodeURIComponent(vcode.value)}`)
     currentEmail.value = maskEmail(formEmail.value)
-    toastSuccess('绑定成功')
+    toastSuccess(t('bindEmail.bindSuccess'))
     isEditing.value = false
   } catch (e) {
-    showErrorTopTips('绑定失败，请稍后重试')
+    showErrorTopTips(t('bindEmail.bindFailed'))
   } finally {
     isBinding.value = false
   }
@@ -132,7 +134,7 @@ async function confirmUnbind() {
     formEmail.value = ''
     vcode.value = ''
     isEditing.value = false
-    toastSuccess('已解除绑定')
+    toastSuccess(t('bindEmail.unbindSuccess'))
     showUnbindDialog.value = false
   } catch (e) {
     // 错误由 request.js 全局拦截器统一提示
@@ -165,8 +167,8 @@ onUnmounted(() => {
   <div class="min-h-screen bg-gray-50">
     <!-- Sticky Header -->
     <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">返回</button>
-      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">绑定邮箱</h1>
+      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">{{ t('common.back') }}</button>
+      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">{{ t('profile.bindEmail') }}</h1>
       <div class="w-15"></div>
     </div>
 
@@ -174,60 +176,60 @@ onUnmounted(() => {
       <!-- Bound status -->
       <div v-if="currentEmail && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
         <div class="text-5xl text-green-500 mb-4">&#10003;</div>
-        <h2 class="text-lg font-medium text-gray-700">已绑定邮箱</h2>
-        <p class="text-sm text-gray-500 mt-2">您当前绑定的邮箱为：{{ currentEmail }}</p>
+        <h2 class="text-lg font-medium text-gray-700">{{ t('bindEmail.boundTitle') }}</h2>
+        <p class="text-sm text-gray-500 mt-2">{{ t('bindEmail.boundDescription', { email: currentEmail }) }}</p>
         <div class="mt-8 space-y-3">
           <button
             type="button"
             class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer"
             @click="startEdit"
-          >修改绑定</button>
+          >{{ t('bindEmail.edit') }}</button>
           <button
             type="button"
             class="w-full rounded-lg bg-white text-gray-700 font-medium py-2.5 border border-gray-300 cursor-pointer"
             @click="openUnbindDialog"
-          >解除绑定</button>
+          >{{ t('bindEmail.unbind') }}</button>
         </div>
       </div>
 
       <!-- Unbound status -->
       <div v-else-if="!currentEmail && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
         <div class="text-5xl text-blue-400 mb-4">i</div>
-        <h2 class="text-lg font-medium text-gray-700">未绑定邮箱</h2>
-        <p class="text-sm text-gray-500 mt-2">您尚未绑定电子邮箱，绑定后可用于接收重要通知。</p>
+        <h2 class="text-lg font-medium text-gray-700">{{ t('bindEmail.unboundTitle') }}</h2>
+        <p class="text-sm text-gray-500 mt-2">{{ t('bindEmail.unboundDescription') }}</p>
         <div class="mt-8">
           <button
             type="button"
             class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer"
             @click="startBind"
-          >立即绑定</button>
+          >{{ t('bindEmail.bindNow') }}</button>
         </div>
       </div>
 
       <!-- Edit/Bind form -->
       <div v-else>
-        <p v-if="currentEmail" class="text-sm text-gray-400 mb-3">请输入新的邮箱地址进行绑定。</p>
+        <p v-if="currentEmail" class="text-sm text-gray-400 mb-3">{{ t('bindEmail.editDescription') }}</p>
 
         <div class="bg-white rounded-xl shadow-sm divide-y divide-gray-100">
           <!-- Email input -->
           <div class="flex items-center px-4 py-3 gap-3">
-            <label class="w-[60px] text-sm text-gray-700 shrink-0">邮箱</label>
+            <label class="w-[60px] text-sm text-gray-700 shrink-0">{{ t('bindEmail.email') }}</label>
             <input
               v-model="formEmail"
               type="email"
-              :placeholder="currentEmail ? '请输入新的电子邮箱' : '请输入您的电子邮箱'"
+              :placeholder="currentEmail ? t('bindEmail.newEmailPlaceholder') : t('bindEmail.emailPlaceholder')"
               class="flex-1 text-sm text-gray-700 outline-none placeholder-gray-400"
             />
           </div>
 
           <!-- Verification code -->
           <div class="flex items-center px-4 py-3 gap-3">
-            <label class="w-[60px] text-sm text-gray-700 shrink-0">验证码</label>
+            <label class="w-[60px] text-sm text-gray-700 shrink-0">{{ t('bindEmail.code') }}</label>
             <input
               v-model="vcode"
               type="number"
               inputmode="numeric"
-              placeholder="请输入邮箱验证码"
+              :placeholder="t('bindEmail.codePlaceholder')"
               class="flex-1 text-sm text-gray-700 outline-none placeholder-gray-400"
             />
             <button
@@ -252,9 +254,9 @@ onUnmounted(() => {
           >
             <template v-if="isBinding">
               <span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></span>
-              绑定中...
+              {{ t('bindEmail.binding') }}
             </template>
-            <template v-else>确认绑定</template>
+            <template v-else>{{ t('bindEmail.confirm') }}</template>
           </button>
         </div>
 
@@ -263,7 +265,7 @@ onUnmounted(() => {
             type="button"
             class="w-full rounded-lg bg-white text-gray-700 font-medium py-2.5 border border-gray-300 cursor-pointer"
             @click="cancelEdit"
-          >取消</button>
+          >{{ t('common.cancel') }}</button>
         </div>
       </div>
     </div>
@@ -274,22 +276,22 @@ onUnmounted(() => {
         <div class="fixed inset-0 bg-black/60 z-[1000]" @click="closeUnbindDialog"></div>
         <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[300px] bg-white rounded-xl z-[1001] overflow-hidden">
           <div class="px-5 pt-5 pb-2.5 text-center">
-            <strong class="text-[17px] font-medium text-gray-700">解除绑定</strong>
+            <strong class="text-[17px] font-medium text-gray-700">{{ t('bindEmail.unbind') }}</strong>
           </div>
           <div class="px-5 pb-5 text-center text-[15px] text-gray-500 leading-relaxed">
-            确定要解除绑定该邮箱吗？解除后将无法使用该邮箱找回账号。
+            {{ t('bindEmail.unbindConfirm') }}
           </div>
           <div class="flex border-t border-gray-200">
             <button
               type="button"
               class="flex-1 py-3.5 text-center text-[17px] text-gray-700 border-r border-gray-200 cursor-pointer bg-transparent"
               @click="closeUnbindDialog"
-            >取消</button>
+            >{{ t('common.cancel') }}</button>
             <button
               type="button"
               class="flex-1 py-3.5 text-center text-[17px] text-red-500 font-medium cursor-pointer bg-transparent"
               @click="confirmUnbind"
-            >确认解绑</button>
+            >{{ t('bindEmail.confirmUnbind') }}</button>
           </div>
         </div>
       </template>

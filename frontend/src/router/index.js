@@ -298,7 +298,7 @@ const routes = [
     path: '/user/avatar-edit',
     name: 'AvatarEdit',
     component: () => import('../views/user/AvatarEdit.vue'),
-    meta: { title: '头像管理' }
+    meta: { titleKey: 'profile.avatar' }
   },
   // 数据查询模块（对应后端 Data 模块）
   {
@@ -528,43 +528,43 @@ const routes = [
         path: 'home',
         name: 'Home',
         component: Home,
-        meta: { title: '首页' }
+        meta: { titleKey: 'tab.home' }
       },
       {
         path: 'info',
         name: 'InfoList',
         component: Info,
-        meta: { title: '消息通知' }
+        meta: { titleKey: 'tab.info' }
       },
       {
         path: 'profile',
         name: 'Profile',
         component: Profile,
-        meta: { title: '个人资料' }
+        meta: { titleKey: 'profile.title' }
       },
       {
         path: 'settings',
         name: 'SettingsPage',
         component: Settings,
-        meta: { title: '设置' }
+        meta: { titleKey: 'sidebar.settings' }
       },
       {
         path: 'info/announcements',
         name: 'AnnouncementList',
         component: AnnouncementList,
-        meta: { title: '通知公告' }
+        meta: { titleKey: 'info.noticeTitle' }
       },
       {
         path: 'info/announcements/:id',
         name: 'AnnouncementDetail',
         component: AnnouncementDetail,
-        meta: { title: '公告详情' }
+        meta: { titleKey: 'info.noticeTitle' }
       },
       {
         path: 'info/interactions',
         name: 'InteractionList',
         component: InteractionList,
-        meta: { title: '互动消息' }
+        meta: { titleKey: 'info.interactionTitle' }
       }
     ]
   }

@@ -1,19 +1,22 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import { createDeliveryStatusMap, createDeliveryTypeMap } from '../community/communityContent'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
 const activeTab = ref('published') // published, accepted
 const publishedList = ref([])
 const acceptedList = ref([])
 const loading = ref(false)
 
 function getStatusText(status) {
-  const map = { 0: '待接单', 1: '配送中', 2: '已完成' }
-  return map[status] || '未知'
+  const map = createDeliveryStatusMap(t)
+  return map[status] || t('delivery.unknownStatus')
 }
 
 function getStatusClass(status) {
@@ -24,8 +27,8 @@ function getStatusClass(status) {
 }
 
 function getTypeText(type) {
-  const map = { 'express': '代取快递', 'food': '买饭', 'other': '跑腿' }
-  return map[type] || '跑腿'
+  const map = createDeliveryTypeMap(t)
+  return map[type] || t('delivery.type.other')
 }
 
 function getQueryTab() {
@@ -78,7 +81,7 @@ async function loadData() {
       reward: o.price ?? 0,
       time: o.orderTime,
       type: 'express',
-      pickupAddress: o.company ? `${o.company} 取件` : '取件',
+      pickupAddress: o.company ? t('delivery.pickupAddressWithCompany', { company: o.company }) : t('delivery.pickupShort'),
       deliveryAddress: o.address || ''
     })) : []
     acceptedList.value = Array.isArray(accepted) ? accepted.map((o) => ({
@@ -89,7 +92,7 @@ async function loadData() {
       reward: o.price ?? 0,
       time: o.orderTime,
       type: 'express',
-      pickupAddress: o.company ? `${o.company} 取件` : '取件',
+      pickupAddress: o.company ? t('delivery.pickupAddressWithCompany', { company: o.company }) : t('delivery.pickupShort'),
       deliveryAddress: o.address || ''
     })) : []
   } catch (e) {
@@ -113,7 +116,7 @@ watch(() => route.fullPath, () => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] pb-16" style="--module-color: #f59e0b">
-    <CommunityHeader title="我的跑腿" moduleColor="#f59e0b" backTo="/" />
+    <CommunityHeader :title="t('delivery.mine.title')" moduleColor="#f59e0b" backTo="/" />
 
     <!-- Tabs -->
     <div class="flex bg-[var(--c-card)] border-b border-[var(--c-divider)] px-4">
@@ -122,7 +125,7 @@ watch(() => route.fullPath, () => {
         :class="activeTab === 'published' ? 'text-amber-500 font-medium' : 'text-[var(--c-text-2)]'"
         @click="switchTab('published')"
       >
-        我发布的
+        {{ t('delivery.mine.publishedTab') }}
         <div v-if="activeTab === 'published'" class="absolute bottom-0 left-0 right-0 h-[3px] bg-amber-500 rounded-t"></div>
       </div>
       <div
@@ -130,7 +133,7 @@ watch(() => route.fullPath, () => {
         :class="activeTab === 'accepted' ? 'text-amber-500 font-medium' : 'text-[var(--c-text-2)]'"
         @click="switchTab('accepted')"
       >
-        我接的单
+        {{ t('delivery.mine.acceptedTab') }}
         <div v-if="activeTab === 'accepted'" class="absolute bottom-0 left-0 right-0 h-[3px] bg-amber-500 rounded-t"></div>
       </div>
     </div>
@@ -138,10 +141,10 @@ watch(() => route.fullPath, () => {
     <!-- Published list -->
     <div v-if="activeTab === 'published'" class="p-4 animate-[fade-in_0.3s_ease_both]">
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-amber-500 rounded-full animate-spin"></i> 加载中
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-amber-500 rounded-full animate-spin"></i> {{ t('common.loading') }}
       </div>
       <div v-else-if="publishedList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-sm">暂无发布的任务</div>
+        <div class="text-sm">{{ t('delivery.mine.emptyPublished') }}</div>
       </div>
       <div v-else class="flex flex-col gap-4">
         <div
@@ -160,11 +163,12 @@ watch(() => route.fullPath, () => {
           </div>
           <div class="mb-4 p-3 bg-[var(--c-bg)] rounded-lg">
             <div class="flex items-center mb-2.5">
-              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-blue-500">取</span>
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-blue-500">{{ t('delivery.pickupBadge') }}</span>
+              
               <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.pickupAddress }}</span>
             </div>
             <div class="flex items-center">
-              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-amber-500">送</span>
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-amber-500">{{ t('delivery.deliveryBadge') }}</span>
               <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.deliveryAddress }}</span>
             </div>
           </div>
@@ -183,10 +187,10 @@ watch(() => route.fullPath, () => {
     <!-- Accepted list -->
     <div v-if="activeTab === 'accepted'" class="p-4 animate-[fade-in_0.3s_ease_both]">
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-amber-500 rounded-full animate-spin"></i> 加载中
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-amber-500 rounded-full animate-spin"></i> {{ t('common.loading') }}
       </div>
       <div v-else-if="acceptedList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-sm">暂无接单的任务</div>
+        <div class="text-sm">{{ t('delivery.mine.emptyAccepted') }}</div>
       </div>
       <div v-else class="flex flex-col gap-4">
         <div
@@ -205,11 +209,11 @@ watch(() => route.fullPath, () => {
           </div>
           <div class="mb-4 p-3 bg-[var(--c-bg)] rounded-lg">
             <div class="flex items-center mb-2.5">
-              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-blue-500">取</span>
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-blue-500">{{ t('delivery.pickupBadge') }}</span>
               <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.pickupAddress }}</span>
             </div>
             <div class="flex items-center">
-              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-amber-500">送</span>
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold text-white mr-2.5 shrink-0 bg-amber-500">{{ t('delivery.deliveryBadge') }}</span>
               <span class="flex-1 text-base text-[var(--c-text-1)] leading-relaxed">{{ item.deliveryAddress }}</span>
             </div>
           </div>

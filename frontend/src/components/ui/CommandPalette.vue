@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { DialogRoot, DialogOverlay, DialogContent, DialogPortal } from 'radix-vue'
 import {
   Search, Star, Calendar, CreditCard, FileText, GraduationCap,
@@ -8,7 +9,7 @@ import {
   Search as SearchIcon, MessageCircle, Eye, Users, Heart, Camera,
   Truck, CornerDownLeft, ArrowUp, ArrowDown,
 } from 'lucide-vue-next'
-import { ALL_FEATURES } from '@/constants/features'
+import { ALL_FEATURES, getLocalizedFeatures } from '@/constants/features'
 
 const props = defineProps({
   open: Boolean,
@@ -17,6 +18,7 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 
 const router = useRouter()
+const { t } = useI18n()
 const query = ref('')
 const selectedIndex = ref(0)
 const inputRef = ref(null)
@@ -31,11 +33,14 @@ const iconMap = {
 }
 
 const academicIds = ['grade', 'schedule', 'card', 'cet', 'kaoyan', 'collection', 'spare', 'pe', 'evaluate', 'data']
+const localizedFeatures = computed(() => getLocalizedFeatures(ALL_FEATURES, t))
 
 const filtered = computed(() => {
   const q = query.value.trim().toLowerCase()
-  if (!q) return ALL_FEATURES
-  return ALL_FEATURES.filter(f => f.name.toLowerCase().includes(q))
+  if (!q) return localizedFeatures.value
+  return localizedFeatures.value.filter((f) => {
+    return f.name.toLowerCase().includes(q) || f.description.toLowerCase().includes(q)
+  })
 })
 
 const academicItems = computed(() => filtered.value.filter(f => academicIds.includes(f.id)))
@@ -115,7 +120,7 @@ function getFlatIndex(item) {
                 <input
                   ref="inputRef"
                   v-model="query"
-                  placeholder="搜索功能..."
+                  :placeholder="t('commandPalette.searchPlaceholder')"
                   class="flex-1 bg-transparent outline-none text-sm"
                 />
                 <span
@@ -129,7 +134,7 @@ function getFlatIndex(item) {
                 <!-- Academic group -->
                 <template v-if="academicItems.length">
                   <div class="text-[10px] font-semibold uppercase tracking-wider text-[var(--c-text-3)] px-4 pt-2.5 pb-1">
-                    学业服务
+                    {{ t('commandPalette.academicGroup') }}
                   </div>
                   <div
                     v-for="item in academicItems"
@@ -153,7 +158,7 @@ function getFlatIndex(item) {
                 <!-- Community group -->
                 <template v-if="communityItems.length">
                   <div class="text-[10px] font-semibold uppercase tracking-wider text-[var(--c-text-3)] px-4 pt-2.5 pb-1">
-                    社区服务
+                    {{ t('commandPalette.communityGroup') }}
                   </div>
                   <div
                     v-for="item in communityItems"
@@ -176,7 +181,7 @@ function getFlatIndex(item) {
 
                 <!-- Empty state -->
                 <div v-if="!flatList.length" class="px-4 py-8 text-center text-sm text-[var(--c-text-3)]">
-                  没有匹配的功能
+                  {{ t('commandPalette.empty') }}
                 </div>
               </div>
 
@@ -185,15 +190,15 @@ function getFlatIndex(item) {
                 <span class="flex items-center gap-1">
                   <kbd class="bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1 py-0.5"><ArrowUp :size="10" /></kbd>
                   <kbd class="bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1 py-0.5"><ArrowDown :size="10" /></kbd>
-                  导航
+                  {{ t('commandPalette.navigate') }}
                 </span>
                 <span class="flex items-center gap-1">
                   <kbd class="bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1 py-0.5"><CornerDownLeft :size="10" /></kbd>
-                  跳转
+                  {{ t('commandPalette.open') }}
                 </span>
                 <span class="flex items-center gap-1">
                   <kbd class="bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1 py-0.5 text-[10px]">ESC</kbd>
-                  关闭
+                  {{ t('commandPalette.close') }}
                 </span>
               </div>
             </DialogContent>

@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const id = route.params.id
 
 const loading = ref(true)
@@ -27,7 +29,7 @@ function copyQQ() {
   if (!qq) return
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(qq).then(() => {
-      showTopTips('QQ号已复制')
+      showTopTips(t('marketplace.detail.qqCopied'))
     }).catch(() => {
       fallbackCopy(qq)
     })
@@ -45,9 +47,9 @@ function fallbackCopy(text) {
   ta.select()
   try {
     document.execCommand('copy')
-    showTopTips('QQ号已复制')
+    showTopTips(t('marketplace.detail.qqCopied'))
   } catch (e) {
-    showTopTips('复制失败，请手动复制')
+    showTopTips(t('marketplace.detail.copyFailed'))
   }
   document.body.removeChild(ta)
 }
@@ -87,11 +89,11 @@ onMounted(async () => {
       detail.value = mapErshouDetail(info)
     } else {
       detail.value = null
-      errorMessage.value = res?.message || '商品不存在'
+      errorMessage.value = res?.message || t('marketplace.detail.itemNotFound')
     }
   } catch (e) {
     detail.value = null
-    errorMessage.value = '加载失败，请稍后重试'
+    errorMessage.value = t('marketplace.detail.loadFailed')
   } finally {
     loading.value = false
   }
@@ -101,12 +103,12 @@ onMounted(async () => {
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] pb-5">
     <!-- 统一顶部导航栏 -->
-    <CommunityHeader title="商品详情" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
+    <CommunityHeader :title="t('marketplace.detail.title')" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
 
     <!-- 加载中 -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
       <div class="w-6 h-6 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></div>
-      <p class="mt-3 text-sm">加载中</p>
+      <p class="mt-3 text-sm">{{ t('communityCommon.loading') }}</p>
     </div>
 
     <template v-else-if="detail">
@@ -118,7 +120,7 @@ onMounted(async () => {
             v-for="(img, idx) in detail.images"
             :key="idx"
             :src="img"
-            :alt="'商品图' + (idx + 1)"
+            :alt="t('marketplace.detail.imageAlt', { index: idx + 1 })"
             class="w-full block rounded-lg"
             :class="idx > 0 ? 'mt-2.5' : ''"
           />
@@ -130,14 +132,14 @@ onMounted(async () => {
             <b class="absolute top-1 text-xs leading-3 left-1/2 -ml-[5px] font-normal">{{ '¥' }}</b>{{ detail.price }}
           </em>
           <h5 class="text-lg text-white m-0 mb-1">{{ detail.title }}</h5>
-          <p class="text-sm text-white m-0">发布时间：<b>{{ detail.seller?.publishTime || '—' }}</b></p>
+          <p class="text-sm text-white m-0">{{ t('marketplace.detail.publishTime') }}<b>{{ detail.seller?.publishTime || '—' }}</b></p>
         </div>
 
         <!-- 交易地点 -->
         <p class="bg-[var(--c-surface)] py-2 px-2.5 pl-[98px] text-emerald-500 leading-5 text-sm relative m-0">
           <span class="absolute left-2.5 top-2">
             <i class="inline-block w-2.5 h-3.5 mr-1 align-middle bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20384%20512%27%20fill=%27%2310b981%27%3E%3Cpath%20d=%27M192%200C86%200%200%2086%200%20192c0%2077.4%2027%2099%20172.3%20309.7a24%2024%200%200%200%2039.4%200C357%20291%20384%20269.4%20384%20192%20384%2086%20298%200%20192%200zm0%20272a80%2080%200%201%201%200-160%2080%2080%200%200%201%200%20160z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
-            交易地点：
+            {{ t('marketplace.detail.location') }}
           </span>
           {{ detail.location || '—' }}
         </p>
@@ -147,43 +149,43 @@ onMounted(async () => {
         <!-- 发布者 -->
         <div class="mt-2.5 bg-[var(--c-surface)] shadow-sm rounded overflow-hidden min-h-[30px] py-5 px-4 pl-[60px] relative block">
           <i class="w-[30px] h-[30px] absolute left-4 top-5 rounded-full overflow-hidden block">
-            <img :src="detail.seller?.avatar || '/img/avatar/default.png'" alt="头像" class="w-full h-full object-cover">
+            <img :src="detail.seller?.avatar || '/img/avatar/default.png'" :alt="t('profile.avatar')" class="w-full h-full object-cover">
           </i>
-          <span class="leading-[30px] text-base text-[var(--c-text-2)]">发布者：{{ detail.seller?.name || '—' }}</span>
+          <span class="leading-[30px] text-base text-[var(--c-text-2)]">{{ t('marketplace.detail.publisher') }}{{ detail.seller?.name || '—' }}</span>
         </div>
 
         <!-- 商品描述 -->
         <div class="mt-2.5 bg-[var(--c-surface)] shadow-sm rounded overflow-hidden relative py-4 px-4 pl-[60px] text-sm text-[var(--c-text-2)]">
           <i class="absolute left-4 top-4 w-[30px] h-[30px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20512%20512%27%20fill=%27%2310b981%27%3E%3Cpath%20d=%27M256%208C119%208%208%20119%208%20256s111%20248%20248%20248%20248-111%20248-248S393%208%20256%208zm0%20110a42%2042%200%201%201%200%2084%2042%2042%200%200%201%200-84zm56%20254c0%207-5%2012-12%2012h-88c-7%200-12-5-12-12v-24c0-7%205-12%2012-12h12v-64h-12c-7%200-12-5-12-12v-24c0-7%205-12%2012-12h64c7%200%2012%205%2012%2012v100h12c7%200%2012%205%2012%2012v24z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
-          <p class="m-0 leading-5">商品描述：{{ detail.desc || '—' }}</p>
+          <p class="m-0 leading-5">{{ t('marketplace.detail.description') }}{{ detail.desc || '—' }}</p>
         </div>
 
         <!-- 联系方式 -->
         <div class="mt-2.5 bg-[var(--c-surface)] shadow-sm rounded overflow-hidden relative py-4 px-4 pl-[60px] text-sm text-[var(--c-text-2)]">
           <i class="absolute left-4 top-4 w-[30px] h-[30px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20512%20512%27%20fill=%27%2310b981%27%3E%3Cpath%20d=%27M497%20361.8l-112-48a24%2024%200%200%200-28%206.9l-49.6%2060.6A370.7%20370.7%200%200%201%20131.6%20205l60.6-49.6a24%2024%200%200%200%206.9-28l-48-112A24.2%2024.2%200%200%200%20123.4.3L11.4%2024.3A24%2024%200%200%200-5.2e-7%2048c0%20256.5%20207.9%20464%20464%20464a24%2024%200%200%200%2023.7-11.4l24-112a24.2%2024.2%200%200%200-14.7-27.6z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
-          <p class="m-0 mb-0.5 leading-5">qq：<b>{{ detail.contact?.qq || '—' }}</b></p>
+          <p class="m-0 mb-0.5 leading-5">{{ t('marketplace.detail.qq') }}<b>{{ detail.contact?.qq || '—' }}</b></p>
           <p v-if="detail.contact?.phone" class="m-0 leading-5">
-            <span>手机号：<a class="text-[var(--c-text-2)]">{{ detail.contact.phone }}</a></span>
-            <a :href="'tel:' + detail.contact.phone" class="ml-1.5">打电话</a>
-            <a :href="'sms:' + detail.contact.phone" class="ml-1.5">发短信</a>
+            <span>{{ t('marketplace.detail.phone') }}<a class="text-[var(--c-text-2)]">{{ detail.contact.phone }}</a></span>
+            <a :href="'tel:' + detail.contact.phone" class="ml-1.5">{{ t('marketplace.detail.call') }}</a>
+            <a :href="'sms:' + detail.contact.phone" class="ml-1.5">{{ t('marketplace.detail.sms') }}</a>
           </p>
         </div>
       </section>
 
       <section class="text-center leading-[38px] h-[38px] mt-5 text-[var(--c-text-3)] text-xs">
-        <span>网络交易有风险，交易时请自行核实</span>
+        <span>{{ t('marketplace.detail.riskHint') }}</span>
       </section>
     </template>
 
     <!-- Empty State -->
     <div v-else class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-      <p class="text-sm">{{ errorMessage || '加载失败或商品不存在' }}</p>
+      <p class="text-sm">{{ errorMessage || t('marketplace.detail.loadFailedOrMissing') }}</p>
     </div>
 
     <!-- 底部悬浮操作栏 -->
     <div v-if="detail && !loading" class="fixed bottom-0 left-0 right-0 w-full flex items-center gap-3 px-3 py-2.5 bg-[var(--c-surface)] shadow-[0_-2px_10px_rgba(0,0,0,0.08)] z-[400]">
-      <button type="button" class="flex-1 h-11 border-none rounded bg-[var(--c-bg)] text-[var(--c-text-1)] text-base cursor-pointer flex items-center justify-center" @click="copyQQ">复制QQ</button>
-      <button v-if="detail.contact?.phone" type="button" class="flex-1 h-11 border-none rounded bg-emerald-500 text-white text-base cursor-pointer flex items-center justify-center" @click="callPhone">拨打电话</button>
+      <button type="button" class="flex-1 h-11 border-none rounded bg-[var(--c-bg)] text-[var(--c-text-1)] text-base cursor-pointer flex items-center justify-center" @click="copyQQ">{{ t('marketplace.detail.copyQQ') }}</button>
+      <button v-if="detail.contact?.phone" type="button" class="flex-1 h-11 border-none rounded bg-emerald-500 text-white text-base cursor-pointer flex items-center justify-center" @click="callPhone">{{ t('marketplace.detail.call') }}</button>
     </div>
 
     <!-- 底部栏占位 -->

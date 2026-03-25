@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const topic = ref(null)
 const loading = ref(true)
@@ -52,26 +54,26 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]">
-    <CommunityHeader title="话题详情" moduleColor="#6366f1" @back="router.back()" backTo="" />
+    <CommunityHeader :title="t('topic.detail.title')" moduleColor="#6366f1" @back="router.back()" backTo="" />
 
     <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
       <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i>
-      <span>加载中...</span>
+      <span>{{ t('common.loading') }}</span>
     </div>
 
     <div v-else-if="topic" class="p-4">
       <div class="bg-[var(--c-surface)] rounded-xl p-4 shadow-sm">
         <div class="flex items-center justify-between gap-3">
-          <span class="text-[var(--c-topic)] text-base font-semibold">#{{ topic.topic || '校园话题' }}</span>
-          <span class="text-[var(--c-text-3)] text-xs shrink-0">{{ topic.publishTime || '最近更新' }}</span>
+          <span class="text-[var(--c-topic)] text-base font-semibold">#{{ topic.topic || t('topic.detail.defaultTopic') }}</span>
+          <span class="text-[var(--c-text-3)] text-xs shrink-0">{{ topic.publishTime || t('common.recentUpdate') }}</span>
         </div>
-        <p class="mt-4 text-sm leading-[1.7] text-[var(--c-text-1)] whitespace-pre-wrap">{{ topic.content || '暂无内容' }}</p>
+        <p class="mt-4 text-sm leading-[1.7] text-[var(--c-text-1)] whitespace-pre-wrap">{{ topic.content || t('topic.detail.emptyContent') }}</p>
         <div v-if="topic.images.length" class="mt-4 grid grid-cols-2 gap-2.5">
           <img
             v-for="(image, index) in topic.images"
             :key="`${topic.id}-${index}`"
             :src="image"
-            :alt="`${topic.topic || '话题'}-${index + 1}`"
+            :alt="t('topic.imageAlt', { index: index + 1 })"
             class="w-full rounded-lg object-cover bg-[var(--c-bg)]"
           >
         </div>
@@ -82,14 +84,14 @@ onMounted(async () => {
             :class="topic.liked ? 'text-[var(--c-text-3)] bg-[var(--c-bg)]' : 'text-[var(--c-topic)] bg-[color-mix(in_srgb,var(--c-topic)_10%,white)]'"
             @click="handleLike"
           >
-            {{ topic.liked ? '已点赞' : '点赞' }} {{ topic.likeCount || 0 }}
+            {{ topic.liked ? t('topic.detail.liked') : t('topic.detail.like') }} {{ topic.likeCount || 0 }}
           </button>
         </div>
       </div>
     </div>
 
     <div v-else class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-      <p class="text-sm">话题不存在或已被删除</p>
+      <p class="text-sm">{{ t('topic.detail.notFound') }}</p>
     </div>
   </div>
 </template>

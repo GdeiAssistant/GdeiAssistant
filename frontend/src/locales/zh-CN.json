@@ -30,7 +30,28 @@
     "hint": "提示",
     "noData": "暂无数据",
     "loadingRegions": "地区列表加载中，请稍后再试",
-    "recentUpdate": "最近更新"
+    "recentUpdate": "最近更新",
+    "back": "返回"
+  },
+  "feature": {
+    "grade": { "name": "成绩查询", "description": "查每学年每学期成绩和绩点" },
+    "schedule": { "name": "课表查询", "description": "一眼看清这周每天上什么课" },
+    "cet": { "name": "四六级查询", "description": "输入考号和验证码即可查分" },
+    "kaoyan": { "name": "考研查询", "description": "查询考研成绩和相关信息" },
+    "spare": { "name": "教室查询", "description": "看看现在还有哪些空教室" },
+    "collection": { "name": "图书馆", "description": "搜馆藏、看借阅、办续借" },
+    "card": { "name": "校园卡", "description": "查余额、查消费、办挂失" },
+    "pe": { "name": "体测查询", "description": "查看体测成绩和数据" },
+    "data": { "name": "数据查询", "description": "查电费，也能找校内常用号码" },
+    "evaluate": { "name": "教学评价", "description": "需要评教时直接来这里" },
+    "ershou": { "name": "二手交易", "description": "闲置物品转让，校内面交" },
+    "delivery": { "name": "全民快递", "description": "发跑腿需求，帮取快递" },
+    "lostandfound": { "name": "失物招领", "description": "丢东西、捡东西都来这" },
+    "secret": { "name": "校园树洞", "description": "匿名倾诉，说出心里话" },
+    "dating": { "name": "卖室友", "description": "把室友介绍给全世界" },
+    "express": { "name": "表白墙", "description": "勇敢说出你的心意" },
+    "topic": { "name": "话题", "description": "热门讨论，校园八卦" },
+    "photograph": { "name": "拍好校园", "description": "用镜头记录校园美好" }
   },
   "tab": {
     "home": "功能主页",
@@ -87,6 +108,93 @@
     "selectFacultyFirst": "请先选择院系",
     "language": "语言 / Language"
   },
+  "settings": {
+    "section": {
+      "preference": "偏好设置",
+      "security": "账号安全"
+    }
+  },
+  "privacy": {
+    "partialSuccess": "设置已保存，但清理旧缓存时遇到网络延迟，可能需要稍后生效。",
+    "field": {
+      "faculty": "公开我的院系",
+      "major": "公开我的专业",
+      "location": "公开我的国家/地区",
+      "hometown": "公开我的家乡",
+      "introduction": "公开我的个人简介",
+      "enrollment": "公开我的入学年份",
+      "age": "公开我的年龄",
+      "cache": "缓存我的教务数据",
+      "robots": "让搜索引擎链接到我的个人资料页"
+    }
+  },
+  "avatarEdit": {
+    "title": "个人头像",
+    "currentAvatar": "当前头像",
+    "delete": "删除头像",
+    "change": "更换头像",
+    "crop": "裁剪头像",
+    "uploading": "正在上传头像...",
+    "cropFailed": "裁剪失败",
+    "updateSuccess": "更新头像完成",
+    "deleteConfirm": "确定要删除头像并恢复默认吗？",
+    "deleting": "正在删除头像...",
+    "deleteSuccess": "已恢复默认头像",
+    "deleteFailed": "删除头像失败，请稍后再试"
+  },
+  "bindEmail": {
+    "retryIn": "{seconds}s 后重试",
+    "getCode": "获取验证码",
+    "invalidEmail": "邮箱格式不正确",
+    "codeSent": "验证码已发送，请检查邮箱",
+    "sendFailed": "发送验证码失败，请稍后重试",
+    "codeRequired": "请输入验证码",
+    "bindSuccess": "绑定成功",
+    "bindFailed": "绑定失败，请稍后重试",
+    "unbindSuccess": "已解除绑定",
+    "boundTitle": "已绑定邮箱",
+    "boundDescription": "您当前绑定的邮箱为：{email}",
+    "edit": "修改绑定",
+    "unbind": "解除绑定",
+    "unboundTitle": "未绑定邮箱",
+    "unboundDescription": "您尚未绑定电子邮箱，绑定后可用于接收重要通知。",
+    "bindNow": "立即绑定",
+    "editDescription": "请输入新的邮箱地址进行绑定。",
+    "email": "邮箱",
+    "emailPlaceholder": "请输入您的电子邮箱",
+    "newEmailPlaceholder": "请输入新的电子邮箱",
+    "code": "验证码",
+    "codePlaceholder": "请输入邮箱验证码",
+    "binding": "绑定中...",
+    "confirm": "确认绑定",
+    "unbindConfirm": "确定要解除绑定该邮箱吗？解除后将无法使用该邮箱找回账号。",
+    "confirmUnbind": "确认解绑"
+  },
+  "realname": {
+    "unavailableTitle": "实名认证暂未开放",
+    "unavailableDescription": "当前实名认证能力仍在接入公安数据接口，暂未对外开放。待后端和外部校验链路就绪后再开放。",
+    "back": "返回上一页"
+  },
+  "deleteAccount": {
+    "success": "账号已注销",
+    "warningTitle": "将注销您的广东第二师范学院助手账号",
+    "riskTitle": "注销后，以下信息将被永久删除且无法恢复：",
+    "risk": {
+      "account": "账号及所有个人资料将被清空",
+      "posts": "表白墙、话题、跑腿等所有发布内容将被永久删除",
+      "interactions": "所有互动记录（评论、点赞等）将被清除",
+      "academic": "自定义课程以及保存的四六级准考证号信息将被删除",
+      "community": "社交功能平台的用户数据和交易记录将被清空",
+      "identity": "绑定的手机号、邮箱地址等身份信息将被删除"
+    },
+    "irreversible": "注销操作不可逆，请谨慎操作。",
+    "agreement": "我已充分阅读并同意上述注销后果",
+    "deleting": "注销中...",
+    "confirm": "确认注销",
+    "finalConfirmTitle": "最后确认",
+    "finalConfirmDescription": "注销操作不可逆，确定要永久删除该账号吗？",
+    "finalConfirmAction": "残忍注销"
+  },
   "info": {
     "news": "新闻",
     "newsDesc": "查看学校公开发布的校园新闻",
@@ -128,6 +236,732 @@
   },
   "router": {
     "siteTitle": "广东第二师范学院校园助手系统"
+  },
+  "sidebar": {
+    "settings": "设置",
+    "about": "关于",
+    "notLoggedIn": "未登录"
+  },
+  "commandPalette": {
+    "searchPlaceholder": "搜索功能...",
+    "academicGroup": "学业服务",
+    "communityGroup": "社区服务",
+    "empty": "没有匹配的功能",
+    "navigate": "导航",
+    "open": "跳转",
+    "close": "关闭"
+  },
+  "featureManage": {
+    "description": "首页功能模块展示设置（关闭后将不在首页显示）",
+    "saved": "修改已保存，首页将实时生效"
+  },
+  "locationPicker": {
+    "title": "选择地区",
+    "selectFirst": "请先选择"
+  },
+  "loginRecord": {
+    "empty": "暂无登录记录",
+    "success": "登录成功",
+    "unknownDevice": "未知设备",
+    "clientDevice": "{network} 客户端"
+  },
+  "news": {
+    "loadFailed": "加载失败，请稍后重试",
+    "noMore": "没有更多数据了",
+    "empty": "暂无新闻",
+    "defaultTitle": "新闻",
+    "openAttachment": "打开附件",
+    "tab": {
+      "school": "学校要闻",
+      "department": "院部通知",
+      "notice": "通知公告",
+      "academic": "学术动态"
+    },
+    "detail": {
+      "loading": "正在加载新闻详情",
+      "notFound": "未找到对应的新闻",
+      "loadFailed": "新闻详情加载失败，请稍后重试",
+      "noDate": "—",
+      "openSource": "打开原文链接",
+      "attachments": "附件链接",
+      "empty": "暂无详细内容"
+    }
+  },
+  "card": {
+    "title": "校园卡",
+    "description": "查询余额、消费记录，办理挂失业务。",
+    "amountUnit": "元",
+    "action": {
+      "info": {
+        "title": "基本信息",
+        "description": "查看校园卡余额、状态及当前挂失情况，支持在线挂失",
+        "badge": "信息"
+      },
+      "records": {
+        "title": "消费记录",
+        "description": "按日期查询校园卡当日消费流水",
+        "badge": "消费"
+      }
+    },
+    "search": {
+      "description": "选择日期后查询当日校园卡流水",
+      "dateLabel": "查询日期",
+      "datePlaceholder": "请选择日期",
+      "dateRequired": "请选择查询日期！",
+      "submit": "查询"
+    },
+    "list": {
+      "queryDate": "查询日期：",
+      "empty": "当日暂无消费记录",
+      "unknownMerchant": "未知商户",
+      "retry": "重新查询",
+      "invalidDate": "查询日期格式不正确，请重新选择"
+    }
+  },
+  "spare": {
+    "pageTitle": "空课室查询",
+    "resultTitle": "查询结果",
+    "resultList": "空课室列表",
+    "search": "查询",
+    "optional": "选填",
+    "empty": "暂无空课室数据",
+    "field": {
+      "campus": "校区",
+      "roomType": "教室类别",
+      "seatsMin": "座位数≥",
+      "seatsMax": "座位数≤",
+      "weekday": "星期",
+      "weekType": "单双周",
+      "period": "节数"
+    },
+    "result": {
+      "number": "编号",
+      "type": "类型",
+      "campus": "校区",
+      "seats": "座位"
+    },
+    "option": {
+      "unlimited": "不限"
+    },
+    "campus": {
+      "haizhu": "海珠",
+      "huadu": "花都",
+      "nanhai": "广东轻工南海校区",
+      "correspondence": "业余函授校区"
+    },
+    "weekday": {
+      "monday": "一",
+      "tuesday": "二",
+      "wednesday": "三",
+      "thursday": "四",
+      "friday": "五",
+      "saturday": "六",
+      "sunday": "日"
+    },
+    "weekType": {
+      "single": "单",
+      "double": "双"
+    },
+    "period": {
+      "oneTwo": "第1,2节",
+      "three": "第3节",
+      "fourFive": "第4,5节",
+      "sixSeven": "第6,7节",
+      "eightNine": "第8,9节",
+      "tenToTwelve": "第10,11,12节",
+      "morning": "上午",
+      "afternoon": "下午",
+      "evening": "晚上",
+      "daytime": "白天",
+      "allDay": "整天"
+    },
+    "roomType": {
+      "unlimited": "不限",
+      "noClassroom": "不用课室的课程",
+      "playground": "操场",
+      "largeMultimedia": "大多媒体",
+      "computerLab": "电脑专业机房",
+      "sculptureRoom": "雕塑室",
+      "multimediaRoom": "多媒体教室",
+      "translationRoom": "翻译室",
+      "fashionLab": "服装实验室",
+      "pianoRoomA": "钢琴室",
+      "pianoRoomB": "钢琴室",
+      "publicComputerRoom": "公共机房",
+      "traditionalPaintingRoom": "国画临摹室",
+      "artStudio": "画室",
+      "chemistryLab": "化学实验室",
+      "computerRoom": "机房",
+      "teachingAidRoom": "教具室",
+      "educationLab": "教育实验室",
+      "anatomyLab": "解剖实验室",
+      "financialMathLab": "金融数学实验室",
+      "artClassroom": "美术课室",
+      "montessoriRoom": "蒙氏教学法专用课室",
+      "modelMakingLab": "模型制作实验室",
+      "graphicDesignLab": "平面制作实验室",
+      "musicPracticeRoom": "琴房",
+      "photographyLab": "摄影实验室",
+      "vocalRoom": "声乐课室",
+      "biologyLab": "生物实验室",
+      "trainingRoom": "实训室",
+      "solfeggioRoom": "视唱练耳室",
+      "ceramicRoom": "陶艺室",
+      "gymnasticsRoom": "体操房",
+      "networkLab": "网络实验室",
+      "microteachingRoom": "微格课室",
+      "noNeedClassroom": "无须课室",
+      "danceRoomA": "舞蹈室",
+      "danceRoomB": "舞蹈室",
+      "physicsLab": "物理实验室",
+      "smallMultimedia": "小多媒体",
+      "smallMultimediaUnder70": "小多媒体(<70)",
+      "smallClassroomUnder70": "小普通课室(<70)",
+      "groupClassroom": "小组课室",
+      "bodyTrainingRoom": "形体房",
+      "musicRoom": "音乐室",
+      "musicMajorRoom": "音乐专业课室",
+      "languageLab": "语音室",
+      "smartRecordingRoom": "智能录像室",
+      "mediumMultimedia": "中多媒体(70-100)",
+      "majorClassroom": "专业课教室",
+      "majorTheoryRoom": "专业理论课室",
+      "majorLab": "专业实验室",
+      "consultingRoom": "咨询室",
+      "integratedPaintingLab": "综合绘画实验室"
+    }
+  },
+  "feedback": {
+    "title": "帮助与反馈",
+    "tab": {
+      "faq": "常见问题",
+      "form": "意见反馈"
+    },
+    "faq": {
+      "moreHelpPrefix": "以上未能解决您的问题？请切换到",
+      "moreHelpSuffix": "告诉我们您的疑问和建议。",
+      "login": {
+        "title": "登录应用的用户名和密码是什么？",
+        "content": "用户名和密码与校园网上网账号、学校教务系统账号保持一致。如果不清楚自己的账号信息，可以在\"关于应用-校园网络账号说明\"中查看详细指引。"
+      },
+      "password": {
+        "title": "应用账号是否支持修改密码？",
+        "content": "请前往学校统一身份认证系统修改密码。修改完成后，重新登录广东二师助手即可同步最新密码，本应用不会单独保存你的登录密码。"
+      },
+      "schedule": {
+        "title": "为什么成绩/课表查询会提示系统异常？",
+        "content": "教务查询依赖学校官网和教务系统的稳定性。当源站维护或更新时，可能出现查询异常或暂时不可用的情况，一般会在24小时内恢复。如果长时间异常，可以通过本页的\"意见反馈\"提交故障工单。"
+      },
+      "cache": {
+        "title": "什么是教务数据缓存？开启后是否安全？",
+        "content": "教务数据缓存用于在获得你授权的前提下，定期从学校教务系统同步成绩和课表，以提升查询速度和稳定性。数据仅用于教务展示，不会对外泄露，你可以在隐私设置中随时关闭该功能。"
+      },
+      "delete": {
+        "title": "如何注销账户？",
+        "content": "你可以在个人中心-删除账号中发起注销申请，系统会校验密码并判断是否满足注销条件。如果无法自助注销，可以在此处提交工单或发送邮件至 support@gdeiassistant.cn 联系管理员协助处理。"
+      }
+    },
+    "type": {
+      "crash": "闪退、卡顿或界面错位",
+      "login": "用户登录和密码设置",
+      "profile": "个人资料和隐私设置",
+      "verification": "实名认证和手机绑定",
+      "account": "账号绑定、管理和注销",
+      "appError": "应用功能异常",
+      "other": "其它"
+    },
+    "form": {
+      "typeTitle": "选择反馈类型",
+      "contentTitle": "反馈内容",
+      "contentPlaceholder": "请详细描述您遇到的问题或建议...",
+      "contentRequired": "请填写反馈内容",
+      "contactTitle": "联系方式（选填）",
+      "contactPlaceholder": "请留下您的QQ/微信或手机号，方便我们联系您（选填）",
+      "screenshotTitle": "截图上传",
+      "screenshotLimit": "（可选，最多 {count} 张）",
+      "screenshotPreview": "截图预览",
+      "addImage": "添加图片",
+      "submit": "提交反馈",
+      "submitting": "提交中...",
+      "submitSuccess": "提交成功"
+    }
+  },
+  "schedule": {
+    "pageTitle": "课表查询",
+    "more": "更多",
+    "selectWeek": "选择周次",
+    "empty": "本周暂无课程安排",
+    "noTeacher": "暂无教师信息",
+    "weekLabel": "第 {week} 周",
+    "sectionLabel": "第 {section} 节",
+    "lengthLabel": "{count} 节",
+    "weekRange": "第 {start} 周 - 第 {end} 周",
+    "day": {
+      "monday": "周一",
+      "tuesday": "周二",
+      "wednesday": "周三",
+      "thursday": "周四",
+      "friday": "周五",
+      "saturday": "周六",
+      "sunday": "周日"
+    },
+    "action": {
+      "manageCache": "管理教务缓存",
+      "refresh": "刷新课表",
+      "addCustomCourse": "添加自定义课程"
+    },
+    "detail": {
+      "title": "课程详情",
+      "name": "课程名称",
+      "location": "上课地点",
+      "teacher": "授课教师",
+      "weekRangeTitle": "上课周次"
+    },
+    "addDialog": {
+      "title": "添加自定义课程",
+      "name": "课程名称",
+      "namePlaceholder": "请输入课程名称",
+      "location": "上课地点",
+      "locationPlaceholder": "请输入上课地点",
+      "dayOfWeek": "星期",
+      "startSection": "开始节次",
+      "scheduleLength": "课程长度",
+      "minWeek": "开始周次",
+      "maxWeek": "结束周次",
+      "submit": "保存课程",
+      "submitting": "保存中..."
+    },
+    "message": {
+      "syncLoading": "正在同步课表...",
+      "syncSuccess": "课表已刷新",
+      "nameRequired": "请输入课程名称",
+      "locationRequired": "请输入上课地点",
+      "invalidWeekRange": "结束周次不能早于开始周次",
+      "invalidSectionRange": "课程节次超出当天范围",
+      "duplicateCourse": "当前时间段已有课程安排",
+      "addSuccess": "自定义课程已添加",
+      "deleteConfirm": "确定删除这门自定义课程吗？",
+      "deleteSuccess": "自定义课程已删除"
+    }
+  },
+  "electricityFees": {
+    "title": "电费查询",
+    "loading": "正在查询电费...",
+    "queryFailed": "查询失败，请稍后重试",
+    "submit": "开始查询",
+    "retry": "重新查询",
+    "field": {
+      "year": "年份",
+      "name": "姓名",
+      "number": "学号"
+    },
+    "placeholder": {
+      "name": "请输入姓名",
+      "number": "请输入学号"
+    },
+    "validation": {
+      "yearRequired": "请选择年份",
+      "nameRequired": "请输入姓名",
+      "numberRequired": "请输入学号",
+      "numberInvalid": "请输入 11 位学号",
+      "yearInvalid": "年份不合法"
+    },
+    "result": {
+      "title": "查询结果",
+      "year": "年份",
+      "dormitory": "宿舍",
+      "peopleNumber": "入住人数",
+      "usedElectricAmount": "已用电量",
+      "freeElectricAmount": "免费电量",
+      "feeBasedElectricAmount": "计费电量",
+      "electricPrice": "电价",
+      "totalElectricBill": "总电费",
+      "averageElectricBill": "人均电费"
+    }
+  },
+  "yellowPage": {
+    "title": "黄页查询"
+  },
+  "communityCommon": {
+    "refreshing": "正在刷新...",
+    "releaseToRefresh": "释放立即刷新",
+    "pullToRefresh": "下拉刷新",
+    "loading": "正在加载",
+    "noMore": "没有更多了",
+    "select": "请选择",
+    "gender": {
+      "male": "男",
+      "female": "女",
+      "secret": "其他或保密"
+    }
+  },
+  "marketplace": {
+    "title": "二手交易",
+    "searchTitle": "搜索结果",
+    "searchPlaceholder": "搜搜看",
+    "searchAction": "搜索",
+    "searchRequired": "请输入搜索关键词",
+    "searchEmpty": "未搜索到相关商品",
+    "searchPrompt": "请输入关键词搜索",
+    "categoryTitle": "分类",
+    "emptyByCategory": "暂无该分类的商品",
+    "publish": {
+      "title": "发布二手商品",
+      "editTitle": "编辑二手商品",
+      "finish": "完成",
+      "submitting": "提交中",
+      "loading": "正在加载商品信息...",
+      "saving": "正在保存...",
+      "uploading": "正在上传...",
+      "publishSuccess": "发布成功",
+      "imageEditUnsupported": "编辑模式暂不支持修改商品图片",
+      "invalidImageType": "不合法的图片文件类型",
+      "imageTooLarge": "图片文件不能超过5MB",
+      "imageLimit": "最多只能选择四张图片",
+      "imageLimitHint": "最多可上传4张图片",
+      "itemNotFound": "未找到要编辑的商品",
+      "selectImageRequired": "请至少选择一张图片",
+      "nameRequired": "请填写商品名称",
+      "descriptionRequired": "请填写商品描述",
+      "priceInvalid": "请填写有效的商品价格（0-9999.99元）",
+      "locationRequired": "请填写交易地点",
+      "typeRequired": "请选择商品分类",
+      "qqRequired": "请填写QQ号",
+      "formInvalid": "请检查表单内容",
+      "typePickerTitle": "选择分类",
+      "field": {
+        "name": "商品名称",
+        "description": "商品描述",
+        "price": "商品价格",
+        "location": "交易地点",
+        "type": "选择分类",
+        "qq": "QQ号",
+        "phone": "手机号"
+      },
+      "placeholder": {
+        "name": "最多25个字",
+        "description": "填写商品用途、新旧程度",
+        "price": "金额不能超过9999.99元",
+        "phone": "选填"
+      },
+      "error": {
+        "name": "商品名称不能为空",
+        "description": "商品描述不能为空",
+        "price": "商品价格金额不合法",
+        "location": "交易地点不能为空",
+        "type": "分类未选择",
+        "qq": "QQ号不能为空"
+      }
+    },
+    "detail": {
+      "title": "商品详情",
+      "imageAlt": "商品图{index}",
+      "publishTime": "发布时间：",
+      "location": "交易地点：",
+      "publisher": "发布者：",
+      "description": "商品描述：",
+      "qq": "QQ：",
+      "phone": "手机号：",
+      "call": "打电话",
+      "sms": "发短信",
+      "riskHint": "网络交易有风险，交易时请自行核实",
+      "copyQQ": "复制QQ",
+      "qqCopied": "QQ号已复制",
+      "copyFailed": "复制失败，请手动复制",
+      "itemNotFound": "商品不存在",
+      "loadFailed": "加载失败，请稍后重试",
+      "loadFailedOrMissing": "加载失败或商品不存在"
+    },
+    "category": {
+      "vehicle": "校园代步",
+      "phone": "手机",
+      "computer": "电脑",
+      "digitalAccessory": "数码配件",
+      "digital": "数码",
+      "appliance": "电器",
+      "sports": "运动健身",
+      "clothing": "衣物伞帽",
+      "books": "图书教材",
+      "rental": "租赁",
+      "life": "生活娱乐",
+      "other": "其他"
+    }
+  },
+  "express": {
+    "title": "表白墙",
+    "searchTitle": "搜索表白",
+    "searchPlaceholder": "搜索发件人/收件人/内容",
+    "searchAction": "搜索",
+    "searchRequired": "请输入搜索关键词",
+    "searchEmpty": "未找到相关表白",
+    "searchPrompt": "输入关键词搜索",
+    "bannerTitle": "广东第二师范学院表白墙",
+    "justNow": "刚刚",
+    "legend": "蓝色下划线：男生 / 红色下划线：女生 / 黑色下划线：其他或保密",
+    "empty": "暂无表白墙内容",
+    "guessDialogTitle": "猜名字",
+    "guessPlaceholder": "请输入你猜的真实姓名：",
+    "guessRequired": "请输入你猜的真实姓名",
+    "guessCorrect": "恭喜你，猜对了！",
+    "guessWrong": "猜错了，再试试看吧！",
+    "guessUnavailable": "TA很神秘，没有留下真名让人猜哦~",
+    "publish": {
+      "title": "发布表白",
+      "myInfo": "你的信息",
+      "targetInfo": "TA的信息",
+      "targetName": "名字",
+      "realName": "真名",
+      "gender": "性别",
+      "contentTitle": "表白内容",
+      "nicknamePlaceholder": "请输入昵称",
+      "realNamePlaceholder": "请输入真名",
+      "receiverNamePlaceholder": "请输入TA的名字",
+      "contentPlaceholder": "写下你想对TA说的话...",
+      "realNameTip": "注：真实姓名可选填，默认保密不显示！填写即可参加猜名字游戏。",
+      "submitAction": "发布表白",
+      "submitting": "提交中...",
+      "publishing": "正在发布...",
+      "publishSuccess": "发布成功",
+      "nicknameRequired": "请输入昵称",
+      "nicknameTooLong": "昵称不能超过 10 个字",
+      "realNameTooLong": "真实姓名不能超过 10 个字",
+      "myGenderRequired": "请选择你的性别",
+      "receiverNameRequired": "请输入TA的名字",
+      "receiverNameTooLong": "TA的名字不能超过 10 个字",
+      "receiverGenderRequired": "请选择TA的性别",
+      "contentRequired": "请填写表白内容",
+      "contentTooLong": "表白内容不能超过 250 个字"
+    },
+    "detail": {
+      "title": "表白详情",
+      "commentList": "评论列表",
+      "commentEmpty": "暂无评论，快来抢沙发吧！",
+      "commentRequired": "请输入评论内容",
+      "commentTooLong": "评论不能超过50字",
+      "commentPlaceholder": "我想说...",
+      "sending": "发送中...",
+      "send": "发送",
+      "me": "我",
+      "floor": "{index}楼"
+    }
+  },
+  "topic": {
+    "title": "话题",
+    "empty": "暂无话题",
+    "anonymousUser": "匿名",
+    "imageAlt": "图片{index}",
+    "searchTitle": "搜索话题",
+    "searchPlaceholder": "搜索话题、内容...",
+    "searchAction": "搜索",
+    "searchRequired": "请输入您要搜索的话题或内容！",
+    "searching": "搜索中...",
+    "searchEmpty": "暂无结果",
+    "publish": {
+      "title": "发布话题",
+      "submitAction": "提交",
+      "submitting": "提交中...",
+      "topicPlaceholder": "请输入你的话题",
+      "contentPlaceholder": "请输入你的内容...",
+      "addImage": "添加图片",
+      "imageLimit": "最多只能上传9张图片",
+      "invalidImageType": "只能上传图片文件",
+      "imageTooLarge": "图片大小不能超过5MB",
+      "topicRequired": "请输入话题标签",
+      "contentRequired": "请输入内容",
+      "contentTooLong": "内容不能超过250字",
+      "uploading": "正在上传...",
+      "publishing": "正在发布...",
+      "publishSuccess": "发布成功"
+    },
+    "detail": {
+      "title": "话题详情",
+      "defaultTopic": "校园话题",
+      "emptyContent": "暂无内容",
+      "like": "点赞",
+      "liked": "已点赞",
+      "notFound": "话题不存在或已被删除"
+    }
+  },
+  "secret": {
+    "title": "校园树洞",
+    "publishAction": "说个小秘密",
+    "empty": "暂无树洞信息",
+    "voiceAlt": "语音",
+    "profile": {
+      "title": "我的树洞",
+      "voiceMessage": "语音消息",
+      "empty": "暂无发布的树洞",
+      "loadMore": "加载更多"
+    }
+  },
+  "lostandfound": {
+    "title": "失物招领",
+    "emptyLost": "暂无寻物信息",
+    "emptyFound": "暂无招领信息",
+    "itemType": {
+      "phone": "手机",
+      "campusCard": "校园卡",
+      "idCard": "身份证",
+      "bankCard": "银行卡",
+      "book": "书",
+      "key": "钥匙",
+      "bag": "包包",
+      "clothing": "衣帽",
+      "vehicle": "校园代步",
+      "sports": "运动健身",
+      "digitalAccessory": "数码配件",
+      "other": "其他"
+    },
+    "tab": {
+      "lost": "寻物启事",
+      "found": "失物招领"
+    },
+    "badge": {
+      "lost": "寻物",
+      "found": "招领"
+    },
+    "publish": {
+      "title": "发布信息",
+      "editTitle": "编辑信息",
+      "finish": "完成",
+      "submitting": "提交中",
+      "loading": "正在加载信息...",
+      "saving": "正在保存...",
+      "uploading": "正在上传...",
+      "publishSuccess": "发布成功",
+      "modeTitle": "寻找类型",
+      "modeFoundOwner": "寻主",
+      "itemTypeTitle": "物品分类",
+      "itemTypePickerTitle": "选择物品分类",
+      "lostLocation": "丢失地点",
+      "foundLocation": "捡到地点",
+      "contactTip": "QQ号/微信/手机号任填其中一项即可",
+      "imageLimit": "最多只能上传4张图片",
+      "invalidImageType": "只能上传图片文件",
+      "imageTooLarge": "图片大小不能超过5MB",
+      "imageEditUnsupported": "编辑模式暂不支持修改图片",
+      "imageLimitHint": "最多可上传4张图片",
+      "itemNotFound": "未找到要编辑的信息",
+      "titleRequired": "请填写物品名称",
+      "titleTooLong": "物品名称不能超过25个字符",
+      "descRequired": "请填写物品描述",
+      "descTooLong": "物品描述不能超过100个字符",
+      "locationRequired": "请填写地点",
+      "locationTooLong": "地点不能超过30个字符",
+      "itemTypeRequired": "请选择物品分类",
+      "imageRequired": "请至少上传一张图片",
+      "contactRequired": "联系方式至少需要填写一项",
+      "previewAlt": "预览图",
+      "field": {
+        "title": "物品名称",
+        "desc": "物品描述"
+      },
+      "placeholder": {
+        "title": "最多25个字"
+      }
+    },
+    "detail": {
+      "title": "详情",
+      "imageAlt": "物品图{index}",
+      "publishTime": "发布时间：",
+      "lostLocation": "丢失地点：",
+      "foundLocation": "捡到地点：",
+      "publisher": "发布者：",
+      "description": "物品描述：",
+      "contact": "联系方式：",
+      "qq": "QQ号：",
+      "wechat": "微信：",
+      "phone": "手机号：",
+      "copyQQ": "复制QQ",
+      "copyWechat": "复制微信",
+      "call": "打电话",
+      "sms": "发短信"
+    }
+  },
+  "delivery": {
+    "title": "全民快递",
+    "empty": "暂无任务",
+    "smallSize": "小件",
+    "pickupShort": "取件",
+    "pickupBadge": "取",
+    "deliveryBadge": "送",
+    "pickupAddressWithCompany": "{company} 取件",
+    "unknownStatus": "未知",
+    "status": {
+      "pending": "待接单",
+      "inTransit": "配送中",
+      "completed": "已完成"
+    },
+    "type": {
+      "express": "代取快递",
+      "food": "买饭",
+      "other": "跑腿"
+    },
+    "size": {
+      "small": "小件(外卖/文件)",
+      "medium": "中件(鞋服)",
+      "large": "大件(重物)"
+    },
+    "publish": {
+      "title": "发布任务",
+      "submitAction": "确认发布",
+      "submitting": "提交中...",
+      "pickupSection": "取件信息",
+      "pickupAddress": "取件地点",
+      "pickupPlaceholder": "如：菜鸟驿站、南门快递点",
+      "pickupCode": "取件码/凭证（可选）",
+      "pickupCodePlaceholder": "如：1-2-3456",
+      "pickupImage": "取件凭证图片（可选）",
+      "uploadImage": "上传图片",
+      "deliverySection": "送达信息",
+      "deliveryAddress": "送达地址",
+      "deliveryPlaceholder": "如：南苑1栋301",
+      "contactPhone": "联系人电话",
+      "phonePlaceholder": "请输入手机号",
+      "itemSection": "物品描述",
+      "sizeLabel": "重量/体积",
+      "descriptionLabel": "备注说明（可选）",
+      "descriptionPlaceholder": "补充说明...",
+      "rewardLabel": "跑腿费：",
+      "invalidImageType": "只能上传图片文件",
+      "imageTooLarge": "图片大小不能超过5MB",
+      "pickupRequired": "请输入取件地点",
+      "deliveryRequired": "请输入送达地址",
+      "phoneRequired": "请输入联系人电话",
+      "rewardInvalid": "请输入有效的跑腿费（0.01-9999.99元）",
+      "publishSuccess": "发布成功"
+    },
+    "detail": {
+      "title": "任务详情",
+      "pickupCode": "取件码：",
+      "contactPhone": "联系电话：",
+      "myRole": "我的角色：",
+      "publisherRole": "发布者",
+      "runnerRole": "接单者",
+      "sizeLabel": "物品大小：",
+      "descriptionLabel": "备注说明：",
+      "publishTime": "发布时间：",
+      "statusLabel": "任务状态：",
+      "acceptAction": "立即抢单",
+      "accepting": "接单中...",
+      "completeAction": "确认完成",
+      "completing": "确认中...",
+      "acceptSuccess": "接单成功！",
+      "completeSuccess": "订单已完成！",
+      "completeConfirmTitle": "确认完成",
+      "completeConfirmMessage": "确定要完成这个订单吗？完成后将无法撤销。"
+    },
+    "mine": {
+      "title": "我的跑腿",
+      "publishedTab": "我发布的",
+      "acceptedTab": "我接的单",
+      "emptyPublished": "暂无发布的任务",
+      "emptyAccepted": "暂无接单的任务"
+    }
+  },
+  "dataSource": {
+    "mock": "Mock 数据源",
+    "remote": "远程数据源"
   },
   "about": {
     "appName": "广东二师助手",

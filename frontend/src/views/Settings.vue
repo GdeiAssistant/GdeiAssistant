@@ -3,7 +3,7 @@
     <!-- Privacy & Features -->
     <AppCard>
       <template #header>
-        <span class="text-sm font-medium text-[var(--c-text-2)]">偏好设置</span>
+        <span class="text-sm font-medium text-[var(--c-text-2)]">{{ t('settings.section.preference') }}</span>
       </template>
 
       <RouterLink to="/user/privacy-setting"
@@ -31,7 +31,7 @@
     <!-- Security -->
     <AppCard>
       <template #header>
-        <span class="text-sm font-medium text-[var(--c-text-2)]">账号安全</span>
+        <span class="text-sm font-medium text-[var(--c-text-2)]">{{ t('settings.section.security') }}</span>
       </template>
 
       <button type="button"

@@ -8,6 +8,7 @@ import {
   DialogClose,
   DialogPortal,
 } from 'radix-vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -16,6 +17,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close', 'confirm'])
+const { t } = useI18n()
 
 function onOpenChange(val) {
   if (!val) emit('close')
@@ -50,14 +52,14 @@ function onOpenChange(val) {
               class="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--c-fill-2)] text-[var(--c-text-1)] hover:bg-[var(--c-fill-3)] transition cursor-pointer"
               @click="emit('close')"
             >
-              取消
+              {{ t('common.cancel') }}
             </button>
           </DialogClose>
           <button
             class="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--c-primary)] text-white hover:opacity-90 transition cursor-pointer"
             @click="emit('confirm')"
           >
-            确认
+            {{ t('common.confirm') }}
           </button>
         </div>
       </DialogContent>

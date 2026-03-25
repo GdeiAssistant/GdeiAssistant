@@ -2,8 +2,8 @@
   <div class="min-h-screen bg-gray-50" :class="{ 'bg-black': isCropping }">
     <!-- Sticky Header -->
     <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-base text-gray-700 text-left cursor-pointer" @click="goBack">返回</button>
-      <div class="flex-1 text-center text-lg font-medium text-black">个人头像</div>
+      <button type="button" class="w-15 text-base text-gray-700 text-left cursor-pointer" @click="goBack">{{ t('common.back') }}</button>
+      <div class="flex-1 text-center text-lg font-medium text-black">{{ t('avatarEdit.title') }}</div>
       <div class="w-15"></div>
     </div>
 
@@ -12,19 +12,19 @@
       <div class="max-w-lg mx-auto px-4 py-6">
         <div class="bg-white rounded-xl shadow-sm p-6">
           <div class="flex items-center justify-center min-h-[320px] w-full">
-            <img :src="currentAvatar" class="w-[92%] max-w-[92%] h-auto max-h-[70vh] object-contain block" alt="当前头像" />
+            <img :src="currentAvatar" class="w-[92%] max-w-[92%] h-auto max-h-[70vh] object-contain block" :alt="t('avatarEdit.currentAvatar')" />
           </div>
           <div class="flex flex-col items-center gap-4 mt-8 px-2">
             <button
               type="button"
               class="w-4/5 max-w-[300px] py-3 px-6 text-base rounded-lg border border-red-500 bg-transparent text-red-500 cursor-pointer"
               @click="handleDelete"
-            >删除头像</button>
+            >{{ t('avatarEdit.delete') }}</button>
             <button
               type="button"
               class="w-4/5 max-w-[300px] py-3 px-6 text-base rounded-lg border border-green-500 bg-green-500 text-white cursor-pointer"
               @click="triggerSelect"
-            >更换头像</button>
+            >{{ t('avatarEdit.change') }}</button>
           </div>
         </div>
       </div>
@@ -35,19 +35,19 @@
     <template v-else>
       <div class="bg-black min-h-[calc(100vh-48px)] flex flex-col">
         <div class="flex-1 min-h-0 w-full">
-          <img ref="cropperImgRef" :src="tempImage" alt="裁剪" class="block max-w-full max-h-full" />
+          <img ref="cropperImgRef" :src="tempImage" :alt="t('avatarEdit.crop')" class="block max-w-full max-h-full" />
         </div>
         <div class="py-5 px-4 flex justify-around bg-black/60">
           <button
             type="button"
             class="min-w-[120px] py-3 px-6 text-base rounded-lg cursor-pointer bg-transparent border border-white text-white"
             @click="cancelCrop"
-          >取消</button>
+          >{{ t('common.cancel') }}</button>
           <button
             type="button"
             class="min-w-[120px] py-3 px-6 text-base rounded-lg cursor-pointer bg-green-500 border-green-500 text-white"
             @click="confirmCrop"
-          >完成</button>
+          >{{ t('common.confirm') }}</button>
         </div>
       </div>
     </template>
@@ -57,13 +57,15 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import Cropper from 'cropperjs'
 import request from '@/utils/request'
 import { uploadFileByPresignedUrl } from '@/utils/presignedUpload'
 import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
-const { success: toastSuccess, loading: toastLoading, hideLoading } = useToast()
+const { t } = useI18n()
+const { success: toastSuccess, error: toastError, loading: toastLoading, hideLoading } = useToast()
 const defaultAvatar = '/img/login/qq.png'
 
 const currentAvatar = ref(defaultAvatar)
@@ -108,11 +110,11 @@ const confirmCrop = async () => {
   const canvas = cropperInstance.getCroppedCanvas({ width: 200, height: 200 })
   if (!canvas) return
 
-  toastLoading('正在上传头像...')
+  toastLoading(t('avatarEdit.uploading'))
 
   try {
     const blob = await new Promise((resolve, reject) => {
-      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('裁剪失败'))), 'image/jpeg')
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error(t('avatarEdit.cropFailed')))), 'image/jpeg')
     })
     const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })
     const [avatarKey, avatarHdKey] = await Promise.all([
@@ -125,7 +127,7 @@ const confirmCrop = async () => {
 
     await request.post('/profile/avatar', formData)
 
-    toastSuccess('更新头像完成')
+    toastSuccess(t('avatarEdit.updateSuccess'))
     router.back()
   } catch (e) {
     console.error('头像上传失败', e)
@@ -152,16 +154,16 @@ const cancelCrop = () => {
 }
 
 const handleDelete = async () => {
-  if (!confirm('确定要删除头像并恢复默认吗？')) return
-  toastLoading('正在删除头像...')
+  if (!confirm(t('avatarEdit.deleteConfirm'))) return
+  toastLoading(t('avatarEdit.deleting'))
   try {
     await request.delete('/profile/avatar')
     currentAvatar.value = defaultAvatar
-    toastSuccess('已恢复默认头像')
+    toastSuccess(t('avatarEdit.deleteSuccess'))
     router.back()
   } catch (e) {
     console.error('删除头像失败', e)
-    toastSuccess('删除头像失败，请稍后再试')
+    toastError(t('avatarEdit.deleteFailed'))
   } finally {
     hideLoading()
   }

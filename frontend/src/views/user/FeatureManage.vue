@@ -2,15 +2,15 @@
   <div class="min-h-screen bg-gray-50">
     <!-- Sticky Header -->
     <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-base text-gray-700 text-left" @click="goBack">返回</button>
-      <div class="flex-1 text-center text-lg font-medium text-black">功能管理</div>
+      <button type="button" class="w-15 text-base text-gray-700 text-left" @click="goBack">{{ t('common.back') }}</button>
+      <div class="flex-1 text-center text-lg font-medium text-black">{{ t('profile.featureManage') }}</div>
       <div class="w-15"></div>
     </div>
 
     <!-- Content -->
     <div class="max-w-lg mx-auto px-4 py-6">
       <p class="text-sm text-gray-400 mb-3">
-        首页功能模块展示设置（关闭后将不在首页显示）
+        {{ t('featureManage.description') }}
       </p>
 
       <div class="bg-white rounded-xl shadow-sm divide-y divide-gray-100">
@@ -49,11 +49,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ALL_FEATURES } from '@/constants/features'
+import { useI18n } from 'vue-i18n'
+import { ALL_FEATURES, getLocalizedFeatures } from '@/constants/features'
 
 const STORAGE_KEY = 'user_features_config'
 
 const router = useRouter()
+const { t } = useI18n()
 const featureList = ref([])
 const showToast = ref(false)
 const toastMessage = ref('')
@@ -80,7 +82,7 @@ function loadFromStorage() {
     })
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
   }
-  featureList.value = ALL_FEATURES.map((item) => ({
+  featureList.value = getLocalizedFeatures(ALL_FEATURES, t).map((item) => ({
     ...item,
     visible: config[item.id] !== false,
   }))
@@ -93,7 +95,7 @@ function handleToggle() {
     config[item.id] = item.visible
   })
   localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
-  toastMessage.value = '修改已保存，首页将实时生效'
+  toastMessage.value = t('featureManage.saved')
   showToast.value = true
   setTimeout(() => {
     showToast.value = false

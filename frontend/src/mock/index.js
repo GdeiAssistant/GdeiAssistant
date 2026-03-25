@@ -5,6 +5,7 @@ import * as profileHandlers from './profile-handlers.js'
 import * as campusHandlers from './campus-handlers.js'
 import * as infoHandlers from './info-handlers.js'
 import * as messageHandlers from './message-handlers.js'
+import { localizeMockValue } from './mock-i18n.js'
 
 // ---------------------------------------------------------------------------
 // Storage keys (inlined from WeChat constants/storage.js)
@@ -65,18 +66,19 @@ function writeState(nextState) {
   }
 }
 
-function buildSuccess(payload, message) {
+function buildSuccess(payload, message, locale) {
   return {
     success: true,
     code: 200,
-    message: message || 'success',
-    data: payload === undefined ? null : payload
+    message: message ? localizeMockValue(message, locale) : 'success',
+    data: payload === undefined ? null : localizeMockValue(payload, locale)
   }
 }
 
-function rejectWithMessage(message, options) {
-  const error = new Error(message)
-  error.message = message
+function rejectWithMessage(message, options, locale) {
+  const localizedMessage = localizeMockValue(message, locale)
+  const error = new Error(localizedMessage)
+  error.message = localizedMessage
   error.statusCode = options && options.statusCode ? options.statusCode : 400
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
@@ -167,138 +169,151 @@ export function handleRequest(options) {
   const payload = requestOptions.data || {}
   const query = requestParts.query
   const token = requestOptions.sessionToken || requestOptions.token || ''
+  const locale = requestOptions.locale || 'zh-CN'
+  const localizedUtils = {
+    ...utils,
+    locale,
+    buildSuccess: (data, message) => buildSuccess(data, message, locale),
+    rejectWithMessage: (message, options) => rejectWithMessage(message, options, locale),
+    ensureAuthorized: (sessionToken) => {
+      if (!isSessionTokenValid(sessionToken)) {
+        return rejectWithMessage('登录凭证已过期，请重新登录', { statusCode: 401 }, locale)
+      }
+      return null
+    }
+  }
 
   // --- Auth ---
   if (path === '/api/auth/login' && method === 'POST') {
-    return authHandlers.handleLogin(payload, utils)
+    return authHandlers.handleLogin(payload, localizedUtils)
   }
 
   if (path === '/api/auth/logout' && method === 'POST') {
-    return resolveWithDelay(buildSuccess(null))
+    return resolveWithDelay(buildSuccess(null, undefined, locale))
   }
 
   if (path === '/api/upload/presignedUrl' && method === 'GET') {
-    return authHandlers.handlePresignedUrl(query, utils)
+    return authHandlers.handlePresignedUrl(query, localizedUtils)
   }
 
   // --- Profile ---
   if (path === '/api/profile/avatar' && method === 'GET') {
-    return profileHandlers.handleAvatar(token, utils)
+    return profileHandlers.handleAvatar(token, localizedUtils)
   }
 
   if (path === '/api/profile/avatar' && method === 'POST') {
-    return profileHandlers.handleAvatarUpdate(token, payload, utils)
+    return profileHandlers.handleAvatarUpdate(token, payload, localizedUtils)
   }
 
   if (path === '/api/profile/avatar' && method === 'DELETE') {
-    return profileHandlers.handleAvatarDelete(token, utils)
+    return profileHandlers.handleAvatarDelete(token, localizedUtils)
   }
 
   if (path === '/api/user/profile' && method === 'GET') {
-    return profileHandlers.handleProfile(token, utils)
+    return profileHandlers.handleProfile(token, localizedUtils)
   }
 
   if (path === '/api/profile/locations' && method === 'GET') {
-    return profileHandlers.handleLocationList(token, utils)
+    return profileHandlers.handleLocationList(token, localizedUtils)
   }
 
   if (path === '/api/profile/nickname' && method === 'POST') {
-    return profileHandlers.handleNicknameUpdate(token, payload, utils)
+    return profileHandlers.handleNicknameUpdate(token, payload, localizedUtils)
   }
 
   if (path === '/api/introduction' && method === 'POST') {
-    return profileHandlers.handleIntroductionUpdate(token, payload, utils)
+    return profileHandlers.handleIntroductionUpdate(token, payload, localizedUtils)
   }
 
   if (path === '/api/profile/birthday' && method === 'POST') {
-    return profileHandlers.handleBirthdayUpdate(token, payload, utils)
+    return profileHandlers.handleBirthdayUpdate(token, payload, localizedUtils)
   }
 
   if (path === '/api/profile/faculty' && method === 'POST') {
-    return profileHandlers.handleFacultyUpdate(token, payload, utils)
+    return profileHandlers.handleFacultyUpdate(token, payload, localizedUtils)
   }
 
   if (path === '/api/profile/major' && method === 'POST') {
-    return profileHandlers.handleMajorUpdate(token, payload, utils)
+    return profileHandlers.handleMajorUpdate(token, payload, localizedUtils)
   }
 
   if (path === '/api/profile/enrollment' && method === 'POST') {
-    return profileHandlers.handleEnrollmentUpdate(token, payload, utils)
+    return profileHandlers.handleEnrollmentUpdate(token, payload, localizedUtils)
   }
 
   if (path === '/api/profile/location' && method === 'POST') {
-    return profileHandlers.handleLocationUpdate(token, payload, 'location', utils)
+    return profileHandlers.handleLocationUpdate(token, payload, 'location', localizedUtils)
   }
 
   if (path === '/api/profile/hometown' && method === 'POST') {
-    return profileHandlers.handleLocationUpdate(token, payload, 'hometown', utils)
+    return profileHandlers.handleLocationUpdate(token, payload, 'hometown', localizedUtils)
   }
 
   if (path === '/api/profile/options' && method === 'GET') {
-    return profileHandlers.handleProfileOptions(token, utils)
+    return profileHandlers.handleProfileOptions(token, localizedUtils)
   }
 
   if (path === '/api/privacy' && method === 'GET') {
-    return profileHandlers.handlePrivacyGet(token, utils)
+    return profileHandlers.handlePrivacyGet(token, localizedUtils)
   }
 
   if (path === '/api/privacy' && method === 'POST') {
-    return profileHandlers.handlePrivacyUpdate(token, payload, utils)
+    return profileHandlers.handlePrivacyUpdate(token, payload, localizedUtils)
   }
 
   if (path === '/api/feedback' && method === 'POST') {
-    const authError = utils.ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return utils.resolveWithDelay(utils.buildSuccess(null))
+    return localizedUtils.resolveWithDelay(localizedUtils.buildSuccess(null))
   }
 
   // --- Campus / Academic ---
   if (path === '/api/grade' && method === 'GET') {
-    return campusHandlers.handleGrade(token, query, utils)
+    return campusHandlers.handleGrade(token, query, localizedUtils)
   }
 
   if (path === '/api/schedule' && method === 'GET') {
-    return campusHandlers.handleSchedule(token, query, utils)
+    return campusHandlers.handleSchedule(token, query, localizedUtils)
   }
 
   if (path === '/api/card/info' && method === 'GET') {
-    return campusHandlers.handleCardInfo(token, utils)
+    return campusHandlers.handleCardInfo(token, localizedUtils)
   }
 
   if (path === '/api/card/query' && method === 'POST') {
-    return campusHandlers.handleCardQuery(token, utils)
+    return campusHandlers.handleCardQuery(token, localizedUtils)
   }
 
   if (path === '/api/evaluate/submit' && method === 'POST') {
-    return campusHandlers.handleEvaluateSubmit(token, utils)
+    return campusHandlers.handleEvaluateSubmit(token, localizedUtils)
   }
 
   if (path === '/api/card/lost' && method === 'POST') {
-    return campusHandlers.handleCardLost(token, query, utils)
+    return campusHandlers.handleCardLost(token, query, localizedUtils)
   }
 
   if (path === '/api/library/search' && method === 'GET') {
-    return campusHandlers.handleCollectionSearch(query, utils)
+    return campusHandlers.handleCollectionSearch(query, localizedUtils)
   }
 
   if (path === '/api/library/detail' && method === 'GET') {
-    return campusHandlers.handleCollectionDetail(query, utils)
+    return campusHandlers.handleCollectionDetail(query, localizedUtils)
   }
 
   if (path === '/api/library/borrow' && method === 'GET') {
-    return campusHandlers.handleBookBorrow(token, query, utils)
+    return campusHandlers.handleBookBorrow(token, query, localizedUtils)
   }
 
   if (path === '/api/library/renew' && method === 'POST') {
-    return campusHandlers.handleBookRenew(token, payload, utils)
+    return campusHandlers.handleBookRenew(token, payload, localizedUtils)
   }
 
   if (path === '/api/cet/number' && method === 'GET') {
-    return campusHandlers.handleCetNumberGet(token, utils)
+    return campusHandlers.handleCetNumberGet(token, localizedUtils)
   }
 
   if (path === '/api/cet/number' && method === 'POST') {
-    return campusHandlers.handleCetNumberSave(token, payload, utils)
+    return campusHandlers.handleCetNumberSave(token, payload, localizedUtils)
   }
 
   if (path === '/api/cet/checkcode' && method === 'GET') {
@@ -306,168 +321,168 @@ export function handleRequest(options) {
   }
 
   if (path === '/api/cet/query' && method === 'GET') {
-    return campusHandlers.handleCetQuery(token, query, utils)
+    return campusHandlers.handleCetQuery(token, query, localizedUtils)
   }
 
   if (path === '/api/spare/query' && method === 'POST') {
-    return campusHandlers.handleSpareRoom(token, utils)
+    return campusHandlers.handleSpareRoom(token, localizedUtils)
   }
 
   if (path === '/api/grade/update' && method === 'POST') {
-    return campusHandlers.handleGradeUpdate(token, utils)
+    return campusHandlers.handleGradeUpdate(token, localizedUtils)
   }
 
   if (path === '/api/schedule/update' && method === 'POST') {
-    return campusHandlers.handleScheduleUpdate(token, utils)
+    return campusHandlers.handleScheduleUpdate(token, localizedUtils)
   }
 
   if (path === '/api/schedule/custom' && method === 'POST') {
-    return campusHandlers.handleScheduleCustomAdd(token, payload, utils)
+    return campusHandlers.handleScheduleCustomAdd(token, payload, localizedUtils)
   }
 
   if (path === '/api/schedule/custom' && method === 'DELETE') {
-    return campusHandlers.handleScheduleCustomDelete(token, query, utils)
+    return campusHandlers.handleScheduleCustomDelete(token, query, localizedUtils)
   }
 
   // --- Info / Data ---
   if (path === '/api/information/overview' && method === 'GET') {
-    return infoHandlers.handleInformationOverview(utils)
+    return infoHandlers.handleInformationOverview(localizedUtils)
   }
 
   if (path === '/api/graduate-exam/query' && method === 'POST') {
-    return infoHandlers.handleGraduateExam(payload, utils)
+    return infoHandlers.handleGraduateExam(payload, localizedUtils)
   }
 
   if (/^\/api\/information\/news\/type\/\d+\/start\/\d+\/size\/\d+$/.test(path) && method === 'GET') {
-    return infoHandlers.handleNews(path, utils)
+    return infoHandlers.handleNews(path, localizedUtils)
   }
 
   if (/^\/api\/information\/news\/id\/.+$/.test(path) && method === 'GET') {
-    return infoHandlers.handleNewsDetail(path, utils)
+    return infoHandlers.handleNewsDetail(path, localizedUtils)
   }
 
   if (path === '/api/data/electricfees' && method === 'POST') {
-    return infoHandlers.handleElectricFees(payload, utils)
+    return infoHandlers.handleElectricFees(payload, localizedUtils)
   }
 
   if (path === '/api/data/yellowpage' && method === 'GET') {
-    return infoHandlers.handleYellowPage(utils)
+    return infoHandlers.handleYellowPage(localizedUtils)
   }
 
   if (path === '/api/module/state/detail' && method === 'GET') {
-    return infoHandlers.handleModuleStateDetail(utils)
+    return infoHandlers.handleModuleStateDetail(localizedUtils)
   }
 
   // --- Messages ---
   if (/^\/api\/information\/announcement\/start\/\d+\/size\/\d+$/.test(path) && method === 'GET') {
-    return messageHandlers.handleAnnouncementList(token, path, utils)
+    return messageHandlers.handleAnnouncementList(token, path, localizedUtils)
   }
 
   if (/^\/api\/information\/announcement\/id\/.+$/.test(path) && method === 'GET') {
-    return messageHandlers.handleAnnouncementDetail(token, path, utils)
+    return messageHandlers.handleAnnouncementDetail(token, path, localizedUtils)
   }
 
   if (/^\/api\/information\/message\/interaction\/start\/\d+\/size\/\d+$/.test(path) && method === 'GET') {
-    return messageHandlers.handleInteractionList(token, path, utils)
+    return messageHandlers.handleInteractionList(token, path, localizedUtils)
   }
 
   if (path === '/api/information/message/unread' && method === 'GET') {
-    return messageHandlers.handleUnreadCount(token, utils)
+    return messageHandlers.handleUnreadCount(token, localizedUtils)
   }
 
   if (/^\/api\/information\/message\/id\/.+\/read$/.test(path) && method === 'POST') {
-    return messageHandlers.handleMessageRead(token, path, utils)
+    return messageHandlers.handleMessageRead(token, path, localizedUtils)
   }
 
   if (path === '/api/information/message/readall' && method === 'POST') {
-    return messageHandlers.handleMessageReadAll(token, utils)
+    return messageHandlers.handleMessageReadAll(token, localizedUtils)
   }
 
   // --- User account: login records, download, phone, email, delete ---
   if (/^\/api\/ip\/start\/\d+\/size\/\d+$/.test(path) && method === 'GET') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
     return resolveWithDelay(buildSuccess([
       { id: 1, time: '2026-03-25T09:12:34', ip: '119.136.42.101', area: '广东广州', network: 'Web' },
       { id: 2, time: '2026-03-24T18:45:10', ip: '14.23.167.88', area: '广东广州', network: 'iOS' },
       { id: 3, time: '2026-03-23T14:30:00', ip: '183.6.50.22', area: '广东深圳', network: 'Android' }
-    ]))
+    ], undefined, locale))
   }
 
   if (path === '/api/userdata/state' && method === 'GET') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
     const s = readState()
-    return resolveWithDelay(buildSuccess(s.userdataExportStatus ?? 0))
+    return resolveWithDelay(buildSuccess(s.userdataExportStatus ?? 0, undefined, locale))
   }
 
   if (path === '/api/userdata/export' && method === 'POST') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
     const s = readState()
     s.userdataExportStatus = 2
-    saveState(s)
-    return resolveWithDelay(buildSuccess(null))
+    writeState(s)
+    return resolveWithDelay(buildSuccess(null, undefined, locale))
   }
 
   if (path === '/api/userdata/download' && method === 'POST') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess('https://example.com/mock-userdata.zip'))
+    return resolveWithDelay(buildSuccess('https://example.com/mock-userdata.zip', undefined, locale))
   }
 
   if (path === '/api/phone/status' && method === 'GET') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess({ phone: '', code: 86 }))
+    return resolveWithDelay(buildSuccess({ phone: '', code: 86 }, undefined, locale))
   }
 
   if (/^\/api\/phone\/verification/.test(path) && method === 'POST') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess(null))
+    return resolveWithDelay(buildSuccess(null, undefined, locale))
   }
 
   if (/^\/api\/phone\/attach/.test(path) && method === 'POST') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess(null))
+    return resolveWithDelay(buildSuccess(null, undefined, locale))
   }
 
   if (path === '/api/phone/unattach' && method === 'POST') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess(null))
+    return resolveWithDelay(buildSuccess(null, undefined, locale))
   }
 
   if (path === '/api/email/status' && method === 'GET') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess(''))
+    return resolveWithDelay(buildSuccess('', undefined, locale))
   }
 
   if (/^\/api\/email\/verification/.test(path) && method === 'POST') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess(null))
+    return resolveWithDelay(buildSuccess(null, undefined, locale))
   }
 
   if (/^\/api\/email\/bind/.test(path) && method === 'POST') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess(null))
+    return resolveWithDelay(buildSuccess(null, undefined, locale))
   }
 
   if (path === '/api/email/unbind' && method === 'POST') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess(null))
+    return resolveWithDelay(buildSuccess(null, undefined, locale))
   }
 
   if (path === '/api/close/submit' && method === 'POST') {
-    const authError = ensureAuthorized(token)
+    const authError = localizedUtils.ensureAuthorized(token)
     if (authError) return authError
-    return resolveWithDelay(buildSuccess(null))
+    return resolveWithDelay(buildSuccess(null, undefined, locale))
   }
 
   // --- Community (delegated to community.js) ---
@@ -477,13 +492,13 @@ export function handleRequest(options) {
     payload: payload,
     query: query,
     token: token,
-    utils: utils
+    utils: localizedUtils
   })
   if (communityResponse) {
     return communityResponse
   }
 
-  return rejectWithMessage('该模拟接口暂未实现')
+  return rejectWithMessage('该模拟接口暂未实现', undefined, locale)
 }
 
 export { isSessionTokenValid }

@@ -2,8 +2,8 @@
   <div class="min-h-screen bg-gray-50">
     <!-- Sticky Header -->
     <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-base text-gray-700 text-left" @click="goBack">返回</button>
-      <div class="flex-1 text-center text-lg font-medium text-black">隐私设置</div>
+      <button type="button" class="w-15 text-base text-gray-700 text-left" @click="goBack">{{ t('common.back') }}</button>
+      <div class="flex-1 text-center text-lg font-medium text-black">{{ t('profile.privacySetting') }}</div>
       <div class="w-15"></div>
     </div>
 
@@ -34,24 +34,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { getPrivacySettings, updatePrivacySettings } from '../../api/privacy.js'
-import { showErrorTopTips } from '@/utils/toast.js'
 import { useToast } from '@/composables/useToast'
+import { createPrivacyItems } from './settingsContent'
 
 const router = useRouter()
+const { t } = useI18n()
 const { success: toastSuccess } = useToast()
 
-const privacyList = ref([
-  { key: 'faculty', name: '公开我的院系', status: false },
-  { key: 'major', name: '公开我的专业', status: false },
-  { key: 'location', name: '公开我的国家/地区', status: false },
-  { key: 'hometown', name: '公开我的家乡', status: false },
-  { key: 'introduction', name: '公开我的个人简介', status: false },
-  { key: 'enrollment', name: '公开我的入学年份', status: false },
-  { key: 'age', name: '公开我的年龄', status: false },
-  { key: 'cache', name: '缓存我的教务数据', status: false },
-  { key: 'robots', name: '让搜索引擎链接到我的个人资料页', status: false }
-])
+const privacyList = ref(createPrivacyItems(t))
 
 const fieldMapping = {
   faculty: 'facultyOpen',
@@ -104,7 +96,7 @@ async function handlePrivacyChange(item) {
       return
     }
     if (res.code === CODE_PARTIAL_SUCCESS) {
-      toastSuccess(res.message || '设置已保存，但清理旧缓存时遇到网络延迟，可能需要稍后生效。')
+      toastSuccess(res.message || t('privacy.partialSuccess'))
     }
   } catch (e) {
     item.status = prevStatus

@@ -30,7 +30,8 @@
     "hint": "提示",
     "noData": "暫無數據",
     "loadingRegions": "地區列表載入中，請稍後再試",
-    "recentUpdate": "最近更新"
+    "recentUpdate": "最近更新",
+    "back": "返回"
   },
   "tab": {
     "home": "功能主頁",
@@ -128,6 +129,11 @@
   },
   "router": {
     "siteTitle": "廣東第二師範學院校園助手系統"
+  },
+  "sidebar": {
+    "settings": "設定",
+    "about": "關於",
+    "notLoggedIn": "未登入"
   },
   "about": {
     "appName": "廣東二師助手",
@@ -236,6 +242,10 @@
       "exportStarted": "匯出任務已提交，請稍候返回下載",
       "downloadStarted": "下載已開始"
     }
+  },
+  "locationPicker": {
+    "title": "選擇地區",
+    "selectFirst": "請先選擇"
   },
   "graduateExam": {
     "title": "考研成績查詢",

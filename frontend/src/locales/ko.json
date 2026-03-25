@@ -30,7 +30,8 @@
     "hint": "알림",
     "noData": "데이터 없음",
     "loadingRegions": "지역 목록을 불러오는 중입니다. 잠시만 기다려 주세요...",
-    "recentUpdate": "최근 업데이트"
+    "recentUpdate": "최근 업데이트",
+    "back": "뒤로"
   },
   "tab": {
     "home": "홈",
@@ -128,6 +129,11 @@
   },
   "router": {
     "siteTitle": "광둥제2사범대학교 캠퍼스 어시스턴트"
+  },
+  "sidebar": {
+    "settings": "설정",
+    "about": "정보",
+    "notLoggedIn": "로그인되지 않음"
   },
   "about": {
     "appName": "광둥이사 어시스턴트",
@@ -236,6 +242,10 @@
       "exportStarted": "내보내기 요청이 제출되었습니다. 잠시 후 다시 와서 다운로드해 주세요.",
       "downloadStarted": "다운로드가 시작되었습니다"
     }
+  },
+  "locationPicker": {
+    "title": "지역 선택",
+    "selectFirst": "먼저 선택해 주세요"
   },
   "graduateExam": {
     "title": "대학원 시험 성적 조회",

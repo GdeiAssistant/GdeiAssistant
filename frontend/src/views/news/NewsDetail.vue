@@ -1,33 +1,23 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
+import { getNewsAttachmentTitle, getNewsSourceLabel } from './newsContent'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const loading = ref(true)
 const error = ref('')
 const detail = ref(null)
 
 const fallbackType = computed(() => Number(route.query.type || 1))
-const fallbackTitle = computed(() => String(route.query.title || '新闻'))
+const fallbackTitle = computed(() => String(route.query.title || t('news.defaultTitle')))
 const fallbackDate = computed(() => String(route.query.date || ''))
 
-const sourceLabel = computed(() => {
-  switch (detail.value?.type || fallbackType.value) {
-    case 1:
-      return '学校要闻'
-    case 2:
-      return '院部通知'
-    case 3:
-      return '通知公告'
-    case 4:
-      return '学术动态'
-    default:
-      return '新闻'
-  }
-})
+const sourceLabel = computed(() => getNewsSourceLabel(detail.value?.type || fallbackType.value, t))
 
 const displayTitle = computed(() => detail.value?.title || fallbackTitle.value)
 const displayDate = computed(() => detail.value?.publishDate || fallbackDate.value)
@@ -47,7 +37,7 @@ function parseAttachmentLine(line) {
     return null
   }
   const url = match[2]
-  const title = match[1].trim().replace(/[：:]+$/, '') || '打开附件'
+  const title = getNewsAttachmentTitle(match[1], t)
   return { title, url }
 }
 
@@ -97,11 +87,11 @@ async function loadDetail() {
     const res = await request.get(`/information/news/id/${route.params.id}`)
     detail.value = res?.data ?? null
     if (!detail.value) {
-      error.value = '未找到对应的新闻'
+      error.value = t('news.detail.notFound')
     }
   } catch (e) {
     detail.value = null
-    error.value = '新闻详情加载失败，请稍后重试'
+    error.value = t('news.detail.loadFailed')
   } finally {
     loading.value = false
   }
@@ -121,7 +111,7 @@ onMounted(() => {
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]">
     <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="router.back()" class="text-[var(--c-primary)] text-sm font-medium min-w-[48px]">&larr; 返回</button>
+      <button @click="router.back()" class="text-[var(--c-primary)] text-sm font-medium min-w-[48px]">&larr; {{ t('common.back') }}</button>
       <span class="flex-1 text-center text-sm font-bold">{{ sourceLabel }}</span>
       <div class="w-12"></div>
     </div>
@@ -130,7 +120,7 @@ onMounted(() => {
       <!-- Loading -->
       <div v-if="loading" class="flex flex-col items-center gap-3 py-14">
         <span class="inline-block w-5 h-5 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></span>
-        <span class="text-sm text-[var(--c-text-3)]">正在加载新闻详情</span>
+        <span class="text-sm text-[var(--c-text-3)]">{{ t('news.detail.loading') }}</span>
       </div>
 
       <!-- Content card -->
@@ -139,14 +129,14 @@ onMounted(() => {
 
         <p class="text-xs font-semibold text-[var(--c-primary)] mb-2.5">{{ sourceLabel }}</p>
         <h2 class="text-2xl font-bold text-[var(--c-text)] leading-snug">{{ displayTitle }}</h2>
-        <p class="mt-3.5 text-xs text-[var(--c-text-3)]">{{ displayDate || '—' }}</p>
+        <p class="mt-3.5 text-xs text-[var(--c-text-3)]">{{ displayDate || t('news.detail.noDate') }}</p>
 
         <a
           v-if="sourceUrl"
           href="javascript:;"
           class="inline-block mt-3.5 text-sm font-semibold text-[var(--c-primary)] no-underline"
           @click="openSource"
-        >打开原文链接</a>
+        >{{ t('news.detail.openSource') }}</a>
 
         <div v-if="contentParagraphs.length" class="mt-5 text-[15px] leading-[1.9] text-[var(--c-text)]">
           <p
@@ -158,7 +148,7 @@ onMounted(() => {
         </div>
 
         <div v-if="attachmentItems.length" class="mt-5 p-4 rounded-xl bg-[var(--c-primary)]/5">
-          <p class="text-xs font-semibold text-[var(--c-primary)] mb-2.5">附件链接</p>
+          <p class="text-xs font-semibold text-[var(--c-primary)] mb-2.5">{{ t('news.detail.attachments') }}</p>
           <a
             v-for="(item, index) in attachmentItems"
             :key="`attachment-${index}`"
@@ -173,7 +163,7 @@ onMounted(() => {
         <p
           v-if="!contentParagraphs.length && !attachmentItems.length"
           class="mt-5 text-sm text-[var(--c-text-3)]"
-        >暂无详细内容</p>
+        >{{ t('news.detail.empty') }}</p>
       </div>
     </div>
   </div>

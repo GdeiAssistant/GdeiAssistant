@@ -30,7 +30,28 @@
     "hint": "Notice",
     "noData": "No data",
     "loadingRegions": "Loading region list, please wait...",
-    "recentUpdate": "Recently updated"
+    "recentUpdate": "Recently updated",
+    "back": "Back"
+  },
+  "feature": {
+    "grade": { "name": "Grades", "description": "Check grades and GPA by term" },
+    "schedule": { "name": "Schedule", "description": "See this week's classes at a glance" },
+    "cet": { "name": "CET Scores", "description": "Check CET results with ticket number and captcha" },
+    "kaoyan": { "name": "Graduate Exam", "description": "View graduate exam scores and details" },
+    "spare": { "name": "Empty Classrooms", "description": "Find available classrooms right now" },
+    "collection": { "name": "Library", "description": "Search holdings, view loans and renew books" },
+    "card": { "name": "Campus Card", "description": "Check balance, transactions and report loss" },
+    "pe": { "name": "PE Test", "description": "View physical test scores and records" },
+    "data": { "name": "Data Query", "description": "Check electricity fees and useful campus numbers" },
+    "evaluate": { "name": "Teaching Review", "description": "Complete course evaluations here" },
+    "ershou": { "name": "Marketplace", "description": "Sell idle items and trade on campus" },
+    "delivery": { "name": "Delivery", "description": "Post errands and pickup requests" },
+    "lostandfound": { "name": "Lost & Found", "description": "Report lost items or claim found ones" },
+    "secret": { "name": "Secret", "description": "Share anonymous thoughts safely" },
+    "dating": { "name": "Roommate Match", "description": "Introduce your roommate to the world" },
+    "express": { "name": "Confession Wall", "description": "Say what you really feel" },
+    "topic": { "name": "Topics", "description": "Join hot campus discussions" },
+    "photograph": { "name": "Campus Photography", "description": "Capture the best moments on campus" }
   },
   "tab": {
     "home": "Home",
@@ -87,6 +108,93 @@
     "selectFacultyFirst": "Please select a faculty first",
     "language": "Language"
   },
+  "settings": {
+    "section": {
+      "preference": "Preferences",
+      "security": "Account Security"
+    }
+  },
+  "privacy": {
+    "partialSuccess": "Settings were saved, but clearing old cache may take a little longer to take effect.",
+    "field": {
+      "faculty": "Show my faculty",
+      "major": "Show my major",
+      "location": "Show my country or region",
+      "hometown": "Show my hometown",
+      "introduction": "Show my bio",
+      "enrollment": "Show my enrollment year",
+      "age": "Show my age",
+      "cache": "Cache my academic data",
+      "robots": "Allow search engines to link to my profile"
+    }
+  },
+  "avatarEdit": {
+    "title": "Avatar",
+    "currentAvatar": "Current avatar",
+    "delete": "Delete Avatar",
+    "change": "Change Avatar",
+    "crop": "Crop avatar",
+    "uploading": "Uploading avatar...",
+    "cropFailed": "Cropping failed",
+    "updateSuccess": "Avatar updated",
+    "deleteConfirm": "Delete this avatar and restore the default one?",
+    "deleting": "Deleting avatar...",
+    "deleteSuccess": "Default avatar restored",
+    "deleteFailed": "Failed to delete avatar. Please try again later."
+  },
+  "bindEmail": {
+    "retryIn": "Retry in {seconds}s",
+    "getCode": "Get Code",
+    "invalidEmail": "Invalid email format",
+    "codeSent": "Verification code sent. Please check your inbox.",
+    "sendFailed": "Failed to send verification code. Please try again later.",
+    "codeRequired": "Please enter the verification code",
+    "bindSuccess": "Email linked successfully",
+    "bindFailed": "Failed to link email. Please try again later.",
+    "unbindSuccess": "Email unlinked",
+    "boundTitle": "Email Linked",
+    "boundDescription": "Your linked email is: {email}",
+    "edit": "Change Email",
+    "unbind": "Unlink Email",
+    "unboundTitle": "No Email Linked",
+    "unboundDescription": "You have not linked an email yet. Linking one lets you receive important notices.",
+    "bindNow": "Link Now",
+    "editDescription": "Enter a new email address to update the binding.",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "newEmailPlaceholder": "Enter the new email",
+    "code": "Code",
+    "codePlaceholder": "Enter the email verification code",
+    "binding": "Linking...",
+    "confirm": "Confirm",
+    "unbindConfirm": "Unlink this email? You will no longer be able to use it to recover your account.",
+    "confirmUnbind": "Confirm Unlink"
+  },
+  "realname": {
+    "unavailableTitle": "Identity Verification Not Available Yet",
+    "unavailableDescription": "Identity verification is still being integrated with the required public security data interface and is not open yet. It will be enabled after the backend and external verification flow are ready.",
+    "back": "Go Back"
+  },
+  "deleteAccount": {
+    "success": "Account deleted",
+    "warningTitle": "Your GdeiAssistant account will be deleted",
+    "riskTitle": "After deletion, the following information will be permanently removed and cannot be recovered:",
+    "risk": {
+      "account": "Your account and all profile information will be cleared",
+      "posts": "All published content such as confessions, topics, and delivery posts will be permanently deleted",
+      "interactions": "All interaction records such as comments and likes will be removed",
+      "academic": "Custom schedules and saved CET admission ticket numbers will be deleted",
+      "community": "User data and transaction records on community platforms will be cleared",
+      "identity": "Linked phone numbers, email addresses, and other identity information will be deleted"
+    },
+    "irreversible": "This action cannot be undone. Please proceed with caution.",
+    "agreement": "I have read and understand the consequences above",
+    "deleting": "Deleting...",
+    "confirm": "Delete Account",
+    "finalConfirmTitle": "Final Confirmation",
+    "finalConfirmDescription": "This action cannot be undone. Are you sure you want to permanently delete this account?",
+    "finalConfirmAction": "Delete Permanently"
+  },
   "info": {
     "news": "News",
     "newsDesc": "View publicly released campus news",
@@ -128,6 +236,732 @@
   },
   "router": {
     "siteTitle": "GdeiAssistant - Guangdong University of Education"
+  },
+  "sidebar": {
+    "settings": "Settings",
+    "about": "About",
+    "notLoggedIn": "Not signed in"
+  },
+  "commandPalette": {
+    "searchPlaceholder": "Search features...",
+    "academicGroup": "Academic Services",
+    "communityGroup": "Community Services",
+    "empty": "No matching features",
+    "navigate": "Navigate",
+    "open": "Open",
+    "close": "Close"
+  },
+  "featureManage": {
+    "description": "Choose which feature modules appear on the home page",
+    "saved": "Saved. The home page has been updated."
+  },
+  "locationPicker": {
+    "title": "Select Region",
+    "selectFirst": "Please select first"
+  },
+  "loginRecord": {
+    "empty": "No login history",
+    "success": "Login successful",
+    "unknownDevice": "Unknown device",
+    "clientDevice": "{network} client"
+  },
+  "news": {
+    "loadFailed": "Failed to load. Please try again later.",
+    "noMore": "No more news",
+    "empty": "No news available",
+    "defaultTitle": "News",
+    "openAttachment": "Open Attachment",
+    "tab": {
+      "school": "Campus News",
+      "department": "Department Notices",
+      "notice": "Announcements",
+      "academic": "Academic Updates"
+    },
+    "detail": {
+      "loading": "Loading news details",
+      "notFound": "The requested news item was not found",
+      "loadFailed": "Failed to load news details. Please try again later.",
+      "noDate": "—",
+      "openSource": "Open Source Link",
+      "attachments": "Attachments",
+      "empty": "No detailed content available"
+    }
+  },
+  "card": {
+    "title": "Campus Card",
+    "description": "Check your balance, view spending records, and manage card loss reporting.",
+    "amountUnit": " CNY",
+    "action": {
+      "info": {
+        "title": "Basic Info",
+        "description": "View balance, status, and current loss status, with online reporting support",
+        "badge": "Info"
+      },
+      "records": {
+        "title": "Transactions",
+        "description": "Check your campus card transactions by date",
+        "badge": "Records"
+      }
+    },
+    "search": {
+      "description": "Pick a date to view your campus card transactions for that day",
+      "dateLabel": "Date",
+      "datePlaceholder": "Please select a date",
+      "dateRequired": "Please select a date first",
+      "submit": "Search"
+    },
+    "list": {
+      "queryDate": "Selected date: ",
+      "empty": "No transactions for this day",
+      "unknownMerchant": "Unknown merchant",
+      "retry": "Search Again",
+      "invalidDate": "The selected date is invalid. Please choose again."
+    }
+  },
+  "spare": {
+    "pageTitle": "Empty Classroom Search",
+    "resultTitle": "Results",
+    "resultList": "Available Classrooms",
+    "search": "Search",
+    "optional": "Optional",
+    "empty": "No empty classroom data",
+    "field": {
+      "campus": "Campus",
+      "roomType": "Room Type",
+      "seatsMin": "Seats ≥",
+      "seatsMax": "Seats ≤",
+      "weekday": "Weekday",
+      "weekType": "Single/Double Week",
+      "period": "Period"
+    },
+    "result": {
+      "number": "Number",
+      "type": "Type",
+      "campus": "Campus",
+      "seats": "Seats"
+    },
+    "option": {
+      "unlimited": "Unlimited"
+    },
+    "campus": {
+      "haizhu": "Haizhu",
+      "huadu": "Huadu",
+      "nanhai": "Nanhai Campus of Guangdong Light Industry",
+      "correspondence": "Correspondence Campus"
+    },
+    "weekday": {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    },
+    "weekType": {
+      "single": "Single",
+      "double": "Double"
+    },
+    "period": {
+      "oneTwo": "Periods 1-2",
+      "three": "Period 3",
+      "fourFive": "Periods 4-5",
+      "sixSeven": "Periods 6-7",
+      "eightNine": "Periods 8-9",
+      "tenToTwelve": "Periods 10-12",
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening",
+      "daytime": "Daytime",
+      "allDay": "All Day"
+    },
+    "roomType": {
+      "unlimited": "Unlimited",
+      "noClassroom": "Courses Without Classroom",
+      "playground": "Playground",
+      "largeMultimedia": "Large Multimedia Room",
+      "computerLab": "Computer Lab",
+      "sculptureRoom": "Sculpture Room",
+      "multimediaRoom": "Multimedia Classroom",
+      "translationRoom": "Translation Room",
+      "fashionLab": "Fashion Lab",
+      "pianoRoomA": "Piano Room",
+      "pianoRoomB": "Piano Room",
+      "publicComputerRoom": "Public Computer Room",
+      "traditionalPaintingRoom": "Traditional Painting Room",
+      "artStudio": "Art Studio",
+      "chemistryLab": "Chemistry Lab",
+      "computerRoom": "Computer Room",
+      "teachingAidRoom": "Teaching Aid Room",
+      "educationLab": "Education Lab",
+      "anatomyLab": "Anatomy Lab",
+      "financialMathLab": "Financial Mathematics Lab",
+      "artClassroom": "Art Classroom",
+      "montessoriRoom": "Montessori Room",
+      "modelMakingLab": "Model-Making Lab",
+      "graphicDesignLab": "Graphic Design Lab",
+      "musicPracticeRoom": "Practice Room",
+      "photographyLab": "Photography Lab",
+      "vocalRoom": "Vocal Room",
+      "biologyLab": "Biology Lab",
+      "trainingRoom": "Training Room",
+      "solfeggioRoom": "Solfeggio Room",
+      "ceramicRoom": "Ceramics Room",
+      "gymnasticsRoom": "Gymnastics Room",
+      "networkLab": "Network Lab",
+      "microteachingRoom": "Microteaching Room",
+      "noNeedClassroom": "No Classroom Needed",
+      "danceRoomA": "Dance Room",
+      "danceRoomB": "Dance Room",
+      "physicsLab": "Physics Lab",
+      "smallMultimedia": "Small Multimedia Room",
+      "smallMultimediaUnder70": "Small Multimedia (<70)",
+      "smallClassroomUnder70": "Small Classroom (<70)",
+      "groupClassroom": "Group Classroom",
+      "bodyTrainingRoom": "Body Training Room",
+      "musicRoom": "Music Room",
+      "musicMajorRoom": "Music Major Classroom",
+      "languageLab": "Language Lab",
+      "smartRecordingRoom": "Smart Recording Room",
+      "mediumMultimedia": "Medium Multimedia (70-100)",
+      "majorClassroom": "Major Classroom",
+      "majorTheoryRoom": "Major Theory Classroom",
+      "majorLab": "Major Lab",
+      "consultingRoom": "Consulting Room",
+      "integratedPaintingLab": "Integrated Painting Lab"
+    }
+  },
+  "feedback": {
+    "title": "Help & Feedback",
+    "tab": {
+      "faq": "FAQ",
+      "form": "Feedback"
+    },
+    "faq": {
+      "moreHelpPrefix": "Still not solved?",
+      "moreHelpSuffix": " Tell us your questions and suggestions.",
+      "login": {
+        "title": "What are the username and password for login?",
+        "content": "Use the same username and password as your campus network or academic system account. If you are not sure, check the guide in About - Campus Network Account Guide."
+      },
+      "password": {
+        "title": "Can I change my password in the app?",
+        "content": "Please change it through the university unified authentication system. After that, log back into GdeiAssistant to sync the new password. The app does not store your login password separately."
+      },
+      "schedule": {
+        "title": "Why do grades or schedule queries show system errors?",
+        "content": "Academic queries depend on the university website and academic system. When the source service is under maintenance or updating, queries may temporarily fail and usually recover within 24 hours. If the issue lasts longer, submit a feedback ticket here."
+      },
+      "cache": {
+        "title": "What is academic data cache, and is it safe?",
+        "content": "Academic data cache syncs grades and schedules from the university academic system with your authorization to improve speed and stability. It is used only for academic display and is not shared externally. You can disable it at any time in privacy settings."
+      },
+      "delete": {
+        "title": "How do I delete my account?",
+        "content": "You can request deletion in Profile - Delete Account. The system will verify your password and check whether the account meets deletion requirements. If self-service deletion is unavailable, submit a ticket here or email support@gdeiassistant.cn."
+      }
+    },
+    "type": {
+      "crash": "Crashes, lag, or broken layout",
+      "login": "Login and password issues",
+      "profile": "Profile and privacy settings",
+      "verification": "Verification and phone binding",
+      "account": "Account binding, management, or deletion",
+      "appError": "App errors",
+      "other": "Other"
+    },
+    "form": {
+      "typeTitle": "Select Feedback Type",
+      "contentTitle": "Feedback Details",
+      "contentPlaceholder": "Please describe the issue or suggestion in detail...",
+      "contentRequired": "Please enter your feedback",
+      "contactTitle": "Contact (Optional)",
+      "contactPlaceholder": "Leave your QQ, WeChat, or phone number so we can contact you if needed",
+      "screenshotTitle": "Screenshots",
+      "screenshotLimit": "(Optional, up to {count} images)",
+      "screenshotPreview": "Screenshot Preview",
+      "addImage": "Add Image",
+      "submit": "Submit Feedback",
+      "submitting": "Submitting...",
+      "submitSuccess": "Submitted successfully"
+    }
+  },
+  "schedule": {
+    "pageTitle": "Schedule",
+    "more": "More",
+    "selectWeek": "Select Week",
+    "empty": "No classes scheduled for this week",
+    "noTeacher": "No teacher information",
+    "weekLabel": "Week {week}",
+    "sectionLabel": "Section {section}",
+    "lengthLabel": "{count} section(s)",
+    "weekRange": "Week {start} - Week {end}",
+    "day": {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    },
+    "action": {
+      "manageCache": "Manage academic cache",
+      "refresh": "Refresh schedule",
+      "addCustomCourse": "Add custom course"
+    },
+    "detail": {
+      "title": "Course Details",
+      "name": "Course",
+      "location": "Location",
+      "teacher": "Teacher",
+      "weekRangeTitle": "Weeks"
+    },
+    "addDialog": {
+      "title": "Add Custom Course",
+      "name": "Course Name",
+      "namePlaceholder": "Enter course name",
+      "location": "Location",
+      "locationPlaceholder": "Enter location",
+      "dayOfWeek": "Day",
+      "startSection": "Start Section",
+      "scheduleLength": "Course Length",
+      "minWeek": "Start Week",
+      "maxWeek": "End Week",
+      "submit": "Save Course",
+      "submitting": "Saving..."
+    },
+    "message": {
+      "syncLoading": "Syncing schedule...",
+      "syncSuccess": "Schedule refreshed",
+      "nameRequired": "Please enter the course name",
+      "locationRequired": "Please enter the location",
+      "invalidWeekRange": "End week cannot be earlier than start week",
+      "invalidSectionRange": "The selected sections exceed the daily range",
+      "duplicateCourse": "There is already a course in this time slot",
+      "addSuccess": "Custom course added",
+      "deleteConfirm": "Delete this custom course?",
+      "deleteSuccess": "Custom course deleted"
+    }
+  },
+  "electricityFees": {
+    "title": "Electricity Fees",
+    "loading": "Checking electricity fees...",
+    "queryFailed": "Query failed. Please try again later.",
+    "submit": "Search",
+    "retry": "Search Again",
+    "field": {
+      "year": "Year",
+      "name": "Name",
+      "number": "Student ID"
+    },
+    "placeholder": {
+      "name": "Enter your name",
+      "number": "Enter your student ID"
+    },
+    "validation": {
+      "yearRequired": "Please select a year",
+      "nameRequired": "Please enter your name",
+      "numberRequired": "Please enter your student ID",
+      "numberInvalid": "Please enter an 11-digit student ID",
+      "yearInvalid": "Invalid year"
+    },
+    "result": {
+      "title": "Result",
+      "year": "Year",
+      "dormitory": "Dormitory",
+      "peopleNumber": "Occupants",
+      "usedElectricAmount": "Used Electricity",
+      "freeElectricAmount": "Free Electricity",
+      "feeBasedElectricAmount": "Billable Electricity",
+      "electricPrice": "Unit Price",
+      "totalElectricBill": "Total Bill",
+      "averageElectricBill": "Average Bill"
+    }
+  },
+  "yellowPage": {
+    "title": "Yellow Pages"
+  },
+  "communityCommon": {
+    "refreshing": "Refreshing...",
+    "releaseToRefresh": "Release to refresh",
+    "pullToRefresh": "Pull to refresh",
+    "loading": "Loading",
+    "noMore": "No more",
+    "select": "Please select",
+    "gender": {
+      "male": "Male",
+      "female": "Female",
+      "secret": "Other / Private"
+    }
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "searchTitle": "Search Results",
+    "searchPlaceholder": "Search items",
+    "searchAction": "Search",
+    "searchRequired": "Please enter a keyword",
+    "searchEmpty": "No matching items found",
+    "searchPrompt": "Enter a keyword to search",
+    "categoryTitle": "Category",
+    "emptyByCategory": "No items in this category",
+    "publish": {
+      "title": "Post Item",
+      "editTitle": "Edit Item",
+      "finish": "Done",
+      "submitting": "Submitting",
+      "loading": "Loading item details...",
+      "saving": "Saving...",
+      "uploading": "Uploading...",
+      "publishSuccess": "Posted successfully",
+      "imageEditUnsupported": "Image editing is not available in edit mode",
+      "invalidImageType": "Invalid image file type",
+      "imageTooLarge": "Image files must be smaller than 5MB",
+      "imageLimit": "You can select up to 4 images",
+      "imageLimitHint": "You can upload up to 4 images",
+      "itemNotFound": "Item to edit was not found",
+      "selectImageRequired": "Please select at least one image",
+      "nameRequired": "Please enter the item name",
+      "descriptionRequired": "Please enter the item description",
+      "priceInvalid": "Please enter a valid price between 0 and 9999.99",
+      "locationRequired": "Please enter the trading location",
+      "typeRequired": "Please select a category",
+      "qqRequired": "Please enter your QQ number",
+      "formInvalid": "Please check the form fields",
+      "typePickerTitle": "Select Category",
+      "field": {
+        "name": "Item Name",
+        "description": "Description",
+        "price": "Price",
+        "location": "Trading Location",
+        "type": "Category",
+        "qq": "QQ",
+        "phone": "Phone"
+      },
+      "placeholder": {
+        "name": "Up to 25 characters",
+        "description": "Describe the use and condition",
+        "price": "Price cannot exceed 9999.99",
+        "phone": "Optional"
+      },
+      "error": {
+        "name": "Item name is required",
+        "description": "Description is required",
+        "price": "Invalid price",
+        "location": "Trading location is required",
+        "type": "No category selected",
+        "qq": "QQ number is required"
+      }
+    },
+    "detail": {
+      "title": "Item Details",
+      "imageAlt": "Item image {index}",
+      "publishTime": "Posted at: ",
+      "location": "Location: ",
+      "publisher": "Seller: ",
+      "description": "Description: ",
+      "qq": "QQ: ",
+      "phone": "Phone: ",
+      "call": "Call",
+      "sms": "Text",
+      "riskHint": "Online transactions carry risk. Please verify details before trading.",
+      "copyQQ": "Copy QQ",
+      "qqCopied": "QQ number copied",
+      "copyFailed": "Copy failed. Please copy it manually.",
+      "itemNotFound": "Item not found",
+      "loadFailed": "Failed to load. Please try again later.",
+      "loadFailedOrMissing": "Failed to load or item does not exist"
+    },
+    "category": {
+      "vehicle": "Campus Ride",
+      "phone": "Phone",
+      "computer": "Computer",
+      "digitalAccessory": "Digital Accessories",
+      "digital": "Digital",
+      "appliance": "Appliances",
+      "sports": "Sports & Fitness",
+      "clothing": "Clothing & Umbrellas",
+      "books": "Books & Textbooks",
+      "rental": "Rental",
+      "life": "Lifestyle",
+      "other": "Other"
+    }
+  },
+  "express": {
+    "title": "Confession Wall",
+    "searchTitle": "Search Confessions",
+    "searchPlaceholder": "Search sender, recipient, or content",
+    "searchAction": "Search",
+    "searchRequired": "Please enter a search keyword",
+    "searchEmpty": "No matching confessions found",
+    "searchPrompt": "Enter a keyword to search",
+    "bannerTitle": "Guangdong University of Education Confession Wall",
+    "justNow": "Just now",
+    "legend": "Blue underline: male / Red underline: female / Black underline: other or private",
+    "empty": "No confessions yet",
+    "guessDialogTitle": "Guess the Name",
+    "guessPlaceholder": "Enter the real name you want to guess",
+    "guessRequired": "Please enter the name you want to guess",
+    "guessCorrect": "You got it right!",
+    "guessWrong": "Not quite. Try again.",
+    "guessUnavailable": "This person did not leave a real name to guess.",
+    "publish": {
+      "title": "Post a Confession",
+      "myInfo": "Your Info",
+      "targetInfo": "Their Info",
+      "targetName": "Name",
+      "realName": "Real Name",
+      "gender": "Gender",
+      "contentTitle": "Confession Content",
+      "nicknamePlaceholder": "Enter a nickname",
+      "realNamePlaceholder": "Enter your real name",
+      "receiverNamePlaceholder": "Enter their name",
+      "contentPlaceholder": "Write what you want to say...",
+      "realNameTip": "Real name is optional and hidden by default. Fill it in to join the guess-the-name game.",
+      "submitAction": "Post Confession",
+      "submitting": "Submitting...",
+      "publishing": "Publishing...",
+      "publishSuccess": "Posted successfully",
+      "nicknameRequired": "Please enter a nickname",
+      "nicknameTooLong": "Nickname must be within 10 characters",
+      "realNameTooLong": "Real name must be within 10 characters",
+      "myGenderRequired": "Please select your gender",
+      "receiverNameRequired": "Please enter their name",
+      "receiverNameTooLong": "Their name must be within 10 characters",
+      "receiverGenderRequired": "Please select their gender",
+      "contentRequired": "Please enter the confession content",
+      "contentTooLong": "Confession content must be within 250 characters"
+    },
+    "detail": {
+      "title": "Confession Details",
+      "commentList": "Comments",
+      "commentEmpty": "No comments yet. Be the first to leave one!",
+      "commentRequired": "Please enter a comment",
+      "commentTooLong": "Comments must be within 50 characters",
+      "commentPlaceholder": "Say something...",
+      "sending": "Sending...",
+      "send": "Send",
+      "me": "Me",
+      "floor": "Floor {index}"
+    }
+  },
+  "topic": {
+    "title": "Topics",
+    "empty": "No topics yet",
+    "anonymousUser": "Anonymous",
+    "imageAlt": "Image {index}",
+    "searchTitle": "Search Topics",
+    "searchPlaceholder": "Search topics or content...",
+    "searchAction": "Search",
+    "searchRequired": "Please enter the topic or content you want to search for",
+    "searching": "Searching...",
+    "searchEmpty": "No results found",
+    "publish": {
+      "title": "Post Topic",
+      "submitAction": "Submit",
+      "submitting": "Submitting...",
+      "topicPlaceholder": "Enter your topic",
+      "contentPlaceholder": "Enter your content...",
+      "addImage": "Add Image",
+      "imageLimit": "You can upload up to 9 images",
+      "invalidImageType": "Only image files are allowed",
+      "imageTooLarge": "Image size cannot exceed 5MB",
+      "topicRequired": "Please enter a topic tag",
+      "contentRequired": "Please enter content",
+      "contentTooLong": "Content must be within 250 characters",
+      "uploading": "Uploading...",
+      "publishing": "Publishing...",
+      "publishSuccess": "Posted successfully"
+    },
+    "detail": {
+      "title": "Topic Details",
+      "defaultTopic": "Campus Topic",
+      "emptyContent": "No content yet",
+      "like": "Like",
+      "liked": "Liked",
+      "notFound": "This topic does not exist or has been removed"
+    }
+  },
+  "secret": {
+    "title": "Secret Wall",
+    "publishAction": "Share a Secret",
+    "empty": "No secret posts yet",
+    "voiceAlt": "Voice",
+    "profile": {
+      "title": "My Secret Posts",
+      "voiceMessage": "Voice Message",
+      "empty": "No secret posts yet",
+      "loadMore": "Load More"
+    }
+  },
+  "lostandfound": {
+    "title": "Lost & Found",
+    "emptyLost": "No lost-item posts",
+    "emptyFound": "No found-item posts",
+    "itemType": {
+      "phone": "Phone",
+      "campusCard": "Campus Card",
+      "idCard": "ID Card",
+      "bankCard": "Bank Card",
+      "book": "Book",
+      "key": "Key",
+      "bag": "Bag",
+      "clothing": "Clothing",
+      "vehicle": "Campus Ride",
+      "sports": "Sports & Fitness",
+      "digitalAccessory": "Digital Accessories",
+      "other": "Other"
+    },
+    "tab": {
+      "lost": "Lost Items",
+      "found": "Found Items"
+    },
+    "badge": {
+      "lost": "Lost",
+      "found": "Found"
+    },
+    "publish": {
+      "title": "Post Info",
+      "editTitle": "Edit Info",
+      "finish": "Done",
+      "submitting": "Submitting",
+      "loading": "Loading information...",
+      "saving": "Saving...",
+      "uploading": "Uploading...",
+      "publishSuccess": "Posted successfully",
+      "modeTitle": "Post Type",
+      "modeFoundOwner": "Find Owner",
+      "itemTypeTitle": "Item Category",
+      "itemTypePickerTitle": "Select Item Category",
+      "lostLocation": "Lost At",
+      "foundLocation": "Found At",
+      "contactTip": "Fill in at least one: QQ, WeChat, or phone number",
+      "imageLimit": "You can upload up to 4 images",
+      "invalidImageType": "Only image files are allowed",
+      "imageTooLarge": "Image size cannot exceed 5MB",
+      "imageEditUnsupported": "Image editing is not available in edit mode",
+      "imageLimitHint": "You can upload up to 4 images",
+      "itemNotFound": "The item to edit was not found",
+      "titleRequired": "Please enter the item name",
+      "titleTooLong": "Item name must be within 25 characters",
+      "descRequired": "Please enter the item description",
+      "descTooLong": "Item description must be within 100 characters",
+      "locationRequired": "Please enter the location",
+      "locationTooLong": "Location must be within 30 characters",
+      "itemTypeRequired": "Please select an item category",
+      "imageRequired": "Please upload at least one image",
+      "contactRequired": "Please provide at least one contact method",
+      "previewAlt": "Preview image",
+      "field": {
+        "title": "Item Name",
+        "desc": "Description"
+      },
+      "placeholder": {
+        "title": "Up to 25 characters"
+      }
+    },
+    "detail": {
+      "title": "Details",
+      "imageAlt": "Item image {index}",
+      "publishTime": "Posted at: ",
+      "lostLocation": "Lost At: ",
+      "foundLocation": "Found At: ",
+      "publisher": "Publisher: ",
+      "description": "Description: ",
+      "contact": "Contact:",
+      "qq": "QQ: ",
+      "wechat": "WeChat: ",
+      "phone": "Phone: ",
+      "copyQQ": "Copy QQ",
+      "copyWechat": "Copy WeChat",
+      "call": "Call",
+      "sms": "Text"
+    }
+  },
+  "delivery": {
+    "title": "Campus Delivery",
+    "empty": "No tasks yet",
+    "smallSize": "Small",
+    "pickupShort": "Pickup",
+    "pickupBadge": "P",
+    "deliveryBadge": "D",
+    "pickupAddressWithCompany": "Pickup at {company}",
+    "unknownStatus": "Unknown",
+    "status": {
+      "pending": "Pending",
+      "inTransit": "In Transit",
+      "completed": "Completed"
+    },
+    "type": {
+      "express": "Parcel Pickup",
+      "food": "Meal Errand",
+      "other": "Errand"
+    },
+    "size": {
+      "small": "Small (Food / Documents)",
+      "medium": "Medium (Shoes / Clothes)",
+      "large": "Large (Heavy Items)"
+    },
+    "publish": {
+      "title": "Post Task",
+      "submitAction": "Confirm",
+      "submitting": "Submitting...",
+      "pickupSection": "Pickup Info",
+      "pickupAddress": "Pickup Address",
+      "pickupPlaceholder": "For example: Cainiao Station, South Gate pickup point",
+      "pickupCode": "Pickup Code / Voucher (Optional)",
+      "pickupCodePlaceholder": "For example: 1-2-3456",
+      "pickupImage": "Pickup Voucher Image (Optional)",
+      "uploadImage": "Upload Image",
+      "deliverySection": "Delivery Info",
+      "deliveryAddress": "Delivery Address",
+      "deliveryPlaceholder": "For example: Nanyuan Building 1 Room 301",
+      "contactPhone": "Contact Phone",
+      "phonePlaceholder": "Enter phone number",
+      "itemSection": "Item Details",
+      "sizeLabel": "Weight / Size",
+      "descriptionLabel": "Notes (Optional)",
+      "descriptionPlaceholder": "Add more details...",
+      "rewardLabel": "Reward: ",
+      "invalidImageType": "Only image files are allowed",
+      "imageTooLarge": "Image size cannot exceed 5MB",
+      "pickupRequired": "Please enter the pickup address",
+      "deliveryRequired": "Please enter the delivery address",
+      "phoneRequired": "Please enter the contact phone number",
+      "rewardInvalid": "Please enter a valid reward amount (0.01-9999.99)",
+      "publishSuccess": "Posted successfully"
+    },
+    "detail": {
+      "title": "Task Details",
+      "pickupCode": "Pickup Code: ",
+      "contactPhone": "Contact Phone: ",
+      "myRole": "My Role: ",
+      "publisherRole": "Publisher",
+      "runnerRole": "Runner",
+      "sizeLabel": "Item Size: ",
+      "descriptionLabel": "Notes: ",
+      "publishTime": "Posted At: ",
+      "statusLabel": "Status: ",
+      "acceptAction": "Accept Now",
+      "accepting": "Accepting...",
+      "completeAction": "Mark Complete",
+      "completing": "Confirming...",
+      "acceptSuccess": "Accepted successfully!",
+      "completeSuccess": "Order completed!",
+      "completeConfirmTitle": "Confirm Completion",
+      "completeConfirmMessage": "Are you sure you want to complete this order? This action cannot be undone."
+    },
+    "mine": {
+      "title": "My Delivery Tasks",
+      "publishedTab": "Published",
+      "acceptedTab": "Accepted",
+      "emptyPublished": "No published tasks yet",
+      "emptyAccepted": "No accepted tasks yet"
+    }
+  },
+  "dataSource": {
+    "mock": "Mock Data Source",
+    "remote": "Remote Data Source"
   },
   "about": {
     "appName": "GdeiAssistant",

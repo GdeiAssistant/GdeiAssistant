@@ -1,14 +1,18 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import { createCommunityPullMessages } from '../community/communityContent'
 
 const router = useRouter()
+const { t } = useI18n()
 const scrollContainer = ref({ get scrollTop() { return window.pageYOffset || document.documentElement.scrollTop } })
 const previewImage = ref('')
 const previewVisible = ref(false)
+const pullMessages = computed(() => createCommunityPullMessages(t))
 
 const PAGE_SIZE = 10
 const fetchTopicData = async (page) => {
@@ -19,7 +23,7 @@ const fetchTopicData = async (page) => {
     id: t.id,
     topicTag: t.topic,
     content: t.content,
-    userName: t.username || '匿名',
+    userName: t.username || t('topic.anonymousUser'),
     userAvatar: '/img/avatar/default.png',
     time: t.publishTime,
     images: t.firstImageUrl ? [t.firstImageUrl] : [],
@@ -79,12 +83,12 @@ onUnmounted(() => {
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
   >
-    <CommunityHeader title="话题" moduleColor="#6366f1" />
+    <CommunityHeader :title="t('topic.title')" moduleColor="#6366f1" />
 
     <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
-      <span v-if="refreshing" class="flex items-center gap-2"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> 正在刷新...</span>
-      <span v-else-if="pullY > 50">释放立即刷新</span>
-      <span v-else-if="pullY > 0">下拉刷新</span>
+      <span v-if="refreshing" class="flex items-center gap-2"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}</span>
+      <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
+      <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
     </div>
 
     <div class="p-4 flex flex-col gap-4">
@@ -119,7 +123,7 @@ onUnmounted(() => {
           >
             <img
               :src="img"
-              :alt="`图片${idx + 1}`"
+              :alt="t('topic.imageAlt', { index: idx + 1 })"
               :class="item.images.length === 1 ? 'w-full h-auto max-h-[400px] object-contain' : 'w-full h-full object-cover'"
               @click="openImagePreview(img)"
             />
@@ -142,10 +146,10 @@ onUnmounted(() => {
     </div>
 
     <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-      <p class="text-sm">暂无话题</p>
+      <p class="text-sm">{{ t('topic.empty') }}</p>
     </div>
-    <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> 正在加载</div>
-    <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">没有更多了</div>
+    <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> {{ pullMessages.loading }}</div>
+    <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">{{ pullMessages.noMore }}</div>
 
     <!-- 图片预览 Lightbox -->
     <div v-if="previewVisible" class="fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center" @click="closeImagePreview">

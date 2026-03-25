@@ -116,7 +116,8 @@ function createMockAdapter(config) {
     path,
     method,
     data: mergedData,
-    token
+    token,
+    locale: config.headers?.['Accept-Language']
   }).then((mockData) => ({
     data: mockData,
     status: 200,

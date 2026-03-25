@@ -1,14 +1,18 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import { useToast } from '@/composables/useToast'
 import { showErrorTopTips } from '@/utils/toast.js'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import { createCommunityPullMessages } from '../community/communityContent'
 
 const router = useRouter()
+const { t } = useI18n()
 const { success: toastSuccess } = useToast()
+const pullMessages = computed(() => createCommunityPullMessages(t))
 // 用于下拉刷新：模拟 scrollTop 为 window 的滚动位置
 const scrollContainer = ref({ get scrollTop() { return window.pageYOffset || document.documentElement.scrollTop } })
 
@@ -73,7 +77,7 @@ function showSuccess(msg) {
 function confirmGuess() {
   const guessName = guessInputValue.value && guessInputValue.value.trim()
   if (!guessName) {
-    showErrorTopTips('请输入你猜的真实姓名')
+    showErrorTopTips(t('express.guessRequired'))
     return
   }
   const currentItem = guessTargetItem.value
@@ -86,9 +90,9 @@ function confirmGuess() {
       const correct = res?.data === true
       if (correct) {
         currentItem.correctCount = (currentItem.correctCount || 0) + 1
-        showSuccess('恭喜你，猜对了！')
+        showSuccess(t('express.guessCorrect'))
       } else {
-        showErrorTopTips('猜错了，再试试看吧！')
+        showErrorTopTips(t('express.guessWrong'))
       }
       currentItem.guessCount = (currentItem.guessCount || 0) + 1
     })
@@ -101,7 +105,7 @@ function confirmGuess() {
 function handleGuess(item) {
   // 拦截无效的猜测点击
   if (!item.canGuess) {
-    showErrorTopTips('TA很神秘，没有留下真名让人猜哦~')
+    showErrorTopTips(t('express.guessUnavailable'))
     return
   }
   openGuessDialog(item)
@@ -139,18 +143,18 @@ onUnmounted(() => {
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
   >
-    <CommunityHeader title="表白墙" moduleColor="#f43f5e" />
+    <CommunityHeader :title="t('express.title')" moduleColor="#f43f5e" />
 
     <!-- 导航栏正下方：居中的浅粉色粗体标题 -->
-    <h2 class="text-center text-[22px] font-bold text-[#ffb3ba] mx-4 mt-4 mb-5 leading-tight">广东第二师范学院表白墙</h2>
+    <h2 class="text-center text-[22px] font-bold text-[#ffb3ba] mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
 
     <!-- 下拉刷新指示器 -->
     <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
       <span v-if="refreshing" class="flex items-center gap-2">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i> 正在刷新...
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
       </span>
-      <span v-else-if="pullY > 50">释放立即刷新</span>
-      <span v-else-if="pullY > 0">下拉刷新</span>
+      <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
+      <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
     </div>
 
     <!-- 表白卡片列表 -->
@@ -173,7 +177,7 @@ onUnmounted(() => {
         </div>
 
         <div class="text-right text-xs text-[var(--c-text-3)] px-4 pb-4">
-          {{ item.time || '刚刚' }}
+          {{ item.time || t('express.justNow') }}
         </div>
 
         <div class="flex border-t border-[var(--c-border)] py-2.5">
@@ -206,40 +210,40 @@ onUnmounted(() => {
 
     <!-- 底部图例 -->
     <div class="text-center text-xs text-[var(--c-text-3)] px-4 pt-4 pb-5 leading-relaxed">
-      蓝色下划线：男生 / 红色下划线：女生 / 黑色下划线：其他或保密
+      {{ t('express.legend') }}
     </div>
 
     <!-- 空状态 -->
     <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
       <div class="text-5xl mb-3">💌</div>
-      <p class="text-sm">暂无表白墙内容</p>
+      <p class="text-sm">{{ t('express.empty') }}</p>
     </div>
 
     <!-- 上拉加载更多 -->
     <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
       <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i>
-      <span>正在加载</span>
+      <span>{{ pullMessages.loading }}</span>
     </div>
     <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
-      <span>没有更多了</span>
+      <span>{{ pullMessages.noMore }}</span>
     </div>
 
     <!-- 猜名字 Dialog -->
     <div v-if="guessDialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="guessDialogVisible = false"></div>
     <div v-if="guessDialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
-      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">猜名字</div>
+      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('express.guessDialogTitle') }}</div>
       <div class="px-5 pb-4">
         <input
           type="text"
           class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[#f43f5e] focus:ring-2 focus:ring-[#f43f5e]/10"
-          placeholder="请输入你猜的真实姓名："
+          :placeholder="t('express.guessPlaceholder')"
           v-model="guessInputValue"
           @keyup.enter="confirmGuess"
         />
       </div>
       <div class="flex border-t border-[var(--c-border)]">
-        <button class="flex-1 py-3 text-center text-sm text-[var(--c-text-2)] bg-transparent border-none border-r border-[var(--c-border)] cursor-pointer" @click="guessDialogVisible = false">取消</button>
-        <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="confirmGuess">确定</button>
+        <button class="flex-1 py-3 text-center text-sm text-[var(--c-text-2)] bg-transparent border-none border-r border-[var(--c-border)] cursor-pointer" @click="guessDialogVisible = false">{{ t('common.cancel') }}</button>
+        <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="confirmGuess">{{ t('common.confirm') }}</button>
       </div>
     </div>
   </div>

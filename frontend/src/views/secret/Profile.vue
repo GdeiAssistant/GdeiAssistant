@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
@@ -7,6 +8,7 @@ import CommunityHeader from '../../components/community/CommunityHeader.vue'
 const PAGE_SIZE = 20
 
 const router = useRouter()
+const { t } = useI18n()
 const secretList = ref([])
 const loading = ref(true)
 const loadingMore = ref(false)
@@ -55,11 +57,11 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: #8b5cf6">
-    <CommunityHeader title="我的树洞" moduleColor="#8b5cf6" backTo="/secret/home" />
+    <CommunityHeader :title="t('secret.profile.title')" moduleColor="#8b5cf6" backTo="/secret/home" />
 
     <div v-if="loading" class="flex items-center justify-center py-16 gap-2.5 text-[var(--c-text-3)]">
       <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#8b5cf6] rounded-full animate-spin"></i>
-      <span>加载中...</span>
+      <span>{{ t('common.loading') }}</span>
     </div>
 
     <!-- 发布的树洞消息列表 -->
@@ -71,13 +73,13 @@ onMounted(() => {
         :style="{ animationDelay: index * 0.05 + 's' }"
       >
         <a href="javascript:;" class="flex-1 no-underline text-[var(--c-text-1)]" @click.prevent="router.push(`/secret/detail/${secret.id}`)">
-          <p class="m-0 text-sm leading-relaxed flex items-center min-h-[50px]">{{ secret.type === 0 ? secret.content : '语音消息' }}</p>
+          <p class="m-0 text-sm leading-relaxed flex items-center min-h-[50px]">{{ secret.type === 0 ? secret.content : t('secret.profile.voiceMessage') }}</p>
         </a>
         <i class="inline-block w-2.5 h-2.5 ml-3 border-t-2 border-r-2 border-[var(--c-text-3)] rotate-45 opacity-80"></i>
       </div>
       <div v-if="secretList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
         <div class="text-5xl mb-3">📭</div>
-        <p class="text-sm">暂无发布的树洞</p>
+        <p class="text-sm">{{ t('secret.profile.empty') }}</p>
       </div>
 
       <div v-if="secretList.length > 0 && hasMore" class="flex justify-center py-3">
@@ -86,11 +88,11 @@ onMounted(() => {
           :disabled="loadingMore"
           @click="loadMore"
         >
-          {{ loadingMore ? '加载中...' : '加载更多' }}
+          {{ loadingMore ? t('common.loading') : t('secret.profile.loadMore') }}
         </button>
       </div>
       <div v-if="secretList.length > 0 && !hasMore" class="flex justify-center py-3">
-        <span class="text-[var(--c-text-3)] text-xs">没有更多了</span>
+        <span class="text-[var(--c-text-3)] text-xs">{{ t('communityCommon.noMore') }}</span>
       </div>
     </div>
   </div>

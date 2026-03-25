@@ -2,8 +2,8 @@
   <div class="min-h-screen bg-gray-50">
     <!-- Sticky Header -->
     <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-base text-gray-700 text-left cursor-pointer" @click="goBack">返回</button>
-      <div class="flex-1 text-center text-lg font-medium text-black">登录记录</div>
+      <button type="button" class="w-15 text-base text-gray-700 text-left cursor-pointer" @click="goBack">{{ t('common.back') }}</button>
+      <div class="flex-1 text-center text-lg font-medium text-black">{{ t('profile.loginRecord') }}</div>
       <div class="w-15"></div>
     </div>
 
@@ -12,12 +12,12 @@
       <!-- Loading -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-16">
         <div class="w-5 h-5 border-2 border-gray-200 border-t-green-500 rounded-full animate-spin"></div>
-        <p class="mt-3 text-sm text-gray-400">加载中...</p>
+        <p class="mt-3 text-sm text-gray-400">{{ t('common.loading') }}</p>
       </div>
 
       <!-- Empty -->
       <div v-else-if="records.length === 0" class="flex items-center justify-center py-16">
-        <p class="text-sm text-gray-400">暂无登录记录</p>
+        <p class="text-sm text-gray-400">{{ t('loginRecord.empty') }}</p>
       </div>
 
       <!-- Records -->
@@ -25,7 +25,7 @@
         <div v-for="record in records" :key="record.id" class="px-4 py-4">
           <div class="flex justify-between items-center mb-1">
             <span class="text-base font-medium text-gray-700">{{ record.loginTime }}</span>
-            <span class="text-sm text-green-500">登录成功</span>
+            <span class="text-sm text-green-500">{{ t('loginRecord.success') }}</span>
           </div>
           <div class="text-[13px] text-gray-400 leading-relaxed mt-0.5">
             {{ record.location }} · {{ record.ip }}
@@ -42,9 +42,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 
 const router = useRouter()
+const { t } = useI18n()
 
 // 响应式数据
 const records = ref([])
@@ -78,7 +80,7 @@ const loadRecords = async () => {
       loginTime: formatTime(item.time),
       ip: item.ip || '',
       location: item.area || [item.country, item.province, item.city].filter(Boolean).join(''),
-      device: item.network ? `${item.network} 客户端` : '未知设备'
+      device: item.network ? t('loginRecord.clientDevice', { network: item.network }) : t('loginRecord.unknownDevice')
     }))
   } catch (e) {
     records.value = []

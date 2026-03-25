@@ -18,6 +18,48 @@ public class I18nFieldConfig {
         ));
         put("/api/information/news/**", List.of("data.title", "data.content", "data[].title", "data[].content"));
         put("/api/information/announcement/**", List.of("data.title", "data.content", "data[].title", "data[].content"));
+        put("/api/schedule", List.of(
+                "data.scheduleList[].scheduleName",
+                "data.scheduleList[].scheduleTeacher",
+                "data.scheduleList[].scheduleLocation"
+        ));
+        put("/api/card/query", List.of(
+                "data.cardInfo.cardLostState",
+                "data.cardInfo.cardFreezeState",
+                "data.cardList[].merchantName",
+                "data.cardList[].tradeName"
+        ));
+        put("/api/card/info", List.of(
+                "data.cardLostState",
+                "data.cardFreezeState"
+        ));
+        put("/api/data/electricfees", List.of(
+                "data.buildingNumber",
+                "data.department",
+                "data.name"
+        ));
+        put("/api/data/yellowpage", List.of(
+                "data.type[].typeName",
+                "data.data[].typeName",
+                "data.data[].section",
+                "data.data[].campus",
+                "data.data[].address"
+        ));
+        put("/api/user/profile", List.of(
+                "data.faculty",
+                "data.major",
+                "data.location",
+                "data.hometown",
+                "data.introduction",
+                "data.ipArea"
+        ));
+        put("/api/profile/options", List.of(
+                "data.faculties[].label",
+                "data.faculties[].majors[]",
+                "data.marketplaceItemTypes[].label",
+                "data.lostFoundItemTypes[].label",
+                "data.lostFoundModes[].label"
+        ));
         put("/api/ershou/**", List.of("data.name", "data.description", "data[].name", "data[].description"));
         put("/api/lostandfound/**", List.of("data.name", "data.description", "data[].name", "data[].description"));
         put("/api/express/**", List.of("data.nickname", "data.name", "data.content", "data[].nickname", "data[].name", "data[].content"));

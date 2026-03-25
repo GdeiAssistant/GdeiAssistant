@@ -1,13 +1,16 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import { createMarketplaceCategoryNames } from '../community/communityContent'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const { toast, loading: showLoadingToast, hideLoading } = useToast()
 const name = ref('')
 const description = ref('')
@@ -35,8 +38,8 @@ function showDialog(msg) {
   dialogVisible.value = true
 }
 
-const typeNames = ['校园代步', '手机', '电脑', '数码配件', '数码', '电器', '运动健身', '衣物伞帽', '图书教材', '租赁', '生活娱乐', '其他']
-const typeNameDisplay = computed(() => typeId.value >= 0 && typeId.value <= 11 ? typeNames[typeId.value] : '')
+const typeNames = computed(() => createMarketplaceCategoryNames(t))
+const typeNameDisplay = computed(() => typeId.value >= 0 && typeId.value <= 11 ? typeNames.value[typeId.value] : '')
 
 const MAX_IMAGES = 4
 const MAX_SIZE = 5 * 1024 * 1024
@@ -48,7 +51,7 @@ function goBack() {
 
 function triggerFileInput() {
   if (isEditMode.value) {
-    showDialog('编辑模式暂不支持修改商品图片')
+    showDialog(t('marketplace.publish.imageEditUnsupported'))
     return
   }
   if (images.value.length >= MAX_IMAGES) return
@@ -65,15 +68,15 @@ function onFileChange(e) {
   if (!files || files.length === 0) return
   const file = files[0]
   if (ALLOW_TYPES.indexOf(file.type) === -1) {
-    showDialog('不合法的图片文件类型')
+    showDialog(t('marketplace.publish.invalidImageType'))
     return
   }
   if (file.size > MAX_SIZE) {
-    showDialog('图片文件不能超过5MB')
+    showDialog(t('marketplace.publish.imageTooLarge'))
     return
   }
   if (images.value.length >= MAX_IMAGES) {
-    showDialog('最多只能选择四张图片')
+    showDialog(t('marketplace.publish.imageLimit'))
     return
   }
   const reader = new FileReader()
@@ -86,7 +89,7 @@ function onFileChange(e) {
 
 function removeImage(index) {
   if (isEditMode.value) {
-    showDialog('编辑模式暂不支持修改商品图片')
+    showDialog(t('marketplace.publish.imageEditUnsupported'))
     return
   }
   images.value = images.value.filter((_, i) => i !== index)
@@ -153,7 +156,7 @@ async function loadEditItem() {
       .concat(Array.isArray(data.off) ? data.off : [])
     const item = list.find((entry) => Number(entry.id) === editItemId.value)
     if (!item) {
-      showDialog('未找到要编辑的商品')
+      showDialog(t('marketplace.publish.itemNotFound'))
       return
     }
     populateForm(item)
@@ -165,45 +168,45 @@ async function loadEditItem() {
 async function submit() {
   if (submitting.value || pageLoading.value) return
   if (!isEditMode.value && images.value.length < 1) {
-    showDialog('请至少选择一张图片')
+    showDialog(t('marketplace.publish.selectImageRequired'))
     return
   }
   if (!name.value || name.value.trim() === '') {
-    showDialog('请填写商品名称')
+    showDialog(t('marketplace.publish.nameRequired'))
     return
   }
   if (!description.value || description.value.trim() === '') {
-    showDialog('请填写商品描述')
+    showDialog(t('marketplace.publish.descriptionRequired'))
     return
   }
   if (!price.value || parseFloat(price.value) <= 0 || parseFloat(price.value) > 9999.99) {
-    showDialog('请填写有效的商品价格（0-9999.99元）')
+    showDialog(t('marketplace.publish.priceInvalid'))
     return
   }
   if (!location.value || location.value.trim() === '') {
-    showDialog('请填写交易地点')
+    showDialog(t('marketplace.publish.locationRequired'))
     return
   }
   if (typeId.value === null || typeId.value < 0 || typeId.value > 11) {
-    showDialog('请选择商品分类')
+    showDialog(t('marketplace.publish.typeRequired'))
     return
   }
   if (!qq.value || qq.value.trim() === '') {
-    showDialog('请填写QQ号')
+    showDialog(t('marketplace.publish.qqRequired'))
     return
   }
   if (!validate()) {
-    showDialog('请检查表单内容')
+    showDialog(t('marketplace.publish.formInvalid'))
     return
   }
   submitting.value = true
-  showLoadingToast(isEditMode.value ? '正在保存...' : '正在上传...')
+  showLoadingToast(isEditMode.value ? t('marketplace.publish.saving') : t('marketplace.publish.uploading'))
   try {
     const formData = buildPayload()
     if (isEditMode.value) {
       await request.post(`/marketplace/item/id/${editItemId.value}`, formData)
       hideLoading()
-      showDialog('保存成功')
+      showDialog(t('common.saveSuccess'))
       setTimeout(() => router.push('/marketplace/profile'), 1200)
       return
     }
@@ -211,7 +214,7 @@ async function submit() {
     imageKeys.forEach((imageKey) => formData.append('imageKeys', imageKey))
     await request.post('/marketplace/item', formData)
     hideLoading()
-    showDialog('发布成功')
+    showDialog(t('marketplace.publish.publishSuccess'))
     setTimeout(() => router.push('/marketplace/home'), 1500)
   } catch (_) {
     submitting.value = false
@@ -226,10 +229,10 @@ onMounted(() => {
 
 <template>
   <div class="bg-[var(--c-surface)] min-h-screen">
-    <CommunityHeader :title="isEditMode ? '编辑二手商品' : '发布二手商品'" moduleColor="#10b981" :showBack="true" :backTo="isEditMode ? '/marketplace/profile' : '/marketplace/home'">
+    <CommunityHeader :title="isEditMode ? t('marketplace.publish.editTitle') : t('marketplace.publish.title')" moduleColor="#10b981" :showBack="true" :backTo="isEditMode ? '/marketplace/profile' : '/marketplace/home'">
       <template #right>
         <a href="javascript:;" class="text-sm text-emerald-500 no-underline font-medium hover:text-emerald-600" @click.prevent="submit">
-          {{ submitting ? '提交中' : (isEditMode ? '保存' : '完成') }}
+          {{ submitting ? t('marketplace.publish.submitting') : (isEditMode ? t('common.save') : t('marketplace.publish.finish')) }}
         </a>
       </template>
     </CommunityHeader>
@@ -251,68 +254,68 @@ onMounted(() => {
           <input type="file" accept="image/*" id="publish_file_input" @change="onFileChange" class="absolute top-0 left-0 w-[68px] h-[68px] opacity-0 z-[1] cursor-pointer">
         </span>
       </div>
-      <p class="h-6 leading-6 text-center text-white text-sm pb-1">{{ isEditMode ? '编辑模式暂不支持修改商品图片' : '最多可上传4张图片' }}</p>
+      <p class="h-6 leading-6 text-center text-white text-sm pb-1">{{ isEditMode ? t('marketplace.publish.imageEditUnsupported') : t('marketplace.publish.imageLimitHint') }}</p>
     </section>
 
     <!-- 表单 -->
     <section class="px-5">
-      <p v-if="pageLoading" class="mt-4 text-[var(--c-text-3)] text-sm text-center">正在加载商品信息...</p>
+      <p v-if="pageLoading" class="mt-4 text-[var(--c-text-3)] text-sm text-center">{{ t('marketplace.publish.loading') }}</p>
 
       <div class="relative pl-[90px] text-base min-h-[70px] pb-2.5" :class="[frmErrors.name ? 'border-b-2 border-[#fe6a7c]' : 'border-b-2 border-emerald-500']">
-        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">商品名称</p>
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">{{ t('marketplace.publish.field.name') }}</p>
         <div class="pt-[18px]">
-          <input v-model="name" type="text" placeholder="最多25个字" maxlength="25" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none">
+          <input v-model="name" type="text" :placeholder="t('marketplace.publish.placeholder.name')" maxlength="25" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none">
         </div>
-        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.name ? 'block' : 'hidden'">商品名称不能为空</p>
+        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.name ? 'block' : 'hidden'">{{ t('marketplace.publish.error.name') }}</p>
       </div>
 
       <div class="relative pl-[90px] text-base min-h-[70px] pb-2.5" :class="[frmErrors.description ? 'border-b-2 border-[#fe6a7c]' : 'border-b-2 border-emerald-500']">
-        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">商品描述</p>
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">{{ t('marketplace.publish.field.description') }}</p>
         <div class="pt-[18px]">
-          <textarea v-model="description" name="description" placeholder="填写商品用途、新旧程度" maxlength="100" rows="3" class="resize-none border-none bg-transparent w-full text-base text-[var(--c-text-1)] p-0 mt-3.5 outline-none"></textarea>
+          <textarea v-model="description" name="description" :placeholder="t('marketplace.publish.placeholder.description')" maxlength="100" rows="3" class="resize-none border-none bg-transparent w-full text-base text-[var(--c-text-1)] p-0 mt-3.5 outline-none"></textarea>
         </div>
-        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.description ? 'block' : 'hidden'">商品描述不能为空</p>
+        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.description ? 'block' : 'hidden'">{{ t('marketplace.publish.error.description') }}</p>
       </div>
 
       <div class="relative pl-[90px] text-base min-h-[70px] pb-2.5" :class="[frmErrors.price ? 'border-b-2 border-[#fe6a7c]' : 'border-b-2 border-emerald-500']">
-        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">商品价格</p>
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">{{ t('marketplace.publish.field.price') }}</p>
         <div class="pt-[18px]">
-          <input v-model="price" type="number" placeholder="金额不能超过9999.99元" step="0.01" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none">
+          <input v-model="price" type="number" :placeholder="t('marketplace.publish.placeholder.price')" step="0.01" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none">
         </div>
-        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.price ? 'block' : 'hidden'">商品价格金额不合法</p>
+        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.price ? 'block' : 'hidden'">{{ t('marketplace.publish.error.price') }}</p>
       </div>
 
       <div class="relative pl-[90px] text-base min-h-[70px] pb-2.5" :class="[frmErrors.location ? 'border-b-2 border-[#fe6a7c]' : 'border-b-2 border-emerald-500']">
-        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">交易地点</p>
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">{{ t('marketplace.publish.field.location') }}</p>
         <div class="pt-[18px]">
           <input v-model="location" type="text" maxlength="30" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none">
         </div>
-        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.location ? 'block' : 'hidden'">交易地点不能为空</p>
+        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.location ? 'block' : 'hidden'">{{ t('marketplace.publish.error.location') }}</p>
       </div>
 
       <div class="relative pl-[90px] text-base min-h-[70px] pb-2.5" :class="[frmErrors.type ? 'border-b-2 border-[#fe6a7c]' : 'border-b-2 border-emerald-500']">
-        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">选择分类</p>
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">{{ t('marketplace.publish.field.type') }}</p>
         <div class="pt-[18px]">
           <b class="h-[34px] leading-[34px] text-base w-full text-[var(--c-text-1)] block relative cursor-pointer" @click="openTypePicker">
-            <span>{{ typeNameDisplay || '请选择' }}</span>
+            <span>{{ typeNameDisplay || t('communityCommon.select') }}</span>
             <i class="absolute right-2.5 top-2.5 w-2 h-3 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20256%20512%27%20fill=%27%2310b981%27%3E%3Cpath%20d=%27M224.3%20273l-136%20136c-9.4%209.4-24.6%209.4-33.9%200l-22.6-22.6c-9.4-9.4-9.4-24.6%200-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6%200-33.9L54.3%20103c9.4-9.4%2024.6-9.4%2033.9%200l136%20136c9.5%209.4%209.5%2024.6.1%2034z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
           </b>
         </div>
-        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.type ? 'block' : 'hidden'">分类未选择</p>
+        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.type ? 'block' : 'hidden'">{{ t('marketplace.publish.error.type') }}</p>
       </div>
 
       <div class="relative pl-[90px] text-base min-h-[70px] pb-2.5" :class="[frmErrors.qq ? 'border-b-2 border-[#fe6a7c]' : 'border-b-2 border-emerald-500']">
-        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">QQ号</p>
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">{{ t('marketplace.publish.field.qq') }}</p>
         <div class="pt-[18px]">
           <input v-model="qq" type="text" maxlength="20" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none">
         </div>
-        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.qq ? 'block' : 'hidden'">QQ号不能为空</p>
+        <p class="absolute bottom-0 left-0 bg-[#fe6a7c] h-[15px] leading-[15px] text-xs text-white px-1" :class="frmErrors.qq ? 'block' : 'hidden'">{{ t('marketplace.publish.error.qq') }}</p>
       </div>
 
       <div class="relative pl-[90px] text-base min-h-[70px] pb-2.5 border-b-2 border-emerald-500">
-        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">手机号</p>
+        <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">{{ t('marketplace.publish.field.phone') }}</p>
         <div class="pt-[18px]">
-          <input v-model="phone" type="text" placeholder="选填" maxlength="11" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none">
+          <input v-model="phone" type="text" :placeholder="t('marketplace.publish.placeholder.phone')" maxlength="11" class="text-[var(--c-text-1)] bg-transparent h-[34px] leading-[34px] text-base w-full border-none outline-none">
         </div>
       </div>
     </section>
@@ -321,10 +324,10 @@ onMounted(() => {
     <div v-if="dialogVisible">
       <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
       <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
-        <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">提示</div>
+        <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">{{ t('common.hint') }}</div>
         <div class="text-center text-sm text-[var(--c-text-2)] px-5 pb-5">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)]">
-          <button class="w-full py-3 text-center text-emerald-500 font-medium text-base border-none bg-transparent cursor-pointer" @click="dialogVisible = false">确定</button>
+          <button class="w-full py-3 text-center text-emerald-500 font-medium text-base border-none bg-transparent cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</button>
         </div>
       </div>
     </div>
@@ -337,7 +340,7 @@ onMounted(() => {
           <a href="javascript:;" class="absolute right-1.5 top-0 block p-2.5" @click.prevent="closeTypePicker">
             <i class="block w-[11px] h-[13px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20352%20512%27%20fill=%27%23999%27%3E%3Cpath%20d=%27M242.7%20256l100.1-100.1c12.3-12.3%2012.3-32.2%200-44.5l-22.2-22.2c-12.3-12.3-32.2-12.3-44.5%200L176%20189.3%2075.9%2089.2c-12.3-12.3-32.2-12.3-44.5%200L9.2%20111.4c-12.3%2012.3-12.3%2032.2%200%2044.5L109.3%20256%209.2%20356.1c-12.3%2012.3-12.3%2032.2%200%2044.5l22.2%2022.2c12.3%2012.3%2032.2%2012.3%2044.5%200L176%20322.7l100.1%20100.1c12.3%2012.3%2032.2%2012.3%2044.5%200l22.2-22.2c12.3-12.3%2012.3-32.2%200-44.5L242.7%20256z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
           </a>
-          <p>选择分类</p>
+          <p>{{ t('marketplace.publish.typePickerTitle') }}</p>
         </div>
         <div class="py-2.5">
           <ul>

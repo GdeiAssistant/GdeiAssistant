@@ -1,14 +1,17 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { Moon, Sun, Menu } from 'lucide-vue-next'
+import { resolveRouteTitle } from './navigation'
 
 defineProps({ sidebarOpen: Boolean })
 const route = useRoute()
+const { t } = useI18n()
 const emit = defineEmits(['open-command-palette', 'toggle-sidebar'])
 
 const pageTitle = computed(() => {
-  return route.meta?.title || route.name?.toString() || ''
+  return resolveRouteTitle(route, t)
 })
 
 const isDark = ref(false)

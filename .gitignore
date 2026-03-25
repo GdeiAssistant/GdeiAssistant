@@ -16,7 +16,14 @@ Desktop.ini
 *.swp
 *.swo
 *~
-docs
+.superpowers/
+.worktrees/
+worktrees/
+
+# 文档默认忽略，但保留 superpowers 下的设计和计划文档
+docs/*
+!docs/superpowers/
+!docs/superpowers/**
 
 # ==================================
 # Spring Boot & Java
@@ -74,13 +81,8 @@ frontend/pnpm-debug.log*
 frontend/lerna-debug.log*
 frontend/test/
 frontend/tests/
-frontend/src/**/*.test.*
-frontend/src/**/*.spec.*
 frontend/coverage/
 frontend/*.lcov
-
-# Backend Local Tests
-src/test/java/
 
 # ==================================
 # 敏感配置（勿提交）- 可提交的模板见下方「例外规则」

@@ -20,10 +20,8 @@ Desktop.ini
 .worktrees/
 worktrees/
 
-# 文档默认忽略，但保留 superpowers 下的设计和计划文档
-docs/*
-!docs/superpowers/
-!docs/superpowers/**
+# 文档默认忽略
+docs/
 
 # ==================================
 # Spring Boot & Java

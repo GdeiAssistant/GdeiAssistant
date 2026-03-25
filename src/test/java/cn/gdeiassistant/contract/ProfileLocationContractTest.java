@@ -84,11 +84,12 @@ class ProfileLocationContractTest {
     }
 
     @Test
-    void getLocationList_returnsLocalizedNameFields() throws Exception {
+    void getLocationList_returnsCodeOnlyTree() throws Exception {
         mockMvc.perform(get("/api/profile/locations").header("Accept-Language", "zh-Hant"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data[0].code").isNotEmpty())
-                .andExpect(jsonPath("$.data[0].name").isNotEmpty());
+                .andExpect(jsonPath("$.data[0].name").doesNotExist())
+                .andExpect(jsonPath("$.data[0].children").isArray());
     }
 }

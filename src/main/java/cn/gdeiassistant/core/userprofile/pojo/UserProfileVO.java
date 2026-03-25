@@ -10,11 +10,11 @@ public class UserProfileVO implements Serializable {
     private String username;
     private String nickname;
     private String avatar;
-    private String faculty;
-    private String major;
+    private ProfileFacultyValueVO faculty;
+    private ProfileMajorValueVO major;
     private String enrollment;
-    private String location;
-    private String hometown;
+    private ProfileLocationValueVO location;
+    private ProfileLocationValueVO hometown;
     private String introduction;
     private String birthday;
     private String ipArea;
@@ -26,16 +26,16 @@ public class UserProfileVO implements Serializable {
     public void setNickname(String nickname) { this.nickname = nickname; }
     public String getAvatar() { return avatar; }
     public void setAvatar(String avatar) { this.avatar = avatar; }
-    public String getFaculty() { return faculty; }
-    public void setFaculty(String faculty) { this.faculty = faculty; }
-    public String getMajor() { return major; }
-    public void setMajor(String major) { this.major = major; }
+    public ProfileFacultyValueVO getFaculty() { return faculty; }
+    public void setFaculty(ProfileFacultyValueVO faculty) { this.faculty = faculty; }
+    public ProfileMajorValueVO getMajor() { return major; }
+    public void setMajor(ProfileMajorValueVO major) { this.major = major; }
     public String getEnrollment() { return enrollment; }
     public void setEnrollment(String enrollment) { this.enrollment = enrollment; }
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
-    public String getHometown() { return hometown; }
-    public void setHometown(String hometown) { this.hometown = hometown; }
+    public ProfileLocationValueVO getLocation() { return location; }
+    public void setLocation(ProfileLocationValueVO location) { this.location = location; }
+    public ProfileLocationValueVO getHometown() { return hometown; }
+    public void setHometown(ProfileLocationValueVO hometown) { this.hometown = hometown; }
     public String getIntroduction() { return introduction; }
     public void setIntroduction(String introduction) { this.introduction = introduction; }
     public String getBirthday() { return birthday; }

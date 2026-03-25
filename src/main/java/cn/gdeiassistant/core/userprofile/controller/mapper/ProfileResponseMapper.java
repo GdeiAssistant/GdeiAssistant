@@ -6,8 +6,8 @@ import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
-import cn.gdeiassistant.core.userProfile.controller.support.ProfileLocationFormatter;
 import cn.gdeiassistant.core.userProfile.pojo.UserProfileVO;
+import cn.gdeiassistant.core.userProfile.service.ProfileLocalizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,26 +26,25 @@ public class ProfileResponseMapper {
     private IPAddressService ipAddressService;
 
     @Autowired
-    private ProfileLocationFormatter locationFormatter;
+    private ProfileLocalizationService profileLocalizationService;
 
     /**
      * Assembles a UserProfileVO from the given ProfileVO and session context.
      */
     public UserProfileVO toUserProfileVO(ProfileVO profile, String sessionId) throws Exception {
+        return toUserProfileVO(profile, sessionId, "zh-CN");
+    }
+
+    public UserProfileVO toUserProfileVO(ProfileVO profile, String sessionId, String language) throws Exception {
         if (profile.getFaculty() == null) {
             profile.setMajor(null);
         }
         UserProfileVO vo = new UserProfileVO();
         vo.setUsername(profile.getUsername());
         vo.setNickname(profile.getNickname());
-        vo.setMajor(profile.getMajor());
         vo.setEnrollment(profile.getEnrollment() != null ? String.valueOf(profile.getEnrollment()) : null);
-        if (profile.getFaculty() != null && profile.getFaculty() != 0 && UserProfileService.getFacultyMap() != null) {
-            vo.setFaculty((String) UserProfileService.getFacultyMap().get(profile.getFaculty()));
-        } else {
-            vo.setFaculty(null);
-            vo.setMajor(null);
-        }
+        vo.setFaculty(profileLocalizationService.buildFacultyValue(profile.getFaculty(), language));
+        vo.setMajor(profileLocalizationService.buildMajorValue(profile.getFaculty(), profile.getMajor(), language));
         // Avatar
         String avatarUrl = userProfileService.getSelfUserAvatar(sessionId);
         vo.setAvatar(StringUtils.isBlank(avatarUrl) ? "" : avatarUrl);
@@ -60,8 +59,8 @@ public class ProfileResponseMapper {
                     .atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()));
         }
         // Location & hometown
-        vo.setLocation(locationFormatter.buildLocationDisplayString(profile));
-        vo.setHometown(locationFormatter.buildHometownDisplayString(profile));
+        vo.setLocation(profileLocalizationService.buildLocationValue(profile, false, language));
+        vo.setHometown(profileLocalizationService.buildLocationValue(profile, true, language));
         // IP area
         enrichIpArea(vo, sessionId);
         return vo;

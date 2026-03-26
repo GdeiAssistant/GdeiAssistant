@@ -53,6 +53,33 @@
     "topic": { "name": "Topics", "description": "Join hot campus discussions" },
     "photograph": { "name": "Campus Photography", "description": "Capture the best moments on campus" }
   },
+  "gradePage": {
+    "title": "Grades",
+    "moreAction": "More",
+    "syncLoading": "Syncing academic data...",
+    "updateSuccess": "Grades updated",
+    "empty": "No grade data",
+    "term": {
+      "first": "First Term",
+      "second": "Second Term"
+    },
+    "table": {
+      "course": "Course",
+      "credit": "Credits",
+      "score": "Score"
+    },
+    "year": {
+      "freshman": "Year 1",
+      "sophomore": "Year 2",
+      "junior": "Year 3",
+      "senior": "Year 4"
+    },
+    "actionSheet": {
+      "manageCache": "Manage Cache Settings",
+      "updateCache": "Refresh Cached Data",
+      "cancel": "Cancel"
+    }
+  },
   "tab": {
     "home": "Home",
     "info": "Info",
@@ -335,6 +362,8 @@
     "noInteraction": "No interaction messages",
     "defaultInteractionTitle": "Interaction",
     "defaultInteractionContent": "You have a new interaction message",
+    "loadMore": "Load More",
+    "loadingMore": "Loading...",
     "read": "Read",
     "unread": "Unread",
     "moduleMarketplace": "Marketplace",
@@ -962,6 +991,39 @@
     "publishAction": "Share a Secret",
     "empty": "No secret posts yet",
     "voiceAlt": "Voice",
+    "publish": {
+      "title": "Share a Secret",
+      "cardTitle": "Secret",
+      "submitAction": "Publish",
+      "submitting": "Publishing",
+      "placeholder": "Share something quietly",
+      "voiceHintIdle": "Hold to start recording, up to 60 seconds",
+      "voiceHintRecording": "Recording, captured {duration}",
+      "voiceHintRecorded": "Recorded {duration}, preview or record again",
+      "voiceStateIdle": "No recording",
+      "voiceStateFinished": "Recording ready ({duration})",
+      "voiceStateRemaining": "Recording, {seconds}s left",
+      "voiceStateProcessing": "Processing recording...",
+      "voiceStatePreview": "Previewing recording",
+      "browserUnsupported": "This browser does not support recording",
+      "voiceTooLarge": "The recording is too large. Please make it shorter",
+      "microphoneUnavailable": "Microphone access failed",
+      "voiceMissing": "No recording was captured",
+      "previewUnsupported": "This browser cannot preview the recording",
+      "stopRecordingFirst": "Please stop the current recording first",
+      "contentRequired": "Secret content cannot be empty",
+      "contentTooLong": "Secret content is too long",
+      "publishing": "Publishing...",
+      "uploadingVoice": "Uploading voice...",
+      "submitFailed": "Submission failed",
+      "deleteAfter24h": "Delete after 24 hours",
+      "switchToTextPrefix": "Switch to",
+      "switchToTextAction": "text secret",
+      "switchToTextSuffix": ", and share it in words",
+      "switchToVoicePrefix": "Switch to",
+      "switchToVoiceAction": "voice secret",
+      "switchToVoiceSuffix": ", and share it by voice"
+    },
     "profile": {
       "title": "My Secret Posts",
       "voiceMessage": "Voice Message",

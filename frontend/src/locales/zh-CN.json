@@ -53,6 +53,33 @@
     "topic": { "name": "话题", "description": "热门讨论，校园八卦" },
     "photograph": { "name": "拍好校园", "description": "用镜头记录校园美好" }
   },
+  "gradePage": {
+    "title": "成绩查询",
+    "moreAction": "更多",
+    "syncLoading": "正在同步教务系统...",
+    "updateSuccess": "更新成功",
+    "empty": "暂无成绩数据",
+    "term": {
+      "first": "第一学期",
+      "second": "第二学期"
+    },
+    "table": {
+      "course": "课程",
+      "credit": "学分",
+      "score": "成绩"
+    },
+    "year": {
+      "freshman": "大一",
+      "sophomore": "大二",
+      "junior": "大三",
+      "senior": "大四"
+    },
+    "actionSheet": {
+      "manageCache": "管理缓存配置",
+      "updateCache": "更新缓存数据",
+      "cancel": "取消"
+    }
+  },
   "tab": {
     "home": "功能主页",
     "info": "资讯信息",
@@ -335,6 +362,8 @@
     "noInteraction": "暂无互动消息",
     "defaultInteractionTitle": "互动消息",
     "defaultInteractionContent": "你有一条新的互动消息",
+    "loadMore": "加载更多",
+    "loadingMore": "加载中...",
     "read": "已读",
     "unread": "未读",
     "moduleMarketplace": "二手交易",
@@ -962,6 +991,39 @@
     "publishAction": "说个小秘密",
     "empty": "暂无树洞信息",
     "voiceAlt": "语音",
+    "publish": {
+      "title": "发布小秘密",
+      "cardTitle": "小秘密",
+      "submitAction": "发布",
+      "submitting": "发布中",
+      "placeholder": "说个小秘密",
+      "voiceHintIdle": "按住开始录音，最长不超过 60 秒",
+      "voiceHintRecording": "正在录音，已录制 {duration}",
+      "voiceHintRecorded": "已录音 {duration}，可试听或重新录制",
+      "voiceStateIdle": "未录音",
+      "voiceStateFinished": "录音完成（{duration}）",
+      "voiceStateRemaining": "正在录音，还剩 {seconds} 秒",
+      "voiceStateProcessing": "录音处理中...",
+      "voiceStatePreview": "正在试听录音",
+      "browserUnsupported": "当前浏览器不支持录音",
+      "voiceTooLarge": "语音文件过大，请缩短录音时长",
+      "microphoneUnavailable": "麦克风权限获取失败",
+      "voiceMissing": "未采集到任何录音信息",
+      "previewUnsupported": "当前浏览器暂不支持播放该录音",
+      "stopRecordingFirst": "请先结束当前录音",
+      "contentRequired": "树洞内容不能为空",
+      "contentTooLong": "树洞内容长度超过限制",
+      "publishing": "正在发布...",
+      "uploadingVoice": "正在上传语音...",
+      "submitFailed": "提交失败",
+      "deleteAfter24h": "24小时后删除",
+      "switchToTextPrefix": "切换到",
+      "switchToTextAction": "文字树洞",
+      "switchToTextSuffix": "，用文字分享你的小秘密",
+      "switchToVoicePrefix": "切换到",
+      "switchToVoiceAction": "语音树洞",
+      "switchToVoiceSuffix": "，用语音分享你的小秘密"
+    },
     "profile": {
       "title": "我的树洞",
       "voiceMessage": "语音消息",

@@ -33,6 +33,33 @@
     "recentUpdate": "最近更新",
     "back": "返回"
   },
+  "gradePage": {
+    "title": "成績查詢",
+    "moreAction": "更多",
+    "syncLoading": "正在同步教務系統...",
+    "updateSuccess": "更新成功",
+    "empty": "暫無成績數據",
+    "term": {
+      "first": "第一學期",
+      "second": "第二學期"
+    },
+    "table": {
+      "course": "課程",
+      "credit": "學分",
+      "score": "成績"
+    },
+    "year": {
+      "freshman": "大一",
+      "sophomore": "大二",
+      "junior": "大三",
+      "senior": "大四"
+    },
+    "actionSheet": {
+      "manageCache": "管理快取設定",
+      "updateCache": "更新快取資料",
+      "cancel": "取消"
+    }
+  },
   "tab": {
     "home": "功能主頁",
     "info": "資訊信息",
@@ -115,6 +142,8 @@
     "noInteraction": "暫無互動消息",
     "defaultInteractionTitle": "互動消息",
     "defaultInteractionContent": "你有一條新的互動消息",
+    "loadMore": "載入更多",
+    "loadingMore": "載入中...",
     "read": "已讀",
     "unread": "未讀",
     "moduleMarketplace": "二手交易",
@@ -249,6 +278,51 @@
     "toast": {
       "exportStarted": "匯出任務已提交，請稍候返回下載",
       "downloadStarted": "下載已開始"
+    }
+  },
+  "secret": {
+    "title": "校園樹洞",
+    "publishAction": "說個小秘密",
+    "empty": "暫無樹洞內容",
+    "voiceAlt": "語音",
+    "publish": {
+      "title": "發佈小秘密",
+      "cardTitle": "小秘密",
+      "submitAction": "發佈",
+      "submitting": "發佈中",
+      "placeholder": "說個小秘密",
+      "voiceHintIdle": "按住開始錄音，最長不超過 60 秒",
+      "voiceHintRecording": "正在錄音，已錄製 {duration}",
+      "voiceHintRecorded": "已錄音 {duration}，可試聽或重新錄製",
+      "voiceStateIdle": "未錄音",
+      "voiceStateFinished": "錄音完成（{duration}）",
+      "voiceStateRemaining": "正在錄音，尚餘 {seconds} 秒",
+      "voiceStateProcessing": "錄音處理中...",
+      "voiceStatePreview": "正在試聽錄音",
+      "browserUnsupported": "當前瀏覽器不支援錄音",
+      "voiceTooLarge": "語音檔案過大，請縮短錄音時間",
+      "microphoneUnavailable": "取得麥克風權限失敗",
+      "voiceMissing": "未取得任何錄音內容",
+      "previewUnsupported": "當前瀏覽器暫不支援播放該錄音",
+      "stopRecordingFirst": "請先結束目前錄音",
+      "contentRequired": "樹洞內容不能為空",
+      "contentTooLong": "樹洞內容超出長度限制",
+      "publishing": "正在發佈...",
+      "uploadingVoice": "正在上傳語音...",
+      "submitFailed": "提交失敗",
+      "deleteAfter24h": "24小時後刪除",
+      "switchToTextPrefix": "切換到",
+      "switchToTextAction": "文字樹洞",
+      "switchToTextSuffix": "，用文字分享你的小秘密",
+      "switchToVoicePrefix": "切換到",
+      "switchToVoiceAction": "語音樹洞",
+      "switchToVoiceSuffix": "，用語音分享你的小秘密"
+    },
+    "profile": {
+      "title": "我的樹洞",
+      "voiceMessage": "語音消息",
+      "empty": "暫無發佈的樹洞",
+      "loadMore": "載入更多"
     }
   },
   "marketplace": {

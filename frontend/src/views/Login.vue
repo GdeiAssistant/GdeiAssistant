@@ -8,7 +8,7 @@ import { isMockMode, toggleDataSourceMode } from '@/services/data-source.js'
 import { MOCK_ACCOUNT_USERNAME, MOCK_ACCOUNT_PASSWORD, getMockCredentialsHint } from '@/constants/mock.js'
 
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const username = ref('')
@@ -123,7 +123,7 @@ function handleThirdPartyLogin(type) {
         <span v-if="mockMode" class="text-[10px] text-[var(--c-primary)] font-medium">Mock</span>
       </div>
       <div v-if="mockMode" class="mt-2 px-3 py-2 rounded-lg bg-[var(--c-primary-50)] text-xs text-[var(--c-primary)]">
-        {{ `${getMockCredentialsHint()}${t('loginPage.autoFilledSuffix')}` }}
+        {{ `${getMockCredentialsHint(locale)}${t('loginPage.autoFilledSuffix')}` }}
       </div>
 
       <!-- Footer links -->

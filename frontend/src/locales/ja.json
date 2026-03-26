@@ -33,6 +33,33 @@
     "recentUpdate": "最近の更新",
     "back": "戻る"
   },
+  "gradePage": {
+    "title": "成績照会",
+    "moreAction": "その他",
+    "syncLoading": "教務システムを同期中...",
+    "updateSuccess": "更新しました",
+    "empty": "成績データがありません",
+    "term": {
+      "first": "前期",
+      "second": "後期"
+    },
+    "table": {
+      "course": "科目",
+      "credit": "単位",
+      "score": "成績"
+    },
+    "year": {
+      "freshman": "1年生",
+      "sophomore": "2年生",
+      "junior": "3年生",
+      "senior": "4年生"
+    },
+    "actionSheet": {
+      "manageCache": "キャッシュ設定を管理",
+      "updateCache": "キャッシュデータを更新",
+      "cancel": "キャンセル"
+    }
+  },
   "tab": {
     "home": "ホーム",
     "info": "お知らせ",
@@ -115,6 +142,8 @@
     "noInteraction": "インタラクションメッセージはありません",
     "defaultInteractionTitle": "インタラクション",
     "defaultInteractionContent": "新しいインタラクションメッセージがあります",
+    "loadMore": "もっと読み込む",
+    "loadingMore": "読み込み中...",
     "read": "既読",
     "unread": "未読",
     "moduleMarketplace": "フリマ",
@@ -249,6 +278,51 @@
     "toast": {
       "exportStarted": "エクスポート依頼を送信しました。しばらくしてからダウンロードしてください。",
       "downloadStarted": "ダウンロードを開始しました"
+    }
+  },
+  "secret": {
+    "title": "告白",
+    "publishAction": "秘密を話す",
+    "empty": "投稿はまだありません",
+    "voiceAlt": "音声",
+    "publish": {
+      "title": "秘密を投稿",
+      "cardTitle": "秘密",
+      "submitAction": "投稿",
+      "submitting": "投稿中",
+      "placeholder": "ちょっとした秘密を話してみてください",
+      "voiceHintIdle": "長押しで録音開始、最大 60 秒まで",
+      "voiceHintRecording": "録音中、{duration} 経過",
+      "voiceHintRecorded": "{duration} 録音済み。試聴または再録音できます",
+      "voiceStateIdle": "未録音",
+      "voiceStateFinished": "録音完了（{duration}）",
+      "voiceStateRemaining": "録音中、残り {seconds} 秒",
+      "voiceStateProcessing": "録音を処理中...",
+      "voiceStatePreview": "録音を試聴中",
+      "browserUnsupported": "現在のブラウザは録音に対応していません",
+      "voiceTooLarge": "音声ファイルが大きすぎます。録音時間を短くしてください",
+      "microphoneUnavailable": "マイクの許可取得に失敗しました",
+      "voiceMissing": "録音データが見つかりません",
+      "previewUnsupported": "現在のブラウザではこの録音を再生できません",
+      "stopRecordingFirst": "先に現在の録音を終了してください",
+      "contentRequired": "内容を入力してください",
+      "contentTooLong": "内容が長すぎます",
+      "publishing": "投稿中...",
+      "uploadingVoice": "音声をアップロード中...",
+      "submitFailed": "投稿に失敗しました",
+      "deleteAfter24h": "24時間後に削除",
+      "switchToTextPrefix": "切り替えて",
+      "switchToTextAction": "テキスト投稿",
+      "switchToTextSuffix": "で秘密を共有する",
+      "switchToVoicePrefix": "切り替えて",
+      "switchToVoiceAction": "音声投稿",
+      "switchToVoiceSuffix": "で秘密を共有する"
+    },
+    "profile": {
+      "title": "自分の投稿",
+      "voiceMessage": "音声メッセージ",
+      "empty": "投稿はまだありません",
+      "loadMore": "もっと読み込む"
     }
   },
   "marketplace": {

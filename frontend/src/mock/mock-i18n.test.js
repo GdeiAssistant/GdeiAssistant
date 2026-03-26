@@ -35,6 +35,18 @@ describe('mock i18n', () => {
     ])
   })
 
+  it('localizes academic mock helper text and statuses', () => {
+    expect(localizeMockValue('账号：gdeiassistant  密码：gdeiassistant  图书馆密码：library123', 'en')).toBe(
+      'Account: gdeiassistant  Password: gdeiassistant  Library Password: library123'
+    )
+    expect(localizeMockValue(['正常', '已挂失', '广东第二师范学院', '英语六级'], 'en')).toEqual([
+      'Normal',
+      'Reported Lost',
+      'Guangdong University of Education',
+      'CET-6'
+    ])
+  })
+
   it('keeps original text when translation is missing', () => {
     expect(localizeMockValue('暂未配置的文案', 'en')).toBe('暂未配置的文案')
     expect(localizeMockValue('系统维护通知', 'zh-CN')).toBe('系统维护通知')

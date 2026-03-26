@@ -38,6 +38,7 @@ import cn.gdeiassistant.common.exception.VerificationException.SendEmailExceptio
 import cn.gdeiassistant.common.exception.VerificationException.SendSMSException;
 import cn.gdeiassistant.common.exception.VerificationException.VerificationCodeInvalidException;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
 /**
@@ -71,144 +73,166 @@ public class GlobalRestExceptionHandler {
 
     @ExceptionHandler({MissingServletRequestParameterException.class, TypeMismatchException.class,
             HttpMessageNotReadableException.class})
-    public ResponseEntity<JsonResult> handleBadRequestException() {
+    public ResponseEntity<JsonResult> handleBadRequestException(HttpServletRequest request) {
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.INCORRECT_REQUEST_PARAM, false,
-                "请求参数不合法"));
+                BackendTextLocalizer.localizeMessage("请求参数不合法", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(MethodNotSupportedException.class)
-    public ResponseEntity<JsonResult> handleMethodNotSupportedException() {
-        return ResponseEntity.ok(new JsonResult(false, "请求方法不支持"));
+    public ResponseEntity<JsonResult> handleMethodNotSupportedException(HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage("请求方法不支持", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler({ConstraintViolationException.class, BindException.class, MethodArgumentNotValidException.class})
-    public ResponseEntity<JsonResult> handleConstraintViolationException() {
+    public ResponseEntity<JsonResult> handleConstraintViolationException(HttpServletRequest request) {
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.INCORRECT_REQUEST_PARAM, false,
-                "请求参数不合法"));
+                BackendTextLocalizer.localizeMessage("请求参数不合法", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<JsonResult> handleIllegalArgumentException(IllegalArgumentException e) {
+    public ResponseEntity<JsonResult> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.INCORRECT_REQUEST_PARAM, false,
-                e.getMessage() != null ? e.getMessage() : "请求参数不合法"));
+                BackendTextLocalizer.localizeMessage(
+                        e.getMessage() != null ? e.getMessage() : "请求参数不合法",
+                        request.getHeader("Accept-Language"))));
     }
 
     // ========== 通用业务异常（使用异常自身 message） ==========
 
     @ExceptionHandler(DataNotExistException.class)
-    public ResponseEntity<JsonResult> handleDataNotExistException(DataNotExistException e) {
+    public ResponseEntity<JsonResult> handleDataNotExistException(DataNotExistException e, HttpServletRequest request) {
         logger.error("数据不存在：", e);
-        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.DATA_NOT_EXIST, false, e.getMessage()));
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.DATA_NOT_EXIST, false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(NetWorkTimeoutException.class)
-    public ResponseEntity<JsonResult> handleNetWorkTimeoutException(NetWorkTimeoutException e) {
+    public ResponseEntity<JsonResult> handleNetWorkTimeoutException(NetWorkTimeoutException e, HttpServletRequest request) {
         logger.error("网络超时：", e);
-        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.NETWORK_TIMEOUT, false, "网络连接超时，请重试"));
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.NETWORK_TIMEOUT, false,
+                BackendTextLocalizer.localizeMessage("网络连接超时，请重试", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(ErrorQueryConditionException.class)
-    public ResponseEntity<JsonResult> handleErrorQueryConditionException(ErrorQueryConditionException e) {
+    public ResponseEntity<JsonResult> handleErrorQueryConditionException(ErrorQueryConditionException e, HttpServletRequest request) {
         logger.error("查询条件错误：", e);
-        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.ERROR_QUERY_CONDITION, false, "查询条件不合法，请重新填写"));
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.ERROR_QUERY_CONDITION, false,
+                BackendTextLocalizer.localizeMessage("查询条件不合法，请重新填写", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(TimeStampIncorrectException.class)
-    public ResponseEntity<JsonResult> handleTimeStampIncorrectException(TimeStampIncorrectException e) {
+    public ResponseEntity<JsonResult> handleTimeStampIncorrectException(TimeStampIncorrectException e, HttpServletRequest request) {
         logger.error("时间戳校验失败：", e);
-        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.TIMESTAMP_INVALIDATED, false, "时间戳校验失败，请尝试重新登录"));
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.TIMESTAMP_INVALIDATED, false,
+                BackendTextLocalizer.localizeMessage("时间戳校验失败，请尝试重新登录", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(PasswordIncorrectException.class)
-    public ResponseEntity<JsonResult> handlePasswordIncorrectException(PasswordIncorrectException e) {
+    public ResponseEntity<JsonResult> handlePasswordIncorrectException(PasswordIncorrectException e, HttpServletRequest request) {
         logger.error("密码错误：", e);
         String message = e.getMessage() != null ? e.getMessage() : "用户账号密码错误，请检查重试或重新登录";
-        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.PASSWORD_INCORRECT, false, message));
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.PASSWORD_INCORRECT, false,
+                BackendTextLocalizer.localizeMessage(message, request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(UserNotExistException.class)
-    public ResponseEntity<JsonResult> handleUserNotExistException(UserNotExistException e) {
+    public ResponseEntity<JsonResult> handleUserNotExistException(UserNotExistException e, HttpServletRequest request) {
         logger.error("用户不存在：", e);
-        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.USER_NOT_EXIST, false, "当前用户不存在，请尝试重新登录"));
+        return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.USER_NOT_EXIST, false,
+                BackendTextLocalizer.localizeMessage("当前用户不存在，请尝试重新登录", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(FeatureNotEnabledException.class)
-    public ResponseEntity<JsonResult> handleFeatureNotEnabledException(FeatureNotEnabledException e) {
+    public ResponseEntity<JsonResult> handleFeatureNotEnabledException(FeatureNotEnabledException e, HttpServletRequest request) {
         logger.warn("功能未启用: {}", e.getMessage());
         String message = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : "该功能未启用";
-        return ResponseEntity.ok(new JsonResult(false, message));
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(message, request.getHeader("Accept-Language"))));
     }
 
     // ========== 原 module-specific handlers 合并 ==========
 
     @ExceptionHandler({NoAccessException.class, ConfirmedStateException.class, NotAvailableStateException.class,
             NoAccessUpdatingException.class})
-    public ResponseEntity<JsonResult> handleAccessException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleAccessException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler({NullIDPhotoException.class, InconsistentAuthenticationException.class,
             AuthenticationRecordExistException.class})
-    public ResponseEntity<JsonResult> handleAuthenticationException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleAuthenticationException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler({BookRenewOvertimeException.class})
-    public ResponseEntity<JsonResult> handleBookRenewException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleBookRenewException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(AmountNotAvailableException.class)
-    public ResponseEntity<JsonResult> handleAmountNotAvailableException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleAmountNotAvailableException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler({UserStateErrorException.class, ItemAvailableException.class})
-    public ResponseEntity<JsonResult> handleCloseAccountException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleCloseAccountException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler({CountOverLimitException.class, GenerateScheduleException.class,
             NotAvailableConditionException.class})
-    public ResponseEntity<JsonResult> handleScheduleException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleScheduleException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler({RepeatPickException.class, SelfPickException.class})
-    public ResponseEntity<JsonResult> handleDatingException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleDatingException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler({DeliveryOrderTakenException.class, SelfTradingOrderException.class,
             DeliveryOrderStateUpdatedException.class})
-    public ResponseEntity<JsonResult> handleDeliveryException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleDeliveryException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(NotAvailableTimeException.class)
-    public ResponseEntity<JsonResult> handleNotAvailableTimeException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleNotAvailableTimeException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler({CorrectRecordException.class, NoRealNameException.class})
-    public ResponseEntity<JsonResult> handleExpressException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleExpressException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler({HourFrequencyLimitException.class, MinuteFrequencyLimitException.class,
             DayFrequencyLimitException.class, IllegalPhoneNumberException.class,
             VerificationCodeInvalidException.class, SendSMSException.class, SendEmailException.class})
-    public ResponseEntity<JsonResult> handleVerificationException(Exception e) {
-        return ResponseEntity.ok(new JsonResult(false, e.getMessage()));
+    public ResponseEntity<JsonResult> handleVerificationException(Exception e, HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     // ========== 兜底 ==========
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<JsonResult> handleException(Exception e) {
+    public ResponseEntity<JsonResult> handleException(Exception e, HttpServletRequest request) {
         logger.error("系统内部异常", e);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new JsonResult(ErrorConstantUtils.INTERNAL_SERVER_ERROR, false, "系统繁忙，请稍后再试"));
+                .body(new JsonResult(ErrorConstantUtils.INTERNAL_SERVER_ERROR, false,
+                        BackendTextLocalizer.localizeMessage("系统繁忙，请稍后再试", request.getHeader("Accept-Language"))));
     }
 }

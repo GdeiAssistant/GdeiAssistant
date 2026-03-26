@@ -18,7 +18,7 @@
         <p class="mt-1.5 text-[13px] text-[var(--c-text-2)] line-clamp-2">{{ item.content }}</p>
       </div>
 
-      <div v-if="!list.length" class="py-16 text-center text-sm text-[var(--c-text-3)]">暂无通知公告</div>
+      <div v-if="!list.length" class="py-16 text-center text-sm text-[var(--c-text-3)]">{{ t('info.noNotice') }}</div>
 
       <button
         v-if="hasMore"
@@ -27,7 +27,7 @@
         :disabled="loadingMore"
         @click="loadMore"
       >
-        {{ loadingMore ? '加载中...' : '加载更多' }}
+        {{ loadingMore ? t('info.loadingMore') : t('info.loadMore') }}
       </button>
     </template>
   </div>
@@ -35,10 +35,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import request from '@/utils/request'
 
 const router = useRouter()
+const { t } = useI18n()
 const list = ref([])
 const loading = ref(true)
 const loadingMore = ref(false)

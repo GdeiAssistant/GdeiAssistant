@@ -1,14 +1,28 @@
 import i18n from '../i18n'
-import { localizeMockValue } from '../mock/mock-i18n'
 import { LOCATION_CATALOG_DATA } from './locationCatalogData.generated'
 import { normalizeCatalogLocale } from './profileCatalog'
 
-function localizeName(name, locale) {
+function localizeName(node, locale) {
   const normalizedLocale = normalizeCatalogLocale(locale || i18n.global?.locale?.value)
-  if (normalizedLocale === 'en') {
-    return localizeMockValue(name, 'en')
+  if (normalizedLocale === 'en' || normalizedLocale === 'ja' || normalizedLocale === 'ko') {
+    const localizedNames = node?.localizedNames || {}
+    if (localizedNames[normalizedLocale]) {
+      return localizedNames[normalizedLocale]
+    }
+    if (node?.latinName) {
+      return node.latinName
+    }
   }
-  return name
+  return node?.name || ''
+}
+
+function formatLocationLabel(parts, locale) {
+  const normalizedLocale = normalizeCatalogLocale(locale || i18n.global?.locale?.value)
+  const compactParts = parts.filter((item, index, list) => item && item !== list[index - 1])
+  if (normalizedLocale === 'en' || normalizedLocale === 'ja' || normalizedLocale === 'ko') {
+    return [...compactParts].reverse().join(', ')
+  }
+  return compactParts.join(' ')
 }
 
 function createMaps(locale) {
@@ -17,16 +31,16 @@ function createMaps(locale) {
   const regions = LOCATION_CATALOG_DATA.map((region) => {
     const regionNode = {
       code: region.code,
-      name: localizeName(region.name, locale),
+      name: localizeName(region, locale),
       rawName: region.name,
       children: (region.children || []).map((state) => {
         const stateNode = {
           code: state.code,
-          name: localizeName(state.name, locale),
+          name: localizeName(state, locale),
           rawName: state.name,
           children: (state.children || []).map((city) => ({
             code: city.code,
-            name: localizeName(city.name, locale),
+            name: localizeName(city, locale),
             rawName: city.name,
           })),
         }
@@ -57,16 +71,7 @@ export function getLocationCatalog(locale) {
     locationLabel(regionCode, stateCode, cityCode) {
       const value = findLocation(regionCode, stateCode, cityCode)
       if (!value) return ''
-      const rawLabel = [value.region?.rawName, value.state?.rawName, value.city?.rawName]
-        .filter((item, index, list) => item && item !== list[index - 1])
-        .join(' ')
-      const localizedRawLabel = localizeName(rawLabel, locale)
-      if (localizedRawLabel && localizedRawLabel !== rawLabel) {
-        return localizedRawLabel
-      }
-      return [value.region?.name, value.state?.name, value.city?.name]
-        .filter((item, index, list) => item && item !== list[index - 1])
-        .join(' ')
+      return formatLocationLabel([value.region?.name, value.state?.name, value.city?.name], locale)
     },
     toPickerTree(codeTree) {
       const sourceRegions = Array.isArray(codeTree) && codeTree.length ? codeTree : regions

@@ -10,6 +10,7 @@ import cn.gdeiassistant.common.exception.DatingException.RepeatPickException;
 import cn.gdeiassistant.common.exception.DatingException.SelfPickException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.dating.pojo.dto.DatingPickSubmitDTO;
 import cn.gdeiassistant.core.dating.pojo.dto.DatingPublishDTO;
 import cn.gdeiassistant.core.dating.pojo.vo.DatingPickVO;
@@ -38,6 +39,10 @@ public class DatingController {
 
     @Autowired
     private DatingService datingService;
+
+    private JsonResult failure(HttpServletRequest request, String message) {
+        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+    }
 
     @RequestMapping(value = "/api/dating/profile/id/{id}", method = RequestMethod.GET)
     public DataJsonResult<Map<String, Object>> getRoommateProfileDetail(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException {
@@ -114,7 +119,7 @@ public class DatingController {
         } catch (Exception e) {
             datingService.deleteDatingImage(id);
             datingService.deleteDatingProfile(id);
-            return new JsonResult(false, "上传失败");
+            return failure(request, "上传失败");
         }
         return new JsonResult(true);
     }
@@ -128,7 +133,7 @@ public class DatingController {
 
     @RequestMapping(value = "/api/dating/pick/id/{id}", method = RequestMethod.POST)
     public JsonResult updateRoommatePickState(HttpServletRequest request, @PathVariable("id") Integer id, Integer state) throws DataNotExistException, NoAccessException {
-        if (state == null || (!state.equals(-1) && !state.equals(1))) return new JsonResult(false, "请求参数不合法");
+        if (state == null || (!state.equals(-1) && !state.equals(1))) return failure(request, "请求参数不合法");
         String sessionId = (String) request.getAttribute("sessionId");
         datingService.verifyRoommatePickViewAccess(sessionId, id);
         datingService.updateRoommatePickState(id, state);
@@ -139,8 +144,8 @@ public class DatingController {
     @RequestMapping(value = "/api/dating/pick", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addRoommatePick(HttpServletRequest request, @Validated DatingPickSubmitDTO dto) throws SelfPickException, RepeatPickException, DataNotExistException {
-        if (dto.getProfileId() == null) return new JsonResult(false, "请求参数不合法");
-        if (dto.getContent() != null && dto.getContent().length() > 50) return new JsonResult(false, "文本内容超过限制");
+        if (dto.getProfileId() == null) return failure(request, "请求参数不合法");
+        if (dto.getContent() != null && dto.getContent().length() > 50) return failure(request, "文本内容超过限制");
         String sessionId = (String) request.getAttribute("sessionId");
         datingService.verifyRoommatePickRequestAccess(sessionId, dto.getProfileId());
         datingService.addRoommatePick(sessionId, dto);

@@ -3,12 +3,13 @@ package cn.gdeiassistant.core.userLogin.controller;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.constant.ErrorConstantUtils;
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.core.user.pojo.dto.UserLoginDTO;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.tools.Utils.JwtUtil;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.core.user.pojo.dto.UserLoginDTO;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.core.userLogin.service.UserLoginService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
-import cn.gdeiassistant.common.tools.Utils.JwtUtil;
 import cn.gdeiassistant.common.validgroup.User.UserLoginValidGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,9 @@ public class AuthController {
     @RateLimit(maxRequests = 5, windowSeconds = 60)
     public DataJsonResult<Map<String, String>> login(
             @Validated(UserLoginValidGroup.class) @RequestBody UserLoginDTO dto,
+            HttpServletRequest request,
             HttpServletResponse response) {
+        String language = request != null ? request.getHeader("Accept-Language") : null;
         String username = dto.getUsername();
         String password = dto.getPassword();
         String sessionId = UUID.randomUUID().toString().replace("-", "");
@@ -62,14 +65,16 @@ public class AuthController {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             DataJsonResult<Map<String, String>> err = new DataJsonResult<>(false, null);
             err.setCode(ErrorConstantUtils.PASSWORD_INCORRECT);
-            err.setMessage(e.getMessage() != null ? e.getMessage() : "账号或密码错误");
+            err.setMessage(BackendTextLocalizer.localizeMessage(
+                    e.getMessage() != null ? e.getMessage() : "账号或密码错误",
+                    language));
             return err;
         } catch (Exception e) {
             logger.error("登录过程发生异常", e);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             DataJsonResult<Map<String, String>> err = new DataJsonResult<>(false, null);
             err.setCode(ErrorConstantUtils.INTERNAL_SERVER_ERROR);
-            err.setMessage("系统繁忙，登录失败，请稍后重试");
+            err.setMessage(BackendTextLocalizer.localizeMessage("系统繁忙，登录失败，请稍后重试", language));
             return err;
         }
         String jwt = jwtUtil.createToken(sessionId, username);

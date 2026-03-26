@@ -8,6 +8,7 @@ import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.topic.pojo.dto.TopicPublishDTO;
 import cn.gdeiassistant.core.topic.pojo.vo.TopicVO;
 import cn.gdeiassistant.core.topic.service.TopicService;
@@ -25,6 +26,10 @@ public class TopicController {
 
     @Autowired
     private TopicService topicService;
+
+    private JsonResult failure(HttpServletRequest request, String message) {
+        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+    }
 
     @RequestMapping(value = "/api/topic/profile/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<TopicVO>> getMyTopicList(HttpServletRequest request
@@ -68,19 +73,19 @@ public class TopicController {
                                @RequestParam(value = "imageKeys", required = false) String[] imageKeys) throws IOException {
         int actualImageCount = imageKeys != null && imageKeys.length > 0 ? imageKeys.length : (images == null ? 0 : images.length);
         if (actualImageCount > 9) {
-            return new JsonResult(false, "不合法的图片文件");
+            return failure(request, "不合法的图片文件");
         }
         if (images != null && images.length > 0) {
             for (MultipartFile file : images) {
                 if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
-                    return new JsonResult(false, "不合法的图片文件");
+                    return failure(request, "不合法的图片文件");
                 }
             }
         }
         if (imageKeys != null && imageKeys.length > 0) {
             for (String imageKey : imageKeys) {
                 if (StringUtils.isBlank(imageKey)) {
-                    return new JsonResult(false, "不合法的图片文件");
+                    return failure(request, "不合法的图片文件");
                 }
             }
         }
@@ -100,7 +105,7 @@ public class TopicController {
         } catch (Exception e) {
             topicService.deleteTopicImages(vo.getId(), dto.getCount());
             topicService.deleteTopic(vo.getId());
-            return new JsonResult(false, "话题图片上传失败");
+            return failure(request, "话题图片上传失败");
         }
         return new JsonResult(true);
     }

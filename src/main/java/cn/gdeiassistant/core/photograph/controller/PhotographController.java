@@ -8,6 +8,7 @@ import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.photograph.pojo.dto.PhotographPublishDTO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographCommentVO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
@@ -35,6 +36,10 @@ public class PhotographController {
 
     @Autowired
     private PhotographService photographService;
+
+    private JsonResult failure(HttpServletRequest request, String message) {
+        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+    }
 
     @RequestMapping(value = "/api/photograph/statistics/photos", method = RequestMethod.GET)
     public DataJsonResult<Integer> queryPhotoStatisticalData(HttpServletRequest request) {
@@ -121,19 +126,19 @@ public class PhotographController {
                 if (StringUtils.isNotBlank(imageKey)) {
                     uploadedKeyCount++;
                 } else {
-                    return new JsonResult(false, "不合法的图片文件");
+                    return failure(request, "不合法的图片文件");
                 }
             }
         }
         int count = uploadedKeyCount > 0 ? uploadedKeyCount : uploadedFileCount;
         if (count <= 0) {
-            return new JsonResult(false, "不合法的图片文件");
+            return failure(request, "不合法的图片文件");
         }
         if (count > 4) {
-            return new JsonResult(false, "不合法的图片文件");
+            return failure(request, "不合法的图片文件");
         }
         if (uploadedKeyCount > 0 && uploadedFileCount > 0) {
-            return new JsonResult(false, "不支持混合上传图片参数");
+            return failure(request, "不支持混合上传图片参数");
         }
         if (uploadedFileCount == 0) {
             dto.setCount(count);
@@ -164,7 +169,7 @@ public class PhotographController {
         } catch (Exception e) {
             photographService.deletePhotographImages(id, count);
             photographService.deletePhotograph(id);
-            return new JsonResult(false, "拍好校园图片上传失败");
+            return failure(request, "拍好校园图片上传失败");
         }
         return new JsonResult(true);
     }

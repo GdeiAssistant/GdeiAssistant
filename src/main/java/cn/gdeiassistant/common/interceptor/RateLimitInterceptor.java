@@ -1,6 +1,7 @@
 package cn.gdeiassistant.common.interceptor;
 
 import cn.gdeiassistant.common.annotation.RateLimit;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
@@ -49,10 +50,11 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
         if (timestamps.size() >= rateLimit.maxRequests()) {
             log.warn("请求限流: key={}, path={}, 窗口内请求数={}", sanitizeLogParam(rateLimitKey), sanitizeLogParam(path), timestamps.size());
+            String message = BackendTextLocalizer.localizeMessage("请求过于频繁，请稍后再试", request.getHeader("Accept-Language"));
             response.setStatus(429);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print("{\"code\":429,\"message\":\"请求过于频繁，请稍后再试\"}");
+            response.getWriter().print("{\"code\":429,\"message\":\"" + jsonEscape(message) + "\"}");
             response.getWriter().flush();
             return false;
         }
@@ -64,6 +66,15 @@ public class RateLimitInterceptor implements HandlerInterceptor {
     private static String sanitizeLogParam(String value) {
         if (value == null) return "null";
         return value.replaceAll("[\\r\\n\\t]", "_");
+    }
+
+    private static String jsonEscape(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"");
     }
 
     private String getRateLimitKey(HttpServletRequest request) {

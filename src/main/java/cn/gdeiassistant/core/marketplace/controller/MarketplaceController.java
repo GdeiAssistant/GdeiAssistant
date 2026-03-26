@@ -6,6 +6,7 @@ import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.ConfirmedStateException;
 import cn.gdeiassistant.common.exception.DatabaseException.NotAvailableStateException;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.marketplace.pojo.dto.MarketplacePublishDTO;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
@@ -39,6 +40,14 @@ public class MarketplaceController {
      */
     @Autowired
     private MarketplaceService marketplaceService;
+
+    private String localize(HttpServletRequest request, String message) {
+        return BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null);
+    }
+
+    private JsonResult failure(HttpServletRequest request, String message) {
+        return new JsonResult(false, localize(request, message));
+    }
 
     @RequestMapping(value = "/api/ershou/item/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<MarketplaceItemEntity>> getItemList(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
@@ -87,19 +96,19 @@ public class MarketplaceController {
         if (imageKeys != null) {
             for (String imageKey : imageKeys) {
                 if (StringUtils.isBlank(imageKey)) {
-                    return new JsonResult(false, "不合法的图片文件");
+                    return failure(request, "不合法的图片文件");
                 }
                 uploadedKeyCount++;
             }
         }
         if (uploadedKeyCount > 4) {
-            return new JsonResult(false, "不合法的图片文件");
+            return failure(request, "不合法的图片文件");
         }
         if (uploadedFileCount == 0 && uploadedKeyCount == 0) {
-            return new JsonResult(false, "不合法的图片文件");
+            return failure(request, "不合法的图片文件");
         }
         if (uploadedKeyCount > 0 && uploadedFileCount > 0) {
-            return new JsonResult(false, "不支持混合上传图片参数");
+            return failure(request, "不支持混合上传图片参数");
         }
         String sessionId = (String) request.getAttribute("sessionId");
         MarketplaceItemEntity entity = marketplaceService.publishItem(dto, sessionId);
@@ -119,7 +128,7 @@ public class MarketplaceController {
         } catch (Exception e) {
             marketplaceService.deleteItemImages(entity.getId(), 4);
             marketplaceService.deleteItem(entity.getId());
-            return new JsonResult(false, "上传失败");
+            return failure(request, "上传失败");
         }
         return new JsonResult(true);
     }
@@ -137,7 +146,7 @@ public class MarketplaceController {
         if (list != null && !list.isEmpty()) {
             return new DataJsonResult<>(true, list.get(0));
         }
-        return new DataJsonResult<>(false, "获取二手交易商品预览图失败");
+        return new DataJsonResult<>(false, localize(request, "获取二手交易商品预览图失败"));
     }
 
     @RequestMapping(value = "/api/ershou/item/id/{id}", method = RequestMethod.GET)
@@ -164,7 +173,7 @@ public class MarketplaceController {
     public JsonResult updateItem(HttpServletRequest request, @Validated MarketplacePublishDTO dto,
             @PathVariable("id") int id) throws Exception {
         if (dto.getPrice() <= 0 || dto.getPrice() > 9999.99) {
-            return new JsonResult(false, "商品价格不合法");
+            return failure(request, "商品价格不合法");
         }
         String sessionId = (String) request.getAttribute("sessionId");
         marketplaceService.updateItem(sessionId, dto, id);

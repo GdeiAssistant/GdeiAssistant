@@ -5,6 +5,7 @@ import cn.gdeiassistant.common.exception.VerificationException.VerificationCodeI
 import cn.gdeiassistant.common.pojo.Entity.Email;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.email.service.EmailService;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import org.hibernate.validator.constraints.Length;
@@ -26,6 +27,10 @@ public class EmailController {
 
     @Autowired
     private EmailService emailService;
+
+    private JsonResult failure(HttpServletRequest request, String message) {
+        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+    }
 
     /**
      * 获取电子邮件验证码
@@ -73,7 +78,7 @@ public class EmailController {
             emailService.unBindUserEmail(sessionId);
             return new JsonResult(true);
         }
-        return new JsonResult(false, "当前用户未绑定电子邮件");
+        return failure(request, "当前用户未绑定电子邮件");
     }
 
     /**
@@ -87,4 +92,3 @@ public class EmailController {
         return new DataJsonResult<>(true, email != null ? email.getEmail() : null);
     }
 }
-

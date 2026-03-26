@@ -7,6 +7,7 @@ import cn.gdeiassistant.common.pojo.Entity.Attribution;
 import cn.gdeiassistant.core.phone.pojo.dto.PhoneBindDTO;
 import cn.gdeiassistant.core.phone.pojo.vo.PhoneVO;
 import cn.gdeiassistant.core.profile.pojo.AttributionComparator;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.phone.service.PhoneService;
@@ -34,6 +35,10 @@ public class PhoneController {
     @Autowired
     private PhoneService phoneService;
 
+    private JsonResult failure(HttpServletRequest request, String message) {
+        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+    }
+
     /**
      * 获取国际手机区号表
      *
@@ -60,7 +65,7 @@ public class PhoneController {
     public JsonResult GetPhoneVerificationCode(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(999) Integer code
             , @Validated @NotBlank @Length(min = 7, max = 11) @Pattern(regexp = "^[0-9]*$") String phone) throws SendSMSException {
         if (LocationUtils.getAttributionMap().get(code) == null) {
-            return new JsonResult(false, "不受支持的国际手机区号");
+            return failure(request, "不受支持的国际手机区号");
         }
         phoneService.getPhoneVerificationCode(code, phone);
         return new JsonResult(true);
@@ -79,7 +84,7 @@ public class PhoneController {
             , @Validated @NotBlank @Length(min = 7, max = 11) @Pattern(regexp = "^[0-9]*$") String phone
             , @Validated @NotNull @Min(10000) @Max(999999) Integer randomCode) throws VerificationCodeInvalidException {
         if (LocationUtils.getAttributionMap().get(code) == null) {
-            return new JsonResult(false, "不受支持的国际手机区号");
+            return failure(request, "不受支持的国际手机区号");
         }
         phoneService.checkVerificationCode(code, phone, randomCode);
         String sessionId = (String) request.getAttribute("sessionId");
@@ -104,7 +109,7 @@ public class PhoneController {
             phoneService.unAttachUserPhone(sessionId);
             return new JsonResult(true);
         }
-        return new JsonResult(false, "当前用户未绑定手机号");
+        return failure(request, "当前用户未绑定手机号");
     }
 
     /**

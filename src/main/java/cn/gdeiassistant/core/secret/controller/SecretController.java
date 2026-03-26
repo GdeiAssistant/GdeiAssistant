@@ -7,6 +7,7 @@ import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.secret.pojo.dto.SecretPublishDTO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
@@ -29,6 +30,10 @@ public class SecretController {
 
     @Autowired
     private SecretService secretService;
+
+    private JsonResult failure(HttpServletRequest request, String message) {
+        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+    }
 
     @RequestMapping(value = "/api/secret/id/{id}", method = RequestMethod.GET)
     public DataJsonResult<SecretVO> getSecretDetail(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
@@ -71,16 +76,16 @@ public class SecretController {
             , @RequestParam(value = "voiceKey", required = false) String voiceKey) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         if (dto.getType() != null && dto.getType() == 0 && StringUtils.isBlank(dto.getContent())) {
-            return new JsonResult(false, "树洞信息不能为空");
+            return failure(request, "树洞信息不能为空");
         }
         if (dto.getType() != null && dto.getType().equals(0)) {
             secretService.addSecretInfo(sessionId, dto);
             return new JsonResult(true);
         } else if (dto.getType() != null && dto.getType().equals(1)) {
             if ((file == null || file.isEmpty() || file.getSize() == 0) && StringUtils.isBlank(voiceKey)) {
-                return new JsonResult(false, "语音内容不能为空");
+                return failure(request, "语音内容不能为空");
             } else if (file != null && file.getSize() > ValueConstantUtils.MAX_VOICE_SIZE) {
-                return new JsonResult(false, "语音文件大小过大");
+                return failure(request, "语音文件大小过大");
             } else {
                 Integer id = secretService.addSecretInfo(sessionId, dto);
                 try {
@@ -92,12 +97,12 @@ public class SecretController {
                 } catch (Exception e) {
                     secretService.deleteSecretVoice(id);
                     secretService.deleteSecretById(id);
-                    return new JsonResult(false, "语音上传失败");
+                    return failure(request, "语音上传失败");
                 }
                 return new JsonResult(true);
             }
         } else {
-            return new JsonResult(false, "树洞信息类型不合法");
+            return failure(request, "树洞信息类型不合法");
         }
     }
 
@@ -126,7 +131,7 @@ public class SecretController {
                     secretService.changeUserLikeState(true, id, sessionId);
                     return new JsonResult(true);
                 default:
-                    return new JsonResult(false, "请求参数不合法");
+                    return failure(request, "请求参数不合法");
             }
         }
         throw new DataNotExistException("查询的校园树洞信息不存在");

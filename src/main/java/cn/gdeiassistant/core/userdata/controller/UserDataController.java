@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.userData.controller;
 import cn.gdeiassistant.common.enums.UserData.ExportStateEnum;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.userData.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,10 @@ public class UserDataController {
 
     @Autowired
     private UserDataService userDataService;
+
+    private JsonResult failure(HttpServletRequest request, String message) {
+        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+    }
 
     /**
      * 检查用户数据导出状态
@@ -47,10 +52,10 @@ public class UserDataController {
     public JsonResult ExportUserData(HttpServletRequest request) throws IOException {
         String sessionId = (String) request.getAttribute("sessionId");
         if (userDataService.CheckAlreadyExportUserData(sessionId)) {
-            return new JsonResult(false, "24小时内已导出过用户数据，请勿重复提交请求");
+            return failure(request, "24小时内已导出过用户数据，请勿重复提交请求");
         }
         if (userDataService.CheckExportingUserData(sessionId)) {
-            return new JsonResult(false, "系统正在导出用户数据，请稍候再返回下载");
+            return failure(request, "系统正在导出用户数据，请稍候再返回下载");
         }
         userDataService.ExportUserData(sessionId);
         return new JsonResult(true);
@@ -69,6 +74,6 @@ public class UserDataController {
             String url = userDataService.DownloadUserData(sessionId);
             return new DataJsonResult<>(true, url);
         }
-        return new DataJsonResult<>(new JsonResult(false, "请先提交用户数据导出请求"));
+        return new DataJsonResult<>(failure(request, "请先提交用户数据导出请求"));
     }
 }

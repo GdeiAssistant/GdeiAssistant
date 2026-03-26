@@ -3,9 +3,10 @@ package cn.gdeiassistant.core.feedback.controller;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.pojo.Entity.ClassifiedFeedback;
 import cn.gdeiassistant.common.pojo.Entity.Feedback;
-import cn.gdeiassistant.core.feedback.pojo.dto.FeedbackSubmitDTO;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.feedback.pojo.dto.FeedbackSubmitDTO;
 import cn.gdeiassistant.core.feedback.service.FeedbackService;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +40,7 @@ public class FeedbackController {
     public JsonResult postFeedback(HttpServletRequest request, @RequestBody @Validated FeedbackSubmitDTO body) {
         String sessionId = (String) request.getAttribute("sessionId");
         feedbackService.SubmitFeedback(sessionId, body);
-        return new JsonResult(true, "感谢您的反馈");
+        return new JsonResult(true, BackendTextLocalizer.localizeMessage("感谢您的反馈", request.getHeader("Accept-Language")));
     }
 
     /**

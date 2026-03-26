@@ -2,6 +2,8 @@ package cn.gdeiassistant.core.message.controller;
 
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.i18n.ApiLanguageResolver;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import cn.gdeiassistant.core.message.service.MessageService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,7 +28,16 @@ public class MessageController {
             @PathVariable("start") Integer start,
             @PathVariable("size") Integer size) {
         String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, messageService.queryInteractionMessages(sessionId, start, size));
+        String language = ApiLanguageResolver.normalizeLanguage(request.getHeader("Accept-Language"));
+        List<InteractionMessageVO> messages = messageService.queryInteractionMessages(sessionId, start, size);
+        if (messages == null || messages.isEmpty() || ApiLanguageResolver.isSimplifiedChinese(language)) {
+            return new DataJsonResult<>(true, messages);
+        }
+        List<InteractionMessageVO> localizedMessages = new ArrayList<>(messages.size());
+        for (InteractionMessageVO message : messages) {
+            localizedMessages.add(BackendTextLocalizer.localizeInteractionMessage(message, language));
+        }
+        return new DataJsonResult<>(true, localizedMessages);
     }
 
     @RequestMapping(value = "/unread", method = RequestMethod.GET)

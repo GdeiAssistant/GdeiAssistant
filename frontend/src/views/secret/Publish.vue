@@ -1,12 +1,19 @@
 <script setup>
-import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
 import { useToast } from '@/composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import {
+  createSecretSwitchCopy,
+  createSecretVoiceHint,
+  getSecretVoiceState
+} from './secretContent'
 
 const router = useRouter()
+const { t } = useI18n()
 const { loading: toastLoading, hideLoading } = useToast()
 
 const MAX_RECORD_SECONDS = 60
@@ -21,13 +28,9 @@ const formData = ref({
 const submitting = ref(false)
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
-const showDialog = (msg) => {
-  dialogMessage.value = msg
-  dialogVisible.value = true
-}
-
 const recording = ref(false)
-const voiceState = ref('未录音')
+const voiceStateKey = ref('idle')
+const voiceStateParams = ref({})
 const voiceVolume = ref(0)
 const showThemes = ref(false)
 const previewPlaying = ref(false)
@@ -43,6 +46,26 @@ let volumeAnimationId = 0
 let recordTimer = null
 let previewAudio = null
 let recordedChunks = []
+
+const switchCopy = computed(() => createSecretSwitchCopy(t))
+const voiceState = computed(() => getSecretVoiceState(voiceStateKey.value, t, voiceStateParams.value))
+const voiceHint = computed(() => {
+  return createSecretVoiceHint({
+    recording: recording.value,
+    hasRecordedAudio: Boolean(recordedAudioFile.value),
+    duration: formatSeconds(recordSeconds.value)
+  }, t)
+})
+
+const showDialog = (msg) => {
+  dialogMessage.value = msg
+  dialogVisible.value = true
+}
+
+function setVoiceState(state, params = {}) {
+  voiceStateKey.value = state
+  voiceStateParams.value = params
+}
 
 const switchToWord = () => {
   stopPreviewAudio()
@@ -84,16 +107,6 @@ function formatSeconds(seconds) {
   const second = String(total % 60).padStart(2, '0')
   return `${minute}:${second}`
 }
-
-const voiceHint = computed(() => {
-  if (recording.value) {
-    return `正在录音，已录制 ${formatSeconds(recordSeconds.value)}`
-  }
-  if (recordedAudioFile.value) {
-    return `已录音 ${formatSeconds(recordSeconds.value)}，可试听或重新录制`
-  }
-  return '按住开始录音，最长不超过60秒'
-})
 
 const selectTheme = (themeNum) => {
   formData.value.theme = themeNum
@@ -145,15 +158,15 @@ function revokeRecordedAudio() {
 
 function updateVoiceStateAfterRecording() {
   if (recordedAudioFile.value) {
-    voiceState.value = `录音完成（${formatSeconds(recordSeconds.value)}）`
+    setVoiceState('finished', { duration: formatSeconds(recordSeconds.value) })
   } else {
-    voiceState.value = '未录音'
+    setVoiceState('idle')
   }
 }
 
 async function ensureMediaStream() {
   if (!navigator.mediaDevices?.getUserMedia) {
-    throw new Error('当前浏览器不支持录音')
+    throw new Error(t('secret.publish.browserUnsupported'))
   }
   mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true })
   return mediaStream
@@ -202,13 +215,13 @@ const startRecord = async () => {
       const blob = new Blob(recordedChunks, { type: finalMimeType })
       if (!blob.size) {
         revokeRecordedAudio()
-        voiceState.value = '未录音'
+        setVoiceState('idle')
         return
       }
       if (blob.size > MAX_VOICE_SIZE) {
         revokeRecordedAudio()
-        voiceState.value = '未录音'
-        showDialog('语音文件大小过大，请缩短录音时长')
+        setVoiceState('idle')
+        showDialog(t('secret.publish.voiceTooLarge'))
         return
       }
       revokeRecordedAudio()
@@ -222,7 +235,7 @@ const startRecord = async () => {
     }
     mediaRecorder.start(200)
     recording.value = true
-    voiceState.value = `正在录音，还剩${MAX_RECORD_SECONDS}秒`
+    setVoiceState('remaining', { seconds: MAX_RECORD_SECONDS })
     startVolumeMonitor(stream)
     resetRecordTimer()
     recordTimer = setInterval(() => {
@@ -232,12 +245,12 @@ const startRecord = async () => {
         stopRecord()
         return
       }
-      voiceState.value = `正在录音，还剩${remain}秒`
+      setVoiceState('remaining', { seconds: remain })
     }, 1000)
   } catch (error) {
     stopMediaStream()
     stopVolumeMonitor()
-    showDialog(error?.message || '麦克风权限获取失败')
+    showDialog(error?.message || t('secret.publish.microphoneUnavailable'))
   }
 }
 
@@ -245,7 +258,7 @@ const stopRecord = () => {
   if (!recording.value) return
   recording.value = false
   resetRecordTimer()
-  voiceState.value = '录音处理中...'
+  setVoiceState('processing')
   if (mediaRecorder && mediaRecorder.state !== 'inactive') {
     mediaRecorder.stop()
   } else {
@@ -261,7 +274,7 @@ const togglePreviewAudio = () => {
     return
   }
   if (!recordedAudioUrl.value) {
-    showDialog('未采集到任何录音信息')
+    showDialog(t('secret.publish.voiceMissing'))
     return
   }
   if (!previewAudio || previewAudio.src !== recordedAudioUrl.value) {
@@ -277,10 +290,10 @@ const togglePreviewAudio = () => {
   } else {
     previewAudio.play().then(() => {
       previewPlaying.value = true
-      voiceState.value = '正在试听录音'
+      setVoiceState('preview')
     }).catch(() => {
       previewPlaying.value = false
-      showDialog('当前浏览器暂不支持播放该录音')
+      showDialog(t('secret.publish.previewUnsupported'))
     })
   }
 }
@@ -288,21 +301,21 @@ const togglePreviewAudio = () => {
 const submit = async () => {
   if (submitting.value) return
   if (recording.value) {
-    showDialog('请先结束当前录音')
+    showDialog(t('secret.publish.stopRecordingFirst'))
     return
   }
   if (mode.value === 'text') {
     if (!formData.value.content || formData.value.content.trim() === '') {
-      showDialog('树洞内容不能为空！')
+      showDialog(t('secret.publish.contentRequired'))
       return
     }
     if (formData.value.content.length > 100) {
-      showDialog('树洞内容长度超过限制！')
+      showDialog(t('secret.publish.contentTooLong'))
       return
     }
     try {
       submitting.value = true
-      toastLoading('正在发布...')
+      toastLoading(t('secret.publish.publishing'))
       await request.post('/secret/info', {
         content: formData.value.content,
         theme: formData.value.theme,
@@ -311,19 +324,19 @@ const submit = async () => {
       })
       router.push('/secret/home')
     } catch (err) {
-      showDialog(err?.message || '提交失败')
+      showDialog(err?.message || t('secret.publish.submitFailed'))
     } finally {
       submitting.value = false
       hideLoading()
     }
   } else {
     if (!recordedAudioFile.value) {
-      showDialog('未采集到任何录音信息')
+      showDialog(t('secret.publish.voiceMissing'))
       return
     }
     try {
       submitting.value = true
-      toastLoading('正在上传语音...')
+      toastLoading(t('secret.publish.uploadingVoice'))
       const voiceKey = await uploadFileByPresignedUrl(recordedAudioFile.value, {
         fileName: recordedAudioFile.value.name
       })
@@ -335,7 +348,7 @@ const submit = async () => {
       await request.post('/secret/info', payload)
       router.push('/secret/home')
     } catch (err) {
-      showDialog(err?.message || '提交失败')
+      showDialog(err?.message || t('secret.publish.submitFailed'))
     } finally {
       submitting.value = false
       hideLoading()
@@ -385,9 +398,8 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] relative" style="--module-color: #8b5cf6">
-    <CommunityHeader title="发布小秘密" moduleColor="#8b5cf6" backTo="/secret/home" />
+    <CommunityHeader :title="t('secret.publish.title')" moduleColor="#8b5cf6" backTo="/secret/home" />
 
-    <!-- 树洞发布框 -->
     <div
       class="relative rounded-lg mx-2.5 pb-5 border-l-4 border-[var(--c-secret)]"
       :style="{ backgroundColor: getThemeBg(formData.theme), color: formData.theme === 1 ? '#000' : '#fff' }"
@@ -398,11 +410,10 @@ onBeforeUnmount(() => {
             class="inline-block w-10 h-10 bg-[length:1rem] bg-center bg-no-repeat align-middle absolute left-0 cursor-pointer bg-[url('/img/secret/back1.png')]"
             @click="router.back()"
           ></i>
-          <span class="inline-block">小秘密</span>
-          <label class="absolute right-4 top-0 cursor-pointer text-[var(--c-secret)]" @click="submit">{{ submitting ? '发布中' : '发布' }}</label>
+          <span class="inline-block">{{ t('secret.publish.cardTitle') }}</span>
+          <label class="absolute right-4 top-0 cursor-pointer text-[var(--c-secret)]" @click="submit">{{ submitting ? t('secret.publish.submitting') : t('secret.publish.submitAction') }}</label>
         </header>
         <div class="h-[284px] relative text-center">
-          <!-- 语音树洞 -->
           <div
             v-if="mode === 'voice'"
             class="relative h-[250px] flex flex-col items-center justify-center"
@@ -415,21 +426,20 @@ onBeforeUnmount(() => {
               width="50px"
               height="50px"
               :src="formData.theme === 1 ? '/img/secret/voice_normal_white.png' : '/img/secret/voice_normal.png'"
-              alt="录音"
+              :alt="t('secret.voiceAlt')"
             />
             <br>
             <span :style="{ color: formData.theme === 1 ? '#bfbfbf' : '#fff' }">
               {{ voiceHint }}
             </span>
           </div>
-          <!-- 文字树洞 -->
           <div v-else>
             <textarea
               v-model="formData.content"
               name="content"
               maxlength="100"
               autofocus
-              placeholder="说个小秘密"
+              :placeholder="t('secret.publish.placeholder')"
               class="text-center w-full mx-auto border-none text-lg overflow-x-hidden leading-6 bg-inherit text-inherit h-auto p-5 resize-none outline-none placeholder:text-inherit placeholder:leading-6 placeholder:opacity-60"
             ></textarea>
             <div class="absolute bottom-2.5 right-4 text-sm text-[var(--c-text-3)]">{{ remainingChars }}</div>
@@ -438,9 +448,7 @@ onBeforeUnmount(() => {
       </form>
     </div>
 
-    <!-- 底部控制区 -->
     <div class="relative z-10 bg-[var(--c-bg)]" style="pointer-events: auto;">
-      <!-- 操作栏 -->
       <div class="border-y border-[var(--c-border)] p-2.5 overflow-hidden bg-[var(--c-surface)]">
         <div class="h-[30px]">
           <div v-if="mode === 'voice'" @click="togglePreviewAudio">
@@ -451,7 +459,7 @@ onBeforeUnmount(() => {
               :src="recording ? '/img/secret/record.png' : '/img/secret/play.png'"
               alt=""
             />
-            <p class="relative top-[5px] left-[5px] w-[150px] float-left">{{ previewPlaying ? '正在试听录音' : voiceState }}</p>
+            <p class="relative top-[5px] left-[5px] w-[150px] float-left">{{ previewPlaying ? t('secret.publish.voiceStatePreview') : voiceState }}</p>
           </div>
           <i
             class="w-[23px] h-[23px] block float-right bg-no-repeat bg-center bg-[length:100%] cursor-pointer"
@@ -473,11 +481,10 @@ onBeforeUnmount(() => {
             :true-value="1"
             :false-value="0"
           />
-          24小时后删除
+          {{ t('secret.publish.deleteAfter24h') }}
         </div>
       </div>
 
-      <!-- 主题选择 -->
       <div v-if="showThemes" class="flex mt-2.5 px-2.5 gap-2.5">
         <div
           v-for="i in 6"
@@ -501,36 +508,33 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- 切换到文字树洞 -->
       <div
         v-if="mode === 'voice'"
         class="mt-4 text-[var(--c-text-3)] text-center"
       >
-        切换到
-        <p class="inline text-[var(--c-secret)] cursor-pointer" @click="switchToWord">文字树洞</p>
-        ，用文字分享你的小秘密
+        {{ switchCopy.text.prefix }}
+        <p class="inline text-[var(--c-secret)] cursor-pointer" @click="switchToWord">{{ switchCopy.text.action }}</p>
+        {{ switchCopy.text.suffix }}
       </div>
 
-      <!-- 切换到语音树洞 -->
       <div
         v-if="mode === 'text'"
         class="mt-4 text-[var(--c-text-3)] text-center"
       >
-        切换到
-        <p class="inline text-[var(--c-secret)] cursor-pointer" @click="switchToVoice">语音树洞</p>
-        ，用语音分享你的小秘密
+        {{ switchCopy.voice.prefix }}
+        <p class="inline text-[var(--c-secret)] cursor-pointer" @click="switchToVoice">{{ switchCopy.voice.action }}</p>
+        {{ switchCopy.voice.suffix }}
       </div>
     </div>
   </div>
 
-  <!-- 对话框 -->
   <div v-if="dialogVisible">
     <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
     <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: #8b5cf6">
-      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">提示</div>
+      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
       <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
       <div class="flex border-t border-[var(--c-border)]">
-        <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[#8b5cf6] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">确定</a>
+        <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[#8b5cf6] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
       </div>
     </div>
   </div>

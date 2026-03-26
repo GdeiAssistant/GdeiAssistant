@@ -33,6 +33,33 @@
     "recentUpdate": "최근 업데이트",
     "back": "뒤로"
   },
+  "gradePage": {
+    "title": "성적 조회",
+    "moreAction": "더보기",
+    "syncLoading": "학사 시스템 동기화 중...",
+    "updateSuccess": "업데이트되었습니다",
+    "empty": "성적 데이터가 없습니다",
+    "term": {
+      "first": "1학기",
+      "second": "2학기"
+    },
+    "table": {
+      "course": "과목",
+      "credit": "학점",
+      "score": "성적"
+    },
+    "year": {
+      "freshman": "1학년",
+      "sophomore": "2학년",
+      "junior": "3학년",
+      "senior": "4학년"
+    },
+    "actionSheet": {
+      "manageCache": "캐시 설정 관리",
+      "updateCache": "캐시 데이터 갱신",
+      "cancel": "취소"
+    }
+  },
   "tab": {
     "home": "홈",
     "info": "알림",
@@ -115,6 +142,8 @@
     "noInteraction": "상호작용 메시지가 없습니다",
     "defaultInteractionTitle": "상호작용",
     "defaultInteractionContent": "새로운 상호작용 메시지가 있습니다",
+    "loadMore": "더 불러오기",
+    "loadingMore": "불러오는 중...",
     "read": "읽음",
     "unread": "안읽음",
     "moduleMarketplace": "중고거래",
@@ -249,6 +278,51 @@
     "toast": {
       "exportStarted": "내보내기 요청이 제출되었습니다. 잠시 후 다시 와서 다운로드해 주세요.",
       "downloadStarted": "다운로드가 시작되었습니다"
+    }
+  },
+  "secret": {
+    "title": "비밀 게시판",
+    "publishAction": "비밀 이야기하기",
+    "empty": "아직 게시물이 없습니다",
+    "voiceAlt": "음성",
+    "publish": {
+      "title": "비밀 게시하기",
+      "cardTitle": "비밀",
+      "submitAction": "게시",
+      "submitting": "게시 중",
+      "placeholder": "작은 비밀을 남겨 보세요",
+      "voiceHintIdle": "길게 눌러 녹음 시작, 최대 60초",
+      "voiceHintRecording": "녹음 중, {duration} 진행됨",
+      "voiceHintRecorded": "{duration} 녹음됨, 미리 듣거나 다시 녹음할 수 있습니다",
+      "voiceStateIdle": "녹음 없음",
+      "voiceStateFinished": "녹음 완료 ({duration})",
+      "voiceStateRemaining": "녹음 중, {seconds}초 남음",
+      "voiceStateProcessing": "녹음을 처리하는 중...",
+      "voiceStatePreview": "녹음 미리 듣는 중",
+      "browserUnsupported": "현재 브라우저는 녹음을 지원하지 않습니다",
+      "voiceTooLarge": "음성 파일이 너무 큽니다. 녹음 시간을 줄여 주세요",
+      "microphoneUnavailable": "마이크 권한을 가져오지 못했습니다",
+      "voiceMissing": "녹음된 내용이 없습니다",
+      "previewUnsupported": "현재 브라우저에서는 이 녹음을 재생할 수 없습니다",
+      "stopRecordingFirst": "먼저 현재 녹음을 종료해 주세요",
+      "contentRequired": "내용을 입력해 주세요",
+      "contentTooLong": "내용이 너무 깁니다",
+      "publishing": "게시 중...",
+      "uploadingVoice": "음성을 업로드하는 중...",
+      "submitFailed": "제출에 실패했습니다",
+      "deleteAfter24h": "24시간 후 삭제",
+      "switchToTextPrefix": "전환해서",
+      "switchToTextAction": "텍스트 비밀",
+      "switchToTextSuffix": "로 내용을 남기기",
+      "switchToVoicePrefix": "전환해서",
+      "switchToVoiceAction": "음성 비밀",
+      "switchToVoiceSuffix": "로 내용을 남기기"
+    },
+    "profile": {
+      "title": "내 비밀 게시물",
+      "voiceMessage": "음성 메시지",
+      "empty": "아직 게시물이 없습니다",
+      "loadMore": "더 불러오기"
     }
   },
   "marketplace": {

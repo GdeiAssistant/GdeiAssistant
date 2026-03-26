@@ -5,7 +5,7 @@
     </div>
 
     <template v-else>
-      <div v-if="!items.length" class="py-16 text-center text-sm text-[var(--c-text-3)]">暂无互动消息</div>
+      <div v-if="!items.length" class="py-16 text-center text-sm text-[var(--c-text-3)]">{{ t('info.noInteraction') }}</div>
 
       <button
         v-for="item in items"
@@ -25,7 +25,7 @@
             :class="['text-[11px] font-semibold flex items-center gap-1', item.isRead ? 'text-[var(--c-text-3)]' : 'text-[var(--c-primary)]']"
           >
             <span v-if="!item.isRead" class="w-1.5 h-1.5 rounded-full bg-[var(--c-primary)]"></span>
-            {{ item.isRead ? '已读' : '未读' }}
+            {{ item.isRead ? t('info.read') : t('info.unread') }}
           </span>
         </div>
       </button>
@@ -36,7 +36,7 @@
           type="button"
           class="flex-1 py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
           @click="markAllRead"
-        >全部已读</button>
+        >{{ t('info.markAllRead') }}</button>
         <button
           v-if="hasMore"
           type="button"
@@ -44,7 +44,7 @@
           :disabled="loadingMore"
           @click="loadMore"
         >
-          {{ loadingMore ? '加载中...' : '加载更多' }}
+          {{ getInteractionLoadMoreLabel(loadingMore, t) }}
         </button>
       </div>
     </template>
@@ -56,6 +56,11 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import request from '@/utils/request'
+import {
+  getInfoModuleLabel,
+  getInteractionLoadMoreLabel,
+  normalizeInfoModule
+} from './infoContent'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -67,24 +72,15 @@ const loadingMore = ref(false)
 const hasMore = ref(false)
 const PAGE_SIZE = 20
 
-function normalizeModule(module) {
-  if (!module) return null
-  const m = String(module).trim()
-  if (m === 'ershou' || m === 'secondhand') return 'marketplace'
-  if (m === 'lost_found' || m === 'lostfound') return 'lostandfound'
-  if (m === 'roommate') return 'dating'
-  return m
-}
-
 function normalize(raw) {
   if (!Array.isArray(raw)) return []
   return raw.map(item => ({
     id: item?.id ?? null,
-    module: normalizeModule(item?.module),
+    module: normalizeInfoModule(item?.module),
     type: item?.type ?? null,
-    title: item?.title ?? '互动消息',
-    content: item?.content ?? '',
-    createdAt: item?.createdAt ?? '',
+    title: item?.title || t('info.defaultInteractionTitle'),
+    content: item?.content || t('info.defaultInteractionContent'),
+    createdAt: item?.createdAt || t('common.recentUpdate'),
     isRead: item?.isRead === true,
     targetId: item?.targetId ?? null,
     targetSubId: item?.targetSubId ?? null,
@@ -93,12 +89,7 @@ function normalize(raw) {
 }
 
 function getModuleLabel(module) {
-  const map = {
-    marketplace: '二手交易', lostandfound: '失物招领', dating: '卖室友',
-    delivery: '全民快递', secret: '校园树洞', express: '表白墙',
-    topic: '话题', photograph: '拍好校园'
-  }
-  return map[module] || '消息'
+  return getInfoModuleLabel(module, t)
 }
 
 async function loadPage(start) {

@@ -128,7 +128,7 @@ function createMockAdapter(config) {
     // Mock handler rejected — wrap as axios-compatible error response
     const status = err.statusCode || 400
     const errorResponse = {
-      data: { success: false, message: err.message || '请求失败' },
+      data: { success: false, message: err.message || _t('common.saveFailed') },
       status,
       statusText: 'Mock Error',
       headers: {},

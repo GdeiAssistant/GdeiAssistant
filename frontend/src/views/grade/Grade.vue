@@ -1,12 +1,19 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { getGrade, updateGradeCache } from '@/api/grade'
 import { useToast } from '@/composables/useToast'
 import AppCard from '@/components/ui/AppCard.vue'
 import AppSkeleton from '@/components/ui/AppSkeleton.vue'
+import {
+  createGradeActionSheetItems,
+  createGradeTableHeaders,
+  createGradeYearTabs
+} from './gradeContent'
 
 const router = useRouter()
+const { t } = useI18n()
 const { success: toastSuccess, loading: showLoading, hideLoading } = useToast()
 
 const activeYear = ref(0)
@@ -14,12 +21,9 @@ const loading = ref(false)
 const gradeResult = ref(null)
 const showActionSheet = ref(false)
 
-const yearTabs = [
-  { value: 0, label: '大一' },
-  { value: 1, label: '大二' },
-  { value: 2, label: '大三' },
-  { value: 3, label: '大四' }
-]
+const yearTabs = computed(() => createGradeYearTabs(t))
+const tableHeaders = computed(() => createGradeTableHeaders(t))
+const actionSheetItems = computed(() => createGradeActionSheetItems(t))
 
 async function fetchGrade() {
   loading.value = true
@@ -64,12 +68,12 @@ function onManageCache() {
 /** 更新缓存数据：调用后端 /api/grade/update，成功后静默刷新当前学年成绩 */
 async function handleUpdateCache() {
   closeActionSheet()
-  showLoading('正在同步教务系统...')
+  showLoading(t('gradePage.syncLoading'))
   try {
     const res = await updateGradeCache()
     if (res && res.success) {
       hideLoading()
-      toastSuccess('更新成功')
+      toastSuccess(t('gradePage.updateSuccess'))
       await fetchGrade()
     }
   } catch (e) {
@@ -95,9 +99,9 @@ onMounted(() => {
   <div class="min-h-screen bg-[var(--c-bg)]">
     <!-- Header bar -->
     <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">← 返回</button>
-      <span class="flex-1 text-center text-sm font-bold">成绩查询</span>
-      <button @click="showOptionMenu" class="text-[var(--c-primary)] text-sm font-medium w-10 text-right">更多</button>
+      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">← {{ t('common.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('gradePage.title') }}</span>
+      <button @click="showOptionMenu" class="text-[var(--c-primary)] text-sm font-medium w-10 text-right">{{ t('gradePage.moreAction') }}</button>
     </div>
 
     <!-- Year/term selector pills -->
@@ -151,7 +155,7 @@ onMounted(() => {
         <AppCard>
           <template #header>
             <div class="flex items-center justify-between w-full">
-              <span class="text-sm font-semibold text-[var(--c-text-1)]">第一学期</span>
+              <span class="text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.first') }}</span>
               <span class="text-xs text-[var(--c-text-3)]">
                 GPA: {{ gradeResult.firstTermGPA != null ? gradeResult.firstTermGPA : '—' }}
               </span>
@@ -161,9 +165,9 @@ onMounted(() => {
           <template v-if="(gradeResult.firstTermGradeList || []).length > 0">
             <!-- Table header -->
             <div class="grid grid-cols-[1fr_56px_64px] text-[11px] font-semibold uppercase tracking-wide text-[var(--c-text-3)] bg-[var(--c-bg)] px-5 py-2.5">
-              <span>课程</span>
-              <span class="text-center">学分</span>
-              <span class="text-right">成绩</span>
+              <span>{{ tableHeaders.course }}</span>
+              <span class="text-center">{{ tableHeaders.credit }}</span>
+              <span class="text-right">{{ tableHeaders.score }}</span>
             </div>
             <!-- Table rows -->
             <div
@@ -185,14 +189,14 @@ onMounted(() => {
               >{{ item.gradeScore }}</span>
             </div>
           </template>
-          <div v-else class="px-5 py-8 text-center text-sm text-[var(--c-text-3)]">暂无成绩数据</div>
+          <div v-else class="px-5 py-8 text-center text-sm text-[var(--c-text-3)]">{{ t('gradePage.empty') }}</div>
         </AppCard>
 
         <!-- 第二学期 -->
         <AppCard>
           <template #header>
             <div class="flex items-center justify-between w-full">
-              <span class="text-sm font-semibold text-[var(--c-text-1)]">第二学期</span>
+              <span class="text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.second') }}</span>
               <span class="text-xs text-[var(--c-text-3)]">
                 GPA: {{ gradeResult.secondTermGPA != null ? gradeResult.secondTermGPA : '—' }}
               </span>
@@ -202,9 +206,9 @@ onMounted(() => {
           <template v-if="(gradeResult.secondTermGradeList || []).length > 0">
             <!-- Table header -->
             <div class="grid grid-cols-[1fr_56px_64px] text-[11px] font-semibold uppercase tracking-wide text-[var(--c-text-3)] bg-[var(--c-bg)] px-5 py-2.5">
-              <span>课程</span>
-              <span class="text-center">学分</span>
-              <span class="text-right">成绩</span>
+              <span>{{ tableHeaders.course }}</span>
+              <span class="text-center">{{ tableHeaders.credit }}</span>
+              <span class="text-right">{{ tableHeaders.score }}</span>
             </div>
             <!-- Table rows -->
             <div
@@ -226,7 +230,7 @@ onMounted(() => {
               >{{ item.gradeScore }}</span>
             </div>
           </template>
-          <div v-else class="px-5 py-8 text-center text-sm text-[var(--c-text-3)]">暂无成绩数据</div>
+          <div v-else class="px-5 py-8 text-center text-sm text-[var(--c-text-3)]">{{ t('gradePage.empty') }}</div>
         </AppCard>
       </div>
     </template>
@@ -236,7 +240,7 @@ onMounted(() => {
       <svg class="w-16 h-16 mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
-      <p class="text-sm">暂无成绩数据</p>
+      <p class="text-sm">{{ t('gradePage.empty') }}</p>
     </div>
 
     <!-- Action Sheet (bottom drawer) -->
@@ -257,17 +261,17 @@ onMounted(() => {
             <button
               @click="onManageCache"
               class="px-5 py-4 text-sm font-medium text-[var(--c-text-1)] text-center border-b border-[var(--c-border-light)] active:bg-[var(--c-bg)] transition"
-            >管理缓存配置</button>
+            >{{ actionSheetItems.manageCache }}</button>
             <button
               @click="handleUpdateCache"
               class="px-5 py-4 text-sm font-medium text-[var(--c-text-1)] text-center border-b border-[var(--c-border-light)] active:bg-[var(--c-bg)] transition"
-            >更新缓存数据</button>
+            >{{ actionSheetItems.updateCache }}</button>
           </div>
           <div class="mt-2 border-t border-[var(--c-border)]">
             <button
               @click="closeActionSheet"
               class="w-full px-5 py-4 text-sm font-medium text-[var(--c-danger)] text-center active:bg-[var(--c-bg)] transition"
-            >取消</button>
+            >{{ actionSheetItems.cancel }}</button>
           </div>
         </div>
       </Transition>

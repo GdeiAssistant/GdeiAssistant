@@ -64,12 +64,13 @@ class AuthContractTest {
                 .when(userLoginService).userLogin(anyString(), anyString(), anyString());
 
         mockMvc.perform(post("/api/auth/login")
+                        .header("Accept-Language", "en-US")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"testuser\",\"password\":\"wrong\"}"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.code").exists())
-                .andExpect(jsonPath("$.message").exists());
+                .andExpect(jsonPath("$.message").value("Incorrect username or password"));
     }
 
     @Test

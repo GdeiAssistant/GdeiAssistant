@@ -8,6 +8,7 @@ import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionExc
 import cn.gdeiassistant.common.pojo.Entity.CustomSchedule;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedulequery.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class ScheduleQueryController {
     public JsonResult updateScheduleCache(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         scheduleService.updateScheduleCache(sessionId);
-        return new JsonResult(true, "课表数据更新成功");
+        return new JsonResult(true, BackendTextLocalizer.localizeMessage("课表数据更新成功", request.getHeader("Accept-Language")));
     }
 
     /**
@@ -55,7 +56,7 @@ public class ScheduleQueryController {
             throws GenerateScheduleException, CountOverLimitException, NotAvailableConditionException {
         String sessionId = (String) request.getAttribute("sessionId");
         scheduleService.addCustomSchedule(sessionId, customSchedule);
-        return new JsonResult(true, "添加成功");
+        return new JsonResult(true, BackendTextLocalizer.localizeMessage("添加成功", request.getHeader("Accept-Language")));
     }
 
     /**

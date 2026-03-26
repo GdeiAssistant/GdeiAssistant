@@ -4,7 +4,107 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+const ABOUT_LINK_LABELS = {
+  'zh-CN': {
+    moe: '教育部',
+    gdEducation: '广东省教育厅',
+    gzEducation: '广州市教育局',
+    gdGovernment: '广东省人民政府',
+    gzGovernment: '广州市人民政府',
+    eduCn: '中国教育科研网',
+    cnki: '中国知网',
+    chsi: '学信网',
+    scut: '华南理工大学',
+    sysu: '中山大学',
+    jnu: '暨南大学',
+    scnu: '华南师范大学',
+    gdei: '广东第二师范学院',
+    cpcNews: '中国共产党新闻网',
+    stayTrue: '"不忘初心、牢记使命"主题教育',
+    antiEpidemic: '人民战"疫"党旗飘扬',
+    partyHistory: '党史学习教育',
+    homeland: '我奋斗家国美',
+    congress20: '二十大专题报道'
+  },
+  'zh-HK': {
+    moe: '教育部',
+    gdEducation: '廣東省教育廳',
+    gzEducation: '廣州市教育局',
+    gdGovernment: '廣東省人民政府',
+    gzGovernment: '廣州市人民政府',
+    eduCn: '中國教育科研網',
+    cnki: '中國知網',
+    chsi: '學信網',
+    scut: '華南理工大學',
+    sysu: '中山大學',
+    jnu: '暨南大學',
+    scnu: '華南師範大學',
+    gdei: '廣東第二師範學院',
+    cpcNews: '中國共產黨新聞網',
+    stayTrue: '"不忘初心、牢記使命"主題教育',
+    antiEpidemic: '人民戰"疫"黨旗飄揚',
+    partyHistory: '黨史學習教育',
+    homeland: '我奮鬥家國美',
+    congress20: '二十大專題報道'
+  },
+  'zh-TW': {
+    moe: '教育部',
+    gdEducation: '廣東省教育廳',
+    gzEducation: '廣州市教育局',
+    gdGovernment: '廣東省人民政府',
+    gzGovernment: '廣州市人民政府',
+    eduCn: '中國教育科研網',
+    cnki: '中國知網',
+    chsi: '學信網',
+    scut: '華南理工大學',
+    sysu: '中山大學',
+    jnu: '暨南大學',
+    scnu: '華南師範大學',
+    gdei: '廣東第二師範學院',
+    cpcNews: '中國共產黨新聞網',
+    stayTrue: '"不忘初心、牢記使命"主題教育',
+    antiEpidemic: '人民戰"疫"黨旗飄揚',
+    partyHistory: '黨史學習教育',
+    homeland: '我奮鬥家國美',
+    congress20: '二十大專題報導'
+  },
+  en: {
+    moe: 'Ministry of Education of China',
+    gdEducation: 'Guangdong Department of Education',
+    gzEducation: 'Guangzhou Education Bureau',
+    gdGovernment: 'People\'s Government of Guangdong Province',
+    gzGovernment: 'People\'s Government of Guangzhou Municipality',
+    eduCn: 'China Education and Research Network',
+    cnki: 'CNKI',
+    chsi: 'CHSI',
+    scut: 'South China University of Technology',
+    sysu: 'Sun Yat-sen University',
+    jnu: 'Jinan University',
+    scnu: 'South China Normal University',
+    gdei: 'Guangdong University of Education',
+    cpcNews: 'Communist Party of China News Network',
+    stayTrue: 'Stay True to the Founding Mission Campaign',
+    antiEpidemic: 'People\'s Anti-Epidemic Party Banner',
+    partyHistory: 'Party History Learning Campaign',
+    homeland: 'I Strive for a Beautiful Homeland',
+    congress20: '20th CPC National Congress Special Coverage'
+  }
+}
+
+function resolveAboutLocale(value) {
+  const normalized = (value || 'zh-CN').toLowerCase()
+  if (normalized.startsWith('zh-hk')) return 'zh-HK'
+  if (normalized.startsWith('zh-tw') || normalized.startsWith('zh-hant')) return 'zh-TW'
+  if (normalized.startsWith('zh')) return 'zh-CN'
+  return 'en'
+}
+
+function aboutLinkLabel(key) {
+  const labels = ABOUT_LINK_LABELS[resolveAboutLocale(locale.value)] || ABOUT_LINK_LABELS.en
+  return labels[key] || ABOUT_LINK_LABELS.en[key] || key
+}
 
 // Cookie 横幅状态
 const showCookieBanner = ref(false)
@@ -36,30 +136,30 @@ const menuItems = computed(() => [
   {
     title: t('about.menuFriendlyLinks'),
     items: [
-      { text: '教育部', href: 'http://www.moe.gov.cn', external: true },
-      { text: '广东省教育厅', href: 'https://edu.gd.gov.cn', external: true },
-      { text: '广州市教育局', href: 'http://jyj.gz.gov.cn', external: true },
-      { text: '广东省人民政府', href: 'https://www.gd.gov.cn', external: true },
-      { text: '广州市人民政府', href: 'http://www.gz.gov.cn', external: true },
-      { text: '中国教育科研网', href: 'http://www.edu.cn', external: true },
-      { text: '中国知网', href: 'https://www.cnki.net', external: true },
-      { text: '学信网', href: 'https://www.chsi.com.cn', external: true },
-      { text: '华南理工大学', href: 'https://www.scut.edu.cn', external: true },
-      { text: '中山大学', href: 'https://www.sysu.edu.cn', external: true },
-      { text: '暨南大学', href: 'https://www.jnu.edu.cn', external: true },
-      { text: '华南师范大学', href: 'https://www.scnu.edu.cn', external: true },
-      { text: '广东第二师范学院', href: 'http://www.gdei.edu.cn', external: true }
+      { text: aboutLinkLabel('moe'), href: 'http://www.moe.gov.cn', external: true },
+      { text: aboutLinkLabel('gdEducation'), href: 'https://edu.gd.gov.cn', external: true },
+      { text: aboutLinkLabel('gzEducation'), href: 'http://jyj.gz.gov.cn', external: true },
+      { text: aboutLinkLabel('gdGovernment'), href: 'https://www.gd.gov.cn', external: true },
+      { text: aboutLinkLabel('gzGovernment'), href: 'http://www.gz.gov.cn', external: true },
+      { text: aboutLinkLabel('eduCn'), href: 'http://www.edu.cn', external: true },
+      { text: aboutLinkLabel('cnki'), href: 'https://www.cnki.net', external: true },
+      { text: aboutLinkLabel('chsi'), href: 'https://www.chsi.com.cn', external: true },
+      { text: aboutLinkLabel('scut'), href: 'https://www.scut.edu.cn', external: true },
+      { text: aboutLinkLabel('sysu'), href: 'https://www.sysu.edu.cn', external: true },
+      { text: aboutLinkLabel('jnu'), href: 'https://www.jnu.edu.cn', external: true },
+      { text: aboutLinkLabel('scnu'), href: 'https://www.scnu.edu.cn', external: true },
+      { text: aboutLinkLabel('gdei'), href: 'http://www.gdei.edu.cn', external: true }
     ]
   },
   {
     title: t('about.menuSmartPartyBuilding'),
     items: [
-      { text: '中国共产党新闻网', href: 'http://cpc.people.com.cn/index.html', external: true },
-      { text: '"不忘初心、牢记使命"主题教育', href: 'http://chuxin.people.cn/GB/index.html', external: true },
-      { text: '人民战"疫"党旗飘扬', href: 'http://cpc.people.com.cn/GB/67481/431601/index.html', external: true },
-      { text: '党史学习教育', href: 'http://dangshi.people.cn', external: true },
-      { text: '我奋斗家国美', href: 'http://dangjian.people.com.cn/GB/136058/447038/index.html', external: true },
-      { text: '二十大专题报道', href: 'http://cpc.people.com.cn/20th', external: true }
+      { text: aboutLinkLabel('cpcNews'), href: 'http://cpc.people.com.cn/index.html', external: true },
+      { text: aboutLinkLabel('stayTrue'), href: 'http://chuxin.people.cn/GB/index.html', external: true },
+      { text: aboutLinkLabel('antiEpidemic'), href: 'http://cpc.people.com.cn/GB/67481/431601/index.html', external: true },
+      { text: aboutLinkLabel('partyHistory'), href: 'http://dangshi.people.cn', external: true },
+      { text: aboutLinkLabel('homeland'), href: 'http://dangjian.people.com.cn/GB/136058/447038/index.html', external: true },
+      { text: aboutLinkLabel('congress20'), href: 'http://cpc.people.com.cn/20th', external: true }
     ]
   }
 ])

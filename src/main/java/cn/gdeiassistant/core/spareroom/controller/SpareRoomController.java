@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.spareRoom.controller;
 import cn.gdeiassistant.common.annotation.QueryLogPersistence;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.spareRoom.pojo.dto.EmptyClassroomQueryDTO;
 import cn.gdeiassistant.core.spareRoom.pojo.vo.SpareRoomVO;
 import cn.gdeiassistant.core.spareRoom.service.SpareRoomService;
@@ -33,7 +34,8 @@ public class SpareRoomController {
         String sessionId = (String) request.getAttribute("sessionId");
         List<SpareRoomVO> list = spareRoomService.querySpareRoom(sessionId, query);
         if (list == null || list.isEmpty()) {
-            return new DataJsonResult<>(new JsonResult(false, "没有空闲的课室"));
+            return new DataJsonResult<>(new JsonResult(false,
+                    BackendTextLocalizer.localizeMessage("没有空闲的课室", request.getHeader("Accept-Language"))));
         }
         return new DataJsonResult<>(true, list);
     }

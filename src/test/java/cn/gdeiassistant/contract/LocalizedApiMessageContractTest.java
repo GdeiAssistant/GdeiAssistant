@@ -2,6 +2,7 @@ package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.message.controller.MessageController;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import cn.gdeiassistant.core.message.service.MessageService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -76,6 +78,18 @@ class LocalizedApiMessageContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message").value("Grades are not available for the current academic year"));
+    }
+
+    @Test
+    void backendTextLocalizerCoversManualSuccessAndIntegrationMessages() {
+        assertEquals("Schedule data refreshed successfully",
+                BackendTextLocalizer.localizeMessage("课表数据更新成功", "en-US"));
+        assertEquals("Thanks for your feedback",
+                BackendTextLocalizer.localizeMessage("感谢您的反馈", "en-US"));
+        assertEquals("The campus news site is temporarily unavailable",
+                BackendTextLocalizer.localizeMessage("校园新闻站点访问失败", "en-US"));
+        assertEquals("The academic system page structure has changed and the term selector could not be found",
+                BackendTextLocalizer.localizeMessage("教务系统页面结构异常，未找到学期下拉框", "en-US"));
     }
 
     @RestController

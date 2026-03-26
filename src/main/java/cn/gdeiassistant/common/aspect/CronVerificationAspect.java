@@ -2,6 +2,7 @@ package cn.gdeiassistant.common.aspect;
 
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -29,6 +30,6 @@ public class CronVerificationAspect {
         if (StringUtils.isNotBlank(flag) && "true".equals(flag)) {
             return (JsonResult) proceedingJoinPoint.proceed(args);
         }
-        return new JsonResult(false, "不合法的Cron请求");
+        return new JsonResult(false, BackendTextLocalizer.localizeMessage("不合法的Cron请求", request.getHeader("Accept-Language")));
     }
 }

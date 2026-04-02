@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test:e2e": "playwright test --config=e2e/playwright.config.js",
     "test:unit": "vitest run --passWithNoTests",
     "test:unit:watch": "vitest --passWithNoTests"
   },

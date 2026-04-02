@@ -3,9 +3,9 @@ import { test, expect } from '@playwright/test'
 test.describe('Appearance page', () => {
   test.beforeEach(async ({ page }) => {
     // Set a mock session token to bypass auth redirect
-    await page.goto('/login')
-    await page.evaluate(() => {
+    await page.addInitScript(() => {
       localStorage.setItem('token', 'mock-token')
+      localStorage.setItem('locale', 'zh-CN')
     })
   })
 
@@ -55,7 +55,7 @@ test.describe('Appearance page', () => {
 
   test('no FOUC — data-theme is set before page renders', async ({ page }) => {
     // Set dark theme preference before navigation
-    await page.evaluate(() => localStorage.setItem('theme', 'dark'))
+    await page.addInitScript(() => localStorage.setItem('theme', 'dark'))
     await page.goto('/appearance')
 
     // Check that data-theme was set synchronously (inline script)

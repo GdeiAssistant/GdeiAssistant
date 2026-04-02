@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.userLogin.pojo.dto;
 
 import org.apache.ibatis.type.Alias;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 

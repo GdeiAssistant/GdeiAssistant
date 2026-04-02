@@ -9,6 +9,23 @@ public class SpringProfileUtils {
 
     private static Environment environment;
 
+    private static boolean hasProfile(String targetProfile) {
+        if (environment == null) {
+            return false;
+        }
+        for (String profile : environment.getActiveProfiles()) {
+            if (targetProfile.equals(profile)) {
+                return true;
+            }
+        }
+        for (String profile : environment.getDefaultProfiles()) {
+            if (targetProfile.equals(profile)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * 获取当前的Spring Profile环境名称
      *
@@ -27,20 +44,16 @@ public class SpringProfileUtils {
      * @return
      */
     public static boolean checkDevelopmentEnvironment() {
-        for (String profile : environment.getActiveProfiles()) {
-            if (profile.equals("development")) {
-                return true;
-            }
-            if (profile.equals("production")) {
-                return false;
-            }
-        }
-        for (String profile : environment.getDefaultProfiles()) {
-            if (profile.equals("development")) {
-                return true;
-            }
-        }
-        return false;
+        return hasProfile("development");
+    }
+
+    /**
+     * 检测是否为测试环境
+     *
+     * @return
+     */
+    public static boolean checkStagingEnvironment() {
+        return hasProfile("staging");
     }
 
     /**
@@ -49,20 +62,7 @@ public class SpringProfileUtils {
      * @return
      */
     public static boolean checkProductionEnvironment() {
-        for (String profile : environment.getActiveProfiles()) {
-            if (profile.equals("production")) {
-                return true;
-            }
-            if (profile.equals("development")) {
-                return false;
-            }
-        }
-        for (String profile : environment.getDefaultProfiles()) {
-            if (profile.equals("development")) {
-                return true;
-            }
-        }
-        return false;
+        return hasProfile("production");
     }
 
     @Autowired

@@ -9,10 +9,12 @@ public enum ModuleEnum {
     ALIYUN_API("阿里云API服务", "/api/aliyun.properties"),
     ALIYUN_SMS("阿里云短信服务", "/aliyun/sms.properties"),
     JWT("JSON Web Token", "/jwt/secret.properties"),
-    NEWS("新闻通知", "/news/sms.properties"),
-    REPLAY_ATTACKS_VALIDATE("防重放攻击验证", "/validate/token.properties"),
-    WECHAT_OFFICIAL_ACCOUNT("微信公众号", "/wechat/sms.properties"),
-    WECHAT_MINI_PROGRAM("微信小程序", "/wechat/app.properties");
+    NEWS("新闻通知"),
+    REPLAY_ATTACKS_VALIDATE("防重放攻击验证", "/validate/token.properties");
+
+    ModuleEnum(String name) {
+        this(name, null);
+    }
 
     ModuleEnum(String name, String location) {
         this.name = name;
@@ -29,5 +31,9 @@ public enum ModuleEnum {
 
     public String getLocation() {
         return location;
+    }
+
+    public boolean hasLocation() {
+        return location != null && !location.isBlank();
     }
 }

@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.feedback.pojo.dto;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 

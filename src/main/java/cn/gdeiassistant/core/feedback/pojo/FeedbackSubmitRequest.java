@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**

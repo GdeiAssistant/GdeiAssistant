@@ -1,7 +1,7 @@
 package cn.gdeiassistant.common.pojo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

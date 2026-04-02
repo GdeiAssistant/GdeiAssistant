@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.graduateExam.pojo;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.Pattern;
 

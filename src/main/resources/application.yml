@@ -7,7 +7,7 @@ spring:
   application:
     name: GdeiAssistant
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+    active: ${SPRING_PROFILES_ACTIVE:development}
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai
@@ -96,41 +96,11 @@ email:
   feedback: ${EMAIL_FEEDBACK:}
   ticket: ${EMAIL_TICKET:}
 
-wechat:
-  dev:
-    app:
-      appid: ${WECHAT_DEV_APP_APPID:}
-      secret: ${WECHAT_DEV_APP_SECRET:}
-    account:
-      appid: ${WECHAT_DEV_ACCOUNT_APPID:}
-      appsecret: ${WECHAT_DEV_ACCOUNT_SECRET:}
-      token: ${WECHAT_DEV_ACCOUNT_TOKEN:}
-  pro:
-    app:
-      appid: ${WECHAT_PRO_APP_APPID:}
-      secret: ${WECHAT_PRO_APP_SECRET:}
-    account:
-      appid: ${WECHAT_PRO_ACCOUNT_APPID:}
-      appsecret: ${WECHAT_PRO_ACCOUNT_SECRET:}
-      token: ${WECHAT_PRO_ACCOUNT_TOKEN:}
-  app:
-    appid: ${WECHAT_APP_APPID:}
-    secret: ${WECHAT_APP_SECRET:}
-
 encrypt:
-  enable: ${ENCRYPT_ENABLE:true}
+  enable: ${ENCRYPT_ENABLE:false}
   type: ${ENCRYPT_TYPE:aes}
   private:
-    key: ${ENCRYPT_PRIVATE_KEY:gdei-dev-default-key-change-in-prod}
-  app:
-    key: ${ENCRYPT_APP_KEY:}
-  config:
-    location: ${ENCRYPT_CONFIG_LOCATION:}
-
-news:
-  admin:
-    account: ${NEWS_ADMIN_ACCOUNT:}
-    password: ${NEWS_ADMIN_PASSWORD:}
+    key: ${ENCRYPT_PRIVATE_KEY:}
 
 api:
   ai:

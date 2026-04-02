@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.collectionquery.pojo.dto;
 
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.Min;
 import java.io.Serializable;

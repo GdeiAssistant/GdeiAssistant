@@ -118,23 +118,42 @@ public class ModuleUtils {
         StringBuilder message = new StringBuilder();
         //未启用的功能模块配置文件路径提示信息
         StringBuilder locations = new StringBuilder();
+        //未启用但无需额外配置文件的功能模块提示信息
+        StringBuilder modulesWithoutConfig = new StringBuilder();
         for (Map.Entry<ModuleEnum, Boolean> entry : moduleStateMap.entrySet()) {
             if (Boolean.FALSE.equals(entry.getValue())) {
                 if (message.length() == 0) {
                     message.append("以下的扩展功能模块未启用：");
                     message.append(entry.getKey().getName());
-                    locations.append("\n其路径分别为resources资源文件路径下config目录的：");
-                    locations.append(entry.getKey().getLocation());
                 } else {
                     message.append("、").append(entry.getKey().getName());
-                    locations.append("、").append(entry.getKey().getLocation());
+                }
+                if (entry.getKey().hasLocation()) {
+                    if (locations.length() == 0) {
+                        locations.append("\n需要配置文件的模块路径（resources资源文件路径下config目录）分别为：");
+                        locations.append(entry.getKey().getLocation());
+                    } else {
+                        locations.append("、").append(entry.getKey().getLocation());
+                    }
+                } else {
+                    if (modulesWithoutConfig.length() == 0) {
+                        modulesWithoutConfig.append("\n其中以下模块无需额外配置文件：");
+                        modulesWithoutConfig.append(entry.getKey().getName());
+                    } else {
+                        modulesWithoutConfig.append("、").append(entry.getKey().getName());
+                    }
                 }
             }
         }
         if (message.length() != 0) {
-            message.append("。部分功能可能无法使用，若需要使用对应功能，请完善相关配置文件。");
+            message.append("。部分功能可能无法使用");
+            if (locations.length() != 0) {
+                message.append("，若需要使用对应功能，请完善相关配置文件。");
+            } else {
+                message.append("。");
+            }
         }
         //整合功能模块提示信息和功能模块配置文件路径提示信息作为提示文本
-        return message.toString() + locations;
+        return message.toString() + locations + modulesWithoutConfig;
     }
 }

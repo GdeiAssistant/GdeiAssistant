@@ -12,7 +12,7 @@ import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundDetailVO;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundItemVO;
 import cn.gdeiassistant.core.lostandfound.service.LostAndFoundService;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

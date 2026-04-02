@@ -13,7 +13,7 @@ import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.phone.service.PhoneService;
 import cn.gdeiassistant.common.tools.Utils.LocationUtils;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

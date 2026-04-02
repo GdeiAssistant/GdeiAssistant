@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.express.pojo.dto;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

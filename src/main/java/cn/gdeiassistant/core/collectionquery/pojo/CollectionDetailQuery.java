@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.collectionquery.pojo;
 
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public class CollectionDetailQuery {
 

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.cetquery.pojo.dto;
 
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;

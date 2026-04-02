@@ -1,11 +1,11 @@
 # GdeiAssistant | 广东第二师范学院校园助手系统
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-brightgreen.svg)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0-brightgreen.svg)
 ![JDK](https://img.shields.io/badge/JDK-17-blue.svg)
 ![Vue](https://img.shields.io/badge/Vue.js-3.x-4FC08D.svg)
 ![License](https://img.shields.io/badge/License-Apache%202.0-orange.svg)
 
-广东第二师范学院校园助手系统采用了网络爬虫模拟登录技术和 SpringBoot3 以及 Vue3 框架开发构建，实现了前后端分离和无状态架构。
+广东第二师范学院校园助手系统采用了网络爬虫模拟登录技术和 Spring Boot 4 以及 Vue 3 框架开发构建，实现了前后端分离和无状态架构。
 
 项目适配了 Docker 容器化与 GraalVM Native Image 技术，支持以原生二进制文件运行，具有毫秒级启动与极低内存占用的优势。
 
@@ -33,7 +33,7 @@ GdeiAssistant/                 # 仓库根目录
 ## 快速入门
 
 **1. 环境**  
-安装 Docker + Docker Compose。
+安装 Docker + Docker Compose。若需要本地前端开发，建议使用 Node.js `24.14.1 LTS`（仓库已提供 `.nvmrc`）。
 
 **2. 配置**  
 复制并编辑环境变量，后端、前端、Docker 都统一读取这一份 `.env`：
@@ -42,7 +42,11 @@ GdeiAssistant/                 # 仓库根目录
 cp .env.template .env
 ```
 
-填写数据库密码、Redis、JWT 等（见模板注释）。
+填写数据库密码、Redis、JWT 等（见模板注释）。环境语义统一为：
+
+- `development`：本地开发
+- `staging`：测试验证
+- `production`：正式环境
 
 > **生产环境必填变量：**
 > - `JWT_SECRET` — JWT 签名密钥（至少 32 位随机串）
@@ -55,6 +59,7 @@ cp .env.template .env
 **3. 运行**
 
 - **全栈（Docker）**：`docker compose up -d`（后端 8080，前端 5173）。
+- **测试编排**：`docker compose -f docker-compose-staging.yml up -d`。
 - **生产编排**：`docker compose -f docker-compose-prod.yml up -d`。
 - **仅后端**：`./gradlew bootRun`（自动加载根目录 `.env`）。
 - **仅前端**：进入前端目录安装依赖并启动开发服务器：
@@ -69,14 +74,16 @@ npm run dev
 
 前端开发服务器默认运行在 `http://localhost:5173`，需配置接口代理指向后端（如 `http://localhost:8080`），参见 `frontend/vite.config.*` 或 `frontend/.env*`。
 
+更完整的环境矩阵见：`docs/environment-matrix.md`。
+
 ---
 
 ## 技术栈
 
 | 端 | 技术 |
 |----|------|
-| 后端 | JDK 17、Spring Boot 3.2、MySQL 8.0、MyBatis-Plus、MongoDB、Redis、Gradle 8.x、GraalVM Native Image（可选） |
-| 前端 | Vue 3、Vue Router、Vite、Axios、WeUI |
+| 后端 | JDK 17、Spring Boot 4.0、MySQL 8.0、MyBatis-Plus、MongoDB、Redis、Gradle 8.14、GraalVM Native Image（可选） |
+| 前端 | Vue 3、Vue Router、Vite、Axios、WeUI、Node.js 24.14.1 LTS |
 
 ---
 
@@ -117,4 +124,3 @@ npm run dev
 ## 许可证
 
 [Apache License 2.0](LICENSE) · Copyright (c) 2016-2026 GdeiAssistant
-

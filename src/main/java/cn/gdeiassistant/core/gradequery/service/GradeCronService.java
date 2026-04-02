@@ -15,10 +15,7 @@ import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -28,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
@@ -65,66 +63,61 @@ public class GradeCronService {
                 if (gradeDocument == null || Duration.between(gradeDocument.getUpdateDateTime()
                                 .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
                         , LocalDateTime.now()).toDays() >= 7) {
-                    ListenableFuture<GradeCacheResult> future = ((GradeCronService) AopContext.currentProxy())
+                    CompletableFuture<GradeCacheResult> future = ((GradeCronService) AopContext.currentProxy())
                             .asyncQueryGrade(semaphore, user);
                     User finalUser = user;
-                    future.addCallback(new ListenableFutureCallback<GradeCacheResult>() {
-
-                        @Override
-                        public void onFailure(Throwable ex) {
-
+                    future.whenComplete((result, throwable) -> {
+                        if (throwable != null) {
+                            logger.error("定时查询保存成绩信息异常：", throwable);
+                            return;
                         }
-
-                        @Override
-                        public void onSuccess(GradeCacheResult result) {
-                            try {
-                                if (result != null) {
-                                    GradeDocument document = new GradeDocument();
-                                    List<Double> firstTermGPAList = new ArrayList<>();
-                                    List<Double> secondTermGPAList = new ArrayList<>();
-                                    List<Double> firstTermIGPList = new ArrayList<>();
-                                    List<Double> secondTermIGPList = new ArrayList<>();
-                                    List<List<Grade>> gradeLists = new ArrayList<>();
-                                    for (Double firstTermGPA : result.getFirstTermGPAArray()) {
-                                        if (firstTermGPA != null) {
-                                            firstTermGPAList.add(firstTermGPA);
-                                        }
+                        try {
+                            if (result != null) {
+                                GradeDocument document = new GradeDocument();
+                                List<Double> firstTermGPAList = new ArrayList<>();
+                                List<Double> secondTermGPAList = new ArrayList<>();
+                                List<Double> firstTermIGPList = new ArrayList<>();
+                                List<Double> secondTermIGPList = new ArrayList<>();
+                                List<List<Grade>> gradeLists = new ArrayList<>();
+                                for (Double firstTermGPA : result.getFirstTermGPAArray()) {
+                                    if (firstTermGPA != null) {
+                                        firstTermGPAList.add(firstTermGPA);
                                     }
-                                    for (Double secondTermGPA : result.getSecondTermGPAArray()) {
-                                        if (secondTermGPA != null) {
-                                            secondTermGPAList.add(secondTermGPA);
-                                        }
-                                    }
-                                    for (Double firstTermIGP : result.getFirstTermIGPArray()) {
-                                        if (firstTermIGP != null) {
-                                            firstTermIGPList.add(firstTermIGP);
-                                        }
-                                    }
-                                    for (Double secondTermIGP : result.getSecondTermIGPArray()) {
-                                        if (secondTermIGP != null) {
-                                            secondTermIGPList.add(secondTermIGP);
-                                        }
-                                    }
-                                    for (List<Grade> gradeList : result.getGradeListArray()) {
-                                        if (gradeList != null) {
-                                            gradeLists.add(gradeList);
-                                        }
-                                    }
-                                    if (gradeDocument != null && gradeDocument.getId() != null) {
-                                        document.setId(gradeDocument.getId());
-                                    }
-                                    document.setUsername(finalUser.getUsername());
-                                    document.setFirstTermGPAList(firstTermGPAList);
-                                    document.setFirstTermIGPList(firstTermIGPList);
-                                    document.setSecondTermGPAList(secondTermGPAList);
-                                    document.setSecondTermIGPList(secondTermIGPList);
-                                    document.setGradeList(gradeLists);
-                                    document.setUpdateDateTime(new Date());
-                                    gradeDao.saveGrade(document);
                                 }
-                            } catch (Exception e) {
-                                logger.error("定时查询保存成绩信息异常：", e);
+                                for (Double secondTermGPA : result.getSecondTermGPAArray()) {
+                                    if (secondTermGPA != null) {
+                                        secondTermGPAList.add(secondTermGPA);
+                                    }
+                                }
+                                for (Double firstTermIGP : result.getFirstTermIGPArray()) {
+                                    if (firstTermIGP != null) {
+                                        firstTermIGPList.add(firstTermIGP);
+                                    }
+                                }
+                                for (Double secondTermIGP : result.getSecondTermIGPArray()) {
+                                    if (secondTermIGP != null) {
+                                        secondTermIGPList.add(secondTermIGP);
+                                    }
+                                }
+                                for (List<Grade> gradeList : result.getGradeListArray()) {
+                                    if (gradeList != null) {
+                                        gradeLists.add(gradeList);
+                                    }
+                                }
+                                if (gradeDocument != null && gradeDocument.getId() != null) {
+                                    document.setId(gradeDocument.getId());
+                                }
+                                document.setUsername(finalUser.getUsername());
+                                document.setFirstTermGPAList(firstTermGPAList);
+                                document.setFirstTermIGPList(firstTermIGPList);
+                                document.setSecondTermGPAList(secondTermGPAList);
+                                document.setSecondTermIGPList(secondTermIGPList);
+                                document.setGradeList(gradeLists);
+                                document.setUpdateDateTime(new Date());
+                                gradeDao.saveGrade(document);
                             }
+                        } catch (Exception e) {
+                            logger.error("定时查询保存成绩信息异常：", e);
                         }
                     });
                 }
@@ -142,9 +135,11 @@ public class GradeCronService {
      * @return
      */
     @Async
-    public ListenableFuture<GradeCacheResult> asyncQueryGrade(Semaphore semaphore, User user) {
+    public CompletableFuture<GradeCacheResult> asyncQueryGrade(Semaphore semaphore, User user) {
+        boolean acquired = false;
         try {
             semaphore.acquire();
+            acquired = true;
             GradeCacheResult gradeCacheResult = new GradeCacheResult();
             gradeCacheResult.setFirstTermGPAArray(new Double[4]);
             gradeCacheResult.setSecondTermGPAArray(new Double[4]);
@@ -179,12 +174,14 @@ public class GradeCronService {
                 }
             }
             countDownLatch.await();
-            return AsyncResult.forValue(gradeCacheResult);
+            return CompletableFuture.completedFuture(gradeCacheResult);
         } catch (Exception e) {
             logger.error("定时查询保存成绩信息异常：", e);
         } finally {
-            semaphore.release();
+            if (acquired) {
+                semaphore.release();
+            }
         }
-        return AsyncResult.forValue(null);
+        return CompletableFuture.completedFuture(null);
     }
 }

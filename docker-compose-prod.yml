@@ -16,7 +16,7 @@ services:
     networks:
       - gdei-network
     environment:
-      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required for production}"
       MYSQL_CHARSET: utf8mb4
     command:
       - --character-set-server=utf8mb4
@@ -24,7 +24,7 @@ services:
     volumes:
       - ./db-init/mysql:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD:?DB_PASSWORD is required for production}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -91,13 +91,13 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: production
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: "${DB_NAME:-gdeiassistant}"
       DB_NAME_LOG: "${DB_NAME_LOG:-gdeiassistant_log}"
       DB_NAME_DATA: "${DB_NAME_DATA:-gdeiassistant_data}"
-      DB_PASSWORD: "${DB_PASSWORD:-123456}"
+      DB_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required for production}"
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: "${REDIS_PASSWORD:-}"

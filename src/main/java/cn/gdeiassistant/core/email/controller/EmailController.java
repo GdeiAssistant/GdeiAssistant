@@ -9,7 +9,7 @@ import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.email.service.EmailService;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

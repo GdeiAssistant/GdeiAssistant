@@ -1,47 +1,43 @@
 # =============================================================================
-# GdeiAssistant 开发环境全栈
+# GdeiAssistant 测试环境全栈
 # 单一配置入口：项目根目录 .env
-# 启动：docker compose up -d
+# 使用：docker compose -f docker-compose-staging.yml up -d
 # =============================================================================
 
 networks:
-  gdei-dev:
-    name: ${DEV_COMPOSE_NETWORK_NAME:-gdei-dev}
+  gdei-staging:
+    name: ${STAGING_COMPOSE_NETWORK_NAME:-gdei-staging}
     driver: bridge
 
 services:
   mysql:
     image: mysql:8.0
-    container_name: gdei-mysql
+    container_name: gdei-mysql-staging
     networks:
-      - gdei-dev
-    ports:
-      - "${MYSQL_EXPOSE_PORT:-3306}:3306"
+      - gdei-staging
     environment:
-      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required for staging}"
       MYSQL_CHARSET: utf8mb4
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     volumes:
-      - mysql-data:/var/lib/mysql
       - ./db-init/mysql:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD", "sh", "-c", "mysqladmin ping -h localhost -uroot -p\"$$MYSQL_ROOT_PASSWORD\""]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD:?DB_PASSWORD is required for staging}"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 40s
+    restart: unless-stopped
 
   redis:
     image: redis:alpine
-    container_name: gdei-redis
+    container_name: gdei-redis-staging
     networks:
-      - gdei-dev
+      - gdei-staging
     env_file:
       - .env
-    ports:
-      - "${REDIS_EXPOSE_PORT:-6379}:6379"
     command:
       - sh
       - -c
@@ -51,8 +47,6 @@ services:
         else
           exec redis-server --appendonly yes;
         fi
-    volumes:
-      - redis-data:/data
     healthcheck:
       test:
         - CMD-SHELL
@@ -65,16 +59,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   mongodb:
     image: mongo:latest
-    container_name: gdei-mongo
+    container_name: gdei-mongo-staging
     networks:
-      - gdei-dev
-    ports:
-      - "${MONGO_EXPOSE_PORT:-27017}:27017"
+      - gdei-staging
     volumes:
-      - mongo-data:/data/db
       - ./db-init/mongodb:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
@@ -82,32 +74,30 @@ services:
       timeout: 5s
       retries: 5
       start_period: 15s
+    restart: unless-stopped
 
-  backend:
+  gdeiassistant-backend:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    image: gdeiassistant-backend:development
-    container_name: gdeiassistant-backend-development
+    image: gdeiassistant-backend:staging
+    container_name: gdeiassistant-backend-staging
     networks:
-      - gdei-dev
+      - gdei-staging
     depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      mongodb:
-        condition: service_healthy
+      mysql: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      mongodb: { condition: service_healthy }
     env_file:
       - .env
     environment:
-      SPRING_PROFILES_ACTIVE: development
+      SPRING_PROFILES_ACTIVE: staging
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: "${DB_NAME:-gdeiassistant}"
       DB_NAME_LOG: "${DB_NAME_LOG:-gdeiassistant_log}"
       DB_NAME_DATA: "${DB_NAME_DATA:-gdeiassistant_data}"
-      DB_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required}"
+      DB_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required for staging}"
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
@@ -116,31 +106,25 @@ services:
       MONGO_PORT: 27017
       MONGO_DATABASE: "${MONGO_DATABASE:-gdeiassistant}"
       SERVER_PORT: 8080
-      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET is required}"
-    ports:
-      - "${BACKEND_EXPOSE_PORT:-8080}:8080"
+      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET is required for staging}"
+      CRON_SECRET: "${CRON_SECRET:?CRON_SECRET is required for staging}"
+      ENCRYPT_ENABLE: "true"
+      ENCRYPT_PRIVATE_KEY: "${ENCRYPT_PRIVATE_KEY:?ENCRYPT_PRIVATE_KEY is required for staging}"
+    restart: unless-stopped
 
-  frontend:
-    image: node:20-alpine
-    container_name: gdeiassistant-frontend-development
+  gdeiassistant-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_APP_BASE_API: "${VITE_APP_BASE_API:-/api}"
+        VITE_PE_EXTERNAL_URL: "${VITE_PE_EXTERNAL_URL:-}"
+    image: gdeiassistant-frontend:staging
+    container_name: gdeiassistant-frontend-staging
     networks:
-      - gdei-dev
-    env_file:
-      - .env
-    working_dir: /app
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
-    volumes:
-      - ./frontend:/app
-      - frontend-node-modules:/app/node_modules
-    environment:
-      VITE_APP_BASE_API: "${VITE_APP_BASE_API:-http://localhost:8080/api}"
-    ports:
-      - "${FRONTEND_EXPOSE_PORT:-5173}:5173"
+      - gdei-staging
     depends_on:
-      - backend
-
-volumes:
-  mysql-data:
-  mongo-data:
-  redis-data:
-  frontend-node-modules:
+      - gdeiassistant-backend
+    ports:
+      - "${FRONTEND_STAGING_EXPOSE_PORT:-8088}:80"
+    restart: unless-stopped

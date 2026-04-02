@@ -14,10 +14,7 @@ import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -26,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Semaphore;
 
 @Service
@@ -61,32 +59,27 @@ public class ScheduleCronService {
                 //如果最后更新日期距今已超过3天，则进行更新
                 if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()
                         .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), LocalDateTime.now()).toDays() >= 3) {
-                    ListenableFuture<ScheduleQueryVO> future = ((ScheduleCronService) AopContext.currentProxy())
+                    CompletableFuture<ScheduleQueryVO> future = ((ScheduleCronService) AopContext.currentProxy())
                             .asyncQuerySchedule(semaphore, user);
                     User finalUser = user;
-                    future.addCallback(new ListenableFutureCallback<ScheduleQueryVO>() {
-
-                        @Override
-                        public void onFailure(Throwable ex) {
-
+                    future.whenComplete((result, throwable) -> {
+                        if (throwable != null) {
+                            logger.error("定时查询保存课表信息异常：", throwable);
+                            return;
                         }
-
-                        @Override
-                        public void onSuccess(ScheduleQueryVO result) {
-                            try {
-                                if (result != null) {
-                                    ScheduleDocument document = new ScheduleDocument();
-                                    if (scheduleDocument != null && scheduleDocument.getId() != null) {
-                                        document.setId(scheduleDocument.getId());
-                                    }
-                                    document.setUsername(finalUser.getUsername());
-                                    document.setScheduleList(result.getScheduleList());
-                                    document.setUpdateDateTime(new Date());
-                                    scheduleDao.saveSchedule(document);
+                        try {
+                            if (result != null) {
+                                ScheduleDocument document = new ScheduleDocument();
+                                if (scheduleDocument != null && scheduleDocument.getId() != null) {
+                                    document.setId(scheduleDocument.getId());
                                 }
-                            } catch (Exception e) {
-                                logger.error("定时查询保存课表信息异常：", e);
+                                document.setUsername(finalUser.getUsername());
+                                document.setScheduleList(result.getScheduleList());
+                                document.setUpdateDateTime(new Date());
+                                scheduleDao.saveSchedule(document);
                             }
+                        } catch (Exception e) {
+                            logger.error("定时查询保存课表信息异常：", e);
                         }
                     });
                 }
@@ -103,21 +96,25 @@ public class ScheduleCronService {
      * @param user
      */
     @Async
-    public ListenableFuture<ScheduleQueryVO> asyncQuerySchedule(Semaphore semaphore, User user) {
+    public CompletableFuture<ScheduleQueryVO> asyncQuerySchedule(Semaphore semaphore, User user) {
+        boolean acquired = false;
         try {
             semaphore.acquire();
+            acquired = true;
             String sessionId = UUID.randomUUID().toString().replace("-", "");
             userLoginService.userLogin(sessionId, user.getUsername(), user.getPassword());
             ScheduleQueryResult result = scheduleService.querySchedule(sessionId, 0);
             ScheduleQueryVO vo = result != null ? new ScheduleQueryVO(result.getScheduleList(), result.getWeek() != null ? result.getWeek() : 0) : null;
-            return AsyncResult.forValue(vo);
+            return CompletableFuture.completedFuture(vo);
         } catch (PasswordIncorrectException ignored) {
 
         } catch (Exception e) {
             logger.error("定时查询保存课表信息异常：", e);
         } finally {
-            semaphore.release();
+            if (acquired) {
+                semaphore.release();
+            }
         }
-        return AsyncResult.forValue(null);
+        return CompletableFuture.completedFuture(null);
     }
 }

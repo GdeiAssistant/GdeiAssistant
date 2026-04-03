@@ -1,5 +1,6 @@
 package cn.gdeiassistant.common.config.DataSource;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,8 +24,8 @@ public class LogDataSourceConfig {
 
     @Bean(name = "logDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.log")
-    public DataSource logDataSource() {
-        return DataSourceBuilder.create().build();
+    public HikariDataSource logDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
     @Bean(name = "logSqlSessionFactory")

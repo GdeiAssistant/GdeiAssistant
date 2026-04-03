@@ -60,7 +60,7 @@ public class SecretController {
         return new DataJsonResult<>(true, list);
     }
 
-    // TODO(perf): unpaged — see docs/ops/unbounded-endpoints-inventory
+    // TODO(perf): unpaged endpoint; add pagination or server-side cap
     @RequestMapping(value = "/api/secret/profile", method = RequestMethod.GET)
     public DataJsonResult<List<SecretVO>> getMySecrets(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");

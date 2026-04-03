@@ -632,7 +632,7 @@
       },
       "delete": {
         "title": "How do I delete my account?",
-        "content": "You can request deletion in Profile - Delete Account. The system will verify your password and check whether the account meets deletion requirements. If self-service deletion is unavailable, submit a ticket here or email support@gdeiassistant.cn."
+        "content": "You can request deletion in Profile - Delete Account. The system will verify your password and check whether the account meets deletion requirements. If self-service deletion is unavailable, submit a ticket here or email support{'@'}gdeiassistant.cn."
       }
     },
     "type": {
@@ -851,13 +851,13 @@
       "phone": "Phone",
       "computer": "Computer",
       "digitalAccessory": "Digital Accessories",
-      "digital": "Digital",
-      "appliance": "Appliances",
+      "digital": "Digital Devices",
+      "appliance": "Home Appliances",
       "sports": "Sports & Fitness",
-      "clothing": "Clothing & Umbrellas",
+      "clothing": "Clothing and Accessories",
       "books": "Books & Textbooks",
       "rental": "Rental",
-      "life": "Lifestyle",
+      "life": "Lifestyle and Entertainment",
       "other": "Other"
     },
     "profile": {

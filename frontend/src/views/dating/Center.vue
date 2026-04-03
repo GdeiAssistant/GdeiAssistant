@@ -1,11 +1,14 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import { getDatingCenterCopy } from './datingContent'
 
 const router = useRouter()
 const route = useRoute()
+const { t, locale } = useI18n()
 const activeTab = ref(0) // 0: 收到的撩, 1: 我发出的, 2: 我的发布
 const receivedList = ref([])
 const sentList = ref([])
@@ -15,6 +18,8 @@ const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const deleteTargetId = ref(null)
 const deleteDialogVisible = ref(false)
+const copy = computed(() => getDatingCenterCopy(locale.value))
+const tabLabels = computed(() => [t('info.targetReceived'), t('info.targetSent'), t('info.targetPosts')])
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -89,9 +94,9 @@ async function loadData() {
         const profile = getProfile(p)
         return {
           id: normalizeId(p.pickId),
-          senderName: profile.nickname || p.username || '匿名',
+          senderName: profile.nickname || p.username || copy.value.anonymous,
           content: p.content || '',
-          time: p.createTime || '最近更新',
+          time: p.createTime || copy.value.recentUpdate,
           status: p.state,
           avatar: profile.pictureURL || null
         }
@@ -103,7 +108,7 @@ async function loadData() {
         const profile = getProfile(p)
         return {
           id: normalizeId(p.pickId),
-          targetName: profile.nickname || '匿名',
+          targetName: profile.nickname || copy.value.anonymous,
           content: p.content || '',
           status: p.state,
           targetQq: profile.qq,
@@ -118,7 +123,7 @@ async function loadData() {
         id: normalizeId(p.profileId),
         name: p.nickname,
         image: p.pictureURL,
-        publishTime: p.createTime || '已发布'
+        publishTime: p.createTime || copy.value.published
       })) : []
     }
   } finally {
@@ -130,7 +135,7 @@ function handleAccept(item) {
   request.post(`/dating/pick/id/${item.id}`, null, { params: { state: 1 } })
     .then(() => {
       item.status = 1
-      showDialog('已同意，联系方式已展示')
+      showDialog(copy.value.acceptSuccess)
     })
     .catch(() => {})
 }
@@ -139,7 +144,7 @@ function handleReject(item) {
   request.post(`/dating/pick/id/${item.id}`, null, { params: { state: -1 } })
     .then(() => {
       item.status = -1
-      showDialog('已拒绝')
+      showDialog(copy.value.rejectSuccess)
     })
     .catch(() => {})
 }
@@ -151,7 +156,7 @@ function confirmDelete() {
       postsList.value = postsList.value.filter((item) => item.id !== deleteTargetId.value)
       deleteDialogVisible.value = false
       deleteTargetId.value = null
-      showDialog('已隐藏')
+      showDialog(copy.value.hideSuccess)
     })
     .catch(() => {})
 }
@@ -162,8 +167,13 @@ function openDeleteDialog(id) {
 }
 
 function getStatusText(status) {
-  const map = { 0: '待处理', 1: '已同意', 2: '已拒绝', '-1': '已拒绝' }
-  return map[status] ?? map[String(status)] ?? '未知'
+  const map = {
+    0: copy.value.statusPending,
+    1: copy.value.statusAccepted,
+    2: copy.value.statusRejected,
+    '-1': copy.value.statusRejected,
+  }
+  return map[status] ?? map[String(status)] ?? copy.value.statusUnknown
 }
 
 function getStatusClass(status) {
@@ -186,12 +196,12 @@ watch(() => route.fullPath, () => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] pb-6">
-    <CommunityHeader title="互动中心" moduleColor="#ec4899" backTo="/dating/home" />
+    <CommunityHeader :title="copy.title" moduleColor="#ec4899" backTo="/dating/home" />
 
     <!-- Tabs -->
     <div class="flex bg-[var(--c-card)] border-b border-[var(--c-border)]">
       <div
-        v-for="(label, idx) in ['收到的撩', '我发出的', '我的发布']"
+        v-for="(label, idx) in tabLabels"
         :key="idx"
         class="flex-1 text-center py-3 text-base cursor-pointer relative transition-all duration-300"
         :class="activeTab === idx ? 'text-pink-500 font-bold' : 'text-[var(--c-text-2)]'"
@@ -205,11 +215,11 @@ watch(() => route.fullPath, () => {
     <!-- Tab 1: Received -->
     <div v-if="activeTab === 0" class="p-4">
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> 加载中
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
       </div>
       <div v-else-if="receivedList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
         <div class="text-4xl mb-2">💕</div>
-        <div class="text-sm">暂无收到的请求</div>
+        <div class="text-sm">{{ copy.emptyReceived }}</div>
       </div>
       <div v-else class="flex flex-col gap-3">
         <div
@@ -227,11 +237,11 @@ watch(() => route.fullPath, () => {
           </div>
           <div class="p-3 bg-[var(--c-bg)] rounded-lg text-sm text-[var(--c-text-2)] leading-relaxed mb-3">{{ item.content }}</div>
           <div v-if="item.status === 0" class="flex gap-3 mt-2">
-            <button type="button" class="flex-1 py-2 border-none rounded-lg text-sm cursor-pointer transition-opacity active:opacity-70 bg-pink-500 text-white" @click="handleAccept(item)">同意</button>
-            <button type="button" class="flex-1 py-2 border-none rounded-lg text-sm cursor-pointer transition-opacity active:opacity-70 bg-[var(--c-border)] text-[var(--c-text-2)]" @click="handleReject(item)">拒绝</button>
+            <button type="button" class="flex-1 py-2 border-none rounded-lg text-sm cursor-pointer transition-opacity active:opacity-70 bg-pink-500 text-white" @click="handleAccept(item)">{{ copy.acceptAction }}</button>
+            <button type="button" class="flex-1 py-2 border-none rounded-lg text-sm cursor-pointer transition-opacity active:opacity-70 bg-[var(--c-border)] text-[var(--c-text-2)]" @click="handleReject(item)">{{ copy.rejectAction }}</button>
           </div>
-          <div v-else-if="item.status === 1" class="mt-2 text-center text-sm font-medium text-pink-500">已同意，已展示联系方式</div>
-          <div v-else-if="item.status === -1 || item.status === 2" class="mt-2 text-center text-sm font-medium text-[var(--c-text-3)]">已拒绝</div>
+          <div v-else-if="item.status === 1" class="mt-2 text-center text-sm font-medium text-pink-500">{{ copy.acceptedShown }}</div>
+          <div v-else-if="item.status === -1 || item.status === 2" class="mt-2 text-center text-sm font-medium text-[var(--c-text-3)]">{{ copy.rejected }}</div>
         </div>
       </div>
     </div>
@@ -239,11 +249,11 @@ watch(() => route.fullPath, () => {
     <!-- Tab 2: Sent -->
     <div v-if="activeTab === 1" class="p-4">
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> 加载中
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
       </div>
       <div v-else-if="sentList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
         <div class="text-4xl mb-2">💕</div>
-        <div class="text-sm">暂无发出的请求</div>
+        <div class="text-sm">{{ copy.emptySent }}</div>
       </div>
       <div v-else class="flex flex-col gap-3">
         <div
@@ -263,10 +273,10 @@ watch(() => route.fullPath, () => {
           </div>
           <div class="p-3 bg-[var(--c-bg)] rounded-lg text-sm text-[var(--c-text-2)] leading-relaxed mb-3">{{ item.content }}</div>
           <div v-if="item.status === 1" class="mt-2 p-3 bg-pink-50 rounded-lg border-l-[3px] border-pink-500">
-            <div class="text-xs text-[var(--c-text-2)] mb-1.5">联系方式：</div>
+            <div class="text-xs text-[var(--c-text-2)] mb-1.5">{{ copy.contactLabel }}</div>
             <div class="text-sm text-pink-500 font-medium leading-loose">
-              <span v-if="item.targetQq">QQ: {{ item.targetQq }}</span>
-              <span v-if="item.targetWechat" class="ml-2">微信: {{ item.targetWechat }}</span>
+              <span v-if="item.targetQq">{{ copy.qqLabel }}: {{ item.targetQq }}</span>
+              <span v-if="item.targetWechat" class="ml-2">{{ copy.wechatLabel }}: {{ item.targetWechat }}</span>
             </div>
           </div>
         </div>
@@ -276,11 +286,11 @@ watch(() => route.fullPath, () => {
     <!-- Tab 3: My posts -->
     <div v-if="activeTab === 2" class="p-4">
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> 加载中
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
       </div>
       <div v-else-if="postsList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
         <div class="text-4xl mb-2">💕</div>
-        <div class="text-sm">暂无发布</div>
+        <div class="text-sm">{{ copy.emptyPosts }}</div>
       </div>
       <div v-else class="flex flex-col gap-3">
         <div
@@ -293,7 +303,7 @@ watch(() => route.fullPath, () => {
           <div class="flex-1 flex flex-col gap-1.5">
             <div class="text-base font-medium text-[var(--c-text-1)]">{{ item.name }}</div>
             <div class="text-xs text-[var(--c-text-3)]">{{ item.publishTime }}</div>
-            <button type="button" class="w-full py-2 bg-[var(--c-bg)] text-[var(--c-text-2)] border border-[var(--c-border)] rounded-lg text-sm cursor-pointer mt-2 active:bg-[var(--c-border)]" @click="openDeleteDialog(item.id)">隐藏</button>
+            <button type="button" class="w-full py-2 bg-[var(--c-bg)] text-[var(--c-text-2)] border border-[var(--c-border)] rounded-lg text-sm cursor-pointer mt-2 active:bg-[var(--c-border)]" @click="openDeleteDialog(item.id)">{{ copy.hideAction }}</button>
           </div>
         </div>
       </div>
@@ -302,21 +312,21 @@ watch(() => route.fullPath, () => {
     <!-- Info dialog -->
     <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
     <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
-      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">提示</div>
+      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
       <div class="border-t border-[var(--c-border)] flex">
-        <a href="javascript:;" class="flex-1 text-center py-3 text-pink-500 font-medium no-underline" @click="dialogVisible = false">确定</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-pink-500 font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
       </div>
     </div>
 
     <!-- Delete confirmation dialog -->
     <div v-if="deleteDialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="deleteDialogVisible = false"></div>
     <div v-if="deleteDialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
-      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">确认隐藏</div>
-      <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">确定要隐藏这条发布吗？隐藏后他人将无法在卖室友大厅看到此内容。</div>
+      <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ copy.hideTitle }}</div>
+      <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ copy.hideDescription }}</div>
       <div class="border-t border-[var(--c-border)] flex">
-        <a href="javascript:;" class="flex-1 text-center py-3 text-[var(--c-text-2)] no-underline border-r border-[var(--c-border)]" @click="deleteDialogVisible = false">取消</a>
-        <a href="javascript:;" class="flex-1 text-center py-3 text-pink-500 font-medium no-underline" @click="confirmDelete">确定</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-[var(--c-text-2)] no-underline border-r border-[var(--c-border)]" @click="deleteDialogVisible = false">{{ t('common.cancel') }}</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-pink-500 font-medium no-underline" @click="confirmDelete">{{ t('common.confirm') }}</a>
       </div>
     </div>
   </div>

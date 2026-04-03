@@ -570,9 +570,17 @@ const routes = [
   }
 ]
 
+export function resolveScrollPosition(_to, _from, savedPosition) {
+  if (savedPosition) {
+    return savedPosition
+  }
+  return { left: 0, top: 0 }
+}
+
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior: resolveScrollPosition
 })
 
 // 与后端 SettingConstantUtils.LOGIN_INTERCEPTOR_EXCEPTION_LIST 同步：无需登录即可访问的路径前缀

@@ -6,6 +6,8 @@ const SPECIAL_REGION_MAP = {
   中国台湾: 'TW',
 }
 
+const DEFAULT_FETCH_TIMEOUT_MS = 5000
+
 export function getFlagEmoji(isoCode) {
   if (!isoCode || isoCode.length !== 2) return ''
   const codePoints = isoCode
@@ -89,4 +91,66 @@ export function getFallbackCountryCodeItems() {
   return normalizeCountryCodeItems([
     { iso: 'CN', code: 86, flag: getFlagEmoji('CN'), name: '中国大陆' },
   ])
+}
+
+async function fetchWithTimeout(fetchImpl, input, init = {}, timeoutMs = DEFAULT_FETCH_TIMEOUT_MS) {
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || typeof AbortController !== 'function') {
+    return fetchImpl(input, init)
+  }
+
+  const controller = new AbortController()
+  const timerId = setTimeout(() => {
+    controller.abort()
+  }, timeoutMs)
+
+  try {
+    return await fetchImpl(input, {
+      ...init,
+      signal: controller.signal,
+    })
+  } finally {
+    clearTimeout(timerId)
+  }
+}
+
+export async function loadCountryCodeCatalog({
+  apiUrl,
+  locale,
+  fetchImpl = globalThis.fetch,
+  fallbackUrl = '/country_codes.xml',
+  timeoutMs = DEFAULT_FETCH_TIMEOUT_MS,
+} = {}) {
+  if (typeof fetchImpl !== 'function') {
+    return getFallbackCountryCodeItems()
+  }
+
+  try {
+    const response = await fetchWithTimeout(fetchImpl, apiUrl, {
+      headers: {
+        'Accept-Language': locale,
+      },
+    }, timeoutMs)
+    if (response.ok) {
+      const payload = await response.json()
+      const items = normalizeCountryCodeItems(payload?.data || [])
+      if (items.length > 0) {
+        return items
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load area codes from API, falling back to XML.', error)
+  }
+
+  try {
+    const response = await fetchWithTimeout(fetchImpl, fallbackUrl, {}, timeoutMs)
+    const text = await response.text()
+    const items = parseCountryCodesXml(text)
+    if (items.length > 0) {
+      return items
+    }
+  } catch (error) {
+    console.error('Failed to load area codes from XML fallback.', error)
+  }
+
+  return getFallbackCountryCodeItems()
 }

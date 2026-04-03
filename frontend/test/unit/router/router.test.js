@@ -4,6 +4,7 @@ import {
   hasToken,
   isWhitelisted,
   resolveNavigationTarget,
+  resolveScrollPosition,
 } from '../../../src/router/index.js'
 
 describe('router auth helpers', () => {
@@ -32,5 +33,10 @@ describe('router auth helpers', () => {
     expect(resolveNavigationTarget('/about/account', false)).toBeNull()
     expect(resolveNavigationTarget('/secret/home', false)).toBe('/login')
     expect(resolveNavigationTarget('/secret/home', true)).toBeNull()
+  })
+
+  it('resets scroll to the top for normal route changes and preserves browser back positions', () => {
+    expect(resolveScrollPosition({}, {}, null)).toEqual({ left: 0, top: 0 })
+    expect(resolveScrollPosition({}, {}, { left: 0, top: 420 })).toEqual({ left: 0, top: 420 })
   })
 })

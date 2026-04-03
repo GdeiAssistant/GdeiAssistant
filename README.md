@@ -44,9 +44,16 @@ cp .env.template .env
 
 填写数据库密码、Redis、JWT 等（见模板注释）。环境语义统一为：
 
-- `development`：本地开发
-- `staging`：测试验证
-- `production`：正式环境
+- `development`：本地开发，保持仓库内全栈 Docker 方案
+- `staging`：演示 / 测试环境，推荐前后端与数据库拆开部署
+- `production`：正式环境，推荐前后端与数据库拆开部署
+
+> **演示 / 生产外部数据库常用变量：**
+> - MySQL：`DB_USERNAME`、`DB_JDBC_PARAMS`、`DB_JDBC_URL_APP`、`DB_JDBC_URL_LOG`、`DB_JDBC_URL_DATA`
+> - Redis：`REDIS_USERNAME`、`REDIS_SSL_ENABLED`
+> - MongoDB：`MONGO_URI`
+>
+> 当前 MySQL 仍默认使用三套 schema：`DB_NAME`、`DB_NAME_LOG`、`DB_NAME_DATA`。
 
 > **生产环境必填变量：**
 > - `JWT_SECRET` — JWT 签名密钥（至少 32 位随机串）
@@ -58,10 +65,11 @@ cp .env.template .env
 
 **3. 运行**
 
-- **全栈（Docker）**：`docker compose up -d`（后端 8080，前端 5173）。
-- **测试编排**：`docker compose -f docker-compose-staging.yml up -d`。
-- **生产编排**：`docker compose -f docker-compose-prod.yml up -d`。
+- **开发全栈（Docker）**：`docker compose up -d`（前后端 + MySQL + Redis + MongoDB）。
+- **测试全栈编排**：`docker compose -f docker-compose-staging.yml up -d`。
+- **生产全栈编排**：`docker compose -f docker-compose-prod.yml up -d`。
 - **仅后端**：`./gradlew bootRun`（自动加载根目录 `.env`）。
+- **演示 / 生产推荐形态**：后端单独部署，前端单独构建，数据库改为外部服务；例如演示环境后端可使用 `https://gdeiassistant.azurewebsites.net/api`。
 - **仅前端**：进入前端目录安装依赖并启动开发服务器：
 
 

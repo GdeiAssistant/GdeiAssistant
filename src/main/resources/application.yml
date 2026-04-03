@@ -17,36 +17,38 @@ spring:
       max-request-size: 50MB
   datasource:
     app:
-      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:gdeiassistant}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-      username: root
+      jdbc-url: ${DB_JDBC_URL_APP:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:gdeiassistant}?${DB_JDBC_PARAMS:useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
+      username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
         maximum-pool-size: 10
         minimum-idle: 2
     log:
-      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_LOG:gdeiassistant_log}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-      username: root
+      jdbc-url: ${DB_JDBC_URL_LOG:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_LOG:gdeiassistant_log}?${DB_JDBC_PARAMS:useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
+      username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
         maximum-pool-size: 5
     data:
-      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_DATA:gdeiassistant_data}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-      username: root
+      jdbc-url: ${DB_JDBC_URL_DATA:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_DATA:gdeiassistant_data}?${DB_JDBC_PARAMS:useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
+      username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
         maximum-pool-size: 5
-  redis:
-    host: ${REDIS_HOST:localhost}
-    port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD:}
-    database: ${REDIS_DATABASE:0}
   data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:0}
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:false}
     mongodb:
-      uri: mongodb://${MONGO_HOST:localhost}:${MONGO_PORT:27017}
-      database: ${MONGO_DATABASE:gdeiassistant}
+      uri: ${MONGO_URI:mongodb://${MONGO_HOST:localhost}:${MONGO_PORT:27017}/${MONGO_DATABASE:gdeiassistant}}
 
 mybatis:
   configuration:

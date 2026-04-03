@@ -46,7 +46,7 @@ public interface AppDataMapper {
     List<DeliveryTradeEntity> selectUserDeliveryTradeList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserErshouItemList")
-    @ResultMap("cn.gdeiassistant.core.secondhand.mapper.SecondhandMapper.MarketplaceItemEntity")
+    @ResultMap("cn.gdeiassistant.core.marketplace.mapper.MarketplaceMapper.MarketplaceItemEntity")
     List<MarketplaceItemEntity> selectUserErshouItemList(String username);
 
     @SelectProvider(type = DataSQLBuilder.class, method = "selectUserLostAndFoundItemList")

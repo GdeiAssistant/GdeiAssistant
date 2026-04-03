@@ -36,17 +36,22 @@ GdeiAssistant/                 # 仓库根目录
 安装 Docker + Docker Compose。若需要本地前端开发，建议使用 Node.js `24.14.1 LTS`（仓库已提供 `.nvmrc`）。
 
 **2. 配置**  
-复制并编辑环境变量，后端、前端、Docker 都统一读取这一份 `.env`：
+复制并编辑环境变量。**根目录 `.env` 默认只服务本地 `development`**，供 `./gradlew bootRun`、`docker compose up -d` 和本地前端联调用：
 
 ```bash
 cp .env.template .env
 ```
 
-填写数据库密码、Redis、JWT 等（见模板注释）。环境语义统一为：
+填写本地开发所需的数据库密码、Redis、JWT 等（见模板注释）。环境语义统一为：
 
 - `development`：本地开发，保持仓库内全栈 Docker 方案
 - `staging`：演示 / 测试环境，推荐前后端与数据库拆开部署
 - `production`：正式环境，推荐前后端与数据库拆开部署
+
+> **当前约定：**
+> - 根目录 `.env` 保持 `development` 默认值，优先指向本地 `localhost`
+> - `staging` / `production` 不要直接复用本地 `.env`
+> - 演示 / 生产请改用各自独立的环境变量配置，例如 Azure App Service App Settings、CI Secret、部署平台 Secret 文件
 
 > **演示 / 生产外部数据库常用变量：**
 > - MySQL：`DB_USERNAME`、`DB_JDBC_PARAMS`、`DB_JDBC_URL_APP`、`DB_JDBC_URL_LOG`、`DB_JDBC_URL_DATA`
@@ -68,8 +73,8 @@ cp .env.template .env
 - **开发全栈（Docker）**：`docker compose up -d`（前后端 + MySQL + Redis + MongoDB）。
 - **测试全栈编排**：`docker compose -f docker-compose-staging.yml up -d`。
 - **生产全栈编排**：`docker compose -f docker-compose-prod.yml up -d`。
-- **仅后端**：`./gradlew bootRun`（自动加载根目录 `.env`）。
-- **演示 / 生产推荐形态**：后端单独部署，前端单独构建，数据库改为外部服务；例如演示环境后端可使用 `https://gdeiassistant.azurewebsites.net/api`。
+- **仅后端**：`./gradlew bootRun`（自动加载根目录 `.env`，按 `development` 语义启动）。
+- **演示 / 生产推荐形态**：后端单独部署，前端单独构建，数据库改为外部服务；例如当前演示环境后端可使用 `https://gdeiassistant.azurewebsites.net/api`。
 - **仅前端**：进入前端目录安装依赖并启动开发服务器：
 
 
@@ -80,7 +85,9 @@ npm install
 npm run dev
 ```
 
-前端开发服务器默认运行在 `http://localhost:5173`，需配置接口代理指向后端（如 `http://localhost:8080`），参见 `frontend/vite.config.*` 或 `frontend/.env*`。
+前端开发服务器默认运行在 `http://localhost:5173`，需配置接口代理指向本地后端（如 `http://localhost:8080`），参见 `frontend/vite.config.*` 或 `frontend/.env*`。
+
+> 如果你要在本机临时直连演示环境，请不要改仓库根目录 `.env` 的默认语义；更稳妥的做法是单独导出一次环境变量，或在 IDE / 部署平台里覆盖 `SPRING_PROFILES_ACTIVE`、数据库连接串和 `CORS_ALLOWED_ORIGIN_PATTERNS`。
 
 更完整的环境矩阵见：`docs/environment-matrix.md`。
 

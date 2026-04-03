@@ -1,3 +1,5 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   createCommunityGenderOptions,
@@ -47,6 +49,18 @@ describe('community localized content', () => {
     const categories = createMarketplaceCategoryNames('en')
     expect(categories[0]).toBe('Campus Transportation')
     expect(categories.at(-1)).toBe('Other')
+  })
+
+  it('keeps zh-CN marketplace category order aligned with backend enums', () => {
+    const javaPath = path.resolve(process.cwd(), '../src/main/java/cn/gdeiassistant/common/constant/OptionConstantUtils.java')
+    const source = fs.readFileSync(javaPath, 'utf8')
+    const match = source.match(/MARKETPLACE_ITEM_TYPE_OPTIONS\s*=\s*\{([\s\S]*?)\};/)
+    const backendLabels = (match?.[1] || '')
+      .split(',')
+      .map((item) => item.replace(/["\s\n\r]/g, ''))
+      .filter(Boolean)
+
+    expect(createMarketplaceCategoryNames('zh-CN')).toEqual(backendLabels)
   })
 
   it('builds delivery maps', () => {

@@ -6,10 +6,9 @@ import request from '../../utils/request'
 import { showErrorTopTips } from '@/utils/toast.js'
 import { useToast } from '@/composables/useToast'
 import {
+  loadCountryCodeCatalog,
   getFallbackCountryCodeItems,
   localizeCountryCodes,
-  normalizeCountryCodeItems,
-  parseCountryCodesXml,
 } from './bindPhoneSupport'
 
 const router = useRouter()
@@ -21,7 +20,7 @@ const boundCountryCode = ref('+86')
 const isEditing = ref(false)
 const loadingStatus = ref(true)
 
-const rawCountryCodes = ref([])
+const rawCountryCodes = ref(getFallbackCountryCodeItems())
 const countryCodes = computed(() => localizeCountryCodes(rawCountryCodes.value, locale.value))
 const currentCountryCode = ref('+86')
 
@@ -63,37 +62,10 @@ function maskPhone(phone) {
 }
 
 async function loadCountryCodes() {
-  try {
-    const response = await fetch(phoneAttributionApi, {
-      headers: {
-        'Accept-Language': locale.value,
-      },
-    })
-    if (response.ok) {
-      const payload = await response.json()
-      const items = normalizeCountryCodeItems(payload?.data || [])
-      if (items.length > 0) {
-        rawCountryCodes.value = items
-        return
-      }
-    }
-  } catch (error) {
-    console.error('Failed to load area codes from API, falling back to XML.', error)
-  }
-
-  try {
-    const response = await fetch('/country_codes.xml')
-    const text = await response.text()
-    const items = parseCountryCodesXml(text)
-    if (items.length > 0) {
-      rawCountryCodes.value = items
-      return
-    }
-  } catch (error) {
-    console.error('Failed to load area codes from XML fallback.', error)
-  }
-
-  rawCountryCodes.value = getFallbackCountryCodeItems()
+  rawCountryCodes.value = await loadCountryCodeCatalog({
+    apiUrl: phoneAttributionApi,
+    locale: locale.value,
+  })
 }
 
 function normalizePhoneErrorMessage() {
@@ -204,20 +176,24 @@ async function confirmUnbind() {
   }
 }
 
+async function loadPhoneStatus() {
+  const res = await request.get('/phone/status')
+  const data = res && res.data
+  if (data && typeof data === 'object') {
+    if (data.phone) {
+      currentPhone.value = maskPhone(String(data.phone))
+    }
+    if (typeof data.code === 'number') {
+      boundCountryCode.value = `+${data.code}`
+    }
+  }
+}
+
 onMounted(async () => {
-  await loadCountryCodes()
+  void loadCountryCodes()
 
   try {
-    const res = await request.get('/phone/status')
-    const data = res && res.data
-    if (data && typeof data === 'object') {
-      if (data.phone) {
-        currentPhone.value = maskPhone(String(data.phone))
-      }
-      if (typeof data.code === 'number') {
-        boundCountryCode.value = `+${data.code}`
-      }
-    }
+    await loadPhoneStatus()
   } catch (e) {
     // keep the default unbound state
   } finally {

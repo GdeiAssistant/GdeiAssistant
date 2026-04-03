@@ -38,7 +38,7 @@
               class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="handlePasswordClick">
         <Lock class="w-5 h-5 text-[var(--c-text-3)]" />
-        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.changePassword') }}</span>
+        <span class="flex-1 text-[var(--c-text-1)] font-medium">{{ $t('profile.changePassword') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 

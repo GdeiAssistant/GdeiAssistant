@@ -1,13 +1,19 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import { createCommunityPullMessages } from '../community/communityContent'
+import { getPhotographCopy } from './photographContent'
 
 const router = useRouter()
+const { t, locale } = useI18n()
 const scrollContainer = ref(null)
 const activeType = ref(1) // 1: 最美生活照, 2: 最美校园照
+const copy = computed(() => getPhotographCopy(locale.value))
+const pullMessages = computed(() => createCommunityPullMessages(t))
 
 const PAGE_SIZE = 10
 const fetchPhotographList = async (page) => {
@@ -70,7 +76,7 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': '#06b6d4' }">
-    <CommunityHeader title="拍好校园" moduleColor="#06b6d4" backTo="/" />
+    <CommunityHeader :title="t('feature.photograph.name')" moduleColor="#06b6d4" backTo="/" />
 
     <!-- Scrollable container -->
     <div
@@ -85,10 +91,10 @@ onMounted(() => {
       <!-- Pull refresh -->
       <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
         <span v-if="refreshing" class="flex items-center gap-2">
-          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-cyan-500 rounded-full animate-spin"></i> 正在刷新...
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-cyan-500 rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
         </span>
-        <span v-else-if="pullY > 50">释放立即刷新</span>
-        <span v-else-if="pullY > 0">下拉刷新</span>
+        <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
+        <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
       </div>
 
       <!-- Card list -->
@@ -106,7 +112,7 @@ onMounted(() => {
               <img :src="item.imgUrl" :alt="item.title" class="w-full h-auto block" />
             </figure>
             <div class="absolute right-2 bottom-2 inline-flex" v-if="(item.photoCount || 1) > 1">
-              <span class="bg-cyan-500 text-white rounded-lg px-2 py-0.5 text-sm font-medium">{{ item.photoCount || 1 }}图</span>
+              <span class="bg-cyan-500 text-white rounded-lg px-2 py-0.5 text-sm font-medium">{{ copy.formatImageBadge(item.photoCount || 1) }}</span>
             </div>
           </div>
 
@@ -126,10 +132,10 @@ onMounted(() => {
                 role="button"
                 @click.stop="toggleLike(item, $event)"
               >
-                {{ item.likeCount ?? item.likes }} 点赞
+                {{ copy.formatLikeMetric(item.likeCount ?? item.likes ?? 0) }}
               </a>
               <a class="flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white bg-cyan-500 text-base no-underline transition-opacity active:opacity-85" href="javascript:;" role="button">
-                {{ item.commentCount ?? 0 }} 评论
+                {{ copy.formatCommentMetric(item.commentCount ?? 0) }}
               </a>
             </div>
           </div>
@@ -139,15 +145,15 @@ onMounted(() => {
       <!-- Empty -->
       <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
         <div class="text-4xl mb-2">📷</div>
-        <p class="text-sm">暂无照片作品</p>
+        <p class="text-sm">{{ copy.empty }}</p>
       </div>
 
       <!-- Loading -->
       <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
         <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-cyan-500 rounded-full animate-spin"></i>
-        <span>正在加载</span>
+        <span>{{ pullMessages.loading }}</span>
       </div>
-      <div v-if="finished && list.length > 0" class="text-center py-4 text-sm text-[var(--c-text-3)]">没有更多了</div>
+      <div v-if="finished && list.length > 0" class="text-center py-4 text-sm text-[var(--c-text-3)]">{{ pullMessages.noMore }}</div>
     </div>
 
     <!-- Bottom toolbar -->
@@ -157,20 +163,20 @@ onMounted(() => {
         :class="{ 'shadow-[inset_0_-3px_0_rgba(0,0,0,0.2)]': activeType === 1 }"
         @click="setType(1)"
       >
-        <span>最美生活照</span>
+        <span>{{ copy.lifeTab }}</span>
       </div>
       <div
         class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-blue-500"
         :class="{ 'shadow-[inset_0_-3px_0_rgba(0,0,0,0.2)]': activeType === 2 }"
         @click="setType(2)"
       >
-        <span>最美校园照</span>
+        <span>{{ copy.campusTab }}</span>
       </div>
       <div
         class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-cyan-500"
         @click="router.push('/photograph/publish')"
       >
-        <span>我要晒照</span>
+        <span>{{ copy.publishAction }}</span>
       </div>
     </footer>
   </div>

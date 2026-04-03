@@ -3,7 +3,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { localizeCountryCodes, parseCountryCodesXml } from '../bindPhoneSupport'
+import { localizeCountryCodes, loadCountryCodeCatalog, parseCountryCodesXml } from '../bindPhoneSupport'
 
 describe('bindPhoneSupport', () => {
   it('parses the bundled country code catalog with broad coverage', () => {
@@ -28,5 +28,25 @@ describe('bindPhoneSupport', () => {
 
     expect(items[0].name).toContain('China')
     expect(items[1].name).toContain('Japan')
+  })
+
+  it('falls back to the bundled country list when remote requests time out', async () => {
+    const fetchImpl = (_url, init = {}) => new Promise((_, reject) => {
+      init.signal?.addEventListener('abort', () => reject(new Error('aborted')), { once: true })
+    })
+
+    const items = await loadCountryCodeCatalog({
+      apiUrl: '/api/phone/attribution',
+      locale: 'zh-CN',
+      fetchImpl,
+      timeoutMs: 5,
+    })
+
+    expect(items).toEqual([
+      expect.objectContaining({
+        iso: 'CN',
+        code: '+86',
+      }),
+    ])
   })
 })

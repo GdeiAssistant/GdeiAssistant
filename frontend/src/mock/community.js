@@ -1,6 +1,19 @@
 const DELIVERY_DEFAULT_ORDER_NAME = '代收'
 
-const DEFAULT_AVATAR = '/image/default.png'
+const MOCK_IMAGE = {
+  avatar: '/img/avatar/default.png',
+  ershou: '/img/function/ershou.png',
+  book: '/img/function/book.png',
+  data: '/img/function/data.png',
+  spare: '/img/function/spare.png',
+  lostandfound: '/img/function/lostandfound.png',
+  card: '/img/function/card.png',
+  news: '/img/function/news.png',
+  dating: '/img/function/dating.png',
+  photograph: '/img/function/photograph.png'
+}
+
+const DEFAULT_AVATAR = MOCK_IMAGE.avatar
 
 const COMMUNITY_DEFAULT_STATE = {
   secondhandItems: [
@@ -15,7 +28,7 @@ const COMMUNITY_DEFAULT_STATE = {
       qq: '214578901',
       phone: '13612340001',
       publishTime: '2026-03-13 20:10',
-      pictureURL: ['/image/ershou.png'],
+      pictureURL: [MOCK_IMAGE.ershou],
       owner: 'gdeiassistant'
     },
     {
@@ -29,7 +42,7 @@ const COMMUNITY_DEFAULT_STATE = {
       qq: '103454321',
       phone: '13900000001',
       publishTime: '2026-03-14 16:20',
-      pictureURL: ['/image/book.png'],
+      pictureURL: [MOCK_IMAGE.book],
       owner: 'campus_seller'
     },
     {
@@ -43,7 +56,7 @@ const COMMUNITY_DEFAULT_STATE = {
       qq: '214578901',
       phone: '13612340001',
       publishTime: '2026-03-10 12:00',
-      pictureURL: ['/image/data.png'],
+      pictureURL: [MOCK_IMAGE.data],
       owner: 'gdeiassistant'
     },
     {
@@ -57,7 +70,7 @@ const COMMUNITY_DEFAULT_STATE = {
       qq: '214578901',
       phone: '13612340001',
       publishTime: '2026-03-09 18:00',
-      pictureURL: ['/image/spare.png'],
+      pictureURL: [MOCK_IMAGE.spare],
       owner: 'gdeiassistant'
     }
   ],
@@ -74,7 +87,7 @@ const COMMUNITY_DEFAULT_STATE = {
       wechat: 'linzy_2023',
       phone: '13612340001',
       publishTime: '2026-03-15 08:20',
-      pictureURL: ['/image/lostandfound.png'],
+      pictureURL: [MOCK_IMAGE.lostandfound],
       owner: 'gdeiassistant'
     },
     {
@@ -89,7 +102,7 @@ const COMMUNITY_DEFAULT_STATE = {
       wechat: '拾金不昧同学',
       phone: '13700002222',
       publishTime: '2026-03-14 19:40',
-      pictureURL: ['/image/card.png'],
+      pictureURL: [MOCK_IMAGE.card],
       owner: 'library_helper'
     },
     {
@@ -104,7 +117,7 @@ const COMMUNITY_DEFAULT_STATE = {
       wechat: 'linzy_2023',
       phone: '',
       publishTime: '2026-03-11 09:10',
-      pictureURL: ['/image/book.png'],
+      pictureURL: [MOCK_IMAGE.book],
       owner: 'gdeiassistant'
     }
   ],
@@ -182,7 +195,7 @@ const COMMUNITY_DEFAULT_STATE = {
       topic: '春招实习',
       content: '大家最近投递前端和客户端岗位的反馈怎么样？',
       count: 1,
-      imageUrls: ['/image/news.png'],
+      imageUrls: [MOCK_IMAGE.news],
       publishTime: '2026-03-15 10:10',
       owner: 'gdeiassistant',
       likedUsers: ['campus_buddy']
@@ -241,7 +254,7 @@ const COMMUNITY_DEFAULT_STATE = {
       qq: '214578901',
       wechat: 'linzy_2023',
       area: 0,
-      pictureURL: '/image/dating.png',
+      pictureURL: MOCK_IMAGE.dating,
       state: 1,
       createTime: '2026-03-12 14:10',
       owner: 'gdeiassistant'
@@ -256,7 +269,7 @@ const COMMUNITY_DEFAULT_STATE = {
       qq: '334455667',
       wechat: 'runner_senior',
       area: 1,
-      pictureURL: '/image/photograph.png',
+      pictureURL: MOCK_IMAGE.photograph,
       state: 1,
       createTime: '2026-03-11 18:30',
       owner: 'runner_senior'
@@ -288,7 +301,7 @@ const COMMUNITY_DEFAULT_STATE = {
       type: 1,
       feedType: 1,
       count: 2,
-      imageUrls: ['/image/photograph.png', '/image/news.png'],
+      imageUrls: [MOCK_IMAGE.photograph, MOCK_IMAGE.news],
       createTime: '2026-03-15 17:20',
       owner: 'gdeiassistant',
       likedUsers: ['campus_buddy']
@@ -300,7 +313,7 @@ const COMMUNITY_DEFAULT_STATE = {
       type: 2,
       feedType: 0,
       count: 1,
-      imageUrls: ['/image/news.png'],
+      imageUrls: [MOCK_IMAGE.news],
       createTime: '2026-03-14 15:45',
       owner: 'photo_club',
       likedUsers: []
@@ -1228,7 +1241,7 @@ function handleDating(path, method, data, token, utils) {
       qq: String(data.qq || '').trim(),
       wechat: String(data.wechat || '').trim(),
       area: Number(data.area || 0),
-      pictureURL: String(data.imageKey || '/image/dating.png'),
+      pictureURL: String(data.imageKey || MOCK_IMAGE.dating),
       state: 1,
       createTime: nowText(),
       owner: username

@@ -1,5 +1,6 @@
 package cn.gdeiassistant.common.config.DataSource;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -25,7 +26,7 @@ import java.io.IOException;
         "cn.gdeiassistant.core.delivery.mapper",
         "cn.gdeiassistant.core.email.mapper",
         "cn.gdeiassistant.core.message.mapper",
-        "cn.gdeiassistant.core.secondhand.mapper",
+        "cn.gdeiassistant.core.marketplace.mapper",
         "cn.gdeiassistant.core.express.mapper",
         "cn.gdeiassistant.core.feedback.mapper",
         "cn.gdeiassistant.core.lostandfound.mapper",
@@ -42,8 +43,8 @@ public class AppDataSourceConfig {
     @Primary
     @Bean(name = "appDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.app")
-    public DataSource appDataSource() {
-        return DataSourceBuilder.create().build();
+    public HikariDataSource appDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
     @Primary

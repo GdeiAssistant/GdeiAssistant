@@ -1,5 +1,6 @@
 package cn.gdeiassistant.common.config.DataSource;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,15 +17,14 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = {
         "cn.gdeiassistant.core.announcement.mapper",
         "cn.gdeiassistant.core.electricFees.mapper",
-        "cn.gdeiassistant.core.reading.mapper",
         "cn.gdeiassistant.core.yellowPage.mapper"
 }, sqlSessionFactoryRef = "dataSqlSessionFactory")
 public class DataDataSourceConfig {
 
     @Bean(name = "dataDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.data")
-    public DataSource dataDataSource() {
-        return DataSourceBuilder.create().build();
+    public HikariDataSource dataDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
     @Bean(name = "dataSqlSessionFactory")

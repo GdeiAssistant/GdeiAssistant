@@ -47,8 +47,8 @@ spring:
       database: ${REDIS_DATABASE:0}
       ssl:
         enabled: ${REDIS_SSL_ENABLED:false}
-    mongodb:
-      uri: ${MONGO_URI:mongodb://${MONGO_HOST:localhost}:${MONGO_PORT:27017}/${MONGO_DATABASE:gdeiassistant}}
+  mongodb:
+    uri: ${MONGO_URI:mongodb://${MONGO_HOST:localhost}:${MONGO_PORT:27017}/${MONGO_DATABASE:gdeiassistant}}
 
 mybatis:
   configuration:

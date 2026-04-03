@@ -77,9 +77,10 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 frontend/lerna-debug.log*
-frontend/test/
-frontend/tests/
 frontend/coverage/
+frontend/test-results/
+frontend/playwright-report/
+frontend/blob-report/
 frontend/*.lcov
 
 # ==================================

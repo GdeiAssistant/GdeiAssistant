@@ -121,7 +121,7 @@ services:
       - "${BACKEND_EXPOSE_PORT:-8080}:8080"
 
   frontend:
-    image: node:20-alpine
+    image: node:24.14.1-alpine
     container_name: gdeiassistant-frontend-development
     networks:
       - gdei-dev

@@ -2,7 +2,7 @@
 # GdeiAssistant 前端镜像（Vue + Vite 构建 -> Nginx 托管）
 # 生产构建时 baseURL 使用相对路径 /api，由 Nginx 代理到后端
 # =============================================================================
-FROM node:20-alpine AS builder
+FROM node:24.14.1-alpine AS builder
 WORKDIR /app
 ARG VITE_APP_BASE_API=/api
 ARG VITE_PE_EXTERNAL_URL=

@@ -50,7 +50,7 @@ public class JavaMailConfig {
         String password = environment.getProperty("email.smtp.password");
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setHost(host);
-        javaMailSender.setPort(Integer.parseInt(port));
+        javaMailSender.setPort(resolveSmtpPort(port));
         javaMailSender.setUsername(username);
         javaMailSender.setPassword(password);
         javaMailSender.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
@@ -79,6 +79,17 @@ public class JavaMailConfig {
                 && StringUtils.isNumeric(port)
                 && StringUtils.isNotBlank(username)
                 && StringUtils.isNotBlank(password);
+    }
+
+    private int resolveSmtpPort(String port) {
+        if (StringUtils.isBlank(port)) {
+            return 465;
+        }
+        try {
+            return Integer.parseInt(port);
+        } catch (NumberFormatException ignored) {
+            return 465;
+        }
     }
 
 }

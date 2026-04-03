@@ -41,6 +41,21 @@ class JavaMailConfigTest {
         });
     }
 
+    @Test
+    void overflowingSmtpPortFallsBackToDefaultPort() {
+        contextRunner.withPropertyValues(
+                "email.smtp.host=smtp.example.com",
+                "email.smtp.port=99999999999999999999",
+                "email.smtp.username=test@example.com",
+                "email.smtp.password=secret",
+                "email.smtp.auth=true"
+        ).run(context -> {
+            assertThat(context).hasSingleBean(JavaMailSenderImpl.class);
+            assertThat(context.getBean(JavaMailSenderImpl.class).getPort()).isEqualTo(465);
+            assertThat(context.getBean(ModuleUtils.class).CheckModuleState(ModuleEnum.EMAIL)).isTrue();
+        });
+    }
+
     @TestConfiguration
     static class TestSupportConfig {
 

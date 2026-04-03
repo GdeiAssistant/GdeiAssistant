@@ -22,6 +22,7 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     volumes:
+      - mysql-data:/var/lib/mysql
       - ./db-init/mysql:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD:?DB_PASSWORD is required for production}"]
@@ -47,6 +48,8 @@ services:
         else
           exec redis-server --appendonly yes;
         fi
+    volumes:
+      - redis-data:/data
     healthcheck:
       test:
         - CMD-SHELL
@@ -62,11 +65,12 @@ services:
     restart: unless-stopped
 
   mongodb:
-    image: mongo:latest
+    image: mongo:8.0
     container_name: gdei-mongo
     networks:
       - gdei-network
     volumes:
+      - mongo-data:/data/db
       - ./db-init/mongodb:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
@@ -128,3 +132,8 @@ services:
     ports:
       - "${FRONTEND_PROD_EXPOSE_PORT:-80}:80"
     restart: unless-stopped
+
+volumes:
+  mysql-data:
+  redis-data:
+  mongo-data:

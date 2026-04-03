@@ -74,7 +74,7 @@ cp .env.template .env
 - **测试全栈编排**：`docker compose -f docker-compose-staging.yml up -d`。
 - **生产全栈编排**：`docker compose -f docker-compose-prod.yml up -d`。
 - **仅后端**：`./gradlew bootRun`（自动加载根目录 `.env`，按 `development` 语义启动）。
-- **演示 / 生产推荐形态**：后端单独部署，前端单独构建，数据库改为外部服务；例如当前演示环境前端可使用 `https://gentle-moss-05e781600.7.azurestaticapps.net`，后端 API 使用 `https://gdeiassistant.azurewebsites.net/api`。
+- **演示 / 生产推荐形态**：后端单独部署，前端单独构建，数据库改为外部服务；例如当前演示环境前端可使用 `https://gdeiassistant.pages.dev`，后端 API 使用 `https://gdeiassistant.azurewebsites.net/api`。
 - **仅前端**：进入前端目录安装依赖并启动开发服务器：
 
 
@@ -132,7 +132,12 @@ npm run dev
 
 ## 客户端与官网
 
-[官网](https://gdeiassistant.cn) · [功能演示](https://gentle-moss-05e781600.7.azurestaticapps.net) · [后端 API](https://gdeiassistant.azurewebsites.net/actuator/health) · [Android](https://github.com/GdeiAssistant/GdeiAssistant-Android) · [iOS](https://github.com/GdeiAssistant/GdeiAssistant-iOS) · [微信小程序](https://github.com/GdeiAssistant/GdeiAssistant-WechatApp)
+[官网](https://gdeiassistant.cn) · [Android](https://github.com/GdeiAssistant/GdeiAssistant-Android) · [iOS](https://github.com/GdeiAssistant/GdeiAssistant-iOS) · [微信小程序](https://github.com/GdeiAssistant/GdeiAssistant-WechatApp)
+
+### 功能演示
+
+- [前端网站](https://gdeiassistant.pages.dev)
+- [后端接口](https://gdeiassistant.azurewebsites.net/actuator/health)
 
 ---
 

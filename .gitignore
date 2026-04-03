@@ -65,6 +65,7 @@ frontend/.vite/
 frontend/*.tsbuildinfo
 frontend/.turbo/
 frontend/.pnpm-store/
+.wrangler/
 frontend/location-tree-output.txt
 frontend/scripts/*-generated.js
 !frontend/scripts/build-*.cjs

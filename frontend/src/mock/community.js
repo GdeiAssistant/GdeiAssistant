@@ -1,16 +1,19 @@
 const DELIVERY_DEFAULT_ORDER_NAME = '代收'
 
 const MOCK_IMAGE = {
-  avatar: '/img/avatar/default.png',
-  ershou: '/img/function/ershou.png',
-  book: '/img/function/book.png',
-  data: '/img/function/data.png',
-  spare: '/img/function/spare.png',
-  lostandfound: '/img/function/lostandfound.png',
-  card: '/img/function/card.png',
-  news: '/img/function/news.png',
-  dating: '/img/function/dating.png',
-  photograph: '/img/function/photograph.png'
+  avatar: '/img/mock-demo/avatar-assistant.jpg',
+  ershou: '/img/mock-demo/marketplace-keyboard.jpg',
+  book: '/img/mock-demo/marketplace-books.jpg',
+  data: '/img/mock-demo/marketplace-fan.jpg',
+  spare: '/img/mock-demo/marketplace-umbrella.jpg',
+  lostandfound: '/img/mock-demo/lost-card.jpg',
+  card: '/img/mock-demo/lost-id.jpg',
+  lostBackpack: '/img/mock-demo/lost-backpack.jpg',
+  news: '/img/mock-demo/topic-study.jpg',
+  dating: '/img/mock-demo/dating-roommate.jpg',
+  datingRunner: '/img/mock-demo/dating-runner.jpg',
+  photograph: '/img/mock-demo/photograph-campus.jpg',
+  photographCorridor: '/img/mock-demo/photograph-corridor.jpg'
 }
 
 const DEFAULT_AVATAR = MOCK_IMAGE.avatar
@@ -117,7 +120,7 @@ const COMMUNITY_DEFAULT_STATE = {
       wechat: 'linzy_2023',
       phone: '',
       publishTime: '2026-03-11 09:10',
-      pictureURL: [MOCK_IMAGE.book],
+      pictureURL: [MOCK_IMAGE.lostBackpack],
       owner: 'gdeiassistant'
     }
   ],
@@ -269,7 +272,7 @@ const COMMUNITY_DEFAULT_STATE = {
       qq: '334455667',
       wechat: 'runner_senior',
       area: 1,
-      pictureURL: MOCK_IMAGE.photograph,
+      pictureURL: MOCK_IMAGE.datingRunner,
       state: 1,
       createTime: '2026-03-11 18:30',
       owner: 'runner_senior'
@@ -301,7 +304,7 @@ const COMMUNITY_DEFAULT_STATE = {
       type: 1,
       feedType: 1,
       count: 2,
-      imageUrls: [MOCK_IMAGE.photograph, MOCK_IMAGE.news],
+      imageUrls: [MOCK_IMAGE.photograph, MOCK_IMAGE.photographCorridor],
       createTime: '2026-03-15 17:20',
       owner: 'gdeiassistant',
       likedUsers: ['campus_buddy']
@@ -313,7 +316,7 @@ const COMMUNITY_DEFAULT_STATE = {
       type: 2,
       feedType: 0,
       count: 1,
-      imageUrls: [MOCK_IMAGE.news],
+      imageUrls: [MOCK_IMAGE.photographCorridor],
       createTime: '2026-03-14 15:45',
       owner: 'photo_club',
       likedUsers: []

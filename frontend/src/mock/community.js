@@ -6,7 +6,7 @@ const MOCK_IMAGE = {
   book: '/img/mock-demo/marketplace-books.jpg',
   data: '/img/mock-demo/marketplace-fan.jpg',
   spare: '/img/mock-demo/marketplace-umbrella.jpg',
-  lostandfound: '/img/mock-demo/lost-card.jpg',
+  lostandfound: '/img/mock-demo/lost-card.png',
   card: '/img/mock-demo/lost-id.jpg',
   lostBackpack: '/img/mock-demo/lost-backpack.jpg',
   news: '/img/mock-demo/topic-study.jpg',
@@ -80,8 +80,8 @@ const COMMUNITY_DEFAULT_STATE = {
   lostAndFoundItems: [
     {
       id: 201,
-      name: '蓝色校园卡',
-      description: '卡套上贴有小熊贴纸，卡背写了联系电话。',
+      name: '校园学生证',
+      description: '封面略旧，疑似旧版学生证，请失主联系领取。',
       location: '一饭门口',
       lostType: 0,
       itemType: 1,

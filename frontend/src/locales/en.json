@@ -1233,9 +1233,9 @@
     "appIntroContent": "GdeiAssistant is a campus service application exclusively built for Guangdong University of Education. It provides comprehensive academic features such as timetable, grades, CET scores, empty classroom search, library search, borrowing records, teaching evaluation, electricity bills, yellow pages, campus card info, transaction history, and card loss reporting, as well as community platforms including second-hand trading, lost & found, campus confessions, dating, confession wall, delivery, campus photography, topics, and anonymous course reviews. GdeiAssistant aims to deliver top-quality information on teaching, campus life, club activities, entertainment, and academic services for all students and faculty.",
     "screenshotsTitle": "Screenshots",
     "screenshotAlt": "Screenshot {n}",
-    "cookieNotice": "This website uses cookies to provide you with a more convenient and personalised browsing experience. Cookies store useful information on your computer to help us improve the efficiency and relevance of our website. In some cases, they are essential for the website to function properly. By visiting this website, you agree to our use of cookies.",
+    "cookieNotice": "This site uses cookies and browser storage to remember your sign-in status, interface preferences, data source selection, and dismissal of this notice. By continuing, you acknowledge this information.",
     "cookieLearnMore": "Please click {link} for more information.",
-    "cookiePolicy": "Cookie Policy",
+    "cookiePolicy": "Cookie & Local Storage Notice",
     "menuHelp": "Help",
     "menuSecuritySpec": "Security Specifications",
     "menuAccountSpec": "Campus Network Account Guide",
@@ -1244,8 +1244,8 @@
     "menuPrivacyPolicy": "Privacy Policy",
     "menuCommunityGuidelines": "Community Guidelines",
     "menuOpenSourceLicense": "Open Source License",
-    "menuCookiePolicy": "Cookie Policy",
-    "menuIPDeclaration": "Intellectual Property Notice",
+    "menuCookiePolicy": "Cookie & Local Storage Notice",
+    "menuIPDeclaration": "IP Complaints and Counter-Notice Rules",
     "menuFriendlyLinks": "Friendly Links",
     "menuSmartPartyBuilding": "Smart Party Building",
     "menuOpen": "Open menu",
@@ -1255,7 +1255,7 @@
     "securityTitle": "Security Specifications",
     "privacyPolicyTitle": "Privacy Policy",
     "userAgreementTitle": "User Agreement",
-    "chineseOnlyNotice": "This page is currently available in Chinese only."
+    "chineseOnlyNotice": "The legal text on this page is currently available in Chinese only."
   },
   "appearance": {
     "title": "Interface & Appearance",

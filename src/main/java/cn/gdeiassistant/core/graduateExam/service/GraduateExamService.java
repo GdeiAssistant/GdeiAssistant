@@ -4,6 +4,7 @@ import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
+import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
 import cn.gdeiassistant.common.pojo.Entity.Postgraduate;
 import cn.gdeiassistant.core.imageRecognition.service.ImageRecognitionService;
 import cn.gdeiassistant.common.tools.Utils.ImageEncodeUtils;
@@ -33,7 +34,7 @@ public class GraduateExamService {
     /**
      * 查询考研初试成绩
      */
-    public Postgraduate queryPostgraduateScore(String name, String examNumber, String idNumber) throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException {
+    public Postgraduate queryPostgraduateScore(String name, String examNumber, String idNumber) throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException, RecognitionException {
         try {
             Document document = chsiClient.fetchPostgraduateCjcxPage();
             Element cjcxForm = document.getElementsByAttributeValue("name", "cjcxForm").first();
@@ -74,6 +75,9 @@ public class GraduateExamService {
         } catch (ErrorQueryConditionException e) {
             logger.error("查询考研成绩异常：", e);
             throw new ErrorQueryConditionException("查询条件错误");
+        } catch (RecognitionException e) {
+            logger.error("查询考研成绩验证码识别异常：", e);
+            throw new RecognitionException("图像识别服务异常，请稍后重试");
         } catch (Exception e) {
             logger.error("查询考研成绩异常：", e);
             throw new ServerErrorException("教务系统异常");

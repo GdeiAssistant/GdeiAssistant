@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.graduateExam.controller;
 import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
+import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
 import cn.gdeiassistant.common.pojo.Entity.Postgraduate;
 import cn.gdeiassistant.core.graduateExam.pojo.GraduateExamQuery;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
@@ -21,7 +22,7 @@ public class GraduateExamController {
 
     @PostMapping("/api/graduate-exam/query")
     public DataJsonResult<Postgraduate> queryPostgraduateScore(@Validated @RequestBody GraduateExamQuery graduateExamQuery)
-            throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException {
+            throws NetWorkTimeoutException, ServerErrorException, ErrorQueryConditionException, RecognitionException {
         Postgraduate postgraduate = graduateExamService.queryPostgraduateScore(
                 graduateExamQuery.getName(),
                 graduateExamQuery.getExamNumber(),

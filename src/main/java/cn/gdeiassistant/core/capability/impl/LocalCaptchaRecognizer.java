@@ -7,41 +7,44 @@ import cn.gdeiassistant.core.capability.ocr.CaptchaRecognizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("aiCaptchaRecognizer")
-public class AiCaptchaRecognizer implements CaptchaRecognizer {
+import java.util.Locale;
+
+@Component("localCaptchaRecognizer")
+public class LocalCaptchaRecognizer implements CaptchaRecognizer {
 
     @Autowired
-    private AiLlmVisionClient aiLlmVisionClient;
+    private LocalTemplateOcrEngine localTemplateOcrEngine;
 
     @Override
     public String recognize(String imageBase64, CheckCodeTypeEnum typeEnum, int length) throws RecognitionException {
-        String typeHint = typeEnum != null ? typeEnum.name() : "UNKNOWN";
-        String text = aiLlmVisionClient.recognizeCaptcha(imageBase64, typeHint, length);
+        String text = localTemplateOcrEngine.recognizeCaptcha(imageBase64, typeEnum, length);
         text = sanitize(text, typeEnum, length);
         if (StringUtils.isBlank(text)) {
-            throw new RecognitionException("AI识别验证码失败");
+            throw new RecognitionException("本地OCR识别验证码失败");
         }
         return text;
     }
 
     private String sanitize(String raw, CheckCodeTypeEnum typeEnum, int length) {
-        if (raw == null) return "";
-        String t = raw.replaceAll("[^A-Za-z0-9\\u4e00-\\u9fa5]", "").trim();
-        if (typeEnum == CheckCodeTypeEnum.NUMBER) {
-            t = t.replaceAll("[^0-9]", "");
-        } else if (typeEnum == CheckCodeTypeEnum.ENGLISH) {
-            t = t.replaceAll("[^A-Za-z]", "");
-        } else if (typeEnum == CheckCodeTypeEnum.ENGLISH_WITH_NUMBER) {
-            t = t.replaceAll("[^A-Za-z0-9]", "");
-        } else if (typeEnum == CheckCodeTypeEnum.CHINESE) {
-            t = t.replaceAll("[^\\u4e00-\\u9fa5]", "");
-        }
-        if (length > 0 && t.length() > length) {
-            t = t.substring(0, length);
-        }
-        if (length > 0 && t.length() < length) {
+        if (raw == null) {
             return "";
         }
-        return t;
+        String text = raw.replaceAll("[^A-Za-z0-9\\u4e00-\\u9fa5]", "").trim();
+        if (typeEnum == CheckCodeTypeEnum.NUMBER) {
+            text = text.replaceAll("[^0-9]", "");
+        } else if (typeEnum == CheckCodeTypeEnum.ENGLISH) {
+            text = text.replaceAll("[^A-Za-z]", "");
+        } else if (typeEnum == CheckCodeTypeEnum.ENGLISH_WITH_NUMBER) {
+            text = text.replaceAll("[^A-Za-z0-9]", "");
+        } else if (typeEnum == CheckCodeTypeEnum.CHINESE) {
+            text = text.replaceAll("[^\\u4e00-\\u9fa5]", "");
+        }
+        if (length > 0 && text.length() > length) {
+            text = text.substring(0, length);
+        }
+        if (length > 0 && text.length() < length) {
+            return "";
+        }
+        return text.toUpperCase(Locale.ROOT);
     }
 }

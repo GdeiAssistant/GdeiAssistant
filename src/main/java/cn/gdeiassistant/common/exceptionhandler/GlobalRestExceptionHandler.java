@@ -30,6 +30,7 @@ import cn.gdeiassistant.common.exception.BookRenewException.BookRenewOvertimeExc
 import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
 import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
 import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
+import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
 import cn.gdeiassistant.common.exception.VerificationException.DayFrequencyLimitException;
 import cn.gdeiassistant.common.exception.VerificationException.HourFrequencyLimitException;
 import cn.gdeiassistant.common.exception.VerificationException.IllegalPhoneNumberException;
@@ -147,6 +148,14 @@ public class GlobalRestExceptionHandler {
     public ResponseEntity<JsonResult> handleFeatureNotEnabledException(FeatureNotEnabledException e, HttpServletRequest request) {
         logger.warn("功能未启用: {}", e.getMessage());
         String message = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : "该功能未启用";
+        return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(message, request.getHeader("Accept-Language"))));
+    }
+
+    @ExceptionHandler(RecognitionException.class)
+    public ResponseEntity<JsonResult> handleRecognitionException(RecognitionException e, HttpServletRequest request) {
+        logger.warn("图像识别异常：{}", e.getMessage());
+        String message = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : "图像识别服务异常，请稍后重试";
         return ResponseEntity.ok(new JsonResult(false,
                 BackendTextLocalizer.localizeMessage(message, request.getHeader("Accept-Language"))));
     }

@@ -1,8 +1,16 @@
+<script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t, locale } = useI18n()
+const isNonChinese = computed(() => !locale.value.startsWith('zh'))
+</script>
+
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]">
     <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← 返回</button>
-      <span class="flex-1 text-center text-sm font-bold">侵权投诉与反通知规则</span>
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← {{ t('about.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('about.menuIPDeclaration') }}</span>
       <div class="w-10"></div>
     </div>
 
@@ -17,6 +25,10 @@
             [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5
             [&_li]:mb-2
             [&_strong]:font-semibold">
+          <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
+            {{ t('about.chineseOnlyNotice') }}
+          </div>
+
           <h3 class="!mt-0 text-center">《侵权投诉与反通知规则》</h3>
           <p class="text-center">更新日期：2026年4月15日</p>
           <p class="text-center">生效日期：2026年4月15日</p>

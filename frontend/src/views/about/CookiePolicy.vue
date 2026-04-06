@@ -10,7 +10,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
   <div class="min-h-screen bg-[var(--c-bg)]">
     <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
       <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← {{ t('about.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">Cookie与本地存储说明</span>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('about.menuCookiePolicy') }}</span>
       <div class="w-10"></div>
     </div>
 

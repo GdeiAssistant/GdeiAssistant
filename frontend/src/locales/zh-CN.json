@@ -1245,7 +1245,7 @@
     "menuCommunityGuidelines": "社区准则",
     "menuOpenSourceLicense": "开源协议",
     "menuCookiePolicy": "Cookie与本地存储说明",
-    "menuIPDeclaration": "知识产权声明",
+    "menuIPDeclaration": "侵权投诉与反通知规则",
     "menuFriendlyLinks": "友情链接",
     "menuSmartPartyBuilding": "智慧党建",
     "menuOpen": "打开菜单",
@@ -1255,7 +1255,7 @@
     "securityTitle": "安全技术规格说明",
     "privacyPolicyTitle": "隐私政策",
     "userAgreementTitle": "用户协议",
-    "chineseOnlyNotice": "本页面目前仅提供中文版本。"
+    "chineseOnlyNotice": "本页面正文目前仅提供中文版本。"
   },
   "appearance": {
     "title": "界面和外观",

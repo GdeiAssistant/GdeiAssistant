@@ -179,9 +179,9 @@
     "appIntroContent": "廣東第二師範學院校園助手，是為廣東第二師範學院專屬打造的校園服務應用。它不僅提供了課表查詢、成績查詢、四六級考試成績查詢、空課室查詢、圖書館檢索、我的借閱、教學質量評價、電費查詢、黃頁查詢、校園卡信息、消費記錄、校園卡掛失等綜合性的教務功能，還提供了二手交易、失物招領、校園樹洞、戀愛交友、表白牆、全民快遞、拍好校園、話題、匿名評教等社區交流平台。廣東二師助手旨在為廣東第二師範學院的在校師生們提供最優質的教育教學、校園生活、社團活動、文化娛樂和教務服務等信息。四年時光，廣東二師助手陪你一起走過。",
     "screenshotsTitle": "應用截圖",
     "screenshotAlt": "應用截圖 {n}",
-    "cookieNotice": "本網站使用Cookie的目的是為您提供更加簡捷和個性化的上網體驗。Cookie將有用的信息存儲在您的電腦上，可幫助我們改善您瀏覽我們網站的效率以及對您的實用性。在某些情況下，它們是網站正常運行所必不可少的。如果您訪問本網站，即表示您同意我們使用Cookie。",
+    "cookieNotice": "本網站會使用 Cookie 和瀏覽器本地儲存來記住登入狀態、介面偏好、資料來源選擇及提示關閉狀態。繼續訪問即表示您已知悉相關說明。",
     "cookieLearnMore": "請點擊{link}了解更多信息。",
-    "cookiePolicy": "Cookie政策",
+    "cookiePolicy": "Cookie與本地儲存說明",
     "menuHelp": "使用幫助",
     "menuSecuritySpec": "安全技術規格說明",
     "menuAccountSpec": "校園網絡賬號說明",
@@ -190,8 +190,8 @@
     "menuPrivacyPolicy": "隱私政策",
     "menuCommunityGuidelines": "社區準則",
     "menuOpenSourceLicense": "開源協議",
-    "menuCookiePolicy": "Cookie政策",
-    "menuIPDeclaration": "知識產權聲明",
+    "menuCookiePolicy": "Cookie與本地儲存說明",
+    "menuIPDeclaration": "侵權投訴與反通知規則",
     "menuFriendlyLinks": "友情鏈接",
     "menuSmartPartyBuilding": "智慧黨建",
     "menuOpen": "打開菜單",
@@ -201,7 +201,7 @@
     "securityTitle": "安全技術規格說明",
     "privacyPolicyTitle": "隱私政策",
     "userAgreementTitle": "用戶協議",
-    "chineseOnlyNotice": "本頁面目前僅提供中文版本。"
+    "chineseOnlyNotice": "本頁面正文目前僅提供中文版本。"
   },
   "appearance": {
     "title": "介面和外觀",

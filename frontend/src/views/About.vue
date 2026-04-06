@@ -106,6 +106,36 @@ function aboutLinkLabel(key) {
   return labels[key] || ABOUT_LINK_LABELS.en[key] || key
 }
 
+const officialMediaLinks = [
+  {
+    key: 'wechat',
+    iconSrc: '/img/about/media/wechat.png',
+    alt: '微信',
+    title: '学校官网微信',
+    href: 'https://www.gdei.edu.cn/3989/list.htm'
+  },
+  {
+    key: 'bilibili',
+    iconSrc: '/img/about/media/bilibili.png',
+    alt: 'B站',
+    title: 'B站',
+    href: 'https://b23.tv/VlE7GPv'
+  },
+  {
+    key: 'xiaohongshu',
+    iconSrc: '/img/about/media/xiaohongshu.png',
+    alt: '小红书',
+    title: '小红书'
+  },
+  {
+    key: 'douyin',
+    iconSrc: '/img/about/media/douyin.png',
+    alt: '抖音',
+    title: '学校官网抖音',
+    href: 'https://www.gdei.edu.cn/3987/list.htm'
+  }
+]
+
 // Cookie 横幅状态
 const showCookieBanner = ref(false)
 
@@ -327,11 +357,23 @@ onMounted(() => {
     <!-- 页脚版权信息 -->
     <div class="w-full max-w-[600px] text-center mt-auto pt-10 border-t border-[var(--color-divider)] px-4">
       <div class="flex justify-center items-center mb-5">
-        <img src="/img/about/media/wechat.png" alt="微信" class="w-6 h-6 mx-2 align-middle opacity-70 transition-opacity duration-300 hover:opacity-100" />
-        <img src="/img/about/media/weibo.png" alt="微博" class="w-6 h-6 mx-2 align-middle opacity-70 transition-opacity duration-300 hover:opacity-100" />
-        <img src="/img/about/media/bilibili.png" alt="B站" class="w-6 h-6 mx-2 align-middle opacity-70 transition-opacity duration-300 hover:opacity-100" />
-        <img src="/img/about/media/xiaohongshu.png" alt="小红书" class="w-6 h-6 mx-2 align-middle opacity-70 transition-opacity duration-300 hover:opacity-100" />
-        <img src="/img/about/media/douyin.png" alt="抖音" class="w-6 h-6 mx-2 align-middle opacity-70 transition-opacity duration-300 hover:opacity-100" />
+        <component
+          v-for="item in officialMediaLinks"
+          :key="item.key"
+          :is="item.href ? 'a' : 'span'"
+          :href="item.href"
+          :title="item.title"
+          :aria-label="item.title"
+          :target="item.href ? '_blank' : undefined"
+          :rel="item.href ? 'noopener noreferrer' : undefined"
+          class="inline-flex items-center justify-center mx-2"
+        >
+          <img
+            :src="item.iconSrc"
+            :alt="item.alt"
+            class="w-6 h-6 align-middle opacity-70 transition-opacity duration-300 hover:opacity-100"
+          />
+        </component>
       </div>
       <p class="text-xs text-[var(--color-text-tertiary)] my-2">Copyright &copy; 2016 - 2026 GdeiAssistant</p>
       <p class="text-xs text-[var(--color-text-tertiary)] my-2">All rights reserved</p>

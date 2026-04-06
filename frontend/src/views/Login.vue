@@ -161,12 +161,6 @@ function handleThirdPartyLogin(type) {
             @click="handleThirdPartyLogin('QQ')"
           />
           <img
-            src="/img/login/weibo.png"
-            alt="Weibo"
-            class="w-8 h-8 rounded-full cursor-pointer transition-opacity hover:opacity-70 active:opacity-50"
-            @click="handleThirdPartyLogin('Weibo')"
-          />
-          <img
             src="/img/login/apple.png"
             alt="Apple"
             class="w-8 h-8 rounded-full cursor-pointer transition-opacity hover:opacity-70 active:opacity-50"

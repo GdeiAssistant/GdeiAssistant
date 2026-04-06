@@ -46,7 +46,7 @@ public class TeacherLoginService {
      * @param password
      * @return
      */
-    public void TeacherLogin(String sessionId, String username, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
+    public void TeacherLogin(String sessionId, String username, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException, RecognitionException {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
@@ -100,7 +100,10 @@ public class TeacherLoginService {
         } catch (IOException e) {
             logger.error("教师登录异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");
-        } catch (ServerErrorException | RecognitionException e) {
+        } catch (RecognitionException e) {
+            logger.error("教师登录验证码识别异常：", e);
+            throw new RecognitionException("图像识别服务异常，请稍后重试");
+        } catch (ServerErrorException e) {
             logger.error("教师登录异常：", e);
             throw new ServerErrorException("教务系统异常");
         } catch (PasswordIncorrectException ignored) {

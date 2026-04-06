@@ -155,6 +155,9 @@ public class CardQueryService {
             submitCardLostViaClient(sessionId, cardPassword);
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码不正确");
+        } catch (RecognitionException e) {
+            logger.error("校园卡挂失图像识别异常：", e);
+            throw new RecognitionException("图像识别服务异常，请稍后重试");
         } catch (IOException e) {
             logger.error("校园卡挂失异常：", e);
             throw new NetWorkTimeoutException("网络连接超时");

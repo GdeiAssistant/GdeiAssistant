@@ -8,6 +8,7 @@ import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateSchedul
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
 import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
+import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
 import cn.gdeiassistant.common.pojo.Document.CustomScheduleDocument;
 import cn.gdeiassistant.common.pojo.Document.ScheduleDocument;
 import cn.gdeiassistant.common.pojo.Entity.CustomSchedule;
@@ -391,7 +392,7 @@ public class ScheduleService {
      */
     @Deprecated
     public List<TeacherSchedule> teacherScheduleQuery(String sessionId
-            , String username, String password, String year, String term, String teacherName) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
+            , String username, String password, String year, String term, String teacherName) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException, RecognitionException {
         Document document;
         try {
             document = eduSystemClient.fetchTeacherScheduleDocument(sessionId, username, teacherName, year, term);

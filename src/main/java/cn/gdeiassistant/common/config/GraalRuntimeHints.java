@@ -1,6 +1,5 @@
 package cn.gdeiassistant.common.config;
 
-import cn.gdeiassistant.common.aspect.CronVerificationAspect;
 import cn.gdeiassistant.common.aspect.IPAddressAspect;
 import cn.gdeiassistant.common.aspect.LoginTokenAspect;
 import cn.gdeiassistant.common.aspect.QueryLogAspect;
@@ -21,7 +20,6 @@ public class GraalRuntimeHints implements RuntimeHintsRegistrar {
         hints.reflection().registerType(IPAddressAspect.class, MemberCategory.values());
         hints.reflection().registerType(QueryLogAspect.class, MemberCategory.values());
         hints.reflection().registerType(RequestLogAspect.class, MemberCategory.values());
-        hints.reflection().registerType(CronVerificationAspect.class, MemberCategory.values());
     }
 }
 

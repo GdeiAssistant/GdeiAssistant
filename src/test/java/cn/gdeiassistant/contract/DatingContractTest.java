@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,6 +75,52 @@ class DatingContractTest {
                 .andExpect(jsonPath("$.success").value(false));
 
         mockMvc.perform(get("/api/dating/profile/area/2/start/0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(datingService);
+    }
+
+    @Test
+    void updatePickStateAcceptsValidState() throws Exception {
+        mockMvc.perform(post("/api/dating/pick/id/3")
+                        .requestAttr("sessionId", "test-session")
+                        .param("state", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(datingService).verifyRoommatePickViewAccess("test-session", 3);
+        verify(datingService).updateRoommatePickState(3, 1);
+    }
+
+    @Test
+    void updatePickStateRejectsInvalidStateBeforeService() throws Exception {
+        mockMvc.perform(post("/api/dating/pick/id/3")
+                        .requestAttr("sessionId", "test-session")
+                        .param("state", "0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(datingService);
+    }
+
+    @Test
+    void updateProfileStateAcceptsValidState() throws Exception {
+        mockMvc.perform(post("/api/dating/profile/id/4/state")
+                        .requestAttr("sessionId", "test-session")
+                        .param("state", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(datingService).verifyRoommateProfileOwner("test-session", 4);
+        verify(datingService).updateRoommateProfileState(4, 1);
+    }
+
+    @Test
+    void updateProfileStateRejectsInvalidStateBeforeService() throws Exception {
+        mockMvc.perform(post("/api/dating/profile/id/4/state")
+                        .requestAttr("sessionId", "test-session")
+                        .param("state", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 

@@ -31,11 +31,19 @@ public class DeliveryController {
     @Autowired
     private DeliveryService deliveryService;
 
+    private int requirePositiveId(Integer id) {
+        if (id == null || id < 1) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
+        return id;
+    }
+
     /**
      * 订单详情（含 detailType；已接单时含 trade）。GET /api/delivery/order/id/{id}
      */
     @RequestMapping(value = "/api/delivery/order/id/{id}", method = RequestMethod.GET)
-    public DataJsonResult<Map<String, Object>> getDeliveryOrderDetail(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException {
+    public DataJsonResult<Map<String, Object>> getDeliveryOrderDetail(HttpServletRequest request, @PathVariable("id") @Min(1) Integer id) throws DataNotExistException {
+        id = requirePositiveId(id);
         String sessionId = (String) request.getAttribute("sessionId");
         DeliveryOrderVO order = deliveryService.queryDeliveryOrderByOrderId(id);
         int detailType = deliveryService.queryDeliveryOrderDetailType(sessionId, id);
@@ -95,7 +103,8 @@ public class DeliveryController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/delivery/acceptorder", method = RequestMethod.POST)
-    public JsonResult acceptOrder(HttpServletRequest request, @RequestParam Integer orderId) throws Exception {
+    public JsonResult acceptOrder(HttpServletRequest request, @RequestParam @Min(1) Integer orderId) throws Exception {
+        orderId = requirePositiveId(orderId);
         String sessionId = (String) request.getAttribute("sessionId");
         deliveryService.acceptOrder(orderId, sessionId);
         return new JsonResult(true);
@@ -112,7 +121,8 @@ public class DeliveryController {
      * @throws DeliveryOrderStateUpdatedException
      */
     @RequestMapping(value = "/api/delivery/order/id/{id}", method = RequestMethod.DELETE)
-    public JsonResult deleteOrder(HttpServletRequest request, @PathVariable("id") Integer orderId) throws NoAccessUpdatingException, DataNotExistException, DeliveryOrderStateUpdatedException {
+    public JsonResult deleteOrder(HttpServletRequest request, @PathVariable("id") @Min(1) Integer orderId) throws NoAccessUpdatingException, DataNotExistException, DeliveryOrderStateUpdatedException {
+        orderId = requirePositiveId(orderId);
         String sessionId = (String) request.getAttribute("sessionId");
         deliveryService.deleteOrder(orderId, sessionId);
         return new JsonResult(true);
@@ -128,7 +138,8 @@ public class DeliveryController {
      * @throws NoAccessUpdatingException
      */
     @RequestMapping(value = "/api/delivery/trade/id/{id}/finishtrade", method = RequestMethod.POST)
-    public JsonResult finishTrade(HttpServletRequest request, @PathVariable("id") Integer tradeId) throws DataNotExistException, NoAccessUpdatingException {
+    public JsonResult finishTrade(HttpServletRequest request, @PathVariable("id") @Min(1) Integer tradeId) throws DataNotExistException, NoAccessUpdatingException {
+        tradeId = requirePositiveId(tradeId);
         String sessionId = (String) request.getAttribute("sessionId");
         deliveryService.finishTrade(tradeId, sessionId);
         return new JsonResult(true);

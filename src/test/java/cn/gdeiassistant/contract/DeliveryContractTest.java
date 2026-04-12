@@ -16,7 +16,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,6 +79,78 @@ class DeliveryContractTest {
                 .andExpect(jsonPath("$.success").value(false));
 
         mockMvc.perform(get("/api/delivery/order/start/0/size/0")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(deliveryService);
+    }
+
+    @Test
+    void acceptOrderAcceptsValidOrderId() throws Exception {
+        mockMvc.perform(post("/api/delivery/acceptorder")
+                        .requestAttr("sessionId", "test-session")
+                        .param("orderId", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(deliveryService).acceptOrder(10, "test-session");
+    }
+
+    @Test
+    void acceptOrderRejectsInvalidOrderIdBeforeService() throws Exception {
+        mockMvc.perform(post("/api/delivery/acceptorder")
+                        .requestAttr("sessionId", "test-session")
+                        .param("orderId", "0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(deliveryService);
+    }
+
+    @Test
+    void deleteOrderAcceptsValidOrderId() throws Exception {
+        mockMvc.perform(delete("/api/delivery/order/id/10")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(deliveryService).deleteOrder(10, "test-session");
+    }
+
+    @Test
+    void deleteOrderRejectsInvalidOrderIdBeforeService() throws Exception {
+        mockMvc.perform(delete("/api/delivery/order/id/0")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(deliveryService);
+    }
+
+    @Test
+    void finishTradeAcceptsValidTradeId() throws Exception {
+        mockMvc.perform(post("/api/delivery/trade/id/10/finishtrade")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(deliveryService).finishTrade(10, "test-session");
+    }
+
+    @Test
+    void finishTradeRejectsInvalidTradeIdBeforeService() throws Exception {
+        mockMvc.perform(post("/api/delivery/trade/id/0/finishtrade")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(deliveryService);
+    }
+
+    @Test
+    void detailEndpointRejectsInvalidOrderIdBeforeService() throws Exception {
+        mockMvc.perform(get("/api/delivery/order/id/0")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));

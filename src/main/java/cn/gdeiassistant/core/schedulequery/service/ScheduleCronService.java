@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -50,6 +51,7 @@ public class ScheduleCronService {
     public void synchronizeScheduleData() {
         logger.info("{}启动了查询保存用户课表信息的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
+        List<CompletableFuture<Void>> pendingTasks = new ArrayList<>();
         try {
             List<User> userList = cronMapper.selectCacheAllowUsers();
             //设置线程信号量，限制最大同时查询的线程数为5
@@ -62,10 +64,10 @@ public class ScheduleCronService {
                     CompletableFuture<ScheduleQueryVO> future = ((ScheduleCronService) AopContext.currentProxy())
                             .asyncQuerySchedule(semaphore, user);
                     User finalUser = user;
-                    future.whenComplete((result, throwable) -> {
+                    CompletableFuture<Void> completion = future.handle((result, throwable) -> {
                         if (throwable != null) {
                             logger.error("定时查询保存课表信息异常：", throwable);
-                            return;
+                            return null;
                         }
                         try {
                             if (result != null) {
@@ -81,11 +83,19 @@ public class ScheduleCronService {
                         } catch (Exception e) {
                             logger.error("定时查询保存课表信息异常：", e);
                         }
+                        return null;
                     });
+                    pendingTasks.add(completion);
                 }
             }
         } catch (Exception e) {
             logger.error("定时查询保存课表信息异常：", e);
+        } finally {
+            try {
+                CompletableFuture.allOf(pendingTasks.toArray(new CompletableFuture<?>[0])).join();
+            } catch (Exception e) {
+                logger.error("等待定时查询保存课表信息任务完成异常：", e);
+            }
         }
     }
 

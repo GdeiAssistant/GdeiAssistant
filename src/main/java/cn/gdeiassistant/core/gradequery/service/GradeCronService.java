@@ -52,6 +52,7 @@ public class GradeCronService {
      */
     public void synchronizeGradeData() {
         logger.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了查询保存用户成绩信息的任务");
+        List<CompletableFuture<Void>> pendingTasks = new ArrayList<>();
         try {
             //获取所有允许教务缓存的用户
             List<User> userList = cronMapper.selectCacheAllowUsers();
@@ -66,10 +67,10 @@ public class GradeCronService {
                     CompletableFuture<GradeCacheResult> future = ((GradeCronService) AopContext.currentProxy())
                             .asyncQueryGrade(semaphore, user);
                     User finalUser = user;
-                    future.whenComplete((result, throwable) -> {
+                    CompletableFuture<Void> completion = future.handle((result, throwable) -> {
                         if (throwable != null) {
                             logger.error("定时查询保存成绩信息异常：", throwable);
-                            return;
+                            return null;
                         }
                         try {
                             if (result != null) {
@@ -119,11 +120,19 @@ public class GradeCronService {
                         } catch (Exception e) {
                             logger.error("定时查询保存成绩信息异常：", e);
                         }
+                        return null;
                     });
+                    pendingTasks.add(completion);
                 }
             }
         } catch (Exception e) {
             logger.error("定时查询保存成绩信息异常：", e);
+        } finally {
+            try {
+                CompletableFuture.allOf(pendingTasks.toArray(new CompletableFuture<?>[0])).join();
+            } catch (Exception e) {
+                logger.error("等待定时查询保存成绩信息任务完成异常：", e);
+            }
         }
     }
 

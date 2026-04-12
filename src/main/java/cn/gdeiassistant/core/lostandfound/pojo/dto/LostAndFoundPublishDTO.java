@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -24,10 +25,12 @@ public class LostAndFoundPublishDTO implements Serializable {
     @Length(max = 30)
     private String location;
 
+    @NotNull
     @Min(0)
     @Max(11)
     private Integer itemType;
 
+    @NotNull
     @Min(0)
     @Max(1)
     private Integer lostType;

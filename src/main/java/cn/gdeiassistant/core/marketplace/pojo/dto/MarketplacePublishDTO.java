@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -20,12 +21,14 @@ public class MarketplacePublishDTO implements Serializable {
     @Length(max = 100)
     private String description;
 
+    @NotNull
     private Float price;
 
     @NotBlank(message = "交易地点不能为空")
     @Length(max = 30)
     private String location;
 
+    @NotNull
     @Min(0)
     @Max(11)
     private Integer type;

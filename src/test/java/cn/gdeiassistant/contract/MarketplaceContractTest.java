@@ -2,18 +2,23 @@ package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.marketplace.controller.MarketplaceController;
+import cn.gdeiassistant.core.marketplace.pojo.dto.MarketplacePublishDTO;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
 import cn.gdeiassistant.core.marketplace.service.MarketplaceService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -170,6 +175,150 @@ class MarketplaceContractTest {
         mockMvc.perform(post("/api/ershou/item/state/id/101")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(marketplaceService);
+    }
+
+
+    @Test
+    void publishEndpointAcceptsValidPayloadAndImageKeys() throws Exception {
+        MarketplaceItemEntity saved = mockItemEntity();
+        saved.setId(6);
+        when(marketplaceService.publishItem(any(MarketplacePublishDTO.class), eq("test-session")))
+                .thenReturn(saved);
+
+        mockMvc.perform(post("/api/ershou/item")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "教材")
+                        .param("description", "九成新微积分教材")
+                        .param("price", "25.50")
+                        .param("location", "图书馆门口")
+                        .param("type", "8")
+                        .param("qq", "123456")
+                        .param("phone", "13612340001")
+                        .param("imageKeys", "upload/item-1.jpg", "upload/item-2.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        ArgumentCaptor<MarketplacePublishDTO> captor = ArgumentCaptor.forClass(MarketplacePublishDTO.class);
+        verify(marketplaceService).publishItem(captor.capture(), eq("test-session"));
+        MarketplacePublishDTO dto = captor.getValue();
+        assertEquals("教材", dto.getName());
+        assertEquals("九成新微积分教材", dto.getDescription());
+        assertEquals(Float.valueOf(25.50f), dto.getPrice());
+        assertEquals("图书馆门口", dto.getLocation());
+        assertEquals(8, dto.getType());
+        assertEquals("123456", dto.getQq());
+        assertEquals("13612340001", dto.getPhone());
+        verify(marketplaceService).moveItemPictureFromTempObject(6, 1, "upload/item-1.jpg");
+        verify(marketplaceService).moveItemPictureFromTempObject(6, 2, "upload/item-2.jpg");
+    }
+
+    @Test
+    void publishEndpointAcceptsInclusivePriceBounds() throws Exception {
+        MarketplaceItemEntity minSaved = mockItemEntity();
+        minSaved.setId(7);
+        MarketplaceItemEntity maxSaved = mockItemEntity();
+        maxSaved.setId(8);
+        when(marketplaceService.publishItem(any(MarketplacePublishDTO.class), eq("test-session")))
+                .thenReturn(minSaved, maxSaved);
+
+        mockMvc.perform(post("/api/ershou/item")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "贴纸")
+                        .param("description", "边界价格测试")
+                        .param("price", "0.01")
+                        .param("location", "图书馆门口")
+                        .param("type", "8")
+                        .param("imageKeys", "upload/min-price.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        mockMvc.perform(post("/api/ershou/item")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "电脑")
+                        .param("description", "边界价格测试")
+                        .param("price", "9999.99")
+                        .param("location", "图书馆门口")
+                        .param("type", "8")
+                        .param("imageKeys", "upload/max-price.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(marketplaceService).moveItemPictureFromTempObject(7, 1, "upload/min-price.jpg");
+        verify(marketplaceService).moveItemPictureFromTempObject(8, 1, "upload/max-price.jpg");
+    }
+
+    @Test
+    void publishEndpointRejectsInvalidPriceOrTypeBeforeService() throws Exception {
+        mockMvc.perform(post("/api/ershou/item")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "教材")
+                        .param("description", "九成新微积分教材")
+                        .param("location", "图书馆门口")
+                        .param("type", "8")
+                        .param("imageKeys", "upload/item-1.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(post("/api/ershou/item")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "教材")
+                        .param("description", "九成新微积分教材")
+                        .param("price", "0")
+                        .param("location", "图书馆门口")
+                        .param("type", "8")
+                        .param("imageKeys", "upload/item-1.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(post("/api/ershou/item")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "教材")
+                        .param("description", "九成新微积分教材")
+                        .param("price", "25.50")
+                        .param("location", "图书馆门口")
+                        .param("imageKeys", "upload/item-1.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(marketplaceService);
+    }
+
+    @Test
+    void publishEndpointRejectsInvalidImageKeysBeforeService() throws Exception {
+        mockMvc.perform(post("/api/ershou/item")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "教材")
+                        .param("description", "九成新微积分教材")
+                        .param("price", "25.50")
+                        .param("location", "图书馆门口")
+                        .param("type", "8")
+                        .param("imageKeys", "upload/item-1.jpg", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(post("/api/ershou/item")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "教材")
+                        .param("description", "九成新微积分教材")
+                        .param("price", "25.50")
+                        .param("location", "图书馆门口")
+                        .param("type", "8")
+                        .param("imageKeys", "upload/item-1.jpg", "upload/item-2.jpg", "upload/item-3.jpg",
+                                "upload/item-4.jpg", "upload/item-5.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(post("/api/ershou/item")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "教材")
+                        .param("description", "九成新微积分教材")
+                        .param("price", "25.50")
+                        .param("location", "图书馆门口")
+                        .param("type", "8"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 

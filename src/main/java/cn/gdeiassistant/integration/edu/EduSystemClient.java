@@ -19,6 +19,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,7 @@ import java.util.List;
 @Component
 public class EduSystemClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(EduSystemClient.class);
     private static final String JWGL_BASE = "http://jwgl.gdei.edu.cn";
     private static final int EDU_REQUEST_TIMEOUT_SEC = 15;
 
@@ -81,9 +84,7 @@ public class EduSystemClient {
             }
             throw new ServerErrorException("教务系统异常");
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -120,9 +121,7 @@ public class EduSystemClient {
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -234,9 +233,7 @@ public class EduSystemClient {
             }
             throw new ServerErrorException("教务系统异常");
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -283,9 +280,7 @@ public class EduSystemClient {
             }
             throw new ServerErrorException("教务系统异常");
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -314,9 +309,7 @@ public class EduSystemClient {
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -358,9 +351,7 @@ public class EduSystemClient {
             }
             throw new ServerErrorException("教务系统异常");
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -387,9 +378,7 @@ public class EduSystemClient {
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -463,12 +452,21 @@ public class EduSystemClient {
             }
             return document;
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
+        }
+    }
+
+    private static void closeHttpClient(CloseableHttpClient httpClient) {
+        if (httpClient == null) {
+            return;
+        }
+        try {
+            httpClient.close();
+        } catch (IOException e) {
+            logger.warn("关闭教务系统 HTTP 客户端失败", e);
         }
     }
 

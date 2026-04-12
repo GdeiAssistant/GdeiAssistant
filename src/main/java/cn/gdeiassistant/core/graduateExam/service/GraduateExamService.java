@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 @Service
 public class GraduateExamService {
@@ -44,8 +44,8 @@ public class GraduateExamService {
                 hasCheckCode = true;
                 String imageURL = "https://yz.chsi.com.cn" + cjcxForm.select("td[align='left']").get(5)
                         .select("img").first().attr("src");
-                InputStream inputStream = chsiClient.fetchPostgraduateCaptchaImage(imageURL);
-                String base64 = ImageEncodeUtils.convertToBase64(inputStream);
+                byte[] imageBytes = chsiClient.fetchPostgraduateCaptchaImage(imageURL);
+                String base64 = ImageEncodeUtils.convertToBase64(new ByteArrayInputStream(imageBytes));
                 checkcode = imageRecognitionService.CheckCodeRecognize(base64, CheckCodeTypeEnum.NUMBER, 4);
             }
             document = chsiClient.submitPostgraduateQuery(name, examNumber, idNumber, checkcode);

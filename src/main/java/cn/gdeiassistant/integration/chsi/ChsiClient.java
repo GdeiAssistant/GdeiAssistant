@@ -12,10 +12,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ChsiClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChsiClient.class);
     private static final String CET_BASE = "http://www.chsi.com.cn/cet";
     private static final String KAOYAN_CJCX = "https://yz.chsi.com.cn/apply/cjcx";
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
@@ -59,9 +61,7 @@ public class ChsiClient {
             }
             return ImageEncodeUtils.convertToBase64(httpResponse.getEntity().getContent());
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -93,9 +93,7 @@ public class ChsiClient {
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -114,30 +112,26 @@ public class ChsiClient {
                 .writeTimeout(OKHTTP_TIMEOUT_SEC, TimeUnit.SECONDS)
                 .build();
         Request request = new Request.Builder().url(KAOYAN_CJCX + "/").build();
-        Response response = httpClient.newCall(request).execute();
-        if (!response.isSuccessful()) {
-            throw new ServerErrorException("查询系统异常");
+        try (Response response = httpClient.newCall(request).execute()) {
+            return parseSuccessfulResponse(response);
         }
-        return Jsoup.parse(response.body().string());
     }
 
     /**
      * 考研验证码图片（研招网，无会话）
      *
      * @param imageUrl 完整 URL，如 https://yz.chsi.com.cn/...
-     * @return 图片字节流，调用方可转 Base64
+     * @return 图片字节数组，调用方可转 Base64
      */
-    public InputStream fetchPostgraduateCaptchaImage(String imageUrl) throws IOException, ServerErrorException {
+    public byte[] fetchPostgraduateCaptchaImage(String imageUrl) throws IOException, ServerErrorException {
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .connectTimeout(OKHTTP_TIMEOUT_SEC, TimeUnit.SECONDS)
                 .readTimeout(OKHTTP_TIMEOUT_SEC, TimeUnit.SECONDS)
                 .build();
         Request request = new Request.Builder().url(imageUrl).build();
-        Response response = httpClient.newCall(request).execute();
-        if (!response.isSuccessful()) {
-            throw new ServerErrorException("查询系统异常");
+        try (Response response = httpClient.newCall(request).execute()) {
+            return readSuccessfulResponseBytes(response);
         }
-        return response.body().byteStream();
     }
 
     /**
@@ -172,10 +166,35 @@ public class ChsiClient {
                 .addHeader("Referer", KAOYAN_CJCX + "/")
                 .addHeader("User-Agent", USER_AGENT_MAC)
                 .build();
-        Response response = httpClient.newCall(request).execute();
-        if (!response.isSuccessful()) {
+        try (Response response = httpClient.newCall(request).execute()) {
+            return parseSuccessfulResponse(response);
+        }
+    }
+
+    private static Document parseSuccessfulResponse(Response response) throws IOException, ServerErrorException {
+        ResponseBody responseBody = response.body();
+        if (!response.isSuccessful() || responseBody == null) {
             throw new ServerErrorException("查询系统异常");
         }
-        return Jsoup.parse(response.body().string());
+        return Jsoup.parse(responseBody.string());
+    }
+
+    private static byte[] readSuccessfulResponseBytes(Response response) throws IOException, ServerErrorException {
+        ResponseBody responseBody = response.body();
+        if (!response.isSuccessful() || responseBody == null) {
+            throw new ServerErrorException("查询系统异常");
+        }
+        return responseBody.bytes();
+    }
+
+    private static void closeHttpClient(CloseableHttpClient httpClient) {
+        if (httpClient == null) {
+            return;
+        }
+        try {
+            httpClient.close();
+        } catch (IOException e) {
+            logger.warn("关闭学信网 HTTP 客户端失败", e);
+        }
     }
 }

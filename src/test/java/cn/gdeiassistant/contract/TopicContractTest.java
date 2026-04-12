@@ -1,5 +1,6 @@
 package cn.gdeiassistant.contract;
 
+import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.topic.controller.TopicController;
 import cn.gdeiassistant.core.topic.pojo.vo.TopicVO;
 import cn.gdeiassistant.core.topic.service.TopicService;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,7 +32,9 @@ class TopicContractTest {
         TopicController controller = new TopicController();
         ReflectionTestUtils.setField(controller, "topicService", topicService);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new GlobalRestExceptionHandler())
+                .build();
     }
 
     @Test
@@ -48,6 +52,21 @@ class TopicContractTest {
                 .andExpect(jsonPath("$.data[0].count").exists())
                 .andExpect(jsonPath("$.data[0].publishTime").exists())
                 .andExpect(jsonPath("$.data[0].likeCount").exists());
+    }
+
+    @Test
+    void listEndpointRejectsLowerBoundViolations() throws Exception {
+        mockMvc.perform(get("/api/topic/start/-1/size/10")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(get("/api/topic/profile/start/0/size/0")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(topicService);
     }
 
     @Test

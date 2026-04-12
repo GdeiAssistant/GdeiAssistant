@@ -99,6 +99,11 @@ class SecretContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
+        mockMvc.perform(get("/api/secret/info/start/-1/size/10")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
         verifyNoInteractions(secretService);
     }
 

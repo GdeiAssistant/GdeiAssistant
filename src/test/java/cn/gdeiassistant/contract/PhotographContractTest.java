@@ -1,5 +1,6 @@
 package cn.gdeiassistant.contract;
 
+import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.photograph.controller.PhotographController;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographCommentVO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,7 +35,9 @@ class PhotographContractTest {
     void setUp() {
         PhotographController controller = new PhotographController();
         ReflectionTestUtils.setField(controller, "photographService", photographService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new GlobalRestExceptionHandler())
+                .build();
     }
 
     @Test
@@ -58,6 +62,19 @@ class PhotographContractTest {
                 .andExpect(jsonPath("$.data[0].type").value(0))
                 .andExpect(jsonPath("$.data[0].likeCount").value(10))
                 .andExpect(jsonPath("$.data[0].commentCount").value(3));
+    }
+
+    @Test
+    void listPhotographs_rejectsLowerBoundViolations() throws Exception {
+        mockMvc.perform(get("/api/photograph/type/1/start/-1/size/10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(get("/api/photograph/profile/start/0/size/0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(photographService);
     }
 
     @Test

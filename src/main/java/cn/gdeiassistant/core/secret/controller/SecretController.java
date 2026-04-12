@@ -67,6 +67,15 @@ public class SecretController {
         return new DataJsonResult<>(true, list);
     }
 
+    @RequestMapping(value = "/api/secret/profile/start/{start}/size/{size}", method = RequestMethod.GET)
+    public DataJsonResult<List<SecretVO>> getMySecrets(HttpServletRequest request
+            , @PathVariable("start") int start, @PathVariable("size") int size) throws Exception {
+        if (size > 50) size = 50;
+        String sessionId = (String) request.getAttribute("sessionId");
+        List<SecretVO> list = secretService.getSecretInfo(sessionId, start, size);
+        return new DataJsonResult<>(true, list);
+    }
+
     @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/secret/info", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)

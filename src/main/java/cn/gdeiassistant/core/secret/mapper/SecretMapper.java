@@ -120,9 +120,10 @@ public interface SecretMapper {
     })
     List<SecretContentEntity> selectSecretLight(@Param("start") int start, @Param("size") int size);
 
-    @Select("select * from secret_content where username=#{username} and state=0 order by id desc limit #{limit}")
+    @Select("select * from secret_content where username=#{username} and state=0 order by id desc limit #{start},#{size}")
     @ResultMap("SecretContentLight")
-    List<SecretContentEntity> selectSecretByUsernameLight(@Param("username") String username, @Param("limit") int limit);
+    List<SecretContentEntity> selectSecretByUsernameLight(@Param("username") String username,
+            @Param("start") int start, @Param("size") int size);
 
     // ---- Batch count/like queries ----
 

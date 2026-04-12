@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -52,6 +53,34 @@ class SecretContractTest {
                 .andExpect(jsonPath("$.data[0].publishTime").exists())
                 .andExpect(jsonPath("$.data[0].likeCount").exists())
                 .andExpect(jsonPath("$.data[0].commentCount").exists());
+    }
+
+    @Test
+    void profilePagedEndpointReturnsExpectedFields() throws Exception {
+        when(secretService.getSecretInfo("test-session", 20, 10))
+                .thenReturn(List.of(mockSecretVO()));
+
+        mockMvc.perform(get("/api/secret/profile/start/20/size/10")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data[0].id").exists())
+                .andExpect(jsonPath("$.data[0].content").exists())
+                .andExpect(jsonPath("$.data[0].likeCount").exists())
+                .andExpect(jsonPath("$.data[0].commentCount").exists());
+    }
+
+    @Test
+    void profilePagedEndpointCapsPageSizeAtFifty() throws Exception {
+        when(secretService.getSecretInfo("test-session", 0, 50))
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/api/secret/profile/start/0/size/100")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(secretService).getSecretInfo("test-session", 0, 50);
     }
 
     @Test

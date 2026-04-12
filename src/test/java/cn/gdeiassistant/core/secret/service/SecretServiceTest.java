@@ -211,7 +211,7 @@ class SecretServiceTest {
         User user = new User("testuser");
         when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
         List<SecretContentEntity> entities = buildEntities(100, 200);
-        when(secretMapper.selectSecretByUsernameLight("testuser", 50)).thenReturn(entities);
+        when(secretMapper.selectSecretByUsernameLight("testuser", 0, 50)).thenReturn(entities);
         List<SecretVO> vos = buildVOs(100, 200);
         when(secretConverter.toVOList(entities)).thenReturn(vos);
 
@@ -277,11 +277,23 @@ class SecretServiceTest {
     void profilePathUsesLightweightQueryNotEagerComments() throws Exception {
         User user = new User("testuser");
         when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
-        when(secretMapper.selectSecretByUsernameLight("testuser", 50)).thenReturn(new ArrayList<>());
+        when(secretMapper.selectSecretByUsernameLight("testuser", 0, 50)).thenReturn(new ArrayList<>());
 
         secretService.getSecretInfo("session1");
 
-        verify(secretMapper).selectSecretByUsernameLight("testuser", 50);
+        verify(secretMapper).selectSecretByUsernameLight("testuser", 0, 50);
+        verify(secretMapper, never()).selectSecretByUsername(anyString());
+    }
+
+    @Test
+    void profilePagedPathPassesRequestedOffsetAndSize() throws Exception {
+        User user = new User("testuser");
+        when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
+        when(secretMapper.selectSecretByUsernameLight("testuser", 20, 10)).thenReturn(new ArrayList<>());
+
+        secretService.getSecretInfo("session1", 20, 10);
+
+        verify(secretMapper).selectSecretByUsernameLight("testuser", 20, 10);
         verify(secretMapper, never()).selectSecretByUsername(anyString());
     }
 }

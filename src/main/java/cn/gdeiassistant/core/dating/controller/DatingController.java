@@ -88,14 +88,12 @@ public class DatingController {
         return new DataJsonResult<>(true, datingService.queryMyRoommateProfiles(sessionId));
     }
 
-    // TODO(perf): unpaged endpoint; add pagination or server-side cap
     @RequestMapping(value = "/api/dating/pick/my/sent", method = RequestMethod.GET)
     public DataJsonResult<List<DatingPickVO>> getMySentPicks(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
         return new DataJsonResult<>(true, datingService.queryMySentPicks(sessionId));
     }
 
-    // TODO(perf): unpaged endpoint; add pagination or server-side cap
     @RequestMapping(value = "/api/dating/pick/my/received", method = RequestMethod.GET)
     public DataJsonResult<List<DatingPickVO>> getMyReceivedPicks(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");

@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 public class DatingService {
 
     private static final Logger logger = LoggerFactory.getLogger(DatingService.class);
+    private static final int MY_PICK_LIMIT = 50;
     @Autowired
     private UserCertificateService userCertificateService;
 
@@ -229,7 +230,7 @@ public class DatingService {
 
     public List<DatingPickVO> queryMySentPicks(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<DatingPickEntity> list = datingMapper.selectDatingPickListByUsername(user.getUsername());
+        List<DatingPickEntity> list = datingMapper.selectDatingPickListByUsername(user.getUsername(), MY_PICK_LIMIT);
         if (list == null) return new ArrayList<>();
         return list.stream().map(e -> {
             DatingPickVO vo = pickEntityToVO(e);
@@ -246,7 +247,7 @@ public class DatingService {
 
     public List<DatingPickVO> queryMyReceivedPicks(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<DatingPickEntity> list = datingMapper.selectReceivedRoommatePickListByProfileOwner(user.getUsername());
+        List<DatingPickEntity> list = datingMapper.selectReceivedRoommatePickListByProfileOwner(user.getUsername(), MY_PICK_LIMIT);
         if (list == null) return new ArrayList<>();
         return list.stream().map(e -> {
             DatingPickVO vo = pickEntityToVO(e);

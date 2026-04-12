@@ -32,6 +32,20 @@ public class TopicController {
         return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
     }
 
+    private int requirePositiveId(int id) {
+        if (id < 1) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
+        return id;
+    }
+
+    private int requireImageIndex(int index) {
+        if (index < 1 || index > 9) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
+        return index;
+    }
+
     @RequestMapping(value = "/api/topic/profile/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<TopicVO>> getMyTopicList(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) {
@@ -43,6 +57,7 @@ public class TopicController {
 
     @RequestMapping(value = "/api/topic/id/{id}", method = RequestMethod.GET)
     public DataJsonResult<TopicVO> getTopicDetail(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
+        id = requirePositiveId(id);
         String sessionId = (String) request.getAttribute("sessionId");
         TopicVO vo = topicService.queryTopicById(id, sessionId);
         return new DataJsonResult<>(true, vo);
@@ -113,6 +128,7 @@ public class TopicController {
 
     @RequestMapping(value = "/api/topic/id/{id}/like", method = RequestMethod.POST)
     public JsonResult likeTopic(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
+        id = requirePositiveId(id);
         String sessionId = (String) request.getAttribute("sessionId");
         topicService.likeTopic(id, sessionId);
         return new JsonResult(true);
@@ -120,6 +136,8 @@ public class TopicController {
 
     @RequestMapping(value = "/api/topic/id/{id}/index/{index}/image", method = RequestMethod.GET)
     public DataJsonResult<String> getTopicImage(HttpServletRequest request, @PathVariable("id") int id, @PathVariable("index") int index) {
+        id = requirePositiveId(id);
+        index = requireImageIndex(index);
         String url = topicService.downloadTopicItemPicture(id, index);
         return new DataJsonResult<>(true, url);
     }

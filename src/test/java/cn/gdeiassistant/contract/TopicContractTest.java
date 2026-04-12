@@ -2,10 +2,12 @@ package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.topic.controller.TopicController;
+import cn.gdeiassistant.core.topic.pojo.dto.TopicPublishDTO;
 import cn.gdeiassistant.core.topic.pojo.vo.TopicVO;
 import cn.gdeiassistant.core.topic.service.TopicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -13,6 +15,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -86,6 +91,54 @@ class TopicContractTest {
                 .andExpect(jsonPath("$.data.count").exists())
                 .andExpect(jsonPath("$.data.publishTime").exists())
                 .andExpect(jsonPath("$.data.likeCount").exists());
+    }
+
+    @Test
+    void publishEndpointDerivesZeroCountWhenCountParamIsMissing() throws Exception {
+        mockMvc.perform(post("/api/topic")
+                        .requestAttr("sessionId", "test-session")
+                        .param("topic", "campus")
+                        .param("content", "topic content"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        ArgumentCaptor<TopicPublishDTO> captor = ArgumentCaptor.forClass(TopicPublishDTO.class);
+        verify(topicService).addTopic(captor.capture(), eq("test-session"));
+        assertEquals(0, captor.getValue().getCount());
+    }
+
+    @Test
+    void publishEndpointDerivesCountFromImageKeysWhenCountParamIsMissing() throws Exception {
+        TopicVO vo = mockTopicVO();
+        vo.setId(5);
+        when(topicService.addTopic(any(TopicPublishDTO.class), eq("test-session"))).thenReturn(vo);
+
+        mockMvc.perform(post("/api/topic")
+                        .requestAttr("sessionId", "test-session")
+                        .param("topic", "campus")
+                        .param("content", "topic content")
+                        .param("imageKeys", "tmp/topic-1.jpg", "tmp/topic-2.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        ArgumentCaptor<TopicPublishDTO> captor = ArgumentCaptor.forClass(TopicPublishDTO.class);
+        verify(topicService).addTopic(captor.capture(), eq("test-session"));
+        assertEquals(2, captor.getValue().getCount());
+        verify(topicService).moveTopicItemPictureFromTempObject(5, 1, "tmp/topic-1.jpg");
+        verify(topicService).moveTopicItemPictureFromTempObject(5, 2, "tmp/topic-2.jpg");
+    }
+
+    @Test
+    void publishEndpointRejectsBlankImageKeysBeforeService() throws Exception {
+        mockMvc.perform(post("/api/topic")
+                        .requestAttr("sessionId", "test-session")
+                        .param("topic", "campus")
+                        .param("content", "topic content")
+                        .param("imageKeys", "tmp/topic-1.jpg", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(topicService);
     }
 
     @Test

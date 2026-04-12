@@ -8,10 +8,13 @@ import cn.gdeiassistant.core.topic.service.TopicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -139,6 +143,28 @@ class TopicContractTest {
                 .andExpect(jsonPath("$.success").value(false));
 
         verifyNoInteractions(topicService);
+    }
+
+    @Test
+    void publishEndpointDerivesCountFromMultipartImagesWhenCountParamIsMissing() throws Exception {
+        TopicVO vo = mockTopicVO();
+        vo.setId(6);
+        when(topicService.addTopic(any(TopicPublishDTO.class), eq("test-session"))).thenReturn(vo);
+
+        mockMvc.perform(multipart("/api/topic")
+                        .file(new MockMultipartFile("images", "topic-1.jpg", "image/jpeg", "one".getBytes(StandardCharsets.UTF_8)))
+                        .file(new MockMultipartFile("images", "topic-2.jpg", "image/jpeg", "two".getBytes(StandardCharsets.UTF_8)))
+                        .requestAttr("sessionId", "test-session")
+                        .param("topic", "campus")
+                        .param("content", "topic content"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        ArgumentCaptor<TopicPublishDTO> captor = ArgumentCaptor.forClass(TopicPublishDTO.class);
+        verify(topicService).addTopic(captor.capture(), eq("test-session"));
+        assertEquals(2, captor.getValue().getCount());
+        verify(topicService).uploadTopicItemPicture(eq(6), eq(1), any(InputStream.class));
+        verify(topicService).uploadTopicItemPicture(eq(6), eq(2), any(InputStream.class));
     }
 
     @Test

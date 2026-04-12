@@ -7,6 +7,7 @@ import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
 import cn.gdeiassistant.core.secret.service.SecretService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -14,6 +15,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -142,6 +147,41 @@ class SecretContractTest {
                 .andExpect(jsonPath("$.data[0].comment").exists())
                 .andExpect(jsonPath("$.data[0].avatarTheme").exists())
                 .andExpect(jsonPath("$.data[0].publishTime").exists());
+    }
+
+    @Test
+    void publishVoiceEndpointAllowsMissingTextContentWhenVoiceKeyIsProvided() throws Exception {
+        when(secretService.addSecretInfo(eq("test-session"), any())).thenReturn(7);
+
+        mockMvc.perform(post("/api/secret/info")
+                        .requestAttr("sessionId", "test-session")
+                        .param("theme", "1")
+                        .param("type", "1")
+                        .param("timer", "0")
+                        .param("voiceKey", "tmp/voice.m4a"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        ArgumentCaptor<cn.gdeiassistant.core.secret.pojo.dto.SecretPublishDTO> captor =
+                ArgumentCaptor.forClass(cn.gdeiassistant.core.secret.pojo.dto.SecretPublishDTO.class);
+        verify(secretService).addSecretInfo(eq("test-session"), captor.capture());
+        assertEquals(1, captor.getValue().getType());
+        assertNull(captor.getValue().getContent());
+        verify(secretService).moveVoiceSecretFromTempObject(7, "tmp/voice.m4a");
+    }
+
+    @Test
+    void publishTextEndpointRejectsBlankContentBeforeService() throws Exception {
+        mockMvc.perform(post("/api/secret/info")
+                        .requestAttr("sessionId", "test-session")
+                        .param("theme", "1")
+                        .param("type", "0")
+                        .param("timer", "0")
+                        .param("content", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(secretService);
     }
 
     @Test

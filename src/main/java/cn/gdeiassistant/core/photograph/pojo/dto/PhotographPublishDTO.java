@@ -20,9 +20,6 @@ public class PhotographPublishDTO implements Serializable {
     @Length(max = 50)
     private String content;
 
-    @NotNull
-    @Min(0)
-    @Max(4)
     private Integer count;
 
     @NotNull

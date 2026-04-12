@@ -2,12 +2,14 @@ package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.photograph.controller.PhotographController;
+import cn.gdeiassistant.core.photograph.pojo.dto.PhotographPublishDTO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographCommentVO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
 import cn.gdeiassistant.core.photograph.service.PhotographService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -150,6 +153,68 @@ class PhotographContractTest {
         mockMvc.perform(post("/api/photograph/id/1/comment")
                         .requestAttr("sessionId", "test-session")
                         .param("comment", "x".repeat(51)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(photographService);
+    }
+
+    @Test
+    void publishEndpointDerivesCountFromImageKeysWhenCountParamIsMissing() throws Exception {
+        when(photographService.addPhotograph(any(PhotographPublishDTO.class), eq("test-session")))
+                .thenReturn(9);
+
+        mockMvc.perform(post("/api/photograph")
+                        .requestAttr("sessionId", "test-session")
+                        .param("title", "毕业季")
+                        .param("content", "校园照片")
+                        .param("type", "1")
+                        .param("imageKeys", "upload/photo-1.jpg", "upload/photo-2.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        ArgumentCaptor<PhotographPublishDTO> captor = ArgumentCaptor.forClass(PhotographPublishDTO.class);
+        verify(photographService).addPhotograph(captor.capture(), eq("test-session"));
+        PhotographPublishDTO dto = captor.getValue();
+        assertEquals("毕业季", dto.getTitle());
+        assertEquals("校园照片", dto.getContent());
+        assertEquals(2, dto.getCount());
+        assertEquals(1, dto.getType());
+        verify(photographService).movePhotographItemPictureFromTempObject(9, 1, "upload/photo-1.jpg");
+        verify(photographService).movePhotographItemPictureFromTempObject(9, 2, "upload/photo-2.jpg");
+    }
+
+    @Test
+    void publishEndpointRejectsInvalidImageKeysBeforeService() throws Exception {
+        mockMvc.perform(post("/api/photograph")
+                        .requestAttr("sessionId", "test-session")
+                        .param("title", "毕业季")
+                        .param("content", "校园照片")
+                        .param("type", "1")
+                        .param("imageKeys", "upload/photo-1.jpg", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(post("/api/photograph")
+                        .requestAttr("sessionId", "test-session")
+                        .param("title", "毕业季")
+                        .param("content", "校园照片")
+                        .param("type", "1")
+                        .param("imageKeys", "upload/photo-1.jpg", "upload/photo-2.jpg", "upload/photo-3.jpg",
+                                "upload/photo-4.jpg", "upload/photo-5.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(photographService);
+    }
+
+    @Test
+    void publishEndpointStillRequiresTypeBeforeService() throws Exception {
+        mockMvc.perform(post("/api/photograph")
+                        .requestAttr("sessionId", "test-session")
+                        .param("title", "毕业季")
+                        .param("content", "校园照片")
+                        .param("imageKeys", "upload/photo-1.jpg"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 

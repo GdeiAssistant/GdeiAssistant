@@ -66,8 +66,12 @@ public class SecretService {
     }
 
     public List<SecretVO> getSecretInfo(String sessionId) throws Exception {
+        return getSecretInfo(sessionId, 0, PROFILE_SECRET_LIMIT);
+    }
+
+    public List<SecretVO> getSecretInfo(String sessionId, int start, int size) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<SecretContentEntity> list = secretMapper.selectSecretByUsernameLight(user.getUsername(), PROFILE_SECRET_LIMIT);
+        List<SecretContentEntity> list = secretMapper.selectSecretByUsernameLight(user.getUsername(), start, size);
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }

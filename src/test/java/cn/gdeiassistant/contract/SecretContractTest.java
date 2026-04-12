@@ -19,6 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -141,6 +142,34 @@ class SecretContractTest {
                 .andExpect(jsonPath("$.data[0].comment").exists())
                 .andExpect(jsonPath("$.data[0].avatarTheme").exists())
                 .andExpect(jsonPath("$.data[0].publishTime").exists());
+    }
+
+    @Test
+    void commentEndpointRejectsBlankOrOverlongComment() throws Exception {
+        mockMvc.perform(post("/api/secret/id/1/comment")
+                        .requestAttr("sessionId", "test-session")
+                        .param("comment", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(post("/api/secret/id/1/comment")
+                        .requestAttr("sessionId", "test-session")
+                        .param("comment", "x".repeat(51)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(secretService);
+    }
+
+    @Test
+    void likeEndpointRejectsInvalidLikeState() throws Exception {
+        mockMvc.perform(post("/api/secret/id/1/like")
+                        .requestAttr("sessionId", "test-session")
+                        .param("like", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(secretService);
     }
 
     private static SecretVO mockSecretVO() {

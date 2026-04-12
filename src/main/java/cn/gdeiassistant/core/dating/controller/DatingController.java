@@ -157,6 +157,7 @@ public class DatingController {
 
     @RequestMapping(value = "/api/dating/profile/id/{id}/state", method = RequestMethod.POST)
     public JsonResult updateMyRoommateProfileState(HttpServletRequest request, @PathVariable("id") Integer id, Integer state) throws DataNotExistException, NoAccessException {
+        if (state == null || (!state.equals(0) && !state.equals(1))) return failure(request, "请求参数不合法");
         String sessionId = (String) request.getAttribute("sessionId");
         datingService.verifyRoommateProfileOwner(sessionId, id);
         datingService.updateRoommateProfileState(id, state);

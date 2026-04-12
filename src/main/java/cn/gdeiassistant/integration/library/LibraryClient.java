@@ -10,6 +10,7 @@ import com.alibaba.fastjson2.JSONObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -20,6 +21,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -36,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class LibraryClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(LibraryClient.class);
     private static final String OPAC_RENEW_BASE = "http://agentdockingopac.featurelib.libsou.com";
     private static final String OPAC_SEARCH_BASE = "http://agentdockingopac.featurelib.libsou.com";
     private static final String FIVEREAD_M = "http://m.5read.com";
@@ -68,9 +72,7 @@ public class LibraryClient {
             result.setMessage(jsonObject.getString("msg"));
             return result;
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -130,9 +132,7 @@ public class LibraryClient {
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-            if (httpClient != null) {
-                try { httpClient.close(); } catch (IOException ignored) { }
-            }
+            closeHttpClient(httpClient);
             if (cookieStore != null) {
                 HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
@@ -159,11 +159,9 @@ public class LibraryClient {
             url = url + "&page=" + page;
         }
         Request request = new Request.Builder().url(url).build();
-        Response response = okHttpClient.newCall(request).execute();
-        if (!response.isSuccessful()) {
-            throw new ServerErrorException("移动图书馆系统异常");
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return parseSuccessfulResponse(response);
         }
-        return Jsoup.parse(response.body().string());
     }
 
     /**
@@ -192,10 +190,27 @@ public class LibraryClient {
                 + "&page=" + URLEncoder.encode(page != null ? page : "1", StandardCharsets.UTF_8)
                 + "&xc=" + URLEncoder.encode(xc != null ? xc : "3", StandardCharsets.UTF_8);
         Request request = new Request.Builder().url(u).build();
-        Response response = okHttpClient.newCall(request).execute();
-        if (!response.isSuccessful()) {
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return parseSuccessfulResponse(response);
+        }
+    }
+
+    private static Document parseSuccessfulResponse(Response response) throws IOException, ServerErrorException {
+        ResponseBody responseBody = response.body();
+        if (!response.isSuccessful() || responseBody == null) {
             throw new ServerErrorException("移动图书馆系统异常");
         }
-        return Jsoup.parse(response.body().string());
+        return Jsoup.parse(responseBody.string());
+    }
+
+    private static void closeHttpClient(CloseableHttpClient httpClient) {
+        if (httpClient == null) {
+            return;
+        }
+        try {
+            httpClient.close();
+        } catch (IOException e) {
+            logger.warn("关闭图书馆 HTTP 客户端失败", e);
+        }
     }
 }

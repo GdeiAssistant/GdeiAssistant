@@ -13,6 +13,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,7 @@ import java.util.List;
 @Component
 public class CardClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(CardClient.class);
     private static final String ECARD_BASE = "http://ecard.gdei.edu.cn";
     private static final int CARD_TIMEOUT_SEC = 15;
 
@@ -49,7 +52,7 @@ public class CardClient {
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-            if (httpClient != null) try { httpClient.close(); } catch (IOException ignored) { }
+            closeHttpClient(httpClient);
             if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
@@ -75,7 +78,7 @@ public class CardClient {
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-            if (httpClient != null) try { httpClient.close(); } catch (IOException ignored) { }
+            closeHttpClient(httpClient);
             if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
@@ -99,7 +102,7 @@ public class CardClient {
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-            if (httpClient != null) try { httpClient.close(); } catch (IOException ignored) { }
+            closeHttpClient(httpClient);
             if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
@@ -123,7 +126,7 @@ public class CardClient {
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-            if (httpClient != null) try { httpClient.close(); } catch (IOException ignored) { }
+            closeHttpClient(httpClient);
             if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
@@ -144,7 +147,7 @@ public class CardClient {
             }
             return readBytes(httpResponse.getEntity().getContent());
         } finally {
-            if (httpClient != null) try { httpClient.close(); } catch (IOException ignored) { }
+            closeHttpClient(httpClient);
             if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
@@ -166,17 +169,31 @@ public class CardClient {
             }
             return readBytes(httpResponse.getEntity().getContent());
         } finally {
-            if (httpClient != null) try { httpClient.close(); } catch (IOException ignored) { }
+            closeHttpClient(httpClient);
             if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
 
     private static byte[] readBytes(InputStream in) throws IOException {
-        ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        byte[] b = new byte[4096];
-        int n;
-        while ((n = in.read(b)) != -1) buf.write(b, 0, n);
-        return buf.toByteArray();
+        try (InputStream input = in; ByteArrayOutputStream buf = new ByteArrayOutputStream()) {
+            byte[] b = new byte[4096];
+            int n;
+            while ((n = input.read(b)) != -1) {
+                buf.write(b, 0, n);
+            }
+            return buf.toByteArray();
+        }
+    }
+
+    private static void closeHttpClient(CloseableHttpClient httpClient) {
+        if (httpClient == null) {
+            return;
+        }
+        try {
+            httpClient.close();
+        } catch (IOException e) {
+            logger.warn("关闭一卡通 HTTP 客户端失败", e);
+        }
     }
 
     /**
@@ -203,7 +220,7 @@ public class CardClient {
             }
             return EntityUtils.toString(httpResponse.getEntity());
         } finally {
-            if (httpClient != null) try { httpClient.close(); } catch (IOException ignored) { }
+            closeHttpClient(httpClient);
             if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }

@@ -1,5 +1,6 @@
 package cn.gdeiassistant.contract;
 
+import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.delivery.controller.DeliveryController;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryOrderVO;
 import cn.gdeiassistant.core.delivery.service.DeliveryService;
@@ -12,6 +13,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,7 +32,9 @@ class DeliveryContractTest {
         DeliveryController controller = new DeliveryController();
         ReflectionTestUtils.setField(controller, "deliveryService", deliveryService);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new GlobalRestExceptionHandler())
+                .build();
     }
 
     @Test
@@ -49,6 +54,34 @@ class DeliveryContractTest {
                 .andExpect(jsonPath("$.data[0].company").exists())
                 .andExpect(jsonPath("$.data[0].address").exists())
                 .andExpect(jsonPath("$.data[0].state").exists());
+    }
+
+    @Test
+    void listEndpointCapsPageSizeAtFifty() throws Exception {
+        when(deliveryService.queryDeliveryOrderPage(0, 50))
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/api/delivery/order/start/0/size/100")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(deliveryService).queryDeliveryOrderPage(0, 50);
+    }
+
+    @Test
+    void listEndpointRejectsLowerBoundViolations() throws Exception {
+        mockMvc.perform(get("/api/delivery/order/start/-1/size/10")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(get("/api/delivery/order/start/0/size/0")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(deliveryService);
     }
 
     @Test

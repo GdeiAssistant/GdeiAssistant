@@ -13,6 +13,7 @@ import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
 import cn.gdeiassistant.core.marketplace.service.MarketplaceService;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ public class MarketplaceController {
 
     @RequestMapping(value = "/api/ershou/item/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<MarketplaceItemEntity>> getItemList(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
+        start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItems(start);
         return new DataJsonResult<>(true, list);
     }
@@ -136,6 +138,7 @@ public class MarketplaceController {
     @RequestMapping(value = "/api/ershou/keyword/{keyword}/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<MarketplaceItemEntity>> getItemWithKeyword(HttpServletRequest request, @PathVariable("keyword") String keyword,
             @PathVariable("start") int start) throws Exception {
+        start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItemsWithKeyword(keyword, start);
         return new DataJsonResult<>(true, list);
     }
@@ -164,6 +167,7 @@ public class MarketplaceController {
     @RequestMapping(value = "/api/ershou/item/type/{type}/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<MarketplaceItemEntity>> getItemByType(HttpServletRequest request, @Validated @Range(min = 0, max = 11) @PathVariable("type") int type,
             @PathVariable("start") int start) throws Exception {
+        start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItemsByType(type, start);
         return new DataJsonResult<>(true, list);
     }

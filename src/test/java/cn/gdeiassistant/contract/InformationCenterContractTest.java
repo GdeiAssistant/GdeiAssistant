@@ -1,6 +1,7 @@
 package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.announcement.controller.AnnouncementController;
 import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
 import cn.gdeiassistant.core.information.service.Announcement.AnnouncementService;
@@ -19,9 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class InformationCenterContractTest {
@@ -50,7 +53,7 @@ class InformationCenterContractTest {
                 schoolNewsController,
                 announcementController,
                 messageController
-        ).build();
+        ).setControllerAdvice(new GlobalRestExceptionHandler()).build();
     }
 
     @Test
@@ -63,6 +66,18 @@ class InformationCenterContractTest {
                 .andExpect(content().json(
                         ContractResourceSupport.loadJson("contracts/information-news.empty.json")
                 ));
+    }
+
+    @Test
+    void newsListCapsPageSizeAtFifty() throws Exception {
+        when(schoolNewsService.queryNewInfoList(1, 0, 50))
+                .thenThrow(new DataNotExistException("no data"));
+
+        mockMvc.perform(get("/api/information/news/type/1/start/0/size/100"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(schoolNewsService).queryNewInfoList(1, 0, 50);
     }
 
     @Test
@@ -81,6 +96,17 @@ class InformationCenterContractTest {
                 .andExpect(content().json(
                         ContractResourceSupport.loadJson("contracts/information-announcements.success.json")
                 ));
+    }
+
+    @Test
+    void announcementListCapsPageSizeAtFifty() throws Exception {
+        when(announcementService.queryAnnouncementPage(0, 50)).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/information/announcement/start/0/size/100"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(announcementService).queryAnnouncementPage(0, 50);
     }
 
     @Test
@@ -118,6 +144,19 @@ class InformationCenterContractTest {
                 .andExpect(content().json(
                         ContractResourceSupport.loadJson("contracts/information-message-list.success.json")
                 ));
+    }
+
+    @Test
+    void interactionMessagesCapPageSizeAtFifty() throws Exception {
+        when(messageService.queryInteractionMessages("session-1", 0, 50))
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/api/information/message/interaction/start/0/size/100")
+                        .requestAttr("sessionId", "session-1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(messageService).queryInteractionMessages("session-1", 0, 50);
     }
 
     @Test

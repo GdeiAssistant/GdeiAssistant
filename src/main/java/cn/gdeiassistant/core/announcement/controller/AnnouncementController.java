@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.announcement.controller;
 import cn.gdeiassistant.common.pojo.Entity.Announcement;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
 import cn.gdeiassistant.core.information.service.Announcement.AnnouncementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class AnnouncementController {
     @RequestMapping(value = "/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<AnnouncementVO>> queryAnnouncementPage(@PathVariable("start") Integer start,
             @PathVariable("size") Integer size) {
+        size = PageUtils.normalizePageSize(start, size);
         return new DataJsonResult<>(true, announcementService.queryAnnouncementPage(start, size));
     }
 

@@ -16,6 +16,7 @@ import cn.gdeiassistant.core.dating.pojo.dto.DatingPublishDTO;
 import cn.gdeiassistant.core.dating.pojo.vo.DatingPickVO;
 import cn.gdeiassistant.core.dating.pojo.vo.DatingProfileVO;
 import cn.gdeiassistant.core.dating.service.DatingService;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -69,6 +70,10 @@ public class DatingController {
 
     @RequestMapping(value = "/api/dating/profile/area/{area}/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<DatingProfileVO>> queryDatingProfile(@PathVariable("start") Integer start, @PathVariable("area") Integer area) {
+        if (area == null || area < 0 || area > 1) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
+        start = PageUtils.requireNonNegativeStart(start);
         List<DatingProfileVO> list = datingService.queryDatingProfile(start, 10, area);
         for (DatingProfileVO p : list) {
             if (p.getProfileId() != null) p.setPictureURL(datingService.getRoommateProfilePictureURL(p.getProfileId()));

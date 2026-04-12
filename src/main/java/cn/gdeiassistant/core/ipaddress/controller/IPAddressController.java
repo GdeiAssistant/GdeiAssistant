@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.iPAddress.controller;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class IPAddressController {
     @RequestMapping(value = "/api/ip/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<IPAddressRecord>> getRecentLoginIPAddressRecord(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) {
+        size = PageUtils.normalizePageSize(start, size);
         String sessionId = (String) request.getAttribute("sessionId");
         List<IPAddressRecord> recordList = ipAddressService.getSelfUserAddressRecord(sessionId
                 , IPAddressEnum.LOGIN.getValue(), start, size);

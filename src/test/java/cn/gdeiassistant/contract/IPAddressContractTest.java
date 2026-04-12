@@ -1,5 +1,6 @@
 package cn.gdeiassistant.contract;
 
+import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
 import cn.gdeiassistant.core.iPAddress.controller.IPAddressController;
 import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
@@ -12,6 +13,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,7 +37,9 @@ class IPAddressContractTest {
         IPAddressController controller = new IPAddressController();
         ReflectionTestUtils.setField(controller, "ipAddressService", ipAddressService);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new GlobalRestExceptionHandler())
+                .build();
     }
 
     @Test
@@ -89,6 +94,34 @@ class IPAddressContractTest {
                 .andExpect(jsonPath("$.data[0].ip").value("1.2.3.4"))
                 .andExpect(jsonPath("$.data[0].country").value("中国"))
                 .andExpect(jsonPath("$.data[0].province").value("广东省"));
+    }
+
+    @Test
+    void historyEndpointCapsPageSizeAtFifty() throws Exception {
+        when(ipAddressService.getSelfUserAddressRecord("test-session", 0, 0, 50))
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/api/ip/start/0/size/100")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(ipAddressService).getSelfUserAddressRecord("test-session", 0, 0, 50);
+    }
+
+    @Test
+    void historyEndpointRejectsLowerBoundViolations() throws Exception {
+        mockMvc.perform(get("/api/ip/start/-1/size/10")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(get("/api/ip/start/0/size/0")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(ipAddressService);
     }
 
     @Test

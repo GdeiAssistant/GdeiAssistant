@@ -18,9 +18,11 @@ import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -124,5 +126,33 @@ class PhotographContractTest {
                 .andExpect(jsonPath("$.data[0].commentId").value(10))
                 .andExpect(jsonPath("$.data[0].comment").value("great shot"))
                 .andExpect(jsonPath("$.data[0].createTime").exists());
+    }
+
+    @Test
+    void addPhotographCommentAcceptsValidComment() throws Exception {
+        mockMvc.perform(post("/api/photograph/id/1/comment")
+                        .requestAttr("sessionId", "test-session")
+                        .param("comment", "great shot"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(photographService).addPhotographComment(1, "great shot", "test-session");
+    }
+
+    @Test
+    void addPhotographCommentRejectsBlankOrOverlongComment() throws Exception {
+        mockMvc.perform(post("/api/photograph/id/1/comment")
+                        .requestAttr("sessionId", "test-session")
+                        .param("comment", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(post("/api/photograph/id/1/comment")
+                        .requestAttr("sessionId", "test-session")
+                        .param("comment", "x".repeat(51)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(photographService);
     }
 }

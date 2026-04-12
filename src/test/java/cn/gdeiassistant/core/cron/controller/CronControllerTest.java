@@ -70,6 +70,34 @@ class CronControllerTest {
     }
 
     @Test
+    void cacheGradeDataReportsMissingService() throws Exception {
+        ReflectionTestUtils.setField(controller, "cronSecret", "expected-secret");
+        ReflectionTestUtils.setField(controller, "gradeCronService", null);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        JsonResult result = controller.cacheGradeData("expected-secret", response);
+
+        assertNotNull(result);
+        assertFalse(result.isSuccess());
+        verifyNoInteractions(scheduleCronService, schoolNewsCornService);
+    }
+
+    @Test
+    void cacheGradeDataReportsServiceFailure() throws Exception {
+        ReflectionTestUtils.setField(controller, "cronSecret", "expected-secret");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        doThrow(new IllegalStateException("boom")).when(gradeCronService).synchronizeGradeData();
+
+        JsonResult result = controller.cacheGradeData("expected-secret", response);
+
+        assertNotNull(result);
+        assertFalse(result.isSuccess());
+        assertEquals("Cron task failed: grade", result.getMessage());
+        verify(gradeCronService).synchronizeGradeData();
+        verifyNoInteractions(scheduleCronService, schoolNewsCornService);
+    }
+
+    @Test
     void cacheScheduleDataRunsWhenSecretMatches() throws Exception {
         ReflectionTestUtils.setField(controller, "cronSecret", "expected-secret");
         MockHttpServletResponse response = new MockHttpServletResponse();

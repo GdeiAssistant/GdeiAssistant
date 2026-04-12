@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 public class SecretService {
 
     private static final Logger logger = LoggerFactory.getLogger(SecretService.class);
+    private static final int PROFILE_SECRET_LIMIT = 50;
     @Autowired
     private UserCertificateService userCertificateService;
 
@@ -66,7 +67,7 @@ public class SecretService {
 
     public List<SecretVO> getSecretInfo(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<SecretContentEntity> list = secretMapper.selectSecretByUsernameLight(user.getUsername());
+        List<SecretContentEntity> list = secretMapper.selectSecretByUsernameLight(user.getUsername(), PROFILE_SECRET_LIMIT);
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }

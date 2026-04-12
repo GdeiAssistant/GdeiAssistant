@@ -97,7 +97,7 @@ public interface DatingMapper {
             "d.profile_id as profile_id,d.username as profile_username,d.nickname,d.grade,d.faculty,d.hometown," +
             "d.content as profile_content,d.qq,d.wechat,d.area,d.state as profile_state " +
             "from dating_pick p inner join dating_profile d on p.profile_id=d.profile_id " +
-            "where p.username=#{username} order by p.pick_id desc")
+            "where p.username=#{username} order by p.pick_id desc limit #{limit}")
     @Results(id = "RoommatePickSent", value = {
             @Result(property = "pickId", column = "pick_id"),
             @Result(property = "username", column = "pick_username"),
@@ -115,15 +115,17 @@ public interface DatingMapper {
             @Result(property = "datingProfile.area", column = "area"),
             @Result(property = "datingProfile.state", column = "profile_state")
     })
-    List<DatingPickEntity> selectDatingPickListByUsername(@Param("username") String username);
+    List<DatingPickEntity> selectDatingPickListByUsername(@Param("username") String username,
+            @Param("limit") int limit);
 
     @Select("select p.pick_id as pick_id,p.username as pick_username,p.content as pick_content,p.state as pick_state," +
             "d.profile_id as profile_id,d.username as profile_username,d.nickname,d.grade,d.faculty,d.hometown," +
             "d.content as profile_content,d.qq,d.wechat,d.area,d.state as profile_state " +
             "from dating_pick p inner join dating_profile d on p.profile_id=d.profile_id " +
-            "where d.username=#{username} order by p.pick_id desc")
+            "where d.username=#{username} order by p.pick_id desc limit #{limit}")
     @ResultMap("RoommatePickSent")
-    List<DatingPickEntity> selectReceivedRoommatePickListByProfileOwner(@Param("username") String username);
+    List<DatingPickEntity> selectReceivedRoommatePickListByProfileOwner(@Param("username") String username,
+            @Param("limit") int limit);
 
     @Delete("delete from dating_profile where profile_id=#{profileId}")
     void deleteRoommateProfile(@Param("profileId") int profileId);

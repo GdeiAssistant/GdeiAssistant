@@ -165,4 +165,26 @@ class DatingServiceTest {
         assertDoesNotThrow(() -> datingService.updateRoommateProfileState(1, 1));
         verify(datingMapper, times(2)).updateRoommateProfileState(anyInt(), anyInt());
     }
+    @Test
+    void queryMySentPicks_usesServerSideLimit() {
+        User user = new User("testuser");
+        when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
+
+        datingService.queryMySentPicks("session1");
+
+        verify(datingMapper).selectDatingPickListByUsername("testuser", 50);
+        verify(datingMapper, never()).selectDatingPickListByUsername(anyString(), intThat(limit -> limit > 50));
+    }
+
+    @Test
+    void queryMyReceivedPicks_usesServerSideLimit() {
+        User user = new User("testuser");
+        when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
+
+        datingService.queryMyReceivedPicks("session1");
+
+        verify(datingMapper).selectReceivedRoommatePickListByProfileOwner("testuser", 50);
+        verify(datingMapper, never()).selectReceivedRoommatePickListByProfileOwner(anyString(), intThat(limit -> limit > 50));
+    }
+
 }

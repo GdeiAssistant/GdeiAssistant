@@ -7,6 +7,7 @@ import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.secret.pojo.dto.SecretPublishDTO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
@@ -54,7 +55,7 @@ public class SecretController {
     @RequestMapping(value = "/api/secret/info/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<SecretVO>> getMoreSecret(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) throws Exception {
-        if (size > 50) size = 50; // Cap page size
+        size = PageUtils.normalizePageSize(start, size);
         String sessionId = (String) request.getAttribute("sessionId");
         List<SecretVO> list = secretService.getSecretInfo(start, size, sessionId);
         return new DataJsonResult<>(true, list);
@@ -70,10 +71,7 @@ public class SecretController {
     @RequestMapping(value = "/api/secret/profile/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<SecretVO>> getMySecrets(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) throws Exception {
-        if (start < 0 || size <= 0) {
-            throw new IllegalArgumentException("请求参数不合法");
-        }
-        if (size > 50) size = 50;
+        size = PageUtils.normalizePageSize(start, size);
         String sessionId = (String) request.getAttribute("sessionId");
         List<SecretVO> list = secretService.getSecretInfo(sessionId, start, size);
         return new DataJsonResult<>(true, list);

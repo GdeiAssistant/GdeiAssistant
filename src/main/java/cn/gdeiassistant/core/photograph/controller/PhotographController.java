@@ -7,6 +7,7 @@ import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.photograph.pojo.dto.PhotographPublishDTO;
@@ -63,7 +64,7 @@ public class PhotographController {
     public DataJsonResult<List<PhotographVO>> queryPhotographList(HttpServletRequest request
             , @Validated @NotNull @Min(0) @Max(1) @PathVariable("type") int type
             , @PathVariable("start") int start, @PathVariable("size") int size) {
-        if (size > 50) size = 50; // Cap page size
+        size = PageUtils.normalizePageSize(start, size);
         List<PhotographVO> list = photographService.queryPhotographList(start, size, type, (String) request.getAttribute("sessionId"));
         return new DataJsonResult<>(true, list);
     }
@@ -100,7 +101,7 @@ public class PhotographController {
     @RequestMapping(value = "/api/photograph/profile/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<PhotographVO>> getMyPhotographs(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) {
-        if (size > 50) size = 50; // Cap page size
+        size = PageUtils.normalizePageSize(start, size);
         String sessionId = (String) request.getAttribute("sessionId");
         List<PhotographVO> list = photographService.queryMyPhotographList(sessionId, start, size);
         return new DataJsonResult<>(true, list);

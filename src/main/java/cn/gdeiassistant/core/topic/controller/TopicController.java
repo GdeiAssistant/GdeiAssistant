@@ -7,6 +7,7 @@ import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.topic.pojo.dto.TopicPublishDTO;
@@ -34,7 +35,7 @@ public class TopicController {
     @RequestMapping(value = "/api/topic/profile/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<TopicVO>> getMyTopicList(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) {
-        if (size > 50) size = 50; // Cap page size
+        size = PageUtils.normalizePageSize(start, size);
         String sessionId = (String) request.getAttribute("sessionId");
         List<TopicVO> list = topicService.queryMyTopicList(sessionId, start, size);
         return new DataJsonResult<>(true, list);
@@ -50,7 +51,7 @@ public class TopicController {
     @RequestMapping(value = "/api/topic/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<TopicVO>> queryTopic(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size) {
-        if (size > 50) size = 50; // Cap page size
+        size = PageUtils.normalizePageSize(start, size);
         String sessionId = (String) request.getAttribute("sessionId");
         List<TopicVO> list = topicService.queryTopic(sessionId, start, size);
         return new DataJsonResult<>(true, list);
@@ -59,7 +60,7 @@ public class TopicController {
     @RequestMapping(value = "/api/topic/keyword/{keyword}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<TopicVO>> queryTopicByKeyword(HttpServletRequest request, @PathVariable("start") int start
             , @PathVariable("size") int size, @PathVariable("keyword") String keyword) {
-        if (size > 50) size = 50; // Cap page size
+        size = PageUtils.normalizePageSize(start, size);
         String sessionId = (String) request.getAttribute("sessionId");
         List<TopicVO> list = topicService.queryTopicByKeyword(sessionId, start, size, keyword);
         return new DataJsonResult<>(true, list);

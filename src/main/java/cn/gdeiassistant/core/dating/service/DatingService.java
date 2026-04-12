@@ -118,7 +118,11 @@ public class DatingService {
             throw new RuntimeException("上传失败", e);
         } finally {
             if (inputStream != null) {
-                try { inputStream.close(); } catch (IOException ignored) {}
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.warn("关闭室友信息图片上传输入流失败，id={}", id, e);
+                }
             }
         }
     }
@@ -261,7 +265,9 @@ public class DatingService {
     public void deleteDatingImage(int id) {
         try {
             r2StorageService.deleteObject("gdeiassistant-userdata", "dating/" + id + ".jpg");
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            logger.warn("删除室友信息图片失败，id={}", id, e);
+        }
     }
 
     public void deleteDatingProfile(int id) {

@@ -109,7 +109,11 @@ public class SecretService {
             throw new RuntimeException("语音上传失败", e);
         } finally {
             if (inputStream != null) {
-                try { inputStream.close(); } catch (IOException ignored) {}
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.warn("关闭树洞语音上传输入流失败，id={}", id, e);
+                }
             }
         }
     }
@@ -170,7 +174,9 @@ public class SecretService {
         for (String ext : extensions) {
             try {
                 r2StorageService.deleteObject("gdeiassistant-userdata", "secret/voice/" + id + ext);
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                logger.warn("删除树洞语音失败，id={}，extension={}", id, ext, e);
+            }
         }
     }
 

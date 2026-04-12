@@ -37,6 +37,7 @@ public class LostAndFoundController {
 
     @RequestMapping(value = "/api/lostandfound/lostitem/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<LostAndFoundItemVO>> getLostItem(HttpServletRequest request, @PathVariable("start") @Min(0) int start) throws Exception {
+        start = PageUtils.requireNonNegativeStart(start);
         List<LostAndFoundItemVO> list = lostAndFoundService.queryLostItems(start);
         return new DataJsonResult<>(true, list);
     }
@@ -66,6 +67,7 @@ public class LostAndFoundController {
 
     @RequestMapping(value = "/api/lostandfound/founditem/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<LostAndFoundItemVO>> getFoundInfo(HttpServletRequest request, @PathVariable("start") @Min(0) int start) throws Exception {
+        start = PageUtils.requireNonNegativeStart(start);
         List<LostAndFoundItemVO> list = lostAndFoundService.queryFoundItems(start);
         return new DataJsonResult<>(true, list);
     }
@@ -74,6 +76,10 @@ public class LostAndFoundController {
     public DataJsonResult<List<LostAndFoundItemVO>> searchLostAndFoundInfo(HttpServletRequest request, @Validated @Range(min = 0, max = 1) @PathVariable("type") Integer lostType,
             @PathVariable("start") @Min(0) Integer start,
             @Validated @NotBlank @Length(min = 1, max = 50) @RequestParam("keyword") String keywords) throws Exception {
+        if (lostType == null || (lostType != 0 && lostType != 1)) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
+        start = PageUtils.requireNonNegativeStart(start);
         List<LostAndFoundItemVO> list = lostType.equals(0)
                 ? lostAndFoundService.queryLostItemsWithKeyword(keywords, start)
                 : lostAndFoundService.queryFoundItemsWithKeyword(keywords, start);

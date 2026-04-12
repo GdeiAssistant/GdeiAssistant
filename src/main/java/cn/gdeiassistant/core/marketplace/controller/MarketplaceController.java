@@ -167,6 +167,9 @@ public class MarketplaceController {
     @RequestMapping(value = "/api/ershou/item/type/{type}/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<MarketplaceItemEntity>> getItemByType(HttpServletRequest request, @Validated @Range(min = 0, max = 11) @PathVariable("type") int type,
             @PathVariable("start") int start) throws Exception {
+        if (type < 0 || type > 11) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
         start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItemsByType(type, start);
         return new DataJsonResult<>(true, list);

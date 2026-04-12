@@ -106,6 +106,19 @@ class MarketplaceContractTest {
     }
 
     @Test
+    void typeFilterEndpointRejectsInvalidTypeOrStart() throws Exception {
+        mockMvc.perform(get("/api/ershou/item/type/12/start/0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(get("/api/ershou/item/type/8/start/-1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(marketplaceService);
+    }
+
+    @Test
     void detailEndpointReturnsExpectedShape() throws Exception {
         MarketplaceItemVO vo = mockItemVO(1);
 

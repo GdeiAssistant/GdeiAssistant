@@ -78,6 +78,15 @@ class PhotographContractTest {
     }
 
     @Test
+    void listPhotographs_rejectsInvalidType() throws Exception {
+        mockMvc.perform(get("/api/photograph/type/2/start/0/size/10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(photographService);
+    }
+
+    @Test
     void getPhotographById_returnsDataObjectWithExpectedFields() throws Exception {
         PhotographVO vo = new PhotographVO();
         vo.setId(1);

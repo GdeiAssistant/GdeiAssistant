@@ -54,6 +54,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -85,7 +86,8 @@ public class GlobalRestExceptionHandler {
                 BackendTextLocalizer.localizeMessage("请求方法不支持", request.getHeader("Accept-Language"))));
     }
 
-    @ExceptionHandler({ConstraintViolationException.class, BindException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler({ConstraintViolationException.class, BindException.class, MethodArgumentNotValidException.class,
+            HandlerMethodValidationException.class})
     public ResponseEntity<JsonResult> handleConstraintViolationException(HttpServletRequest request) {
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.INCORRECT_REQUEST_PARAM, false,
                 BackendTextLocalizer.localizeMessage("请求参数不合法", request.getHeader("Accept-Language"))));

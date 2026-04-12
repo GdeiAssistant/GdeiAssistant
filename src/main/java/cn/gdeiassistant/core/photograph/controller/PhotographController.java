@@ -64,6 +64,9 @@ public class PhotographController {
     public DataJsonResult<List<PhotographVO>> queryPhotographList(HttpServletRequest request
             , @Validated @NotNull @Min(0) @Max(1) @PathVariable("type") int type
             , @PathVariable("start") int start, @PathVariable("size") int size) {
+        if (type < 0 || type > 1) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
         size = PageUtils.normalizePageSize(start, size);
         List<PhotographVO> list = photographService.queryPhotographList(start, size, type, (String) request.getAttribute("sessionId"));
         return new DataJsonResult<>(true, list);

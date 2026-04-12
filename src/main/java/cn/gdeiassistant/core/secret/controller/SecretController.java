@@ -70,6 +70,9 @@ public class SecretController {
     @RequestMapping(value = "/api/secret/profile/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<SecretVO>> getMySecrets(HttpServletRequest request
             , @PathVariable("start") int start, @PathVariable("size") int size) throws Exception {
+        if (start < 0 || size <= 0) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
         if (size > 50) size = 50;
         String sessionId = (String) request.getAttribute("sessionId");
         List<SecretVO> list = secretService.getSecretInfo(sessionId, start, size);

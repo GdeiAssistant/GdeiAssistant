@@ -45,8 +45,16 @@ public class DatingController {
         return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
     }
 
+    private int requirePositiveId(Integer id) {
+        if (id == null || id < 1) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
+        return id;
+    }
+
     @RequestMapping(value = "/api/dating/profile/id/{id}", method = RequestMethod.GET)
     public DataJsonResult<Map<String, Object>> getRoommateProfileDetail(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException {
+        id = requirePositiveId(id);
         String sessionId = (String) request.getAttribute("sessionId");
         DatingProfileVO profile = datingService.queryDatingProfile(id);
         String pictureURL = datingService.getRoommateProfilePictureURL(id);
@@ -83,6 +91,7 @@ public class DatingController {
 
     @RequestMapping(value = "/api/dating/profile/id/{id}/picture", method = RequestMethod.GET)
     public DataJsonResult<String> getRoommateProfilePicture(@PathVariable("id") Integer id) {
+        id = requirePositiveId(id);
         String url = datingService.getRoommateProfilePictureURL(id);
         return StringUtils.isNotBlank(url) ? new DataJsonResult<>(true, url) : new DataJsonResult<>(new JsonResult(false));
     }
@@ -129,6 +138,7 @@ public class DatingController {
 
     @RequestMapping(value = "/api/dating/pick/id/{id}", method = RequestMethod.GET)
     public DataJsonResult<DatingPickVO> getRoommatePickDetail(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException, NoAccessException {
+        id = requirePositiveId(id);
         datingService.verifyRoommatePickViewAccess((String) request.getAttribute("sessionId"), id);
         DatingPickVO vo = datingService.getRoommatePickDetailVo(id);
         return new DataJsonResult<>(true, vo);
@@ -136,6 +146,7 @@ public class DatingController {
 
     @RequestMapping(value = "/api/dating/pick/id/{id}", method = RequestMethod.POST)
     public JsonResult updateRoommatePickState(HttpServletRequest request, @PathVariable("id") Integer id, Integer state) throws DataNotExistException, NoAccessException {
+        id = requirePositiveId(id);
         if (state == null || (!state.equals(-1) && !state.equals(1))) return failure(request, "请求参数不合法");
         String sessionId = (String) request.getAttribute("sessionId");
         datingService.verifyRoommatePickViewAccess(sessionId, id);
@@ -147,16 +158,17 @@ public class DatingController {
     @RequestMapping(value = "/api/dating/pick", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addRoommatePick(HttpServletRequest request, @Validated DatingPickSubmitDTO dto) throws SelfPickException, RepeatPickException, DataNotExistException {
-        if (dto.getProfileId() == null) return failure(request, "请求参数不合法");
+        int profileId = requirePositiveId(dto.getProfileId());
         if (dto.getContent() != null && dto.getContent().length() > 50) return failure(request, "文本内容超过限制");
         String sessionId = (String) request.getAttribute("sessionId");
-        datingService.verifyRoommatePickRequestAccess(sessionId, dto.getProfileId());
+        datingService.verifyRoommatePickRequestAccess(sessionId, profileId);
         datingService.addRoommatePick(sessionId, dto);
         return new JsonResult(true);
     }
 
     @RequestMapping(value = "/api/dating/profile/id/{id}/state", method = RequestMethod.POST)
     public JsonResult updateMyRoommateProfileState(HttpServletRequest request, @PathVariable("id") Integer id, Integer state) throws DataNotExistException, NoAccessException {
+        id = requirePositiveId(id);
         if (state == null || (!state.equals(0) && !state.equals(1))) return failure(request, "请求参数不合法");
         String sessionId = (String) request.getAttribute("sessionId");
         datingService.verifyRoommateProfileOwner(sessionId, id);

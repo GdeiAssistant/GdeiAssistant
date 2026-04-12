@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.dating.pojo.dto;
 
 import org.hibernate.validator.constraints.Length;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
 public class DatingPickSubmitDTO implements Serializable {
 
     @NotNull
+    @Min(1)
     private Integer profileId;
 
     @Length(max = 50)

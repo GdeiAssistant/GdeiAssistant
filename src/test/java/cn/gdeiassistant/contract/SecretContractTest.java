@@ -1,5 +1,6 @@
 package cn.gdeiassistant.contract;
 
+import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.secret.controller.SecretController;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,7 +34,9 @@ class SecretContractTest {
         SecretController controller = new SecretController();
         ReflectionTestUtils.setField(controller, "secretService", secretService);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new GlobalRestExceptionHandler())
+                .build();
     }
 
     @Test
@@ -81,6 +85,21 @@ class SecretContractTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         verify(secretService).getSecretInfo("test-session", 0, 50);
+    }
+
+    @Test
+    void profilePagedEndpointRejectsLowerBoundViolations() throws Exception {
+        mockMvc.perform(get("/api/secret/profile/start/-1/size/10")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(get("/api/secret/profile/start/0/size/-5")
+                        .requestAttr("sessionId", "test-session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(secretService);
     }
 
     @Test

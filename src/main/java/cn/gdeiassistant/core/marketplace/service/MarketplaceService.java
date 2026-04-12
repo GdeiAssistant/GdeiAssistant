@@ -176,7 +176,11 @@ public class MarketplaceService {
             throw new RuntimeException("图片上传失败", e);
         } finally {
             if (inputStream != null) {
-                try { inputStream.close(); } catch (IOException ignored) {}
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.warn("关闭二手交易图片上传输入流失败，id={}，index={}", id, index, e);
+                }
             }
         }
     }
@@ -189,7 +193,9 @@ public class MarketplaceService {
         for (int i = 1; i <= count; i++) {
             try {
                 r2StorageService.deleteObject("gdeiassistant-userdata", "ershou/" + id + "_" + i + ".jpg");
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                logger.warn("删除二手交易图片失败，id={}，index={}", id, i, e);
+            }
         }
     }
 

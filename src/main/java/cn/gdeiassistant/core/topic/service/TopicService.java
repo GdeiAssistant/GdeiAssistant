@@ -150,7 +150,11 @@ public class TopicService {
             throw new RuntimeException("话题图片上传失败", e);
         } finally {
             if (inputStream != null) {
-                try { inputStream.close(); } catch (IOException ignored) {}
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.warn("关闭话题图片上传输入流失败，id={}，index={}", id, index, e);
+                }
             }
         }
     }
@@ -171,7 +175,9 @@ public class TopicService {
         for (int i = 1; i <= count; i++) {
             try {
                 r2StorageService.deleteObject("gdeiassistant-userdata", "topic/" + id + "_" + i + ".jpg");
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                logger.warn("删除话题图片失败，id={}，index={}", id, i, e);
+            }
         }
     }
 }

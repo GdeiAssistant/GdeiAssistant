@@ -163,7 +163,11 @@ public class LostAndFoundService {
             throw new RuntimeException("上传失败", e);
         } finally {
             if (inputStream != null) {
-                try { inputStream.close(); } catch (IOException ignored) {}
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.warn("关闭失物招领图片上传输入流失败，id={}，index={}", id, index, e);
+                }
             }
         }
     }
@@ -176,7 +180,9 @@ public class LostAndFoundService {
         for (int i = 1; i <= count; i++) {
             try {
                 r2StorageService.deleteObject("gdeiassistant-userdata", "lostandfound/" + id + "_" + i + ".jpg");
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                logger.warn("删除失物招领图片失败，id={}，index={}", id, i, e);
+            }
         }
     }
 

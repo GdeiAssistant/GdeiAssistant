@@ -15,9 +15,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -150,6 +152,28 @@ class MarketplaceContractTest {
         mockMvc.perform(get("/api/ershou/item/id/99/preview"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
+    }
+
+    @Test
+    void stateEndpointUpdatesValidState() throws Exception {
+        mockMvc.perform(post("/api/ershou/item/state/id/101")
+                        .requestAttr("sessionId", "test-session")
+                        .param("state", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(marketplaceService).updateItemState("test-session", 101, 2);
+    }
+
+    @Test
+    void stateEndpointRejectsInvalidStateBeforeService() throws Exception {
+        mockMvc.perform(post("/api/ershou/item/state/id/101")
+                        .requestAttr("sessionId", "test-session")
+                        .param("state", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(marketplaceService);
     }
 
     // ----------------------------------------------------------------

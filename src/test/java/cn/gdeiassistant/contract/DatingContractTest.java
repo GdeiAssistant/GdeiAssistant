@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -63,6 +64,19 @@ class DatingContractTest {
                 .andExpect(jsonPath("$.data[0].faculty").value("CS"))
                 .andExpect(jsonPath("$.data[0].hometown").value("GZ"))
                 .andExpect(jsonPath("$.data[0].content").value("looking for roommate"));
+    }
+
+    @Test
+    void listProfiles_rejectsInvalidPagingOrArea() throws Exception {
+        mockMvc.perform(get("/api/dating/profile/area/0/start/-1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(get("/api/dating/profile/area/2/start/0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(datingService);
     }
 
     @Test

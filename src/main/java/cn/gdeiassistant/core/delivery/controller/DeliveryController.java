@@ -8,6 +8,7 @@ import cn.gdeiassistant.common.exception.DeliveryException.DeliveryOrderStateUpd
 import cn.gdeiassistant.common.exception.DeliveryException.NoAccessUpdatingException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.core.delivery.pojo.dto.DeliveryPublishDTO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryOrderVO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryTradeVO;
@@ -80,7 +81,7 @@ public class DeliveryController {
     @RequestMapping(value = "/api/delivery/order/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<DeliveryOrderVO>> queryDeliveryOrderPage(HttpServletRequest request, @PathVariable("start") @Min(0) Integer start
             , @PathVariable("size") @Min(1) Integer size) {
-        if (size > 50) size = 50; // Cap page size
+        size = PageUtils.normalizePageSize(start, size);
         List<DeliveryOrderVO> list = deliveryService.queryDeliveryOrderPage(start, size);
         return new DataJsonResult<>(true, list);
     }

@@ -4,6 +4,7 @@ import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException
 import cn.gdeiassistant.common.pojo.Entity.NewInfo;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.core.information.service.SchoolNews.SchoolNewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class SchoolNewsController {
     public DataJsonResult<List<NewInfo>> queryNewInfoList(@PathVariable("type") Integer type
             , @PathVariable("start") Integer start, @PathVariable("size") Integer size) {
         try {
+            size = PageUtils.normalizePageSize(start, size);
             List<NewInfo> newInfoList = schoolNewsService.queryNewInfoList(type, start, size);
             return new DataJsonResult<>(true, newInfoList);
         } catch (DataNotExistException e) {

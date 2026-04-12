@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.message.controller;
 
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.core.i18n.ApiLanguageResolver;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
@@ -27,6 +28,7 @@ public class MessageController {
     public DataJsonResult<List<InteractionMessageVO>> getInteractionMessages(HttpServletRequest request,
             @PathVariable("start") Integer start,
             @PathVariable("size") Integer size) {
+        size = PageUtils.normalizePageSize(start, size);
         String sessionId = (String) request.getAttribute("sessionId");
         String language = ApiLanguageResolver.normalizeLanguage(request.getHeader("Accept-Language"));
         List<InteractionMessageVO> messages = messageService.queryInteractionMessages(sessionId, start, size);

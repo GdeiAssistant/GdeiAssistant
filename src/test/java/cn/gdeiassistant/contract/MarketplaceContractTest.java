@@ -1,5 +1,6 @@
 package cn.gdeiassistant.contract;
 
+import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.marketplace.controller.MarketplaceController;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -35,7 +37,9 @@ class MarketplaceContractTest {
         MarketplaceController controller = new MarketplaceController();
         ReflectionTestUtils.setField(controller, "marketplaceService", marketplaceService);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new GlobalRestExceptionHandler())
+                .build();
     }
 
     @Test
@@ -52,6 +56,19 @@ class MarketplaceContractTest {
                 .andExpect(jsonPath("$.data[0].location").exists())
                 .andExpect(jsonPath("$.data[0].type").exists())
                 .andExpect(jsonPath("$.data[0].state").exists());
+    }
+
+    @Test
+    void listEndpointRejectsNegativeStart() throws Exception {
+        mockMvc.perform(get("/api/ershou/item/start/-1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(get("/api/ershou/keyword/textbook/start/-1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(marketplaceService);
     }
 
     @Test

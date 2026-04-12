@@ -6,6 +6,7 @@ import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.tools.Utils.PageUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.lostandfound.pojo.dto.LostAndFoundPublishDTO;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundDetailVO;
@@ -97,6 +98,10 @@ public class LostAndFoundController {
     @RequestMapping(value = "/api/lostandfound/founditem/type/{type}/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<LostAndFoundItemVO>> searchFoundInfoByType(HttpServletRequest request, @PathVariable("type") Integer type,
             @PathVariable("start") Integer start) throws Exception {
+        if (type == null || type < 0 || type > 11) {
+            throw new IllegalArgumentException("请求参数不合法");
+        }
+        start = PageUtils.requireNonNegativeStart(start);
         List<LostAndFoundItemVO> list = lostAndFoundService.queryFoundItemsByType(type, start);
         return new DataJsonResult<>(true, list);
     }

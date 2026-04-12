@@ -18,6 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -103,6 +104,40 @@ class ExpressContractTest {
                 .andExpect(jsonPath("$.data[0].id").exists())
                 .andExpect(jsonPath("$.data[0].comment").exists())
                 .andExpect(jsonPath("$.data[0].publishTime").exists());
+    }
+
+    @Test
+    void commentEndpointRejectsBlankOrOverlongComment() throws Exception {
+        mockMvc.perform(post("/api/express/id/1/comment")
+                        .requestAttr("sessionId", "test-session")
+                        .param("comment", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(post("/api/express/id/1/comment")
+                        .requestAttr("sessionId", "test-session")
+                        .param("comment", "x".repeat(51)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(expressService);
+    }
+
+    @Test
+    void guessEndpointRejectsBlankOrOverlongName() throws Exception {
+        mockMvc.perform(post("/api/express/id/1/guess")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(post("/api/express/id/1/guess")
+                        .requestAttr("sessionId", "test-session")
+                        .param("name", "x".repeat(11)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(expressService);
     }
 
     private static ExpressVO mockExpressVO() {

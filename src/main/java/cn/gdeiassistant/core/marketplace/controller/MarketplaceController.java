@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,9 @@ import java.util.stream.Collectors;
 
 @RestController
 public class MarketplaceController {
+
+    private static final BigDecimal MIN_PRICE = new BigDecimal("0.01");
+    private static final BigDecimal MAX_PRICE = new BigDecimal("9999.99");
 
     /**
      * Per-group cap for the personal profile endpoint.
@@ -48,6 +52,14 @@ public class MarketplaceController {
 
     private JsonResult failure(HttpServletRequest request, String message) {
         return new JsonResult(false, localize(request, message));
+    }
+
+    private boolean isInvalidPrice(Float price) {
+        if (price == null) {
+            return true;
+        }
+        BigDecimal value = new BigDecimal(price.toString());
+        return value.compareTo(MIN_PRICE) < 0 || value.compareTo(MAX_PRICE) > 0;
     }
 
     @RequestMapping(value = "/api/ershou/item/start/{start}", method = RequestMethod.GET)
@@ -87,6 +99,9 @@ public class MarketplaceController {
             @Validated MarketplacePublishDTO dto, MultipartFile image1,
             MultipartFile image2, MultipartFile image3, MultipartFile image4,
             @RequestParam(value = "imageKeys", required = false) String[] imageKeys) throws Exception {
+        if (isInvalidPrice(dto.getPrice())) {
+            return failure(request, "商品价格不合法");
+        }
         MultipartFile[] images = new MultipartFile[]{image1, image2, image3, image4};
         int uploadedFileCount = 0;
         for (MultipartFile image : images) {
@@ -179,7 +194,7 @@ public class MarketplaceController {
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult updateItem(HttpServletRequest request, @Validated MarketplacePublishDTO dto,
             @PathVariable("id") int id) throws Exception {
-        if (dto.getPrice() <= 0 || dto.getPrice() > 9999.99) {
+        if (isInvalidPrice(dto.getPrice())) {
             return failure(request, "商品价格不合法");
         }
         String sessionId = (String) request.getAttribute("sessionId");

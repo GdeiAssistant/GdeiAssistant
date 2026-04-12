@@ -36,7 +36,7 @@ public class DataQueryController {
      */
     @RequestMapping(value = "/api/data/electricfees", method = RequestMethod.POST)
     public DataJsonResult<ElectricFees> queryElectricFeesData(@Validated @NotBlank @Length(max = 5) String name
-            , @Validated @NotBlank Long number, @Validated @NotNull @Range(min = 2016, max = 2050) Integer year) throws DataNotExistException {
+            , @Validated @NotNull Long number, @Validated @NotNull @Range(min = 2016, max = 2050) Integer year) throws DataNotExistException {
         ElectricFees electricFees = dataQueryService.queryElectricFees(name, number, year);
         return new DataJsonResult<>(true, electricFees);
     }

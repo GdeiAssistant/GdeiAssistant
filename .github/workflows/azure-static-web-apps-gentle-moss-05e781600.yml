@@ -27,11 +27,11 @@ jobs:
     env:
       VITE_APP_BASE_API: https://gdeiassistant.azurewebsites.net/api
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           submodules: true
           lfs: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.14.1
           cache: npm

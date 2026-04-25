@@ -18,7 +18,8 @@ export function maskIdentifier(value, start = 2, end = 2) {
     return `${normalized[0]}***`
   }
 
-  return `${normalized.slice(0, visibleStart)}****${normalized.slice(-visibleEnd)}`
+  const suffix = visibleEnd > 0 ? normalized.slice(-visibleEnd) : ''
+  return `${normalized.slice(0, visibleStart)}****${suffix}`
 }
 
 export function maskCampusAccount(value) {

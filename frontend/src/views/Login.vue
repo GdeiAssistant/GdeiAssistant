@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { login } from '../api/user.js'
@@ -14,6 +14,7 @@ const { error: showError, loading: showLoading, hideLoading } = useToast()
 const username = ref('')
 const password = ref('')
 const mockMode = ref(isMockMode())
+const campusCredentialConsent = ref(false)
 
 function toggleMock() {
   toggleDataSourceMode()
@@ -32,8 +33,13 @@ async function handleLogin() {
     showError(t('loginPage.incompleteFields'))
     return
   }
+  if (!campusCredentialConsent.value) {
+    showError(t('loginPage.campusConsentRequired'))
+    return
+  }
   showLoading(t('loginPage.loading'))
   try {
+    // TODO: submit campus-credential consent metadata after backend supports consent persistence.
     const res = await login(username.value.trim(), password.value)
     hideLoading()
     // 仅当后端返回 code === 200 时存 Token 并跳转；401 或其他错误码展示后端 message 并停留在登录页
@@ -69,6 +75,10 @@ function handleThirdPartyLogin(type) {
         <p class="text-sm text-[var(--c-text-secondary)] mt-1">{{ t('loginPage.subtitle') }}</p>
       </div>
 
+      <div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-6 text-amber-900">
+        校园账号凭证可能用于校园认证、快速认证和会话同步。请仅使用本人账号；如您拒绝保存相关凭证或后续通过账号设置、反馈渠道申请删除，部分校园查询或快速认证功能可能不可用。
+      </div>
+
       <!-- Form -->
       <form @submit.prevent="handleLogin" class="space-y-5">
         <!-- Username -->
@@ -94,6 +104,15 @@ function handleThirdPartyLogin(type) {
             class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3.5 py-2.5 text-sm text-[var(--c-text)] placeholder-[var(--c-text-tertiary)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
           />
         </div>
+
+        <label class="flex items-start gap-3 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg)] px-3.5 py-3 text-xs leading-6 text-[var(--c-text-secondary)]">
+          <input
+            v-model="campusCredentialConsent"
+            type="checkbox"
+            class="mt-1 h-4 w-4 shrink-0 rounded border border-[var(--c-border)] text-[var(--c-primary)]"
+          />
+          <span>{{ t('loginPage.campusConsentLabel') }}</span>
+        </label>
 
         <!-- Submit -->
         <button

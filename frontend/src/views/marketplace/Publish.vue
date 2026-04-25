@@ -237,6 +237,10 @@ onMounted(() => {
       </template>
     </CommunityHeader>
 
+    <div class="mx-4 mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs leading-6 text-emerald-900">
+      请勿发布违法违规物品、危险品、证件原件、账号凭证或侵权盗版内容。请谨慎公开手机号、微信号、住址等联系方式，并自行核验商品状态、价格和线下交易风险。
+    </div>
+
     <!-- 图片上传区 -->
     <section class="bg-emerald-500 border-t border-emerald-600">
       <div class="px-4 pt-6 mb-1.5">

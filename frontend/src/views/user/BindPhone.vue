@@ -10,6 +10,7 @@ import {
   getFallbackCountryCodeItems,
   localizeCountryCodes,
 } from './bindPhoneSupport'
+import { maskPhone } from '@/utils/mask'
 
 const router = useRouter()
 const { success: toastSuccess } = useToast()
@@ -48,17 +49,6 @@ function validatePhone(value, countryCode) {
     return /^1[3-9]\d{9}$/.test(value)
   }
   return /^\d{7,11}$/.test(value)
-}
-
-function maskPhone(phone) {
-  if (!phone) return ''
-  if (phone.length === 11) {
-    return `${phone.substring(0, 3)}****${phone.substring(7)}`
-  }
-  if (phone.length >= 5) {
-    return `${phone.substring(0, 3)}****${phone.substring(phone.length - 2)}`
-  }
-  return phone
 }
 
 async function loadCountryCodes() {

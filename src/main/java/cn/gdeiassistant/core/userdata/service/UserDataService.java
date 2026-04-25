@@ -25,6 +25,7 @@ import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.secret.service.SecretService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.common.tools.Utils.LocationUtils;
 import cn.gdeiassistant.common.tools.Utils.ReflectionUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
@@ -388,7 +389,7 @@ public class UserDataService {
             exportDataDao.RemoveExportingDataToken(user.getUsername());
 
         } catch (Exception e) {
-            logger.error("导出用户数据失败，username={}", user.getUsername(), e);
+            logger.error("导出用户数据失败，username={}", AnonymizeUtils.maskUsername(user.getUsername()), e);
             exportDataDao.RemoveExportingDataToken(user.getUsername());
         } finally {
             if (byteArrayInputStream != null) {
@@ -409,7 +410,7 @@ public class UserDataService {
                         entry.getValue().close();
                     } catch (IOException e) {
                         logger.error("关闭用户数据导出资源流失败，username={}，key={}",
-                                user.getUsername(), entry.getKey(), e);
+                                AnonymizeUtils.maskUsername(user.getUsername()), AnonymizeUtils.maskToken(entry.getKey()), e);
                     }
                 }
             }

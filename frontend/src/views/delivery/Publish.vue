@@ -106,6 +106,10 @@ function submit() {
     </CommunityHeader>
 
     <div class="p-4 animate-[slide-up_0.4s_ease_both]">
+      <div class="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-6 text-amber-900">
+        取件码、地址、手机号、姓名等通常属于高敏信息，请最小化填写和展示。请勿承接违法违规、危险、贵重或明显超出自身能力范围的任务。
+      </div>
+
       <!-- Pickup info -->
       <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 mb-4">
         <div class="text-lg font-semibold text-[var(--c-text-1)] mb-4 pb-2.5 border-b border-[var(--c-border)]">{{ t('delivery.publish.pickupSection') }}</div>

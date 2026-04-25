@@ -6,6 +6,7 @@ import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import { createCommunityPullMessages, createDeliveryStatusMap, createDeliveryTypeMap } from '../community/communityContent'
+import { maskAddress } from '@/utils/mask'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -27,7 +28,7 @@ const fetchDeliveryData = async (page) => {
     size: t('delivery.smallSize'),
     type: 'express',
     pickupAddress: o.company ? t('delivery.pickupAddressWithCompany', { company: o.company }) : t('delivery.pickupShort'),
-    deliveryAddress: o.address || ''
+    deliveryAddress: maskAddress(o.address || '')
   })) : []
   return { list, hasMore: list.length >= PAGE_SIZE }
 }

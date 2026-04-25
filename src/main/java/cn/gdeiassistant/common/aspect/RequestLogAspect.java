@@ -1,8 +1,11 @@
 package cn.gdeiassistant.common.aspect;
 
 import cn.gdeiassistant.common.constant.ObservabilityConstants;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import org.aspectj.lang.JoinPoint;
@@ -39,7 +42,11 @@ public class RequestLogAspect {
 
     /** Sensitive parameter names that must never be logged. */
     private static final Set<String> SENSITIVE_PARAMS = Set.of(
-            "password", "token", "secret", "credential", "accesskey"
+            "password", "passwd", "pwd", "token", "secret", "credential",
+            "accesskey", "authorization", "captcha", "checkcode", "randomcode",
+            "verifycode", "verificationcode", "smscode", "email", "phone",
+            "mobile", "pickup", "address", "studentid", "account", "username",
+            "session", "jwt", "hmac", "cookie", "qq", "wechat", "keycode"
     );
 
     @Autowired
@@ -75,13 +82,20 @@ public class RequestLogAspect {
         //记录非敏感请求参数信息
         stringBuilder.append(". RequestParameters: ");
         for (int i = 1; i < args.length; i++) {
-            if (args[i] != null && !(parameterName[i].contains("password") || parameterName[i].contains("token"))) {
-                if (i != 1) {
-                    stringBuilder.append(" , ");
-                }
-                stringBuilder.append(parameterName[i])
-                        .append(":").append(JSON.toJSONString(args[i]));
+            Object arg = args[i];
+            String paramName = parameterName[i];
+            if (arg == null
+                    || arg instanceof HttpServletRequest
+                    || arg instanceof HttpServletResponse
+                    || arg instanceof MultipartFile
+                    || arg instanceof MultipartFile[]) {
+                continue;
             }
+            if (i != 1) {
+                stringBuilder.append(" , ");
+            }
+            stringBuilder.append(paramName)
+                    .append(":").append(serializeForLog(paramName, arg));
         }
         stringBuilder.append(" . ");
         //保存请求信息到日志
@@ -242,7 +256,7 @@ public class RequestLogAspect {
             if (arg != null) {
                 if (!first) sb.append(", ");
                 try {
-                    String serialized = JSON.toJSONString(arg);
+                    String serialized = serializeForLog(name, arg);
                     if (serialized.length() > MAX_PARAM_SERIALIZED_LENGTH) {
                         serialized = serialized.substring(0, MAX_PARAM_SERIALIZED_LENGTH) + "...[truncated]";
                     }
@@ -260,6 +274,73 @@ public class RequestLogAspect {
         if (paramName == null) return false;
         String lower = paramName.toLowerCase();
         return SENSITIVE_PARAMS.stream().anyMatch(lower::contains);
+    }
+
+    private String serializeForLog(String paramName, Object arg) {
+        if (arg == null) {
+            return "null";
+        }
+        if (isSensitive(paramName)) {
+            return "[REDACTED]";
+        }
+        Object sanitized = sanitizeValue(paramName, JSON.toJSON(arg));
+        return JSON.toJSONString(sanitized);
+    }
+
+    private Object sanitizeValue(String keyHint, Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof JSONObject jsonObject) {
+            JSONObject sanitized = new JSONObject();
+            for (String key : jsonObject.keySet()) {
+                sanitized.put(key, sanitizeValue(key, jsonObject.get(key)));
+            }
+            return sanitized;
+        }
+        if (value instanceof JSONArray jsonArray) {
+            JSONArray sanitized = new JSONArray();
+            for (Object item : jsonArray) {
+                sanitized.add(sanitizeValue(keyHint, item));
+            }
+            return sanitized;
+        }
+        if (value instanceof String text) {
+            return sanitizeTextValue(keyHint, text);
+        }
+        if (value instanceof Number numberValue) {
+            return sanitizeTextValue(keyHint, String.valueOf(numberValue));
+        }
+        return value;
+    }
+
+    private String sanitizeTextValue(String keyHint, String raw) {
+        if (raw == null || raw.isBlank()) {
+            return raw;
+        }
+        if (isSensitive(keyHint)) {
+            return "[REDACTED]";
+        }
+        String lower = keyHint == null ? "" : keyHint.toLowerCase();
+        if (raw.contains("@")) {
+            return AnonymizeUtils.maskEmail(raw);
+        }
+        if (raw.matches("^\\+?\\d{7,15}$")) {
+            return AnonymizeUtils.maskPhone(raw);
+        }
+        if (lower.contains("number") || lower.contains("student") || lower.contains("card")) {
+            return AnonymizeUtils.maskIdentifier(raw, 2, 2);
+        }
+        if (lower.contains("user") || lower.contains("account")) {
+            return AnonymizeUtils.maskUsername(raw);
+        }
+        if (lower.contains("address") || lower.contains("location")) {
+            return AnonymizeUtils.maskAddress(raw);
+        }
+        if (raw.length() >= 24 && raw.matches("^[A-Za-z0-9._\\-:/+=]+$")) {
+            return AnonymizeUtils.maskToken(raw);
+        }
+        return raw;
     }
 
 }

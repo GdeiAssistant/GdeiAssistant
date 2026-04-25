@@ -157,7 +157,11 @@ const menuItems = computed(() => [
     items: [
       { text: t('about.menuUserAgreement'), href: '/agreement' },
       { text: t('about.menuPrivacyPolicy'), href: '/policy/privacy' },
+      { text: t('about.menuThirdPartyServices'), href: '/policy/third-party-services' },
       { text: t('about.menuCommunityGuidelines'), href: '/policy/social' },
+      { text: t('about.menuSecondHandPolicy'), href: '/policy/secondhand' },
+      { text: t('about.menuLostAndFoundPolicy'), href: '/policy/lostandfound' },
+      { text: t('about.menuErrandPolicy'), href: '/policy/errand' },
       { text: t('about.menuOpenSourceLicense'), href: '/license' },
       { text: t('about.menuCookiePolicy'), href: '/policy/cookie' },
       { text: t('about.menuIPDeclaration'), href: '/policy/intellectualproperty' }

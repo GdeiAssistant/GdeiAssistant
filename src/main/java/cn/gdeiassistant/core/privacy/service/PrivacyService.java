@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.privacy.service;
 import cn.gdeiassistant.common.exception.CommonException.CacheClearException;
 import cn.gdeiassistant.common.exception.DatabaseException.UserNotExistException;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.core.privacy.converter.PrivacyConverter;
@@ -147,7 +148,7 @@ public class PrivacyService {
             gradeDao.removeGrade(user.getUsername());
             scheduleDao.removeSchedule(user.getUsername());
         } catch (Exception e) {
-            logger.warn("清理 MongoDB 缓存失败，MySQL 隐私设置已更新，username={}", user.getUsername(), e);
+            logger.warn("清理 MongoDB 缓存失败，MySQL 隐私设置已更新，username={}", AnonymizeUtils.maskUsername(user.getUsername()), e);
             throw new CacheClearException("清理教务缓存时遇到网络延迟，设置已保存，可能需要稍后生效。", e);
         }
     }

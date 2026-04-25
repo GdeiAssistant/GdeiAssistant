@@ -7,6 +7,7 @@ import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectExcept
 import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
 import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.core.charge.pojo.dto.ChargeRequestDTO;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeVO;
 import cn.gdeiassistant.core.charge.service.ChargeService;
@@ -107,7 +108,7 @@ public class ChargeRequestController {
         String payload = "amount=" + requestParams.getAmount() + "&timestamp=" + clientTimestamp;
         String expectedHmac = hmacSha256(hmacSecret, payload);
         if (!expectedHmac.equals(clientHmac)) {
-            logger.warn("充值 HMAC 校验失败: expected={}, actual={}", expectedHmac, clientHmac);
+            logger.warn("充值 HMAC 校验失败: expected={}, actual={}", AnonymizeUtils.maskToken(expectedHmac), AnonymizeUtils.maskToken(clientHmac));
             throw new ServerErrorException("请求签名校验失败");
         }
     }

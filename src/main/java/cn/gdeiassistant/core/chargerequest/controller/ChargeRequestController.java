@@ -108,7 +108,7 @@ public class ChargeRequestController {
         String payload = "amount=" + requestParams.getAmount() + "&timestamp=" + clientTimestamp;
         String expectedHmac = hmacSha256(hmacSecret, payload);
         if (!expectedHmac.equals(clientHmac)) {
-            logger.warn("充值 HMAC 校验失败: expected={}, actual={}", AnonymizeUtils.maskToken(expectedHmac), AnonymizeUtils.maskToken(clientHmac));
+            logger.warn("充值 HMAC 校验失败");
             throw new ServerErrorException("请求签名校验失败");
         }
     }

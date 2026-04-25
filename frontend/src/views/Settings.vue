@@ -42,6 +42,13 @@
         <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 
+      <RouterLink to="/about/account"
+                  class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
+        <Shield class="w-5 h-5 text-[var(--c-text-3)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.campusCredentialManage') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
+      </RouterLink>
+
       <RouterLink to="/user/login-record"
                   class="flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer no-underline text-inherit">
         <Smartphone class="w-5 h-5 text-[var(--c-text-3)]" />

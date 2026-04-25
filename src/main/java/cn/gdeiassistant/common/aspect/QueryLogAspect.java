@@ -2,6 +2,7 @@ package cn.gdeiassistant.common.aspect;
 
 import cn.gdeiassistant.common.constant.ObservabilityConstants;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -68,8 +69,8 @@ public class QueryLogAspect {
 
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
-        String username = (Optional.ofNullable((User) request.getAttribute("user"))
-                .orElse(new User("unknown"))).getUsername();
+        String username = AnonymizeUtils.maskUsername((Optional.ofNullable((User) request.getAttribute("user"))
+                .orElse(new User("unknown"))).getUsername());
         String dateTime = dateFormat.format(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         String functionName = joinPoint.getSignature().getName();
         switch (functionName) {
@@ -101,8 +102,8 @@ public class QueryLogAspect {
         long elapsed = System.currentTimeMillis() - start;
 
         Object[] args = joinPoint.getArgs();
-        String username = Optional.ofNullable((String) WebUtils.getSessionAttribute((HttpServletRequest) args[0]
-                , "username")).orElse("unknown");
+        String username = AnonymizeUtils.maskUsername(Optional.ofNullable((String) WebUtils.getSessionAttribute((HttpServletRequest) args[0]
+                , "username")).orElse("unknown"));
         String dateTime = dateFormat.format(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         String functionName = joinPoint.getSignature().getName();
         switch (functionName) {

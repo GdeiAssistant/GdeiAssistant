@@ -87,9 +87,7 @@ function handleLogout(rawMessage) {
   try {
     localStorage.removeItem('token')
     sessionStorage.clear()
-  } catch (e) {
-    console.error('【清理本地缓存失败】', e)
-  }
+  } catch (_) {}
   router.push(LOGIN_PATH).catch(() => {})
 }
 
@@ -194,8 +192,6 @@ service.interceptors.response.use(
     return res
   },
   (error) => {
-    console.error('【全局拦截器捕获错误】:', error)
-
     const status = error.response?.status
     const isLoginRequest = error.config?.url?.includes('/auth/login')
 
@@ -225,9 +221,7 @@ service.interceptors.response.use(
     const safeMessage = sanitizeMessage(friendlyMessage)
     try {
       showErrorTopTips(safeMessage)
-    } catch (e) {
-      console.error('【showErrorTopTips 执行异常】', e)
-    }
+    } catch (_) {}
 
     return Promise.reject(error)
   }

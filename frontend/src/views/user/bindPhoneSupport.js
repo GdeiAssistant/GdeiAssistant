@@ -137,9 +137,7 @@ export async function loadCountryCodeCatalog({
         return items
       }
     }
-  } catch (error) {
-    console.error('Failed to load area codes from API, falling back to XML.', error)
-  }
+  } catch (_) {}
 
   try {
     const response = await fetchWithTimeout(fetchImpl, fallbackUrl, {}, timeoutMs)
@@ -148,9 +146,7 @@ export async function loadCountryCodeCatalog({
     if (items.length > 0) {
       return items
     }
-  } catch (error) {
-    console.error('Failed to load area codes from XML fallback.', error)
-  }
+  } catch (_) {}
 
   return getFallbackCountryCodeItems()
 }

@@ -23,8 +23,7 @@ const loadMySecrets = async () => {
     secretList.value = res.data || []
     hasMore.value = (res.data || []).length >= PAGE_SIZE
     start.value = secretList.value.length
-  } catch (err) {
-    console.error('加载失败', err)
+  } catch (_) {
   } finally {
     loading.value = false
   }
@@ -39,8 +38,7 @@ const loadMore = async () => {
     secretList.value = [...secretList.value, ...newItems]
     hasMore.value = newItems.length >= PAGE_SIZE
     start.value = secretList.value.length
-  } catch (err) {
-    console.error('加载更多失败', err)
+  } catch (_) {
   } finally {
     loadingMore.value = false
   }

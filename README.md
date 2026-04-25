@@ -126,7 +126,7 @@ npm run dev
 
 ## 测试账号
 
-`gdeiassistant` / `gdeiassistant`（见 `db-init/mysql/init.sql`）。
+`gdeiassistant` / `gdeiassistant`（仅用于本地初始化或开发演示，见 `db-init/mysql/init.sql`，不要用于公网生产环境）。
 
 ---
 
@@ -138,6 +138,39 @@ npm run dev
 
 - [前端网站](https://gdeiassistant.pages.dev)
 - [后端接口](https://gdeiassistant.azurewebsites.net/actuator/health)
+
+---
+
+## 法律、隐私与安全提示
+
+- [用户协议](frontend/src/views/about/UserAgreement.vue)
+- [隐私政策](frontend/src/views/about/PrivacyPolicy.vue)
+- [Cookie 与本地存储说明](frontend/src/views/about/CookiePolicy.vue)
+- [社区准则](frontend/src/views/about/SocialPolicy.vue)
+- [第三方服务清单](frontend/src/views/about/ThirdPartyServices.vue)
+- [安全说明](frontend/src/views/about/Security.vue)
+- [协议与政策版本记录](docs/policy-changelog.md)
+- [SECURITY.md](SECURITY.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [TRADEMARK.md](TRADEMARK.md)
+- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+
+部署者或二次开发者需要注意：
+
+- 本项目在实际部署中可能涉及校园账号、校园数据、短信、邮件、对象存储、AI OCR，以及云服务器、数据库、缓存、日志和备份等能力；是否启用、启用哪些服务以及是否发生境外处理，取决于实际部署、服务商区域和配置。部署者应根据实际情况完成必要的告知、授权、加密、日志脱敏、密钥管理和第三方服务清单维护，并同步更新隐私告知。
+- 二次部署者不得使用原项目名称、Logo、域名或页面文案暗示自己是学校官方服务、原项目官方服务，或已获得学校官方授权、学校官方合作或原项目背书。
+- 生产环境不得使用默认密钥，必须启用必要的敏感字段加密和 Secret 管理；包括但不限于 `JWT_SECRET`、`ENCRYPT_PRIVATE_KEY`、短信、邮件、AI、对象存储等相关密钥。
+
+### 二次部署前检查清单
+
+- 是否已替换默认密钥、`JWT_SECRET`、加密密钥、数据库密码和其他生产凭证。
+- 是否已确认短信、邮件、对象存储、AI OCR、数据库、缓存、日志与备份等能力的实际启用情况。
+- 是否已按实际启用的服务更新第三方服务清单、隐私告知和部署说明。
+- 是否已确认校园账号凭证是否会被保存、如何加密、如何删除以及如何撤回授权。
+- 是否已关闭调试日志、请求体输出和其他可能暴露密码、验证码、Token、手机号、邮箱或取件码的调试能力。
+- 是否已配置 HTTPS、CORS、必要的 CSRF/XSS 防护、访问控制和备份策略。
+- 是否已避免使用原项目名称、Logo、域名或页面文案暗示学校官方或原项目官方背书。
+- 是否已准备用户投诉、隐私请求、侵权投诉和安全漏洞反馈的处理渠道。
 
 ---
 

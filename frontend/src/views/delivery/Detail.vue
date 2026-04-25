@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
@@ -9,6 +9,7 @@ import {
   createDeliveryStatusMap,
   createDeliveryTypeMap
 } from '../community/communityContent'
+import { maskAddress, maskPhone } from '@/utils/mask'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,6 +22,7 @@ const completing = ref(false)
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 const confirmCompleteVisible = ref(false)
+const canViewSensitiveInfo = computed(() => detailType.value === 0 || detailType.value === 3)
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -145,17 +147,17 @@ onMounted(async () => {
           <div class="flex items-start mb-4">
             <span class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5 bg-blue-500">{{ t('delivery.pickupBadge') }}</span>
             <div class="flex-1">
-              <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ item.pickupAddress }}</div>
-              <div v-if="item.pickupCode && (detailType === 0 || detailType === 3)" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.pickupCode') }}{{ item.pickupCode }}</div>
+              <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ canViewSensitiveInfo ? item.pickupAddress : maskAddress(item.pickupAddress) }}</div>
+              <div v-if="item.pickupCode && canViewSensitiveInfo" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.pickupCode') }}{{ item.pickupCode }}</div>
               <div v-else-if="item.pickupCode" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.pickupCode') }}***</div>
             </div>
           </div>
           <div class="flex items-start">
             <span class="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5 bg-amber-500">{{ t('delivery.deliveryBadge') }}</span>
             <div class="flex-1">
-              <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ item.deliveryAddress }}</div>
-              <div v-if="item.contactPhone && (detailType === 0 || detailType === 3)" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.contactPhone') }}{{ item.contactPhone }}</div>
-              <div v-else-if="item.contactPhone" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.contactPhone') }}***</div>
+              <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ canViewSensitiveInfo ? item.deliveryAddress : maskAddress(item.deliveryAddress) }}</div>
+              <div v-if="item.contactPhone && canViewSensitiveInfo" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.contactPhone') }}{{ item.contactPhone }}</div>
+              <div v-else-if="item.contactPhone" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.contactPhone') }}{{ maskPhone(item.contactPhone) }}</div>
             </div>
           </div>
         </div>

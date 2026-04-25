@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { showErrorTopTips } from '@/utils/toast.js'
 import { useToast } from '@/composables/useToast'
+import { maskEmail } from '@/utils/mask'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -34,17 +35,6 @@ const canSendCode = computed(() => countdown.value === 0 && !sending.value)
 function validateEmail(value) {
   const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return pattern.test(value)
-}
-
-function maskEmail(email) {
-  if (!email) return ''
-  const [localPart, domain] = email.split('@')
-  if (!localPart || !domain) return email
-  if (localPart.length <= 3) {
-    return `${localPart[0]}***@${domain}`
-  }
-  const visibleStart = localPart.substring(0, 3)
-  return `${visibleStart}***@${domain}`
 }
 
 async function handleSendCode() {

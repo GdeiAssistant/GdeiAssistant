@@ -44,6 +44,36 @@ const router = useRouter()
           </p>
         </div>
       </div>
+
+      <div class="mt-4 bg-[var(--color-surface)] rounded-xl p-4 shadow-sm">
+        <div class="text-sm leading-relaxed text-[var(--c-text-2)] [&_p]:my-3 [&_li]:my-2">
+          <p class="text-center font-medium">校园账号凭证与快速认证管理</p>
+          <p class="indent-8">校园账号凭证可能用于校园认证、快速认证、会话同步以及课表、成绩、校园卡、图书馆等查询。请仅使用本人账号，不要向他人共享密码、验证码、会话信息或其他凭证。</p>
+          <p class="indent-8">当前页面主要提供说明和申请路径提示。若您希望关闭快速认证、申请删除已保存校园凭证或撤回相关授权，请优先通过“帮助与反馈”提交申请；关闭或删除后，部分校园查询功能可能需要重新登录，或暂时无法继续使用。</p>
+          <ul class="pl-5 list-disc">
+            <li>当前暂不支持在此页面直接自助删除校园凭证或直接关闭快速认证。</li>
+            <li>如需核验账号信息，请以本人当前登录状态和学校系统页面展示为准，本页不会展示已保存的密码、验证码、令牌或其他敏感凭证。</li>
+            <li>涉及校园账号凭证处理、保存期限和删除申请的具体口径，请同时阅读隐私政策与用户协议中的相关章节。</li>
+          </ul>
+
+          <div class="mt-4 grid gap-3 md:grid-cols-2">
+            <button
+              type="button"
+              class="w-full rounded-lg border border-[var(--c-primary)] bg-[var(--c-primary)] px-4 py-2.5 text-sm text-white cursor-pointer"
+              @click="router.push('/user/feedback')"
+            >
+              通过帮助与反馈申请处理
+            </button>
+            <button
+              type="button"
+              class="w-full rounded-lg border border-[var(--c-border)] bg-transparent px-4 py-2.5 text-sm text-[var(--c-text-2)] cursor-pointer"
+              @click="router.push('/policy/privacy')"
+            >
+              查看隐私政策中的校园凭证说明
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

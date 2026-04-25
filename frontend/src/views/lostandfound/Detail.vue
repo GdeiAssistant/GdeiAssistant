@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import { maskContactHandle, maskPhone } from '@/utils/mask'
 
 const route = useRoute()
 const router = useRouter()
@@ -128,15 +129,15 @@ function copyText(text) {
         <i class="absolute left-4 top-4 w-5 h-5 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20512%20512%27%20fill=%27%233b82f6%27%3E%3Cpath%20d=%27M497%20361.8l-112-48a24%2024%200%200%200-28%206.9l-49.6%2060.6A370.7%20370.7%200%200%201%20131.6%20205l60.6-49.6a24%2024%200%200%200%206.9-28l-48-112A24.2%2024.2%200%200%200%20123.4.3L11.4%2024.3A24%2024%200%200%200-5.2e-7%2048c0%20256.5%20207.9%20464%20464%20464a24%2024%200%200%200%2023.7-11.4l24-112a24.2%2024.2%200%200%200-14.7-27.6z%27/%3E%3C/svg%3E')] bg-no-repeat bg-center bg-contain"></i>
         <span class="block mb-2.5">{{ t('lostandfound.detail.contact') }}</span>
         <div v-if="detail.contact?.qq" class="flex items-center justify-between py-2 border-b border-[var(--c-border)]">
-          <span>{{ t('lostandfound.detail.qq') }}<b>{{ detail.contact.qq }}</b></span>
+          <span>{{ t('lostandfound.detail.qq') }}<b>{{ maskContactHandle(detail.contact.qq) }}</b></span>
           <button class="px-3 py-1 text-[13px] text-blue-500 bg-transparent border border-blue-500 rounded cursor-pointer no-underline" @click="copyText(detail.contact.qq)">{{ t('lostandfound.detail.copyQQ') }}</button>
         </div>
         <div v-if="detail.contact?.wechat" class="flex items-center justify-between py-2 border-b border-[var(--c-border)]">
-          <span>{{ t('lostandfound.detail.wechat') }}<b>{{ detail.contact.wechat }}</b></span>
+          <span>{{ t('lostandfound.detail.wechat') }}<b>{{ maskContactHandle(detail.contact.wechat) }}</b></span>
           <button class="px-3 py-1 text-[13px] text-blue-500 bg-transparent border border-blue-500 rounded cursor-pointer no-underline" @click="copyText(detail.contact.wechat)">{{ t('lostandfound.detail.copyWechat') }}</button>
         </div>
         <div v-if="detail.contact?.phone" class="flex items-center justify-between py-2">
-          <span>{{ t('lostandfound.detail.phone') }}<a class="text-[var(--c-text-2)]">{{ detail.contact.phone }}</a></span>
+          <span>{{ t('lostandfound.detail.phone') }}<a class="text-[var(--c-text-2)]">{{ maskPhone(detail.contact.phone) }}</a></span>
           <span class="flex gap-2">
             <a :href="`tel:${detail.contact.phone}`" class="px-3 py-1 text-[13px] text-blue-500 bg-transparent border border-blue-500 rounded cursor-pointer no-underline">{{ t('lostandfound.detail.call') }}</a>
             <a :href="`sms:${detail.contact.phone}`" class="px-3 py-1 text-[13px] text-blue-500 bg-transparent border border-blue-500 rounded cursor-pointer no-underline">{{ t('lostandfound.detail.sms') }}</a>

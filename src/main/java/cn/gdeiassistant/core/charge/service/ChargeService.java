@@ -9,6 +9,7 @@ import cn.gdeiassistant.common.pojo.Entity.Cookie;
 import cn.gdeiassistant.core.charge.pojo.entity.ChargeLogEntity;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeVO;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.charge.mapper.ChargeMapper;
@@ -409,7 +410,7 @@ public class ChargeService {
             entity.setAmount(amount);
             chargeMapper.insertChargeLog(entity);
         } catch (Exception e) {
-            logger.error("充值审计日志写入失败: sessionId={}, amount={}", sessionId, amount, e);
+            logger.error("充值审计日志写入失败: sessionId={}, amount={}", AnonymizeUtils.maskToken(sessionId), amount, e);
         }
     }
 }

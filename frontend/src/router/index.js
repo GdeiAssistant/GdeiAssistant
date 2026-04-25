@@ -72,6 +72,10 @@ const CookiePolicy = lazyView('about/CookiePolicy')
 const SocialPolicy = lazyView('about/SocialPolicy')
 const License = lazyView('about/License')
 const IntellectualProperty = lazyView('about/IntellectualProperty')
+const SecondHandPolicy = lazyView('about/SecondHandPolicy')
+const ErrandPolicy = lazyView('about/ErrandPolicy')
+const LostAndFoundPolicy = lazyView('about/LostAndFoundPolicy')
+const ThirdPartyServices = lazyView('about/ThirdPartyServices')
 const ErshouIndex = lazyView('marketplace/Index')
 const ErshouHome = lazyView('marketplace/Home')
 const ErshouPublish = lazyView('marketplace/Publish')
@@ -346,6 +350,26 @@ const routes = [
     path: '/policy/social',
     name: 'SocialPolicy',
     component: SocialPolicy
+  },
+  {
+    path: '/policy/secondhand',
+    name: 'SecondHandPolicy',
+    component: SecondHandPolicy
+  },
+  {
+    path: '/policy/errand',
+    name: 'ErrandPolicy',
+    component: ErrandPolicy
+  },
+  {
+    path: '/policy/lostandfound',
+    name: 'LostAndFoundPolicy',
+    component: LostAndFoundPolicy
+  },
+  {
+    path: '/policy/third-party-services',
+    name: 'ThirdPartyServices',
+    component: ThirdPartyServices
   },
   {
     path: '/license',

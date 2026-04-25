@@ -84,8 +84,7 @@ const submitQuery = () => {
         showError(res?.message || t('electricityFees.queryFailed'))
       }
     })
-    .catch((err) => {
-      console.error('Electricity fee query failed', err)
+    .catch(() => {
       isLoading.value = false
       hideLoading()
       // 错误由 request.js 全局拦截器统一提示

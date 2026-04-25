@@ -1,5 +1,6 @@
 package cn.gdeiassistant.common.tools.SpringUtils;
 
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.core.feedback.service.FeedbackService;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ public class EmailUtils {
             javaMailSender.send(mimeMailMessage);
             return;
         }
-        logger.error("发送至" + recipient + "的邮箱发送失败，原因为未配置邮件发送器", LocalDateTime.now().atZone(ZoneId.systemDefault())
+        logger.error("发送至" + AnonymizeUtils.maskEmail(recipient) + "的邮箱发送失败，原因为未配置邮件发送器", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
     }
 }

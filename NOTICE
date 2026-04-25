@@ -1,0 +1,12 @@
+GdeiAssistant
+
+This project is distributed under the Apache License, Version 2.0.
+
+The Apache-2.0 license applies to the source code and other materials that are
+explicitly distributed under that license. It does not automatically grant any
+right to use the project name, logos, domains, page designs, online service
+identity, school-related identifiers, or user data.
+
+Third-party dependency notices and attribution requirements should be reviewed
+with THIRD_PARTY_NOTICES.md and the licenses of the dependencies actually used
+in the build and deployment.

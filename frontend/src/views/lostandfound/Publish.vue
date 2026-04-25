@@ -237,6 +237,10 @@ onMounted(() => {
     </CommunityHeader>
 
     <div class="p-0">
+      <div class="mx-4 mt-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-xs leading-6 text-blue-900">
+        证件、学生卡、照片、联系方式等信息请尽量打码或最小化展示，避免公开完整证件号、完整手机号、完整二维码和其他足以导致冒领的信息。
+      </div>
+
       <p v-if="pageLoading" class="mt-4 text-center text-[var(--c-text-3)] text-sm">{{ t('lostandfound.publish.loading') }}</p>
 
       <!-- 寻找类型 -->

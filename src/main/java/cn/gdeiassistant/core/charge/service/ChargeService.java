@@ -410,7 +410,7 @@ public class ChargeService {
             entity.setAmount(amount);
             chargeMapper.insertChargeLog(entity);
         } catch (Exception e) {
-            logger.error("充值审计日志写入失败: sessionId={}, amount={}", AnonymizeUtils.maskToken(sessionId), amount, e);
+            logger.error("充值审计日志写入失败: amount={}", amount, e);
         }
     }
 }

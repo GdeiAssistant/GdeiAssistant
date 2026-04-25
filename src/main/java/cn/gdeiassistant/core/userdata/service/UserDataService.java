@@ -409,8 +409,7 @@ public class UserDataService {
                     try {
                         entry.getValue().close();
                     } catch (IOException e) {
-                        logger.error("关闭用户数据导出资源流失败，username={}，key={}",
-                                AnonymizeUtils.maskUsername(user.getUsername()), AnonymizeUtils.maskToken(entry.getKey()), e);
+                        logger.error("关闭用户数据导出资源流失败", e);
                     }
                 }
             }

@@ -12,6 +12,7 @@ import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -128,6 +129,38 @@ class CampusCredentialServiceTest {
         verify(privacyMapper, never()).updateQuickAuth(true, USERNAME);
         assertTrue(Boolean.TRUE.equals(status.getHasActiveConsent()));
         assertFalse(Boolean.TRUE.equals(status.getQuickAuthEnabled()));
+    }
+
+    @Test
+    void recordConsentUsesServerManagedPolicyMetadata() throws Exception {
+        PrivacyEntity privacy = new PrivacyEntity();
+        privacy.setUsername(USERNAME);
+        privacy.setQuickAuthAllow(true);
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(USERNAME);
+        userEntity.setPassword("saved-password");
+
+        CampusCredentialConsentEntity activeConsent = consent("LOGIN", null);
+
+        when(privacyMapper.selectPrivacy(USERNAME)).thenReturn(privacy, privacy);
+        when(campusCredentialConsentMapper.selectLatestActiveConsent(USERNAME, CampusCredentialService.CONSENT_TYPE_CAMPUS_CREDENTIAL))
+                .thenReturn(null, activeConsent);
+        when(campusCredentialConsentMapper.selectLatestConsent(USERNAME, CampusCredentialService.CONSENT_TYPE_CAMPUS_CREDENTIAL))
+                .thenReturn(activeConsent);
+        when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
+
+        CampusCredentialConsentDTO dto = new CampusCredentialConsentDTO();
+        dto.setScene("LOGIN");
+        dto.setPolicyDate("2000-01-01");
+        dto.setEffectiveDate("2000-01-02");
+
+        campusCredentialService.recordConsentByUsername(USERNAME, dto);
+
+        ArgumentCaptor<CampusCredentialConsentEntity> captor = ArgumentCaptor.forClass(CampusCredentialConsentEntity.class);
+        verify(campusCredentialConsentMapper).insertConsent(captor.capture());
+        assertEquals(Date.valueOf(CampusCredentialService.DEFAULT_POLICY_DATE), captor.getValue().getPolicyDate());
+        assertEquals(Date.valueOf(CampusCredentialService.DEFAULT_EFFECTIVE_DATE), captor.getValue().getEffectiveDate());
     }
 
     @Test

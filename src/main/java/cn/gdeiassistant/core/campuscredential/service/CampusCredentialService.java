@@ -74,8 +74,8 @@ public class CampusCredentialService {
     public CampusCredentialStatusVO recordConsentByUsername(String username, CampusCredentialConsentDTO body) throws Exception {
         ensurePrivacyRow(username);
         String scene = normalizeScene(body != null ? body.getScene() : null, SCENE_SETTINGS);
-        java.util.Date policyDate = parseDate(body != null ? body.getPolicyDate() : null, DEFAULT_POLICY_DATE);
-        java.util.Date effectiveDate = parseDate(body != null ? body.getEffectiveDate() : null, DEFAULT_EFFECTIVE_DATE);
+        java.util.Date policyDate = parseDate(null, DEFAULT_POLICY_DATE);
+        java.util.Date effectiveDate = parseDate(null, DEFAULT_EFFECTIVE_DATE);
         CampusCredentialConsentEntity activeConsent = campusCredentialConsentMapper
                 .selectLatestActiveConsent(username, CONSENT_TYPE_CAMPUS_CREDENTIAL);
         if (activeConsent == null) {

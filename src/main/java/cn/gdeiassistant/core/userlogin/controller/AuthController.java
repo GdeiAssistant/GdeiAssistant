@@ -93,9 +93,9 @@ public class AuthController {
         if (persistCredential) {
             try {
                 CampusCredentialConsentDTO consentDTO = new CampusCredentialConsentDTO();
-                consentDTO.setScene(dto.getConsentScene());
-                consentDTO.setPolicyDate(dto.getPolicyDate());
-                consentDTO.setEffectiveDate(dto.getEffectiveDate());
+                consentDTO.setScene(CampusCredentialService.SCENE_LOGIN);
+                consentDTO.setPolicyDate(CampusCredentialService.DEFAULT_POLICY_DATE);
+                consentDTO.setEffectiveDate(CampusCredentialService.DEFAULT_EFFECTIVE_DATE);
                 campusCredentialService.recordConsentByUsername(username, consentDTO);
                 userDataService.syncUserData(new User(username, password), true);
                 consentPersisted = true;

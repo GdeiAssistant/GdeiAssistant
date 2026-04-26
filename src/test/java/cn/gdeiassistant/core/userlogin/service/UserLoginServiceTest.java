@@ -29,8 +29,8 @@ class UserLoginServiceTest {
     void loginAlwaysUsesRemoteSchoolFlowForCampusCredentialLogin() throws Exception {
         userLoginService.userLogin("session-1", "campus-user", "raw-password", false);
 
-        verify(userCertificateService, never()).saveUserLoginCertificate(anyString(), anyString(), anyString());
         verify(userCertificateService).syncUpdateSessionCertificate("session-1", "campus-user", "raw-password");
+        verify(userCertificateService).saveUserLoginCertificate("session-1", "campus-user", "raw-password");
         verify(userDataService).syncUserData(any(), eq(false));
     }
 
@@ -39,6 +39,7 @@ class UserLoginServiceTest {
         userLoginService.userLogin("session-1", "campus-user", "raw-password", true);
 
         verify(userCertificateService).syncUpdateSessionCertificate("session-1", "campus-user", "raw-password");
+        verify(userCertificateService).saveUserLoginCertificate("session-1", "campus-user", "raw-password");
         verify(userDataService).syncUserData(any(), eq(true));
     }
 }

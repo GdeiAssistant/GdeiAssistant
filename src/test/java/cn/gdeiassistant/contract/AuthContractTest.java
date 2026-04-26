@@ -1,10 +1,12 @@
 package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
+import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.userLogin.controller.AuthController;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.core.userLogin.service.UserLoginService;
 import cn.gdeiassistant.common.tools.Utils.JwtUtil;
+import cn.gdeiassistant.core.userData.service.UserDataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -32,17 +34,23 @@ class AuthContractTest {
     private UserLoginService userLoginService;
     private UserCertificateService userCertificateService;
     private JwtUtil jwtUtil;
+    private CampusCredentialService campusCredentialService;
+    private UserDataService userDataService;
 
     @BeforeEach
     void setUp() {
         userLoginService = mock(UserLoginService.class);
         userCertificateService = mock(UserCertificateService.class);
         jwtUtil = mock(JwtUtil.class);
+        campusCredentialService = mock(CampusCredentialService.class);
+        userDataService = mock(UserDataService.class);
 
         AuthController controller = new AuthController();
         ReflectionTestUtils.setField(controller, "userLoginService", userLoginService);
         ReflectionTestUtils.setField(controller, "userCertificateService", userCertificateService);
         ReflectionTestUtils.setField(controller, "jwtUtil", jwtUtil);
+        ReflectionTestUtils.setField(controller, "campusCredentialService", campusCredentialService);
+        ReflectionTestUtils.setField(controller, "userDataService", userDataService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
@@ -72,6 +80,21 @@ class AuthContractTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.code").exists())
                 .andExpect(jsonPath("$.message").value("Incorrect username or password"));
+    }
+
+    @Test
+    void loginWithConsentReturnsPersistenceFlagWhenConsentRecordingFails() throws Exception {
+        when(jwtUtil.createToken(anyString(), anyString())).thenReturn("jwt-token-example");
+        doThrow(new RuntimeException("db down"))
+                .when(campusCredentialService).recordConsentByUsername(anyString(), any());
+
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"testuser\",\"password\":\"testpass\",\"campusCredentialConsent\":true,\"consentScene\":\"LOGIN\",\"policyDate\":\"2026-04-25\",\"effectiveDate\":\"2026-05-11\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.token").value("jwt-token-example"))
+                .andExpect(jsonPath("$.data.campusCredentialConsentPersisted").value("false"));
     }
 
     @Test

@@ -87,8 +87,8 @@ public class CampusCredentialService {
             entity.setScene(scene);
             entity.setConsentedAt(new java.util.Date());
             campusCredentialConsentMapper.insertConsent(entity);
+            privacyMapper.updateQuickAuth(true, username);
         }
-        privacyMapper.updateQuickAuth(true, username);
         return getStatusByUsername(username);
     }
 

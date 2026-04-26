@@ -458,9 +458,7 @@ public class UserDataService {
         entity.setPassword(user.getPassword());
         if (persistCredential) {
             if (queryUser != null) {
-                if (queryUser.getUsername().equals(user.getUsername()) && queryUser.getPassword().equals(user.getPassword())) {
-                    userMapper.updateUser(entity);
-                }
+                userMapper.updateUser(entity);
             } else {
                 userMapper.insertUser(entity);
             }

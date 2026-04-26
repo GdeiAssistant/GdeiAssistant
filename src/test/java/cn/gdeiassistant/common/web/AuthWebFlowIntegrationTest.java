@@ -71,6 +71,13 @@ class AuthWebFlowIntegrationTest {
     }
 
     @Test
+    void shouldBlockCampusCredentialStatusWithoutToken() throws Exception {
+        mockMvc.perform(get("/api/campus-credential/status"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"code\":401,\"message\":\"Unauthorized\"}"));
+    }
+
+    @Test
     void shouldAllowProtectedRouteWhenBearerTokenResolvesSession() throws Exception {
         Claim sessionIdClaim = mock(Claim.class);
         when(sessionIdClaim.isNull()).thenReturn(false);
@@ -141,6 +148,11 @@ class AuthWebFlowIntegrationTest {
         String tokenHeader(@RequestHeader(value = "token", required = false) String token,
                            HttpServletRequest request) {
             return token != null ? String.valueOf(request.getAttribute("sessionId")) : "";
+        }
+
+        @GetMapping("/api/campus-credential/status")
+        Map<String, String> campusCredentialStatus() {
+            return Map.of("status", "ok");
         }
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -61,7 +62,7 @@ class AuthContractTest {
     @Test
     void loginWithWrongPasswordReturnsUnauthorized() throws Exception {
         doThrow(new PasswordIncorrectException("账号或密码错误"))
-                .when(userLoginService).userLogin(anyString(), anyString(), anyString());
+                .when(userLoginService).userLogin(anyString(), anyString(), anyString(), anyBoolean());
 
         mockMvc.perform(post("/api/auth/login")
                         .header("Accept-Language", "en-US")

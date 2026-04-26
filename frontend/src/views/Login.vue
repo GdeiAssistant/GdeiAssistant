@@ -39,8 +39,12 @@ async function handleLogin() {
   }
   showLoading(t('loginPage.loading'))
   try {
-    // TODO: submit campus-credential consent metadata after backend supports consent persistence.
-    const res = await login(username.value.trim(), password.value)
+    const res = await login(username.value.trim(), password.value, {
+      campusCredentialConsent: true,
+      consentScene: 'LOGIN',
+      policyDate: '2026-04-25',
+      effectiveDate: '2026-05-11'
+    })
     hideLoading()
     // 仅当后端返回 code === 200 时存 Token 并跳转；401 或其他错误码展示后端 message 并停留在登录页
     if (res && res.code === 200 && res.data && res.data.token) {

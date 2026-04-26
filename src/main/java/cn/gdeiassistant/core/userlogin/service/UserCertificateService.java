@@ -112,6 +112,16 @@ public class UserCertificateService {
     }
 
     /**
+     * 清除指定用户在 Redis 中已知的可复用校园凭证缓存。
+     */
+    public void clearReusableCredentials(String username) {
+        if (username != null && !username.isEmpty()) {
+            userCertificateDao.deleteUserSessionCertificatesByUsername(username);
+            userCertificateDao.deleteUserLoginCertificatesByUsername(username);
+        }
+    }
+
+    /**
      * 获取缓存的教务系统会话凭证
      *
      * @param sessionId

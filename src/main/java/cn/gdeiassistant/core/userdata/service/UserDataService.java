@@ -441,15 +441,31 @@ public class UserDataService {
      */
     @Transactional("appTransactionManager")
     public void syncUserData(User user) throws Exception {
+        syncUserData(user, true);
+    }
+
+    /**
+     * 同步用户数据，并按需决定是否刷新长期保存的校园凭证。
+     *
+     * @param user
+     * @param persistCredential true 表示允许更新 MySQL 中保存的校园凭证；false 表示仅初始化账号相关资料
+     */
+    @Transactional("appTransactionManager")
+    public void syncUserData(User user, boolean persistCredential) throws Exception {
         cn.gdeiassistant.core.user.pojo.entity.UserEntity queryUser = userMapper.selectUser(user.getUsername());
         cn.gdeiassistant.core.user.pojo.entity.UserEntity entity = new cn.gdeiassistant.core.user.pojo.entity.UserEntity();
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
-        if (queryUser != null) {
-            if (queryUser.getUsername().equals(user.getUsername()) && queryUser.getPassword().equals(user.getPassword())) {
-                userMapper.updateUser(entity);
+        if (persistCredential) {
+            if (queryUser != null) {
+                if (queryUser.getUsername().equals(user.getUsername()) && queryUser.getPassword().equals(user.getPassword())) {
+                    userMapper.updateUser(entity);
+                }
+            } else {
+                userMapper.insertUser(entity);
             }
-        } else {
+        } else if (queryUser == null) {
+            entity.setPassword(null);
             userMapper.insertUser(entity);
         }
         // 以下保持原逻辑：个人资料初始化

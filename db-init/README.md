@@ -33,5 +33,6 @@
 ## 使用方式
 
 1. **MySQL**：执行 `mysql/init.sql`（见该文件内注释）。
+   - **存量部署升级**：执行 `mysql/upgrade-2026-05-11-campus-credential-controls.sql`，补充校园凭证授权留痕表和 `privacy.is_quick_auth_allow` 字段。
 2. **MongoDB**：若使用 Mongo，执行 `mongodb/init.js`（见该目录说明）。
 3. **Redis**：无需预置 Key，见 `redis/README.md`。

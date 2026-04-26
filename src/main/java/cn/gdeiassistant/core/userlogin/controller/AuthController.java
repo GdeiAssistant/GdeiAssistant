@@ -5,8 +5,13 @@ import cn.gdeiassistant.common.constant.ErrorConstantUtils;
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.tools.Utils.JwtUtil;
+import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.core.campuscredential.pojo.dto.CampusCredentialConsentDTO;
+import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.core.user.pojo.dto.UserLoginDTO;
+import cn.gdeiassistant.core.userData.service.UserDataService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.core.userLogin.service.UserLoginService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
@@ -44,6 +49,12 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private CampusCredentialService campusCredentialService;
+
+    @Autowired
+    private UserDataService userDataService;
+
     /**
      * 用户登录（JWT）
      * 账号密码校验通过后签发 JWT，载荷包含用户唯一标识（学号 username）。
@@ -59,8 +70,9 @@ public class AuthController {
         String username = dto.getUsername();
         String password = dto.getPassword();
         String sessionId = UUID.randomUUID().toString().replace("-", "");
+        boolean persistCredential = Boolean.TRUE.equals(dto.getCampusCredentialConsent());
         try {
-            userLoginService.userLogin(sessionId, username, password);
+            userLoginService.userLogin(sessionId, username, password, false);
         } catch (PasswordIncorrectException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             DataJsonResult<Map<String, String>> err = new DataJsonResult<>(false, null);
@@ -76,6 +88,18 @@ public class AuthController {
             err.setCode(ErrorConstantUtils.INTERNAL_SERVER_ERROR);
             err.setMessage(BackendTextLocalizer.localizeMessage("系统繁忙，登录失败，请稍后重试", language));
             return err;
+        }
+        if (persistCredential) {
+            try {
+                CampusCredentialConsentDTO consentDTO = new CampusCredentialConsentDTO();
+                consentDTO.setScene(dto.getConsentScene());
+                consentDTO.setPolicyDate(dto.getPolicyDate());
+                consentDTO.setEffectiveDate(dto.getEffectiveDate());
+                campusCredentialService.recordConsentByUsername(username, consentDTO);
+                userDataService.syncUserData(new User(username, password), true);
+            } catch (Exception e) {
+                logger.warn("登录成功后记录校园凭证授权失败，username={}", AnonymizeUtils.maskUsername(username), e);
+            }
         }
         String jwt = jwtUtil.createToken(sessionId, username);
         Map<String, String> data = new HashMap<>();

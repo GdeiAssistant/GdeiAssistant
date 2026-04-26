@@ -98,7 +98,10 @@ public class AuthController {
                 campusCredentialService.recordConsentByUsername(username, consentDTO);
                 userDataService.syncUserData(new User(username, password), true);
             } catch (Exception e) {
-                logger.warn("登录成功后记录校园凭证授权失败，username={}", AnonymizeUtils.maskUsername(username), e);
+                String maskedUsername = String.valueOf(AnonymizeUtils.maskUsername(username))
+                        .replace('\n', '_')
+                        .replace('\r', '_');
+                logger.warn("登录成功后记录校园凭证授权失败，username={}", maskedUsername, e);
             }
         }
         String jwt = jwtUtil.createToken(sessionId, username);

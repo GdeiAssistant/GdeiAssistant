@@ -41,6 +41,7 @@ public class UserLoginService {
     private void completeRemoteSchoolLogin(String sessionId, String username, String password, boolean persistCredential) throws Exception {
         userCertificateService.syncUpdateSessionCertificate(sessionId, username, password);
         userDataService.syncUserData(new User(username, password), persistCredential);
+        userCertificateService.saveUserLoginCertificate(sessionId, username, password);
     }
 
 }

@@ -71,6 +71,7 @@ public class AuthController {
         String password = dto.getPassword();
         String sessionId = UUID.randomUUID().toString().replace("-", "");
         boolean persistCredential = Boolean.TRUE.equals(dto.getCampusCredentialConsent());
+        boolean consentPersisted = !persistCredential;
         try {
             userLoginService.userLogin(sessionId, username, password, false);
         } catch (PasswordIncorrectException e) {
@@ -97,6 +98,7 @@ public class AuthController {
                 consentDTO.setEffectiveDate(dto.getEffectiveDate());
                 campusCredentialService.recordConsentByUsername(username, consentDTO);
                 userDataService.syncUserData(new User(username, password), true);
+                consentPersisted = true;
             } catch (Exception e) {
                 String maskedUsername = String.valueOf(AnonymizeUtils.maskUsername(username))
                         .replace('\n', '_')
@@ -107,6 +109,9 @@ public class AuthController {
         String jwt = jwtUtil.createToken(sessionId, username);
         Map<String, String> data = new HashMap<>();
         data.put("token", jwt);
+        if (persistCredential) {
+            data.put("campusCredentialConsentPersisted", String.valueOf(consentPersisted));
+        }
         DataJsonResult<Map<String, String>> result = new DataJsonResult<>(true, data);
         result.setCode(200);
         result.setMessage("success");

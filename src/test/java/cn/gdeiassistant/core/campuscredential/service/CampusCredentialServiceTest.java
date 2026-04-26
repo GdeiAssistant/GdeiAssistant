@@ -104,6 +104,33 @@ class CampusCredentialServiceTest {
     }
 
     @Test
+    void recordConsentDoesNotReEnableQuickAuthWhenActiveConsentAlreadyExists() throws Exception {
+        PrivacyEntity privacy = new PrivacyEntity();
+        privacy.setUsername(USERNAME);
+        privacy.setQuickAuthAllow(false);
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(USERNAME);
+        userEntity.setPassword("saved-password");
+
+        CampusCredentialConsentEntity activeConsent = consent("LOGIN", null);
+
+        when(privacyMapper.selectPrivacy(USERNAME)).thenReturn(privacy);
+        when(campusCredentialConsentMapper.selectLatestActiveConsent(USERNAME, CampusCredentialService.CONSENT_TYPE_CAMPUS_CREDENTIAL))
+                .thenReturn(activeConsent);
+        when(campusCredentialConsentMapper.selectLatestConsent(USERNAME, CampusCredentialService.CONSENT_TYPE_CAMPUS_CREDENTIAL))
+                .thenReturn(activeConsent);
+        when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
+
+        CampusCredentialStatusVO status = campusCredentialService.recordConsentByUsername(USERNAME, new CampusCredentialConsentDTO());
+
+        verify(campusCredentialConsentMapper, never()).insertConsent(any(CampusCredentialConsentEntity.class));
+        verify(privacyMapper, never()).updateQuickAuth(true, USERNAME);
+        assertTrue(Boolean.TRUE.equals(status.getHasActiveConsent()));
+        assertFalse(Boolean.TRUE.equals(status.getQuickAuthEnabled()));
+    }
+
+    @Test
     void revokeConsentDisablesQuickAuthAndClearsSavedCredentialState() throws Exception {
         User user = new User(USERNAME, "runtime-password");
         PrivacyEntity privacy = new PrivacyEntity();

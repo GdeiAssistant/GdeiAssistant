@@ -8,13 +8,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Repository;
 
 import jakarta.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -190,36 +193,45 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         if (redisTemplate == null || username == null || username.isBlank()) {
             return;
         }
-        Set<String> keys = redisTemplate.keys("*");
-        if (keys == null || keys.isEmpty()) {
+        redisTemplate.execute((RedisCallback<Void>) connection -> {
+            ScanOptions scanOptions = ScanOptions.scanOptions().count(1000).build();
+            try (Cursor<byte[]> cursor = connection.scan(scanOptions)) {
+                while (cursor.hasNext()) {
+                    String key = new String(cursor.next(), StandardCharsets.UTF_8);
+                    if (!isHashedCredentialKey(key)) {
+                        continue;
+                    }
+                    deleteCredentialEntryIfMatches(username, requireSessionShape, key);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("Redis 扫描凭证缓存失败", e);
+            }
+            return null;
+        });
+    }
+
+    private void deleteCredentialEntryIfMatches(String username, boolean requireSessionShape, String key) {
+        String json = redisTemplate.opsForValue().get(key);
+        if (json == null || json.isEmpty()) {
             return;
         }
-        for (String key : keys) {
-            if (!isHashedCredentialKey(key)) {
-                continue;
+        try {
+            Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
+            if (!username.equals(map.get("username"))) {
+                return;
             }
-            String json = redisTemplate.opsForValue().get(key);
-            if (json == null || json.isEmpty()) {
-                continue;
+            boolean looksLikeSessionCredential = map.containsKey("keycode")
+                    && map.containsKey("number")
+                    && map.containsKey("timestamp");
+            boolean looksLikeReusableLoginCredential = map.containsKey("password");
+            if (!looksLikeReusableLoginCredential) {
+                return;
             }
-            try {
-                Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
-                if (!username.equals(map.get("username"))) {
-                    continue;
-                }
-                boolean looksLikeSessionCredential = map.containsKey("keycode")
-                        && map.containsKey("number")
-                        && map.containsKey("timestamp");
-                boolean looksLikeReusableLoginCredential = map.containsKey("password");
-                if (!looksLikeReusableLoginCredential) {
-                    continue;
-                }
-                if (requireSessionShape == looksLikeSessionCredential) {
-                    redisTemplate.delete(key);
-                }
-            } catch (Exception ignored) {
-                // Ignore non-credential Redis values during credential cleanup scan.
+            if (requireSessionShape == looksLikeSessionCredential) {
+                redisTemplate.delete(key);
             }
+        } catch (Exception ignored) {
+            // Ignore non-credential Redis values during credential cleanup scan.
         }
     }
 

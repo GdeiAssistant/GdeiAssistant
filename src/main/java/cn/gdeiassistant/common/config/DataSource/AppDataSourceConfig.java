@@ -17,6 +17,7 @@ import java.io.IOException;
 
 @Configuration
 @MapperScan(basePackages = {
+        "cn.gdeiassistant.core.campuscredential.mapper",
         "cn.gdeiassistant.core.authentication.mapper",
         "cn.gdeiassistant.core.cet.mapper",
         "cn.gdeiassistant.core.cetquery.mapper",

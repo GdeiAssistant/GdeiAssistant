@@ -1,8 +1,5 @@
 package cn.gdeiassistant.core.userLogin.service;
 
-import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
-import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
 import cn.gdeiassistant.core.userData.service.UserDataService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,13 +7,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserLoginServiceTest {
-
-    @Mock
-    private UserMapper userMapper;
 
     @Mock
     private UserCertificateService userCertificateService;
@@ -24,21 +22,11 @@ class UserLoginServiceTest {
     @Mock
     private UserDataService userDataService;
 
-    @Mock
-    private CampusCredentialService campusCredentialService;
-
     @InjectMocks
     private UserLoginService userLoginService;
 
     @Test
-    void noActiveConsentDoesNotUseSavedCredentialShortcut() throws Exception {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername("campus-user");
-        userEntity.setPassword("raw-password");
-
-        when(userMapper.selectUser("campus-user")).thenReturn(userEntity);
-        when(campusCredentialService.isEffectiveQuickAuthEnabled("campus-user")).thenReturn(false);
-
+    void loginAlwaysUsesRemoteSchoolFlowForCampusCredentialLogin() throws Exception {
         userLoginService.userLogin("session-1", "campus-user", "raw-password", false);
 
         verify(userCertificateService, never()).saveUserLoginCertificate(anyString(), anyString(), anyString());
@@ -47,18 +35,10 @@ class UserLoginServiceTest {
     }
 
     @Test
-    void activeConsentAndSavedCredentialAllowSavedCredentialShortcut() throws Exception {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername("campus-user");
-        userEntity.setPassword("raw-password");
-
-        when(userMapper.selectUser("campus-user")).thenReturn(userEntity);
-        when(campusCredentialService.isEffectiveQuickAuthEnabled("campus-user")).thenReturn(true);
-
+    void loginPropagatesPersistCredentialFlagToUserDataSync() throws Exception {
         userLoginService.userLogin("session-1", "campus-user", "raw-password", true);
 
-        verify(userCertificateService).saveUserLoginCertificate("session-1", "campus-user", "raw-password");
-        verify(userCertificateService, never()).syncUpdateSessionCertificate(anyString(), anyString(), anyString());
-        verify(userDataService, never()).syncUserData(any(), anyBoolean());
+        verify(userCertificateService).syncUpdateSessionCertificate("session-1", "campus-user", "raw-password");
+        verify(userDataService).syncUserData(any(), eq(true));
     }
 }

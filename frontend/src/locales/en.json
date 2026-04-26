@@ -160,7 +160,7 @@
     "agreementLink": "\"User Agreement\"",
     "privacyLink": "\"Privacy Policy\"",
     "and": " and ",
-    "campusConsentLabel": "I have read and separately agree that the platform may process my campus credentials within the necessary scope for campus identity verification, quick authentication, campus data queries, and the required session synchronization with campus systems. I understand that I can request to disable quick authentication or delete saved campus credentials through account settings, feedback channels, or future product features, and that some campus query or quick-auth features may become unavailable after disabling or deletion.",
+    "campusConsentLabel": "I have read and separately agree that the platform may process my campus credentials within the necessary scope for campus identity verification, quick authentication, campus data queries, and the required session synchronization with campus systems. I understand that I can disable quick authentication, revoke consent, or request deletion of saved campus credentials through account settings or feedback channels, and that some campus query or quick-auth features may become unavailable after disabling or deletion.",
     "campusConsentRequired": "Please separately agree to the campus credential notice before signing in",
     "otherLogin": "Other login methods",
     "incompleteFields": "Please complete all required fields",

@@ -27,7 +27,11 @@ public class CampusCredentialController {
     public DataJsonResult<CampusCredentialStatusVO> recordConsent(HttpServletRequest request,
                                                                   @RequestBody(required = false) CampusCredentialConsentDTO body) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, campusCredentialService.recordConsent(sessionId, body));
+        CampusCredentialConsentDTO dto = body != null ? body : new CampusCredentialConsentDTO();
+        dto.setScene(CampusCredentialService.SCENE_SETTINGS);
+        dto.setPolicyDate(CampusCredentialService.DEFAULT_POLICY_DATE);
+        dto.setEffectiveDate(CampusCredentialService.DEFAULT_EFFECTIVE_DATE);
+        return new DataJsonResult<>(true, campusCredentialService.recordConsent(sessionId, dto));
     }
 
     @PostMapping("/revoke")

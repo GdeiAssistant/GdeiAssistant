@@ -4,6 +4,7 @@ import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectExcept
 import cn.gdeiassistant.common.pojo.Document.GradeDocument;
 import cn.gdeiassistant.common.pojo.Entity.Grade;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.gradequery.pojo.GradeCacheResult;
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
@@ -47,6 +48,9 @@ public class GradeCronService {
     @Autowired
     private GradeDao gradeDao;
 
+    @Autowired
+    private CampusCredentialService campusCredentialService;
+
     /**
      * 同步教务系统实时成绩信息（可由 Scheduler 或 HTTP /cron/grade 触发）。
      */
@@ -55,7 +59,9 @@ public class GradeCronService {
         List<CompletableFuture<Void>> pendingTasks = new ArrayList<>();
         try {
             //获取所有允许教务缓存的用户
-            List<User> userList = cronMapper.selectCacheAllowUsers();
+            List<User> userList = campusCredentialService.filterUsersWithEffectiveQuickAuth(
+                    cronMapper.selectCacheAllowUsers()
+            );
             //设置线程信号量，限制最大同时查询的线程数为5
             Semaphore semaphore = new Semaphore(5);
             for (User user : userList) {

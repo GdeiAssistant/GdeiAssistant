@@ -21,8 +21,24 @@ public class UserLoginDTO implements Serializable {
     @Size(min = 1, max = 35, message = "密码长度超过限制", groups = {UserLoginValidGroup.class})
     private String password;
 
+    private Boolean campusCredentialConsent;
+
+    private String consentScene;
+
+    private String policyDate;
+
+    private String effectiveDate;
+
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    public Boolean getCampusCredentialConsent() { return campusCredentialConsent; }
+    public void setCampusCredentialConsent(Boolean campusCredentialConsent) { this.campusCredentialConsent = campusCredentialConsent; }
+    public String getConsentScene() { return consentScene; }
+    public void setConsentScene(String consentScene) { this.consentScene = consentScene; }
+    public String getPolicyDate() { return policyDate; }
+    public void setPolicyDate(String policyDate) { this.policyDate = policyDate; }
+    public String getEffectiveDate() { return effectiveDate; }
+    public void setEffectiveDate(String effectiveDate) { this.effectiveDate = effectiveDate; }
 }

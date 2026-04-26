@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.schedulequery.service;
 import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
 import cn.gdeiassistant.common.pojo.Document.ScheduleDocument;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedulequery.pojo.vo.ScheduleQueryVO;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
@@ -45,6 +46,9 @@ public class ScheduleCronService {
     @Autowired
     private ScheduleDao scheduleDao;
 
+    @Autowired
+    private CampusCredentialService campusCredentialService;
+
     /**
      * 同步教务系统实时课表信息（可由 Scheduler 或 HTTP /cron/schedule 触发）。
      */
@@ -53,7 +57,9 @@ public class ScheduleCronService {
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
         List<CompletableFuture<Void>> pendingTasks = new ArrayList<>();
         try {
-            List<User> userList = cronMapper.selectCacheAllowUsers();
+            List<User> userList = campusCredentialService.filterUsersWithEffectiveQuickAuth(
+                    cronMapper.selectCacheAllowUsers()
+            );
             //设置线程信号量，限制最大同时查询的线程数为5
             Semaphore semaphore = new Semaphore(5);
             for (User user : userList) {

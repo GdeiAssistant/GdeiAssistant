@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import jakarta.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -123,6 +124,16 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
     }
 
     @Override
+    public void deleteUserLoginCertificatesByUsername(String username) {
+        deleteCredentialEntriesByUsername(username, false);
+    }
+
+    @Override
+    public void deleteUserSessionCertificatesByUsername(String username) {
+        deleteCredentialEntriesByUsername(username, true);
+    }
+
+    @Override
     public void saveUserLoginCertificate(String sessionId, String username, String password) {
         if (redisTemplate == null) return;
         Map<String, String> map = new HashMap<>();
@@ -173,5 +184,55 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
             throw new RuntimeException("会话凭证序列化失败", e);
         }
         redisDaoUtils.expire(key, 10, TimeUnit.MINUTES);
+    }
+
+    private void deleteCredentialEntriesByUsername(String username, boolean requireSessionShape) {
+        if (redisTemplate == null || username == null || username.isBlank()) {
+            return;
+        }
+        Set<String> keys = redisTemplate.keys("*");
+        if (keys == null || keys.isEmpty()) {
+            return;
+        }
+        for (String key : keys) {
+            if (!isHashedCredentialKey(key)) {
+                continue;
+            }
+            String json = redisTemplate.opsForValue().get(key);
+            if (json == null || json.isEmpty()) {
+                continue;
+            }
+            try {
+                Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
+                if (!username.equals(map.get("username"))) {
+                    continue;
+                }
+                boolean looksLikeSessionCredential = map.containsKey("keycode")
+                        && map.containsKey("number")
+                        && map.containsKey("timestamp");
+                boolean looksLikeReusableLoginCredential = map.containsKey("password");
+                if (!looksLikeReusableLoginCredential) {
+                    continue;
+                }
+                if (requireSessionShape == looksLikeSessionCredential) {
+                    redisTemplate.delete(key);
+                }
+            } catch (Exception ignored) {
+                // Ignore non-credential Redis values during credential cleanup scan.
+            }
+        }
+    }
+
+    private boolean isHashedCredentialKey(String key) {
+        if (key == null || key.length() != 64) {
+            return false;
+        }
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
+            if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

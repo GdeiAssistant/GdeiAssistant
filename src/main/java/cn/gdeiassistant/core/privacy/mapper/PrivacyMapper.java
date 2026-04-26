@@ -16,14 +16,15 @@ public interface PrivacyMapper {
             @Result(property = "enrollmentOpen", column = "is_enrollment_open", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
             @Result(property = "ageOpen", column = "is_age_open", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
             @Result(property = "cacheAllow", column = "is_cache_allow", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
+            @Result(property = "quickAuthAllow", column = "is_quick_auth_allow", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
             @Result(property = "robotsIndexAllow", column = "is_robots_index_allow", javaType = Boolean.class, jdbcType = JdbcType.TINYINT)
     })
     PrivacyEntity selectPrivacy(String username);
 
-    @Insert("insert into privacy (username,is_cache_allow) values(#{username},false)")
+    @Insert("insert into privacy (username,is_cache_allow,is_quick_auth_allow) values(#{username},false,false)")
     void initPrivacy(String username);
 
-    @Update("update privacy set is_cache_allow=0 where username=#{username}")
+    @Update("update privacy set is_cache_allow=0,is_quick_auth_allow=0 where username=#{username}")
     void resetPrivacy(String username);
 
     @Update("<script>" +
@@ -140,6 +141,20 @@ public interface PrivacyMapper {
             "</script>")
     void updateCache(@Param("cacheAllow") Boolean cache, @Param("username") String username)
            ;
+
+    @Update("<script>" +
+            "update privacy" +
+            "        <choose>" +
+            "            <when test='quickAuthAllow'>" +
+            "                set is_quick_auth_allow='1'" +
+            "            </when>" +
+            "            <otherwise>" +
+            "                set is_quick_auth_allow='0'" +
+            "            </otherwise>" +
+            "        </choose>" +
+            "        where username=#{username}" +
+            "</script>")
+    void updateQuickAuth(@Param("quickAuthAllow") Boolean quickAuthAllow, @Param("username") String username);
 
     @Update("<script>" +
             "update privacy" +

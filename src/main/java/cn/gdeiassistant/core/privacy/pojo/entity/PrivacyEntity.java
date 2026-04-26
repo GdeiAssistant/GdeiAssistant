@@ -18,6 +18,7 @@ public class PrivacyEntity implements Serializable, Entity {
     private Boolean enrollmentOpen;
     private Boolean ageOpen;
     private Boolean cacheAllow;
+    private Boolean quickAuthAllow;
     private Boolean robotsIndexAllow;
 
     public String getUsername() { return username; }
@@ -38,6 +39,8 @@ public class PrivacyEntity implements Serializable, Entity {
     public void setAgeOpen(Boolean ageOpen) { this.ageOpen = ageOpen; }
     public Boolean getCacheAllow() { return cacheAllow; }
     public void setCacheAllow(Boolean cacheAllow) { this.cacheAllow = cacheAllow; }
+    public Boolean getQuickAuthAllow() { return quickAuthAllow; }
+    public void setQuickAuthAllow(Boolean quickAuthAllow) { this.quickAuthAllow = quickAuthAllow; }
     public Boolean getRobotsIndexAllow() { return robotsIndexAllow; }
     public void setRobotsIndexAllow(Boolean robotsIndexAllow) { this.robotsIndexAllow = robotsIndexAllow; }
 }

@@ -21,6 +21,10 @@ public interface UserCertificateDao {
 
     void deleteUserSessionCertificate(String sessionId);
 
+    void deleteUserLoginCertificatesByUsername(String username);
+
+    void deleteUserSessionCertificatesByUsername(String username);
+
     UserCertificateEntity queryUserSessionCertificate(String sessionId);
 
     void saveUserSessionCertificate(String sessionId, UserCertificateEntity user);

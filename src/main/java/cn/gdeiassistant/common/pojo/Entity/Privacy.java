@@ -29,6 +29,8 @@ public class Privacy implements Serializable, Entity {
 
     private Boolean cacheAllow;
 
+    private Boolean quickAuthAllow;
+
     private Boolean robotsIndexAllow;
 
     public String getUsername() {
@@ -101,6 +103,14 @@ public class Privacy implements Serializable, Entity {
 
     public void setCacheAllow(Boolean cacheAllow) {
         this.cacheAllow = cacheAllow;
+    }
+
+    public Boolean isQuickAuthAllow() {
+        return quickAuthAllow;
+    }
+
+    public void setQuickAuthAllow(Boolean quickAuthAllow) {
+        this.quickAuthAllow = quickAuthAllow;
     }
 
     public Boolean isRobotsIndexAllow() {

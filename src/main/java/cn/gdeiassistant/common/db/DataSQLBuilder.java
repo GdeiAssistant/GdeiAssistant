@@ -25,7 +25,7 @@ public class DataSQLBuilder {
         return new SQL() {{
             SELECT("p.username,p.is_location_open,p.is_hometown_open,p.is_introduction_open");
             SELECT("p.is_enrollment_open,p.is_age_open");
-            SELECT("p.is_faculty_open,p.is_major_open,p.is_cache_allow,p.is_robots_index_allow");
+            SELECT("p.is_faculty_open,p.is_major_open,p.is_cache_allow,p.is_quick_auth_allow,p.is_robots_index_allow");
             FROM("privacy p");
             WHERE("p.username=#{username}");
         }}.toString();

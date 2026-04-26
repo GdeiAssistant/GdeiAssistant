@@ -34,6 +34,9 @@ public interface UserMapper {
     @Update("update user set password=#{password,typeHandler=cn.gdeiassistant.common.typehandler.MybatisEncryptionTypeHandler,jdbcType=VARCHAR} where username=#{username}")
     void updateUser(UserEntity user);
 
+    @Update("update user set password=null where username=#{username}")
+    void clearPassword(String username);
+
     @Update("update user set username=#{resetname},password=null where username=#{username}")
     void closeUser(@Param("resetname") String resetname, @Param("username") String username);
 }

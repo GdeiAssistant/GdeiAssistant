@@ -5,10 +5,15 @@ import request from '@/utils/request'
  * POST /api/auth/login
  * @param {string} username 学号/校园网账号
  * @param {string} password 密码
+ * @param {Object} [consentMetadata]
  * @returns {Promise<{ code, message, success, data }>} 成功时 code===200，data.token 为 JWT
  */
-export function login(username, password) {
-  return request.post('/auth/login', { username, password })
+export function login(username, password, consentMetadata = {}) {
+  return request.post('/auth/login', {
+    username,
+    password,
+    ...consentMetadata
+  })
 }
 
 /**

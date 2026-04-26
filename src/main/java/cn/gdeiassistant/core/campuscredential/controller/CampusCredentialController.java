@@ -45,10 +45,7 @@ public class CampusCredentialController {
     @PostMapping("/quick-auth")
     public DataJsonResult<CampusCredentialStatusVO> updateQuickAuth(HttpServletRequest request,
                                                                     @RequestBody CampusCredentialQuickAuthUpdateDTO body) throws Exception {
-        if (body == null || body.getEnabled() == null) {
-            throw new IllegalArgumentException("请提供快速认证开关状态");
-        }
         String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, campusCredentialService.updateQuickAuth(sessionId, body.getEnabled()));
+        return new DataJsonResult<>(true, campusCredentialService.updateQuickAuth(sessionId, body.isEnabled()));
     }
 }

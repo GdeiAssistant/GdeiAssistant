@@ -35,7 +35,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p class="text-center">生效日期：2026年5月11日</p>
 
           <div class="bg-slate-50 text-slate-800 border border-slate-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
-            <p class="!mb-2"><strong>说明口径：</strong>本页面用于说明平台通常采取或建议采取的安全措施，具体实现仍以实际部署、版本和配置为准。</p>
+            <p class="!mb-2"><strong>阅读提示：</strong>本页面用于说明平台通常采取或建议采取的安全措施，具体实现仍以实际部署、版本和配置为准。</p>
             <p class="!mb-0"><strong>本次修订说明：</strong>本次修订内容将自 2026 年 5 月 11 日起适用；生效日前仍适用修订前版本。</p>
           </div>
 
@@ -44,7 +44,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p><strong>1.2</strong> 本说明适用于 Web 端、接口服务、对象存储上传、校园系统对接、短信/邮件/AI OCR 等能力的常见安全要求，但不构成对全部技术细节的穷尽披露。</p>
 
           <h3>第二条 登录态、令牌与会话安全</h3>
-          <p><strong>2.1</strong> 就当前 Web 端实现而言，用户登录状态通常主要依赖浏览器本地存储中的令牌与 `Authorization` 请求头维持，而不是以浏览器 HttpOnly Cookie 作为唯一或主要的用户登录载体。</p>
+          <p><strong>2.1</strong> Web 端登录状态通常主要依赖浏览器本地存储中的令牌与 `Authorization` 请求头维持，而不是仅依赖浏览器 HttpOnly Cookie 作为唯一或主要的用户登录载体。</p>
           <p><strong>2.2</strong> 结合不同功能场景，平台也可能使用浏览器本地存储、请求头、Cookie、服务端会话、同步凭证或其他安全机制保存或传递登录状态；对接学校相关系统时，服务端还可能基于同步会话或服务端 Cookie 完成校园系统访问。</p>
           <p><strong>2.3</strong> 对高敏令牌、校园凭证和同步会话，平台应尽量采用更安全的存储、有效期、刷新、失效、访问控制、异常检测和 XSS 防护措施。</p>
           <p><strong>2.4</strong> 浏览器本地存储存在 XSS、恶意扩展、共享设备、浏览器同步和误操作带来的风险。请避免在公共设备长期登录，并在完成使用后退出登录、清理浏览器数据或注销账号。</p>
@@ -73,7 +73,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           </ul>
 
           <h3>第六条 漏洞处理与安全事件响应</h3>
-          <p><strong>6.1</strong> 如您发现安全漏洞、越权访问、敏感信息暴露或其他安全风险，可通过项目公开反馈渠道、Issue 或后续公布的安全联系方式提交。涉及敏感漏洞时，请避免在公开页面披露可直接利用的细节。</p>
+          <p><strong>6.1</strong> 如您发现安全漏洞、越权访问、敏感信息暴露或其他安全风险，可通过应用内“帮助与反馈”或页面公示的其他安全反馈渠道提交。涉及敏感漏洞时，请避免在公开页面披露可直接利用的细节。</p>
           <p><strong>6.2</strong> 平台通常会在合理期限内评估、修复或缓解已确认的安全问题，但不承诺固定处理时限、奖金或公开披露计划。</p>
           <p><strong>6.3</strong> 当发生或可能发生安全事件时，平台会在适用规则要求下采取失效处理、访问限制、日志留存、补丁发布、配置调整、范围排查和合理通知等措施。</p>
 

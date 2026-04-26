@@ -24,6 +24,7 @@ worktrees/
 docs/**
 !docs/compliance-todo.md
 !docs/policy-changelog.md
+!docs/public-content-guidelines.md
 
 # ==================================
 # Spring Boot & Java

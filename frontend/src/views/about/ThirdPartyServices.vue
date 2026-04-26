@@ -93,8 +93,8 @@ const rows = [
           <p class="text-center">生效日期：2026年5月11日</p>
 
           <div class="bg-slate-50 text-slate-800 border border-slate-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
-            <p class="!mb-2"><strong>说明：</strong>以下服务商为“可能包括”或“根据实际部署选择”的范围，不代表当前所有服务均已启用。</p>
-            <p class="!mb-0"><strong>互链：</strong>本清单与 <a href="/policy/privacy">《隐私政策》</a> 配套阅读；涉及安全配置建议时，可同时参阅 <a href="/about/security">《安全说明》</a>。</p>
+            <p class="!mb-2"><strong>说明：</strong>以下服务商为“可能包括”或“根据实际部署选择”的范围，不代表所有服务在每个版本、终端或部署环境中均已启用。</p>
+            <p class="!mb-0"><strong>配套阅读：</strong>涉及个人信息处理时，请与 <a href="/policy/privacy">《隐私政策》</a> 一并阅读；涉及安全配置要求时，请同时参阅 <a href="/about/security">《安全说明》</a>。</p>
           </div>
 
           <table>

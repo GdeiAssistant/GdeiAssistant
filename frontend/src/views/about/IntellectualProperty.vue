@@ -36,7 +36,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 
           <div class="bg-amber-50 text-amber-900 border border-amber-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>适用范围：</strong>当您认为平台内内容侵犯著作权、商标权、肖像权、名誉权、隐私权、商业秘密或其他合法权益时，可依本规则提交投诉；被投诉用户也可提交反通知或申诉。</p>
-            <p class="!mb-0"><strong>提交提醒：</strong>请尽量通过帮助与反馈、站内工单、仓库公开反馈渠道或平台后续公布的专门入口提交材料；不适合公开披露的敏感材料，请避免直接在公开页面贴出完整细节。</p>
+            <p class="!mb-0"><strong>提交提醒：</strong>请尽量通过应用内“帮助与反馈”或页面公示的其他渠道提交材料；不适合公开披露的敏感材料，请避免直接在公开页面贴出完整细节。</p>
           </div>
 
           <h3>第一条 用户发布内容的权利边界</h3>
@@ -77,7 +77,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p><strong>5.2</strong> 因通知不实、恶意投诉、恶意反通知或其他不当行为给平台、其他用户或第三方造成损失的，相关方应依法承担责任。</p>
 
           <h3>第六条 联系与材料提交建议</h3>
-          <p><strong>6.1</strong> 若平台当前未提供专门自助入口，您可通过应用内帮助与反馈、站内工单、仓库公开反馈渠道或后续公布的专门渠道提交侵权投诉、反通知或申诉材料。</p>
+          <p><strong>6.1</strong> 您可通过应用内“帮助与反馈”或页面公示的其他渠道提交侵权投诉、反通知或申诉材料。</p>
           <p><strong>6.2</strong> 公开渠道不适合提交真实证件号、完整联系方式、原始密钥、原始取件码、未打码证件照或其他高敏材料；必要时请先使用打码版本说明问题，再根据平台提示补充更完整的证明。</p>
           <p><strong>6.3</strong> 本规则未尽事宜，适用 <a href="/agreement">《用户协议》</a>、<a href="/policy/social">《社区准则》</a>、<a href="/policy/privacy">《隐私政策》</a> 及适用法律规定。</p>
         </div>

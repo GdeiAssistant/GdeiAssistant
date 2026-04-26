@@ -47,26 +47,36 @@ public class UserLoginService {
      * @param persistCredential 是否允许更新长期保存的校园凭证
      */
     public void userLogin(String sessionId, String username, String password, boolean persistCredential) throws Exception {
-        if (canUseSavedCredentialShortcut(username, password)) {
-            completeLocalQuickAuthLogin(sessionId, username, password);
+        UserEntity savedCredentialUser = getSavedCredentialShortcutUser(username, password);
+        if (savedCredentialUser != null) {
+            completeLocalQuickAuthLogin(sessionId, savedCredentialUser);
             return;
         }
         completeRemoteSchoolLogin(sessionId, username, password, persistCredential);
     }
 
-    private boolean canUseSavedCredentialShortcut(String username, String password) {
+    private UserEntity getSavedCredentialShortcutUser(String username, String password) {
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
-            return false;
+            return null;
         }
         UserEntity queryUser = userMapper.selectUser(username);
-        return queryUser != null
-                && username.equals(queryUser.getUsername())
-                && password.equals(queryUser.getPassword())
-                && campusCredentialService.isEffectiveQuickAuthEnabled(username);
+        if (queryUser == null) {
+            return null;
+        }
+        boolean sameStoredCredential = username.equals(queryUser.getUsername())
+                && password.equals(queryUser.getPassword());
+        if (!sameStoredCredential) {
+            return null;
+        }
+        return campusCredentialService.isEffectiveQuickAuthEnabled(queryUser.getUsername()) ? queryUser : null;
     }
 
-    private void completeLocalQuickAuthLogin(String sessionId, String username, String password) {
-        userCertificateService.saveUserLoginCertificate(sessionId, username, password);
+    private void completeLocalQuickAuthLogin(String sessionId, UserEntity savedCredentialUser) {
+        userCertificateService.saveUserLoginCertificate(
+                sessionId,
+                savedCredentialUser.getUsername(),
+                savedCredentialUser.getPassword()
+        );
     }
 
     private void completeRemoteSchoolLogin(String sessionId, String username, String password, boolean persistCredential) throws Exception {

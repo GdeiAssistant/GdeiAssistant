@@ -195,7 +195,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         }
         redisTemplate.execute((RedisCallback<Void>) connection -> {
             ScanOptions scanOptions = ScanOptions.scanOptions().count(1000).build();
-            try (Cursor<byte[]> cursor = connection.scan(scanOptions)) {
+            try (Cursor<byte[]> cursor = connection.keyCommands().scan(scanOptions)) {
                 while (cursor.hasNext()) {
                     String key = new String(cursor.next(), StandardCharsets.UTF_8);
                     if (!isHashedCredentialKey(key)) {

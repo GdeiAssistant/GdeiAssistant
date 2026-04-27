@@ -128,3 +128,30 @@ CREATE TABLE IF NOT EXISTS topic_like (
   username VARCHAR(24) NOT NULL,
   create_time DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS charge_order (
+  order_id VARCHAR(36) PRIMARY KEY,
+  username VARCHAR(24) NOT NULL,
+  amount INT NOT NULL,
+  status VARCHAR(32) NOT NULL,
+  idempotency_key_hash VARCHAR(64),
+  payload_fingerprint VARCHAR(64),
+  request_id VARCHAR(64),
+  device_id_hash VARCHAR(64),
+  external_order_no VARCHAR(128),
+  external_trade_no VARCHAR(128),
+  school_trade_no VARCHAR(128),
+  payment_url_hash VARCHAR(64),
+  error_code VARCHAR(64),
+  error_message_sanitized VARCHAR(255),
+  unknown_reason VARCHAR(255),
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  submitted_at DATETIME,
+  completed_at DATETIME,
+  last_checked_at DATETIME,
+  check_count INT DEFAULT 0 NOT NULL,
+  manual_review_at DATETIME,
+  manual_review_note VARCHAR(255),
+  version INT DEFAULT 0 NOT NULL
+);

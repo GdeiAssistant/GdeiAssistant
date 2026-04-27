@@ -219,7 +219,7 @@ public class CampusCredentialService {
             try {
                 HttpClientUtils.clearHttpClientCookieStore(sessionId);
             } catch (Exception e) {
-                logger.warn("清理校园凭证关联 CookieStore 失败，sessionId={}", AnonymizeUtils.maskToken(sessionId), e);
+                logger.warn("清理校园凭证关联 CookieStore 失败", e);
             }
             userCertificateService.clearUserLoginAndSession(sessionId);
         }

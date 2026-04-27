@@ -111,8 +111,8 @@
 ## 13. 充值订单状态表和状态流转
 
 - 当前状态：基础实现。后端新增 `charge_order` 表记录 `CREATED`、`PROCESSING`、`PAYMENT_SESSION_CREATED`、`FAILED`、`UNKNOWN`、`MANUAL_REVIEW` 等状态，并与 Redis 幂等记录关联订单摘要。`PAYMENT_SESSION_CREATED` 仅表示支付会话或跳转链接已生成，不代表校园卡余额最终到账。
-- 风险说明：当前阶段不提供订单查询 API、客户端订单状态 UI、UNKNOWN 自动补偿、人工处理后台或最终到账确认。学校侧是否提供稳定订单号、流水号和结果查询能力仍需确认。
-- 建议方案：后续分别推进用户订单查询 API、Android/iOS 订单状态展示、UNKNOWN 自动补偿、MANUAL_REVIEW 处理工具、兼容期后强制幂等键，以及更完整的外部流水号/到账状态确认；如继续依赖支付 URL 和 cookie，应评估安全中转方案，避免长期持久化敏感 cookie。
+- 风险说明：当前阶段已提供用户订单详情和近期列表查询 API，但不提供客户端订单状态 UI、UNKNOWN 自动补偿、人工处理后台或最终到账确认。学校侧是否提供稳定订单号、流水号和结果查询能力仍需确认。
+- 建议方案：后续分别推进 Android/iOS 订单状态展示、UNKNOWN 自动补偿、MANUAL_REVIEW 处理工具、兼容期后强制幂等键，以及更完整的外部流水号/到账状态确认；如继续依赖支付 URL 和 cookie，应评估安全中转方案，避免长期持久化敏感 cookie。
 - 优先级：高
 - 是否需要后端：是
 - 是否需要运营人工处理：是

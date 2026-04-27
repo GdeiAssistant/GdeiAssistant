@@ -12,6 +12,9 @@ import cn.gdeiassistant.core.secret.mapper.SecretMapper;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretContentEntity;
 import cn.gdeiassistant.core.topic.mapper.TopicMapper;
 import cn.gdeiassistant.core.topic.pojo.entity.TopicEntity;
+import cn.gdeiassistant.core.charge.mapper.ChargeOrderMapper;
+import cn.gdeiassistant.core.charge.pojo.entity.ChargeOrderEntity;
+import cn.gdeiassistant.core.charge.pojo.entity.ChargeOrderStatus;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -50,6 +53,9 @@ class MapperIntegrationTest {
             stmt.execute("INSERT INTO delivery_order (username,name,number,phone,price,company,address,state) VALUES ('testuser','张三','12345678901','13800138000',5.00,'顺丰','C栋',0)");
             stmt.execute("INSERT INTO secret_content (username,content,theme,type,timer,state) VALUES ('testuser','匿名内容',1,0,0,0)");
             stmt.execute("INSERT INTO topic (username,topic,content,count) VALUES ('testuser','校园话题','讨论内容',0)");
+            stmt.execute("INSERT INTO charge_order (order_id,username,amount,status,created_at,updated_at,check_count,version) VALUES ('synthetic-order-old','testuser',30,'PROCESSING','2026-04-28 10:00:00','2026-04-28 10:00:00',0,0)");
+            stmt.execute("INSERT INTO charge_order (order_id,username,amount,status,created_at,updated_at,check_count,version) VALUES ('synthetic-order-new','testuser',50,'PAYMENT_SESSION_CREATED','2026-04-28 11:00:00','2026-04-28 11:00:00',0,0)");
+            stmt.execute("INSERT INTO charge_order (order_id,username,amount,status,created_at,updated_at,check_count,version) VALUES ('synthetic-other-order','otheruser',20,'PAYMENT_SESSION_CREATED','2026-04-28 12:00:00','2026-04-28 12:00:00',0,0)");
             stmt.close();
             session.commit();
         }
@@ -150,6 +156,35 @@ class MapperIntegrationTest {
             assertNotNull(items);
             assertFalse(items.isEmpty());
             assertEquals("校园话题", items.get(0).getTopic());
+        }
+    }
+
+    @Test
+    void chargeOrderSelectByOwner() {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            ChargeOrderMapper mapper = session.getMapper(ChargeOrderMapper.class);
+            ChargeOrderEntity order = mapper.findByOrderIdAndUsername("synthetic-order-new", "testuser");
+            ChargeOrderEntity otherUserOrder = mapper.findByOrderIdAndUsername("synthetic-order-new", "otheruser");
+
+            assertNotNull(order);
+            assertEquals("synthetic-order-new", order.getOrderId());
+            assertEquals("testuser", order.getUsername());
+            assertEquals(50, order.getAmount());
+            assertEquals(ChargeOrderStatus.PAYMENT_SESSION_CREATED.name(), order.getStatus());
+            assertNull(otherUserOrder);
+        }
+    }
+
+    @Test
+    void chargeOrderSelectRecentByStatus() {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            ChargeOrderMapper mapper = session.getMapper(ChargeOrderMapper.class);
+            List<ChargeOrderEntity> items = mapper.findRecentByUsernameAndStatus("testuser",
+                    ChargeOrderStatus.PAYMENT_SESSION_CREATED.name(), 0, 10);
+
+            assertEquals(1, items.size());
+            assertEquals("synthetic-order-new", items.get(0).getOrderId());
+            assertEquals(ChargeOrderStatus.PAYMENT_SESSION_CREATED.name(), items.get(0).getStatus());
         }
     }
 }

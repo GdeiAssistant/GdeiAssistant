@@ -23,5 +23,6 @@
         <mapper class="cn.gdeiassistant.core.delivery.mapper.DeliveryMapper"/>
         <mapper class="cn.gdeiassistant.core.secret.mapper.SecretMapper"/>
         <mapper class="cn.gdeiassistant.core.topic.mapper.TopicMapper"/>
+        <mapper class="cn.gdeiassistant.core.charge.mapper.ChargeOrderMapper"/>
     </mappers>
 </configuration>

@@ -22,8 +22,16 @@ public class ChargeRequestDTO implements Serializable {
     @JSONField(serialize = false)
     private String password;
 
+    /**
+     * Legacy client compatibility only. The server no longer trusts client HMAC values.
+     */
+    @JSONField(serialize = false)
     private String hmac;
 
+    /**
+     * Legacy client compatibility only. The server no longer trusts client timestamps.
+     */
+    @JSONField(serialize = false)
     private String timestamp;
 
     public Integer getAmount() {

@@ -1,5 +1,6 @@
 package cn.gdeiassistant.common.aspect;
 
+import cn.gdeiassistant.core.charge.pojo.dto.ChargeRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -81,6 +82,25 @@ class RequestLogAspectTest {
         assertTrue(serialized.contains(rawToken.substring(rawToken.length() - 4)));
         assertTrue(serialized.contains("..."));
         assertFalse(serialized.contains(rawToken));
+    }
+
+    @Test
+    void shouldNotSerializeLegacyChargeSignatureFields() {
+        ChargeRequestDTO request = new ChargeRequestDTO();
+        request.setAmount(50);
+        request.setPassword("synthetic-charge-password");
+        request.setHmac("synthetic-legacy-hmac");
+        request.setTimestamp("1234567890");
+
+        String serialized = serialize("requestParams", request);
+
+        assertTrue(serialized.contains("\"amount\":\"50\""));
+        assertFalse(serialized.contains("synthetic-charge-password"));
+        assertFalse(serialized.contains("synthetic-legacy-hmac"));
+        assertFalse(serialized.contains("1234567890"));
+        assertFalse(serialized.contains("password"));
+        assertFalse(serialized.contains("hmac"));
+        assertFalse(serialized.contains("timestamp"));
     }
 
     @Test

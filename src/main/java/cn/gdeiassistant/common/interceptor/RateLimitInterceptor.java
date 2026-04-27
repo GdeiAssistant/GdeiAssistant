@@ -49,7 +49,8 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         }
 
         if (timestamps.size() >= rateLimit.maxRequests()) {
-            log.warn("请求限流: key={}, path={}, 窗口内请求数={}", sanitizeLogParam(rateLimitKey), sanitizeLogParam(path), timestamps.size());
+            log.warn("请求限流: maxRequests={}, windowSeconds={}, currentRequests={}",
+                    rateLimit.maxRequests(), rateLimit.windowSeconds(), timestamps.size());
             String message = BackendTextLocalizer.localizeMessage("请求过于频繁，请稍后再试", request.getHeader("Accept-Language"));
             response.setStatus(429);
             response.setContentType("application/json");

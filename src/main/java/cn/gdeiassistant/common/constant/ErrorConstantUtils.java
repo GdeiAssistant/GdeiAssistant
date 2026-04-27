@@ -56,6 +56,9 @@ public class ErrorConstantUtils {
     //查询条件不合法
     public static final int ERROR_QUERY_CONDITION = 40018;
 
+    //充值幂等键冲突或重复
+    public static final int CHARGE_IDEMPOTENCY_CONFLICT = 40019;
+
     //权限令牌过期
     public static final int TOKEN_EXPIRED_EXCEPTION = 40101;
 
@@ -109,5 +112,8 @@ public class ErrorConstantUtils {
 
     //Redis数据源未配置
     public static final int REDIS_DATASOURCE_NOT_CONFIGURED = 50501;
+
+    //充值幂等校验暂不可用
+    public static final int CHARGE_IDEMPOTENCY_UNAVAILABLE = 50502;
 
 }

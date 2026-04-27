@@ -9,6 +9,7 @@ import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.core.charge.pojo.dto.ChargeRequestDTO;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeVO;
+import cn.gdeiassistant.core.charge.service.ChargeIdempotencyService;
 import cn.gdeiassistant.core.charge.service.ChargeService;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
@@ -29,6 +30,9 @@ public class ChargeRequestController {
 
     @Autowired
     private ChargeService chargeService;
+
+    @Autowired
+    private ChargeIdempotencyService chargeIdempotencyService;
 
     @Autowired
     private UserCertificateService userCertificateService;
@@ -61,9 +65,27 @@ public class ChargeRequestController {
             throw new PasswordIncorrectException("充值密码验证失败");
         }
 
-        ChargeVO charge = chargeService.ChargeRequest(sessionId, requestParams.getAmount());
-        chargeService.SaveChargeLog(sessionId, requestParams.getAmount());
-        return new DataJsonResult<>(true, charge);
+        String idempotencyKey = resolveIdempotencyKey(request);
+        ChargeIdempotencyService.ChargeIdempotencyContext idempotencyContext = null;
+        if (idempotencyKey != null) {
+            idempotencyContext = chargeIdempotencyService.begin(user.getUsername(),
+                    ChargeIdempotencyService.ENDPOINT_CARD_CHARGE, idempotencyKey,
+                    requestParams.getAmount(), deviceId);
+        }
+
+        try {
+            ChargeVO charge = chargeService.ChargeRequest(sessionId, requestParams.getAmount());
+            chargeService.SaveChargeLog(sessionId, requestParams.getAmount());
+            if (idempotencyContext != null) {
+                chargeIdempotencyService.markSuccess(idempotencyContext);
+            }
+            return new DataJsonResult<>(true, charge);
+        } catch (Exception e) {
+            if (idempotencyContext != null) {
+                chargeIdempotencyService.markFailed(idempotencyContext);
+            }
+            throw e;
+        }
     }
 
     private void recordLegacySignatureFields(ChargeRequestDTO requestParams) {
@@ -74,5 +96,16 @@ public class ChargeRequestController {
                 || (requestParams.getTimestamp() != null && !requestParams.getTimestamp().isBlank())) {
             logger.info("Legacy charge signature fields were present and ignored");
         }
+    }
+
+    private String resolveIdempotencyKey(HttpServletRequest request) {
+        String idempotencyKey = request.getHeader("Idempotency-Key");
+        if (idempotencyKey == null || idempotencyKey.trim().isEmpty()) {
+            idempotencyKey = request.getHeader("X-Idempotency-Key");
+        }
+        if (idempotencyKey == null || idempotencyKey.trim().isEmpty()) {
+            return null;
+        }
+        return idempotencyKey;
     }
 }

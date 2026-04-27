@@ -1,9 +1,12 @@
 package cn.gdeiassistant.core.chargerequest.controller;
 
+import cn.gdeiassistant.common.constant.ErrorConstantUtils;
+import cn.gdeiassistant.common.exception.ChargeException.ChargeIdempotencyException;
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.common.interceptor.ApiAuthInterceptor;
 import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeVO;
+import cn.gdeiassistant.core.charge.service.ChargeIdempotencyService;
 import cn.gdeiassistant.core.charge.service.ChargeService;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
@@ -21,7 +24,9 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -36,9 +41,13 @@ class ChargeRequestControllerTest {
     private static final String DEVICE_ID = "synthetic-device-for-charge-test";
     private static final String USERNAME = "synthetic_charge_user";
     private static final String PASSWORD = "synthetic-charge-password";
+    private static final String IDEMPOTENCY_KEY = "synthetic-idempotency-key";
 
     @Mock
     private ChargeService chargeService;
+
+    @Mock
+    private ChargeIdempotencyService chargeIdempotencyService;
 
     @Mock
     private UserCertificateService userCertificateService;
@@ -52,6 +61,7 @@ class ChargeRequestControllerTest {
     void setUp() {
         ChargeRequestController controller = new ChargeRequestController();
         ReflectionTestUtils.setField(controller, "chargeService", chargeService);
+        ReflectionTestUtils.setField(controller, "chargeIdempotencyService", chargeIdempotencyService);
         ReflectionTestUtils.setField(controller, "userCertificateService", userCertificateService);
         ReflectionTestUtils.setField(controller, "userMapper", userMapper);
 
@@ -76,6 +86,7 @@ class ChargeRequestControllerTest {
 
         verify(chargeService).ChargeRequest(SESSION_ID, 50);
         verify(chargeService).SaveChargeLog(SESSION_ID, 50);
+        verifyNoInteractions(chargeIdempotencyService);
     }
 
     @Test
@@ -94,6 +105,151 @@ class ChargeRequestControllerTest {
 
         verify(chargeService).ChargeRequest(SESSION_ID, 30);
         verify(chargeService).SaveChargeLog(SESSION_ID, 30);
+        verifyNoInteractions(chargeIdempotencyService);
+    }
+
+    @Test
+    void shouldProcessFirstRequestWithIdempotencyKeyOnce() throws Exception {
+        mockSuccessfulCharge(50);
+        ChargeIdempotencyService.ChargeIdempotencyContext context =
+                new ChargeIdempotencyService.ChargeIdempotencyContext("redis-key", "fingerprint");
+        when(chargeIdempotencyService.begin(eq(USERNAME), eq(ChargeIdempotencyService.ENDPOINT_CARD_CHARGE),
+                eq(IDEMPOTENCY_KEY), eq(50), eq(DEVICE_ID))).thenReturn(context);
+
+        mockMvc.perform(post("/api/card/charge")
+                        .requestAttr("sessionId", SESSION_ID)
+                        .header("X-Device-ID", DEVICE_ID)
+                        .header("Idempotency-Key", IDEMPOTENCY_KEY)
+                        .param("amount", "50")
+                        .param("password", PASSWORD))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(chargeIdempotencyService).begin(USERNAME, ChargeIdempotencyService.ENDPOINT_CARD_CHARGE,
+                IDEMPOTENCY_KEY, 50, DEVICE_ID);
+        verify(chargeService).ChargeRequest(SESSION_ID, 50);
+        verify(chargeService).SaveChargeLog(SESSION_ID, 50);
+        verify(chargeIdempotencyService).markSuccess(context);
+    }
+
+    @Test
+    void shouldRejectDuplicateProcessingRequestWithoutCallingChargeService() throws Exception {
+        mockAuthenticatedUser(PASSWORD);
+        when(chargeIdempotencyService.begin(eq(USERNAME), eq(ChargeIdempotencyService.ENDPOINT_CARD_CHARGE),
+                eq(IDEMPOTENCY_KEY), eq(50), eq(DEVICE_ID)))
+                .thenThrow(new ChargeIdempotencyException(ErrorConstantUtils.CHARGE_IDEMPOTENCY_CONFLICT,
+                        "相同充值请求正在处理中，请稍后查看结果"));
+
+        mockMvc.perform(post("/api/card/charge")
+                        .requestAttr("sessionId", SESSION_ID)
+                        .header("X-Device-ID", DEVICE_ID)
+                        .header("Idempotency-Key", IDEMPOTENCY_KEY)
+                        .param("amount", "50")
+                        .param("password", PASSWORD))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(ErrorConstantUtils.CHARGE_IDEMPOTENCY_CONFLICT));
+
+        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
+        verify(chargeService, never()).SaveChargeLog(anyString(), anyInt());
+    }
+
+    @Test
+    void shouldRejectDuplicateCompletedRequestWithoutCallingChargeService() throws Exception {
+        mockAuthenticatedUser(PASSWORD);
+        when(chargeIdempotencyService.begin(eq(USERNAME), eq(ChargeIdempotencyService.ENDPOINT_CARD_CHARGE),
+                eq(IDEMPOTENCY_KEY), eq(50), eq(DEVICE_ID)))
+                .thenThrow(new ChargeIdempotencyException(ErrorConstantUtils.CHARGE_IDEMPOTENCY_CONFLICT,
+                        "相同充值请求已处理，请勿重复提交"));
+
+        mockMvc.perform(post("/api/card/charge")
+                        .requestAttr("sessionId", SESSION_ID)
+                        .header("X-Device-ID", DEVICE_ID)
+                        .header("Idempotency-Key", IDEMPOTENCY_KEY)
+                        .param("amount", "50")
+                        .param("password", PASSWORD))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("相同充值请求已处理，请勿重复提交"));
+
+        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
+        verify(chargeService, never()).SaveChargeLog(anyString(), anyInt());
+    }
+
+    @Test
+    void shouldRejectSameIdempotencyKeyWithDifferentAmount() throws Exception {
+        mockAuthenticatedUser(PASSWORD);
+        when(chargeIdempotencyService.begin(eq(USERNAME), eq(ChargeIdempotencyService.ENDPOINT_CARD_CHARGE),
+                eq(IDEMPOTENCY_KEY), eq(60), eq(DEVICE_ID)))
+                .thenThrow(new ChargeIdempotencyException(ErrorConstantUtils.CHARGE_IDEMPOTENCY_CONFLICT,
+                        "同一幂等键不能用于不同充值参数"));
+
+        mockMvc.perform(post("/api/card/charge")
+                        .requestAttr("sessionId", SESSION_ID)
+                        .header("X-Device-ID", DEVICE_ID)
+                        .header("Idempotency-Key", IDEMPOTENCY_KEY)
+                        .param("amount", "60")
+                        .param("password", PASSWORD))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("同一幂等键不能用于不同充值参数"));
+
+        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
+    }
+
+    @Test
+    void shouldAllowSameUserDifferentIdempotencyKeysToProcessSeparately() throws Exception {
+        mockSuccessfulCharge(40);
+        ChargeIdempotencyService.ChargeIdempotencyContext firstContext =
+                new ChargeIdempotencyService.ChargeIdempotencyContext("redis-key-1", "fingerprint-1");
+        ChargeIdempotencyService.ChargeIdempotencyContext secondContext =
+                new ChargeIdempotencyService.ChargeIdempotencyContext("redis-key-2", "fingerprint-2");
+        when(chargeIdempotencyService.begin(eq(USERNAME), eq(ChargeIdempotencyService.ENDPOINT_CARD_CHARGE),
+                eq("synthetic-idempotency-key-1"), eq(40), eq(DEVICE_ID))).thenReturn(firstContext);
+        when(chargeIdempotencyService.begin(eq(USERNAME), eq(ChargeIdempotencyService.ENDPOINT_CARD_CHARGE),
+                eq("synthetic-idempotency-key-2"), eq(40), eq(DEVICE_ID))).thenReturn(secondContext);
+
+        mockMvc.perform(post("/api/card/charge")
+                        .requestAttr("sessionId", SESSION_ID)
+                        .header("X-Device-ID", DEVICE_ID)
+                        .header("Idempotency-Key", "synthetic-idempotency-key-1")
+                        .param("amount", "40")
+                        .param("password", PASSWORD))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+        mockMvc.perform(post("/api/card/charge")
+                        .requestAttr("sessionId", SESSION_ID)
+                        .header("X-Device-ID", DEVICE_ID)
+                        .header("Idempotency-Key", "synthetic-idempotency-key-2")
+                        .param("amount", "40")
+                        .param("password", PASSWORD))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        verify(chargeService, times(2)).ChargeRequest(SESSION_ID, 40);
+        verify(chargeIdempotencyService).markSuccess(firstContext);
+        verify(chargeIdempotencyService).markSuccess(secondContext);
+    }
+
+    @Test
+    void shouldRejectChargeWhenIdempotencyStoreIsUnavailable() throws Exception {
+        mockAuthenticatedUser(PASSWORD);
+        when(chargeIdempotencyService.begin(eq(USERNAME), eq(ChargeIdempotencyService.ENDPOINT_CARD_CHARGE),
+                eq(IDEMPOTENCY_KEY), eq(50), eq(DEVICE_ID)))
+                .thenThrow(new ChargeIdempotencyException(ErrorConstantUtils.CHARGE_IDEMPOTENCY_UNAVAILABLE,
+                        "充值幂等校验暂不可用，请稍后重试"));
+
+        mockMvc.perform(post("/api/card/charge")
+                        .requestAttr("sessionId", SESSION_ID)
+                        .header("X-Device-ID", DEVICE_ID)
+                        .header("X-Idempotency-Key", IDEMPOTENCY_KEY)
+                        .param("amount", "50")
+                        .param("password", PASSWORD))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(ErrorConstantUtils.CHARGE_IDEMPOTENCY_UNAVAILABLE));
+
+        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
     }
 
     @Test
@@ -133,6 +289,7 @@ class ChargeRequestControllerTest {
 
         verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
         verify(chargeService, never()).SaveChargeLog(anyString(), anyInt());
+        verifyNoInteractions(chargeIdempotencyService);
     }
 
     @Test

@@ -66,33 +66,78 @@ public class ChargeIdempotencyService {
         }
     }
 
-    public void markSuccess(ChargeIdempotencyContext context) {
+    public String hashIdempotencyKey(String rawIdempotencyKey) throws ChargeIdempotencyException {
+        return hashValue(normalizeIdempotencyKey(rawIdempotencyKey));
+    }
+
+    public String buildPayloadFingerprint(int amount, String deviceId) {
+        String canonical = "amount=" + amount + "&device=" + hashValue(deviceId);
+        return hashValue(canonical);
+    }
+
+    public void markProcessing(ChargeIdempotencyContext context, String orderId, String orderStatus) {
         if (context == null) {
             return;
         }
         try {
-            storeTerminalRecord(context, ChargeIdempotencyStatus.SUCCESS, SUCCESS_TTL_MINUTES);
+            storeRecord(context, ChargeIdempotencyStatus.PROCESSING, PROCESSING_TTL_MINUTES,
+                    orderId, orderStatus);
+        } catch (Exception e) {
+            logger.warn("Charge idempotency processing state update failed");
+        }
+    }
+
+    public void markSuccess(ChargeIdempotencyContext context) {
+        markSuccess(context, null, null);
+    }
+
+    public void markSuccess(ChargeIdempotencyContext context, String orderId, String orderStatus) {
+        if (context == null) {
+            return;
+        }
+        try {
+            storeRecord(context, ChargeIdempotencyStatus.SUCCESS, SUCCESS_TTL_MINUTES,
+                    orderId, orderStatus);
         } catch (Exception e) {
             logger.warn("Charge idempotency success state update failed");
         }
     }
 
     public void markFailed(ChargeIdempotencyContext context) {
+        markFailed(context, null, null);
+    }
+
+    public void markFailed(ChargeIdempotencyContext context, String orderId, String orderStatus) {
         if (context == null) {
             return;
         }
         try {
-            storeTerminalRecord(context, ChargeIdempotencyStatus.FAILED, FAILED_TTL_MINUTES);
+            storeRecord(context, ChargeIdempotencyStatus.FAILED, FAILED_TTL_MINUTES,
+                    orderId, orderStatus);
         } catch (Exception e) {
             logger.warn("Charge idempotency failure state update failed");
         }
     }
 
-    private void storeTerminalRecord(ChargeIdempotencyContext context, ChargeIdempotencyStatus status,
-                                     long ttlMinutes) {
+    public void markUnknown(ChargeIdempotencyContext context, String orderId, String orderStatus) {
+        if (context == null) {
+            return;
+        }
+        try {
+            storeRecord(context, ChargeIdempotencyStatus.UNKNOWN, FAILED_TTL_MINUTES,
+                    orderId, orderStatus);
+        } catch (Exception e) {
+            logger.warn("Charge idempotency unknown state update failed");
+        }
+    }
+
+    private void storeRecord(ChargeIdempotencyContext context, ChargeIdempotencyStatus status,
+                             long ttlMinutes, String orderId, String orderStatus) {
         long now = Instant.now().toEpochMilli();
         ChargeIdempotencyRecord record = new ChargeIdempotencyRecord(status.name(),
                 context.getFingerprint(), now, now);
+        record.setOrderId(orderId);
+        record.setOrderStatus(orderStatus);
         redisDaoUtils.set(context.getRedisKey(), serialize(record));
         redisDaoUtils.expire(context.getRedisKey(), ttlMinutes, TimeUnit.MINUTES);
     }
@@ -147,11 +192,6 @@ public class ChargeIdempotencyService {
         return KEY_PREFIX + ":" + hashValue(username) + ":" + endpoint + ":" + hashValue(idempotencyKey);
     }
 
-    private String buildPayloadFingerprint(int amount, String deviceId) {
-        String canonical = "amount=" + amount + "&device=" + hashValue(deviceId);
-        return hashValue(canonical);
-    }
-
     private String serialize(ChargeIdempotencyRecord record) {
         try {
             return objectMapper.writeValueAsString(record);
@@ -195,6 +235,8 @@ public class ChargeIdempotencyService {
 
         private String status;
         private String fingerprint;
+        private String orderId;
+        private String orderStatus;
         private long createdAt;
         private long updatedAt;
 
@@ -222,6 +264,22 @@ public class ChargeIdempotencyService {
 
         public void setFingerprint(String fingerprint) {
             this.fingerprint = fingerprint;
+        }
+
+        public String getOrderId() {
+            return orderId;
+        }
+
+        public void setOrderId(String orderId) {
+            this.orderId = orderId;
+        }
+
+        public String getOrderStatus() {
+            return orderStatus;
+        }
+
+        public void setOrderStatus(String orderStatus) {
+            this.orderStatus = orderStatus;
         }
 
         public long getCreatedAt() {

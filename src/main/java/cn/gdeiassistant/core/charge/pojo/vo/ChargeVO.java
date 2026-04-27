@@ -18,6 +18,18 @@ public class ChargeVO implements Serializable {
     @JSONField(ordinal = 2)
     private List<cn.gdeiassistant.common.pojo.Entity.Cookie> cookieList;
 
+    @JSONField(ordinal = 3)
+    private String orderId;
+
+    @JSONField(ordinal = 4)
+    private String status;
+
+    @JSONField(ordinal = 5)
+    private String message;
+
+    @JSONField(ordinal = 6)
+    private Integer retryAfter;
+
     public String getAlipayURL() {
         return alipayURL;
     }
@@ -32,5 +44,37 @@ public class ChargeVO implements Serializable {
 
     public void setCookieList(List<cn.gdeiassistant.common.pojo.Entity.Cookie> cookieList) {
         this.cookieList = cookieList;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Integer getRetryAfter() {
+        return retryAfter;
+    }
+
+    public void setRetryAfter(Integer retryAfter) {
+        this.retryAfter = retryAfter;
     }
 }

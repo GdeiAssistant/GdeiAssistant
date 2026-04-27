@@ -170,13 +170,17 @@ class ChargeIdempotencyServiceTest {
         ChargeIdempotencyService.ChargeIdempotencyContext context =
                 new ChargeIdempotencyService.ChargeIdempotencyContext("redis-key", "fingerprint");
 
-        service.markSuccess(context);
+        service.markSuccess(context, "synthetic-order-id", "PAYMENT_SESSION_CREATED");
 
         ArgumentCaptor<String> valueCaptor = ArgumentCaptor.forClass(String.class);
         verify(redisDaoUtils).set(eq("redis-key"), valueCaptor.capture());
         verify(redisDaoUtils).expire(eq("redis-key"), eq(60L), eq(TimeUnit.MINUTES));
         String stored = valueCaptor.getValue();
         assertTrue(stored.contains("SUCCESS"));
+        ChargeIdempotencyService.ChargeIdempotencyRecord record = objectMapper.readValue(stored,
+                ChargeIdempotencyService.ChargeIdempotencyRecord.class);
+        assertEquals("synthetic-order-id", record.getOrderId());
+        assertEquals("PAYMENT_SESSION_CREATED", record.getOrderStatus());
         assertFalse(stored.contains("password"));
         assertFalse(stored.contains("token"));
         assertFalse(stored.contains("session"));

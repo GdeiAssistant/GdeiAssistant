@@ -31,6 +31,14 @@ public class RedisDaoUtils {
         }
     }
 
+    public boolean setIfAbsent(String key, String value, long timeout, TimeUnit unit) {
+        if (redisTemplate == null) {
+            throw new IllegalStateException("Redis is not configured");
+        }
+        Boolean result = redisTemplate.opsForValue().setIfAbsent(key, value, timeout, unit);
+        return Boolean.TRUE.equals(result);
+    }
+
     public void delete(String key) {
         if (redisTemplate != null) {
             redisTemplate.delete(key);

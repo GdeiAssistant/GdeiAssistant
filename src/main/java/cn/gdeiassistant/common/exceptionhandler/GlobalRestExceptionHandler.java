@@ -5,6 +5,7 @@ import cn.gdeiassistant.common.exception.AuthenticationException.AuthenticationR
 import cn.gdeiassistant.common.exception.AuthenticationException.InconsistentAuthenticationException;
 import cn.gdeiassistant.common.exception.AuthenticationException.NullIDPhotoException;
 import cn.gdeiassistant.common.exception.ChargeException.AmountNotAvailableException;
+import cn.gdeiassistant.common.exception.ChargeException.ChargeIdempotencyException;
 import cn.gdeiassistant.common.exception.CloseAccountException.ItemAvailableException;
 import cn.gdeiassistant.common.exception.CloseAccountException.UserStateErrorException;
 import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
@@ -187,6 +188,13 @@ public class GlobalRestExceptionHandler {
     @ExceptionHandler(AmountNotAvailableException.class)
     public ResponseEntity<JsonResult> handleAmountNotAvailableException(Exception e, HttpServletRequest request) {
         return ResponseEntity.ok(new JsonResult(false,
+                BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
+    }
+
+    @ExceptionHandler(ChargeIdempotencyException.class)
+    public ResponseEntity<JsonResult> handleChargeIdempotencyException(ChargeIdempotencyException e,
+                                                                       HttpServletRequest request) {
+        return ResponseEntity.ok(new JsonResult(e.getCode(), false,
                 BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 

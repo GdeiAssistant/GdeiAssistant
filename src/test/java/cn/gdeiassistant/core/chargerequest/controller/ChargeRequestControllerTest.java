@@ -62,7 +62,7 @@ class ChargeRequestControllerTest {
     }
 
     @Test
-    void shouldAllowChargeRequestWithoutClientHmacFields() throws Exception {
+    void shouldAllowChargeRequestWithoutClientHmacFieldsOrValidateTokenConfig() throws Exception {
         mockSuccessfulCharge(50);
 
         mockMvc.perform(post("/api/card/charge")

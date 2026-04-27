@@ -159,6 +159,7 @@ sms:
 
 request:
   validate:
+    # Legacy only: charge requests no longer trust client-submitted HMAC values.
     token: ${REQUEST_VALIDATE_TOKEN:}
 
 app:

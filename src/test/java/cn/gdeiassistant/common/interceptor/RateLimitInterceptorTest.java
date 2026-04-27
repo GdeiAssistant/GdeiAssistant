@@ -3,6 +3,9 @@ package cn.gdeiassistant.common.interceptor;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.method.HandlerMethod;
@@ -11,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(OutputCaptureExtension.class)
 class RateLimitInterceptorTest {
 
     private RateLimitInterceptor interceptor;
@@ -153,5 +157,25 @@ class RateLimitInterceptorTest {
         MockHttpServletRequest uploadReq = new MockHttpServletRequest("GET", "/api/upload/presignedUrl");
         MockHttpServletResponse uploadResp = new MockHttpServletResponse();
         assertTrue(interceptor.preHandle(uploadReq, uploadResp, handler));
+    }
+
+    @Test
+    void shouldNotLogFullAuthenticatedRateLimitKey(CapturedOutput output) throws Exception {
+        HandlerMethod handler = mockHandlerWithRateLimit(1, 60);
+        String syntheticSessionId = "synthetic-session-rate-limit-test";
+
+        MockHttpServletRequest firstRequest = new MockHttpServletRequest("POST", "/api/card/charge");
+        firstRequest.setAttribute("sessionId", syntheticSessionId);
+        assertTrue(interceptor.preHandle(firstRequest, new MockHttpServletResponse(), handler));
+
+        MockHttpServletRequest blockedRequest = new MockHttpServletRequest("POST", "/api/card/charge");
+        blockedRequest.setAttribute("sessionId", syntheticSessionId);
+        MockHttpServletResponse blockedResponse = new MockHttpServletResponse();
+        assertFalse(interceptor.preHandle(blockedRequest, blockedResponse, handler));
+
+        assertEquals(429, blockedResponse.getStatus());
+        assertTrue(output.getAll().contains("请求限流"));
+        assertFalse(output.getAll().contains(syntheticSessionId));
+        assertFalse(output.getAll().contains("session:"));
     }
 }

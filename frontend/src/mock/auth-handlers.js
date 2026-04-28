@@ -1,4 +1,5 @@
 import * as data from './mock-data.js'
+import { applyLoginCampusCredentialState } from './campus-credential-handlers.js'
 
 export function handleLogin(payload, utils) {
   const username = String(payload.username || '').trim()
@@ -14,6 +15,7 @@ export function handleLogin(payload, utils) {
 
   const nextState = utils.readState()
   nextState.token = 'mock-session-token'
+  applyLoginCampusCredentialState(nextState, username, payload)
   utils.writeState(nextState)
   return utils.resolveWithDelay(utils.buildSuccess({ token: nextState.token }))
 }

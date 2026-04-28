@@ -128,25 +128,27 @@ function handleThirdPartyLogin(type) {
       </form>
 
       <!-- Mock mode toggle -->
-      <div class="mt-5 flex items-center justify-between px-1">
-        <div class="flex items-center gap-2">
+      <div class="mt-5 border-t border-[var(--c-border)] pt-4 text-xs">
+        <div class="flex items-center justify-between gap-3">
+          <span class="text-[var(--c-text-tertiary)]">{{ t('loginPage.mockMode') }}</span>
           <button
             type="button"
-            class="relative w-10 h-5 rounded-full transition-colors"
-            :class="mockMode ? 'bg-[var(--c-primary)]' : 'bg-[var(--c-border)]'"
+            class="relative h-4 w-8 shrink-0 rounded-full transition-colors"
+            :class="mockMode ? 'bg-[var(--c-text-secondary)]' : 'bg-[var(--c-border)]'"
             @click="toggleMock"
           >
             <span
-              class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform"
-              :class="mockMode ? 'translate-x-5' : 'translate-x-0'"
+              class="absolute left-0.5 top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-transform"
+              :class="mockMode ? 'translate-x-4' : 'translate-x-0'"
             />
           </button>
-          <span class="text-xs text-[var(--c-text-3)]">{{ t('loginPage.mockMode') }}</span>
         </div>
-        <span v-if="mockMode" class="text-[10px] text-[var(--c-primary)] font-medium">Mock</span>
-      </div>
-      <div v-if="mockMode" class="mt-2 px-3 py-2 rounded-lg bg-[var(--c-primary-50)] text-xs text-[var(--c-primary)]">
-        {{ `${getMockCredentialsHint(locale)}${t('loginPage.autoFilledSuffix')}` }}
+        <div v-if="mockMode" class="mt-2 flex items-start justify-between gap-3 text-[var(--c-text-tertiary)]">
+          <p class="leading-5">{{ `${getMockCredentialsHint(locale)}${t('loginPage.autoFilledSuffix')}` }}</p>
+          <span class="shrink-0 rounded-full border border-[var(--c-border)] px-2 py-0.5 text-[10px] font-medium">
+            {{ t('loginPage.mockActive') }}
+          </span>
+        </div>
       </div>
 
       <!-- Footer links -->

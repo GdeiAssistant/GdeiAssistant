@@ -37,19 +37,20 @@ async function request(path, options = {}) {
   return response
 }
 
-async function login() {
+async function login(data = {}) {
   const response = await request('/api/auth/login', {
     method: 'POST',
     data: {
       username: MOCK_ACCOUNT_DATA.username,
       password: MOCK_ACCOUNT_DATA.password,
+      campusCredentialConsent: true,
+      policyDate: '2026-04-25',
+      effectiveDate: '2026-05-11',
+      ...data,
     },
   })
 
   expect(response.data.token).toBeTruthy()
-  if (typeof localStorage?.setItem === 'function') {
-    localStorage.setItem('mockRuntimeState', JSON.stringify({ token: response.data.token }))
-  }
   return response.data.token
 }
 
@@ -68,6 +69,46 @@ describe('mock smoke', () => {
 
     const privacy = await request('/api/privacy', { token })
     expect(privacy.data).toHaveProperty('cacheAllow')
+
+    const campusCredentialStatus = await request('/api/campus-credential/status', { token })
+    expect(campusCredentialStatus.data.hasActiveConsent).toBe(true)
+    expect(campusCredentialStatus.data.hasSavedCredential).toBe(true)
+    expect(campusCredentialStatus.data.quickAuthEnabled).toBe(true)
+    expect(campusCredentialStatus.data.maskedCampusAccount).toBeTruthy()
+
+    const quickAuthOff = await request('/api/campus-credential/quick-auth', {
+      method: 'POST',
+      token,
+      data: { enabled: false },
+    })
+    expect(quickAuthOff.data.quickAuthEnabled).toBe(false)
+
+    const loginWithoutConsentToken = await login({ campusCredentialConsent: undefined })
+    const campusCredentialAfterPlainRelogin = await request('/api/campus-credential/status', {
+      token: loginWithoutConsentToken,
+    })
+    expect(campusCredentialAfterPlainRelogin.data.hasActiveConsent).toBe(true)
+    expect(campusCredentialAfterPlainRelogin.data.hasSavedCredential).toBe(true)
+    expect(campusCredentialAfterPlainRelogin.data.quickAuthEnabled).toBe(false)
+
+    const reloginToken = await login()
+    const campusCredentialAfterRelogin = await request('/api/campus-credential/status', { token: reloginToken })
+    expect(campusCredentialAfterRelogin.data.hasActiveConsent).toBe(true)
+    expect(campusCredentialAfterRelogin.data.hasSavedCredential).toBe(true)
+    expect(campusCredentialAfterRelogin.data.quickAuthEnabled).toBe(false)
+
+    const revoked = await request('/api/campus-credential/revoke', {
+      method: 'POST',
+      token: reloginToken,
+    })
+    expect(revoked.data.hasActiveConsent).toBe(false)
+    expect(revoked.data.hasSavedCredential).toBe(false)
+
+    const deleted = await request('/api/campus-credential', {
+      method: 'DELETE',
+      token,
+    })
+    expect(deleted.data.quickAuthEnabled).toBe(false)
 
     const phoneStatus = await request('/api/phone/status', { token })
     expect(phoneStatus.data).toHaveProperty('code')

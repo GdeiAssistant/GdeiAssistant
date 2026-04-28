@@ -144,17 +144,18 @@ npm run dev
 ## 法律、隐私与安全提示
 
 - 本项目是校园助手类项目，不代表学校官方服务。
-- 部署者在生产使用前，应审查隐私、安全、校园凭证处理、第三方服务和商标使用限制。
-- 面向用户的协议、隐私与政策说明以应用内 About / Policy 页面展示为准。
-- 生产部署应根据实际环境配置密钥管理、敏感字段加密、HTTPS、日志脱敏和第三方服务告知。
+- 面向用户的正式协议、隐私政策和功能风险提示，以应用内“关于/政策”页面展示为准。
+- 生产部署前，部署者应结合实际环境审查隐私处理、校园凭证管理、第三方服务、日志脱敏、密钥管理、HTTPS 配置以及商标/名称使用边界。
+- 本仓库 README 只保留维护和部署层面的合规提示，不替代用户协议或隐私政策正文。
 
 相关链接：
 
-- [About / Policy 入口](https://gdeiassistant.pages.dev/about)
-- [SECURITY.md](SECURITY.md)
-- [CONTRIBUTING.md](CONTRIBUTING.md)
-- [TRADEMARK.md](TRADEMARK.md)
-- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+- [应用内关于与政策入口](https://gdeiassistant.pages.dev/about)
+- [公开文案维护指南](docs/public-content-guidelines.md)
+- [安全说明](SECURITY.md)
+- [贡献说明](CONTRIBUTING.md)
+- [商标使用说明](TRADEMARK.md)
+- [第三方通知](THIRD_PARTY_NOTICES.md)
 
 ---
 

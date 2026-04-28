@@ -151,7 +151,6 @@ npm run dev
 相关链接：
 
 - [应用内关于与政策入口](https://gdeiassistant.pages.dev/about)
-- [公开文案维护指南](docs/public-content-guidelines.md)
 - [安全说明](SECURITY.md)
 - [贡献说明](CONTRIBUTING.md)
 - [商标使用说明](TRADEMARK.md)

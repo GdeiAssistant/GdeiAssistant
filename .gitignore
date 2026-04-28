@@ -23,9 +23,7 @@ worktrees/
 # 文档默认忽略，仅放行指定文档
 docs/**
 !docs/compliance-todo.md
-!docs/policy-changelog.md
-!docs/public-content-guidelines.md
-!docs/release-readiness-checklist.md
+!docs/environment-matrix.md
 
 # ==================================
 # Spring Boot & Java

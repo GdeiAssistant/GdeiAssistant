@@ -34,7 +34,7 @@
     "autoprefixer": "^10.4.27",
     "fast-xml-parser": "^5.3.6",
     "jsdom": "^26.1.0",
-    "postcss": "^8.5.8",
+    "postcss": "^8.5.14",
     "tailwindcss": "^4.2.2",
     "vite": "^7.3.2",
     "vitest": "^4.1.0"

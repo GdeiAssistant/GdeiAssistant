@@ -349,6 +349,8 @@
   },
   "info": {
     "news": "News",
+    "newsBadge": "Campus",
+    "newsEntryTitle": "Campus News",
     "newsDesc": "View publicly released campus news",
     "systemNotice": "System Notices",
     "noNotice": "No system notices",

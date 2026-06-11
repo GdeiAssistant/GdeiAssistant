@@ -14,11 +14,11 @@
           <div
             class="w-[42px] h-[42px] rounded-xl bg-[#e8f7ef] text-[var(--c-primary)] flex items-center justify-center text-[13px] font-bold shrink-0"
           >
-            {{ $t('info.news') }}
+            {{ $t('info.newsBadge') }}
           </div>
           <div class="flex-1 min-w-0">
-            <div class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ $t('info.news') }}</div>
-            <div class="mt-1 text-[13px] text-[var(--c-text-3)]">{{ $t('info.newsDesc') }}</div>
+            <div class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ $t('info.newsEntryTitle') }}</div>
+            <div class="mt-1 text-[13px] text-[var(--c-text-2)]">{{ $t('info.newsDesc') }}</div>
           </div>
           <div class="w-2 h-2 border-r border-t border-[#c8c8c8] rotate-45 shrink-0" />
         </button>

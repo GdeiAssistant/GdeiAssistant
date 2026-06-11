@@ -349,6 +349,8 @@
   },
   "info": {
     "news": "新闻",
+    "newsBadge": "校园",
+    "newsEntryTitle": "校园新闻",
     "newsDesc": "查看学校公开发布的校园新闻",
     "systemNotice": "系统公告",
     "noNotice": "暂无系统公告",

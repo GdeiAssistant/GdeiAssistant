@@ -125,6 +125,8 @@
   },
   "info": {
     "news": "ニュース",
+    "newsBadge": "キャンパス",
+    "newsEntryTitle": "キャンパスニュース",
     "newsDesc": "学校が公開したキャンパスニュースを閲覧",
     "systemNotice": "システム通知",
     "noNotice": "システム通知はありません",

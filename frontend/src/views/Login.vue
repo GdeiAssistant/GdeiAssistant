@@ -16,12 +16,20 @@ const password = ref('')
 const mockMode = ref(isMockMode())
 const campusCredentialConsent = ref(false)
 
+function fillMockCredentials() {
+  username.value = MOCK_ACCOUNT_USERNAME
+  password.value = MOCK_ACCOUNT_PASSWORD
+}
+
+if (mockMode.value) {
+  fillMockCredentials()
+}
+
 function toggleMock() {
   toggleDataSourceMode()
   mockMode.value = isMockMode()
   if (mockMode.value) {
-    username.value = MOCK_ACCOUNT_USERNAME
-    password.value = MOCK_ACCOUNT_PASSWORD
+    fillMockCredentials()
   } else {
     username.value = ''
     password.value = ''

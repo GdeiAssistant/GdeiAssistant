@@ -125,6 +125,8 @@
   },
   "info": {
     "news": "新聞",
+    "newsBadge": "校園",
+    "newsEntryTitle": "校園新聞",
     "newsDesc": "查看學校公開發布的校園新聞",
     "systemNotice": "系統公告",
     "noNotice": "暫無系統公告",

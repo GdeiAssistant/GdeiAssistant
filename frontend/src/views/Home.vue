@@ -147,7 +147,7 @@ function iconColorStyle(id) {
     >
       <div class="bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] p-5">
         <h2 class="text-lg font-extrabold mb-1">{{ section.title }}</h2>
-        <p class="text-sm text-[var(--c-text-3)] mb-4">{{ section.description }}</p>
+        <p class="text-sm text-[var(--c-text-2)] mb-4">{{ section.description }}</p>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           <button
             v-for="(item, index) in section.items"
@@ -167,7 +167,7 @@ function iconColorStyle(id) {
               />
             </div>
             <div class="text-sm font-bold text-[var(--c-text-1)]">{{ item.title }}</div>
-            <div class="text-[11px] text-[var(--c-text-3)] mt-0.5 line-clamp-2">{{ item.description }}</div>
+            <div class="text-[11px] text-[var(--c-text-2)] mt-0.5 line-clamp-2">{{ item.description }}</div>
           </button>
         </div>
       </div>

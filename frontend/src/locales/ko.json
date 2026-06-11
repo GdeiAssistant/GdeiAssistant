@@ -125,6 +125,8 @@
   },
   "info": {
     "news": "뉴스",
+    "newsBadge": "캠퍼스",
+    "newsEntryTitle": "캠퍼스 뉴스",
     "newsDesc": "학교에서 공개한 캠퍼스 뉴스를 확인하세요",
     "systemNotice": "시스템 공지",
     "noNotice": "시스템 공지가 없습니다",

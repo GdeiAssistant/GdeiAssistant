@@ -42,7 +42,7 @@ onUnmounted(() => {
         @open-command-palette="showCommandPalette = true"
       />
 
-      <main class="p-7 max-w-[1160px]">
+      <main class="p-7 w-full max-w-[1160px] mx-auto">
         <router-view />
       </main>
     </div>

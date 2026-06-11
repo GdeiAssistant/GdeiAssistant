@@ -21,9 +21,10 @@ test.beforeEach(async ({ page }) => {
 
 async function loginAsMockUser(page) {
   await page.goto('/login')
-  await expect(page.getByText('模拟数据模式')).toBeVisible()
-  await page.locator('input[type="text"]').fill(MOCK_USERNAME)
-  await page.locator('input[type="password"]').fill(MOCK_PASSWORD)
+  await expect(page.getByText('本地示例数据')).toBeVisible()
+  await expect(page.locator('input[type="text"]')).toHaveValue(MOCK_USERNAME)
+  await expect(page.locator('input[type="password"]')).toHaveValue(MOCK_PASSWORD)
+  await page.locator('input[type="checkbox"]').check()
   await page.getByRole('button', { name: '登录' }).click()
   await expect(page).toHaveURL(/\/home$/)
   await expect(page.getByText('校园服务')).toBeVisible()
@@ -56,6 +57,7 @@ test.describe('mock 模式 UI smoke', () => {
 
     await page.goto('/info')
 
+    await expect(page.getByText('校园新闻', { exact: true })).toBeVisible()
     await expect(page.getByText('查看学校公开发布的校园新闻')).toBeVisible()
     await expect(page.getByText('系统公告', { exact: true })).toBeVisible()
     await expect(page.getByText('互动消息', { exact: true })).toBeVisible()

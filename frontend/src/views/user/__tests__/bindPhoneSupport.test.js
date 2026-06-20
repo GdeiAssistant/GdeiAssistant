@@ -30,6 +30,23 @@ describe('bindPhoneSupport', () => {
     expect(items[1].name).toContain('Japan')
   })
 
+
+  it('uses the bundled country list when remote catalog is skipped', async () => {
+    const fetchImpl = async (url) => {
+      const xmlPath = path.resolve(process.cwd(), 'public/country_codes.xml')
+      return new Response(fs.readFileSync(xmlPath, 'utf8'))
+    }
+
+    const items = await loadCountryCodeCatalog({
+      apiUrl: '',
+      locale: 'zh-CN',
+      fetchImpl,
+    })
+
+    expect(items.length).toBeGreaterThan(150)
+    expect(items.some((item) => item.code === '+86')).toBe(true)
+  })
+
   it('falls back to the bundled country list when remote requests time out', async () => {
     const fetchImpl = (_url, init = {}) => new Promise((_, reject) => {
       init.signal?.addEventListener('abort', () => reject(new Error('aborted')), { once: true })

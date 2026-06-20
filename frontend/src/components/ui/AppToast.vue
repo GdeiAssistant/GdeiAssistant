@@ -7,30 +7,17 @@ const { toasts } = useToast()
 
 <template>
   <Teleport to="body">
-    <div class="fixed bottom-6 right-8 z-[200] flex flex-col gap-2 pointer-events-none">
+    <div class="toast-stack">
       <TransitionGroup
         enter-active-class="toast-enter-active"
         leave-active-class="toast-leave-active"
         enter-from-class="toast-enter-from"
         leave-to-class="toast-leave-to"
       >
-        <div
-          v-for="t in toasts"
-          :key="t.id"
-          class="pointer-events-auto flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium shadow-lg bg-[var(--c-text-1)] text-white"
-        >
-          <Check
-            v-if="t.type === 'success'"
-            class="size-4 shrink-0 text-green-400"
-          />
-          <X
-            v-else-if="t.type === 'error'"
-            class="size-4 shrink-0 text-red-400"
-          />
-          <Loader2
-            v-else-if="t.type === 'loading'"
-            class="size-4 shrink-0 animate-spin"
-          />
+        <div v-for="t in toasts" :key="t.id" class="toast-item">
+          <Check v-if="t.type === 'success'" class="size-4 shrink-0 text-emerald-400" />
+          <X v-else-if="t.type === 'error'" class="size-4 shrink-0 text-red-400" />
+          <Loader2 v-else-if="t.type === 'loading'" class="size-4 shrink-0 animate-spin" />
           <span>{{ t.message }}</span>
         </div>
       </TransitionGroup>
@@ -39,43 +26,61 @@ const { toasts } = useToast()
 </template>
 
 <style scoped>
-.toast-enter-active {
-  animation: toast-in 0.25s ease-out;
+.toast-stack {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 200;
+  display: flex;
+  pointer-events: none;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.toast-leave-active {
-  animation: toast-out 0.2s ease-in forwards;
+.toast-item {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  background: rgba(16, 32, 51, 0.92);
+  box-shadow: 0 18px 38px rgba(15, 39, 49, 0.18);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 760;
+  padding: 0 16px;
+  pointer-events: auto;
+  backdrop-filter: blur(16px);
 }
 
-.toast-enter-from {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
+.toast-enter-active { animation: toast-in 0.25s ease-out; }
+.toast-leave-active { animation: toast-out 0.2s ease-in forwards; }
+.toast-enter-from,
 .toast-leave-to {
   opacity: 0;
   transform: translateY(8px);
 }
 
 @keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes toast-out {
-  from {
-    opacity: 1;
-    transform: translateY(0);
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(8px); }
+}
+
+@media (max-width: 767px) {
+  .toast-stack {
+    right: 14px;
+    bottom: 92px;
+    left: 14px;
   }
-  to {
-    opacity: 0;
-    transform: translateY(8px);
+
+  .toast-item {
+    justify-content: center;
   }
 }
 </style>

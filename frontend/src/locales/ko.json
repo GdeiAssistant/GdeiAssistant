@@ -33,6 +33,14 @@
     "recentUpdate": "최근 업데이트",
     "back": "뒤로"
   },
+  "grade": {
+    "year": {
+      "freshman": "1학년",
+      "sophomore": "2학년",
+      "junior": "3학년",
+      "senior": "4학년"
+    }
+  },
   "gradePage": {
     "title": "성적 조회",
     "moreAction": "더보기",
@@ -80,7 +88,23 @@
     "sectionServiceDesc": "성적 조회, 시간표, 영어 시험, 도서관, 캠퍼스 카드 및 기타 도구",
     "sectionLife": "캠퍼스 라이프",
     "sectionLifeDesc": "중고거래, 배달대행, 분실물, 고백, 룸메이트, 러브월, 토픽, 사진",
-    "noFeatures": "표시할 기능이 없습니다"
+    "noFeatures": "표시할 기능이 없습니다",
+    "heroPrimary": "캠퍼스 서비스 보기",
+    "heroSecondary": "캠퍼스 생활 둘러보기",
+    "todayTitle": "오늘의 캠퍼스",
+    "todayMore": "더 보기",
+    "todayScheduleTitle": "오늘 시간표",
+    "todayScheduleDesc": "다음 수업 일정을 시간표에서 확인",
+    "todayScheduleMeta": "확인",
+    "todayCardTitle": "캠퍼스 카드",
+    "todayCardDesc": "잔액과 사용 내역을 한곳에서 확인",
+    "todayCardMeta": "열기",
+    "todayNoticeTitle": "공지 알림",
+    "todayNoticeDesc": "학교 공지와 상호작용 메시지 확인",
+    "todayNoticeMeta": "읽기",
+    "todayDeliveryTitle": "내 배달",
+    "todayDeliveryDesc": "심부름과 택배 수령 요청 확인",
+    "todayDeliveryMeta": "이동"
   },
   "profile": {
     "title": "프로필",

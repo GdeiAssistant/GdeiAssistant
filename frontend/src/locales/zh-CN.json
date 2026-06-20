@@ -53,6 +53,14 @@
     "topic": { "name": "话题", "description": "热门讨论，校园八卦" },
     "photograph": { "name": "拍好校园", "description": "用镜头记录校园美好" }
   },
+  "grade": {
+    "year": {
+      "freshman": "大一",
+      "sophomore": "大二",
+      "junior": "大三",
+      "senior": "大四"
+    }
+  },
   "gradePage": {
     "title": "成绩查询",
     "moreAction": "更多",
@@ -100,7 +108,23 @@
     "sectionServiceDesc": "查成绩、课表、四六级、图书馆、校园卡和常用查询工具",
     "sectionLife": "校园生活",
     "sectionLifeDesc": "二手交易、快递代取、失物招领、树洞、卖室友、表白墙、话题和校园摄影",
-    "noFeatures": "当前没有可展示的功能入口"
+    "noFeatures": "当前没有可展示的功能入口",
+    "heroPrimary": "查看校园服务",
+    "heroSecondary": "逛校园生活",
+    "todayTitle": "校园今日",
+    "todayMore": "查看更多",
+    "todayScheduleTitle": "今日课程",
+    "todayScheduleDesc": "打开课表查看下一节安排",
+    "todayScheduleMeta": "去查看",
+    "todayCardTitle": "校园卡",
+    "todayCardDesc": "余额和消费记录统一查看",
+    "todayCardMeta": "去查看",
+    "todayNoticeTitle": "通知公告",
+    "todayNoticeDesc": "校内通知与互动消息",
+    "todayNoticeMeta": "去查看",
+    "todayDeliveryTitle": "我的快递",
+    "todayDeliveryDesc": "跑腿和快递代取需求",
+    "todayDeliveryMeta": "去处理"
   },
   "profile": {
     "title": "个人中心",

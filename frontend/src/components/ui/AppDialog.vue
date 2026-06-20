@@ -27,38 +27,30 @@ function onOpenChange(val) {
 <template>
   <DialogRoot :open="open" @update:open="onOpenChange">
     <DialogPortal>
-      <DialogOverlay class="dialog-overlay fixed inset-0 z-[300] bg-black/40" />
-      <DialogContent
-        class="dialog-content fixed left-1/2 top-1/2 z-[301] w-[380px] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-[20px] bg-[var(--c-surface)] p-6 shadow-lg focus:outline-none"
-      >
-        <DialogTitle v-if="title" class="text-lg font-bold mb-2">
+      <DialogOverlay class="dialog-overlay fixed inset-0 z-[300] bg-slate-950/45 backdrop-blur-[3px]" />
+      <DialogContent class="dialog-content">
+        <DialogTitle v-if="title" class="dialog-title">
           {{ title }}
         </DialogTitle>
 
         <DialogDescription
           v-if="description && !$slots.default"
-          class="text-sm text-[var(--c-text-2)] mb-6"
+          class="dialog-description"
         >
           {{ description }}
         </DialogDescription>
 
-        <div v-if="$slots.default" class="mb-6">
+        <div v-if="$slots.default" class="dialog-body">
           <slot />
         </div>
 
-        <div class="flex justify-end gap-2">
+        <div class="dialog-actions">
           <DialogClose as-child>
-            <button
-              class="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--c-fill-2)] text-[var(--c-text-1)] hover:bg-[var(--c-fill-3)] transition cursor-pointer"
-              @click="emit('close')"
-            >
+            <button class="dialog-button dialog-button--secondary" @click="emit('close')">
               {{ t('common.cancel') }}
             </button>
           </DialogClose>
-          <button
-            class="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--c-primary)] text-white hover:opacity-90 transition cursor-pointer"
-            @click="emit('confirm')"
-          >
+          <button class="dialog-button dialog-button--primary" @click="emit('confirm')">
             {{ t('common.confirm') }}
           </button>
         </div>
@@ -68,6 +60,68 @@ function onOpenChange(val) {
 </template>
 
 <style scoped>
+.dialog-content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 301;
+  width: 390px;
+  max-width: 90vw;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(205, 222, 226, 0.82);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 28px 80px rgba(15, 39, 49, 0.18);
+  padding: 24px;
+  outline: none;
+  backdrop-filter: blur(18px);
+}
+
+.dialog-title {
+  margin: 0 0 8px;
+  color: var(--c-text-1);
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.dialog-description,
+.dialog-body {
+  margin-bottom: 22px;
+  color: var(--c-text-2);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dialog-button {
+  min-height: 42px;
+  border-radius: 14px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 820;
+  padding: 0 18px;
+}
+
+.dialog-button--secondary {
+  border: 1px solid var(--c-border);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--c-text-2);
+}
+
+.dialog-button--primary {
+  border: 0;
+  background: var(--c-primary);
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.18);
+}
+
 .dialog-overlay {
   animation: overlay-in 0.2s ease-out;
 }
@@ -90,5 +144,15 @@ function onOpenChange(val) {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
+}
+
+[data-theme="dark"] .dialog-content {
+  border-color: rgba(45, 58, 73, 0.9);
+  background: rgba(20, 27, 37, 0.94);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.46);
+}
+
+[data-theme="dark"] .dialog-button--secondary {
+  background: rgba(31, 41, 55, 0.86);
 }
 </style>

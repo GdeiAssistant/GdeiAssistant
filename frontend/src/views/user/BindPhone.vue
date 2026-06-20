@@ -51,9 +51,17 @@ function validatePhone(value, countryCode) {
   return /^\d{7,11}$/.test(value)
 }
 
+function shouldUseMockCountryCodeCatalog() {
+  try {
+    return localStorage.getItem('gdei_data_source_mode') === 'mock'
+  } catch (_) {
+    return false
+  }
+}
+
 async function loadCountryCodes() {
   rawCountryCodes.value = await loadCountryCodeCatalog({
-    apiUrl: phoneAttributionApi,
+    apiUrl: shouldUseMockCountryCodeCatalog() ? '' : phoneAttributionApi,
     locale: locale.value,
   })
 }

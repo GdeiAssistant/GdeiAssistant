@@ -33,6 +33,14 @@
     "recentUpdate": "最近更新",
     "back": "返回"
   },
+  "grade": {
+    "year": {
+      "freshman": "大一",
+      "sophomore": "大二",
+      "junior": "大三",
+      "senior": "大四"
+    }
+  },
   "gradePage": {
     "title": "成績查詢",
     "moreAction": "更多",
@@ -80,7 +88,23 @@
     "sectionServiceDesc": "查成績、課表、四六級、圖書館、校園卡和常用查詢工具",
     "sectionLife": "校園生活",
     "sectionLifeDesc": "二手交易、快遞代取、失物招領、樹洞、賣室友、表白牆、話題和校園攝影",
-    "noFeatures": "當前沒有可展示的功能入口"
+    "noFeatures": "當前沒有可展示的功能入口",
+    "heroPrimary": "查看校園服務",
+    "heroSecondary": "逛校園生活",
+    "todayTitle": "校園今日",
+    "todayMore": "查看更多",
+    "todayScheduleTitle": "今日課程",
+    "todayScheduleDesc": "打開課表查看下一節安排",
+    "todayScheduleMeta": "去查看",
+    "todayCardTitle": "校園卡",
+    "todayCardDesc": "餘額和消費記錄統一查看",
+    "todayCardMeta": "去查看",
+    "todayNoticeTitle": "通知公告",
+    "todayNoticeDesc": "校內通知與互動消息",
+    "todayNoticeMeta": "去查看",
+    "todayDeliveryTitle": "我的快遞",
+    "todayDeliveryDesc": "跑腿和快遞代取需求",
+    "todayDeliveryMeta": "去處理"
   },
   "profile": {
     "title": "個人中心",

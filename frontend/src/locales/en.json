@@ -53,6 +53,14 @@
     "topic": { "name": "Topics", "description": "Join hot campus discussions" },
     "photograph": { "name": "Campus Photography", "description": "Capture the best moments on campus" }
   },
+  "grade": {
+    "year": {
+      "freshman": "Year 1",
+      "sophomore": "Year 2",
+      "junior": "Year 3",
+      "senior": "Year 4"
+    }
+  },
   "gradePage": {
     "title": "Grades",
     "moreAction": "More",
@@ -100,7 +108,23 @@
     "sectionServiceDesc": "Grades, schedule, CET, library, campus card and common tools",
     "sectionLife": "Campus Life",
     "sectionLifeDesc": "Marketplace, delivery, lost & found, confessions, roommate, love wall, topics and photography",
-    "noFeatures": "No features to display"
+    "noFeatures": "No features to display",
+    "heroPrimary": "View campus services",
+    "heroSecondary": "Explore campus life",
+    "todayTitle": "Campus Today",
+    "todayMore": "View more",
+    "todayScheduleTitle": "Today's schedule",
+    "todayScheduleDesc": "Open timetable for the next class",
+    "todayScheduleMeta": "Check",
+    "todayCardTitle": "Campus card",
+    "todayCardDesc": "Balance and spending records in one place",
+    "todayCardMeta": "Open",
+    "todayNoticeTitle": "Notices",
+    "todayNoticeDesc": "School notices and interaction messages",
+    "todayNoticeMeta": "Read",
+    "todayDeliveryTitle": "My delivery",
+    "todayDeliveryDesc": "Errands and parcel pickup requests",
+    "todayDeliveryMeta": "Go"
   },
   "profile": {
     "title": "Profile",

@@ -28,27 +28,87 @@ function goTo(path) {
 </script>
 
 <template>
-  <div
-    class="fixed bottom-0 left-0 right-0 w-full h-14 bg-[var(--c-surface)] border-t border-[var(--c-border)] flex z-[500] shadow-[0_-1px_8px_rgba(0,0,0,0.04)]"
-    :style="{ '--module-color': moduleColor }"
-  >
+  <nav class="community-tabbar" :style="{ '--module-color': moduleColor }" aria-label="社区导航">
     <button
       v-for="tab in tabs"
       :key="tab.key"
       type="button"
-      class="flex-1 flex flex-col items-center justify-center text-[var(--c-text-3)] text-xs py-1.5 border-none bg-transparent cursor-pointer font-[inherit] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-[var(--module-color)] focus-visible:outline-offset-[-2px]"
-      :class="{ '!text-[var(--module-color)]': activeTab === tab.key }"
+      class="community-tabbar__item"
+      :class="{ 'community-tabbar__item--active': activeTab === tab.key }"
       @click="goTo(tab.path)"
     >
-      <i
-        class="flex items-center justify-center w-6 h-6 mb-0.5 transition-transform duration-200 [&>svg]:w-[22px] [&>svg]:h-[22px] [&>svg]:fill-current"
-        :class="{ 'scale-110': activeTab === tab.key }"
-        v-html="tab.icon"
-      ></i>
-      <p
-        class="m-0 text-[11px] leading-none text-inherit"
-        :class="{ 'font-medium': activeTab === tab.key }"
-      >{{ tab.label }}</p>
+      <i class="community-tabbar__icon" v-html="tab.icon" />
+      <p>{{ tab.label }}</p>
     </button>
-  </div>
+  </nav>
 </template>
+
+<style scoped>
+.community-tabbar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 500;
+  display: flex;
+  padding: 8px 18px calc(8px + env(safe-area-inset-bottom, 0));
+  border-top: 1px solid rgba(207, 221, 225, 0.72);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 -16px 34px rgba(15, 39, 49, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.community-tabbar__item {
+  display: flex;
+  flex: 1;
+  min-height: 54px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  color: var(--c-text-3);
+  cursor: pointer;
+  font: inherit;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.community-tabbar__item--active {
+  background: color-mix(in srgb, var(--module-color) 12%, transparent);
+  color: var(--module-color);
+}
+
+.community-tabbar__item:active {
+  transform: scale(0.98);
+}
+
+.community-tabbar__icon {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+}
+
+.community-tabbar__icon :deep(svg),
+.community-tabbar__icon :deep(*) {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.community-tabbar__item p {
+  margin: 0;
+  color: inherit;
+  font-size: 11px;
+  font-weight: 760;
+  line-height: 1;
+}
+
+[data-theme="dark"] .community-tabbar {
+  border-top-color: rgba(43, 52, 65, 0.9);
+  background: rgba(19, 25, 34, 0.92);
+  box-shadow: 0 -16px 34px rgba(0, 0, 0, 0.34);
+}
+</style>

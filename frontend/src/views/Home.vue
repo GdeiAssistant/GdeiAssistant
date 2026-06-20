@@ -4,9 +4,10 @@ import { onMounted, onActivated, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ALL_FEATURES, FEATURE_ICON_SRC, getLocalizedFeatures } from '@/constants/features'
 import {
-  Star, Calendar, CreditCard, FileText, GraduationCap, BookOpen,
-  DoorOpen, Dumbbell, PenLine, Database, ShoppingCart, Search,
-  MessageCircle, Eye, Users, Heart, Camera, Truck, Info as InfoIcon
+  ArrowRight, Bell, Calendar, CalendarCheck, CreditCard, Database, DoorOpen,
+  Dumbbell, Eye, FileText, GraduationCap, Heart, Info as InfoIcon, MessageCircle,
+  PackageCheck, PenLine, Search, ShoppingCart, Star, Truck, Users, BookOpen,
+  Camera, WalletCards
 } from 'lucide-vue-next'
 
 const STORAGE_KEY = 'user_features_config'
@@ -95,13 +96,45 @@ const featureSections = computed(() => {
   ].filter((section) => section.items.length > 0)
 })
 
-function handleMenuClick(item) {
-  if (item.path) {
-    router.push(item.path)
+const todayItems = computed(() => [
+  {
+    id: 'schedule',
+    title: t('home.todayScheduleTitle'),
+    description: t('home.todayScheduleDesc'),
+    meta: t('home.todayScheduleMeta'),
+    icon: CalendarCheck,
+    path: '/schedule',
+    color: '#10B981'
+  },
+  {
+    id: 'card',
+    title: t('home.todayCardTitle'),
+    description: t('home.todayCardDesc'),
+    meta: t('home.todayCardMeta'),
+    icon: WalletCards,
+    path: '/card',
+    color: '#3B82F6'
+  },
+  {
+    id: 'notice',
+    title: t('home.todayNoticeTitle'),
+    description: t('home.todayNoticeDesc'),
+    meta: t('home.todayNoticeMeta'),
+    icon: Bell,
+    path: '/info',
+    color: '#8B5CF6'
+  },
+  {
+    id: 'delivery',
+    title: t('home.todayDeliveryTitle'),
+    description: t('home.todayDeliveryDesc'),
+    meta: t('home.todayDeliveryMeta'),
+    icon: PackageCheck,
+    path: '/delivery',
+    color: '#F59E0B'
   }
-}
+])
 
-// Icon mapping
 const iconMap = {
   grade: Star, schedule: Calendar, card: CreditCard, cet: FileText,
   kaoyan: GraduationCap, collection: BookOpen, spare: DoorOpen,
@@ -112,70 +145,621 @@ const iconMap = {
 }
 
 const iconColors = {
-  grade: '#047857', schedule: '#2563EB', card: '#D97706', cet: '#7C3AED',
+  grade: '#0B8F6A', schedule: '#2563EB', card: '#D97706', cet: '#7C3AED',
   kaoyan: '#0891B2', collection: '#4F46E5', spare: '#06B6D4',
   pe: '#DC2626', evaluate: '#DB2777', data: '#0D9488', about: '#6B7280',
-  ershou: '#047857', lostandfound: '#2563EB', express: '#F43F5E',
-  secret: '#8B5CF6', dating: '#EC4899', topic: '#6366F1',
+  ershou: '#F97316', lostandfound: '#2563EB', express: '#F43F5E',
+  secret: '#8B5CF6', dating: '#EC4899', topic: '#3B82F6',
   photograph: '#06B6D4', delivery: '#F59E0B',
 }
 
-function iconBgStyle(id) {
+function handleMenuClick(item) {
+  if (item.path) {
+    router.push(item.path)
+  }
+}
+
+function goTo(path) {
+  router.push(path)
+}
+
+function scrollToSection(id) {
+  const section = document.getElementById(`home-${id}`)
+  section?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+function resolveFeatureIcon(id) {
+  return iconMap[id] || InfoIcon
+}
+
+function featureCardStyle(id) {
   const color = iconColors[id] || '#6B7280'
-  return { backgroundColor: color + '14' }
+  return {
+    '--feature-color': color,
+    '--feature-color-soft': `${color}17`
+  }
 }
 
-function iconColorStyle(id) {
-  return { color: iconColors[id] || '#6B7280' }
+function todayItemStyle(item) {
+  return {
+    '--today-color': item.color,
+    '--today-color-soft': `${item.color}16`
+  }
 }
-
 </script>
 
 <template>
-  <div>
-    <!-- Greeting section -->
-    <div class="mb-6">
-      <h1 class="text-2xl font-extrabold">{{ $t('home.title') }}</h1>
-      <p class="text-sm text-[var(--c-text-2)] mt-1">{{ $t('home.subtitle') }}</p>
-    </div>
+  <div class="home-page">
+    <section class="home-hero-grid" aria-labelledby="home-title">
+      <article class="home-hero-card">
+        <div class="home-hero-card__shade" />
+        <div class="home-hero-card__content">
+          <h1 id="home-title">{{ $t('home.title') }}</h1>
+          <p>{{ $t('home.subtitle') }}</p>
+          <div class="home-hero-card__actions">
+            <button type="button" class="home-hero-card__primary" @click="scrollToSection('service')">
+              {{ $t('home.heroPrimary') }}
+            </button>
+            <button type="button" class="home-hero-card__secondary" @click="scrollToSection('life')">
+              {{ $t('home.heroSecondary') }}
+            </button>
+          </div>
+        </div>
+      </article>
 
-    <!-- Feature sections -->
-    <section
-      v-for="section in featureSections"
-      :key="section.id"
-      class="mb-6"
-    >
-      <div class="bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] p-5">
-        <h2 class="text-lg font-extrabold mb-1">{{ section.title }}</h2>
-        <p class="text-sm text-[var(--c-text-2)] mb-4">{{ section.description }}</p>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <button
-            v-for="(item, index) in section.items"
-            :key="item.id || item.path || item.key || index"
-            :aria-label="item.title"
-            class="flex flex-col bg-[var(--c-bg)] rounded-xl p-3.5 text-left transition hover:bg-[var(--c-border-light)] active:scale-[0.97]"
-            @click="handleMenuClick(item)"
-          >
-            <div
-              class="w-9 h-9 rounded-lg flex items-center justify-center mb-2.5"
-              :style="iconBgStyle(item.id)"
-            >
-              <component
-                :is="iconMap[item.id]"
-                class="w-[18px] h-[18px]"
-                :style="iconColorStyle(item.id)"
-              />
-            </div>
-            <div class="text-sm font-bold text-[var(--c-text-1)]">{{ item.title }}</div>
-            <div class="text-[11px] text-[var(--c-text-2)] mt-0.5 line-clamp-2">{{ item.description }}</div>
+      <aside class="today-panel" aria-labelledby="today-title">
+        <div class="today-panel__header">
+          <h2 id="today-title">{{ $t('home.todayTitle') }}</h2>
+          <button type="button" @click="goTo('/info')">
+            {{ $t('home.todayMore') }}
+            <ArrowRight class="w-4 h-4" />
           </button>
         </div>
+
+        <div class="today-panel__list">
+          <button
+            v-for="item in todayItems"
+            :key="item.id"
+            type="button"
+            class="today-panel__item"
+            :style="todayItemStyle(item)"
+            @click="goTo(item.path)"
+          >
+            <span class="today-panel__icon">
+              <component :is="item.icon" class="w-5 h-5" />
+            </span>
+            <span class="today-panel__text">
+              <strong>{{ item.title }}</strong>
+              <small>{{ item.description }}</small>
+            </span>
+            <span class="today-panel__meta">{{ item.meta }}</span>
+          </button>
+        </div>
+      </aside>
+    </section>
+
+    <section
+      v-for="section in featureSections"
+      :id="`home-${section.id}`"
+      :key="section.id"
+      class="feature-section"
+      :class="`feature-section--${section.id}`"
+    >
+      <header class="feature-section__header">
+        <div>
+          <h2>{{ section.title }}</h2>
+          <p>{{ section.description }}</p>
+        </div>
+      </header>
+
+      <div class="feature-section__grid">
+        <button
+          v-for="(item, index) in section.items"
+          :key="item.id || item.path || item.key || index"
+          :aria-label="item.title"
+          class="feature-card"
+          :style="featureCardStyle(item.id)"
+          @click="handleMenuClick(item)"
+        >
+          <span class="feature-card__icon">
+            <component :is="resolveFeatureIcon(item.id)" class="w-6 h-6" />
+          </span>
+          <span class="feature-card__body">
+            <strong>{{ item.title }}</strong>
+            <small>{{ item.description }}</small>
+          </span>
+          <ArrowRight class="feature-card__arrow" />
+        </button>
       </div>
     </section>
 
-    <!-- Empty state -->
-    <div v-if="featureSections.length === 0" class="py-12 text-center text-sm text-[var(--c-text-3)]">
+    <div v-if="featureSections.length === 0" class="home-empty">
       {{ $t('home.noFeatures') }}
     </div>
   </div>
 </template>
+
+<style scoped>
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.58fr) minmax(340px, 0.92fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.home-hero-card,
+.today-panel,
+.feature-section {
+  border: 1px solid rgba(202, 222, 226, 0.76);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 20px 46px rgba(33, 74, 84, 0.08);
+  backdrop-filter: blur(16px);
+}
+
+.home-hero-card {
+  position: relative;
+  min-height: 348px;
+  overflow: hidden;
+  border-radius: 28px;
+  background-image: url('/img/landing/campus-hero.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.home-hero-card__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.68) 32%, rgba(255, 255, 255, 0.1) 68%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(220, 246, 237, 0.26));
+}
+
+.home-hero-card__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  max-width: 560px;
+  min-height: 348px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 46px;
+}
+
+.home-hero-card h1 {
+  margin: 0;
+  color: #102033;
+  font-size: clamp(42px, 6vw, 66px);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+}
+
+.home-hero-card p {
+  max-width: 440px;
+  margin: 18px 0 0;
+  color: #3f5368;
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.7;
+}
+
+.home-hero-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 34px;
+}
+
+.home-hero-card__primary,
+.home-hero-card__secondary {
+  min-height: 50px;
+  border-radius: 16px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 850;
+  padding: 0 23px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.home-hero-card__primary:hover,
+.home-hero-card__secondary:hover {
+  transform: translateY(-2px);
+}
+
+.home-hero-card__primary {
+  border: 0;
+  background: linear-gradient(135deg, #12b981, #0f9f76);
+  color: #fff;
+  box-shadow: 0 16px 28px rgba(16, 185, 129, 0.26);
+}
+
+.home-hero-card__secondary {
+  border: 1px solid rgba(18, 145, 104, 0.38);
+  background: rgba(255, 255, 255, 0.82);
+  color: #0f7a5d;
+}
+
+.today-panel {
+  display: flex;
+  flex-direction: column;
+  border-radius: 26px;
+  padding: 22px;
+}
+
+.today-panel__header,
+.feature-section__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.today-panel__header h2,
+.feature-section__header h2 {
+  margin: 0;
+  color: var(--c-text-1);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.today-panel__header button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--c-text-2);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 760;
+  padding: 3px 0;
+}
+
+.today-panel__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.today-panel__item {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  min-height: 76px;
+  border: 1px solid rgba(210, 225, 229, 0.78);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.66);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 12px;
+  text-align: left;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.today-panel__item:hover {
+  border-color: color-mix(in srgb, var(--today-color) 28%, rgba(210, 225, 229, 0.78));
+  box-shadow: 0 14px 28px rgba(32, 69, 78, 0.08);
+  transform: translateY(-2px);
+}
+
+.today-panel__icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 14px;
+  color: var(--today-color);
+  background: var(--today-color-soft);
+}
+
+.today-panel__text {
+  min-width: 0;
+}
+
+.today-panel__text strong,
+.feature-card__body strong {
+  display: block;
+  color: var(--c-text-1);
+  font-weight: 860;
+}
+
+.today-panel__text strong {
+  font-size: 15px;
+}
+
+.today-panel__text small,
+.feature-card__body small {
+  display: block;
+  overflow: hidden;
+  color: var(--c-text-2);
+  text-overflow: ellipsis;
+}
+
+.today-panel__text small {
+  margin-top: 3px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.today-panel__meta {
+  color: var(--today-color);
+  font-size: 12px;
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+.feature-section {
+  border-radius: 28px;
+  padding: 22px;
+  scroll-margin-top: 88px;
+}
+
+.feature-section--service {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(241, 255, 250, 0.82)),
+    radial-gradient(circle at 100% 0, rgba(155, 216, 255, 0.22), transparent 34%);
+}
+
+.feature-section--life {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(254, 248, 255, 0.82)),
+    radial-gradient(circle at 0 0, rgba(251, 191, 36, 0.12), transparent 28%),
+    radial-gradient(circle at 100% 100%, rgba(96, 165, 250, 0.14), transparent 34%);
+}
+
+.feature-section__header p {
+  margin: 6px 0 0;
+  color: var(--c-text-2);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.feature-section__grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.feature-card {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 14px;
+  min-height: 86px;
+  border: 1px solid rgba(210, 225, 229, 0.78);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 14px 16px;
+  text-align: left;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.feature-card:hover {
+  border-color: color-mix(in srgb, var(--feature-color) 26%, rgba(210, 225, 229, 0.78));
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 30px rgba(33, 74, 84, 0.08);
+  transform: translateY(-2px);
+}
+
+.feature-card__icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 16px;
+  color: var(--feature-color);
+  background: var(--feature-color-soft);
+}
+
+.feature-card__body {
+  min-width: 0;
+}
+
+.feature-card__body strong {
+  font-size: 15px;
+}
+
+.feature-card__body small {
+  display: -webkit-box;
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.feature-card__arrow {
+  width: 17px;
+  height: 17px;
+  color: var(--feature-color);
+  opacity: 0.42;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.feature-card:hover .feature-card__arrow {
+  opacity: 0.88;
+  transform: translateX(2px);
+}
+
+.home-empty {
+  border: 1px dashed var(--c-border);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--c-text-3);
+  font-size: 14px;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+@media (max-width: 1180px) {
+  .home-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-section__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .home-page {
+    gap: 14px;
+  }
+
+  .home-hero-grid {
+    gap: 14px;
+  }
+
+  .home-hero-card {
+    min-height: 358px;
+    border-radius: 28px;
+    background-position: 62% center;
+  }
+
+  .home-hero-card__shade {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.62) 54%, rgba(255, 255, 255, 0.92) 100%),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.08));
+  }
+
+  .home-hero-card__content {
+    min-height: 358px;
+    justify-content: flex-end;
+    padding: 28px 24px;
+  }
+
+  .home-hero-card h1 {
+    font-size: clamp(38px, 12vw, 54px);
+  }
+
+  .home-hero-card p {
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .home-hero-card__actions {
+    margin-top: 22px;
+  }
+
+  .home-hero-card__primary,
+  .home-hero-card__secondary {
+    min-height: 46px;
+    flex: 1;
+    padding: 0 14px;
+  }
+
+  .today-panel,
+  .feature-section {
+    border-radius: 24px;
+    padding: 18px;
+  }
+
+  .today-panel__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .today-panel__item {
+    display: flex;
+    min-height: 118px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .today-panel__text strong {
+    font-size: 14px;
+  }
+
+  .today-panel__text small,
+  .today-panel__meta {
+    display: none;
+  }
+
+  .feature-section__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .feature-card {
+    min-height: 110px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 10px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .feature-card__icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
+  }
+
+  .feature-card__body strong {
+    font-size: 14px;
+  }
+
+  .feature-card__body small,
+  .feature-card__arrow {
+    display: none;
+  }
+}
+
+
+[data-theme="dark"] .home-hero-card,
+[data-theme="dark"] .today-panel,
+[data-theme="dark"] .feature-section,
+[data-theme="dark"] .home-empty {
+  border-color: rgba(45, 58, 73, 0.86);
+  background: rgba(20, 27, 37, 0.78);
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.28);
+}
+
+[data-theme="dark"] .home-hero-card__shade {
+  background:
+    linear-gradient(90deg, rgba(10, 15, 22, 0.9) 0%, rgba(10, 15, 22, 0.62) 36%, rgba(10, 15, 22, 0.16) 74%),
+    linear-gradient(180deg, rgba(10, 15, 22, 0.02), rgba(15, 23, 42, 0.46));
+}
+
+[data-theme="dark"] .home-hero-card h1 {
+  color: var(--c-text-1);
+}
+
+[data-theme="dark"] .home-hero-card p {
+  color: var(--c-text-2);
+}
+
+[data-theme="dark"] .home-hero-card__secondary,
+[data-theme="dark"] .today-panel__item,
+[data-theme="dark"] .feature-card {
+  border-color: rgba(54, 68, 83, 0.82);
+  background: rgba(24, 32, 43, 0.76);
+}
+
+[data-theme="dark"] .feature-section--service,
+[data-theme="dark"] .feature-section--life {
+  background: rgba(20, 27, 37, 0.78);
+}
+</style>

@@ -68,10 +68,10 @@ function close() {
 <template>
   <Teleport to="body">
     <div v-if="open" class="fixed inset-0 z-[1000] flex items-end justify-center sm:items-center">
-      <div class="absolute inset-0 bg-black/60" @click="close" />
-      <div class="relative z-10 bg-[var(--c-surface)] rounded-t-2xl sm:rounded-2xl w-full sm:w-[420px] overflow-hidden shadow-xl flex flex-col max-h-[80vh]">
+      <div class="absolute inset-0 bg-slate-950/45 backdrop-blur-[3px]" @click="close" />
+      <div class="relative z-10 bg-white/95 border border-[var(--c-border)] rounded-t-[28px] sm:rounded-[28px] w-full sm:w-[460px] overflow-hidden shadow-[0_28px_80px_rgba(15,39,49,0.18)] backdrop-blur-xl flex flex-col max-h-[80vh]">
         <!-- Header -->
-        <div class="flex items-center justify-between px-5 py-4 border-b border-[var(--c-border-light)] shrink-0">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-[var(--c-border-light)] bg-white/50 shrink-0">
           <button type="button" class="text-sm text-[var(--c-text-tertiary)] bg-transparent border-0 cursor-pointer font-inherit" @click="close">
             {{ $t('common.cancel') }}
           </button>

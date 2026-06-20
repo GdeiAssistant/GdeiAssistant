@@ -241,126 +241,101 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--color-surface)] pb-20 flex flex-col items-center relative">
-    <!-- 顶部导航栏 -->
-    <div class="fixed top-0 left-0 right-0 h-[50px] bg-[var(--color-surface)] shadow-md z-[1000]">
-      <div class="flex justify-between items-center h-full px-4">
-        <span class="text-lg font-bold text-[var(--color-text-primary)]">{{ t('about.appName') }}</span>
-        <button
-          class="w-10 h-10 border-none bg-transparent flex flex-col justify-center gap-[5px] cursor-pointer p-0"
-          :aria-label="t('about.menuOpen')"
-          @click="toggleMenu"
-        >
-          <span class="w-6 h-0.5 bg-[var(--color-text-primary)] transition-all duration-300"></span>
-          <span class="w-6 h-0.5 bg-[var(--color-text-primary)] transition-all duration-300"></span>
-          <span class="w-6 h-0.5 bg-[var(--color-text-primary)] transition-all duration-300"></span>
-        </button>
-      </div>
-    </div>
+  <div class="about-page">
+    <header class="about-topbar">
+      <button type="button" class="about-brand" @click="goToLogin">
+        <img src="/img/about/application/logo.png" :alt="t('about.appName')" />
+        <span>{{ t('about.appName') }}</span>
+      </button>
+      <button
+        class="about-menu-button"
+        :aria-label="t('about.menuOpen')"
+        type="button"
+        @click="toggleMenu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </header>
 
-    <!-- 侧边菜单（抽屉式） -->
     <div
       v-if="showMenu"
-      class="fixed inset-0 bg-black/50 z-[1001]"
+      class="about-drawer-mask"
       @click="toggleMenu"
     ></div>
-    <div
-      class="fixed top-0 w-[300px] h-screen bg-[var(--color-surface)] shadow-[-2px_0_8px_rgba(0,0,0,0.1)] z-[1002] transition-[right] duration-300 ease-in-out overflow-y-auto"
-      :class="showMenu ? 'right-0' : '-right-[300px]'"
-    >
-      <div class="flex justify-between items-center p-4 border-b border-[var(--color-divider)]">
-        <span class="text-lg font-bold text-[var(--color-text-primary)]">{{ t('about.appName') }}</span>
-        <button
-          class="w-8 h-8 border-none bg-transparent text-2xl text-[var(--color-text-primary)] cursor-pointer flex items-center justify-center"
-          :aria-label="t('about.menuClose')"
-          @click="toggleMenu"
-        >×</button>
+    <aside class="about-drawer" :class="{ 'is-open': showMenu }" aria-label="about menu">
+      <div class="about-drawer__header">
+        <span>{{ t('about.appName') }}</span>
+        <button type="button" :aria-label="t('about.menuClose')" @click="toggleMenu">×</button>
       </div>
-      <div>
-        <div
-          v-for="menu in menuItems"
-          :key="menu.title"
-          class="border-b border-[var(--color-divider)]"
-        >
-          <button
-            type="button"
-            class="flex justify-between items-center p-4 cursor-pointer text-[var(--color-text-primary)] text-[15px] w-full border-none bg-transparent font-[inherit] text-left hover:bg-[var(--color-bg-secondary)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)] focus-visible:outline-offset-[-2px]"
-            @click="toggleSubMenu(menu.title)"
-          >
+      <div class="about-drawer__body">
+        <section v-for="menu in menuItems" :key="menu.title" class="about-menu-group">
+          <button type="button" class="about-menu-group__title" @click="toggleSubMenu(menu.title)">
             <span>{{ menu.title }}</span>
-            <span
-              class="text-xs text-[var(--color-text-tertiary)] transition-transform duration-300"
-              :class="{ 'rotate-180': expandedMenu === menu.title }"
-            >▼</span>
+            <span class="about-menu-group__chevron" :class="{ 'is-open': expandedMenu === menu.title }">⌄</span>
           </button>
-          <div v-if="expandedMenu === menu.title" class="bg-[var(--color-bg-secondary)]">
+          <div v-if="expandedMenu === menu.title" class="about-menu-group__items">
             <button
               v-for="item in menu.items"
               :key="item.text"
               type="button"
-              class="block w-full py-3 pl-8 pr-4 text-[var(--color-text-secondary)] no-underline text-sm border-none border-b border-[var(--color-divider)] bg-transparent font-[inherit] text-left cursor-pointer last:border-b-0 hover:bg-[var(--color-divider)] hover:text-[var(--color-primary)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)] focus-visible:outline-offset-[-2px]"
+              class="about-menu-link"
               @click="handleMenuClick(item)"
             >
               {{ item.text }}
             </button>
           </div>
+        </section>
+      </div>
+    </aside>
+
+    <main class="about-main">
+      <section class="about-hero campus-page-card">
+        <div class="about-hero__copy">
+          <h1>{{ t('about.appName') }}</h1>
+          <p>{{ t('about.appIntroContent') }}</p>
+          <button type="button" class="about-primary-action" @click="goToLogin">
+            {{ t('about.enterSystem') }}
+          </button>
         </div>
-      </div>
-    </div>
+        <div class="about-hero__visual" aria-hidden="true">
+          <div class="about-logo-orb">
+            <img src="/img/about/application/logo.png" :alt="t('about.appName')" />
+          </div>
+          <div class="about-phone-card about-phone-card--front">
+            <img src="/img/about/application/preview_0.jpg" :alt="t('about.screenshotAlt', { n: 1 })" />
+          </div>
+          <div class="about-phone-card about-phone-card--back">
+            <img src="/img/about/application/preview_1.jpg" :alt="t('about.screenshotAlt', { n: 2 })" />
+          </div>
+        </div>
+      </section>
 
-    <!-- Logo 区域 -->
-    <div class="mt-[70px] mb-10 text-center">
-      <img
-        src="/img/about/application/logo.png"
-        :alt="t('about.appName')"
-        width="120"
-        height="120"
-        class="w-[120px] h-[120px] rounded-3xl shadow-lg"
-      />
-    </div>
+      <section class="about-section campus-page-card">
+        <div class="about-section__heading">
+          <h2>{{ t('about.appIntroTitle') }}</h2>
+        </div>
+        <p class="about-intro-text">{{ t('about.appIntroContent') }}</p>
+      </section>
 
-    <!-- 进入系统按钮 -->
-    <div class="w-full max-w-[400px] mb-10 px-4">
-      <button
-        type="button"
-        class="w-full bg-[var(--color-primary)] border-none cursor-pointer font-[inherit] text-white py-3 rounded-lg text-base focus-visible:outline-2 focus-visible:outline-[var(--color-primary)] focus-visible:outline-offset-2"
-        @click="goToLogin"
-      >
-        {{ t('about.enterSystem') }}
-      </button>
-    </div>
-
-    <!-- 应用介绍 -->
-    <div class="w-full max-w-[600px] mb-10 px-4">
-      <h2 class="text-lg font-medium text-[var(--color-text-primary)] m-0 mb-4 text-center relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-10 after:h-0.5 after:bg-[var(--color-primary)]">
-        {{ t('about.appIntroTitle') }}
-      </h2>
-      <div class="leading-[1.8] text-[var(--color-text-secondary)] text-sm">
-        <p class="m-0 text-justify">{{ t('about.appIntroContent') }}</p>
-      </div>
-    </div>
-
-    <!-- 应用截图（横向滚动 - 画廊模式） -->
-    <div class="w-full mb-10">
-      <h2 class="text-lg font-medium text-[var(--color-text-primary)] m-0 mb-4 text-center relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-10 after:h-0.5 after:bg-[var(--color-primary)]">
-        {{ t('about.screenshotsTitle') }}
-      </h2>
-      <div class="flex justify-center">
-        <div class="flex flex-nowrap overflow-x-auto overflow-y-hidden snap-x snap-mandatory gap-4 px-6 pb-4 max-w-full [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/15 [&::-webkit-scrollbar-thumb]:rounded-sm">
+      <section class="about-section campus-page-card about-gallery-section">
+        <div class="about-section__heading">
+          <h2>{{ t('about.screenshotsTitle') }}</h2>
+        </div>
+        <div class="about-gallery" aria-label="application screenshots">
           <img
             v-for="i in 5"
             :key="i"
             :src="`/img/about/application/preview_${i - 1}.jpg`"
             :alt="t('about.screenshotAlt', { n: i })"
-            class="flex-none w-52 h-auto object-contain rounded-xl shadow-md snap-center"
           />
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
 
-    <!-- 页脚版权信息 -->
-    <div class="w-full max-w-[600px] text-center mt-auto pt-10 border-t border-[var(--color-divider)] px-4">
-      <div class="flex justify-center items-center mb-5">
+    <footer class="about-footer">
+      <div class="about-media-links">
         <component
           v-for="item in officialMediaLinks"
           :key="item.key"
@@ -370,53 +345,608 @@ onMounted(() => {
           :aria-label="item.title"
           :target="item.href ? '_blank' : undefined"
           :rel="item.href ? 'noopener noreferrer' : undefined"
-          class="inline-flex items-center justify-center mx-2"
+          class="about-media-link"
         >
-          <img
-            :src="item.iconSrc"
-            :alt="item.alt"
-            class="w-6 h-6 align-middle opacity-70 transition-opacity duration-300 hover:opacity-100"
-          />
+          <img :src="item.iconSrc" :alt="item.alt" />
         </component>
       </div>
-      <p class="text-xs text-[var(--color-text-tertiary)] my-2">Copyright &copy; 2016 - 2026 GdeiAssistant</p>
-      <p class="text-xs text-[var(--color-text-tertiary)] my-2">All rights reserved</p>
-      <div class="mt-4">
-        <p class="my-1 text-xs">
-          <a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener noreferrer" class="text-[var(--c-text-1)] no-underline hover:text-[var(--color-primary)] hover:underline">
-            粤ICP备17087427号-1
-          </a>
-        </p>
-        <p class="my-1 text-xs">
-          <a
-            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44010502001297"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--c-text-1)] no-underline hover:text-[var(--color-primary)] hover:underline"
-          >
-            粤公网安备44010502001297号
-          </a>
-        </p>
+      <p>Copyright &copy; 2016 - 2026 GdeiAssistant</p>
+      <p>All rights reserved</p>
+      <div class="about-records">
+        <a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">粤ICP备17087427号-1</a>
+        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44010502001297" target="_blank" rel="noopener noreferrer">粤公网安备44010502001297号</a>
       </div>
-    </div>
+    </footer>
 
-    <!-- Cookie 政策横幅 -->
-    <div v-if="showCookieBanner" class="fixed bottom-0 left-0 right-0 bg-black/85 text-white z-[999] p-4">
-      <div class="flex items-start gap-4 max-w-5xl mx-auto">
-        <div class="flex-1 text-[13px] leading-relaxed text-white">
+    <div v-if="showCookieBanner" class="about-cookie-banner">
+      <div class="about-cookie-banner__content">
+        <p>
           {{ t('about.cookieNotice') }}
           <i18n-t keypath="about.cookieLearnMore" tag="span">
             <template #link>
-              <a href="/policy/cookie" class="text-white underline cursor-pointer hover:text-[var(--color-primary)]">{{ t('about.cookiePolicy') }}</a>
+              <a href="/policy/cookie">{{ t('about.cookiePolicy') }}</a>
             </template>
           </i18n-t>
-        </div>
-        <button
-          class="w-6 h-6 border-none bg-transparent text-white text-xl cursor-pointer shrink-0 flex items-center justify-center p-0 hover:text-[var(--color-primary)]"
-          :aria-label="t('about.closeCookie')"
-          @click="closeCookieBanner"
-        >×</button>
+        </p>
+        <button type="button" :aria-label="t('about.closeCookie')" @click="closeCookieBanner">×</button>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.about-page {
+  min-height: 100vh;
+  color: var(--c-text-1);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(173, 225, 255, 0.42), transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(188, 241, 211, 0.36), transparent 34%),
+    linear-gradient(180deg, #f6fbff 0%, #edf7f7 100%);
+  padding-bottom: 56px;
+}
+
+.about-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 22px;
+  border-bottom: 1px solid rgba(211, 226, 230, 0.78);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(18px);
+}
+
+.about-brand,
+.about-menu-button,
+.about-drawer button,
+.about-primary-action {
+  font: inherit;
+}
+
+.about-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--c-text-1);
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.about-brand img {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(11, 154, 114, 0.18);
+}
+
+.about-menu-button {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid rgba(204, 221, 225, 0.86);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(32, 69, 78, 0.08);
+}
+
+.about-menu-button span {
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--c-text-1);
+}
+
+.about-drawer-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 990;
+  background: rgba(9, 27, 42, 0.34);
+  backdrop-filter: blur(4px);
+}
+
+.about-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  width: min(340px, 88vw);
+  height: 100vh;
+  transform: translateX(105%);
+  overflow-y: auto;
+  border-left: 1px solid rgba(211, 226, 230, 0.8);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: -24px 0 70px rgba(24, 62, 74, 0.18);
+  transition: transform 0.24s ease;
+}
+
+.about-drawer.is-open {
+  transform: translateX(0);
+}
+
+.about-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid var(--c-divider);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.about-drawer__header button {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--c-primary-50);
+  color: var(--c-primary);
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.about-drawer__body {
+  padding: 14px;
+}
+
+.about-menu-group {
+  overflow: hidden;
+  border: 1px solid rgba(218, 230, 233, 0.85);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.about-menu-group + .about-menu-group {
+  margin-top: 12px;
+}
+
+.about-menu-group__title,
+.about-menu-link {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--c-text-1);
+  cursor: pointer;
+  text-align: left;
+}
+
+.about-menu-group__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 16px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.about-menu-group__chevron {
+  color: var(--c-text-3);
+  transition: transform 0.2s ease;
+}
+
+.about-menu-group__chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.about-menu-group__items {
+  padding: 0 10px 10px;
+}
+
+.about-menu-link {
+  display: block;
+  padding: 11px 12px;
+  border-radius: 12px;
+  color: var(--c-text-2);
+  font-size: 14px;
+}
+
+.about-menu-link:hover {
+  background: var(--c-primary-50);
+  color: var(--c-primary);
+}
+
+.about-main {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 34px 0 28px;
+}
+
+.about-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  gap: 30px;
+  overflow: hidden;
+  min-height: 420px;
+  padding: clamp(28px, 5vw, 54px);
+}
+
+.about-hero::before {
+  position: absolute;
+  inset: auto -80px -160px auto;
+  width: 360px;
+  height: 360px;
+  border-radius: 999px;
+  background: rgba(11, 154, 114, 0.12);
+  content: '';
+}
+
+.about-hero__copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.about-hero__copy h1 {
+  margin: 0;
+  max-width: 560px;
+  color: var(--c-text-1);
+  font-size: clamp(34px, 6vw, 58px);
+  line-height: 1.02;
+  font-weight: 950;
+  letter-spacing: -0.07em;
+}
+
+.about-hero__copy p {
+  margin: 22px 0 0;
+  max-width: 620px;
+  color: var(--c-text-2);
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.about-primary-action {
+  margin-top: 28px;
+  min-width: 178px;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, var(--c-primary), #16c48f);
+  color: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 850;
+  box-shadow: 0 16px 34px rgba(11, 154, 114, 0.26);
+}
+
+.about-primary-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 42px rgba(11, 154, 114, 0.3);
+}
+
+.about-hero__visual {
+  position: relative;
+  z-index: 1;
+  min-height: 340px;
+}
+
+.about-logo-orb {
+  position: absolute;
+  top: 12px;
+  right: 42px;
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 132px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 38px;
+  background: linear-gradient(150deg, #0b9a72, #19c992);
+  box-shadow: 0 28px 70px rgba(11, 154, 114, 0.24);
+}
+
+.about-logo-orb img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+}
+
+.about-phone-card {
+  position: absolute;
+  overflow: hidden;
+  width: 170px;
+  border: 8px solid #fff;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: 0 26px 68px rgba(28, 59, 74, 0.18);
+}
+
+.about-phone-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.about-phone-card--front {
+  right: 88px;
+  bottom: 0;
+  z-index: 2;
+}
+
+.about-phone-card--back {
+  right: 230px;
+  bottom: 42px;
+  opacity: 0.82;
+  transform: rotate(-4deg);
+}
+
+.about-section {
+  margin-top: 22px;
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.about-section__heading {
+  display: flex;
+  justify-content: center;
+}
+
+.about-section__heading h2 {
+  position: relative;
+  margin: 0;
+  padding-bottom: 12px;
+  color: var(--c-text-1);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.about-section__heading h2::after {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 48px;
+  height: 3px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--c-primary), #69d7ff);
+  content: '';
+}
+
+.about-intro-text {
+  margin: 22px auto 0;
+  max-width: 780px;
+  color: var(--c-text-2);
+  font-size: 15px;
+  line-height: 1.95;
+  text-align: justify;
+}
+
+.about-gallery-section {
+  overflow: hidden;
+}
+
+.about-gallery {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  overflow-x: auto;
+  padding: 4px 4px 14px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.about-gallery img {
+  flex: 0 0 210px;
+  width: 210px;
+  height: auto;
+  border: 8px solid rgba(255, 255, 255, 0.92);
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 18px 46px rgba(32, 69, 78, 0.12);
+  scroll-snap-align: center;
+}
+
+.about-footer {
+  width: min(760px, calc(100% - 32px));
+  margin: 10px auto 0;
+  padding: 26px 0 38px;
+  border-top: 1px solid rgba(211, 226, 230, 0.8);
+  color: var(--c-text-3);
+  text-align: center;
+  font-size: 12px;
+}
+
+.about-footer p {
+  margin: 7px 0;
+}
+
+.about-media-links {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.about-media-link {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(211, 226, 230, 0.82);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.about-media-link img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.75;
+}
+
+.about-records {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 16px;
+  margin-top: 14px;
+}
+
+.about-records a {
+  color: var(--c-text-3);
+}
+
+.about-cookie-banner {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 1100;
+  display: flex;
+  justify-content: center;
+}
+
+.about-cookie-banner__content {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  max-width: 900px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: rgba(16, 32, 51, 0.9);
+  color: #fff;
+  padding: 16px 18px;
+  box-shadow: 0 22px 60px rgba(16, 32, 51, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.about-cookie-banner__content p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.about-cookie-banner__content a {
+  color: #6ee7b7;
+  text-decoration: underline;
+}
+
+.about-cookie-banner__content button {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
+@media (max-width: 760px) {
+  .about-page {
+    padding-bottom: 82px;
+  }
+
+  .about-topbar {
+    height: 58px;
+    padding: 0 16px;
+  }
+
+  .about-brand span {
+    font-size: 17px;
+  }
+
+  .about-main {
+    width: min(100% - 24px, 560px);
+    padding-top: 20px;
+  }
+
+  .about-hero {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    min-height: 0;
+    padding: 28px 22px;
+  }
+
+  .about-hero__copy h1 {
+    font-size: 34px;
+  }
+
+  .about-hero__copy p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    font-size: 15px;
+  }
+
+  .about-primary-action {
+    width: 100%;
+  }
+
+  .about-hero__visual {
+    min-height: 250px;
+    margin-top: 16px;
+  }
+
+  .about-logo-orb {
+    top: 0;
+    right: 18px;
+    width: 104px;
+    height: 104px;
+    border-radius: 30px;
+  }
+
+  .about-logo-orb img {
+    width: 72px;
+    height: 72px;
+  }
+
+  .about-phone-card {
+    width: 136px;
+    border-width: 6px;
+    border-radius: 24px;
+  }
+
+  .about-phone-card--front {
+    right: 32px;
+  }
+
+  .about-phone-card--back {
+    right: 156px;
+    bottom: 28px;
+  }
+
+  .about-gallery img {
+    flex-basis: 178px;
+    width: 178px;
+    border-radius: 24px;
+  }
+
+  .about-cookie-banner {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+  }
+}
+
+[data-theme="dark"] .about-page {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(45, 212, 191, 0.14), transparent 30%),
+    linear-gradient(180deg, #0b1118 0%, #101923 100%);
+}
+
+[data-theme="dark"] .about-topbar,
+[data-theme="dark"] .about-drawer,
+[data-theme="dark"] .about-menu-group,
+[data-theme="dark"] .about-media-link {
+  border-color: rgba(45, 58, 73, 0.86);
+  background: rgba(20, 27, 37, 0.86);
+}
+</style>

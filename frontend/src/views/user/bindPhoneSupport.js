@@ -124,20 +124,22 @@ export async function loadCountryCodeCatalog({
     return getFallbackCountryCodeItems()
   }
 
-  try {
-    const response = await fetchWithTimeout(fetchImpl, apiUrl, {
-      headers: {
-        'Accept-Language': locale,
-      },
-    }, timeoutMs)
-    if (response.ok) {
-      const payload = await response.json()
-      const items = normalizeCountryCodeItems(payload?.data || [])
-      if (items.length > 0) {
-        return items
+  if (apiUrl) {
+    try {
+      const response = await fetchWithTimeout(fetchImpl, apiUrl, {
+        headers: {
+          'Accept-Language': locale,
+        },
+      }, timeoutMs)
+      if (response.ok) {
+        const payload = await response.json()
+        const items = normalizeCountryCodeItems(payload?.data || [])
+        if (items.length > 0) {
+          return items
+        }
       }
-    }
-  } catch (_) {}
+    } catch (_) {}
+  }
 
   try {
     const response = await fetchWithTimeout(fetchImpl, fallbackUrl, {}, timeoutMs)

@@ -26,18 +26,18 @@ const props = defineProps({
 })
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
+  'inline-flex items-center justify-center rounded-[15px] font-extrabold tracking-[-0.01em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-primary)]/30 disabled:opacity-50 disabled:pointer-events-none',
   {
     variants: {
       variant: {
-        primary: 'bg-[var(--c-primary)] text-white hover:bg-[var(--c-primary-hover)]',
+        primary: 'bg-[var(--c-primary)] text-white shadow-[0_14px_26px_rgba(16,185,129,0.22)] hover:bg-[var(--c-primary-hover)] hover:-translate-y-0.5',
         secondary:
-          'bg-[var(--c-surface)] text-[var(--c-text-2)] border border-[var(--c-border)] hover:bg-[var(--c-surface-hover)]',
-        destructive: 'bg-[var(--c-danger)] text-white hover:opacity-90',
+          'bg-white/75 text-[var(--c-text-1)] border border-[var(--c-border)] hover:border-[var(--c-primary)]/30 hover:bg-white hover:-translate-y-0.5',
+        destructive: 'bg-[var(--c-danger)] text-white shadow-[0_14px_26px_rgba(239,68,68,0.18)] hover:opacity-90 hover:-translate-y-0.5',
       },
       size: {
-        sm: 'text-xs px-3 py-1.5',
-        md: 'text-sm px-5 py-2.5',
+        sm: 'text-xs px-3.5 py-2',
+        md: 'text-sm px-5 py-3',
       },
     },
     defaultVariants: {

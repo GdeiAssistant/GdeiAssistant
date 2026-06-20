@@ -273,7 +273,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)] pb-14" style="--module-color: #8b5cf6">
+  <div class="secret-page-root">
+    <div class="min-h-screen bg-[var(--c-bg)] pb-14" style="--module-color: #8b5cf6">
     <CommunityHeader title="树洞详情" moduleColor="#8b5cf6" backTo="/secret/home" />
 
     <div v-if="loading" class="flex items-center justify-center py-16 gap-2.5 text-[var(--c-text-3)]">
@@ -396,5 +397,6 @@ onBeforeUnmount(() => {
         <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[#8b5cf6] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">确定</a>
       </div>
     </div>
+  </div>
   </div>
 </template>

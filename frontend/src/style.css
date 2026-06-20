@@ -41,19 +41,30 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  --c-primary: #047857;
-  --c-primary-hover: #065F46;
-  --c-primary-50: #ECFDF5;
-  --c-primary-100: #D1FAE5;
-  --c-bg: #FAFBFC;
+  --c-primary: #0B9A72;
+  --c-primary-hover: #087D5E;
+  --c-primary-50: #E9F8F2;
+  --c-primary-100: #CFF0E3;
+  --c-bg: #F6FBFF;
   --c-surface: #FFFFFF;
-  --c-surface-hover: #F9FAFB;
-  --c-text-1: #111827;
-  --c-text-2: #4B5563;
-  --c-text-3: #9CA3AF;
-  --c-border: #E5E7EB;
-  --c-border-light: #F3F4F6;
-  --c-divider: #F3F4F6;
+  --c-surface-hover: #F1F8F7;
+  --c-text-1: #102033;
+  --c-text-2: #516274;
+  --c-text-3: #8FA0AE;
+  --c-border: #DCE8EC;
+  --c-border-light: #EDF5F6;
+  --c-divider: #E7F0F2;
+  --c-card: var(--c-surface);
+  --c-text: var(--c-text-1);
+  --c-primary-light: var(--c-primary-50);
+  --c-fill-2: #EEF6F7;
+  --c-fill-3: #E3EFF1;
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: var(--c-bg);
+  --color-bg-tertiary: var(--c-border-light);
+  --color-surface-raised: var(--c-surface);
+  --color-divider: var(--c-divider);
+  --color-text-tertiary: var(--c-text-3);
   --c-danger: #EF4444;
   --c-warning: #F59E0B;
   --c-info: #3B82F6;
@@ -73,9 +84,9 @@
   --c-photograph: #06B6D4;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
-  --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+  --shadow-sm: 0 6px 18px rgba(32,69,78,0.06);
+  --shadow-md: 0 14px 34px rgba(32,69,78,0.08);
+  --shadow-lg: 0 24px 60px rgba(32,69,78,0.10);
 
   /* Spacing */
   --space-xs: 4px;
@@ -108,15 +119,26 @@
   --c-primary-hover: #34D399;
   --c-primary-50: rgba(52,211,153,0.08);
   --c-primary-100: rgba(52,211,153,0.12);
-  --c-bg: #0B0E14;
-  --c-surface: #151921;
-  --c-surface-hover: #1A1F2A;
-  --c-text-1: #E8ECF2;
-  --c-text-2: #8B95A8;
-  --c-text-3: #4E5769;
-  --c-border: #1E2433;
-  --c-border-light: #1A1F2A;
-  --c-divider: #1A1F2A;
+  --c-bg: #0B1118;
+  --c-surface: #151C26;
+  --c-surface-hover: #1B2531;
+  --c-text-1: #E8F0F5;
+  --c-text-2: #9AA9B8;
+  --c-text-3: #5B6877;
+  --c-border: #263241;
+  --c-border-light: #1B2531;
+  --c-divider: #202A37;
+  --c-card: var(--c-surface);
+  --c-text: var(--c-text-1);
+  --c-primary-light: var(--c-primary-50);
+  --c-fill-2: #1B2531;
+  --c-fill-3: #223042;
+  --color-bg-primary: #0B1118;
+  --color-bg-secondary: var(--c-bg);
+  --color-bg-tertiary: var(--c-border-light);
+  --color-surface-raised: var(--c-surface-hover);
+  --color-divider: var(--c-divider);
+  --color-text-tertiary: var(--c-text-3);
   --c-danger: #F87171;
   --c-warning: #FBBF24;
   --c-info: #60A5FA;
@@ -177,4 +199,69 @@ a {
 }
 a:hover {
   color: var(--c-primary-hover);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--c-primary) 42%, transparent);
+  outline-offset: 3px;
+}
+
+
+/* ── Shared campus surface primitives ─────────────────────── */
+.campus-page-card {
+  border: 1px solid rgba(205, 222, 226, 0.78);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(14px);
+}
+
+.campus-page-title {
+  color: var(--c-text-1);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.campus-list-row {
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.campus-list-row:hover {
+  background: rgba(241, 248, 247, 0.78);
+}
+
+input,
+textarea,
+select {
+  color: var(--c-text-1);
+}
+
+::placeholder {
+  color: var(--c-text-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+[data-theme="dark"] .campus-page-card {
+  border-color: rgba(45, 58, 73, 0.86);
+  background: rgba(20, 27, 37, 0.78);
+  box-shadow: var(--shadow-md);
 }

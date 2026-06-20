@@ -397,7 +397,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)] relative" style="--module-color: #8b5cf6">
+  <div class="secret-page-root">
+    <div class="min-h-screen bg-[var(--c-bg)] relative" style="--module-color: #8b5cf6">
     <CommunityHeader :title="t('secret.publish.title')" moduleColor="#8b5cf6" backTo="/secret/home" />
 
     <div
@@ -537,5 +538,6 @@ onBeforeUnmount(() => {
         <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[#8b5cf6] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
       </div>
     </div>
+  </div>
   </div>
 </template>

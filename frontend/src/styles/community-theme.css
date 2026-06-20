@@ -9,17 +9,17 @@
 
   /* 基础主题变量 */
   --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f9fafb;
-  --color-bg-tertiary: #f3f4f6;
+  --color-bg-secondary: #f6fbff;
+  --color-bg-tertiary: #edf5f6;
   --color-surface: #ffffff;
   --color-surface-raised: #ffffff;
-  --color-text-primary: #1f2937;
-  --color-text-secondary: #4b5563;
-  --color-text-tertiary: #9ca3af;
-  --color-border: #e5e7eb;
-  --color-divider: #f3f4f6;
-  --color-primary: #047857;
-  --color-primary-hover: #065f46;
+  --color-text-primary: #102033;
+  --color-text-secondary: #516274;
+  --color-text-tertiary: #8fa0ae;
+  --color-border: #dce8ec;
+  --color-divider: #e7f0f2;
+  --color-primary: #0b9a72;
+  --color-primary-hover: #087d5e;
 
   /* 模块专属色 */
   --c-ershou: #10b981;
@@ -32,14 +32,14 @@
   --c-photograph: #06b6d4;
 
   /* 中性色 */
-  --c-text-1: #1f2937;
-  --c-text-2: #4b5563;
-  --c-text-3: #9ca3af;
-  --c-bg: #f9fafb;
-  --c-card: #ffffff;
-  --c-border: #f3f4f6;
-  --c-divider: #e5e7eb;
-  --c-shadow: rgba(0, 0, 0, 0.06);
+  --c-text-1: #102033;
+  --c-text-2: #516274;
+  --c-text-3: #8fa0ae;
+  --c-bg: #f6fbff;
+  --c-card: rgba(255, 255, 255, 0.86);
+  --c-border: #dce8ec;
+  --c-divider: #e7f0f2;
+  --c-shadow: rgba(32, 69, 78, 0.08);
 
   /* 圆角 */
   --radius-sm: 8px;
@@ -48,9 +48,9 @@
   --radius-full: 9999px;
 
   /* 阴影 */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 10px 28px rgba(32, 69, 78, 0.06);
+  --shadow-md: 0 16px 38px rgba(32, 69, 78, 0.08);
+  --shadow-lg: 0 26px 64px rgba(32, 69, 78, 0.12);
 
   /* 间距 */
   --space-xs: 4px;
@@ -114,7 +114,7 @@
 
 .community-page {
   min-height: 100vh;
-  background-color: var(--c-bg);
+  background: radial-gradient(circle at 16% 0, rgba(175, 225, 255, 0.35), transparent 30%), radial-gradient(circle at 90% 4%, rgba(183, 238, 207, 0.3), transparent 28%), var(--c-bg);
 }
 
 .community-page *,
@@ -129,8 +129,10 @@
 
 .community-card {
   background: var(--c-card);
-  border-radius: var(--radius-md);
+  border: 1px solid rgba(205, 222, 226, 0.78);
+  border-radius: 18px;
   box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(12px);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -304,7 +306,8 @@
   width: 85%;
   max-width: 320px;
   background: var(--c-card);
-  border-radius: var(--radius-lg);
+  border: 1px solid rgba(205, 222, 226, 0.82);
+  border-radius: 22px;
   z-index: 1001;
   overflow: hidden;
   box-shadow: var(--shadow-lg);
@@ -461,4 +464,14 @@
 
 .community-img-lazy.loaded {
   opacity: 1;
+}
+
+
+[data-theme="dark"] .community-page {
+  background: radial-gradient(circle at 16% 0, rgba(45, 212, 191, 0.14), transparent 30%), var(--c-bg);
+}
+
+[data-theme="dark"] .community-card,
+[data-theme="dark"] .community-dialog {
+  border-color: rgba(45, 58, 73, 0.86);
 }

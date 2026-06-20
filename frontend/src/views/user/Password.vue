@@ -28,7 +28,7 @@ const { t } = useI18n()
           class="w-full max-w-xs mx-auto block rounded-lg bg-green-500 text-white font-medium py-2.5 px-6 active:bg-green-600 cursor-pointer"
           @click="router.back()"
         >
-          {{ t('deleteAccount.back') }}
+          {{ t('common.back') }}
         </button>
       </div>
     </div>

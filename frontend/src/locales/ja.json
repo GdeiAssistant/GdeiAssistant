@@ -33,6 +33,14 @@
     "recentUpdate": "最近の更新",
     "back": "戻る"
   },
+  "grade": {
+    "year": {
+      "freshman": "1年生",
+      "sophomore": "2年生",
+      "junior": "3年生",
+      "senior": "4年生"
+    }
+  },
   "gradePage": {
     "title": "成績照会",
     "moreAction": "その他",
@@ -80,7 +88,23 @@
     "sectionServiceDesc": "成績照会、時間割、英語試験、図書館、キャンパスカード、その他ツール",
     "sectionLife": "キャンパスライフ",
     "sectionLifeDesc": "フリマ、配達代行、落とし物、告白、ルームメイト、ラブウォール、トピック、フォト",
-    "noFeatures": "表示できる機能がありません"
+    "noFeatures": "表示できる機能がありません",
+    "heroPrimary": "サービスを見る",
+    "heroSecondary": "キャンパス生活へ",
+    "todayTitle": "今日のキャンパス",
+    "todayMore": "もっと見る",
+    "todayScheduleTitle": "今日の時間割",
+    "todayScheduleDesc": "次の授業予定を時間割で確認",
+    "todayScheduleMeta": "確認",
+    "todayCardTitle": "キャンパスカード",
+    "todayCardDesc": "残高と利用履歴をまとめて確認",
+    "todayCardMeta": "開く",
+    "todayNoticeTitle": "お知らせ",
+    "todayNoticeDesc": "学内通知とメッセージを確認",
+    "todayNoticeMeta": "読む",
+    "todayDeliveryTitle": "配達代行",
+    "todayDeliveryDesc": "荷物受取や代行依頼を確認",
+    "todayDeliveryMeta": "移動"
   },
   "profile": {
     "title": "マイページ",

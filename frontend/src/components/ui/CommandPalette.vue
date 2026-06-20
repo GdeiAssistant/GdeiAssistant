@@ -105,23 +105,23 @@ function getFlatIndex(item) {
       <Transition name="cp-overlay">
         <DialogOverlay
           v-if="open"
-          class="fixed inset-0 bg-black/35 z-[500] flex items-start justify-center pt-[20vh]"
+          class="fixed inset-0 bg-slate-950/35 backdrop-blur-[3px] z-[500] flex items-start justify-center pt-[20vh]"
           @click.self="emit('close')"
         >
           <Transition name="cp-content" appear>
             <DialogContent
-              class="w-[480px] max-w-[90vw] bg-[var(--c-surface)] rounded-2xl shadow-2xl overflow-hidden"
+              class="w-[520px] max-w-[90vw] bg-white/95 border border-[var(--c-border)] rounded-[26px] shadow-[0_28px_80px_rgba(15,39,49,0.18)] overflow-hidden backdrop-blur-xl"
               @keydown="onKeydown"
               @escape-key-down="emit('close')"
             >
               <!-- Search input -->
-              <div class="flex items-center gap-2.5 px-4 py-3 border-b border-[var(--c-border-light)]">
+              <div class="flex items-center gap-3 px-4 py-3.5 border-b border-[var(--c-border-light)] bg-white/50">
                 <Search class="w-4 h-4 text-[var(--c-text-3)] shrink-0" />
                 <input
                   ref="inputRef"
                   v-model="query"
                   :placeholder="t('commandPalette.searchPlaceholder')"
-                  class="flex-1 bg-transparent outline-none text-sm"
+                  class="flex-1 bg-transparent outline-none text-sm font-medium text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]"
                 />
                 <span
                   class="text-[10px] bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1.5 py-0.5 text-[var(--c-text-3)] cursor-pointer select-none"
@@ -139,8 +139,8 @@ function getFlatIndex(item) {
                   <div
                     v-for="item in academicItems"
                     :key="item.id"
-                    class="flex items-center gap-2.5 px-4 py-2 cursor-pointer"
-                    :class="{ 'bg-[var(--c-primary-50)]': getFlatIndex(item) === selectedIndex }"
+                    class="flex items-center gap-3 mx-2 rounded-2xl px-3 py-2.5 cursor-pointer transition-colors"
+                    :class="{ 'bg-[var(--c-primary-50)] text-[var(--c-primary)]': getFlatIndex(item) === selectedIndex }"
                     @click="navigate(item)"
                     @mouseenter="selectedIndex = getFlatIndex(item)"
                   >
@@ -163,8 +163,8 @@ function getFlatIndex(item) {
                   <div
                     v-for="item in communityItems"
                     :key="item.id"
-                    class="flex items-center gap-2.5 px-4 py-2 cursor-pointer"
-                    :class="{ 'bg-[var(--c-primary-50)]': getFlatIndex(item) === selectedIndex }"
+                    class="flex items-center gap-3 mx-2 rounded-2xl px-3 py-2.5 cursor-pointer transition-colors"
+                    :class="{ 'bg-[var(--c-primary-50)] text-[var(--c-primary)]': getFlatIndex(item) === selectedIndex }"
                     @click="navigate(item)"
                     @mouseenter="selectedIndex = getFlatIndex(item)"
                   >
@@ -186,7 +186,7 @@ function getFlatIndex(item) {
               </div>
 
               <!-- Footer -->
-              <div class="px-4 py-2 border-t border-[var(--c-border-light)] flex gap-4 text-[10px] text-[var(--c-text-3)]">
+              <div class="px-4 py-3 border-t border-[var(--c-border-light)] bg-white/50 flex gap-4 text-[10px] text-[var(--c-text-3)]">
                 <span class="flex items-center gap-1">
                   <kbd class="bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1 py-0.5"><ArrowUp :size="10" /></kbd>
                   <kbd class="bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1 py-0.5"><ArrowDown :size="10" /></kbd>

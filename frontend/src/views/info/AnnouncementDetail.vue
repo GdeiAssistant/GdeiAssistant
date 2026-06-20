@@ -31,6 +31,8 @@ onMounted(async () => {
     if (res?.success && res.data) {
       item.value = res.data
     }
+  } catch (_) {
+    item.value = null
   } finally {
     loading.value = false
   }

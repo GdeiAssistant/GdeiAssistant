@@ -441,7 +441,7 @@ onMounted(async () => {
 
 [data-theme="dark"] .community-module-layout {
   background:
-    radial-gradient(circle at 14% 0, color-mix(in srgb, var(--module-color) 12%, transparent), transparent 30%),
+    radial-gradient(circle at 14% 0, color-mix(in srgb, var(--module-color) 6%, transparent), transparent 30%),
     radial-gradient(circle at 88% 8%, rgba(96, 165, 250, 0.09), transparent 32%),
     linear-gradient(180deg, #101923 0%, #0f1822 100%);
 }
@@ -457,12 +457,28 @@ onMounted(async () => {
 [data-theme="dark"] .community-module-layout__hero {
   background:
     linear-gradient(135deg, rgba(24, 38, 53, 0.88), rgba(18, 30, 42, 0.78)),
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--module-color) 14%, transparent), transparent 38%);
+    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--module-color) 8%, transparent), transparent 38%);
+}
+
+[data-theme="dark"] .community-module-layout__primary {
+  background: linear-gradient(135deg, var(--c-primary), color-mix(in srgb, var(--c-primary-hover) 72%, #60a5fa));
+  box-shadow: 0 18px 34px rgba(45, 212, 191, 0.18);
 }
 
 [data-theme="dark"] .community-module-layout__secondary {
-  border-color: color-mix(in srgb, var(--module-color) 24%, rgba(68, 89, 112, 0.72));
+  border-color: rgba(74, 96, 120, 0.78);
   background: rgba(27, 43, 60, 0.72);
   color: var(--c-text-2);
+}
+
+[data-theme="dark"] .community-module-layout__rail-head span,
+[data-theme="dark"] .community-module-layout__safe-icon {
+  color: var(--c-primary);
+}
+
+[data-theme="dark"] .community-module-layout__quick-grid button {
+  border-color: rgba(74, 96, 120, 0.68);
+  background: rgba(32, 48, 68, 0.68);
+  color: var(--c-primary);
 }
 </style>

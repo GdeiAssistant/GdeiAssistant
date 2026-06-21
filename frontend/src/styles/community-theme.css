@@ -489,13 +489,13 @@
 
 .community-stream-page--dating .community-dating-switch__item,
 [data-theme="light"] .community-stream-page--dating .community-dating-switch__item {
-  color: color-mix(in srgb, var(--c-text-2) 92%, var(--c-dating)) !important;
+  color: var(--dating-accent-muted, #725f70) !important;
 }
 
 .community-stream-page--dating .community-dating-switch__item--active,
 [data-theme="light"] .community-stream-page--dating .community-dating-switch__item--active,
 [data-theme="light"] .community-stream-page--dating .community-dating-switch__item--active:hover {
-  color: #fff !important;
+  color: var(--dating-accent-active-text, #fff) !important;
 }
 
 [data-theme="dark"] .community-stream-page--dating .community-desktop-switch > [class*="bg-[var(--c-"] {

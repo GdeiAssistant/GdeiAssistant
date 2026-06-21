@@ -178,9 +178,9 @@ function getStatusText(status) {
 
 function getStatusClass(status) {
   const s = String(status)
-  if (s === '0') return 'bg-amber-100 text-amber-800'
-  if (s === '1') return 'bg-green-100 text-green-800'
-  return 'bg-red-100 text-red-800'
+  if (s === '0') return 'dating-status--pending'
+  if (s === '1') return 'dating-status--accepted'
+  return 'dating-status--rejected'
 }
 
 onMounted(() => {
@@ -331,3 +331,41 @@ watch(() => route.fullPath, () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.dating-status--pending {
+  border: 1px solid color-mix(in srgb, #f59e0b 22%, transparent);
+  background: color-mix(in srgb, #f59e0b 13%, transparent);
+  color: #9a5b00;
+}
+
+.dating-status--accepted {
+  border: 1px solid color-mix(in srgb, var(--c-dating) 20%, transparent);
+  background: color-mix(in srgb, var(--c-dating) 12%, transparent);
+  color: color-mix(in srgb, var(--c-dating) 76%, #7c1d3f);
+}
+
+.dating-status--rejected {
+  border: 1px solid color-mix(in srgb, #f43f5e 18%, transparent);
+  background: color-mix(in srgb, #f43f5e 10%, transparent);
+  color: #be123c;
+}
+
+[data-theme="dark"] .dating-status--pending {
+  border-color: color-mix(in srgb, #f6c768 22%, rgba(74, 96, 120, 0.68));
+  background: color-mix(in srgb, #f6c768 8%, rgba(32, 48, 68, 0.82));
+  color: #f6d98b;
+}
+
+[data-theme="dark"] .dating-status--accepted {
+  border-color: color-mix(in srgb, var(--c-dating) 18%, rgba(74, 96, 120, 0.68));
+  background: color-mix(in srgb, var(--c-dating) 7%, rgba(32, 48, 68, 0.82));
+  color: color-mix(in srgb, var(--c-dating) 48%, #dbeafe);
+}
+
+[data-theme="dark"] .dating-status--rejected {
+  border-color: color-mix(in srgb, #fb8795 18%, rgba(74, 96, 120, 0.68));
+  background: color-mix(in srgb, #fb8795 7%, rgba(32, 48, 68, 0.82));
+  color: #fda4af;
+}
+</style>

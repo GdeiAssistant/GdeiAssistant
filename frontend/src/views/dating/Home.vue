@@ -177,7 +177,7 @@ onUnmounted(() => {
   border: 0;
   border-radius: 14px;
   background: transparent;
-  color: var(--dating-accent-muted);
+  color: var(--dating-accent-muted) !important;
   cursor: pointer;
   font: inherit;
   font-size: 20px;
@@ -187,18 +187,18 @@ onUnmounted(() => {
 }
 
 .community-dating-switch__item:hover {
-  color: var(--dating-accent-strong);
+  color: var(--dating-accent-strong) !important;
   background: color-mix(in srgb, var(--c-dating) 8%, transparent);
 }
 
 .community-dating-switch__item--active {
   background: linear-gradient(135deg, var(--dating-accent), color-mix(in srgb, var(--dating-accent) 78%, #fb7185));
-  color: #fff;
+  color: #fff !important;
   box-shadow: 0 10px 24px color-mix(in srgb, var(--dating-accent) 22%, transparent);
 }
 
 .community-dating-switch__item--active:hover {
-  color: #fff;
+  color: #fff !important;
   background: linear-gradient(135deg, var(--dating-accent), color-mix(in srgb, var(--dating-accent) 78%, #fb7185));
 }
 
@@ -221,7 +221,7 @@ onUnmounted(() => {
 [data-theme="dark"] .community-dating-switch__item--active,
 [data-theme="dark"] .community-dating-switch__item--active:hover {
   background: linear-gradient(135deg, rgba(35, 51, 70, 0.98), rgba(28, 43, 61, 0.96));
-  color: var(--dating-accent-strong);
+  color: var(--dating-accent-strong) !important;
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-dating) 18%, rgba(111, 132, 156, 0.72));
 }
 

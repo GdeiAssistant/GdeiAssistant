@@ -265,3 +265,85 @@ select {
   background: rgba(24, 38, 53, 0.84);
   box-shadow: var(--shadow-md);
 }
+
+/* ── Dark compatibility for legacy Tailwind utility pages ───
+   Several account sub-pages still use fixed Tailwind gray/white utilities
+   instead of design tokens. Limit the remap to screens rooted at bg-gray-50
+   so community cards and white icon marks are not affected globally. */
+[data-theme="dark"] .bg-gray-50 {
+  background-color: var(--c-bg) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .bg-white {
+  background-color: var(--c-surface) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .bg-gray-50 {
+  background-color: var(--c-surface-hover) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .bg-gray-100 {
+  background-color: var(--c-border-light) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .bg-gray-200 {
+  background-color: var(--c-fill-3) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .text-black,
+[data-theme="dark"] .bg-gray-50 .text-gray-900,
+[data-theme="dark"] .bg-gray-50 .text-gray-700,
+[data-theme="dark"] .bg-gray-50 .text-gray-600 {
+  color: var(--c-text-1) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .text-gray-500 {
+  color: var(--c-text-2) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .text-gray-400 {
+  color: var(--c-text-3) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .placeholder-gray-400::placeholder {
+  color: var(--c-text-3) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .border-gray-100,
+[data-theme="dark"] .bg-gray-50 .border-gray-200,
+[data-theme="dark"] .bg-gray-50 .border-gray-300 {
+  border-color: var(--c-border) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--c-divider) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .divide-gray-100 > :not(:last-child) {
+  border-color: var(--c-divider) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .shadow-sm {
+  box-shadow: var(--shadow-sm) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .bg-green-500,
+[data-theme="dark"] .bg-gray-50 .bg-emerald-500 {
+  background-color: var(--c-primary) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .text-green-500,
+[data-theme="dark"] .bg-gray-50 .text-emerald-500 {
+  color: var(--c-primary) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 .border-green-500,
+[data-theme="dark"] .bg-gray-50 .border-emerald-500 {
+  border-color: var(--c-primary) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 input,
+[data-theme="dark"] .bg-gray-50 textarea,
+[data-theme="dark"] .bg-gray-50 select {
+  color: var(--c-text-1);
+}

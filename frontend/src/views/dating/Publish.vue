@@ -325,7 +325,7 @@ async function submit() {
       <!-- Hint -->
       <div class="text-center mx-6 my-4 text-sm text-[var(--c-text-2)]">
         <span>{{ copy.privacyHint }}</span><br />
-        <span class="text-red-600">{{ copy.warningHint }}</span>
+        <span class="community-dating-warning">{{ copy.warningHint }}</span>
       </div>
 
       <!-- Textarea + submit -->
@@ -348,3 +348,13 @@ async function submit() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-dating-warning {
+  color: color-mix(in srgb, var(--c-dating) 68%, #be123c);
+}
+
+[data-theme="dark"] .community-dating-warning {
+  color: color-mix(in srgb, var(--c-dating) 34%, var(--c-text-2));
+}
+</style>

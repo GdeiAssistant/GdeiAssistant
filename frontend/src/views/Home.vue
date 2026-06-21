@@ -732,15 +732,30 @@ function todayItemStyle(item) {
 [data-theme="dark"] .today-panel,
 [data-theme="dark"] .feature-section,
 [data-theme="dark"] .home-empty {
-  border-color: rgba(45, 58, 73, 0.86);
+  border-color: rgba(58, 74, 92, 0.9);
+  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.32);
+}
+
+[data-theme="dark"] .home-hero-card {
+  background-color: rgba(14, 22, 32, 0.92);
+  background-image: url('/img/landing/campus-hero.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+[data-theme="dark"] .today-panel,
+[data-theme="dark"] .feature-section,
+[data-theme="dark"] .home-empty {
   background: rgba(20, 27, 37, 0.78);
-  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.28);
 }
 
 [data-theme="dark"] .home-hero-card__shade {
   background:
-    linear-gradient(90deg, rgba(10, 15, 22, 0.9) 0%, rgba(10, 15, 22, 0.62) 36%, rgba(10, 15, 22, 0.16) 74%),
-    linear-gradient(180deg, rgba(10, 15, 22, 0.02), rgba(15, 23, 42, 0.46));
+    linear-gradient(90deg, rgba(6, 11, 18, 0.92) 0%, rgba(8, 14, 22, 0.78) 34%, rgba(8, 14, 22, 0.34) 64%, rgba(8, 14, 22, 0.12) 100%),
+    linear-gradient(180deg, rgba(12, 19, 28, 0.08), rgba(12, 19, 28, 0.52)),
+    radial-gradient(circle at 78% 22%, rgba(83, 187, 255, 0.16), transparent 38%),
+    radial-gradient(circle at 25% 88%, rgba(16, 185, 129, 0.14), transparent 34%);
 }
 
 [data-theme="dark"] .home-hero-card h1 {
@@ -758,8 +773,23 @@ function todayItemStyle(item) {
   background: rgba(24, 32, 43, 0.76);
 }
 
-[data-theme="dark"] .feature-section--service,
+[data-theme="dark"] .home-hero-card__secondary {
+  border-color: rgba(93, 230, 184, 0.38);
+  background: rgba(8, 24, 27, 0.72);
+  color: #72e6bb;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .feature-section--service {
+  background:
+    linear-gradient(135deg, rgba(20, 27, 37, 0.86), rgba(13, 22, 30, 0.82)),
+    radial-gradient(circle at 100% 0, rgba(45, 212, 191, 0.13), transparent 36%);
+}
+
 [data-theme="dark"] .feature-section--life {
-  background: rgba(20, 27, 37, 0.78);
+  background:
+    linear-gradient(135deg, rgba(20, 27, 37, 0.86), rgba(18, 20, 31, 0.82)),
+    radial-gradient(circle at 0 0, rgba(245, 158, 11, 0.1), transparent 30%),
+    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.12), transparent 36%);
 }
 </style>

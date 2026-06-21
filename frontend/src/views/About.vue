@@ -4,7 +4,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
-const { t, locale } = useI18n()
+const { t, locale } = useI18n({ useScope: 'global' })
 
 const ABOUT_LINK_LABELS = {
   'zh-CN': {
@@ -362,7 +362,7 @@ onMounted(() => {
       <div class="about-cookie-banner__content">
         <p>
           {{ t('about.cookieNotice') }}
-          <i18n-t keypath="about.cookieLearnMore" tag="span">
+          <i18n-t keypath="about.cookieLearnMore" tag="span" scope="global">
             <template #link>
               <a href="/policy/cookie">{{ t('about.cookiePolicy') }}</a>
             </template>

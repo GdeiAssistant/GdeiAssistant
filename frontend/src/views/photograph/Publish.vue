@@ -104,7 +104,7 @@ const submit = async () => {
     <section class="p-6">
       <!-- Title -->
       <div class="mb-4">
-        <label class="block text-base font-medium text-[var(--c-text-1)] mb-2">{{ copy.titleLabel }}<span class="text-red-500 font-bold ml-0.5">*</span></label>
+        <label class="block text-base font-medium text-[var(--c-text-1)] mb-2">{{ copy.titleLabel }}<span class="community-photograph-required font-bold ml-0.5">*</span></label>
         <input
           type="text"
           maxlength="25"
@@ -130,7 +130,7 @@ const submit = async () => {
       </div>
 
       <!-- Main image -->
-      <label class="block text-base font-medium text-[var(--c-text-1)] mb-3">{{ copy.mainImageLabel }}<span class="text-red-500 font-bold ml-0.5">*</span></label>
+      <label class="block text-base font-medium text-[var(--c-text-1)] mb-3">{{ copy.mainImageLabel }}<span class="community-photograph-required font-bold ml-0.5">*</span></label>
       <div class="community-photograph-upload community-photograph-upload--main relative overflow-hidden border-2 border-dashed rounded-xl h-40 flex items-center justify-center mb-4 cursor-pointer transition-colors">
         <input type="file" accept="image/*" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-10" @change="onMainImageChange" />
         <div v-if="!mainImageUrl" class="text-[40px] text-[var(--c-text-3)] z-[1] pointer-events-none">+</div>
@@ -191,6 +191,10 @@ const submit = async () => {
   accent-color: var(--photograph-form-accent);
 }
 
+.community-photograph-required {
+  color: color-mix(in srgb, var(--photograph-form-accent) 82%, #0f766e);
+}
+
 .community-photograph-upload {
   background: var(--photograph-form-accent-soft);
 }
@@ -216,6 +220,10 @@ const submit = async () => {
   --photograph-form-accent: color-mix(in srgb, var(--c-photograph) 44%, #94a3b8);
   --photograph-form-accent-soft: color-mix(in srgb, var(--c-photograph) 7%, rgba(32, 48, 68, 0.82));
   --photograph-form-action-end: color-mix(in srgb, var(--c-photograph) 24%, #172435);
+}
+
+[data-theme="dark"] .community-photograph-required {
+  color: color-mix(in srgb, var(--photograph-form-accent) 72%, var(--c-text-2));
 }
 
 [data-theme="dark"] .community-photograph-submit {

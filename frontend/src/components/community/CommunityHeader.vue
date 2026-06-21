@@ -135,8 +135,13 @@ function handleBack() {
 }
 
 [data-theme="dark"] .community-header {
+  border-color: rgba(68, 89, 112, 0.72);
   border-bottom-color: rgba(68, 89, 112, 0.72);
   background: rgba(24, 38, 53, 0.9);
+}
+
+[data-theme="dark"] .community-header::before {
+  background: linear-gradient(90deg, var(--c-primary), color-mix(in srgb, var(--c-primary) 44%, #60a5fa));
 }
 
 [data-theme="dark"] .community-header__back {

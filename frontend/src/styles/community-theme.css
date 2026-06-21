@@ -485,6 +485,26 @@
   color: var(--c-text-1) !important;
 }
 
+[data-theme="dark"] .community-dating-page [class*="bg-[var(--c-dating)]"] {
+  background: linear-gradient(135deg, var(--c-primary), color-mix(in srgb, var(--c-primary) 72%, #60a5fa)) !important;
+}
+
+[data-theme="dark"] .community-dating-page [class*="text-[var(--c-dating)]"] {
+  color: var(--c-primary) !important;
+}
+
+[data-theme="dark"] .community-dating-page [class*="border-[var(--c-dating)]"] {
+  border-color: var(--c-primary) !important;
+}
+
+[data-theme="dark"] .community-dating-page [class*="border-t-[var(--c-dating)]"] {
+  border-top-color: var(--c-primary) !important;
+}
+
+[data-theme="dark"] .community-dating-page [class*="bg-[color-mix"][class*="var(--c-dating)"] {
+  background: rgba(45, 212, 191, 0.1) !important;
+}
+
 [data-theme="dark"] .community-stream-page--dating .community-desktop-profile-card h2 {
   color: var(--c-text-1) !important;
 }

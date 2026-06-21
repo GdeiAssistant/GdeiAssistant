@@ -68,7 +68,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="community-stream-page community-stream-page--dating min-h-screen bg-[var(--c-bg)] pb-20"
+    class="community-stream-page community-stream-page--dating community-dating-page min-h-screen bg-[var(--c-bg)] pb-20"
     @touchstart="handleTouchStart"
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"

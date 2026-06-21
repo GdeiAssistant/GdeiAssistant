@@ -195,7 +195,7 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)] pb-6">
+  <div class="community-dating-page min-h-screen bg-[var(--c-bg)] pb-6">
     <CommunityHeader :title="copy.title" moduleColor="var(--c-dating)" backTo="/dating/home" />
 
     <!-- Tabs -->

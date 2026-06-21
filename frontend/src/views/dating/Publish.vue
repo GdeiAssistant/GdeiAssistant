@@ -296,7 +296,7 @@ async function submit() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)] pb-10">
+  <div class="community-dating-page min-h-screen bg-[var(--c-bg)] pb-10">
     <CommunityHeader :title="copy.title" moduleColor="var(--c-dating)" backTo="/dating/home" />
 
     <div class="w-[90%] mx-auto mt-4 p-6 bg-[var(--c-surface)] rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">

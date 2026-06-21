@@ -133,7 +133,7 @@ onMounted(() => {
           <!-- Image -->
           <div class="relative">
             <figure class="m-0 p-0">
-              <img :src="item.imgUrl" :alt="item.title" class="w-full h-auto block" />
+              <img :src="item.imgUrl" :alt="item.title" class="community-photograph-card-image w-full h-auto block" />
             </figure>
             <div class="absolute right-2 bottom-2 inline-flex" v-if="(item.photoCount || 1) > 1">
               <span class="bg-[var(--c-photograph)] text-white rounded-lg px-2 py-0.5 text-sm font-medium">{{ copy.formatImageBadge(item.photoCount || 1) }}</span>
@@ -257,6 +257,13 @@ onMounted(() => {
 @media (min-width: 768px) {
   .community-photograph-switch {
     margin: 16px 16px 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .community-photograph-card-image {
+    height: clamp(340px, 52vh, 460px);
+    object-fit: cover;
   }
 }
 </style>

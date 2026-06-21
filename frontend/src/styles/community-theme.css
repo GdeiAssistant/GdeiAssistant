@@ -553,6 +553,36 @@
   color: var(--c-text-2) !important;
 }
 
+.community-stream-page--photograph .community-photograph-action,
+.community-stream-page--photograph .community-photograph-action:hover {
+  background: var(--c-photograph) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--c-photograph) 22%, transparent);
+}
+
+.community-stream-page--photograph .community-photograph-action--liked {
+  background: color-mix(in srgb, var(--c-photograph) 80%, #082f49) !important;
+}
+
+[data-theme="dark"] .community-stream-page--photograph .community-photograph-action,
+[data-theme="dark"] .community-stream-page--photograph .community-photograph-action:hover {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-photograph) 48%, #334155),
+    color-mix(in srgb, var(--c-photograph) 32%, #1e293b)
+  ) !important;
+  color: #fff !important;
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--c-photograph) 14%, transparent);
+}
+
+[data-theme="dark"] .community-stream-page--photograph .community-photograph-action--liked {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-photograph) 36%, #263849),
+    color-mix(in srgb, var(--c-photograph) 22%, #152232)
+  ) !important;
+}
+
 /* ============================================================
    桌面端社区页面内容适配
    ============================================================ */

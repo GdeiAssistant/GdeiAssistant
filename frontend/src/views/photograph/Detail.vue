@@ -110,12 +110,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': 'var(--c-photograph)' }">
+  <div class="community-stream-page community-stream-page--photograph min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': 'var(--c-photograph)' }">
     <CommunityHeader :title="copy.detailTitle" moduleColor="var(--c-photograph)" @back="goBack" :backTo="''" :showBack="true" />
 
     <!-- Loading -->
     <div v-if="loading" class="flex items-center justify-center gap-2 py-16 text-sm text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-cyan-500 rounded-full animate-spin"></i>
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-photograph)] rounded-full animate-spin"></i>
       <span>{{ t('common.loading') }}</span>
     </div>
 
@@ -123,15 +123,15 @@ onMounted(async () => {
       <!-- Stats bar -->
       <div class="mx-4 mt-3 bg-[var(--c-surface)] rounded-xl shadow-sm flex overflow-hidden animate-[slide-up_0.3s_ease_both]">
         <div class="flex-1 text-center">
-          <div class="text-2xl font-bold py-2 bg-cyan-500 text-white">{{ work.photoCount || (images.length || 1) }}</div>
+          <div class="text-2xl font-bold py-2 bg-[var(--c-photograph)] text-white">{{ work.photoCount || (images.length || 1) }}</div>
           <div class="text-base py-1 bg-[color-mix(in_srgb,var(--c-photograph)_70%,#000)] text-white">{{ copy.statsPhotos }}</div>
         </div>
         <div class="flex-1 text-center">
-          <div class="text-2xl font-bold py-2 bg-cyan-500 text-white">{{ work.commentCount || (work.comments ? work.comments.length : 0) }}</div>
+          <div class="text-2xl font-bold py-2 bg-[var(--c-photograph)] text-white">{{ work.commentCount || (work.comments ? work.comments.length : 0) }}</div>
           <div class="text-base py-1 bg-[color-mix(in_srgb,var(--c-photograph)_70%,#000)] text-white">{{ copy.statsComments }}</div>
         </div>
         <div class="flex-1 text-center">
-          <div class="text-2xl font-bold py-2 bg-cyan-500 text-white">{{ work.likeCount ?? work.likes }}</div>
+          <div class="text-2xl font-bold py-2 bg-[var(--c-photograph)] text-white">{{ work.likeCount ?? work.likes }}</div>
           <div class="text-base py-1 bg-[color-mix(in_srgb,var(--c-photograph)_70%,#000)] text-white">{{ copy.statsLikes }}</div>
         </div>
       </div>
@@ -150,7 +150,7 @@ onMounted(async () => {
           v-for="(img, index) in images"
           :key="index"
           class="w-1.5 h-1.5 rounded-full mx-[3px] transition-colors"
-          :class="index === currentIndex ? 'bg-cyan-500' : 'bg-[var(--c-divider)]'"
+          :class="index === currentIndex ? 'bg-[var(--c-photograph)]' : 'bg-[var(--c-divider)]'"
         ></span>
       </div>
 
@@ -170,15 +170,15 @@ onMounted(async () => {
         <div class="py-3">
           <div class="flex gap-2">
             <a
-              class="flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85"
-              :class="work.isLiked ? 'bg-[color-mix(in_srgb,var(--c-photograph)_80%,#000)]' : 'bg-cyan-500'"
+              class="community-photograph-action flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85"
+              :class="{ 'community-photograph-action--liked': work.isLiked }"
               href="javascript:;"
               role="button"
               @click.stop="toggleLike"
             >
               {{ copy.formatLikeMetric(work.likeCount ?? work.likes ?? 0) }}
             </a>
-            <a class="flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white bg-cyan-500 text-base no-underline transition-opacity active:opacity-85" href="javascript:;" role="button">
+            <a class="community-photograph-action flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85" href="javascript:;" role="button">
               {{ copy.formatCommentMetric(work.commentCount || (work.comments ? work.comments.length : 0)) }}
             </a>
           </div>
@@ -205,9 +205,9 @@ onMounted(async () => {
         type="text"
         :placeholder="copy.commentPlaceholder"
         @keyup.enter="submitComment"
-        class="flex-1 border border-[var(--c-divider)] rounded-full px-3 py-2 text-base mr-2 text-[var(--c-text-1)] transition-colors focus:outline-none focus:border-cyan-500"
+        class="flex-1 border border-[var(--c-divider)] rounded-full px-3 py-2 text-base mr-2 text-[var(--c-text-1)] transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
       />
-      <button type="button" @click="submitComment" class="px-4 py-2 border-none rounded-full bg-cyan-500 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85">{{ copy.sendAction }}</button>
+      <button type="button" @click="submitComment" class="community-photograph-action px-4 py-2 border-none rounded-full text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85">{{ copy.sendAction }}</button>
     </div>
 
     <!-- Dialog -->
@@ -217,7 +217,7 @@ onMounted(async () => {
         <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
         <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)] flex">
-          <a href="javascript:" class="flex-1 text-center py-3 text-cyan-500 font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
+          <a href="javascript:" class="flex-1 text-center py-3 text-[var(--c-photograph)] font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
         </div>
       </div>
     </div>

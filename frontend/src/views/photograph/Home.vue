@@ -91,7 +91,7 @@ onMounted(() => {
       <!-- Pull refresh -->
       <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
         <span v-if="refreshing" class="flex items-center gap-2">
-          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-cyan-500 rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-photograph)] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
         </span>
         <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
         <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
@@ -112,7 +112,7 @@ onMounted(() => {
               <img :src="item.imgUrl" :alt="item.title" class="w-full h-auto block" />
             </figure>
             <div class="absolute right-2 bottom-2 inline-flex" v-if="(item.photoCount || 1) > 1">
-              <span class="bg-cyan-500 text-white rounded-lg px-2 py-0.5 text-sm font-medium">{{ copy.formatImageBadge(item.photoCount || 1) }}</span>
+              <span class="bg-[var(--c-photograph)] text-white rounded-lg px-2 py-0.5 text-sm font-medium">{{ copy.formatImageBadge(item.photoCount || 1) }}</span>
             </div>
           </div>
 
@@ -126,15 +126,15 @@ onMounted(() => {
           <div class="px-4 pb-4">
             <div class="flex gap-2">
               <a
-                class="flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85"
-                :class="item.isLiked ? 'bg-[color-mix(in_srgb,var(--c-photograph)_80%,#000)]' : 'bg-cyan-500'"
+                class="community-photograph-action flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85"
+                :class="{ 'community-photograph-action--liked': item.isLiked }"
                 href="javascript:;"
                 role="button"
                 @click.stop="toggleLike(item, $event)"
               >
                 {{ copy.formatLikeMetric(item.likeCount ?? item.likes ?? 0) }}
               </a>
-              <a class="flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white bg-cyan-500 text-base no-underline transition-opacity active:opacity-85" href="javascript:;" role="button">
+              <a class="community-photograph-action flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85" href="javascript:;" role="button">
                 {{ copy.formatCommentMetric(item.commentCount ?? 0) }}
               </a>
             </div>
@@ -150,7 +150,7 @@ onMounted(() => {
 
       <!-- Loading -->
       <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-cyan-500 rounded-full animate-spin"></i>
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-photograph)] rounded-full animate-spin"></i>
         <span>{{ pullMessages.loading }}</span>
       </div>
       <div v-if="finished && list.length > 0" class="text-center py-4 text-sm text-[var(--c-text-3)]">{{ pullMessages.noMore }}</div>
@@ -173,7 +173,7 @@ onMounted(() => {
         <span>{{ copy.campusTab }}</span>
       </div>
       <div
-        class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-cyan-500"
+        class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-[var(--c-photograph)]"
         @click="router.push('/photograph/publish')"
       >
         <span>{{ copy.publishAction }}</span>

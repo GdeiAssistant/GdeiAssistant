@@ -56,24 +56,25 @@ function toggleLike(item) {
 const themeColors = {
   1: 'var(--c-surface)',
   2: '#595959',
-  3: '#f5d676',
-  4: '#f69695',
-  5: '#c6a8c1',
-  6: '#89cdcb',
-  7: '#90cce2',
+  3: '#f7df8e',
+  4: '#f6b7bd',
+  5: '#d8c4df',
+  6: '#b5dfdd',
+  7: '#bddff0',
   8: '#6e7e90',
-  9: '#61ae97',
-  10: '#d3cd72',
-  11: '#e8d5a8',
-  12: '#daa6a1'
+  9: '#b8dfcf',
+  10: '#e6dc97',
+  11: '#eadfc4',
+  12: '#e7c2bd'
 }
+const lightNoteThemes = new Set([1, 3, 4, 5, 6, 7, 9, 10, 11, 12])
 
 function getThemeBg(theme) {
   return themeColors[theme] || 'var(--c-surface)'
 }
 
 function getThemeTextColor(theme) {
-  return theme === 1 ? '#000' : '#fff'
+  return lightNoteThemes.has(Number(theme)) ? '#3f3359' : '#fff'
 }
 
 function getFooterBg(theme) {
@@ -81,7 +82,7 @@ function getFooterBg(theme) {
 }
 
 function getFooterTextColor(theme) {
-  return theme === 1 ? '#000' : '#fff'
+  return lightNoteThemes.has(Number(theme)) ? '#6a5a78' : '#fff'
 }
 
 function getPregoodIcon(theme) {
@@ -102,10 +103,10 @@ onMounted(() => {
     <CommunityHeader :title="t('secret.title')" moduleColor="var(--c-secret)" backTo="/" />
 
     <!-- 顶部操作区 -->
-    <header class="community-desktop-actionbar mx-auto my-4 w-[14.7rem] flex items-center gap-2.5">
+    <header class="community-secret-actionbar community-desktop-actionbar mx-auto my-4 w-[14.7rem] flex items-center gap-2.5">
       <a
         href="javascript:;"
-        class="inline-block leading-[3rem] rounded-full border border-[var(--c-border)] text-[var(--c-secret)] no-underline bg-[var(--c-surface)] text-[1.1rem] font-bold align-top px-6"
+        class="community-secret-actionbar__publish inline-block leading-[3rem] rounded-full border border-[var(--c-border)] text-[var(--c-secret)] no-underline bg-[var(--c-surface)] text-[1.1rem] font-bold align-top px-6"
         @click.prevent="router.push('/secret/publish')"
       >
         <i class="inline-block w-8 h-[3rem] align-top bg-[url('/img/secret/publish.png')] bg-[length:1.5rem] bg-no-repeat bg-center"></i>{{ t('secret.publishAction') }}
@@ -144,7 +145,7 @@ onMounted(() => {
           class="community-desktop-note-card mx-2.5 my-5 text-center text-[17px] leading-[25px] relative h-[240px] px-2.5 rounded-lg border-l-4 border-[var(--c-secret)] animate-[community-slide-up_0.3s_ease_both]"
           :style="{ backgroundColor: getThemeBg(item.theme || 1), color: getThemeTextColor(item.theme || 1), animationDelay: index * 0.05 + 's' }"
         >
-          <a href="javascript:;" class="block h-full no-underline text-inherit" @click.prevent="goDetail(item.id)">
+          <a href="javascript:;" class="community-secret-note-link block h-full no-underline text-inherit" @click.prevent="goDetail(item.id)">
             <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit">
               <template v-if="item.type === 0">
                 {{ item.content }}
@@ -217,3 +218,24 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-secret-note-link,
+.community-secret-note-link:hover {
+  color: inherit;
+}
+
+.community-secret-actionbar__publish,
+.community-secret-actionbar__publish:hover {
+  color: var(--c-secret);
+}
+
+.community-desktop-note-card section {
+  color: inherit;
+}
+
+[data-theme="dark"] .community-secret-actionbar__publish,
+[data-theme="dark"] .community-secret-actionbar__publish:hover {
+  color: color-mix(in srgb, var(--c-secret) 54%, var(--c-text-1));
+}
+</style>

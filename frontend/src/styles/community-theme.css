@@ -542,7 +542,7 @@
 }
 
 [data-theme="dark"] .community-stream-page--secret .community-desktop-note-card section {
-  color: var(--c-primary) !important;
+  color: color-mix(in srgb, var(--c-secret) 28%, var(--c-text-1)) !important;
 }
 
 [data-theme="dark"] .community-stream-page--secret .community-desktop-note-card footer {

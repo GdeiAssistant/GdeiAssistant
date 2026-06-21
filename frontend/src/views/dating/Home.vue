@@ -128,7 +128,7 @@ onUnmounted(() => {
 
     <!-- Empty -->
     <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-      <div class="text-4xl mb-2">💕</div>
+      <div class="text-4xl mb-2">🤝</div>
       <div class="text-sm">{{ copy.empty }}</div>
     </div>
 
@@ -140,7 +140,7 @@ onUnmounted(() => {
 
     <!-- FAB -->
     <div
-      class="community-mobile-only-action fixed right-5 bottom-6 w-12 h-12 rounded-full bg-[var(--c-dating)] shadow-[0_4px_12px_rgba(240,163,199,0.28)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.92]"
+      class="community-mobile-only-action fixed right-5 bottom-6 w-12 h-12 rounded-full bg-[var(--c-dating)] shadow-[0_4px_12px_rgba(13,148,136,0.26)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.92]"
       @click="router.push('/dating/publish')"
     >
       <span class="text-[28px] leading-none text-white font-light">+</span>
@@ -150,12 +150,12 @@ onUnmounted(() => {
 
 <style scoped>
 .community-dating-page {
-  --dating-accent: #df4d94;
-  --dating-accent-strong: #cf3f84;
-  --dating-accent-muted: #725f70;
+  --dating-accent: #0d9488;
+  --dating-accent-strong: #087d72;
+  --dating-accent-muted: #4f6f70;
   --dating-accent-active-text: #fff;
-  --dating-switch-bg: color-mix(in srgb, var(--c-dating) 3%, var(--c-surface));
-  --dating-switch-border: color-mix(in srgb, var(--c-dating) 16%, var(--c-border));
+  --dating-switch-bg: color-mix(in srgb, var(--c-dating) 5%, var(--c-surface));
+  --dating-switch-border: color-mix(in srgb, var(--c-dating) 18%, var(--c-border));
 }
 
 .community-dating-switch {

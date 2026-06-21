@@ -485,6 +485,10 @@
   color: var(--c-text-1) !important;
 }
 
+[data-theme="dark"] .community-stream-page--dating .community-desktop-profile-card h2 {
+  color: var(--c-text-1) !important;
+}
+
 [data-theme="dark"] .community-stream-page--secret .community-desktop-note-card {
   background:
     linear-gradient(135deg, rgba(28, 44, 60, 0.94), rgba(18, 31, 44, 0.94)) !important;

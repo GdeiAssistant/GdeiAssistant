@@ -160,16 +160,17 @@ function goTo(path) {
 
 [data-theme="dark"] .community-tabbar__item:hover {
   background: rgba(32, 48, 68, 0.56);
+  color: var(--c-primary);
 }
 
 [data-theme="dark"] .community-tabbar__item--active {
   background: rgba(32, 48, 68, 0.76);
   color: var(--c-text-1);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--module-color) 22%, rgba(74, 96, 120, 0.74));
+  box-shadow: inset 0 0 0 1px rgba(76, 101, 126, 0.82);
 }
 
 [data-theme="dark"] .community-tabbar__item--active .community-tabbar__icon {
-  color: var(--module-color);
+  color: var(--c-primary);
 }
 
 @media (min-width: 768px) {

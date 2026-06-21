@@ -150,9 +150,9 @@ onUnmounted(() => {
 
 <style scoped>
 .community-dating-page {
-  --dating-accent: var(--c-dating);
-  --dating-accent-strong: color-mix(in srgb, var(--c-dating) 82%, #be123c);
-  --dating-accent-muted: color-mix(in srgb, var(--c-dating) 30%, var(--c-text-2));
+  --dating-accent: color-mix(in srgb, var(--c-dating) 86%, #b45375);
+  --dating-accent-strong: color-mix(in srgb, var(--c-dating) 62%, #9f315f);
+  --dating-accent-muted: color-mix(in srgb, var(--c-text-2) 92%, var(--c-dating));
   --dating-switch-bg: color-mix(in srgb, var(--c-dating) 4%, var(--c-surface));
   --dating-switch-border: color-mix(in srgb, var(--c-dating) 14%, var(--c-border));
 }
@@ -192,14 +192,14 @@ onUnmounted(() => {
 }
 
 .community-dating-switch__item--active {
-  background: linear-gradient(135deg, var(--dating-accent), color-mix(in srgb, var(--dating-accent) 78%, #fb7185));
+  background: linear-gradient(135deg, var(--dating-accent-strong), var(--dating-accent));
   color: #fff !important;
   box-shadow: 0 10px 24px color-mix(in srgb, var(--dating-accent) 22%, transparent);
 }
 
 .community-dating-switch__item--active:hover {
   color: #fff !important;
-  background: linear-gradient(135deg, var(--dating-accent), color-mix(in srgb, var(--dating-accent) 78%, #fb7185));
+  background: linear-gradient(135deg, var(--dating-accent-strong), var(--dating-accent));
 }
 
 .community-dating-card-title {

@@ -69,7 +69,7 @@ function copyText(text) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="community-lostandfound-page min-h-screen bg-[var(--c-bg)]">
     <!-- 统一顶部导航栏 -->
     <CommunityHeader :title="t('lostandfound.detail.title')" moduleColor="var(--c-lostandfound)" @back="router.back()" backTo="" />
 

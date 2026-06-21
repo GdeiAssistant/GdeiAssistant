@@ -487,10 +487,12 @@
   color: #fff !important;
 }
 
+.community-stream-page--dating .community-dating-switch__item,
 [data-theme="light"] .community-stream-page--dating .community-dating-switch__item {
-  color: color-mix(in srgb, var(--c-dating) 30%, var(--c-text-2)) !important;
+  color: color-mix(in srgb, var(--c-text-2) 92%, var(--c-dating)) !important;
 }
 
+.community-stream-page--dating .community-dating-switch__item--active,
 [data-theme="light"] .community-stream-page--dating .community-dating-switch__item--active,
 [data-theme="light"] .community-stream-page--dating .community-dating-switch__item--active:hover {
   color: #fff !important;
@@ -639,8 +641,41 @@
   background: var(--c-lostandfound) !important;
 }
 
+.community-lostandfound-page .border-blue-500,
+.community-lostandfound-page .border-blue-600 {
+  border-color: color-mix(in srgb, var(--c-lostandfound) 70%, var(--c-border)) !important;
+}
+
+.community-lostandfound-page .bg-blue-50 {
+  background: color-mix(in srgb, var(--c-lostandfound) 8%, var(--c-surface)) !important;
+}
+
+.community-lostandfound-page .border-blue-200 {
+  border-color: color-mix(in srgb, var(--c-lostandfound) 18%, var(--c-border)) !important;
+}
+
+.community-lostandfound-page .text-blue-900 {
+  color: color-mix(in srgb, var(--c-lostandfound) 36%, var(--c-text-1)) !important;
+}
+
 .community-lostandfound-page [class*="border-t-blue-500"] {
   border-top-color: var(--c-lostandfound) !important;
+}
+
+.community-lostandfound-page [class*="from-blue-500"][class*="to-blue-400"] {
+  background: linear-gradient(
+    135deg,
+    var(--c-lostandfound),
+    color-mix(in srgb, var(--c-lostandfound) 72%, #60a5fa)
+  ) !important;
+}
+
+.community-lostandfound-page [class*="text-[#f6383a]"] {
+  color: color-mix(in srgb, #f43f5e 56%, var(--c-text-2)) !important;
+}
+
+.community-lostandfound-page input[type="radio"] {
+  accent-color: var(--c-lostandfound);
 }
 
 [data-theme="dark"] .community-lostandfound-page .text-blue-500 {
@@ -651,8 +686,33 @@
   background: color-mix(in srgb, var(--c-lostandfound) 36%, #334155) !important;
 }
 
+[data-theme="dark"] .community-lostandfound-page .border-blue-500,
+[data-theme="dark"] .community-lostandfound-page .border-blue-600 {
+  border-color: color-mix(in srgb, var(--c-lostandfound) 18%, rgba(111, 132, 156, 0.72)) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page .bg-blue-50 {
+  background: color-mix(in srgb, var(--c-lostandfound) 8%, rgba(32, 48, 68, 0.82)) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page .border-blue-200 {
+  border-color: color-mix(in srgb, var(--c-lostandfound) 14%, rgba(74, 96, 120, 0.68)) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page .text-blue-900 {
+  color: color-mix(in srgb, var(--c-lostandfound) 28%, var(--c-text-1)) !important;
+}
+
 [data-theme="dark"] .community-lostandfound-page [class*="border-t-blue-500"] {
   border-top-color: color-mix(in srgb, var(--c-lostandfound) 40%, #94a3b8) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page [class*="from-blue-500"][class*="to-blue-400"] {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-lostandfound) 28%, #24384d),
+    color-mix(in srgb, var(--c-lostandfound) 18%, #172435)
+  ) !important;
 }
 
 [data-theme="dark"] .community-lostandfound-page .bg-amber-500 {
@@ -661,6 +721,10 @@
 
 [data-theme="dark"] .community-lostandfound-page .bg-green-500 {
   background: color-mix(in srgb, #34d399 30%, #334155) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page [class*="text-[#f6383a]"] {
+  color: color-mix(in srgb, #fb7185 28%, var(--c-text-2)) !important;
 }
 
 /* ============================================================

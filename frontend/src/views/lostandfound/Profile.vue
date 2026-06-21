@@ -125,7 +125,7 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="community-lostandfound-page min-h-screen bg-[var(--c-bg)]">
     <CommunityHeader :title="t('lostandfound.profile.title')" moduleColor="var(--c-lostandfound)" backTo="/lostandfound/home" />
 
     <!-- Profile Header -->

@@ -222,7 +222,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="community-lostandfound-page min-h-screen bg-[var(--c-bg)]">
     <CommunityHeader
       :title="isEditMode ? t('lostandfound.publish.editTitle') : t('lostandfound.publish.title')"
       moduleColor="var(--c-lostandfound)"

@@ -592,6 +592,45 @@
   ) !important;
 }
 
+.community-delivery-page .text-red-500 {
+  color: color-mix(in srgb, var(--c-delivery) 82%, #ea580c) !important;
+}
+
+.community-delivery-page .bg-blue-500 {
+  background: color-mix(in srgb, var(--c-delivery) 68%, #b45309) !important;
+}
+
+.community-delivery-page .bg-amber-500 {
+  background: color-mix(in srgb, var(--c-delivery) 88%, #f97316) !important;
+}
+
+[data-theme="dark"] .community-delivery-page .text-red-500 {
+  color: color-mix(in srgb, var(--c-delivery) 46%, #fff7ed) !important;
+}
+
+[data-theme="dark"] .community-delivery-page .bg-blue-500 {
+  background: color-mix(in srgb, var(--c-delivery) 34%, #334155) !important;
+}
+
+[data-theme="dark"] .community-delivery-page .bg-amber-500 {
+  background: color-mix(in srgb, var(--c-delivery) 42%, #3a2d1d) !important;
+}
+
+[data-theme="dark"] .community-delivery-page .bg-amber-100 {
+  background: color-mix(in srgb, var(--c-delivery) 16%, rgba(32, 48, 68, 0.88)) !important;
+  color: color-mix(in srgb, var(--c-delivery) 52%, #fff7ed) !important;
+}
+
+[data-theme="dark"] .community-delivery-page .bg-blue-100 {
+  background: color-mix(in srgb, #60a5fa 14%, rgba(32, 48, 68, 0.88)) !important;
+  color: color-mix(in srgb, #93c5fd 48%, #e2e8f0) !important;
+}
+
+[data-theme="dark"] .community-delivery-page .bg-green-100 {
+  background: color-mix(in srgb, #34d399 12%, rgba(32, 48, 68, 0.88)) !important;
+  color: color-mix(in srgb, #6ee7b7 42%, #e2e8f0) !important;
+}
+
 /* ============================================================
    桌面端社区页面内容适配
    ============================================================ */

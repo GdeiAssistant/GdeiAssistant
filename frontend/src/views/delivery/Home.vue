@@ -73,7 +73,8 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="min-h-screen bg-[var(--c-bg)]"
+    class="community-delivery-page min-h-screen bg-[var(--c-bg)]"
+    style="--module-color: var(--c-delivery)"
     @touchstart="handleTouchStart"
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"

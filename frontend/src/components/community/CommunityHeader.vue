@@ -54,7 +54,7 @@ function handleBack() {
   z-index: 100;
   display: grid;
   min-height: 54px;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
   align-items: center;
   padding: 6px 10px;
   border-bottom: 1px solid rgba(218, 229, 233, 0.78);
@@ -101,6 +101,7 @@ function handleBack() {
   display: flex;
   min-width: 36px;
   justify-content: flex-end;
+  white-space: nowrap;
 }
 
 .community-header--no-back {

@@ -479,6 +479,14 @@
   border-color: rgba(68, 89, 112, 0.74);
 }
 
+[data-theme="light"] .community-stream-page--dating .community-desktop-switch > a {
+  color: color-mix(in srgb, var(--c-dating) 72%, var(--c-text-2)) !important;
+}
+
+[data-theme="light"] .community-stream-page--dating .community-desktop-switch > [class*="bg-[var(--c-dating)]"] {
+  color: #fff !important;
+}
+
 [data-theme="dark"] .community-stream-page--dating .community-desktop-switch > [class*="bg-[var(--c-"] {
   background: rgba(32, 48, 68, 0.94) !important;
   box-shadow: inset 0 0 0 1px rgba(76, 101, 126, 0.82);

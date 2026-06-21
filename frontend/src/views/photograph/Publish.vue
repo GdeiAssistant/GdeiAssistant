@@ -97,7 +97,7 @@ const submit = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': 'var(--c-photograph)' }">
+  <div class="community-photograph-page min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': 'var(--c-photograph)' }">
     <CommunityHeader :title="t('feature.photograph.name')" moduleColor="var(--c-photograph)" @back="goBack" :backTo="''" :showBack="true" />
 
     <!-- Upload form -->
@@ -108,7 +108,7 @@ const submit = async () => {
         <input
           type="text"
           maxlength="25"
-          class="w-full box-border px-3 py-2 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] bg-[var(--c-card)] transition-colors focus:outline-none focus:border-cyan-500"
+          class="w-full box-border px-3 py-2 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] bg-[var(--c-card)] transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
           :placeholder="copy.titlePlaceholder"
           v-model="form.title"
         />
@@ -119,11 +119,11 @@ const submit = async () => {
         <label class="block text-base font-medium text-[var(--c-text-1)] mb-2">{{ copy.typeLabel }}</label>
         <div class="flex gap-4">
           <label class="flex items-center gap-1 text-base text-[var(--c-text-2)] cursor-pointer">
-            <input type="radio" name="type" value="1" v-model="form.type" class="accent-cyan-500" />
+            <input type="radio" name="type" value="1" v-model="form.type" />
             <span>{{ copy.typeLife }}</span>
           </label>
           <label class="flex items-center gap-1 text-base text-[var(--c-text-2)] cursor-pointer">
-            <input type="radio" name="type" value="2" v-model="form.type" class="accent-cyan-500" />
+            <input type="radio" name="type" value="2" v-model="form.type" />
             <span>{{ copy.typeCampus }}</span>
           </label>
         </div>
@@ -131,7 +131,7 @@ const submit = async () => {
 
       <!-- Main image -->
       <label class="block text-base font-medium text-[var(--c-text-1)] mb-3">{{ copy.mainImageLabel }}<span class="text-red-500 font-bold ml-0.5">*</span></label>
-      <div class="relative overflow-hidden border-2 border-dashed border-cyan-500 rounded-xl h-40 flex items-center justify-center mb-4 cursor-pointer transition-colors">
+      <div class="community-photograph-upload community-photograph-upload--main relative overflow-hidden border-2 border-dashed rounded-xl h-40 flex items-center justify-center mb-4 cursor-pointer transition-colors">
         <input type="file" accept="image/*" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-10" @change="onMainImageChange" />
         <div v-if="!mainImageUrl" class="text-[40px] text-[var(--c-text-3)] z-[1] pointer-events-none">+</div>
         <img v-else :src="mainImageUrl" class="absolute inset-0 w-full h-full object-cover z-[5]" :alt="copy.mainPreviewAlt" />
@@ -140,7 +140,7 @@ const submit = async () => {
       <!-- Sub images -->
       <label class="block text-base font-medium text-[var(--c-text-1)] mb-3">{{ copy.subImagesLabel }}</label>
       <div class="flex gap-3 mb-4">
-        <div v-for="(_, idx) in 3" :key="idx" class="flex-1 aspect-square relative overflow-hidden border-2 border-dashed border-[var(--c-divider)] rounded-xl flex items-center justify-center cursor-pointer transition-colors hover:border-cyan-500">
+        <div v-for="(_, idx) in 3" :key="idx" class="community-photograph-upload community-photograph-upload--sub flex-1 aspect-square relative overflow-hidden border-2 border-dashed border-[var(--c-divider)] rounded-xl flex items-center justify-center cursor-pointer transition-colors">
           <input type="file" accept="image/*" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-10" @change="onSubImageChange($event, idx)" />
           <div v-if="!subImages[idx]" class="text-2xl text-[var(--c-text-3)] z-[1] pointer-events-none">+</div>
           <img v-else :src="subImages[idx]" class="absolute inset-0 w-full h-full object-cover z-[5]" :alt="copy.subPreviewAlt" />
@@ -154,7 +154,7 @@ const submit = async () => {
       <div class="mt-4 mb-4">
         <label class="block text-base font-medium text-[var(--c-text-1)] mb-2">{{ copy.contentLabel }}</label>
         <textarea
-          class="w-full box-border px-3 py-2 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] bg-[var(--c-card)] resize-y transition-colors focus:outline-none focus:border-cyan-500"
+          class="w-full box-border px-3 py-2 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] bg-[var(--c-card)] resize-y transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
           rows="4"
           :placeholder="copy.contentPlaceholder"
           v-model="form.content"
@@ -163,7 +163,7 @@ const submit = async () => {
       </div>
 
       <!-- Submit -->
-      <button type="button" class="block mx-auto mt-6 w-full bg-cyan-500 text-white border-none rounded-lg p-3 text-lg font-medium cursor-pointer transition-opacity active:opacity-85" @click="submit">{{ copy.submitAction }}</button>
+      <button type="button" class="community-photograph-submit block mx-auto mt-6 w-full text-white border-none rounded-lg p-3 text-lg font-medium cursor-pointer transition-opacity active:opacity-85" @click="submit">{{ copy.submitAction }}</button>
     </section>
 
     <!-- Dialog -->
@@ -173,9 +173,53 @@ const submit = async () => {
         <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
         <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)] flex">
-          <a href="javascript:" class="flex-1 text-center py-3 text-cyan-500 font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
+          <a href="javascript:" class="community-photograph-confirm flex-1 text-center py-3 font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-photograph-page {
+  --photograph-form-accent: var(--c-photograph);
+  --photograph-form-accent-soft: color-mix(in srgb, var(--c-photograph) 8%, var(--c-card));
+  --photograph-form-action-end: color-mix(in srgb, var(--c-photograph) 72%, #0ea5e9);
+}
+
+.community-photograph-page input[type="radio"] {
+  accent-color: var(--photograph-form-accent);
+}
+
+.community-photograph-upload {
+  background: var(--photograph-form-accent-soft);
+}
+
+.community-photograph-upload--main {
+  border-color: var(--photograph-form-accent) !important;
+}
+
+.community-photograph-upload--sub:hover {
+  border-color: var(--photograph-form-accent) !important;
+}
+
+.community-photograph-submit {
+  background: linear-gradient(135deg, var(--photograph-form-accent), var(--photograph-form-action-end));
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--photograph-form-accent) 18%, transparent);
+}
+
+.community-photograph-confirm {
+  color: var(--photograph-form-accent);
+}
+
+[data-theme="dark"] .community-photograph-page {
+  --photograph-form-accent: color-mix(in srgb, var(--c-photograph) 44%, #94a3b8);
+  --photograph-form-accent-soft: color-mix(in srgb, var(--c-photograph) 7%, rgba(32, 48, 68, 0.82));
+  --photograph-form-action-end: color-mix(in srgb, var(--c-photograph) 24%, #172435);
+}
+
+[data-theme="dark"] .community-photograph-submit {
+  color: color-mix(in srgb, var(--c-photograph) 36%, #fff);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-photograph) 18%, rgba(111, 132, 156, 0.72));
+}
+</style>

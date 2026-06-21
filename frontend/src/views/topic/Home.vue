@@ -19,16 +19,16 @@ const fetchTopicData = async (page) => {
   const start = (page - 1) * PAGE_SIZE
   const res = await request.get(`/topic/start/${start}/size/${PAGE_SIZE}`)
   const rawList = res?.data || []
-  const list = Array.isArray(rawList) ? rawList.map((t) => ({
-    id: t.id,
-    topicTag: t.topic,
-    content: t.content,
-    userName: t.username || t('topic.anonymousUser'),
+  const list = Array.isArray(rawList) ? rawList.map((topicItem) => ({
+    id: topicItem.id,
+    topicTag: topicItem.topic,
+    content: topicItem.content,
+    userName: topicItem.username || t('topic.anonymousUser'),
     userAvatar: '/img/avatar/default.png',
-    time: t.publishTime,
-    images: t.firstImageUrl ? [t.firstImageUrl] : [],
-    likeCount: t.likeCount ?? 0,
-    isLiked: t.liked === true
+    time: topicItem.publishTime,
+    images: topicItem.firstImageUrl ? [topicItem.firstImageUrl] : [],
+    likeCount: topicItem.likeCount ?? 0,
+    isLiked: topicItem.liked === true
   })) : []
   return { list, hasMore: list.length >= PAGE_SIZE }
 }
@@ -145,8 +145,11 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-      <p class="text-sm">{{ t('topic.empty') }}</p>
+    <div v-if="!loading && !refreshing && list.length === 0" class="community-topic-empty">
+      <div class="community-topic-empty__mark" aria-hidden="true">#</div>
+      <h2>{{ t('topic.empty') }}</h2>
+      <p>{{ t('feature.topic.description') }}</p>
+      <button type="button" @click="router.push('/topic/publish')">{{ t('topic.publish.title') }}</button>
     </div>
     <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-topic)] rounded-full animate-spin"></i> {{ pullMessages.loading }}</div>
     <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">{{ pullMessages.noMore }}</div>
@@ -157,3 +160,94 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-topic-empty {
+  display: grid;
+  min-height: 270px;
+  margin: 16px;
+  place-items: center;
+  align-content: center;
+  gap: 12px;
+  border: 1px solid color-mix(in srgb, var(--c-topic) 16%, var(--c-border));
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-topic) 12%, transparent), transparent 42%),
+    color-mix(in srgb, var(--c-topic) 3%, var(--c-surface));
+  color: var(--c-text-2);
+  text-align: center;
+}
+
+.community-topic-empty__mark {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--c-topic) 12%, transparent);
+  color: var(--c-topic);
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.community-topic-empty h2,
+.community-topic-empty p {
+  margin: 0;
+}
+
+.community-topic-empty h2 {
+  color: var(--c-text-1);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.community-topic-empty p {
+  max-width: 320px;
+  color: var(--c-text-2);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.7;
+}
+
+.community-topic-empty button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--c-topic), color-mix(in srgb, var(--c-topic) 74%, #38bdf8));
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 850;
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--c-topic) 22%, transparent);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.community-topic-empty button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px color-mix(in srgb, var(--c-topic) 26%, transparent);
+}
+
+[data-theme="dark"] .community-topic-empty {
+  border-color: rgba(68, 89, 112, 0.72);
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-topic) 10%, transparent), transparent 42%),
+    rgba(24, 38, 53, 0.84);
+}
+
+[data-theme="dark"] .community-topic-empty__mark {
+  background: rgba(32, 48, 68, 0.78);
+  color: color-mix(in srgb, var(--c-topic) 42%, #94a3b8);
+}
+
+@media (max-width: 767px) {
+  .community-topic-empty {
+    min-height: 230px;
+    margin: 14px;
+    border-radius: 20px;
+  }
+}
+</style>

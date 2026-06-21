@@ -96,14 +96,14 @@ onMounted(() => {
       </div>
 
       <!-- 失物招领列表（双列网格） -->
-      <div class="mx-auto w-full flex flex-wrap px-[2%] mt-2.5">
+      <div class="lostandfound-card-list mx-auto w-full flex flex-wrap px-[2%] mt-2.5">
         <div
           v-for="item in list"
           :key="item.id"
-          class="inline-block w-[46.5%] relative mx-[1%] my-1 bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
+          class="lostandfound-card inline-block w-[46.5%] relative mx-[1%] my-1 bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
           @click="goDetail(item.id)"
         >
-          <div class="w-full h-[170px] relative overflow-hidden bg-[var(--c-border)]">
+          <div class="lostandfound-card__media w-full h-[170px] relative overflow-hidden bg-[var(--c-border)]">
             <img v-if="item.images && item.images.length > 0" :src="item.images[0]" :alt="item.title" class="w-full h-full object-cover" />
             <div v-else class="w-full h-full bg-[var(--c-border)]"></div>
             <div
@@ -113,7 +113,7 @@ onMounted(() => {
               {{ item.type === 0 ? t('lostandfound.badge.lost') : t('lostandfound.badge.found') }}
             </div>
           </div>
-          <div class="p-2">
+          <div class="lostandfound-card__body p-2">
             <h5 class="text-sm font-medium text-[var(--c-text-1)] m-0 mb-1 p-0 line-clamp-2 leading-snug">{{ item.title }}</h5>
             <p class="text-xs text-[var(--c-text-3)] m-0 p-0 line-clamp-2 leading-snug">{{ item.desc }}</p>
           </div>
@@ -137,3 +137,60 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+@media (max-width: 767px) {
+  .lostandfound-card-list {
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    gap: 14px;
+    margin-top: 0 !important;
+    padding: 16px 15px 0 !important;
+  }
+
+  .lostandfound-card {
+    display: grid !important;
+    grid-template-columns: 118px minmax(0, 1fr);
+    width: 100% !important;
+    min-height: 132px;
+    margin: 0 !important;
+    border: 1px solid color-mix(in srgb, var(--c-lostandfound) 16%, var(--c-border));
+    border-radius: 20px;
+    box-shadow: 0 14px 34px color-mix(in srgb, var(--c-lostandfound) 9%, rgba(32, 69, 78, 0.12));
+  }
+
+  .lostandfound-card__media {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 132px;
+    border-radius: 20px 0 0 20px;
+  }
+
+  .lostandfound-card__body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    padding: 14px 16px !important;
+  }
+
+  .lostandfound-card__body h5 {
+    margin-bottom: 8px !important;
+    font-size: 17px !important;
+    font-weight: 850;
+    line-height: 1.25;
+  }
+
+  .lostandfound-card__body p {
+    color: var(--c-text-2);
+    font-size: 13px !important;
+    line-height: 1.55;
+    -webkit-line-clamp: 3;
+  }
+
+  [data-theme="dark"] .lostandfound-card {
+    border-color: color-mix(in srgb, var(--c-lostandfound) 14%, rgba(74, 96, 120, 0.68));
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+  }
+}
+</style>

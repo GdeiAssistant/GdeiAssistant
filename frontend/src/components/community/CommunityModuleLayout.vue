@@ -387,11 +387,6 @@ onMounted(async () => {
   border-radius: 18px !important;
 }
 
-.community-module-layout__main :deep(.flex.flex-wrap > .inline-block) {
-  width: calc(33.333% - 14px) !important;
-  margin: 7px !important;
-}
-
 @media (max-width: 1100px) {
   .community-module-layout__body {
     grid-template-columns: 1fr;
@@ -436,6 +431,13 @@ onMounted(async () => {
 
   .community-module-layout__main :deep(.overflow-y-auto) {
     overflow-y: auto !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .community-module-layout__main :deep(.flex.flex-wrap > .inline-block) {
+    width: calc(33.333% - 14px) !important;
+    margin: 7px !important;
   }
 }
 

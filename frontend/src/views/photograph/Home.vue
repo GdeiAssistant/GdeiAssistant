@@ -97,6 +97,30 @@ onMounted(() => {
         <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
       </div>
 
+      <!-- Photo type switch -->
+      <div class="community-photograph-switch" role="tablist" :aria-label="t('feature.photograph.name')">
+        <button
+          type="button"
+          role="tab"
+          class="community-photograph-switch__item"
+          :class="{ 'community-photograph-switch__item--active': activeType === 1 }"
+          :aria-selected="activeType === 1"
+          @click="setType(1)"
+        >
+          {{ copy.lifeTab }}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="community-photograph-switch__item"
+          :class="{ 'community-photograph-switch__item--active': activeType === 2 }"
+          :aria-selected="activeType === 2"
+          @click="setType(2)"
+        >
+          {{ copy.campusTab }}
+        </button>
+      </div>
+
       <!-- Card list -->
       <div class="community-desktop-card-grid p-4">
         <div
@@ -155,29 +179,84 @@ onMounted(() => {
       </div>
       <div v-if="finished && list.length > 0" class="text-center py-4 text-sm text-[var(--c-text-3)]">{{ pullMessages.noMore }}</div>
     </div>
-
-    <!-- Bottom toolbar -->
-    <footer class="community-mobile-only-action fixed bottom-0 left-0 right-0 flex shadow-lg border-t border-[var(--c-border)] z-50">
-      <div
-        class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-red-500"
-        :class="{ 'shadow-[inset_0_-3px_0_rgba(0,0,0,0.2)]': activeType === 1 }"
-        @click="setType(1)"
-      >
-        <span>{{ copy.lifeTab }}</span>
-      </div>
-      <div
-        class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-blue-500"
-        :class="{ 'shadow-[inset_0_-3px_0_rgba(0,0,0,0.2)]': activeType === 2 }"
-        @click="setType(2)"
-      >
-        <span>{{ copy.campusTab }}</span>
-      </div>
-      <div
-        class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-[var(--c-photograph)]"
-        @click="router.push('/photograph/publish')"
-      >
-        <span>{{ copy.publishAction }}</span>
-      </div>
-    </footer>
   </div>
 </template>
+
+<style scoped>
+.community-photograph-switch {
+  display: flex;
+  gap: 6px;
+  margin: 14px 16px 0;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--c-photograph) 18%, var(--c-border));
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--c-photograph) 5%, var(--c-surface));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-photograph) 8%, transparent);
+}
+
+.community-photograph-switch__item {
+  display: inline-flex;
+  flex: 1;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: color-mix(in srgb, var(--c-photograph) 34%, var(--c-text-2));
+  cursor: pointer;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1;
+  transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.community-photograph-switch__item:hover {
+  color: color-mix(in srgb, var(--c-photograph) 78%, #0f172a);
+  background: color-mix(in srgb, var(--c-photograph) 8%, transparent);
+}
+
+.community-photograph-switch__item:active {
+  transform: scale(0.99);
+}
+
+.community-photograph-switch__item--active,
+.community-photograph-switch__item--active:hover {
+  background: linear-gradient(135deg, var(--c-photograph), color-mix(in srgb, var(--c-photograph) 72%, #0ea5e9));
+  color: #fff;
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--c-photograph) 22%, transparent);
+}
+
+[data-theme="dark"] .community-photograph-switch {
+  border-color: rgba(68, 89, 112, 0.72);
+  background: rgba(24, 38, 53, 0.76);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="dark"] .community-photograph-switch__item {
+  color: color-mix(in srgb, var(--c-photograph) 26%, var(--c-text-2));
+}
+
+[data-theme="dark"] .community-photograph-switch__item:hover {
+  background: rgba(32, 48, 68, 0.62);
+  color: color-mix(in srgb, var(--c-photograph) 34%, var(--c-text-1));
+}
+
+[data-theme="dark"] .community-photograph-switch__item--active,
+[data-theme="dark"] .community-photograph-switch__item--active:hover {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-photograph) 36%, #24384d),
+    color-mix(in srgb, var(--c-photograph) 22%, #172435)
+  );
+  color: color-mix(in srgb, var(--c-photograph) 42%, #fff);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-photograph) 18%, rgba(111, 132, 156, 0.72));
+}
+
+@media (min-width: 768px) {
+  .community-photograph-switch {
+    margin: 16px 16px 0;
+  }
+}
+</style>

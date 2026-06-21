@@ -949,4 +949,14 @@ onMounted(() => {
   border-color: rgba(45, 58, 73, 0.86);
   background: rgba(20, 27, 37, 0.86);
 }
+
+[data-theme="dark"] .about-menu-button {
+  border-color: rgba(78, 98, 120, 0.86);
+  background: rgba(27, 43, 60, 0.9);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+[data-theme="dark"] .about-menu-button span {
+  background: var(--c-text-1);
+}
 </style>

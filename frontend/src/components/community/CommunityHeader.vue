@@ -24,7 +24,11 @@ function handleBack() {
 </script>
 
 <template>
-  <header class="community-header" :style="{ '--module-color': moduleColor }">
+  <header
+    class="community-header"
+    :class="{ 'community-header--no-back': !showBack }"
+    :style="{ '--module-color': moduleColor }"
+  >
     <button
       v-if="showBack"
       type="button"
@@ -99,6 +103,20 @@ function handleBack() {
   justify-content: flex-end;
 }
 
+.community-header--no-back {
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  padding-left: 20px;
+}
+
+.community-header--no-back h1 {
+  text-align: left;
+}
+
+.community-header--no-back .community-header__right {
+  min-width: 0;
+}
+
 @media (min-width: 768px) {
   .community-header {
     position: static;
@@ -125,6 +143,10 @@ function handleBack() {
   .community-header h1 {
     font-size: 20px;
     text-align: left;
+  }
+
+  .community-header--no-back {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .community-header__back {

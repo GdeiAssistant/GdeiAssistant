@@ -631,6 +631,38 @@
   color: color-mix(in srgb, #6ee7b7 42%, #e2e8f0) !important;
 }
 
+.community-lostandfound-page .text-blue-500 {
+  color: var(--c-lostandfound) !important;
+}
+
+.community-lostandfound-page .bg-blue-500 {
+  background: var(--c-lostandfound) !important;
+}
+
+.community-lostandfound-page [class*="border-t-blue-500"] {
+  border-top-color: var(--c-lostandfound) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page .text-blue-500 {
+  color: color-mix(in srgb, var(--c-lostandfound) 44%, #dbeafe) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page .bg-blue-500 {
+  background: color-mix(in srgb, var(--c-lostandfound) 36%, #334155) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page [class*="border-t-blue-500"] {
+  border-top-color: color-mix(in srgb, var(--c-lostandfound) 40%, #94a3b8) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page .bg-amber-500 {
+  background: color-mix(in srgb, #f59e0b 36%, #334155) !important;
+}
+
+[data-theme="dark"] .community-lostandfound-page .bg-green-500 {
+  background: color-mix(in srgb, #34d399 30%, #334155) !important;
+}
+
 /* ============================================================
    桌面端社区页面内容适配
    ============================================================ */

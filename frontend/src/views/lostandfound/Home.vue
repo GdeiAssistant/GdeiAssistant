@@ -52,7 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-[var(--c-bg)] min-h-screen">
+  <div class="community-lostandfound-page bg-[var(--c-bg)] min-h-screen">
     <!-- 统一顶部导航栏 -->
     <CommunityHeader :title="t('lostandfound.title')" moduleColor="var(--c-lostandfound)" />
 

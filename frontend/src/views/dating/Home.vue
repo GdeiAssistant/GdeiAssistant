@@ -68,7 +68,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="min-h-screen bg-[var(--c-bg)] pb-20"
+    class="community-stream-page community-stream-page--dating min-h-screen bg-[var(--c-bg)] pb-20"
     @touchstart="handleTouchStart"
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
@@ -87,7 +87,7 @@ onUnmounted(() => {
     </div>
 
     <!-- Gender Tab -->
-    <div class="flex bg-[var(--c-card)] mt-2 h-11">
+    <div class="community-desktop-switch flex bg-[var(--c-card)] mt-2 h-11">
       <a
         href="javascript:;"
         class="flex-1 text-center leading-[44px] text-xl transition-colors duration-300"
@@ -103,15 +103,15 @@ onUnmounted(() => {
     </div>
 
     <!-- Card list -->
-    <div class="p-4">
+    <div class="community-desktop-card-grid p-4">
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="bg-[var(--c-surface)] rounded-xl shadow-sm mb-4 p-4 overflow-hidden cursor-pointer animate-[slide-up_0.4s_ease_both]"
+        class="community-desktop-profile-card bg-[var(--c-surface)] rounded-xl shadow-sm mb-4 p-4 overflow-hidden cursor-pointer animate-[slide-up_0.4s_ease_both]"
         :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         @click="goDetail(item.id)"
       >
-        <div class="w-full aspect-square bg-[var(--c-border)] rounded-lg overflow-hidden mb-3">
+        <div class="community-desktop-card-media w-full aspect-square bg-[var(--c-border)] rounded-lg overflow-hidden mb-3">
           <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" class="w-full h-full object-cover" />
         </div>
         <h2 class="m-0 mb-1.5 text-xl font-bold text-pink-500 leading-tight">{{ item.name }}</h2>
@@ -135,7 +135,7 @@ onUnmounted(() => {
 
     <!-- FAB -->
     <div
-      class="fixed right-5 bottom-6 w-12 h-12 rounded-full bg-pink-500 shadow-[0_4px_12px_rgba(236,72,153,0.4)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.92]"
+      class="community-mobile-only-action fixed right-5 bottom-6 w-12 h-12 rounded-full bg-pink-500 shadow-[0_4px_12px_rgba(236,72,153,0.4)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.92]"
       @click="router.push('/dating/publish')"
     >
       <span class="text-[28px] leading-none text-white font-light">+</span>

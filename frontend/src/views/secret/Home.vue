@@ -98,11 +98,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: #8b5cf6">
+  <div class="community-stream-page community-stream-page--secret min-h-screen bg-[var(--c-bg)]" style="--module-color: #8b5cf6">
     <CommunityHeader :title="t('secret.title')" moduleColor="#8b5cf6" backTo="/" />
 
     <!-- 顶部操作区 -->
-    <header class="mx-auto my-4 w-[14.7rem] flex items-center gap-2.5">
+    <header class="community-desktop-actionbar mx-auto my-4 w-[14.7rem] flex items-center gap-2.5">
       <a
         href="javascript:;"
         class="inline-block leading-[3rem] rounded-full border border-[var(--c-border)] text-[var(--c-secret)] no-underline bg-[var(--c-surface)] text-[1.1rem] font-bold align-top px-6"
@@ -136,12 +136,12 @@ onMounted(() => {
       </div>
 
       <!-- 树洞信息列表 -->
-      <div>
+      <div class="community-desktop-note-grid">
         <div
           v-for="(item, index) in list"
           :key="item.id"
           :id="item.id"
-          class="mx-2.5 my-5 text-center text-[17px] leading-[25px] relative h-[240px] px-2.5 rounded-lg border-l-4 border-[var(--c-secret)] animate-[community-slide-up_0.3s_ease_both]"
+          class="community-desktop-note-card mx-2.5 my-5 text-center text-[17px] leading-[25px] relative h-[240px] px-2.5 rounded-lg border-l-4 border-[var(--c-secret)] animate-[community-slide-up_0.3s_ease_both]"
           :style="{ backgroundColor: getThemeBg(item.theme || 1), color: getThemeTextColor(item.theme || 1), animationDelay: index * 0.05 + 's' }"
         >
           <a href="javascript:;" class="block h-full no-underline text-inherit" @click.prevent="goDetail(item.id)">

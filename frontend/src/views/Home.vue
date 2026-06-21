@@ -238,40 +238,42 @@ function todayItemStyle(item) {
       </aside>
     </section>
 
-    <section
-      v-for="section in featureSections"
-      :id="`home-${section.id}`"
-      :key="section.id"
-      class="feature-section"
-      :class="`feature-section--${section.id}`"
-    >
-      <header class="feature-section__header">
-        <div>
-          <h2>{{ section.title }}</h2>
-          <p>{{ section.description }}</p>
-        </div>
-      </header>
+    <div class="feature-sections-grid">
+      <section
+        v-for="section in featureSections"
+        :id="`home-${section.id}`"
+        :key="section.id"
+        class="feature-section"
+        :class="`feature-section--${section.id}`"
+      >
+        <header class="feature-section__header">
+          <div>
+            <h2>{{ section.title }}</h2>
+            <p>{{ section.description }}</p>
+          </div>
+        </header>
 
-      <div class="feature-section__grid">
-        <button
-          v-for="(item, index) in section.items"
-          :key="item.id || item.path || item.key || index"
-          :aria-label="item.title"
-          class="feature-card"
-          :style="featureCardStyle(item.id)"
-          @click="handleMenuClick(item)"
-        >
-          <span class="feature-card__icon">
-            <component :is="resolveFeatureIcon(item.id)" class="w-6 h-6" />
-          </span>
-          <span class="feature-card__body">
-            <strong>{{ item.title }}</strong>
-            <small>{{ item.description }}</small>
-          </span>
-          <ArrowRight class="feature-card__arrow" />
-        </button>
-      </div>
-    </section>
+        <div class="feature-section__grid">
+          <button
+            v-for="(item, index) in section.items"
+            :key="item.id || item.path || item.key || index"
+            :aria-label="item.title"
+            class="feature-card"
+            :style="featureCardStyle(item.id)"
+            @click="handleMenuClick(item)"
+          >
+            <span class="feature-card__icon">
+              <component :is="resolveFeatureIcon(item.id)" class="w-6 h-6" />
+            </span>
+            <span class="feature-card__body">
+              <strong>{{ item.title }}</strong>
+              <small>{{ item.description }}</small>
+            </span>
+            <ArrowRight class="feature-card__arrow" />
+          </button>
+        </div>
+      </section>
+    </div>
 
     <div v-if="featureSections.length === 0" class="home-empty">
       {{ $t('home.noFeatures') }}
@@ -288,7 +290,7 @@ function todayItemStyle(item) {
 
 .home-hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.58fr) minmax(340px, 0.92fr);
+  grid-template-columns: minmax(0, 1.68fr) minmax(330px, 0.82fr);
   gap: 20px;
   align-items: stretch;
 }
@@ -304,11 +306,11 @@ function todayItemStyle(item) {
 
 .home-hero-card {
   position: relative;
-  min-height: 348px;
+  min-height: 392px;
   overflow: hidden;
   border-radius: 28px;
   background-image: url('/img/landing/campus-hero.jpg');
-  background-position: center;
+  background-position: 56% center;
   background-size: cover;
 }
 
@@ -316,8 +318,8 @@ function todayItemStyle(item) {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.68) 32%, rgba(255, 255, 255, 0.1) 68%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(220, 246, 237, 0.26));
+    linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.74) 34%, rgba(255, 255, 255, 0.16) 66%, rgba(255, 255, 255, 0.04) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(220, 246, 237, 0.18));
 }
 
 .home-hero-card__content {
@@ -325,7 +327,7 @@ function todayItemStyle(item) {
   z-index: 1;
   display: flex;
   max-width: 560px;
-  min-height: 348px;
+  min-height: 392px;
   flex-direction: column;
   justify-content: center;
   padding: 46px;
@@ -428,7 +430,9 @@ function todayItemStyle(item) {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 12px;
+  flex: 1;
+  justify-content: space-between;
+  margin-top: 16px;
 }
 
 .today-panel__item {
@@ -506,6 +510,12 @@ function todayItemStyle(item) {
   scroll-margin-top: 88px;
 }
 
+.feature-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
 .feature-section--service {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(241, 255, 250, 0.82)),
@@ -528,7 +538,7 @@ function todayItemStyle(item) {
 
 .feature-section__grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
   gap: 14px;
   margin-top: 18px;
 }
@@ -609,6 +619,10 @@ function todayItemStyle(item) {
 
 @media (max-width: 1180px) {
   .home-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-sections-grid {
     grid-template-columns: 1fr;
   }
 
@@ -752,8 +766,8 @@ function todayItemStyle(item) {
 
 [data-theme="dark"] .home-hero-card__shade {
   background:
-    linear-gradient(90deg, rgba(6, 11, 18, 0.92) 0%, rgba(8, 14, 22, 0.78) 34%, rgba(8, 14, 22, 0.34) 64%, rgba(8, 14, 22, 0.12) 100%),
-    linear-gradient(180deg, rgba(12, 19, 28, 0.08), rgba(12, 19, 28, 0.52)),
+    linear-gradient(90deg, rgba(6, 11, 18, 0.9) 0%, rgba(8, 14, 22, 0.68) 34%, rgba(8, 14, 22, 0.18) 64%, rgba(8, 14, 22, 0.02) 100%),
+    linear-gradient(180deg, rgba(12, 19, 28, 0.02), rgba(12, 19, 28, 0.22)),
     radial-gradient(circle at 78% 22%, rgba(83, 187, 255, 0.16), transparent 38%),
     radial-gradient(circle at 25% 88%, rgba(16, 185, 129, 0.14), transparent 34%);
 }

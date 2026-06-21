@@ -118,7 +118,7 @@ onUnmounted(() => {
 
 .campus-content {
   width: 100%;
-  max-width: 1230px;
+  max-width: 1360px;
   margin: 0 auto;
   padding: 26px 32px 56px;
 }

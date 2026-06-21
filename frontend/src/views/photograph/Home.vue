@@ -75,12 +75,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': '#06b6d4' }">
+  <div class="community-stream-page community-stream-page--photograph min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': '#06b6d4' }">
     <CommunityHeader :title="t('feature.photograph.name')" moduleColor="#06b6d4" backTo="/" />
 
     <!-- Scrollable container -->
     <div
-      class="h-[calc(100vh-51px-80px)] overflow-y-auto pb-20"
+      class="community-desktop-scroll h-[calc(100vh-51px-80px)] overflow-y-auto pb-20"
       style="-webkit-overflow-scrolling: touch;"
       ref="scrollContainer"
       @scroll="handleScroll"
@@ -98,11 +98,11 @@ onMounted(() => {
       </div>
 
       <!-- Card list -->
-      <div class="p-4">
+      <div class="community-desktop-card-grid p-4">
         <div
           v-for="(item, index) in list"
           :key="item.id"
-          class="bg-[var(--c-surface)] rounded-xl shadow-sm w-full mb-4 overflow-hidden animate-[slide-up_0.4s_ease_both] cursor-pointer"
+          class="community-desktop-photo-card bg-[var(--c-surface)] rounded-xl shadow-sm w-full mb-4 overflow-hidden animate-[slide-up_0.4s_ease_both] cursor-pointer"
           :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
           @click="goDetail(item.id)"
         >
@@ -157,7 +157,7 @@ onMounted(() => {
     </div>
 
     <!-- Bottom toolbar -->
-    <footer class="fixed bottom-0 left-0 right-0 flex shadow-lg border-t border-[var(--c-border)] z-50">
+    <footer class="community-mobile-only-action fixed bottom-0 left-0 right-0 flex shadow-lg border-t border-[var(--c-border)] z-50">
       <div
         class="flex-1 text-center py-3 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85 bg-red-500"
         :class="{ 'shadow-[inset_0_-3px_0_rgba(0,0,0,0.2)]': activeType === 1 }"

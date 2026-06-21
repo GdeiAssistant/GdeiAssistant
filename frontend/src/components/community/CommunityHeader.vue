@@ -99,6 +99,41 @@ function handleBack() {
   justify-content: flex-end;
 }
 
+@media (min-width: 768px) {
+  .community-header {
+    position: static;
+    max-width: 1180px;
+    min-height: 68px;
+    margin: 24px auto 14px;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    padding: 10px 14px;
+    border: 1px solid color-mix(in srgb, var(--module-color) 20%, rgba(205, 222, 226, 0.76));
+    border-radius: 24px;
+    box-shadow: 0 16px 38px rgba(32, 69, 78, 0.07);
+  }
+
+  .community-header::before {
+    top: 10px;
+    bottom: 10px;
+    left: 0;
+    width: 4px;
+    height: auto;
+    border-radius: 0 999px 999px 0;
+    background: var(--module-color);
+  }
+
+  .community-header h1 {
+    font-size: 20px;
+    text-align: left;
+  }
+
+  .community-header__back {
+    width: 40px;
+    height: 40px;
+    border-radius: 15px;
+  }
+}
+
 [data-theme="dark"] .community-header {
   border-bottom-color: rgba(45, 58, 73, 0.86);
   background: rgba(20, 27, 37, 0.9);

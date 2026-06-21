@@ -5,16 +5,16 @@ import CommunityModuleLayout from '../../components/community/CommunityModuleLay
 import { createCommunityTabs } from '../community/communityTabs'
 
 const { t } = useI18n()
-const tabs = computed(() => createCommunityTabs('lostandfound', t))
+const tabs = computed(() => createCommunityTabs('secret', t))
 </script>
 
 <template>
   <CommunityModuleLayout
-    :title="t('lostandfound.title')"
-    :subtitle="t('feature.lostandfound.description')"
-    basePath="/lostandfound"
-    moduleColor="#3b82f6"
-    publishPath="/lostandfound/publish"
+    :title="t('secret.title')"
+    :subtitle="t('feature.secret.description')"
+    basePath="/secret"
+    moduleColor="#8b5cf6"
+    publishPath="/secret/publish"
     :tabs="tabs"
   >
     <router-view />

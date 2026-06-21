@@ -746,12 +746,12 @@ function todayItemStyle(item) {
 [data-theme="dark"] .today-panel,
 [data-theme="dark"] .feature-section,
 [data-theme="dark"] .home-empty {
-  border-color: rgba(58, 74, 92, 0.9);
-  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.32);
+  border-color: rgba(68, 89, 112, 0.74);
+  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.28);
 }
 
 [data-theme="dark"] .home-hero-card {
-  background-color: rgba(14, 22, 32, 0.92);
+  background-color: rgba(18, 30, 42, 0.92);
   background-image: url('/img/landing/campus-hero.jpg');
   background-position: center;
   background-repeat: no-repeat;
@@ -761,15 +761,15 @@ function todayItemStyle(item) {
 [data-theme="dark"] .today-panel,
 [data-theme="dark"] .feature-section,
 [data-theme="dark"] .home-empty {
-  background: rgba(20, 27, 37, 0.78);
+  background: rgba(24, 38, 53, 0.84);
 }
 
 [data-theme="dark"] .home-hero-card__shade {
   background:
-    linear-gradient(90deg, rgba(6, 11, 18, 0.9) 0%, rgba(8, 14, 22, 0.68) 34%, rgba(8, 14, 22, 0.18) 64%, rgba(8, 14, 22, 0.02) 100%),
-    linear-gradient(180deg, rgba(12, 19, 28, 0.02), rgba(12, 19, 28, 0.22)),
-    radial-gradient(circle at 78% 22%, rgba(83, 187, 255, 0.16), transparent 38%),
-    radial-gradient(circle at 25% 88%, rgba(16, 185, 129, 0.14), transparent 34%);
+    linear-gradient(90deg, rgba(11, 20, 31, 0.84) 0%, rgba(12, 23, 35, 0.58) 34%, rgba(12, 23, 35, 0.14) 64%, rgba(12, 23, 35, 0.02) 100%),
+    linear-gradient(180deg, rgba(16, 25, 35, 0.02), rgba(16, 25, 35, 0.2)),
+    radial-gradient(circle at 78% 22%, rgba(96, 165, 250, 0.12), transparent 38%),
+    radial-gradient(circle at 25% 88%, rgba(45, 212, 191, 0.11), transparent 34%);
 }
 
 [data-theme="dark"] .home-hero-card h1 {
@@ -783,27 +783,27 @@ function todayItemStyle(item) {
 [data-theme="dark"] .home-hero-card__secondary,
 [data-theme="dark"] .today-panel__item,
 [data-theme="dark"] .feature-card {
-  border-color: rgba(54, 68, 83, 0.82);
-  background: rgba(24, 32, 43, 0.76);
+  border-color: rgba(68, 89, 112, 0.68);
+  background: rgba(27, 43, 60, 0.76);
 }
 
 [data-theme="dark"] .home-hero-card__secondary {
-  border-color: rgba(93, 230, 184, 0.38);
-  background: rgba(8, 24, 27, 0.72);
-  color: #72e6bb;
+  border-color: rgba(94, 234, 212, 0.34);
+  background: rgba(17, 54, 56, 0.62);
+  color: #99F6E4;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
 }
 
 [data-theme="dark"] .feature-section--service {
   background:
-    linear-gradient(135deg, rgba(20, 27, 37, 0.86), rgba(13, 22, 30, 0.82)),
-    radial-gradient(circle at 100% 0, rgba(45, 212, 191, 0.13), transparent 36%);
+    linear-gradient(135deg, rgba(24, 38, 53, 0.88), rgba(18, 30, 42, 0.82)),
+    radial-gradient(circle at 100% 0, rgba(45, 212, 191, 0.1), transparent 36%);
 }
 
 [data-theme="dark"] .feature-section--life {
   background:
-    linear-gradient(135deg, rgba(20, 27, 37, 0.86), rgba(18, 20, 31, 0.82)),
-    radial-gradient(circle at 0 0, rgba(245, 158, 11, 0.1), transparent 30%),
-    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.12), transparent 36%);
+    linear-gradient(135deg, rgba(24, 38, 53, 0.88), rgba(22, 29, 44, 0.82)),
+    radial-gradient(circle at 0 0, rgba(251, 191, 36, 0.08), transparent 30%),
+    radial-gradient(circle at 100% 100%, rgba(167, 139, 250, 0.09), transparent 36%);
 }
 </style>

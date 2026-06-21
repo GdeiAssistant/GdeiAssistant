@@ -441,28 +441,28 @@ onMounted(async () => {
 
 [data-theme="dark"] .community-module-layout {
   background:
-    radial-gradient(circle at 14% 0, color-mix(in srgb, var(--module-color) 16%, transparent), transparent 30%),
-    radial-gradient(circle at 88% 8%, rgba(96, 165, 250, 0.1), transparent 32%),
-    var(--c-bg);
+    radial-gradient(circle at 14% 0, color-mix(in srgb, var(--module-color) 12%, transparent), transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(96, 165, 250, 0.09), transparent 32%),
+    linear-gradient(180deg, #101923 0%, #0f1822 100%);
 }
 
 [data-theme="dark"] .community-module-layout__hero,
 [data-theme="dark"] .community-module-layout__main,
 [data-theme="dark"] .community-module-layout__rail-card {
-  border-color: rgba(54, 68, 83, 0.86);
-  background: rgba(20, 27, 37, 0.78);
-  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.32);
+  border-color: rgba(68, 89, 112, 0.72);
+  background: rgba(24, 38, 53, 0.84);
+  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.28);
 }
 
 [data-theme="dark"] .community-module-layout__hero {
   background:
-    linear-gradient(135deg, rgba(20, 27, 37, 0.86), rgba(12, 19, 28, 0.76)),
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--module-color) 18%, transparent), transparent 38%);
+    linear-gradient(135deg, rgba(24, 38, 53, 0.88), rgba(18, 30, 42, 0.78)),
+    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--module-color) 14%, transparent), transparent 38%);
 }
 
 [data-theme="dark"] .community-module-layout__secondary {
-  border-color: color-mix(in srgb, var(--module-color) 28%, rgba(54, 68, 83, 0.86));
-  background: rgba(24, 32, 43, 0.72);
+  border-color: color-mix(in srgb, var(--module-color) 24%, rgba(68, 89, 112, 0.72));
+  background: rgba(27, 43, 60, 0.72);
   color: var(--c-text-2);
 }
 </style>

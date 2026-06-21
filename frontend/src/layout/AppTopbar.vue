@@ -149,12 +149,12 @@ function toggleTheme() {
 }
 
 [data-theme="dark"] .campus-topbar {
-  border-bottom-color: rgba(45, 58, 73, 0.88);
-  background: rgba(12, 18, 26, 0.78);
+  border-bottom-color: rgba(68, 89, 112, 0.72);
+  background: rgba(18, 30, 42, 0.82);
 }
 
 [data-theme="dark"] .campus-topbar__icon-button {
-  border-color: rgba(55, 69, 86, 0.88);
-  background: rgba(20, 27, 37, 0.82);
+  border-color: rgba(74, 96, 120, 0.78);
+  background: rgba(32, 48, 68, 0.82);
 }
 </style>

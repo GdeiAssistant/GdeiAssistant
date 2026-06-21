@@ -115,25 +115,25 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --c-primary: #10B981;
-  --c-primary-hover: #34D399;
-  --c-primary-50: rgba(52,211,153,0.08);
-  --c-primary-100: rgba(52,211,153,0.12);
-  --c-bg: #0B1118;
-  --c-surface: #151C26;
-  --c-surface-hover: #1B2531;
-  --c-text-1: #E8F0F5;
-  --c-text-2: #9AA9B8;
-  --c-text-3: #5B6877;
-  --c-border: #263241;
-  --c-border-light: #1B2531;
-  --c-divider: #202A37;
+  --c-primary: #2DD4BF;
+  --c-primary-hover: #5EEAD4;
+  --c-primary-50: rgba(45, 212, 191, 0.1);
+  --c-primary-100: rgba(45, 212, 191, 0.16);
+  --c-bg: #101923;
+  --c-surface: #182635;
+  --c-surface-hover: #203044;
+  --c-text-1: #EEF6F8;
+  --c-text-2: #B4C2CF;
+  --c-text-3: #748397;
+  --c-border: #314255;
+  --c-border-light: #243345;
+  --c-divider: #2A3A4E;
   --c-card: var(--c-surface);
   --c-text: var(--c-text-1);
   --c-primary-light: var(--c-primary-50);
-  --c-fill-2: #1B2531;
-  --c-fill-3: #223042;
-  --color-bg-primary: #0B1118;
+  --c-fill-2: #203044;
+  --c-fill-3: #293B50;
+  --color-bg-primary: #101923;
   --color-bg-secondary: var(--c-bg);
   --color-bg-tertiary: var(--c-border-light);
   --color-surface-raised: var(--c-surface-hover);
@@ -147,7 +147,7 @@
   --c-cyan: #22D3EE;
   --c-orange: #FB923C;
 
-  --c-ershou: #34D399;
+  --c-ershou: #2DD4BF;
   --c-lostandfound: #60A5FA;
   --c-secret: #A78BFA;
   --c-express: #FB7185;
@@ -156,9 +156,9 @@
   --c-dating: #F472B6;
   --c-photograph: #22D3EE;
 
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-  --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+  --shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 16px 38px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 26px 64px rgba(0, 0, 0, 0.34);
 }
 
 /* ── Base Resets ────────────────────────────────────────── */
@@ -261,7 +261,7 @@ select {
 }
 
 [data-theme="dark"] .campus-page-card {
-  border-color: rgba(45, 58, 73, 0.86);
-  background: rgba(20, 27, 37, 0.78);
+  border-color: rgba(68, 89, 112, 0.74);
+  background: rgba(24, 38, 53, 0.84);
   box-shadow: var(--shadow-md);
 }

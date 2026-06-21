@@ -72,20 +72,20 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --color-bg-primary: #121212;
-  --color-bg-secondary: #1a1a1a;
-  --color-bg-tertiary: #242424;
-  --color-surface: #1e1e1e;
-  --color-surface-raised: #2a2a2a;
-  --color-text-primary: #e5e7eb;
-  --color-text-secondary: #9ca3af;
-  --color-text-tertiary: #9295a0;
-  --color-border: #374151;
-  --color-divider: #2a2a2a;
-  --color-primary: #34D399;
-  --color-primary-hover: #6EE7B7;
+  --color-bg-primary: #101923;
+  --color-bg-secondary: #121e2a;
+  --color-bg-tertiary: #203044;
+  --color-surface: #182635;
+  --color-surface-raised: #203044;
+  --color-text-primary: #eef6f8;
+  --color-text-secondary: #b4c2cf;
+  --color-text-tertiary: #748397;
+  --color-border: #314255;
+  --color-divider: #2a3a4e;
+  --color-primary: #2dd4bf;
+  --color-primary-hover: #5eead4;
 
-  --c-ershou: #34d399;
+  --c-ershou: #2dd4bf;
   --c-lostandfound: #60a5fa;
   --c-secret: #a78bfa;
   --c-express: #fb7185;
@@ -94,18 +94,18 @@
   --c-dating: #f472b6;
   --c-photograph: #22d3ee;
 
-  --c-text-1: #e5e7eb;
-  --c-text-2: #9ca3af;
-  --c-text-3: #9295a0;
-  --c-bg: #121212;
-  --c-card: #1e1e1e;
-  --c-border: #374151;
-  --c-divider: #2a2a2a;
-  --c-shadow: rgba(0, 0, 0, 0.3);
+  --c-text-1: #eef6f8;
+  --c-text-2: #b4c2cf;
+  --c-text-3: #748397;
+  --c-bg: #101923;
+  --c-card: rgba(24, 38, 53, 0.86);
+  --c-border: #314255;
+  --c-divider: #2a3a4e;
+  --c-shadow: rgba(0, 0, 0, 0.28);
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 16px 38px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 26px 64px rgba(0, 0, 0, 0.34);
 }
 
 /* ============================================================
@@ -468,12 +468,15 @@
 
 
 [data-theme="dark"] .community-page {
-  background: radial-gradient(circle at 16% 0, rgba(45, 212, 191, 0.14), transparent 30%), var(--c-bg);
+  background:
+    radial-gradient(circle at 16% 0, rgba(45, 212, 191, 0.1), transparent 30%),
+    radial-gradient(circle at 90% 4%, rgba(96, 165, 250, 0.1), transparent 28%),
+    linear-gradient(180deg, #101923 0%, #0f1822 100%);
 }
 
 [data-theme="dark"] .community-card,
 [data-theme="dark"] .community-dialog {
-  border-color: rgba(45, 58, 73, 0.86);
+  border-color: rgba(68, 89, 112, 0.74);
 }
 
 /* ============================================================
@@ -588,7 +591,7 @@
   [data-theme="dark"] .community-module-layout .community-desktop-switch,
   [data-theme="dark"] .community-module-layout .community-desktop-profile-card,
   [data-theme="dark"] .community-module-layout .community-desktop-photo-card {
-    border-color: rgba(54, 68, 83, 0.86);
-    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.26);
+    border-color: rgba(68, 89, 112, 0.72);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
   }
 }

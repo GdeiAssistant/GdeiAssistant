@@ -135,12 +135,12 @@ function handleBack() {
 }
 
 [data-theme="dark"] .community-header {
-  border-bottom-color: rgba(45, 58, 73, 0.86);
-  background: rgba(20, 27, 37, 0.9);
+  border-bottom-color: rgba(68, 89, 112, 0.72);
+  background: rgba(24, 38, 53, 0.9);
 }
 
 [data-theme="dark"] .community-header__back {
-  border-color: rgba(45, 58, 73, 0.86);
-  background: rgba(31, 41, 55, 0.76);
+  border-color: rgba(68, 89, 112, 0.72);
+  background: rgba(32, 48, 68, 0.76);
 }
 </style>

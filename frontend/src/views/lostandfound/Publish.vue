@@ -225,7 +225,7 @@ onMounted(() => {
   <div class="min-h-screen bg-[var(--c-bg)]">
     <CommunityHeader
       :title="isEditMode ? t('lostandfound.publish.editTitle') : t('lostandfound.publish.title')"
-      moduleColor="#3b82f6"
+      moduleColor="var(--c-lostandfound)"
       @back="goBack()"
       backTo=""
     >

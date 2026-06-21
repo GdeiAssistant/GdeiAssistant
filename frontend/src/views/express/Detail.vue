@@ -157,7 +157,7 @@ onMounted(async () => {
 
 <template>
   <div class="bg-[var(--c-bg)] pb-[60px]">
-    <CommunityHeader :title="t('express.detail.title')" moduleColor="#f43f5e" backTo="/express/home" />
+    <CommunityHeader :title="t('express.detail.title')" moduleColor="var(--c-express)" backTo="/express/home" />
 
     <!-- 主体容器 -->
     <div class="p-4 pb-[60px]">
@@ -181,7 +181,7 @@ onMounted(async () => {
           <button
             type="button"
             class="flex-1 flex items-center justify-center gap-0.5 py-2.5 bg-transparent border-none border-r border-[var(--c-border)] text-sm cursor-pointer"
-            :class="item.isLiked ? 'text-[#f43f5e] font-bold' : 'text-[var(--c-text-2)]'"
+            :class="item.isLiked ? 'text-[var(--c-express)] font-bold' : 'text-[var(--c-text-2)]'"
             @click.stop="handleLike"
           >
             {{ item.isLiked ? '♥' : '♡' }} {{ item.likeCount || 0 }}
@@ -234,7 +234,7 @@ onMounted(async () => {
       <div class="px-5 pb-4">
         <input
           type="text"
-          class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[#f43f5e] focus:ring-2 focus:ring-[#f43f5e]/10"
+          class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[var(--c-express)] focus:ring-2 focus:ring-[var(--c-express)]/10"
           :placeholder="t('express.guessPlaceholder')"
           v-model="guessInputValue"
           @keyup.enter="confirmGuess"
@@ -242,7 +242,7 @@ onMounted(async () => {
       </div>
       <div class="flex border-t border-[var(--c-border)]">
         <button class="flex-1 py-3 text-center text-sm text-[var(--c-text-2)] bg-transparent border-none border-r border-[var(--c-border)] cursor-pointer" @click="guessDialogVisible = false">{{ t('common.cancel') }}</button>
-        <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="confirmGuess">{{ t('common.confirm') }}</button>
+        <button class="flex-1 py-3 text-center text-sm text-[var(--c-express)] font-semibold bg-transparent border-none cursor-pointer" @click="confirmGuess">{{ t('common.confirm') }}</button>
       </div>
     </div>
 
@@ -250,14 +250,14 @@ onMounted(async () => {
     <div class="fixed bottom-0 left-0 right-0 flex items-center px-4 py-2.5 bg-[var(--c-surface)] border-t border-[var(--c-border)] z-[500]">
       <input
         type="text"
-        class="flex-1 h-9 px-3 border border-[var(--c-border)] rounded-full text-sm outline-none text-[var(--c-text-1)] bg-[var(--c-bg)] focus:border-[#f43f5e]"
+        class="flex-1 h-9 px-3 border border-[var(--c-border)] rounded-full text-sm outline-none text-[var(--c-text-1)] bg-[var(--c-bg)] focus:border-[var(--c-express)]"
         :placeholder="t('express.detail.commentPlaceholder')"
         v-model="commentInput"
         @keyup.enter="submitComment"
       />
       <button
         type="button"
-        class="ml-2.5 px-5 h-9 bg-[#f43f5e] text-white border-none rounded-full text-sm cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
+        class="ml-2.5 px-5 h-9 bg-[var(--c-express)] text-white border-none rounded-full text-sm cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
         :disabled="submitting"
         @click="submitComment"
       >

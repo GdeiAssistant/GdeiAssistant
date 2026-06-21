@@ -71,7 +71,7 @@ function submit() {
 
 <template>
   <div class="bg-[var(--c-bg)] pb-20">
-    <CommunityHeader :title="t('express.publish.title')" moduleColor="#f43f5e" backTo="/express/home" />
+    <CommunityHeader :title="t('express.publish.title')" moduleColor="var(--c-express)" backTo="/express/home" />
 
     <!-- 浅粉色粗体标题 -->
     <h2 class="text-center text-[22px] font-bold text-[#ffb3ba] mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
@@ -160,7 +160,7 @@ function submit() {
       <div class="px-4 pt-5 pb-10">
         <button
           type="button"
-          class="w-full h-11 flex justify-center items-center bg-[#f43f5e] text-white rounded-full text-base font-medium border-none cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
+          class="w-full h-11 flex justify-center items-center bg-[var(--c-express)] text-white rounded-full text-base font-medium border-none cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
           :disabled="submitting"
           @click="submit"
         >
@@ -176,7 +176,7 @@ function submit() {
         <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
         <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
         <div class="flex border-t border-[var(--c-border)]">
-          <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</button>
+          <button class="flex-1 py-3 text-center text-sm text-[var(--c-express)] font-semibold bg-transparent border-none cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</button>
         </div>
       </div>
     </div>

@@ -83,10 +83,10 @@ onUnmounted(() => {
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
   >
-    <CommunityHeader :title="t('topic.title')" moduleColor="#6366f1" />
+    <CommunityHeader :title="t('topic.title')" moduleColor="var(--c-topic)" />
 
     <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
-      <span v-if="refreshing" class="flex items-center gap-2"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}</span>
+      <span v-if="refreshing" class="flex items-center gap-2"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-topic)] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}</span>
       <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
       <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
     </div>
@@ -148,7 +148,7 @@ onUnmounted(() => {
     <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
       <p class="text-sm">{{ t('topic.empty') }}</p>
     </div>
-    <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> {{ pullMessages.loading }}</div>
+    <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-topic)] rounded-full animate-spin"></i> {{ pullMessages.loading }}</div>
     <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">{{ pullMessages.noMore }}</div>
 
     <!-- 图片预览 Lightbox -->

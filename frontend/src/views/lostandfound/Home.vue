@@ -54,7 +54,7 @@ onMounted(() => {
 <template>
   <div class="bg-[var(--c-bg)] min-h-screen">
     <!-- 统一顶部导航栏 -->
-    <CommunityHeader :title="t('lostandfound.title')" moduleColor="#3b82f6" />
+    <CommunityHeader :title="t('lostandfound.title')" moduleColor="var(--c-lostandfound)" />
 
     <!-- Tab 切换：寻物启事 / 失物招领 -->
     <div class="flex bg-[var(--c-surface)] border-b border-[var(--c-border)]">

@@ -78,7 +78,7 @@ onUnmounted(() => {
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
   >
-    <CommunityHeader :title="t('delivery.title')" moduleColor="#f59e0b" backTo="/" />
+    <CommunityHeader :title="t('delivery.title')" moduleColor="var(--c-delivery)" backTo="/" />
 
     <!-- Pull refresh -->
     <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">

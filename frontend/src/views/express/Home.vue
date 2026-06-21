@@ -143,7 +143,7 @@ onUnmounted(() => {
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
   >
-    <CommunityHeader :title="t('express.title')" moduleColor="#f43f5e" />
+    <CommunityHeader :title="t('express.title')" moduleColor="var(--c-express)" />
 
     <!-- 导航栏正下方：居中的浅粉色粗体标题 -->
     <h2 class="text-center text-[22px] font-bold text-[#ffb3ba] mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
@@ -151,7 +151,7 @@ onUnmounted(() => {
     <!-- 下拉刷新指示器 -->
     <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
       <span v-if="refreshing" class="flex items-center gap-2">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-express)] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
       </span>
       <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
       <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
@@ -184,7 +184,7 @@ onUnmounted(() => {
           <button
             type="button"
             class="flex-1 flex items-center justify-center gap-0.5 py-2.5 bg-transparent border-none border-r border-[var(--c-border)] text-sm cursor-pointer"
-            :class="item.isLiked ? 'text-[#f43f5e] font-bold' : 'text-[var(--c-text-2)]'"
+            :class="item.isLiked ? 'text-[var(--c-express)] font-bold' : 'text-[var(--c-text-2)]'"
             @click.stop="handleLike(item)"
           >
             {{ item.isLiked ? '♥' : '♡' }} {{ item.likeCount || 0 }}
@@ -221,7 +221,7 @@ onUnmounted(() => {
 
     <!-- 上拉加载更多 -->
     <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i>
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-express)] rounded-full animate-spin"></i>
       <span>{{ pullMessages.loading }}</span>
     </div>
     <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
@@ -235,7 +235,7 @@ onUnmounted(() => {
       <div class="px-5 pb-4">
         <input
           type="text"
-          class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[#f43f5e] focus:ring-2 focus:ring-[#f43f5e]/10"
+          class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[var(--c-express)] focus:ring-2 focus:ring-[var(--c-express)]/10"
           :placeholder="t('express.guessPlaceholder')"
           v-model="guessInputValue"
           @keyup.enter="confirmGuess"
@@ -243,7 +243,7 @@ onUnmounted(() => {
       </div>
       <div class="flex border-t border-[var(--c-border)]">
         <button class="flex-1 py-3 text-center text-sm text-[var(--c-text-2)] bg-transparent border-none border-r border-[var(--c-border)] cursor-pointer" @click="guessDialogVisible = false">{{ t('common.cancel') }}</button>
-        <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="confirmGuess">{{ t('common.confirm') }}</button>
+        <button class="flex-1 py-3 text-center text-sm text-[var(--c-express)] font-semibold bg-transparent border-none cursor-pointer" @click="confirmGuess">{{ t('common.confirm') }}</button>
       </div>
     </div>
   </div>

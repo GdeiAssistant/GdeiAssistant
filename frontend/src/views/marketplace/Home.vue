@@ -85,7 +85,7 @@ onMounted(() => {
 <template>
   <div class="bg-[var(--c-bg)] min-h-screen pb-5">
     <!-- 统一顶部导航栏 -->
-    <CommunityHeader :title="t('marketplace.title')" moduleColor="#10b981" />
+    <CommunityHeader :title="t('marketplace.title')" moduleColor="var(--c-ershou)" />
 
     <!-- 搜索栏 -->
     <div class="flex items-center px-4 py-2.5 bg-[var(--c-bg)]">

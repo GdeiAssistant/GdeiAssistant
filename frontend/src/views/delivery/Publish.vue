@@ -96,8 +96,8 @@ function submit() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)] pb-20" style="--module-color: #f59e0b">
-    <CommunityHeader :title="t('delivery.publish.title')" moduleColor="#f59e0b" :showBack="false">
+  <div class="min-h-screen bg-[var(--c-bg)] pb-20" style="--module-color: var(--c-delivery)">
+    <CommunityHeader :title="t('delivery.publish.title')" moduleColor="var(--c-delivery)" :showBack="false">
       <template #right>
         <button type="button" class="px-5 py-1.5 bg-amber-500 text-white border-none rounded-full text-base cursor-pointer transition-opacity disabled:opacity-60 disabled:cursor-not-allowed" :disabled="submitting" @click="submit">
           {{ submitting ? t('delivery.publish.submitting') : t('delivery.publish.submitAction') }}

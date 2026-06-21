@@ -75,8 +75,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="community-stream-page community-stream-page--photograph min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': '#06b6d4' }">
-    <CommunityHeader :title="t('feature.photograph.name')" moduleColor="#06b6d4" backTo="/" />
+  <div class="community-stream-page community-stream-page--photograph min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': 'var(--c-photograph)' }">
+    <CommunityHeader :title="t('feature.photograph.name')" moduleColor="var(--c-photograph)" backTo="/" />
 
     <!-- Scrollable container -->
     <div

@@ -80,7 +80,7 @@ watch(
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] pb-5">
-    <CommunityHeader :title="t('marketplace.searchTitle')" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
+    <CommunityHeader :title="t('marketplace.searchTitle')" moduleColor="var(--c-ershou)" :showBack="true" @back="router.back()" backTo="" />
 
     <!-- 搜索栏 -->
     <div class="flex items-center px-4 py-2.5 bg-[var(--c-bg)]">

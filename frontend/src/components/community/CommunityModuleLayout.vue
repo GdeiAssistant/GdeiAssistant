@@ -9,7 +9,7 @@ const props = defineProps({
   title: { type: String, required: true },
   subtitle: { type: String, default: '' },
   basePath: { type: String, required: true },
-  moduleColor: { type: String, default: '#10b981' },
+  moduleColor: { type: String, default: 'var(--c-ershou)' },
   tabs: { type: Array, required: true },
   publishPath: { type: String, default: '' }
 })
@@ -310,13 +310,13 @@ onMounted(async () => {
 }
 
 .community-module-layout__rail-icon--blue {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.12);
+  color: var(--c-lostandfound);
+  background: color-mix(in srgb, var(--c-lostandfound) 12%, transparent);
 }
 
 .community-module-layout__rail-icon--green {
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.12);
+  color: var(--c-ershou);
+  background: color-mix(in srgb, var(--c-ershou) 12%, transparent);
 }
 
 .community-module-layout__quick-grid {

@@ -158,10 +158,10 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] pb-10">
-    <CommunityHeader :title="t('feature.dating.name')" moduleColor="#ec4899" backTo="/dating/home" />
+    <CommunityHeader :title="t('feature.dating.name')" moduleColor="var(--c-dating)" backTo="/dating/home" />
 
     <div v-if="item" class="w-[90%] mx-auto mt-4 p-6 bg-[var(--c-surface)] rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
-      <div class="text-[22px] text-pink-500 font-bold mb-4">{{ item.name }}</div>
+      <div class="text-[22px] text-[var(--c-dating)] font-bold mb-4">{{ item.name }}</div>
       <div class="w-full rounded-lg overflow-hidden bg-[var(--c-bg)] mb-4">
         <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" class="w-full h-auto max-h-[360px] object-cover" />
       </div>
@@ -177,7 +177,7 @@ onMounted(async () => {
       <!-- Pick section -->
       <div class="border-t-2 border-dashed border-[var(--c-divider)] pt-6 mt-6 text-center">
         <textarea v-model="pickContent" class="w-full p-4 border border-[var(--c-divider)] rounded-lg text-base min-h-[80px] box-border mb-4 text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" :placeholder="copy.placeholder" rows="3"></textarea>
-        <button type="button" class="px-7 py-2.5 bg-pink-500 text-white border-none rounded-full text-lg cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="pickSubmitting" @click="submitPick">{{ copy.submitAction }}</button>
+        <button type="button" class="px-7 py-2.5 bg-[var(--c-dating)] text-white border-none rounded-full text-lg cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="pickSubmitting" @click="submitPick">{{ copy.submitAction }}</button>
       </div>
     </div>
 
@@ -193,7 +193,7 @@ onMounted(async () => {
       <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ copy.noticeTitle }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
       <div class="border-t border-[var(--c-border)] flex">
-        <a href="javascript:;" class="flex-1 text-center py-3 text-pink-500 font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-[var(--c-dating)] font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
       </div>
     </div>
   </div>

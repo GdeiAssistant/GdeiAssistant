@@ -104,7 +104,7 @@ onMounted(async () => {
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] pb-5">
     <!-- 统一顶部导航栏 -->
-    <CommunityHeader :title="t('marketplace.detail.title')" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
+    <CommunityHeader :title="t('marketplace.detail.title')" moduleColor="var(--c-ershou)" :showBack="true" @back="router.back()" backTo="" />
 
     <!-- 加载中 -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">

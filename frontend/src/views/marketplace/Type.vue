@@ -71,7 +71,7 @@ watch(
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] pb-5">
-    <CommunityHeader :title="typeName" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
+    <CommunityHeader :title="typeName" moduleColor="var(--c-ershou)" :showBack="true" @back="router.back()" backTo="" />
 
     <!-- 滚动容器 -->
     <div

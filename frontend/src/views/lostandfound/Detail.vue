@@ -71,7 +71,7 @@ function copyText(text) {
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]">
     <!-- 统一顶部导航栏 -->
-    <CommunityHeader :title="t('lostandfound.detail.title')" moduleColor="#3b82f6" @back="router.back()" backTo="" />
+    <CommunityHeader :title="t('lostandfound.detail.title')" moduleColor="var(--c-lostandfound)" @back="router.back()" backTo="" />
 
     <!-- Loading -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">

@@ -97,8 +97,8 @@ const submit = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': '#06b6d4' }">
-    <CommunityHeader :title="t('feature.photograph.name')" moduleColor="#06b6d4" @back="goBack" :backTo="''" :showBack="true" />
+  <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': 'var(--c-photograph)' }">
+    <CommunityHeader :title="t('feature.photograph.name')" moduleColor="var(--c-photograph)" @back="goBack" :backTo="''" :showBack="true" />
 
     <!-- Upload form -->
     <section class="p-6">

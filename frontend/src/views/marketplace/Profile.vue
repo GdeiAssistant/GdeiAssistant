@@ -134,7 +134,7 @@ watch(() => route.fullPath, () => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] pb-16">
-    <CommunityHeader :title="t('marketplace.profile.title')" moduleColor="#10b981" backTo="/marketplace/home" />
+    <CommunityHeader :title="t('marketplace.profile.title')" moduleColor="var(--c-ershou)" backTo="/marketplace/home" />
 
     <!-- Profile Header -->
     <section class="relative bg-gradient-to-br from-emerald-500 to-emerald-600 pt-8 pb-5 pl-[140px] pr-5 min-h-[90px]">

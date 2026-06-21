@@ -5,7 +5,7 @@ const props = defineProps({
   /** 页面标题 */
   title: { type: String, default: '' },
   /** 模块主色 */
-  moduleColor: { type: String, default: '#6366f1' },
+  moduleColor: { type: String, default: 'var(--c-topic)' },
   /** 返回目标路径，默认 / */
   backTo: { type: String, default: '/' },
   /** 是否显示返回按钮 */

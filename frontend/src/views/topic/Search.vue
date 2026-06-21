@@ -58,7 +58,7 @@ function getImageGridCols(count) {
 
 <template>
   <div class="bg-[var(--c-bg)] min-h-screen pb-16">
-    <CommunityHeader :title="t('topic.searchTitle')" moduleColor="#6366f1" @back="router.back()" backTo="" showBack />
+    <CommunityHeader :title="t('topic.searchTitle')" moduleColor="var(--c-topic)" @back="router.back()" backTo="" showBack />
 
     <div class="flex gap-2.5 p-4 bg-[var(--c-surface)] border-b border-[var(--c-border)]">
       <input
@@ -75,7 +75,7 @@ function getImageGridCols(count) {
       >{{ t('topic.searchAction') }}</button>
     </div>
 
-    <div v-if="searching" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i> {{ t('topic.searching') }}</div>
+    <div v-if="searching" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-topic)] rounded-full animate-spin"></i> {{ t('topic.searching') }}</div>
     <div v-else-if="searchResults.length === 0 && keyword" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
       <p class="text-sm">{{ t('topic.searchEmpty') }}</p>
     </div>

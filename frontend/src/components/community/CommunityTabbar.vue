@@ -5,8 +5,8 @@ import { useRouter, useRoute } from 'vue-router'
 const props = defineProps({
   /** 模块基础路径，如 '/ershou' */
   basePath: { type: String, required: true },
-  /** 模块主色，如 '#10b981' */
-  moduleColor: { type: String, default: '#6366f1' },
+  /** 模块主色，如 'var(--c-ershou)' */
+  moduleColor: { type: String, default: 'var(--c-topic)' },
   /** Tab 配置列表 [{key, label, path, icon}] */
   tabs: { type: Array, required: true }
 })

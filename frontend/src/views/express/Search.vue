@@ -103,7 +103,7 @@ watch(
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]">
-    <CommunityHeader :title="t('express.searchTitle')" moduleColor="#f43f5e" backTo="/express/home" />
+    <CommunityHeader :title="t('express.searchTitle')" moduleColor="var(--c-express)" backTo="/express/home" />
 
     <!-- 搜索栏 -->
     <div class="flex items-center px-4 py-2.5 bg-[var(--c-bg)]">
@@ -119,7 +119,7 @@ watch(
           @keyup.enter="doSearch"
         />
       </div>
-      <span class="text-[#f43f5e] text-sm ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">{{ t('express.searchAction') }}</span>
+      <span class="text-[var(--c-express)] text-sm ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">{{ t('express.searchAction') }}</span>
     </div>
 
     <!-- 浅粉色标题 -->
@@ -136,7 +136,7 @@ watch(
     >
       <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
         <span v-if="refreshing" class="flex items-center gap-2">
-          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-express)] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
         </span>
         <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
         <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
@@ -152,7 +152,7 @@ watch(
           <div class="p-4 pb-3">
             <p class="mb-2.5 text-base leading-relaxed">
               <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.senderGender), color: getGenderColor(item.senderGender) }">{{ item.senderName }}</span>
-              <span class="mx-1.5 text-[#f43f5e] font-bold">≡❤</span>
+              <span class="mx-1.5 text-[var(--c-express)] font-bold">≡❤</span>
               <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.receiverGender), color: getGenderColor(item.receiverGender) }">{{ item.receiverName }}</span>
             </p>
             <p class="text-sm text-[var(--c-text-1)] leading-relaxed break-words mb-1">{{ item.content }}</p>
@@ -185,7 +185,7 @@ watch(
       </div>
 
       <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#f43f5e] rounded-full animate-spin"></i>
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-express)] rounded-full animate-spin"></i>
         <span>{{ pullMessages.loading }}</span>
       </div>
       <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
@@ -200,7 +200,7 @@ watch(
         <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
         <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
         <div class="flex border-t border-[var(--c-border)]">
-          <button class="flex-1 py-3 text-center text-sm text-[#f43f5e] font-semibold bg-transparent border-none cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</button>
+          <button class="flex-1 py-3 text-center text-sm text-[var(--c-express)] font-semibold bg-transparent border-none cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</button>
         </div>
       </div>
     </div>

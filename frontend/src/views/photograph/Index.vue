@@ -13,7 +13,7 @@ const tabs = computed(() => createCommunityTabs('photograph', t))
     :title="t('feature.photograph.name')"
     :subtitle="t('feature.photograph.description')"
     basePath="/photograph"
-    moduleColor="#06b6d4"
+    moduleColor="var(--c-photograph)"
     publishPath="/photograph/publish"
     :tabs="tabs"
   >

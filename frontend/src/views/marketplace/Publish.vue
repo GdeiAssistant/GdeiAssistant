@@ -229,7 +229,7 @@ onMounted(() => {
 
 <template>
   <div class="bg-[var(--c-surface)] min-h-screen">
-    <CommunityHeader :title="isEditMode ? t('marketplace.publish.editTitle') : t('marketplace.publish.title')" moduleColor="#10b981" :showBack="true" :backTo="isEditMode ? '/marketplace/profile' : '/marketplace/home'">
+    <CommunityHeader :title="isEditMode ? t('marketplace.publish.editTitle') : t('marketplace.publish.title')" moduleColor="var(--c-ershou)" :showBack="true" :backTo="isEditMode ? '/marketplace/profile' : '/marketplace/home'">
       <template #right>
         <a href="javascript:;" class="text-sm text-emerald-500 no-underline font-medium hover:text-emerald-600" @click.prevent="submit">
           {{ submitting ? t('marketplace.publish.submitting') : (isEditMode ? t('common.save') : t('marketplace.publish.finish')) }}

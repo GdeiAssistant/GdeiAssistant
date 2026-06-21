@@ -54,11 +54,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: #8b5cf6">
-    <CommunityHeader :title="t('secret.profile.title')" moduleColor="#8b5cf6" backTo="/secret/home" />
+  <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: var(--c-secret)">
+    <CommunityHeader :title="t('secret.profile.title')" moduleColor="var(--c-secret)" backTo="/secret/home" />
 
     <div v-if="loading" class="flex items-center justify-center py-16 gap-2.5 text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#8b5cf6] rounded-full animate-spin"></i>
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-secret)] rounded-full animate-spin"></i>
       <span>{{ t('common.loading') }}</span>
     </div>
 

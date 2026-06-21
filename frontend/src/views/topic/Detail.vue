@@ -54,10 +54,10 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]">
-    <CommunityHeader :title="t('topic.detail.title')" moduleColor="#6366f1" @back="router.back()" backTo="" />
+    <CommunityHeader :title="t('topic.detail.title')" moduleColor="var(--c-topic)" @back="router.back()" backTo="" />
 
     <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#6366f1] rounded-full animate-spin"></i>
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-topic)] rounded-full animate-spin"></i>
       <span>{{ t('common.loading') }}</span>
     </div>
 

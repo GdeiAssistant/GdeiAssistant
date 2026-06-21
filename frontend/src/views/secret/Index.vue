@@ -13,7 +13,7 @@ const tabs = computed(() => createCommunityTabs('secret', t))
     :title="t('secret.title')"
     :subtitle="t('feature.secret.description')"
     basePath="/secret"
-    moduleColor="#8b5cf6"
+    moduleColor="var(--c-secret)"
     publishPath="/secret/publish"
     :tabs="tabs"
   >

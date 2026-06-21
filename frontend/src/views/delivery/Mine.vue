@@ -115,8 +115,8 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)] pb-16" style="--module-color: #f59e0b">
-    <CommunityHeader :title="t('delivery.mine.title')" moduleColor="#f59e0b" backTo="/" />
+  <div class="min-h-screen bg-[var(--c-bg)] pb-16" style="--module-color: var(--c-delivery)">
+    <CommunityHeader :title="t('delivery.mine.title')" moduleColor="var(--c-delivery)" backTo="/" />
 
     <!-- Tabs -->
     <div class="flex bg-[var(--c-card)] border-b border-[var(--c-divider)] px-4">

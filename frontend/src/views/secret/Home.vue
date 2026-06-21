@@ -98,8 +98,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="community-stream-page community-stream-page--secret min-h-screen bg-[var(--c-bg)]" style="--module-color: #8b5cf6">
-    <CommunityHeader :title="t('secret.title')" moduleColor="#8b5cf6" backTo="/" />
+  <div class="community-stream-page community-stream-page--secret min-h-screen bg-[var(--c-bg)]" style="--module-color: var(--c-secret)">
+    <CommunityHeader :title="t('secret.title')" moduleColor="var(--c-secret)" backTo="/" />
 
     <!-- 顶部操作区 -->
     <header class="community-desktop-actionbar mx-auto my-4 w-[14.7rem] flex items-center gap-2.5">
@@ -129,7 +129,7 @@ onMounted(() => {
       <!-- 下拉刷新指示器 -->
       <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
         <span v-if="refreshing" class="flex items-center gap-2">
-          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#8b5cf6] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-secret)] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
         </span>
         <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
         <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
@@ -208,7 +208,7 @@ onMounted(() => {
 
       <!-- 上拉加载更多 -->
       <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#8b5cf6] rounded-full animate-spin"></i>
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-secret)] rounded-full animate-spin"></i>
         <span>{{ pullMessages.loading }}</span>
       </div>
       <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">

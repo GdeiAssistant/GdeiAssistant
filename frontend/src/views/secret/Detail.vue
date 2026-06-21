@@ -274,11 +274,11 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="secret-page-root">
-    <div class="min-h-screen bg-[var(--c-bg)] pb-14" style="--module-color: #8b5cf6">
-    <CommunityHeader title="树洞详情" moduleColor="#8b5cf6" backTo="/secret/home" />
+    <div class="min-h-screen bg-[var(--c-bg)] pb-14" style="--module-color: var(--c-secret)">
+    <CommunityHeader title="树洞详情" moduleColor="var(--c-secret)" backTo="/secret/home" />
 
     <div v-if="loading" class="flex items-center justify-center py-16 gap-2.5 text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[#8b5cf6] rounded-full animate-spin"></i>
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-secret)] rounded-full animate-spin"></i>
       <span>加载中...</span>
     </div>
 
@@ -390,11 +390,11 @@ onBeforeUnmount(() => {
   <!-- 对话框 -->
   <div v-if="dialogVisible">
     <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: #8b5cf6">
+    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: var(--c-secret)">
       <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">提示</div>
       <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
       <div class="flex border-t border-[var(--c-border)]">
-        <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[#8b5cf6] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">确定</a>
+        <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[var(--c-secret)] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">确定</a>
       </div>
     </div>
   </div>

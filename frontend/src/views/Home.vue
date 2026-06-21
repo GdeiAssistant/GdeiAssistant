@@ -148,9 +148,9 @@ const iconColors = {
   grade: '#0B8F6A', schedule: '#2563EB', card: '#D97706', cet: '#7C3AED',
   kaoyan: '#0891B2', collection: '#4F46E5', spare: '#06B6D4',
   pe: '#DC2626', evaluate: '#DB2777', data: '#0D9488', about: '#6B7280',
-  ershou: '#F97316', lostandfound: '#2563EB', express: '#F43F5E',
-  secret: '#8B5CF6', dating: '#EC4899', topic: '#3B82F6',
-  photograph: '#06B6D4', delivery: '#F59E0B',
+  ershou: 'var(--c-ershou)', lostandfound: 'var(--c-lostandfound)', express: 'var(--c-express)',
+  secret: 'var(--c-secret)', dating: 'var(--c-dating)', topic: 'var(--c-topic)',
+  photograph: 'var(--c-photograph)', delivery: 'var(--c-delivery)',
 }
 
 function handleMenuClick(item) {
@@ -174,9 +174,13 @@ function resolveFeatureIcon(id) {
 
 function featureCardStyle(id) {
   const color = iconColors[id] || '#6B7280'
+  const softColor = color.startsWith('var(')
+    ? `color-mix(in srgb, ${color} 13%, transparent)`
+    : `${color}17`
+
   return {
     '--feature-color': color,
-    '--feature-color-soft': `${color}17`
+    '--feature-color-soft': softColor
   }
 }
 

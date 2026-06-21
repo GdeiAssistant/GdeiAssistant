@@ -110,8 +110,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': '#06b6d4' }">
-    <CommunityHeader :title="copy.detailTitle" moduleColor="#06b6d4" @back="goBack" :backTo="''" :showBack="true" />
+  <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': 'var(--c-photograph)' }">
+    <CommunityHeader :title="copy.detailTitle" moduleColor="var(--c-photograph)" @back="goBack" :backTo="''" :showBack="true" />
 
     <!-- Loading -->
     <div v-if="loading" class="flex items-center justify-center gap-2 py-16 text-sm text-[var(--c-text-3)]">

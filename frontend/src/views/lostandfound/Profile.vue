@@ -126,7 +126,7 @@ watch(() => route.fullPath, () => {
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)]">
-    <CommunityHeader :title="t('lostandfound.profile.title')" moduleColor="#3b82f6" backTo="/lostandfound/home" />
+    <CommunityHeader :title="t('lostandfound.profile.title')" moduleColor="var(--c-lostandfound)" backTo="/lostandfound/home" />
 
     <!-- Profile Header -->
     <section class="relative bg-gradient-to-br from-blue-500 to-blue-400 pt-8 pb-5 pl-[140px] pr-5 min-h-[90px]">

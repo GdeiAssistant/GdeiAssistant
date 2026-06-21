@@ -13,7 +13,7 @@ const tabs = computed(() => createCommunityTabs('marketplace', t))
     :title="t('marketplace.title')"
     :subtitle="t('feature.ershou.description')"
     basePath="/marketplace"
-    moduleColor="#10b981"
+    moduleColor="var(--c-ershou)"
     publishPath="/marketplace/publish"
     :tabs="tabs"
   >

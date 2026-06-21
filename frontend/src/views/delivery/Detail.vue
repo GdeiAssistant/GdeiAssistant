@@ -128,8 +128,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: #f59e0b">
-    <CommunityHeader :title="t('delivery.detail.title')" moduleColor="#f59e0b" @back="router.back()" backTo="" />
+  <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: var(--c-delivery)">
+    <CommunityHeader :title="t('delivery.detail.title')" moduleColor="var(--c-delivery)" @back="router.back()" backTo="" />
 
     <div v-if="item" class="p-4 animate-[slide-up_0.4s_ease_both]">
       <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-6">

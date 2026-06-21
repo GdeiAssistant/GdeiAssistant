@@ -13,7 +13,7 @@ const tabs = computed(() => createCommunityTabs('express', t))
     :title="t('express.title')"
     :subtitle="t('feature.express.description')"
     basePath="/express"
-    moduleColor="#f43f5e"
+    moduleColor="var(--c-express)"
     publishPath="/express/publish"
     :tabs="tabs"
   >

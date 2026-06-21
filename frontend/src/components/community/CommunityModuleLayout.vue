@@ -440,6 +440,10 @@ onMounted(async () => {
 }
 
 [data-theme="dark"] .community-module-layout {
+  --community-module-dark-accent: color-mix(in srgb, var(--module-color) 40%, #94a3b8);
+  --community-module-dark-accent-soft: color-mix(in srgb, var(--module-color) 6%, rgba(32, 48, 68, 0.68));
+  --community-module-dark-border: color-mix(in srgb, var(--module-color) 10%, rgba(74, 96, 120, 0.68));
+
   background:
     radial-gradient(circle at 14% 0, color-mix(in srgb, var(--module-color) 6%, transparent), transparent 30%),
     radial-gradient(circle at 88% 8%, rgba(96, 165, 250, 0.09), transparent 32%),
@@ -473,12 +477,12 @@ onMounted(async () => {
 
 [data-theme="dark"] .community-module-layout__rail-head span,
 [data-theme="dark"] .community-module-layout__safe-icon {
-  color: var(--c-primary);
+  color: var(--community-module-dark-accent);
 }
 
 [data-theme="dark"] .community-module-layout__quick-grid button {
-  border-color: rgba(74, 96, 120, 0.68);
-  background: rgba(32, 48, 68, 0.68);
-  color: var(--c-primary);
+  border-color: var(--community-module-dark-border);
+  background: var(--community-module-dark-accent-soft);
+  color: var(--community-module-dark-accent);
 }
 </style>

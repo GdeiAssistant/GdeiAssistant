@@ -153,6 +153,9 @@ function goTo(path) {
 }
 
 [data-theme="dark"] .community-tabbar {
+  --community-module-dark-accent: color-mix(in srgb, var(--module-color) 40%, #94a3b8);
+  --community-module-dark-border: color-mix(in srgb, var(--module-color) 12%, rgba(76, 101, 126, 0.82));
+
   border-top-color: rgba(68, 89, 112, 0.74);
   background: rgba(18, 30, 42, 0.92);
   box-shadow: 0 -16px 34px rgba(0, 0, 0, 0.28);
@@ -160,17 +163,17 @@ function goTo(path) {
 
 [data-theme="dark"] .community-tabbar__item:hover {
   background: rgba(32, 48, 68, 0.56);
-  color: var(--c-primary);
+  color: var(--community-module-dark-accent);
 }
 
 [data-theme="dark"] .community-tabbar__item--active {
   background: rgba(32, 48, 68, 0.76);
   color: var(--c-text-1);
-  box-shadow: inset 0 0 0 1px rgba(76, 101, 126, 0.82);
+  box-shadow: inset 0 0 0 1px var(--community-module-dark-border);
 }
 
 [data-theme="dark"] .community-tabbar__item--active .community-tabbar__icon {
-  color: var(--c-primary);
+  color: var(--community-module-dark-accent);
 }
 
 @media (min-width: 768px) {

@@ -135,13 +135,16 @@ function handleBack() {
 }
 
 [data-theme="dark"] .community-header {
+  --community-module-dark-accent: color-mix(in srgb, var(--module-color) 42%, #94a3b8);
+  --community-module-dark-accent-end: color-mix(in srgb, var(--module-color) 20%, #60a5fa);
+
   border-color: rgba(68, 89, 112, 0.72);
   border-bottom-color: rgba(68, 89, 112, 0.72);
   background: rgba(24, 38, 53, 0.9);
 }
 
 [data-theme="dark"] .community-header::before {
-  background: linear-gradient(90deg, var(--c-primary), color-mix(in srgb, var(--c-primary) 44%, #60a5fa));
+  background: linear-gradient(90deg, var(--community-module-dark-accent), var(--community-module-dark-accent-end));
 }
 
 [data-theme="dark"] .community-header__back {

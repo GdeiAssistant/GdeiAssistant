@@ -485,28 +485,44 @@
   color: var(--c-text-1) !important;
 }
 
+[data-theme="dark"] .community-dating-page {
+  --dating-dark-accent: color-mix(in srgb, var(--c-dating) 36%, #94a3b8);
+  --dating-dark-border-accent: color-mix(in srgb, var(--c-dating) 22%, #7d8da2);
+  --dating-dark-accent-soft: color-mix(in srgb, var(--c-dating) 8%, rgba(32, 48, 68, 0.88));
+}
+
 [data-theme="dark"] .community-dating-page [class*="bg-[var(--c-dating)]"] {
   background: linear-gradient(135deg, var(--c-primary), color-mix(in srgb, var(--c-primary) 72%, #60a5fa)) !important;
 }
 
 [data-theme="dark"] .community-dating-page [class*="text-[var(--c-dating)]"] {
-  color: var(--c-primary) !important;
+  color: var(--dating-dark-accent) !important;
 }
 
 [data-theme="dark"] .community-dating-page [class*="border-[var(--c-dating)]"] {
-  border-color: var(--c-primary) !important;
+  border-color: var(--dating-dark-border-accent) !important;
 }
 
 [data-theme="dark"] .community-dating-page [class*="border-t-[var(--c-dating)]"] {
-  border-top-color: var(--c-primary) !important;
+  border-top-color: var(--dating-dark-border-accent) !important;
 }
 
 [data-theme="dark"] .community-dating-page [class*="bg-[color-mix"][class*="var(--c-dating)"] {
-  background: rgba(45, 212, 191, 0.1) !important;
+  background: var(--dating-dark-accent-soft) !important;
+}
+
+[data-theme="dark"] .community-dating-page .community-mobile-only-action {
+  box-shadow: 0 12px 24px rgba(45, 212, 191, 0.2) !important;
 }
 
 [data-theme="dark"] .community-stream-page--dating .community-desktop-profile-card h2 {
   color: var(--c-text-1) !important;
+}
+
+@media (max-width: 767px) {
+  .community-module-layout .community-stream-page--dating .community-mobile-only-action {
+    display: none !important;
+  }
 }
 
 [data-theme="dark"] .community-stream-page--secret .community-desktop-note-card {

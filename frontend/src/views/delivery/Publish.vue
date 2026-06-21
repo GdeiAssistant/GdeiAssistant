@@ -96,7 +96,7 @@ function submit() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)] pb-20" style="--module-color: var(--c-delivery)">
+  <div class="community-delivery-page min-h-screen bg-[var(--c-bg)] pb-20" style="--module-color: var(--c-delivery)">
     <CommunityHeader :title="t('delivery.publish.title')" moduleColor="var(--c-delivery)" :showBack="false">
       <template #right>
         <button type="button" class="px-5 py-1.5 bg-amber-500 text-white border-none rounded-full text-base cursor-pointer transition-opacity disabled:opacity-60 disabled:cursor-not-allowed" :disabled="submitting" @click="submit">
@@ -106,7 +106,7 @@ function submit() {
     </CommunityHeader>
 
     <div class="p-4 animate-[slide-up_0.4s_ease_both]">
-      <div class="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-6 text-amber-900">
+      <div class="community-delivery-warning mb-4 rounded-xl px-4 py-3 text-xs leading-6">
         取件码、地址、手机号、姓名等通常属于高敏信息，请最小化填写和展示。请勿承接违法违规、危险、贵重或明显超出自身能力范围的任务。
       </div>
 
@@ -177,8 +177,8 @@ function submit() {
     <div class="fixed bottom-14 left-0 right-0 flex items-center px-4 py-3 bg-[var(--c-card)] border-t border-[var(--c-border)] z-[100] shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
       <div class="flex items-center mr-4">
         <span class="text-base text-[var(--c-text-2)] mr-1">{{ t('delivery.publish.rewardLabel') }}</span>
-        <span class="text-lg text-red-500 font-bold">&#xffe5;</span>
-        <input type="number" class="w-20 px-2 py-1.5 border border-[var(--c-divider)] rounded-lg text-lg text-red-500 font-bold outline-none ml-1 transition-colors focus:border-amber-500" placeholder="0.00" v-model="formData.reward" step="0.01" min="0" max="99" />
+        <span class="community-delivery-reward text-lg font-bold">&#xffe5;</span>
+        <input type="number" class="community-delivery-reward-input w-20 px-2 py-1.5 border border-[var(--c-divider)] rounded-lg text-lg font-bold outline-none ml-1 transition-colors focus:border-amber-500" placeholder="0.00" v-model="formData.reward" step="0.01" min="0" max="99" />
       </div>
       <button type="button" class="flex-1 h-11 bg-amber-500 text-white border-none rounded-lg text-lg font-medium cursor-pointer transition-opacity disabled:opacity-60 disabled:cursor-not-allowed" :disabled="submitting" @click="submit">
         {{ submitting ? t('delivery.publish.submitting') : t('delivery.publish.submitAction') }}
@@ -196,3 +196,27 @@ function submit() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-delivery-warning {
+  border: 1px solid color-mix(in srgb, var(--c-delivery) 28%, var(--c-border));
+  background: color-mix(in srgb, var(--c-delivery) 10%, var(--c-card));
+  color: color-mix(in srgb, var(--c-delivery) 46%, #7c2d12);
+}
+
+.community-delivery-reward,
+.community-delivery-reward-input {
+  color: color-mix(in srgb, var(--c-delivery) 86%, #ea580c) !important;
+}
+
+[data-theme="dark"] .community-delivery-warning {
+  border-color: color-mix(in srgb, var(--c-delivery) 20%, rgba(76, 101, 126, 0.72));
+  background: color-mix(in srgb, var(--c-delivery) 10%, rgba(32, 48, 68, 0.88));
+  color: color-mix(in srgb, var(--c-delivery) 48%, #fff7ed);
+}
+
+[data-theme="dark"] .community-delivery-reward,
+[data-theme="dark"] .community-delivery-reward-input {
+  color: color-mix(in srgb, var(--c-delivery) 46%, #fff7ed) !important;
+}
+</style>

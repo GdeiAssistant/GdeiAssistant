@@ -26,7 +26,7 @@ const fontScales = [0.85, 1.0, 1.15, 1.3]
 
 const locales = [
   { code: 'zh-CN', label: '简体中文' },
-  { code: 'zh-HK', label: '繁體中文（香港）' },
+  { code: 'zh-HK', label: '繁體中文（港澳）' },
   { code: 'zh-TW', label: '繁體中文（台灣）' },
   { code: 'en', label: 'English' },
   { code: 'ja', label: '日本語' },

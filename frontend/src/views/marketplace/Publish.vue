@@ -228,7 +228,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-[var(--c-surface)] min-h-screen">
+  <div class="marketplace-publish-page bg-[var(--c-surface)] min-h-screen">
     <CommunityHeader :title="isEditMode ? t('marketplace.publish.editTitle') : t('marketplace.publish.title')" moduleColor="var(--c-ershou)" :showBack="true" :backTo="isEditMode ? '/marketplace/profile' : '/marketplace/home'">
       <template #right>
         <a href="javascript:;" class="text-sm text-emerald-500 no-underline font-medium hover:text-emerald-600" @click.prevent="submit">
@@ -237,12 +237,12 @@ onMounted(() => {
       </template>
     </CommunityHeader>
 
-    <div class="mx-4 mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs leading-6 text-emerald-900">
+    <div class="marketplace-publish-alert mx-4 mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs leading-6 text-emerald-900">
       请勿发布违法违规物品、危险品、证件原件、账号凭证或侵权盗版内容。请谨慎公开手机号、微信号、住址等联系方式，并自行核验商品状态、价格和线下交易风险。
     </div>
 
     <!-- 图片上传区 -->
-    <section class="bg-emerald-500 border-t border-emerald-600">
+    <section class="marketplace-publish-uploader bg-emerald-500 border-t border-emerald-600">
       <div class="px-4 pt-6 mb-1.5">
         <div v-for="(img, index) in images" :key="index" class="w-[70px] h-[70px] relative inline-block mx-1.5 mb-2.5 align-top">
           <a v-if="!isEditMode" href="javascript:;" class="absolute -bottom-3.5 left-1/2 -ml-[19px] w-[18px] h-[18px] p-2.5 block" @click.prevent="removeImage(index)">
@@ -250,7 +250,7 @@ onMounted(() => {
           </a>
           <i class="w-[70px] h-[70px] overflow-hidden block rounded"><img :src="img.dataUrl" alt="" class="w-full h-full object-cover block"></i>
         </div>
-        <span v-if="!isEditMode && images.length < MAX_IMAGES" class="w-[68px] h-[68px] border-2 border-white rounded inline-block mx-1.5 mb-2.5 align-top relative cursor-pointer" @click="triggerFileInput">
+        <span v-if="!isEditMode && images.length < MAX_IMAGES" class="marketplace-publish-uploader__add w-[68px] h-[68px] border-2 border-white rounded inline-block mx-1.5 mb-2.5 align-top relative cursor-pointer" @click="triggerFileInput">
           <i class="absolute w-6 h-6 top-1/2 left-1/2 -mt-3 -ml-3">
             <i class="w-full h-0.5 absolute top-[11px] bg-white block"></i>
             <i class="h-full w-0.5 absolute left-[11px] bg-white block"></i>
@@ -262,7 +262,7 @@ onMounted(() => {
     </section>
 
     <!-- 表单 -->
-    <section class="px-5">
+    <section class="marketplace-publish-form px-5">
       <p v-if="pageLoading" class="mt-4 text-[var(--c-text-3)] text-sm text-center">{{ t('marketplace.publish.loading') }}</p>
 
       <div class="relative pl-[90px] text-base min-h-[70px] pb-2.5" :class="[frmErrors.name ? 'border-b-2 border-[#fe6a7c]' : 'border-b-2 border-emerald-500']">
@@ -357,3 +357,28 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+[data-theme="dark"] .marketplace-publish-alert {
+  border-color: color-mix(in srgb, var(--c-ershou) 28%, rgba(68, 89, 112, 0.74));
+  background: color-mix(in srgb, var(--c-ershou) 8%, rgba(24, 38, 53, 0.9));
+  color: color-mix(in srgb, var(--c-ershou) 44%, var(--c-text-2));
+}
+
+[data-theme="dark"] .marketplace-publish-uploader {
+  border-color: color-mix(in srgb, var(--c-ershou) 22%, rgba(68, 89, 112, 0.74));
+  background:
+    radial-gradient(circle at 12% 0, color-mix(in srgb, var(--c-ershou) 16%, transparent), transparent 34%),
+    linear-gradient(135deg, rgba(24, 55, 51, 0.96), rgba(18, 39, 45, 0.94));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-ershou) 22%, transparent);
+}
+
+[data-theme="dark"] .marketplace-publish-uploader__add {
+  border-color: color-mix(in srgb, var(--c-ershou) 42%, rgba(148, 163, 184, 0.7));
+  background: rgba(32, 48, 68, 0.42);
+}
+
+[data-theme="dark"] .marketplace-publish-form :deep([class*="border-emerald-500"]) {
+  border-color: color-mix(in srgb, var(--c-ershou) 34%, rgba(68, 89, 112, 0.74)) !important;
+}
+</style>

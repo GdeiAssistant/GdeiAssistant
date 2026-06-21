@@ -242,54 +242,58 @@ const retentionRows = [
 
           <h3>第三条 敏感个人信息处理说明</h3>
           <p><strong>3.1</strong> 平台处理的部分信息可能属于敏感个人信息或具有较高隐私风险。我们会结合功能必要性、风险等级、处理场景和法律要求采取更严格的控制措施。</p>
-          <table>
-            <thead>
-              <tr>
-                <th>信息类型</th>
-                <th>使用场景</th>
-                <th>是否可能属于敏感个人信息</th>
-                <th>必要性</th>
-                <th>用户可否拒绝或删除</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in sensitiveInfoRows" :key="row.type">
-                <td>{{ row.type }}</td>
-                <td>{{ row.scenario }}</td>
-                <td>{{ row.sensitive }}</td>
-                <td>{{ row.necessity }}</td>
-                <td>{{ row.control }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="policy-table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>信息类型</th>
+                  <th>使用场景</th>
+                  <th>是否可能属于敏感个人信息</th>
+                  <th>必要性</th>
+                  <th>用户可否拒绝或删除</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in sensitiveInfoRows" :key="row.type">
+                  <td>{{ row.type }}</td>
+                  <td>{{ row.scenario }}</td>
+                  <td>{{ row.sensitive }}</td>
+                  <td>{{ row.necessity }}</td>
+                  <td>{{ row.control }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <h3>第四条 第三方服务清单</h3>
           <p><strong>4.1</strong> 为实现校园认证、消息发送、图片上传、验证码识别、服务部署、安全审计和故障排查，平台可能根据实际部署选择第三方服务。是否启用、启用哪些服务以及是否发生跨境或境外处理，通常取决于实际部署、服务商区域和配置。</p>
           <p><strong>4.2</strong> 详细清单可进一步参阅 <a href="/policy/third-party-services">《第三方服务清单》</a>。</p>
-          <table>
-            <thead>
-              <tr>
-                <th>服务类型</th>
-                <th>可能服务商</th>
-                <th>使用目的</th>
-                <th>涉及信息</th>
-                <th>是否可关闭</th>
-                <th>是否可能跨境或境外处理</th>
-                <th>备注</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in thirdPartyRows" :key="row.type">
-                <td>{{ row.type }}</td>
-                <td>{{ row.providers }}</td>
-                <td>{{ row.purpose }}</td>
-                <td>{{ row.data }}</td>
-                <td>{{ row.disable }}</td>
-                <td>{{ row.crossBorder }}</td>
-                <td>{{ row.note }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="policy-table-scroll policy-table-scroll--wide">
+            <table>
+              <thead>
+                <tr>
+                  <th>服务类型</th>
+                  <th>可能服务商</th>
+                  <th>使用目的</th>
+                  <th>涉及信息</th>
+                  <th>是否可关闭</th>
+                  <th>是否可能跨境或境外处理</th>
+                  <th>备注</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in thirdPartyRows" :key="row.type">
+                  <td>{{ row.type }}</td>
+                  <td>{{ row.providers }}</td>
+                  <td>{{ row.purpose }}</td>
+                  <td>{{ row.data }}</td>
+                  <td>{{ row.disable }}</td>
+                  <td>{{ row.crossBorder }}</td>
+                  <td>{{ row.note }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <h3>第五条 个人信息共享、委托处理与公开展示</h3>
           <p><strong>5.1</strong> 我们不会出售您的个人信息。</p>
@@ -299,24 +303,26 @@ const retentionRows = [
 
           <h3>第六条 个人信息保存期限</h3>
           <p><strong>6.1</strong> 我们仅在实现处理目的所必需的最短期限内保存个人信息。超过保存期限后，我们会根据适用法律和实际情况进行删除、匿名化、去标识化、限制处理或归档脱敏。</p>
-          <table>
-            <thead>
-              <tr>
-                <th>信息类型</th>
-                <th>保存期限</th>
-                <th>删除或匿名化方式</th>
-                <th>例外情况</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in retentionRows" :key="row.type">
-                <td>{{ row.type }}</td>
-                <td>{{ row.duration }}</td>
-                <td>{{ row.deletion }}</td>
-                <td>{{ row.exception }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="policy-table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>信息类型</th>
+                  <th>保存期限</th>
+                  <th>删除或匿名化方式</th>
+                  <th>例外情况</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in retentionRows" :key="row.type">
+                  <td>{{ row.type }}</td>
+                  <td>{{ row.duration }}</td>
+                  <td>{{ row.deletion }}</td>
+                  <td>{{ row.exception }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <h3>第七条 您的权利与操作路径</h3>
           <p><strong>7.1</strong> 在符合法律法规规定的前提下，您可以申请查询、更正、补充、删除个人信息，关闭快速认证或申请删除校园凭证，撤回部分授权，注销账号，删除发布内容，申请导出个人信息，以及投诉举报或联系平台处理隐私问题。</p>
@@ -348,3 +354,21 @@ const retentionRows = [
     </div>
   </div>
 </template>
+
+<style scoped>
+.policy-table-scroll {
+  max-width: 100%;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.policy-table-scroll table {
+  min-width: 680px;
+  margin-bottom: 0;
+}
+
+.policy-table-scroll--wide table {
+  min-width: 760px;
+}
+</style>

@@ -27,14 +27,14 @@ async function loginAsMockUser(page) {
   await page.locator('input[type="checkbox"]').check()
   await page.getByRole('button', { name: '登录' }).click()
   await expect(page).toHaveURL(/\/home$/)
-  await expect(page.getByText('校园服务')).toBeVisible()
+  await expect(page.getByRole('heading', { name: '校园服务' })).toBeVisible()
 }
 
 test.describe('mock 模式 UI smoke', () => {
   test('mock 登录后可以进入首页并看到主入口', async ({ page }) => {
     await loginAsMockUser(page)
 
-    await expect(page.getByText('校园生活')).toBeVisible()
+    await expect(page.getByRole('heading', { name: '校园生活' })).toBeVisible()
     await expect(page.getByRole('button', { name: '成绩查询' })).toBeVisible()
     await expect(page.getByRole('button', { name: '二手交易' })).toBeVisible()
   })

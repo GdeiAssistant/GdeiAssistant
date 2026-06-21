@@ -97,32 +97,52 @@ const rows = [
             <p class="!mb-0"><strong>配套阅读：</strong>涉及个人信息处理时，请与 <a href="/policy/privacy">《隐私政策》</a> 一并阅读；涉及安全配置要求时，请同时参阅 <a href="/about/security">《安全说明》</a>。</p>
           </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>服务类型</th>
-                <th>可能服务商</th>
-                <th>使用目的</th>
-                <th>涉及信息</th>
-                <th>是否可关闭</th>
-                <th>是否可能跨境或境外处理</th>
-                <th>备注</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in rows" :key="row.type">
-                <td>{{ row.type }}</td>
-                <td>{{ row.providers }}</td>
-                <td>{{ row.purpose }}</td>
-                <td>{{ row.data }}</td>
-                <td>{{ row.disable }}</td>
-                <td>{{ row.crossBorder }}</td>
-                <td>{{ row.note }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="policy-table-scroll policy-table-scroll--wide">
+            <table>
+              <thead>
+                <tr>
+                  <th>服务类型</th>
+                  <th>可能服务商</th>
+                  <th>使用目的</th>
+                  <th>涉及信息</th>
+                  <th>是否可关闭</th>
+                  <th>是否可能跨境或境外处理</th>
+                  <th>备注</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in rows" :key="row.type">
+                  <td>{{ row.type }}</td>
+                  <td>{{ row.providers }}</td>
+                  <td>{{ row.purpose }}</td>
+                  <td>{{ row.data }}</td>
+                  <td>{{ row.disable }}</td>
+                  <td>{{ row.crossBorder }}</td>
+                  <td>{{ row.note }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.policy-table-scroll {
+  max-width: 100%;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.policy-table-scroll table {
+  min-width: 680px;
+  margin-bottom: 0;
+}
+
+.policy-table-scroll--wide table {
+  min-width: 760px;
+}
+</style>

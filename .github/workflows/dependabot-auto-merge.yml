@@ -24,8 +24,9 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REQUIRED_CHECKS: |
         Build and Test
-        Build and Test Frontend
         Analyze (Java)
+      FRONTEND_REQUIRED_CHECKS: |
+        Build and Test Frontend
         Build and Deploy Job
     steps:
       - name: Merge non-major Dependabot PR after required checks pass
@@ -79,7 +80,7 @@ jobs:
             '--repo',
             repo,
             '--json',
-            'author,body,title,state,isDraft,mergeStateStatus,statusCheckRollup,headRefOid,url',
+            'author,body,title,state,isDraft,mergeStateStatus,statusCheckRollup,headRefOid,url,files',
           ]))
           
           const author = pr.author?.login || ''
@@ -106,6 +107,16 @@ jobs:
             process.exit(0)
           }
           
+          const changedFiles = (pr.files || []).map((file) => file.path || '')
+          if (changedFiles.some((file) => file.startsWith('frontend/'))) {
+            requiredChecks.push(
+              ...(process.env.FRONTEND_REQUIRED_CHECKS || '')
+                .split('\n')
+                .map((item) => item.trim())
+                .filter(Boolean),
+            )
+          }
+
           const checks = pr.statusCheckRollup || []
           const checkByName = new Map(checks.map((check) => [check.name, check]))
           const terminalFailureStates = new Set(['ACTION_REQUIRED', 'CANCELLED', 'ERROR', 'FAILURE', 'FAILED', 'TIMED_OUT'])

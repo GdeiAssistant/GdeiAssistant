@@ -36,7 +36,11 @@
     "jsdom": "^26.1.0",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.2.2",
-    "vite": "^7.3.2",
+    "vite": "^7.3.5",
     "vitest": "^4.1.9"
+  },
+  "overrides": {
+    "esbuild": "0.28.1",
+    "ws": "8.21.0"
   }
 }

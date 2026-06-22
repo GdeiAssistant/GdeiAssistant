@@ -600,13 +600,9 @@ export function resolveNavigationTarget(path, loggedIn) {
   return loggedIn ? null : '/login'
 }
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(to => {
   const redirectTarget = resolveNavigationTarget(to.path, hasToken())
-  if (redirectTarget == null) {
-    next()
-    return
-  }
-  next(redirectTarget)
+  return redirectTarget ?? true
 })
 
 // 固定浏览器标题，禁止根据路由动态修改

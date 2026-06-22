@@ -58,7 +58,7 @@ dependencies {
     implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.28.4'
 
     // Jakarta 注解（PostConstruct / PreDestroy / Resource）
-    implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+    implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
 
     // MapStruct 映射框架
     implementation 'org.mapstruct:mapstruct:1.6.3'

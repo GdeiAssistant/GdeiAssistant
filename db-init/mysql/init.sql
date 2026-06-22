@@ -577,7 +577,7 @@ DROP TABLE IF EXISTS `topic`;
 CREATE TABLE `topic` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '话题信息主键ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '话题信息发布者用户名',
-  `topic` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '话题信息关键词',
+  `topic` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '话题信息关键词',
   `content` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '话题信息内容',
   `count` tinyint(1) NOT NULL COMMENT '话题信息图片数量',
   `publish_time` datetime NOT NULL COMMENT '话题信息发布时间',

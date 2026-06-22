@@ -86,7 +86,7 @@ function mapErshouDetail(info) {
 onMounted(async () => {
   loading.value = true
   try {
-    const res = await request.get(`/marketplace/item/id/${id}`)
+    const res = await request.get(`/ershou/item/id/${id}`)
     const info = res?.data
     if (info && res.success !== false) {
       detail.value = mapErshouDetail(info)

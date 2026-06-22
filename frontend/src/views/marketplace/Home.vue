@@ -32,7 +32,7 @@ function mapErshouItemToCard(item) {
 
 const fetchHomeData = async (page) => {
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/marketplace/item/start/${start}`)
+  const res = await request.get(`/ershou/item/start/${start}`)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map(mapErshouItemToCard) : []
   return {

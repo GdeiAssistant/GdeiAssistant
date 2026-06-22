@@ -72,7 +72,7 @@ public interface MarketplaceMapper {
     List<MarketplaceItemEntity> selectItemsWithKeyword(@Param("start") int start, @Param("size") int size, @Param("keyword") String keyword);
 
     @Insert("insert into ershou (username,name,description,price,location,type,qq,phone,state,publish_time) values (#{username},#{name},#{description},#{price},#{location},#{type},#{qq},#{phone},'1',#{publishTime})")
-    @Options(useGeneratedKeys = true)
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertItem(MarketplaceItemEntity entity);
 
     @Update("update ershou set name=#{name},description=#{description},price=#{price},location=#{location},type=#{type},qq=#{qq},phone=#{phone} where id=#{id}")

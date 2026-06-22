@@ -35,7 +35,7 @@ const fetchSearchData = async (page) => {
     return { list: [], hasMore: false }
   }
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/marketplace/keyword/${encodeURIComponent(k)}/start/${start}`)
+  const res = await request.get(`/ershou/keyword/${encodeURIComponent(k)}/start/${start}`)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map(mapErshouItemToCard) : []
   return {

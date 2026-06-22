@@ -1,6 +1,8 @@
 -- Campus credential consent persistence and quick-auth controls
 -- Apply manually on existing deployments before enabling the new backend endpoints.
 
+USE gdeiassistant;
+
 CREATE TABLE IF NOT EXISTS `campus_credential_consent` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '校园凭证授权记录ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
@@ -18,8 +20,21 @@ CREATE TABLE IF NOT EXISTS `campus_credential_consent` (
   KEY `idx_ccc_username_type_consented` (`username`,`consent_type`,`consented_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='校园凭证授权留痕';
 
-ALTER TABLE `privacy`
-  ADD COLUMN IF NOT EXISTS `is_quick_auth_allow` tinyint(1) DEFAULT NULL COMMENT '允许快速认证复用校园凭证' AFTER `is_cache_allow`;
+SET @is_quick_auth_allow_exists := (
+  SELECT COUNT(*)
+  FROM information_schema.COLUMNS
+  WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'privacy'
+    AND COLUMN_NAME = 'is_quick_auth_allow'
+);
+SET @add_is_quick_auth_allow := IF(
+  @is_quick_auth_allow_exists = 0,
+  'ALTER TABLE `privacy` ADD COLUMN `is_quick_auth_allow` tinyint(1) DEFAULT NULL COMMENT ''允许快速认证复用校园凭证'' AFTER `is_cache_allow`',
+  'SELECT 1'
+);
+PREPARE add_is_quick_auth_allow_stmt FROM @add_is_quick_auth_allow;
+EXECUTE add_is_quick_auth_allow_stmt;
+DEALLOCATE PREPARE add_is_quick_auth_allow_stmt;
 
 UPDATE `privacy`
 SET `is_quick_auth_allow` = 0

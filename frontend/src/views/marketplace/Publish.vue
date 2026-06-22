@@ -50,7 +50,7 @@ const MAX_SIZE = 5 * 1024 * 1024
 const ALLOW_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
 function goBack() {
-  router.push(isEditMode.value ? '/marketplace/profile' : '/marketplace/home')
+  router.push(isEditMode.value ? '/ershou/profile' : '/marketplace/home')
 }
 
 function triggerFileInput() {
@@ -152,7 +152,7 @@ async function loadEditItem() {
   if (!isEditMode.value) return
   pageLoading.value = true
   try {
-    const res = await request.get('/marketplace/profile')
+    const res = await request.get('/ershou/profile')
     const data = res?.data || {}
     const list = []
       .concat(Array.isArray(data.doing) ? data.doing : [])
@@ -208,15 +208,15 @@ async function submit() {
   try {
     const formData = buildPayload()
     if (isEditMode.value) {
-      await request.post(`/marketplace/item/id/${editItemId.value}`, formData)
+      await request.post(`/ershou/item/id/${editItemId.value}`, formData)
       hideLoading()
       showDialog(t('common.saveSuccess'))
-      setTimeout(() => router.push('/marketplace/profile'), 1200)
+      setTimeout(() => router.push('/ershou/profile'), 1200)
       return
     }
     const imageKeys = await uploadFilesByPresignedUrl(images.value.map(item => item.file).filter(Boolean))
     imageKeys.forEach((imageKey) => formData.append('imageKeys', imageKey))
-    await request.post('/marketplace/item', formData)
+    await request.post('/ershou/item', formData)
     hideLoading()
     showDialog(t('marketplace.publish.publishSuccess'))
     setTimeout(() => router.push('/marketplace/home'), 1500)
@@ -233,7 +233,7 @@ onMounted(() => {
 
 <template>
   <div class="marketplace-publish-page bg-[var(--c-surface)] min-h-screen">
-    <CommunityHeader :title="isEditMode ? t('marketplace.publish.editTitle') : t('marketplace.publish.title')" moduleColor="var(--c-ershou)" :showBack="true" :backTo="isEditMode ? '/marketplace/profile' : '/marketplace/home'">
+    <CommunityHeader :title="isEditMode ? t('marketplace.publish.editTitle') : t('marketplace.publish.title')" moduleColor="var(--c-ershou)" :showBack="true" :backTo="isEditMode ? '/ershou/profile' : '/marketplace/home'">
       <template #right>
         <a href="javascript:;" class="marketplace-publish-submit text-sm no-underline font-medium" @click.prevent="submit">
           {{ submitting ? t('marketplace.publish.submitting') : (isEditMode ? t('common.save') : t('marketplace.publish.finish')) }}

@@ -109,7 +109,7 @@ async function submit() {
           class="flex-1 border-none outline-none text-sm text-[var(--c-text-1)] bg-transparent"
           :placeholder="t('topic.publish.topicPlaceholder')"
           v-model="topicTag"
-          maxlength="20"
+          maxlength="15"
         />
       </div>
 

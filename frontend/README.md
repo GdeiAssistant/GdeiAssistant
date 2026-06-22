@@ -66,5 +66,7 @@ npm run test:e2e    # Playwright 端到端测试
 1. `npm ci`
 2. `npm run build`
 3. `npm run test:unit`
+4. `npx playwright install --with-deps chromium`
+5. `npm run test:e2e`
 
-如需扩展 Playwright smoke，请在现有 `e2e/` 用例基础上继续补充。
+Playwright 失败时 CI 会上传 `playwright-report/` 与 `test-results/`，便于查看截图、trace 等失败证据。如需扩展 Playwright smoke，请在现有 `e2e/` 用例基础上继续补充。

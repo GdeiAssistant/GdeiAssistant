@@ -49,3 +49,19 @@ jobs:
 
       - name: Run unit tests
         run: npm run test:unit
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E smoke tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-artifacts
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          retention-days: 7

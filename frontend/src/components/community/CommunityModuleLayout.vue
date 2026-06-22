@@ -385,6 +385,12 @@ onMounted(async () => {
   display: none;
 }
 
+.community-module-layout__main :deep(.community-header--with-right) {
+  display: grid;
+  max-width: none;
+  margin: 0 0 18px;
+}
+
 .community-module-layout__main :deep(.min-h-screen) {
   min-height: auto;
 }

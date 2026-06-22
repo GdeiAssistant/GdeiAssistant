@@ -62,7 +62,7 @@ function setStat(stat) {
     return
   }
   router.replace({
-    path: '/marketplace/profile',
+    path: '/ershou/profile',
     query: {
       ...route.query,
       tab: normalized
@@ -89,7 +89,7 @@ async function loadUserInfo() {
 }
 
 async function loadItems() {
-  const res = await request.get('/marketplace/profile')
+  const res = await request.get('/ershou/profile')
   const data = res?.data || {}
   doingList.value = Array.isArray(data.doing) ? data.doing.map(mapProfileItem) : []
   soldList.value = Array.isArray(data.sold) ? data.sold.map(mapProfileItem) : []
@@ -115,7 +115,7 @@ async function updateItemState(id, state, confirmText, successText) {
   if (confirmText && !window.confirm(confirmText)) return
   actionLoading.value = true
   try {
-    await request.post(`/marketplace/item/state/id/${id}`, null, { params: { state } })
+    await request.post(`/ershou/item/state/id/${id}`, null, { params: { state } })
     await loadItems()
     showDialog(successText)
   } finally {

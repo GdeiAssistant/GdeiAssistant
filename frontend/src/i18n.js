@@ -23,11 +23,13 @@ const i18n = createI18n({
   messages: { 'zh-CN': zhCN }
 })
 
+const localeLoaders = import.meta.glob(['./locales/*.json', '!./locales/zh-CN.json'])
+
 export async function setLocale(locale) {
   const normalizedLocale = resolveSupportedLocale(locale)
 
   if (!i18n.global.availableLocales.includes(normalizedLocale)) {
-    const messages = await import(`./locales/${normalizedLocale}.json`)
+    const messages = await localeLoaders[`./locales/${normalizedLocale}.json`]()
     i18n.global.setLocaleMessage(normalizedLocale, messages.default)
   }
   i18n.global.locale.value = normalizedLocale

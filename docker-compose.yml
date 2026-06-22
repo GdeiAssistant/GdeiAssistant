@@ -133,7 +133,8 @@ services:
       - ./frontend:/app
       - frontend-node-modules:/app/node_modules
     environment:
-      VITE_APP_BASE_API: "${VITE_APP_BASE_API:-http://localhost:8080/api}"
+      VITE_APP_BASE_API: "${VITE_APP_BASE_API:-/api}"
+      DEV_BACKEND_PROXY_TARGET: "${DEV_BACKEND_PROXY_TARGET:-http://backend:8080}"
     ports:
       - "${FRONTEND_EXPOSE_PORT:-5173}:5173"
     depends_on:

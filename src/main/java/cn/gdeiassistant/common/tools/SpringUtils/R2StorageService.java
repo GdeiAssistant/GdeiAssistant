@@ -184,7 +184,7 @@ public class R2StorageService {
         GetObjectRequest getRequest = GetObjectRequest.builder().bucket(resolvedBucket).key(key).build();
         PresignedGetObjectRequest presigned = s3Presigner.presignGetObject(
                 GetObjectPresignRequest.builder().signatureDuration(duration).getObjectRequest(getRequest).build());
-        String url = presigned.url().toString().replace("http://", "https://");
+        String url = normalizePresignedUrl(presigned.url().toString());
         if (r2Config.getCustomDomain() != null && !r2Config.getCustomDomain().isEmpty()) {
             try {
                 URL original = presigned.url();
@@ -192,8 +192,10 @@ public class R2StorageService {
                 if (original.getQuery() != null) {
                     path += "?" + original.getQuery();
                 }
-                String domain = r2Config.getCustomDomain().replaceFirst("^https?://", "").split("/")[0];
-                url = "https://" + domain + path;
+                String customDomain = r2Config.getCustomDomain();
+                String scheme = customDomain.startsWith("http://") ? "http://" : "https://";
+                String domain = customDomain.replaceFirst("^https?://", "").split("/")[0];
+                url = scheme + domain + path;
             } catch (Exception ignored) {
             }
         }
@@ -222,7 +224,15 @@ public class R2StorageService {
                         .signatureDuration(duration)
                         .putObjectRequest(putObjectRequest)
                         .build());
-        return presigned.url().toString().replace("http://", "https://");
+        return normalizePresignedUrl(presigned.url().toString());
+    }
+
+    private String normalizePresignedUrl(String url) {
+        String endpoint = r2Config.getEffectivePresignEndpoint();
+        if (endpoint != null && !endpoint.isBlank() && endpoint.startsWith("http://")) {
+            return url;
+        }
+        return url.replace("http://", "https://");
     }
 
     private static String contentTypeFromKey(String key) {

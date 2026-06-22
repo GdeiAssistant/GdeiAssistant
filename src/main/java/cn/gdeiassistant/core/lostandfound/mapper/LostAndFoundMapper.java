@@ -72,7 +72,7 @@ public interface LostAndFoundMapper {
 
     @Insert("insert into lostandfound (username,name,description,location,item_type,lost_type,qq,wechat,phone,state,publish_time) " +
             "values (#{username},#{name},#{description},#{location},#{itemType},#{lostType},#{qq},#{wechat},#{phone},0,#{publishTime})")
-    @Options(useGeneratedKeys = true)
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertItem(LostAndFoundItemEntity item);
 
     @Update("update lostandfound set name=#{name},description=#{description},location=#{location},item_type=#{itemType},lost_type=#{lostType},qq=#{qq},wechat=#{wechat},phone=#{phone} where id=#{id}")

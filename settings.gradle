@@ -2,7 +2,7 @@ pluginManagement {
     repositories {
         mavenCentral()
         gradlePluginPortal()
-        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url = uri('https://maven.aliyun.com/repository/public') }
     }
 }
 
@@ -10,7 +10,7 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         mavenCentral()
-        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url = uri('https://maven.aliyun.com/repository/public') }
     }
 }
 

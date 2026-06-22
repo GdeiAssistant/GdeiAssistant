@@ -102,6 +102,24 @@ npm run dev
 
 ---
 
+## 自动化测试基线
+
+```bash
+./gradlew test
+
+cd frontend
+npm ci
+npm run build
+npm run test:unit
+npm run test:e2e
+```
+
+- 后端 CI 执行 `./gradlew test`，覆盖单元、契约和集成边界测试。
+- 前端 CI 执行依赖安装、生产构建、Vitest 单元测试和 Playwright smoke E2E。
+- 本地 Playwright 如需复用系统 Chrome，可设置 `PLAYWRIGHT_CHROME_EXECUTABLE_PATH` 指向 Chrome 可执行文件。
+
+---
+
 ## 预览
 
 <p>

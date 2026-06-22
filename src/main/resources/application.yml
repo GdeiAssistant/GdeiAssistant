@@ -165,6 +165,7 @@ app:
 
 r2:
   endpoint: ${R2_ENDPOINT:}
+  presignEndpoint: ${R2_PRESIGN_ENDPOINT:}
   accessKeyId: ${R2_ACCESS_KEY_ID:}
   secretAccessKey: ${R2_SECRET_ACCESS_KEY:}
   bucketName: ${R2_BUCKET_NAME:gdeiassistant-userdata}

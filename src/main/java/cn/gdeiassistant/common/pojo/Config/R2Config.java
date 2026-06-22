@@ -22,6 +22,7 @@ import java.net.URI;
 public class R2Config {
 
     private String endpoint;
+    private String presignEndpoint;
     private String accessKeyId;
     private String secretAccessKey;
     private String bucketName;
@@ -30,6 +31,11 @@ public class R2Config {
     @Value("${r2.endpoint:}")
     public void setEndpoint(String endpoint) {
         this.endpoint = normalize(endpoint);
+    }
+
+    @Value("${r2.presignEndpoint:}")
+    public void setPresignEndpoint(String presignEndpoint) {
+        this.presignEndpoint = normalize(presignEndpoint);
     }
 
     @Value("${r2.accessKeyId:}")
@@ -77,7 +83,7 @@ public class R2Config {
             + "T(org.springframework.util.StringUtils).hasText('${r2.bucketName:}')")
     public S3Presigner r2S3Presigner() {
         return S3Presigner.builder()
-                .endpointOverride(URI.create(endpoint))
+                .endpointOverride(URI.create(getEffectivePresignEndpoint()))
                 .credentialsProvider(StaticCredentialsProvider.create(
                         AwsBasicCredentials.create(accessKeyId, secretAccessKey)))
                 .region(Region.of("auto"))
@@ -89,6 +95,14 @@ public class R2Config {
 
     public String getEndpoint() {
         return endpoint;
+    }
+
+    public String getPresignEndpoint() {
+        return presignEndpoint;
+    }
+
+    public String getEffectivePresignEndpoint() {
+        return StringUtils.isNotBlank(presignEndpoint) ? presignEndpoint : endpoint;
     }
 
     public String getAccessKeyId() {

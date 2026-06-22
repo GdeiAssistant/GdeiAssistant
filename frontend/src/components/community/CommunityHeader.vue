@@ -1,4 +1,5 @@
 <script setup>
+import { computed, useSlots } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -14,6 +15,8 @@ const props = defineProps({
 
 const emit = defineEmits(['back'])
 const router = useRouter()
+const slots = useSlots()
+const hasRightSlot = computed(() => Boolean(slots.right))
 
 function handleBack() {
   emit('back')
@@ -26,7 +29,7 @@ function handleBack() {
 <template>
   <header
     class="community-header"
-    :class="{ 'community-header--no-back': !showBack }"
+    :class="{ 'community-header--no-back': !showBack, 'community-header--with-right': hasRightSlot }"
     :style="{ '--module-color': moduleColor }"
   >
     <button

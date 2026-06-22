@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 // https://vite.dev/config/
+const backendProxyTarget = process.env.DEV_BACKEND_PROXY_TARGET || 'http://localhost:8080'
+
 export default defineConfig({
   plugins: [vue(), tailwindcss()],
   resolve: {
@@ -23,7 +25,7 @@ export default defineConfig({
     // /api 代理到 Java 后端
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: backendProxyTarget,
         changeOrigin: true
       }
     }

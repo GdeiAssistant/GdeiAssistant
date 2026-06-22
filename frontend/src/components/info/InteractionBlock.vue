@@ -8,7 +8,12 @@
         @click="$emit('mark-all')"
       >{{ $t('info.markAllRead') }}</button>
     </div>
-    <div v-if="!items.length" class="interaction-empty">{{ $t('info.noInteraction') }}</div>
+    <div v-if="!items.length" class="interaction-empty">
+      <div class="interaction-empty__icon">
+        <Inbox class="size-5" />
+      </div>
+      <div class="interaction-empty__text">{{ $t('info.noInteraction') }}</div>
+    </div>
     <div v-else class="interaction-list" style="margin-top:0">
       <button
         v-for="item in items"
@@ -39,6 +44,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { Inbox } from 'lucide-vue-next'
 
 const { t } = useI18n()
 
@@ -118,7 +124,7 @@ function getActionLabel(item) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #fa5151;
+  background: var(--c-danger);
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -137,7 +143,7 @@ function getActionLabel(item) {
 .card-action {
   border: none;
   background: transparent;
-  color: #576b95;
+  color: color-mix(in srgb, var(--c-primary) 56%, var(--c-text-2));
   font-size: 13px;
   padding: 0;
   flex-shrink: 0;
@@ -145,10 +151,44 @@ function getActionLabel(item) {
 }
 
 .interaction-empty {
-  padding: 12px 0 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 132px;
+  padding: 24px 18px;
+  text-align: center;
+  border: 1px solid color-mix(in srgb, var(--c-primary) 8%, var(--c-border));
+  border-radius: 18px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--c-primary) 3%, rgba(255, 255, 255, 0.94)),
+    color-mix(in srgb, var(--c-primary) 1%, rgba(255, 255, 255, 0.92))
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.interaction-empty__icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--c-primary) 14%, var(--c-border));
+  border-radius: 18px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-primary) 10%, rgba(255, 255, 255, 0.96)),
+    color-mix(in srgb, var(--c-primary) 4%, rgba(255, 255, 255, 0.94))
+  );
+  color: color-mix(in srgb, var(--c-primary) 52%, var(--c-text-2));
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--c-primary) 8%, transparent);
+}
+
+.interaction-empty__text {
   font-size: 14px;
   color: var(--color-text-tertiary);
-  text-align: center;
+  font-weight: 600;
 }
 
 .interaction-list {
@@ -159,12 +199,16 @@ function getActionLabel(item) {
 
 .interaction-item {
   width: 100%;
-  border: 1px solid var(--color-divider);
-  border-radius: 10px;
-  background: var(--color-bg-secondary);
-  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--c-primary) 10%, var(--c-border));
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.76), rgba(250, 255, 253, 0.58)),
+    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--c-primary) 6%, transparent), transparent 34%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.36);
+  padding: 14px;
   text-align: left;
   cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
 .interaction-item:active {
@@ -181,21 +225,21 @@ function getActionLabel(item) {
   flex: 1;
   min-width: 0;
   font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text-primary);
+  font-weight: 780;
+  color: var(--c-text-1);
 }
 
 .interaction-item__time {
   flex-shrink: 0;
   font-size: 12px;
-  color: var(--color-text-tertiary);
+  color: var(--c-text-3);
 }
 
 .interaction-item__content {
   margin-top: 8px;
   font-size: 13px;
-  line-height: 1.6;
-  color: var(--color-text-secondary);
+  line-height: 1.7;
+  color: var(--c-text-2);
 }
 
 .interaction-item__footer {
@@ -215,13 +259,13 @@ function getActionLabel(item) {
 
 .interaction-item__module {
   font-size: 12px;
-  color: #576b95;
+  color: color-mix(in srgb, var(--c-primary) 56%, var(--c-text-2));
 }
 
 .interaction-item__action {
   font-size: 12px;
-  color: #7c8797;
-  background: #eef2f7;
+  color: color-mix(in srgb, var(--c-text-2) 82%, var(--c-primary));
+  background: color-mix(in srgb, var(--c-primary) 8%, var(--c-surface));
   border-radius: 999px;
   padding: 2px 8px;
 }
@@ -249,4 +293,49 @@ function getActionLabel(item) {
 .interaction-item__state.is-unread {
   color: var(--color-primary);
 }
+
+.interaction-item:hover {
+  border-color: color-mix(in srgb, var(--c-primary) 18%, var(--c-border));
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(250, 255, 253, 0.72)),
+    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--c-primary) 8%, transparent), transparent 34%);
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--c-primary) 9%, transparent);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .interaction-empty {
+  border-color: color-mix(in srgb, var(--c-primary) 12%, rgba(68, 89, 112, 0.72));
+  background: linear-gradient(180deg, rgba(26, 39, 54, 0.88), rgba(22, 34, 48, 0.92));
+  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.06);
+}
+
+[data-theme="dark"] .interaction-item {
+  background: color-mix(in srgb, var(--c-primary) 4%, rgba(24, 38, 53, 0.96));
+  border-color: color-mix(in srgb, var(--c-primary) 16%, rgba(68, 89, 112, 0.78));
+}
+
+[data-theme="dark"] .interaction-item:hover {
+  background: color-mix(in srgb, var(--c-primary) 7%, rgba(32, 48, 68, 0.98));
+}
+
+[data-theme="dark"] .interaction-item__module {
+  color: color-mix(in srgb, var(--c-primary) 42%, var(--c-text-2));
+}
+
+[data-theme="dark"] .interaction-item__action {
+  color: color-mix(in srgb, var(--c-text-2) 88%, var(--c-primary));
+  background: color-mix(in srgb, var(--c-primary) 10%, rgba(32, 48, 68, 0.9));
+}
+
+[data-theme="dark"] .interaction-empty__icon {
+  border-color: color-mix(in srgb, var(--c-primary) 16%, rgba(68, 89, 112, 0.74));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-primary) 10%, rgba(32, 48, 68, 0.9)),
+    color-mix(in srgb, var(--c-primary) 5%, rgba(24, 38, 53, 0.94))
+  );
+  color: color-mix(in srgb, var(--c-primary) 34%, #dbeafe);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.16);
+}
+
 </style>

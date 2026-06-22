@@ -165,13 +165,13 @@ onUnmounted(() => {
     <div class="max-w-lg mx-auto px-4 py-6">
       <!-- Bound status -->
       <div v-if="currentEmail && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
-        <div class="text-5xl text-green-500 mb-4">&#10003;</div>
+        <div class="bind-email-status bind-email-status--success text-5xl mb-4">&#10003;</div>
         <h2 class="text-lg font-medium text-gray-700">{{ t('bindEmail.boundTitle') }}</h2>
         <p class="text-sm text-gray-500 mt-2">{{ t('bindEmail.boundDescription', { email: currentEmail }) }}</p>
         <div class="mt-8 space-y-3">
           <button
             type="button"
-            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer"
+            class="bind-email-primary-action w-full rounded-lg text-white font-medium py-2.5 cursor-pointer"
             @click="startEdit"
           >{{ t('bindEmail.edit') }}</button>
           <button
@@ -184,13 +184,13 @@ onUnmounted(() => {
 
       <!-- Unbound status -->
       <div v-else-if="!currentEmail && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
-        <div class="text-5xl text-blue-400 mb-4">i</div>
+        <div class="bind-email-status bind-email-status--info text-5xl mb-4">i</div>
         <h2 class="text-lg font-medium text-gray-700">{{ t('bindEmail.unboundTitle') }}</h2>
         <p class="text-sm text-gray-500 mt-2">{{ t('bindEmail.unboundDescription') }}</p>
         <div class="mt-8">
           <button
             type="button"
-            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer"
+            class="bind-email-primary-action w-full rounded-lg text-white font-medium py-2.5 cursor-pointer"
             @click="startBind"
           >{{ t('bindEmail.bindNow') }}</button>
         </div>
@@ -225,7 +225,7 @@ onUnmounted(() => {
             <button
               type="button"
               class="shrink-0 text-sm pl-3 border-l border-gray-200 cursor-pointer bg-transparent"
-              :class="canSendCode ? 'text-green-500' : 'text-gray-400'"
+              :class="canSendCode ? 'bind-email-code-link bind-email-code-link--active' : 'text-gray-400'"
               :disabled="!canSendCode"
               @click="handleSendCode"
             >
@@ -238,7 +238,7 @@ onUnmounted(() => {
         <div class="mt-8">
           <button
             type="button"
-            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 flex items-center justify-center active:bg-green-600 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            class="bind-email-primary-action w-full rounded-lg text-white font-medium py-2.5 flex items-center justify-center cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             :disabled="isBinding"
             @click="handleSubmit"
           >
@@ -288,3 +288,35 @@ onUnmounted(() => {
     </Teleport>
   </div>
 </template>
+
+<style scoped>
+.bind-email-primary-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 22%, transparent);
+}
+
+.bind-email-status--success {
+  color: color-mix(in srgb, var(--c-primary) 82%, #2dd4bf);
+}
+
+.bind-email-status--info {
+  color: color-mix(in srgb, var(--c-primary) 62%, #67e8f9);
+}
+
+.bind-email-code-link--active {
+  color: color-mix(in srgb, var(--c-primary) 76%, #14b8a6);
+}
+
+[data-theme="dark"] .bind-email-primary-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
+}
+
+[data-theme="dark"] .bind-email-status--success {
+  color: color-mix(in srgb, var(--c-primary) 62%, #ccfbf1);
+}
+
+[data-theme="dark"] .bind-email-status--info,
+[data-theme="dark"] .bind-email-code-link--active {
+  color: color-mix(in srgb, var(--c-primary) 58%, #67e8f9);
+}
+</style>

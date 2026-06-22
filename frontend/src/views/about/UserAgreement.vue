@@ -26,7 +26,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
             [&_li]:mb-2
             [&_a]:text-[var(--c-primary)] [&_a]:underline
             [&_strong]:font-semibold">
-          <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
+          <div v-if="isNonChinese" class="policy-notice policy-notice--language px-4 py-3 mb-4 text-sm leading-relaxed">
             {{ t('about.chineseOnlyNotice') }}
           </div>
 
@@ -35,7 +35,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p class="text-center">更新日期：2026年4月25日</p>
           <p class="text-center">生效日期：2026年5月11日</p>
 
-          <div class="bg-red-50 text-red-800 border border-red-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
+          <div class="policy-notice policy-notice--important px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>重要提示：</strong>广东二师助手是校园助手类服务，主要提供信息展示、查询、发布、沟通、撮合或辅助管理能力，不代表学校官方系统，也不等同于学校官方通知、官方教务、官方财务、官方校园卡、官方图书馆或官方快递服务。</p>
             <p class="!mb-2"><strong>校内系统优先：</strong>与学校官方系统数据、学校官方通知或相关部门说明不一致时，以学校官方系统、官方通知或相关部门说明为准。</p>
             <p class="!mb-0"><strong>本次修订说明：</strong>本次修订内容将自生效日期起适用；生效日前仍适用修订前版本。您在生效日期后继续使用相关服务的，视为已阅读并接受修订后的规则；法律法规另有规定或平台另行要求单独同意的，从其规定或以您的单独同意为准。</p>

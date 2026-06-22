@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { setLocale as setI18nLocale } from '@/i18n'
 import { getThemeMode, setThemeMode, getFontScaleStep, setFontScaleStep } from '@/theme'
+import { LOCALE_OPTIONS, resolveSupportedLocale } from '@/constants/localeOptions'
 
 const { t, locale } = useI18n()
 
@@ -24,16 +25,9 @@ const fontLabels = [
 
 const fontScales = [0.85, 1.0, 1.15, 1.3]
 
-const locales = [
-  { code: 'zh-CN', label: '简体中文' },
-  { code: 'zh-HK', label: '繁體中文（香港）' },
-  { code: 'zh-TW', label: '繁體中文（台灣）' },
-  { code: 'en', label: 'English' },
-  { code: 'ja', label: '日本語' },
-  { code: 'ko', label: '한국어' },
-]
+const locales = LOCALE_OPTIONS
 
-const selectedLocale = computed(() => locale.value)
+const selectedLocale = computed(() => resolveSupportedLocale(locale.value))
 
 function onThemeChange(value) {
   theme.value = value
@@ -48,6 +42,14 @@ function onFontChange(e) {
 
 function onLocaleChange(code) {
   setI18nLocale(code)
+}
+
+function isThemeSelected(value) {
+  return theme.value === value
+}
+
+function isLocaleSelected(code) {
+  return selectedLocale.value === code
 }
 </script>
 
@@ -66,10 +68,11 @@ function onLocaleChange(code) {
           :key="opt.value"
           type="button"
           class="option-item"
+          :class="{ 'option-item--active': isThemeSelected(opt.value) }"
           @click="onThemeChange(opt.value)"
         >
           <span>{{ t(opt.labelKey) }}</span>
-          <span v-if="theme === opt.value" class="check-icon">✓</span>
+          <span v-if="isThemeSelected(opt.value)" class="check-icon">✓</span>
         </button>
       </div>
     </div>
@@ -103,10 +106,11 @@ function onLocaleChange(code) {
           :key="loc.code"
           type="button"
           class="option-item"
+          :class="{ 'option-item--active': isLocaleSelected(loc.code) }"
           @click="onLocaleChange(loc.code)"
         >
           <span>{{ loc.label }}</span>
-          <span v-if="selectedLocale === loc.code" class="check-icon">✓</span>
+          <span v-if="isLocaleSelected(loc.code)" class="check-icon">✓</span>
         </button>
       </div>
     </div>
@@ -200,6 +204,15 @@ function onLocaleChange(code) {
   background: var(--c-primary-50);
 }
 
+.option-item--active {
+  background: color-mix(in srgb, var(--c-primary) 10%, rgba(255, 255, 255, 0.9));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 16%, transparent);
+}
+
+.option-item--active:hover {
+  background: color-mix(in srgb, var(--c-primary) 14%, rgba(255, 255, 255, 0.92));
+}
+
 .check-icon {
   color: var(--c-primary);
   font-weight: 900;
@@ -240,5 +253,14 @@ function onLocaleChange(code) {
 [data-theme="dark"] .font-preview {
   border-color: rgba(45, 58, 73, 0.86);
   background: rgba(20, 27, 37, 0.86);
+}
+
+[data-theme="dark"] .option-item--active {
+  background: color-mix(in srgb, var(--c-primary) 10%, rgba(29, 40, 54, 0.92));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 18%, rgba(103, 232, 249, 0.16));
+}
+
+[data-theme="dark"] .option-item--active:hover {
+  background: color-mix(in srgb, var(--c-primary) 14%, rgba(31, 45, 61, 0.94));
 }
 </style>

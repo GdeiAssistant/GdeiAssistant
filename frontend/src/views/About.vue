@@ -2,9 +2,10 @@
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { resolveSupportedLocale } from '@/constants/localeOptions'
 
 const router = useRouter()
-const { t, locale } = useI18n()
+const { t, locale } = useI18n({ useScope: 'global' })
 
 const ABOUT_LINK_LABELS = {
   'zh-CN': {
@@ -94,11 +95,8 @@ const ABOUT_LINK_LABELS = {
 }
 
 function resolveAboutLocale(value) {
-  const normalized = (value || 'zh-CN').toLowerCase()
-  if (normalized.startsWith('zh-hk')) return 'zh-HK'
-  if (normalized.startsWith('zh-tw') || normalized.startsWith('zh-hant')) return 'zh-TW'
-  if (normalized.startsWith('zh')) return 'zh-CN'
-  return 'en'
+  const resolved = resolveSupportedLocale(value)
+  return ['zh-CN', 'zh-HK', 'zh-TW'].includes(resolved) ? resolved : 'en'
 }
 
 function aboutLinkLabel(key) {
@@ -362,7 +360,7 @@ onMounted(() => {
       <div class="about-cookie-banner__content">
         <p>
           {{ t('about.cookieNotice') }}
-          <i18n-t keypath="about.cookieLearnMore" tag="span">
+          <i18n-t keypath="about.cookieLearnMore" tag="span" scope="global">
             <template #link>
               <a href="/policy/cookie">{{ t('about.cookiePolicy') }}</a>
             </template>
@@ -572,6 +570,9 @@ onMounted(() => {
   overflow: hidden;
   min-height: 420px;
   padding: clamp(28px, 5vw, 54px);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(189, 241, 223, 0.2), transparent 28%),
+    radial-gradient(circle at 92% 6%, rgba(176, 227, 255, 0.16), transparent 32%);
 }
 
 .about-hero::before {
@@ -588,6 +589,7 @@ onMounted(() => {
   position: relative;
   z-index: 1;
   display: flex;
+  max-width: 580px;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
@@ -605,10 +607,15 @@ onMounted(() => {
 
 .about-hero__copy p {
   margin: 22px 0 0;
-  max-width: 620px;
+  max-width: 560px;
+  border: 1px solid rgba(218, 230, 233, 0.9);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(247, 252, 255, 0.58));
   color: var(--c-text-2);
-  font-size: 16px;
-  line-height: 1.9;
+  font-size: 15px;
+  line-height: 1.88;
+  padding: 18px 20px;
+  box-shadow: 0 18px 38px rgba(32, 69, 78, 0.07);
 }
 
 .about-primary-action {
@@ -634,6 +641,7 @@ onMounted(() => {
   position: relative;
   z-index: 1;
   min-height: 340px;
+  filter: drop-shadow(0 22px 50px rgba(29, 72, 83, 0.12));
 }
 
 .about-logo-orb {
@@ -814,13 +822,14 @@ onMounted(() => {
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  max-width: 900px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: min(760px, calc(100vw - 32px));
+  max-width: 760px;
+  border: 1px solid rgba(205, 221, 228, 0.88);
   border-radius: 22px;
-  background: rgba(16, 32, 51, 0.9);
-  color: #fff;
-  padding: 16px 18px;
-  box-shadow: 0 22px 60px rgba(16, 32, 51, 0.28);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--c-text-1);
+  padding: 14px 16px;
+  box-shadow: 0 18px 42px rgba(32, 69, 78, 0.16);
   backdrop-filter: blur(18px);
 }
 
@@ -831,7 +840,7 @@ onMounted(() => {
 }
 
 .about-cookie-banner__content a {
-  color: #6ee7b7;
+  color: var(--c-primary);
   text-decoration: underline;
 }
 
@@ -841,8 +850,8 @@ onMounted(() => {
   flex: 0 0 auto;
   border: 0;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  background: rgba(15, 23, 42, 0.08);
+  color: var(--c-text-2);
   cursor: pointer;
   font-size: 20px;
   line-height: 1;
@@ -869,58 +878,64 @@ onMounted(() => {
 
   .about-hero {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
     min-height: 0;
-    padding: 28px 22px;
+    padding: 24px 18px 18px;
   }
 
   .about-hero__copy h1 {
-    font-size: 34px;
+    font-size: 30px;
   }
 
   .about-hero__copy p {
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    font-size: 15px;
+    -webkit-line-clamp: 4;
+    font-size: 14px;
+    line-height: 1.78;
+    padding: 14px 15px;
+    border-radius: 20px;
   }
 
   .about-primary-action {
     width: 100%;
+    margin-top: 18px;
+    min-width: 0;
+    padding: 13px 20px;
   }
 
   .about-hero__visual {
-    min-height: 250px;
-    margin-top: 16px;
+    min-height: 214px;
+    margin-top: 6px;
   }
 
   .about-logo-orb {
     top: 0;
-    right: 18px;
-    width: 104px;
-    height: 104px;
-    border-radius: 30px;
+    right: 10px;
+    width: 88px;
+    height: 88px;
+    border-radius: 26px;
   }
 
   .about-logo-orb img {
-    width: 72px;
-    height: 72px;
+    width: 60px;
+    height: 60px;
   }
 
   .about-phone-card {
-    width: 136px;
-    border-width: 6px;
-    border-radius: 24px;
+    width: 122px;
+    border-width: 5px;
+    border-radius: 22px;
   }
 
   .about-phone-card--front {
-    right: 32px;
+    right: 20px;
   }
 
   .about-phone-card--back {
-    right: 156px;
-    bottom: 28px;
+    right: 130px;
+    bottom: 20px;
   }
 
   .about-gallery img {
@@ -933,6 +948,23 @@ onMounted(() => {
     right: 12px;
     bottom: 12px;
     left: 12px;
+  }
+
+  .about-cookie-banner__content {
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 20px;
+  }
+
+  .about-cookie-banner__content p {
+    font-size: 12px;
+    line-height: 1.62;
+  }
+
+  .about-cookie-banner__content button {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
   }
 }
 
@@ -947,6 +979,47 @@ onMounted(() => {
 [data-theme="dark"] .about-menu-group,
 [data-theme="dark"] .about-media-link {
   border-color: rgba(45, 58, 73, 0.86);
-  background: rgba(20, 27, 37, 0.86);
+  background:
+    radial-gradient(circle at 0 0, rgba(45, 212, 191, 0.06), transparent 28%),
+    linear-gradient(180deg, rgba(20, 27, 37, 0.9), rgba(17, 24, 34, 0.94));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 18px 44px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .about-hero__copy p {
+  border-color: rgba(68, 89, 112, 0.72);
+  background: linear-gradient(145deg, rgba(19, 34, 47, 0.84), rgba(21, 39, 53, 0.62));
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+}
+
+[data-theme="dark"] .about-topbar {
+  backdrop-filter: blur(18px);
+}
+
+[data-theme="dark"] .about-cookie-banner__content {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(16, 32, 51, 0.9);
+  color: #fff;
+  box-shadow: 0 22px 60px rgba(16, 32, 51, 0.28);
+}
+
+[data-theme="dark"] .about-cookie-banner__content a {
+  color: #6ee7b7;
+}
+
+[data-theme="dark"] .about-cookie-banner__content button {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+[data-theme="dark"] .about-menu-button {
+  border-color: rgba(78, 98, 120, 0.86);
+  background: rgba(27, 43, 60, 0.9);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+[data-theme="dark"] .about-menu-button span {
+  background: var(--c-text-1);
 }
 </style>

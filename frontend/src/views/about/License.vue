@@ -196,7 +196,7 @@ const apacheLicenseText = `                                 Apache License
     <div class="max-w-3xl mx-auto px-4 py-6">
       <div class="rounded-xl bg-[var(--c-surface)] border border-[var(--c-border)] p-5 md:p-6">
         <div class="text-sm leading-7 text-[var(--c-text-2)] [&_p]:mb-3 [&_h3]:mt-7 [&_h3]:mb-3 [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-[var(--c-text-primary)] [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2 [&_pre]:mb-0 [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_pre]:rounded-lg [&_pre]:border [&_pre]:border-[var(--c-border)] [&_pre]:bg-[var(--c-bg)] [&_pre]:p-4 [&_pre]:text-xs [&_pre]:leading-6 [&_pre]:text-[var(--c-text-2)] [&_pre]:overflow-x-auto [&_strong]:font-semibold">
-          <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
+          <div v-if="isNonChinese" class="policy-notice policy-notice--language px-4 py-3 mb-4 text-sm leading-relaxed">
             本页面补充说明目前仅提供中文版本；Apache-2.0 原文保持英文。
           </div>
 

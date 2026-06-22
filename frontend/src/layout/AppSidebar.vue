@@ -288,19 +288,19 @@ function avatarInitial() {
 }
 
 [data-theme="dark"] .campus-sidebar {
-  border-color: rgba(45, 58, 73, 0.88);
+  border-color: rgba(68, 89, 112, 0.72);
   background:
-    linear-gradient(180deg, rgba(20, 27, 37, 0.94), rgba(16, 23, 31, 0.9)),
-    radial-gradient(circle at 45% 100%, rgba(45, 212, 191, 0.12), transparent 46%);
-  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.32);
+    linear-gradient(180deg, rgba(18, 30, 42, 0.96), rgba(16, 25, 35, 0.92)),
+    radial-gradient(circle at 45% 100%, rgba(45, 212, 191, 0.1), transparent 46%);
+  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.28);
 }
 
 [data-theme="dark"] .campus-sidebar__item:hover,
 [data-theme="dark"] .campus-sidebar__profile {
-  background: rgba(31, 41, 55, 0.72);
+  background: rgba(32, 48, 68, 0.72);
 }
 
 [data-theme="dark"] .campus-sidebar__footer {
-  border-top-color: rgba(45, 58, 73, 0.88);
+  border-top-color: rgba(68, 89, 112, 0.72);
 }
 </style>

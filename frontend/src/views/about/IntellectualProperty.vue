@@ -25,7 +25,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
             [&_li]:mb-2
             [&_a]:text-[var(--c-primary)] [&_a]:underline
             [&_strong]:font-semibold">
-          <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
+          <div v-if="isNonChinese" class="policy-notice policy-notice--language px-4 py-3 mb-4 text-sm leading-relaxed">
             {{ t('about.chineseOnlyNotice') }}
           </div>
 
@@ -34,7 +34,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p class="text-center">更新日期：2026年4月25日</p>
           <p class="text-center">生效日期：2026年5月11日</p>
 
-          <div class="bg-amber-50 text-amber-900 border border-amber-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
+          <div class="policy-notice policy-notice--warm px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>适用范围：</strong>当您认为平台内内容侵犯著作权、商标权、肖像权、名誉权、隐私权、商业秘密或其他合法权益时，可依本规则提交投诉；被投诉用户也可提交反通知或申诉。</p>
             <p class="!mb-0"><strong>提交提醒：</strong>请尽量通过应用内“帮助与反馈”或页面公示的其他渠道提交材料；不适合公开披露的敏感材料，请避免直接在公开页面贴出完整细节。</p>
           </div>

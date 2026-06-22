@@ -131,12 +131,29 @@ function toggleTheme() {
 
 @media (max-width: 767px) {
   .campus-topbar {
-    min-height: 62px;
-    padding: 10px 14px;
+    min-height: 56px;
+    gap: 12px;
+    padding: 8px 12px;
   }
 
   .campus-topbar__menu {
     display: inline-flex;
+  }
+
+  .campus-topbar__left,
+  .campus-topbar__actions {
+    gap: 10px;
+  }
+
+  .campus-topbar__title {
+    font-size: 16px;
+    font-weight: 820;
+  }
+
+  .campus-topbar__icon-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 14px;
   }
 
   .campus-topbar__desktop-title {
@@ -149,12 +166,12 @@ function toggleTheme() {
 }
 
 [data-theme="dark"] .campus-topbar {
-  border-bottom-color: rgba(45, 58, 73, 0.88);
-  background: rgba(12, 18, 26, 0.78);
+  border-bottom-color: rgba(68, 89, 112, 0.72);
+  background: rgba(18, 30, 42, 0.82);
 }
 
 [data-theme="dark"] .campus-topbar__icon-button {
-  border-color: rgba(55, 69, 86, 0.88);
-  background: rgba(20, 27, 37, 0.82);
+  border-color: rgba(74, 96, 120, 0.78);
+  background: rgba(32, 48, 68, 0.82);
 }
 </style>

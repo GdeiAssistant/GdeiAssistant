@@ -80,7 +80,7 @@ watch(
 
 <template>
   <div class="min-h-screen bg-[var(--c-bg)] pb-5">
-    <CommunityHeader :title="t('marketplace.searchTitle')" moduleColor="#10b981" :showBack="true" @back="router.back()" backTo="" />
+    <CommunityHeader :title="t('marketplace.searchTitle')" moduleColor="var(--c-ershou)" :showBack="true" @back="router.back()" backTo="" />
 
     <!-- 搜索栏 -->
     <div class="flex items-center px-4 py-2.5 bg-[var(--c-bg)]">
@@ -88,7 +88,7 @@ watch(
         <i class="inline-block w-4 h-4 shrink-0 mr-1.5 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27%239ca3af%27%3E%3Cpath%20d=%27M15.5%2014h-.79l-.28-.27C15.41%2012.59%2016%2011.11%2016%209.5%2016%205.91%2013.09%203%209.5%203S3%205.91%203%209.5%205.91%2016%209.5%2016c1.61%200%203.09-.59%204.23-1.57l.27.28v.79l5%204.99L20.49%2019l-4.99-5zm-6%200C7.01%2014%205%2011.99%205%209.5S7.01%205%209.5%205%2014%207.01%2014%209.5%2011.99%2014%209.5%2014z%27/%3E%3C/svg%3E')] bg-center bg-contain bg-no-repeat"></i>
         <input type="text" :placeholder="t('marketplace.searchPlaceholder')" v-model="keywordInput" @keyup.enter="doSearch" class="flex-1 border-none outline-none text-sm bg-transparent min-w-0 text-[var(--c-text-1)]" />
       </div>
-      <span class="text-emerald-500 text-[15px] ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">{{ t('marketplace.searchAction') }}</span>
+      <span class="marketplace-action-link text-[15px] ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">{{ t('marketplace.searchAction') }}</span>
     </div>
 
     <!-- 滚动容器 -->
@@ -105,7 +105,7 @@ watch(
       <!-- 下拉刷新指示器 -->
       <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
         <span v-if="refreshing" class="flex items-center gap-2">
-          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] marketplace-spinner-accent rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
         </span>
         <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
         <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
@@ -124,7 +124,7 @@ watch(
           </div>
           <h3 class="text-sm font-medium text-[var(--c-text-1)] mx-2 mt-2 p-0 line-clamp-2 leading-snug">{{ item.title }}</h3>
           <p class="text-xs text-[var(--c-text-3)] mx-2 mt-1 p-0 truncate">{{ item.desc }}</p>
-          <em class="block text-base font-semibold text-[#e4393c] mx-2 mt-1.5 mb-2 p-0 not-italic">{{ item.price }}</em>
+          <em class="block text-base font-semibold marketplace-price mx-2 mt-1.5 mb-2 p-0 not-italic">{{ item.price }}</em>
         </div>
       </div>
 
@@ -136,7 +136,7 @@ watch(
 
       <!-- 上拉加载更多 -->
       <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-emerald-500 rounded-full animate-spin"></i>
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] marketplace-spinner-accent rounded-full animate-spin"></i>
         <span>{{ pullMessages.loading }}</span>
       </div>
       <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
@@ -150,3 +150,30 @@ watch(
     </div>
   </div>
 </template>
+
+<style scoped>
+.marketplace-action-link {
+  color: color-mix(in srgb, var(--c-ershou) 84%, var(--c-text-1));
+}
+
+.marketplace-action-link:hover {
+  color: color-mix(in srgb, var(--c-ershou) 92%, var(--c-text-1));
+}
+
+.marketplace-action-icon {
+  color: color-mix(in srgb, var(--c-ershou) 82%, var(--c-text-1));
+}
+
+.marketplace-spinner-accent {
+  border-top-color: color-mix(in srgb, var(--c-ershou) 86%, var(--c-text-1)) !important;
+}
+
+.marketplace-price {
+  color: color-mix(in srgb, var(--c-ershou) 18%, var(--c-warning));
+}
+
+[data-theme="dark"] .marketplace-price {
+  color: color-mix(in srgb, var(--c-warning) 78%, #fde68a);
+}
+
+</style>

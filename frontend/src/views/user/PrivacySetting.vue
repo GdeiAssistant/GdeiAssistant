@@ -1,21 +1,21 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="privacy-setting-page min-h-screen">
     <!-- Sticky Header -->
-    <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-base text-gray-700 text-left" @click="goBack">{{ t('common.back') }}</button>
-      <div class="flex-1 text-center text-lg font-medium text-black">{{ t('profile.privacySetting') }}</div>
+    <div class="privacy-setting-header sticky top-0 z-10 flex items-center h-12 px-4">
+      <button type="button" class="privacy-setting-back w-15 text-base text-left" @click="goBack">{{ t('common.back') }}</button>
+      <div class="privacy-setting-title flex-1 text-center text-lg font-medium">{{ t('profile.privacySetting') }}</div>
       <div class="w-15"></div>
     </div>
 
     <!-- Content -->
     <div class="max-w-lg mx-auto px-4 py-6">
-      <div class="bg-white rounded-xl shadow-sm divide-y divide-gray-100">
+      <div class="privacy-setting-card rounded-xl shadow-sm divide-y">
         <label
           v-for="item in privacyList"
           :key="item.key"
-          class="flex items-center justify-between px-4 py-3 cursor-pointer"
+          class="privacy-setting-row flex items-center justify-between px-4 py-3 cursor-pointer"
         >
-          <span class="text-base text-gray-700">{{ item.name }}</span>
+          <span class="privacy-setting-label text-base">{{ item.name }}</span>
           <div class="relative inline-flex items-center">
             <input
               type="checkbox"
@@ -23,7 +23,7 @@
               :checked="item.status"
               @change="handlePrivacyChange(item)"
             />
-            <div class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-green-500 transition-colors after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+            <div class="privacy-setting-switch w-11 h-6 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
           </div>
         </label>
       </div>
@@ -112,3 +112,69 @@ onMounted(() => {
   loadPrivacySettings()
 })
 </script>
+
+<style scoped>
+.privacy-setting-page {
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 8%, transparent), transparent 30%),
+    var(--c-bg-soft);
+}
+
+.privacy-setting-header {
+  background: color-mix(in srgb, var(--c-surface) 94%, var(--c-bg));
+  border-bottom: 1px solid var(--c-border-light);
+  backdrop-filter: blur(18px);
+}
+
+.privacy-setting-back,
+.privacy-setting-title,
+.privacy-setting-label {
+  color: var(--c-text-1);
+}
+
+.privacy-setting-card {
+  background: var(--c-surface);
+  border: 1px solid color-mix(in srgb, var(--c-primary) 8%, var(--c-border-light));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 8%, rgba(15, 23, 42, 0.06));
+}
+
+.privacy-setting-row + .privacy-setting-row {
+  border-top: 1px solid var(--c-border-light);
+}
+
+.privacy-setting-switch {
+  background: color-mix(in srgb, var(--c-text-3) 18%, var(--c-border));
+}
+
+.peer:checked + .privacy-setting-switch {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
+}
+
+[data-theme="dark"] .privacy-setting-page {
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 10%, transparent), transparent 30%),
+    var(--c-bg);
+}
+
+[data-theme="dark"] .privacy-setting-header {
+  background: color-mix(in srgb, var(--c-surface) 88%, rgba(10, 20, 32, 0.9));
+  border-bottom-color: rgba(68, 89, 112, 0.72);
+}
+
+[data-theme="dark"] .privacy-setting-card {
+  border-color: rgba(68, 89, 112, 0.72);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .privacy-setting-row + .privacy-setting-row {
+  border-top-color: rgba(68, 89, 112, 0.72);
+}
+
+[data-theme="dark"] .privacy-setting-switch {
+  background: rgba(36, 52, 69, 0.88);
+}
+
+[data-theme="dark"] .peer:checked + .privacy-setting-switch {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
+}
+</style>

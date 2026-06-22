@@ -2,6 +2,7 @@
 import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { Sparkles } from 'lucide-vue-next'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import { getDatingCenterCopy } from './datingContent'
@@ -178,9 +179,9 @@ function getStatusText(status) {
 
 function getStatusClass(status) {
   const s = String(status)
-  if (s === '0') return 'bg-amber-100 text-amber-800'
-  if (s === '1') return 'bg-green-100 text-green-800'
-  return 'bg-red-100 text-red-800'
+  if (s === '0') return 'dating-status--pending'
+  if (s === '1') return 'dating-status--accepted'
+  return 'dating-status--rejected'
 }
 
 onMounted(() => {
@@ -195,8 +196,8 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)] pb-6">
-    <CommunityHeader :title="copy.title" moduleColor="#ec4899" backTo="/dating/home" />
+  <div class="community-dating-page min-h-screen bg-[var(--c-bg)] pb-6">
+    <CommunityHeader :title="copy.title" moduleColor="var(--c-dating)" backTo="/dating/home" />
 
     <!-- Tabs -->
     <div class="flex bg-[var(--c-card)] border-b border-[var(--c-border)]">
@@ -204,21 +205,23 @@ watch(() => route.fullPath, () => {
         v-for="(label, idx) in tabLabels"
         :key="idx"
         class="flex-1 text-center py-3 text-base cursor-pointer relative transition-all duration-300"
-        :class="activeTab === idx ? 'text-pink-500 font-bold' : 'text-[var(--c-text-2)]'"
+        :class="activeTab === idx ? 'text-[var(--c-dating)] font-bold' : 'text-[var(--c-text-2)]'"
         @click="switchTab(idx)"
       >
         {{ label }}
-        <div v-if="activeTab === idx" class="absolute bottom-0 left-0 right-0 h-[3px] bg-pink-500"></div>
+        <div v-if="activeTab === idx" class="absolute bottom-0 left-0 right-0 h-[3px] bg-[var(--c-dating)]"></div>
       </div>
     </div>
 
     <!-- Tab 1: Received -->
     <div v-if="activeTab === 0" class="p-4">
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-dating)] rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
       </div>
-      <div v-else-if="receivedList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-4xl mb-2">💕</div>
+      <div v-else-if="receivedList.length === 0" class="dating-empty-state">
+        <div class="dating-empty-state__icon">
+          <Sparkles class="size-7" />
+        </div>
         <div class="text-sm">{{ copy.emptyReceived }}</div>
       </div>
       <div v-else class="flex flex-col gap-3">
@@ -237,10 +240,10 @@ watch(() => route.fullPath, () => {
           </div>
           <div class="p-3 bg-[var(--c-bg)] rounded-lg text-sm text-[var(--c-text-2)] leading-relaxed mb-3">{{ item.content }}</div>
           <div v-if="item.status === 0" class="flex gap-3 mt-2">
-            <button type="button" class="flex-1 py-2 border-none rounded-lg text-sm cursor-pointer transition-opacity active:opacity-70 bg-pink-500 text-white" @click="handleAccept(item)">{{ copy.acceptAction }}</button>
+            <button type="button" class="flex-1 py-2 border-none rounded-lg text-sm cursor-pointer transition-opacity active:opacity-70 bg-[var(--c-dating)] text-white" @click="handleAccept(item)">{{ copy.acceptAction }}</button>
             <button type="button" class="flex-1 py-2 border-none rounded-lg text-sm cursor-pointer transition-opacity active:opacity-70 bg-[var(--c-border)] text-[var(--c-text-2)]" @click="handleReject(item)">{{ copy.rejectAction }}</button>
           </div>
-          <div v-else-if="item.status === 1" class="mt-2 text-center text-sm font-medium text-pink-500">{{ copy.acceptedShown }}</div>
+          <div v-else-if="item.status === 1" class="mt-2 text-center text-sm font-medium text-[var(--c-dating)]">{{ copy.acceptedShown }}</div>
           <div v-else-if="item.status === -1 || item.status === 2" class="mt-2 text-center text-sm font-medium text-[var(--c-text-3)]">{{ copy.rejected }}</div>
         </div>
       </div>
@@ -249,10 +252,12 @@ watch(() => route.fullPath, () => {
     <!-- Tab 2: Sent -->
     <div v-if="activeTab === 1" class="p-4">
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-dating)] rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
       </div>
-      <div v-else-if="sentList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-4xl mb-2">💕</div>
+      <div v-else-if="sentList.length === 0" class="dating-empty-state">
+        <div class="dating-empty-state__icon">
+          <Sparkles class="size-7" />
+        </div>
         <div class="text-sm">{{ copy.emptySent }}</div>
       </div>
       <div v-else class="flex flex-col gap-3">
@@ -272,9 +277,9 @@ watch(() => route.fullPath, () => {
             </div>
           </div>
           <div class="p-3 bg-[var(--c-bg)] rounded-lg text-sm text-[var(--c-text-2)] leading-relaxed mb-3">{{ item.content }}</div>
-          <div v-if="item.status === 1" class="mt-2 p-3 bg-pink-50 rounded-lg border-l-[3px] border-pink-500">
+          <div v-if="item.status === 1" class="mt-2 p-3 bg-[color-mix(in_srgb,var(--c-dating)_12%,transparent)] rounded-lg border-l-[3px] border-[var(--c-dating)]">
             <div class="text-xs text-[var(--c-text-2)] mb-1.5">{{ copy.contactLabel }}</div>
-            <div class="text-sm text-pink-500 font-medium leading-loose">
+            <div class="text-sm text-[var(--c-dating)] font-medium leading-loose">
               <span v-if="item.targetQq">{{ copy.qqLabel }}: {{ item.targetQq }}</span>
               <span v-if="item.targetWechat" class="ml-2">{{ copy.wechatLabel }}: {{ item.targetWechat }}</span>
             </div>
@@ -286,10 +291,12 @@ watch(() => route.fullPath, () => {
     <!-- Tab 3: My posts -->
     <div v-if="activeTab === 2" class="p-4">
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-pink-500 rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-dating)] rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
       </div>
-      <div v-else-if="postsList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-4xl mb-2">💕</div>
+      <div v-else-if="postsList.length === 0" class="dating-empty-state">
+        <div class="dating-empty-state__icon">
+          <Sparkles class="size-7" />
+        </div>
         <div class="text-sm">{{ copy.emptyPosts }}</div>
       </div>
       <div v-else class="flex flex-col gap-3">
@@ -315,7 +322,7 @@ watch(() => route.fullPath, () => {
       <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
       <div class="border-t border-[var(--c-border)] flex">
-        <a href="javascript:;" class="flex-1 text-center py-3 text-pink-500 font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-[var(--c-dating)] font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
       </div>
     </div>
 
@@ -326,8 +333,82 @@ watch(() => route.fullPath, () => {
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ copy.hideDescription }}</div>
       <div class="border-t border-[var(--c-border)] flex">
         <a href="javascript:;" class="flex-1 text-center py-3 text-[var(--c-text-2)] no-underline border-r border-[var(--c-border)]" @click="deleteDialogVisible = false">{{ t('common.cancel') }}</a>
-        <a href="javascript:;" class="flex-1 text-center py-3 text-pink-500 font-medium no-underline" @click="confirmDelete">{{ t('common.confirm') }}</a>
+        <a href="javascript:;" class="flex-1 text-center py-3 text-[var(--c-dating)] font-medium no-underline" @click="confirmDelete">{{ t('common.confirm') }}</a>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.dating-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 64px 0;
+  color: var(--c-text-3);
+}
+
+.dating-empty-state__icon {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--c-dating) 18%, var(--c-border));
+  border-radius: 18px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-dating) 12%, rgba(255, 255, 255, 0.96)),
+    color-mix(in srgb, var(--c-dating) 4%, rgba(255, 255, 255, 0.92))
+  );
+  color: color-mix(in srgb, var(--c-dating) 78%, var(--c-text-1));
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--c-dating) 10%, transparent);
+}
+
+.dating-status--pending {
+  border: 1px solid color-mix(in srgb, var(--c-dating) 16%, var(--c-warning));
+  background: color-mix(in srgb, var(--c-dating) 8%, rgba(255, 255, 255, 0.86));
+  color: color-mix(in srgb, var(--c-dating) 52%, #8a5a0a);
+}
+
+.dating-status--accepted {
+  border: 1px solid color-mix(in srgb, var(--c-dating) 24%, var(--c-border));
+  background: color-mix(in srgb, var(--c-dating) 12%, rgba(255, 255, 255, 0.88));
+  color: color-mix(in srgb, var(--c-dating) 86%, var(--c-text-1));
+}
+
+.dating-status--rejected {
+  border: 1px solid color-mix(in srgb, var(--c-dating) 10%, var(--c-danger));
+  background: color-mix(in srgb, var(--c-dating) 6%, rgba(255, 255, 255, 0.84));
+  color: color-mix(in srgb, var(--c-dating) 24%, var(--c-danger));
+}
+
+[data-theme="dark"] .dating-status--pending {
+  border-color: color-mix(in srgb, var(--c-dating) 16%, rgba(125, 211, 199, 0.72));
+  background: color-mix(in srgb, var(--c-dating) 8%, rgba(32, 48, 68, 0.82));
+  color: color-mix(in srgb, var(--c-warning) 64%, #f8fafc);
+}
+
+[data-theme="dark"] .dating-empty-state__icon {
+  border-color: color-mix(in srgb, var(--c-dating) 18%, rgba(91, 118, 144, 0.72));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-dating) 14%, rgba(32, 48, 68, 0.88)),
+    color-mix(in srgb, var(--c-dating) 6%, rgba(24, 38, 53, 0.92))
+  );
+  color: color-mix(in srgb, var(--c-dating) 58%, var(--c-text-1));
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--c-dating) 12%, transparent);
+}
+
+[data-theme="dark"] .dating-status--accepted {
+  border-color: color-mix(in srgb, var(--c-dating) 20%, rgba(74, 96, 120, 0.68));
+  background: color-mix(in srgb, var(--c-dating) 9%, rgba(32, 48, 68, 0.84));
+  color: color-mix(in srgb, var(--c-dating) 54%, var(--c-text-1));
+}
+
+[data-theme="dark"] .dating-status--rejected {
+  border-color: color-mix(in srgb, var(--c-dating) 12%, rgba(248, 113, 113, 0.72));
+  background: color-mix(in srgb, var(--c-dating) 6%, rgba(32, 48, 68, 0.82));
+  color: color-mix(in srgb, var(--c-danger) 56%, #f8fafc);
+}
+</style>

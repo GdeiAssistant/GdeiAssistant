@@ -118,7 +118,7 @@ onUnmounted(() => {
 
 .campus-content {
   width: 100%;
-  max-width: 1230px;
+  max-width: 1360px;
   margin: 0 auto;
   padding: 26px 32px 56px;
 }
@@ -201,14 +201,14 @@ onUnmounted(() => {
 
 [data-theme="dark"] .campus-app-shell {
   background:
-    radial-gradient(circle at 15% 8%, rgba(45, 212, 191, 0.16), transparent 28%),
-    radial-gradient(circle at 84% 10%, rgba(96, 165, 250, 0.13), transparent 26%),
-    var(--c-bg);
+    radial-gradient(circle at 15% 8%, rgba(45, 212, 191, 0.1), transparent 28%),
+    radial-gradient(circle at 84% 10%, rgba(96, 165, 250, 0.1), transparent 26%),
+    linear-gradient(180deg, #101923 0%, #0f1822 100%);
 }
 
 [data-theme="dark"] .campus-mobile-tabbar {
-  border-top-color: rgba(43, 52, 65, 0.9);
-  background: rgba(19, 25, 34, 0.92);
-  box-shadow: 0 -16px 34px rgba(0, 0, 0, 0.34);
+  border-top-color: rgba(68, 89, 112, 0.74);
+  background: rgba(18, 30, 42, 0.92);
+  box-shadow: 0 -16px 34px rgba(0, 0, 0, 0.28);
 }
 </style>

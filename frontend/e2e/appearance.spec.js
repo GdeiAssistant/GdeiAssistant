@@ -53,6 +53,14 @@ test.describe('Appearance page', () => {
     await expect(page.locator('input[type="range"]')).toBeVisible()
   })
 
+  test('language option keeps zh-HK wording aligned with About page', async ({ page }) => {
+    await page.goto('/appearance')
+
+    const languageSection = page.locator('.appearance-section').filter({ hasText: '语言' }).first()
+    await expect(languageSection.getByText('繁體中文（香港）')).toBeVisible()
+    await expect(languageSection.getByText('繁體中文（港澳）')).toHaveCount(0)
+  })
+
   test('no FOUC — data-theme is set before page renders', async ({ page }) => {
     // Set dark theme preference before navigation
     await page.addInitScript(() => localStorage.setItem('theme', 'dark'))

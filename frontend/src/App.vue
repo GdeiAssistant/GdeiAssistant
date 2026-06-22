@@ -1,24 +1,32 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import AppToast from '@/components/ui/AppToast.vue'
 
 const route = useRoute()
+const AppSidebar = defineAsyncComponent(() => import('@/layout/AppSidebar.vue'))
 
 const COMMUNITY_PREFIXES = ['/ershou', '/marketplace', '/lostandfound', '/secret', '/express', '/topic', '/delivery', '/dating', '/photograph']
 
-const transitionName = computed(() => {
+const isCommunityRoute = computed(() => {
   const p = route.path
   return COMMUNITY_PREFIXES.some(prefix => p === prefix || p.startsWith(prefix + '/'))
-    ? 'community-fade'
-    : ''
+})
+
+const transitionName = computed(() => {
+  return isCommunityRoute.value ? 'community-fade' : ''
 })
 </script>
 
 <template>
   <router-view v-slot="{ Component }">
     <transition :name="transitionName" mode="out-in">
-      <component :is="Component" />
+      <div :class="{ 'community-route-shell': isCommunityRoute }">
+        <AppSidebar v-if="isCommunityRoute" class="community-route-shell__sidebar" />
+        <div :class="{ 'community-route-shell__content': isCommunityRoute }">
+          <component :is="Component" />
+        </div>
+      </div>
     </transition>
   </router-view>
   <AppToast />
@@ -31,6 +39,32 @@ const transitionName = computed(() => {
 .community-fade-leave-active {
   animation: community-page-out 0.15s ease;
 }
+
+.community-route-shell {
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  .community-route-shell {
+    min-height: 100vh;
+    padding-left: 232px;
+    background:
+      radial-gradient(circle at 14% 0, rgba(45, 212, 191, 0.12), transparent 28%),
+      radial-gradient(circle at 84% 10%, rgba(96, 165, 250, 0.1), transparent 28%),
+      var(--c-bg);
+  }
+
+  .community-route-shell__content {
+    min-height: 100vh;
+  }
+}
+
+@media (max-width: 767px) {
+  .community-route-shell__sidebar {
+    display: none;
+  }
+}
+
 @keyframes community-page-in {
   from {
     opacity: 0;

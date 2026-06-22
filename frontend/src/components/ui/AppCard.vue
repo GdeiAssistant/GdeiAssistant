@@ -43,13 +43,18 @@ const slots = useSlots()
 }
 
 [data-theme="dark"] .app-card {
-  border-color: rgba(45, 58, 73, 0.86);
-  background: rgba(20, 27, 37, 0.78);
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.28);
+  border-color: rgba(68, 89, 112, 0.74);
+  background:
+    radial-gradient(circle at 0 0, rgba(45, 212, 191, 0.07), transparent 26%),
+    linear-gradient(180deg, rgba(23, 33, 46, 0.96), rgba(18, 27, 38, 0.98));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 18px 42px rgba(0, 0, 0, 0.24);
 }
 
 [data-theme="dark"] .app-card__header {
-  border-bottom-color: rgba(45, 58, 73, 0.86);
-  background: rgba(31, 41, 55, 0.34);
+  border-bottom-color: rgba(68, 89, 112, 0.58);
+  background:
+    linear-gradient(180deg, rgba(35, 46, 61, 0.68), rgba(30, 40, 53, 0.36));
 }
 </style>

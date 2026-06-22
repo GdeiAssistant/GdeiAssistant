@@ -70,7 +70,7 @@ test.describe('mock 模式 UI smoke', () => {
 
     await page.goto('/marketplace/home')
 
-    await expect(page.getByText('二手交易')).toBeVisible()
+    await expect(page.getByRole('heading', { name: '二手交易' })).toBeVisible()
     await expect(page.getByText('九成新机械键盘')).toBeVisible()
 
     await page.getByText('九成新机械键盘').click()

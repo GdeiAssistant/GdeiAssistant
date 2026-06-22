@@ -104,9 +104,9 @@ onUnmounted(() => {
     <div class="max-w-lg mx-auto px-4 py-6">
       <div class="bg-white rounded-xl shadow-sm p-6 text-center mb-4">
         <div class="flex justify-center items-center w-20 h-20 mx-auto mb-5">
-          <div v-if="loadingState || exportStatus === EXPORT_STATUS.EXPORTING" class="w-12 h-12 border-3 border-gray-200 border-t-green-500 rounded-full animate-spin"></div>
+          <div v-if="loadingState || exportStatus === EXPORT_STATUS.EXPORTING" class="download-page-loading w-12 h-12 border-3 border-gray-200 rounded-full animate-spin"></div>
           <svg v-else-if="exportStatus === EXPORT_STATUS.EXPORTED" class="w-full h-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 6L9 17L4 12" stroke="#07c160" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M20 6L9 17L4 12" class="download-page-success-stroke" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
           <svg v-else class="w-full h-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#10aeff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -125,7 +125,7 @@ onUnmounted(() => {
 
       <div class="bg-white rounded-xl shadow-sm p-5">
         <div v-if="loadingState">
-          <button type="button" class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 opacity-60 cursor-not-allowed" disabled>
+          <button type="button" class="download-page-primary-action w-full rounded-lg text-white font-medium py-2.5 opacity-60 cursor-not-allowed" disabled>
             {{ t('downloadPage.actions.checking') }}
           </button>
         </div>
@@ -133,7 +133,7 @@ onUnmounted(() => {
         <div v-else-if="exportStatus === EXPORT_STATUS.NOT_EXPORT">
           <button
             type="button"
-            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            class="download-page-primary-action w-full rounded-lg text-white font-medium py-2.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             :disabled="exporting"
             @click="handleStartExport"
           >
@@ -142,7 +142,7 @@ onUnmounted(() => {
         </div>
 
         <div v-else-if="exportStatus === EXPORT_STATUS.EXPORTING" class="space-y-3">
-          <button type="button" class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 opacity-60 cursor-not-allowed flex items-center justify-center" disabled>
+          <button type="button" class="download-page-primary-action w-full rounded-lg text-white font-medium py-2.5 opacity-60 cursor-not-allowed flex items-center justify-center" disabled>
             <span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></span>
             {{ t('downloadPage.actions.exporting') }}
           </button>
@@ -154,10 +154,10 @@ onUnmounted(() => {
         </div>
 
         <div v-else>
-          <p class="text-sm text-green-500 text-center mb-3">&#10003; {{ t('downloadPage.exportedHint') }}</p>
+          <p class="download-page-success-text text-sm text-center mb-3">&#10003; {{ t('downloadPage.exportedHint') }}</p>
           <button
             type="button"
-            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            class="download-page-primary-action w-full rounded-lg text-white font-medium py-2.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             :disabled="downloading"
             @click="handleDownload"
           >
@@ -168,3 +168,36 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.download-page-loading {
+  border-top-color: color-mix(in srgb, var(--c-primary) 82%, #2dd4bf);
+}
+
+.download-page-success-stroke {
+  stroke: color-mix(in srgb, var(--c-primary) 82%, #2dd4bf);
+}
+
+.download-page-primary-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 22%, transparent);
+}
+
+.download-page-success-text {
+  color: color-mix(in srgb, var(--c-primary) 78%, #14b8a6);
+}
+
+[data-theme="dark"] .download-page-loading {
+  border-top-color: color-mix(in srgb, var(--c-primary) 58%, #67e8f9);
+}
+
+[data-theme="dark"] .download-page-primary-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
+}
+
+[data-theme="dark"] .download-page-success-stroke,
+[data-theme="dark"] .download-page-success-text {
+  color: color-mix(in srgb, var(--c-primary) 62%, #ccfbf1);
+  stroke: color-mix(in srgb, var(--c-primary) 62%, #ccfbf1);
+}
+</style>

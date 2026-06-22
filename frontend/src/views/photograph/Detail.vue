@@ -110,29 +110,29 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': '#06b6d4' }">
-    <CommunityHeader :title="copy.detailTitle" moduleColor="#06b6d4" @back="goBack" :backTo="''" :showBack="true" />
+  <div class="community-stream-page community-stream-page--photograph min-h-screen bg-[var(--c-bg)]" :style="{ '--module-color': 'var(--c-photograph)' }">
+    <CommunityHeader :title="copy.detailTitle" moduleColor="var(--c-photograph)" @back="goBack" :backTo="''" :showBack="true" />
 
     <!-- Loading -->
     <div v-if="loading" class="flex items-center justify-center gap-2 py-16 text-sm text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-cyan-500 rounded-full animate-spin"></i>
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-photograph)] rounded-full animate-spin"></i>
       <span>{{ t('common.loading') }}</span>
     </div>
 
     <div v-else-if="work" class="pb-20">
       <!-- Stats bar -->
-      <div class="mx-4 mt-3 bg-[var(--c-surface)] rounded-xl shadow-sm flex overflow-hidden animate-[slide-up_0.3s_ease_both]">
+      <div class="community-photograph-detail-stats mx-4 mt-3 rounded-xl shadow-sm flex overflow-hidden animate-[slide-up_0.3s_ease_both]">
         <div class="flex-1 text-center">
-          <div class="text-2xl font-bold py-2 bg-cyan-500 text-white">{{ work.photoCount || (images.length || 1) }}</div>
-          <div class="text-base py-1 bg-[color-mix(in_srgb,var(--c-photograph)_70%,#000)] text-white">{{ copy.statsPhotos }}</div>
+          <div class="community-photograph-detail-stats__value text-2xl font-bold py-2 text-white">{{ work.photoCount || (images.length || 1) }}</div>
+          <div class="community-photograph-detail-stats__label text-base py-1 text-white">{{ copy.statsPhotos }}</div>
         </div>
         <div class="flex-1 text-center">
-          <div class="text-2xl font-bold py-2 bg-cyan-500 text-white">{{ work.commentCount || (work.comments ? work.comments.length : 0) }}</div>
-          <div class="text-base py-1 bg-[color-mix(in_srgb,var(--c-photograph)_70%,#000)] text-white">{{ copy.statsComments }}</div>
+          <div class="community-photograph-detail-stats__value text-2xl font-bold py-2 text-white">{{ work.commentCount || (work.comments ? work.comments.length : 0) }}</div>
+          <div class="community-photograph-detail-stats__label text-base py-1 text-white">{{ copy.statsComments }}</div>
         </div>
         <div class="flex-1 text-center">
-          <div class="text-2xl font-bold py-2 bg-cyan-500 text-white">{{ work.likeCount ?? work.likes }}</div>
-          <div class="text-base py-1 bg-[color-mix(in_srgb,var(--c-photograph)_70%,#000)] text-white">{{ copy.statsLikes }}</div>
+          <div class="community-photograph-detail-stats__value text-2xl font-bold py-2 text-white">{{ work.likeCount ?? work.likes }}</div>
+          <div class="community-photograph-detail-stats__label text-base py-1 text-white">{{ copy.statsLikes }}</div>
         </div>
       </div>
 
@@ -150,12 +150,12 @@ onMounted(async () => {
           v-for="(img, index) in images"
           :key="index"
           class="w-1.5 h-1.5 rounded-full mx-[3px] transition-colors"
-          :class="index === currentIndex ? 'bg-cyan-500' : 'bg-[var(--c-divider)]'"
+          :class="index === currentIndex ? 'bg-[var(--c-photograph)]' : 'bg-[var(--c-divider)]'"
         ></span>
       </div>
 
       <!-- Info card -->
-      <div class="mx-4 mt-3 p-5 bg-[var(--c-surface)] rounded-xl shadow-sm animate-[slide-up_0.4s_ease_both]" style="animation-delay: 0.1s;">
+      <div class="community-photograph-detail-card mx-4 mt-3 p-5 bg-[var(--c-surface)] rounded-xl shadow-sm animate-[slide-up_0.4s_ease_both]" style="animation-delay: 0.1s;">
         <h2 class="text-2xl font-semibold text-[var(--c-text-1)] m-0 mb-3">{{ work.title }}</h2>
         <div class="flex items-center justify-between mb-2">
           <div class="flex items-center">
@@ -170,15 +170,15 @@ onMounted(async () => {
         <div class="py-3">
           <div class="flex gap-2">
             <a
-              class="flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85"
-              :class="work.isLiked ? 'bg-[color-mix(in_srgb,var(--c-photograph)_80%,#000)]' : 'bg-cyan-500'"
+              class="community-photograph-action flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85"
+              :class="{ 'community-photograph-action--liked': work.isLiked }"
               href="javascript:;"
               role="button"
               @click.stop="toggleLike"
             >
               {{ copy.formatLikeMetric(work.likeCount ?? work.likes ?? 0) }}
             </a>
-            <a class="flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white bg-cyan-500 text-base no-underline transition-opacity active:opacity-85" href="javascript:;" role="button">
+            <a class="community-photograph-action flex-1 text-center py-2 border-none rounded-lg cursor-pointer text-white text-base no-underline transition-opacity active:opacity-85" href="javascript:;" role="button">
               {{ copy.formatCommentMetric(work.commentCount || (work.comments ? work.comments.length : 0)) }}
             </a>
           </div>
@@ -188,7 +188,7 @@ onMounted(async () => {
         <div class="mt-3 border-t border-[var(--c-border)] pt-3" v-if="work.comments && work.comments.length">
           <div v-for="comment in work.comments" :key="comment.id" class="flex items-start mb-3">
             <img class="w-8 h-8 rounded-full mr-2 shrink-0" :src="comment.avatar" :alt="copy.commentAvatarAlt" />
-            <div class="bg-[var(--c-bg)] rounded-lg px-3 py-2 relative max-w-[80%] before:content-[''] before:absolute before:-left-1.5 before:top-2.5 before:border-[6px] before:border-solid before:border-transparent before:border-r-[var(--c-bg)]">
+            <div class="community-photograph-comment-bubble bg-[var(--c-bg)] rounded-lg px-3 py-2 relative max-w-[80%] before:content-[''] before:absolute before:-left-1.5 before:top-2.5 before:border-[6px] before:border-solid before:border-transparent before:border-r-[var(--c-bg)]">
               <p class="m-0 text-sm font-semibold text-[var(--c-text-2)]">{{ comment.author }}</p>
               <p class="my-0.5 text-base text-[var(--c-text-1)]">{{ comment.text }}</p>
               <p class="m-0 text-xs text-[var(--c-text-3)]">{{ comment.time }}</p>
@@ -199,15 +199,15 @@ onMounted(async () => {
     </div>
 
     <!-- Comment input bar -->
-    <div class="fixed bottom-0 left-0 right-0 flex items-center px-3 py-2 bg-[var(--c-card)] border-t border-[var(--c-border)] shadow-sm z-50">
+    <div class="community-photograph-commentbar fixed bottom-0 left-0 right-0 flex items-center px-3 py-2 bg-[var(--c-card)] border-t border-[var(--c-border)] shadow-sm z-50">
       <input
         v-model="newComment"
         type="text"
         :placeholder="copy.commentPlaceholder"
         @keyup.enter="submitComment"
-        class="flex-1 border border-[var(--c-divider)] rounded-full px-3 py-2 text-base mr-2 text-[var(--c-text-1)] transition-colors focus:outline-none focus:border-cyan-500"
+        class="community-photograph-commentbar__input flex-1 border border-[var(--c-divider)] rounded-full px-3 py-2 text-base mr-2 text-[var(--c-text-1)] transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
       />
-      <button type="button" @click="submitComment" class="px-4 py-2 border-none rounded-full bg-cyan-500 text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85">{{ copy.sendAction }}</button>
+      <button type="button" @click="submitComment" class="community-photograph-action px-4 py-2 border-none rounded-full text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85">{{ copy.sendAction }}</button>
     </div>
 
     <!-- Dialog -->
@@ -217,9 +217,90 @@ onMounted(async () => {
         <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
         <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)] flex">
-          <a href="javascript:" class="flex-1 text-center py-3 text-cyan-500 font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
+          <a href="javascript:" class="flex-1 text-center py-3 text-[var(--c-photograph)] font-medium no-underline" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-photograph-detail-stats {
+  border: 1px solid color-mix(in srgb, var(--c-photograph) 18%, var(--c-border));
+  background: color-mix(in srgb, var(--c-photograph) 4%, var(--c-surface));
+}
+
+.community-photograph-detail-stats__value {
+  background: linear-gradient(135deg, var(--c-photograph), color-mix(in srgb, var(--c-photograph) 72%, #0ea5e9));
+}
+
+.community-photograph-detail-stats__label {
+  background: color-mix(in srgb, var(--c-photograph) 68%, #0f172a);
+}
+
+.community-photograph-detail-card {
+  border: 1px solid color-mix(in srgb, var(--c-photograph) 10%, var(--c-border));
+  box-shadow: 0 18px 36px color-mix(in srgb, var(--c-photograph) 8%, transparent);
+}
+
+.community-photograph-comment-bubble {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-photograph) 6%, transparent);
+}
+
+.community-photograph-commentbar {
+  backdrop-filter: blur(14px);
+}
+
+.community-photograph-commentbar__input {
+  background: color-mix(in srgb, var(--c-photograph) 4%, var(--c-surface));
+}
+
+[data-theme="dark"] .community-photograph-detail-stats {
+  border-color: rgba(68, 89, 112, 0.72);
+  background: rgba(24, 38, 53, 0.86);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .community-photograph-detail-stats__value {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-photograph) 44%, #365a70),
+    color-mix(in srgb, var(--c-photograph) 28%, #233849)
+  );
+}
+
+[data-theme="dark"] .community-photograph-detail-stats__label {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--c-photograph) 28%, rgba(37, 63, 80, 0.94)),
+    rgba(33, 48, 63, 0.96)
+  );
+  color: color-mix(in srgb, var(--c-photograph) 34%, #f8fafc);
+}
+
+[data-theme="dark"] .community-photograph-detail-card {
+  border-color: color-mix(in srgb, var(--c-photograph) 12%, rgba(111, 132, 156, 0.4));
+  background: rgba(24, 38, 53, 0.88);
+  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.22);
+}
+
+[data-theme="dark"] .community-photograph-comment-bubble {
+  background: rgba(17, 27, 38, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(68, 89, 112, 0.42);
+}
+
+[data-theme="dark"] .community-photograph-comment-bubble::before {
+  border-right-color: rgba(17, 27, 38, 0.92);
+}
+
+[data-theme="dark"] .community-photograph-commentbar {
+  background: rgba(18, 29, 40, 0.92);
+  border-top-color: rgba(68, 89, 112, 0.66);
+  box-shadow: 0 -12px 28px rgba(0, 0, 0, 0.16);
+}
+
+[data-theme="dark"] .community-photograph-commentbar__input {
+  background: rgba(24, 38, 53, 0.88);
+  border-color: rgba(68, 89, 112, 0.62);
+}
+</style>

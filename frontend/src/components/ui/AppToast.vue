@@ -14,10 +14,10 @@ const { toasts } = useToast()
         enter-from-class="toast-enter-from"
         leave-to-class="toast-leave-to"
       >
-        <div v-for="t in toasts" :key="t.id" class="toast-item">
-          <Check v-if="t.type === 'success'" class="size-4 shrink-0 text-emerald-400" />
-          <X v-else-if="t.type === 'error'" class="size-4 shrink-0 text-red-400" />
-          <Loader2 v-else-if="t.type === 'loading'" class="size-4 shrink-0 animate-spin" />
+        <div v-for="t in toasts" :key="t.id" class="toast-item" :class="`toast-item--${t.type}`">
+          <Check v-if="t.type === 'success'" class="toast-icon toast-icon--success size-4 shrink-0" />
+          <X v-else-if="t.type === 'error'" class="toast-icon toast-icon--error size-4 shrink-0" />
+          <Loader2 v-else-if="t.type === 'loading'" class="toast-icon toast-icon--loading size-4 shrink-0 animate-spin" />
           <span>{{ t.message }}</span>
         </div>
       </TransitionGroup>
@@ -52,6 +52,18 @@ const { toasts } = useToast()
   padding: 0 16px;
   pointer-events: auto;
   backdrop-filter: blur(16px);
+}
+
+.toast-icon--success {
+  color: color-mix(in srgb, var(--c-primary) 78%, #67e8f9);
+}
+
+.toast-icon--error {
+  color: color-mix(in srgb, var(--c-danger, #ef4444) 82%, #fda4af);
+}
+
+.toast-icon--loading {
+  color: color-mix(in srgb, var(--c-primary) 72%, #e0f2fe);
 }
 
 .toast-enter-active { animation: toast-in 0.25s ease-out; }

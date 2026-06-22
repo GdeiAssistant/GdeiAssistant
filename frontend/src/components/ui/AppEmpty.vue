@@ -1,5 +1,6 @@
 <script setup>
 import AppButton from '@/components/ui/AppButton.vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
@@ -19,14 +20,31 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  accent: {
+    type: String,
+    default: 'var(--c-primary)',
+  },
+  actionVariant: {
+    type: String,
+    default: 'secondary',
+    validator: (value) => ['primary', 'secondary'].includes(value),
+  },
 })
 
 const emit = defineEmits(['action'])
 const { t } = useI18n()
+
+const actionStyle = computed(() => {
+  if (props.actionVariant !== 'primary') return null
+  return {
+    '--c-primary': 'var(--empty-accent)',
+    '--c-primary-hover': 'color-mix(in srgb, var(--empty-accent) 82%, black)',
+  }
+})
 </script>
 
 <template>
-  <div class="app-empty">
+  <div class="app-empty" :style="{ '--empty-accent': props.accent }">
     <div class="app-empty__icon">
       <slot name="icon" />
     </div>
@@ -36,8 +54,9 @@ const { t } = useI18n()
     </p>
     <AppButton
       v-if="actionText"
-      variant="secondary"
-      class="mt-4"
+      :variant="props.actionVariant"
+      class="app-empty__action mt-4"
+      :style="actionStyle"
       @click="emit('action')"
     >
       {{ actionText }}
@@ -63,8 +82,8 @@ const { t } = useI18n()
   margin-bottom: 16px;
   place-items: center;
   border-radius: 24px;
-  background: linear-gradient(135deg, rgba(20, 185, 133, 0.12), rgba(59, 130, 246, 0.1));
-  color: var(--c-primary);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--empty-accent) 14%, transparent), color-mix(in srgb, var(--empty-accent) 8%, rgba(59, 130, 246, 0.12)));
+  color: var(--empty-accent);
   font-size: 34px;
 }
 
@@ -81,5 +100,9 @@ const { t } = useI18n()
   color: var(--c-text-2);
   font-size: 13px;
   line-height: 1.6;
+}
+
+.app-empty__action {
+  box-shadow: 0 14px 26px color-mix(in srgb, var(--empty-accent) 24%, transparent);
 }
 </style>

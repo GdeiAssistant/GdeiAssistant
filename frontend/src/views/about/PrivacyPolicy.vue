@@ -209,7 +209,7 @@ const retentionRows = [
             [&_th]:border [&_th]:border-[var(--c-border)] [&_th]:px-3 [&_th]:py-2 [&_th]:text-xs [&_th]:font-semibold [&_th]:text-[var(--c-text-primary)]
             [&_td]:border [&_td]:border-[var(--c-border)] [&_td]:px-3 [&_td]:py-2 [&_td]:align-top
             [&_strong]:font-semibold">
-          <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
+          <div v-if="isNonChinese" class="policy-notice policy-notice--language px-4 py-3 mb-4 text-sm leading-relaxed">
             {{ t('about.chineseOnlyNotice') }}
           </div>
 
@@ -218,7 +218,7 @@ const retentionRows = [
           <p class="text-center">更新日期：2026年4月25日</p>
           <p class="text-center">生效日期：2026年5月11日</p>
 
-          <div class="bg-red-50 text-red-800 border border-red-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
+          <div class="policy-notice policy-notice--important px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>重要提示：</strong>本政策重点说明校园账号凭证、校园数据查询、社区发布、交易/跑腿/失物招领信息、第三方服务以及用户权利与操作路径。</p>
             <p class="!mb-2"><strong>本次修订说明：</strong>本次修订内容自 2026 年 5 月 11 日起适用；生效日前仍适用修订前版本。</p>
             <p class="!mb-0"><strong>重大变化提示：</strong>涉及敏感个人信息、校园账号凭证、第三方服务或用户重要权益的重大变化时，平台通常会通过页面公告、弹窗、站内通知或其他合理方式提示您阅读；必要时，会依法取得单独同意或重新同意。</p>

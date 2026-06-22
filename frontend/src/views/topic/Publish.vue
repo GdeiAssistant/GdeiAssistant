@@ -87,7 +87,7 @@ async function submit() {
 
 <template>
   <div class="bg-[var(--c-bg)] min-h-screen pb-16">
-    <CommunityHeader :title="t('topic.publish.title')" moduleColor="#6366f1" @back="router.back()" backTo="">
+    <CommunityHeader :title="t('topic.publish.title')" moduleColor="var(--c-topic)" @back="router.back()" backTo="">
       <template #right>
         <button
           type="button"
@@ -165,7 +165,7 @@ async function submit() {
       <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
       <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
       <div class="flex border-t border-[var(--c-border)]">
-        <a href="javascript:;" class="flex-1 py-3 text-center text-sm text-[#6366f1] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
+        <a href="javascript:;" class="flex-1 py-3 text-center text-sm text-[var(--c-topic)] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
       </div>
     </div>
   </div>

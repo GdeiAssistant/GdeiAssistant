@@ -18,14 +18,14 @@ const { t } = useI18n()
     <!-- Content -->
     <div class="max-w-lg mx-auto px-4 py-16 text-center">
       <div class="bg-white rounded-xl shadow-sm p-8">
-        <div class="text-5xl text-blue-400 mb-4">i</div>
+        <div class="realname-page-info text-5xl mb-4">i</div>
         <h2 class="text-lg font-medium text-gray-800 mb-2">{{ t('realname.unavailableTitle') }}</h2>
         <p class="text-sm text-gray-500 mb-8 leading-relaxed">
           {{ t('realname.unavailableDescription') }}
         </p>
         <button
           type="button"
-          class="w-full max-w-xs mx-auto block rounded-lg bg-green-500 text-white font-medium py-2.5 px-6 active:bg-green-600 cursor-pointer"
+          class="realname-page-action w-full max-w-xs mx-auto block rounded-lg text-white font-medium py-2.5 px-6 cursor-pointer"
           @click="router.back()"
         >
           {{ t('realname.back') }}
@@ -34,3 +34,22 @@ const { t } = useI18n()
     </div>
   </div>
 </template>
+
+<style scoped>
+.realname-page-info {
+  color: color-mix(in srgb, var(--c-primary) 62%, #67e8f9);
+}
+
+.realname-page-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 22%, transparent);
+}
+
+[data-theme="dark"] .realname-page-info {
+  color: color-mix(in srgb, var(--c-primary) 58%, #67e8f9);
+}
+
+[data-theme="dark"] .realname-page-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
+}
+</style>

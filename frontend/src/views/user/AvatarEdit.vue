@@ -1,17 +1,17 @@
 <template>
-  <div class="min-h-screen bg-gray-50" :class="{ 'bg-black': isCropping }">
+  <div class="avatar-edit-page min-h-screen" :class="{ 'bg-black': isCropping }">
     <!-- Sticky Header -->
-    <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-base text-gray-700 text-left cursor-pointer" @click="goBack">{{ t('common.back') }}</button>
-      <div class="flex-1 text-center text-lg font-medium text-black">{{ t('avatarEdit.title') }}</div>
+    <div class="avatar-edit-header sticky top-0 z-10 flex items-center h-12 px-4">
+      <button type="button" class="avatar-edit-back w-15 text-base text-left cursor-pointer" @click="goBack">{{ t('common.back') }}</button>
+      <div class="avatar-edit-title flex-1 text-center text-lg font-medium">{{ t('avatarEdit.title') }}</div>
       <div class="w-15"></div>
     </div>
 
     <!-- Display mode: current avatar + buttons -->
     <template v-if="!isCropping">
       <div class="max-w-lg mx-auto px-4 py-6">
-        <div class="bg-white rounded-xl shadow-sm p-6">
-          <div class="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-6 text-slate-700">
+        <div class="avatar-edit-card rounded-xl shadow-sm p-6">
+          <div class="avatar-edit-tip mb-4 rounded-xl px-4 py-3 text-xs leading-6">
             上传头像或图片前，请自行确认其中不包含不必要的人脸、位置、证件、学生卡、联系方式或其他高敏信息。
           </div>
           <div class="flex items-center justify-center min-h-[320px] w-full">
@@ -25,7 +25,7 @@
             >{{ t('avatarEdit.delete') }}</button>
             <button
               type="button"
-              class="w-4/5 max-w-[300px] py-3 px-6 text-base rounded-lg border border-green-500 bg-green-500 text-white cursor-pointer"
+              class="avatar-edit-primary-action w-4/5 max-w-[300px] py-3 px-6 text-base rounded-lg text-white cursor-pointer"
               @click="triggerSelect"
             >{{ t('avatarEdit.change') }}</button>
           </div>
@@ -48,7 +48,7 @@
           >{{ t('common.cancel') }}</button>
           <button
             type="button"
-            class="min-w-[120px] py-3 px-6 text-base rounded-lg cursor-pointer bg-green-500 border-green-500 text-white"
+            class="avatar-edit-primary-action min-w-[120px] py-3 px-6 text-base rounded-lg cursor-pointer text-white"
             @click="confirmCrop"
           >{{ t('common.confirm') }}</button>
         </div>
@@ -187,4 +187,67 @@ onMounted(async () => {
 
 <style>
 @import 'cropperjs/dist/cropper.css';
+</style>
+
+<style scoped>
+.avatar-edit-page {
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 8%, transparent), transparent 30%),
+    var(--c-bg-soft);
+}
+
+.avatar-edit-header {
+  background: color-mix(in srgb, var(--c-surface) 94%, var(--c-bg));
+  border-bottom: 1px solid var(--c-border-light);
+  backdrop-filter: blur(18px);
+}
+
+.avatar-edit-back,
+.avatar-edit-title {
+  color: var(--c-text-1);
+}
+
+.avatar-edit-card {
+  background: var(--c-surface);
+  border: 1px solid color-mix(in srgb, var(--c-primary) 8%, var(--c-border-light));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 8%, rgba(15, 23, 42, 0.06));
+}
+
+.avatar-edit-tip {
+  border: 1px solid color-mix(in srgb, var(--c-primary) 10%, var(--c-border-light));
+  background: color-mix(in srgb, var(--c-bg-soft) 76%, var(--c-surface));
+  color: var(--c-text-2);
+}
+
+.avatar-edit-primary-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
+  border: 1px solid transparent;
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 22%, transparent);
+}
+
+[data-theme="dark"] .avatar-edit-page {
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 10%, transparent), transparent 30%),
+    var(--c-bg);
+}
+
+[data-theme="dark"] .avatar-edit-header {
+  background: color-mix(in srgb, var(--c-surface) 88%, rgba(10, 20, 32, 0.9));
+  border-bottom-color: rgba(68, 89, 112, 0.72);
+}
+
+[data-theme="dark"] .avatar-edit-card {
+  border-color: rgba(68, 89, 112, 0.72);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .avatar-edit-tip {
+  border-color: rgba(68, 89, 112, 0.72);
+  background: rgba(24, 38, 53, 0.84);
+  color: var(--c-text-2);
+}
+
+[data-theme="dark"] .avatar-edit-primary-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
+}
 </style>

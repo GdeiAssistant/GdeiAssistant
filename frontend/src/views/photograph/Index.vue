@@ -5,16 +5,16 @@ import CommunityModuleLayout from '../../components/community/CommunityModuleLay
 import { createCommunityTabs } from '../community/communityTabs'
 
 const { t } = useI18n()
-const tabs = computed(() => createCommunityTabs('marketplace', t))
+const tabs = computed(() => createCommunityTabs('photograph', t))
 </script>
 
 <template>
   <CommunityModuleLayout
-    :title="t('marketplace.title')"
-    :subtitle="t('feature.ershou.description')"
-    basePath="/marketplace"
-    moduleColor="var(--c-ershou)"
-    publishPath="/marketplace/publish"
+    :title="t('feature.photograph.name')"
+    :subtitle="t('feature.photograph.description')"
+    basePath="/photograph"
+    moduleColor="var(--c-photograph)"
+    publishPath="/photograph/publish"
     :tabs="tabs"
   >
     <router-view />

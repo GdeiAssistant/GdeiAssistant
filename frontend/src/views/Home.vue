@@ -104,7 +104,7 @@ const todayItems = computed(() => [
     meta: t('home.todayScheduleMeta'),
     icon: CalendarCheck,
     path: '/schedule',
-    color: '#10B981'
+    color: '#139682'
   },
   {
     id: 'card',
@@ -113,7 +113,7 @@ const todayItems = computed(() => [
     meta: t('home.todayCardMeta'),
     icon: WalletCards,
     path: '/card',
-    color: '#3B82F6'
+    color: '#2E8FA8'
   },
   {
     id: 'notice',
@@ -122,7 +122,7 @@ const todayItems = computed(() => [
     meta: t('home.todayNoticeMeta'),
     icon: Bell,
     path: '/info',
-    color: '#8B5CF6'
+    color: '#28A390'
   },
   {
     id: 'delivery',
@@ -131,7 +131,7 @@ const todayItems = computed(() => [
     meta: t('home.todayDeliveryMeta'),
     icon: PackageCheck,
     path: '/delivery',
-    color: '#F59E0B'
+    color: '#C98A3D'
   }
 ])
 
@@ -145,12 +145,35 @@ const iconMap = {
 }
 
 const iconColors = {
-  grade: '#0B8F6A', schedule: '#2563EB', card: '#D97706', cet: '#7C3AED',
-  kaoyan: '#0891B2', collection: '#4F46E5', spare: '#06B6D4',
-  pe: '#DC2626', evaluate: '#DB2777', data: '#0D9488', about: '#6B7280',
-  ershou: '#F97316', lostandfound: '#2563EB', express: '#F43F5E',
-  secret: '#8B5CF6', dating: '#EC4899', topic: '#3B82F6',
-  photograph: '#06B6D4', delivery: '#F59E0B',
+  grade: '#148D78', schedule: '#139682', card: '#2E8FA8', cet: '#5C82C7',
+  kaoyan: '#3C90A8', collection: '#4F86BD', spare: '#2AA0A5',
+  pe: '#C97059', evaluate: '#C96F82', data: '#248F86', about: '#6B7B8D',
+  ershou: 'var(--c-ershou)', lostandfound: 'var(--c-lostandfound)', express: 'var(--c-express)',
+  secret: 'var(--c-secret)', dating: 'var(--c-dating)', topic: 'var(--c-topic)',
+  photograph: 'var(--c-photograph)', delivery: 'var(--c-delivery)',
+}
+
+const darkAccentColors = {
+  schedule: '#63D4C0',
+  card: '#84CBDE',
+  notice: '#71D8C5',
+  delivery: '#E3C17D',
+  grade: '#67D3BA',
+  cet: '#97BCE8',
+  kaoyan: '#8ED3DF',
+  collection: '#96BAE4',
+  spare: '#7DD8D6',
+  pe: '#E1A48D',
+  evaluate: '#E1A8B6',
+  data: '#76D7CC',
+  about: '#A5B7C9',
+  ershou: '#5FD3C3',
+  lostandfound: '#78C8E8',
+  express: '#7AD6B5',
+  secret: '#7EDCC9',
+  dating: '#79D0C9',
+  topic: '#7FC4E2',
+  photograph: '#7AD7DB',
 }
 
 function handleMenuClick(item) {
@@ -174,16 +197,26 @@ function resolveFeatureIcon(id) {
 
 function featureCardStyle(id) {
   const color = iconColors[id] || '#6B7280'
+  const darkColor = darkAccentColors[id] || '#9AAFC4'
+  const softColor = color.startsWith('var(')
+    ? `color-mix(in srgb, ${color} 13%, transparent)`
+    : `${color}17`
+
   return {
     '--feature-color': color,
-    '--feature-color-soft': `${color}17`
+    '--feature-color-soft': softColor,
+    '--feature-color-dark': darkColor,
+    '--feature-color-dark-soft': `color-mix(in srgb, ${darkColor} 12%, rgba(32, 48, 68, 0.92))`
   }
 }
 
 function todayItemStyle(item) {
+  const darkColor = darkAccentColors[item.id] || '#7ED2C8'
   return {
     '--today-color': item.color,
-    '--today-color-soft': `${item.color}16`
+    '--today-color-soft': `${item.color}16`,
+    '--today-color-dark': darkColor,
+    '--today-color-dark-soft': `color-mix(in srgb, ${darkColor} 13%, rgba(32, 48, 68, 0.92))`
   }
 }
 </script>
@@ -238,40 +271,42 @@ function todayItemStyle(item) {
       </aside>
     </section>
 
-    <section
-      v-for="section in featureSections"
-      :id="`home-${section.id}`"
-      :key="section.id"
-      class="feature-section"
-      :class="`feature-section--${section.id}`"
-    >
-      <header class="feature-section__header">
-        <div>
-          <h2>{{ section.title }}</h2>
-          <p>{{ section.description }}</p>
-        </div>
-      </header>
+    <div class="feature-sections-grid">
+      <section
+        v-for="section in featureSections"
+        :id="`home-${section.id}`"
+        :key="section.id"
+        class="feature-section"
+        :class="`feature-section--${section.id}`"
+      >
+        <header class="feature-section__header">
+          <div>
+            <h2>{{ section.title }}</h2>
+            <p>{{ section.description }}</p>
+          </div>
+        </header>
 
-      <div class="feature-section__grid">
-        <button
-          v-for="(item, index) in section.items"
-          :key="item.id || item.path || item.key || index"
-          :aria-label="item.title"
-          class="feature-card"
-          :style="featureCardStyle(item.id)"
-          @click="handleMenuClick(item)"
-        >
-          <span class="feature-card__icon">
-            <component :is="resolveFeatureIcon(item.id)" class="w-6 h-6" />
-          </span>
-          <span class="feature-card__body">
-            <strong>{{ item.title }}</strong>
-            <small>{{ item.description }}</small>
-          </span>
-          <ArrowRight class="feature-card__arrow" />
-        </button>
-      </div>
-    </section>
+        <div class="feature-section__grid">
+          <button
+            v-for="(item, index) in section.items"
+            :key="item.id || item.path || item.key || index"
+            :aria-label="item.title"
+            class="feature-card"
+            :style="featureCardStyle(item.id)"
+            @click="handleMenuClick(item)"
+          >
+            <span class="feature-card__icon">
+              <component :is="resolveFeatureIcon(item.id)" class="w-6 h-6" />
+            </span>
+            <span class="feature-card__body">
+              <strong>{{ item.title }}</strong>
+              <small>{{ item.description }}</small>
+            </span>
+            <ArrowRight class="feature-card__arrow" />
+          </button>
+        </div>
+      </section>
+    </div>
 
     <div v-if="featureSections.length === 0" class="home-empty">
       {{ $t('home.noFeatures') }}
@@ -288,7 +323,7 @@ function todayItemStyle(item) {
 
 .home-hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.58fr) minmax(340px, 0.92fr);
+  grid-template-columns: minmax(0, 1.68fr) minmax(330px, 0.82fr);
   gap: 20px;
   align-items: stretch;
 }
@@ -304,11 +339,11 @@ function todayItemStyle(item) {
 
 .home-hero-card {
   position: relative;
-  min-height: 348px;
+  min-height: 392px;
   overflow: hidden;
   border-radius: 28px;
   background-image: url('/img/landing/campus-hero.jpg');
-  background-position: center;
+  background-position: 56% center;
   background-size: cover;
 }
 
@@ -316,24 +351,32 @@ function todayItemStyle(item) {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.68) 32%, rgba(255, 255, 255, 0.1) 68%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(220, 246, 237, 0.26));
+    linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.74) 34%, rgba(255, 255, 255, 0.16) 66%, rgba(255, 255, 255, 0.04) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(220, 246, 237, 0.18));
 }
 
 .home-hero-card__content {
   position: relative;
   z-index: 1;
   display: flex;
-  max-width: 560px;
-  min-height: 348px;
+  max-width: 540px;
+  min-height: 328px;
   flex-direction: column;
   justify-content: center;
-  padding: 46px;
+  margin: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 30px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.44)),
+    radial-gradient(circle at top left, rgba(196, 241, 224, 0.28), transparent 38%);
+  box-shadow: 0 24px 52px rgba(33, 74, 84, 0.12);
+  backdrop-filter: blur(18px);
+  padding: 34px 34px 34px 38px;
 }
 
 .home-hero-card h1 {
   margin: 0;
-  color: #102033;
+  color: var(--c-text-1);
   font-size: clamp(42px, 6vw, 66px);
   font-weight: 900;
   letter-spacing: -0.055em;
@@ -341,12 +384,12 @@ function todayItemStyle(item) {
 }
 
 .home-hero-card p {
-  max-width: 440px;
+  max-width: 420px;
   margin: 18px 0 0;
-  color: #3f5368;
-  font-size: 18px;
+  color: color-mix(in srgb, var(--c-text-1) 74%, white 26%);
+  font-size: 17px;
   font-weight: 650;
-  line-height: 1.7;
+  line-height: 1.72;
 }
 
 .home-hero-card__actions {
@@ -375,15 +418,19 @@ function todayItemStyle(item) {
 
 .home-hero-card__primary {
   border: 0;
-  background: linear-gradient(135deg, #12b981, #0f9f76);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-primary) 88%, white 12%),
+    color-mix(in srgb, var(--c-primary-hover) 92%, #06634b 8%)
+  );
   color: #fff;
-  box-shadow: 0 16px 28px rgba(16, 185, 129, 0.26);
+  box-shadow: 0 16px 28px color-mix(in srgb, var(--c-primary) 24%, transparent);
 }
 
 .home-hero-card__secondary {
-  border: 1px solid rgba(18, 145, 104, 0.38);
+  border: 1px solid color-mix(in srgb, var(--c-primary) 24%, rgba(202, 222, 226, 0.78));
   background: rgba(255, 255, 255, 0.82);
-  color: #0f7a5d;
+  color: color-mix(in srgb, var(--c-primary-hover) 78%, var(--c-text-1) 22%);
 }
 
 .today-panel {
@@ -428,7 +475,9 @@ function todayItemStyle(item) {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 12px;
+  flex: 1;
+  justify-content: space-between;
+  margin-top: 16px;
 }
 
 .today-panel__item {
@@ -506,6 +555,12 @@ function todayItemStyle(item) {
   scroll-margin-top: 88px;
 }
 
+.feature-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
 .feature-section--service {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(241, 255, 250, 0.82)),
@@ -528,7 +583,7 @@ function todayItemStyle(item) {
 
 .feature-section__grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
   gap: 14px;
   margin-top: 18px;
 }
@@ -612,6 +667,10 @@ function todayItemStyle(item) {
     grid-template-columns: 1fr;
   }
 
+  .feature-sections-grid {
+    grid-template-columns: 1fr;
+  }
+
   .feature-section__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -619,16 +678,16 @@ function todayItemStyle(item) {
 
 @media (max-width: 767px) {
   .home-page {
-    gap: 14px;
+    gap: 10px;
   }
 
   .home-hero-grid {
-    gap: 14px;
+    gap: 10px;
   }
 
   .home-hero-card {
-    min-height: 358px;
-    border-radius: 28px;
+    min-height: 304px;
+    border-radius: 24px;
     background-position: 62% center;
   }
 
@@ -639,57 +698,98 @@ function todayItemStyle(item) {
   }
 
   .home-hero-card__content {
-    min-height: 358px;
+    min-height: 264px;
     justify-content: flex-end;
-    padding: 28px 24px;
+    margin: 14px;
+    padding: 18px 16px;
+    border-radius: 20px;
   }
 
   .home-hero-card h1 {
-    font-size: clamp(38px, 12vw, 54px);
+    font-size: clamp(30px, 10vw, 42px);
+    line-height: 1.03;
   }
 
   .home-hero-card p {
-    margin-top: 12px;
-    font-size: 15px;
-    line-height: 1.6;
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.5;
   }
 
   .home-hero-card__actions {
-    margin-top: 22px;
+    margin-top: 14px;
+    gap: 8px;
   }
 
   .home-hero-card__primary,
   .home-hero-card__secondary {
-    min-height: 46px;
+    min-height: 40px;
     flex: 1;
-    padding: 0 14px;
+    border-radius: 14px;
+    font-size: 13px;
+    padding: 0 10px;
   }
 
   .today-panel,
   .feature-section {
-    border-radius: 24px;
-    padding: 18px;
+    border-radius: 20px;
+    padding: 12px;
+  }
+
+  .today-panel__header,
+  .feature-section__header {
+    gap: 10px;
+  }
+
+  .today-panel__header h2,
+  .feature-section__header h2 {
+    font-size: 18px;
+  }
+
+  .today-panel__header button {
+    font-size: 12px;
+  }
+
+  .feature-section__header p {
+    display: -webkit-box;
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.45;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 
   .today-panel__list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    gap: 10px;
+    margin-top: 12px;
   }
 
   .today-panel__item {
     display: flex;
-    min-height: 118px;
+    min-height: 88px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 9px;
-    padding: 12px 8px;
+    gap: 6px;
+    padding: 8px 6px;
     text-align: center;
   }
 
+  .today-panel__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+  }
+
   .today-panel__text strong {
-    font-size: 14px;
+    font-size: 12px;
+  }
+
+  .feature-section__grid {
+    margin-top: 12px;
   }
 
   .today-panel__text small,
@@ -732,12 +832,12 @@ function todayItemStyle(item) {
 [data-theme="dark"] .today-panel,
 [data-theme="dark"] .feature-section,
 [data-theme="dark"] .home-empty {
-  border-color: rgba(58, 74, 92, 0.9);
-  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.32);
+  border-color: rgba(68, 89, 112, 0.74);
+  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.28);
 }
 
 [data-theme="dark"] .home-hero-card {
-  background-color: rgba(14, 22, 32, 0.92);
+  background-color: rgba(18, 30, 42, 0.92);
   background-image: url('/img/landing/campus-hero.jpg');
   background-position: center;
   background-repeat: no-repeat;
@@ -747,15 +847,23 @@ function todayItemStyle(item) {
 [data-theme="dark"] .today-panel,
 [data-theme="dark"] .feature-section,
 [data-theme="dark"] .home-empty {
-  background: rgba(20, 27, 37, 0.78);
+  background: rgba(24, 38, 53, 0.84);
 }
 
 [data-theme="dark"] .home-hero-card__shade {
   background:
-    linear-gradient(90deg, rgba(6, 11, 18, 0.92) 0%, rgba(8, 14, 22, 0.78) 34%, rgba(8, 14, 22, 0.34) 64%, rgba(8, 14, 22, 0.12) 100%),
-    linear-gradient(180deg, rgba(12, 19, 28, 0.08), rgba(12, 19, 28, 0.52)),
-    radial-gradient(circle at 78% 22%, rgba(83, 187, 255, 0.16), transparent 38%),
-    radial-gradient(circle at 25% 88%, rgba(16, 185, 129, 0.14), transparent 34%);
+    linear-gradient(90deg, rgba(11, 20, 31, 0.7) 0%, rgba(12, 23, 35, 0.42) 34%, rgba(12, 23, 35, 0.12) 64%, rgba(12, 23, 35, 0.02) 100%),
+    linear-gradient(180deg, rgba(16, 25, 35, 0.02), rgba(16, 25, 35, 0.2)),
+    radial-gradient(circle at 78% 22%, rgba(96, 165, 250, 0.12), transparent 38%),
+    radial-gradient(circle at 25% 88%, rgba(45, 212, 191, 0.11), transparent 34%);
+}
+
+[data-theme="dark"] .home-hero-card__content {
+  border-color: rgba(102, 129, 160, 0.28);
+  background:
+    linear-gradient(145deg, rgba(16, 29, 42, 0.72), rgba(17, 36, 48, 0.46)),
+    radial-gradient(circle at top left, rgba(95, 211, 195, 0.16), transparent 38%);
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.28);
 }
 
 [data-theme="dark"] .home-hero-card h1 {
@@ -769,27 +877,66 @@ function todayItemStyle(item) {
 [data-theme="dark"] .home-hero-card__secondary,
 [data-theme="dark"] .today-panel__item,
 [data-theme="dark"] .feature-card {
-  border-color: rgba(54, 68, 83, 0.82);
-  background: rgba(24, 32, 43, 0.76);
+  border-color: rgba(68, 89, 112, 0.68);
+  background: rgba(27, 43, 60, 0.76);
+}
+
+[data-theme="dark"] .today-panel__item {
+  --today-dark-accent: var(--today-color-dark);
+  --today-dark-soft: var(--today-color-dark-soft);
+}
+
+[data-theme="dark"] .today-panel__item:hover {
+  border-color: color-mix(in srgb, var(--today-dark-accent) 38%, rgba(68, 89, 112, 0.68));
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24);
+}
+
+[data-theme="dark"] .today-panel__icon {
+  color: var(--today-dark-accent);
+  background: var(--today-dark-soft);
+}
+
+[data-theme="dark"] .today-panel__meta {
+  color: var(--today-dark-accent);
+}
+
+[data-theme="dark"] .feature-card {
+  --feature-dark-accent: var(--feature-color-dark);
+  --feature-dark-soft: var(--feature-color-dark-soft);
+}
+
+[data-theme="dark"] .feature-card:hover {
+  border-color: color-mix(in srgb, var(--feature-dark-accent) 36%, rgba(68, 89, 112, 0.68));
+  background: rgba(32, 48, 68, 0.9);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.26);
+}
+
+[data-theme="dark"] .feature-card__icon {
+  color: var(--feature-dark-accent);
+  background: var(--feature-dark-soft);
+}
+
+[data-theme="dark"] .feature-card__arrow {
+  color: var(--feature-dark-accent);
 }
 
 [data-theme="dark"] .home-hero-card__secondary {
-  border-color: rgba(93, 230, 184, 0.38);
-  background: rgba(8, 24, 27, 0.72);
-  color: #72e6bb;
+  border-color: color-mix(in srgb, var(--c-primary) 28%, rgba(68, 89, 112, 0.68));
+  background: color-mix(in srgb, var(--c-primary) 12%, rgba(27, 43, 60, 0.84));
+  color: color-mix(in srgb, var(--c-primary) 78%, white 22%);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
 }
 
 [data-theme="dark"] .feature-section--service {
   background:
-    linear-gradient(135deg, rgba(20, 27, 37, 0.86), rgba(13, 22, 30, 0.82)),
-    radial-gradient(circle at 100% 0, rgba(45, 212, 191, 0.13), transparent 36%);
+    linear-gradient(135deg, rgba(24, 38, 53, 0.88), rgba(18, 30, 42, 0.82)),
+    radial-gradient(circle at 100% 0, rgba(45, 212, 191, 0.1), transparent 36%);
 }
 
 [data-theme="dark"] .feature-section--life {
   background:
-    linear-gradient(135deg, rgba(20, 27, 37, 0.86), rgba(18, 20, 31, 0.82)),
-    radial-gradient(circle at 0 0, rgba(245, 158, 11, 0.1), transparent 30%),
-    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.12), transparent 36%);
+    linear-gradient(135deg, rgba(24, 38, 53, 0.88), rgba(22, 29, 44, 0.82)),
+    radial-gradient(circle at 0 0, rgba(45, 212, 191, 0.08), transparent 30%),
+    radial-gradient(circle at 100% 100%, rgba(96, 165, 250, 0.08), transparent 36%);
 }
 </style>

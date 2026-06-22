@@ -4,6 +4,8 @@ import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getCollectionDetail } from '@/api/collection'
 import { useToast } from '@/composables/useToast'
+import AppEmpty from '@/components/ui/AppEmpty.vue'
+import { BookOpenText } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()
@@ -62,9 +64,36 @@ onMounted(() => {
           </div>
         </div>
       </template>
-      <div v-else-if="!loading" class="flex items-center justify-center py-10 text-sm text-[var(--c-text-3)]">
-        {{ t('libraryPage.detail.empty') }}
+      <div v-else-if="!loading" class="collection-empty-shell">
+        <AppEmpty
+          :title="t('libraryPage.detail.empty')"
+          description="暂时没有查到这本书的馆藏详情，可以返回上一页重新选择，或稍后再查看。"
+        >
+          <template #icon>
+            <BookOpenText :size="30" />
+          </template>
+        </AppEmpty>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.collection-empty-shell {
+  border: 1px solid color-mix(in srgb, var(--c-border) 88%, white);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 12%, transparent), transparent 48%),
+    color-mix(in srgb, var(--c-surface) 94%, white);
+  box-shadow: 0 18px 40px rgba(27, 71, 84, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+:global([data-theme='dark']) .collection-empty-shell {
+  border-color: color-mix(in srgb, var(--c-border) 82%, rgba(147, 197, 253, 0.18));
+  background:
+    radial-gradient(circle at top, rgba(111, 216, 208, 0.12), transparent 50%),
+    color-mix(in srgb, var(--c-surface) 94%, rgba(12, 25, 35, 0.88));
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+</style>

@@ -88,6 +88,7 @@ const LostAndFoundHome = lazyView('lostandfound/Home')
 const LostAndFoundPublish = lazyView('lostandfound/Publish')
 const LostAndFoundProfile = lazyView('lostandfound/Profile')
 const LostAndFoundDetail = lazyView('lostandfound/Detail')
+const SecretIndex = lazyView('secret/Index')
 const SecretHome = lazyView('secret/Home')
 const SecretPublish = lazyView('secret/Publish')
 const SecretDetail = lazyView('secret/Detail')
@@ -97,6 +98,7 @@ const ExpressHome = lazyView('express/Home')
 const ExpressPublish = lazyView('express/Publish')
 const ExpressSearch = lazyView('express/Search')
 const ExpressDetail = lazyView('express/Detail')
+const DatingIndex = lazyView('dating/Index')
 const DatingHome = lazyView('dating/Home')
 const DatingPublish = lazyView('dating/Publish')
 const DatingDetail = lazyView('dating/Detail')
@@ -106,6 +108,7 @@ const TopicHome = lazyView('topic/Home')
 const TopicPublish = lazyView('topic/Publish')
 const TopicSearch = lazyView('topic/Search')
 const TopicDetail = lazyView('topic/Detail')
+const PhotographIndex = lazyView('photograph/Index')
 const PhotographHome = lazyView('photograph/Home')
 const PhotographDetail = lazyView('photograph/Detail')
 const PhotographPublish = lazyView('photograph/Publish')
@@ -444,27 +447,14 @@ const routes = [
   // 卖室友/交友模块
   {
     path: '/dating',
-    redirect: '/dating/home'
-  },
-  {
-    path: '/dating/home',
-    name: 'DatingHome',
-    component: DatingHome
-  },
-  {
-    path: '/dating/publish',
-    name: 'DatingPublish',
-    component: DatingPublish
-  },
-  {
-    path: '/dating/detail/:id',
-    name: 'DatingDetail',
-    component: DatingDetail
-  },
-  {
-    path: '/dating/center',
-    name: 'DatingCenter',
-    component: DatingCenter
+    component: DatingIndex,
+    redirect: '/dating/home',
+    children: [
+      { path: 'home', name: 'DatingHome', component: DatingHome },
+      { path: 'publish', name: 'DatingPublish', component: DatingPublish },
+      { path: 'detail/:id', name: 'DatingDetail', component: DatingDetail },
+      { path: 'center', name: 'DatingCenter', component: DatingCenter }
+    ]
   },
   // 校园话题主路由，使用绿色 Tabbar 主题
   {
@@ -501,47 +491,25 @@ const routes = [
   // 拍好校园模块
   {
     path: '/photograph',
-    redirect: '/photograph/home'
+    component: PhotographIndex,
+    redirect: '/photograph/home',
+    children: [
+      { path: 'home', name: 'PhotographHome', component: PhotographHome },
+      { path: 'detail/:id', name: 'PhotographDetail', component: PhotographDetail },
+      { path: 'publish', name: 'PhotographPublish', component: PhotographPublish }
+    ]
   },
-  {
-    path: '/photograph/home',
-    name: 'PhotographHome',
-    component: PhotographHome
-  },
-  {
-    path: '/photograph/detail/:id',
-    name: 'PhotographDetail',
-    component: PhotographDetail
-  },
-  {
-    path: '/photograph/publish',
-    name: 'PhotographPublish',
-    component: PhotographPublish
-  },
-  // 校园树洞：所有页面均为独立路由
+  // 校园树洞
   {
     path: '/secret',
-    redirect: '/secret/home'
-  },
-  {
-    path: '/secret/home',
-    name: 'SecretHome',
-    component: SecretHome
-  },
-  {
-    path: '/secret/publish',
-    name: 'SecretPublish',
-    component: SecretPublish
-  },
-  {
-    path: '/secret/profile',
-    name: 'SecretProfile',
-    component: SecretProfile
-  },
-  {
-    path: '/secret/detail/:id',
-    name: 'SecretDetail',
-    component: SecretDetail
+    component: SecretIndex,
+    redirect: '/secret/home',
+    children: [
+      { path: 'home', name: 'SecretHome', component: SecretHome },
+      { path: 'publish', name: 'SecretPublish', component: SecretPublish },
+      { path: 'profile', name: 'SecretProfile', component: SecretProfile },
+      { path: 'detail/:id', name: 'SecretDetail', component: SecretDetail }
+    ]
   },
   {
     path: '/',

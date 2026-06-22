@@ -27,7 +27,7 @@ jobs:
     env:
       VITE_APP_BASE_API: https://gdeiassistant.azurewebsites.net/api
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: true
           lfs: false

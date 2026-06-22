@@ -24,7 +24,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
             [&_li]:mb-2
             [&_a]:text-[var(--c-primary)] [&_a]:underline
             [&_strong]:font-semibold">
-          <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
+          <div v-if="isNonChinese" class="policy-notice policy-notice--language px-4 py-3 mb-4 text-sm leading-relaxed">
             {{ t('about.chineseOnlyNotice') }}
           </div>
 
@@ -33,7 +33,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p class="text-center">更新日期：2026年4月25日</p>
           <p class="text-center">生效日期：2026年5月11日</p>
 
-          <div class="bg-amber-50 text-amber-900 border border-amber-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
+          <div class="policy-notice policy-notice--warm px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>使用方式说明：</strong>平台通常会通过浏览器本地存储、请求头或其他必要的站点数据维持登录状态和界面偏好；是否使用浏览器 Cookie 以及具体方式，取决于终端、版本和实际部署。</p>
             <p class="!mb-0"><strong>风险提示：</strong>浏览器本地存储可能受 XSS、恶意扩展、共享设备、浏览器同步或误操作影响。请避免在公共设备长期登录，并在退出登录、清理浏览器数据或注销账号后及时关闭会话。</p>
           </div>

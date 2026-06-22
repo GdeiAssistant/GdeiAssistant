@@ -70,17 +70,17 @@ function submit() {
 </script>
 
 <template>
-  <div class="bg-[var(--c-bg)] pb-20">
+  <div class="community-express-page bg-[var(--c-bg)] pb-20">
     <CommunityHeader :title="t('express.publish.title')" moduleColor="var(--c-express)" backTo="/express/home" />
 
     <!-- 浅粉色粗体标题 -->
-    <h2 class="text-center text-[22px] font-bold text-[#ffb3ba] mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
+    <h2 class="express-banner-title text-center text-[22px] font-bold mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
 
     <!-- 手账风表单 -->
     <div>
       <!-- 第一个 form-section：你的信息 -->
-      <div class="border-2 border-dashed border-[#81d4fa] rounded-lg pt-6 px-4 pb-4 mx-4 mt-6 mb-4 relative bg-[var(--c-surface)] shadow-sm">
-        <span class="absolute -top-3 -left-0.5 bg-[#4fc3f7] text-white px-2.5 py-1 rounded-sm text-sm font-medium">{{ t('express.publish.myInfo') }}</span>
+      <div class="express-form-section rounded-lg pt-6 px-4 pb-4 mx-4 mt-6 mb-4 relative bg-[var(--c-surface)] shadow-sm">
+        <span class="express-form-section__label absolute -top-3 -left-0.5 text-white px-2.5 py-1 rounded-sm text-sm font-medium">{{ t('express.publish.myInfo') }}</span>
         <div>
           <div class="flex items-start py-3 border-b border-[var(--c-border)]">
             <label class="w-[70px] text-sm text-[var(--c-text-1)] leading-8">{{ t('profile.nickname') }}</label>
@@ -117,8 +117,8 @@ function submit() {
       </div>
 
       <!-- 第二个 form-section：TA的信息 -->
-      <div class="border-2 border-dashed border-[#81d4fa] rounded-lg pt-6 px-4 pb-4 mx-4 mt-6 mb-4 relative bg-[var(--c-surface)] shadow-sm">
-        <span class="absolute -top-3 -left-0.5 bg-[#4fc3f7] text-white px-2.5 py-1 rounded-sm text-sm font-medium">{{ t('express.publish.targetInfo') }}</span>
+      <div class="express-form-section rounded-lg pt-6 px-4 pb-4 mx-4 mt-6 mb-4 relative bg-[var(--c-surface)] shadow-sm">
+        <span class="express-form-section__label absolute -top-3 -left-0.5 text-white px-2.5 py-1 rounded-sm text-sm font-medium">{{ t('express.publish.targetInfo') }}</span>
         <div>
           <div class="flex items-start py-3 border-b border-[var(--c-border)]">
             <label class="w-[70px] text-sm text-[var(--c-text-1)] leading-8">{{ t('express.publish.targetName') }}</label>
@@ -143,8 +143,8 @@ function submit() {
       </div>
 
       <!-- 表白内容 -->
-      <div class="border-2 border-dashed border-[#81d4fa] rounded-lg pt-6 px-4 pb-4 mx-4 mt-6 mb-4 relative bg-[var(--c-surface)] shadow-sm">
-        <span class="absolute -top-3 -left-0.5 bg-[#4fc3f7] text-white px-2.5 py-1 rounded-sm text-sm font-medium">{{ t('express.publish.contentTitle') }}</span>
+      <div class="express-form-section rounded-lg pt-6 px-4 pb-4 mx-4 mt-6 mb-4 relative bg-[var(--c-surface)] shadow-sm">
+        <span class="express-form-section__label absolute -top-3 -left-0.5 text-white px-2.5 py-1 rounded-sm text-sm font-medium">{{ t('express.publish.contentTitle') }}</span>
         <div>
           <div class="py-3">
             <textarea
@@ -160,7 +160,7 @@ function submit() {
       <div class="px-4 pt-5 pb-10">
         <button
           type="button"
-          class="w-full h-11 flex justify-center items-center bg-[var(--c-express)] text-white rounded-full text-base font-medium border-none cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
+          class="express-submit w-full h-11 flex justify-center items-center text-white rounded-full text-base font-medium border-none cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
           :disabled="submitting"
           @click="submit"
         >
@@ -182,3 +182,53 @@ function submit() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-express-page {
+  --express-form-border: color-mix(in srgb, var(--c-express) 18%, var(--c-border));
+  --express-form-tag: linear-gradient(135deg, var(--c-express), color-mix(in srgb, var(--c-express) 68%, var(--c-text-1)));
+}
+
+.express-banner-title {
+  color: color-mix(in srgb, var(--c-express) 78%, var(--c-text-1));
+}
+
+.express-form-section {
+  border: 2px dashed var(--express-form-border);
+}
+
+.express-form-section__label {
+  background: var(--express-form-tag);
+  box-shadow: 0 10px 18px color-mix(in srgb, var(--c-express) 16%, transparent);
+}
+
+.express-submit {
+  background: linear-gradient(135deg, var(--c-express), color-mix(in srgb, var(--c-express) 68%, var(--c-text-1)));
+}
+
+[data-theme="dark"] .community-express-page {
+  --express-form-border: color-mix(in srgb, var(--c-express) 22%, rgba(74, 96, 120, 0.72));
+  --express-form-tag: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-express) 34%, #203044),
+    color-mix(in srgb, var(--c-express) 54%, var(--c-text-1))
+  );
+}
+
+[data-theme="dark"] .express-banner-title {
+  color: color-mix(in srgb, var(--c-express) 52%, var(--c-text-1));
+}
+
+[data-theme="dark"] .express-form-section {
+  background: rgba(24, 38, 53, 0.84);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
+}
+
+[data-theme="dark"] .express-submit {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-express) 30%, #203044),
+    color-mix(in srgb, var(--c-express) 52%, var(--c-text-1))
+  );
+}
+</style>

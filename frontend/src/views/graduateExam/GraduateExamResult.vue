@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { queryKaoyanScore } from '@/api/graduateExam'
 import { useToast } from '@/composables/useToast'
+import AppEmpty from '@/components/ui/AppEmpty.vue'
+import { GraduationCap } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()
@@ -117,9 +119,38 @@ onMounted(() => {
       </template>
 
       <!-- No data -->
-      <div v-if="!isLoading && !hasData" class="text-center py-16 text-sm text-[var(--c-text-secondary)]">
-        暂无成绩数据
+      <div v-if="!isLoading && !hasData" class="graduate-empty-shell">
+        <AppEmpty
+          title="暂无成绩数据"
+          description="当前未查询到对应考生的成绩信息，请检查姓名、考号和证件号码后重新查询。"
+          action-text="返回重查"
+          @action="reQuery"
+        >
+          <template #icon>
+            <GraduationCap :size="30" />
+          </template>
+        </AppEmpty>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.graduate-empty-shell {
+  border: 1px solid color-mix(in srgb, var(--c-border) 88%, white);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 13%, transparent), transparent 52%),
+    color-mix(in srgb, var(--c-surface) 94%, white);
+  box-shadow: 0 18px 40px rgba(27, 71, 84, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+:global([data-theme='dark']) .graduate-empty-shell {
+  border-color: color-mix(in srgb, var(--c-border) 82%, rgba(147, 197, 253, 0.18));
+  background:
+    radial-gradient(circle at top, rgba(111, 216, 208, 0.12), transparent 52%),
+    color-mix(in srgb, var(--c-surface) 94%, rgba(12, 25, 35, 0.88));
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+</style>

@@ -18,6 +18,7 @@ const DATING_HOME_COPY = {
     fromPrefix: '来自',
     unknown: '未知',
     empty: '暂无内容',
+    publishAction: '发布资料',
   },
   'zh-HK': {
     myAction: '我的',
@@ -27,6 +28,7 @@ const DATING_HOME_COPY = {
     fromPrefix: '來自',
     unknown: '未知',
     empty: '暫無內容',
+    publishAction: '發布資料',
   },
   'zh-TW': {
     myAction: '我的',
@@ -36,6 +38,7 @@ const DATING_HOME_COPY = {
     fromPrefix: '來自',
     unknown: '未知',
     empty: '暫無內容',
+    publishAction: '發布資料',
   },
   en: {
     myAction: 'My',
@@ -45,6 +48,7 @@ const DATING_HOME_COPY = {
     fromPrefix: 'From',
     unknown: 'Unknown',
     empty: 'No profiles yet',
+    publishAction: 'Post profile',
   },
   ja: {
     myAction: 'マイ',
@@ -54,6 +58,7 @@ const DATING_HOME_COPY = {
     fromPrefix: '出身',
     unknown: '不明',
     empty: 'まだ投稿がありません',
+    publishAction: 'プロフィールを投稿',
   },
   ko: {
     myAction: '내 정보',
@@ -63,6 +68,7 @@ const DATING_HOME_COPY = {
     fromPrefix: '출신',
     unknown: '알 수 없음',
     empty: '아직 게시물이 없습니다',
+    publishAction: '프로필 등록',
   },
 }
 

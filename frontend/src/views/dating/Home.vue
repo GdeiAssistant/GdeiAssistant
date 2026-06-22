@@ -5,6 +5,8 @@ import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import AppEmpty from '@/components/ui/AppEmpty.vue'
+import { Sparkles } from 'lucide-vue-next'
 import { createCommunityPullMessages } from '../community/communityContent'
 import { getDatingGradeText, getDatingHomeCopy } from './datingContent'
 
@@ -127,9 +129,19 @@ onUnmounted(() => {
     </div>
 
     <!-- Empty -->
-    <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-      <div class="text-4xl mb-2">🤝</div>
-      <div class="text-sm">{{ copy.empty }}</div>
+    <div v-if="!loading && !refreshing && list.length === 0" class="community-dating-empty-shell">
+      <AppEmpty
+        :title="copy.empty"
+        :description="t('feature.dating.description')"
+        :action-text="copy.publishAction"
+        accent="var(--c-dating)"
+        action-variant="primary"
+        @action="router.push('/dating/publish')"
+      >
+        <template #icon>
+          <Sparkles class="dating-empty-state__icon-mark" aria-hidden="true" />
+        </template>
+      </AppEmpty>
     </div>
 
     <!-- Loading -->
@@ -207,6 +219,18 @@ onUnmounted(() => {
   color: var(--dating-accent-strong);
 }
 
+.community-dating-empty-shell {
+  border: 1px solid color-mix(in srgb, var(--c-dating) 10%, var(--c-border));
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--c-dating) 3%, var(--c-surface));
+  box-shadow: 0 18px 36px color-mix(in srgb, var(--c-dating) 8%, transparent);
+}
+
+.dating-empty-state__icon-mark {
+  width: 28px;
+  height: 28px;
+}
+
 [data-theme="dark"] .community-dating-page {
   --dating-accent: color-mix(in srgb, var(--c-dating) 42%, #94a3b8);
   --dating-accent-strong: color-mix(in srgb, var(--c-dating) 48%, #dbeafe);
@@ -225,6 +249,12 @@ onUnmounted(() => {
   background: linear-gradient(135deg, rgba(35, 51, 70, 0.98), rgba(28, 43, 61, 0.96));
   color: var(--dating-accent-strong) !important;
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-dating) 18%, rgba(111, 132, 156, 0.72));
+}
+
+[data-theme="dark"] .community-dating-empty-shell {
+  border-color: color-mix(in srgb, var(--c-dating) 12%, rgba(111, 132, 156, 0.44));
+  background: rgba(24, 38, 53, 0.86);
+  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.2);
 }
 
 @media (min-width: 768px) {

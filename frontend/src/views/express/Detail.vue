@@ -23,8 +23,8 @@ function mapGender(g) {
 }
 
 function getGenderColor(gender) {
-  if (gender === 'male') return '#4fc3f7'
-  if (gender === 'female') return '#ff8a80'
+  if (gender === 'male') return 'var(--express-gender-male)'
+  if (gender === 'female') return 'var(--express-gender-female)'
   return 'var(--c-text-1)'
 }
 
@@ -156,7 +156,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="bg-[var(--c-bg)] pb-[60px]">
+  <div class="community-express-page bg-[var(--c-bg)] pb-[60px]">
     <CommunityHeader :title="t('express.detail.title')" moduleColor="var(--c-express)" backTo="/express/home" />
 
     <!-- 主体容器 -->
@@ -257,7 +257,7 @@ onMounted(async () => {
       />
       <button
         type="button"
-        class="ml-2.5 px-5 h-9 bg-[var(--c-express)] text-white border-none rounded-full text-sm cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
+        class="express-submit ml-2.5 px-5 h-9 text-white border-none rounded-full text-sm cursor-pointer transition-opacity duration-200 active:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
         :disabled="submitting"
         @click="submitComment"
       >
@@ -266,3 +266,27 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-express-page {
+  --express-gender-male: color-mix(in srgb, var(--c-info) 72%, var(--c-express));
+  --express-gender-female: color-mix(in srgb, var(--c-danger) 42%, var(--c-express));
+}
+
+.express-submit {
+  background: linear-gradient(135deg, var(--c-express), color-mix(in srgb, var(--c-express) 68%, var(--c-text-1)));
+}
+
+[data-theme="dark"] .community-express-page {
+  --express-gender-male: color-mix(in srgb, var(--c-info) 68%, var(--c-text-1));
+  --express-gender-female: color-mix(in srgb, var(--c-express) 56%, var(--c-text-1));
+}
+
+[data-theme="dark"] .express-submit {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-express) 30%, #203044),
+    color-mix(in srgb, var(--c-express) 52%, var(--c-text-1))
+  );
+}
+</style>

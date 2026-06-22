@@ -148,7 +148,7 @@ const submit = async () => {
       </div>
 
       <!-- Clear button -->
-      <button class="w-full bg-[var(--c-bg)] text-[var(--c-text-2)] border border-[var(--c-divider)] rounded-lg px-3 py-2 text-base cursor-pointer transition-colors active:bg-[var(--c-border)]" type="button" @click="clearImages">{{ copy.clearImagesAction }}</button>
+      <button class="community-photograph-clear w-full text-[var(--c-text-2)] border border-[var(--c-divider)] rounded-lg px-3 py-2 text-base cursor-pointer transition-colors active:bg-[var(--c-border)]" type="button" @click="clearImages">{{ copy.clearImagesAction }}</button>
 
       <!-- Content textarea -->
       <div class="mt-4 mb-4">
@@ -197,14 +197,26 @@ const submit = async () => {
 
 .community-photograph-upload {
   background: var(--photograph-form-accent-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--photograph-form-accent) 10%, transparent);
 }
 
 .community-photograph-upload--main {
   border-color: var(--photograph-form-accent) !important;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--photograph-form-accent) 14%, transparent),
+    0 18px 34px color-mix(in srgb, var(--photograph-form-accent) 10%, transparent);
+}
+
+.community-photograph-upload--sub {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--photograph-form-accent) 8%, transparent);
 }
 
 .community-photograph-upload--sub:hover {
   border-color: var(--photograph-form-accent) !important;
+}
+
+.community-photograph-clear {
+  background: color-mix(in srgb, var(--photograph-form-accent) 4%, var(--c-bg));
 }
 
 .community-photograph-submit {
@@ -218,7 +230,7 @@ const submit = async () => {
 
 [data-theme="dark"] .community-photograph-page {
   --photograph-form-accent: color-mix(in srgb, var(--c-photograph) 44%, #94a3b8);
-  --photograph-form-accent-soft: color-mix(in srgb, var(--c-photograph) 7%, rgba(32, 48, 68, 0.82));
+  --photograph-form-accent-soft: linear-gradient(180deg, color-mix(in srgb, var(--c-photograph) 9%, rgba(36, 56, 74, 0.86)), rgba(29, 44, 60, 0.92));
   --photograph-form-action-end: color-mix(in srgb, var(--c-photograph) 24%, #172435);
 }
 
@@ -226,8 +238,26 @@ const submit = async () => {
   color: color-mix(in srgb, var(--photograph-form-accent) 72%, var(--c-text-2));
 }
 
+[data-theme="dark"] .community-photograph-upload {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--photograph-form-accent) 12%, rgba(111, 132, 156, 0.42)),
+    0 14px 28px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] .community-photograph-upload--sub {
+  background: linear-gradient(180deg, rgba(42, 64, 84, 0.88), rgba(31, 47, 64, 0.92));
+}
+
+[data-theme="dark"] .community-photograph-clear {
+  background: rgba(22, 33, 45, 0.94);
+  border-color: color-mix(in srgb, var(--photograph-form-accent) 18%, rgba(111, 132, 156, 0.4));
+  color: color-mix(in srgb, var(--photograph-form-accent) 28%, var(--c-text-2));
+}
+
 [data-theme="dark"] .community-photograph-submit {
   color: color-mix(in srgb, var(--c-photograph) 36%, #fff);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-photograph) 18%, rgba(111, 132, 156, 0.72));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--c-photograph) 18%, rgba(111, 132, 156, 0.72)),
+    0 18px 32px rgba(0, 0, 0, 0.18);
 }
 </style>

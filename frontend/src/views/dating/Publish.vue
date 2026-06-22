@@ -296,17 +296,17 @@ async function submit() {
 </script>
 
 <template>
-  <div class="community-dating-page min-h-screen bg-[var(--c-bg)] pb-10">
+  <div class="community-dating-page community-dating-publish-page min-h-screen bg-[var(--c-bg)] pb-10">
     <CommunityHeader :title="copy.title" moduleColor="var(--c-dating)" backTo="/dating/home" />
 
-    <div class="w-[90%] mx-auto mt-4 p-6 bg-[var(--c-surface)] rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
-      <div class="text-[22px] text-[var(--c-dating)] font-bold mb-6 pl-2">{{ copy.title }}</div>
+    <div class="community-dating-shell w-[90%] mx-auto mt-4 p-6 rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
+      <div class="community-dating-shell__title text-[22px] font-bold mb-6 pl-2">{{ copy.title }}</div>
 
       <!-- Photo upload -->
-      <div class="w-full min-h-[200px] bg-[var(--c-bg)] rounded-lg mb-6 flex items-center justify-center overflow-hidden relative cursor-pointer" @click="$refs.fileInput.click()">
+      <div class="community-dating-upload w-full min-h-[200px] rounded-lg mb-6 flex items-center justify-center overflow-hidden relative cursor-pointer" @click="$refs.fileInput.click()">
         <img v-if="imagePreview" :src="imagePreview" class="w-full h-auto max-h-80 object-cover" />
         <div v-else class="absolute inset-0 flex items-center justify-center">
-          <span class="px-6 py-2.5 bg-[var(--c-dating)] text-white rounded-full">{{ copy.uploadAction }}</span>
+          <span class="community-dating-upload__cta px-6 py-2.5 text-white rounded-full">{{ copy.uploadAction }}</span>
         </div>
         <input ref="fileInput" type="file" accept="image/*" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer" @change="onFileChange" />
       </div>
@@ -331,7 +331,7 @@ async function submit() {
       <!-- Textarea + submit -->
       <div class="border-t-2 border-dashed border-[var(--c-divider)] pt-6 text-center">
         <textarea class="w-full max-w-xs mx-auto block p-4 border border-[var(--c-divider)] rounded-lg text-base min-h-[100px] box-border text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.content" :placeholder="copy.contentPlaceholder" rows="4"></textarea>
-        <button type="button" class="mt-6 w-20 h-20 rounded-full bg-[var(--c-dating)] text-white border-none text-xl cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="submitting" @click="submit">
+        <button type="button" class="community-dating-submit mt-6 w-20 h-20 rounded-full text-white border-none text-xl cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="submitting" @click="submit">
           {{ submitting ? copy.submitting : copy.submitAction }}
         </button>
       </div>
@@ -350,8 +350,60 @@ async function submit() {
 </template>
 
 <style scoped>
+.community-dating-shell {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid color-mix(in srgb, var(--c-dating) 16%, rgba(205, 222, 226, 0.82));
+}
+
+.community-dating-shell__title {
+  color: color-mix(in srgb, var(--c-dating) 88%, var(--c-text-1));
+}
+
+.community-dating-upload {
+  background: color-mix(in srgb, var(--c-dating) 6%, var(--c-bg));
+  border: 1px dashed color-mix(in srgb, var(--c-dating) 22%, var(--c-border));
+}
+
+.community-dating-upload__cta {
+  background: linear-gradient(135deg, var(--c-dating), color-mix(in srgb, var(--c-dating) 70%, var(--c-text-1)));
+}
+
+.community-dating-submit {
+  background: linear-gradient(135deg, var(--c-dating), color-mix(in srgb, var(--c-dating) 72%, var(--c-text-1)));
+}
+
 .community-dating-warning {
-  color: color-mix(in srgb, var(--c-dating) 68%, #be123c);
+  color: color-mix(in srgb, var(--c-warning) 72%, #8a5a0a);
+}
+
+[data-theme="dark"] .community-dating-shell {
+  background: rgba(24, 38, 53, 0.86);
+  border-color: rgba(68, 89, 112, 0.72);
+}
+
+[data-theme="dark"] .community-dating-shell__title {
+  color: color-mix(in srgb, var(--c-dating) 58%, var(--c-text-1));
+}
+
+[data-theme="dark"] .community-dating-upload {
+  background: rgba(20, 30, 42, 0.88);
+  border-color: color-mix(in srgb, var(--c-dating) 18%, rgba(68, 89, 112, 0.72));
+}
+
+[data-theme="dark"] .community-dating-upload__cta {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-dating) 34%, #203044),
+    color-mix(in srgb, var(--c-dating) 50%, var(--c-text-1))
+  );
+}
+
+[data-theme="dark"] .community-dating-submit {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-dating) 30%, #203044),
+    color-mix(in srgb, var(--c-dating) 52%, var(--c-text-1))
+  );
 }
 
 [data-theme="dark"] .community-dating-warning {

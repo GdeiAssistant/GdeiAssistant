@@ -217,13 +217,13 @@ onUnmounted(() => {
 
     <div class="max-w-lg mx-auto px-4 py-6">
       <div v-if="loadingStatus" class="bg-white rounded-xl shadow-sm p-8 text-center">
-        <div class="w-8 h-8 border-2 border-gray-200 border-t-green-500 rounded-full animate-spin mx-auto"></div>
+        <div class="bind-phone-loading w-8 h-8 border-2 border-gray-200 rounded-full animate-spin mx-auto"></div>
         <h2 class="text-lg font-medium text-gray-700 mt-4">{{ t('bindPhonePage.loadingTitle') }}</h2>
         <p class="text-sm text-gray-500 mt-1">{{ t('bindPhonePage.loadingDescription') }}</p>
       </div>
 
       <div v-else-if="currentPhone && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
-        <div class="text-5xl text-green-500 mb-4">&#10003;</div>
+        <div class="bind-phone-status bind-phone-status--success text-5xl mb-4">&#10003;</div>
         <h2 class="text-lg font-medium text-gray-700">{{ t('bindPhonePage.boundTitle') }}</h2>
         <p class="text-sm text-gray-500 mt-2">
           {{ t('bindPhonePage.boundDescription', { code: boundCountryCode, phone: currentPhone }) }}
@@ -231,7 +231,7 @@ onUnmounted(() => {
         <div class="mt-8 space-y-3">
           <button
             type="button"
-            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer"
+            class="bind-phone-primary-action w-full rounded-lg text-white font-medium py-2.5 cursor-pointer"
             @click="startEdit"
           >{{ t('bindPhonePage.changeAction') }}</button>
           <button
@@ -243,13 +243,13 @@ onUnmounted(() => {
       </div>
 
       <div v-else-if="!currentPhone && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
-        <div class="text-5xl text-blue-400 mb-4">i</div>
+        <div class="bind-phone-status bind-phone-status--info text-5xl mb-4">i</div>
         <h2 class="text-lg font-medium text-gray-700">{{ t('bindPhonePage.unboundTitle') }}</h2>
         <p class="text-sm text-gray-500 mt-2">{{ t('bindPhonePage.unboundDescription') }}</p>
         <div class="mt-8">
           <button
             type="button"
-            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 active:bg-green-600 cursor-pointer"
+            class="bind-phone-primary-action w-full rounded-lg text-white font-medium py-2.5 cursor-pointer"
             @click="startBind"
           >{{ t('bindPhonePage.bindNowAction') }}</button>
         </div>
@@ -289,7 +289,7 @@ onUnmounted(() => {
             <button
               type="button"
               class="shrink-0 text-sm pl-3 border-l border-gray-200 cursor-pointer"
-              :class="canSendCode ? 'text-green-500' : 'text-gray-400'"
+              :class="canSendCode ? 'bind-phone-code-link bind-phone-code-link--active' : 'text-gray-400'"
               :disabled="!canSendCode"
               @click="handleSendCode"
             >
@@ -301,7 +301,7 @@ onUnmounted(() => {
         <div class="mt-8">
           <button
             type="button"
-            class="w-full rounded-lg bg-green-500 text-white font-medium py-2.5 flex items-center justify-center active:bg-green-600 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            class="bind-phone-primary-action w-full rounded-lg text-white font-medium py-2.5 flex items-center justify-center cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             :disabled="isBinding"
             @click="handleSubmit"
           >
@@ -350,3 +350,43 @@ onUnmounted(() => {
     </Teleport>
   </div>
 </template>
+
+<style scoped>
+.bind-phone-loading {
+  border-top-color: color-mix(in srgb, var(--c-primary) 82%, #2dd4bf);
+}
+
+.bind-phone-primary-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 22%, transparent);
+}
+
+.bind-phone-status--success {
+  color: color-mix(in srgb, var(--c-primary) 82%, #2dd4bf);
+}
+
+.bind-phone-status--info {
+  color: color-mix(in srgb, var(--c-primary) 62%, #67e8f9);
+}
+
+.bind-phone-code-link--active {
+  color: color-mix(in srgb, var(--c-primary) 76%, #14b8a6);
+}
+
+[data-theme="dark"] .bind-phone-primary-action {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
+}
+
+[data-theme="dark"] .bind-phone-loading {
+  border-top-color: color-mix(in srgb, var(--c-primary) 58%, #67e8f9);
+}
+
+[data-theme="dark"] .bind-phone-status--success {
+  color: color-mix(in srgb, var(--c-primary) 62%, #ccfbf1);
+}
+
+[data-theme="dark"] .bind-phone-status--info,
+[data-theme="dark"] .bind-phone-code-link--active {
+  color: color-mix(in srgb, var(--c-primary) 58%, #67e8f9);
+}
+</style>

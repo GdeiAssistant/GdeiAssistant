@@ -14,6 +14,15 @@ const props = defineProps({
   open: { type: Boolean, default: false },
   title: { type: String, default: '' },
   description: { type: String, default: '' },
+  confirmText: { type: String, default: '' },
+  cancelText: { type: String, default: '' },
+  showCancel: { type: Boolean, default: true },
+  showActions: { type: Boolean, default: true },
+  confirmTone: {
+    type: String,
+    default: 'primary',
+    validator: (value) => ['primary', 'danger'].includes(value),
+  },
 })
 
 const emit = defineEmits(['close', 'confirm'])
@@ -40,18 +49,33 @@ function onOpenChange(val) {
           {{ description }}
         </DialogDescription>
 
+        <DialogDescription
+          v-else-if="$slots.default"
+          class="dialog-description sr-only"
+        >
+          {{ title || t('common.confirm') }}
+        </DialogDescription>
+
         <div v-if="$slots.default" class="dialog-body">
           <slot />
         </div>
 
-        <div class="dialog-actions">
-          <DialogClose as-child>
+        <div
+          v-if="showActions"
+          class="dialog-actions"
+          :class="{ 'dialog-actions--single': !showCancel }"
+        >
+          <DialogClose v-if="showCancel" as-child>
             <button class="dialog-button dialog-button--secondary" @click="emit('close')">
-              {{ t('common.cancel') }}
+              {{ cancelText || t('common.cancel') }}
             </button>
           </DialogClose>
-          <button class="dialog-button dialog-button--primary" @click="emit('confirm')">
-            {{ t('common.confirm') }}
+          <button
+            class="dialog-button"
+            :class="confirmTone === 'danger' ? 'dialog-button--danger' : 'dialog-button--primary'"
+            @click="emit('confirm')"
+          >
+            {{ confirmText || t('common.confirm') }}
           </button>
         </div>
       </DialogContent>
@@ -99,6 +123,10 @@ function onOpenChange(val) {
   gap: 10px;
 }
 
+.dialog-actions--single .dialog-button {
+  min-width: 120px;
+}
+
 .dialog-button {
   min-height: 42px;
   border-radius: 14px;
@@ -119,7 +147,18 @@ function onOpenChange(val) {
   border: 0;
   background: var(--c-primary);
   color: #fff;
-  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.18);
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--c-primary) 18%, transparent);
+}
+
+.dialog-button--danger {
+  border: 0;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-danger) 92%, #ef4444),
+    color-mix(in srgb, var(--c-danger) 76%, #991b1b)
+  );
+  color: #fff;
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--c-danger) 18%, transparent);
 }
 
 .dialog-overlay {
@@ -154,5 +193,14 @@ function onOpenChange(val) {
 
 [data-theme="dark"] .dialog-button--secondary {
   background: rgba(31, 41, 55, 0.86);
+}
+
+[data-theme="dark"] .dialog-button--danger {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-danger) 88%, rgba(24, 38, 53, 0.12)),
+    color-mix(in srgb, var(--c-danger) 68%, rgba(24, 38, 53, 0.3))
+  );
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--c-danger) 22%, transparent);
 }
 </style>

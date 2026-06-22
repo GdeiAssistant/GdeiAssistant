@@ -2,6 +2,7 @@
 import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { Sparkles } from 'lucide-vue-next'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import { getDatingCenterCopy } from './datingContent'
@@ -217,8 +218,10 @@ watch(() => route.fullPath, () => {
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
         <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-dating)] rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
       </div>
-      <div v-else-if="receivedList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-4xl mb-2">💕</div>
+      <div v-else-if="receivedList.length === 0" class="dating-empty-state">
+        <div class="dating-empty-state__icon">
+          <Sparkles class="size-7" />
+        </div>
         <div class="text-sm">{{ copy.emptyReceived }}</div>
       </div>
       <div v-else class="flex flex-col gap-3">
@@ -251,8 +254,10 @@ watch(() => route.fullPath, () => {
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
         <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-dating)] rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
       </div>
-      <div v-else-if="sentList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-4xl mb-2">💕</div>
+      <div v-else-if="sentList.length === 0" class="dating-empty-state">
+        <div class="dating-empty-state__icon">
+          <Sparkles class="size-7" />
+        </div>
         <div class="text-sm">{{ copy.emptySent }}</div>
       </div>
       <div v-else class="flex flex-col gap-3">
@@ -288,8 +293,10 @@ watch(() => route.fullPath, () => {
       <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
         <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-dating)] rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
       </div>
-      <div v-else-if="postsList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-4xl mb-2">💕</div>
+      <div v-else-if="postsList.length === 0" class="dating-empty-state">
+        <div class="dating-empty-state__icon">
+          <Sparkles class="size-7" />
+        </div>
         <div class="text-sm">{{ copy.emptyPosts }}</div>
       </div>
       <div v-else class="flex flex-col gap-3">
@@ -333,39 +340,75 @@ watch(() => route.fullPath, () => {
 </template>
 
 <style scoped>
+.dating-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 64px 0;
+  color: var(--c-text-3);
+}
+
+.dating-empty-state__icon {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--c-dating) 18%, var(--c-border));
+  border-radius: 18px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-dating) 12%, rgba(255, 255, 255, 0.96)),
+    color-mix(in srgb, var(--c-dating) 4%, rgba(255, 255, 255, 0.92))
+  );
+  color: color-mix(in srgb, var(--c-dating) 78%, var(--c-text-1));
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--c-dating) 10%, transparent);
+}
+
 .dating-status--pending {
-  border: 1px solid color-mix(in srgb, #f59e0b 22%, transparent);
-  background: color-mix(in srgb, #f59e0b 13%, transparent);
-  color: #9a5b00;
+  border: 1px solid color-mix(in srgb, var(--c-dating) 16%, var(--c-warning));
+  background: color-mix(in srgb, var(--c-dating) 8%, rgba(255, 255, 255, 0.86));
+  color: color-mix(in srgb, var(--c-dating) 52%, #8a5a0a);
 }
 
 .dating-status--accepted {
-  border: 1px solid color-mix(in srgb, var(--c-dating) 20%, transparent);
-  background: color-mix(in srgb, var(--c-dating) 12%, transparent);
-  color: color-mix(in srgb, var(--c-dating) 76%, #7c1d3f);
+  border: 1px solid color-mix(in srgb, var(--c-dating) 24%, var(--c-border));
+  background: color-mix(in srgb, var(--c-dating) 12%, rgba(255, 255, 255, 0.88));
+  color: color-mix(in srgb, var(--c-dating) 86%, var(--c-text-1));
 }
 
 .dating-status--rejected {
-  border: 1px solid color-mix(in srgb, #f43f5e 18%, transparent);
-  background: color-mix(in srgb, #f43f5e 10%, transparent);
-  color: #be123c;
+  border: 1px solid color-mix(in srgb, var(--c-dating) 10%, var(--c-danger));
+  background: color-mix(in srgb, var(--c-dating) 6%, rgba(255, 255, 255, 0.84));
+  color: color-mix(in srgb, var(--c-dating) 24%, var(--c-danger));
 }
 
 [data-theme="dark"] .dating-status--pending {
-  border-color: color-mix(in srgb, #f6c768 22%, rgba(74, 96, 120, 0.68));
-  background: color-mix(in srgb, #f6c768 8%, rgba(32, 48, 68, 0.82));
-  color: #f6d98b;
+  border-color: color-mix(in srgb, var(--c-dating) 16%, rgba(125, 211, 199, 0.72));
+  background: color-mix(in srgb, var(--c-dating) 8%, rgba(32, 48, 68, 0.82));
+  color: color-mix(in srgb, var(--c-warning) 64%, #f8fafc);
+}
+
+[data-theme="dark"] .dating-empty-state__icon {
+  border-color: color-mix(in srgb, var(--c-dating) 18%, rgba(91, 118, 144, 0.72));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-dating) 14%, rgba(32, 48, 68, 0.88)),
+    color-mix(in srgb, var(--c-dating) 6%, rgba(24, 38, 53, 0.92))
+  );
+  color: color-mix(in srgb, var(--c-dating) 58%, var(--c-text-1));
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--c-dating) 12%, transparent);
 }
 
 [data-theme="dark"] .dating-status--accepted {
-  border-color: color-mix(in srgb, var(--c-dating) 18%, rgba(74, 96, 120, 0.68));
-  background: color-mix(in srgb, var(--c-dating) 7%, rgba(32, 48, 68, 0.82));
-  color: color-mix(in srgb, var(--c-dating) 48%, #dbeafe);
+  border-color: color-mix(in srgb, var(--c-dating) 20%, rgba(74, 96, 120, 0.68));
+  background: color-mix(in srgb, var(--c-dating) 9%, rgba(32, 48, 68, 0.84));
+  color: color-mix(in srgb, var(--c-dating) 54%, var(--c-text-1));
 }
 
 [data-theme="dark"] .dating-status--rejected {
-  border-color: color-mix(in srgb, #fb8795 18%, rgba(74, 96, 120, 0.68));
-  background: color-mix(in srgb, #fb8795 7%, rgba(32, 48, 68, 0.82));
-  color: #fda4af;
+  border-color: color-mix(in srgb, var(--c-dating) 12%, rgba(248, 113, 113, 0.72));
+  background: color-mix(in srgb, var(--c-dating) 6%, rgba(32, 48, 68, 0.82));
+  color: color-mix(in srgb, var(--c-danger) 56%, #f8fafc);
 }
 </style>

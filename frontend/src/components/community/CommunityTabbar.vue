@@ -153,7 +153,7 @@ function goTo(path) {
 }
 
 [data-theme="dark"] .community-tabbar {
-  --community-module-dark-accent: color-mix(in srgb, var(--module-color) 40%, #94a3b8);
+  --community-module-dark-accent: color-mix(in srgb, var(--module-color) 48%, var(--c-text-1));
   --community-module-dark-border: color-mix(in srgb, var(--module-color) 12%, rgba(76, 101, 126, 0.82));
 
   border-top-color: rgba(68, 89, 112, 0.74);

@@ -182,7 +182,7 @@ function handleThirdPartyLogin(type) {
   background:
     radial-gradient(circle at 18% 10%, rgba(175, 225, 255, 0.5), transparent 28%),
     radial-gradient(circle at 82% 8%, rgba(183, 238, 207, 0.42), transparent 24%),
-    linear-gradient(180deg, #f6fcff 0%, var(--c-bg) 100%);
+    linear-gradient(180deg, color-mix(in srgb, var(--c-bg) 72%, white 28%) 0%, var(--c-bg) 100%);
 }
 
 .login-visual {
@@ -215,8 +215,12 @@ function handleThirdPartyLogin(type) {
   display: grid;
   place-items: center;
   color: #fff;
-  background: linear-gradient(135deg, #14b985, #3aa7e8);
-  box-shadow: 0 14px 26px rgba(20, 185, 133, 0.22);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-primary) 90%, white 10%),
+    color-mix(in srgb, var(--c-primary) 54%, var(--c-info) 46%)
+  );
+  box-shadow: 0 14px 26px color-mix(in srgb, var(--c-primary) 22%, transparent);
   font-weight: 900;
 }
 
@@ -290,10 +294,10 @@ function handleThirdPartyLogin(type) {
 
 .login-panel__notice {
   margin-bottom: 22px;
-  border: 1px solid rgba(245, 158, 11, 0.22);
+  border: 1px solid color-mix(in srgb, var(--c-warning) 22%, var(--c-border));
   border-radius: 18px;
-  background: rgba(255, 251, 235, 0.72);
-  color: #8a5a0a;
+  background: color-mix(in srgb, var(--c-warning) 7%, rgba(255, 255, 255, 0.88));
+  color: color-mix(in srgb, var(--c-warning) 78%, var(--c-text-1));
   padding: 13px 15px;
 }
 
@@ -353,8 +357,12 @@ function handleThirdPartyLogin(type) {
   min-height: 48px;
   border: 0;
   border-radius: 16px;
-  background: linear-gradient(135deg, #12b981, #0f9f76);
-  box-shadow: 0 16px 30px rgba(16, 185, 129, 0.24);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-primary) 88%, white 12%),
+    color-mix(in srgb, var(--c-primary-hover) 92%, #06634b 8%)
+  );
+  box-shadow: 0 16px 30px color-mix(in srgb, var(--c-primary) 24%, transparent);
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -493,6 +501,12 @@ function handleThirdPartyLogin(type) {
 [data-theme="dark"] .login-visual__card {
   border-color: rgba(45, 58, 73, 0.86);
   background: rgba(20, 27, 37, 0.9);
+}
+
+[data-theme="dark"] .login-panel__notice {
+  border-color: color-mix(in srgb, var(--c-warning) 18%, rgba(68, 89, 112, 0.74));
+  background: color-mix(in srgb, var(--c-warning) 10%, rgba(20, 27, 37, 0.92));
+  color: color-mix(in srgb, var(--c-warning) 64%, #fef3c7);
 }
 
 [data-theme="dark"] .login-field input,

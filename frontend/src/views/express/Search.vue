@@ -52,8 +52,8 @@ const fetchSearchData = async (page) => {
 const { items: list, loading, finished, refreshing, pullY, loadData, handleScroll, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchSearchData)
 
 function getGenderColor(gender) {
-  if (gender === 'male') return '#4fc3f7'
-  if (gender === 'female') return '#ff8a80'
+  if (gender === 'male') return 'var(--express-gender-male)'
+  if (gender === 'female') return 'var(--express-gender-female)'
   return 'var(--c-text-1)'
 }
 
@@ -102,7 +102,7 @@ watch(
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="community-express-page min-h-screen bg-[var(--c-bg)]">
     <CommunityHeader :title="t('express.searchTitle')" moduleColor="var(--c-express)" backTo="/express/home" />
 
     <!-- 搜索栏 -->
@@ -119,11 +119,11 @@ watch(
           @keyup.enter="doSearch"
         />
       </div>
-      <span class="text-[var(--c-express)] text-sm ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">{{ t('express.searchAction') }}</span>
+      <span class="express-action-link text-sm ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">{{ t('express.searchAction') }}</span>
     </div>
 
     <!-- 浅粉色标题 -->
-    <h2 class="text-center text-xl font-bold text-[#ffb3ba] mx-4 mt-3 mb-4 leading-tight">{{ t('express.bannerTitle') }}</h2>
+    <h2 class="express-banner-title text-center text-xl font-bold mx-4 mt-3 mb-4 leading-tight">{{ t('express.bannerTitle') }}</h2>
 
     <!-- 滚动容器 -->
     <div
@@ -136,7 +136,7 @@ watch(
     >
       <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
         <span v-if="refreshing" class="flex items-center gap-2">
-          <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-express)] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
+          <i class="w-5 h-5 border-2 border-[var(--c-border)] express-spinner-accent rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
         </span>
         <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
         <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
@@ -185,7 +185,7 @@ watch(
       </div>
 
       <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-express)] rounded-full animate-spin"></i>
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] express-spinner-accent rounded-full animate-spin"></i>
         <span>{{ pullMessages.loading }}</span>
       </div>
       <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
@@ -206,3 +206,35 @@ watch(
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-express-page {
+  --express-gender-male: color-mix(in srgb, var(--c-info) 72%, var(--c-express));
+  --express-gender-female: color-mix(in srgb, var(--c-danger) 42%, var(--c-express));
+}
+
+.express-action-link {
+  color: color-mix(in srgb, var(--c-express) 82%, var(--c-text-1));
+}
+
+.express-banner-title {
+  color: color-mix(in srgb, var(--c-express) 78%, var(--c-text-1));
+}
+
+.express-spinner-accent {
+  border-top-color: color-mix(in srgb, var(--c-express) 86%, var(--c-text-1)) !important;
+}
+
+[data-theme="dark"] .community-express-page {
+  --express-gender-male: color-mix(in srgb, var(--c-info) 68%, var(--c-text-1));
+  --express-gender-female: color-mix(in srgb, var(--c-express) 56%, var(--c-text-1));
+}
+
+[data-theme="dark"] .express-action-link {
+  color: color-mix(in srgb, var(--c-express) 56%, var(--c-text-1));
+}
+
+[data-theme="dark"] .express-banner-title {
+  color: color-mix(in srgb, var(--c-express) 52%, var(--c-text-1));
+}
+</style>

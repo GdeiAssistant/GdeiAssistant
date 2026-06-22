@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { getCurrentUserProfile } from '../../api/user.js'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import AppEmpty from '@/components/ui/AppEmpty.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -137,7 +138,7 @@ watch(() => route.fullPath, () => {
     <CommunityHeader :title="t('marketplace.profile.title')" moduleColor="var(--c-ershou)" backTo="/marketplace/home" />
 
     <!-- Profile Header -->
-    <section class="relative bg-gradient-to-br from-emerald-500 to-emerald-600 pt-8 pb-5 pl-[140px] pr-5 min-h-[90px]">
+    <section class="community-marketplace-profile-hero relative pt-8 pb-5 pl-[140px] pr-5 min-h-[90px]">
       <i class="absolute left-[25px] top-[25px] w-16 h-16 rounded-full overflow-hidden block">
         <img :src="avatar" :alt="t('profile.avatar')" class="w-16! h-16! rounded-full object-cover border-2 border-white/30">
       </i>
@@ -149,30 +150,30 @@ watch(() => route.fullPath, () => {
 
     <!-- Status Tabs & Lists -->
     <section class="mx-2.5">
-      <ul class="flex mb-2.5 mt-2.5 bg-[var(--c-surface)] rounded overflow-hidden shadow-sm list-none p-0">
+      <ul class="marketplace-tabs-shell flex mb-2.5 mt-2.5 bg-[var(--c-surface)] rounded overflow-hidden shadow-sm list-none p-0">
         <li
-          class="flex-1 block relative text-emerald-500 text-center h-8 leading-8 text-sm cursor-pointer"
+          class="marketplace-tab-item flex-1 block relative text-center h-8 leading-8 text-sm cursor-pointer"
           :class="{ 'font-semibold': activeStat === 'doing' }"
           @click="setStat('doing')"
         >
           {{ t('marketplace.profile.tab.doing') }}
-          <i class="w-7 h-0.5 bg-emerald-500 absolute left-1/2 -ml-3.5 bottom-0 rounded-sm" :class="activeStat === 'doing' ? 'block' : 'hidden'"></i>
+          <i class="marketplace-tab-indicator w-7 h-0.5 absolute left-1/2 -ml-3.5 bottom-0 rounded-sm" :class="activeStat === 'doing' ? 'block' : 'hidden'"></i>
         </li>
         <li
-          class="flex-1 block relative text-emerald-500 text-center h-8 leading-8 text-sm cursor-pointer"
+          class="marketplace-tab-item flex-1 block relative text-center h-8 leading-8 text-sm cursor-pointer"
           :class="{ 'font-semibold': activeStat === 'sold' }"
           @click="setStat('sold')"
         >
           {{ t('marketplace.profile.tab.sold') }}
-          <i class="w-7 h-0.5 bg-emerald-500 absolute left-1/2 -ml-3.5 bottom-0 rounded-sm" :class="activeStat === 'sold' ? 'block' : 'hidden'"></i>
+          <i class="marketplace-tab-indicator w-7 h-0.5 absolute left-1/2 -ml-3.5 bottom-0 rounded-sm" :class="activeStat === 'sold' ? 'block' : 'hidden'"></i>
         </li>
         <li
-          class="flex-1 block relative text-emerald-500 text-center h-8 leading-8 text-sm cursor-pointer"
+          class="marketplace-tab-item flex-1 block relative text-center h-8 leading-8 text-sm cursor-pointer"
           :class="{ 'font-semibold': activeStat === 'off' }"
           @click="setStat('off')"
         >
           {{ t('marketplace.profile.tab.off') }}
-          <i class="w-7 h-0.5 bg-emerald-500 absolute left-1/2 -ml-3.5 bottom-0 rounded-sm" :class="activeStat === 'off' ? 'block' : 'hidden'"></i>
+          <i class="marketplace-tab-indicator w-7 h-0.5 absolute left-1/2 -ml-3.5 bottom-0 rounded-sm" :class="activeStat === 'off' ? 'block' : 'hidden'"></i>
         </li>
       </ul>
 
@@ -185,8 +186,8 @@ watch(() => route.fullPath, () => {
               <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
                 <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
               </i>
-              <h5 class="text-emerald-500 text-sm leading-5 m-0 mb-1">{{ item.name }}</h5>
-              <em class="text-[#eb5055] leading-[18px] not-italic block">{{ item.price }}</em>
+              <h5 class="marketplace-title-accent text-sm leading-5 m-0 mb-1">{{ item.name }}</h5>
+              <em class="marketplace-price leading-[18px] not-italic block">{{ item.price }}</em>
               <p class="text-[var(--c-text-3)] text-xs m-0">{{ item.publishTime }}</p>
             </div>
             <p class="flex m-0">
@@ -195,8 +196,22 @@ watch(() => route.fullPath, () => {
               <a class="flex-1 block py-[7px] text-center no-underline cursor-pointer" href="javascript:;" @click.prevent="updateItemState(item.id, 2, t('marketplace.profile.confirm.sold'), t('marketplace.profile.success.sold'))"><b class="block text-[var(--c-text-3)] border-l border-[var(--c-border)] leading-4 h-4 font-normal">{{ t('marketplace.profile.action.markSold') }}</b></a>
             </p>
           </div>
-          <p v-if="doingList.length === 0" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ emptyText }}</p>
+<div v-if="doingList.length === 0" class="community-marketplace-empty-shell">
+            <AppEmpty
+              :title="emptyText"
+              :description="t('feature.ershou.description')"
+              :action-text="t('marketplace.publish.title')"
+              accent="var(--c-ershou)"
+              action-variant="primary"
+              @action="router.push('/marketplace/publish')"
+            >
+              <template #icon>
+                <span class="community-marketplace-empty-icon" aria-hidden="true">▣</span>
+              </template>
+            </AppEmpty>
+          </div>
         </template>
+
       </div>
 
       <!-- Sold List -->
@@ -208,16 +223,29 @@ watch(() => route.fullPath, () => {
               <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
                 <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
               </i>
-              <h5 class="text-emerald-500 text-sm leading-5 m-0 mb-1">{{ item.name }}</h5>
-              <em class="text-[#eb5055] leading-[18px] not-italic block">{{ item.price }}</em>
+              <h5 class="marketplace-title-accent text-sm leading-5 m-0 mb-1">{{ item.name }}</h5>
+              <em class="marketplace-price leading-[18px] not-italic block">{{ item.price }}</em>
               <p class="text-[var(--c-text-3)] text-xs m-0">{{ item.publishTime }}</p>
             </div>
             <p class="flex m-0">
               <span class="flex-1 block py-[7px] text-center"><b class="block text-[var(--c-text-3)] text-xs font-normal">{{ t('marketplace.profile.soldHint') }}</b></span>
             </p>
           </div>
-          <p v-if="soldList.length === 0" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ emptyText }}</p>
+          <div v-if="soldList.length === 0" class="community-marketplace-empty-shell">
+            <AppEmpty
+              :title="emptyText"
+              :description="t('feature.ershou.description')"
+              :action-text="t('marketplace.profile.tab.doing')"
+              accent="var(--c-ershou)"
+              @action="setStat('doing')"
+            >
+              <template #icon>
+                <span class="community-marketplace-empty-icon" aria-hidden="true">▣</span>
+              </template>
+            </AppEmpty>
+          </div>
         </template>
+
       </div>
 
       <!-- Off List -->
@@ -229,8 +257,8 @@ watch(() => route.fullPath, () => {
               <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
                 <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
               </i>
-              <h5 class="text-emerald-500 text-sm leading-5 m-0 mb-1">{{ item.name }}</h5>
-              <em class="text-[#eb5055] leading-[18px] not-italic block">{{ item.price }}</em>
+              <h5 class="marketplace-title-accent text-sm leading-5 m-0 mb-1">{{ item.name }}</h5>
+              <em class="marketplace-price leading-[18px] not-italic block">{{ item.price }}</em>
               <p class="text-[var(--c-text-3)] text-xs m-0">{{ item.publishTime }}</p>
             </div>
             <p class="flex m-0">
@@ -238,8 +266,21 @@ watch(() => route.fullPath, () => {
               <a class="flex-1 block py-[7px] text-center no-underline cursor-pointer" href="javascript:;" @click.prevent="updateItemState(item.id, 1, '', t('marketplace.profile.success.relist'))"><b class="block text-[var(--c-text-3)] border-l border-[var(--c-border)] leading-4 h-4 font-normal">{{ t('marketplace.profile.action.relist') }}</b></a>
             </p>
           </div>
-          <p v-if="offList.length === 0" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ emptyText }}</p>
+          <div v-if="offList.length === 0" class="community-marketplace-empty-shell">
+            <AppEmpty
+              :title="emptyText"
+              :description="t('feature.ershou.description')"
+              :action-text="t('marketplace.profile.tab.doing')"
+              accent="var(--c-ershou)"
+              @action="setStat('doing')"
+            >
+              <template #icon>
+                <span class="community-marketplace-empty-icon" aria-hidden="true">▣</span>
+              </template>
+            </AppEmpty>
+          </div>
         </template>
+
       </div>
     </section>
 
@@ -250,7 +291,7 @@ watch(() => route.fullPath, () => {
         <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">{{ t('common.hint') }}</div>
         <div class="text-center text-sm text-[var(--c-text-2)] px-5 pb-5">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)]">
-          <button class="w-full py-3 text-center text-emerald-500 font-medium text-base border-none bg-transparent cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</button>
+          <button class="marketplace-dialog-confirm w-full py-3 text-center font-medium text-base border-none bg-transparent cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</button>
         </div>
       </div>
     </div>
@@ -258,3 +299,94 @@ watch(() => route.fullPath, () => {
     <div class="h-16"></div>
   </div>
 </template>
+
+<style scoped>
+.community-marketplace-profile-hero {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-ershou) 86%, #6c967e), color-mix(in srgb, var(--c-ershou) 62%, #a8c1ad));
+}
+
+.marketplace-tabs-shell {
+  border: 1px solid color-mix(in srgb, var(--c-ershou) 14%, var(--c-border));
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--c-ershou) 3%, var(--c-surface));
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--c-ershou) 6%, transparent);
+}
+
+.marketplace-price {
+  color: color-mix(in srgb, var(--c-ershou) 18%, var(--c-warning));
+}
+
+[data-theme="dark"] .marketplace-price {
+  color: color-mix(in srgb, var(--c-warning) 78%, #fde68a);
+}
+
+.marketplace-tab-item {
+  color: color-mix(in srgb, var(--c-ershou) 84%, var(--c-text-1));
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.marketplace-tab-item.font-semibold {
+  background: color-mix(in srgb, var(--c-ershou) 8%, rgba(255, 255, 255, 0.96));
+}
+
+.marketplace-tab-indicator {
+  background: color-mix(in srgb, var(--c-ershou) 88%, var(--c-text-1));
+}
+
+.marketplace-title-accent {
+  color: color-mix(in srgb, var(--c-ershou) 82%, var(--c-text-1));
+}
+
+.marketplace-dialog-confirm {
+  color: color-mix(in srgb, var(--c-ershou) 84%, var(--c-text-1));
+}
+
+.community-marketplace-empty-shell {
+  margin: 0 0 8px;
+  border: 1px solid color-mix(in srgb, var(--c-ershou) 16%, var(--c-border));
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-ershou) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--c-ershou) 3%, var(--c-surface));
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--c-ershou) 7%, transparent);
+}
+
+.community-marketplace-empty-icon {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+[data-theme="dark"] .marketplace-tab-item,
+[data-theme="dark"] .marketplace-title-accent,
+[data-theme="dark"] .marketplace-dialog-confirm {
+  color: color-mix(in srgb, var(--c-ershou) 54%, var(--c-text-1));
+}
+
+[data-theme="dark"] .marketplace-tabs-shell {
+  border-color: rgba(68, 89, 112, 0.72);
+  background: rgba(24, 38, 53, 0.78);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="dark"] .marketplace-tab-item.font-semibold {
+  background: rgba(32, 48, 68, 0.88);
+  color: color-mix(in srgb, var(--c-ershou) 68%, var(--c-text-1));
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--c-ershou) 18%, rgba(196, 221, 203, 0.2));
+}
+
+[data-theme="dark"] .community-marketplace-empty-shell {
+  border-color: rgba(68, 89, 112, 0.72);
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-ershou) 8%, transparent), transparent 42%),
+    rgba(24, 38, 53, 0.84);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .community-marketplace-profile-hero {
+  background:
+    radial-gradient(circle at 14% 0, color-mix(in srgb, var(--c-ershou) 9%, transparent), transparent 34%),
+    radial-gradient(circle at 82% 14%, rgba(145, 201, 184, 0.08), transparent 22%),
+    linear-gradient(135deg, rgba(28, 47, 46, 0.98), rgba(20, 33, 40, 0.97));
+}
+</style>

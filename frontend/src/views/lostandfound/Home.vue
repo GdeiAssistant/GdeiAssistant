@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import AppEmpty from '@/components/ui/AppEmpty.vue'
 import { createCommunityPullMessages } from '../community/communityContent'
 
 const router = useRouter()
@@ -59,20 +60,20 @@ onMounted(() => {
     <!-- Tab 切换：寻物启事 / 失物招领 -->
     <div class="flex bg-[var(--c-surface)] border-b border-[var(--c-border)]">
       <div
-        class="flex-1 py-3.5 text-center text-[15px] cursor-pointer relative"
-        :class="activeType === 0 ? 'text-blue-500' : 'text-[var(--c-text-2)]'"
+        class="community-lostandfound-tab flex-1 py-3.5 text-center text-[15px] cursor-pointer relative"
+        :class="{ 'community-lostandfound-tab--active': activeType === 0 }"
         @click="switchType(0)"
       >
         <span>{{ t('lostandfound.tab.lost') }}</span>
-        <span v-if="activeType === 0" class="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500"></span>
+        <span v-if="activeType === 0" class="community-lostandfound-tab__indicator absolute bottom-0 left-0 right-0 h-0.5"></span>
       </div>
       <div
-        class="flex-1 py-3.5 text-center text-[15px] cursor-pointer relative"
-        :class="activeType === 1 ? 'text-blue-500' : 'text-[var(--c-text-2)]'"
+        class="community-lostandfound-tab flex-1 py-3.5 text-center text-[15px] cursor-pointer relative"
+        :class="{ 'community-lostandfound-tab--active': activeType === 1 }"
         @click="switchType(1)"
       >
         <span>{{ t('lostandfound.tab.found') }}</span>
-        <span v-if="activeType === 1" class="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500"></span>
+        <span v-if="activeType === 1" class="community-lostandfound-tab__indicator absolute bottom-0 left-0 right-0 h-0.5"></span>
       </div>
     </div>
 
@@ -89,7 +90,7 @@ onMounted(() => {
       <!-- 下拉刷新指示器 -->
       <div class="flex items-center justify-center overflow-hidden text-sm text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
         <span v-if="refreshing" class="flex items-center gap-2">
-          <span class="w-5 h-5 border-2 border-[var(--c-border)] border-t-blue-500 rounded-full animate-spin"></span> {{ pullMessages.refreshing }}
+          <span class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-lostandfound)] rounded-full animate-spin"></span> {{ pullMessages.refreshing }}
         </span>
         <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
         <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
@@ -107,8 +108,8 @@ onMounted(() => {
             <img v-if="item.images && item.images.length > 0" :src="item.images[0]" :alt="item.title" class="w-full h-full object-cover" />
             <div v-else class="w-full h-full bg-[var(--c-border)]"></div>
             <div
-              class="absolute top-2 right-2 px-2 py-0.5 text-[11px] text-white rounded z-[1]"
-              :class="item.type === 1 ? 'bg-green-500' : 'bg-amber-500'"
+              class="absolute top-2 right-2 px-2 py-0.5 text-[11px] text-white rounded z-[1] lostandfound-card__badge"
+              :class="item.type === 1 ? 'lostandfound-card__badge--found' : 'lostandfound-card__badge--lost'"
             >
               {{ item.type === 0 ? t('lostandfound.badge.lost') : t('lostandfound.badge.found') }}
             </div>
@@ -121,14 +122,24 @@ onMounted(() => {
       </div>
 
       <!-- 空状态 -->
-      <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-3xl mb-3">&#x1f4ed;</div>
-        <p class="text-sm">{{ activeType === 0 ? t('lostandfound.emptyLost') : t('lostandfound.emptyFound') }}</p>
+      <div v-if="!loading && !refreshing && list.length === 0" class="community-lostandfound-empty-shell mx-[15px] mt-4">
+        <AppEmpty
+          :title="activeType === 0 ? t('lostandfound.emptyLost') : t('lostandfound.emptyFound')"
+          :description="t('feature.lostandfound.description')"
+          :action-text="t('lostandfound.publish.title')"
+          accent="var(--c-lostandfound)"
+          action-variant="primary"
+          @action="router.push('/lostandfound/publish')"
+        >
+          <template #icon>
+            <span class="community-lostandfound-empty-icon" aria-hidden="true">◌</span>
+          </template>
+        </AppEmpty>
       </div>
 
       <!-- 上拉加载更多 -->
       <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <span class="w-5 h-5 border-2 border-[var(--c-border)] border-t-blue-500 rounded-full animate-spin"></span>
+        <span class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-lostandfound)] rounded-full animate-spin"></span>
         <span>{{ pullMessages.loading }}</span>
       </div>
       <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
@@ -139,6 +150,59 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.community-lostandfound-tab {
+  color: var(--c-text-2);
+  transition: color 0.18s ease;
+}
+
+.community-lostandfound-tab--active {
+  color: color-mix(in srgb, var(--c-lostandfound) 82%, var(--c-text-1));
+  font-weight: 760;
+}
+
+.community-lostandfound-tab__indicator {
+  background: color-mix(in srgb, var(--c-lostandfound) 86%, var(--c-text-1));
+}
+
+.community-lostandfound-empty-shell {
+  border: 1px solid color-mix(in srgb, var(--c-lostandfound) 16%, var(--c-border));
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-lostandfound) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--c-lostandfound) 3%, var(--c-surface));
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--c-lostandfound) 10%, transparent);
+}
+
+.community-lostandfound-empty-icon {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.lostandfound-card__badge--lost {
+  background: color-mix(in srgb, var(--c-lostandfound) 76%, var(--c-warning));
+}
+
+.lostandfound-card__badge--found {
+  background: color-mix(in srgb, var(--c-lostandfound) 66%, var(--c-primary));
+}
+
+[data-theme="dark"] .community-lostandfound-empty-shell {
+  border-color: rgba(68, 89, 112, 0.72);
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-lostandfound) 8%, transparent), transparent 42%),
+    rgba(24, 38, 53, 0.84);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .lostandfound-card__badge--lost {
+  background: color-mix(in srgb, var(--c-lostandfound) 38%, var(--c-warning));
+}
+
+[data-theme="dark"] .lostandfound-card__badge--found {
+  background: color-mix(in srgb, var(--c-lostandfound) 36%, var(--c-primary));
+}
+
 @media (max-width: 767px) {
   .lostandfound-card-list {
     flex-direction: column !important;

@@ -24,7 +24,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
             [&_li]:mb-2
             [&_a]:text-[var(--c-primary)] [&_a]:underline
             [&_strong]:font-semibold">
-          <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
+          <div v-if="isNonChinese" class="policy-notice policy-notice--language px-4 py-3 mb-4 text-sm leading-relaxed">
             {{ t('about.chineseOnlyNotice') }}
           </div>
 
@@ -33,7 +33,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p class="text-center">更新日期：2026年4月25日</p>
           <p class="text-center">生效日期：2026年5月11日</p>
 
-          <div class="bg-red-50 text-red-800 border border-red-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
+          <div class="policy-notice policy-notice--important px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>适用范围：</strong>本准则适用于普通社区内容、二手交易、失物招领、校园跑腿/全民快递、评论互动、资料页展示以及投诉举报、申诉等相关行为。</p>
             <p class="!mb-2"><strong>隐私提醒：</strong>证件、学生卡、取件码、地址、手机号、邮箱、聊天记录和其他个人信息应最小化展示，通常建议通过私密渠道沟通，不要在公开页面发布完整信息。</p>
             <p class="!mb-0"><strong>本次修订说明：</strong>本次修订内容将自生效日期起适用；生效日前仍适用修订前版本。生效后继续使用社区或相关功能的，视为您已阅读并接受修订后的规则；法律法规另有规定或平台另行要求单独同意的，从其规定或以您的单独同意为准。</p>

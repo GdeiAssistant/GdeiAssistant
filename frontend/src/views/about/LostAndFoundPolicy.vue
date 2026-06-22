@@ -23,7 +23,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
             [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5
             [&_li]:mb-2
             [&_strong]:font-semibold">
-          <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
+          <div v-if="isNonChinese" class="policy-notice policy-notice--language px-4 py-3 mb-4 text-sm leading-relaxed">
             {{ t('about.chineseOnlyNotice') }}
           </div>
 
@@ -32,7 +32,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p class="text-center">更新日期：2026年4月25日</p>
           <p class="text-center">生效日期：2026年5月11日</p>
 
-          <div class="bg-blue-50 text-blue-900 border border-blue-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
+          <div class="policy-notice policy-notice--info px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>平台角色：</strong>平台主要提供失物信息发布、沟通、认领辅助和必要的记录留存能力，不当然成为失物保管、权属认定或赔偿主体。</p>
             <p class="!mb-0"><strong>生效说明：</strong>本规则自 2026 年 5 月 11 日起生效；生效日前仍适用修订前相关规则。</p>
           </div>

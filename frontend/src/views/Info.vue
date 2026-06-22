@@ -11,16 +11,14 @@
           class="w-full flex items-center gap-3 text-left cursor-pointer bg-transparent border-none"
           @click="router.push('/news')"
         >
-          <div
-            class="w-[42px] h-[42px] rounded-xl bg-[#e8f7ef] text-[var(--c-primary)] flex items-center justify-center text-[13px] font-bold shrink-0"
-          >
+          <div class="info-news-badge w-[42px] h-[42px] rounded-xl flex items-center justify-center text-[13px] font-bold shrink-0">
             {{ $t('info.newsBadge') }}
           </div>
           <div class="flex-1 min-w-0">
             <div class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ $t('info.newsEntryTitle') }}</div>
             <div class="mt-1 text-[13px] text-[var(--c-text-2)]">{{ $t('info.newsDesc') }}</div>
           </div>
-          <div class="w-2 h-2 border-r border-t border-[#c8c8c8] rotate-45 shrink-0" />
+          <div class="info-news-chevron w-2 h-2 rotate-45 shrink-0" />
         </button>
       </div>
     </AppCard>
@@ -37,12 +35,6 @@
       </template>
       <div class="p-4">
         <NoticeBlock :notices="systemNoticeItems" />
-        <div
-          v-if="!systemNoticeItems.length"
-          class="text-sm text-[var(--c-text-3)] text-center py-8"
-        >
-          {{ $t('info.noNotice') }}
-        </div>
       </div>
     </AppCard>
 
@@ -53,7 +45,7 @@
           <span class="text-sm font-semibold">{{ $t('info.interaction') }}</span>
           <span
             v-if="interactionUnreadCount > 0"
-            class="min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center"
+            class="info-interaction-badge min-w-[18px] h-[18px] px-1 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
           >{{ interactionUnreadCount > 99 ? '99+' : interactionUnreadCount }}</span>
         </div>
         <button
@@ -78,7 +70,6 @@
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useToast } from '@/composables/useToast'
 import request from '../utils/request'
 import AppCard from '../components/ui/AppCard.vue'
 import NoticeBlock from '../components/info/NoticeBlock.vue'
@@ -86,7 +77,6 @@ import InteractionBlock from '../components/info/InteractionBlock.vue'
 
 const router = useRouter()
 const { t } = useI18n()
-const { loading: showLoading, hideLoading } = useToast()
 const infoData = ref({})
 const announcementList = ref([])
 const interactionItems = ref([])
@@ -262,31 +252,26 @@ function handleMarkAllInteractionsRead() {
 }
 
 async function loadInfoPage() {
-  showLoading(t('info.loadingInfo'))
-  try {
-    const [announcementRes, informationRes, interactionRes, unreadRes] = await Promise.allSettled([
-      request.get('/information/announcement/start/0/size/5'),
-      request.get('/information/overview'),
-      request.get('/information/message/interaction/start/0/size/20'),
-      request.get('/information/message/unread')
-    ])
+  const [announcementRes, informationRes, interactionRes, unreadRes] = await Promise.allSettled([
+    request.get('/information/announcement/start/0/size/5'),
+    request.get('/information/overview'),
+    request.get('/information/message/interaction/start/0/size/20'),
+    request.get('/information/message/unread')
+  ])
 
-    if (announcementRes.status === 'fulfilled' && announcementRes.value?.success) {
-      announcementList.value = Array.isArray(announcementRes.value?.data) ? announcementRes.value.data : []
-    }
-    if (informationRes.status === 'fulfilled' && informationRes.value?.success && informationRes.value?.data) {
-      infoData.value = informationRes.value.data
-    }
-    if (interactionRes.status === 'fulfilled') {
-      const items = normalizeInteractionItems(interactionRes.value?.data || [])
-      interactionItems.value = items
-      interactionHasMore.value = items.length >= INTERACTION_PAGE_SIZE
-    }
-    if (unreadRes.status === 'fulfilled') {
-      interactionUnreadCount.value = Number(unreadRes.value?.data || 0)
-    }
-  } finally {
-    hideLoading()
+  if (announcementRes.status === 'fulfilled' && announcementRes.value?.success) {
+    announcementList.value = Array.isArray(announcementRes.value?.data) ? announcementRes.value.data : []
+  }
+  if (informationRes.status === 'fulfilled' && informationRes.value?.success && informationRes.value?.data) {
+    infoData.value = informationRes.value.data
+  }
+  if (interactionRes.status === 'fulfilled') {
+    const items = normalizeInteractionItems(interactionRes.value?.data || [])
+    interactionItems.value = items
+    interactionHasMore.value = items.length >= INTERACTION_PAGE_SIZE
+  }
+  if (unreadRes.status === 'fulfilled') {
+    interactionUnreadCount.value = Number(unreadRes.value?.data || 0)
   }
 }
 
@@ -307,3 +292,35 @@ onMounted(() => {
   loadInfoPage()
 })
 </script>
+
+<style scoped>
+.info-news-badge {
+  background: color-mix(in srgb, var(--c-primary) 12%, var(--c-surface));
+  color: var(--c-primary);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 10%, transparent);
+}
+
+.info-news-chevron {
+  border-right: 1px solid color-mix(in srgb, var(--c-text-3) 72%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--c-text-3) 72%, transparent);
+}
+
+.info-interaction-badge {
+  background: var(--c-danger);
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--c-danger) 22%, transparent);
+}
+
+[data-theme="dark"] .info-news-badge {
+  background: color-mix(in srgb, var(--c-primary) 16%, rgba(24, 38, 53, 0.9));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 16%, rgba(103, 232, 249, 0.1));
+}
+
+[data-theme="dark"] .info-news-chevron {
+  border-right-color: color-mix(in srgb, var(--c-text-2) 56%, transparent);
+  border-top-color: color-mix(in srgb, var(--c-text-2) 56%, transparent);
+}
+
+[data-theme="dark"] .info-interaction-badge {
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--c-danger) 16%, transparent);
+}
+</style>

@@ -78,9 +78,9 @@ const showEmptyState = computed(() => {
 
 // 课程颜色配置
 const courseColors = [
-  '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6',
-  '#EC4899', '#06B6D4', '#F97316', '#6366F1', '#14B8A6',
-  '#E11D48', '#7C3AED', '#0EA5E9', '#84CC16'
+  '#2F8FA6', '#17937E', '#C38A49', '#C56E64', '#6E88C9',
+  '#C78BA3', '#3A9FB4', '#D08A63', '#5C86BE', '#2F9E95',
+  '#B96F84', '#7B8FCB', '#4F9EC4', '#83A85D'
 ]
 
 function getCourseColor(course) {
@@ -93,7 +93,7 @@ function getCourseStyle(course) {
     gridColumn: course.column + 2,
     gridRow: `${course.row + 2} / span ${course.scheduleLength}`,
     borderLeftColor: color,
-    backgroundColor: `${color}14`,
+    backgroundColor: `color-mix(in srgb, ${color} 12%, var(--c-surface))`,
   }
 }
 
@@ -333,7 +333,7 @@ onMounted(() => {
           :style="{
             gridColumn: idx + 2,
             gridRow: 1,
-            backgroundColor: idx === todayIndex ? 'rgba(4,120,87,0.06)' : undefined
+            backgroundColor: idx === todayIndex ? 'color-mix(in srgb, var(--c-primary) 8%, var(--c-surface))' : undefined
           }"
         >
           <span>{{ label }}</span>
@@ -358,7 +358,9 @@ onMounted(() => {
           :style="{
             gridColumn: (index % 7) + 2,
             gridRow: Math.floor(index / 7) + 2,
-            backgroundColor: (index % 7) === todayIndex ? 'rgba(4,120,87,0.06)' : 'var(--c-bg)'
+            backgroundColor: (index % 7) === todayIndex
+              ? 'color-mix(in srgb, var(--c-primary) 8%, var(--c-bg))'
+              : 'var(--c-bg)'
           }"
         ></div>
 
@@ -462,7 +464,7 @@ onMounted(() => {
           <div v-if="isCustomCourse(selectedCourse)" class="px-4 pb-4 flex justify-center">
             <button
               @click="handleDeleteCustomCourse"
-              class="w-full max-w-[200px] py-2 rounded-lg border border-red-500 text-red-500 text-sm font-medium transition active:bg-red-50"
+              class="schedule-course-delete w-full max-w-[200px] py-2 rounded-lg text-sm font-medium transition"
             >{{ t('common.delete') }}</button>
           </div>
         </div>
@@ -600,6 +602,24 @@ onMounted(() => {
     </Teleport>
   </div>
 </template>
+
+<style scoped>
+.schedule-course-delete {
+  border: 1px solid color-mix(in srgb, var(--c-danger) 42%, transparent);
+  background: color-mix(in srgb, var(--c-danger) 8%, var(--c-surface));
+  color: color-mix(in srgb, var(--c-danger) 82%, #dc2626);
+}
+
+.schedule-course-delete:active {
+  background: color-mix(in srgb, var(--c-danger) 14%, var(--c-surface));
+}
+
+[data-theme="dark"] .schedule-course-delete {
+  border-color: color-mix(in srgb, var(--c-danger) 32%, rgba(68, 89, 112, 0.72));
+  background: color-mix(in srgb, var(--c-danger) 10%, rgba(24, 38, 53, 0.9));
+  color: color-mix(in srgb, var(--c-danger) 76%, #fee2e2);
+}
+</style>
 
 <style>
 @keyframes slide-up {

@@ -47,8 +47,8 @@ const fetchExpressData = async (page) => {
 const { items: list, loading, finished, refreshing, pullY, loadData, handleTouchStart, handleTouchMove, handleTouchEnd } = useScrollLoad(fetchExpressData)
 
 function getGenderColor(gender) {
-  if (gender === 'male') return '#4fc3f7'
-  if (gender === 'female') return '#ff8a80'
+  if (gender === 'male') return 'var(--express-gender-male)'
+  if (gender === 'female') return 'var(--express-gender-female)'
   return 'var(--c-text-1)'
 }
 
@@ -138,7 +138,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="bg-[var(--c-bg)] pb-5"
+    class="community-express-page bg-[var(--c-bg)] pb-5"
     @touchstart="handleTouchStart"
     @touchmove="handleTouchMove($event, scrollContainer)"
     @touchend="handleTouchEnd"
@@ -146,12 +146,12 @@ onUnmounted(() => {
     <CommunityHeader :title="t('express.title')" moduleColor="var(--c-express)" />
 
     <!-- 导航栏正下方：居中的浅粉色粗体标题 -->
-    <h2 class="text-center text-[22px] font-bold text-[#ffb3ba] mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
+    <h2 class="express-banner-title text-center text-[22px] font-bold mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
 
     <!-- 下拉刷新指示器 -->
     <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
       <span v-if="refreshing" class="flex items-center gap-2">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-express)] rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
+        <i class="w-5 h-5 border-2 border-[var(--c-border)] express-spinner-accent rounded-full animate-spin"></i> {{ pullMessages.refreshing }}
       </span>
       <span v-else-if="pullY > 50">{{ pullMessages.releaseToRefresh }}</span>
       <span v-else-if="pullY > 0">{{ pullMessages.pullToRefresh }}</span>
@@ -221,7 +221,7 @@ onUnmounted(() => {
 
     <!-- 上拉加载更多 -->
     <div v-if="loading && !refreshing" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-express)] rounded-full animate-spin"></i>
+      <i class="w-5 h-5 border-2 border-[var(--c-border)] express-spinner-accent rounded-full animate-spin"></i>
       <span>{{ pullMessages.loading }}</span>
     </div>
     <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">
@@ -248,3 +248,27 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-express-page {
+  --express-gender-male: color-mix(in srgb, var(--c-info) 72%, var(--c-express));
+  --express-gender-female: color-mix(in srgb, var(--c-danger) 42%, var(--c-express));
+}
+
+.express-banner-title {
+  color: color-mix(in srgb, var(--c-express) 78%, var(--c-text-1));
+}
+
+.express-spinner-accent {
+  border-top-color: color-mix(in srgb, var(--c-express) 86%, var(--c-text-1)) !important;
+}
+
+[data-theme="dark"] .community-express-page {
+  --express-gender-male: color-mix(in srgb, var(--c-info) 68%, var(--c-text-1));
+  --express-gender-female: color-mix(in srgb, var(--c-express) 56%, var(--c-text-1));
+}
+
+[data-theme="dark"] .express-banner-title {
+  color: color-mix(in srgb, var(--c-express) 52%, var(--c-text-1));
+}
+</style>

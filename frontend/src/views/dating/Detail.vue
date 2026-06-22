@@ -157,11 +157,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="community-dating-page min-h-screen bg-[var(--c-bg)] pb-10">
+  <div class="community-dating-page community-dating-detail-page min-h-screen bg-[var(--c-bg)] pb-10">
     <CommunityHeader :title="t('feature.dating.name')" moduleColor="var(--c-dating)" backTo="/dating/home" />
 
-    <div v-if="item" class="w-[90%] mx-auto mt-4 p-6 bg-[var(--c-surface)] rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
-      <div class="text-[22px] text-[var(--c-dating)] font-bold mb-4">{{ item.name }}</div>
+    <div v-if="item" class="community-dating-shell w-[90%] mx-auto mt-4 p-6 rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
+      <div class="community-dating-shell__title text-[22px] font-bold mb-4">{{ item.name }}</div>
       <div class="w-full rounded-lg overflow-hidden bg-[var(--c-bg)] mb-4">
         <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" class="w-full h-auto max-h-[360px] object-cover" />
       </div>
@@ -177,7 +177,7 @@ onMounted(async () => {
       <!-- Pick section -->
       <div class="border-t-2 border-dashed border-[var(--c-divider)] pt-6 mt-6 text-center">
         <textarea v-model="pickContent" class="w-full p-4 border border-[var(--c-divider)] rounded-lg text-base min-h-[80px] box-border mb-4 text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" :placeholder="copy.placeholder" rows="3"></textarea>
-        <button type="button" class="px-7 py-2.5 bg-[var(--c-dating)] text-white border-none rounded-full text-lg cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="pickSubmitting" @click="submitPick">{{ copy.submitAction }}</button>
+        <button type="button" class="community-dating-submit px-7 py-2.5 text-white border-none rounded-full text-lg cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="pickSubmitting" @click="submitPick">{{ copy.submitAction }}</button>
       </div>
     </div>
 
@@ -198,3 +198,35 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-dating-shell {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid color-mix(in srgb, var(--c-dating) 16%, rgba(205, 222, 226, 0.82));
+}
+
+.community-dating-shell__title {
+  color: color-mix(in srgb, var(--c-dating) 88%, var(--c-text-1));
+}
+
+.community-dating-submit {
+  background: linear-gradient(135deg, var(--c-dating), color-mix(in srgb, var(--c-dating) 72%, var(--c-text-1)));
+}
+
+[data-theme="dark"] .community-dating-shell {
+  background: rgba(24, 38, 53, 0.86);
+  border-color: rgba(68, 89, 112, 0.72);
+}
+
+[data-theme="dark"] .community-dating-shell__title {
+  color: color-mix(in srgb, var(--c-dating) 58%, var(--c-text-1));
+}
+
+[data-theme="dark"] .community-dating-submit {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c-dating) 30%, #203044),
+    color-mix(in srgb, var(--c-dating) 52%, var(--c-text-1))
+  );
+}
+</style>

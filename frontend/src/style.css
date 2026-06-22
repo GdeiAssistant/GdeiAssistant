@@ -74,10 +74,10 @@
   --c-orange: #F97316;
 
   /* Module accent colors (community) */
-  --c-ershou: #10B981;
-  --c-lostandfound: #3B82F6;
+  --c-ershou: #5D9F7C;
+  --c-lostandfound: #5E8FAF;
   --c-secret: #8B5CF6;
-  --c-express: #F43F5E;
+  --c-express: #C88C69;
   --c-topic: #6366F1;
   --c-delivery: #F59E0B;
   --c-dating: #0D9488;
@@ -147,10 +147,10 @@
   --c-cyan: #67E8F9;
   --c-orange: #FB923C;
 
-  --c-ershou: #2DD4BF;
-  --c-lostandfound: #78B4FF;
+  --c-ershou: #8FC2A4;
+  --c-lostandfound: #90B8D1;
   --c-secret: #8EA7FF;
-  --c-express: #FB8795;
+  --c-express: #D7AE91;
   --c-topic: #7EA6FF;
   --c-delivery: #F6C768;
   --c-dating: #7DD3C7;
@@ -237,6 +237,55 @@ a:focus-visible {
 
 .campus-list-row:hover {
   background: rgba(241, 248, 247, 0.78);
+}
+
+.policy-notice {
+  border: 1px solid color-mix(in srgb, var(--policy-notice-accent, var(--c-primary)) 18%, var(--c-border));
+  border-radius: 18px;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--policy-notice-accent, var(--c-primary)) 8%, rgba(255, 255, 255, 0.96)),
+      color-mix(in srgb, var(--policy-notice-accent, var(--c-primary)) 4%, rgba(248, 252, 255, 0.92))
+    );
+  color: color-mix(in srgb, var(--policy-notice-accent, var(--c-primary)) 72%, var(--c-text-1));
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--policy-notice-accent, var(--c-primary)) 10%, transparent);
+}
+
+.policy-notice--language {
+  --policy-notice-accent: var(--c-warning);
+}
+
+.policy-notice--important {
+  --policy-notice-accent: var(--c-danger);
+}
+
+.policy-notice--warm {
+  --policy-notice-accent: var(--c-warning);
+}
+
+.policy-notice--success {
+  --policy-notice-accent: var(--c-primary);
+}
+
+.policy-notice--info {
+  --policy-notice-accent: var(--c-info);
+}
+
+.policy-notice--neutral {
+  --policy-notice-accent: var(--c-text-3);
+}
+
+[data-theme="dark"] .policy-notice {
+  border-color: color-mix(in srgb, var(--policy-notice-accent, var(--c-primary)) 16%, rgba(68, 89, 112, 0.74));
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--policy-notice-accent, var(--c-primary)) 12%, rgba(20, 27, 37, 0.94)),
+      color-mix(in srgb, var(--policy-notice-accent, var(--c-primary)) 6%, rgba(24, 38, 53, 0.9))
+    );
+  color: color-mix(in srgb, var(--policy-notice-accent, var(--c-primary)) 56%, #f8fafc);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
 }
 
 input,

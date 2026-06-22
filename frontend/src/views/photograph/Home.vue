@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import AppEmpty from '@/components/ui/AppEmpty.vue'
 import { createCommunityPullMessages } from '../community/communityContent'
 import { getPhotographCopy } from './photographContent'
 
@@ -167,9 +168,19 @@ onMounted(() => {
       </div>
 
       <!-- Empty -->
-      <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-4xl mb-2">📷</div>
-        <p class="text-sm">{{ copy.empty }}</p>
+      <div v-if="!loading && !refreshing && list.length === 0" class="community-photograph-empty-shell">
+        <AppEmpty
+          :title="copy.empty"
+          :description="t('feature.photograph.description')"
+          :action-text="copy.publishAction"
+          accent="var(--c-photograph)"
+          action-variant="primary"
+          @action="router.push('/photograph/publish')"
+        >
+          <template #icon>
+            <span class="community-photograph-empty-icon" aria-hidden="true">◌</span>
+          </template>
+        </AppEmpty>
       </div>
 
       <!-- Loading -->
@@ -258,6 +269,31 @@ onMounted(() => {
   .community-photograph-switch {
     margin: 16px 16px 0;
   }
+}
+
+
+.community-photograph-empty-shell {
+  margin: 14px 16px 0;
+  border: 1px solid color-mix(in srgb, var(--c-photograph) 16%, var(--c-border));
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-photograph) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--c-photograph) 3%, var(--c-surface));
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--c-photograph) 10%, transparent);
+}
+
+.community-photograph-empty-icon {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-theme="dark"] .community-photograph-empty-shell {
+  border-color: rgba(68, 89, 112, 0.72);
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-photograph) 8%, transparent), transparent 42%),
+    rgba(24, 38, 53, 0.84);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 767px) {

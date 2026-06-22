@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import AppEmpty from '@/components/ui/AppEmpty.vue'
 
 const PAGE_SIZE = 20
 
@@ -75,9 +76,21 @@ onMounted(() => {
         </a>
         <i class="inline-block w-2.5 h-2.5 ml-3 border-t-2 border-r-2 border-[var(--c-text-3)] rotate-45 opacity-80"></i>
       </div>
-      <div v-if="secretList.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-5xl mb-3">📭</div>
-        <p class="text-sm">{{ t('secret.profile.empty') }}</p>
+      <div v-if="secretList.length === 0" class="community-secret-profile-empty-shell">
+        <AppEmpty
+          :title="t('secret.profile.empty')"
+          :description="t('feature.secret.description')"
+          :action-text="t('secret.publishAction')"
+          accent="var(--c-secret)"
+          action-variant="primary"
+          @action="router.push('/secret/publish')"
+        >
+          <template #icon>
+            <span class="community-secret-profile-empty-icon" aria-hidden="true">✦</span>
+          </template>
+
+
+        </AppEmpty>
       </div>
 
       <div v-if="secretList.length > 0 && hasMore" class="flex justify-center py-3">
@@ -95,3 +108,29 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.community-secret-profile-empty-shell {
+  margin: 6px 8px 0;
+  border: 1px solid color-mix(in srgb, var(--c-secret) 16%, var(--c-border));
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-secret) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--c-secret) 3%, var(--c-surface));
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--c-secret) 10%, transparent);
+}
+
+.community-secret-profile-empty-icon {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+[data-theme="dark"] .community-secret-profile-empty-shell {
+  border-color: rgba(68, 89, 112, 0.72);
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-secret) 8%, transparent), transparent 42%),
+    rgba(24, 38, 53, 0.84);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
+}
+</style>

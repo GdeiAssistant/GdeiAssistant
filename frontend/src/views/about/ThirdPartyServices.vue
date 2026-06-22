@@ -83,7 +83,7 @@ const rows = [
             [&_th]:border [&_th]:border-[var(--c-border)] [&_th]:px-3 [&_th]:py-2 [&_th]:text-xs [&_th]:font-semibold [&_th]:text-[var(--c-text-primary)]
             [&_td]:border [&_td]:border-[var(--c-border)] [&_td]:px-3 [&_td]:py-2 [&_td]:align-top
             [&_strong]:font-semibold">
-          <div v-if="isNonChinese" class="bg-amber-50 text-amber-800 border border-amber-300 rounded-lg px-4 py-3 mb-4 text-sm leading-relaxed">
+          <div v-if="isNonChinese" class="policy-notice policy-notice--language px-4 py-3 mb-4 text-sm leading-relaxed">
             {{ t('about.chineseOnlyNotice') }}
           </div>
 
@@ -92,7 +92,7 @@ const rows = [
           <p class="text-center">更新日期：2026年4月25日</p>
           <p class="text-center">生效日期：2026年5月11日</p>
 
-          <div class="bg-slate-50 text-slate-800 border border-slate-200 rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed">
+          <div class="policy-notice policy-notice--neutral px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>说明：</strong>以下服务商为“可能包括”或“根据实际部署选择”的范围，不代表所有服务在每个版本、终端或部署环境中均已启用。</p>
             <p class="!mb-0"><strong>配套阅读：</strong>涉及个人信息处理时，请与 <a href="/policy/privacy">《隐私政策》</a> 一并阅读；涉及安全配置要求时，请同时参阅 <a href="/about/security">《安全说明》</a>。</p>
           </div>

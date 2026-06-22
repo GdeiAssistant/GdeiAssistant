@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import AppEmpty from '@/components/ui/AppEmpty.vue'
 import { createCommunityPullMessages } from '../community/communityContent'
 
 const router = useRouter()
@@ -202,9 +203,17 @@ onMounted(() => {
       </div>
 
       <!-- 空状态 -->
-      <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-5xl mb-3">📭</div>
-        <p class="text-sm">{{ t('secret.empty') }}</p>
+      <div v-if="!loading && !refreshing && list.length === 0" class="community-secret-empty-shell">
+        <AppEmpty
+          :title="t('secret.empty')"
+          :description="t('feature.secret.description')"
+          :action-text="t('secret.publishAction')"
+          @action="router.push('/secret/publish')"
+        >
+          <template #icon>
+            <span class="community-secret-empty-icon" aria-hidden="true">✦</span>
+          </template>
+        </AppEmpty>
       </div>
 
       <!-- 上拉加载更多 -->
@@ -237,5 +246,29 @@ onMounted(() => {
 [data-theme="dark"] .community-secret-actionbar__publish,
 [data-theme="dark"] .community-secret-actionbar__publish:hover {
   color: color-mix(in srgb, var(--c-secret) 54%, var(--c-text-1));
+}
+
+.community-secret-empty-shell {
+  margin: 10px 16px 0;
+  border: 1px solid color-mix(in srgb, var(--c-secret) 16%, var(--c-border));
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-secret) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--c-secret) 3%, var(--c-surface));
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--c-secret) 10%, transparent);
+}
+
+.community-secret-empty-icon {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+[data-theme="dark"] .community-secret-empty-shell {
+  border-color: rgba(68, 89, 112, 0.72);
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-secret) 8%, transparent), transparent 42%),
+    rgba(24, 38, 53, 0.84);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
 }
 </style>

@@ -1,19 +1,19 @@
 import { createI18n } from 'vue-i18n'
 import zhCN from './locales/zh-CN.json'
+import { resolveSupportedLocale } from './constants/localeOptions'
 
 export function detectBrowserLocale() {
   const lang = (typeof navigator !== 'undefined' && navigator.language) || 'zh-CN'
-  const supported = ['zh-CN', 'zh-HK', 'zh-TW', 'en', 'ja', 'ko']
-  if (supported.includes(lang)) return lang
-  if (lang.startsWith('zh')) return 'zh-CN'
-  if (lang.startsWith('ja')) return 'ja'
-  if (lang.startsWith('ko')) return 'ko'
-  if (lang.startsWith('en')) return 'en'
-  return 'zh-CN'
+  return resolveSupportedLocale(lang)
 }
 
 export function getSavedLocale() {
-  try { return localStorage.getItem('locale') } catch (e) { return null }
+  try {
+    const saved = localStorage.getItem('locale')
+    return saved ? resolveSupportedLocale(saved) : null
+  } catch (e) {
+    return null
+  }
 }
 
 const i18n = createI18n({
@@ -24,12 +24,14 @@ const i18n = createI18n({
 })
 
 export async function setLocale(locale) {
-  if (!i18n.global.availableLocales.includes(locale)) {
-    const messages = await import(`./locales/${locale}.json`)
-    i18n.global.setLocaleMessage(locale, messages.default)
+  const normalizedLocale = resolveSupportedLocale(locale)
+
+  if (!i18n.global.availableLocales.includes(normalizedLocale)) {
+    const messages = await import(`./locales/${normalizedLocale}.json`)
+    i18n.global.setLocaleMessage(normalizedLocale, messages.default)
   }
-  i18n.global.locale.value = locale
-  localStorage.setItem('locale', locale)
+  i18n.global.locale.value = normalizedLocale
+  localStorage.setItem('locale', normalizedLocale)
 }
 
 export default i18n

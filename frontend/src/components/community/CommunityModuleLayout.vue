@@ -76,7 +76,7 @@ onMounted(async () => {
       </main>
 
       <aside class="community-module-layout__rail" aria-label="校园生活侧栏">
-        <section class="community-module-layout__rail-card">
+        <section class="community-module-layout__rail-card community-module-layout__rail-card--today">
           <div class="community-module-layout__rail-head">
             <h2>今日校园</h2>
             <span>去看看</span>
@@ -96,7 +96,7 @@ onMounted(async () => {
           </ul>
         </section>
 
-        <section class="community-module-layout__rail-card">
+        <section class="community-module-layout__rail-card community-module-layout__rail-card--manage">
           <div class="community-module-layout__rail-head">
             <h2>我的发布</h2>
             <span>管理</span>
@@ -199,7 +199,7 @@ onMounted(async () => {
 
 .community-module-layout__primary {
   border: 0;
-  background: linear-gradient(135deg, var(--module-color), color-mix(in srgb, var(--module-color) 72%, #0ea5e9));
+  background: linear-gradient(135deg, var(--module-color), color-mix(in srgb, var(--module-color) 74%, var(--c-text-1)));
   color: #fff;
   box-shadow: 0 18px 34px color-mix(in srgb, var(--module-color) 24%, transparent);
 }
@@ -246,6 +246,12 @@ onMounted(async () => {
   box-shadow: 0 16px 36px rgba(32, 69, 78, 0.07);
   padding: 18px;
   backdrop-filter: blur(16px);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.community-module-layout__rail-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 42px rgba(32, 69, 78, 0.1);
 }
 
 .community-module-layout__rail-head {
@@ -282,7 +288,18 @@ onMounted(async () => {
   grid-template-columns: 42px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--module-color) 10%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--module-color) 4%, transparent);
   cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.community-module-layout__activity-list li:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--module-color) 18%, var(--c-border));
+  background: color-mix(in srgb, var(--module-color) 7%, transparent);
 }
 
 .community-module-layout__activity-list strong,
@@ -310,13 +327,13 @@ onMounted(async () => {
 }
 
 .community-module-layout__rail-icon--blue {
-  color: color-mix(in srgb, var(--module-color) 76%, #3b82f6);
-  background: color-mix(in srgb, var(--module-color) 11%, transparent);
+  color: color-mix(in srgb, var(--module-color) 82%, var(--c-text-1));
+  background: color-mix(in srgb, var(--module-color) 12%, transparent);
 }
 
 .community-module-layout__rail-icon--green {
-  color: color-mix(in srgb, var(--module-color) 74%, #f59e0b);
-  background: color-mix(in srgb, var(--module-color) 9%, transparent);
+  color: color-mix(in srgb, var(--module-color) 66%, var(--c-text-2));
+  background: color-mix(in srgb, var(--module-color) 8%, transparent);
 }
 
 .community-module-layout__quick-grid {
@@ -341,6 +358,14 @@ onMounted(async () => {
   font: inherit;
   font-size: 12px;
   font-weight: 850;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.community-module-layout__quick-grid button:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--module-color) 24%, var(--c-border));
+  background: color-mix(in srgb, var(--module-color) 11%, transparent);
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--module-color) 12%, transparent);
 }
 
 .community-module-layout__rail-card--safe p {
@@ -414,6 +439,7 @@ onMounted(async () => {
 
   .community-module-layout__main {
     overflow: visible;
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0));
     border: 0;
     border-radius: 0;
     background: transparent;
@@ -432,6 +458,11 @@ onMounted(async () => {
   .community-module-layout__main :deep(.overflow-y-auto) {
     overflow-y: auto !important;
   }
+
+  .community-module-layout__main :deep(.pb-14),
+  .community-module-layout__main :deep(.pb-20) {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0)) !important;
+  }
 }
 
 @media (min-width: 768px) {
@@ -442,13 +473,16 @@ onMounted(async () => {
 }
 
 [data-theme="dark"] .community-module-layout {
-  --community-module-dark-accent: color-mix(in srgb, var(--module-color) 40%, #94a3b8);
+  --community-module-dark-accent: color-mix(in srgb, var(--module-color) 50%, var(--c-text-1));
   --community-module-dark-accent-soft: color-mix(in srgb, var(--module-color) 6%, rgba(32, 48, 68, 0.68));
   --community-module-dark-border: color-mix(in srgb, var(--module-color) 10%, rgba(74, 96, 120, 0.68));
+  --community-module-dark-panel: rgba(24, 38, 53, 0.84);
+  --community-module-dark-panel-strong: rgba(20, 33, 46, 0.94);
+  --community-module-dark-panel-soft: rgba(29, 44, 60, 0.82);
 
   background:
     radial-gradient(circle at 14% 0, color-mix(in srgb, var(--module-color) 6%, transparent), transparent 30%),
-    radial-gradient(circle at 88% 8%, rgba(96, 165, 250, 0.09), transparent 32%),
+    radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--module-color) 10%, transparent), transparent 32%),
     linear-gradient(180deg, #101923 0%, #0f1822 100%);
 }
 
@@ -456,18 +490,56 @@ onMounted(async () => {
 [data-theme="dark"] .community-module-layout__main,
 [data-theme="dark"] .community-module-layout__rail-card {
   border-color: rgba(68, 89, 112, 0.72);
-  background: rgba(24, 38, 53, 0.84);
+  background: var(--community-module-dark-panel);
   box-shadow: 0 22px 58px rgba(0, 0, 0, 0.28);
 }
 
 [data-theme="dark"] .community-module-layout__hero {
   background:
-    linear-gradient(135deg, rgba(24, 38, 53, 0.88), rgba(18, 30, 42, 0.78)),
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--module-color) 8%, transparent), transparent 38%);
+    radial-gradient(circle at 0 0, color-mix(in srgb, var(--module-color) 10%, transparent), transparent 34%),
+    linear-gradient(135deg, rgba(26, 40, 55, 0.94), rgba(17, 28, 40, 0.84)),
+    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--module-color) 9%, transparent), transparent 38%);
+}
+
+[data-theme="dark"] .community-module-layout__main {
+  background:
+    linear-gradient(180deg, rgba(21, 34, 47, 0.96), rgba(17, 28, 40, 0.98));
+}
+
+[data-theme="dark"] .community-module-layout__rail-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(27, 42, 58, 0.92), rgba(21, 34, 47, 0.92));
+}
+
+[data-theme="dark"] .community-module-layout__rail-card::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 42%);
+}
+
+[data-theme="dark"] .community-module-layout__rail-card--today {
+  background:
+    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--module-color) 9%, transparent), transparent 34%),
+    linear-gradient(180deg, rgba(28, 44, 60, 0.94), rgba(21, 34, 47, 0.92));
+}
+
+[data-theme="dark"] .community-module-layout__rail-card--manage {
+  background:
+    radial-gradient(circle at 0 0, color-mix(in srgb, var(--module-color) 7%, transparent), transparent 34%),
+    linear-gradient(180deg, rgba(26, 41, 56, 0.94), rgba(20, 32, 44, 0.92));
 }
 
 [data-theme="dark"] .community-module-layout__primary {
-  background: linear-gradient(135deg, var(--community-module-dark-accent), color-mix(in srgb, var(--community-module-dark-accent) 76%, #60a5fa));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--module-color) 34%, rgba(24, 38, 53, 0.98)),
+    color-mix(in srgb, var(--module-color) 54%, var(--c-text-1))
+  );
   box-shadow: 0 18px 34px color-mix(in srgb, var(--module-color) 18%, transparent);
 }
 
@@ -488,13 +560,45 @@ onMounted(async () => {
 }
 
 [data-theme="dark"] .community-module-layout__rail-icon--green {
-  color: color-mix(in srgb, var(--community-module-dark-accent) 76%, #f6c768);
+  color: color-mix(in srgb, var(--module-color) 38%, var(--c-text-1));
   background: color-mix(in srgb, var(--module-color) 7%, rgba(32, 48, 68, 0.82));
+}
+
+[data-theme="dark"] .community-module-layout__activity-list li {
+  border-color: color-mix(in srgb, var(--module-color) 10%, rgba(74, 96, 120, 0.58));
+  background: color-mix(in srgb, var(--module-color) 5%, rgba(32, 48, 68, 0.82));
+}
+
+[data-theme="dark"] .community-module-layout__activity-list li:hover {
+  border-color: color-mix(in srgb, var(--module-color) 18%, rgba(90, 116, 142, 0.78));
+  background: color-mix(in srgb, var(--module-color) 8%, rgba(35, 52, 72, 0.9));
 }
 
 [data-theme="dark"] .community-module-layout__quick-grid button {
   border-color: var(--community-module-dark-border);
   background: var(--community-module-dark-accent-soft);
   color: var(--community-module-dark-accent);
+}
+
+[data-theme="dark"] .community-module-layout__quick-grid button:hover {
+  border-color: color-mix(in srgb, var(--module-color) 22%, rgba(90, 116, 142, 0.78));
+  background: color-mix(in srgb, var(--module-color) 10%, rgba(38, 56, 77, 0.92));
+  box-shadow: 0 16px 28px color-mix(in srgb, var(--module-color) 10%, transparent);
+}
+
+[data-theme="dark"] .community-module-layout__rail-card--safe {
+  border-color: rgba(96, 101, 118, 0.72);
+  background:
+    radial-gradient(circle at 100% 0, rgba(189, 144, 83, 0.08), transparent 32%),
+    linear-gradient(180deg, rgba(35, 40, 49, 0.94), rgba(24, 29, 37, 0.96));
+}
+
+[data-theme="dark"] .community-module-layout__rail-card--safe .community-module-layout__rail-head h2,
+[data-theme="dark"] .community-module-layout__rail-card--safe p {
+  color: color-mix(in srgb, #f0e2bf 18%, var(--c-text-1));
+}
+
+[data-theme="dark"] .community-module-layout__rail-card--safe .community-module-layout__safe-icon {
+  color: #d7bb79;
 }
 </style>

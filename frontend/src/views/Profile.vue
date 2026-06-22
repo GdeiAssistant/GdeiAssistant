@@ -1,10 +1,10 @@
 <template>
-  <div class="space-y-4 pb-20">
+  <div class="profile-page space-y-4 pb-20">
     <!-- User Info Card -->
     <AppCard>
       <div class="flex items-center gap-4 px-5 py-5">
         <RouterLink to="/user/avatar-edit" class="shrink-0">
-          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 p-[2px]">
+          <div class="profile-avatar-ring w-16 h-16 rounded-full p-[2px]">
             <img
               :src="userInfo.avatar"
               :alt="$t('profile.avatar')"
@@ -35,56 +35,56 @@
         </div>
       </template>
 
-      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openNicknameDialog">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.nickname') }}</span>
         <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.nickname || $t('common.clickToSet') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
-      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openBirthdayPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.birthday') }}</span>
         <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.birthday || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
-      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openFacultyPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.faculty') }}</span>
         <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.faculty || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
-      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openMajorPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.major') }}</span>
         <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.major || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
-      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openEnrollmentPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.enrollmentYear') }}</span>
         <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.enrollment || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
-      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openLocationPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.location') }}</span>
         <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.location || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
-      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openHometownPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.hometown') }}</span>
         <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.hometown || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
-      <button type="button" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-0 text-left font-inherit"
               @click="openIntroDialog">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.introduction') }}</span>
         <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.introduction ? $t('common.filled') : $t('common.notFilled') }}</span>
@@ -93,92 +93,76 @@
 
     </AppCard>
 
-    <!-- Nickname Dialog -->
-    <Teleport to="body">
-      <div v-if="showNicknameDialog" class="fixed inset-0 z-[1000] flex items-center justify-center">
-        <div class="absolute inset-0 bg-black/60" @click="showNicknameDialog = false"></div>
-        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
-          <div class="px-6 pt-8 pb-4 text-center">
-            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('profile.editNickname') }}</strong>
-          </div>
-          <div class="px-6 pb-8">
-            <input type="text" v-model="tempNickname" :placeholder="$t('profile.nicknamePlaceholder')"
-                   class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-[15px] outline-none bg-[var(--c-surface)] text-[var(--c-text-primary)] box-border focus:border-[var(--c-primary)]" />
-          </div>
-          <div class="flex border-t border-[var(--c-border-light)]">
-            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
-                    @click="showNicknameDialog = false">{{ $t('common.cancel') }}</button>
-            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 border-l border-[var(--c-border-light)] cursor-pointer text-[var(--c-primary)] font-medium font-inherit"
-                    @click="confirmNickname">{{ $t('common.confirm') }}</button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <AppDialog
+      :open="showNicknameDialog"
+      :title="$t('profile.editNickname')"
+      @close="showNicknameDialog = false"
+      @confirm="confirmNickname"
+    >
+      <input
+        v-model="tempNickname"
+        type="text"
+        :placeholder="$t('profile.nicknamePlaceholder')"
+        class="profile-dialog-input"
+      />
+    </AppDialog>
 
-    <!-- Introduction Dialog -->
-    <Teleport to="body">
-      <div v-if="showIntroDialog" class="fixed inset-0 z-[1000] flex items-center justify-center">
-        <div class="absolute inset-0 bg-black/60" @click="showIntroDialog = false"></div>
-        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
-          <div class="px-6 pt-8 pb-4 text-center">
-            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('profile.editIntro') }}</strong>
-          </div>
-          <div class="px-6 pb-8">
-            <textarea v-model="tempIntro" :placeholder="$t('profile.introPlaceholder')" rows="3"
-                      class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-[15px] outline-none bg-[var(--c-surface)] text-[var(--c-text-primary)] box-border resize-y focus:border-[var(--c-primary)]"></textarea>
-          </div>
-          <div class="flex border-t border-[var(--c-border-light)]">
-            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
-                    @click="showIntroDialog = false">{{ $t('common.cancel') }}</button>
-            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 border-l border-[var(--c-border-light)] cursor-pointer text-[var(--c-primary)] font-medium font-inherit"
-                    @click="confirmIntro">{{ $t('common.confirm') }}</button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <AppDialog
+      :open="showIntroDialog"
+      :title="$t('profile.editIntro')"
+      @close="showIntroDialog = false"
+      @confirm="confirmIntro"
+    >
+      <textarea
+        v-model="tempIntro"
+        :placeholder="$t('profile.introPlaceholder')"
+        rows="3"
+        class="profile-dialog-input profile-dialog-textarea"
+      ></textarea>
+    </AppDialog>
 
-    <!-- Date Fallback Dialog -->
-    <Teleport to="body">
-      <div v-if="showDateFallback" class="fixed inset-0 z-[1000] flex items-center justify-center">
-        <div class="absolute inset-0 bg-black/60" @click="showDateFallback = false"></div>
-        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
-          <div class="px-6 pt-8 pb-4 text-center">
-            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ $t('profile.selectBirthday') }}</strong>
-          </div>
-          <div class="px-6 pb-8">
-            <input type="date" v-model="tempDate" min="1900-01-01" :max="todayStr"
-                   class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-[15px] outline-none bg-[var(--c-surface)] text-[var(--c-text-primary)] box-border focus:border-[var(--c-primary)]" />
-          </div>
-          <div class="flex border-t border-[var(--c-border-light)]">
-            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
-                    @click="showDateFallback = false">{{ $t('common.cancel') }}</button>
-            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 border-l border-[var(--c-border-light)] cursor-pointer text-[var(--c-primary)] font-medium font-inherit"
-                    @click="confirmDateFallback">{{ $t('common.confirm') }}</button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <AppDialog
+      :open="showDateFallback"
+      :title="$t('profile.selectBirthday')"
+      @close="showDateFallback = false"
+      @confirm="confirmDateFallback"
+    >
+      <input
+        v-model="tempDate"
+        type="date"
+        min="1900-01-01"
+        :max="todayStr"
+        class="profile-dialog-input"
+      />
+    </AppDialog>
 
-    <!-- List Fallback Dialog -->
-    <Teleport to="body">
-      <div v-if="showListFallback" class="fixed inset-0 z-[1000] flex items-center justify-center">
-        <div class="absolute inset-0 bg-black/60" @click="showListFallback = false"></div>
-        <div class="relative z-10 bg-[var(--c-surface)] rounded-xl w-80 overflow-hidden shadow-xl">
-          <div class="px-6 pt-8 pb-4 text-center">
-            <strong class="text-[17px] font-bold text-[var(--c-text-primary)]">{{ listFallbackTitle }}</strong>
-          </div>
-          <div class="max-h-[280px] overflow-y-auto">
-            <button type="button" v-for="opt in listFallbackOptions" :key="opt"
-                    class="w-full px-6 py-3 border-b border-[var(--c-border-light)] bg-transparent cursor-pointer text-left text-[var(--c-text-primary)] font-inherit hover:bg-[var(--c-surface-hover)] active:bg-[var(--c-surface-hover)]"
-                    @click="confirmListFallback(opt)">{{ opt }}</button>
-          </div>
-          <div class="flex border-t border-[var(--c-border-light)]">
-            <button type="button" class="flex-1 py-3.5 text-center bg-transparent border-0 cursor-pointer text-[var(--c-text-primary)] font-inherit"
-                    @click="showListFallback = false">{{ $t('common.cancel') }}</button>
-          </div>
-        </div>
+    <AppDialog
+      :open="showListFallback"
+      :title="listFallbackTitle"
+      :show-actions="false"
+      @close="showListFallback = false"
+    >
+      <div class="profile-dialog-list">
+        <button
+          v-for="opt in listFallbackOptions"
+          :key="opt"
+          type="button"
+          class="profile-dialog-list__item"
+          @click="confirmListFallback(opt)"
+        >
+          {{ opt }}
+        </button>
       </div>
-    </Teleport>
+      <div class="profile-dialog-list__footer">
+        <button
+          type="button"
+          class="profile-dialog-list__cancel"
+          @click="showListFallback = false"
+        >
+          {{ $t('common.cancel') }}
+        </button>
+      </div>
+    </AppDialog>
 
     <!-- Location Picker (三级联动) -->
     <LocationPicker
@@ -210,6 +194,7 @@ import {
 } from '../api/user.js'
 import { useToast } from '@/composables/useToast'
 import AppCard from '@/components/ui/AppCard.vue'
+import AppDialog from '@/components/ui/AppDialog.vue'
 import LocationPicker from '@/components/ui/LocationPicker.vue'
 import { formatProfileOptions } from '@/catalog/profileCatalog'
 import { getLocationCatalog } from '@/catalog/locationCatalog'
@@ -529,3 +514,126 @@ onMounted(() => {
 })
 
 </script>
+
+<style scoped>
+.profile-page {
+  width: min(1140px, calc(100% - 64px));
+  margin: 0 auto;
+  padding-top: 26px;
+}
+
+.profile-avatar-ring {
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--c-primary) 86%, #67e8f9) 0%,
+      color-mix(in srgb, var(--c-primary) 72%, #2dd4bf) 52%,
+      color-mix(in srgb, var(--c-primary) 44%, #93c5fd) 100%);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--c-primary) 16%, transparent);
+}
+
+[data-theme="dark"] .profile-avatar-ring {
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--c-primary) 64%, #7dd3c7) 0%,
+      color-mix(in srgb, var(--c-primary) 54%, #67e8f9) 58%,
+      color-mix(in srgb, var(--c-primary) 34%, #93c5fd) 100%);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 18%, transparent);
+}
+
+[data-theme="dark"] .profile-page {
+  background:
+    radial-gradient(circle at 0 0, rgba(45, 212, 191, 0.05), transparent 18%);
+}
+
+.profile-dialog-input {
+  width: 100%;
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--c-bg) 72%, white);
+  color: var(--c-text-1);
+  font: inherit;
+  font-size: 15px;
+  outline: none;
+  padding: 12px 14px;
+  box-sizing: border-box;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.profile-dialog-input:focus {
+  border-color: color-mix(in srgb, var(--c-primary) 32%, var(--c-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-primary) 14%, transparent);
+}
+
+.profile-dialog-textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.profile-dialog-list {
+  max-height: 280px;
+  overflow-y: auto;
+  margin: -6px -4px 0;
+}
+
+.profile-dialog-list__item {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--c-border) 92%, transparent);
+  background: transparent;
+  color: var(--c-text-1);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 640;
+  padding: 12px 10px;
+  text-align: left;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.profile-dialog-list__item:hover {
+  background: color-mix(in srgb, var(--c-primary) 6%, transparent);
+  color: var(--c-primary);
+}
+
+.profile-dialog-list__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.profile-dialog-list__cancel {
+  min-height: 42px;
+  border: 1px solid var(--c-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--c-text-2);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 760;
+  padding: 0 18px;
+}
+
+[data-theme="dark"] .profile-dialog-input {
+  background: rgba(31, 41, 55, 0.72);
+}
+
+[data-theme="dark"] .profile-dialog-list__item {
+  border-bottom-color: rgba(45, 58, 73, 0.86);
+}
+
+[data-theme="dark"] .profile-dialog-list__item:hover {
+  background: color-mix(in srgb, var(--c-primary) 8%, rgba(31, 41, 55, 0.38));
+}
+
+[data-theme="dark"] .profile-dialog-list__cancel {
+  background: rgba(31, 41, 55, 0.86);
+}
+
+@media (max-width: 768px) {
+  .profile-page {
+    width: calc(100% - 24px);
+    padding-top: 16px;
+  }
+}
+</style>

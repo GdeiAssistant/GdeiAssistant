@@ -1,0 +1,134 @@
+name: Dependabot Auto Merge
+
+on:
+  workflow_run:
+    workflows:
+      - Backend CI
+      - Frontend CI
+      - CodeQL Security Analysis
+      - Azure Static Web Apps CI/CD
+    types:
+      - completed
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  merge:
+    name: Merge safe Dependabot updates
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REQUIRED_CHECKS: |
+        Build and Test
+        Build and Test Frontend
+        Analyze (Java)
+        Build and Deploy Job
+    steps:
+      - name: Merge non-major Dependabot PR after required checks pass
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs')
+          const { execFileSync } = require('child_process')
+          
+          const payload = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'))
+          const run = payload.workflow_run || {}
+          const repo = process.env.GITHUB_REPOSITORY
+          const requiredChecks = (process.env.REQUIRED_CHECKS || '')
+            .split('\n')
+            .map((item) => item.trim())
+            .filter(Boolean)
+          
+          function gh(args) {
+            return execFileSync('gh', args, { encoding: 'utf8' }).trim()
+          }
+          
+          function log(message) {
+            console.log(`[dependabot-auto-merge] ${message}`)
+          }
+          
+          if (run.event !== 'pull_request' || run.conclusion !== 'success') {
+            log(`skip workflow_run event=${run.event} conclusion=${run.conclusion}`)
+            process.exit(0)
+          }
+          
+          let prNumber = run.pull_requests?.[0]?.number
+          if (!prNumber) {
+            const prs = JSON.parse(gh([
+              'api',
+              `repos/${repo}/commits/${run.head_sha}/pulls`,
+              '-H',
+              'Accept: application/vnd.github+json',
+            ]))
+            prNumber = prs?.[0]?.number
+          }
+          
+          if (!prNumber) {
+            log(`skip: cannot resolve PR for head ${run.head_sha}`)
+            process.exit(0)
+          }
+          
+          const pr = JSON.parse(gh([
+            'pr',
+            'view',
+            String(prNumber),
+            '--repo',
+            repo,
+            '--json',
+            'author,body,title,state,isDraft,mergeStateStatus,statusCheckRollup,headRefOid,url',
+          ]))
+          
+          const author = pr.author?.login || ''
+          if (!['app/dependabot', 'dependabot[bot]'].includes(author)) {
+            log(`skip PR #${prNumber}: author is ${author}`)
+            process.exit(0)
+          }
+          if (pr.state !== 'OPEN' || pr.isDraft) {
+            log(`skip PR #${prNumber}: state=${pr.state} draft=${pr.isDraft}`)
+            process.exit(0)
+          }
+          if (!['CLEAN', 'HAS_HOOKS'].includes(pr.mergeStateStatus)) {
+            log(`skip PR #${prNumber}: mergeStateStatus=${pr.mergeStateStatus}`)
+            process.exit(0)
+          }
+          
+          const versionPairs = [...`${pr.title}\n${pr.body || ''}`.matchAll(/from\s+v?(\d+)\.(\d+)\.(\d+)(?:[-+][^\s<),]*)?\s+to\s+v?(\d+)\.(\d+)\.(\d+)(?:[-+][^\s<),]*)?/gi)]
+          if (versionPairs.length === 0) {
+            log(`skip PR #${prNumber}: no semver from/to pairs found; fail closed`)
+            process.exit(0)
+          }
+          if (versionPairs.some((match) => match[1] !== match[4])) {
+            log(`skip PR #${prNumber}: semver-major update detected`)
+            process.exit(0)
+          }
+          
+          const checks = pr.statusCheckRollup || []
+          const checkByName = new Map(checks.map((check) => [check.name, check]))
+          const terminalFailureStates = new Set(['ACTION_REQUIRED', 'CANCELLED', 'ERROR', 'FAILURE', 'FAILED', 'TIMED_OUT'])
+          const failedChecks = checks.filter((check) => terminalFailureStates.has(String(check.conclusion || check.state || '').toUpperCase()))
+          if (failedChecks.length > 0) {
+            log(`skip PR #${prNumber}: failed checks: ${failedChecks.map((check) => check.name).join(', ')}`)
+            process.exit(0)
+          }
+          
+          const missingOrPending = []
+          for (const name of requiredChecks) {
+            const check = checkByName.get(name)
+            const state = String(check?.conclusion || check?.state || '').toUpperCase()
+            if (!check || state !== 'SUCCESS') {
+              missingOrPending.push(`${name}:${state || 'MISSING'}`)
+            }
+          }
+          if (missingOrPending.length > 0) {
+            log(`skip PR #${prNumber}: required checks not ready: ${missingOrPending.join(', ')}`)
+            process.exit(0)
+          }
+          
+          log(`merging PR #${prNumber}: ${pr.title}`)
+          gh(['pr', 'merge', String(prNumber), '--repo', repo, '--merge', '--delete-branch'])
+          log(`merged ${pr.url}`)
+          NODE

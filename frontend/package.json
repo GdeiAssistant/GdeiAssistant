@@ -33,7 +33,7 @@
     "@vitejs/plugin-vue": "^6.0.7",
     "autoprefixer": "^10.5.0",
     "fast-xml-parser": "^5.9.3",
-    "jsdom": "^26.1.0",
+    "jsdom": "^29.1.1",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.2.2",
     "vite": "^7.3.5",

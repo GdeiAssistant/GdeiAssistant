@@ -1,9 +1,9 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.5'
+    id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
     // GraalVM Native Image：nativeCompile 需 JDK 17+
-    id 'org.graalvm.buildtools.native' version '1.0.0'
+    id 'org.graalvm.buildtools.native' version '1.1.2'
 }
 
 dependencies {
@@ -14,58 +14,58 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-aspectj'
-    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
-    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.2.0'
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.4.0'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.4.0'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-    implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.5'
+    implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.16'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-    implementation platform('software.amazon.awssdk:bom:2.20.26')
+    implementation platform('software.amazon.awssdk:bom:2.46.15')
     implementation 'software.amazon.awssdk:s3'
     implementation 'software.amazon.awssdk:auth'
 
-    implementation 'com.auth0:java-jwt:4.4.0'
+    implementation 'com.auth0:java-jwt:4.5.2'
 
-    implementation 'org.apache.commons:commons-lang3:3.14.0'
-    implementation 'commons-logging:commons-logging:1.3.5'
-    implementation 'com.github.houbb:opencc4j:1.8.0'
-    implementation 'commons-io:commons-io:2.16.1'
+    implementation 'org.apache.commons:commons-lang3:3.20.0'
+    implementation 'commons-logging:commons-logging:1.4.0'
+    implementation 'com.github.houbb:opencc4j:1.14.0'
+    implementation 'commons-io:commons-io:2.22.0'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'org.apache.httpcomponents:httpasyncclient:4.1.5'
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
-    implementation 'org.jsoup:jsoup:1.17.2'
-    implementation 'com.thoughtworks.xstream:xstream:1.4.20'
-    implementation 'org.dom4j:dom4j:2.1.4'
+    implementation 'org.jsoup:jsoup:1.22.2'
+    implementation 'com.thoughtworks.xstream:xstream:1.4.21'
+    implementation 'org.dom4j:dom4j:2.2.0'
     implementation 'com.google.code.gson:gson'
-    implementation 'com.alibaba.fastjson2:fastjson2:2.0.47'
+    implementation 'com.alibaba.fastjson2:fastjson2:2.0.62'
 
     // 邮件发送（Jakarta Mail）
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.apache.pdfbox:pdfbox:2.0.31'
-    implementation 'org.apache.poi:poi:5.2.5'
-    implementation 'org.apache.poi:poi-ooxml:5.2.5'
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
+    implementation 'org.apache.poi:poi:5.5.1'
+    implementation 'org.apache.poi:poi-ooxml:5.5.1'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.84'
     implementation 'com.alipay.sdk:alipay-sdk-java:3.6.0.ALL'
-    implementation 'com.aliyun:aliyun-java-sdk-core:4.5.30'
+    implementation 'com.aliyun:aliyun-java-sdk-core:4.7.8'
     implementation 'com.tencentcloudapi:tencentcloud-sdk-java:3.1.628'
-    implementation 'com.qcloud:cos_api:5.6.110'
+    implementation 'com.qcloud:cos_api:5.6.269'
     implementation 'com.google.appengine:appengine-api-1.0-sdk:1.9.80'
-    implementation 'com.google.cloud:google-cloud-logging-logback:0.117.0-alpha'
-    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.0.16'
+    implementation 'com.google.cloud:google-cloud-logging-logback:0.142.0-alpha'
+    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.28.4'
 
     // Jakarta 注解（PostConstruct / PreDestroy / Resource）
     implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
 
     // MapStruct 映射框架
-    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
 
     // Lombok 与 MapStruct 的编译期绑定
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'junit:junit:4.13.2'

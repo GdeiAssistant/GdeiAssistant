@@ -53,7 +53,7 @@ dependencies {
     implementation 'com.aliyun:aliyun-java-sdk-core:4.7.8'
     implementation 'com.tencentcloudapi:tencentcloud-sdk-java:3.1.628'
     implementation 'com.qcloud:cos_api:5.6.269'
-    implementation 'com.google.appengine:appengine-api-1.0-sdk:1.9.80'
+    implementation 'com.google.appengine:appengine-api-1.0-sdk:5.0.4'
     implementation 'com.google.cloud:google-cloud-logging-logback:0.142.0-alpha'
     implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.28.4'
 

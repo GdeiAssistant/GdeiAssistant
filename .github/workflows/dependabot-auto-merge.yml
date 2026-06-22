@@ -97,13 +97,13 @@ jobs:
             process.exit(0)
           }
           
-          const versionPairs = [...`${pr.title}\n${pr.body || ''}`.matchAll(/from\s+v?(\d+)\.(\d+)\.(\d+)(?:[-+][^\s<),]*)?\s+to\s+v?(\d+)\.(\d+)\.(\d+)(?:[-+][^\s<),]*)?/gi)]
+          const versionPairs = [...`${pr.title}\n${pr.body || ''}`.matchAll(/from\s+v?(\d+)(?:\.\d+){0,2}(?:[-+][^\s<),]*)?\s+to\s+v?(\d+)(?:\.\d+){0,2}(?:[-+][^\s<),]*)?/gi)]
           if (versionPairs.length === 0) {
-            log(`skip PR #${prNumber}: no semver from/to pairs found; fail closed`)
+            log(`skip PR #${prNumber}: no semver-like from/to pairs found; fail closed`)
             process.exit(0)
           }
-          if (versionPairs.some((match) => match[1] !== match[4])) {
-            log(`skip PR #${prNumber}: semver-major update detected`)
+          if (versionPairs.some((match) => match[1] !== match[2])) {
+            log(`skip PR #${prNumber}: major update detected`)
             process.exit(0)
           }
           

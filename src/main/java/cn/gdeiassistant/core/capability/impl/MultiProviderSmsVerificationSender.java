@@ -9,10 +9,10 @@ import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
-import com.tencentcloudapi.sms.v20210111.SmsClient;
-import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
-import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
-import com.tencentcloudapi.sms.v20210111.models.SendStatus;
+import com.tencentcloudapi.sms.v20190711.SmsClient;
+import com.tencentcloudapi.sms.v20190711.models.SendSmsRequest;
+import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
+import com.tencentcloudapi.sms.v20190711.models.SendStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -205,9 +205,9 @@ public class MultiProviderSmsVerificationSender implements SmsVerificationSender
             SmsClient client = new SmsClient(cred, tencentRegion, clientProfile);
 
             SendSmsRequest req = new SendSmsRequest();
-            req.setSmsSdkAppId(tencentAppId);
-            req.setSignName(tencentSignName);
-            req.setTemplateId(templateId);
+            req.setSmsSdkAppid(tencentAppId);
+            req.setSign(tencentSignName);
+            req.setTemplateID(templateId);
             req.setPhoneNumberSet(new String[]{phoneE164});
             req.setTemplateParamSet(new String[]{String.valueOf(code)});
 

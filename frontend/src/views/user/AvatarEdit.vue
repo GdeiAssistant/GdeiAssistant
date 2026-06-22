@@ -78,6 +78,27 @@ const cropperImgRef = ref(null)
 const fileInput = ref(null)
 let cropperInstance = null
 
+const cropperTemplate = `
+  <cropper-canvas>
+    <cropper-image scalable translatable></cropper-image>
+    <cropper-shade hidden></cropper-shade>
+    <cropper-handle action="select" plain></cropper-handle>
+    <cropper-selection initial-coverage="0.8" aspect-ratio="1" movable resizable>
+      <cropper-grid role="grid" bordered covered></cropper-grid>
+      <cropper-crosshair centered></cropper-crosshair>
+      <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+      <cropper-handle action="n-resize"></cropper-handle>
+      <cropper-handle action="e-resize"></cropper-handle>
+      <cropper-handle action="s-resize"></cropper-handle>
+      <cropper-handle action="w-resize"></cropper-handle>
+      <cropper-handle action="ne-resize"></cropper-handle>
+      <cropper-handle action="nw-resize"></cropper-handle>
+      <cropper-handle action="se-resize"></cropper-handle>
+      <cropper-handle action="sw-resize"></cropper-handle>
+    </cropper-selection>
+  </cropper-canvas>
+`
+
 const goBack = () => router.back()
 
 const triggerSelect = () => fileInput.value?.click()
@@ -99,18 +120,15 @@ const initCropper = () => {
     if (!cropperImgRef.value) return
     if (cropperInstance) cropperInstance.destroy()
     cropperInstance = new Cropper(cropperImgRef.value, {
-      aspectRatio: 1,
-      viewMode: 1,
-      dragMode: 'move',
-      background: false,
-      autoCropArea: 0.8
+      template: cropperTemplate
     })
   })
 }
 
 const confirmCrop = async () => {
   if (!cropperInstance) return
-  const canvas = cropperInstance.getCroppedCanvas({ width: 200, height: 200 })
+  const selection = cropperInstance.getCropperSelection()
+  const canvas = await selection?.$toCanvas({ width: 200, height: 200 })
   if (!canvas) return
 
   toastLoading(t('avatarEdit.uploading'))
@@ -186,7 +204,6 @@ onMounted(async () => {
 </script>
 
 <style>
-@import 'cropperjs/dist/cropper.css';
 </style>
 
 <style scoped>

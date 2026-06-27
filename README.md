@@ -30,6 +30,25 @@ GdeiAssistant/                 # 仓库根目录
 
 ---
 
+## Docker 一键启动
+
+无需单独安装 Tomcat 或手动部署 WAR 包。Spring Boot 4 内嵌 Web 容器，Docker Compose 会一并启动后端、前端与数据库依赖。
+
+```bash
+cp .env.template .env
+# 编辑 .env，至少填写 DB_PASSWORD 与 JWT_SECRET（见模板注释）
+docker compose up -d
+```
+
+启动后：
+
+- 后端 API：`http://localhost:8080/api`
+- 前端：`http://localhost:5173`（由 compose 中的前端服务提供）
+
+查看日志：`docker compose logs -f backend`。停止：`docker compose down`。
+
+---
+
 ## 快速入门
 
 **1. 环境**  
@@ -60,13 +79,15 @@ cp .env.template .env
 >
 > 当前 MySQL 仍默认使用三套 schema：`DB_NAME`、`DB_NAME_LOG`、`DB_NAME_DATA`。
 
-> **生产环境必填变量：**
+> **生产 / 预发环境必填变量（缺一不可，否则 fail-fast 拒绝启动）：**
+> - `DB_PASSWORD` — 数据库密码
 > - `JWT_SECRET` — JWT 签名密钥（至少 32 位随机串）
 > - `CRON_SECRET` — 定时任务触发密钥（任意随机串）
-> - `ENCRYPT_ENABLE=true` — 启用敏感字段加密
+> - `ENCRYPT_ENABLE=true` — **必须**启用敏感字段加密（校园凭证等）
 > - `ENCRYPT_PRIVATE_KEY` — AES 加密密钥
+> - `REDIS_SSL_ENABLED=true` — 连接外部 Redis 时启用 TLS
 >
-> 缺少以上变量时，生产环境会拒绝启动。
+> **密钥轮换：** 定期轮换 `JWT_SECRET`、`CRON_SECRET`、`ENCRYPT_PRIVATE_KEY`；轮换前请评估已签发 Token 与已加密数据的兼容策略。详见 `docs/environment-matrix.md`。
 
 **3. 运行**
 
@@ -90,6 +111,8 @@ npm run dev
 > 如果你要在本机临时直连演示环境，请不要改仓库根目录 `.env` 的默认语义；更稳妥的做法是单独导出一次环境变量，或在 IDE / 部署平台里覆盖 `SPRING_PROFILES_ACTIVE`、数据库连接串和 `CORS_ALLOWED_ORIGIN_PATTERNS`。
 
 更完整的环境矩阵见：`docs/environment-matrix.md`。
+
+多端 API 契约（OpenAPI 骨架，作为 Android / iOS / 小程序与后端的统一参考）：[`docs/openapi.yaml`](docs/openapi.yaml)。
 
 ---
 

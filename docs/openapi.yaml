@@ -1,0 +1,173 @@
+openapi: 3.1.0
+info:
+  title: GdeiAssistant API
+  description: |
+    多端（Web / Android / iOS / 微信小程序）共享的后端 REST 契约骨架。
+    本文件为**真相源（source of truth）**的初版索引；请求/响应 schema 将随实现迭代补充。
+    鉴权：除 `/api/auth/*` 等白名单外，需在 Header 携带 `Authorization: Bearer <JWT>`。
+  version: 2.0.0
+  contact:
+    name: GdeiAssistant
+    url: https://github.com/GdeiAssistant/GdeiAssistant
+
+servers:
+  - url: http://localhost:8080
+    description: development
+  - url: https://gdeiassistant.azurewebsites.net
+    description: staging
+  - url: https://gdeiassistant.cn
+    description: production
+
+tags:
+  - name: auth
+    description: 登录、登出、Token 校验
+  - name: campus-credential
+    description: 校园凭证授权、撤回与快速认证
+  - name: profile
+    description: 用户资料与头像
+  - name: academic
+    description: 教务查询（成绩、课表、四六级等）
+  - name: campus-service
+    description: 校园服务（校园卡、图书馆、教室等）
+  - name: community
+    description: 社区功能（树洞、二手、快递等）
+  - name: information
+    description: 资讯与消息
+
+paths:
+  /api/auth/login:
+    post:
+      tags: [auth]
+      summary: 用户登录
+      security: []
+  /api/auth/logout:
+    post:
+      tags: [auth]
+      summary: 用户登出
+  /api/auth/validate:
+    get:
+      tags: [auth]
+      summary: 校验当前 Token
+
+  /api/campus-credential/status:
+    get:
+      tags: [campus-credential]
+      summary: 查询校园凭证绑定与授权状态
+  /api/campus-credential/consent:
+    post:
+      tags: [campus-credential]
+      summary: 记录用户授权同意
+  /api/campus-credential/revoke:
+    post:
+      tags: [campus-credential]
+      summary: 撤回授权
+  /api/campus-credential:
+    delete:
+      tags: [campus-credential]
+      summary: 删除已保存的校园凭证
+  /api/campus-credential/quick-auth:
+    post:
+      tags: [campus-credential]
+      summary: 更新快速认证开关
+
+  /api/user/profile:
+    get:
+      tags: [profile]
+      summary: 获取当前用户资料
+  /api/profile/avatar:
+    get:
+      tags: [profile]
+      summary: 获取头像
+    post:
+      tags: [profile]
+      summary: 上传头像
+    delete:
+      tags: [profile]
+      summary: 删除头像
+
+  /api/grade:
+    get:
+      tags: [academic]
+      summary: 查询成绩
+  /api/schedule:
+    get:
+      tags: [academic]
+      summary: 查询课表
+  /api/cet/query:
+    get:
+      tags: [academic]
+      summary: 四六级成绩查询
+  /api/graduate-exam/query:
+    post:
+      tags: [academic]
+      summary: 考研成绩查询
+
+  /api/card/info:
+    get:
+      tags: [campus-service]
+      summary: 校园卡信息
+  /api/card/query:
+    post:
+      tags: [campus-service]
+      summary: 校园卡交易查询
+  /api/card/charge:
+    post:
+      tags: [campus-service]
+      summary: 校园卡充值
+  /api/library/search:
+    get:
+      tags: [campus-service]
+      summary: 图书馆检索
+  /api/spare/query:
+    post:
+      tags: [campus-service]
+      summary: 空教室查询
+
+  /api/secret/info/start/{start}/size/{size}:
+    get:
+      tags: [community]
+      summary: 树洞列表（分页）
+  /api/secret/info:
+    post:
+      tags: [community]
+      summary: 发布树洞
+  /api/ershou/item/start/{start}:
+    get:
+      tags: [community]
+      summary: 二手商品列表
+  /api/express/start/{start}/size/{size}:
+    get:
+      tags: [community]
+      summary: 全民快递列表
+  /api/lostandfound/lostitem/start/{start}:
+    get:
+      tags: [community]
+      summary: 失物招领列表
+
+  /api/information/overview:
+    get:
+      tags: [information]
+      summary: 资讯概览
+  /api/information/news/type/{type}/start/{start}/size/{size}:
+    get:
+      tags: [information]
+      summary: 新闻列表
+  /api/information/message/unread:
+    get:
+      tags: [information]
+      summary: 未读消息数
+
+  /api/module/state:
+    get:
+      tags: [campus-service]
+      summary: 功能模块开关状态
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

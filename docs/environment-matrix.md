@@ -20,13 +20,24 @@ GdeiAssistant 统一使用以下三套环境语义：
 
 ## Security expectations
 
-- `development` 默认允许 `ENCRYPT_ENABLE=false`
-- `staging` / `production` 必须显式提供：
+- `development` 默认允许 `ENCRYPT_ENABLE=false`（仅限本机联调；见 [SECURITY.md](../SECURITY.md) 风险说明）
+- `staging` / `production` **必须**显式提供并启用：
   - `DB_PASSWORD`
   - `JWT_SECRET`
   - `CRON_SECRET`
-  - `ENCRYPT_ENABLE=true`
+  - `ENCRYPT_ENABLE=true` — 校园凭证等敏感字段加密，**禁止**在生产关闭
   - `ENCRYPT_PRIVATE_KEY`
+  - `REDIS_SSL_ENABLED=true` — 使用托管 Redis（Azure Cache、云厂商 Redis 等）时启用 TLS
+
+### 密钥轮换建议
+
+| 密钥 | 建议周期 | 说明 |
+| --- | --- | --- |
+| `JWT_SECRET` | 90–180 天 | 轮换后旧 Token 失效，需客户端重新登录 |
+| `CRON_SECRET` | 90–180 天 | 更新定时任务触发端配置 |
+| `ENCRYPT_PRIVATE_KEY` | 按合规要求 | 需规划密文重加密或双密钥过渡期；勿在未备份的情况下直接替换 |
+
+轮换操作应在维护窗口进行，并先在 `staging` 验证 fail-fast 与加密读写正常。
 
 ## Notes
 

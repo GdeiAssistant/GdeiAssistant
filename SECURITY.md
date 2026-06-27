@@ -43,6 +43,14 @@
 - 是否公开修复细节、何时发布补丁、是否回溯旧版本，由维护者结合风险和维护成本判断。
 - 本项目当前不承诺奖金、赏金计划或固定 SLA。
 
+## 开发环境默认加密关闭的风险
+
+本地 `development` profile 默认 `ENCRYPT_ENABLE=false`，便于快速联调，但会带来以下风险：
+
+- 校园凭证等敏感字段以明文或弱保护形式落库，**不得**将此类配置用于 staging / production 或任何可公网访问的实例。
+- 若开发机 `.env` 含真实凭据，请勿提交到 Git、勿共享截图、勿在不可信网络暴露 `8080` 端口。
+- 演示 / 生产部署前务必确认 `ENCRYPT_ENABLE=true` 且已配置 `ENCRYPT_PRIVATE_KEY`；详见 `docs/environment-matrix.md`。
+
 ## 敏感信息处理
 
 请不要在公开 Issue、PR、评论或讨论中粘贴以下内容：

@@ -147,6 +147,74 @@ public class AiLlmVisionClient {
         }
     }
 
+    private String callDeepseek(String imageBase64, String prompt) throws RecognitionException {
+        if (StringUtils.isBlank(deepseekApiKey)) {
+            throw new RecognitionException("AI识别未启用：请配置 api.ai.ocr.deepseek.api-key");
+        }
+        if (StringUtils.isBlank(deepseekBaseUrl)) {
+            throw new RecognitionException("AI识别未启用：请配置 api.ai.ocr.deepseek.base-url");
+        }
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(deepseekApiKey);
+
+            JSONObject body = new JSONObject();
+            body.put("model", deepseekModel);
+            JSONArray messages = new JSONArray();
+            JSONObject userMessage = new JSONObject();
+            userMessage.put("role", "user");
+            JSONArray content = new JSONArray();
+            JSONObject textPart = new JSONObject();
+            textPart.put("type", "text");
+            textPart.put("text", prompt);
+            JSONObject imagePart = new JSONObject();
+            imagePart.put("type", "image_url");
+            JSONObject imageUrl = new JSONObject();
+            imageUrl.put("url", "data:image/png;base64," + imageBase64);
+            imagePart.put("image_url", imageUrl);
+            content.add(textPart);
+            content.add(imagePart);
+            userMessage.put("content", content);
+            messages.add(userMessage);
+            body.put("messages", messages);
+
+            String url = deepseekBaseUrl.endsWith("/")
+                    ? deepseekBaseUrl + "chat/completions"
+                    : deepseekBaseUrl + "/chat/completions";
+            String res = restTemplate.postForObject(url, new HttpEntity<>(body, headers), String.class);
+            if (StringUtils.isBlank(res)) {
+                return "";
+            }
+            JSONObject json = JSONObject.parseObject(res);
+            JSONArray choices = json.getJSONArray("choices");
+            if (choices != null && !choices.isEmpty()) {
+                JSONObject message = choices.getJSONObject(0).getJSONObject("message");
+                if (message != null) {
+                    String text = message.getString("content");
+                    if (StringUtils.isNotBlank(text)) {
+                        return text;
+                    }
+                    JSONArray contentRes = message.getJSONArray("content");
+                    if (contentRes != null && !contentRes.isEmpty()) {
+                        for (int i = 0; i < contentRes.size(); i++) {
+                            JSONObject item = contentRes.getJSONObject(i);
+                            if (item != null && "text".equals(item.getString("type"))) {
+                                String value = item.getString("text");
+                                if (StringUtils.isNotBlank(value)) {
+                                    return value;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return "";
+        } catch (Exception e) {
+            throw new RecognitionException("DeepSeek 识别失败");
+        }
+    }
+
     private String callOpenAi(String imageBase64, String prompt) throws RecognitionException {
         if (StringUtils.isBlank(openaiApiKey)) {
             throw new RecognitionException("AI识别未启用：请配置 api.ai.ocr.openai.api-key");
@@ -303,74 +371,6 @@ public class AiLlmVisionClient {
             return "";
         } catch (Exception e) {
             throw new RecognitionException("Claude 识别失败");
-        }
-    }
-
-    private String callDeepseek(String imageBase64, String prompt) throws RecognitionException {
-        if (StringUtils.isBlank(deepseekApiKey)) {
-            throw new RecognitionException("AI识别未启用：请配置 api.ai.ocr.deepseek.api-key");
-        }
-        if (StringUtils.isBlank(deepseekBaseUrl)) {
-            throw new RecognitionException("AI识别未启用：请配置 api.ai.ocr.deepseek.base-url");
-        }
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(deepseekApiKey);
-
-            JSONObject body = new JSONObject();
-            body.put("model", deepseekModel);
-            JSONArray messages = new JSONArray();
-            JSONObject userMessage = new JSONObject();
-            userMessage.put("role", "user");
-            JSONArray content = new JSONArray();
-            JSONObject textPart = new JSONObject();
-            textPart.put("type", "text");
-            textPart.put("text", prompt);
-            JSONObject imagePart = new JSONObject();
-            imagePart.put("type", "image_url");
-            JSONObject imageUrl = new JSONObject();
-            imageUrl.put("url", "data:image/png;base64," + imageBase64);
-            imagePart.put("image_url", imageUrl);
-            content.add(textPart);
-            content.add(imagePart);
-            userMessage.put("content", content);
-            messages.add(userMessage);
-            body.put("messages", messages);
-
-            String url = deepseekBaseUrl.endsWith("/")
-                    ? deepseekBaseUrl + "chat/completions"
-                    : deepseekBaseUrl + "/chat/completions";
-            String res = restTemplate.postForObject(url, new HttpEntity<>(body, headers), String.class);
-            if (StringUtils.isBlank(res)) {
-                return "";
-            }
-            JSONObject json = JSONObject.parseObject(res);
-            JSONArray choices = json.getJSONArray("choices");
-            if (choices != null && !choices.isEmpty()) {
-                JSONObject message = choices.getJSONObject(0).getJSONObject("message");
-                if (message != null) {
-                    String text = message.getString("content");
-                    if (StringUtils.isNotBlank(text)) {
-                        return text;
-                    }
-                    JSONArray contentRes = message.getJSONArray("content");
-                    if (contentRes != null && !contentRes.isEmpty()) {
-                        for (int i = 0; i < contentRes.size(); i++) {
-                            JSONObject item = contentRes.getJSONObject(i);
-                            if (item != null && "text".equals(item.getString("type"))) {
-                                String value = item.getString("text");
-                                if (StringUtils.isNotBlank(value)) {
-                                    return value;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return "";
-        } catch (Exception e) {
-            throw new RecognitionException("DeepSeek 识别失败");
         }
     }
 

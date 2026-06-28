@@ -2,7 +2,7 @@ package cn.gdeiassistant.common.pojo.Excel;
 
 import cn.gdeiassistant.common.annotation.ExcelField;
 import cn.gdeiassistant.common.tools.Utils.ReflectionUtils;
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -226,7 +226,7 @@ public class ImportExcel {
      * @param groups 导入分组
      */
     public <E> List<E> getDataList(Class<E> cls, int... groups) throws InstantiationException, IllegalAccessException {
-        List<Object[]> annotationList = Lists.newArrayList();
+        List<Object[]> annotationList = new ArrayList<>();
         // Get annotation field
         Field[] fs = cls.getDeclaredFields();
         for (Field f : fs) {
@@ -278,7 +278,7 @@ public class ImportExcel {
         // Field sorting
         annotationList.sort(Comparator.comparing(o -> ((ExcelField) o[0]).sort()));
         // Get excel data
-        List<E> dataList = Lists.newArrayList();
+        List<E> dataList = new ArrayList<>();
         //循环获取每一行的数据
         for (int i = this.getDataRowNum(); i < this.getLastDataRowNum(); i++) {
             //实例化对象

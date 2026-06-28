@@ -17,6 +17,7 @@ services:
       - gdei-staging
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required for staging}"
+      MYSQL_PWD: "${DB_PASSWORD:?DB_PASSWORD is required for staging}"
       MYSQL_CHARSET: utf8mb4
     command:
       - --character-set-server=utf8mb4
@@ -24,7 +25,7 @@ services:
     volumes:
       - ./db-init/mysql:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD:?DB_PASSWORD is required for staging}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -111,6 +112,12 @@ services:
       ENCRYPT_ENABLE: "true"
       ENCRYPT_PRIVATE_KEY: "${ENCRYPT_PRIVATE_KEY:?ENCRYPT_PRIVATE_KEY is required for staging}"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -sf http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
 
   gdeiassistant-frontend:
     build:

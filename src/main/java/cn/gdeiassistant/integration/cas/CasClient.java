@@ -16,12 +16,15 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * CAS 认证防腐层：负责 security.gdei.edu.cn 的登录表单提交，仅返回封装了 Cookie 的 CasSessionCredential。
@@ -31,6 +34,13 @@ public class CasClient {
 
     private static final String CAS_LOGIN_URL = "https://security.gdei.edu.cn/cas/login";
     private static final int TIMEOUT_MS = 10000;
+
+    private static final Set<String> ALLOWED_REDIRECT_HOSTS = Set.of(
+            "security.gdei.edu.cn",
+            "jwgl.gdei.edu.cn",
+            "portal.gdei.edu.cn",
+            "epay.gdei.edu.cn"
+    );
 
     public CasSessionCredential login(String username, String password, String serviceUrl)
             throws IOException, ServerErrorException {
@@ -84,13 +94,13 @@ public class CasClient {
             }
             // Validate redirect URL stays within trusted school domains
             try {
-                java.net.URI uri = java.net.URI.create(redirectUrl);
+                URI uri = URI.create(redirectUrl);
                 String scheme = uri.getScheme();
                 if (scheme != null && !scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https")) {
                     throw new ServerErrorException("CAS重定向地址协议不安全");
                 }
                 String host = uri.getHost();
-                if (host != null && !host.toLowerCase().endsWith(".gdei.edu.cn") && !host.toLowerCase().equals("gdei.edu.cn")) {
+                if (host == null || !ALLOWED_REDIRECT_HOSTS.contains(host.toLowerCase())) {
                     throw new ServerErrorException("CAS重定向地址不在可信域名范围内");
                 }
             } catch (IllegalArgumentException e) {

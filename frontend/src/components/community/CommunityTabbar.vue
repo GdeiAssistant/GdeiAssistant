@@ -8,6 +8,7 @@ const props = defineProps({
   /** 模块主色，如 'var(--c-ershou)' */
   moduleColor: { type: String, default: 'var(--c-topic)' },
   /** Tab 配置列表 [{key, label, path, icon}] */
+  /** ⚠️ icon 通过 v-html 渲染，必须为硬编码 SVG 字符串，禁止来自 API 或用户输入 */
   tabs: { type: Array, required: true }
 })
 

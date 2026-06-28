@@ -4,10 +4,10 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
     // GraalVM Native Image：nativeCompile 需 JDK 17+
     id 'org.graalvm.buildtools.native' version '1.1.2'
+    id 'jacoco'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -49,16 +49,16 @@ dependencies {
     implementation 'org.apache.poi:poi:5.5.1'
     implementation 'org.apache.poi:poi-ooxml:5.5.1'
     implementation 'org.bouncycastle:bcprov-jdk18on:1.84'
-    implementation 'com.alipay.sdk:alipay-sdk-java:3.6.0.ALL'
     implementation 'com.aliyun:aliyun-java-sdk-core:4.7.8'
     implementation 'com.tencentcloudapi:tencentcloud-sdk-java:4.0.11'
-    implementation 'com.qcloud:cos_api:5.6.269'
-    implementation 'com.google.appengine:appengine-api-1.0-sdk:5.0.4'
-    implementation 'com.google.cloud:google-cloud-logging-logback:0.142.0-alpha'
-    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.28.4'
 
     // Jakarta 注解（PostConstruct / PreDestroy / Resource）
     implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
+
+    // Jackson 2.x（Jackson 2.18 兼容层，与 Spring Boot 4 自带的 Jackson 3.x 共存，
+    // 用于业务代码中已有的 com.fasterxml.jackson 包引用，后续可逐步迁移到 tools.jackson）
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.18.2'
 
     // MapStruct 映射框架
     implementation 'org.mapstruct:mapstruct:1.6.3'
@@ -133,3 +133,17 @@ tasks.withType(Jar) {
 tasks.withType(Copy) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+// JaCoCo test coverage
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.40
+            }
+        }
+    }
+}
+check.dependsOn jacocoTestCoverageVerification

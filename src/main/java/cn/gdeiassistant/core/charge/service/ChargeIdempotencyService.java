@@ -38,6 +38,22 @@ public class ChargeIdempotencyService {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * Begins an idempotent charge operation.
+     * <p>
+     * <b>Known race condition:</b> Redis {@code setIfAbsent()} acquires a distributed lock
+     * atomically, but this only prevents concurrent {@code begin()} calls for the same key.
+     * A window exists between this method returning and the caller inserting the charge order
+     * into MySQL where another instance could also acquire the Redis lock and proceed to insert.
+     * </p>
+     * <p>
+     * <b>Mitigation:</b> The DB-level UNIQUE constraint on
+     * {@code charge_order.idempotency_key_hash} (added in upgrade-2026-06-28) catches
+     * duplicate inserts at the database layer. The caller should catch
+     * {@code DuplicateKeyException} / {@code DataIntegrityViolationException} and treat it
+     * as a duplicate (idempotent) request rather than a failure.
+     * </p>
+     */
     public ChargeIdempotencyContext begin(String username, String endpoint, String rawIdempotencyKey,
                                           int amount, String deviceId) throws ChargeIdempotencyException {
         String idempotencyKey = normalizeIdempotencyKey(rawIdempotencyKey);

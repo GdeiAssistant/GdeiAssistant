@@ -2,7 +2,8 @@ package cn.gdeiassistant.common.pojo.Excel;
 
 import cn.gdeiassistant.common.annotation.ExcelField;
 import cn.gdeiassistant.common.tools.Utils.ReflectionUtils;
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -45,7 +46,7 @@ public class ExportExcel {
     /**
      * 注解列表（Object[]{ ExcelField, Field/Method }）
      */
-    List<Object[]> annotationList = Lists.newArrayList();
+    List<Object[]> annotationList = new ArrayList<>();
 
     /**
      * 构造函数
@@ -126,7 +127,7 @@ public class ExportExcel {
 
         });
         // Initialize
-        List<String> headerList = Lists.newArrayList();
+        List<String> headerList = new ArrayList<>();
         for (Object[] os : annotationList) {
             //获取注解title属性值
             String t = ((ExcelField) os[0]).title();
@@ -150,7 +151,7 @@ public class ExportExcel {
      * @param headers 表头数组
      */
     public ExportExcel(String title, String[] headers) {
-        initialize(title, Lists.newArrayList(headers));
+        initialize(title, new ArrayList<>(Arrays.asList(headers)));
     }
 
     /**

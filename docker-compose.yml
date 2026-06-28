@@ -19,6 +19,7 @@ services:
       - "${MYSQL_EXPOSE_PORT:-3306}:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required}"
+      MYSQL_PWD: "${DB_PASSWORD:?DB_PASSWORD is required}"
       MYSQL_CHARSET: utf8mb4
     command:
       - --character-set-server=utf8mb4
@@ -27,7 +28,7 @@ services:
       - mysql-data:/var/lib/mysql
       - ./db-init/mysql:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD", "sh", "-c", "mysqladmin ping -h localhost -uroot -p\"$$MYSQL_ROOT_PASSWORD\""]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -119,6 +120,12 @@ services:
       JWT_SECRET: "${JWT_SECRET:?JWT_SECRET is required}"
     ports:
       - "${BACKEND_EXPOSE_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -sf http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   frontend:
     image: node:24.14.1-alpine

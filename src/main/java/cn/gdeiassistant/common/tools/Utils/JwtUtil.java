@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -43,14 +44,11 @@ public class JwtUtil {
 
     public String createToken(String sessionId, String username) {
         ensureSecretConfigured();
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expireTime = now.plusDays(EXPIRE_DAYS);
         return JWT.create()
                 .withIssuer(ISSUER)
                 .withClaim("username", username)
                 .withClaim("sessionId", sessionId)
-                .withClaim("createTime", now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-                .withClaim("expireTime", expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .withExpiresAt(Date.from(LocalDateTime.now().plusDays(EXPIRE_DAYS).atZone(ZoneId.systemDefault()).toInstant()))
                 .sign(Algorithm.HMAC256(jwtConfig.getSecret()));
     }
 
@@ -67,10 +65,6 @@ public class JwtUtil {
                 .withIssuer(ISSUER)
                 .build();
         DecodedJWT decoded = verifier.verify(token);
-        long expireTime = decoded.getClaim("expireTime").asLong();
-        if (expireTime <= System.currentTimeMillis()) {
-            throw new JWTVerificationException("Token has expired");
-        }
         return decoded.getClaims();
     }
 

@@ -3,6 +3,7 @@
 .gradle
 build
 logs
+.env
 frontend/node_modules
 frontend/dist
 frontend/test-results

@@ -7,36 +7,53 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
 
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
 
+    private final String contentType;
+
     public XSSRequestWrapper(HttpServletRequest request) {
         super(request);
+        this.contentType = request.getContentType();
+    }
+
+    private boolean shouldSkip() {
+        return contentType != null && contentType.startsWith("application/json");
+    }
+
+    private boolean isPasswordParameter(String name) {
+        return name != null && name.toLowerCase().contains("password");
     }
 
     @Override
     public String getHeader(String name) {
-        return StringEscapeUtils.escapeHtml4(super.getHeader(name));
+        String value = super.getHeader(name);
+        return value != null ? StringEscapeUtils.escapeHtml4(value) : null;
     }
 
     @Override
     public String getQueryString() {
-        return StringEscapeUtils.escapeHtml4(super.getQueryString());
+        String value = super.getQueryString();
+        return value != null ? StringEscapeUtils.escapeHtml4(value) : null;
     }
 
     @Override
     public String getParameter(String name) {
-        return StringEscapeUtils.escapeHtml4(super.getParameter(name));
+        String value = super.getParameter(name);
+        if (value == null || shouldSkip() || isPasswordParameter(name)) {
+            return value;
+        }
+        return StringEscapeUtils.escapeHtml4(value);
     }
 
     @Override
     public String[] getParameterValues(String name) {
         String[] values = super.getParameterValues(name);
-        if(values != null) {
-            int length = values.length;
-            String[] escapseValues = new String[length];
-            for(int i = 0; i < length; i++){
-                escapseValues[i] = StringEscapeUtils.escapeHtml4(values[i]);
-            }
-            return escapseValues;
+        if (values == null || shouldSkip() || isPasswordParameter(name)) {
+            return values;
         }
-        return super.getParameterValues(name);
+        int length = values.length;
+        String[] escapseValues = new String[length];
+        for(int i = 0; i < length; i++){
+            escapseValues[i] = StringEscapeUtils.escapeHtml4(values[i]);
+        }
+        return escapseValues;
     }
 }

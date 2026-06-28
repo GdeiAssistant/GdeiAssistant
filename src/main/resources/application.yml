@@ -17,7 +17,7 @@ spring:
       max-request-size: 50MB
   datasource:
     app:
-      jdbc-url: ${DB_JDBC_URL_APP:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:gdeiassistant}?${DB_JDBC_PARAMS:useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
+      jdbc-url: ${DB_JDBC_URL_APP:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:gdeiassistant}?${DB_JDBC_PARAMS:useUnicode=true&characterEncoding=utf-8&useSSL=true&requireSSL=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -25,14 +25,14 @@ spring:
         maximum-pool-size: 10
         minimum-idle: 2
     log:
-      jdbc-url: ${DB_JDBC_URL_LOG:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_LOG:gdeiassistant_log}?${DB_JDBC_PARAMS:useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
+      jdbc-url: ${DB_JDBC_URL_LOG:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_LOG:gdeiassistant_log}?${DB_JDBC_PARAMS:useUnicode=true&characterEncoding=utf-8&useSSL=true&requireSSL=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
         maximum-pool-size: 5
     data:
-      jdbc-url: ${DB_JDBC_URL_DATA:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_DATA:gdeiassistant_data}?${DB_JDBC_PARAMS:useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
+      jdbc-url: ${DB_JDBC_URL_DATA:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_DATA:gdeiassistant_data}?${DB_JDBC_PARAMS:useUnicode=true&characterEncoding=utf-8&useSSL=true&requireSSL=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -195,8 +195,21 @@ resilience4j:
         permitted-number-of-calls-in-half-open-state: 3
         slow-call-duration-threshold: 10s
         slow-call-rate-threshold: 80
+      externalService:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        slow-call-duration-threshold: 8s
+        slow-call-rate-threshold: 80
     instances:
       eduSystem:
         base-config: eduSystem
       cardSystem:
         base-config: cardSystem
+      chsiClient:
+        base-config: externalService
+      libraryClient:
+        base-config: externalService
+      casClient:
+        base-config: externalService

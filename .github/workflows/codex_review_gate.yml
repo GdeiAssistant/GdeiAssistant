@@ -1,0 +1,65 @@
+name: Codex Review Gate
+
+# Two-mode gate for the Codex GitHub App (chatgpt-codex-connector):
+#
+# 1. WAIT mode (PR opened/synchronized):
+#    Creates a pending check → polls for Codex review up to N minutes.
+#    If Codex responds → check reflects review state.
+#    If Codex times out → check passes (don't block when App is broken).
+#
+# 2. REACT mode (Codex submits review):
+#    Updates check instantly — CHANGES_REQUESTED → fail, APPROVED → pass.
+#
+# No API keys needed — reads the App's review via GitHub API.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: codex-review-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    if: >
+      github.event_name == 'pull_request_review'
+      && github.event.review.user.login == 'chatgpt-codex-connector[bot]'
+      || github.event_name == 'pull_request'
+      && github.event.pull_request.draft == false
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      CODEX_GATE_POLL_SECONDS: ${{ vars.CODEX_GATE_POLL_SECONDS || '30' }}
+      CODEX_GATE_MAX_WAIT_MINUTES: ${{ vars.CODEX_GATE_MAX_WAIT_MINUTES || '5' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Codex Review Gate
+        id: gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/gate_codex_app_review.py
+
+      - name: Upload gate diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: codex-review-gate-${{ github.event.pull_request.number || github.run_id }}
+          path: data/output/codex_review_gate/
+          if-no-files-found: warn

@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "auto_merge_label": "auto-merge-ok",
+  "human_review_label": "human-review-required",
+  "monthly_marker_prefix": "<!-- codex-monthly-remediation:issue-",
+  "blocked_path_patterns": [
+    "(^|/)(\\.env|.*secret.*|.*credential.*|.*token.*|.*private.*|.*\\.pem|.*\\.key)$"
+  ],
+  "risk_policy": {
+    "low": {
+      "prefixes": [
+        "docs/",
+        "tests/"
+      ],
+      "exact": [
+        "README.md",
+        "README.zh-CN.md"
+      ],
+      "reason": "docs/tests/readme-only changes"
+    },
+    "high": {
+      "reason": "source code changes require review"
+    }
+  },
+  "max_changed_files": 30,
+  "max_changed_lines": 2000,
+  "pr_review": {
+    "enabled": true,
+    "block_severities": [
+      "critical",
+      "high"
+    ],
+    "skip_paths": [
+      "docs/**",
+      "**.md",
+      "**.txt",
+      "**.json",
+      "**.csv",
+      "LICENSE",
+      ".github/dependabot*"
+    ],
+    "skip_risk_levels": [
+      "low"
+    ],
+    "timeout_minutes": 20,
+    "max_diff_lines": 2400,
+    "block_on_review_failure": false
+  }
+}

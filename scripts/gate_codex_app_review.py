@@ -33,8 +33,10 @@ def env(name: str, default: str = "") -> str:
 
 
 def env_int(name: str, default: int) -> int:
-    try: return int(env(name, str(default)))
-    except ValueError: return default
+    try:
+        return int(env(name, str(default)))
+    except ValueError:
+        return default
 
 
 def github_request(token: str, method: str, path: str,
@@ -47,7 +49,8 @@ def github_request(token: str, method: str, path: str,
         "X-GitHub-Api-Version": "2022-11-28",
         "User-Agent": "codex-review-gate",
     }
-    if payload: headers["Content-Type"] = "application/json"
+    if payload:
+        headers["Content-Type"] = "application/json"
     req = urllib.request.Request(url, data=data, method=method, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
@@ -69,8 +72,10 @@ def step_summary(text: str) -> None:
 
 def load_policy() -> dict[str, Any]:
     if POLICY_PATH.exists():
-        try: return json.loads(POLICY_PATH.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError): pass
+        try:
+            return json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            pass
     return {
         "version": 1,
         "blocked_path_patterns": [
@@ -85,8 +90,10 @@ def compile_patterns(policy: dict[str, Any]) -> list[re.Pattern[str]]:
     pp: list[re.Pattern[str]] = []
     for p in policy.get("blocked_path_patterns", []):
         if isinstance(p, str) and p.strip():
-            try: pp.append(re.compile(p, re.IGNORECASE))
-            except re.error: pass
+            try:
+                pp.append(re.compile(p, re.IGNORECASE))
+            except re.error:
+                pass
     return pp
 
 
@@ -111,8 +118,11 @@ def scan_diff(diff_text: str, path_patterns: list[re.Pattern[str]]) -> list[str]
                     violations.append(f"**Blocked file**: `{current}` matches `{pat.pattern}`")
                     break
             continue
-        if line.startswith("+++ b/"): current = line[6:]; continue
-        if not line.startswith("+") or line.startswith("+++"): continue
+        if line.startswith("+++ b/"):
+            current = line[6:]
+            continue
+        if not line.startswith("+") or line.startswith("+++"):
+            continue
         m = _SENSITIVE.search(line[1:])
         if m:
             violations.append(f"**Hardcoded secret** in `{current}`: `{m.group(0)[:100]}`")
@@ -128,8 +138,10 @@ def check_metadata(files: list[dict[str, Any]], policy: dict[str, Any]) -> list[
     for f in files:
         fn = f.get("filename", "?")
         st = (f.get("status") or "").lower().strip()
-        if st == "removed": issues.append(f"**File deleted**: `{fn}` — verify intentional")
-        elif st == "renamed": issues.append(f"**File renamed**: `{f.get('previous_filename', '?')}` → `{fn}`")
+        if st == "removed":
+            issues.append(f"**File deleted**: `{fn}` — verify intentional")
+        elif st == "renamed":
+            issues.append(f"**File renamed**: `{f.get('previous_filename', '?')}` → `{fn}`")
     if len(files) > mx_f:
         issues.append(f"**Too many files**: {len(files)} changed (limit {mx_f})")
     if ta + td > mx_l:
@@ -146,10 +158,13 @@ def run_static_guard(token: str, repo: str, pr_number: int) -> int:
         try:
             batch = github_request(token, "GET",
                 f"/repos/{repo}/pulls/{pr_number}/files?per_page=100&page={page}")
-        except RuntimeError: break
-        if not isinstance(batch, list) or not batch: break
+        except RuntimeError:
+            break
+        if not isinstance(batch, list) or not batch:
+            break
         files.extend(batch)
-        if len(batch) < 100: break
+        if len(batch) < 100:
+            break
         page += 1
 
     diff_text = ""
@@ -165,13 +180,16 @@ def run_static_guard(token: str, repo: str, pr_number: int) -> int:
         )
         with urllib.request.urlopen(req, timeout=30) as resp:
             diff_text = resp.read().decode("utf-8", errors="replace")
-    except Exception: pass
+    except Exception:
+        pass
 
     issues = check_metadata(files, policy) + scan_diff(diff_text, compile_patterns(policy))
-    if not issues: return 0
+    if not issues:
+        return 0
 
     print(f"STATIC → BLOCKED: {len(issues)} issue(s)")
-    for i in issues: print(f"  • {i}")
+    for i in issues:
+        print(f"  • {i}")
     step_summary(f"## Merge blocked: {len(issues)} static issue(s)\n\n" +
                  "\n".join(f"- {i}" for i in issues))
     return 1
@@ -181,7 +199,8 @@ def run_static_guard(token: str, repo: str, pr_number: int) -> int:
 
 def get_codex_review(token: str, repo: str, pr_number: int) -> dict[str, Any] | None:
     reviews = github_request(token, "GET", f"/repos/{repo}/pulls/{pr_number}/reviews?per_page=100")
-    if not isinstance(reviews, list): return None
+    if not isinstance(reviews, list):
+        return None
     for r in reversed(reviews):
         if isinstance(r, dict) and (r.get("user") or {}).get("login") == BOT_LOGIN:
             return r
@@ -228,16 +247,20 @@ def main() -> int:
     pr_number = pr.get("number")
     head_sha = (pr.get("head") or {}).get("sha")
     if not pr_number or not head_sha:
-        print(f"::warning::Cannot resolve PR context"); return 0
+        print("::warning::Cannot resolve PR context")
+        return 0
 
     print(f"PR #{pr_number}  sha={head_sha[:12]}  event={event_name}")
 
     # ── Phase 1: Static guard (skip on review-only events) ────────────
     if event_name != "pull_request_review":
-        try: rc = run_static_guard(token, repo, pr_number)
+        try:
+            rc = run_static_guard(token, repo, pr_number)
         except RuntimeError as exc:
-            print(f"::warning::Static guard error: {exc}"); rc = 0
-        if rc != 0: return 1
+            print(f"::warning::Static guard error: {exc}")
+            rc = 0
+        if rc != 0:
+            return 1
         print("STATIC → clean")
 
     # ── Phase 2: App review ───────────────────────────────────────────
@@ -250,8 +273,10 @@ def main() -> int:
         return rc
 
     # WAIT: poll for existing or upcoming review
-    try: existing = get_codex_review(token, repo, pr_number)
-    except RuntimeError: existing = None
+    try:
+        existing = get_codex_review(token, repo, pr_number)
+    except RuntimeError:
+        existing = None
 
     if existing is not None:
         rc, title, summary = app_decision(existing)
@@ -266,8 +291,10 @@ def main() -> int:
 
     while time.time() < deadline:
         time.sleep(poll_s)
-        try: review = get_codex_review(token, repo, pr_number)
-        except RuntimeError: continue
+        try:
+            review = get_codex_review(token, repo, pr_number)
+        except RuntimeError:
+            continue
         if review is not None:
             rc, title, summary = app_decision(review)
             print(f"WAIT → found review → exit={rc}: {title}")

@@ -13,8 +13,17 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Service
 public class AuthenticationService {
+
+    private static final Map<Integer, AuthenticationEnum> AUTHENTICATION_TYPES = Arrays.stream(AuthenticationEnum.values())
+            .collect(Collectors.toUnmodifiableMap(AuthenticationEnum::getValue, Function.identity()));
 
     @Autowired
     private AuthenticationMapper authenticationMapper;
@@ -52,7 +61,7 @@ public class AuthenticationService {
     public void UpdateAuthentication(String sessionId
             , Authentication authentication
             , @Nullable MultipartFile[] images) throws NullIDPhotoException, InconsistentAuthenticationException, AuthenticationRecordExistException, IDPhotoCountLimitationException, IDPhotoSizeLimitationException {
-        switch (AuthenticationEnum.values()[authentication.getType()]) {
+        switch (resolveAuthenticationType(authentication)) {
             case MAINLAND_CHINESE_RESIDENT_ID_CARD:
                 //中国居民身份证，使用API进行审核
                 aliYunAPIUtils.VerifyMainLandChineseResidentIDCard(authentication);
@@ -70,6 +79,13 @@ public class AuthenticationService {
             default:
                 throw new InconsistentAuthenticationException("该证件类型的实名认证暂未开放");
         }
+    }
+
+    private AuthenticationEnum resolveAuthenticationType(Authentication authentication) throws InconsistentAuthenticationException {
+        return Optional.ofNullable(authentication)
+                .map(Authentication::getType)
+                .map(AUTHENTICATION_TYPES::get)
+                .orElseThrow(() -> new InconsistentAuthenticationException("证件类型不合法"));
     }
 
     /**

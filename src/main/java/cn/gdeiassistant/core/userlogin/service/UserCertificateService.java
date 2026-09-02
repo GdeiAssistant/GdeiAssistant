@@ -171,7 +171,7 @@ public class UserCertificateService {
      * @return
      */
     private void updateSessionCertificate(String sessionId, String username, String password) throws PasswordIncorrectException, NetWorkTimeoutException, ServerErrorException {
-        UserCertificateEntity userCertificate = userCertificateDao.queryUserSessionCertificate(username);
+        UserCertificateEntity userCertificate = userCertificateDao.queryUserSessionCertificate(sessionId);
         if (userCertificate == null) {
             CloseableHttpClient httpClient = null;
             CookieStore cookieStore = null;

@@ -52,6 +52,11 @@ public class AuthenticationService {
     public void UpdateAuthentication(String sessionId
             , Authentication authentication
             , @Nullable MultipartFile[] images) throws NullIDPhotoException, InconsistentAuthenticationException, AuthenticationRecordExistException, IDPhotoCountLimitationException, IDPhotoSizeLimitationException {
+        if (authentication == null || authentication.getType() == null
+                || authentication.getType() < 0
+                || authentication.getType() >= AuthenticationEnum.values().length) {
+            throw new InconsistentAuthenticationException("证件类型不合法");
+        }
         switch (AuthenticationEnum.values()[authentication.getType()]) {
             case MAINLAND_CHINESE_RESIDENT_ID_CARD:
                 //中国居民身份证，使用API进行审核

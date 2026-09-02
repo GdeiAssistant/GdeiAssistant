@@ -52,12 +52,7 @@ public class AuthenticationService {
     public void UpdateAuthentication(String sessionId
             , Authentication authentication
             , @Nullable MultipartFile[] images) throws NullIDPhotoException, InconsistentAuthenticationException, AuthenticationRecordExistException, IDPhotoCountLimitationException, IDPhotoSizeLimitationException {
-        if (authentication == null || authentication.getType() == null
-                || authentication.getType() < 0
-                || authentication.getType() >= AuthenticationEnum.values().length) {
-            throw new InconsistentAuthenticationException("证件类型不合法");
-        }
-        switch (AuthenticationEnum.values()[authentication.getType()]) {
+        switch (resolveAuthenticationType(authentication)) {
             case MAINLAND_CHINESE_RESIDENT_ID_CARD:
                 //中国居民身份证，使用API进行审核
                 aliYunAPIUtils.VerifyMainLandChineseResidentIDCard(authentication);
@@ -74,6 +69,14 @@ public class AuthenticationService {
 
             default:
                 throw new InconsistentAuthenticationException("该证件类型的实名认证暂未开放");
+        }
+    }
+
+    private AuthenticationEnum resolveAuthenticationType(Authentication authentication) throws InconsistentAuthenticationException {
+        try {
+            return AuthenticationEnum.values()[authentication.getType()];
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
+            throw new InconsistentAuthenticationException("证件类型不合法");
         }
     }
 

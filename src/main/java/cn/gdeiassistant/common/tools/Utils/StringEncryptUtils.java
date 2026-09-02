@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -51,10 +52,10 @@ public class StringEncryptUtils {
         cipher.init(Cipher.ENCRYPT_MODE, keyFor(aesConfig), new GCMParameterSpec(TAG_LENGTH_BITS, iv));
         cipher.updateAAD(FORMAT_VERSION.getBytes(StandardCharsets.US_ASCII));
         byte[] ciphertext = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
-        byte[] payload = new byte[iv.length + ciphertext.length];
-        System.arraycopy(iv, 0, payload, 0, iv.length);
-        System.arraycopy(ciphertext, 0, payload, iv.length, ciphertext.length);
-        return FORMAT_VERSION + Base64.getUrlEncoder().withoutPadding().encodeToString(payload);
+        ByteArrayOutputStream payload = new ByteArrayOutputStream();
+        payload.writeBytes(iv);
+        payload.writeBytes(ciphertext);
+        return FORMAT_VERSION + Base64.getUrlEncoder().withoutPadding().encodeToString(payload.toByteArray());
 
     }
 

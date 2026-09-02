@@ -13,8 +13,17 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Service
 public class AuthenticationService {
+
+    private static final Map<Integer, AuthenticationEnum> AUTHENTICATION_TYPES = Arrays.stream(AuthenticationEnum.values())
+            .collect(Collectors.toUnmodifiableMap(AuthenticationEnum::getValue, Function.identity()));
 
     @Autowired
     private AuthenticationMapper authenticationMapper;
@@ -73,11 +82,10 @@ public class AuthenticationService {
     }
 
     private AuthenticationEnum resolveAuthenticationType(Authentication authentication) throws InconsistentAuthenticationException {
-        try {
-            return AuthenticationEnum.values()[authentication.getType()];
-        } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
-            throw new InconsistentAuthenticationException("证件类型不合法");
-        }
+        return Optional.ofNullable(authentication)
+                .map(Authentication::getType)
+                .map(AUTHENTICATION_TYPES::get)
+                .orElseThrow(() -> new InconsistentAuthenticationException("证件类型不合法"));
     }
 
     /**

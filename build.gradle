@@ -3,7 +3,7 @@ plugins {
     id 'org.springframework.boot' version '4.1.1'
     id 'io.spring.dependency-management' version '1.1.7'
     // GraalVM Native Image：nativeCompile 需 JDK 17+
-    id 'org.graalvm.buildtools.native' version '1.1.11'
+    id 'org.graalvm.buildtools.native' version '1.1.12'
     id 'jacoco'
 }
 
@@ -24,11 +24,11 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-    implementation platform('software.amazon.awssdk:bom:2.54.12')
+    implementation platform('software.amazon.awssdk:bom:2.54.16')
     implementation 'software.amazon.awssdk:s3'
     implementation 'software.amazon.awssdk:auth'
 
-    implementation 'com.auth0:java-jwt:4.6.0'
+    implementation 'com.auth0:java-jwt:4.6.1'
 
     implementation 'org.apache.commons:commons-lang3:3.20.0'
     implementation 'commons-logging:commons-logging:1.4.0'

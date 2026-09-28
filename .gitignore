@@ -118,3 +118,11 @@ docker-compose.local.yml
 logs/
 build/native/
 **/nativeCompile/
+
+# AI assistant / agent configs (local only)
+AGENTS.md
+CLAUDE.md
+.claude/
+.codex/
+.cursor/
+.cursorrules

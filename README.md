@@ -9,9 +9,7 @@
 
 项目适配了 Docker 容器化与 GraalVM Native Image 技术，支持以原生二进制文件运行，具有毫秒级启动与极低内存占用的优势。
 
----
-
-## 📂 目录结构概览
+## 目录结构
 
 ```text
 GdeiAssistant/                 # 仓库根目录
@@ -27,8 +25,6 @@ GdeiAssistant/                 # 仓库根目录
 └── .env.template              # 环境变量配置模板
 
 ```
-
----
 
 ## Docker 一键启动
 
@@ -46,8 +42,6 @@ docker compose up -d
 - 前端：`http://localhost:5173`（由 compose 中的前端服务提供）
 
 查看日志：`docker compose logs -f backend`。停止：`docker compose down`。
-
----
 
 ## 快速入门
 
@@ -98,8 +92,6 @@ cp .env.template .env
 - **演示 / 生产推荐形态**：后端单独部署，前端单独构建，数据库改为外部服务；例如当前演示环境前端可使用 `https://gdeiassistant.pages.dev`，后端 API 使用 `https://gdeiassistant.azurewebsites.net/api`。
 - **仅前端**：进入前端目录安装依赖并启动开发服务器：
 
-
-
 ```bash
 cd frontend
 npm install
@@ -114,16 +106,12 @@ npm run dev
 
 多端 API 契约（OpenAPI 骨架，作为 Android / iOS / 小程序与后端的统一参考）：[`docs/openapi.yaml`](docs/openapi.yaml)。
 
----
-
 ## 技术栈
 
 | 端 | 技术 |
 |----|------|
 | 后端 | JDK 17、Spring Boot 4.0、MySQL 8.0、MyBatis-Plus、MongoDB、Redis、Gradle 8.14、GraalVM Native Image（可选） |
 | 前端 | Vue 3、Vue Router、Vite、Axios、WeUI、Node.js 24.14.1 LTS |
-
----
 
 ## 自动化测试基线
 
@@ -141,8 +129,6 @@ npm run test:e2e
 - 前端 CI 执行依赖安装、生产构建、Vitest 单元测试和 Playwright smoke E2E。
 - 本地 Playwright 如需复用系统 Chrome，可设置 `PLAYWRIGHT_CHROME_EXECUTABLE_PATH` 指向 Chrome 可执行文件。
 
----
-
 ## 预览
 
 <p>
@@ -151,25 +137,9 @@ npm run test:e2e
   <img src="assets/screenshots/secret.png" width="250">
 </p>
 
----
-
-## 项目结构
-
-| 路径 | 说明 |
-|------|------|
-| `src/main/java` | Spring Boot 后端 |
-| `frontend/` | Vue 前端 |
-| `db-init/mysql/` | MySQL 初始化（含 Mock 数据） |
-| `db-init/mongodb/` | MongoDB 初始化（含 Mock 数据） |
-| `docker-compose.yml` | 全栈编排 |
-
----
-
 ## 开发测试账号
 
 开发和测试环境如需示例账号，请使用团队内部渠道获取或在本地自行配置。不要在公开仓库中提交真实或可复用的测试凭据。
-
----
 
 ## 客户端与官网
 
@@ -179,8 +149,6 @@ npm run test:e2e
 
 - [前端网站](https://gdeiassistant.pages.dev)
 - [后端接口](https://gdeiassistant.azurewebsites.net/actuator/health)
-
----
 
 ## 法律、隐私与安全提示
 
@@ -196,8 +164,6 @@ npm run test:e2e
 - [贡献说明](CONTRIBUTING.md)
 - [商标使用说明](TRADEMARK.md)
 - [第三方通知](THIRD_PARTY_NOTICES.md)
-
----
 
 ## 许可证
 

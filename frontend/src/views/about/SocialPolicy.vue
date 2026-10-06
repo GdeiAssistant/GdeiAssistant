@@ -38,7 +38,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           </div>
 
           <h3>第一条 社区定位与专项规则</h3>
-          <p><strong>1.1</strong> 广东二师助手致力于提供真实、友善、克制、对校园生活有帮助的交流环境，但平台不承诺对所有内容进行事前人工审核，也不当然对用户间线下行为承担保证责任。</p>
+          <p><strong>1.1</strong> 本准则适用于广东二师助手社区及相关功能。平台不对所有内容进行事前人工审核，也不当然对用户间线下行为承担保证责任。</p>
           <p><strong>1.2</strong> 二手交易、失物招领、校园跑腿/全民快递另有专项规则，分别详见 <a href="/policy/secondhand">《二手交易规则》</a>、<a href="/policy/lostandfound">《失物招领规则》</a>、<a href="/policy/errand">《校园跑腿/全民快递规则》</a>。</p>
 
           <h3>第二条 倡导内容</h3>

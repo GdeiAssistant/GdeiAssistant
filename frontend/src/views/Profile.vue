@@ -1,8 +1,8 @@
 <template>
   <div class="profile-page space-y-4 pb-20">
-    <!-- User Info Card -->
+    <!-- User Info + social stats -->
     <AppCard>
-      <div class="flex items-center gap-4 px-5 py-5">
+      <div class="flex items-center gap-4 px-5 pt-5 pb-3">
         <RouterLink to="/user/avatar-edit" class="shrink-0">
           <div class="profile-avatar-ring w-16 h-16 rounded-full p-[2px]">
             <img
@@ -24,6 +24,43 @@
           </p>
         </div>
       </div>
+      <div class="grid grid-cols-3 gap-2 px-4 pb-3 text-center text-sm">
+        <RouterLink
+          :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=following` : '/social/search'"
+          class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+        >
+          <div class="font-semibold">{{ socialStats.followingCount }}</div>
+          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.following') }}</div>
+        </RouterLink>
+        <RouterLink
+          :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=followers` : '/social/search'"
+          class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+        >
+          <div class="font-semibold">{{ socialStats.followerCount }}</div>
+          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.followers') }}</div>
+        </RouterLink>
+        <RouterLink
+          :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=friends` : '/social/search'"
+          class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+        >
+          <div class="font-semibold">{{ socialStats.friendCount }}</div>
+          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.friends') }}</div>
+        </RouterLink>
+      </div>
+      <RouterLink
+        to="/social/search"
+        class="campus-list-row flex items-center gap-3 min-h-11 px-4 py-3 border-t border-[var(--c-border-light)]"
+      >
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.searchTitle') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+      <RouterLink
+        to="/user/privacy-setting"
+        class="campus-list-row flex items-center gap-3 min-h-11 px-4 py-3 border-t border-[var(--c-border-light)]"
+      >
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.privacySetting') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
     </AppCard>
 
     <!-- Profile Info -->
@@ -91,42 +128,6 @@
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
-    </AppCard>
-
-    <!-- Social stats -->
-    <AppCard>
-      <template #header>
-        <div class="flex items-center gap-2">
-          <Users class="w-4 h-4 text-[var(--c-text-tertiary)]" />
-          <span class="text-sm font-medium text-[var(--c-text-secondary)]">{{ $t('social.statsTitle') }}</span>
-        </div>
-      </template>
-      <div class="grid grid-cols-3 gap-2 px-4 py-3 text-center text-sm">
-        <RouterLink :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=following` : '/social/search'" class="rounded-lg bg-[var(--c-bg)] py-2">
-          <div class="font-semibold">{{ socialStats.followingCount }}</div>
-          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.following') }}</div>
-        </RouterLink>
-        <RouterLink :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=followers` : '/social/search'" class="rounded-lg bg-[var(--c-bg)] py-2">
-          <div class="font-semibold">{{ socialStats.followerCount }}</div>
-          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.followers') }}</div>
-        </RouterLink>
-        <RouterLink :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=friends` : '/social/search'" class="rounded-lg bg-[var(--c-bg)] py-2">
-          <div class="font-semibold">{{ socialStats.friendCount }}</div>
-          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.friends') }}</div>
-        </RouterLink>
-      </div>
-      <RouterLink to="/social/search" class="campus-list-row flex items-center gap-3 px-4 py-3 border-t border-[var(--c-border-light)]">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.searchTitle') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
-      </RouterLink>
-      <RouterLink to="/social/privacy" class="campus-list-row flex items-center gap-3 px-4 py-3 border-t border-[var(--c-border-light)]">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.dmPrivacyTitle') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
-      </RouterLink>
-      <RouterLink to="/social/blocks" class="campus-list-row flex items-center gap-3 px-4 py-3 border-t border-[var(--c-border-light)]">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.blocksTitle') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
-      </RouterLink>
     </AppCard>
 
     <AppDialog
@@ -235,7 +236,7 @@ import LocationPicker from '@/components/ui/LocationPicker.vue'
 import { formatProfileOptions } from '@/catalog/profileCatalog'
 import { getLocationCatalog } from '@/catalog/locationCatalog'
 import { formatProfileViewModel } from '@/formatters/profileFormatter'
-import { User, Users, ChevronRight } from 'lucide-vue-next'
+import { User, ChevronRight } from 'lucide-vue-next'
 import { fetchSocialMe } from '../api/social.js'
 
 const { t, locale } = useI18n()

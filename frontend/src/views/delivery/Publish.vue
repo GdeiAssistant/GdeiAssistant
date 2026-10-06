@@ -107,7 +107,7 @@ function submit() {
 
     <div class="p-4 animate-[slide-up_0.4s_ease_both]">
       <div class="community-delivery-warning mb-4 rounded-xl px-4 py-3 text-xs leading-6">
-        取件码、地址、手机号、姓名等通常属于高敏信息，请最小化填写和展示。请勿承接违法违规、危险、贵重或明显超出自身能力范围的任务。
+        {{ t('delivery.publish.privacyHint') }}
       </div>
 
       <!-- Pickup info -->

@@ -67,7 +67,7 @@ onMounted(() => {
       <div v-else-if="!loading" class="collection-empty-shell">
         <AppEmpty
           :title="t('libraryPage.detail.empty')"
-          description="暂时没有查到这本书的馆藏详情，可以返回上一页重新选择，或稍后再查看。"
+          :description="t('libraryPage.detail.emptyDescription')"
         >
           <template #icon>
             <BookOpenText :size="30" />

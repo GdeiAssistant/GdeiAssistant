@@ -33,6 +33,10 @@ export async function setLocale(locale) {
     i18n.global.setLocaleMessage(normalizedLocale, messages.default)
   }
   i18n.global.locale.value = normalizedLocale
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = normalizedLocale
+    document.title = i18n.global.t('router.siteTitle')
+  }
   localStorage.setItem('locale', normalizedLocale)
 }
 

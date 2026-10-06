@@ -1,20 +1,25 @@
 <script setup>
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const secret = ref(null)
 const comments = ref([])
 const commentText = ref('')
 const loading = ref(true)
 const dialogVisible = ref(false)
-const dialogMessage = ref('')
-const showDialog = (msg) => {
-  dialogMessage.value = msg
+const dialogKey = ref('')
+const dialogParams = ref({})
+const dialogMessage = computed(() => dialogKey.value ? t(dialogKey.value, dialogParams.value) : '')
+const showDialog = (key, params = {}) => {
+  dialogKey.value = key
+  dialogParams.value = params
   dialogVisible.value = true
 }
 
@@ -82,7 +87,7 @@ function bindAudioEvents(audioElement) {
     playing.value = false
     audioLoading.value = false
     audioReady.value = false
-    audioError.value = '语音加载失败，请稍后重试'
+    audioError.value = 'secret.detail.audioLoadFailed'
   }
 }
 
@@ -104,11 +109,11 @@ const audioProgress = computed(() => {
 })
 
 const audioStatusText = computed(() => {
-  if (audioError.value) return audioError.value
-  if (audioLoading.value && !audioReady.value) return '语音加载中...'
-  if (playing.value) return '点击暂停播放'
-  if (audioReady.value) return '点击继续播放'
-  return '点击播放语音'
+  if (audioError.value) return t(audioError.value)
+  if (audioLoading.value && !audioReady.value) return t('secret.detail.audioLoading')
+  if (playing.value) return t('secret.detail.audioPause')
+  if (audioReady.value) return t('secret.detail.audioResume')
+  return t('secret.detail.audioPlay')
 })
 
 const audioTimeText = computed(() => {
@@ -133,7 +138,7 @@ const playAudio = async () => {
     await audioElement.play()
   } catch (_) {
     audioLoading.value = false
-    audioError.value = '当前浏览器无法播放该语音'
+    audioError.value = 'secret.detail.audioUnsupported'
   }
 }
 
@@ -165,11 +170,11 @@ const toggleLike = () => {
 // 提交评论
 const submitComment = () => {
   if (!commentText.value || commentText.value.trim() === '') {
-    showDialog('评论内容不能为空')
+    showDialog('secret.detail.commentEmpty')
     return
   }
   if (commentText.value.length > 50) {
-    showDialog('评论内容不能超过50字')
+    showDialog('secret.detail.commentTooLong', { max: 50 })
     return
   }
   request.post(`/secret/id/${route.params.id}/comment`, null, { params: { comment: commentText.value.trim() } }).then(() => {
@@ -275,11 +280,11 @@ onBeforeUnmount(() => {
 <template>
   <div class="secret-page-root">
     <div class="min-h-screen bg-[var(--c-bg)] pb-14" style="--module-color: var(--c-secret)">
-    <CommunityHeader title="树洞详情" moduleColor="var(--c-secret)" backTo="/secret/home" />
+    <CommunityHeader :title="t('secret.detail.title')" moduleColor="var(--c-secret)" backTo="/secret/home" />
 
     <div v-if="loading" class="flex items-center justify-center py-16 gap-2.5 text-[var(--c-text-3)]">
       <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-secret)] rounded-full animate-spin"></i>
-      <span>加载中...</span>
+      <span>{{ t('common.loading') }}</span>
     </div>
 
     <div v-else-if="secret" class="min-h-full pb-16 pt-4">
@@ -300,7 +305,7 @@ onBeforeUnmount(() => {
               height="50px"
               :src="playing ? '/img/secret/voice_pressed.png' : '/img/secret/voice_normal_white.png'"
               class="w-12 h-12 mx-auto"
-              alt="语音"
+              :alt="t('secret.voiceAlt')"
             />
             <img
               v-else
@@ -308,7 +313,7 @@ onBeforeUnmount(() => {
               height="50px"
               :src="playing ? '/img/secret/voice_pressed.png' : '/img/secret/voice_normal.png'"
               class="w-12 h-12 mx-auto"
-              alt="语音"
+              :alt="t('secret.voiceAlt')"
             />
             <div class="mt-3 text-xs opacity-95">{{ audioStatusText }}</div>
             <div class="mt-1.5 text-[10px] opacity-80">{{ audioTimeText }}</div>
@@ -359,14 +364,14 @@ onBeforeUnmount(() => {
         <img :src="`/img/avatar/${comment.avatarTheme || 1}.png`" alt="" class="w-10 h-10 rounded-full shrink-0" />
         <div class="flex-1">
           <p class="font-bold mb-1 text-[var(--c-text-1)]">{{ comment.comment }}</p>
-          <span class="text-[10px] text-[var(--c-text-3)]">{{ index + 1 }}楼 {{ comment.publishTime }}</span>
+          <span class="text-[10px] text-[var(--c-text-3)]">{{ t('secret.detail.floor', { n: index + 1 }) }} {{ comment.publishTime }}</span>
         </div>
       </div>
     </div>
 
     <div v-else class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
       <div class="text-5xl mb-3">📭</div>
-      <p class="text-sm">树洞不存在或已删除</p>
+      <p class="text-sm">{{ t('secret.detail.notFound') }}</p>
     </div>
 
     <!-- 底部固定输入框 -->
@@ -374,7 +379,7 @@ onBeforeUnmount(() => {
       <input
         type="text"
         name="comment"
-        placeholder="匿名评论"
+        :placeholder="t('secret.detail.commentPlaceholder')"
         class="leading-9 border border-[var(--c-border)] flex-1 rounded px-2.5 text-base outline-none"
         v-model="commentText"
         @keyup.enter="submitComment"
@@ -383,7 +388,7 @@ onBeforeUnmount(() => {
         v-if="showSubmitBtn"
         class="leading-9 border border-[var(--c-border)] w-[20%] rounded text-center text-[var(--c-secret)] cursor-pointer text-base"
         @click="submitComment"
-      >发布</div>
+      >{{ t('secret.publish.submitAction') }}</div>
     </div>
   </div>
 
@@ -391,10 +396,10 @@ onBeforeUnmount(() => {
   <div v-if="dialogVisible">
     <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
     <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: var(--c-secret)">
-      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">提示</div>
+      <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
       <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
       <div class="flex border-t border-[var(--c-border)]">
-        <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[var(--c-secret)] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">确定</a>
+        <a href="javascript:" class="flex-1 py-3 text-center text-sm text-[var(--c-secret)] font-semibold no-underline cursor-pointer" @click="dialogVisible = false">{{ t('common.confirm') }}</a>
       </div>
     </div>
   </div>

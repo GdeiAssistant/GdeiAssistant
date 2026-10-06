@@ -12,16 +12,18 @@
       </div>
     </div>
 
-    <div v-else class="py-16 text-center text-sm text-[var(--c-text-3)]">公告不存在或已删除</div>
+    <div v-else class="py-16 text-center text-sm text-[var(--c-text-3)]">{{ t('info.announcementMissing') }}</div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import request from '@/utils/request'
 
 const route = useRoute()
+const { t } = useI18n()
 const item = ref(null)
 const loading = ref(true)
 

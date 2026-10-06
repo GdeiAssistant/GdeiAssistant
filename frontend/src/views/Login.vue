@@ -80,7 +80,7 @@ function handleThirdPartyLogin(type) {
       <div class="login-visual__card">
         <div class="login-visual__mark">G</div>
         <h2>广东二师助手</h2>
-        <p>把课表、校园卡、资讯和校园生活放在一个清爽入口里。</p>
+        <p>{{ t('loginPage.visualIntro') }}</p>
       </div>
     </section>
 
@@ -94,7 +94,7 @@ function handleThirdPartyLogin(type) {
       </div>
 
       <div class="login-panel__notice">
-        校园账号凭证可能用于校园认证、快速认证和会话同步。请仅使用本人账号；如您拒绝保存相关凭证或后续通过账号设置、反馈渠道申请删除，部分校园查询或快速认证功能可能不可用。
+        {{ t('loginPage.credentialNotice') }}
       </div>
 
       <form class="login-form" @submit.prevent="handleLogin">

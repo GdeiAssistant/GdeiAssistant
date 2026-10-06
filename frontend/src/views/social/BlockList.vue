@@ -1,5 +1,12 @@
 <template>
   <div class="social-page space-y-3">
+    <button
+      type="button"
+      class="min-h-11 px-0 text-sm text-[var(--c-primary)] bg-transparent border-0 cursor-pointer"
+      @click="router.push('/user/privacy-setting')"
+    >
+      {{ $t('social.backToPrivacySettings') }}
+    </button>
     <h1 class="text-lg font-semibold">{{ $t('social.blocksTitle') }}</h1>
     <div v-if="loading" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('common.loading') }}</div>
     <div

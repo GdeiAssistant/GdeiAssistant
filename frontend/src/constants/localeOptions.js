@@ -8,9 +8,30 @@ export const LOCALE_OPTIONS = [
 ]
 
 export function resolveSupportedLocale(code) {
-  const normalized = String(code || 'zh-CN').toLowerCase()
-  if (normalized === 'zh-hant-hk' || normalized.startsWith('zh-hk')) return 'zh-HK'
-  if (normalized.startsWith('zh-tw') || normalized.startsWith('zh-hant')) return 'zh-TW'
+  const raw = String(code || 'zh-CN').trim()
+  if (!raw) return 'zh-CN'
+
+  // RFC 5646 / Accept-Language: first language range, drop q-values.
+  const firstTag = raw.split(',')[0].trim().split(';')[0].trim()
+  const normalized = firstTag.replace(/_/g, '-').toLowerCase()
+
+  // Hong Kong / Macau Traditional → zh-HK
+  if (
+    normalized.startsWith('zh-hk')
+    || normalized.startsWith('zh-mo')
+    || normalized === 'zh-hant-hk'
+    || normalized === 'zh-hant-mo'
+    || normalized.startsWith('zh-hant-hk')
+    || normalized.startsWith('zh-hant-mo')
+  ) {
+    return 'zh-HK'
+  }
+
+  // Taiwan / generic zh-Hant → zh-TW
+  if (normalized.startsWith('zh-tw') || normalized.startsWith('zh-hant')) {
+    return 'zh-TW'
+  }
+
   if (normalized.startsWith('zh')) return 'zh-CN'
   if (normalized.startsWith('ja')) return 'ja'
   if (normalized.startsWith('ko')) return 'ko'

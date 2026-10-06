@@ -44,7 +44,7 @@ function toggleTheme() {
         class="campus-topbar__icon-button campus-topbar__menu"
         type="button"
         :aria-expanded="sidebarOpen"
-        aria-label="打开侧边栏"
+        :aria-label="t('navigationAccessibility.openSidebar')"
         @click="emit('toggle-sidebar')"
       >
         <Menu class="w-4 h-4" />
@@ -56,7 +56,7 @@ function toggleTheme() {
       <button
         class="campus-topbar__icon-button"
         type="button"
-        :aria-label="isDark ? '切换到浅色模式' : '切换到深色模式'"
+        :aria-label="t(isDark ? 'navigationAccessibility.lightMode' : 'navigationAccessibility.darkMode')"
         @click="toggleTheme"
       >
         <Moon v-if="!isDark" class="w-4 h-4" />

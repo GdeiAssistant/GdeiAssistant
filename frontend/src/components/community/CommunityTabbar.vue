@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   /** 模块基础路径，如 '/ershou' */
@@ -14,6 +15,7 @@ const props = defineProps({
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
 
 const activeTab = computed(() => {
   const p = route.path
@@ -29,7 +31,7 @@ function goTo(path) {
 </script>
 
 <template>
-  <nav class="community-tabbar" :style="{ '--module-color': moduleColor }" aria-label="社区导航">
+  <nav class="community-tabbar" :style="{ '--module-color': moduleColor }" :aria-label="t('community.navAriaLabel')">
     <button
       v-for="tab in tabs"
       :key="tab.key"

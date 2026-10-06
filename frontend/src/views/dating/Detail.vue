@@ -75,14 +75,47 @@ const DETAIL_COPY = {
     success: 'Message sent. Please wait for their reply.',
     emptyMessage: 'Please enter a message first',
     tooLongMessage: 'Your message must be within 50 characters'
+  },
+  ja: {
+    unknownGrade: '不明',
+    noticeTitle: 'お知らせ',
+    gradeLabel: '学年：',
+    facultyLabel: '専攻：',
+    hometownLabel: '出身地：',
+    qqLabel: 'QQ：',
+    wechatLabel: 'WeChat：',
+    hiddenContact: '相手がメッセージを承認すると表示されます',
+    placeholder: '50文字以内でひとこと書いてください',
+    submitAction: 'メッセージを送る',
+    success: '送信しました。返信をお待ちください',
+    emptyMessage: 'メッセージを入力してください',
+    tooLongMessage: 'メッセージは50文字以内にしてください'
+  },
+  ko: {
+    unknownGrade: '알 수 없음',
+    noticeTitle: '안내',
+    gradeLabel: '학년: ',
+    facultyLabel: '전공: ',
+    hometownLabel: '고향: ',
+    qqLabel: 'QQ: ',
+    wechatLabel: 'WeChat: ',
+    hiddenContact: '상대가 메시지를 수락하면 볼 수 있습니다',
+    placeholder: '50자 이내로 메시지를 적어 주세요',
+    submitAction: '메시지 보내기',
+    success: '보냈습니다. 답장을 기다려 주세요',
+    emptyMessage: '메시지를 먼저 입력해 주세요',
+    tooLongMessage: '메시지는 50자 이내여야 합니다'
   }
 }
 
 function resolveDatingLocale(value) {
   const normalized = (value || 'zh-CN').toLowerCase()
-  if (normalized.startsWith('zh-hk')) return 'zh-HK'
+  if (normalized.startsWith('zh-hk') || normalized.startsWith('zh-mo') || normalized.startsWith('zh-hant-hk') || normalized.startsWith('zh-hant-mo')) return 'zh-HK'
   if (normalized.startsWith('zh-tw') || normalized.startsWith('zh-hant')) return 'zh-TW'
   if (normalized.startsWith('zh')) return 'zh-CN'
+  if (normalized.startsWith('ja')) return 'ja'
+  if (normalized.startsWith('ko')) return 'ko'
+  if (normalized.startsWith('en')) return 'en'
   return 'en'
 }
 

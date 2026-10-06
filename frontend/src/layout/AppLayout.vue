@@ -62,7 +62,7 @@ onUnmounted(() => {
       v-if="sidebarOpen"
       type="button"
       class="campus-sidebar-backdrop"
-      aria-label="关闭侧边栏"
+      :aria-label="t('navigationAccessibility.closeSidebar')"
       @click="closeSidebar"
     />
 
@@ -82,7 +82,7 @@ onUnmounted(() => {
       </main>
     </div>
 
-    <nav class="campus-mobile-tabbar" aria-label="主导航">
+    <nav class="campus-mobile-tabbar" :aria-label="t('navigationAccessibility.mainNavigation')">
       <button
         v-for="tab in mobileTabs"
         :key="tab.path"

@@ -31,7 +31,8 @@
     "noData": "データがありません",
     "loadingRegions": "地域リストを読み込み中です。しばらくお待ちください...",
     "recentUpdate": "最近の更新",
-    "back": "戻る"
+    "back": "戻る",
+    "unknown": "不明"
   },
   "grade": {
     "year": {
@@ -145,7 +146,8 @@
     "selectLocation": "所在地を選択してください",
     "selectHometown": "出身地を選択してください",
     "selectFacultyFirst": "先に学部を選択してください",
-    "language": "言語 / Language"
+    "language": "言語 / Language",
+    "campusCredentialManage": "キャンパス認証情報の管理"
   },
   "info": {
     "news": "ニュース",
@@ -188,7 +190,8 @@
     "targetAccepted": "受注",
     "targetComment": "コメント",
     "targetLike": "いいね",
-    "targetGuess": "名前当て"
+    "targetGuess": "名前当て",
+    "announcementMissing": "お知らせが存在しないか、削除されています。"
   },
   "router": {
     "siteTitle": "広東第二師範学院キャンパスアシスタント"
@@ -231,7 +234,64 @@
     "securityTitle": "セキュリティ説明",
     "privacyPolicyTitle": "プライバシーポリシー",
     "userAgreementTitle": "利用規約",
-    "chineseOnlyNotice": "このページの法的本文は現在中国語版のみ提供されています。"
+    "chineseOnlyNotice": "このページの法的本文は現在中国語版のみ提供されています。",
+    "account": {
+      "title": "キャンパス認証情報の管理",
+      "sectionTitle": "認証情報とクイック認証の管理",
+      "sectionDesc": "同意状態、保存済みログイン情報、クイック認証を確認できます。同意撤回や削除後は、一部のキャンパス照会で再ログインが必要になる場合があります。",
+      "statusTitle": "現在の管理状態",
+      "refresh": "更新",
+      "loading": "状態を取得中...",
+      "consentStatus": "同意状態",
+      "authorized": "同意済み",
+      "unauthorized": "未同意",
+      "savedCredential": "保存済みログイン情報",
+      "yes": "あり",
+      "no": "なし",
+      "quickAuth": "クイック認証",
+      "enabled": "オン",
+      "disabled": "オフ",
+      "campusAccount": "キャンパスアカウント",
+      "notProvided": "未提供",
+      "consentedAt": "同意日時",
+      "revokedAt": "撤回日時",
+      "none": "なし",
+      "disableQuickAuth": "クイック認証をオフ",
+      "enableQuickAuth": "クイック認証をオン",
+      "quickAuthHint": "有効な同意と再利用可能なキャンパス認証情報がある場合のみ、クイック認証を再度オンにできます。",
+      "dangerTitle": "危険な操作",
+      "revoke": "同意を撤回",
+      "deleteCredential": "保存済みログイン情報を削除",
+      "feedbackAction": "ヘルプとフィードバックから申請",
+      "privacyAction": "プライバシーポリシーの認証情報説明を見る",
+      "loginRequired": "キャンパス認証情報の管理状態を見るにはログインしてください。",
+      "statusUnavailable": "現在、認証情報の管理状態を取得できません。先に「ヘルプとフィードバック」からご申請ください。",
+      "revokeSuccess": "キャンパス認証情報の同意を撤回しました",
+      "deleteSuccess": "保存済みログイン情報を削除しました",
+      "quickAuthOnSuccess": "クイック認証をオンにしました",
+      "quickAuthOffSuccess": "クイック認証をオフにしました",
+      "revokeDescription": "同意を撤回すると保存済みログイン情報も削除されます。以降、関連機能では再ログインまたは再同意が必要になる場合があります。",
+      "deleteDescription": "削除後、時間割・成績・キャンパスカード・図書館などの照会で再ログインが必要になる場合があります。保存済みログイン情報とクイック認証もクリアされます。",
+      "revokeTitle": "キャンパス認証情報の同意を撤回",
+      "deleteTitle": "保存済みログイン情報を削除",
+      "guide": {
+        "title": "GDEI Assistant 学内ネットワークアカウントの案内",
+        "updated": "更新日：2022年6月28日",
+        "welcome": "広東第二師範学院の皆さん、キャンパスアシスタントへようこそ。",
+        "firstUse": "新入生や初めて利用する方は、先にこの案内をご確認ください。",
+        "login": "学内ネットワークのユーザー名とパスワードでログインしてください。",
+        "usernameHint": "ユーザー名は学籍番号とは異なります。",
+        "activation": "新入生のアカウントがネットワークセンターで有効になるまで、通常約1週間かかります。ログインできない場合は、有効化をお待ちください。",
+        "steps": "学内ネットワークアカウントの確認手順：",
+        "homepage": "大学のホームページ www.gdei.edu.cn を開き、右側のナビゲーションから「内网登录」（学内ログイン）を選択します。",
+        "lookup": "統一認証システムで「查询账号」（アカウント照会）を選択します。",
+        "result": "氏名、学籍・職員番号、身分証番号、認証コードを正しく入力すると、アカウント情報が表示されます。",
+        "passwordHint": "表示されたユーザー名を本システムのログインに使用します。元の案内では、2015年度以降の入学生の初期パスワードは身分証番号の末尾6桁とされています。安全のため、初期パスワードは速やかに変更してください。",
+        "homepageAlt": "大学ホームページの学内ログイン入口",
+        "lookupAlt": "統一認証システムのアカウント照会入口",
+        "resultAlt": "学内アカウント照会結果の例"
+      }
+    }
   },
   "appearance": {
     "title": "インターフェースと外観",
@@ -353,6 +413,20 @@
       "voiceMessage": "音声メッセージ",
       "empty": "投稿はまだありません",
       "loadMore": "もっと読み込む"
+    },
+    "detail": {
+      "title": "投稿詳細",
+      "audioLoadFailed": "音声の読み込みに失敗しました。しばらくしてから再試行してください",
+      "audioLoading": "音声を読み込み中...",
+      "audioPause": "タップで一時停止",
+      "audioResume": "タップで再生再開",
+      "audioPlay": "タップで音声を再生",
+      "audioUnsupported": "このブラウザでは音声を再生できません",
+      "commentEmpty": "コメントを入力してください",
+      "commentTooLong": "コメントは{max}文字以内にしてください",
+      "floor": "{n}番",
+      "notFound": "この投稿は存在しないか、削除されました",
+      "commentPlaceholder": "匿名コメント"
     }
   },
   "marketplace": {
@@ -385,7 +459,98 @@
         "relist": "再出品しました"
       },
       "soldHint": "販売済みの商品は編集や再出品ができません"
-    }
+    },
+    "category": {
+      "appliance": "家電",
+      "books": "書籍・教材",
+      "clothing": "衣類・小物",
+      "computer": "PC",
+      "digital": "デジタル",
+      "digitalAccessory": "デジタル小物",
+      "life": "生活・娯楽",
+      "other": "その他",
+      "phone": "スマートフォン",
+      "rental": "レンタル",
+      "sports": "スポーツ",
+      "vehicle": "キャンパス移動"
+    },
+    "categoryTitle": "カテゴリ",
+    "detail": {
+      "call": "電話",
+      "copyFailed": "コピーに失敗しました。手動でコピーしてください",
+      "copyQQ": "QQをコピー",
+      "description": "商品説明：",
+      "imageAlt": "商品画像{index}",
+      "itemNotFound": "商品が存在しません",
+      "loadFailed": "読み込みに失敗しました。しばらくしてから再試行してください",
+      "loadFailedOrMissing": "読み込み失敗、または商品が存在しません",
+      "location": "取引場所：",
+      "phone": "携帯：",
+      "publishTime": "投稿日時：",
+      "publisher": "出品者：",
+      "qq": "QQ：",
+      "qqCopied": "QQ番号をコピーしました",
+      "riskHint": "ネット取引にはリスクがあります。取引前に必ず確認してください",
+      "sms": "SMS",
+      "title": "商品詳細"
+    },
+    "emptyByCategory": "このカテゴリの商品はありません",
+    "publish": {
+      "descriptionRequired": "商品説明を入力してください",
+      "editTitle": "中古商品を編集",
+      "error": {
+        "description": "商品説明は必須です",
+        "location": "取引場所は必須です",
+        "name": "商品名は必須です",
+        "price": "価格が正しくありません",
+        "qq": "QQ番号は必須です",
+        "type": "カテゴリが未選択です"
+      },
+      "field": {
+        "description": "商品説明",
+        "location": "取引場所",
+        "name": "商品名",
+        "phone": "携帯番号",
+        "price": "価格",
+        "qq": "QQ番号",
+        "type": "カテゴリ"
+      },
+      "finish": "完了",
+      "formInvalid": "フォーム内容を確認してください",
+      "imageEditUnsupported": "編集モードでは商品画像の変更に対応していません",
+      "imageLimit": "画像は最大4枚まで選択できます",
+      "imageLimitHint": "最大4枚までアップロード可",
+      "imageTooLarge": "画像は5MB以下にしてください",
+      "invalidImageType": "画像形式が正しくありません",
+      "itemNotFound": "編集する商品が見つかりません",
+      "loading": "商品情報を読み込み中...",
+      "locationRequired": "取引場所を入力してください",
+      "nameRequired": "商品名を入力してください",
+      "placeholder": {
+        "description": "用途・状態などを記入",
+        "name": "最大25文字",
+        "phone": "任意",
+        "price": "9999.99元以下"
+      },
+      "priceInvalid": "有効な価格（0〜9999.99元）を入力してください",
+      "publishSuccess": "投稿しました",
+      "qqRequired": "QQ番号を入力してください",
+      "saving": "保存中...",
+      "selectImageRequired": "画像を1枚以上選択してください",
+      "submitting": "送信中",
+      "title": "中古商品を投稿",
+      "typePickerTitle": "カテゴリを選択",
+      "typeRequired": "商品カテゴリを選択してください",
+      "uploading": "アップロード中...",
+      "safetyHint": "違法・規則違反の物品、危険物、身分証の原本、アカウント認証情報、権利侵害・海賊版コンテンツは出品しないでください。電話番号、WeChat ID、住所などの公開には注意し、商品の状態・価格・対面取引のリスクはご自身で確認してください。"
+    },
+    "searchAction": "検索",
+    "searchEmpty": "該当する商品が見つかりません",
+    "searchPlaceholder": "検索してみる",
+    "searchPrompt": "キーワードを入力して検索",
+    "searchRequired": "検索キーワードを入力してください",
+    "searchTitle": "検索結果",
+    "title": "フリマ"
   },
   "lostandfound": {
     "profile": {
@@ -411,7 +576,90 @@
       "success": {
         "didFound": "解決済みにしました"
       }
-    }
+    },
+    "badge": {
+      "found": "拾得",
+      "lost": "紛失"
+    },
+    "detail": {
+      "call": "電話",
+      "contact": "連絡先：",
+      "copyQQ": "QQをコピー",
+      "copyWechat": "WeChatをコピー",
+      "description": "物品説明：",
+      "foundLocation": "拾得場所：",
+      "imageAlt": "物品画像{index}",
+      "lostLocation": "紛失場所：",
+      "phone": "携帯：",
+      "publishTime": "投稿日時：",
+      "publisher": "投稿者：",
+      "qq": "QQ：",
+      "sms": "SMS",
+      "title": "詳細",
+      "wechat": "WeChat："
+    },
+    "emptyFound": "拾得情報はありません",
+    "emptyLost": "紛失情報はありません",
+    "itemType": {
+      "bag": "かばん",
+      "bankCard": "銀行カード",
+      "book": "本",
+      "campusCard": "キャンパスカード",
+      "clothing": "衣類・帽子",
+      "digitalAccessory": "デジタル小物",
+      "idCard": "身分証",
+      "key": "鍵",
+      "other": "その他",
+      "phone": "スマートフォン",
+      "sports": "スポーツ",
+      "vehicle": "キャンパス移動"
+    },
+    "publish": {
+      "contactRequired": "連絡先を1つ以上入力してください",
+      "contactTip": "QQ／WeChat／電話のいずれか1つで可",
+      "descRequired": "物品説明を入力してください",
+      "descTooLong": "説明は100文字以内にしてください",
+      "editTitle": "情報を編集",
+      "field": {
+        "desc": "物品説明",
+        "title": "物品名"
+      },
+      "finish": "完了",
+      "foundLocation": "拾得場所",
+      "imageEditUnsupported": "編集モードでは画像変更に対応していません",
+      "imageLimit": "画像は最大4枚まで",
+      "imageLimitHint": "最大4枚までアップロード可",
+      "imageRequired": "画像を1枚以上アップロードしてください",
+      "imageTooLarge": "画像は5MB以下にしてください",
+      "invalidImageType": "画像ファイルのみアップロードできます",
+      "itemNotFound": "編集対象が見つかりません",
+      "itemTypePickerTitle": "カテゴリを選択",
+      "itemTypeRequired": "カテゴリを選択してください",
+      "itemTypeTitle": "物品カテゴリ",
+      "loading": "情報を読み込み中...",
+      "locationRequired": "場所を入力してください",
+      "locationTooLong": "場所は30文字以内にしてください",
+      "lostLocation": "紛失場所",
+      "modeFoundOwner": "持主を探す",
+      "modeTitle": "投稿タイプ",
+      "placeholder": {
+        "title": "最大25文字"
+      },
+      "previewAlt": "プレビュー",
+      "publishSuccess": "投稿しました",
+      "saving": "保存中...",
+      "submitting": "送信中",
+      "title": "情報を投稿",
+      "titleRequired": "物品名を入力してください",
+      "titleTooLong": "物品名は25文字以内にしてください",
+      "uploading": "アップロード中...",
+      "privacyHint": "身分証・学生証・写真・連絡先などは、できるだけマスキングし、公開は必要最小限にしてください。身分証番号や電話番号の全桁、QRコード全体、なりすまして受け取るために悪用される情報は公開しないでください。"
+    },
+    "tab": {
+      "found": "拾得物",
+      "lost": "紛失物"
+    },
+    "title": "落とし物・拾得"
   },
   "locationPicker": {
     "title": "地域を選択",
@@ -430,7 +678,16 @@
     "fillAllFields": "すべての項目を入力してください！",
     "wish": "2019年大学院受験生の合格をお祈りします",
     "altEntry": "代替照会ポータル",
-    "chsiLink": "CHSI修士初試成績照会"
+    "chsiLink": "CHSI修士初試成績照会",
+    "totalScore": "初試合計点",
+    "politics": "思想政治理論",
+    "foreignLanguage": "外国語",
+    "business1": "専門科目一",
+    "business2": "専門科目二",
+    "reQuery": "再照会",
+    "emptyTitle": "成績データがありません",
+    "emptyDescription": "該当する受験生の成績が見つかりませんでした。氏名・受験番号・証明書番号を確認してから再照会してください。",
+    "emptyAction": "戻って再照会"
   },
   "social": {
     "chooseImage": "画像を選択",
@@ -493,6 +750,891 @@
     "policyMutual": "相互フォロー",
     "policyMutualDesc": "相互フォローの友達のみ（既定）",
     "policyNone": "受信しない",
-    "policyNoneDesc": "DMを受け取りません（送信は可能）"
+    "policyNoneDesc": "DMを受け取りません（送信は可能）",
+    "backToPrivacySettings": "プライバシー設定に戻る"
+  },
+  "avatarEdit": {
+    "change": "アバターを変更",
+    "crop": "アバターを切り抜く",
+    "cropFailed": "切り抜きに失敗しました",
+    "currentAvatar": "現在のアバター",
+    "delete": "アバターを削除",
+    "deleteConfirm": "アバターを削除してデフォルトに戻しますか？",
+    "deleteFailed": "アバターの削除に失敗しました。しばらくしてから再試行してください",
+    "deleteSuccess": "デフォルトのアバターに戻しました",
+    "deleting": "アバターを削除しています...",
+    "title": "プロフィール画像",
+    "updateSuccess": "アバターを更新しました",
+    "uploading": "アバターをアップロードしています...",
+    "privacyHint": "アバターや画像をアップロードする前に、不要な顔、位置情報、身分証、学生証、連絡先、その他の機微な情報が含まれていないことをご自身で確認してください。"
+  },
+  "bindEmail": {
+    "bindFailed": "連携に失敗しました。しばらくしてから再試行してください",
+    "bindNow": "今すぐ連携",
+    "bindSuccess": "連携しました",
+    "binding": "連携中...",
+    "boundDescription": "連携中のメール：{email}",
+    "boundTitle": "メール連携済み",
+    "code": "認証コード",
+    "codePlaceholder": "メール認証コードを入力",
+    "codeRequired": "認証コードを入力してください",
+    "codeSent": "認証コードを送信しました。メールを確認してください",
+    "confirm": "連携を確定",
+    "confirmUnbind": "連携解除を確定",
+    "edit": "メールを変更",
+    "editDescription": "新しいメールアドレスを入力して連携を更新してください。",
+    "email": "メール",
+    "emailPlaceholder": "メールアドレスを入力",
+    "getCode": "コードを取得",
+    "invalidEmail": "メール形式が正しくありません",
+    "newEmailPlaceholder": "新しいメールアドレスを入力",
+    "retryIn": "{seconds}秒後に再試行",
+    "sendFailed": "認証コードの送信に失敗しました。しばらくしてから再試行してください",
+    "unbind": "連携を解除",
+    "unbindConfirm": "このメールの連携を解除しますか？解除後はアカウント復旧に使えません。",
+    "unbindSuccess": "連携を解除しました",
+    "unboundDescription": "メールが未連携です。連携すると重要なお知らせを受け取れます。",
+    "unboundTitle": "メール未連携"
+  },
+  "card": {
+    "action": {
+      "info": {
+        "badge": "情報",
+        "description": "キャンパスカードの残高・状態・紛失状況を確認し、オンラインで紛失届けできます",
+        "title": "基本情報"
+      },
+      "records": {
+        "badge": "利用履歴",
+        "description": "日付を指定してキャンパスカードの当日利用明細を照会",
+        "title": "利用明細"
+      }
+    },
+    "amountUnit": " 元",
+    "description": "残高照会、利用履歴、紛失届けができます。",
+    "info": {
+      "balanceTitle": "キャンパスカード残高",
+      "basicInfoTitle": "基本情報",
+      "dialogDescription": "照会パスワードを入力して認証してください",
+      "dialogPlaceholder": "キャンパスカード照会パスワード",
+      "dialogTitle": "紛失届けの認証",
+      "field": {
+        "cardNumber": "キャンパスカード番号",
+        "freezeState": "凍結状態",
+        "lostState": "紛失状態",
+        "name": "氏名",
+        "number": "学籍番号"
+      },
+      "interimBalance": "仮残高: ",
+      "passwordDigitsOnly": "パスワードは数字のみ使用できます",
+      "passwordRequired": "パスワードを入力してください",
+      "reportPromptLink": "キャンパスカード紛失届",
+      "reportPromptPrefix": "カードを紛失しましたか？",
+      "reportSuccess": "紛失届けが完了しました",
+      "reportedState": "紛失届け済み",
+      "statusTitle": "カード状態",
+      "submitting": "送信中",
+      "title": "キャンパスカード情報"
+    },
+    "list": {
+      "empty": "この日の利用履歴はありません",
+      "invalidDate": "日付形式が正しくありません。選び直してください",
+      "queryDate": "照会日：",
+      "retry": "再照会",
+      "unknownMerchant": "不明な店舗"
+    },
+    "search": {
+      "dateLabel": "照会日",
+      "datePlaceholder": "日付を選択",
+      "dateRequired": "照会日を選択してください",
+      "description": "日付を選んで当日のキャンパスカード明細を照会",
+      "submit": "照会"
+    },
+    "title": "キャンパスカード"
+  },
+  "cetPage": {
+    "captchaLabel": "認証コード",
+    "captchaPlaceholder": "認証コードを入力",
+    "captchaRequired": "認証コードを入力してください",
+    "examNumberLabel": "受験番号",
+    "examNumberPlaceholder": "15桁の受験番号を入力",
+    "fallbackChsi": "学信网 CET 成績照会",
+    "fallbackNeea": "中国教育考试网で照会",
+    "fallbackTitle": "予備照会リンク",
+    "importButton": "受験番号を取り込む",
+    "importLoading": "取り込み中",
+    "invalidNumber": "受験番号は15桁である必要があります",
+    "missingFields": "受験番号と氏名を入力してください",
+    "nameLabel": "氏名",
+    "namePlaceholder": "3文字を超える場合は先頭3文字で可",
+    "noSavedNumber": "保存された受験番号がありません",
+    "queryLoading": "照会中...",
+    "refreshCaptcha": "タップして取得",
+    "saveFailed": "保存に失敗しました",
+    "savePromptLink": "受験番号を保存",
+    "savePromptPrefix": "受験番号を忘れそう？タップして",
+    "saveSuccess": "保存しました",
+    "saveTitle": "受験番号を保存",
+    "saving": "保存中...",
+    "submit": "照会",
+    "title": "CET 成績照会",
+    "resultTitle": "照会結果",
+    "resultDisclaimer": "成績は参考情報です。正式な成績通知を優先してください。",
+    "totalScore": "試験合計点",
+    "listeningScore": "リスニング",
+    "readingScore": "リーディング",
+    "writingScore": "作文・翻訳",
+    "reQuery": "再照会",
+    "backHome": "ホームに戻る"
+  },
+  "commandPalette": {
+    "academicGroup": "学務サービス",
+    "close": "閉じる",
+    "communityGroup": "コミュニティ",
+    "empty": "一致する機能がありません",
+    "navigate": "移動",
+    "open": "開く",
+    "searchPlaceholder": "機能を検索..."
+  },
+  "communityCommon": {
+    "gender": {
+      "female": "女性",
+      "male": "男性",
+      "secret": "その他／非公開"
+    },
+    "loading": "読み込み中",
+    "noMore": "これ以上ありません",
+    "pullToRefresh": "下に引いて更新",
+    "refreshing": "更新中...",
+    "releaseToRefresh": "離して更新",
+    "select": "選択してください",
+    "loadFailed": "読み込みに失敗しました。しばらくしてからもう一度お試しください"
+  },
+  "dataSource": {
+    "mock": "Mock データソース",
+    "remote": "リモートデータソース"
+  },
+  "deleteAccount": {
+    "agreement": "上記の注销に関する内容を読み、同意しました",
+    "confirm": "アカウントを削除",
+    "deleting": "削除中...",
+    "finalConfirmAction": "完全に削除",
+    "finalConfirmDescription": "この操作は取り消せません。アカウントを完全に削除しますか？",
+    "finalConfirmTitle": "最終確認",
+    "irreversible": "削除は取り消せません。慎重に操作してください。",
+    "risk": {
+      "academic": "カスタム時間割と保存した CET 受験番号が削除されます",
+      "account": "アカウントと個人プロフィールがすべて消去されます",
+      "community": "コミュニティのユーザーデータと取引記録が消去されます",
+      "identity": "連携した電話番号・メールなどの本人情報が削除されます",
+      "interactions": "コメント・いいねなどのやり取り記録が削除されます",
+      "posts": "告白板・トピック・おつかいなどの投稿が永久に削除されます"
+    },
+    "riskTitle": "削除後、以下の情報は永久に失われ復元できません：",
+    "success": "アカウントを削除しました",
+    "warningTitle": "GdeiAssistant アカウントを削除します"
+  },
+  "delivery": {
+    "deliveryBadge": "届",
+    "detail": {
+      "acceptAction": "今すぐ受注",
+      "acceptSuccess": "受注しました！",
+      "accepting": "受注中...",
+      "completeAction": "完了を確認",
+      "completeConfirmMessage": "この依頼を完了しますか？完了後は取り消せません。",
+      "completeConfirmTitle": "完了の確認",
+      "completeSuccess": "依頼が完了しました！",
+      "completing": "確認中...",
+      "contactPhone": "連絡先：",
+      "descriptionLabel": "備考：",
+      "myRole": "自分の役割：",
+      "pickupCode": "受取コード：",
+      "publishTime": "投稿日時：",
+      "publisherRole": "依頼者",
+      "runnerRole": "受注者",
+      "sizeLabel": "サイズ：",
+      "statusLabel": "ステータス：",
+      "title": "依頼詳細"
+    },
+    "empty": "依頼はまだありません",
+    "mine": {
+      "acceptedTab": "受注した依頼",
+      "emptyAccepted": "受注した依頼はありません",
+      "emptyPublished": "投稿した依頼はありません",
+      "publishedTab": "投稿した依頼",
+      "title": "マイおつかい"
+    },
+    "pickupAddressWithCompany": "{company} で受取",
+    "pickupBadge": "取",
+    "pickupShort": "受取",
+    "publish": {
+      "contactPhone": "連絡先電話",
+      "defaultCompany": "宅配代取",
+      "deliveryAddress": "届先住所",
+      "deliveryPlaceholder": "例：南苑1棟301",
+      "deliveryRequired": "届先住所を入力してください",
+      "deliverySection": "届先情報",
+      "descriptionLabel": "備考（任意）",
+      "descriptionPlaceholder": "補足説明...",
+      "imageTooLarge": "画像は5MB以下にしてください",
+      "invalidImageType": "画像ファイルのみアップロードできます",
+      "itemSection": "物品の説明",
+      "payloadName": "代受取",
+      "phonePlaceholder": "携帯番号を入力",
+      "phoneRequired": "連絡先電話を入力してください",
+      "pickupAddress": "受取場所",
+      "pickupCode": "受取コード／証憑（任意）",
+      "pickupCodePlaceholder": "例：1-2-3456",
+      "pickupImage": "受取証憑画像（任意）",
+      "pickupPlaceholder": "例：菜鸟驿站、南門受取所",
+      "pickupRequired": "受取場所を入力してください",
+      "pickupSection": "受取情報",
+      "publishSuccess": "投稿しました",
+      "rewardInvalid": "有効な謝礼（0.01〜9999.99元）を入力してください",
+      "rewardLabel": "謝礼：",
+      "sizeLabel": "重量／サイズ",
+      "submitAction": "投稿を確定",
+      "submitting": "送信中...",
+      "title": "依頼を投稿",
+      "uploadImage": "画像をアップロード",
+      "privacyHint": "受取コード、住所、電話番号、氏名などは通常、機微な情報です。入力・表示は必要最小限にしてください。違法行為や規則違反を伴う依頼、危険な依頼、貴重品を扱う依頼、または明らかに自分の能力を超える依頼は引き受けないでください。"
+    },
+    "size": {
+      "large": "大（重い物品）",
+      "medium": "中（靴・衣類）",
+      "small": "小（飲食・書類）"
+    },
+    "smallSize": "小",
+    "status": {
+      "completed": "完了",
+      "inTransit": "配送中",
+      "pending": "受注待ち"
+    },
+    "title": "キャンパス配送",
+    "type": {
+      "express": "宅配代取",
+      "food": "食事の購入",
+      "other": "おつかい"
+    },
+    "unknownStatus": "不明"
+  },
+  "electricityFees": {
+    "field": {
+      "name": "氏名",
+      "number": "学籍番号",
+      "year": "年"
+    },
+    "loading": "電気代を照会中...",
+    "placeholder": {
+      "name": "氏名を入力",
+      "number": "学籍番号を入力"
+    },
+    "queryFailed": "照会に失敗しました。しばらくしてから再試行してください",
+    "result": {
+      "averageElectricBill": "一人当たり電気代",
+      "dormitory": "寮",
+      "electricPrice": "電気単価",
+      "feeBasedElectricAmount": "課金対象電力量",
+      "freeElectricAmount": "無料電力量",
+      "peopleNumber": "入居人数",
+      "title": "照会結果",
+      "totalElectricBill": "電気代合計",
+      "usedElectricAmount": "使用電力量",
+      "year": "年"
+    },
+    "retry": "再照会",
+    "submit": "照会開始",
+    "title": "電気代照会",
+    "validation": {
+      "nameRequired": "氏名を入力してください",
+      "numberInvalid": "11桁の学籍番号を入力してください",
+      "numberRequired": "学籍番号を入力してください",
+      "yearInvalid": "年が正しくありません",
+      "yearRequired": "年を選択してください"
+    }
+  },
+  "express": {
+    "bannerTitle": "広東第二師範学院 告白板",
+    "detail": {
+      "commentEmpty": "コメントはまだありません。最初のコメントをどうぞ！",
+      "commentList": "コメント",
+      "commentPlaceholder": "コメントを入力...",
+      "commentRequired": "コメントを入力してください",
+      "commentTooLong": "コメントは50文字以内にしてください",
+      "floor": "{index}階",
+      "me": "自分",
+      "send": "送信",
+      "sending": "送信中...",
+      "title": "告白詳細"
+    },
+    "empty": "告白はまだありません",
+    "guessCorrect": "正解です！",
+    "guessDialogTitle": "名前当て",
+    "guessPlaceholder": "推測する本名を入力：",
+    "guessRequired": "推測する本名を入力してください",
+    "guessUnavailable": "本名が残されていないため、当てられません",
+    "guessWrong": "違います。もう一度！",
+    "justNow": "たった今",
+    "legend": "青下線：男性／赤下線：女性／黒下線：その他・非公開",
+    "publish": {
+      "contentPlaceholder": "伝えたいことを書いてください...",
+      "contentRequired": "告白内容を入力してください",
+      "contentTitle": "告白内容",
+      "contentTooLong": "告白内容は250文字以内にしてください",
+      "gender": "性別",
+      "myGenderRequired": "自分の性別を選択してください",
+      "myInfo": "あなたの情報",
+      "nicknamePlaceholder": "ニックネームを入力",
+      "nicknameRequired": "ニックネームを入力してください",
+      "nicknameTooLong": "ニックネームは10文字以内にしてください",
+      "publishSuccess": "投稿しました",
+      "publishing": "投稿中...",
+      "realName": "本名",
+      "realNamePlaceholder": "本名を入力",
+      "realNameTip": "本名は任意で、既定では非公開です。入力すると名前当てゲームに参加できます。",
+      "realNameTooLong": "本名は10文字以内にしてください",
+      "receiverGenderRequired": "相手の性別を選択してください",
+      "receiverNamePlaceholder": "相手の名前を入力",
+      "receiverNameRequired": "相手の名前を入力してください",
+      "receiverNameTooLong": "相手の名前は10文字以内にしてください",
+      "submitAction": "告白を投稿",
+      "submitting": "送信中...",
+      "targetInfo": "相手の情報",
+      "targetName": "名前",
+      "title": "告白を投稿"
+    },
+    "searchAction": "検索",
+    "searchEmpty": "該当する告白が見つかりません",
+    "searchPlaceholder": "送信者／相手／内容で検索",
+    "searchPrompt": "キーワードを入力して検索",
+    "searchRequired": "検索キーワードを入力してください",
+    "searchTitle": "告白を検索",
+    "title": "告白板"
+  },
+  "feature": {
+    "card": {
+      "description": "残高照会・利用履歴・紛失届け",
+      "name": "キャンパスカード"
+    },
+    "cet": {
+      "description": "受験番号と認証コードで CET 成績を照会",
+      "name": "CET 成績照会"
+    },
+    "collection": {
+      "description": "蔵書検索・貸出・延長",
+      "name": "図書館"
+    },
+    "data": {
+      "description": "電気代や校内の常用番号を照会",
+      "name": "データ照会"
+    },
+    "dating": {
+      "description": "ルームメイトを世界に紹介",
+      "name": "ルームメイト紹介"
+    },
+    "delivery": {
+      "description": "おつかい依頼・宅配代取",
+      "name": "キャンパス配送"
+    },
+    "ershou": {
+      "description": "校内で中古品を譲渡・面渡し",
+      "name": "フリマ"
+    },
+    "evaluate": {
+      "description": "授業評価はこちら",
+      "name": "授業評価"
+    },
+    "express": {
+      "description": "気持ちを素直に伝えよう",
+      "name": "告白板"
+    },
+    "grade": {
+      "description": "学期ごとの成績・GPA を照会",
+      "name": "成績照会"
+    },
+    "kaoyan": {
+      "description": "大学院入試の成績などを照会",
+      "name": "大学院入試照会"
+    },
+    "lostandfound": {
+      "description": "落とし物・拾得物の情報",
+      "name": "落とし物・拾得"
+    },
+    "pe": {
+      "description": "体力測定の成績を確認",
+      "name": "体力測定照会"
+    },
+    "photograph": {
+      "description": "キャンパスの瞬間を記録",
+      "name": "キャンパスフォト"
+    },
+    "schedule": {
+      "description": "今週の授業が一目でわかる",
+      "name": "時間割"
+    },
+    "secret": {
+      "description": "匿名で心の内を共有",
+      "name": "キャンパス樹洞"
+    },
+    "spare": {
+      "description": "今空いている教室を探す",
+      "name": "空き教室"
+    },
+    "topic": {
+      "description": "話題・キャンパス情報",
+      "name": "トピック"
+    }
+  },
+  "featureManage": {
+    "description": "ホームに表示する機能モジュール（オフにすると非表示）",
+    "saved": "保存しました。ホームに反映されます"
+  },
+  "feedback": {
+    "faq": {
+      "cache": {
+        "content": "教务データキャッシュは、許可いただいたうえで大学教务システムから成績・時間割を定期同期し、照会速度と安定性を高めます。教务表示のみに使用し外部には提供しません。プライバシー設定でいつでもオフにできます。",
+        "title": "教务データキャッシュとは？安全ですか？"
+      },
+      "delete": {
+        "content": "マイページの「アカウント削除」から申請できます。パスワード確認と削除条件を満たす必要があります。自助削除できない場合は、ここからチケットを送るか support{'@'}gdeiassistant.cn までメールしてください。",
+        "title": "アカウントを削除するには？"
+      },
+      "login": {
+        "content": "ユーザー名とパスワードはキャンパスネットワーク／教务システムと同じです。不明な場合は「アプリについて › キャンパスネットアカウント説明」をご覧ください。",
+        "title": "ログインのユーザー名とパスワードは？"
+      },
+      "moreHelpPrefix": "上記で解決しませんか？",
+      "moreHelpSuffix": "タブでご質問・ご提案をお送りください。",
+      "password": {
+        "content": "大学統一認証システムでパスワードを変更してください。変更後 GdeiAssistant に再ログインすると同期されます。本アプリはログインパスワードを別途保存しません。",
+        "title": "アプリでパスワードを変更できますか？"
+      },
+      "schedule": {
+        "content": "教务照会は大学公式サイト・教务システムの安定性に依存します。メンテナンス中は一時的にエラーになることがあり、通常24時間以内に回復します。長期間続く場合は本ページからフィードバックを送信してください。",
+        "title": "成績／時間割照会でシステム異常と出る理由は？"
+      }
+    },
+    "form": {
+      "addImage": "画像を追加",
+      "contactPlaceholder": "QQ／WeChat／電話（任意・連絡用）",
+      "contactTitle": "連絡先（任意）",
+      "contentPlaceholder": "問題や提案を詳しく記入してください...",
+      "contentRequired": "フィードバック内容を入力してください",
+      "contentTitle": "フィードバック内容",
+      "screenshotLimit": "（任意、最大 {count} 枚）",
+      "screenshotPreview": "スクリーンショットプレビュー",
+      "screenshotTitle": "スクリーンショット",
+      "submit": "フィードバックを送信",
+      "submitSuccess": "送信しました",
+      "submitting": "送信中...",
+      "typeTitle": "フィードバック種別"
+    },
+    "tab": {
+      "faq": "よくある質問",
+      "form": "意見・フィードバック"
+    },
+    "title": "ヘルプとフィードバック",
+    "type": {
+      "account": "アカウント連携・管理・削除",
+      "appError": "アプリ機能の異常",
+      "crash": "クラッシュ・カクつき・レイアウト崩れ",
+      "login": "ログイン・パスワード",
+      "other": "その他",
+      "profile": "プロフィール・プライバシー",
+      "verification": "実名認証・電話連携"
+    }
+  },
+  "libraryPage": {
+    "borrow": {
+      "author": "著者",
+      "bookName": "書名",
+      "borrowDate": "貸出日",
+      "empty": "貸出記録がありません",
+      "initialHint": "図書館パスワードを入力してから貸出記録を照会",
+      "intro": "図書館パスワードで貸出記録を表示。延長時も再認証します。",
+      "mockPassword": "デモ用パスワード：123456",
+      "passwordLabel": "図書館パスワード",
+      "passwordPlaceholder": "図書館パスワードを入力",
+      "passwordRequired": "図書館パスワードを入力してください",
+      "query": "貸出記録を照会",
+      "recordsTitle": "貸出記録",
+      "refresh": "貸出記録を更新",
+      "renew": "延長",
+      "renewCount": "延長回数",
+      "renewDialogDescription": "延長のため図書館パスワードを入力してください",
+      "renewDialogPlaceholder": "図書館パスワード",
+      "renewDialogTitle": "図書の延長",
+      "renewLoading": "延長中...",
+      "renewSuccess": "延長しました",
+      "returnDate": "返却期限",
+      "title": "マイ貸出"
+    },
+    "detail": {
+      "author": "著者",
+      "empty": "詳細がありません",
+      "principal": "書名／責任表示",
+      "publisher": "出版社",
+      "title": "蔵書詳細",
+      "emptyDescription": "この本の所蔵詳細が見つかりません。前の画面で選び直すか、しばらくしてからご確認ください。"
+    },
+    "heroBadge": "図書館",
+    "heroDescription": "蔵書を検索し、現在の貸出を管理できます。",
+    "heroTitle": "図書館",
+    "home": {
+      "borrowBadge": "貸出",
+      "borrowDescription": "図書館パスワードで貸出記録の確認・延長",
+      "borrowTitle": "マイ貸出",
+      "searchBadge": "検索",
+      "searchDescription": "書名・著者・出版社で蔵書検索",
+      "searchTitle": "蔵書検索"
+    },
+    "list": {
+      "author": "著者: ",
+      "description": "図書館蔵書検索結果",
+      "empty": "該当する蔵書がありません",
+      "nextPage": "次へ",
+      "pageText": "{page} ページ",
+      "prevPage": "前へ",
+      "publisher": "出版社: ",
+      "resultTitle": "検索結果",
+      "title": "蔵書検索"
+    },
+    "search": {
+      "description": "書名・著者・出版社で蔵書を検索",
+      "keywordLabel": "キーワード",
+      "keywordPlaceholder": "書名・著者などを入力",
+      "keywordRequired": "検索キーワードを入力してください",
+      "submit": "照会",
+      "title": "蔵書検索"
+    },
+    "title": "図書館"
+  },
+  "loginPage": {
+    "accountHelpLink": "「キャンパスネットアカウント説明」",
+    "accountHelpPrefix": "ログインアカウントについては",
+    "agreementLink": "「利用規約」",
+    "agreementPrefix": "ご利用前に必ずお読みください",
+    "and": " と ",
+    "autoFilledSuffix": "（自動入力済み）",
+    "campusConsentLabel": "キャンパスアカウントの認証情報が、キャンパス本人確認・クイック認証・キャンパスデータ照会および学校システムとの必要なセッション同期のために必要な範囲で処理されることに、別途同意します。アカウント設定またはフィードバックからクイック認証の停止・同意撤回・保存済みログイン情報の削除ができ、停止・削除後は一部のキャンパス照会・クイック認証が使えなくなる場合があることを理解します。",
+    "campusConsentRequired": "ログイン前にキャンパス認証情報の処理への同意が必要です",
+    "failed": "ログインに失敗しました",
+    "incompleteFields": "必要項目をすべて入力してください",
+    "loading": "ログイン中...",
+    "mockActive": "オン",
+    "mockMode": "ローカルデモデータ",
+    "otherLogin": "その他のログイン方法",
+    "passwordLabel": "パスワード",
+    "passwordPlaceholder": "キャンパスネットのパスワードを入力",
+    "privacyLink": "「プライバシーポリシー」",
+    "submit": "ログイン",
+    "subtitle": "キャンパスネットワークにログイン",
+    "thirdPartyUnavailable": "このログイン方法はまだ利用できません",
+    "title": "GdeiAssistant",
+    "usernameLabel": "アカウント",
+    "usernamePlaceholder": "キャンパスネットのアカウントを入力",
+    "credentialNotice": "キャンパス認証情報は、キャンパス認証・クイック認証・セッション同期に使われる場合があります。本人のアカウントのみを使用してください。保存を拒否したり、設定やフィードバックから削除したりすると、一部の照会やクイック認証が使えなくなることがあります。",
+    "visualIntro": "時間割、キャンパスカード、お知らせ、キャンパスライフをひとつのすっきりした入口にまとめます。"
+  },
+  "loginRecord": {
+    "clientDevice": "{network} クライアント",
+    "empty": "ログイン履歴がありません",
+    "success": "ログイン成功",
+    "unknownDevice": "不明なデバイス"
+  },
+  "news": {
+    "defaultTitle": "ニュース",
+    "detail": {
+      "attachments": "添付リンク",
+      "empty": "詳細内容がありません",
+      "loadFailed": "ニュース詳細の読み込みに失敗しました。しばらくしてから再試行してください",
+      "loading": "ニュース詳細を読み込み中",
+      "noDate": "—",
+      "notFound": "該当するニュースが見つかりません",
+      "openSource": "原文リンクを開く"
+    },
+    "empty": "ニュースがありません",
+    "loadFailed": "読み込みに失敗しました。しばらくしてから再試行してください",
+    "noMore": "これ以上データがありません",
+    "openAttachment": "添付を開く",
+    "tab": {
+      "academic": "学術動向",
+      "department": "学部・部門通知",
+      "notice": "お知らせ",
+      "school": "学校ニュース"
+    }
+  },
+  "privacy": {
+    "field": {
+      "age": "年齢を公開",
+      "cache": "教务データをキャッシュ",
+      "enrollment": "入学年を公開",
+      "faculty": "学部を公開",
+      "hometown": "出身地を公開",
+      "introduction": "自己紹介を公開",
+      "location": "国／地域を公開",
+      "major": "専攻を公開",
+      "robots": "検索エンジンにプロフィールへのリンクを許可"
+    },
+    "partialSuccess": "設定は保存しましたが、古いキャッシュの削除に時間がかかる場合があります。"
+  },
+  "realname": {
+    "back": "前のページに戻る",
+    "unavailableDescription": "実名認証は公安データ連携の準備中のため、現在は公開していません。バックエンドと外部検証が整い次第提供します。",
+    "unavailableTitle": "実名認証はまだ利用できません"
+  },
+  "schedule": {
+    "action": {
+      "addCustomCourse": "カスタム授業を追加",
+      "manageCache": "教务キャッシュを管理",
+      "refresh": "時間割を更新"
+    },
+    "addDialog": {
+      "dayOfWeek": "曜日",
+      "location": "教室",
+      "locationPlaceholder": "教室を入力",
+      "maxWeek": "終了週",
+      "minWeek": "開始週",
+      "name": "科目名",
+      "namePlaceholder": "科目名を入力",
+      "scheduleLength": "コマ数",
+      "startSection": "開始コマ",
+      "submit": "授業を保存",
+      "submitting": "保存中...",
+      "title": "カスタム授業を追加"
+    },
+    "day": {
+      "friday": "金",
+      "monday": "月",
+      "saturday": "土",
+      "sunday": "日",
+      "thursday": "木",
+      "tuesday": "火",
+      "wednesday": "水"
+    },
+    "detail": {
+      "location": "教室",
+      "name": "科目名",
+      "teacher": "担当教員",
+      "title": "授業詳細",
+      "weekRangeTitle": "開講週"
+    },
+    "empty": "今週の授業はありません",
+    "lengthLabel": "{count} コマ",
+    "message": {
+      "addSuccess": "カスタム授業を追加しました",
+      "deleteConfirm": "このカスタム授業を削除しますか？",
+      "deleteSuccess": "カスタム授業を削除しました",
+      "duplicateCourse": "この時間帯には既に授業があります",
+      "invalidSectionRange": "コマが当日の範囲を超えています",
+      "invalidWeekRange": "終了週は開始週より前にできません",
+      "locationRequired": "教室を入力してください",
+      "nameRequired": "科目名を入力してください",
+      "syncLoading": "時間割を同期中...",
+      "syncSuccess": "時間割を更新しました"
+    },
+    "more": "もっと見る",
+    "noTeacher": "教員情報がありません",
+    "pageTitle": "時間割",
+    "sectionLabel": "第 {section} コマ",
+    "selectWeek": "週を選択",
+    "weekLabel": "第 {week} 週",
+    "weekRange": "第 {start} 週〜第 {end} 週"
+  },
+  "settings": {
+    "section": {
+      "preference": "設定",
+      "security": "アカウントセキュリティ"
+    }
+  },
+  "spare": {
+    "campus": {
+      "correspondence": "通信教育キャンパス",
+      "haizhu": "海珠",
+      "huadu": "花都",
+      "nanhai": "広東軽工南海キャンパス"
+    },
+    "empty": "空き教室データがありません",
+    "field": {
+      "campus": "キャンパス",
+      "period": "時限",
+      "roomType": "教室種別",
+      "seatsMax": "座席数≤",
+      "seatsMin": "座席数≥",
+      "weekType": "単週／双週",
+      "weekday": "曜日"
+    },
+    "option": {
+      "unlimited": "指定なし"
+    },
+    "optional": "任意",
+    "pageTitle": "空き教室照会",
+    "period": {
+      "afternoon": "午後",
+      "allDay": "終日",
+      "daytime": "昼間",
+      "eightNine": "8・9限",
+      "evening": "夜",
+      "fourFive": "4・5限",
+      "morning": "午前",
+      "oneTwo": "1・2限",
+      "sixSeven": "6・7限",
+      "tenToTwelve": "10・11・12限",
+      "three": "3限"
+    },
+    "result": {
+      "campus": "キャンパス",
+      "number": "番号",
+      "seats": "座席",
+      "type": "種別"
+    },
+    "resultList": "空き教室一覧",
+    "resultTitle": "照会結果",
+    "roomType": {
+      "anatomyLab": "解剖実験室",
+      "artClassroom": "美術教室",
+      "artStudio": "画房",
+      "biologyLab": "生物実験室",
+      "bodyTrainingRoom": "形体室",
+      "ceramicRoom": "陶芸室",
+      "chemistryLab": "化学実験室",
+      "computerLab": "コンピュータ専門実習室",
+      "computerRoom": "コンピュータ室",
+      "consultingRoom": "相談室",
+      "danceRoomA": "ダンス室",
+      "danceRoomB": "ダンス室",
+      "educationLab": "教育実験室",
+      "fashionLab": "ファッション実験室",
+      "financialMathLab": "金融数学実験室",
+      "graphicDesignLab": "グラフィック制作実験室",
+      "groupClassroom": "グループ教室",
+      "gymnasticsRoom": "体操室",
+      "integratedPaintingLab": "総合絵画実験室",
+      "languageLab": "語学ラボ",
+      "largeMultimedia": "大型マルチメディア",
+      "majorClassroom": "専門科目教室",
+      "majorLab": "専門実験室",
+      "majorTheoryRoom": "専門理論教室",
+      "mediumMultimedia": "中型マルチメディア(70-100)",
+      "microteachingRoom": "マイクロティーチング室",
+      "modelMakingLab": "模型制作実験室",
+      "montessoriRoom": "モンテッソーリ専用教室",
+      "multimediaRoom": "マルチメディア教室",
+      "musicMajorRoom": "音楽専門教室",
+      "musicPracticeRoom": "練習室（琴房）",
+      "musicRoom": "音楽室",
+      "networkLab": "ネットワーク実験室",
+      "noClassroom": "教室不要の授業",
+      "noNeedClassroom": "教室不要",
+      "photographyLab": "写真実験室",
+      "physicsLab": "物理実験室",
+      "pianoRoomA": "ピアノ室",
+      "pianoRoomB": "ピアノ室",
+      "playground": "運動場",
+      "publicComputerRoom": "公共コンピュータ室",
+      "sculptureRoom": "彫刻室",
+      "smallClassroomUnder70": "小普通教室(<70)",
+      "smallMultimedia": "小型マルチメディア",
+      "smallMultimediaUnder70": "小型マルチメディア(<70)",
+      "smartRecordingRoom": "スマート録画室",
+      "solfeggioRoom": "ソルフェージュ室",
+      "teachingAidRoom": "教具室",
+      "traditionalPaintingRoom": "国画模写室",
+      "trainingRoom": "実習室",
+      "translationRoom": "翻訳室",
+      "unlimited": "指定なし",
+      "vocalRoom": "声楽教室"
+    },
+    "search": "照会",
+    "weekType": {
+      "double": "双",
+      "single": "単"
+    },
+    "weekday": {
+      "friday": "金",
+      "monday": "月",
+      "saturday": "土",
+      "sunday": "日",
+      "thursday": "木",
+      "tuesday": "火",
+      "wednesday": "水"
+    }
+  },
+  "topic": {
+    "anonymousUser": "匿名",
+    "detail": {
+      "defaultTopic": "キャンパストピック",
+      "emptyContent": "内容がありません",
+      "like": "いいね",
+      "liked": "いいね済み",
+      "notFound": "トピックが存在しないか削除されました",
+      "title": "トピック詳細"
+    },
+    "empty": "トピックがありません",
+    "imageAlt": "画像{index}",
+    "publish": {
+      "addImage": "画像を追加",
+      "contentPlaceholder": "内容を入力...",
+      "contentRequired": "内容を入力してください",
+      "contentTooLong": "内容は250文字以内にしてください",
+      "imageLimit": "画像は最大9枚まで",
+      "imageTooLarge": "画像は5MB以下にしてください",
+      "invalidImageType": "画像ファイルのみアップロードできます",
+      "publishSuccess": "投稿しました",
+      "publishing": "投稿中...",
+      "submitAction": "送信",
+      "submitting": "送信中...",
+      "title": "トピックを投稿",
+      "topicPlaceholder": "トピックを入力",
+      "topicRequired": "トピックタグを入力してください",
+      "uploading": "アップロード中..."
+    },
+    "searchAction": "検索",
+    "searchEmpty": "結果がありません",
+    "searchPlaceholder": "トピック・内容を検索...",
+    "searchRequired": "検索するトピックまたは内容を入力してください",
+    "searchTitle": "トピック検索",
+    "searching": "検索中...",
+    "title": "トピック"
+  },
+  "yellowPage": {
+    "title": "電話帳照会"
+  },
+  "community": {
+    "navAriaLabel": "コミュニティナビゲーション",
+    "defaultPublish": "情報を投稿",
+    "noticeFallback": "学内お知らせ",
+    "heroSubtitle": "キャンパスの魅力を見つけ、暮らしをつなぐ",
+    "backHome": "機能ホームに戻る",
+    "railAriaLabel": "キャンパスライフサイドバー",
+    "todayCampus": "今日のキャンパス",
+    "goSee": "見てみる",
+    "myPosts": "自分の投稿",
+    "manage": "管理",
+    "latest": "最新の動向",
+    "safetyTitle": "安全のヒント",
+    "safetyTip": "取引や代理受取は、できるだけ学内で対面確認し、個人情報の漏えいを避けてください。"
+  },
+  "evaluatePage": {
+    "title": "授業評価",
+    "directSubmit": "評価を直接提出する",
+    "submitAction": "ワンタップ評価",
+    "riskNotice": "注意：評価情報を提出したあとは、変更できません。",
+    "confirmMessage": "ワンタップ評価を実行しますか？この操作は取り消せません。",
+    "loading": "自動評価中...",
+    "success": "評価を提出しました！",
+    "error": "評価の提出に失敗しました。しばらくしてから再試行してください"
+  },
+  "navigationAccessibility": {
+    "sidebarNavigation": "サイドナビゲーション",
+    "primaryNavigation": "主要ナビゲーション",
+    "mainNavigation": "メインナビゲーション",
+    "openSidebar": "サイドバーを開く",
+    "closeSidebar": "サイドバーを閉じる",
+    "lightMode": "ライトモードに切り替える",
+    "darkMode": "ダークモードに切り替える"
+  },
+  "pePage": {
+    "wechatRequiredTitle": "WeChatで開いてください",
+    "wechatRequiredDescription": "体力測定の結果照会にはWeChatが必要です。WeChatでコードを読み取るか、WeChat内でこのアプリを検索して開いてください。"
   }
 }

@@ -31,7 +31,8 @@
     "noData": "데이터 없음",
     "loadingRegions": "지역 목록을 불러오는 중입니다. 잠시만 기다려 주세요...",
     "recentUpdate": "최근 업데이트",
-    "back": "뒤로"
+    "back": "뒤로",
+    "unknown": "알 수 없음"
   },
   "grade": {
     "year": {
@@ -145,7 +146,8 @@
     "selectLocation": "거주지를 선택하세요",
     "selectHometown": "고향을 선택하세요",
     "selectFacultyFirst": "먼저 학과를 선택하세요",
-    "language": "언어 / Language"
+    "language": "언어 / Language",
+    "campusCredentialManage": "캠퍼스 자격증명 관리"
   },
   "info": {
     "news": "뉴스",
@@ -188,7 +190,8 @@
     "targetAccepted": "수주",
     "targetComment": "댓글",
     "targetLike": "좋아요",
-    "targetGuess": "이름 맞추기"
+    "targetGuess": "이름 맞추기",
+    "announcementMissing": "공지가 없거나 삭제되었습니다."
   },
   "router": {
     "siteTitle": "광둥제2사범대학교 캠퍼스 어시스턴트"
@@ -231,7 +234,64 @@
     "securityTitle": "보안 안내",
     "privacyPolicyTitle": "개인정보 처리방침",
     "userAgreementTitle": "이용 약관",
-    "chineseOnlyNotice": "이 페이지의 법률 본문은 현재 중국어로만 제공됩니다."
+    "chineseOnlyNotice": "이 페이지의 법률 본문은 현재 중국어로만 제공됩니다.",
+    "account": {
+      "title": "캠퍼스 계정 및 자격 증명 관리",
+      "sectionTitle": "캠퍼스 자격 증명과 빠른 인증 관리",
+      "sectionDesc": "동의 상태, 저장된 자격 증명, 빠른 인증을 확인하세요. 동의 철회나 삭제 후에는 일부 캠퍼스 조회에 다시 로그인이 필요할 수 있습니다.",
+      "statusTitle": "현재 관리 상태",
+      "refresh": "새로고침",
+      "loading": "상태를 불러오는 중...",
+      "consentStatus": "동의 상태",
+      "authorized": "동의함",
+      "unauthorized": "동의 안 함",
+      "savedCredential": "저장된 자격 증명",
+      "yes": "예",
+      "no": "아니요",
+      "quickAuth": "빠른 인증",
+      "enabled": "켜짐",
+      "disabled": "꺼짐",
+      "campusAccount": "캠퍼스 계정",
+      "notProvided": "제공되지 않음",
+      "consentedAt": "동의 시각",
+      "revokedAt": "철회 시각",
+      "none": "없음",
+      "disableQuickAuth": "빠른 인증 끄기",
+      "enableQuickAuth": "빠른 인증 켜기",
+      "quickAuthHint": "유효한 동의와 재사용 가능한 캠퍼스 자격 증명이 있어야 빠른 인증을 다시 켤 수 있습니다.",
+      "dangerTitle": "위험 작업",
+      "revoke": "동의 철회",
+      "deleteCredential": "저장된 자격 증명 삭제",
+      "feedbackAction": "도움말 및 피드백으로 신청",
+      "privacyAction": "개인정보 처리방침의 자격 증명 안내 보기",
+      "loginRequired": "캠퍼스 자격 증명 관리 상태를 보려면 먼저 로그인해 주세요.",
+      "statusUnavailable": "지금은 캠퍼스 자격 증명 관리 상태를 가져올 수 없습니다. 먼저 '도움말 및 피드백'으로 신청해 주세요.",
+      "revokeSuccess": "캠퍼스 자격 증명 동의를 철회했습니다",
+      "deleteSuccess": "저장된 캠퍼스 자격 증명을 삭제했습니다",
+      "quickAuthOnSuccess": "빠른 인증을 켰습니다",
+      "quickAuthOffSuccess": "빠른 인증을 껐습니다",
+      "revokeDescription": "동의를 철회하면 저장된 캠퍼스 자격 증명도 함께 삭제됩니다. 이후 관련 기능은 다시 로그인하거나 재동의가 필요할 수 있습니다.",
+      "deleteDescription": "삭제 후 시간표, 성적, 캠퍼스 카드, 도서관 등 조회에 다시 로그인이 필요할 수 있습니다. 저장된 자격 증명과 빠른 인증 상태도 함께 지워집니다.",
+      "revokeTitle": "캠퍼스 자격 증명 동의 철회",
+      "deleteTitle": "저장된 캠퍼스 자격 증명 삭제",
+      "guide": {
+        "title": "GDEI Assistant 교내 네트워크 계정 안내",
+        "updated": "업데이트: 2022년 6월 28일",
+        "welcome": "광둥 제2사범학원 학생 여러분, 캠퍼스 어시스턴트에 오신 것을 환영합니다.",
+        "firstUse": "신입생이거나 처음 이용한다면 먼저 이 안내를 읽어 주세요.",
+        "login": "교내 네트워크 사용자 이름과 비밀번호로 로그인하세요.",
+        "usernameHint": "사용자 이름은 학번과 다릅니다.",
+        "activation": "신입생 계정은 네트워크 센터에서 활성화하는 데 보통 약 일주일이 걸립니다. 로그인할 수 없다면 활성화를 기다려 주세요.",
+        "steps": "교내 네트워크 계정 조회 방법:",
+        "homepage": "학교 홈페이지 www.gdei.edu.cn을 열고 오른쪽 탐색 메뉴의 “内网登录”(교내 로그인)을 선택하세요.",
+        "lookup": "통합 인증 시스템에서 “查询账号”(계정 조회)를 선택하세요.",
+        "result": "이름, 학번 또는 교직원 번호, 신분증 번호와 인증 코드를 정확히 입력하면 계정 정보가 표시됩니다.",
+        "passwordHint": "표시된 사용자 이름으로 이 시스템에 로그인하세요. 원래 안내에 따르면 2015년 이후 입학생의 초기 비밀번호는 신분증 번호의 마지막 여섯 자리입니다. 계정 보호를 위해 초기 비밀번호를 빠르게 변경하세요.",
+        "homepageAlt": "학교 홈페이지의 교내 로그인 메뉴",
+        "lookupAlt": "통합 인증 시스템의 계정 조회 메뉴",
+        "resultAlt": "교내 계정 조회 결과 예시"
+      }
+    }
   },
   "appearance": {
     "title": "인터페이스 및 외관",
@@ -353,6 +413,20 @@
       "voiceMessage": "음성 메시지",
       "empty": "아직 게시물이 없습니다",
       "loadMore": "더 불러오기"
+    },
+    "detail": {
+      "title": "비밀 상세",
+      "audioLoadFailed": "음성을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요",
+      "audioLoading": "음성을 불러오는 중...",
+      "audioPause": "탭하여 일시정지",
+      "audioResume": "탭하여 이어 듣기",
+      "audioPlay": "탭하여 음성 재생",
+      "audioUnsupported": "이 브라우저에서는 음성을 재생할 수 없습니다",
+      "commentEmpty": "댓글 내용을 입력해 주세요",
+      "commentTooLong": "댓글은 {max}자를 넘을 수 없습니다",
+      "floor": "{n}층",
+      "notFound": "비밀 게시물이 없거나 삭제되었습니다",
+      "commentPlaceholder": "익명 댓글"
     }
   },
   "marketplace": {
@@ -385,7 +459,98 @@
         "relist": "다시 올렸습니다"
       },
       "soldHint": "판매 완료된 상품은 수정하거나 다시 올릴 수 없습니다"
-    }
+    },
+    "category": {
+      "appliance": "가전",
+      "books": "도서·교재",
+      "clothing": "의류·잡화",
+      "computer": "컴퓨터",
+      "digital": "디지털",
+      "digitalAccessory": "디지털 액세서리",
+      "life": "생활·오락",
+      "other": "기타",
+      "phone": "휴대폰",
+      "rental": "렌탈",
+      "sports": "운동·피트니스",
+      "vehicle": "캠퍼스 이동수단"
+    },
+    "categoryTitle": "분류",
+    "detail": {
+      "call": "전화",
+      "copyFailed": "복사에 실패했습니다. 직접 복사해 주세요",
+      "copyQQ": "QQ 복사",
+      "description": "상품 설명: ",
+      "imageAlt": "상품 사진 {index}",
+      "itemNotFound": "상품이 존재하지 않습니다",
+      "loadFailed": "불러오기에 실패했습니다. 잠시 후 다시 시도해 주세요",
+      "loadFailedOrMissing": "불러오기 실패 또는 상품 없음",
+      "location": "거래 장소: ",
+      "phone": "휴대폰: ",
+      "publishTime": "게시 시간: ",
+      "publisher": "판매자: ",
+      "qq": "QQ: ",
+      "qqCopied": "QQ 번호가 복사되었습니다",
+      "riskHint": "온라인 거래에는 위험이 있습니다. 거래 전 반드시 확인하세요",
+      "sms": "문자",
+      "title": "상품 상세"
+    },
+    "emptyByCategory": "해당 분류 상품 없음",
+    "publish": {
+      "descriptionRequired": "상품 설명을 입력해 주세요",
+      "editTitle": "중고 상품 수정",
+      "error": {
+        "description": "상품 설명은 필수입니다",
+        "location": "거래 장소는 필수입니다",
+        "name": "상품명은 필수입니다",
+        "price": "가격이 올바르지 않습니다",
+        "qq": "QQ 번호는 필수입니다",
+        "type": "분류가 선택되지 않았습니다"
+      },
+      "field": {
+        "description": "상품 설명",
+        "location": "거래 장소",
+        "name": "상품명",
+        "phone": "휴대폰",
+        "price": "가격",
+        "qq": "QQ",
+        "type": "분류 선택"
+      },
+      "finish": "완료",
+      "formInvalid": "양식 내용을 확인해 주세요",
+      "imageEditUnsupported": "편집 모드에서는 상품 이미지 변경을 지원하지 않습니다",
+      "imageLimit": "이미지는 최대 4장까지 선택할 수 있습니다",
+      "imageLimitHint": "최대 4장까지 업로드 가능",
+      "imageTooLarge": "이미지는 5MB 이하여야 합니다",
+      "invalidImageType": "올바르지 않은 이미지 형식입니다",
+      "itemNotFound": "수정할 상품을 찾을 수 없습니다",
+      "loading": "상품 정보 불러오는 중...",
+      "locationRequired": "거래 장소를 입력해 주세요",
+      "nameRequired": "상품명을 입력해 주세요",
+      "placeholder": {
+        "description": "용도·상태 등을 적어 주세요",
+        "name": "최대 25자",
+        "phone": "선택",
+        "price": "9999.99 이하"
+      },
+      "priceInvalid": "유효한 가격(0~9999.99)을 입력해 주세요",
+      "publishSuccess": "게시되었습니다",
+      "qqRequired": "QQ 번호를 입력해 주세요",
+      "saving": "저장 중...",
+      "selectImageRequired": "이미지를 1장 이상 선택해 주세요",
+      "submitting": "제출 중",
+      "title": "중고 상품 게시",
+      "typePickerTitle": "분류 선택",
+      "typeRequired": "상품 분류를 선택해 주세요",
+      "uploading": "업로드 중...",
+      "safetyHint": "불법·규정 위반 물품, 위험물, 신분증 원본, 계정 인증 정보, 권리 침해·불법 복제 콘텐츠는 게시하지 마세요. 휴대전화 번호, WeChat ID, 주소 등 연락처 공개에 주의하고 상품 상태, 가격 및 대면 거래 위험은 직접 확인하세요."
+    },
+    "searchAction": "검색",
+    "searchEmpty": "관련 상품을 찾지 못했습니다",
+    "searchPlaceholder": "검색해 보세요",
+    "searchPrompt": "키워드를 입력해 검색하세요",
+    "searchRequired": "검색 키워드를 입력해 주세요",
+    "searchTitle": "검색 결과",
+    "title": "중고 거래"
   },
   "lostandfound": {
     "profile": {
@@ -411,7 +576,90 @@
       "success": {
         "didFound": "해결됨으로 표시했습니다"
       }
-    }
+    },
+    "badge": {
+      "found": "습득",
+      "lost": "분실"
+    },
+    "detail": {
+      "call": "전화",
+      "contact": "연락처:",
+      "copyQQ": "QQ 복사",
+      "copyWechat": "WeChat 복사",
+      "description": "물품 설명: ",
+      "foundLocation": "습득 장소: ",
+      "imageAlt": "물품 사진 {index}",
+      "lostLocation": "분실 장소: ",
+      "phone": "휴대폰: ",
+      "publishTime": "게시 시간: ",
+      "publisher": "게시자: ",
+      "qq": "QQ: ",
+      "sms": "문자",
+      "title": "상세",
+      "wechat": "WeChat: "
+    },
+    "emptyFound": "습득 정보 없음",
+    "emptyLost": "분실 정보 없음",
+    "itemType": {
+      "bag": "가방",
+      "bankCard": "은행 카드",
+      "book": "책",
+      "campusCard": "캠퍼스카드",
+      "clothing": "의류·모자",
+      "digitalAccessory": "디지털 액세서리",
+      "idCard": "신분증",
+      "key": "열쇠",
+      "other": "기타",
+      "phone": "휴대폰",
+      "sports": "운동·피트니스",
+      "vehicle": "캠퍼스 이동수단"
+    },
+    "publish": {
+      "contactRequired": "연락처를 하나 이상 입력해 주세요",
+      "contactTip": "QQ/WeChat/전화 중 하나만 입력해도 됩니다",
+      "descRequired": "물품 설명을 입력해 주세요",
+      "descTooLong": "설명은 100자 이내여야 합니다",
+      "editTitle": "정보 수정",
+      "field": {
+        "desc": "물품 설명",
+        "title": "물품명"
+      },
+      "finish": "완료",
+      "foundLocation": "습득 장소",
+      "imageEditUnsupported": "편집 모드에서는 이미지 변경을 지원하지 않습니다",
+      "imageLimit": "이미지는 최대 4장까지",
+      "imageLimitHint": "최대 4장까지 업로드 가능",
+      "imageRequired": "이미지를 1장 이상 업로드해 주세요",
+      "imageTooLarge": "이미지는 5MB 이하여야 합니다",
+      "invalidImageType": "이미지 파일만 업로드할 수 있습니다",
+      "itemNotFound": "수정할 정보를 찾을 수 없습니다",
+      "itemTypePickerTitle": "물품 분류 선택",
+      "itemTypeRequired": "물품 분류를 선택해 주세요",
+      "itemTypeTitle": "물품 분류",
+      "loading": "정보 불러오는 중...",
+      "locationRequired": "장소를 입력해 주세요",
+      "locationTooLong": "장소는 30자 이내여야 합니다",
+      "lostLocation": "분실 장소",
+      "modeFoundOwner": "주인 찾기",
+      "modeTitle": "찾기 유형",
+      "placeholder": {
+        "title": "최대 25자"
+      },
+      "previewAlt": "미리보기",
+      "publishSuccess": "게시되었습니다",
+      "saving": "저장 중...",
+      "submitting": "제출 중",
+      "title": "정보 게시",
+      "titleRequired": "물품명을 입력해 주세요",
+      "titleTooLong": "물품명은 25자 이내여야 합니다",
+      "uploading": "업로드 중...",
+      "privacyHint": "신분증, 학생증, 사진, 연락처 등은 가능한 한 가리거나 필요한 최소한만 공개하세요. 신분증 번호 전체, 휴대전화 번호 전체, 완전한 QR 코드나 허위 수령에 악용될 수 있는 정보는 공개하지 마세요."
+    },
+    "tab": {
+      "found": "습득물",
+      "lost": "분실물"
+    },
+    "title": "분실물 센터"
   },
   "locationPicker": {
     "title": "지역 선택",
@@ -430,7 +678,16 @@
     "fillAllFields": "조회 정보를 모두 입력해 주세요!",
     "wish": "2019 대학원 수험생 여러분의 합격을 기원합니다",
     "altEntry": "대체 조회 포털",
-    "chsiLink": "CHSI 석사 초시 성적 조회"
+    "chsiLink": "CHSI 석사 초시 성적 조회",
+    "totalScore": "초시 총점",
+    "politics": "사상정치이론",
+    "foreignLanguage": "외국어",
+    "business1": "전공과목 1",
+    "business2": "전공과목 2",
+    "reQuery": "다시 조회",
+    "emptyTitle": "성적 데이터 없음",
+    "emptyDescription": "해당 수험생의 성적을 찾지 못했습니다. 이름, 수험번호, 신분증 번호를 확인한 뒤 다시 조회해 주세요.",
+    "emptyAction": "돌아가서 다시 조회"
   },
   "social": {
     "chooseImage": "이미지 선택",
@@ -493,6 +750,891 @@
     "policyMutual": "맞팔 친구",
     "policyMutualDesc": "맞팔 친구만 가능(기본값)",
     "policyNone": "수신 안 함",
-    "policyNoneDesc": "쪽지를 받지 않습니다(보내기는 가능)"
+    "policyNoneDesc": "쪽지를 받지 않습니다(보내기는 가능)",
+    "backToPrivacySettings": "개인정보 설정으로 돌아가기"
+  },
+  "avatarEdit": {
+    "change": "아바타 변경",
+    "crop": "아바타 자르기",
+    "cropFailed": "자르기에 실패했습니다",
+    "currentAvatar": "현재 아바타",
+    "delete": "아바타 삭제",
+    "deleteConfirm": "아바타를 삭제하고 기본값으로 되돌릴까요?",
+    "deleteFailed": "아바타 삭제에 실패했습니다. 잠시 후 다시 시도해 주세요",
+    "deleteSuccess": "기본 아바타로 복원되었습니다",
+    "deleting": "아바타 삭제 중...",
+    "title": "프로필 사진",
+    "updateSuccess": "아바타가 업데이트되었습니다",
+    "uploading": "아바타 업로드 중...",
+    "privacyHint": "프로필 사진이나 이미지를 업로드하기 전에 불필요한 얼굴, 위치, 신분증, 학생증, 연락처 또는 기타 매우 민감한 정보가 포함되지 않았는지 직접 확인하세요."
+  },
+  "bindEmail": {
+    "bindFailed": "연동에 실패했습니다. 잠시 후 다시 시도해 주세요",
+    "bindNow": "지금 연동",
+    "bindSuccess": "연동되었습니다",
+    "binding": "연동 중...",
+    "boundDescription": "연동된 이메일: {email}",
+    "boundTitle": "이메일 연동됨",
+    "code": "인증 코드",
+    "codePlaceholder": "이메일 인증 코드를 입력하세요",
+    "codeRequired": "인증 코드를 입력해 주세요",
+    "codeSent": "인증 코드를 보냈습니다. 메일함을 확인해 주세요",
+    "confirm": "연동 확인",
+    "confirmUnbind": "연동 해제 확인",
+    "edit": "이메일 변경",
+    "editDescription": "새 이메일 주소를 입력해 연동을 업데이트하세요.",
+    "email": "이메일",
+    "emailPlaceholder": "이메일 주소를 입력하세요",
+    "getCode": "코드 받기",
+    "invalidEmail": "이메일 형식이 올바르지 않습니다",
+    "newEmailPlaceholder": "새 이메일 주소를 입력하세요",
+    "retryIn": "{seconds}초 후 재시도",
+    "sendFailed": "인증 코드 전송에 실패했습니다. 잠시 후 다시 시도해 주세요",
+    "unbind": "연동 해제",
+    "unbindConfirm": "이 이메일 연동을 해제할까요? 해제 후 계정 복구에 사용할 수 없습니다.",
+    "unbindSuccess": "연동이 해제되었습니다",
+    "unboundDescription": "이메일이 연동되지 않았습니다. 연동하면 중요 알림을 받을 수 있습니다.",
+    "unboundTitle": "이메일 미연동"
+  },
+  "card": {
+    "action": {
+      "info": {
+        "badge": "정보",
+        "description": "캠퍼스카드 잔액·상태·분실 여부를 확인하고 온라인 분실 신고를 할 수 있습니다",
+        "title": "기본 정보"
+      },
+      "records": {
+        "badge": "이용 내역",
+        "description": "날짜별로 캠퍼스카드 당일 이용 내역을 조회합니다",
+        "title": "이용 내역"
+      }
+    },
+    "amountUnit": " CNY",
+    "description": "잔액 조회, 이용 내역, 분실 신고를 할 수 있습니다.",
+    "info": {
+      "balanceTitle": "캠퍼스카드 잔액",
+      "basicInfoTitle": "기본 정보",
+      "dialogDescription": "조회 비밀번호를 입력해 인증하세요",
+      "dialogPlaceholder": "캠퍼스카드 조회 비밀번호",
+      "dialogTitle": "분실 신고 인증",
+      "field": {
+        "cardNumber": "캠퍼스카드 번호",
+        "freezeState": "동결 상태",
+        "lostState": "분실 상태",
+        "name": "이름",
+        "number": "학번"
+      },
+      "interimBalance": "임시 잔액: ",
+      "passwordDigitsOnly": "비밀번호는 숫자만 입력할 수 있습니다",
+      "passwordRequired": "비밀번호를 입력해 주세요",
+      "reportPromptLink": "캠퍼스카드 분실 신고",
+      "reportPromptPrefix": "카드를 분실하셨나요?",
+      "reportSuccess": "분실 신고가 완료되었습니다",
+      "reportedState": "분실 신고됨",
+      "statusTitle": "카드 상태",
+      "submitting": "제출 중",
+      "title": "캠퍼스카드 정보"
+    },
+    "list": {
+      "empty": "해당 날짜 이용 내역이 없습니다",
+      "invalidDate": "날짜 형식이 올바르지 않습니다. 다시 선택해 주세요",
+      "queryDate": "조회 날짜: ",
+      "retry": "다시 조회",
+      "unknownMerchant": "알 수 없는 가맹점"
+    },
+    "search": {
+      "dateLabel": "조회 날짜",
+      "datePlaceholder": "날짜를 선택하세요",
+      "dateRequired": "조회 날짜를 선택해 주세요",
+      "description": "날짜를 선택해 해당일 캠퍼스카드 내역을 조회합니다",
+      "submit": "조회"
+    },
+    "title": "캠퍼스카드"
+  },
+  "cetPage": {
+    "captchaLabel": "인증 코드",
+    "captchaPlaceholder": "인증 코드를 입력하세요",
+    "captchaRequired": "인증 코드를 입력해 주세요",
+    "examNumberLabel": "수험 번호",
+    "examNumberPlaceholder": "15자리 수험 번호를 입력하세요",
+    "fallbackChsi": "CHSI CET 성적 조회",
+    "fallbackNeea": "NEEA CET 성적 조회",
+    "fallbackTitle": "대체 조회 링크",
+    "importButton": "수험 번호 가져오기",
+    "importLoading": "가져오는 중",
+    "invalidNumber": "수험 번호는 15자리여야 합니다",
+    "missingFields": "수험 번호와 이름을 입력해 주세요",
+    "nameLabel": "이름",
+    "namePlaceholder": "3자를 넘으면 앞 3자만 입력해도 됩니다",
+    "noSavedNumber": "저장된 수험 번호가 없습니다",
+    "queryLoading": "조회 중...",
+    "refreshCaptcha": "탭하여 받기",
+    "saveFailed": "저장에 실패했습니다",
+    "savePromptLink": "수험 번호 저장",
+    "savePromptPrefix": "수험 번호가 걱정되나요? 탭하여",
+    "saveSuccess": "저장되었습니다",
+    "saveTitle": "수험 번호 저장",
+    "saving": "저장 중...",
+    "submit": "조회",
+    "title": "CET 성적 조회",
+    "resultTitle": "조회 결과",
+    "resultDisclaimer": "성적은 참고용이며, 공식 성적표를 기준으로 하세요.",
+    "totalScore": "시험 총점",
+    "listeningScore": "듣기",
+    "readingScore": "읽기",
+    "writingScore": "쓰기·번역",
+    "reQuery": "다시 조회",
+    "backHome": "홈으로 돌아가기"
+  },
+  "commandPalette": {
+    "academicGroup": "학사 서비스",
+    "close": "닫기",
+    "communityGroup": "커뮤니티 서비스",
+    "empty": "일치하는 기능이 없습니다",
+    "navigate": "이동",
+    "open": "열기",
+    "searchPlaceholder": "기능 검색..."
+  },
+  "communityCommon": {
+    "gender": {
+      "female": "여",
+      "male": "남",
+      "secret": "기타/비공개"
+    },
+    "loading": "불러오는 중",
+    "noMore": "더 이상 없습니다",
+    "pullToRefresh": "당겨서 새로고침",
+    "refreshing": "새로고침 중...",
+    "releaseToRefresh": "놓으면 새로고침",
+    "select": "선택해 주세요",
+    "loadFailed": "불러오지 못했습니다. 잠시 후 다시 시도해 주세요"
+  },
+  "dataSource": {
+    "mock": "Mock 데이터 소스",
+    "remote": "원격 데이터 소스"
+  },
+  "deleteAccount": {
+    "agreement": "위 계정 삭제 안내를 충분히 읽고 동의합니다",
+    "confirm": "계정 삭제",
+    "deleting": "삭제 중...",
+    "finalConfirmAction": "영구 삭제",
+    "finalConfirmDescription": "이 작업은 되돌릴 수 없습니다. 계정을 영구 삭제할까요?",
+    "finalConfirmTitle": "최종 확인",
+    "irreversible": "삭제는 되돌릴 수 없습니다. 신중히 진행해 주세요.",
+    "risk": {
+      "academic": "사용자 정의 시간표와 저장된 CET 수험 번호가 삭제됩니다",
+      "account": "계정 및 모든 프로필 정보가 삭제됩니다",
+      "community": "커뮤니티 사용자 데이터와 거래 기록이 삭제됩니다",
+      "identity": "연동된 휴대폰·이메일 등 신원 정보가 삭제됩니다",
+      "interactions": "댓글·좋아요 등 상호작용 기록이 삭제됩니다",
+      "posts": "고백 게시판·토픽·심부름 등 게시물이 영구 삭제됩니다"
+    },
+    "riskTitle": "삭제 후 다음 정보는 영구 삭제되며 복구할 수 없습니다:",
+    "success": "계정이 삭제되었습니다",
+    "warningTitle": "GdeiAssistant 계정을 삭제합니다"
+  },
+  "delivery": {
+    "deliveryBadge": "배",
+    "detail": {
+      "acceptAction": "지금 수주",
+      "acceptSuccess": "수주에 성공했습니다!",
+      "accepting": "수주 중...",
+      "completeAction": "완료 확인",
+      "completeConfirmMessage": "이 요청을 완료할까요? 완료 후에는 취소할 수 없습니다.",
+      "completeConfirmTitle": "완료 확인",
+      "completeSuccess": "요청이 완료되었습니다!",
+      "completing": "확인 중...",
+      "contactPhone": "연락처: ",
+      "descriptionLabel": "메모: ",
+      "myRole": "내 역할: ",
+      "pickupCode": "수령 코드: ",
+      "publishTime": "게시 시간: ",
+      "publisherRole": "의뢰인",
+      "runnerRole": "수주자",
+      "sizeLabel": "크기: ",
+      "statusLabel": "상태: ",
+      "title": "요청 상세"
+    },
+    "empty": "아직 요청이 없습니다",
+    "mine": {
+      "acceptedTab": "수주한 요청",
+      "emptyAccepted": "수주한 요청이 없습니다",
+      "emptyPublished": "게시한 요청이 없습니다",
+      "publishedTab": "게시한 요청",
+      "title": "내 심부름"
+    },
+    "pickupAddressWithCompany": "{company}에서 수령",
+    "pickupBadge": "수",
+    "pickupShort": "수령",
+    "publish": {
+      "contactPhone": "연락처 전화",
+      "defaultCompany": "택배 대리 수령",
+      "deliveryAddress": "배달 주소",
+      "deliveryPlaceholder": "예: 남원 1동 301호",
+      "deliveryRequired": "배달 주소를 입력해 주세요",
+      "deliverySection": "배달 정보",
+      "descriptionLabel": "메모(선택)",
+      "descriptionPlaceholder": "추가 설명...",
+      "imageTooLarge": "이미지는 5MB 이하여야 합니다",
+      "invalidImageType": "이미지 파일만 업로드할 수 있습니다",
+      "itemSection": "물품 설명",
+      "payloadName": "대리 수령",
+      "phonePlaceholder": "휴대폰 번호를 입력하세요",
+      "phoneRequired": "연락처 전화를 입력해 주세요",
+      "pickupAddress": "수령 장소",
+      "pickupCode": "수령 코드/증빙(선택)",
+      "pickupCodePlaceholder": "예: 1-2-3456",
+      "pickupImage": "수령 증빙 이미지(선택)",
+      "pickupPlaceholder": "예: Cainiao 역, 남문 수령점",
+      "pickupRequired": "수령 장소를 입력해 주세요",
+      "pickupSection": "수령 정보",
+      "publishSuccess": "게시되었습니다",
+      "rewardInvalid": "유효한 심부름비(0.01~9999.99)를 입력해 주세요",
+      "rewardLabel": "심부름비: ",
+      "sizeLabel": "무게/크기",
+      "submitAction": "게시 확인",
+      "submitting": "제출 중...",
+      "title": "요청 게시",
+      "uploadImage": "이미지 업로드",
+      "privacyHint": "수령 코드, 주소, 휴대전화 번호, 이름 등은 일반적으로 매우 민감한 정보입니다. 입력과 공개는 필요한 최소한으로 제한하세요. 불법·규정 위반, 위험, 고가 물품 관련 업무나 자신의 능력을 명백히 벗어나는 업무는 맡지 마세요."
+    },
+    "size": {
+      "large": "대형(무거운 물품)",
+      "medium": "중형(신발/의류)",
+      "small": "소형(음식/서류)"
+    },
+    "smallSize": "소",
+    "status": {
+      "completed": "완료",
+      "inTransit": "배달 중",
+      "pending": "수주 대기"
+    },
+    "title": "캠퍼스 배달",
+    "type": {
+      "express": "택배 대리 수령",
+      "food": "식사 구매",
+      "other": "심부름"
+    },
+    "unknownStatus": "알 수 없음"
+  },
+  "electricityFees": {
+    "field": {
+      "name": "이름",
+      "number": "학번",
+      "year": "연도"
+    },
+    "loading": "전기요금 조회 중...",
+    "placeholder": {
+      "name": "이름을 입력하세요",
+      "number": "학번을 입력하세요"
+    },
+    "queryFailed": "조회에 실패했습니다. 잠시 후 다시 시도해 주세요",
+    "result": {
+      "averageElectricBill": "1인당 전기요금",
+      "dormitory": "기숙사",
+      "electricPrice": "전기 단가",
+      "feeBasedElectricAmount": "유료 전력량",
+      "freeElectricAmount": "무료 전력량",
+      "peopleNumber": "입주 인원",
+      "title": "조회 결과",
+      "totalElectricBill": "총 전기요금",
+      "usedElectricAmount": "사용 전력량",
+      "year": "연도"
+    },
+    "retry": "다시 조회",
+    "submit": "조회 시작",
+    "title": "전기요금 조회",
+    "validation": {
+      "nameRequired": "이름을 입력해 주세요",
+      "numberInvalid": "11자리 학번을 입력해 주세요",
+      "numberRequired": "학번을 입력해 주세요",
+      "yearInvalid": "연도가 올바르지 않습니다",
+      "yearRequired": "연도를 선택해 주세요"
+    }
+  },
+  "express": {
+    "bannerTitle": "광둥 제2사범대학 고백 게시판",
+    "detail": {
+      "commentEmpty": "아직 댓글이 없습니다. 첫 댓글을 남겨 보세요!",
+      "commentList": "댓글",
+      "commentPlaceholder": "하고 싶은 말을 입력...",
+      "commentRequired": "댓글을 입력해 주세요",
+      "commentTooLong": "댓글은 50자 이내여야 합니다",
+      "floor": "{index}층",
+      "me": "나",
+      "send": "보내기",
+      "sending": "전송 중...",
+      "title": "고백 상세"
+    },
+    "empty": "고백 게시물이 없습니다",
+    "guessCorrect": "맞혔습니다!",
+    "guessDialogTitle": "이름 맞히기",
+    "guessPlaceholder": "추측하는 실명을 입력:",
+    "guessRequired": "추측하는 실명을 입력해 주세요",
+    "guessUnavailable": "실명이 남겨지지 않아 맞힐 수 없습니다",
+    "guessWrong": "틀렸습니다. 다시 시도해 보세요!",
+    "justNow": "방금",
+    "legend": "파란 밑줄: 남성 / 빨간 밑줄: 여성 / 검은 밑줄: 기타·비공개",
+    "publish": {
+      "contentPlaceholder": "전하고 싶은 말을 적어 보세요...",
+      "contentRequired": "고백 내용을 입력해 주세요",
+      "contentTitle": "고백 내용",
+      "contentTooLong": "고백 내용은 250자 이내여야 합니다",
+      "gender": "성별",
+      "myGenderRequired": "본인 성별을 선택해 주세요",
+      "myInfo": "내 정보",
+      "nicknamePlaceholder": "닉네임을 입력하세요",
+      "nicknameRequired": "닉네임을 입력해 주세요",
+      "nicknameTooLong": "닉네임은 10자 이내여야 합니다",
+      "publishSuccess": "게시되었습니다",
+      "publishing": "게시 중...",
+      "realName": "실명",
+      "realNamePlaceholder": "실명을 입력하세요",
+      "realNameTip": "실명은 선택이며 기본적으로 비공개입니다. 입력하면 이름 맞히기 게임에 참여할 수 있습니다.",
+      "realNameTooLong": "실명은 10자 이내여야 합니다",
+      "receiverGenderRequired": "상대 성별을 선택해 주세요",
+      "receiverNamePlaceholder": "상대 이름을 입력하세요",
+      "receiverNameRequired": "상대 이름을 입력해 주세요",
+      "receiverNameTooLong": "상대 이름은 10자 이내여야 합니다",
+      "submitAction": "고백 게시",
+      "submitting": "제출 중...",
+      "targetInfo": "상대 정보",
+      "targetName": "이름",
+      "title": "고백 게시"
+    },
+    "searchAction": "검색",
+    "searchEmpty": "관련 고백을 찾지 못했습니다",
+    "searchPlaceholder": "발신자/수신자/내용 검색",
+    "searchPrompt": "키워드를 입력해 검색하세요",
+    "searchRequired": "검색 키워드를 입력해 주세요",
+    "searchTitle": "고백 검색",
+    "title": "고백 게시판"
+  },
+  "feature": {
+    "card": {
+      "description": "잔액·이용 내역·분실 신고",
+      "name": "캠퍼스카드"
+    },
+    "cet": {
+      "description": "수험 번호와 인증 코드로 CET 성적 조회",
+      "name": "CET 성적 조회"
+    },
+    "collection": {
+      "description": "소장 검색·대출·연장",
+      "name": "도서관"
+    },
+    "data": {
+      "description": "전기요금 및 교내 유용 번호 조회",
+      "name": "데이터 조회"
+    },
+    "dating": {
+      "description": "룸메이트를 세상에 소개",
+      "name": "룸메이트 소개"
+    },
+    "delivery": {
+      "description": "심부름·택배 대리 수령",
+      "name": "캠퍼스 배달"
+    },
+    "ershou": {
+      "description": "캠퍼스 내 중고 거래·대면 거래",
+      "name": "중고 거래"
+    },
+    "evaluate": {
+      "description": "수업 평가는 여기서",
+      "name": "수업 평가"
+    },
+    "express": {
+      "description": "마음을 솔직히 전하세요",
+      "name": "고백 게시판"
+    },
+    "grade": {
+      "description": "학기별 성적·GPA 조회",
+      "name": "성적 조회"
+    },
+    "kaoyan": {
+      "description": "대학원 입시 성적 등 조회",
+      "name": "대학원 입시 조회"
+    },
+    "lostandfound": {
+      "description": "분실·습득 정보",
+      "name": "분실물 센터"
+    },
+    "pe": {
+      "description": "체력측정 성적 확인",
+      "name": "체력측정 조회"
+    },
+    "photograph": {
+      "description": "캠퍼스의 순간을 기록",
+      "name": "캠퍼스 사진"
+    },
+    "schedule": {
+      "description": "이번 주 수업을 한눈에",
+      "name": "시간표"
+    },
+    "secret": {
+      "description": "익명으로 속마음 나누기",
+      "name": "캠퍼스 익명 게시판"
+    },
+    "spare": {
+      "description": "지금 비는 강의실 찾기",
+      "name": "빈 강의실"
+    },
+    "topic": {
+      "description": "화제·캠퍼스 이야기",
+      "name": "토픽"
+    }
+  },
+  "featureManage": {
+    "description": "홈에 표시할 기능 모듈(끄면 홈에서 숨김)",
+    "saved": "저장되었습니다. 홈에 즉시 반영됩니다"
+  },
+  "feedback": {
+    "faq": {
+      "cache": {
+        "content": "학사 데이터 캐시는 허용 시 대학 학사 시스템에서 성적·시간표를 주기적으로 동기화해 조회 속도와 안정성을 높입니다. 학사 표시에만 사용하며 외부에 제공하지 않습니다. 개인정보 설정에서 언제든 끌 수 있습니다.",
+        "title": "학사 데이터 캐시란? 켜도 안전한가요?"
+      },
+      "delete": {
+        "content": "프로필의 '계정 삭제'에서 신청할 수 있습니다. 비밀번호 확인 및 삭제 조건을 충족해야 합니다. 셀프 삭제가 어려우면 여기서 티켓을 제출하거나 support{'@'}gdeiassistant.cn 으로 문의하세요.",
+        "title": "계정은 어떻게 삭제하나요?"
+      },
+      "login": {
+        "content": "사용자명과 비밀번호는 캠퍼스 네트워크·학사 시스템과 동일합니다. 모르겠다면 '앱 정보 › 캠퍼스 네트워크 계정 안내'를 확인하세요.",
+        "title": "로그인 아이디와 비밀번호는 무엇인가요?"
+      },
+      "moreHelpPrefix": "위 내용으로 해결되지 않나요?",
+      "moreHelpSuffix": " 탭에서 문의와 제안을 알려 주세요.",
+      "password": {
+        "content": "대학 통합 인증 시스템에서 비밀번호를 변경하세요. 변경 후 GdeiAssistant에 다시 로그인하면 동기화됩니다. 본 앱은 로그인 비밀번호를 별도 저장하지 않습니다.",
+        "title": "앱에서 비밀번호를 변경할 수 있나요?"
+      },
+      "schedule": {
+        "content": "학사 조회는 대학 공식 사이트·학사 시스템 안정성에 의존합니다. 점검 중 일시 오류가 날 수 있으며 보통 24시간 내 복구됩니다. 장기간이면 이 페이지에서 피드백을 제출해 주세요.",
+        "title": "성적/시간표 조회 시 시스템 오류가 나는 이유는?"
+      }
+    },
+    "form": {
+      "addImage": "이미지 추가",
+      "contactPlaceholder": "QQ/WeChat/전화(선택, 연락용)",
+      "contactTitle": "연락처(선택)",
+      "contentPlaceholder": "문제나 제안을 자세히 적어 주세요...",
+      "contentRequired": "피드백 내용을 입력해 주세요",
+      "contentTitle": "피드백 내용",
+      "screenshotLimit": "(선택, 최대 {count}장)",
+      "screenshotPreview": "스크린샷 미리보기",
+      "screenshotTitle": "스크린샷 업로드",
+      "submit": "피드백 제출",
+      "submitSuccess": "제출되었습니다",
+      "submitting": "제출 중...",
+      "typeTitle": "피드백 유형 선택"
+    },
+    "tab": {
+      "faq": "자주 묻는 질문",
+      "form": "의견 피드백"
+    },
+    "title": "도움말 및 피드백",
+    "type": {
+      "account": "계정 연동·관리·삭제",
+      "appError": "앱 기능 오류",
+      "crash": "충돌·지연·레이아웃 깨짐",
+      "login": "로그인·비밀번호",
+      "other": "기타",
+      "profile": "프로필·개인정보 설정",
+      "verification": "실명 인증·휴대폰 연동"
+    }
+  },
+  "libraryPage": {
+    "borrow": {
+      "author": "저자",
+      "bookName": "서명",
+      "borrowDate": "대출일",
+      "empty": "대출 기록이 없습니다",
+      "initialHint": "도서관 비밀번호 입력 후 대출 기록을 조회하세요",
+      "intro": "도서관 비밀번호로 대출 기록을 봅니다. 연장 시에도 다시 확인합니다.",
+      "mockPassword": "데모 비밀번호: 123456",
+      "passwordLabel": "도서관 비밀번호",
+      "passwordPlaceholder": "도서관 비밀번호를 입력하세요",
+      "passwordRequired": "도서관 비밀번호를 입력해 주세요",
+      "query": "대출 기록 조회",
+      "recordsTitle": "대출 기록",
+      "refresh": "대출 기록 새로고침",
+      "renew": "연장",
+      "renewCount": "연장 횟수",
+      "renewDialogDescription": "연장을 위해 도서관 비밀번호를 입력하세요",
+      "renewDialogPlaceholder": "도서관 비밀번호",
+      "renewDialogTitle": "도서 연장",
+      "renewLoading": "연장 중...",
+      "renewSuccess": "연장되었습니다",
+      "returnDate": "반납 예정일",
+      "title": "내 대출"
+    },
+    "detail": {
+      "author": "저자",
+      "empty": "상세 정보 없음",
+      "principal": "서명/책임표시",
+      "publisher": "출판사",
+      "title": "소장 상세",
+      "emptyDescription": "현재 이 책의 소장 상세 정보를 찾을 수 없습니다. 이전 화면에서 다시 선택하거나 나중에 확인하세요."
+    },
+    "heroBadge": "도서관",
+    "heroDescription": "소장 도서를 검색하고 현재 대출을 관리하세요.",
+    "heroTitle": "도서관",
+    "home": {
+      "borrowBadge": "대출",
+      "borrowDescription": "도서관 비밀번호로 대출 확인·연장",
+      "borrowTitle": "내 대출",
+      "searchBadge": "검색",
+      "searchDescription": "서명·저자·출판사로 소장 검색",
+      "searchTitle": "소장 검색"
+    },
+    "list": {
+      "author": "저자: ",
+      "description": "도서관 소장 검색 결과",
+      "empty": "검색 결과 없음",
+      "nextPage": "다음",
+      "pageText": "{page}페이지",
+      "prevPage": "이전",
+      "publisher": "출판사: ",
+      "resultTitle": "검색 결과",
+      "title": "소장 검색"
+    },
+    "search": {
+      "description": "서명·저자·출판사로 소장 검색",
+      "keywordLabel": "키워드",
+      "keywordPlaceholder": "서명·저자 등을 입력하세요",
+      "keywordRequired": "검색 키워드를 입력해 주세요",
+      "submit": "조회",
+      "title": "소장 검색"
+    },
+    "title": "도서관"
+  },
+  "loginPage": {
+    "accountHelpLink": "「캠퍼스 네트워크 계정 안내」",
+    "accountHelpPrefix": "로그인 계정은",
+    "agreementLink": "「이용약관」",
+    "agreementPrefix": "이용 전 반드시 읽어 주세요",
+    "and": " 및 ",
+    "autoFilledSuffix": " (자동 입력됨)",
+    "campusConsentLabel": "플랫폼이 캠퍼스 신원 확인·빠른 인증·캠퍼스 데이터 조회 및 학교 시스템과의 필요한 세션 동기화를 위해 필요한 범위에서 내 캠퍼스 계정 자격증명을 처리하는 것에 별도로 동의합니다. 계정 설정 또는 피드백을 통해 빠른 인증 끄기·동의 철회·저장 자격증명 삭제가 가능하며, 중단·삭제 후 일부 캠퍼스 조회·빠른 인증을 사용할 수 없을 수 있음을 이해합니다.",
+    "campusConsentRequired": "로그인 전 캠퍼스 자격증명 처리에 별도 동의해 주세요",
+    "failed": "로그인 실패",
+    "incompleteFields": "필수 항목을 모두 입력해 주세요",
+    "loading": "로그인 중...",
+    "mockActive": "켜짐",
+    "mockMode": "로컬 데모 데이터",
+    "otherLogin": "다른 로그인 방법",
+    "passwordLabel": "비밀번호",
+    "passwordPlaceholder": "캠퍼스 네트워크 비밀번호를 입력하세요",
+    "privacyLink": "「개인정보 처리방침」",
+    "submit": "로그인",
+    "subtitle": "캠퍼스 네트워크 시스템에 로그인",
+    "thirdPartyUnavailable": "해당 로그인 방식은 아직 제공되지 않습니다",
+    "title": "GdeiAssistant",
+    "usernameLabel": "계정",
+    "usernamePlaceholder": "캠퍼스 네트워크 계정을 입력하세요",
+    "credentialNotice": "캠퍼스 자격 증명은 캠퍼스 인증, 빠른 인증, 세션 동기화에 사용될 수 있습니다. 본인 계정만 사용하세요. 저장을 거부하거나 설정·피드백을 통해 삭제하면 일부 조회나 빠른 인증을 사용할 수 없을 수 있습니다.",
+    "visualIntro": "시간표, 캠퍼스카드, 소식과 캠퍼스 생활을 하나의 깔끔한 입구에 모았습니다."
+  },
+  "loginRecord": {
+    "clientDevice": "{network} 클라이언트",
+    "empty": "로그인 기록 없음",
+    "success": "로그인 성공",
+    "unknownDevice": "알 수 없는 기기"
+  },
+  "news": {
+    "defaultTitle": "뉴스",
+    "detail": {
+      "attachments": "첨부 링크",
+      "empty": "상세 내용 없음",
+      "loadFailed": "뉴스 상세 불러오기에 실패했습니다. 잠시 후 다시 시도해 주세요",
+      "loading": "뉴스 상세 불러오는 중",
+      "noDate": "—",
+      "notFound": "해당 뉴스를 찾을 수 없습니다",
+      "openSource": "원문 링크 열기"
+    },
+    "empty": "뉴스 없음",
+    "loadFailed": "불러오기에 실패했습니다. 잠시 후 다시 시도해 주세요",
+    "noMore": "더 이상 데이터 없음",
+    "openAttachment": "첨부 열기",
+    "tab": {
+      "academic": "학술 동향",
+      "department": "학과·부서 공지",
+      "notice": "공지",
+      "school": "학교 소식"
+    }
+  },
+  "privacy": {
+    "field": {
+      "age": "나이 공개",
+      "cache": "학사 데이터 캐시",
+      "enrollment": "입학 연도 공개",
+      "faculty": "학부 공개",
+      "hometown": "고향 공개",
+      "introduction": "자기소개 공개",
+      "location": "국가/지역 공개",
+      "major": "전공 공개",
+      "robots": "검색 엔진이 내 프로필 페이지에 링크하도록 허용"
+    },
+    "partialSuccess": "설정은 저장되었으나 이전 캐시 삭제에 시간이 걸릴 수 있습니다."
+  },
+  "realname": {
+    "back": "이전 페이지로",
+    "unavailableDescription": "실명 인증은 공안 데이터 연동 준비 중으로 아직 공개되지 않았습니다. 백엔드·외부 검증 준비 후 제공됩니다.",
+    "unavailableTitle": "실명 인증 미제공"
+  },
+  "schedule": {
+    "action": {
+      "addCustomCourse": "사용자 정의 수업 추가",
+      "manageCache": "학사 캐시 관리",
+      "refresh": "시간표 새로고침"
+    },
+    "addDialog": {
+      "dayOfWeek": "요일",
+      "location": "수업 장소",
+      "locationPlaceholder": "수업 장소를 입력하세요",
+      "maxWeek": "종료 주",
+      "minWeek": "시작 주",
+      "name": "과목명",
+      "namePlaceholder": "과목명을 입력하세요",
+      "scheduleLength": "수업 길이",
+      "startSection": "시작 교시",
+      "submit": "수업 저장",
+      "submitting": "저장 중...",
+      "title": "사용자 정의 수업 추가"
+    },
+    "day": {
+      "friday": "금",
+      "monday": "월",
+      "saturday": "토",
+      "sunday": "일",
+      "thursday": "목",
+      "tuesday": "화",
+      "wednesday": "수"
+    },
+    "detail": {
+      "location": "수업 장소",
+      "name": "과목",
+      "teacher": "담당 교수",
+      "title": "수업 상세",
+      "weekRangeTitle": "수업 주차"
+    },
+    "empty": "이번 주 수업 없음",
+    "lengthLabel": "{count}교시",
+    "message": {
+      "addSuccess": "사용자 정의 수업이 추가되었습니다",
+      "deleteConfirm": "이 사용자 정의 수업을 삭제할까요?",
+      "deleteSuccess": "사용자 정의 수업이 삭제되었습니다",
+      "duplicateCourse": "해당 시간대에 이미 수업이 있습니다",
+      "invalidSectionRange": "교시가 해당일 범위를 벗어났습니다",
+      "invalidWeekRange": "종료 주는 시작 주보다 앞설 수 없습니다",
+      "locationRequired": "수업 장소를 입력해 주세요",
+      "nameRequired": "과목명을 입력해 주세요",
+      "syncLoading": "시간표 동기화 중...",
+      "syncSuccess": "시간표가 새로고침되었습니다"
+    },
+    "more": "더보기",
+    "noTeacher": "교수 정보 없음",
+    "pageTitle": "시간표",
+    "sectionLabel": "{section}교시",
+    "selectWeek": "주차 선택",
+    "weekLabel": "{week}주",
+    "weekRange": "{start}주 - {end}주"
+  },
+  "settings": {
+    "section": {
+      "preference": "환경 설정",
+      "security": "계정 보안"
+    }
+  },
+  "spare": {
+    "campus": {
+      "correspondence": "통신·函수 캠퍼스",
+      "haizhu": "하이주",
+      "huadu": "화두",
+      "nanhai": "광둥 경공업 남해 캠퍼스"
+    },
+    "empty": "빈 강의실 데이터 없음",
+    "field": {
+      "campus": "캠퍼스",
+      "period": "교시",
+      "roomType": "강의실 유형",
+      "seatsMax": "좌석 수≤",
+      "seatsMin": "좌석 수≥",
+      "weekType": "홀·짝 주",
+      "weekday": "요일"
+    },
+    "option": {
+      "unlimited": "제한 없음"
+    },
+    "optional": "선택",
+    "pageTitle": "빈 강의실 조회",
+    "period": {
+      "afternoon": "오후",
+      "allDay": "종일",
+      "daytime": "주간",
+      "eightNine": "8·9교시",
+      "evening": "저녁",
+      "fourFive": "4·5교시",
+      "morning": "오전",
+      "oneTwo": "1·2교시",
+      "sixSeven": "6·7교시",
+      "tenToTwelve": "10·11·12교시",
+      "three": "3교시"
+    },
+    "result": {
+      "campus": "캠퍼스",
+      "number": "번호",
+      "seats": "좌석",
+      "type": "유형"
+    },
+    "resultList": "빈 강의실 목록",
+    "resultTitle": "조회 결과",
+    "roomType": {
+      "anatomyLab": "해부 실험실",
+      "artClassroom": "미술 교실",
+      "artStudio": "화실",
+      "biologyLab": "생물 실험실",
+      "bodyTrainingRoom": "체형 연습실",
+      "ceramicRoom": "도예실",
+      "chemistryLab": "화학 실험실",
+      "computerLab": "컴퓨터 전공 실습실",
+      "computerRoom": "컴퓨터실",
+      "consultingRoom": "상담실",
+      "danceRoomA": "무용실",
+      "danceRoomB": "무용실",
+      "educationLab": "교육 실험실",
+      "fashionLab": "패션 실험실",
+      "financialMathLab": "금융수학 실험실",
+      "graphicDesignLab": "그래픽 제작 실험실",
+      "groupClassroom": "소그룹 교실",
+      "gymnasticsRoom": "체조실",
+      "integratedPaintingLab": "종합 회화 실험실",
+      "languageLab": "어학실",
+      "largeMultimedia": "대형 멀티미디어",
+      "majorClassroom": "전공 교실",
+      "majorLab": "전공 실험실",
+      "majorTheoryRoom": "전공 이론 교실",
+      "mediumMultimedia": "중형 멀티미디어(70-100)",
+      "microteachingRoom": "마이크로티칭실",
+      "modelMakingLab": "모형 제작 실험실",
+      "montessoriRoom": "몬테소리 전용 교실",
+      "multimediaRoom": "멀티미디어 교실",
+      "musicMajorRoom": "음악 전공 교실",
+      "musicPracticeRoom": "연습실(피아노실)",
+      "musicRoom": "음악실",
+      "networkLab": "네트워크 실험실",
+      "noClassroom": "강의실 불필요 과목",
+      "noNeedClassroom": "강의실 불필요",
+      "photographyLab": "사진 실험실",
+      "physicsLab": "물리 실험실",
+      "pianoRoomA": "피아노실",
+      "pianoRoomB": "피아노실",
+      "playground": "운동장",
+      "publicComputerRoom": "공용 컴퓨터실",
+      "sculptureRoom": "조각실",
+      "smallClassroomUnder70": "소형 일반 교실(<70)",
+      "smallMultimedia": "소형 멀티미디어",
+      "smallMultimediaUnder70": "소형 멀티미디어(<70)",
+      "smartRecordingRoom": "스마트 녹화실",
+      "solfeggioRoom": "시창·청음실",
+      "teachingAidRoom": "교구실",
+      "traditionalPaintingRoom": "국화 모사실",
+      "trainingRoom": "실습실",
+      "translationRoom": "번역실",
+      "unlimited": "제한 없음",
+      "vocalRoom": "성악 교실"
+    },
+    "search": "조회",
+    "weekType": {
+      "double": "짝",
+      "single": "홀"
+    },
+    "weekday": {
+      "friday": "금",
+      "monday": "월",
+      "saturday": "토",
+      "sunday": "일",
+      "thursday": "목",
+      "tuesday": "화",
+      "wednesday": "수"
+    }
+  },
+  "topic": {
+    "anonymousUser": "익명",
+    "detail": {
+      "defaultTopic": "캠퍼스 토픽",
+      "emptyContent": "내용 없음",
+      "like": "좋아요",
+      "liked": "좋아요함",
+      "notFound": "토픽이 없거나 삭제되었습니다",
+      "title": "토픽 상세"
+    },
+    "empty": "토픽 없음",
+    "imageAlt": "이미지 {index}",
+    "publish": {
+      "addImage": "이미지 추가",
+      "contentPlaceholder": "내용을 입력하세요...",
+      "contentRequired": "내용을 입력해 주세요",
+      "contentTooLong": "내용은 250자 이내여야 합니다",
+      "imageLimit": "이미지는 최대 9장까지",
+      "imageTooLarge": "이미지는 5MB 이하여야 합니다",
+      "invalidImageType": "이미지 파일만 업로드할 수 있습니다",
+      "publishSuccess": "게시되었습니다",
+      "publishing": "게시 중...",
+      "submitAction": "제출",
+      "submitting": "제출 중...",
+      "title": "토픽 게시",
+      "topicPlaceholder": "토픽을 입력하세요",
+      "topicRequired": "토픽 태그를 입력해 주세요",
+      "uploading": "업로드 중..."
+    },
+    "searchAction": "검색",
+    "searchEmpty": "결과 없음",
+    "searchPlaceholder": "토픽·내용 검색...",
+    "searchRequired": "검색할 토픽 또는 내용을 입력해 주세요",
+    "searchTitle": "토픽 검색",
+    "searching": "검색 중...",
+    "title": "토픽"
+  },
+  "yellowPage": {
+    "title": "교내 전화번호부"
+  },
+  "community": {
+    "navAriaLabel": "커뮤니티 탐색",
+    "defaultPublish": "정보 게시",
+    "noticeFallback": "교내 공지",
+    "heroSubtitle": "캠퍼스의 매력을 발견하고 일상을 연결하세요",
+    "backHome": "기능 홈으로 돌아가기",
+    "railAriaLabel": "캠퍼스 생활 사이드바",
+    "todayCampus": "오늘의 캠퍼스",
+    "goSee": "둘러보기",
+    "myPosts": "내 게시물",
+    "manage": "관리",
+    "latest": "최신 소식",
+    "safetyTitle": "안전 안내",
+    "safetyTip": "거래와 대리 수령은 가능하면 교내에서 직접 확인하고, 개인정보 유출을 피하세요."
+  },
+  "evaluatePage": {
+    "title": "수업 평가",
+    "directSubmit": "평가 정보 바로 제출",
+    "submitAction": "원탭 평가",
+    "riskNotice": "주의: 평가 정보를 제출한 뒤에는 수정할 수 없습니다.",
+    "confirmMessage": "원탭 평가를 진행할까요? 이 작업은 되돌릴 수 없습니다.",
+    "loading": "자동 평가 중...",
+    "success": "평가가 제출되었습니다!",
+    "error": "평가 제출에 실패했습니다. 잠시 후 다시 시도해 주세요"
+  },
+  "navigationAccessibility": {
+    "sidebarNavigation": "사이드 탐색",
+    "primaryNavigation": "주요 탐색",
+    "mainNavigation": "메인 탐색",
+    "openSidebar": "사이드바 열기",
+    "closeSidebar": "사이드바 닫기",
+    "lightMode": "라이트 모드로 전환",
+    "darkMode": "다크 모드로 전환"
+  },
+  "pePage": {
+    "wechatRequiredTitle": "WeChat에서 열어 주세요",
+    "wechatRequiredDescription": "체력 검사 결과 조회는 WeChat 환경에서만 사용할 수 있습니다. WeChat으로 코드를 스캔하거나 WeChat에서 이 앱을 검색해 열어 주세요."
   }
 }

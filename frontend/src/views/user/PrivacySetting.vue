@@ -8,14 +8,14 @@
     </div>
 
     <!-- Content -->
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="max-w-lg mx-auto px-4 py-6 space-y-4">
       <div class="privacy-setting-card rounded-xl shadow-sm divide-y">
         <label
           v-for="item in privacyList"
           :key="item.key"
-          class="privacy-setting-row flex items-center justify-between px-4 py-3 cursor-pointer"
+          class="privacy-setting-row flex items-center justify-between min-h-11 px-4 py-3 cursor-pointer"
         >
-          <span class="privacy-setting-label text-base">{{ item.name }}</span>
+          <span class="privacy-setting-label text-base">{{ t(`privacy.field.${item.key}`) }}</span>
           <div class="relative inline-flex items-center">
             <input
               type="checkbox"
@@ -27,6 +27,23 @@
           </div>
         </label>
       </div>
+
+      <div class="privacy-setting-card rounded-xl shadow-sm divide-y">
+        <RouterLink
+          to="/social/privacy"
+          class="privacy-setting-row flex items-center justify-between min-h-11 px-4 py-3 no-underline text-inherit"
+        >
+          <span class="privacy-setting-label text-base">{{ t('social.dmPrivacyTitle') }}</span>
+          <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
+        </RouterLink>
+        <RouterLink
+          to="/social/blocks"
+          class="privacy-setting-row flex items-center justify-between min-h-11 px-4 py-3 no-underline text-inherit"
+        >
+          <span class="privacy-setting-label text-base">{{ t('social.blocksTitle') }}</span>
+          <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
+        </RouterLink>
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +52,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { ChevronRight } from 'lucide-vue-next'
 import { getPrivacySettings, updatePrivacySettings } from '../../api/privacy.js'
 import { useToast } from '@/composables/useToast'
 import { createPrivacyItems } from './settingsContent'
@@ -43,7 +61,7 @@ const router = useRouter()
 const { t } = useI18n()
 const { success: toastSuccess } = useToast()
 
-const privacyList = ref(createPrivacyItems(t))
+const privacyList = ref(createPrivacyItems(t).map(({ key, status }) => ({ key, status })))
 
 const fieldMapping = {
   faculty: 'facultyOpen',

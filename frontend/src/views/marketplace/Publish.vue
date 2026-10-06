@@ -242,7 +242,7 @@ onMounted(() => {
     </CommunityHeader>
 
     <div class="marketplace-publish-alert mx-4 mt-4 rounded-xl px-4 py-3 text-xs leading-6">
-      请勿发布违法违规物品、危险品、证件原件、账号凭证或侵权盗版内容。请谨慎公开手机号、微信号、住址等联系方式，并自行核验商品状态、价格和线下交易风险。
+      {{ t('marketplace.publish.safetyHint') }}
     </div>
 
     <section class="marketplace-publish-panel mx-4 mt-4 overflow-hidden rounded-[28px]">

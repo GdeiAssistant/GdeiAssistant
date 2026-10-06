@@ -31,7 +31,7 @@
           type="button"
           class="text-xs text-[var(--c-primary)] bg-transparent border-none cursor-pointer"
           @click="router.push('/info/announcements')"
-        >查看更多</button>
+        >{{ t('info.expand') }}</button>
       </template>
       <div class="p-4">
         <NoticeBlock :notices="systemNoticeItems" />
@@ -52,7 +52,7 @@
           type="button"
           class="text-xs text-[var(--c-primary)] bg-transparent border-none cursor-pointer"
           @click="router.push('/info/interactions')"
-        >查看更多</button>
+        >{{ t('info.expand') }}</button>
       </template>
       <div class="p-4">
         <InteractionBlock

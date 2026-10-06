@@ -1,5 +1,12 @@
 <template>
   <div class="social-page space-y-4">
+    <button
+      type="button"
+      class="min-h-11 px-0 text-sm text-[var(--c-primary)] bg-transparent border-0 cursor-pointer"
+      @click="router.push('/user/privacy-setting')"
+    >
+      {{ $t('social.backToPrivacySettings') }}
+    </button>
     <h1 class="text-lg font-semibold">{{ $t('social.dmPrivacyTitle') }}</h1>
     <p class="text-sm text-[var(--c-text-tertiary)]">{{ $t('social.dmPrivacyHint') }}</p>
     <div class="rounded-xl bg-[var(--c-surface)] border border-[var(--c-border-light)] divide-y divide-[var(--c-border-light)]">
@@ -19,10 +26,12 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { fetchDmPrivacy, updateDmPrivacy } from '../../api/social.js'
 import { useToast } from '../../composables/useToast.js'
 
+const router = useRouter()
 const { t } = useI18n()
 const toast = useToast()
 const dmPolicy = ref('MUTUAL')

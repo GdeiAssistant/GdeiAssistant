@@ -40,16 +40,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
+import { getLocationCatalog } from '../../catalog/locationCatalog'
 
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 // 响应式数据
-const records = ref([])
+const rawRecords = ref([])
+const records = computed(() => {
+  const catalog = getLocationCatalog(locale.value)
+  return rawRecords.value.map((item, index) => ({
+    id: item.id ?? index,
+    loginTime: formatTime(item.time),
+    ip: item.ip || '',
+    location: catalog.systemAreaLabel(item.area || [item.country, item.province, item.city].filter(Boolean).join(' ')),
+    device: item.network ? t('loginRecord.clientDevice', { network: item.network }) : t('loginRecord.unknownDevice')
+  }))
+})
 const isLoading = ref(true)
 
 function formatTime(time) {
@@ -75,15 +86,9 @@ const loadRecords = async () => {
   try {
     const res = await request.get('/ip/start/0/size/20')
     const list = (res && res.data) || []
-    records.value = list.map((item, index) => ({
-      id: item.id ?? index,
-      loginTime: formatTime(item.time),
-      ip: item.ip || '',
-      location: item.area || [item.country, item.province, item.city].filter(Boolean).join(''),
-      device: item.network ? t('loginRecord.clientDevice', { network: item.network }) : t('loginRecord.unknownDevice')
-    }))
+    rawRecords.value = list
   } catch (e) {
-    records.value = []
+    rawRecords.value = []
   } finally {
     isLoading.value = false
   }

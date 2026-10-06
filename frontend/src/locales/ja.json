@@ -291,7 +291,35 @@
         "lookupAlt": "統一認証システムのアカウント照会入口",
         "resultAlt": "学内アカウント照会結果の例"
       }
-    }
+    },
+    "links": {
+      "moe": "中国教育部",
+      "gdEducation": "広東省教育庁",
+      "gzEducation": "広州市教育局",
+      "gdGovernment": "広東省人民政府",
+      "gzGovernment": "広州市人民政府",
+      "eduCn": "中国教育研究ネットワーク",
+      "cnki": "中国知網（CNKI）",
+      "chsi": "学信網（CHSI）",
+      "scut": "華南理工大学",
+      "sysu": "中山大学",
+      "jnu": "曁南大学",
+      "scnu": "華南師範大学",
+      "gdei": "広東第二師範学院",
+      "cpcNews": "中国共産党ニュース網",
+      "stayTrue": "「初心を忘れず、使命を胸に」テーマ教育",
+      "antiEpidemic": "感染症対策と党旗",
+      "partyHistory": "党史学習教育",
+      "homeland": "美しい祖国のために努力する",
+      "congress20": "中国共産党第20回全国代表大会特集"
+    },
+    "media": {
+      "wechat": "学校公式WeChat",
+      "bilibili": "Bilibili",
+      "xiaohongshu": "小紅書（Xiaohongshu）",
+      "douyin": "学校公式Douyin"
+    },
+    "rightsReserved": "無断転載を禁じます"
   },
   "appearance": {
     "title": "インターフェースと外観",
@@ -1636,5 +1664,40 @@
   "pePage": {
     "wechatRequiredTitle": "WeChatで開いてください",
     "wechatRequiredDescription": "体力測定の結果照会にはWeChatが必要です。WeChatでコードを読み取るか、WeChat内でこのアプリを検索して開いてください。"
+  },
+  "dating": {
+    "publish": {
+      "title": "プロフィールを投稿",
+      "uploadAction": "アップロード",
+      "noticeTitle": "お知らせ",
+      "genderFemale": "女性",
+      "genderMale": "男性",
+      "nicknamePlaceholder": "ニックネームを入力",
+      "gradePlaceholder": "学年を選択",
+      "areaPlaceholder": "性別を選択",
+      "facultyPlaceholder": "専攻を入力",
+      "hometownPlaceholder": "出身地を入力",
+      "qqPlaceholder": "QQを入力",
+      "wechatPlaceholder": "WeChatを入力",
+      "privacyHint": "交流リクエストを承認するまで、QQとWeChatは公開されません。",
+      "warningHint": "他人の写真の無断使用やなりすましは禁止です。問題があれば通報してください。",
+      "contentPlaceholder": "どんな人に惹かれますか？理想の相手を100文字以内で教えてください。",
+      "submitting": "送信中…",
+      "submitAction": "プロフィールを投稿",
+      "invalidImageType": "対応していない画像形式です",
+      "imageTooLarge": "画像は5MB以内にしてください",
+      "nicknameInvalid": "ニックネームは1〜15文字で入力してください",
+      "gradeRequired": "学年を選択してください",
+      "areaRequired": "性別を選択してください",
+      "facultyInvalid": "専攻は1〜12文字で入力してください",
+      "hometownInvalid": "出身地は1〜10文字で入力してください",
+      "contactRequired": "QQかWeChatのいずれかを入力してください",
+      "contactInvalid": "連絡先が長すぎます",
+      "contentRequired": "理想の相手について入力してください",
+      "contentTooLong": "理想の相手の説明は100文字以内にしてください",
+      "uploading": "アップロード中…",
+      "publishing": "投稿中…",
+      "publishSuccess": "投稿しました"
+    }
   }
 }

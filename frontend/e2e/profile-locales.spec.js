@@ -4,6 +4,14 @@ import { readFileSync } from 'node:fs'
 const codes = ['zh-CN', 'zh-HK', 'zh-TW', 'en', 'ja', 'ko']
 const labels = ['简体中文', '繁體中文（香港）', '繁體中文（台灣）', 'English', '日本語', '한국어']
 const table = (code) => JSON.parse(readFileSync(new URL(`../src/locales/${code}.json`, import.meta.url), 'utf8'))
+const regions = {
+  'zh-CN': ['中国 广东 广州', '中国 广东 汕头', '中国', '广东', '广州'],
+  'zh-HK': ['中國 廣東 廣州', '中國 廣東 汕頭', '中國', '廣東', '廣州'],
+  'zh-TW': ['中國 廣東 廣州', '中國 廣東 汕頭', '中國', '廣東', '廣州'],
+  en: ['Guangzhou, Guangdong, China', 'Shantou, Guangdong, China', 'China', 'Guangdong', 'Guangzhou'],
+  ja: ['広州, 広東, 中国', '汕頭, 広東, 中国', '中国', '広東', '広州'],
+  ko: ['광저우, 광둥, 중국', '산터우, 광둥, 중국', '중국', '광둥', '광저우']
+}
 
 test.setTimeout(120000)
 for (const width of [375, 1366]) {
@@ -41,6 +49,17 @@ for (const width of [375, 1366]) {
       await expect(stats.nth(0)).toContainText(text.social.following)
       await expect(stats.nth(1)).toContainText(text.social.followers)
       await expect(stats.nth(2)).toContainText(text.social.friends)
+      const place = regions[codes[i]]
+      const locationRow = page.locator('.profile-page button.campus-list-row').filter({ hasText: text.profile.location })
+      const hometownRow = page.locator('.profile-page button.campus-list-row').filter({ hasText: text.profile.hometown })
+      await expect(locationRow).toContainText(place[0])
+      await expect(hometownRow).toContainText(place[1])
+      await locationRow.click()
+      await page.getByRole('button', { name: place[2], exact: true }).click()
+      await page.getByRole('button', { name: place[3], exact: true }).click()
+      await expect(page.getByRole('button', { name: place[4], exact: true })).toBeVisible()
+      await page.getByRole('button', { name: text.common.cancel, exact: true }).click()
+      await expect(locationRow).toContainText(place[0])
       await expect(page.locator('.profile-page a[href="/social/privacy"]')).toHaveCount(0)
       await expect(page.locator('.profile-page a[href="/social/blocks"]')).toHaveCount(0)
       await page.locator('.profile-page a[href="/user/privacy-setting"]').click()

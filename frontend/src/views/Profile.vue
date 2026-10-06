@@ -20,7 +20,7 @@
             {{ $t('profile.username') }}：{{ userInfo.username }}
           </p>
           <p class="text-sm text-[var(--c-text-tertiary)] mt-0.5 truncate">
-            {{ $t('profile.ipArea') }}：{{ userInfo.ipArea || '-' }}
+            {{ $t('profile.ipArea') }}：{{ localizedIpArea || '-' }}
           </p>
         </div>
       </div>
@@ -89,14 +89,14 @@
       <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openFacultyPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.faculty') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.faculty || $t('common.unselected') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ localizedFaculty || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
       <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openMajorPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.major') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.major || $t('common.unselected') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ localizedMajor || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
@@ -110,14 +110,14 @@
       <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openLocationPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.location') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.location || $t('common.unselected') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ localizedLocation || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
       <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openHometownPicker">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.hometown') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.hometown || $t('common.unselected') }}</span>
+        <span class="text-sm text-[var(--c-text-tertiary)]">{{ localizedHometown || $t('common.unselected') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
@@ -182,12 +182,12 @@
       <div class="profile-dialog-list">
         <button
           v-for="opt in listFallbackOptions"
-          :key="opt"
+          :key="opt.code"
           type="button"
           class="profile-dialog-list__item"
           @click="confirmListFallback(opt)"
         >
-          {{ opt }}
+          {{ opt.label }}
         </button>
       </div>
       <div class="profile-dialog-list__footer">
@@ -233,7 +233,7 @@ import { useToast } from '@/composables/useToast'
 import AppCard from '@/components/ui/AppCard.vue'
 import AppDialog from '@/components/ui/AppDialog.vue'
 import LocationPicker from '@/components/ui/LocationPicker.vue'
-import { formatProfileOptions } from '@/catalog/profileCatalog'
+import { formatProfileOptions, getProfileCatalog } from '@/catalog/profileCatalog'
 import { getLocationCatalog } from '@/catalog/locationCatalog'
 import { formatProfileViewModel } from '@/formatters/profileFormatter'
 import { User, ChevronRight } from 'lucide-vue-next'
@@ -272,56 +272,28 @@ const userInfo = ref({
   ipArea: ''
 })
 
+const locationCatalog = computed(() => getLocationCatalog(locale.value))
+const localizedLocation = computed(() => locationCatalog.value.locationLabel(userInfo.value.locationRegion, userInfo.value.locationState, userInfo.value.locationCity))
+const localizedHometown = computed(() => locationCatalog.value.locationLabel(userInfo.value.hometownRegion, userInfo.value.hometownState, userInfo.value.hometownCity))
+const localizedIpArea = computed(() => locationCatalog.value.systemAreaLabel(userInfo.value.ipArea))
+const profileCatalog = computed(() => getProfileCatalog(locale.value))
+const localizedFaculty = computed(() => userInfo.value.facultyCode == null ? userInfo.value.faculty : profileCatalog.value.facultyLabel(userInfo.value.facultyCode) || userInfo.value.faculty)
+const localizedMajor = computed(() => profileCatalog.value.majorLabel(userInfo.value.facultyCode, userInfo.value.majorCode) || userInfo.value.major)
+
 const showNicknameDialog = ref(false)
 const showIntroDialog = ref(false)
 const tempNickname = ref('')
 const tempIntro = ref('')
 
-const unselectedOption = t('common.unselected')
-const facultyList = ref([unselectedOption])
-const facultyCodeMap = ref({})
-const facultyMajorMap = ref({ [unselectedOption]: [unselectedOption] })
-const majorCodeMapByFaculty = ref({ [unselectedOption]: { [unselectedOption]: '' } })
-const facultyPlaceholder = t('profile.selectFaculty')
-const majorList = ref([])
-const updateMajorListByFaculty = () => {
-  majorList.value = (facultyMajorMap.value[userInfo.value.faculty] || [unselectedOption]).slice()
-}
+const rawProfileOptions = ref(null)
+const profileOptions = computed(() => formatProfileOptions(rawProfileOptions.value, locale.value))
+const facultyList = computed(() => [{ code: 0, label: t('common.unselected') }, ...profileOptions.value.faculties.filter(item => item.label)])
+const majorList = computed(() => [{ code: '', label: t('common.unselected') }, ...(profileOptions.value.faculties.find(item => item.code === userInfo.value.facultyCode)?.majors || []).filter(item => item.label)])
 
 const yearList = ref([])
 
-const locationListTree = ref([])
-
-function applyProfileOptions(data) {
-  const faculties = Array.isArray(data?.faculties) ? data.faculties : []
-  const nextFacultyList = [unselectedOption]
-  const nextFacultyCodeMap = { [unselectedOption]: 0 }
-  const nextFacultyMajorMap = { [unselectedOption]: [unselectedOption] }
-  const nextMajorCodeMapByFaculty = { [unselectedOption]: { [unselectedOption]: '' } }
-
-  faculties.forEach((faculty) => {
-    const label = typeof faculty?.label === 'string' ? faculty.label.trim() : ''
-    if (!label) {
-      return
-    }
-    const majors = Array.isArray(faculty?.majors)
-      ? faculty.majors.filter((major) => major?.code && major?.label)
-      : []
-    nextFacultyList.push(label)
-    nextFacultyCodeMap[label] = Number.isInteger(faculty?.code) ? faculty.code : null
-    nextFacultyMajorMap[label] = [unselectedOption, ...majors.map((major) => String(major.label).trim()).filter(Boolean)]
-    nextMajorCodeMapByFaculty[label] = {
-      [unselectedOption]: '',
-      ...Object.fromEntries(majors.map((major) => [major.label, major.code])),
-    }
-  })
-
-  facultyList.value = nextFacultyList
-  facultyCodeMap.value = nextFacultyCodeMap
-  facultyMajorMap.value = nextFacultyMajorMap
-  majorCodeMapByFaculty.value = nextMajorCodeMapByFaculty
-  updateMajorListByFaculty()
-}
+const locationCodeTree = ref(null)
+const locationListTree = computed(() => Array.isArray(locationCodeTree.value) ? locationCatalog.value.toPickerTree(locationCodeTree.value) : [])
 
 const initYearList = () => {
   const currentYear = new Date().getFullYear()
@@ -343,21 +315,19 @@ function saveBirthday(year, month, date) {
 }
 
 function saveFaculty() {
-  const code = facultyCodeMap.value[userInfo.value.faculty]
+  const code = userInfo.value.facultyCode
   if (!Number.isInteger(code)) return Promise.resolve()
   return updateFaculty({ faculty: code })
     .then(() => {
       userInfo.value.facultyCode = code
       userInfo.value.major = ''
       userInfo.value.majorCode = ''
-      updateMajorListByFaculty()
       showSuccess()
     })
 }
 
 function saveMajor() {
-  const major = userInfo.value.major
-  const majorCode = userInfo.value.majorCode || majorCodeMapByFaculty.value[userInfo.value.faculty]?.[major] || ''
+  const majorCode = userInfo.value.majorCode || ''
   if (!majorCode) return Promise.resolve()
   return updateMajor({ major: majorCode })
     .then(() => { showSuccess() })
@@ -390,31 +360,30 @@ const openBirthdayPicker = () => {
 }
 
 const openFacultyPicker = () => {
-  openListFallback(t('profile.selectFaculty'), facultyList.value, (val) => {
-    userInfo.value.faculty = val
-    userInfo.value.facultyCode = facultyCodeMap.value[val] ?? null
-    userInfo.value.major = unselectedOption
+  openListFallback('faculty', (option) => {
+    userInfo.value.faculty = ''
+    userInfo.value.facultyCode = option.code
+    userInfo.value.major = ''
     userInfo.value.majorCode = ''
-    updateMajorListByFaculty()
     saveFaculty()
   })
 }
 
 const openMajorPicker = () => {
-  if (userInfo.value.faculty === null || userInfo.value.faculty === undefined || userInfo.value.faculty === facultyPlaceholder || userInfo.value.faculty === unselectedOption) {
+  if (!userInfo.value.facultyCode) {
     toastError(t('profile.selectFacultyFirst'))
     return
   }
-  openListFallback(t('profile.selectMajor'), majorList.value, (val) => {
-    userInfo.value.major = val
-    userInfo.value.majorCode = majorCodeMapByFaculty.value[userInfo.value.faculty]?.[val] || ''
+  openListFallback('major', (option) => {
+    userInfo.value.major = ''
+    userInfo.value.majorCode = option.code
     saveMajor()
   })
 }
 
 const openEnrollmentPicker = () => {
-  openListFallback(t('profile.selectYear'), yearList.value.map(String), (val) => {
-    userInfo.value.enrollment = val
+  openListFallback('enrollment', (option) => {
+    userInfo.value.enrollment = option.code
     saveEnrollment()
   })
 }
@@ -460,12 +429,12 @@ const onLocationConfirm = ({ region, state, city }) => {
 }
 
 const showListFallback = ref(false)
-const listFallbackTitle = ref('')
-const listFallbackOptions = ref([])
+const listFallbackType = ref('faculty')
+const listFallbackTitle = computed(() => t({ faculty: 'profile.selectFaculty', major: 'profile.selectMajor', enrollment: 'profile.selectYear' }[listFallbackType.value]))
+const listFallbackOptions = computed(() => listFallbackType.value === 'faculty' ? facultyList.value : listFallbackType.value === 'major' ? majorList.value : yearList.value.map(year => ({ code: String(year), label: String(year) })))
 const listFallbackCallback = ref(null)
-const openListFallback = (title, options, onConfirm) => {
-  listFallbackTitle.value = title
-  listFallbackOptions.value = options
+const openListFallback = (type, onConfirm) => {
+  listFallbackType.value = type
   listFallbackCallback.value = onConfirm
   showListFallback.value = true
 }
@@ -522,7 +491,6 @@ async function fetchUserProfile() {
     const ok = res && (res.success === true || res.code === 200) && res.data
     if (ok) {
       Object.assign(userInfo.value, formatProfileViewModel(res.data, locale.value))
-      updateMajorListByFaculty()
     }
   } catch (_) {
     toastError(t('common.saveFailed'))
@@ -533,16 +501,15 @@ async function fetchProfileDictionary() {
   try {
     const res = await getProfileOptions()
     if (res && res.success && res.data) {
-      applyProfileOptions(formatProfileOptions(res.data, locale.value))
+      rawProfileOptions.value = res.data
     }
   } catch (_) {
-    applyProfileOptions(null)
+    rawProfileOptions.value = null
   }
 }
 
 onMounted(() => {
   initYearList()
-  updateMajorListByFaculty()
   fetchProfileDictionary()
   fetchUserProfile()
   fetchSocialMe()
@@ -560,7 +527,7 @@ onMounted(() => {
   getLocationList()
     .then(res => {
       if (res && res.success && res.data) {
-        locationListTree.value = getLocationCatalog(locale.value).toPickerTree(res.data)
+        locationCodeTree.value = res.data
       }
     })
     .catch(() => {})

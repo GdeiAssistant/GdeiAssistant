@@ -28,12 +28,12 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 
           <h3 class="!mt-0 text-center">《失物招领规则》</h3>
           <p class="text-center">发布日期：2026年4月25日</p>
-          <p class="text-center">更新日期：2026年4月25日</p>
-          <p class="text-center">生效日期：2026年5月11日</p>
+          <p class="text-center">更新日期：2026年10月7日</p>
+          <p class="text-center">生效日期：2026年10月14日</p>
 
           <div class="policy-notice policy-notice--info px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>平台角色：</strong>平台主要提供失物信息发布、沟通、认领辅助和必要的记录留存能力，不当然成为失物保管、权属认定或赔偿主体。</p>
-            <p class="!mb-0"><strong>生效说明：</strong>本规则自 2026 年 5 月 11 日起生效；生效日前仍适用修订前相关规则。</p>
+            <p class="!mb-0"><strong>生效说明：</strong>本规则自 2026 年 10 月 14 日起生效；生效日前仍适用修订前相关规则。</p>
           </div>
 
           <h3>第一条 发布要求</h3>
@@ -59,6 +59,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p><strong>4.1</strong> 因权属争议、冒领、描述不实、隐私泄露或线下交接纠纷引起的问题，原则上由相关用户自行协商处理。</p>
           <p><strong>4.2</strong> 平台可根据投诉、举报、风险控制和安全需要，对相关内容采取隐藏、下架、删除、限制账号、保留必要记录或协助处理等措施。</p>
           <p><strong>4.3</strong> 如涉嫌冒领、诈骗、侵权或其他违法行为，平台可依法配合有权机关处理。</p>
+          <p><strong>4.4</strong> 本规则未尽事宜及争议处理，适用 <a href="/agreement">《用户协议》</a> 第十二条、第十三条；涉及个人信息保护的，适用 <a href="/policy/privacy">《隐私政策》</a>。</p>
         </div>
       </div>
     </div>

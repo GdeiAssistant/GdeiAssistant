@@ -203,7 +203,7 @@ public class SocialRelationService {
         int end = rows == null ? 0 : Math.min(rows.size(), size);
         for (int i = 0; i < end; i++) {
             Map<String, Object> row = rows.get(i);
-            Long userId = ((Number) row.get("userId")).longValue();
+            long userId = ((Number) row.get("userId")).longValue();
             UserEntity target = identityService.findById(userId);
             if (target == null) {
                 continue;

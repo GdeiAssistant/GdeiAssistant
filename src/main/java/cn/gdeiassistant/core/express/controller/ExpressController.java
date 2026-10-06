@@ -78,7 +78,7 @@ public class ExpressController {
     }
 
     @RequestMapping(value = "/api/express/id/{id}/comment", method = RequestMethod.GET)
-    public DataJsonResult<List<ExpressCommentVO>> queryExpressComment(HttpServletRequest request, @PathVariable("id") Integer id) {
+    public DataJsonResult<List<ExpressCommentVO>> queryExpressComment(@PathVariable("id") Integer id) {
         List<ExpressCommentVO> list = expressService.queryExpressComment(id);
         return new DataJsonResult<>(true, list);
     }

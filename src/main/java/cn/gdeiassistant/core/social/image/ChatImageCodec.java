@@ -226,7 +226,7 @@ public final class ChatImageCodec {
             int length = (raw[p] & 255) << 8 | raw[p + 1] & 255;
             if (length < 2 || length > raw.length - p) break;
             int start = p + 2, end = p + length;
-            if (marker == 0xe1 && end - start >= 14
+            if (marker == 0xe1 && start <= raw.length - 14 && end - start >= 14
                     && raw[start] == 'E' && raw[start + 1] == 'x' && raw[start + 2] == 'i'
                     && raw[start + 3] == 'f' && raw[start + 4] == 0 && raw[start + 5] == 0) {
                 ByteBuffer tiff = ByteBuffer.wrap(raw, start + 6, end - start - 6).slice();

@@ -120,6 +120,38 @@ class ChatImageCodecTest {
         }
     }
 
+    @Test
+    void shortAndTruncatedExifSegmentsNeverEscapeAsBoundsErrors() throws Exception {
+        BufferedImage source = new BufferedImage(3, 2, BufferedImage.TYPE_INT_RGB);
+        ByteArrayOutputStream jpeg = new ByteArrayOutputStream();
+        assertTrue(ImageIO.write(source, "jpeg", jpeg));
+        byte[] fixture = withExif(jpeg.toByteArray(), 6, ByteOrder.LITTLE_ENDIAN);
+        for (int length = 0; length < fixture.length; length++) {
+            byte[] truncated = Arrays.copyOf(fixture, length);
+            assertDoesNotThrow(() -> {
+                try {
+                    ChatImageCodec.canonicalize(truncated, "image/jpeg");
+                } catch (SocialException expectedInvalidImage) {
+                    assertEquals("INVALID_REQUEST", expectedInvalidImage.getErrorCode());
+                }
+            }, "truncated length=" + length);
+        }
+        for (int payloadLength = 0; payloadLength < 14; payloadLength++) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            out.write(fixture, 0, 6 + payloadLength);
+            out.write(jpeg.toByteArray(), 2, jpeg.size() - 2);
+            byte[] malformed = out.toByteArray();
+            malformed[5] = (byte) (payloadLength + 2);
+            assertDoesNotThrow(() -> {
+                try {
+                    ChatImageCodec.canonicalize(malformed, "image/jpeg");
+                } catch (SocialException expectedInvalidImage) {
+                    assertEquals("INVALID_REQUEST", expectedInvalidImage.getErrorCode());
+                }
+            }, "APP1 payload length=" + payloadLength);
+        }
+    }
+
     private static byte[] withExif(byte[] jpeg, int orientation, ByteOrder order) throws Exception {
         ByteBuffer tiff = ByteBuffer.allocate(26).order(order);
         tiff.put(order == ByteOrder.LITTLE_ENDIAN ? (byte) 'I' : (byte) 'M');

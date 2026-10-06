@@ -133,7 +133,7 @@ onMounted(() => {
         <div
           v-for="item in list"
           :key="item.id"
-          class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
           @click="goDetail(item.id)"
         >
           <div class="w-full aspect-square overflow-hidden bg-[var(--c-border)]">
@@ -159,35 +159,26 @@ onMounted(() => {
 
 <style scoped>
 .marketplace-action-link {
-  color: color-mix(in srgb, var(--c-ershou) 84%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .marketplace-action-link:hover {
-  color: color-mix(in srgb, var(--c-ershou) 92%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .marketplace-action-icon {
-  color: color-mix(in srgb, var(--c-ershou) 82%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .marketplace-spinner-accent {
-  border-top-color: color-mix(in srgb, var(--c-ershou) 86%, var(--c-text-1)) !important;
+  border-top-color: var(--c-primary) !important;
 }
 
 .marketplace-price {
-  color: color-mix(in srgb, var(--c-ershou) 18%, var(--c-warning));
-}
-
-[data-theme="dark"] .marketplace-price {
-  color: color-mix(in srgb, var(--c-warning) 78%, #fde68a);
+  color: var(--c-warning);
 }
 
 .marketplace-category-grid {
-  border: 1px solid color-mix(in srgb, var(--c-ershou) 14%, var(--c-border));
+  border: 1px solid var(--c-border);
 }
-
-[data-theme="dark"] .marketplace-category-grid {
-  border-color: color-mix(in srgb, var(--c-ershou) 20%, rgba(68, 89, 112, 0.72));
-}
-
 </style>

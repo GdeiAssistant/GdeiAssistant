@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { setLocale as setI18nLocale } from '@/i18n'
 import { getThemeMode, setThemeMode, getFontScaleStep, setFontScaleStep } from '@/theme'
 import { LOCALE_OPTIONS, resolveSupportedLocale } from '@/constants/localeOptions'
+import { Check, ChevronLeft } from 'lucide-vue-next'
 
 const { t, locale } = useI18n()
 
@@ -54,213 +55,317 @@ function isLocaleSelected(code) {
 </script>
 
 <template>
-  <div class="appearance-page">
-    <div class="appearance-header">
-      <button type="button" class="back-link" @click="$router.back()">←</button>
-      <h2>{{ t('appearance.title') }}</h2>
+  <div class="appearance-page subpage">
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="$router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <h1 class="subpage-bar__title">{{ t('appearance.title') }}</h1>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="appearance-section">
-      <h3 class="section-title">{{ t('appearance.theme.label') }}</h3>
-      <div class="option-list">
-        <button
-          v-for="opt in themeOptions"
-          :key="opt.value"
-          type="button"
-          class="option-item"
-          :class="{ 'option-item--active': isThemeSelected(opt.value) }"
-          @click="onThemeChange(opt.value)"
-        >
-          <span>{{ t(opt.labelKey) }}</span>
-          <span v-if="isThemeSelected(opt.value)" class="check-icon">✓</span>
-        </button>
-      </div>
-    </div>
+    <div class="appearance-body">
+      <div class="appearance-heading" aria-hidden="true">{{ t('appearance.title') }}</div>
 
-    <div class="appearance-section">
-      <h3 class="section-title">{{ t('appearance.font.label') }}</h3>
-      <div class="font-card">
-        <input
-          type="range"
-          min="0"
-          max="3"
-          step="1"
-          :value="fontStep"
-          class="font-slider"
-          @input="onFontChange"
-        />
-        <div class="font-labels">
-          <span v-for="(lbl, i) in fontLabels" :key="i">{{ t(lbl) }}</span>
+      <section class="appearance-section">
+        <h3 class="section-title">{{ t('appearance.theme.label') }}</h3>
+        <div class="theme-grid" role="radiogroup" :aria-label="t('appearance.theme.label')">
+          <button
+            v-for="opt in themeOptions"
+            :key="opt.value"
+            type="button"
+            role="radio"
+            :aria-checked="isThemeSelected(opt.value)"
+            class="option-item theme-option"
+            :class="{ 'option-item--active': isThemeSelected(opt.value) }"
+            @click="onThemeChange(opt.value)"
+          >
+            <span class="theme-swatch" :class="`theme-swatch--${opt.value}`" aria-hidden="true">
+              <i></i><i></i><i></i>
+            </span>
+            <span class="theme-option__label">
+              <span>{{ t(opt.labelKey) }}</span>
+              <Check v-if="isThemeSelected(opt.value)" class="check-icon" :size="16" aria-hidden="true" />
+            </span>
+          </button>
         </div>
-        <p class="font-preview" :style="{ fontSize: (16 * fontScales[fontStep]) + 'px' }">
-          {{ t('appearance.font.preview') }}
-        </p>
-      </div>
-    </div>
+      </section>
 
-    <div class="appearance-section">
-      <h3 class="section-title">{{ t('appearance.language.label') }}</h3>
-      <div class="option-list">
-        <button
-          v-for="loc in locales"
-          :key="loc.code"
-          type="button"
-          class="option-item"
-          :class="{ 'option-item--active': isLocaleSelected(loc.code) }"
-          @click="onLocaleChange(loc.code)"
-        >
-          <span>{{ loc.label }}</span>
-          <span v-if="isLocaleSelected(loc.code)" class="check-icon">✓</span>
-        </button>
-      </div>
+      <section class="appearance-section">
+        <h3 class="section-title">{{ t('appearance.font.label') }}</h3>
+        <div class="font-card">
+          <p class="font-preview" :style="{ fontSize: (16 * fontScales[fontStep]) + 'px' }">
+            {{ t('appearance.font.preview') }}
+          </p>
+          <input
+            type="range"
+            min="0"
+            max="3"
+            step="1"
+            :value="fontStep"
+            class="font-slider"
+            :style="{ '--fill': (fontStep / 3) * 100 + '%' }"
+            @input="onFontChange"
+          />
+          <div class="font-labels">
+            <span v-for="(lbl, i) in fontLabels" :key="i" :class="{ 'is-active': i === fontStep }">{{ t(lbl) }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="appearance-section">
+        <h3 class="section-title">{{ t('appearance.language.label') }}</h3>
+        <div class="option-list">
+          <button
+            v-for="loc in locales"
+            :key="loc.code"
+            type="button"
+            class="option-item"
+            :class="{ 'option-item--active': isLocaleSelected(loc.code) }"
+            @click="onLocaleChange(loc.code)"
+          >
+            <span>{{ loc.label }}</span>
+            <Check v-if="isLocaleSelected(loc.code)" class="check-icon" :size="18" aria-hidden="true" />
+          </button>
+        </div>
+      </section>
     </div>
   </div>
 </template>
 
 <style scoped>
+.subpage-bar__title {
+  margin: 0;
+}
+
 .appearance-page {
   min-height: 100vh;
-  padding: 22px clamp(14px, 4vw, 42px) 48px;
   color: var(--c-text-1);
-  background:
-    radial-gradient(circle at 18% 10%, rgba(175, 225, 255, 0.42), transparent 28%),
-    radial-gradient(circle at 82% 8%, rgba(183, 238, 207, 0.34), transparent 24%),
-    var(--c-bg);
+  background: var(--c-bg);
 }
 
-.appearance-header {
-  display: flex;
-  max-width: 760px;
-  align-items: center;
-  gap: 12px;
-  margin: 0 auto 18px;
+.appearance-body {
+  width: min(640px, 100%);
+  margin: 0 auto;
+  padding: 20px 16px 56px;
 }
 
-.appearance-header h2 {
-  margin: 0;
-  color: var(--c-text-1);
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: -0.03em;
+.appearance-heading {
+  display: none;
+  margin: 0 0 24px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-.back-link {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border: 1px solid var(--c-border);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.82);
-  color: var(--c-primary);
-  cursor: pointer;
-  font: inherit;
-  font-size: 1.2rem;
-  text-decoration: none;
-}
-
-.appearance-section {
-  max-width: 760px;
-  margin: 14px auto 0;
-  border: 1px solid rgba(205, 222, 226, 0.78);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.86);
-  box-shadow: 0 16px 38px rgba(32, 69, 78, 0.07);
-  overflow: hidden;
-  backdrop-filter: blur(14px);
+.appearance-section + .appearance-section {
+  margin-top: 28px;
 }
 
 .section-title {
-  margin: 0;
-  padding: 16px 18px 10px;
-  color: var(--c-text-2);
-  font-size: 13px;
-  font-weight: 860;
+  margin: 0 0 10px 2px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--c-text-3);
 }
 
-.option-list {
-  padding: 0 10px 10px;
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .option-item {
   display: flex;
-  width: 100%;
-  min-height: 48px;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
   border: 0;
-  border-radius: 16px;
   background: transparent;
   color: var(--c-text-1);
-  cursor: pointer;
   font: inherit;
-  font-size: 14px;
-  font-weight: 720;
-  padding: 0 12px;
+  font-size: 15px;
   text-align: left;
+  cursor: pointer;
+  transition: background-color 0.16s ease, border-color 0.16s ease;
 }
 
-.option-item:hover {
-  background: var(--c-primary-50);
+.option-item:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: -2px;
 }
 
-.option-item--active {
-  background: color-mix(in srgb, var(--c-primary) 10%, rgba(255, 255, 255, 0.9));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 16%, transparent);
+.theme-option {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
 }
 
-.option-item--active:hover {
-  background: color-mix(in srgb, var(--c-primary) 14%, rgba(255, 255, 255, 0.92));
+.theme-option:hover {
+  border-color: color-mix(in srgb, var(--c-primary) 40%, var(--c-border));
 }
+
+.theme-option.option-item--active {
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 1px var(--c-primary);
+}
+
+.theme-option__label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 20px;
+  padding: 0 2px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.theme-swatch {
+  position: relative;
+  display: block;
+  height: 64px;
+  overflow: hidden;
+  border: 1px solid var(--c-divider);
+  border-radius: var(--radius-control);
+  background: #f4f7f6;
+}
+
+.theme-swatch i {
+  position: absolute;
+  left: 10px;
+  height: 8px;
+  border-radius: 4px;
+  background: #dbe4e0;
+}
+
+.theme-swatch i:nth-child(1) { top: 12px; width: 44%; background: #0e8f6e; }
+.theme-swatch i:nth-child(2) { top: 28px; width: 70%; }
+.theme-swatch i:nth-child(3) { top: 42px; width: 56%; }
+
+.theme-swatch--dark { background: #0e1513; }
+.theme-swatch--dark i { background: #26332f; }
+.theme-swatch--dark i:nth-child(1) { background: #34c79a; }
+
+.theme-swatch--system {
+  background: linear-gradient(90deg, #f4f7f6 50%, #0e1513 50%);
+}
+
+.theme-swatch--system i { background: #9aa8a3; }
+.theme-swatch--system i:nth-child(1) { background: #0e8f6e; }
 
 .check-icon {
+  flex: none;
   color: var(--c-primary);
-  font-weight: 900;
+}
+
+.font-card,
+.option-list {
+  overflow: hidden;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
 }
 
 .font-card {
-  padding: 4px 18px 18px;
+  padding: 20px 16px 16px;
+}
+
+.font-preview {
+  min-height: 56px;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border-radius: var(--radius-control);
+  background: var(--c-fill-2);
+  color: var(--c-text-1);
+  line-height: 1.6;
 }
 
 .font-slider {
   width: 100%;
+  height: 4px;
+  margin: 8px 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--c-primary) var(--fill, 33%), var(--c-fill-3) var(--fill, 33%));
   accent-color: var(--c-primary);
+  appearance: none;
+  cursor: pointer;
+}
+
+.font-slider::-webkit-slider-thumb {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--c-primary);
+  border-radius: 50%;
+  background: var(--c-surface);
+  appearance: none;
+}
+
+.font-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--c-primary);
+  border-radius: 50%;
+  background: var(--c-surface);
+}
+
+.font-slider:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 6px;
 }
 
 .font-labels {
   display: flex;
   justify-content: space-between;
-  margin-top: 6px;
-  color: var(--c-text-2);
+  margin-top: 10px;
   font-size: 12px;
+  color: var(--c-text-3);
 }
 
-.font-preview {
-  margin: 16px 0 0;
-  border: 1px solid var(--c-border);
-  border-radius: 18px;
-  background: rgba(246, 251, 255, 0.78);
-  color: var(--c-text-1);
-  padding: 16px;
+.font-labels .is-active {
+  color: var(--c-primary);
+  font-weight: 600;
 }
 
-[data-theme="dark"] .appearance-page {
-  background: var(--c-bg);
+.option-list .option-item + .option-item {
+  border-top: 1px solid var(--c-divider);
 }
 
-[data-theme="dark"] .appearance-section,
-[data-theme="dark"] .back-link,
-[data-theme="dark"] .font-preview {
-  border-color: rgba(45, 58, 73, 0.86);
-  background: rgba(20, 27, 37, 0.86);
+.option-list .option-item:hover {
+  background: var(--c-surface-hover);
 }
 
-[data-theme="dark"] .option-item--active {
-  background: color-mix(in srgb, var(--c-primary) 10%, rgba(29, 40, 54, 0.92));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 18%, rgba(103, 232, 249, 0.16));
+.option-list .option-item--active {
+  font-weight: 600;
 }
 
-[data-theme="dark"] .option-item--active:hover {
-  background: color-mix(in srgb, var(--c-primary) 14%, rgba(31, 45, 61, 0.94));
+@media (min-width: 1024px) {
+  .appearance-body {
+    padding: 40px 0 72px;
+  }
+
+  .appearance-heading {
+    display: block;
+  }
+}
+
+@media (max-width: 380px) {
+  .theme-swatch {
+    height: 52px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option-item {
+    transition: none;
+  }
 }
 </style>

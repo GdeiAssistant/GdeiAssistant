@@ -4,7 +4,7 @@
       <div class="w-6 h-6 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
     </div>
 
-    <div v-else-if="item" class="bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] px-5 py-5">
+    <div v-else-if="item" class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] px-5 py-5">
       <h1 class="text-[18px] font-bold text-[var(--c-text-1)] leading-tight">{{ item.title }}</h1>
       <p class="mt-2 text-[13px] text-[var(--c-text-3)]">{{ item.publishTime }}</p>
       <div class="mt-4 pt-4 border-t border-[var(--c-border-light)] text-[15px] text-[var(--c-text-1)] leading-relaxed whitespace-pre-line">

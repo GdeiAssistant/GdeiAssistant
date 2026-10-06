@@ -112,25 +112,15 @@ onMounted(() => {
 <style scoped>
 .community-secret-profile-empty-shell {
   margin: 6px 8px 0;
-  border: 1px solid color-mix(in srgb, var(--c-secret) 16%, var(--c-border));
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-secret) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--c-secret) 3%, var(--c-surface));
-  box-shadow: 0 14px 30px color-mix(in srgb, var(--c-secret) 10%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 
 .community-secret-profile-empty-icon {
   font-size: 30px;
   font-weight: 900;
   line-height: 1;
-}
-
-[data-theme="dark"] .community-secret-profile-empty-shell {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-secret) 8%, transparent), transparent 42%),
-    rgba(24, 38, 53, 0.84);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
 }
 </style>

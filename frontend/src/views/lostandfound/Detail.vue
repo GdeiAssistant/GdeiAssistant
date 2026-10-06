@@ -83,7 +83,7 @@ function copyText(text) {
     <!-- Loading -->
     <div v-if="loading" class="community-lostandfound-detail-state-shell px-4 pt-4">
       <div class="community-lostandfound-detail-state-card">
-        <div class="flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
+        <div class="ui-empty-state flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
           <span class="w-6 h-6 border-2 border-[var(--c-border)] border-t-[var(--c-lostandfound)] rounded-full animate-spin"></span>
           <p class="mt-3 text-sm">{{ t('communityCommon.loading') }}</p>
         </div>
@@ -105,7 +105,7 @@ function copyText(text) {
       </div>
 
       <!-- 基本信息 -->
-      <div class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform p-4 border-b border-[var(--c-border)] rounded-none m-0">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform p-4 border-b border-[var(--c-border)] rounded-none m-0">
         <h5 class="text-lg font-medium text-[var(--c-text-1)] m-0 mb-2.5 p-0">{{ detail.title }}</h5>
         <p class="text-[13px] text-[var(--c-text-3)] m-0 p-0">{{ t('lostandfound.detail.publishTime') }}<b>{{ detail.time }}</b></p>
       </div>
@@ -188,10 +188,10 @@ function copyText(text) {
 }
 
 .community-lostandfound-detail-state-card {
-  border: 1px solid color-mix(in srgb, var(--c-lostandfound) 10%, rgba(205, 222, 226, 0.82));
-  border-radius: 24px;
-  background: color-mix(in srgb, var(--c-lostandfound) 3%, rgba(255, 255, 255, 0.94));
-  box-shadow: 0 18px 36px rgba(32, 69, 78, 0.08);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
+  box-shadow: none;
 }
 
 .community-lostandfound-detail-state-icon {
@@ -226,31 +226,12 @@ function copyText(text) {
 }
 
 .community-lostandfound-contact-action {
-  border-color: color-mix(in srgb, var(--c-lostandfound) 72%, transparent);
-  color: color-mix(in srgb, var(--c-lostandfound) 84%, var(--c-text-1));
+  border-color: var(--c-primary);
+  color: var(--c-primary);
   transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .community-lostandfound-contact-action:hover {
   background: color-mix(in srgb, var(--c-lostandfound) 8%, transparent);
-}
-
-[data-theme="dark"] .community-lostandfound-contact-action {
-  border-color: color-mix(in srgb, var(--c-lostandfound) 36%, rgba(76, 101, 126, 0.84));
-  color: color-mix(in srgb, var(--c-lostandfound) 54%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-lostandfound-contact-action:hover {
-  background: rgba(32, 48, 68, 0.72);
-}
-
-[data-theme="dark"] .community-lostandfound-detail-icon {
-  background-color: color-mix(in srgb, var(--c-lostandfound) 56%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-lostandfound-detail-state-card {
-  border-color: color-mix(in srgb, var(--c-lostandfound) 12%, rgba(97, 122, 147, 0.66));
-  background: rgba(24, 38, 53, 0.88);
-  box-shadow: 0 22px 38px rgba(0, 0, 0, 0.22);
 }
 </style>

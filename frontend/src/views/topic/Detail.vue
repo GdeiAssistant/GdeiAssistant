@@ -64,7 +64,7 @@ onMounted(async () => {
     </div>
 
     <div v-else-if="topic" class="p-4">
-      <div class="bg-[var(--c-surface)] rounded-xl p-4 shadow-sm">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-xl p-4 shadow-sm">
         <div class="flex items-center justify-between gap-3">
           <span class="text-[var(--c-topic)] text-base font-semibold">#{{ topic.topic || t('topic.detail.defaultTopic') }}</span>
           <span class="text-[var(--c-text-3)] text-xs shrink-0">{{ topic.publishTime || t('common.recentUpdate') }}</span>
@@ -98,7 +98,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div v-else class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+    <div v-else class="ui-empty-state flex flex-col items-center py-16 text-[var(--c-text-3)]">
       <p class="text-sm">{{ t('topic.detail.notFound') }}</p>
     </div>
   </div>

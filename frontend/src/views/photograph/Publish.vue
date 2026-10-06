@@ -108,7 +108,7 @@ const submit = async () => {
         <input
           type="text"
           maxlength="25"
-          class="w-full box-border px-3 py-2 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] bg-[var(--c-card)] transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
+          class="ui-control w-full box-border px-3 py-2 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] bg-[var(--c-card)] transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
           :placeholder="copy.titlePlaceholder"
           v-model="form.title"
         />
@@ -154,7 +154,7 @@ const submit = async () => {
       <div class="mt-4 mb-4">
         <label class="block text-base font-medium text-[var(--c-text-1)] mb-2">{{ copy.contentLabel }}</label>
         <textarea
-          class="w-full box-border px-3 py-2 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] bg-[var(--c-card)] resize-y transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
+          class="ui-control w-full box-border px-3 py-2 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] bg-[var(--c-card)] resize-y transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
           rows="4"
           :placeholder="copy.contentPlaceholder"
           v-model="form.content"
@@ -168,8 +168,8 @@ const submit = async () => {
 
     <!-- Dialog -->
     <div v-if="dialogVisible">
-      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+      <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
         <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
         <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)] flex">
@@ -192,23 +192,21 @@ const submit = async () => {
 }
 
 .community-photograph-required {
-  color: color-mix(in srgb, var(--photograph-form-accent) 82%, #0f766e);
+  color: var(--c-text-2);
 }
 
 .community-photograph-upload {
   background: var(--photograph-form-accent-soft);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--photograph-form-accent) 10%, transparent);
+  box-shadow: none;
 }
 
 .community-photograph-upload--main {
   border-color: var(--photograph-form-accent) !important;
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--photograph-form-accent) 14%, transparent),
-    0 18px 34px color-mix(in srgb, var(--photograph-form-accent) 10%, transparent);
+  box-shadow: none;
 }
 
 .community-photograph-upload--sub {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--photograph-form-accent) 8%, transparent);
+  box-shadow: none;
 }
 
 .community-photograph-upload--sub:hover {
@@ -220,44 +218,11 @@ const submit = async () => {
 }
 
 .community-photograph-submit {
-  background: linear-gradient(135deg, var(--photograph-form-accent), var(--photograph-form-action-end));
-  box-shadow: 0 14px 28px color-mix(in srgb, var(--photograph-form-accent) 18%, transparent);
+  background: var(--c-surface);
+  box-shadow: none;
 }
 
 .community-photograph-confirm {
   color: var(--photograph-form-accent);
-}
-
-[data-theme="dark"] .community-photograph-page {
-  --photograph-form-accent: color-mix(in srgb, var(--c-photograph) 44%, #94a3b8);
-  --photograph-form-accent-soft: linear-gradient(180deg, color-mix(in srgb, var(--c-photograph) 9%, rgba(36, 56, 74, 0.86)), rgba(29, 44, 60, 0.92));
-  --photograph-form-action-end: color-mix(in srgb, var(--c-photograph) 24%, #172435);
-}
-
-[data-theme="dark"] .community-photograph-required {
-  color: color-mix(in srgb, var(--photograph-form-accent) 72%, var(--c-text-2));
-}
-
-[data-theme="dark"] .community-photograph-upload {
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--photograph-form-accent) 12%, rgba(111, 132, 156, 0.42)),
-    0 14px 28px rgba(0, 0, 0, 0.12);
-}
-
-[data-theme="dark"] .community-photograph-upload--sub {
-  background: linear-gradient(180deg, rgba(42, 64, 84, 0.88), rgba(31, 47, 64, 0.92));
-}
-
-[data-theme="dark"] .community-photograph-clear {
-  background: rgba(22, 33, 45, 0.94);
-  border-color: color-mix(in srgb, var(--photograph-form-accent) 18%, rgba(111, 132, 156, 0.4));
-  color: color-mix(in srgb, var(--photograph-form-accent) 28%, var(--c-text-2));
-}
-
-[data-theme="dark"] .community-photograph-submit {
-  color: color-mix(in srgb, var(--c-photograph) 36%, #fff);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--c-photograph) 18%, rgba(111, 132, 156, 0.72)),
-    0 18px 32px rgba(0, 0, 0, 0.18);
 }
 </style>

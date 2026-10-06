@@ -243,32 +243,17 @@ onMounted(() => {
   color: inherit;
 }
 
-[data-theme="dark"] .community-secret-actionbar__publish,
-[data-theme="dark"] .community-secret-actionbar__publish:hover {
-  color: color-mix(in srgb, var(--c-secret) 54%, var(--c-text-1));
-}
-
 .community-secret-empty-shell {
   margin: 10px 16px 0;
-  border: 1px solid color-mix(in srgb, var(--c-secret) 16%, var(--c-border));
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-secret) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--c-secret) 3%, var(--c-surface));
-  box-shadow: 0 14px 32px color-mix(in srgb, var(--c-secret) 10%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 
 .community-secret-empty-icon {
   font-size: 30px;
   font-weight: 900;
   line-height: 1;
-}
-
-[data-theme="dark"] .community-secret-empty-shell {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-secret) 8%, transparent), transparent 42%),
-    rgba(24, 38, 53, 0.84);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
 }
 </style>

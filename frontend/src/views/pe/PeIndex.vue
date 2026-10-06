@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -20,15 +21,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="!isWechat" class="min-h-screen bg-[var(--c-bg)]">
+  <div v-if="!isWechat" class="subpage min-h-screen bg-[var(--c-bg)]">
     <!-- Sticky header -->
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('feature.pe.name') }}</span>
-      <div class="w-10"></div>
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="$router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('feature.pe.name') }}</span>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <div class="flex flex-col items-center text-center pt-12">
         <!-- Warning icon -->
         <div class="pe-wechat-warning-icon w-16 h-16 rounded-full flex items-center justify-center mb-5">
@@ -44,7 +48,7 @@ onMounted(() => {
 
         <button
           @click="$router.back()"
-          class="mt-8 px-8 py-2.5 rounded-xl border border-[var(--c-border)] text-sm text-[var(--c-text)] bg-[var(--c-surface)] active:bg-black/5 transition-colors"
+          class="ui-panel mt-8 px-8 py-2.5 rounded-xl border border-[var(--c-border)] text-sm text-[var(--c-text)] bg-[var(--c-surface)] hover:bg-[var(--c-surface-hover)] transition-colors"
         >
           {{ t('common.back') }}
         </button>
@@ -56,16 +60,11 @@ onMounted(() => {
 <style scoped>
 .pe-wechat-warning-icon {
   background: color-mix(in srgb, var(--c-warning) 16%, var(--c-surface));
-  color: color-mix(in srgb, var(--c-warning) 78%, var(--c-text-1));
-  box-shadow: 0 14px 28px color-mix(in srgb, var(--c-warning) 12%, transparent);
+  color: var(--c-warning);
+  box-shadow: none;
 }
 
 .pe-wechat-warning-icon__glyph {
   color: inherit;
-}
-
-[data-theme="dark"] .pe-wechat-warning-icon {
-  background: color-mix(in srgb, var(--c-warning) 14%, rgba(24, 38, 53, 0.92));
-  color: color-mix(in srgb, var(--c-warning) 68%, #fef3c7);
 }
 </style>

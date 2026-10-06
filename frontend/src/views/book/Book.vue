@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -90,18 +91,21 @@ function confirmRenew() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('libraryPage.borrow.title') }}</span>
-      <div class="w-10"></div>
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="goBack">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('libraryPage.borrow.title') }}</span>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('libraryPage.borrow.intro') }}<br><span class="text-xs text-[var(--c-text-3)]">{{ t('libraryPage.borrow.mockPassword') }}</span></p>
 
       <!-- Password form -->
-      <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
         <div>
           <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('libraryPage.borrow.passwordLabel') }}</label>
           <input
@@ -109,14 +113,14 @@ function confirmRenew() {
             type="password"
             :placeholder="t('libraryPage.borrow.passwordPlaceholder')"
             maxlength="20"
-            class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+            class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
             @keyup.enter="fetchBorrowed"
           />
         </div>
 
         <button
           type="button"
-          class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          class="ui-btn-primary w-full bg-[var(--c-primary)] text-[var(--c-on-primary)] rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
           @click="fetchBorrowed"
         >{{ hasQueriedBorrow ? t('libraryPage.borrow.refresh') : t('libraryPage.borrow.query') }}</button>
       </div>
@@ -142,7 +146,7 @@ function confirmRenew() {
             <div
               v-for="(item, index) in borrowList"
               :key="item.id || index"
-              class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]"
+              class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]"
             >
               <div class="divide-y divide-[var(--c-border-light)]">
                 <div class="flex justify-between py-2.5">
@@ -186,8 +190,8 @@ function confirmRenew() {
 
     <!-- Renew password dialog -->
     <template v-if="showPasswordDialog">
-      <div class="fixed inset-0 z-50 bg-black/40" @click="closePasswordDialog"></div>
-      <div class="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-48px)] max-w-sm bg-[var(--c-surface)] rounded-2xl p-6 shadow-xl">
+      <div class="ui-scrim fixed inset-0 z-50 bg-black/40" @click="closePasswordDialog"></div>
+      <div class="ui-modal fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-48px)] max-w-sm bg-[var(--c-surface)] rounded-2xl p-6 shadow-xl">
         <h3 class="text-base font-bold text-center text-[var(--c-text)]">{{ t('libraryPage.borrow.renewDialogTitle') }}</h3>
         <p class="mt-2 text-sm text-center text-[var(--c-text-2)]">{{ t('libraryPage.borrow.renewDialogDescription') }}</p>
         <input
@@ -195,7 +199,7 @@ function confirmRenew() {
           type="password"
           :placeholder="t('libraryPage.borrow.renewDialogPlaceholder')"
           maxlength="20"
-          class="mt-4 w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+          class="ui-control mt-4 w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
           @keyup.enter="confirmRenew"
         />
         <div class="flex gap-3 mt-5">
@@ -206,7 +210,7 @@ function confirmRenew() {
           >{{ t('common.cancel') }}</button>
           <button
             type="button"
-            class="flex-1 py-2.5 text-sm font-semibold text-white bg-[var(--c-primary)] rounded-lg hover:opacity-90 transition-opacity"
+            class="ui-btn-primary flex-1 py-2.5 text-sm font-semibold text-[var(--c-on-primary)] bg-[var(--c-primary)] rounded-lg hover:opacity-90 transition-opacity"
             @click="confirmRenew"
           >{{ t('common.confirm') }}</button>
         </div>

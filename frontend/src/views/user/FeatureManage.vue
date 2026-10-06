@@ -1,14 +1,17 @@
 <template>
-  <div class="feature-manage-page min-h-screen">
+  <div class="subpage feature-manage-page min-h-screen">
     <!-- Sticky Header -->
-    <div class="feature-manage-header sticky top-0 z-10 flex items-center h-12 px-4">
-      <button type="button" class="feature-manage-back w-15 text-base text-left" @click="goBack">{{ t('common.back') }}</button>
-      <div class="feature-manage-title flex-1 text-center text-lg font-medium">{{ t('profile.featureManage') }}</div>
-      <div class="w-15"></div>
+    <div class="subpage-bar feature-manage-header">
+      <button type="button" class="subpage-bar__back feature-manage-back" @click="goBack">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <div class="subpage-bar__title feature-manage-title">{{ t('profile.featureManage') }}</div>
+      <span aria-hidden="true"></span>
     </div>
 
     <!-- Content -->
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <p class="feature-manage-description text-sm mb-3">
         {{ t('featureManage.description') }}
       </p>
@@ -47,6 +50,7 @@
 </template>
 
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -113,15 +117,7 @@ onMounted(() => {
 
 <style scoped>
 .feature-manage-page {
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 8%, transparent), transparent 30%),
-    var(--c-bg-soft);
-}
-
-.feature-manage-header {
-  background: color-mix(in srgb, var(--c-surface) 94%, var(--c-bg));
-  border-bottom: 1px solid var(--c-border-light);
-  backdrop-filter: blur(18px);
+  background: var(--c-bg);
 }
 
 .feature-manage-back,
@@ -136,8 +132,8 @@ onMounted(() => {
 
 .feature-manage-card {
   background: var(--c-surface);
-  border: 1px solid color-mix(in srgb, var(--c-primary) 8%, var(--c-border-light));
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 8%, rgba(15, 23, 42, 0.06));
+  border: 1px solid var(--c-border);
+  box-shadow: none;
   --tw-divide-opacity: 1;
   border-color: color-mix(in srgb, var(--c-primary) 8%, var(--c-border-light));
 }
@@ -151,34 +147,6 @@ onMounted(() => {
 }
 
 .peer:checked + .feature-manage-switch {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
-}
-
-[data-theme="dark"] .feature-manage-page {
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 10%, transparent), transparent 30%),
-    var(--c-bg);
-}
-
-[data-theme="dark"] .feature-manage-header {
-  background: color-mix(in srgb, var(--c-surface) 88%, rgba(10, 20, 32, 0.9));
-  border-bottom-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .feature-manage-card {
-  border-color: rgba(68, 89, 112, 0.72);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .feature-manage-row + .feature-manage-row {
-  border-top-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .feature-manage-switch {
-  background: rgba(36, 52, 69, 0.88);
-}
-
-[data-theme="dark"] .peer:checked + .feature-manage-switch {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
+  background: var(--c-primary);
 }
 </style>

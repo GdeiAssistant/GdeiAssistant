@@ -114,12 +114,7 @@ onMounted(() => {
         v-for="tab in yearTabs"
         :key="tab.value"
         @click="switchYear(tab.value)"
-        :class="[
-          'shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all whitespace-nowrap',
-          activeYear === tab.value
-            ? 'bg-[var(--c-primary)] text-[var(--c-on-primary)]'
-            : 'bg-[var(--c-surface)] text-[var(--c-text-2)] border border-[var(--c-border)]'
-        ]"
+        :class="[ 'shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all whitespace-nowrap', activeYear === tab.value ? 'bg-[var(--c-primary)] text-[var(--c-on-primary)]' : 'bg-[var(--c-surface)] text-[var(--c-text-2)] border border-[var(--c-border)]' ]"
       >
         {{ tab.label }}
       </button>
@@ -252,14 +247,14 @@ onMounted(() => {
       <Transition name="fade">
         <div
           v-if="showActionSheet"
-          class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
+          class="ui-scrim fixed inset-0 z-50 bg-black/40"
           @click="closeActionSheet"
         />
       </Transition>
       <Transition name="slide-up">
         <div
           v-if="showActionSheet"
-          class="fixed bottom-0 left-0 right-0 z-50 pb-[env(safe-area-inset-bottom)] bg-[var(--c-surface)] rounded-t-2xl"
+          class="ui-modal fixed bottom-0 left-0 right-0 z-50 pb-[env(safe-area-inset-bottom)] bg-[var(--c-surface)] rounded-t-2xl"
         >
           <div class="flex flex-col">
             <button

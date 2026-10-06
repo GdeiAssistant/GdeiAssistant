@@ -245,7 +245,7 @@ onMounted(() => {
       {{ t('marketplace.publish.safetyHint') }}
     </div>
 
-    <section class="marketplace-publish-panel mx-4 mt-4 overflow-hidden rounded-[28px]">
+    <section class="marketplace-publish-panel mx-4 mt-4 overflow-hidden rounded-2xl">
       <!-- 图片上传区 -->
       <section class="marketplace-publish-uploader">
         <div class="px-4 pt-6 mb-1.5">
@@ -257,8 +257,8 @@ onMounted(() => {
           </div>
           <span v-if="!isEditMode && images.length < MAX_IMAGES" class="marketplace-publish-uploader__add w-[68px] h-[68px] border-2 border-white rounded inline-block mx-1.5 mb-2.5 align-top relative cursor-pointer" @click="triggerFileInput">
             <i class="absolute w-6 h-6 top-1/2 left-1/2 -mt-3 -ml-3">
-              <i class="w-full h-0.5 absolute top-[11px] bg-white block"></i>
-              <i class="h-full w-0.5 absolute left-[11px] bg-white block"></i>
+              <i class="w-full h-0.5 absolute top-[11px] bg-[var(--c-surface)] block"></i>
+              <i class="h-full w-0.5 absolute left-[11px] bg-[var(--c-surface)] block"></i>
             </i>
             <input type="file" accept="image/*" id="publish_file_input" @change="onFileChange" class="absolute top-0 left-0 w-[68px] h-[68px] opacity-0 z-[1] cursor-pointer">
           </span>
@@ -332,8 +332,8 @@ onMounted(() => {
 
     <!-- Dialog -->
     <div v-if="dialogVisible">
-      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-      <div class="marketplace-dialog-shell fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
+      <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="ui-modal marketplace-dialog-shell fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
         <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">{{ t('common.hint') }}</div>
         <div class="text-center text-sm text-[var(--c-text-2)] px-5 pb-5">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)]">
@@ -366,38 +366,56 @@ onMounted(() => {
 
 <style scoped>
 .marketplace-publish-panel {
-  border: 1px solid color-mix(in srgb, var(--c-ershou) 20%, rgba(202, 222, 226, 0.78));
-  background: color-mix(in srgb, var(--c-ershou) 4%, rgba(255, 255, 255, 0.92));
-  box-shadow: 0 18px 40px rgba(24, 52, 60, 0.08);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  box-shadow: none;
 }
 
 .marketplace-publish-submit {
-  color: color-mix(in srgb, var(--c-ershou) 84%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .marketplace-publish-submit:hover {
-  color: color-mix(in srgb, var(--c-ershou) 92%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .marketplace-publish-alert {
-  border: 1px solid color-mix(in srgb, var(--c-ershou) 18%, rgba(202, 222, 226, 0.82));
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--c-ershou) 10%, rgba(255, 255, 255, 0.96)), color-mix(in srgb, var(--c-ershou) 4%, rgba(255, 255, 255, 0.92)));
-  color: color-mix(in srgb, var(--c-ershou) 36%, var(--c-text-1));
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-ershou) 8%, transparent);
+  border: 1px solid var(--c-border);
+  background: var(--c-primary-soft);
+  color: var(--c-text-1);
+  box-shadow: none;
 }
 
 .marketplace-publish-uploader {
-  border-bottom: 1px solid color-mix(in srgb, var(--c-ershou) 16%, rgba(202, 222, 226, 0.78));
-  background: linear-gradient(180deg, color-mix(in srgb, var(--c-ershou) 86%, #6f9a7f), color-mix(in srgb, var(--c-ershou) 70%, #567b66));
+  border-bottom: 1px solid var(--c-divider);
+  background: var(--c-fill-2);
+}
+
+.marketplace-publish-uploader p {
+  color: var(--c-text-3);
+}
+
+.marketplace-publish-uploader__add {
+  border: 1.5px dashed var(--c-border) !important;
+  border-radius: var(--radius-control);
+  background: var(--c-surface);
+  transition: border-color 160ms ease;
+}
+
+.marketplace-publish-uploader__add:hover {
+  border-color: var(--c-primary) !important;
+}
+
+.marketplace-publish-uploader__add > i > i {
+  background: var(--c-text-3) !important;
 }
 
 .marketplace-publish-form {
-  background: color-mix(in srgb, var(--c-ershou) 6%, rgba(255, 255, 255, 0.88));
+  background: var(--c-surface);
 }
 
 .marketplace-form-row {
-  border-bottom: 2px solid color-mix(in srgb, var(--c-ershou) 54%, rgba(180, 208, 214, 0.88));
+  border-bottom: 1px solid var(--c-divider);
 }
 
 .marketplace-form-control,
@@ -405,14 +423,15 @@ onMounted(() => {
   display: block;
   width: 100%;
   padding: 0 12px;
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--c-ershou) 4%, rgba(255, 255, 255, 0.56));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-ershou) 10%, transparent);
-  transition: background-color 180ms ease, box-shadow 180ms ease, color 180ms ease;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-control);
+  background: var(--c-surface);
+  box-shadow: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
 .marketplace-form-control::placeholder {
-  color: color-mix(in srgb, var(--c-ershou) 18%, var(--c-text-3));
+  color: var(--c-text-3);
 }
 
 .marketplace-form-control--textarea {
@@ -423,16 +442,17 @@ onMounted(() => {
 
 .marketplace-form-control:focus,
 .marketplace-form-picker:hover {
-  background: color-mix(in srgb, var(--c-ershou) 6%, rgba(255, 255, 255, 0.84));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-ershou) 24%, transparent);
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 3px var(--c-primary-soft);
+  outline: none;
 }
 
 .marketplace-form-row--error {
-  border-bottom-color: color-mix(in srgb, var(--c-danger) 72%, #fb7185);
+  border-bottom-color: var(--c-danger);
 }
 
 .marketplace-form-error {
-  background: color-mix(in srgb, var(--c-danger) 78%, #fb7185);
+  background: var(--c-surface);
 }
 
 .marketplace-form-chevron {
@@ -440,120 +460,26 @@ onMounted(() => {
 }
 
 .marketplace-dialog-confirm {
-  color: color-mix(in srgb, var(--c-ershou) 84%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .marketplace-dialog-shell,
 .marketplace-type-picker-shell {
-  border: 1px solid color-mix(in srgb, var(--c-ershou) 16%, rgba(202, 222, 226, 0.78));
-  box-shadow: 0 24px 54px rgba(18, 41, 48, 0.16);
+  border: 1px solid var(--c-border);
+  box-shadow: var(--shadow-lg);
 }
 
 .marketplace-type-picker-header {
-  border-top: 4px solid color-mix(in srgb, var(--c-ershou) 88%, var(--c-text-1));
+  border-bottom: 1px solid var(--c-divider);
 }
 
 .marketplace-type-picker-item a {
-  border-radius: 10px;
+  border-radius: var(--radius-control);
   transition: background-color 180ms ease, color 180ms ease;
 }
 
 .marketplace-type-picker-item a:hover {
-  background: color-mix(in srgb, var(--c-ershou) 10%, rgba(255, 255, 255, 0.84));
-  color: color-mix(in srgb, var(--c-ershou) 78%, var(--c-text-1));
-}
-
-[data-theme="dark"] .marketplace-publish-alert {
-  border-color: color-mix(in srgb, var(--c-ershou) 28%, rgba(68, 89, 112, 0.74));
-  background:
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--c-ershou) 7%, transparent), transparent 36%),
-    linear-gradient(135deg, rgba(31, 46, 58, 0.94), rgba(24, 38, 53, 0.9));
-  color: color-mix(in srgb, var(--c-ershou) 36%, var(--c-text-1));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 14px 28px rgba(0, 0, 0, 0.14);
-}
-
-[data-theme="dark"] .marketplace-publish-panel {
-  border-color: color-mix(in srgb, var(--c-ershou) 22%, rgba(68, 89, 112, 0.74));
-  background:
-    radial-gradient(circle at 0 0, color-mix(in srgb, var(--c-ershou) 6%, transparent), transparent 28%),
-    linear-gradient(180deg, rgba(23, 34, 47, 0.96), rgba(17, 27, 39, 0.98));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 18px 36px rgba(0, 0, 0, 0.16);
-}
-
-[data-theme="dark"] .marketplace-publish-uploader {
-  border-bottom-color: color-mix(in srgb, var(--c-ershou) 16%, rgba(68, 89, 112, 0.74));
-  background:
-    radial-gradient(circle at 12% 0, color-mix(in srgb, var(--c-ershou) 9%, transparent), transparent 30%),
-    linear-gradient(180deg, rgba(24, 48, 46, 0.98), rgba(17, 33, 39, 0.96));
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-ershou) 22%, transparent);
-}
-
-[data-theme="dark"] .marketplace-publish-form {
-  background: linear-gradient(180deg, rgba(28, 41, 56, 0.94), rgba(24, 36, 49, 0.96));
-}
-
-[data-theme="dark"] .marketplace-publish-uploader__add {
-  border-color: color-mix(in srgb, var(--c-ershou) 42%, rgba(148, 163, 184, 0.7));
-  background: rgba(32, 48, 68, 0.42);
-}
-
-[data-theme="dark"] .marketplace-form-row {
-  border-bottom-color: color-mix(in srgb, var(--c-ershou) 34%, rgba(68, 89, 112, 0.74));
-}
-
-[data-theme="dark"] .marketplace-form-control,
-[data-theme="dark"] .marketplace-form-picker {
-  background: linear-gradient(180deg, rgba(34, 51, 65, 0.86), rgba(29, 43, 57, 0.94));
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--c-ershou) 14%, rgba(91, 117, 129, 0.4)),
-    inset 0 1px 0 rgba(255, 255, 255, 0.02);
-}
-
-[data-theme="dark"] .marketplace-form-control::placeholder {
-  color: color-mix(in srgb, var(--c-ershou) 20%, rgba(196, 208, 223, 0.7));
-}
-
-[data-theme="dark"] .marketplace-form-control:focus,
-[data-theme="dark"] .marketplace-form-picker:hover {
-  background: linear-gradient(180deg, rgba(38, 57, 72, 0.92), rgba(31, 47, 61, 0.98));
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--c-ershou) 28%, rgba(104, 213, 176, 0.24)),
-    0 0 0 3px color-mix(in srgb, var(--c-ershou) 10%, transparent);
-}
-
-[data-theme="dark"] .marketplace-form-row--error {
-  border-bottom-color: color-mix(in srgb, var(--c-danger) 48%, #fb7185);
-}
-
-[data-theme="dark"] .marketplace-form-error {
-  background: color-mix(in srgb, var(--c-danger) 44%, rgba(190, 24, 93, 0.94));
-}
-
-[data-theme="dark"] .marketplace-form-chevron {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20256%20512'%20fill='%2368d5b0'%3E%3Cpath%20d='M224.3%20273l-136%20136c-9.4%209.4-24.6%209.4-33.9%200l-22.6-22.6c-9.4-9.4-9.4-24.6%200-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6%200-33.9L54.3%20103c9.4-9.4%2024.6-9.4%2033.9%200l136%20136c9.5%209.4%209.5%2024.6.1%2034z'/%3E%3C/svg%3E");
-}
-
-[data-theme="dark"] .marketplace-dialog-shell,
-[data-theme="dark"] .marketplace-type-picker-shell {
-  border-color: color-mix(in srgb, var(--c-ershou) 18%, rgba(93, 121, 134, 0.56));
-  background:
-    radial-gradient(circle at 0 0, color-mix(in srgb, var(--c-ershou) 8%, transparent), transparent 28%),
-    linear-gradient(180deg, rgba(27, 39, 53, 0.98), rgba(20, 30, 42, 0.98));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 26px 56px rgba(0, 0, 0, 0.34);
-}
-
-[data-theme="dark"] .marketplace-type-picker-header {
-  border-top-color: color-mix(in srgb, var(--c-ershou) 42%, rgba(104, 213, 176, 0.55));
-}
-
-[data-theme="dark"] .marketplace-type-picker-item a:hover {
-  background: linear-gradient(180deg, rgba(38, 57, 72, 0.92), rgba(31, 47, 61, 0.98));
-  color: color-mix(in srgb, var(--c-ershou) 64%, #ecfdf5);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 </style>

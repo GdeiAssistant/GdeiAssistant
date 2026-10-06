@@ -8,7 +8,7 @@
       <div
         v-for="item in list"
         :key="item.id"
-        class="bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] px-4 py-3.5 cursor-pointer hover:bg-[var(--c-surface-hover)] transition-colors"
+        class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] px-4 py-3.5 cursor-pointer hover:bg-[var(--c-surface-hover)] transition-colors"
         @click="router.push(`/info/announcements/${item.id}`)"
       >
         <div class="flex items-start justify-between gap-3">
@@ -23,7 +23,7 @@
       <button
         v-if="hasMore"
         type="button"
-        class="w-full py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
+        class="ui-panel w-full py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
         :disabled="loadingMore"
         @click="loadMore"
       >

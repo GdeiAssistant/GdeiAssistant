@@ -115,7 +115,7 @@ onMounted(async () => {
     <!-- 加载中 -->
     <div v-if="loading" class="marketplace-detail-state-shell px-4 pt-4">
       <div class="marketplace-detail-state-card">
-        <div class="flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
+        <div class="ui-empty-state flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
           <div class="w-6 h-6 border-2 border-[var(--c-border)] marketplace-detail-spinner-accent rounded-full animate-spin"></div>
           <p class="mt-3 text-sm">{{ t('communityCommon.loading') }}</p>
         </div>
@@ -226,25 +226,37 @@ onMounted(async () => {
 
 <style scoped>
 .marketplace-detail-spinner-accent {
-  border-top-color: color-mix(in srgb, var(--c-ershou) 86%, var(--c-text-1)) !important;
+  border-top-color: var(--c-primary) !important;
 }
 
 .marketplace-detail-hero {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-ershou) 90%, #7eb297), color-mix(in srgb, var(--c-ershou) 76%, #5f8f73));
+  border-bottom: 1px solid var(--c-divider);
+  background: var(--c-surface);
+}
+
+.marketplace-detail-hero :is(h5, p) {
+  color: var(--c-text-1);
+}
+
+.marketplace-detail-hero p {
+  color: var(--c-text-3);
 }
 
 .marketplace-detail-price-badge {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-warning) 72%, #f59e0b), color-mix(in srgb, var(--c-ershou) 18%, #fcd34d));
-  box-shadow: 0 14px 26px color-mix(in srgb, var(--c-ershou) 10%, rgba(15, 23, 42, 0.18));
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  color: var(--c-primary) !important;
+  font-weight: 600;
+  box-shadow: none;
 }
 
 .marketplace-detail-location {
-  color: color-mix(in srgb, var(--c-ershou) 82%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .marketplace-detail-call {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-ershou) 90%, #7eb297), color-mix(in srgb, var(--c-ershou) 76%, #5f8f73));
-  box-shadow: 0 12px 22px color-mix(in srgb, var(--c-ershou) 16%, transparent);
+  background: var(--c-primary);
+  box-shadow: none;
 }
 
 .marketplace-detail-state-shell {
@@ -253,37 +265,14 @@ onMounted(async () => {
 }
 
 .marketplace-detail-state-card {
-  border: 1px solid color-mix(in srgb, var(--c-ershou) 10%, rgba(205, 222, 226, 0.82));
-  border-radius: 24px;
-  background: color-mix(in srgb, var(--c-ershou) 3%, rgba(255, 255, 255, 0.94));
-  box-shadow: 0 18px 36px rgba(32, 69, 78, 0.08);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
+  box-shadow: none;
 }
 
 .marketplace-detail-state-icon {
   width: 30px;
   height: 30px;
-}
-
-[data-theme="dark"] .marketplace-detail-hero {
-  background: radial-gradient(circle at 12% 0, color-mix(in srgb, var(--c-ershou) 14%, transparent), transparent 34%), linear-gradient(135deg, rgba(24, 55, 51, 0.98), rgba(18, 39, 45, 0.96));
-}
-
-[data-theme="dark"] .marketplace-detail-price-badge {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-warning) 54%, #f6c768), color-mix(in srgb, var(--c-ershou) 18%, #fcd34d));
-  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.28);
-}
-
-[data-theme="dark"] .marketplace-detail-location {
-  color: color-mix(in srgb, var(--c-ershou) 52%, var(--c-text-1));
-}
-
-[data-theme="dark"] .marketplace-detail-call {
-  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.24);
-}
-
-[data-theme="dark"] .marketplace-detail-state-card {
-  border-color: color-mix(in srgb, var(--c-ershou) 12%, rgba(97, 122, 147, 0.66));
-  background: rgba(24, 38, 53, 0.88);
-  box-shadow: 0 22px 38px rgba(0, 0, 0, 0.22);
 }
 </style>

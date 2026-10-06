@@ -97,7 +97,7 @@ watch(
         <div
           v-for="item in list"
           :key="item.id"
-          class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
           @click="goDetail(item.id)"
         >
           <div class="w-full aspect-square overflow-hidden bg-[var(--c-border)]">
@@ -110,7 +110,7 @@ watch(
       </div>
 
       <!-- 空状态 -->
-      <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <div v-if="!loading && !refreshing && list.length === 0" class="ui-empty-state flex flex-col items-center py-16 text-[var(--c-text-3)]">
         <div class="text-3xl mb-3">?</div>
         <p class="text-sm">{{ t('marketplace.emptyByCategory') }}</p>
       </div>

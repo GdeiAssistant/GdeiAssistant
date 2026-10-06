@@ -190,7 +190,7 @@ watch(() => route.fullPath, () => {
                 </template>
               </AppEmpty>
             </div>
-            <div v-for="item in lostList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
+            <div v-for="item in lostList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
               <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
                 <i class="absolute left-2 w-[60px] h-[60px] overflow-hidden block rounded">
                   <img :src="item.image" alt="" class="w-full h-full object-cover" />
@@ -226,7 +226,7 @@ watch(() => route.fullPath, () => {
                 </template>
               </AppEmpty>
             </div>
-            <div v-for="item in foundList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
+            <div v-for="item in foundList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
               <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
                 <i class="absolute left-2 w-[60px] h-[60px] overflow-hidden block rounded">
                   <img :src="item.image" alt="" class="w-full h-full object-cover" />
@@ -261,7 +261,7 @@ watch(() => route.fullPath, () => {
                 </template>
               </AppEmpty>
             </div>
-            <div v-for="item in didFoundList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
+            <div v-for="item in didFoundList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
               <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)]">
                 <i class="absolute left-2 w-[60px] h-[60px] overflow-hidden block rounded">
                   <img :src="item.image" alt="" class="w-full h-full object-cover" />
@@ -277,8 +277,8 @@ watch(() => route.fullPath, () => {
 
     <!-- Dialog -->
     <div v-if="dialogVisible">
-      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
+      <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
         <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">{{ t('common.hint') }}</div>
         <div class="text-center text-sm text-[var(--c-text-2)] px-5 pb-5">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)]">
@@ -291,93 +291,67 @@ watch(() => route.fullPath, () => {
 
 <style scoped>
 .community-lostandfound-profile-hero {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-lostandfound) 86%, #87a8bd), color-mix(in srgb, var(--c-lostandfound) 62%, #b9cedb));
+  border-bottom: 1px solid var(--c-divider);
+  background: var(--c-surface);
+}
+
+.community-lostandfound-profile-hero :is(.text-white, .text-white\/90) {
+  color: var(--c-text-1);
+}
+
+.community-lostandfound-profile-hero .text-white\/90 {
+  color: var(--c-text-2);
+}
+
+.community-lostandfound-profile-hero img {
+  border-color: var(--c-border) !important;
 }
 
 .community-lostandfound-tabs-shell {
-  border: 1px solid color-mix(in srgb, var(--c-lostandfound) 14%, var(--c-border));
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--c-lostandfound) 3%, var(--c-surface));
-  box-shadow: 0 12px 26px color-mix(in srgb, var(--c-lostandfound) 7%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-fill-2);
+  box-shadow: none;
   padding: 4px;
+  gap: 4px;
 }
 
 .community-lostandfound-profile-tab {
-  color: color-mix(in srgb, var(--c-lostandfound) 78%, var(--c-text-1));
+  background: transparent !important;
+  color: var(--c-text-2);
   transition: background 0.18s ease, color 0.18s ease;
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--radius-control) !important;
   margin-right: 0 !important;
 }
 
 .community-lostandfound-profile-tab--active {
-  background: color-mix(in srgb, var(--c-lostandfound) 8%, rgba(255, 255, 255, 0.96));
-  color: #fff;
+  background: var(--c-surface) !important;
+  color: var(--c-text-1);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px var(--c-border);
 }
 
 .community-lostandfound-profile-tab__indicator {
-  background: rgba(255, 255, 255, 0.9);
+  display: none !important;
 }
 
 .community-lostandfound-loading,
 .community-lostandfound-title,
 .community-lostandfound-dialog-confirm {
-  color: color-mix(in srgb, var(--c-lostandfound) 84%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .community-lostandfound-profile-empty-shell {
   margin-bottom: 8px;
-  border: 1px solid color-mix(in srgb, var(--c-lostandfound) 16%, var(--c-border));
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-lostandfound) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--c-lostandfound) 3%, var(--c-surface));
-  box-shadow: 0 14px 30px color-mix(in srgb, var(--c-lostandfound) 10%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 
 .community-lostandfound-profile-empty-icon {
   font-size: 28px;
   font-weight: 900;
   line-height: 1;
-}
-
-[data-theme="dark"] .community-lostandfound-profile-tab {
-  color: color-mix(in srgb, var(--c-lostandfound) 62%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-lostandfound-tabs-shell {
-  border-color: rgba(68, 89, 112, 0.72);
-  background: rgba(24, 38, 53, 0.78);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
-}
-
-[data-theme="dark"] .community-lostandfound-profile-tab--active {
-  background: rgba(32, 48, 68, 0.88);
-  color: color-mix(in srgb, var(--c-lostandfound) 68%, var(--c-text-1));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-lostandfound) 16%, rgba(76, 101, 126, 0.84));
-}
-
-[data-theme="dark"] .community-lostandfound-profile-tab__indicator {
-  background: color-mix(in srgb, var(--c-lostandfound) 58%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-lostandfound-loading,
-[data-theme="dark"] .community-lostandfound-title,
-[data-theme="dark"] .community-lostandfound-dialog-confirm {
-  color: color-mix(in srgb, var(--c-lostandfound) 54%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-lostandfound-profile-empty-shell {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-lostandfound) 8%, transparent), transparent 42%),
-    rgba(24, 38, 53, 0.84);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .community-lostandfound-profile-hero {
-  background:
-    radial-gradient(circle at 14% 0, color-mix(in srgb, var(--c-lostandfound) 10%, transparent), transparent 34%),
-    radial-gradient(circle at 82% 14%, rgba(180, 220, 242, 0.08), transparent 22%),
-    linear-gradient(135deg, rgba(33, 52, 63, 0.98), rgba(22, 35, 44, 0.97));
 }
 </style>

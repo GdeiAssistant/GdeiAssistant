@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { resetSocialRealtimeOnAuthChange } from '../../composables/useSocialRealtime.js'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -133,14 +134,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--color-surface)]">
-    <div class="sticky top-0 left-0 right-0 h-[50px] bg-[var(--color-surface)] shadow-md flex items-center px-4 z-[1000]">
-      <span class="text-[var(--color-primary)] text-[15px] cursor-pointer mr-4" @click="router.back()">{{ t('common.back') }}</span>
-      <h2 class="flex-1 text-center text-lg font-medium text-[var(--c-text-1)] m-0">{{ t('about.account.title') }}</h2>
-      <span class="w-10"></span>
+  <div class="subpage min-h-screen bg-[var(--color-surface)]">
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <h1 class="subpage-bar__title">{{ t('about.account.title') }}</h1>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-2xl mx-auto px-4 py-6">
+    <div class="subpage-body max-w-2xl mx-auto px-4 py-6">
       <section class="bg-[var(--color-surface)] rounded-xl p-4 shadow-sm">
         <div class="flex flex-col gap-1">
           <h3 class="m-0 text-base font-semibold text-[var(--c-text-1)]">{{ t('about.account.sectionTitle') }}</h3>
@@ -215,7 +219,7 @@ onMounted(() => {
               <button
                 v-else
                 type="button"
-                class="w-full rounded-lg border border-[var(--c-primary)] bg-[var(--c-primary)] px-4 py-2.5 text-sm text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+                class="ui-btn-primary w-full rounded-lg border border-[var(--c-primary)] bg-[var(--c-primary)] px-4 py-2.5 text-sm text-[var(--c-on-primary)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                 :disabled="submitting || !canEnableQuickAuth"
                 @click="toggleQuickAuth(true)"
               >
@@ -259,7 +263,7 @@ onMounted(() => {
         <div class="mt-4 grid gap-3 md:grid-cols-2">
             <button
               type="button"
-              class="w-full rounded-lg border border-[var(--c-primary)] bg-[var(--c-primary)] px-4 py-2.5 text-sm text-white cursor-pointer"
+              class="ui-btn-primary w-full rounded-lg border border-[var(--c-primary)] bg-[var(--c-primary)] px-4 py-2.5 text-sm text-[var(--c-on-primary)] cursor-pointer"
               @click="router.push('/user/feedback')"
             >
               {{ t('about.account.feedbackAction') }}
@@ -303,11 +307,11 @@ onMounted(() => {
 
 <style scoped>
 .account-status--success {
-  color: color-mix(in srgb, var(--c-primary) 84%, #0f766e);
+  color: var(--c-primary);
 }
 
 .account-status--warning {
-  color: color-mix(in srgb, var(--c-warning) 76%, #a16207);
+  color: var(--c-warning);
 }
 
 .account-status--muted {
@@ -336,27 +340,5 @@ onMounted(() => {
 .account-inline-emphasis {
   color: color-mix(in srgb, var(--c-danger) 74%, var(--c-text-1));
   font-weight: 600;
-}
-
-[data-theme="dark"] .account-status--success {
-  color: color-mix(in srgb, var(--c-primary) 72%, #d1fae5);
-}
-
-[data-theme="dark"] .account-status--warning {
-  color: color-mix(in srgb, var(--c-warning) 72%, #fef3c7);
-}
-
-[data-theme="dark"] .account-danger-action {
-  border-color: color-mix(in srgb, var(--account-danger-accent) 18%, rgba(68, 89, 112, 0.74));
-  background: color-mix(in srgb, var(--account-danger-accent) 10%, rgba(24, 38, 53, 0.9));
-  color: color-mix(in srgb, var(--account-danger-accent) 62%, #f8fafc);
-}
-
-[data-theme="dark"] .account-danger-action:hover {
-  background: color-mix(in srgb, var(--account-danger-accent) 14%, rgba(24, 38, 53, 0.9));
-}
-
-[data-theme="dark"] .account-inline-emphasis {
-  color: color-mix(in srgb, var(--c-danger) 58%, #fee2e2);
 }
 </style>

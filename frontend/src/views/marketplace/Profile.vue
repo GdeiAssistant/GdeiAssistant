@@ -181,7 +181,7 @@ watch(() => route.fullPath, () => {
       <div v-show="activeStat === 'doing'">
         <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ t('common.loading') }}</p>
         <template v-else>
-          <div v-for="item in doingList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
+          <div v-for="item in doingList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
             <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
               <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
                 <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
@@ -218,7 +218,7 @@ watch(() => route.fullPath, () => {
       <div v-show="activeStat === 'sold'">
         <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ t('common.loading') }}</p>
         <template v-else>
-          <div v-for="item in soldList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
+          <div v-for="item in soldList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
             <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)]">
               <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
                 <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
@@ -252,7 +252,7 @@ watch(() => route.fullPath, () => {
       <div v-show="activeStat === 'off'">
         <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ t('common.loading') }}</p>
         <template v-else>
-          <div v-for="item in offList" :key="item.id" class="bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
+          <div v-for="item in offList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
             <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
               <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
                 <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
@@ -286,8 +286,8 @@ watch(() => route.fullPath, () => {
 
     <!-- Dialog -->
     <div v-if="dialogVisible">
-      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
+      <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
         <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">{{ t('common.hint') }}</div>
         <div class="text-center text-sm text-[var(--c-text-2)] px-5 pb-5">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)]">
@@ -302,31 +302,40 @@ watch(() => route.fullPath, () => {
 
 <style scoped>
 .community-marketplace-profile-hero {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-ershou) 86%, #6c967e), color-mix(in srgb, var(--c-ershou) 62%, #a8c1ad));
+  border-bottom: 1px solid var(--c-divider);
+  background: var(--c-surface);
+}
+
+.community-marketplace-profile-hero :is(.text-white, .text-white\/90) {
+  color: var(--c-text-1);
+}
+
+.community-marketplace-profile-hero .text-white\/90 {
+  color: var(--c-text-2);
+}
+
+.community-marketplace-profile-hero img {
+  border-color: var(--c-border) !important;
 }
 
 .marketplace-tabs-shell {
-  border: 1px solid color-mix(in srgb, var(--c-ershou) 14%, var(--c-border));
-  border-radius: 18px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
   background: color-mix(in srgb, var(--c-ershou) 3%, var(--c-surface));
-  box-shadow: 0 12px 26px color-mix(in srgb, var(--c-ershou) 6%, transparent);
+  box-shadow: none;
 }
 
 .marketplace-price {
-  color: color-mix(in srgb, var(--c-ershou) 18%, var(--c-warning));
-}
-
-[data-theme="dark"] .marketplace-price {
-  color: color-mix(in srgb, var(--c-warning) 78%, #fde68a);
+  color: var(--c-warning);
 }
 
 .marketplace-tab-item {
-  color: color-mix(in srgb, var(--c-ershou) 84%, var(--c-text-1));
+  color: var(--c-primary);
   transition: background 0.18s ease, color 0.18s ease;
 }
 
 .marketplace-tab-item.font-semibold {
-  background: color-mix(in srgb, var(--c-ershou) 8%, rgba(255, 255, 255, 0.96));
+  background: var(--c-surface);
 }
 
 .marketplace-tab-indicator {
@@ -334,59 +343,24 @@ watch(() => route.fullPath, () => {
 }
 
 .marketplace-title-accent {
-  color: color-mix(in srgb, var(--c-ershou) 82%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .marketplace-dialog-confirm {
-  color: color-mix(in srgb, var(--c-ershou) 84%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .community-marketplace-empty-shell {
   margin: 0 0 8px;
-  border: 1px solid color-mix(in srgb, var(--c-ershou) 16%, var(--c-border));
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-ershou) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--c-ershou) 3%, var(--c-surface));
-  box-shadow: 0 12px 26px color-mix(in srgb, var(--c-ershou) 7%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 
 .community-marketplace-empty-icon {
   font-size: 26px;
   font-weight: 900;
   line-height: 1;
-}
-
-[data-theme="dark"] .marketplace-tab-item,
-[data-theme="dark"] .marketplace-title-accent,
-[data-theme="dark"] .marketplace-dialog-confirm {
-  color: color-mix(in srgb, var(--c-ershou) 54%, var(--c-text-1));
-}
-
-[data-theme="dark"] .marketplace-tabs-shell {
-  border-color: rgba(68, 89, 112, 0.72);
-  background: rgba(24, 38, 53, 0.78);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
-}
-
-[data-theme="dark"] .marketplace-tab-item.font-semibold {
-  background: rgba(32, 48, 68, 0.88);
-  color: color-mix(in srgb, var(--c-ershou) 68%, var(--c-text-1));
-  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--c-ershou) 18%, rgba(196, 221, 203, 0.2));
-}
-
-[data-theme="dark"] .community-marketplace-empty-shell {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-ershou) 8%, transparent), transparent 42%),
-    rgba(24, 38, 53, 0.84);
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .community-marketplace-profile-hero {
-  background:
-    radial-gradient(circle at 14% 0, color-mix(in srgb, var(--c-ershou) 9%, transparent), transparent 34%),
-    radial-gradient(circle at 82% 14%, rgba(145, 201, 184, 0.08), transparent 22%),
-    linear-gradient(135deg, rgba(28, 47, 46, 0.98), rgba(20, 33, 40, 0.97));
 }
 </style>

@@ -1,15 +1,18 @@
 <template>
-  <div class="avatar-edit-page min-h-screen" :class="{ 'bg-black': isCropping }">
+  <div class="subpage avatar-edit-page min-h-screen" :class="{ 'bg-black': isCropping }">
     <!-- Sticky Header -->
-    <div class="avatar-edit-header sticky top-0 z-10 flex items-center h-12 px-4">
-      <button type="button" class="avatar-edit-back w-15 text-base text-left cursor-pointer" @click="goBack">{{ t('common.back') }}</button>
-      <div class="avatar-edit-title flex-1 text-center text-lg font-medium">{{ t('avatarEdit.title') }}</div>
-      <div class="w-15"></div>
+    <div class="subpage-bar avatar-edit-header">
+      <button type="button" class="subpage-bar__back avatar-edit-back" @click="goBack">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <div class="subpage-bar__title avatar-edit-title">{{ t('avatarEdit.title') }}</div>
+      <span aria-hidden="true"></span>
     </div>
 
     <!-- Display mode: current avatar + buttons -->
     <template v-if="!isCropping">
-      <div class="max-w-lg mx-auto px-4 py-6">
+      <div class="subpage-body max-w-lg mx-auto px-4 py-6">
         <div class="avatar-edit-card rounded-xl shadow-sm p-6">
           <div class="avatar-edit-tip mb-4 rounded-xl px-4 py-3 text-xs leading-6">
             {{ t('avatarEdit.privacyHint') }}
@@ -58,6 +61,7 @@
 </template>
 
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -208,15 +212,7 @@ onMounted(async () => {
 
 <style scoped>
 .avatar-edit-page {
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 8%, transparent), transparent 30%),
-    var(--c-bg-soft);
-}
-
-.avatar-edit-header {
-  background: color-mix(in srgb, var(--c-surface) 94%, var(--c-bg));
-  border-bottom: 1px solid var(--c-border-light);
-  backdrop-filter: blur(18px);
+  background: var(--c-bg);
 }
 
 .avatar-edit-back,
@@ -226,45 +222,19 @@ onMounted(async () => {
 
 .avatar-edit-card {
   background: var(--c-surface);
-  border: 1px solid color-mix(in srgb, var(--c-primary) 8%, var(--c-border-light));
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 8%, rgba(15, 23, 42, 0.06));
+  border: 1px solid var(--c-border);
+  box-shadow: none;
 }
 
 .avatar-edit-tip {
-  border: 1px solid color-mix(in srgb, var(--c-primary) 10%, var(--c-border-light));
-  background: color-mix(in srgb, var(--c-bg-soft) 76%, var(--c-surface));
+  border: 1px solid var(--c-border);
+  background: color-mix(in srgb, var(--c-bg) 76%, var(--c-surface));
   color: var(--c-text-2);
 }
 
 .avatar-edit-primary-action {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
+  background: var(--c-primary);
   border: 1px solid transparent;
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 22%, transparent);
-}
-
-[data-theme="dark"] .avatar-edit-page {
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 10%, transparent), transparent 30%),
-    var(--c-bg);
-}
-
-[data-theme="dark"] .avatar-edit-header {
-  background: color-mix(in srgb, var(--c-surface) 88%, rgba(10, 20, 32, 0.9));
-  border-bottom-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .avatar-edit-card {
-  border-color: rgba(68, 89, 112, 0.72);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .avatar-edit-tip {
-  border-color: rgba(68, 89, 112, 0.72);
-  background: rgba(24, 38, 53, 0.84);
-  color: var(--c-text-2);
-}
-
-[data-theme="dark"] .avatar-edit-primary-action {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
+  box-shadow: none;
 }
 </style>

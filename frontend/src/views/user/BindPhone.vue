@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -208,24 +209,27 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <div class="sticky top-0 z-10 flex items-center h-12 bg-white border-b border-gray-200 px-4">
-      <button type="button" class="w-15 text-sm text-gray-700 text-left cursor-pointer" @click="router.back()">{{ t('about.back') }}</button>
-      <h1 class="flex-1 text-center text-base font-medium text-gray-700 m-0">{{ t('profile.bindPhone') }}</h1>
-      <div class="w-15"></div>
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('about.back') }}</span>
+      </button>
+      <h1 class="subpage-bar__title">{{ t('profile.bindPhone') }}</h1>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-lg mx-auto px-4 py-6">
-      <div v-if="loadingStatus" class="bg-white rounded-xl shadow-sm p-8 text-center">
-        <div class="bind-phone-loading w-8 h-8 border-2 border-gray-200 rounded-full animate-spin mx-auto"></div>
-        <h2 class="text-lg font-medium text-gray-700 mt-4">{{ t('bindPhonePage.loadingTitle') }}</h2>
-        <p class="text-sm text-gray-500 mt-1">{{ t('bindPhonePage.loadingDescription') }}</p>
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
+      <div v-if="loadingStatus" class="bg-[var(--c-surface)] rounded-xl shadow-sm p-8 text-center">
+        <div class="bind-phone-loading w-8 h-8 border-2 border-[var(--c-border)] rounded-full animate-spin mx-auto"></div>
+        <h2 class="text-lg font-medium text-[var(--c-text-1)] mt-4">{{ t('bindPhonePage.loadingTitle') }}</h2>
+        <p class="text-sm text-[var(--c-text-2)] mt-1">{{ t('bindPhonePage.loadingDescription') }}</p>
       </div>
 
-      <div v-else-if="currentPhone && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
+      <div v-else-if="currentPhone && !isEditing" class="bg-[var(--c-surface)] rounded-xl shadow-sm p-8 text-center">
         <div class="bind-phone-status bind-phone-status--success text-5xl mb-4">&#10003;</div>
-        <h2 class="text-lg font-medium text-gray-700">{{ t('bindPhonePage.boundTitle') }}</h2>
-        <p class="text-sm text-gray-500 mt-2">
+        <h2 class="text-lg font-medium text-[var(--c-text-1)]">{{ t('bindPhonePage.boundTitle') }}</h2>
+        <p class="text-sm text-[var(--c-text-2)] mt-2">
           {{ t('bindPhonePage.boundDescription', { code: boundCountryCode, phone: currentPhone }) }}
         </p>
         <div class="mt-8 space-y-3">
@@ -236,16 +240,16 @@ onUnmounted(() => {
           >{{ t('bindPhonePage.changeAction') }}</button>
           <button
             type="button"
-            class="w-full rounded-lg bg-white text-gray-700 font-medium py-2.5 border border-gray-300 cursor-pointer"
+            class="w-full rounded-lg bg-[var(--c-surface)] text-[var(--c-text-1)] font-medium py-2.5 border border-[var(--c-border)] cursor-pointer"
             @click="openUnbindDialog"
           >{{ t('bindPhonePage.unbindAction') }}</button>
         </div>
       </div>
 
-      <div v-else-if="!currentPhone && !isEditing" class="bg-white rounded-xl shadow-sm p-8 text-center">
+      <div v-else-if="!currentPhone && !isEditing" class="bg-[var(--c-surface)] rounded-xl shadow-sm p-8 text-center">
         <div class="bind-phone-status bind-phone-status--info text-5xl mb-4">i</div>
-        <h2 class="text-lg font-medium text-gray-700">{{ t('bindPhonePage.unboundTitle') }}</h2>
-        <p class="text-sm text-gray-500 mt-2">{{ t('bindPhonePage.unboundDescription') }}</p>
+        <h2 class="text-lg font-medium text-[var(--c-text-1)]">{{ t('bindPhonePage.unboundTitle') }}</h2>
+        <p class="text-sm text-[var(--c-text-2)] mt-2">{{ t('bindPhonePage.unboundDescription') }}</p>
         <div class="mt-8">
           <button
             type="button"
@@ -256,13 +260,13 @@ onUnmounted(() => {
       </div>
 
       <div v-else>
-        <p v-if="currentPhone" class="text-sm text-gray-400 mb-3">{{ t('bindPhonePage.replaceHint') }}</p>
+        <p v-if="currentPhone" class="text-sm text-[var(--c-text-3)] mb-3">{{ t('bindPhonePage.replaceHint') }}</p>
 
-        <div class="bg-white rounded-xl shadow-sm divide-y divide-gray-100">
+        <div class="bg-[var(--c-surface)] rounded-xl shadow-sm divide-y divide-[var(--c-divider)]">
           <div class="flex items-center px-4 py-3 gap-3">
             <select
               v-model="currentCountryCode"
-              class="w-[180px] bg-transparent text-sm text-gray-700 border-none outline-none appearance-none cursor-pointer"
+              class="w-[180px] bg-transparent text-sm text-[var(--c-text-1)] border-none outline-none appearance-none cursor-pointer"
             >
               <option v-for="item in countryCodes" :key="item.code" :value="item.code">
                 {{ item.emoji }} {{ item.name }} {{ item.code }}
@@ -273,23 +277,23 @@ onUnmounted(() => {
               type="tel"
               maxlength="11"
               :placeholder="currentPhone ? t('bindPhonePage.phonePlaceholderNew') : t('bindPhonePage.phonePlaceholder')"
-              class="flex-1 text-sm text-gray-700 outline-none placeholder-gray-400"
+              class="flex-1 text-sm text-[var(--c-text-1)] outline-none placeholder-gray-400"
             />
           </div>
 
           <div class="flex items-center px-4 py-3 gap-3">
-            <label class="w-[100px] text-sm text-gray-700 shrink-0">{{ t('bindPhonePage.verificationLabel') }}</label>
+            <label class="w-[100px] text-sm text-[var(--c-text-1)] shrink-0">{{ t('bindPhonePage.verificationLabel') }}</label>
             <input
               v-model="vcode"
               type="number"
               inputmode="numeric"
               :placeholder="t('bindPhonePage.verificationPlaceholder')"
-              class="flex-1 text-sm text-gray-700 outline-none placeholder-gray-400"
+              class="flex-1 text-sm text-[var(--c-text-1)] outline-none placeholder-gray-400"
             />
             <button
               type="button"
-              class="shrink-0 text-sm pl-3 border-l border-gray-200 cursor-pointer"
-              :class="canSendCode ? 'bind-phone-code-link bind-phone-code-link--active' : 'text-gray-400'"
+              class="shrink-0 text-sm pl-3 border-l border-[var(--c-border)] cursor-pointer"
+              :class="canSendCode ? 'bind-phone-code-link bind-phone-code-link--active' : 'text-[var(--c-text-3)]'"
               :disabled="!canSendCode"
               @click="handleSendCode"
             >
@@ -316,7 +320,7 @@ onUnmounted(() => {
         <div v-if="currentPhone" class="mt-3">
           <button
             type="button"
-            class="w-full rounded-lg bg-white text-gray-700 font-medium py-2.5 border border-gray-300 cursor-pointer"
+            class="w-full rounded-lg bg-[var(--c-surface)] text-[var(--c-text-1)] font-medium py-2.5 border border-[var(--c-border)] cursor-pointer"
             @click="cancelEdit"
           >{{ t('common.cancel') }}</button>
         </div>
@@ -325,18 +329,18 @@ onUnmounted(() => {
 
     <Teleport to="body">
       <template v-if="showUnbindDialog">
-        <div class="fixed inset-0 bg-black/60 z-[1000]" @click="closeUnbindDialog"></div>
-        <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[300px] bg-white rounded-xl z-[1001] overflow-hidden">
+        <div class="ui-scrim fixed inset-0 bg-black/60 z-[1000]" @click="closeUnbindDialog"></div>
+        <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[300px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
           <div class="px-5 pt-5 pb-2.5 text-center">
-            <strong class="text-[17px] font-medium text-gray-700">{{ t('bindPhonePage.unbindDialogTitle') }}</strong>
+            <strong class="text-[17px] font-medium text-[var(--c-text-1)]">{{ t('bindPhonePage.unbindDialogTitle') }}</strong>
           </div>
-          <div class="px-5 pb-5 text-center text-[15px] text-gray-500 leading-relaxed">
+          <div class="px-5 pb-5 text-center text-[15px] text-[var(--c-text-2)] leading-relaxed">
             {{ t('bindPhonePage.unbindDialogContent') }}
           </div>
-          <div class="flex border-t border-gray-200">
+          <div class="flex border-t border-[var(--c-border)]">
             <button
               type="button"
-              class="flex-1 py-3.5 text-center text-[17px] text-gray-700 border-r border-gray-200 cursor-pointer bg-transparent"
+              class="flex-1 py-3.5 text-center text-[17px] text-[var(--c-text-1)] border-r border-[var(--c-border)] cursor-pointer bg-transparent"
               @click="closeUnbindDialog"
             >{{ t('common.cancel') }}</button>
             <button
@@ -353,40 +357,23 @@ onUnmounted(() => {
 
 <style scoped>
 .bind-phone-loading {
-  border-top-color: color-mix(in srgb, var(--c-primary) 82%, #2dd4bf);
+  border-top-color: var(--c-primary);
 }
 
 .bind-phone-primary-action {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 22%, transparent);
+  background: var(--c-primary);
+  box-shadow: none;
 }
 
 .bind-phone-status--success {
-  color: color-mix(in srgb, var(--c-primary) 82%, #2dd4bf);
+  color: var(--c-primary);
 }
 
 .bind-phone-status--info {
-  color: color-mix(in srgb, var(--c-primary) 62%, #67e8f9);
+  color: var(--c-primary);
 }
 
 .bind-phone-code-link--active {
-  color: color-mix(in srgb, var(--c-primary) 76%, #14b8a6);
-}
-
-[data-theme="dark"] .bind-phone-primary-action {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
-}
-
-[data-theme="dark"] .bind-phone-loading {
-  border-top-color: color-mix(in srgb, var(--c-primary) 58%, #67e8f9);
-}
-
-[data-theme="dark"] .bind-phone-status--success {
-  color: color-mix(in srgb, var(--c-primary) 62%, #ccfbf1);
-}
-
-[data-theme="dark"] .bind-phone-status--info,
-[data-theme="dark"] .bind-phone-code-link--active {
-  color: color-mix(in srgb, var(--c-primary) 58%, #67e8f9);
+  color: var(--c-primary);
 }
 </style>

@@ -11,7 +11,7 @@
         v-for="item in items"
         :key="item.id || `${item.module}-${item.targetId}`"
         type="button"
-        class="w-full bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] px-4 py-3.5 text-left hover:bg-[var(--c-surface-hover)] transition-colors"
+        class="ui-panel w-full bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] px-4 py-3.5 text-left hover:bg-[var(--c-surface-hover)] transition-colors"
         @click="handleSelect(item)"
       >
         <div class="flex items-start justify-between gap-3">
@@ -34,13 +34,13 @@
         <button
           v-if="unreadCount > 0"
           type="button"
-          class="flex-1 py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
+          class="ui-panel flex-1 py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
           @click="markAllRead"
         >{{ t('info.markAllRead') }}</button>
         <button
           v-if="hasMore"
           type="button"
-          class="flex-1 py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
+          class="ui-panel flex-1 py-3 text-sm text-[var(--c-text-2)] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] hover:bg-[var(--c-surface-hover)] transition-colors"
           :disabled="loadingMore"
           @click="loadMore"
         >

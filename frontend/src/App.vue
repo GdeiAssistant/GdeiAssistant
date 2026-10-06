@@ -48,10 +48,7 @@ const transitionName = computed(() => {
   .community-route-shell {
     min-height: 100vh;
     padding-left: 232px;
-    background:
-      radial-gradient(circle at 14% 0, rgba(45, 212, 191, 0.12), transparent 28%),
-      radial-gradient(circle at 84% 10%, rgba(96, 165, 250, 0.1), transparent 28%),
-      var(--c-bg);
+    background: var(--c-bg);
   }
 
   .community-route-shell__content {

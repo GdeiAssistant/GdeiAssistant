@@ -1,4 +1,5 @@
 <script setup>
+import { Heart, Star, MessageCircle, Mail } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -162,13 +163,13 @@ onUnmounted(() => {
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="bg-[var(--c-surface)] rounded-xl shadow-sm mx-4 mt-4 overflow-hidden animate-[community-slide-up_0.4s_ease_both]"
+        class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm mx-4 mt-4 overflow-hidden animate-[community-slide-up_0.4s_ease_both]"
         :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         @click="goToDetail(item.id)"
       >
         <div class="text-center text-lg px-4 pt-5 pb-2.5 leading-relaxed">
           <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.senderGender), color: getGenderColor(item.senderGender) }">{{ item.senderName }}</span>
-          <span class="text-[var(--c-text-2)] mx-1.5"> ≡❤ </span>
+          <span class="text-[var(--c-text-2)] mx-1.5"><Heart :size="14" class="inline-block align-[-2px]" aria-hidden="true" /></span>
           <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.receiverGender), color: getGenderColor(item.receiverGender) }">{{ item.receiverName }}</span>
         </div>
 
@@ -187,7 +188,7 @@ onUnmounted(() => {
             :class="item.isLiked ? 'text-[var(--c-express)] font-bold' : 'text-[var(--c-text-2)]'"
             @click.stop="handleLike(item)"
           >
-            {{ item.isLiked ? '♥' : '♡' }} {{ item.likeCount || 0 }}
+            <Heart :size="16" :fill="item.isLiked ? 'currentColor' : 'none'" aria-hidden="true" /> {{ item.likeCount || 0 }}
           </button>
           <button
             type="button"
@@ -195,14 +196,14 @@ onUnmounted(() => {
             :style="{ opacity: item.canGuess ? 1 : 0.4 }"
             @click.stop="handleGuess(item)"
           >
-            <span class="mr-1 relative">☆<sup class="text-[10px] absolute -top-1 -right-1.5">?</sup></span> {{ item.guessCount || 0 }}/{{ item.correctCount || 0 }}
+            <span class="mr-1 relative"><Star :size="16" aria-hidden="true" /><sup class="text-[10px] absolute -top-1 -right-1.5">?</sup></span> {{ item.guessCount || 0 }}/{{ item.correctCount || 0 }}
           </button>
           <button
             type="button"
             class="flex-1 flex items-center justify-center gap-0.5 py-2.5 bg-transparent border-none text-sm text-[var(--c-text-2)] cursor-pointer"
             @click.stop="handleComment(item)"
           >
-            💬 {{ item.commentCount || 0 }}
+            <MessageCircle :size="16" aria-hidden="true" /> {{ item.commentCount || 0 }}
           </button>
         </div>
       </div>
@@ -214,8 +215,8 @@ onUnmounted(() => {
     </div>
 
     <!-- 空状态 -->
-    <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-      <div class="text-5xl mb-3">💌</div>
+    <div v-if="!loading && !refreshing && list.length === 0" class="ui-empty-state flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <Mail class="mb-3" :size="40" :stroke-width="1.5" aria-hidden="true" />
       <p class="text-sm">{{ t('express.empty') }}</p>
     </div>
 
@@ -229,13 +230,13 @@ onUnmounted(() => {
     </div>
 
     <!-- 猜名字 Dialog -->
-    <div v-if="guessDialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="guessDialogVisible = false"></div>
-    <div v-if="guessDialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
+    <div v-if="guessDialogVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="guessDialogVisible = false"></div>
+    <div v-if="guessDialogVisible" class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
       <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('express.guessDialogTitle') }}</div>
       <div class="px-5 pb-4">
         <input
           type="text"
-          class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[var(--c-express)] focus:ring-2 focus:ring-[var(--c-express)]/10"
+          class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[var(--c-express)] focus:ring-2 focus:ring-[var(--c-express)]/10"
           :placeholder="t('express.guessPlaceholder')"
           v-model="guessInputValue"
           @keyup.enter="confirmGuess"

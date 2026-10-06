@@ -158,7 +158,7 @@ onMounted(async () => {
       </div>
 
       <!-- Info card -->
-      <div class="community-photograph-detail-card mx-4 mt-3 p-5 bg-[var(--c-surface)] rounded-xl shadow-sm animate-[slide-up_0.4s_ease_both]" style="animation-delay: 0.1s;">
+      <div class="ui-panel community-photograph-detail-card mx-4 mt-3 p-5 bg-[var(--c-surface)] rounded-xl shadow-sm animate-[slide-up_0.4s_ease_both]" style="animation-delay: 0.1s;">
         <h2 class="text-2xl font-semibold text-[var(--c-text-1)] m-0 mb-3">{{ work.title }}</h2>
         <div class="flex items-center justify-between mb-2">
           <button
@@ -221,15 +221,15 @@ onMounted(async () => {
         type="text"
         :placeholder="copy.commentPlaceholder"
         @keyup.enter="submitComment"
-        class="community-photograph-commentbar__input flex-1 border border-[var(--c-divider)] rounded-full px-3 py-2 text-base mr-2 text-[var(--c-text-1)] transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
+        class="ui-control community-photograph-commentbar__input flex-1 border border-[var(--c-divider)] rounded-full px-3 py-2 text-base mr-2 text-[var(--c-text-1)] transition-colors focus:outline-none focus:border-[var(--c-photograph)]"
       />
       <button type="button" @click="submitComment" class="community-photograph-action px-4 py-2 border-none rounded-full text-white text-base font-medium cursor-pointer transition-opacity active:opacity-85">{{ copy.sendAction }}</button>
     </div>
 
     <!-- Dialog -->
     <div v-if="dialogVisible">
-      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+      <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
         <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
         <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)] flex">
@@ -242,81 +242,41 @@ onMounted(async () => {
 
 <style scoped>
 .community-photograph-detail-stats {
-  border: 1px solid color-mix(in srgb, var(--c-photograph) 18%, var(--c-border));
+  border: 1px solid var(--c-border);
   background: color-mix(in srgb, var(--c-photograph) 4%, var(--c-surface));
 }
 
+.community-photograph-detail-stats {
+  box-shadow: none !important;
+}
+
+.community-photograph-detail-stats > * + * {
+  border-left: 1px solid var(--c-divider);
+}
+
 .community-photograph-detail-stats__value {
-  background: linear-gradient(135deg, var(--c-photograph), color-mix(in srgb, var(--c-photograph) 72%, #0ea5e9));
+  color: var(--c-text-1) !important;
+  font-variant-numeric: tabular-nums;
 }
 
 .community-photograph-detail-stats__label {
-  background: color-mix(in srgb, var(--c-photograph) 68%, #0f172a);
+  color: var(--c-text-3) !important;
+  font-size: 13px !important;
 }
 
 .community-photograph-detail-card {
-  border: 1px solid color-mix(in srgb, var(--c-photograph) 10%, var(--c-border));
-  box-shadow: 0 18px 36px color-mix(in srgb, var(--c-photograph) 8%, transparent);
+  border: 1px solid var(--c-border);
+  box-shadow: none;
 }
 
 .community-photograph-comment-bubble {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-photograph) 6%, transparent);
+  box-shadow: none;
 }
 
 .community-photograph-commentbar {
-  backdrop-filter: blur(14px);
 }
 
 .community-photograph-commentbar__input {
   background: color-mix(in srgb, var(--c-photograph) 4%, var(--c-surface));
-}
-
-[data-theme="dark"] .community-photograph-detail-stats {
-  border-color: rgba(68, 89, 112, 0.72);
-  background: rgba(24, 38, 53, 0.86);
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .community-photograph-detail-stats__value {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-photograph) 44%, #365a70),
-    color-mix(in srgb, var(--c-photograph) 28%, #233849)
-  );
-}
-
-[data-theme="dark"] .community-photograph-detail-stats__label {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--c-photograph) 28%, rgba(37, 63, 80, 0.94)),
-    rgba(33, 48, 63, 0.96)
-  );
-  color: color-mix(in srgb, var(--c-photograph) 34%, #f8fafc);
-}
-
-[data-theme="dark"] .community-photograph-detail-card {
-  border-color: color-mix(in srgb, var(--c-photograph) 12%, rgba(111, 132, 156, 0.4));
-  background: rgba(24, 38, 53, 0.88);
-  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.22);
-}
-
-[data-theme="dark"] .community-photograph-comment-bubble {
-  background: rgba(17, 27, 38, 0.92);
-  box-shadow: inset 0 0 0 1px rgba(68, 89, 112, 0.42);
-}
-
-[data-theme="dark"] .community-photograph-comment-bubble::before {
-  border-right-color: rgba(17, 27, 38, 0.92);
-}
-
-[data-theme="dark"] .community-photograph-commentbar {
-  background: rgba(18, 29, 40, 0.92);
-  border-top-color: rgba(68, 89, 112, 0.66);
-  box-shadow: 0 -12px 28px rgba(0, 0, 0, 0.16);
-}
-
-[data-theme="dark"] .community-photograph-commentbar__input {
-  background: rgba(24, 38, 53, 0.88);
-  border-color: rgba(68, 89, 112, 0.62);
 }
 </style>

@@ -11,7 +11,7 @@ test.describe('Appearance page', () => {
 
   test('appearance page loads with theme options', async ({ page }) => {
     await page.goto('/appearance')
-    await expect(page.locator('text=界面和外观')).toBeVisible()
+    await expect(page.getByRole('heading', { name: '界面和外观', exact: true })).toBeVisible()
   })
 
   test('dark mode toggle sets data-theme attribute', async ({ page }) => {

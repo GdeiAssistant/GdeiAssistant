@@ -101,14 +101,14 @@
   --c-orange: #A9844A;
 
   /* Community module tag colors: low saturation, only for small marks */
-  --c-ershou: #5E8C6A;
-  --c-lostandfound: #5B7FA0;
-  --c-secret: #7A6F9B;
-  --c-express: #A8687C;
-  --c-topic: #5D74A6;
-  --c-delivery: #A9844A;
-  --c-dating: #5E8F8A;
-  --c-photograph: #4F8796;
+  --c-ershou: var(--c-primary);
+  --c-lostandfound: var(--c-primary);
+  --c-secret: var(--c-primary);
+  --c-express: var(--c-primary);
+  --c-topic: var(--c-primary);
+  --c-delivery: var(--c-primary);
+  --c-dating: var(--c-primary);
+  --c-photograph: var(--c-primary);
 
   /* Green-gray tinted shadows */
   --shadow-sm: 0 1px 2px rgb(17 32 28 / 4%), 0 2px 8px rgb(17 32 28 / 4%);
@@ -179,14 +179,14 @@
   --c-cyan: #84B5C2;
   --c-orange: #D2AE72;
 
-  --c-ershou: #8DB89A;
-  --c-lostandfound: #8FAECB;
-  --c-secret: #A99FC6;
-  --c-express: #D39CAD;
-  --c-topic: #93A6D0;
-  --c-delivery: #D2AE72;
-  --c-dating: #8DBDB7;
-  --c-photograph: #84B5C2;
+  --c-ershou: var(--c-primary);
+  --c-lostandfound: var(--c-primary);
+  --c-secret: var(--c-primary);
+  --c-express: var(--c-primary);
+  --c-topic: var(--c-primary);
+  --c-delivery: var(--c-primary);
+  --c-dating: var(--c-primary);
+  --c-photograph: var(--c-primary);
 
   --shadow-sm: 0 1px 2px rgb(2 8 6 / 30%);
   --shadow-md: 0 2px 6px rgb(2 8 6 / 30%), 0 10px 28px rgb(2 8 6 / 32%);
@@ -571,5 +571,123 @@ select {
     max-width: 960px;
     margin-left: auto;
     margin-right: auto;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Page system (v2 all pages). Unlayered, so it refines the Tailwind
+   utilities that individual views still carry.
+   ------------------------------------------------------------------ */
+.subpage-body {
+  width: 100%;
+  padding: 20px 16px 56px !important;
+}
+
+@media (min-width: 1024px) {
+  .subpage-body { padding: 32px 0 72px !important; }
+  .subpage > .subpage-body.max-w-lg { max-width: 600px; }
+  .subpage > .subpage-body.max-w-3xl { max-width: 760px; }
+}
+
+.ui-panel {
+  border: 1px solid var(--c-border) !important;
+  border-radius: var(--radius-card) !important;
+  background-color: var(--c-surface);
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.ui-panel.divide-y > :not(:last-child) { border-color: var(--c-divider); }
+
+.ui-modal {
+  border: 1px solid var(--c-border);
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.ui-modal:not([class*="rounded-t"]) { border-radius: var(--radius-card) !important; }
+.ui-modal[class*="rounded-t"] {
+  border-bottom: 0;
+  border-top-left-radius: var(--radius-card) !important;
+  border-top-right-radius: var(--radius-card) !important;
+}
+
+.ui-scrim {
+  background-color: rgb(10 20 17 / 48%) !important;
+  backdrop-filter: none !important;
+}
+
+.ui-btn-primary {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-control) !important;
+  background-color: var(--c-primary);
+  color: var(--c-on-primary) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  transition: background-color 0.15s ease;
+}
+
+.ui-btn-primary:hover:not(:disabled) { background-color: var(--c-primary-hover) !important; opacity: 1; }
+.ui-btn-primary:disabled { opacity: 0.5; }
+.ui-btn-primary:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
+}
+
+.ui-control {
+  min-height: 44px;
+  border: 1px solid var(--c-border) !important;
+  border-radius: var(--radius-control) !important;
+  background-color: var(--c-surface) !important;
+  color: var(--c-text-1);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+textarea.ui-control { min-height: 96px; }
+
+.ui-control:focus {
+  border-color: var(--c-primary) !important;
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-primary) 18%, transparent) !important;
+}
+
+.ui-empty-state {
+  gap: 4px;
+  font-size: 14px;
+}
+
+.ui-empty-state > svg:first-child,
+.ui-empty-state > .lucide:first-child {
+  box-sizing: content-box;
+  padding: 14px;
+  border-radius: var(--radius-card);
+  background: var(--c-fill-2);
+  color: var(--c-text-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-btn-primary,
+  .ui-control,
+  .subpage-bar__back,
+  .subpage-bar__action { transition: none; }
+}
+
+/* 社区模块色已统一为品牌主色：主色底上的白字跟随 on-primary，保证暗色模式对比度 */
+.text-white:is(
+  [class*="bg-[var(--c-ershou)]"], [class*="bg-[var(--c-lostandfound)]"],
+  [class*="bg-[var(--c-secret)]"], [class*="bg-[var(--c-express)]"],
+  [class*="bg-[var(--c-topic)]"], [class*="bg-[var(--c-delivery)]"],
+  [class*="bg-[var(--c-dating)]"], [class*="bg-[var(--c-photograph)]"],
+  [class*="bg-[var(--c-primary)]"], [class*="bg-[var(--color-primary)]"]
+) {
+  color: var(--c-on-primary);
+}
+
+/* Tailwind v4 defaults bare border/divide colors to currentColor; route them to the hairline token. */
+@layer base {
+  *, ::before, ::after, ::backdrop {
+    border-color: var(--c-border);
   }
 }

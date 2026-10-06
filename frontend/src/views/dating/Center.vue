@@ -228,7 +228,7 @@ watch(() => route.fullPath, () => {
         <div
           v-for="(item, index) in receivedList"
           :key="item.id"
-          class="bg-[var(--c-surface)] rounded-xl shadow-sm p-4 animate-[slide-up_0.4s_ease_both]"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-4 animate-[slide-up_0.4s_ease_both]"
           :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         >
           <div class="flex items-center mb-3">
@@ -264,7 +264,7 @@ watch(() => route.fullPath, () => {
         <div
           v-for="(item, index) in sentList"
           :key="item.id"
-          class="bg-[var(--c-surface)] rounded-xl shadow-sm p-4 animate-[slide-up_0.4s_ease_both]"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-4 animate-[slide-up_0.4s_ease_both]"
           :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         >
           <div class="flex items-center mb-3">
@@ -303,7 +303,7 @@ watch(() => route.fullPath, () => {
         <div
           v-for="(item, index) in postsList"
           :key="item.id"
-          class="bg-[var(--c-surface)] rounded-xl shadow-sm p-4 flex gap-3 items-center animate-[slide-up_0.4s_ease_both]"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-4 flex gap-3 items-center animate-[slide-up_0.4s_ease_both]"
           :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         >
           <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" class="w-20 h-20 rounded-lg object-cover shrink-0" />
@@ -317,8 +317,8 @@ watch(() => route.fullPath, () => {
     </div>
 
     <!-- Info dialog -->
-    <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+    <div v-if="dialogVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
       <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
       <div class="border-t border-[var(--c-border)] flex">
@@ -327,8 +327,8 @@ watch(() => route.fullPath, () => {
     </div>
 
     <!-- Delete confirmation dialog -->
-    <div v-if="deleteDialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="deleteDialogVisible = false"></div>
-    <div v-if="deleteDialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+    <div v-if="deleteDialogVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="deleteDialogVisible = false"></div>
+    <div v-if="deleteDialogVisible" class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
       <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ copy.hideTitle }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ copy.hideDescription }}</div>
       <div class="border-t border-[var(--c-border)] flex">
@@ -354,61 +354,28 @@ watch(() => route.fullPath, () => {
   width: 56px;
   height: 56px;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--c-dating) 18%, var(--c-border));
-  border-radius: 18px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-dating) 12%, rgba(255, 255, 255, 0.96)),
-    color-mix(in srgb, var(--c-dating) 4%, rgba(255, 255, 255, 0.92))
-  );
-  color: color-mix(in srgb, var(--c-dating) 78%, var(--c-text-1));
-  box-shadow: 0 14px 32px color-mix(in srgb, var(--c-dating) 10%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  box-shadow: none;
 }
 
 .dating-status--pending {
-  border: 1px solid color-mix(in srgb, var(--c-dating) 16%, var(--c-warning));
-  background: color-mix(in srgb, var(--c-dating) 8%, rgba(255, 255, 255, 0.86));
-  color: color-mix(in srgb, var(--c-dating) 52%, #8a5a0a);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  color: var(--c-primary);
 }
 
 .dating-status--accepted {
-  border: 1px solid color-mix(in srgb, var(--c-dating) 24%, var(--c-border));
-  background: color-mix(in srgb, var(--c-dating) 12%, rgba(255, 255, 255, 0.88));
-  color: color-mix(in srgb, var(--c-dating) 86%, var(--c-text-1));
+  border: 1px solid var(--c-border);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 
 .dating-status--rejected {
-  border: 1px solid color-mix(in srgb, var(--c-dating) 10%, var(--c-danger));
-  background: color-mix(in srgb, var(--c-dating) 6%, rgba(255, 255, 255, 0.84));
-  color: color-mix(in srgb, var(--c-dating) 24%, var(--c-danger));
-}
-
-[data-theme="dark"] .dating-status--pending {
-  border-color: color-mix(in srgb, var(--c-dating) 16%, rgba(125, 211, 199, 0.72));
-  background: color-mix(in srgb, var(--c-dating) 8%, rgba(32, 48, 68, 0.82));
-  color: color-mix(in srgb, var(--c-warning) 64%, #f8fafc);
-}
-
-[data-theme="dark"] .dating-empty-state__icon {
-  border-color: color-mix(in srgb, var(--c-dating) 18%, rgba(91, 118, 144, 0.72));
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-dating) 14%, rgba(32, 48, 68, 0.88)),
-    color-mix(in srgb, var(--c-dating) 6%, rgba(24, 38, 53, 0.92))
-  );
-  color: color-mix(in srgb, var(--c-dating) 58%, var(--c-text-1));
-  box-shadow: 0 16px 32px color-mix(in srgb, var(--c-dating) 12%, transparent);
-}
-
-[data-theme="dark"] .dating-status--accepted {
-  border-color: color-mix(in srgb, var(--c-dating) 20%, rgba(74, 96, 120, 0.68));
-  background: color-mix(in srgb, var(--c-dating) 9%, rgba(32, 48, 68, 0.84));
-  color: color-mix(in srgb, var(--c-dating) 54%, var(--c-text-1));
-}
-
-[data-theme="dark"] .dating-status--rejected {
-  border-color: color-mix(in srgb, var(--c-dating) 12%, rgba(248, 113, 113, 0.72));
-  background: color-mix(in srgb, var(--c-dating) 6%, rgba(32, 48, 68, 0.82));
-  color: color-mix(in srgb, var(--c-danger) 56%, #f8fafc);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  color: var(--c-danger);
 }
 </style>

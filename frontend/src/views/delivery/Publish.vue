@@ -111,15 +111,15 @@ function submit() {
       </div>
 
       <!-- Pickup info -->
-      <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 mb-4">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-5 mb-4">
         <div class="text-lg font-semibold text-[var(--c-text-1)] mb-4 pb-2.5 border-b border-[var(--c-border)]">{{ t('delivery.publish.pickupSection') }}</div>
         <div class="mb-4">
           <label class="block text-base text-[var(--c-text-2)] mb-2">{{ t('delivery.publish.pickupAddress') }}</label>
-          <input type="text" class="community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border transition-colors" :placeholder="t('delivery.publish.pickupPlaceholder')" v-model="formData.pickupAddress" />
+          <input type="text" class="ui-control community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border transition-colors" :placeholder="t('delivery.publish.pickupPlaceholder')" v-model="formData.pickupAddress" />
         </div>
         <div class="mb-4">
           <label class="block text-base text-[var(--c-text-2)] mb-2">{{ t('delivery.publish.pickupCode') }}</label>
-          <input type="text" class="community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border transition-colors" :placeholder="t('delivery.publish.pickupCodePlaceholder')" v-model="formData.pickupCode" />
+          <input type="text" class="ui-control community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border transition-colors" :placeholder="t('delivery.publish.pickupCodePlaceholder')" v-model="formData.pickupCode" />
         </div>
         <div>
           <label class="block text-base text-[var(--c-text-2)] mb-2">{{ t('delivery.publish.pickupImage') }}</label>
@@ -136,20 +136,20 @@ function submit() {
       </div>
 
       <!-- Delivery info -->
-      <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 mb-4">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-5 mb-4">
         <div class="text-lg font-semibold text-[var(--c-text-1)] mb-4 pb-2.5 border-b border-[var(--c-border)]">{{ t('delivery.publish.deliverySection') }}</div>
         <div class="mb-4">
           <label class="block text-base text-[var(--c-text-2)] mb-2">{{ t('delivery.publish.deliveryAddress') }}</label>
-          <input type="text" class="community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border transition-colors" :placeholder="t('delivery.publish.deliveryPlaceholder')" v-model="formData.deliveryAddress" />
+          <input type="text" class="ui-control community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border transition-colors" :placeholder="t('delivery.publish.deliveryPlaceholder')" v-model="formData.deliveryAddress" />
         </div>
         <div>
           <label class="block text-base text-[var(--c-text-2)] mb-2">{{ t('delivery.publish.contactPhone') }}</label>
-          <input type="tel" class="community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border transition-colors" :placeholder="t('delivery.publish.phonePlaceholder')" v-model="formData.contactPhone" maxlength="11" />
+          <input type="tel" class="ui-control community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border transition-colors" :placeholder="t('delivery.publish.phonePlaceholder')" v-model="formData.contactPhone" maxlength="11" />
         </div>
       </div>
 
       <!-- Item description -->
-      <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 mb-4">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-5 mb-4">
         <div class="text-lg font-semibold text-[var(--c-text-1)] mb-4 pb-2.5 border-b border-[var(--c-border)]">{{ t('delivery.publish.itemSection') }}</div>
         <div class="mb-4">
           <label class="block text-base text-[var(--c-text-2)] mb-2">{{ t('delivery.publish.sizeLabel') }}</label>
@@ -168,7 +168,7 @@ function submit() {
         </div>
         <div>
           <label class="block text-base text-[var(--c-text-2)] mb-2">{{ t('delivery.publish.descriptionLabel') }}</label>
-          <textarea class="community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border resize-none min-h-[80px] transition-colors" :placeholder="t('delivery.publish.descriptionPlaceholder')" v-model="formData.description" rows="3" maxlength="100"></textarea>
+          <textarea class="ui-control community-delivery-input w-full p-3 border border-[var(--c-divider)] rounded-lg text-base text-[var(--c-text-1)] outline-none box-border resize-none min-h-[80px] transition-colors" :placeholder="t('delivery.publish.descriptionPlaceholder')" v-model="formData.description" rows="3" maxlength="100"></textarea>
         </div>
       </div>
     </div>
@@ -178,7 +178,7 @@ function submit() {
       <div class="flex items-center mr-4">
         <span class="text-base text-[var(--c-text-2)] mr-1">{{ t('delivery.publish.rewardLabel') }}</span>
         <span class="community-delivery-reward text-lg font-bold">&#xffe5;</span>
-        <input type="number" class="community-delivery-reward-input community-delivery-input w-20 px-2 py-1.5 border border-[var(--c-divider)] rounded-lg text-lg font-bold outline-none ml-1 transition-colors" placeholder="0.00" v-model="formData.reward" step="0.01" min="0" max="99" />
+        <input type="number" class="ui-control community-delivery-reward-input community-delivery-input w-20 px-2 py-1.5 border border-[var(--c-divider)] rounded-lg text-lg font-bold outline-none ml-1 transition-colors" placeholder="0.00" v-model="formData.reward" step="0.01" min="0" max="99" />
       </div>
       <button type="button" class="community-delivery-submit-button flex-1 h-11 text-white border-none rounded-lg text-lg font-medium cursor-pointer transition-opacity disabled:opacity-60 disabled:cursor-not-allowed" :disabled="submitting" @click="submit">
         {{ submitting ? t('delivery.publish.submitting') : t('delivery.publish.submitAction') }}
@@ -186,8 +186,8 @@ function submit() {
     </div>
 
     <!-- Dialog -->
-    <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="community-delivery-dialog-shell fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+    <div v-if="dialogVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="ui-modal community-delivery-dialog-shell fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
       <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
       <div class="border-t border-[var(--c-border)] flex">
@@ -199,129 +199,59 @@ function submit() {
 
 <style scoped>
 .community-delivery-warning {
-  border: 1px solid color-mix(in srgb, var(--c-delivery) 28%, var(--c-border));
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--c-delivery) 12%, rgba(255, 255, 255, 0.96)), color-mix(in srgb, var(--c-delivery) 5%, rgba(255, 255, 255, 0.92)));
-  color: color-mix(in srgb, var(--c-delivery) 46%, #7c2d12);
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-delivery) 8%, transparent);
+  border: 1px solid var(--c-border);
+  background: var(--c-primary-soft);
+  color: var(--c-text-2);
+  box-shadow: none;
 }
 
 .community-delivery-upload-placeholder {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-delivery) 10%, transparent);
+  box-shadow: none;
 }
 
 .community-delivery-input {
-  background: color-mix(in srgb, var(--c-delivery) 3%, rgba(255, 255, 255, 0.72));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-delivery) 8%, transparent);
+  background: var(--c-surface);
+  box-shadow: none;
 }
 
 .community-delivery-input::placeholder {
-  color: color-mix(in srgb, var(--c-delivery) 14%, var(--c-text-3));
+  color: var(--c-text-3);
 }
 
 .community-delivery-submit-chip,
 .community-delivery-submit-button,
 .community-delivery-size-chip--active {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-delivery) 92%, #f59e0b), color-mix(in srgb, var(--c-delivery) 76%, #d97706));
+  background: var(--c-primary);
 }
 
 .community-delivery-submit-button {
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--c-delivery) 24%, transparent);
+  box-shadow: none;
 }
 
 .community-delivery-dialog-confirm {
-  color: color-mix(in srgb, var(--c-delivery) 84%, #d97706);
+  color: var(--c-primary);
 }
 
 .community-delivery-input:focus,
 .community-delivery-upload-placeholder:active {
-  border-color: color-mix(in srgb, var(--c-delivery) 82%, #f59e0b) !important;
+  border-color: var(--c-primary) !important;
 }
 
 .community-delivery-reward,
 .community-delivery-reward-input {
-  color: color-mix(in srgb, var(--c-delivery) 86%, #ea580c) !important;
+  color: var(--c-primary) !important;
 }
 
 .community-delivery-bottom-bar,
 .community-delivery-dialog-shell {
-  border-color: color-mix(in srgb, var(--c-delivery) 14%, rgba(202, 222, 226, 0.72));
+  border-color: var(--c-border);
 }
 
 .community-delivery-bottom-bar {
-  backdrop-filter: blur(18px);
-  background: linear-gradient(180deg, rgba(250, 246, 240, 0.92), rgba(255, 255, 255, 0.96));
+  background: var(--c-surface);
 }
 
 .community-delivery-dialog-shell {
-  box-shadow: 0 24px 56px rgba(48, 39, 18, 0.18);
-}
-
-[data-theme="dark"] .community-delivery-warning {
-  border-color: color-mix(in srgb, var(--c-delivery) 20%, rgba(76, 101, 126, 0.72));
-  background:
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--c-delivery) 8%, transparent), transparent 36%),
-    linear-gradient(135deg, rgba(43, 47, 50, 0.94), rgba(31, 37, 43, 0.94));
-  color: color-mix(in srgb, var(--c-delivery) 38%, #fff7ed);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 14px 28px rgba(0, 0, 0, 0.14);
-}
-
-[data-theme="dark"] .community-delivery-submit-chip,
-[data-theme="dark"] .community-delivery-submit-button,
-[data-theme="dark"] .community-delivery-size-chip--active {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-delivery) 54%, #e7c67a),
-    color-mix(in srgb, var(--c-delivery) 34%, #6d5532)
-  );
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--c-delivery) 18%, rgba(160, 142, 108, 0.52)),
-    0 16px 30px rgba(0, 0, 0, 0.16);
-}
-
-[data-theme="dark"] .community-delivery-upload-placeholder {
-  background: linear-gradient(180deg, rgba(38, 53, 70, 0.92), rgba(28, 40, 55, 0.96));
-  border-color: color-mix(in srgb, var(--c-delivery) 18%, rgba(111, 132, 156, 0.48));
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--c-delivery) 10%, rgba(160, 142, 108, 0.22)),
-    0 12px 24px rgba(0, 0, 0, 0.12);
-}
-
-[data-theme="dark"] .community-delivery-input {
-  background: linear-gradient(180deg, rgba(34, 47, 61, 0.88), rgba(29, 40, 53, 0.96));
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--c-delivery) 12%, rgba(160, 142, 108, 0.16)),
-    inset 0 1px 0 rgba(255, 255, 255, 0.02);
-}
-
-[data-theme="dark"] .community-delivery-input::placeholder {
-  color: color-mix(in srgb, var(--c-delivery) 18%, rgba(214, 218, 226, 0.66));
-}
-
-[data-theme="dark"] .community-delivery-input:focus,
-[data-theme="dark"] .community-delivery-upload-placeholder:active {
-  border-color: color-mix(in srgb, var(--c-delivery) 34%, #e7c67a) !important;
-}
-
-[data-theme="dark"] .community-delivery-bottom-bar,
-[data-theme="dark"] .community-delivery-dialog-shell {
-  border-color: color-mix(in srgb, var(--c-delivery) 18%, rgba(111, 132, 156, 0.42));
-  background:
-    radial-gradient(circle at 0 0, color-mix(in srgb, var(--c-delivery) 8%, transparent), transparent 30%),
-    linear-gradient(180deg, rgba(29, 38, 50, 0.94), rgba(22, 31, 43, 0.98));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 20px 42px rgba(0, 0, 0, 0.26);
-}
-
-[data-theme="dark"] .community-delivery-dialog-confirm {
-  color: color-mix(in srgb, var(--c-delivery) 72%, #fde68a);
-}
-
-[data-theme="dark"] .community-delivery-reward,
-[data-theme="dark"] .community-delivery-reward-input {
-  color: color-mix(in srgb, var(--c-delivery) 46%, #fff7ed) !important;
+  box-shadow: var(--shadow-lg);
 }
 </style>

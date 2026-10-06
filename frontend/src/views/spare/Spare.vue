@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -91,21 +92,24 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
     <!-- Search view -->
     <template v-if="!showResult">
       <!-- Sticky header -->
-      <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
-        <span class="flex-1 text-center text-sm font-bold">{{ t('spare.pageTitle') }}</span>
-        <div class="w-10"></div>
+      <div class="subpage-bar">
+        <button type="button" class="subpage-bar__back" @click="$router.back()">
+          <ChevronLeft :size="18" aria-hidden="true" />
+          <span>{{ t('common.back') }}</span>
+        </button>
+        <span class="subpage-bar__title">{{ t('spare.pageTitle') }}</span>
+        <span aria-hidden="true"></span>
       </div>
 
-      <div class="max-w-lg mx-auto px-4 py-6">
+      <div class="subpage-body max-w-lg mx-auto px-4 py-6">
         <p class="text-center text-xs text-[var(--c-text-secondary)] mb-5">{{ t('about.appName') }}</p>
 
         <!-- Form card -->
-        <div class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+        <div class="ui-panel bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
           <!-- Campus -->
           <div class="flex items-center px-4 h-[52px]">
             <label class="w-24 shrink-0 text-sm text-[var(--c-text)]">{{ t('spare.field.campus') }}</label>
@@ -170,7 +174,7 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
         <!-- Search button -->
         <button
           type="button"
-          class="mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-white text-[15px] font-medium active:opacity-80 transition-opacity"
+          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-[15px] font-medium active:opacity-80 transition-opacity"
           @click="doSearch"
         >
           {{ t('spare.search') }}
@@ -181,13 +185,16 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
     <!-- Result view -->
     <template v-else>
       <!-- Sticky header -->
-      <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-        <button @click="backToSearch" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
-        <span class="flex-1 text-center text-sm font-bold">{{ t('spare.resultTitle') }}</span>
-        <div class="w-10"></div>
+      <div class="subpage-bar">
+        <button type="button" class="subpage-bar__back" @click="backToSearch">
+          <ChevronLeft :size="18" aria-hidden="true" />
+          <span>{{ t('common.back') }}</span>
+        </button>
+        <span class="subpage-bar__title">{{ t('spare.resultTitle') }}</span>
+        <span aria-hidden="true"></span>
       </div>
 
-      <div class="max-w-lg mx-auto px-4 py-6">
+      <div class="subpage-body max-w-lg mx-auto px-4 py-6">
         <!-- Loading -->
         <div v-if="loading" class="flex flex-col items-center justify-center py-16 text-[var(--c-text-secondary)]">
           <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-3"></div>
@@ -201,7 +208,7 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
             <div
               v-for="(item, index) in spareList"
               :key="item.number || index"
-              class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] p-4"
+              class="ui-panel bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] p-4"
             >
               <h4 class="text-[15px] font-medium text-[var(--c-text)] mb-2">{{ item.name || item.number || '—' }}</h4>
               <div class="space-y-1 text-xs text-[var(--c-text-secondary)]">

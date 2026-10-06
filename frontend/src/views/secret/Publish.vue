@@ -567,7 +567,7 @@ onBeforeUnmount(() => {
           :style="{ backgroundColor: getThemeBg(i) }"
           @click="selectTheme(i)"
         >
-          <i v-if="formData.theme === i" class="inline-flex items-center justify-center w-6 h-6 absolute -right-2 -top-2 rounded-full bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] shadow-[0_0.2rem_0.5rem_rgba(139,92,246,0.28)] before:content-[''] before:w-[0.38rem] before:h-[0.72rem] before:border-r-2 before:border-b-2 before:border-white before:rotate-45 before:-translate-x-[8%] before:-translate-y-[8%]"></i>
+          <i v-if="formData.theme === i" class="inline-flex items-center justify-center w-6 h-6 absolute -right-2 -top-2 rounded-full bg-[var(--c-primary)] before:content-[''] before:w-[0.38rem] before:h-[0.72rem] before:border-r-2 before:border-b-2 before:border-white before:rotate-45 before:-translate-x-[8%] before:-translate-y-[8%]"></i>
         </div>
       </div>
       <div v-if="showThemes" class="flex mt-2.5 px-2.5 gap-2.5">
@@ -578,7 +578,7 @@ onBeforeUnmount(() => {
           :style="{ backgroundColor: getThemeBg(i + 6) }"
           @click="selectTheme(i + 6)"
         >
-          <i v-if="formData.theme === i + 6" class="inline-flex items-center justify-center w-6 h-6 absolute -right-2 -top-2 rounded-full bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] shadow-[0_0.2rem_0.5rem_rgba(139,92,246,0.28)] before:content-[''] before:w-[0.38rem] before:h-[0.72rem] before:border-r-2 before:border-b-2 before:border-white before:rotate-45 before:-translate-x-[8%] before:-translate-y-[8%]"></i>
+          <i v-if="formData.theme === i + 6" class="inline-flex items-center justify-center w-6 h-6 absolute -right-2 -top-2 rounded-full bg-[var(--c-primary)] before:content-[''] before:w-[0.38rem] before:h-[0.72rem] before:border-r-2 before:border-b-2 before:border-white before:rotate-45 before:-translate-x-[8%] before:-translate-y-[8%]"></i>
         </div>
       </div>
 
@@ -603,8 +603,8 @@ onBeforeUnmount(() => {
   </div>
 
   <div v-if="dialogVisible">
-    <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: var(--c-secret)">
+    <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: var(--c-secret)">
       <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
       <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
       <div class="flex border-t border-[var(--c-border)]">
@@ -616,20 +616,12 @@ onBeforeUnmount(() => {
 </template>
 <style scoped>
 .secret-note-editor {
-  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.12);
+  box-shadow: none;
 }
 
 .secret-voice-meter {
   background: color-mix(in srgb, var(--c-border) 84%, var(--c-surface));
   border-radius: 999px;
   overflow: hidden;
-}
-
-[data-theme="dark"] .secret-note-editor {
-  box-shadow: 0 22px 42px rgba(0, 0, 0, 0.26);
-}
-
-[data-theme="dark"] .secret-voice-meter {
-  background: color-mix(in srgb, rgba(68, 89, 112, 0.82) 78%, rgba(24, 38, 53, 0.9));
 }
 </style>

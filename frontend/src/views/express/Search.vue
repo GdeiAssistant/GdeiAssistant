@@ -1,4 +1,5 @@
 <script setup>
+import { Heart, Star, MessageCircle, Search as SearchIcon } from 'lucide-vue-next'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -146,13 +147,13 @@ watch(
         <div
           v-for="(item, index) in list"
           :key="item.id"
-          class="bg-[var(--c-surface)] rounded-xl shadow-sm mb-3 overflow-hidden animate-[community-slide-up_0.4s_ease_both]"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm mb-3 overflow-hidden animate-[community-slide-up_0.4s_ease_both]"
           :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         >
           <div class="p-4 pb-3">
             <p class="mb-2.5 text-base leading-relaxed">
               <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.senderGender), color: getGenderColor(item.senderGender) }">{{ item.senderName }}</span>
-              <span class="mx-1.5 text-[var(--c-express)] font-bold">≡❤</span>
+              <span class="mx-1.5 text-[var(--c-express)] font-bold"><Heart :size="14" class="inline-block align-[-2px]" aria-hidden="true" /></span>
               <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.receiverGender), color: getGenderColor(item.receiverGender) }">{{ item.receiverName }}</span>
             </p>
             <p class="text-sm text-[var(--c-text-1)] leading-relaxed break-words mb-1">{{ item.content }}</p>
@@ -160,15 +161,15 @@ watch(
           </div>
           <div class="flex border-t border-[var(--c-border)]">
             <button type="button" class="flex-1 flex items-center justify-center gap-1 py-2.5 bg-transparent border-none border-r border-[var(--c-border)] text-sm text-[var(--c-text-2)] cursor-pointer" @click="handleLike(item)">
-              <span class="text-base">♡</span>
+              <Heart :size="16" :fill="item.isLiked ? 'currentColor' : 'none'" aria-hidden="true" />
               <span>{{ item.likeCount || 0 }}</span>
             </button>
             <button type="button" class="flex-1 flex items-center justify-center gap-1 py-2.5 bg-transparent border-none border-r border-[var(--c-border)] text-sm text-[var(--c-text-2)] cursor-pointer" @click="handleGuess(item)">
-              <span class="text-base">☆</span>
+              <Star :size="16" aria-hidden="true" />
               <span>{{ item.guessCount || 0 }}</span>
             </button>
             <button type="button" class="flex-1 flex items-center justify-center gap-1 py-2.5 bg-transparent border-none text-sm text-[var(--c-text-2)] cursor-pointer" @click="handleComment(item)">
-              <span class="text-base">💬</span>
+              <MessageCircle :size="16" aria-hidden="true" />
               <span>{{ item.commentCount || 0 }}</span>
             </button>
           </div>
@@ -179,8 +180,8 @@ watch(
         {{ t('express.legend') }}
       </div>
 
-      <div v-if="!loading && !refreshing && list.length === 0" class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-        <div class="text-5xl mb-3">🔍</div>
+      <div v-if="!loading && !refreshing && list.length === 0" class="ui-empty-state flex flex-col items-center py-16 text-[var(--c-text-3)]">
+        <SearchIcon class="mb-3" :size="40" :stroke-width="1.5" aria-hidden="true" />
         <p class="text-sm">{{ keyword ? t('express.searchEmpty') : t('express.searchPrompt') }}</p>
       </div>
 
@@ -195,8 +196,8 @@ watch(
 
     <!-- 提示 Dialog -->
     <div v-if="dialogVisible">
-      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
+      <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
         <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
         <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
         <div class="flex border-t border-[var(--c-border)]">

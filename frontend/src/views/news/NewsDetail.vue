@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -109,14 +110,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="router.back()" class="text-[var(--c-primary)] text-sm font-medium min-w-[48px]">&larr; {{ t('common.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ sourceLabel }}</span>
-      <div class="w-12"></div>
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ sourceLabel }}</span>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <!-- Loading -->
       <div v-if="loading" class="flex flex-col items-center gap-3 py-14">
         <span class="inline-block w-5 h-5 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></span>
@@ -124,7 +128,7 @@ onMounted(() => {
       </div>
 
       <!-- Content card -->
-      <div v-else class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+      <div v-else class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
         <p v-if="error" class="text-sm text-red-500 mb-3">{{ error }}</p>
 
         <p class="text-xs font-semibold text-[var(--c-primary)] mb-2.5">{{ sourceLabel }}</p>

@@ -101,7 +101,7 @@ onMounted(() => {
         <div
           v-for="item in list"
           :key="item.id"
-          class="lostandfound-card inline-block w-[46.5%] relative mx-[1%] my-1 bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
+          class="ui-panel lostandfound-card inline-block w-[46.5%] relative mx-[1%] my-1 bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
           @click="goDetail(item.id)"
         >
           <div class="lostandfound-card__media w-full h-[170px] relative overflow-hidden bg-[var(--c-border)]">
@@ -156,7 +156,7 @@ onMounted(() => {
 }
 
 .community-lostandfound-tab--active {
-  color: color-mix(in srgb, var(--c-lostandfound) 82%, var(--c-text-1));
+  color: var(--c-primary);
   font-weight: 760;
 }
 
@@ -165,12 +165,10 @@ onMounted(() => {
 }
 
 .community-lostandfound-empty-shell {
-  border: 1px solid color-mix(in srgb, var(--c-lostandfound) 16%, var(--c-border));
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-lostandfound) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--c-lostandfound) 3%, var(--c-surface));
-  box-shadow: 0 14px 30px color-mix(in srgb, var(--c-lostandfound) 10%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 
 .community-lostandfound-empty-icon {
@@ -185,22 +183,6 @@ onMounted(() => {
 
 .lostandfound-card__badge--found {
   background: color-mix(in srgb, var(--c-lostandfound) 66%, var(--c-primary));
-}
-
-[data-theme="dark"] .community-lostandfound-empty-shell {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-lostandfound) 8%, transparent), transparent 42%),
-    rgba(24, 38, 53, 0.84);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .lostandfound-card__badge--lost {
-  background: color-mix(in srgb, var(--c-lostandfound) 38%, var(--c-warning));
-}
-
-[data-theme="dark"] .lostandfound-card__badge--found {
-  background: color-mix(in srgb, var(--c-lostandfound) 36%, var(--c-primary));
 }
 
 @media (max-width: 767px) {
@@ -218,9 +200,9 @@ onMounted(() => {
     width: 100% !important;
     min-height: 132px;
     margin: 0 !important;
-    border: 1px solid color-mix(in srgb, var(--c-lostandfound) 16%, var(--c-border));
-    border-radius: 20px;
-    box-shadow: 0 14px 34px color-mix(in srgb, var(--c-lostandfound) 9%, rgba(32, 69, 78, 0.12));
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-card);
+    box-shadow: none;
   }
 
   .lostandfound-card__media {
@@ -250,11 +232,6 @@ onMounted(() => {
     font-size: 13px !important;
     line-height: 1.55;
     -webkit-line-clamp: 3;
-  }
-
-  [data-theme="dark"] .lostandfound-card {
-    border-color: color-mix(in srgb, var(--c-lostandfound) 14%, rgba(74, 96, 120, 0.68));
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
   }
 }
 </style>

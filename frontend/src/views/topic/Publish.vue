@@ -133,7 +133,7 @@ async function submit() {
           <div
             v-for="(img, idx) in images"
             :key="idx"
-            class="relative aspect-square rounded-lg overflow-hidden bg-gray-100"
+            class="relative aspect-square rounded-lg overflow-hidden bg-[var(--c-fill-2)]"
           >
             <img :src="img" class="w-full h-full object-cover" />
             <button
@@ -160,8 +160,8 @@ async function submit() {
     </div>
 
     <!-- 提示对话框 -->
-    <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
+    <div v-if="dialogVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
       <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
       <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
       <div class="flex border-t border-[var(--c-border)]">

@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -112,12 +113,15 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="feedback-page min-h-screen pb-6">
+  <div class="subpage feedback-page min-h-screen pb-6">
     <!-- Sticky Header -->
-    <div class="feedback-header sticky top-0 z-10 flex items-center h-12 px-4">
-      <button type="button" class="feedback-back-btn w-15 text-sm text-left cursor-pointer" @click="router.back()">{{ t('common.back') }}</button>
-      <h1 class="feedback-header-title flex-1 text-center text-base font-medium m-0">{{ t('feedback.title') }}</h1>
-      <div class="w-15"></div>
+    <div class="subpage-bar feedback-header">
+      <button type="button" class="subpage-bar__back feedback-back-btn" @click="router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <h1 class="subpage-bar__title feedback-header-title">{{ t('feedback.title') }}</h1>
+      <span aria-hidden="true"></span>
     </div>
 
     <!-- Tabs -->
@@ -196,7 +200,7 @@ async function handleSubmit() {
               :value="content"
               @input="handleContentInput"
               rows="5"
-              class="feedback-input w-full rounded-xl border p-3 text-sm resize-none min-h-[120px] box-border focus:outline-none"
+              class="ui-control feedback-input w-full rounded-xl border p-3 text-sm resize-none min-h-[120px] box-border focus:outline-none"
             ></textarea>
             <div
               class="feedback-counter absolute right-2.5 bottom-2 text-xs"
@@ -212,7 +216,7 @@ async function handleSubmit() {
             type="text"
             v-model="contact"
             :placeholder="t('feedback.form.contactPlaceholder')"
-            class="feedback-input w-full rounded-full border py-2.5 px-3.5 text-sm box-border focus:outline-none"
+            class="ui-control feedback-input w-full rounded-full border py-2.5 px-3.5 text-sm box-border focus:outline-none"
           />
         </div>
 
@@ -268,16 +272,13 @@ async function handleSubmit() {
 
 <style scoped>
 .feedback-page {
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 7%, transparent), transparent 32%),
-    var(--c-bg-soft);
+  background: var(--c-bg);
 }
 
 .feedback-header,
 .feedback-tabs {
   background: color-mix(in srgb, var(--c-surface) 94%, var(--c-bg));
   border-bottom: 1px solid var(--c-border-light);
-  backdrop-filter: blur(18px);
 }
 
 .feedback-back-btn,
@@ -292,7 +293,7 @@ async function handleSubmit() {
 }
 
 .feedback-tab--active {
-  color: color-mix(in srgb, var(--c-primary) 80%, #14b8a6);
+  color: var(--c-primary);
   font-weight: 650;
 }
 
@@ -305,13 +306,13 @@ async function handleSubmit() {
   height: 3px;
   border-radius: 999px;
   transform: translateX(-50%);
-  background: color-mix(in srgb, var(--c-primary) 82%, #14b8a6);
+  background: var(--c-primary);
 }
 
 .feedback-card {
   background: var(--c-surface);
-  border: 1px solid color-mix(in srgb, var(--c-primary) 8%, var(--c-border-light));
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 8%, rgba(15, 23, 42, 0.06));
+  border: 1px solid var(--c-border);
+  box-shadow: none;
 }
 
 .feedback-card__button {
@@ -327,7 +328,7 @@ async function handleSubmit() {
 
 .feedback-card__content,
 .feedback-upload {
-  background: color-mix(in srgb, var(--c-bg-soft) 78%, var(--c-surface));
+  background: color-mix(in srgb, var(--c-bg) 78%, var(--c-surface));
   border-color: var(--c-border-light);
 }
 
@@ -337,12 +338,12 @@ async function handleSubmit() {
 
 .feedback-footnote__accent,
 .feedback-type-chip--active {
-  color: color-mix(in srgb, var(--c-primary) 80%, #0f766e);
+  color: var(--c-primary);
 }
 
 .feedback-type-chip {
   border-color: var(--c-border-light);
-  background: color-mix(in srgb, var(--c-bg-soft) 78%, var(--c-surface));
+  background: color-mix(in srgb, var(--c-bg) 78%, var(--c-surface));
   color: var(--c-text-2);
 }
 
@@ -354,7 +355,7 @@ async function handleSubmit() {
 
 .feedback-input {
   border-color: var(--c-border-light);
-  background: color-mix(in srgb, var(--c-bg-soft) 70%, var(--c-surface));
+  background: color-mix(in srgb, var(--c-bg) 70%, var(--c-surface));
   color: var(--c-text-1);
 }
 
@@ -369,11 +370,11 @@ async function handleSubmit() {
 }
 
 .feedback-counter--warning {
-  color: #f59e0b;
+  color: var(--c-warning);
 }
 
 .feedback-preview {
-  background: color-mix(in srgb, var(--c-bg-soft) 82%, var(--c-surface));
+  background: color-mix(in srgb, var(--c-bg) 82%, var(--c-surface));
 }
 
 .feedback-upload {
@@ -381,56 +382,7 @@ async function handleSubmit() {
 }
 
 .feedback-submit {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 88%, #2dd4bf), color-mix(in srgb, var(--c-primary) 72%, #0f766e));
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--c-primary) 26%, transparent);
-}
-
-[data-theme="dark"] .feedback-page {
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 10%, transparent), transparent 32%),
-    var(--c-bg);
-}
-
-[data-theme="dark"] .feedback-header,
-[data-theme="dark"] .feedback-tabs {
-  background: color-mix(in srgb, var(--c-surface) 88%, rgba(10, 20, 32, 0.9));
-  border-bottom-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .feedback-card {
-  border-color: rgba(68, 89, 112, 0.72);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .feedback-card__content,
-[data-theme="dark"] .feedback-upload,
-[data-theme="dark"] .feedback-input,
-[data-theme="dark"] .feedback-preview {
-  background: rgba(24, 38, 53, 0.84);
-}
-
-[data-theme="dark"] .feedback-type-chip {
-  border-color: rgba(68, 89, 112, 0.72);
-  background: rgba(24, 38, 53, 0.84);
-}
-
-[data-theme="dark"] .feedback-type-chip--active {
-  border-color: color-mix(in srgb, var(--c-primary) 28%, rgba(125, 211, 252, 0.5));
-  background: color-mix(in srgb, var(--c-primary) 18%, rgba(24, 38, 53, 0.88));
-  color: color-mix(in srgb, var(--c-primary) 62%, #ccfbf1);
-}
-
-[data-theme="dark"] .feedback-tab--active,
-[data-theme="dark"] .feedback-tab--active::after,
-[data-theme="dark"] .feedback-footnote__accent {
-  color: color-mix(in srgb, var(--c-primary) 60%, #67e8f9);
-}
-
-[data-theme="dark"] .feedback-tab--active::after {
-  background: color-mix(in srgb, var(--c-primary) 60%, #67e8f9);
-}
-
-[data-theme="dark"] .feedback-submit {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 68%, #22d3ee), color-mix(in srgb, var(--c-primary) 54%, #0f766e));
+  background: var(--c-primary);
+  box-shadow: none;
 }
 </style>

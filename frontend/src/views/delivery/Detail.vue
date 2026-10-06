@@ -142,7 +142,7 @@ onMounted(async () => {
 
     <div v-if="loading" class="community-delivery-detail-state-shell p-4">
       <div class="community-delivery-detail-state-card">
-        <div class="flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
+        <div class="ui-empty-state flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
           <span class="w-6 h-6 border-2 border-[var(--c-border)] border-t-[var(--c-delivery)] rounded-full animate-spin"></span>
           <p class="mt-3 text-sm">{{ t('communityCommon.loading') }}</p>
         </div>
@@ -150,7 +150,7 @@ onMounted(async () => {
     </div>
 
     <div v-else-if="item" class="p-4 animate-[slide-up_0.4s_ease_both]">
-      <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-6">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-6">
         <!-- Header -->
         <div class="flex justify-between items-center mb-5 pb-4 border-b border-[var(--c-border)]">
           <div class="text-xl font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
@@ -256,8 +256,8 @@ onMounted(async () => {
     </div>
 
     <!-- Info dialog -->
-    <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+    <div v-if="dialogVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
       <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('common.hint') }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
       <div class="border-t border-[var(--c-border)] flex">
@@ -266,8 +266,8 @@ onMounted(async () => {
     </div>
 
     <!-- Complete confirmation dialog -->
-    <div v-if="confirmCompleteVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="confirmCompleteVisible = false"></div>
-    <div v-if="confirmCompleteVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+    <div v-if="confirmCompleteVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="confirmCompleteVisible = false"></div>
+    <div v-if="confirmCompleteVisible" class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
       <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ t('delivery.detail.completeConfirmTitle') }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ t('delivery.detail.completeConfirmMessage') }}</div>
       <div class="border-t border-[var(--c-border)] flex">
@@ -285,10 +285,10 @@ onMounted(async () => {
 }
 
 .community-delivery-detail-state-card {
-  border: 1px solid color-mix(in srgb, var(--c-delivery) 10%, rgba(205, 222, 226, 0.82));
-  border-radius: 24px;
-  background: color-mix(in srgb, var(--c-delivery) 3%, rgba(255, 255, 255, 0.94));
-  box-shadow: 0 18px 36px rgba(32, 69, 78, 0.08);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
+  box-shadow: none;
 }
 
 .community-delivery-detail-state-icon {
@@ -297,108 +297,57 @@ onMounted(async () => {
 }
 
 .community-delivery-reward-block {
-  color: color-mix(in srgb, var(--c-delivery) 74%, #d97706);
+  color: var(--c-primary);
 }
 
 .community-delivery-pickup-badge {
-  background: color-mix(in srgb, var(--c-delivery) 68%, #0ea5e9);
+  background: var(--c-primary);
 }
 
 .community-delivery-dropoff-badge {
-  background: color-mix(in srgb, var(--c-delivery) 88%, #f59e0b);
+  background: var(--c-primary);
 }
 
 .community-delivery-status-badge {
-  border: 1px solid color-mix(in srgb, var(--c-delivery) 18%, var(--c-border));
+  border: 1px solid var(--c-border);
 }
 
 .community-delivery-status-badge--pending {
   background: color-mix(in srgb, var(--c-delivery) 14%, var(--c-surface));
-  color: color-mix(in srgb, var(--c-delivery) 80%, #b45309);
+  color: var(--c-primary);
 }
 
 .community-delivery-status-badge--active {
-  background: color-mix(in srgb, var(--c-delivery) 18%, #e0f2fe);
-  color: color-mix(in srgb, var(--c-delivery) 70%, #0f766e);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 
 .community-delivery-status-badge--completed {
-  background: color-mix(in srgb, var(--c-delivery) 16%, #ecfdf5);
-  color: color-mix(in srgb, var(--c-delivery) 76%, #0f766e);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 
 .community-delivery-role-badge--publisher {
-  background: color-mix(in srgb, var(--c-delivery) 18%, #dbeafe);
-  color: color-mix(in srgb, var(--c-delivery) 62%, #1d4ed8);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 
 .community-delivery-role-badge--runner {
-  background: color-mix(in srgb, var(--c-delivery) 18%, #fef3c7);
-  color: color-mix(in srgb, var(--c-delivery) 78%, #b45309);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 
 .community-delivery-action--primary {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-delivery) 92%, #f59e0b), color-mix(in srgb, var(--c-delivery) 76%, #d97706));
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--c-delivery) 28%, transparent);
+  background: var(--c-primary);
+  box-shadow: none;
 }
 
 .community-delivery-action--success {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-delivery) 72%, #10b981), color-mix(in srgb, var(--c-delivery) 54%, #059669));
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--c-delivery) 24%, transparent);
+  background: var(--c-primary);
+  box-shadow: none;
 }
 
 .community-delivery-dialog-confirm {
-  color: color-mix(in srgb, var(--c-delivery) 84%, #d97706);
-}
-
-[data-theme="dark"] .community-delivery-reward-block {
-  color: color-mix(in srgb, var(--c-delivery) 72%, #fde68a);
-}
-
-[data-theme="dark"] .community-delivery-pickup-badge {
-  background: color-mix(in srgb, var(--c-delivery) 42%, #38bdf8);
-}
-
-[data-theme="dark"] .community-delivery-dropoff-badge {
-  background: color-mix(in srgb, var(--c-delivery) 70%, #fbbf24);
-}
-
-[data-theme="dark"] .community-delivery-status-badge {
-  border-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .community-delivery-status-badge--pending {
-  background: rgba(36, 52, 69, 0.88);
-  color: color-mix(in srgb, var(--c-delivery) 72%, #fde68a);
-}
-
-[data-theme="dark"] .community-delivery-status-badge--active {
-  background: color-mix(in srgb, var(--c-delivery) 18%, rgba(24, 38, 53, 0.9));
-  color: color-mix(in srgb, var(--c-delivery) 50%, #bfdbfe);
-}
-
-[data-theme="dark"] .community-delivery-status-badge--completed {
-  background: color-mix(in srgb, var(--c-delivery) 20%, rgba(24, 38, 53, 0.9));
-  color: color-mix(in srgb, var(--c-delivery) 58%, #ccfbf1);
-}
-
-[data-theme="dark"] .community-delivery-role-badge--publisher {
-  background: rgba(32, 48, 68, 0.88);
-  color: color-mix(in srgb, var(--c-delivery) 46%, #bfdbfe);
-}
-
-[data-theme="dark"] .community-delivery-role-badge--runner {
-  background: rgba(36, 52, 69, 0.88);
-  color: color-mix(in srgb, var(--c-delivery) 70%, #fde68a);
-}
-
-[data-theme="dark"] .community-delivery-dialog-confirm {
-  color: color-mix(in srgb, var(--c-delivery) 72%, #fde68a);
-}
-
-[data-theme="dark"] .community-delivery-detail-state-card {
-  border-color: color-mix(in srgb, var(--c-delivery) 12%, rgba(97, 122, 147, 0.66));
-  background: rgba(24, 38, 53, 0.88);
-  box-shadow: 0 22px 38px rgba(0, 0, 0, 0.22);
+  color: var(--c-primary);
 }
 </style>

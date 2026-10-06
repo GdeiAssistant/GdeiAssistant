@@ -182,20 +182,90 @@ function confirmLogout() {
 
 <style scoped>
 .settings-page {
-  width: min(1140px, calc(100% - 64px));
+  width: min(720px, calc(100% - 32px));
   margin: 0 auto;
-  padding-top: 26px;
+  padding-top: 24px;
 }
 
-[data-theme="dark"] .settings-page {
-  background:
-    radial-gradient(circle at 100% 0, rgba(125, 211, 252, 0.05), transparent 20%);
+.settings-page :deep(.app-card) {
+  box-shadow: none;
 }
 
-@media (max-width: 768px) {
+.settings-page :deep(.app-card__header) {
+  min-height: 40px;
+  padding: 14px 16px 8px;
+  border-bottom: 0;
+}
+
+.settings-page :deep(.app-card__header) span {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--c-text-3);
+}
+
+.settings-page .campus-list-row {
+  min-height: 56px;
+  gap: 14px;
+  padding: 10px 16px;
+  border-color: var(--c-divider);
+  transition: background-color 0.16s ease;
+}
+
+.settings-page .campus-list-row > svg:first-child {
+  flex: none;
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  padding: 7px;
+  border-radius: var(--radius-control);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+}
+
+.settings-page .campus-list-row > span {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.settings-page .campus-list-row > svg:last-child {
+  color: var(--c-text-3);
+  transition: transform 0.16s ease, color 0.16s ease;
+}
+
+.settings-page .campus-list-row:hover > svg:last-child {
+  color: var(--c-primary);
+  transform: translateX(2px);
+}
+
+.settings-page .campus-list-row:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: -2px;
+}
+
+.settings-page > section:last-of-type button {
+  min-height: 52px;
+  transition: background-color 0.16s ease;
+}
+
+.settings-page > section:last-of-type button:hover {
+  background: color-mix(in srgb, var(--c-danger) 8%, var(--c-surface));
+}
+
+.settings-page > section:last-of-type :is(svg, span) {
+  color: var(--c-danger);
+}
+
+@media (min-width: 1024px) {
   .settings-page {
-    width: calc(100% - 24px);
-    padding-top: 16px;
+    padding-top: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-page .campus-list-row,
+  .settings-page .campus-list-row > svg:last-child {
+    transition: none;
   }
 }
 </style>

@@ -1,4 +1,5 @@
 <script setup>
+import { Heart, Star, MessageCircle } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -162,10 +163,10 @@ onMounted(async () => {
     <!-- 主体容器 -->
     <div class="p-4 pb-[60px]">
       <!-- 表白卡片 -->
-      <div v-if="item" class="bg-[var(--c-surface)] rounded-xl shadow-sm overflow-hidden mb-4 animate-[community-slide-up_0.4s_ease_both]">
+      <div v-if="item" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm overflow-hidden mb-4 animate-[community-slide-up_0.4s_ease_both]">
         <div class="text-center text-lg px-4 pt-5 pb-2.5 leading-relaxed">
           <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.senderGender), color: getGenderColor(item.senderGender) }">{{ item.senderName }}</span>
-          <span class="text-[var(--c-text-2)] mx-1.5"> ≡❤ </span>
+          <span class="text-[var(--c-text-2)] mx-1.5"><Heart :size="14" class="inline-block align-[-2px]" aria-hidden="true" /></span>
           <span class="border-b-2 border-dashed" :style="{ borderColor: getGenderColor(item.receiverGender), color: getGenderColor(item.receiverGender) }">{{ item.receiverName }}</span>
         </div>
 
@@ -184,7 +185,7 @@ onMounted(async () => {
             :class="item.isLiked ? 'text-[var(--c-express)] font-bold' : 'text-[var(--c-text-2)]'"
             @click.stop="handleLike"
           >
-            {{ item.isLiked ? '♥' : '♡' }} {{ item.likeCount || 0 }}
+            <Heart :size="16" :fill="item.isLiked ? 'currentColor' : 'none'" aria-hidden="true" /> {{ item.likeCount || 0 }}
           </button>
           <button
             type="button"
@@ -192,20 +193,20 @@ onMounted(async () => {
             :style="{ opacity: item.canGuess ? 1 : 0.4 }"
             @click.stop="handleGuess"
           >
-            <span class="mr-1 relative">☆<sup class="text-[10px] absolute -top-1 -right-1.5">?</sup></span> {{ item.guessCount || 0 }}/{{ item.correctCount || 0 }}
+            <span class="mr-1 relative"><Star :size="16" aria-hidden="true" /><sup class="text-[10px] absolute -top-1 -right-1.5">?</sup></span> {{ item.guessCount || 0 }}/{{ item.correctCount || 0 }}
           </button>
           <button
             type="button"
             class="flex-1 flex items-center justify-center gap-0.5 py-2.5 bg-transparent border-none text-sm text-[var(--c-text-2)] cursor-pointer"
             @click.stop
           >
-            💬 {{ item.commentCount || 0 }}
+            <MessageCircle :size="16" aria-hidden="true" /> {{ item.commentCount || 0 }}
           </button>
         </div>
       </div>
 
       <!-- 评论区 -->
-      <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-4 mb-5">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-4 mb-5">
         <h3 class="text-base font-medium text-[var(--c-text-1)] mb-4">{{ t('express.detail.commentList') }}</h3>
         <div v-if="comments.length === 0" class="text-center py-10 text-[var(--c-text-3)] text-sm">
           <p>{{ t('express.detail.commentEmpty') }}</p>
@@ -228,13 +229,13 @@ onMounted(async () => {
     </div>
 
     <!-- 猜名字 Dialog -->
-    <div v-if="guessDialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="guessDialogVisible = false"></div>
-    <div v-if="guessDialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
+    <div v-if="guessDialogVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="guessDialogVisible = false"></div>
+    <div v-if="guessDialogVisible" class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
       <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('express.guessDialogTitle') }}</div>
       <div class="px-5 pb-4">
         <input
           type="text"
-          class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[var(--c-express)] focus:ring-2 focus:ring-[var(--c-express)]/10"
+          class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm bg-[var(--c-surface)] outline-none focus:border-[var(--c-express)] focus:ring-2 focus:ring-[var(--c-express)]/10"
           :placeholder="t('express.guessPlaceholder')"
           v-model="guessInputValue"
           @keyup.enter="confirmGuess"
@@ -250,7 +251,7 @@ onMounted(async () => {
     <div class="fixed bottom-0 left-0 right-0 flex items-center px-4 py-2.5 bg-[var(--c-surface)] border-t border-[var(--c-border)] z-[500]">
       <input
         type="text"
-        class="flex-1 h-9 px-3 border border-[var(--c-border)] rounded-full text-sm outline-none text-[var(--c-text-1)] bg-[var(--c-bg)] focus:border-[var(--c-express)]"
+        class="ui-control flex-1 h-9 px-3 border border-[var(--c-border)] rounded-full text-sm outline-none text-[var(--c-text-1)] bg-[var(--c-bg)] focus:border-[var(--c-express)]"
         :placeholder="t('express.detail.commentPlaceholder')"
         v-model="commentInput"
         @keyup.enter="submitComment"
@@ -274,19 +275,6 @@ onMounted(async () => {
 }
 
 .express-submit {
-  background: linear-gradient(135deg, var(--c-express), color-mix(in srgb, var(--c-express) 68%, var(--c-text-1)));
-}
-
-[data-theme="dark"] .community-express-page {
-  --express-gender-male: color-mix(in srgb, var(--c-info) 68%, var(--c-text-1));
-  --express-gender-female: color-mix(in srgb, var(--c-express) 56%, var(--c-text-1));
-}
-
-[data-theme="dark"] .express-submit {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-express) 30%, #203044),
-    color-mix(in srgb, var(--c-express) 52%, var(--c-text-1))
-  );
+  background: var(--c-primary);
 }
 </style>

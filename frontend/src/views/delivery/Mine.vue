@@ -164,7 +164,7 @@ watch(() => route.fullPath, () => {
         <div
           v-for="(item, index) in publishedList"
           :key="item.id"
-          class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
           :style="{ animationDelay: (index * 0.05) + 's' }"
           @click="goDetail(item.id)"
         >
@@ -222,7 +222,7 @@ watch(() => route.fullPath, () => {
         <div
           v-for="(item, index) in acceptedList"
           :key="item.id"
-          class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
           :style="{ animationDelay: (index * 0.05) + 's' }"
           @click="goDetail(item.id)"
         >
@@ -263,101 +263,55 @@ watch(() => route.fullPath, () => {
 }
 
 .community-delivery-tab--active {
-  color: color-mix(in srgb, var(--c-delivery) 86%, #d97706);
+  color: var(--c-primary);
   font-weight: 700;
 }
 
 .community-delivery-tab__indicator {
-  background: color-mix(in srgb, var(--c-delivery) 88%, #f59e0b);
+  background: var(--c-primary);
 }
 
 .community-delivery-reward-block {
-  color: color-mix(in srgb, var(--c-delivery) 74%, #d97706);
+  color: var(--c-primary);
 }
 
 .community-delivery-pickup-badge {
-  background: color-mix(in srgb, var(--c-delivery) 68%, #0ea5e9);
+  background: var(--c-primary);
 }
 
 .community-delivery-dropoff-badge {
-  background: color-mix(in srgb, var(--c-delivery) 88%, #f59e0b);
+  background: var(--c-primary);
 }
 
 .community-delivery-status-badge {
-  border: 1px solid color-mix(in srgb, var(--c-delivery) 18%, var(--c-border));
+  border: 1px solid var(--c-border);
 }
 
 .community-delivery-status-badge--pending {
   background: color-mix(in srgb, var(--c-delivery) 14%, var(--c-surface));
-  color: color-mix(in srgb, var(--c-delivery) 80%, #b45309);
+  color: var(--c-primary);
 }
 
 .community-delivery-status-badge--active {
-  background: color-mix(in srgb, var(--c-delivery) 18%, #e0f2fe);
-  color: color-mix(in srgb, var(--c-delivery) 70%, #0f766e);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 
 .community-delivery-status-badge--completed {
-  background: color-mix(in srgb, var(--c-delivery) 16%, #ecfdf5);
-  color: color-mix(in srgb, var(--c-delivery) 76%, #0f766e);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 
 .community-delivery-empty-shell {
-  border: 1px solid color-mix(in srgb, var(--c-delivery) 16%, var(--c-border));
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-delivery) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--c-delivery) 3%, var(--c-surface));
-  box-shadow: 0 14px 32px color-mix(in srgb, var(--c-delivery) 10%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 
 .community-delivery-empty-icon {
   font-size: 28px;
   font-weight: 900;
   line-height: 1;
-}
-
-[data-theme="dark"] .community-delivery-empty-shell {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-delivery) 8%, transparent), transparent 42%),
-    rgba(24, 38, 53, 0.84);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .community-delivery-tab--active,
-[data-theme="dark"] .community-delivery-reward-block {
-  color: color-mix(in srgb, var(--c-delivery) 58%, #f6e1b2);
-}
-
-[data-theme="dark"] .community-delivery-tab__indicator {
-  background: linear-gradient(90deg, color-mix(in srgb, var(--c-delivery) 54%, #e7c67a), color-mix(in srgb, var(--c-delivery) 34%, #8c6b3b));
-}
-
-[data-theme="dark"] .community-delivery-pickup-badge {
-  background: color-mix(in srgb, var(--c-delivery) 34%, #78b8d8);
-}
-
-[data-theme="dark"] .community-delivery-dropoff-badge {
-  background: color-mix(in srgb, var(--c-delivery) 52%, #d8b46a);
-}
-
-[data-theme="dark"] .community-delivery-status-badge {
-  border-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .community-delivery-status-badge--pending {
-  background: rgba(36, 52, 69, 0.88);
-  color: color-mix(in srgb, var(--c-delivery) 56%, #f6e1b2);
-}
-
-[data-theme="dark"] .community-delivery-status-badge--active {
-  background: color-mix(in srgb, var(--c-delivery) 18%, rgba(24, 38, 53, 0.9));
-  color: color-mix(in srgb, var(--c-delivery) 42%, #c7d9e8);
-}
-
-[data-theme="dark"] .community-delivery-status-badge--completed {
-  background: color-mix(in srgb, var(--c-delivery) 20%, rgba(24, 38, 53, 0.9));
-  color: color-mix(in srgb, var(--c-delivery) 44%, #d7e7dc);
 }
 </style>

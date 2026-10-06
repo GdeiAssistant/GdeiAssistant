@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { queryKaoyanScore } from '@/api/graduateExam'
 import { useToast } from '@/composables/useToast'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
-import { GraduationCap } from 'lucide-vue-next'
+import { GraduationCap, ChevronLeft } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()
@@ -59,15 +59,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
     <!-- Sticky header -->
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('graduateExam.title') }}</span>
-      <div class="w-10"></div>
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="$router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('graduateExam.title') }}</span>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <!-- Loading -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-16 text-[var(--c-text-secondary)]">
         <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-3"></div>
@@ -83,7 +86,7 @@ onMounted(() => {
         </div>
 
         <!-- Score details card -->
-        <div class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+        <div class="ui-panel bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
           <div class="flex items-center justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.name') }}</span>
             <span class="text-sm text-[var(--c-text)]">{{ scoreData.name ?? '—' }}</span>
@@ -113,7 +116,7 @@ onMounted(() => {
         <!-- Re-query button -->
         <button
           type="button"
-          class="mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-white text-[15px] font-medium active:opacity-80 transition-opacity"
+          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-[15px] font-medium active:opacity-80 transition-opacity"
           @click="reQuery"
         >
           {{ t('graduateExam.reQuery') }}
@@ -139,20 +142,9 @@ onMounted(() => {
 
 <style scoped>
 .graduate-empty-shell {
-  border: 1px solid color-mix(in srgb, var(--c-border) 88%, white);
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 13%, transparent), transparent 52%),
-    color-mix(in srgb, var(--c-surface) 94%, white);
-  box-shadow: 0 18px 40px rgba(27, 71, 84, 0.08);
-  backdrop-filter: blur(18px);
-}
-
-:global([data-theme='dark']) .graduate-empty-shell {
-  border-color: color-mix(in srgb, var(--c-border) 82%, rgba(147, 197, 253, 0.18));
-  background:
-    radial-gradient(circle at top, rgba(111, 216, 208, 0.12), transparent 52%),
-    color-mix(in srgb, var(--c-surface) 94%, rgba(12, 25, 35, 0.88));
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 </style>

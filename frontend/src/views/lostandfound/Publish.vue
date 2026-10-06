@@ -243,7 +243,7 @@ onMounted(() => {
 
       <p v-if="pageLoading" class="mt-4 text-center text-[var(--c-text-3)] text-sm">{{ t('lostandfound.publish.loading') }}</p>
 
-      <section class="community-lostandfound-card mx-2.5 overflow-hidden rounded-[26px]">
+      <section class="community-lostandfound-card mx-2.5 overflow-hidden rounded-2xl">
         <!-- 寻找类型 -->
         <div class="relative pl-[90px] text-base min-h-[70px] border-b border-[var(--c-border)] bg-[var(--c-surface)]">
           <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px] pl-4 text-base">{{ t('lostandfound.publish.modeTitle') }}</p>
@@ -291,7 +291,7 @@ onMounted(() => {
         </div>
       </section>
 
-      <section class="community-lostandfound-card mx-2.5 mt-5 overflow-hidden rounded-[26px]">
+      <section class="community-lostandfound-card mx-2.5 mt-5 overflow-hidden rounded-2xl">
         <!-- Contact tip -->
         <div class="community-lostandfound-contact-tip text-center text-sm py-3">{{ t('lostandfound.publish.contactTip') }}</div>
 
@@ -321,7 +321,7 @@ onMounted(() => {
       </section>
 
       <!-- 图片上传区 -->
-      <section class="community-lostandfound-upload-shell community-lostandfound-card mx-2.5 mt-5 overflow-hidden rounded-[26px]">
+      <section class="community-lostandfound-upload-shell community-lostandfound-card mx-2.5 mt-5 overflow-hidden rounded-2xl">
         <div class="px-4 pt-6 mb-1.5">
           <div v-for="(img, index) in formData.images" :key="index" class="w-[70px] h-[70px] relative inline-block mx-1.5 mb-2.5 align-top">
             <a v-if="!isEditMode" href="javascript:;">
@@ -333,8 +333,8 @@ onMounted(() => {
           </div>
           <span v-if="!isEditMode && formData.images.length < 4" class="w-[68px] h-[68px] border-2 border-white inline-block mx-1.5 mb-2.5 align-top relative">
             <i class="absolute w-6 h-6 top-1/2 left-1/2 -mt-3 -ml-3">
-              <i class="w-full h-0.5 absolute top-[11px] bg-white block"></i>
-              <i class="h-full w-0.5 absolute left-[11px] bg-white block"></i>
+              <i class="w-full h-0.5 absolute top-[11px] bg-[var(--c-surface)] block"></i>
+              <i class="h-full w-0.5 absolute left-[11px] bg-[var(--c-surface)] block"></i>
             </i>
             <input type="file" accept="image/*" id="file_input" @change="onFileChange" class="absolute top-0 left-0 w-[68px] h-[68px] opacity-0 z-[1] cursor-pointer" />
           </span>
@@ -345,8 +345,8 @@ onMounted(() => {
 
     <!-- Dialog -->
     <div v-if="dialogVisible">
-      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-      <div class="community-lostandfound-dialog-shell fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
+      <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="ui-modal community-lostandfound-dialog-shell fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] z-[1001] shadow-lg overflow-hidden">
         <div class="text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">{{ t('common.hint') }}</div>
         <div class="text-center text-sm text-[var(--c-text-2)] px-5 pb-5">{{ dialogMessage }}</div>
         <div class="border-t border-[var(--c-border)]">
@@ -357,8 +357,8 @@ onMounted(() => {
 
     <!-- Item Type Picker -->
     <div v-if="itemTypePickerVisible">
-      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="closeItemTypePicker"></div>
-      <div class="community-lostandfound-picker-shell fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] max-w-[320px] z-[1001] shadow-lg overflow-hidden">
+      <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="closeItemTypePicker"></div>
+      <div class="ui-modal community-lostandfound-picker-shell fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-surface)] rounded-xl w-[280px] max-w-[320px] z-[1001] shadow-lg overflow-hidden">
         <div class="community-lostandfound-picker-title text-center font-semibold text-base text-[var(--c-text-1)] pt-5 pb-2">{{ t('lostandfound.publish.itemTypePickerTitle') }}</div>
         <div class="max-h-[280px] overflow-y-auto p-0 text-left">
           <div
@@ -380,27 +380,39 @@ onMounted(() => {
 
 <style scoped>
 .community-lostandfound-card {
-  border: 1px solid color-mix(in srgb, var(--c-lostandfound) 18%, rgba(202, 222, 226, 0.8));
-  background: color-mix(in srgb, var(--c-lostandfound) 4%, rgba(255, 255, 255, 0.92));
-  box-shadow: 0 16px 36px rgba(24, 52, 60, 0.08);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  box-shadow: none;
 }
 
 .community-lostandfound-submit-link,
 .community-lostandfound-dialog-confirm {
-  color: color-mix(in srgb, var(--c-lostandfound) 84%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .community-lostandfound-privacy-hint {
-  border: 1px solid color-mix(in srgb, var(--c-lostandfound) 16%, var(--c-border));
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--c-lostandfound) 10%, transparent), color-mix(in srgb, var(--c-lostandfound) 4%, var(--c-surface)));
-  color: color-mix(in srgb, var(--c-lostandfound) 76%, var(--c-text-1));
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-lostandfound) 8%, transparent);
+  border: 1px solid var(--c-border);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  box-shadow: none;
 }
 
 .community-lostandfound-upload-shell {
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--c-lostandfound) 16%, var(--c-surface)), color-mix(in srgb, var(--c-lostandfound) 58%, #87a8bd));
+  background: var(--c-fill-2);
+}
+
+.community-lostandfound-upload-shell :is(p, .text-white) {
+  color: var(--c-text-3) !important;
+}
+
+.community-lostandfound-upload-shell span.border-white {
+  border: 1.5px dashed var(--c-border);
+  border-radius: var(--radius-control);
+  background: var(--c-surface);
+}
+
+.community-lostandfound-upload-shell span.border-white > i > i {
+  background: var(--c-text-3) !important;
 }
 
 .community-lostandfound-picker-arrow {
@@ -416,36 +428,36 @@ onMounted(() => {
 }
 
 .community-lostandfound-contact-tip {
-  color: color-mix(in srgb, var(--c-lostandfound) 70%, #b45309);
+  color: var(--c-primary);
 }
 
 .community-lostandfound-control {
   display: block;
   width: 100%;
   padding: 0 12px;
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--c-lostandfound) 4%, rgba(255, 255, 255, 0.58));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-lostandfound) 9%, transparent);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
+  box-shadow: none;
   transition: background-color 180ms ease, box-shadow 180ms ease;
 }
 
 .community-lostandfound-control::placeholder {
-  color: color-mix(in srgb, var(--c-lostandfound) 16%, var(--c-text-3));
+  color: var(--c-text-3);
 }
 
 .community-lostandfound-control:focus {
-  background: color-mix(in srgb, var(--c-lostandfound) 6%, rgba(255, 255, 255, 0.84));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-lostandfound) 22%, transparent);
+  background: var(--c-surface);
+  box-shadow: none;
 }
 
 .community-lostandfound-dialog-shell,
 .community-lostandfound-picker-shell {
-  border: 1px solid color-mix(in srgb, var(--c-lostandfound) 16%, rgba(202, 222, 226, 0.76));
-  box-shadow: 0 24px 54px rgba(18, 35, 48, 0.18);
+  border: 1px solid var(--c-border);
+  box-shadow: var(--shadow-lg);
 }
 
 .community-lostandfound-picker-title {
-  border-top: 4px solid color-mix(in srgb, var(--c-lostandfound) 48%, rgba(119, 170, 205, 0.56));
+  border-bottom: 1px solid var(--c-divider);
 }
 
 .community-lostandfound-picker-item {
@@ -453,84 +465,7 @@ onMounted(() => {
 }
 
 .community-lostandfound-picker-item:hover {
-  background: color-mix(in srgb, var(--c-lostandfound) 8%, rgba(255, 255, 255, 0.84));
-  color: color-mix(in srgb, var(--c-lostandfound) 76%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-lostandfound-submit-link,
-[data-theme="dark"] .community-lostandfound-dialog-confirm {
-  color: color-mix(in srgb, var(--c-lostandfound) 54%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-lostandfound-card {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 0 0, color-mix(in srgb, var(--c-lostandfound) 7%, transparent), transparent 28%),
-    linear-gradient(180deg, rgba(23, 34, 47, 0.96), rgba(18, 28, 41, 0.98));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 18px 34px rgba(0, 0, 0, 0.16);
-}
-
-[data-theme="dark"] .community-lostandfound-privacy-hint {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--c-lostandfound) 8%, transparent), transparent 36%),
-    linear-gradient(135deg, rgba(28, 43, 58, 0.94), rgba(22, 35, 49, 0.9));
-  color: color-mix(in srgb, var(--c-lostandfound) 24%, var(--c-text-1));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 14px 28px rgba(0, 0, 0, 0.14);
-}
-
-[data-theme="dark"] .community-lostandfound-upload-shell {
-  background:
-    linear-gradient(180deg, rgba(20, 30, 43, 0.96), color-mix(in srgb, var(--c-lostandfound) 20%, rgba(58, 78, 96, 0.92)));
-}
-
-[data-theme="dark"] .community-lostandfound-picker-arrow {
-  background-color: color-mix(in srgb, var(--c-lostandfound) 52%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-lostandfound-contact-tip {
-  color: color-mix(in srgb, var(--c-lostandfound) 48%, #fcd34d);
-}
-
-[data-theme="dark"] .community-lostandfound-control {
-  background: linear-gradient(180deg, rgba(33, 46, 61, 0.88), rgba(28, 39, 52, 0.96));
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--c-lostandfound) 12%, rgba(120, 153, 180, 0.18)),
-    inset 0 1px 0 rgba(255, 255, 255, 0.02);
-}
-
-[data-theme="dark"] .community-lostandfound-control::placeholder {
-  color: color-mix(in srgb, var(--c-lostandfound) 18%, rgba(206, 214, 224, 0.66));
-}
-
-[data-theme="dark"] .community-lostandfound-control:focus {
-  background: linear-gradient(180deg, rgba(37, 52, 68, 0.92), rgba(30, 44, 58, 0.98));
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--c-lostandfound) 24%, rgba(154, 201, 233, 0.2)),
-    0 0 0 3px color-mix(in srgb, var(--c-lostandfound) 9%, transparent);
-}
-
-[data-theme="dark"] .community-lostandfound-dialog-shell,
-[data-theme="dark"] .community-lostandfound-picker-shell {
-  border-color: color-mix(in srgb, var(--c-lostandfound) 18%, rgba(111, 132, 156, 0.44));
-  background:
-    radial-gradient(circle at 0 0, color-mix(in srgb, var(--c-lostandfound) 8%, transparent), transparent 28%),
-    linear-gradient(180deg, rgba(26, 38, 52, 0.98), rgba(20, 31, 43, 0.98));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 26px 56px rgba(0, 0, 0, 0.34);
-}
-
-[data-theme="dark"] .community-lostandfound-picker-title {
-  border-top-color: color-mix(in srgb, var(--c-lostandfound) 28%, rgba(154, 201, 233, 0.32));
-}
-
-[data-theme="dark"] .community-lostandfound-picker-item:hover {
-  background: linear-gradient(180deg, rgba(37, 52, 68, 0.92), rgba(30, 44, 58, 0.98));
-  color: color-mix(in srgb, var(--c-lostandfound) 56%, #eff6ff);
+  background: var(--c-surface);
+  color: var(--c-primary);
 }
 </style>

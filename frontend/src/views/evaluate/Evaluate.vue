@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -41,23 +42,26 @@ function confirmEvaluate() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
     <!-- Sticky header -->
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('evaluatePage.title') }}</span>
-      <div class="w-10"></div>
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="$router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('evaluatePage.title') }}</span>
+      <span aria-hidden="true"></span>
     </div>
 
     <!-- Content -->
-    <div class="max-w-lg mx-auto px-4 py-6">
-      <div class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] overflow-hidden">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] overflow-hidden">
         <!-- Toggle row -->
         <div class="flex items-center justify-between px-4 py-4">
           <span class="text-[15px] text-[var(--c-text)]">{{ t('evaluatePage.directSubmit') }}</span>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" v-model="isDirectSubmit" class="sr-only peer" />
-            <div class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-[var(--c-primary)] transition-colors after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:shadow after:transition-transform peer-checked:after:translate-x-5"></div>
+            <div class="w-11 h-6 bg-[var(--c-fill-3)] rounded-full peer-checked:bg-[var(--c-primary)] transition-colors after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:shadow after:transition-transform peer-checked:after:translate-x-5"></div>
           </label>
         </div>
       </div>
@@ -66,7 +70,7 @@ function confirmEvaluate() {
       <button
         type="button"
         :disabled="isLoading"
-        class="mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-white text-[15px] font-medium active:opacity-80 disabled:opacity-50 transition-opacity"
+        class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-[15px] font-medium active:opacity-80 disabled:opacity-50 transition-opacity"
         @click="doEvaluate"
       >
         {{ t('evaluatePage.submitAction') }}
@@ -80,8 +84,8 @@ function confirmEvaluate() {
     <!-- Confirm dialog -->
     <Teleport to="body">
       <template v-if="showEvaluateConfirmDialog">
-        <div class="fixed inset-0 z-50 bg-black/50" @click="closeEvaluateConfirmDialog"></div>
-        <div class="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] bg-[var(--c-surface)] rounded-2xl overflow-hidden shadow-xl">
+        <div class="ui-scrim fixed inset-0 z-50 bg-black/50" @click="closeEvaluateConfirmDialog"></div>
+        <div class="ui-modal fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] bg-[var(--c-surface)] rounded-2xl overflow-hidden shadow-xl">
           <div class="pt-6 pb-3 px-5 text-center">
             <h3 class="text-base font-semibold text-[var(--c-text)]">{{ t('common.hint') }}</h3>
           </div>
@@ -90,11 +94,11 @@ function confirmEvaluate() {
           </div>
           <div class="flex border-t border-[var(--c-border)]">
             <button
-              class="flex-1 py-3.5 text-center text-[15px] text-[var(--c-text-secondary)] border-r border-[var(--c-border)] active:bg-black/5"
+              class="flex-1 py-3.5 text-center text-[15px] text-[var(--c-text-secondary)] border-r border-[var(--c-border)] hover:bg-[var(--c-surface-hover)]"
               @click="closeEvaluateConfirmDialog"
             >{{ t('common.cancel') }}</button>
             <button
-              class="flex-1 py-3.5 text-center text-[15px] text-[var(--c-primary)] font-medium active:bg-black/5 disabled:opacity-40"
+              class="flex-1 py-3.5 text-center text-[15px] text-[var(--c-primary)] font-medium hover:bg-[var(--c-surface-hover)] disabled:opacity-40"
               :disabled="isLoading"
               @click="confirmEvaluate"
             >{{ t('common.confirm') }}</button>

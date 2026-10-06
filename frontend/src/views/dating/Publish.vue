@@ -170,13 +170,13 @@ async function submit() {
 
       <!-- Form inputs -->
       <div class="my-6 space-y-3">
-        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.nickname" :placeholder="copy.nicknamePlaceholder" />
-        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="selectedGradeLabel" :placeholder="copy.gradePlaceholder" @click="openGradePicker" />
-        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="selectedAreaLabel" :placeholder="copy.areaPlaceholder" @click="openAreaPicker" />
-        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.faculty" :placeholder="copy.facultyPlaceholder" />
-        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.hometown" :placeholder="copy.hometownPlaceholder" />
-        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.qq" :placeholder="copy.qqPlaceholder" />
-        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.wechat" :placeholder="copy.wechatPlaceholder" />
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b border-[var(--c-divider)] focus:border-[var(--c-primary)] outline-none bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.nickname" :placeholder="copy.nicknamePlaceholder" />
+        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b border-[var(--c-divider)] focus:border-[var(--c-primary)] outline-none bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="selectedGradeLabel" :placeholder="copy.gradePlaceholder" @click="openGradePicker" />
+        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b border-[var(--c-divider)] focus:border-[var(--c-primary)] outline-none bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="selectedAreaLabel" :placeholder="copy.areaPlaceholder" @click="openAreaPicker" />
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b border-[var(--c-divider)] focus:border-[var(--c-primary)] outline-none bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.faculty" :placeholder="copy.facultyPlaceholder" />
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b border-[var(--c-divider)] focus:border-[var(--c-primary)] outline-none bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.hometown" :placeholder="copy.hometownPlaceholder" />
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b border-[var(--c-divider)] focus:border-[var(--c-primary)] outline-none bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.qq" :placeholder="copy.qqPlaceholder" />
+        <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b border-[var(--c-divider)] focus:border-[var(--c-primary)] outline-none bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.wechat" :placeholder="copy.wechatPlaceholder" />
       </div>
 
       <!-- Hint -->
@@ -187,7 +187,7 @@ async function submit() {
 
       <!-- Textarea + submit -->
       <div class="border-t-2 border-dashed border-[var(--c-divider)] pt-6 text-center">
-        <textarea class="w-full max-w-xs mx-auto block p-4 border border-[var(--c-divider)] rounded-lg text-base min-h-[100px] box-border text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.content" :placeholder="copy.contentPlaceholder" rows="4"></textarea>
+        <textarea class="ui-control w-full max-w-xs mx-auto block p-4 border border-[var(--c-divider)] rounded-lg text-base min-h-[100px] box-border text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.content" :placeholder="copy.contentPlaceholder" rows="4"></textarea>
         <button type="button" class="community-dating-submit mt-6 w-20 h-20 rounded-full text-white border-none text-xl cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="submitting" @click="submit">
           {{ submitting ? copy.submitting : copy.submitAction }}
         </button>
@@ -195,8 +195,8 @@ async function submit() {
     </div>
 
     <!-- Dialog -->
-    <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+    <div v-if="dialogVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
       <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ copy.noticeTitle }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
       <div class="border-t border-[var(--c-border)] flex">
@@ -208,62 +208,28 @@ async function submit() {
 
 <style scoped>
 .community-dating-shell {
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid color-mix(in srgb, var(--c-dating) 16%, rgba(205, 222, 226, 0.82));
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
 }
 
 .community-dating-shell__title {
-  color: color-mix(in srgb, var(--c-dating) 88%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .community-dating-upload {
   background: color-mix(in srgb, var(--c-dating) 6%, var(--c-bg));
-  border: 1px dashed color-mix(in srgb, var(--c-dating) 22%, var(--c-border));
+  border: 1px dashed var(--c-border);
 }
 
 .community-dating-upload__cta {
-  background: linear-gradient(135deg, var(--c-dating), color-mix(in srgb, var(--c-dating) 70%, var(--c-text-1)));
+  background: var(--c-primary);
 }
 
 .community-dating-submit {
-  background: linear-gradient(135deg, var(--c-dating), color-mix(in srgb, var(--c-dating) 72%, var(--c-text-1)));
+  background: var(--c-primary);
 }
 
 .community-dating-warning {
-  color: color-mix(in srgb, var(--c-warning) 72%, #8a5a0a);
-}
-
-[data-theme="dark"] .community-dating-shell {
-  background: rgba(24, 38, 53, 0.86);
-  border-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .community-dating-shell__title {
-  color: color-mix(in srgb, var(--c-dating) 58%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-dating-upload {
-  background: rgba(20, 30, 42, 0.88);
-  border-color: color-mix(in srgb, var(--c-dating) 18%, rgba(68, 89, 112, 0.72));
-}
-
-[data-theme="dark"] .community-dating-upload__cta {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-dating) 34%, #203044),
-    color-mix(in srgb, var(--c-dating) 50%, var(--c-text-1))
-  );
-}
-
-[data-theme="dark"] .community-dating-submit {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-dating) 30%, #203044),
-    color-mix(in srgb, var(--c-dating) 52%, var(--c-text-1))
-  );
-}
-
-[data-theme="dark"] .community-dating-warning {
-  color: color-mix(in srgb, var(--c-dating) 34%, var(--c-text-2));
+  color: var(--c-warning);
 }
 </style>

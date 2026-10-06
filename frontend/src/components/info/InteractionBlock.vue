@@ -92,10 +92,10 @@ function getActionLabel(item) {
 <style scoped>
 .modern-card {
   background: var(--color-surface);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: none;
 }
 
 .card-header {
@@ -143,7 +143,7 @@ function getActionLabel(item) {
 .card-action {
   border: none;
   background: transparent;
-  color: color-mix(in srgb, var(--c-primary) 56%, var(--c-text-2));
+  color: var(--c-primary);
   font-size: 13px;
   padding: 0;
   flex-shrink: 0;
@@ -159,14 +159,10 @@ function getActionLabel(item) {
   min-height: 132px;
   padding: 24px 18px;
   text-align: center;
-  border: 1px solid color-mix(in srgb, var(--c-primary) 8%, var(--c-border));
-  border-radius: 18px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--c-primary) 3%, rgba(255, 255, 255, 0.94)),
-    color-mix(in srgb, var(--c-primary) 1%, rgba(255, 255, 255, 0.92))
-  );
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
+  box-shadow: none;
 }
 
 .interaction-empty__icon {
@@ -174,15 +170,11 @@ function getActionLabel(item) {
   width: 52px;
   height: 52px;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--c-primary) 14%, var(--c-border));
-  border-radius: 18px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-primary) 10%, rgba(255, 255, 255, 0.96)),
-    color-mix(in srgb, var(--c-primary) 4%, rgba(255, 255, 255, 0.94))
-  );
-  color: color-mix(in srgb, var(--c-primary) 52%, var(--c-text-2));
-  box-shadow: 0 14px 28px color-mix(in srgb, var(--c-primary) 8%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  box-shadow: none;
 }
 
 .interaction-empty__text {
@@ -199,12 +191,10 @@ function getActionLabel(item) {
 
 .interaction-item {
   width: 100%;
-  border: 1px solid color-mix(in srgb, var(--c-primary) 10%, var(--c-border));
-  border-radius: 18px;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.76), rgba(250, 255, 253, 0.58)),
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--c-primary) 6%, transparent), transparent 34%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.36);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
+  box-shadow: none;
   padding: 14px;
   text-align: left;
   cursor: pointer;
@@ -259,12 +249,12 @@ function getActionLabel(item) {
 
 .interaction-item__module {
   font-size: 12px;
-  color: color-mix(in srgb, var(--c-primary) 56%, var(--c-text-2));
+  color: var(--c-primary);
 }
 
 .interaction-item__action {
   font-size: 12px;
-  color: color-mix(in srgb, var(--c-text-2) 82%, var(--c-primary));
+  color: var(--c-text-2);
   background: color-mix(in srgb, var(--c-primary) 8%, var(--c-surface));
   border-radius: 999px;
   padding: 2px 8px;
@@ -295,47 +285,9 @@ function getActionLabel(item) {
 }
 
 .interaction-item:hover {
-  border-color: color-mix(in srgb, var(--c-primary) 18%, var(--c-border));
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(250, 255, 253, 0.72)),
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--c-primary) 8%, transparent), transparent 34%);
-  box-shadow: 0 14px 30px color-mix(in srgb, var(--c-primary) 9%, transparent);
+  border-color: var(--c-border);
+  background: var(--c-surface);
+  box-shadow: none;
   transform: translateY(-1px);
 }
-
-[data-theme="dark"] .interaction-empty {
-  border-color: color-mix(in srgb, var(--c-primary) 12%, rgba(68, 89, 112, 0.72));
-  background: linear-gradient(180deg, rgba(26, 39, 54, 0.88), rgba(22, 34, 48, 0.92));
-  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.06);
-}
-
-[data-theme="dark"] .interaction-item {
-  background: color-mix(in srgb, var(--c-primary) 4%, rgba(24, 38, 53, 0.96));
-  border-color: color-mix(in srgb, var(--c-primary) 16%, rgba(68, 89, 112, 0.78));
-}
-
-[data-theme="dark"] .interaction-item:hover {
-  background: color-mix(in srgb, var(--c-primary) 7%, rgba(32, 48, 68, 0.98));
-}
-
-[data-theme="dark"] .interaction-item__module {
-  color: color-mix(in srgb, var(--c-primary) 42%, var(--c-text-2));
-}
-
-[data-theme="dark"] .interaction-item__action {
-  color: color-mix(in srgb, var(--c-text-2) 88%, var(--c-primary));
-  background: color-mix(in srgb, var(--c-primary) 10%, rgba(32, 48, 68, 0.9));
-}
-
-[data-theme="dark"] .interaction-empty__icon {
-  border-color: color-mix(in srgb, var(--c-primary) 16%, rgba(68, 89, 112, 0.74));
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-primary) 10%, rgba(32, 48, 68, 0.9)),
-    color-mix(in srgb, var(--c-primary) 5%, rgba(24, 38, 53, 0.94))
-  );
-  color: color-mix(in srgb, var(--c-primary) 34%, #dbeafe);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.16);
-}
-
 </style>

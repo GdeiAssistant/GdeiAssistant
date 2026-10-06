@@ -6,7 +6,7 @@
       v-for="user in items"
       :key="user.id"
       type="button"
-      class="social-person-row w-full text-left rounded-xl bg-[var(--c-surface)] px-4 py-3 border border-[var(--c-border-light)]"
+      class="ui-panel social-person-row w-full text-left rounded-xl bg-[var(--c-surface)] px-4 py-3 border border-[var(--c-border-light)]"
       @click="router.push(`/social/users/${user.id}`)"
     >
       <AuthAvatar :url="user.avatarUrl" :alt="''" :placeholder="user.nickname?.slice(0, 1) || '?'" img-class="w-11 h-11 shrink-0 rounded-full" />

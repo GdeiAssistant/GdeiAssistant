@@ -1,4 +1,5 @@
 <script setup>
+import { Inbox } from 'lucide-vue-next'
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -244,15 +245,15 @@ function getThemeBg(theme) {
 }
 
 function getThemeTextColor(theme) {
-  return theme === 1 ? '#000' : '#fff'
+  return theme === 1 ? 'var(--c-text-1)' : '#fff'
 }
 
 function getFooterBg(theme) {
-  return theme === 1 ? 'rgba(0,0,0,0.05)' : 'rgba(0,0,0,0.1)'
+  return theme === 1 ? 'var(--c-fill-2)' : 'rgba(0,0,0,0.1)'
 }
 
 function getFooterTextColor(theme) {
-  return theme === 1 ? '#000' : '#fff'
+  return theme === 1 ? 'var(--c-text-2)' : '#fff'
 }
 
 function getPregoodIcon(theme) {
@@ -369,8 +370,8 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <div v-else class="flex flex-col items-center py-16 text-[var(--c-text-3)]">
-      <div class="text-5xl mb-3">📭</div>
+    <div v-else class="ui-empty-state flex flex-col items-center py-16 text-[var(--c-text-3)]">
+      <Inbox class="mb-3" :size="40" :stroke-width="1.5" aria-hidden="true" />
       <p class="text-sm">{{ t('secret.detail.notFound') }}</p>
     </div>
 
@@ -380,7 +381,7 @@ onBeforeUnmount(() => {
         type="text"
         name="comment"
         :placeholder="t('secret.detail.commentPlaceholder')"
-        class="leading-9 border border-[var(--c-border)] flex-1 rounded px-2.5 text-base outline-none"
+        class="ui-control leading-9 border border-[var(--c-border)] flex-1 rounded px-2.5 text-base outline-none"
         v-model="commentText"
         @keyup.enter="submitComment"
       />
@@ -394,8 +395,8 @@ onBeforeUnmount(() => {
 
   <!-- 对话框 -->
   <div v-if="dialogVisible">
-    <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: var(--c-secret)">
+    <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden" style="--module-color: var(--c-secret)">
       <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
       <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
       <div class="flex border-t border-[var(--c-border)]">

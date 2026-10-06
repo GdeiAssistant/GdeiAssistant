@@ -32,11 +32,12 @@ defineProps({
 <style scoped>
 .modern-card {
   background: var(--color-surface);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: none;
 }
+
 .card-title {
   font-size: 17px;
   font-weight: 600;
@@ -45,6 +46,7 @@ defineProps({
   display: flex;
   align-items: center;
 }
+
 .card-title::before {
   content: "";
   display: block;
@@ -54,22 +56,26 @@ defineProps({
   border-radius: 2px;
   margin-right: 8px;
 }
+
 .history-lead {
   font-size: 15px;
   color: var(--color-text-primary);
   margin: 0 0 12px;
   line-height: 1.5;
 }
+
 .history-date {
   font-weight: 600;
   color: var(--color-primary);
 }
+
 .history-desc {
   font-size: 14px;
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0 0 8px;
 }
+
 .history-desc:last-child {
   margin-bottom: 0;
 }

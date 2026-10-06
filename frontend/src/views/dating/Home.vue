@@ -114,7 +114,7 @@ onUnmounted(() => {
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="community-desktop-profile-card bg-[var(--c-surface)] rounded-xl shadow-sm mb-4 p-4 overflow-hidden cursor-pointer animate-[slide-up_0.4s_ease_both]"
+        class="ui-panel community-desktop-profile-card bg-[var(--c-surface)] rounded-xl shadow-sm mb-4 p-4 overflow-hidden cursor-pointer animate-[slide-up_0.4s_ease_both]"
         :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         @click="goDetail(item.id)"
       >
@@ -152,7 +152,7 @@ onUnmounted(() => {
 
     <!-- FAB -->
     <div
-      class="community-mobile-only-action fixed right-5 bottom-6 w-12 h-12 rounded-full bg-[var(--c-dating)] shadow-[0_4px_12px_rgba(13,148,136,0.26)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.92]"
+      class="community-mobile-only-action fixed right-5 bottom-6 w-12 h-12 rounded-full bg-[var(--c-dating)] shadow-[var(--shadow-md)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.92]"
       @click="router.push('/dating/publish')"
     >
       <span class="text-[28px] leading-none text-white font-light">+</span>
@@ -162,12 +162,12 @@ onUnmounted(() => {
 
 <style scoped>
 .community-dating-page {
-  --dating-accent: #0d9488;
-  --dating-accent-strong: #087d72;
-  --dating-accent-muted: #4f6f70;
-  --dating-accent-active-text: #fff;
-  --dating-switch-bg: color-mix(in srgb, var(--c-dating) 5%, var(--c-surface));
-  --dating-switch-border: color-mix(in srgb, var(--c-dating) 18%, var(--c-border));
+  --dating-accent: var(--c-primary);
+  --dating-accent-strong: var(--c-primary);
+  --dating-accent-muted: var(--c-text-2);
+  --dating-accent-active-text: var(--c-text-1);
+  --dating-switch-bg: var(--c-fill-2);
+  --dating-switch-border: var(--c-border);
 }
 
 .community-dating-switch {
@@ -175,7 +175,7 @@ onUnmounted(() => {
   height: auto;
   padding: 4px;
   border: 1px solid var(--dating-switch-border);
-  border-radius: 18px;
+  border-radius: var(--radius-card);
   background: var(--dating-switch-bg);
   overflow: hidden;
 }
@@ -188,31 +188,31 @@ onUnmounted(() => {
   justify-content: center;
   padding: 0 12px;
   border: 0;
-  border-radius: 14px;
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--dating-accent-muted) !important;
   cursor: pointer;
   font: inherit;
-  font-size: 20px;
-  font-weight: 850;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 1;
   transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
 .community-dating-switch__item:hover {
   color: var(--dating-accent-strong) !important;
-  background: color-mix(in srgb, var(--c-dating) 8%, transparent);
+  background: var(--c-surface-hover);
 }
 
 .community-dating-switch__item--active {
-  background: linear-gradient(135deg, var(--dating-accent-strong), var(--dating-accent));
+  background: var(--c-surface);
   color: var(--dating-accent-active-text) !important;
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--dating-accent) 22%, transparent);
+  box-shadow: 0 0 0 1px var(--c-border);
 }
 
 .community-dating-switch__item--active:hover {
   color: var(--dating-accent-active-text) !important;
-  background: linear-gradient(135deg, var(--dating-accent-strong), var(--dating-accent));
+  background: var(--c-surface);
 }
 
 .community-dating-card-title {
@@ -220,41 +220,15 @@ onUnmounted(() => {
 }
 
 .community-dating-empty-shell {
-  border: 1px solid color-mix(in srgb, var(--c-dating) 10%, var(--c-border));
-  border-radius: 24px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
   background: color-mix(in srgb, var(--c-dating) 3%, var(--c-surface));
-  box-shadow: 0 18px 36px color-mix(in srgb, var(--c-dating) 8%, transparent);
+  box-shadow: none;
 }
 
 .dating-empty-state__icon-mark {
   width: 28px;
   height: 28px;
-}
-
-[data-theme="dark"] .community-dating-page {
-  --dating-accent: color-mix(in srgb, var(--c-dating) 42%, #94a3b8);
-  --dating-accent-strong: color-mix(in srgb, var(--c-dating) 48%, #dbeafe);
-  --dating-accent-muted: color-mix(in srgb, var(--c-dating) 24%, var(--c-text-2));
-  --dating-accent-active-text: var(--dating-accent-strong);
-  --dating-switch-bg: rgba(24, 38, 53, 0.76);
-  --dating-switch-border: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .community-dating-switch__item:hover {
-  background: rgba(32, 48, 68, 0.62);
-}
-
-[data-theme="dark"] .community-dating-switch__item--active,
-[data-theme="dark"] .community-dating-switch__item--active:hover {
-  background: linear-gradient(135deg, rgba(35, 51, 70, 0.98), rgba(28, 43, 61, 0.96));
-  color: var(--dating-accent-strong) !important;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-dating) 18%, rgba(111, 132, 156, 0.72));
-}
-
-[data-theme="dark"] .community-dating-empty-shell {
-  border-color: color-mix(in srgb, var(--c-dating) 12%, rgba(111, 132, 156, 0.44));
-  background: rgba(24, 38, 53, 0.86);
-  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.2);
 }
 
 @media (min-width: 768px) {

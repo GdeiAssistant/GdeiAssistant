@@ -13,7 +13,7 @@
     <button v-if="loadFailed" type="button" class="min-h-11 px-4 py-2 rounded-lg" @click="load">
       {{ $t('common.retry') }}
     </button>
-    <div class="rounded-xl bg-[var(--c-surface)] border border-[var(--c-border-light)] divide-y divide-[var(--c-border-light)]">
+    <div class="ui-panel rounded-xl bg-[var(--c-surface)] border border-[var(--c-border-light)] divide-y divide-[var(--c-border-light)]">
       <label v-for="opt in options" :key="opt.value" class="flex items-center gap-3 px-4 py-3 cursor-pointer">
         <input v-model="dmPolicy" type="radio" :value="opt.value" :disabled="formDisabled" class="accent-[var(--c-primary)]" />
         <div>

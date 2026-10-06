@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { getCollectionDetail } from '@/api/collection'
 import { useToast } from '@/composables/useToast'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
-import { BookOpenText } from 'lucide-vue-next'
+import { BookOpenText, ChevronLeft } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()
@@ -37,16 +37,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('libraryPage.detail.title') }}</span>
-      <div class="w-10"></div>
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="goBack">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('libraryPage.detail.title') }}</span>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <template v-if="!loading && detail">
-        <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
+        <div class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
           <h2 class="text-lg font-bold text-[var(--c-text)] mb-3">{{ detail.bookname || '—' }}</h2>
           <div class="divide-y divide-[var(--c-border-light)]">
             <div class="flex justify-between py-3">
@@ -80,20 +83,9 @@ onMounted(() => {
 
 <style scoped>
 .collection-empty-shell {
-  border: 1px solid color-mix(in srgb, var(--c-border) 88%, white);
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 12%, transparent), transparent 48%),
-    color-mix(in srgb, var(--c-surface) 94%, white);
-  box-shadow: 0 18px 40px rgba(27, 71, 84, 0.08);
-  backdrop-filter: blur(18px);
-}
-
-:global([data-theme='dark']) .collection-empty-shell {
-  border-color: color-mix(in srgb, var(--c-border) 82%, rgba(147, 197, 253, 0.18));
-  background:
-    radial-gradient(circle at top, rgba(111, 216, 208, 0.12), transparent 50%),
-    color-mix(in srgb, var(--c-surface) 94%, rgba(12, 25, 35, 0.88));
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 </style>

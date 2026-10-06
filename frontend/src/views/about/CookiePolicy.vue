@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -7,23 +8,20 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← {{ t('about.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('about.menuCookiePolicy') }}</span>
-      <div class="w-10"></div>
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="$router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('about.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('about.menuCookiePolicy') }}</span>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-3xl mx-auto px-4 py-6">
-      <div class="rounded-xl bg-[var(--c-surface)] border border-[var(--c-border)] p-5 md:p-6">
+    <div class="subpage-body max-w-3xl mx-auto px-4 py-6">
+      <div class="ui-panel rounded-xl bg-[var(--c-surface)] border border-[var(--c-border)] p-5 md:p-6">
         <div
-          class="text-sm leading-7 text-[var(--c-text-2)]
-            [&_p]:mb-3
-            [&_h3]:mt-7 [&_h3]:mb-3 [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-[var(--c-text-primary)]
-            [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5
-            [&_li]:mb-2
-            [&_a]:text-[var(--c-primary)] [&_a]:underline
-            [&_strong]:font-semibold">
+          class="text-sm leading-7 text-[var(--c-text-2)] [&_p]:mb-3 [&_h3]:mt-7 [&_h3]:mb-3 [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-[var(--c-text-primary)] [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2 [&_a]:text-[var(--c-primary)] [&_a]:underline [&_strong]:font-semibold">
           <div v-if="isNonChinese" class="policy-notice policy-notice--language px-4 py-3 mb-4 text-sm leading-relaxed">
             {{ t('about.chineseOnlyNotice') }}
           </div>

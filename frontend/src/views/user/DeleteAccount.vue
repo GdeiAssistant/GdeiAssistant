@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import { useToast } from '@/composables/useToast'
 import AppDialog from '@/components/ui/AppDialog.vue'
-import { AlertTriangle } from 'lucide-vue-next'
+import { AlertTriangle, ChevronLeft } from 'lucide-vue-next'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -47,15 +47,18 @@ async function handleConfirmDelete() {
 </script>
 
 <template>
-  <div class="delete-account-page min-h-screen pb-6">
+  <div class="subpage delete-account-page min-h-screen pb-6">
     <!-- Sticky Header -->
-    <div class="delete-account-page__header sticky top-0 z-10 flex items-center h-12 px-4">
-      <button type="button" class="w-15 text-sm text-[var(--c-text-2)] text-left cursor-pointer bg-transparent border-0" @click="router.back()">{{ t('common.back') }}</button>
-      <h1 class="flex-1 text-center text-base font-medium text-[var(--c-text-1)] m-0">{{ t('profile.deleteAccount') }}</h1>
-      <div class="w-15"></div>
+    <div class="subpage-bar delete-account-page__header">
+      <button type="button" class="subpage-bar__back" @click="router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <h1 class="subpage-bar__title">{{ t('profile.deleteAccount') }}</h1>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <!-- Warning header -->
       <div class="delete-account-card rounded-xl p-8 text-center mb-3">
         <div class="delete-account-card__alert text-6xl mb-5"><AlertTriangle class="w-16 h-16 mx-auto" /></div>
@@ -121,28 +124,27 @@ async function handleConfirmDelete() {
 
 <style scoped>
 .delete-account-page {
-  background:
-    radial-gradient(circle at 18% 10%, rgba(255, 214, 214, 0.22), transparent 26%),
-    radial-gradient(circle at 82% 8%, rgba(255, 234, 214, 0.18), transparent 24%),
-    var(--c-bg);
-}
-
-.delete-account-page__header {
-  border-bottom: 1px solid color-mix(in srgb, var(--c-danger) 10%, var(--c-border));
-  background: color-mix(in srgb, rgba(255, 255, 255, 0.88) 88%, transparent);
-  backdrop-filter: blur(14px);
+  background: var(--c-bg);
 }
 
 .delete-account-card {
-  border: 1px solid color-mix(in srgb, var(--c-danger) 8%, var(--c-border));
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 250, 250, 0.88)),
-    radial-gradient(circle at 100% 0, rgba(248, 113, 113, 0.08), transparent 32%);
-  box-shadow: 0 16px 36px rgba(36, 48, 63, 0.08);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  box-shadow: none;
+}
+
+.delete-account-card:first-child {
+  border-color: color-mix(in srgb, var(--c-danger) 28%, var(--c-border));
+  background: color-mix(in srgb, var(--c-danger) 6%, var(--c-surface));
 }
 
 .delete-account-card__alert {
-  color: color-mix(in srgb, var(--c-danger) 82%, #dc2626);
+  color: var(--c-danger);
+}
+
+.delete-account-card__alert :deep(svg) {
+  width: 44px;
+  height: 44px;
 }
 
 .delete-account-risk-item {
@@ -150,68 +152,49 @@ async function handleConfirmDelete() {
 }
 
 .delete-account-risk-item::before {
-  content: '•';
+  content: '';
   position: absolute;
-  left: 0;
-  color: color-mix(in srgb, var(--c-danger) 44%, var(--c-text-3));
-  font-weight: 700;
+  top: 0.65em;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-danger);
 }
 
 .delete-account-card__warning {
-  border-top: 1px solid color-mix(in srgb, var(--c-danger) 10%, var(--c-border));
-  color: color-mix(in srgb, var(--c-danger) 72%, #b91c1c);
+  border-top: 1px solid var(--c-divider);
+  color: var(--c-danger);
 }
 
 .delete-account-checkbox {
-  border: 1px solid color-mix(in srgb, var(--c-danger) 10%, var(--c-border));
-  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid var(--c-border);
+  background: var(--c-surface);
 }
 
 .peer:checked + .delete-account-checkbox {
-  border-color: color-mix(in srgb, var(--c-danger) 30%, transparent);
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border-color: var(--c-danger);
+  background: var(--c-danger);
+}
+
+.peer:focus-visible + .delete-account-checkbox {
+  outline: 2px solid var(--c-danger);
+  outline-offset: 2px;
 }
 
 .delete-account-button {
-  background: color-mix(in srgb, var(--c-text-3) 22%, #cbd5e1);
+  min-height: 48px;
+  border-radius: var(--radius-control);
+  background: var(--c-fill-3);
+  color: var(--c-text-3) !important;
 }
 
 .delete-account-button--enabled {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  box-shadow: 0 14px 30px rgba(220, 38, 38, 0.18);
+  background: var(--c-danger);
+  color: #fff !important;
 }
 
-[data-theme="dark"] .delete-account-page {
-  background:
-    radial-gradient(circle at 16% 8%, rgba(127, 29, 29, 0.16), transparent 28%),
-    radial-gradient(circle at 84% 10%, rgba(180, 83, 9, 0.1), transparent 24%),
-    var(--c-bg);
-}
-
-[data-theme="dark"] .delete-account-page__header {
-  border-bottom-color: color-mix(in srgb, var(--c-danger) 12%, rgba(68, 89, 112, 0.74));
-  background: rgba(20, 27, 37, 0.82);
-}
-
-[data-theme="dark"] .delete-account-card {
-  border-color: color-mix(in srgb, var(--c-danger) 12%, rgba(68, 89, 112, 0.74));
-  background:
-    linear-gradient(135deg, rgba(20, 27, 37, 0.9), rgba(28, 22, 24, 0.9)),
-    radial-gradient(circle at 100% 0, rgba(248, 113, 113, 0.1), transparent 32%);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.26);
-}
-
-[data-theme="dark"] .delete-account-checkbox {
-  border-color: color-mix(in srgb, var(--c-danger) 10%, rgba(68, 89, 112, 0.74));
-  background: rgba(31, 41, 55, 0.88);
-}
-
-[data-theme="dark"] .delete-account-button {
-  background: rgba(71, 85, 105, 0.78);
-}
-
-[data-theme="dark"] .delete-account-button--enabled {
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.92), rgba(153, 27, 27, 0.96));
-  box-shadow: 0 16px 32px rgba(127, 29, 29, 0.24);
+.delete-account-button--enabled:hover {
+  background: color-mix(in srgb, var(--c-danger) 88%, #000);
 }
 </style>

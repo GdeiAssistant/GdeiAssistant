@@ -406,8 +406,8 @@ onMounted(() => {
     <!-- Action Sheet -->
     <Teleport to="body">
       <template v-if="showActionSheet">
-        <div class="fixed inset-0 bg-black/40 z-[5000]" @click="closeActionSheet"></div>
-        <div class="fixed inset-x-0 bottom-0 z-[5001] rounded-t-2xl bg-[var(--c-surface)] shadow-2xl animate-slide-up">
+        <div class="ui-scrim fixed inset-0 bg-black/40 z-[5000]" @click="closeActionSheet"></div>
+        <div class="ui-modal fixed inset-x-0 bottom-0 z-[5001] rounded-t-2xl bg-[var(--c-surface)] shadow-2xl animate-slide-up">
           <div class="py-2">
             <button
               @click="onManageCache"
@@ -438,8 +438,8 @@ onMounted(() => {
     <!-- Course detail dialog -->
     <Teleport to="body">
       <template v-if="showCourseDetail && selectedCourse">
-        <div class="fixed inset-0 bg-black/40 z-[5000]" @click="closeCourseDetail"></div>
-        <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[340px] bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
+        <div class="ui-scrim fixed inset-0 bg-black/40 z-[5000]" @click="closeCourseDetail"></div>
+        <div class="ui-modal fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[340px] bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
           <!-- Header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)]">
             <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ t('schedule.detail.title') }}</h3>
@@ -478,8 +478,8 @@ onMounted(() => {
     <!-- Add custom course dialog -->
     <Teleport to="body">
       <template v-if="showAddCustomDialog">
-        <div class="fixed inset-0 bg-black/40 z-[5000]" @click="closeAddCustomDialog"></div>
-        <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[380px] max-h-[85vh] overflow-y-auto bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
+        <div class="ui-scrim fixed inset-0 bg-black/40 z-[5000]" @click="closeAddCustomDialog"></div>
+        <div class="ui-modal fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[380px] max-h-[85vh] overflow-y-auto bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
           <!-- Header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)] sticky top-0 bg-[var(--c-surface)] rounded-t-2xl">
             <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ t('schedule.addDialog.title') }}</h3>
@@ -495,7 +495,7 @@ onMounted(() => {
                 type="text"
                 maxlength="50"
                 :placeholder="t('schedule.addDialog.namePlaceholder')"
-                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] placeholder-[var(--c-text-3)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
+                class="ui-control w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] placeholder-[var(--c-text-3)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
               />
             </div>
             <!-- 上课地点 -->
@@ -506,7 +506,7 @@ onMounted(() => {
                 type="text"
                 maxlength="25"
                 :placeholder="t('schedule.addDialog.locationPlaceholder')"
-                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] placeholder-[var(--c-text-3)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
+                class="ui-control w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] placeholder-[var(--c-text-3)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20"
               />
             </div>
             <!-- 星期几 -->
@@ -514,7 +514,7 @@ onMounted(() => {
               <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.dayOfWeek') }}</label>
               <select
                 v-model.number="addCustomForm.dayOfWeek"
-                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+                class="ui-control w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
               >
                 <option v-for="option in dayOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
@@ -524,7 +524,7 @@ onMounted(() => {
               <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.startSection') }}</label>
               <select
                 v-model.number="addCustomForm.startSection"
-                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+                class="ui-control w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
               >
                 <option v-for="option in sectionOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
@@ -534,7 +534,7 @@ onMounted(() => {
               <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.scheduleLength') }}</label>
               <select
                 v-model.number="addCustomForm.scheduleLength"
-                class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+                class="ui-control w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
               >
                 <option v-for="option in lengthOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
@@ -545,7 +545,7 @@ onMounted(() => {
                 <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.minWeek') }}</label>
                 <select
                   v-model.number="addCustomForm.minScheduleWeek"
-                  class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+                  class="ui-control w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
                 >
                   <option v-for="option in weekOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
                 </select>
@@ -554,7 +554,7 @@ onMounted(() => {
                 <label class="block text-xs text-[var(--c-text-3)] mb-1.5">{{ t('schedule.addDialog.maxWeek') }}</label>
                 <select
                   v-model.number="addCustomForm.maxScheduleWeek"
-                  class="w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
+                  class="ui-control w-full rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] px-3 py-2 text-sm text-[var(--c-text-1)] outline-none transition focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/20 appearance-none"
                 >
                   <option v-for="option in weekOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
                 </select>
@@ -567,7 +567,7 @@ onMounted(() => {
               type="button"
               :disabled="addCustomSubmitting"
               @click="submitAddCustom"
-              class="w-full max-w-[200px] py-2.5 rounded-full bg-[var(--c-primary)] text-white text-sm font-semibold transition active:scale-95 disabled:opacity-50"
+              class="w-full max-w-[200px] py-2.5 rounded-full bg-[var(--c-primary)] text-[var(--c-on-primary)] text-sm font-semibold transition active:scale-95 disabled:opacity-50"
             >
               {{ addCustomSubmitting ? t('schedule.addDialog.submitting') : t('schedule.addDialog.submit') }}
             </button>
@@ -579,8 +579,8 @@ onMounted(() => {
     <!-- Week picker bottom sheet -->
     <Teleport to="body">
       <template v-if="showWeekPicker">
-        <div class="fixed inset-0 bg-black/40 z-[5000]" @click="closeWeekPicker"></div>
-        <div class="fixed inset-x-0 bottom-0 z-[5001] rounded-t-2xl bg-[var(--c-surface)] shadow-2xl max-h-[70vh] flex flex-col animate-slide-up">
+        <div class="ui-scrim fixed inset-0 bg-black/40 z-[5000]" @click="closeWeekPicker"></div>
+        <div class="ui-modal fixed inset-x-0 bottom-0 z-[5001] rounded-t-2xl bg-[var(--c-surface)] shadow-2xl max-h-[70vh] flex flex-col animate-slide-up">
           <!-- Header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)] shrink-0">
             <button @click="closeWeekPicker" class="text-sm text-[var(--c-text-3)]">{{ t('common.cancel') }}</button>
@@ -611,18 +611,13 @@ onMounted(() => {
 .schedule-course-delete {
   border: 1px solid color-mix(in srgb, var(--c-danger) 42%, transparent);
   background: color-mix(in srgb, var(--c-danger) 8%, var(--c-surface));
-  color: color-mix(in srgb, var(--c-danger) 82%, #dc2626);
+  color: var(--c-danger);
 }
 
 .schedule-course-delete:active {
   background: color-mix(in srgb, var(--c-danger) 14%, var(--c-surface));
 }
 
-[data-theme="dark"] .schedule-course-delete {
-  border-color: color-mix(in srgb, var(--c-danger) 32%, rgba(68, 89, 112, 0.72));
-  background: color-mix(in srgb, var(--c-danger) 10%, rgba(24, 38, 53, 0.9));
-  color: color-mix(in srgb, var(--c-danger) 76%, #fee2e2);
-}
 </style>
 
 <style>

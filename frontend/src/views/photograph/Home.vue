@@ -127,7 +127,7 @@ onMounted(() => {
         <div
           v-for="(item, index) in list"
           :key="item.id"
-          class="community-desktop-photo-card bg-[var(--c-surface)] rounded-xl shadow-sm w-full mb-4 overflow-hidden animate-[slide-up_0.4s_ease_both] cursor-pointer"
+          class="ui-panel community-desktop-photo-card bg-[var(--c-surface)] rounded-xl shadow-sm w-full mb-4 overflow-hidden animate-[slide-up_0.4s_ease_both] cursor-pointer"
           :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
           @click="goDetail(item.id)"
         >
@@ -199,10 +199,10 @@ onMounted(() => {
   gap: 6px;
   margin: 14px 16px 0;
   padding: 4px;
-  border: 1px solid color-mix(in srgb, var(--c-photograph) 18%, var(--c-border));
-  border-radius: 20px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
   background: color-mix(in srgb, var(--c-photograph) 5%, var(--c-surface));
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-photograph) 8%, transparent);
+  box-shadow: none;
 }
 
 .community-photograph-switch__item {
@@ -212,9 +212,9 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   background: transparent;
-  color: color-mix(in srgb, var(--c-photograph) 34%, var(--c-text-2));
+  color: var(--c-text-2);
   cursor: pointer;
   font: inherit;
   font-size: 15px;
@@ -224,7 +224,7 @@ onMounted(() => {
 }
 
 .community-photograph-switch__item:hover {
-  color: color-mix(in srgb, var(--c-photograph) 78%, #0f172a);
+  color: var(--c-primary);
   background: color-mix(in srgb, var(--c-photograph) 8%, transparent);
 }
 
@@ -234,35 +234,9 @@ onMounted(() => {
 
 .community-photograph-switch__item--active,
 .community-photograph-switch__item--active:hover {
-  background: linear-gradient(135deg, var(--c-photograph), color-mix(in srgb, var(--c-photograph) 72%, #0ea5e9));
-  color: #fff;
-  box-shadow: 0 12px 24px color-mix(in srgb, var(--c-photograph) 22%, transparent);
-}
-
-[data-theme="dark"] .community-photograph-switch {
-  border-color: rgba(68, 89, 112, 0.72);
-  background: rgba(24, 38, 53, 0.76);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
-}
-
-[data-theme="dark"] .community-photograph-switch__item {
-  color: color-mix(in srgb, var(--c-photograph) 26%, var(--c-text-2));
-}
-
-[data-theme="dark"] .community-photograph-switch__item:hover {
-  background: rgba(32, 48, 68, 0.62);
-  color: color-mix(in srgb, var(--c-photograph) 34%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-photograph-switch__item--active,
-[data-theme="dark"] .community-photograph-switch__item--active:hover {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-photograph) 36%, #24384d),
-    color-mix(in srgb, var(--c-photograph) 22%, #172435)
-  );
-  color: color-mix(in srgb, var(--c-photograph) 42%, #fff);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-photograph) 18%, rgba(111, 132, 156, 0.72));
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+  box-shadow: none;
 }
 
 @media (min-width: 768px) {
@@ -271,29 +245,18 @@ onMounted(() => {
   }
 }
 
-
 .community-photograph-empty-shell {
   margin: 14px 16px 0;
-  border: 1px solid color-mix(in srgb, var(--c-photograph) 16%, var(--c-border));
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-photograph) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--c-photograph) 3%, var(--c-surface));
-  box-shadow: 0 14px 32px color-mix(in srgb, var(--c-photograph) 10%, transparent);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 
 .community-photograph-empty-icon {
   font-size: 32px;
   font-weight: 700;
   line-height: 1;
-}
-
-[data-theme="dark"] .community-photograph-empty-shell {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-photograph) 8%, transparent), transparent 42%),
-    rgba(24, 38, 53, 0.84);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 767px) {

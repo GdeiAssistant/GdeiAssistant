@@ -1,17 +1,20 @@
 <template>
-  <div class="login-record-page min-h-screen">
+  <div class="subpage login-record-page min-h-screen">
     <!-- Sticky Header -->
-    <div class="login-record-header sticky top-0 z-10 flex items-center h-12 px-4">
-      <button type="button" class="login-record-back w-15 text-base text-left cursor-pointer" @click="goBack">{{ t('common.back') }}</button>
-      <div class="login-record-title flex-1 text-center text-lg font-medium">{{ t('profile.loginRecord') }}</div>
-      <div class="w-15"></div>
+    <div class="subpage-bar login-record-header">
+      <button type="button" class="subpage-bar__back login-record-back" @click="goBack">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <div class="subpage-bar__title login-record-title">{{ t('profile.loginRecord') }}</div>
+      <span aria-hidden="true"></span>
     </div>
 
     <!-- Content -->
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <!-- Loading -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-16">
-        <div class="login-record-loading w-5 h-5 border-2 border-gray-200 rounded-full animate-spin"></div>
+        <div class="login-record-loading w-5 h-5 border-2 border-[var(--c-border)] rounded-full animate-spin"></div>
         <p class="login-record-muted mt-3 text-sm">{{ t('common.loading') }}</p>
       </div>
 
@@ -40,6 +43,7 @@
 </template>
 
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -107,15 +111,7 @@ onMounted(() => {
 
 <style scoped>
 .login-record-page {
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 8%, transparent), transparent 30%),
-    var(--c-bg-soft);
-}
-
-.login-record-header {
-  background: color-mix(in srgb, var(--c-surface) 94%, var(--c-bg));
-  border-bottom: 1px solid var(--c-border-light);
-  backdrop-filter: blur(18px);
+  background: var(--c-bg);
 }
 
 .login-record-back,
@@ -130,13 +126,13 @@ onMounted(() => {
 }
 
 .login-record-loading {
-  border-top-color: color-mix(in srgb, var(--c-primary) 82%, #2dd4bf);
+  border-top-color: var(--c-primary);
 }
 
 .login-record-card {
   background: var(--c-surface);
-  border: 1px solid color-mix(in srgb, var(--c-primary) 8%, var(--c-border-light));
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 8%, rgba(15, 23, 42, 0.06));
+  border: 1px solid var(--c-border);
+  box-shadow: none;
 }
 
 .login-record-row + .login-record-row {
@@ -144,35 +140,7 @@ onMounted(() => {
 }
 
 .login-record-status {
-  color: color-mix(in srgb, var(--c-primary) 76%, #14b8a6);
+  color: var(--c-primary);
   font-weight: 600;
-}
-
-[data-theme="dark"] .login-record-page {
-  background:
-    radial-gradient(circle at top, color-mix(in srgb, var(--c-primary) 10%, transparent), transparent 30%),
-    var(--c-bg);
-}
-
-[data-theme="dark"] .login-record-header {
-  background: color-mix(in srgb, var(--c-surface) 88%, rgba(10, 20, 32, 0.9));
-  border-bottom-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .login-record-loading {
-  border-top-color: color-mix(in srgb, var(--c-primary) 58%, #67e8f9);
-}
-
-[data-theme="dark"] .login-record-card {
-  border-color: rgba(68, 89, 112, 0.72);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .login-record-row + .login-record-row {
-  border-top-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .login-record-status {
-  color: color-mix(in srgb, var(--c-primary) 58%, #67e8f9);
 }
 </style>

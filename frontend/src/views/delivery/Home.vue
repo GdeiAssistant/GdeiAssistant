@@ -95,7 +95,7 @@ onUnmounted(() => {
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
+        class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
         :style="{ animationDelay: (index * 0.05) + 's' }"
         @click="goDetail(item.id)"
       >
@@ -158,83 +158,46 @@ onUnmounted(() => {
 
 <style scoped>
 .community-delivery-reward-block {
-  color: color-mix(in srgb, var(--c-delivery) 74%, #d97706);
+  color: var(--c-primary);
 }
 
 .community-delivery-pickup-badge {
-  background: color-mix(in srgb, var(--c-delivery) 68%, #0ea5e9);
+  background: var(--c-primary);
 }
 
 .community-delivery-dropoff-badge {
-  background: color-mix(in srgb, var(--c-delivery) 88%, #f59e0b);
+  background: var(--c-primary);
 }
 
 .community-delivery-status-badge {
-  border: 1px solid color-mix(in srgb, var(--c-delivery) 18%, var(--c-border));
+  border: 1px solid var(--c-border);
 }
 
 .community-delivery-status-badge--pending {
   background: color-mix(in srgb, var(--c-delivery) 14%, var(--c-surface));
-  color: color-mix(in srgb, var(--c-delivery) 80%, #b45309);
+  color: var(--c-primary);
 }
 
 .community-delivery-status-badge--active {
-  background: color-mix(in srgb, var(--c-delivery) 18%, #e0f2fe);
-  color: color-mix(in srgb, var(--c-delivery) 70%, #0f766e);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 
 .community-delivery-status-badge--completed {
-  background: color-mix(in srgb, var(--c-delivery) 16%, #ecfdf5);
-  color: color-mix(in srgb, var(--c-delivery) 76%, #0f766e);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 
 .community-delivery-empty-shell {
   margin: 16px;
-  border: 1px solid color-mix(in srgb, var(--c-delivery) 10%, var(--c-border));
-  border-radius: 24px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
   background: color-mix(in srgb, var(--c-delivery) 3%, var(--c-surface));
-  box-shadow: 0 18px 36px color-mix(in srgb, var(--c-delivery) 8%, transparent);
+  box-shadow: none;
 }
 
 .community-delivery-empty-icon {
   width: 28px;
   height: 28px;
-}
-
-[data-theme="dark"] .community-delivery-reward-block {
-  color: color-mix(in srgb, var(--c-delivery) 72%, #fde68a);
-}
-
-[data-theme="dark"] .community-delivery-pickup-badge {
-  background: color-mix(in srgb, var(--c-delivery) 42%, #38bdf8);
-}
-
-[data-theme="dark"] .community-delivery-dropoff-badge {
-  background: color-mix(in srgb, var(--c-delivery) 70%, #fbbf24);
-}
-
-[data-theme="dark"] .community-delivery-status-badge {
-  border-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .community-delivery-status-badge--pending {
-  background: rgba(36, 52, 69, 0.88);
-  color: color-mix(in srgb, var(--c-delivery) 72%, #fde68a);
-}
-
-[data-theme="dark"] .community-delivery-status-badge--active {
-  background: color-mix(in srgb, var(--c-delivery) 18%, rgba(24, 38, 53, 0.9));
-  color: color-mix(in srgb, var(--c-delivery) 50%, #bfdbfe);
-}
-
-[data-theme="dark"] .community-delivery-status-badge--completed {
-  background: color-mix(in srgb, var(--c-delivery) 20%, rgba(24, 38, 53, 0.9));
-  color: color-mix(in srgb, var(--c-delivery) 58%, #ccfbf1);
-}
-
-[data-theme="dark"] .community-delivery-empty-shell {
-  border-color: color-mix(in srgb, var(--c-delivery) 12%, rgba(111, 132, 156, 0.44));
-  background: rgba(24, 38, 53, 0.86);
-  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.2);
 }
 </style>

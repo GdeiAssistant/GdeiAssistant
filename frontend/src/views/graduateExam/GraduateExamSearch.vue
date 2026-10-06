@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -24,17 +25,20 @@ function doQuery() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
     <!-- Sticky header -->
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('graduateExam.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('graduateExam.title') }}</span>
-      <div class="w-10"></div>
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="$router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('graduateExam.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('graduateExam.title') }}</span>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-lg mx-auto px-4 py-6">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <!-- Form card -->
-      <div class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
         <!-- Name -->
         <div class="flex items-center px-4 h-[52px]">
           <label class="w-20 shrink-0 text-sm text-[var(--c-text)]">{{ t('graduateExam.name') }}</label>
@@ -72,7 +76,7 @@ function doQuery() {
       <!-- Search button -->
       <button
         type="button"
-        class="mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-white text-[15px] font-medium active:opacity-80 transition-opacity"
+        class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-[15px] font-medium active:opacity-80 transition-opacity"
         @click="doQuery"
       >
         {{ t('graduateExam.search') }}
@@ -87,7 +91,7 @@ function doQuery() {
           href="https://yz.chsi.com.cn/apply/cjcxa/"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex items-center justify-between bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] px-4 py-3.5 text-sm text-[var(--c-text)] active:bg-black/5 transition-colors"
+          class="ui-panel flex items-center justify-between bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] px-4 py-3.5 text-sm text-[var(--c-text)] hover:bg-[var(--c-surface-hover)] transition-colors"
         >
           <span>{{ t('graduateExam.chsiLink') }}</span>
           <span class="text-[var(--c-text-tertiary)]">&rsaquo;</span>

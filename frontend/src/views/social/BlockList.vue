@@ -12,7 +12,7 @@
     <div
       v-for="user in items"
       :key="user.id"
-      class="flex items-center justify-between rounded-xl bg-[var(--c-surface)] px-4 py-3 border border-[var(--c-border-light)]"
+      class="ui-panel flex items-center justify-between rounded-xl bg-[var(--c-surface)] px-4 py-3 border border-[var(--c-border-light)]"
     >
       <button type="button" class="min-h-11 min-w-0 flex-1 text-left bg-transparent border-0 pr-3" @click="router.push(`/social/users/${user.id}`)">
         <div class="font-medium">{{ user.nickname }}</div>

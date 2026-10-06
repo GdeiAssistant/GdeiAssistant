@@ -171,8 +171,8 @@ function submit() {
 
     <!-- 提示对话框 -->
     <div v-if="dialogVisible">
-      <div class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
+      <div class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+      <div class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
         <div class="text-center font-semibold text-base text-[var(--c-text-1)] py-4">{{ t('common.hint') }}</div>
         <div class="px-5 pb-4 text-sm text-[var(--c-text-1)] text-center">{{ dialogMessage }}</div>
         <div class="flex border-t border-[var(--c-border)]">
@@ -186,11 +186,11 @@ function submit() {
 <style scoped>
 .community-express-page {
   --express-form-border: color-mix(in srgb, var(--c-express) 18%, var(--c-border));
-  --express-form-tag: linear-gradient(135deg, var(--c-express), color-mix(in srgb, var(--c-express) 68%, var(--c-text-1)));
+  --express-form-tag: var(--c-primary);
 }
 
 .express-banner-title {
-  color: color-mix(in srgb, var(--c-express) 78%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .express-form-section {
@@ -199,36 +199,10 @@ function submit() {
 
 .express-form-section__label {
   background: var(--express-form-tag);
-  box-shadow: 0 10px 18px color-mix(in srgb, var(--c-express) 16%, transparent);
+  box-shadow: none;
 }
 
 .express-submit {
-  background: linear-gradient(135deg, var(--c-express), color-mix(in srgb, var(--c-express) 68%, var(--c-text-1)));
-}
-
-[data-theme="dark"] .community-express-page {
-  --express-form-border: color-mix(in srgb, var(--c-express) 22%, rgba(74, 96, 120, 0.72));
-  --express-form-tag: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-express) 34%, #203044),
-    color-mix(in srgb, var(--c-express) 54%, var(--c-text-1))
-  );
-}
-
-[data-theme="dark"] .express-banner-title {
-  color: color-mix(in srgb, var(--c-express) 52%, var(--c-text-1));
-}
-
-[data-theme="dark"] .express-form-section {
-  background: rgba(24, 38, 53, 0.84);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
-}
-
-[data-theme="dark"] .express-submit {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-express) 30%, #203044),
-    color-mix(in srgb, var(--c-express) 52%, var(--c-text-1))
-  );
+  background: var(--c-primary);
 }
 </style>

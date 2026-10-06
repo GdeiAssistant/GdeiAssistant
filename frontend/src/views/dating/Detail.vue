@@ -217,7 +217,7 @@ onMounted(async () => {
 
       <!-- Pick section -->
       <div class="border-t-2 border-dashed border-[var(--c-divider)] pt-6 mt-6 text-center">
-        <textarea v-model="pickContent" class="w-full p-4 border border-[var(--c-divider)] rounded-lg text-base min-h-[80px] box-border mb-4 text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" :placeholder="copy.placeholder" rows="3"></textarea>
+        <textarea v-model="pickContent" class="ui-control w-full p-4 border border-[var(--c-divider)] rounded-lg text-base min-h-[80px] box-border mb-4 text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" :placeholder="copy.placeholder" rows="3"></textarea>
         <button type="button" class="community-dating-submit px-7 py-2.5 text-white border-none rounded-full text-lg cursor-pointer transition-opacity active:opacity-85 disabled:opacity-60" :disabled="pickSubmitting" @click="submitPick">{{ copy.submitAction }}</button>
       </div>
     </div>
@@ -229,8 +229,8 @@ onMounted(async () => {
     </div>
 
     <!-- Dialog -->
-    <div v-if="dialogVisible" class="fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
-    <div v-if="dialogVisible" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
+    <div v-if="dialogVisible" class="ui-scrim fixed inset-0 bg-black/50 z-[1000]" @click="dialogVisible = false"></div>
+    <div v-if="dialogVisible" class="ui-modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] bg-[var(--c-surface)] rounded-xl overflow-hidden z-[1001] shadow-lg">
       <div class="text-center font-bold text-base py-4 text-[var(--c-text-1)]">{{ copy.noticeTitle }}</div>
       <div class="px-6 pb-4 text-center text-sm text-[var(--c-text-2)] leading-relaxed">{{ dialogMessage }}</div>
       <div class="border-t border-[var(--c-border)] flex">
@@ -242,32 +242,15 @@ onMounted(async () => {
 
 <style scoped>
 .community-dating-shell {
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid color-mix(in srgb, var(--c-dating) 16%, rgba(205, 222, 226, 0.82));
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
 }
 
 .community-dating-shell__title {
-  color: color-mix(in srgb, var(--c-dating) 88%, var(--c-text-1));
+  color: var(--c-primary);
 }
 
 .community-dating-submit {
-  background: linear-gradient(135deg, var(--c-dating), color-mix(in srgb, var(--c-dating) 72%, var(--c-text-1)));
-}
-
-[data-theme="dark"] .community-dating-shell {
-  background: rgba(24, 38, 53, 0.86);
-  border-color: rgba(68, 89, 112, 0.72);
-}
-
-[data-theme="dark"] .community-dating-shell__title {
-  color: color-mix(in srgb, var(--c-dating) 58%, var(--c-text-1));
-}
-
-[data-theme="dark"] .community-dating-submit {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-dating) 30%, #203044),
-    color-mix(in srgb, var(--c-dating) 52%, var(--c-text-1))
-  );
+  background: var(--c-primary);
 }
 </style>

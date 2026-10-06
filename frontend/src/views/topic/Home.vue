@@ -1,4 +1,5 @@
 <script setup>
+import { Heart } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -95,7 +96,7 @@ onUnmounted(() => {
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="bg-[var(--c-surface)] rounded-xl p-4 shadow-sm animate-[community-slide-up_0.3s_ease_both]"
+        class="ui-panel bg-[var(--c-surface)] rounded-xl p-4 shadow-sm animate-[community-slide-up_0.3s_ease_both]"
         :style="{ animationDelay: (index * 0.05) + 's' }"
       >
         <!-- 卡片头部 -->
@@ -118,7 +119,7 @@ onUnmounted(() => {
           <div
             v-for="(img, idx) in item.images"
             :key="idx"
-            class="relative rounded-md overflow-hidden cursor-pointer bg-gray-100"
+            class="relative rounded-md overflow-hidden cursor-pointer bg-[var(--c-fill-2)]"
             :class="item.images.length === 1 ? 'max-w-[80%] mx-auto' : 'aspect-square'"
           >
             <img
@@ -138,7 +139,7 @@ onUnmounted(() => {
             :class="item.isLiked ? 'text-[var(--c-topic)]' : 'text-[var(--c-text-2)]'"
             @click="handleLike(item)"
           >
-            <span class="text-xl transition-transform duration-200" :class="{ 'scale-120 animate-[community-like-bounce_0.3s_ease]': item.isLiked }">{{ item.isLiked ? '❤️' : '🤍' }}</span>
+            <span class="text-xl transition-transform duration-200" :class="{ 'scale-120 animate-[community-like-bounce_0.3s_ease]': item.isLiked }"><Heart :size="20" :fill="item.isLiked ? 'currentColor' : 'none'" aria-hidden="true" /></span>
             <span>{{ item.likeCount || 0 }}</span>
           </button>
         </div>
@@ -155,7 +156,7 @@ onUnmounted(() => {
     <div v-if="finished && list.length > 0" class="flex items-center justify-center py-4 text-sm text-[var(--c-text-3)]">{{ pullMessages.noMore }}</div>
 
     <!-- 图片预览 Lightbox -->
-    <div v-if="previewVisible" class="fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center" @click="closeImagePreview">
+    <div v-if="previewVisible" class="ui-scrim fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center" @click="closeImagePreview">
       <img :src="previewImage" class="max-w-[90%] max-h-[90vh] object-contain" />
     </div>
   </div>
@@ -169,11 +170,9 @@ onUnmounted(() => {
   place-items: center;
   align-content: center;
   gap: 12px;
-  border: 1px solid color-mix(in srgb, var(--c-topic) 16%, var(--c-border));
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-topic) 12%, transparent), transparent 42%),
-    color-mix(in srgb, var(--c-topic) 3%, var(--c-surface));
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-primary-soft);
   color: var(--c-text-2);
   text-align: center;
 }
@@ -183,7 +182,7 @@ onUnmounted(() => {
   width: 58px;
   height: 58px;
   place-items: center;
-  border-radius: 20px;
+  border-radius: var(--radius-card);
   background: color-mix(in srgb, var(--c-topic) 12%, transparent);
   color: var(--c-topic);
   font-size: 30px;
@@ -215,39 +214,27 @@ onUnmounted(() => {
   min-height: 42px;
   padding: 0 18px;
   border: 0;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--c-topic), color-mix(in srgb, var(--c-topic) 74%, #38bdf8));
-  color: #fff;
+  border-radius: var(--radius-control);
+  background: var(--c-primary);
+  color: var(--c-on-primary);
   cursor: pointer;
   font: inherit;
   font-size: 14px;
   font-weight: 850;
-  box-shadow: 0 14px 28px color-mix(in srgb, var(--c-topic) 22%, transparent);
+  box-shadow: none;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .community-topic-empty button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 18px 34px color-mix(in srgb, var(--c-topic) 26%, transparent);
-}
-
-[data-theme="dark"] .community-topic-empty {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--c-topic) 10%, transparent), transparent 42%),
-    rgba(24, 38, 53, 0.84);
-}
-
-[data-theme="dark"] .community-topic-empty__mark {
-  background: rgba(32, 48, 68, 0.78);
-  color: color-mix(in srgb, var(--c-topic) 42%, #94a3b8);
+  box-shadow: none;
 }
 
 @media (max-width: 767px) {
   .community-topic-empty {
     min-height: 230px;
     margin: 14px;
-    border-radius: 20px;
+    border-radius: var(--radius-card);
   }
 }
 </style>

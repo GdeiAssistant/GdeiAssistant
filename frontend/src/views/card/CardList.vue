@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -91,15 +92,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
     <template v-if="queryDate">
-      <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
-        <span class="flex-1 text-center text-sm font-bold">{{ t('card.action.records.title') }}</span>
-        <div class="w-10"></div>
+      <div class="subpage-bar">
+        <button type="button" class="subpage-bar__back" @click="$router.back()">
+          <ChevronLeft :size="18" aria-hidden="true" />
+          <span>{{ t('common.back') }}</span>
+        </button>
+        <span class="subpage-bar__title">{{ t('card.action.records.title') }}</span>
+        <span aria-hidden="true"></span>
       </div>
 
-      <div class="max-w-lg mx-auto px-4 py-6">
+      <div class="subpage-body max-w-lg mx-auto px-4 py-6">
         <div class="text-sm text-[var(--c-text-2)] mb-4">
           {{ t('card.list.queryDate') }}<span class="font-medium text-[var(--c-text)]">{{ formatDisplayDate(queryDate) }}</span>
         </div>
@@ -110,7 +114,7 @@ onMounted(() => {
         </div>
 
         <!-- Transaction list -->
-        <div v-if="list.length > 0" class="bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)]">
+        <div v-if="list.length > 0" class="ui-panel bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)]">
           <div
             v-for="(item, index) in list"
             :key="index"
@@ -122,14 +126,14 @@ onMounted(() => {
               <div class="text-xs text-[var(--c-text-3)] mt-0.5">{{ item.tradeTime || '' }}</div>
             </div>
             <div class="shrink-0 ml-3 font-mono text-sm font-semibold"
-                 :class="isPositive(item.tradePrice) ? 'text-green-600' : 'text-[var(--c-text-2)]'"
+                 :class="isPositive(item.tradePrice) ? 'text-[var(--c-primary)]' : 'text-[var(--c-text-2)]'"
             >{{ amountText(item.tradePrice) }}</div>
           </div>
         </div>
 
         <button
           type="button"
-          class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          class="ui-btn-primary w-full bg-[var(--c-primary)] text-[var(--c-on-primary)] rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
           @click="reQuery"
         >{{ t('card.list.retry') }}</button>
       </div>

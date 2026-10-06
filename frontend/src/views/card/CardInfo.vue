@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -75,16 +76,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('card.info.title') }}</span>
-      <div class="w-10"></div>
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="$router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('card.info.title') }}</span>
+      <span aria-hidden="true"></span>
     </div>
 
-    <div class="max-w-lg mx-auto px-4 py-6" v-if="info">
+    <div class="subpage-body max-w-lg mx-auto px-4 py-6" v-if="info">
       <!-- 余额卡片 -->
-      <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)] mb-4">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)] mb-4">
         <div class="text-center">
           <div class="text-xs text-[var(--c-text-2)] mb-1">{{ t('card.info.balanceTitle') }}</div>
           <div class="font-mono text-2xl font-bold text-[var(--c-primary)]">{{ info.cardBalance ?? '--' }}</div>
@@ -93,7 +97,7 @@ onMounted(() => {
       </div>
 
       <!-- 基本信息 -->
-      <div class="bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)] mb-4">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)] mb-4">
         <div class="px-4 py-2.5 border-b border-[var(--c-border)]">
           <span class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide">{{ t('card.info.basicInfoTitle') }}</span>
         </div>
@@ -114,7 +118,7 @@ onMounted(() => {
       </div>
 
       <!-- 状态信息 -->
-      <div class="bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)] mb-6">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)] mb-6">
         <div class="px-4 py-2.5 border-b border-[var(--c-border)]">
           <span class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide">{{ t('card.info.statusTitle') }}</span>
         </div>
@@ -139,8 +143,8 @@ onMounted(() => {
     <!-- 挂失验证弹窗 -->
     <Teleport to="body">
       <template v-if="showPasswordDialog">
-        <div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" @click="closePasswordDialog"></div>
-        <div class="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] bg-[var(--c-surface)] rounded-2xl overflow-hidden shadow-xl">
+        <div class="ui-scrim fixed inset-0 z-50 bg-black/50" @click="closePasswordDialog"></div>
+        <div class="ui-modal fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] bg-[var(--c-surface)] rounded-2xl overflow-hidden shadow-xl">
           <div class="px-5 pt-6 pb-3 text-center">
             <h3 class="text-base font-bold">{{ t('card.info.dialogTitle') }}</h3>
           </div>
@@ -151,7 +155,7 @@ onMounted(() => {
               type="password"
               :placeholder="t('card.info.dialogPlaceholder')"
               maxlength="20"
-              class="w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+              class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
               @keyup.enter="confirmReportLoss"
             />
           </div>

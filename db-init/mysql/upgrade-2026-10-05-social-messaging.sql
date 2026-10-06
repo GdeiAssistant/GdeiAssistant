@@ -198,7 +198,8 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 SET @fk := (SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='user_follow' AND CONSTRAINT_NAME='fk_user_follow_followee');
 SET @sql := IF(@fk=0, 'ALTER TABLE `user_follow` ADD CONSTRAINT `fk_user_follow_followee` FOREIGN KEY (`followee_id`) REFERENCES `app_user` (`id`)', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-SET @chk := (SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='user_follow' AND CONSTRAINT_NAME='chk_user_follow_not_self');
+-- TiDB 的 TABLE_CONSTRAINTS 不列出 CHECK；CHECK_CONSTRAINTS 在 MySQL / TiDB 均可用。
+SET @chk := (SELECT COUNT(*) FROM information_schema.CHECK_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_NAME='chk_user_follow_not_self');
 SET @sql := IF(@chk=0, 'ALTER TABLE `user_follow` ADD CONSTRAINT `chk_user_follow_not_self` CHECK (`follower_id` <> `followee_id`)', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
@@ -208,7 +209,7 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 SET @fk := (SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='user_block' AND CONSTRAINT_NAME='fk_user_block_blocked');
 SET @sql := IF(@fk=0, 'ALTER TABLE `user_block` ADD CONSTRAINT `fk_user_block_blocked` FOREIGN KEY (`blocked_id`) REFERENCES `app_user` (`id`)', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-SET @chk := (SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='user_block' AND CONSTRAINT_NAME='chk_user_block_not_self');
+SET @chk := (SELECT COUNT(*) FROM information_schema.CHECK_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_NAME='chk_user_block_not_self');
 SET @sql := IF(@chk=0, 'ALTER TABLE `user_block` ADD CONSTRAINT `chk_user_block_not_self` CHECK (`blocker_id` <> `blocked_id`)', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
@@ -218,7 +219,7 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 SET @fk := (SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='conversation' AND CONSTRAINT_NAME='fk_conversation_high');
 SET @sql := IF(@fk=0, 'ALTER TABLE `conversation` ADD CONSTRAINT `fk_conversation_high` FOREIGN KEY (`user_high_id`) REFERENCES `app_user` (`id`)', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-SET @chk := (SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='conversation' AND CONSTRAINT_NAME='chk_conversation_ordered');
+SET @chk := (SELECT COUNT(*) FROM information_schema.CHECK_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND CONSTRAINT_NAME='chk_conversation_ordered');
 SET @sql := IF(@chk=0, 'ALTER TABLE `conversation` ADD CONSTRAINT `chk_conversation_ordered` CHECK (`user_low_id` < `user_high_id`)', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 

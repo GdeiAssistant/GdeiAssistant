@@ -36,7 +36,8 @@
    - **保留旧演示数据**：在 MySQL 8 中执行 `mysql/upgrade-2026-10-05-social-messaging.sql`，迁移身份并新建社交表；旧校园密码置空。升级脚本可重复执行，不删除已有数据。
    - **图片私信列**：再执行 `mysql/upgrade-2026-10-06-chat-image-messaging.sql`（可重复），为已有 `chat_message` 增加 `type` 与可空图片元数据；旧行默认 `TEXT`。全新 `init.sql` / 社交升级建表已含相同列。
    - 若点赞存在重复记录，升级会报告 `REVIEW_REQUIRED` 并跳过对应唯一键；清理前先核实重复数据，不能将此状态当作完整升级成功。
-   - 已在临时 MySQL 8.0.46 验证初始化、整目录有序升级、图片列重复升级、旧 TEXT 保留及最终列/索引一致；未迁移任何现有数据库。
+   - **TiDB Cloud**：创建迁移前数据分支，并先在隔离分支验证。执行初始化或升级前设置 `SET GLOBAL tidb_enable_check_constraint=ON`，确认该值与 `@@session.foreign_key_checks` 均为 `1`；TiDB 默认关闭 CHECK 功能，不能只根据建表成功认定约束生效。重复升级通过 `information_schema.CHECK_CONSTRAINTS` 检查已存在的 CHECK，兼容 MySQL 8 与 TiDB 8.5。
+   - 已在临时 MySQL 8.0.46 验证初始化、整目录有序升级、图片列重复升级、旧 TEXT 保留及最终列/索引一致；另在真实 TiDB Cloud 8.5 隔离分支验证两份社交迁移连续重复执行，以及 CHECK、外键和消息唯一键实际拒绝非法写入。
 2. **MongoDB**：若使用 Mongo，执行 `mongodb/init.js`（见该目录说明）。
 3. **Redis**：无需预置 Key，见 `redis/README.md`。
 

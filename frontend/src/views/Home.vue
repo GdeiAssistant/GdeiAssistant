@@ -4,7 +4,7 @@ import { onMounted, onActivated, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ALL_FEATURES, FEATURE_ICON_SRC, getLocalizedFeatures } from '@/constants/features'
 import {
-  ArrowRight, Bell, Calendar, CalendarCheck, CreditCard, Database, DoorOpen,
+  ArrowRight, Bell, Calendar, CalendarCheck, Database, DoorOpen,
   Dumbbell, Eye, FileText, GraduationCap, Heart, Info as InfoIcon, MessageCircle,
   PackageCheck, PenLine, Search, ShoppingCart, Star, Truck, Users, BookOpen,
   Camera, WalletCards
@@ -132,7 +132,7 @@ const todayItems = computed(() => [
 ])
 
 const iconMap = {
-  grade: Star, schedule: Calendar, card: CreditCard, cet: FileText,
+  grade: Star, schedule: Calendar, card: WalletCards, cet: FileText,
   kaoyan: GraduationCap, collection: BookOpen, spare: DoorOpen,
   pe: Dumbbell, evaluate: PenLine, data: Database, about: InfoIcon,
   ershou: ShoppingCart, lostandfound: Search, express: Heart,

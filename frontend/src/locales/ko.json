@@ -1652,6 +1652,21 @@
     "wechatRequiredDescription": "체력 검사 결과 조회는 WeChat 환경에서만 사용할 수 있습니다. WeChat으로 코드를 스캔하거나 WeChat에서 이 앱을 검색해 열어 주세요."
   },
   "dating": {
+    "detail": {
+      "unknownGrade": "알 수 없음",
+      "noticeTitle": "안내",
+      "gradeLabel": "학년: ",
+      "facultyLabel": "전공: ",
+      "hometownLabel": "고향: ",
+      "qqLabel": "QQ: ",
+      "wechatLabel": "WeChat: ",
+      "hiddenContact": "상대가 메시지를 수락하면 볼 수 있습니다",
+      "placeholder": "50자 이내로 메시지를 적어 주세요",
+      "submitAction": "메시지 보내기",
+      "success": "보냈습니다. 답장을 기다려 주세요",
+      "emptyMessage": "메시지를 먼저 입력해 주세요",
+      "tooLongMessage": "메시지는 50자 이내여야 합니다"
+    },
     "publish": {
       "title": "프로필 등록",
       "uploadAction": "업로드",

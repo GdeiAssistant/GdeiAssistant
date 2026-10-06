@@ -18,6 +18,10 @@
       </button>
     </div>
     <div v-if="loading" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('common.loading') }}</div>
+    <div v-else-if="error" class="text-sm text-[var(--c-text-tertiary)]">
+      {{ $t('common.networkError') }}
+      <button type="button" class="social-text-action text-sm text-[var(--c-primary)]" @click="search()">{{ $t('common.retry') }}</button>
+    </div>
     <div v-else-if="!items.length" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('social.searchEmpty') }}</div>
     <button
       v-for="user in items"
@@ -46,6 +50,7 @@ const router = useRouter()
 const query = ref('')
 const items = ref([])
 const loading = ref(false)
+const error = ref(false)
 const nextCursor = ref(null)
 const hasMore = ref(false)
 let alive = true
@@ -60,11 +65,12 @@ async function search(append = false) {
     if (!alive || epoch !== generation) return
     const page = res?.data || {}
     const rows = Array.isArray(page.items) ? page.items : []
+    error.value = false
     items.value = append ? [...new Map([...items.value, ...rows].map(item => [item.id, item])).values()] : rows
     nextCursor.value = page.nextCursor || null
     hasMore.value = !!page.hasMore && !!nextCursor.value
   } catch (_) {
-    // 保留已加载列表；用户可重试。
+    if (alive && epoch === generation) error.value = true
   } finally {
     if (alive && epoch === generation) loading.value = false
   }

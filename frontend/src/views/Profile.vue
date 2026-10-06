@@ -28,6 +28,9 @@
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=following` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+          :aria-disabled="!socialMeId"
+          :tabindex="socialMeId ? 0 : -1"
+          @click.capture="!socialMeId && $event.preventDefault()"
         >
           <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followingCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.following') }}</div>
@@ -35,6 +38,9 @@
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=followers` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+          :aria-disabled="!socialMeId"
+          :tabindex="socialMeId ? 0 : -1"
+          @click.capture="!socialMeId && $event.preventDefault()"
         >
           <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followerCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.followers') }}</div>
@@ -42,6 +48,9 @@
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=friends` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+          :aria-disabled="!socialMeId"
+          :tabindex="socialMeId ? 0 : -1"
+          @click.capture="!socialMeId && $event.preventDefault()"
         >
           <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.friendCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.friends') }}</div>
@@ -52,13 +61,6 @@
         class="campus-list-row flex items-center gap-3 min-h-11 px-4 py-3 border-t border-[var(--c-border-light)]"
       >
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.searchTitle') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
-      </RouterLink>
-      <RouterLink
-        to="/user/privacy-setting"
-        class="campus-list-row flex items-center gap-3 min-h-11 px-4 py-3 border-t border-[var(--c-border-light)]"
-      >
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.privacySetting') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </RouterLink>
     </AppCard>
@@ -140,6 +142,7 @@
         v-model="tempNickname"
         type="text"
         :placeholder="$t('profile.nicknamePlaceholder')"
+        :aria-label="$t('profile.editNickname')"
         class="profile-dialog-input"
       />
     </AppDialog>
@@ -153,6 +156,7 @@
       <textarea
         v-model="tempIntro"
         :placeholder="$t('profile.introPlaceholder')"
+        :aria-label="$t('profile.editIntro')"
         rows="3"
         class="profile-dialog-input profile-dialog-textarea"
       ></textarea>
@@ -312,6 +316,7 @@ const showSuccess = (msg) => {
 function saveBirthday(year, month, date) {
   return updateBirthday({ year, month, date })
     .then(() => { showSuccess() })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveFaculty() {
@@ -324,6 +329,7 @@ function saveFaculty() {
       userInfo.value.majorCode = ''
       showSuccess()
     })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveMajor() {
@@ -331,6 +337,7 @@ function saveMajor() {
   if (!majorCode) return Promise.resolve()
   return updateMajor({ major: majorCode })
     .then(() => { showSuccess() })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveEnrollment() {
@@ -338,20 +345,21 @@ function saveEnrollment() {
   const year = y ? parseInt(String(y), 10) : null
   return updateEnrollment({ year })
     .then(() => { showSuccess() })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveLocation() {
   const { locationRegion, locationState, locationCity } = userInfo.value
   if (!locationRegion) return Promise.resolve()
   const payload = { region: locationRegion, state: locationState || undefined, city: locationCity || undefined }
-  return updateLocation(payload).then(() => { showSuccess() })
+  return updateLocation(payload).then(() => { showSuccess() }).catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveHometown() {
   const { hometownRegion, hometownState, hometownCity } = userInfo.value
   if (!hometownRegion) return Promise.resolve()
   const payload = { region: hometownRegion, state: hometownState || undefined, city: hometownCity || undefined }
-  return updateHometown(payload).then(() => { showSuccess() })
+  return updateHometown(payload).then(() => { showSuccess() }).catch(() => { toastError(t('common.saveFailed')) })
 }
 
 const openBirthdayPicker = () => {
@@ -463,7 +471,7 @@ const openNicknameDialog = () => { tempNickname.value = userInfo.value.nickname 
 const confirmNickname = () => {
   const nickname = (tempNickname.value || '').trim()
   if (!nickname) {
-    showNicknameDialog.value = false
+    toastError(t('profile.nicknamePlaceholder'))
     return
   }
   updateNickname({ nickname })
@@ -472,6 +480,7 @@ const confirmNickname = () => {
       showSuccess()
       showNicknameDialog.value = false
     })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 const openIntroDialog = () => { tempIntro.value = userInfo.value.introduction || ''; showIntroDialog.value = true }
@@ -483,6 +492,7 @@ const confirmIntro = () => {
       showSuccess()
       showIntroDialog.value = false
     })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 async function fetchUserProfile() {

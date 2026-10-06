@@ -51,7 +51,6 @@ const AnnouncementList = lazyView('info/AnnouncementList')
 const AnnouncementDetail = lazyView('info/AnnouncementDetail')
 const InteractionList = lazyView('info/InteractionList')
 const UserPrivacySetting = lazyView('user/PrivacySetting')
-const UserFunctions = lazyView('user/Functions')
 const UserFeatureManage = lazyView('user/FeatureManage')
 const UserPassword = lazyView('user/Password')
 const UserLoginRecord = lazyView('user/LoginRecord')
@@ -257,11 +256,6 @@ const routes = [
     path: '/user/privacy-setting',
     name: 'UserPrivacySetting',
     component: UserPrivacySetting
-  },
-  {
-    path: '/user/functions',
-    name: 'UserFunctions',
-    component: UserFunctions
   },
   {
     path: '/user/feature-manage',

@@ -5,8 +5,16 @@
       <RouterLink to="/social/search" class="social-text-action text-sm text-[var(--c-primary)]">{{ $t('social.searchAction') }}</RouterLink>
     </div>
     <div v-if="loading" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('common.loading') }}</div>
+    <div v-else-if="error" class="text-sm text-[var(--c-text-tertiary)]">
+      {{ $t('common.networkError') }}
+      <button type="button" class="social-text-action text-sm text-[var(--c-primary)]" @click="load(loadEpoch)">{{ $t('common.retry') }}</button>
+    </div>
+    <div v-else-if="!items.length" class="text-sm text-[var(--c-text-tertiary)]">
+      {{ $t('social.chatsEmpty') }}
+      <RouterLink to="/social/search" class="social-text-action text-sm text-[var(--c-primary)]">{{ $t('social.searchAction') }}</RouterLink>
+    </div>
     <div v-if="items.length" class="social-inbox-list">
-      <button v-for="item in items" :key="item.id" type="button" class="social-person-row w-full text-left" @click="router.push(`/social/chat/${item.id}`)">
+      <button v-for="item in items" :key="item.id" type="button" class="social-person-row w-full text-left" :aria-label="`${item.peer?.nickname || $t('social.unknownUser')}${item.unreadCount > 0 ? ' (' + item.unreadCount + ')' : ''}`" @click="router.push(`/social/chat/${item.id}`)">
         <AuthAvatar :url="item.peer?.avatarUrl" :alt="''" :placeholder="item.peer?.nickname?.slice(0, 1) || '?'" img-class="w-12 h-12 shrink-0 rounded-full" />
         <div class="min-w-0 flex-1">
           <div class="flex items-center justify-between gap-2"><div class="font-medium truncate">{{ item.peer?.nickname || $t('social.unknownUser') }}</div><time class="social-inbox-time" :datetime="item.updatedAt">{{ inboxTime(item.updatedAt) }}</time></div>
@@ -14,7 +22,6 @@
         </div>
       </button>
     </div>
-    <div v-if="!loading && !items.length" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('social.chatsEmpty') }}</div>
     <button v-if="hasMore" type="button" :disabled="loading" class="social-text-action text-sm text-[var(--c-primary)]" @click="loadMore">{{ $t('social.loadMore') }}</button>
   </div>
 </template>
@@ -39,6 +46,7 @@ function inboxTime(raw) {
 const router = useRouter()
 const items = ref([])
 const loading = ref(false)
+const error = ref(false)
 const nextCursor = ref(null)
 const hasMore = ref(false)
 const { onEvent, ensureConnected } = useSocialRealtime()
@@ -57,11 +65,12 @@ async function load(epoch = loadEpoch, append = false) {
     if (!alive || epoch !== loadEpoch) return
     const page = res?.data || {}
     const rows = Array.isArray(page.items) ? page.items : []
+    error.value = false
     items.value = append ? [...new Map([...items.value, ...rows].map(item => [item.id, item])).values()] : rows
     nextCursor.value = page.nextCursor || null
     hasMore.value = !!page.hasMore && !!nextCursor.value
   } catch (_) {
-    if (alive && epoch === loadEpoch) items.value = []
+    if (alive && epoch === loadEpoch) error.value = true
   } finally {
     if (alive && epoch === loadEpoch) loading.value = false
   }

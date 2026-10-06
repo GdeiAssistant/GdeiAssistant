@@ -1652,6 +1652,21 @@
     "wechatRequiredDescription": "體能測驗查詢需要在微信環境中使用。請使用微信掃碼，或在微信中搜尋並開啟本應用程式。"
   },
   "dating": {
+    "detail": {
+      "unknownGrade": "未知",
+      "noticeTitle": "提示",
+      "gradeLabel": "年級：",
+      "facultyLabel": "專業：",
+      "hometownLabel": "家鄉：",
+      "qqLabel": "QQ：",
+      "wechatLabel": "微信：",
+      "hiddenContact": "對方接受了撩一下後才可見喔",
+      "placeholder": "來說點什麼吧，不超過50字",
+      "submitAction": "撩一下",
+      "success": "發送成功，請耐心等待對方回覆",
+      "emptyMessage": "請輸入撩一下的留言內容",
+      "tooLongMessage": "撩一下輸入的內容太長了"
+    },
     "publish": {
       "title": "發布資料",
       "uploadAction": "上傳",

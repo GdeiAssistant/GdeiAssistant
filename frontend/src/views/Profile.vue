@@ -28,7 +28,9 @@
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=following` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
-          @click="!socialMeId && $event.preventDefault()"
+          :aria-disabled="!socialMeId"
+          :tabindex="socialMeId ? 0 : -1"
+          @click.capture="!socialMeId && $event.preventDefault()"
         >
           <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followingCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.following') }}</div>
@@ -36,7 +38,9 @@
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=followers` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
-          @click="!socialMeId && $event.preventDefault()"
+          :aria-disabled="!socialMeId"
+          :tabindex="socialMeId ? 0 : -1"
+          @click.capture="!socialMeId && $event.preventDefault()"
         >
           <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followerCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.followers') }}</div>
@@ -44,7 +48,9 @@
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=friends` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
-          @click="!socialMeId && $event.preventDefault()"
+          :aria-disabled="!socialMeId"
+          :tabindex="socialMeId ? 0 : -1"
+          @click.capture="!socialMeId && $event.preventDefault()"
         >
           <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.friendCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.friends') }}</div>

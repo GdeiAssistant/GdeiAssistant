@@ -117,6 +117,13 @@ const DeliveryHome = lazyView('delivery/Home')
 const DeliveryPublish = lazyView('delivery/Publish')
 const DeliveryDetail = lazyView('delivery/Detail')
 const DeliveryMine = lazyView('delivery/Mine')
+const SocialUserSearch = lazyView('social/UserSearch')
+const SocialUserHome = lazyView('social/UserHome')
+const SocialRelationshipList = lazyView('social/RelationshipList')
+const SocialBlockList = lazyView('social/BlockList')
+const SocialConversationList = lazyView('social/ConversationList')
+const SocialChatRoom = lazyView('social/ChatRoom')
+const SocialDmPrivacy = lazyView('social/DmPrivacy')
 
 const routes = [
   {
@@ -557,6 +564,48 @@ const routes = [
         name: 'InteractionList',
         component: InteractionList,
         meta: { titleKey: 'info.interactionTitle' }
+      },
+      {
+        path: 'social/search',
+        name: 'SocialUserSearch',
+        component: SocialUserSearch,
+        meta: { titleKey: 'social.searchTitle' }
+      },
+      {
+        path: 'social/users/:id',
+        name: 'SocialUserHome',
+        component: SocialUserHome,
+        meta: { titleKey: 'social.userHomeTitle' }
+      },
+      {
+        path: 'social/users/:id/relationships',
+        name: 'SocialRelationshipList',
+        component: SocialRelationshipList,
+        meta: { titleKey: 'social.relationshipsTitle' }
+      },
+      {
+        path: 'social/blocks',
+        name: 'SocialBlockList',
+        component: SocialBlockList,
+        meta: { titleKey: 'social.blocksTitle' }
+      },
+      {
+        path: 'social/chats',
+        name: 'SocialConversationList',
+        component: SocialConversationList,
+        meta: { titleKey: 'social.chatsTitle' }
+      },
+      {
+        path: 'social/chat/:id',
+        name: 'SocialChatRoom',
+        component: SocialChatRoom,
+        meta: { titleKey: 'social.chatTitle' }
+      },
+      {
+        path: 'social/privacy',
+        name: 'SocialDmPrivacy',
+        component: SocialDmPrivacy,
+        meta: { titleKey: 'social.dmPrivacyTitle' }
       }
     ]
   }

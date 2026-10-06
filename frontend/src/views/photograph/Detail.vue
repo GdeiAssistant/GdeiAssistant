@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
+import AuthAvatar from '../../components/social/AuthAvatar.vue'
 import { getPhotographCopy } from './photographContent'
 
 const route = useRoute()
@@ -42,6 +43,8 @@ const loadDetail = async () => {
         likeCount: data.likeCount ?? 0,
         commentCount: data.commentCount ?? 0,
         isLiked: data.liked === true,
+        authorId: data.authorId || null,
+        authorName: data.username || copy.value.anonymousAuthor,
         photographCommentList: data.photographCommentList || [],
         comments: (data.photographCommentList || []).map((c) => ({
           id: c.commentId,
@@ -158,9 +161,22 @@ onMounted(async () => {
       <div class="community-photograph-detail-card mx-4 mt-3 p-5 bg-[var(--c-surface)] rounded-xl shadow-sm animate-[slide-up_0.4s_ease_both]" style="animation-delay: 0.1s;">
         <h2 class="text-2xl font-semibold text-[var(--c-text-1)] m-0 mb-3">{{ work.title }}</h2>
         <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center">
+          <button
+            v-if="work.authorId"
+            type="button"
+            class="flex items-center bg-transparent border-0 p-0 cursor-pointer"
+            @click="router.push(`/social/users/${work.authorId}`)"
+          >
+            <AuthAvatar
+              :url="`/api/social/users/${work.authorId}/avatar`"
+              :alt="work.authorName"
+              img-class="w-8 h-8 rounded-full mr-2"
+            />
+            <span class="text-base text-[var(--c-primary)]">{{ work.authorName }}</span>
+          </button>
+          <div v-else class="flex items-center">
             <img class="w-8 h-8 rounded-full mr-2" src="/img/avatar/default.png" :alt="copy.authorAvatarAlt" />
-            <span class="text-base text-[var(--c-text-2)]">{{ copy.anonymousAuthor }}</span>
+            <span class="text-base text-[var(--c-text-2)]">{{ work.authorName || copy.anonymousAuthor }}</span>
           </div>
         </div>
         <p class="text-sm text-[var(--c-text-3)] mb-3">{{ work.time || work.createTime }}</p>

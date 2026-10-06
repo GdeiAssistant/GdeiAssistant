@@ -13,6 +13,8 @@ public interface SecretConverter {
     /** 基础字段映射；commentCount、likeCount、liked、voiceURL 由 Service 按需覆盖 */
     @Mapping(target = "liked", ignore = true)
     @Mapping(target = "voiceURL", ignore = true)
+    @Mapping(target = "username",
+            expression = "java(cn.gdeiassistant.common.tools.Utils.AnonymizeUtils.treeholeAnonymousLabel())")
     SecretVO toVO(SecretContentEntity entity);
 
     List<SecretVO> toVOList(List<SecretContentEntity> entities);

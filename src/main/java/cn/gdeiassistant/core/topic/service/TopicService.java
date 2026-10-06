@@ -3,12 +3,16 @@ package cn.gdeiassistant.core.topic.service;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
+import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
+import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
 import cn.gdeiassistant.core.topic.converter.TopicConverter;
 import cn.gdeiassistant.core.topic.mapper.TopicMapper;
 import cn.gdeiassistant.core.topic.pojo.dto.TopicPublishDTO;
 import cn.gdeiassistant.core.topic.pojo.entity.TopicEntity;
 import cn.gdeiassistant.core.topic.pojo.entity.TopicLikeEntity;
 import cn.gdeiassistant.core.topic.pojo.vo.TopicVO;
+import cn.gdeiassistant.core.user.mapper.UserMapper;
+import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
 import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
@@ -44,6 +48,12 @@ public class TopicService {
     @Autowired
     private InteractionNotificationService interactionNotificationService;
 
+    @Autowired(required = false)
+    private UserMapper userMapper;
+
+    @Autowired(required = false)
+    private ProfileMapper profileMapper;
+
     public List<TopicVO> queryTopic(String sessionId, int start, int size) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<TopicEntity> list = topicMapper.selectTopicPage(start, size, user.getUsername());
@@ -53,8 +63,7 @@ public class TopicService {
             if (e.getCount() != null && e.getCount() >= 1) {
                 e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
             }
-            sanitizeEntity(e);
-            voList.add(topicConverter.toVO(e));
+            voList.add(toPublicTopicVO(e));
         }
         return voList;
     }
@@ -68,8 +77,7 @@ public class TopicService {
             if (e.getCount() != null && e.getCount() >= 1) {
                 e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
             }
-            sanitizeEntity(e);
-            voList.add(topicConverter.toVO(e));
+            voList.add(toPublicTopicVO(e));
         }
         return voList;
     }
@@ -83,8 +91,7 @@ public class TopicService {
             if (e.getCount() != null && e.getCount() >= 1) {
                 e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
             }
-            sanitizeEntity(e);
-            voList.add(topicConverter.toVO(e));
+            voList.add(toPublicTopicVO(e));
         }
         return voList;
     }
@@ -100,8 +107,7 @@ public class TopicService {
             }
             entity.setImageUrls(urls);
         }
-        sanitizeEntity(entity);
-        return topicConverter.toVO(entity);
+        return toPublicTopicVO(entity);
     }
 
     @Transactional("appTransactionManager")
@@ -111,18 +117,21 @@ public class TopicService {
         if (entity == null) throw new DataNotExistException("该话题信息不存在");
         TopicLikeEntity like = topicMapper.selectTopicLike(id, user.getUsername());
         if (like == null) {
-            topicMapper.insertTopicLike(id, user.getUsername());
-            interactionNotificationService.createInteractionNotification(
-                    "topic",
-                    "like",
-                    entity.getUsername(),
-                    user.getUsername(),
-                    String.valueOf(id),
-                    null,
-                    "like",
-                    "话题收到新点赞",
-                    user.getUsername() + " 点赞了你的话题"
-            );
+            int inserted = topicMapper.insertTopicLike(id, user.getUsername());
+            if (inserted > 0) {
+                String displayName = resolveDisplayName(user.getUsername());
+                interactionNotificationService.createInteractionNotification(
+                        "topic",
+                        "like",
+                        entity.getUsername(),
+                        user.getUsername(),
+                        String.valueOf(id),
+                        null,
+                        "like",
+                        "话题收到新点赞",
+                        displayName + " 点赞了你的话题"
+                );
+            }
         }
     }
 
@@ -134,8 +143,7 @@ public class TopicService {
         entity.setContent(dto.getContent());
         entity.setCount(dto.getCount());
         topicMapper.insertTopic(entity);
-        sanitizeEntity(entity);
-        return topicConverter.toVO(entity);
+        return toPublicTopicVO(entity);
     }
 
     public String downloadTopicItemPicture(int id, int index) {
@@ -167,8 +175,41 @@ public class TopicService {
         topicMapper.deleteTopic(id);
     }
 
-    private void sanitizeEntity(TopicEntity e) {
-        e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername()));
+    private TopicVO toPublicTopicVO(TopicEntity e) {
+        TopicVO vo = topicConverter.toVO(e);
+        String campusUsername = e.getUsername();
+        if (campusUsername != null && campusUsername.startsWith("del_")) {
+            vo.setUsername(AnonymizeUtils.sanitizeUsername(campusUsername));
+            vo.setAuthorId(null);
+            return vo;
+        }
+        String authorId = null;
+        String displayName = campusUsername;
+        if (userMapper != null && campusUsername != null) {
+            UserEntity author = userMapper.selectUser(campusUsername);
+            if (author != null && author.isActive()) {
+                authorId = author.getPublicId();
+            }
+        }
+        if (profileMapper != null && campusUsername != null) {
+            ProfileEntity profile = profileMapper.selectUserProfile(campusUsername);
+            if (profile != null && profile.getNickname() != null && !profile.getNickname().isBlank()) {
+                displayName = profile.getNickname();
+            }
+        }
+        vo.setUsername(displayName);
+        vo.setAuthorId(authorId);
+        return vo;
+    }
+
+    private String resolveDisplayName(String campusUsername) {
+        if (profileMapper != null && campusUsername != null) {
+            ProfileEntity profile = profileMapper.selectUserProfile(campusUsername);
+            if (profile != null && profile.getNickname() != null && !profile.getNickname().isBlank()) {
+                return profile.getNickname();
+            }
+        }
+        return "用户";
     }
 
     public void deleteTopicImages(int id, int count) {

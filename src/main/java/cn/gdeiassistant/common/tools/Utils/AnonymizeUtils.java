@@ -7,12 +7,18 @@ public class AnonymizeUtils {
 
     private static final String DELETED_PREFIX = "del_";
     private static final String ANONYMOUS_LABEL = "已注销用户";
+    private static final String TREE_ANONYMOUS_LABEL = "匿名用户";
 
     public static String sanitizeUsername(String username) {
         if (username != null && username.startsWith(DELETED_PREFIX)) {
             return ANONYMOUS_LABEL;
         }
         return username;
+    }
+
+    /** 树洞正文/评论/互动通知：永不返回可关联真实用户的标识 */
+    public static String treeholeAnonymousLabel() {
+        return TREE_ANONYMOUS_LABEL;
     }
 
     public static String maskUsername(String username) {

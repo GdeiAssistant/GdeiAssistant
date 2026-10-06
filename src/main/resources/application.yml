@@ -169,6 +169,7 @@ r2:
   accessKeyId: ${R2_ACCESS_KEY_ID:}
   secretAccessKey: ${R2_SECRET_ACCESS_KEY:}
   bucketName: ${R2_BUCKET_NAME:gdeiassistant-userdata}
+  chatBucketName: ${R2_CHAT_BUCKET_NAME:}
   customDomain: ${R2_CUSTOM_DOMAIN:}
 
 theme:

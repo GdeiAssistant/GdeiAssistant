@@ -18,7 +18,8 @@
         "publishTime": null,
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/ershou/101_1.jpg"
-        ]
+        ],
+        "authorId": null
       }
     ],
     "sold": [
@@ -36,7 +37,8 @@
         "publishTime": null,
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/ershou/103_1.jpg"
-        ]
+        ],
+        "authorId": null
       }
     ],
     "off": [
@@ -54,7 +56,8 @@
         "publishTime": null,
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/ershou/102_1.jpg"
-        ]
+        ],
+        "authorId": null
       }
     ]
   }

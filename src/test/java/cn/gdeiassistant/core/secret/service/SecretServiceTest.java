@@ -73,6 +73,7 @@ class SecretServiceTest {
         User user = new User("testuser");
         when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
         when(secretMapper.selectSecretLike(1, "testuser")).thenReturn(0);
+        when(secretMapper.insertSecretLike(1, "testuser")).thenReturn(1);
         SecretContentEntity content = new SecretContentEntity();
         content.setId(1);
         content.setUsername("poster");
@@ -85,6 +86,15 @@ class SecretServiceTest {
                 eq("secret"), eq("like"), eq("poster"), eq("testuser"),
                 eq("1"), isNull(), eq("like"), anyString(), anyString()
         );
+    }
+
+    @Test
+    void duplicateLikeInsertDoesNotNotifyAgain() throws Exception {
+        when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(new User("testuser"));
+        when(secretMapper.selectSecretLike(1, "testuser")).thenReturn(0);
+        when(secretMapper.insertSecretLike(1, "testuser")).thenReturn(0);
+        secretService.changeUserLikeState(true, 1, "session1");
+        verifyNoInteractions(interactionNotificationService);
     }
 
     @Test

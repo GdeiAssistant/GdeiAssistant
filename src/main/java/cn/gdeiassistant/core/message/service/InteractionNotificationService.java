@@ -124,13 +124,44 @@ public class InteractionNotificationService {
         vo.setModule(normalizeModule(entity.getModule()));
         vo.setType(entity.getType());
         vo.setTitle(entity.getTitle());
-        vo.setContent(anonymizeContent(entity.getContent(), entity.getActorUsername()));
+        if ("secret".equalsIgnoreCase(vo.getModule())) {
+            // 树洞互动通知不返回可关联真实用户的正文身份
+            vo.setContent(anonymizeSecretNotificationContent(entity.getContent(), entity.getActorUsername()));
+        } else if ("express".equalsIgnoreCase(vo.getModule())) {
+            vo.setContent(anonymizeExpressNotificationContent(entity.getContent(), entity.getActorUsername()));
+        } else {
+            vo.setContent(anonymizeContent(entity.getContent(), entity.getActorUsername()));
+        }
         vo.setCreatedAt(formatDate(entity.getCreateTime()));
         vo.setIsRead(entity.getIsRead() != null && entity.getIsRead() != 0);
         vo.setTargetType(entity.getTargetType());
         vo.setTargetId(entity.getTargetId());
         vo.setTargetSubId(entity.getTargetSubId());
         return vo;
+    }
+
+    private String anonymizeSecretNotificationContent(String content, String actorUsername) {
+        if (content == null || content.isBlank()) {
+            return AnonymizeUtils.treeholeAnonymousLabel() + " 与你的树洞产生了互动";
+        }
+        // 先按已记录的身份隐藏，避免账号字符或长度变化绕过匿名处理。
+        String sanitized = StringUtils.isNotBlank(actorUsername)
+                ? content.replace(actorUsername, AnonymizeUtils.treeholeAnonymousLabel()) : content;
+        return sanitized.replaceAll("\\b[a-zA-Z0-9_]{3,24}\\b(?=\\s*[点赞评论])", AnonymizeUtils.treeholeAnonymousLabel());
+    }
+
+    private String anonymizeExpressNotificationContent(String content, String actorUsername) {
+        if (content == null || content.isBlank()) {
+            return "有人与你的表白产生了互动";
+        }
+        String sanitized = content;
+        if (StringUtils.isNotBlank(actorUsername) && !actorUsername.startsWith("del_")) {
+            sanitized = sanitized.replace(actorUsername, "有人");
+        }
+        if (actorUsername != null && actorUsername.startsWith("del_")) {
+            sanitized = sanitized.replace(actorUsername, AnonymizeUtils.sanitizeUsername(actorUsername));
+        }
+        return sanitized;
     }
 
     private String formatDate(java.util.Date value) {

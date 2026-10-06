@@ -14,6 +14,7 @@ public class MarketplaceItemEntity implements Serializable, Entity {
 
     private Integer id;
     private String username;
+    private String authorId;
     private String name;
     private String description;
     private Float price;
@@ -29,6 +30,8 @@ public class MarketplaceItemEntity implements Serializable, Entity {
     public void setId(Integer id) { this.id = id; }
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+    public String getAuthorId() { return authorId; }
+    public void setAuthorId(String authorId) { this.authorId = authorId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }

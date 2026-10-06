@@ -19,7 +19,8 @@
         "publishTime": null,
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/lostandfound/201_1.jpg"
-        ]
+        ],
+        "authorId": null
       }
     ],
     "found": [
@@ -38,7 +39,8 @@
         "publishTime": null,
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/lostandfound/202_1.jpg"
-        ]
+        ],
+        "authorId": null
       }
     ],
     "didfound": [
@@ -57,7 +59,8 @@
         "publishTime": null,
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/lostandfound/203_1.jpg"
-        ]
+        ],
+        "authorId": null
       }
     ]
   }

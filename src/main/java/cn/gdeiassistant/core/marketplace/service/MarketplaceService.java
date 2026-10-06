@@ -12,6 +12,7 @@ import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.pojo.Entity.User;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,18 +43,25 @@ public class MarketplaceService {
     @Autowired
     private R2StorageService r2StorageService;
 
+    @Autowired
+    private PublicAuthorResolver publicAuthorResolver;
+
     public MarketplaceItemVO queryDetailById(int id) throws Exception {
         MarketplaceItemVO vo = marketplaceMapper.selectInfoByID(id);
         if (vo == null) {
             throw new DataNotExistException("二手交易商品不存在");
         }
-        String username = vo.getSecondhandItem().getUsername();
+        String campusUsername = vo.getSecondhandItem().getUsername();
+        PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(campusUsername);
         int itemId = vo.getSecondhandItem().getId();
         List<String> pictureURL = getItemPictureURL(itemId);
-        vo.getSecondhandItem().setUsername(username);
+        vo.getSecondhandItem().setAuthorId(author.authorId());
+        vo.getSecondhandItem().setUsername(author.displayName());
         vo.getSecondhandItem().setPictureURL(pictureURL);
-        vo.getProfile().setUsername(username);
-        vo.getProfile().setAvatarURL(userProfileService.getOtherUserAvatar(username));
+        vo.getProfile().setUsername(author.displayName());
+        vo.getProfile().setAvatarURL(author.authorId() != null
+                ? "/api/social/users/" + author.authorId() + "/avatar"
+                : null);
         return vo;
     }
 
@@ -90,6 +98,7 @@ public class MarketplaceService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
+        list.forEach(this::applyPublicAuthor);
         return list;
     }
 
@@ -98,6 +107,7 @@ public class MarketplaceService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
+        list.forEach(this::applyPublicAuthor);
         return list;
     }
 
@@ -106,7 +116,14 @@ public class MarketplaceService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
+        list.forEach(this::applyPublicAuthor);
         return list;
+    }
+
+    private void applyPublicAuthor(MarketplaceItemEntity e) {
+        PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(e.getUsername());
+        e.setAuthorId(author.authorId());
+        e.setUsername(author.displayName());
     }
 
     /** 发布：DTO -> Entity -> 持久化，返回带 id 的 Entity 供上传图片使用 */

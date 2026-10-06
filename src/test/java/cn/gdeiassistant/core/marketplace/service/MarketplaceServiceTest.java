@@ -40,6 +40,9 @@ class MarketplaceServiceTest {
     @Mock
     private UserProfileService userProfileService;
 
+    @Mock
+    private cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver publicAuthorResolver;
+
     @InjectMocks
     private MarketplaceService marketplaceService;
 
@@ -49,6 +52,7 @@ class MarketplaceServiceTest {
         item.setId(1);
         item.setName("Textbook");
         when(marketplaceMapper.selectAvailableItems(0, 10)).thenReturn(List.of(item));
+        when(publicAuthorResolver.resolve(null)).thenReturn(new cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver.AuthorPublic(null, "用户"));
 
         List<MarketplaceItemEntity> result = marketplaceService.queryItems(0);
 
@@ -87,14 +91,16 @@ class MarketplaceServiceTest {
                 eq("ershou/1_1.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("https://pic1.jpg");
         when(r2StorageService.generatePresignedUrl(eq("gdeiassistant-userdata"),
                 eq("ershou/1_2.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("");
-        when(userProfileService.getOtherUserAvatar("testuser")).thenReturn("https://avatar.jpg");
+        String publicId = "11111111-1111-4111-8111-111111111111";
+        when(publicAuthorResolver.resolve("testuser")).thenReturn(new cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver.AuthorPublic(publicId, "同学"));
 
         MarketplaceItemVO result = marketplaceService.queryDetailById(1);
 
-        assertEquals("testuser", result.getSecondhandItem().getUsername());
+        assertEquals("同学", result.getSecondhandItem().getUsername());
+        assertEquals(publicId, result.getSecondhandItem().getAuthorId());
         assertEquals(1, result.getSecondhandItem().getPictureURL().size());
         assertEquals("https://pic1.jpg", result.getSecondhandItem().getPictureURL().get(0));
-        assertEquals("https://avatar.jpg", result.getProfile().getAvatarURL());
+        assertEquals("/api/social/users/" + publicId + "/avatar", result.getProfile().getAvatarURL());
     }
 
     @Test

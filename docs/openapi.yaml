@@ -162,6 +162,91 @@ paths:
       tags: [campus-service]
       summary: 功能模块开关状态
 
+  # --- Social Messaging（契约见 docs/SOCIAL_MESSAGING_DESIGN.zh-CN.md；错误体含 success/code/message/errorCode）---
+  /api/social/me:
+    get:
+      tags: [community]
+      summary: 当前用户社交资料
+  /api/social/users:
+    get:
+      tags: [community]
+      summary: 搜索用户（SQL 过滤 inactive/双向 block 后再 limit）
+  /api/social/users/{id}:
+    get:
+      tags: [community]
+      summary: 公开主页（拉黑双方按 USER_NOT_FOUND）
+  /api/social/users/{id}/avatar:
+    get:
+      tags: [community]
+      summary: 鉴权代理头像（与主页同访问规则；响应不泄漏校园路径）
+  /api/social/users/{id}/relationships:
+    get:
+      tags: [community]
+      summary: following|followers|friends 列表
+  /api/social/users/{id}/follow:
+    put:
+      tags: [community]
+      summary: 关注
+    delete:
+      tags: [community]
+      summary: 取消关注
+  /api/social/users/{id}/block:
+    put:
+      tags: [community]
+      summary: 拉黑
+    delete:
+      tags: [community]
+      summary: 取消拉黑
+  /api/social/blocks:
+    get:
+      tags: [community]
+      summary: 自己的黑名单
+  /api/social/privacy:
+    get:
+      tags: [community]
+      summary: 读取 dmPolicy
+    put:
+      tags: [community]
+      summary: 更新 dmPolicy（ALL|FOLLOWING|MUTUAL|NONE）
+  /api/social/unread:
+    get:
+      tags: [community]
+      summary: 私信未读总数
+  /api/social/conversations:
+    get:
+      tags: [community]
+      summary: 会话列表（已关闭 peer 仍可读，显示已注销且不可发送；含 imageMessagingEnabled）
+    post:
+      tags: [community]
+      summary: 创建或获取一对一会话
+  /api/social/conversations/{id}:
+    get:
+      tags: [community]
+      summary: 会话详情（非成员 404 CONVERSATION_NOT_FOUND；含 imageMessagingEnabled）
+  /api/social/conversations/{id}/messages:
+    get:
+      tags: [community]
+      summary: 消息分页（beforeSeq|afterSeq 互斥；type 缺省按 TEXT；IMAGE 含 image 元数据）
+    post:
+      tags: [community]
+      summary: 发送文字消息（clientMessageId 幂等；type=TEXT；事务 afterCommit 推送）
+  /api/social/conversations/{id}/messages/image:
+    post:
+      tags: [community]
+      summary: 发送图片消息（multipart clientMessageId+image；规范化 JPEG/PNG；缺 chat bucket 时 SOCIAL_IMAGE_UNAVAILABLE）
+  /api/social/conversations/{id}/messages/{messageId}/image:
+    get:
+      tags: [community]
+      summary: 鉴权代理读图（成员+消息属会话；历史可读；Cache-Control private no-store；不返回 key/bucket）
+  /api/social/conversations/{id}/read:
+    put:
+      tags: [community]
+      summary: 回写已读游标（并发后取实际最新值；多设备同步）
+  /api/social/realtime:
+    get:
+      tags: [community]
+      summary: WebSocket 实时通道（握手可无 Bearer；首帧 auth；过期/撤销周期核验）
+
 components:
   securitySchemes:
     bearerAuth:

@@ -293,7 +293,8 @@ CREATE TABLE `express_like` (
   `express_id` int NOT NULL COMMENT '表白信息ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '点赞者用户名',
   `create_time` datetime NOT NULL COMMENT '点赞记录创建时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_express_like_express_user` (`express_id`,`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- ----------------------------
@@ -413,7 +414,8 @@ CREATE TABLE `photograph_like` (
   `photo_id` int NOT NULL COMMENT '照片信息ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '点赞者用户名',
   `create_time` datetime NOT NULL COMMENT '点赞时间',
-  PRIMARY KEY (`like_id`)
+  PRIMARY KEY (`like_id`),
+  UNIQUE KEY `uk_photograph_like_photo_user` (`photo_id`,`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- ----------------------------
@@ -438,6 +440,7 @@ CREATE TABLE `privacy` (
   `is_cache_allow` tinyint(1) DEFAULT NULL COMMENT '使用教务缓存',
   `is_quick_auth_allow` tinyint(1) DEFAULT NULL COMMENT '允许快速认证复用校园凭证',
   `is_robots_index_allow` tinyint(1) DEFAULT NULL COMMENT '允许搜索引擎收录',
+  `dm_policy` varchar(16) NOT NULL DEFAULT 'MUTUAL' COMMENT '私信接收策略 ALL/FOLLOWING/MUTUAL/NONE',
   PRIMARY KEY (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
@@ -445,8 +448,8 @@ CREATE TABLE `privacy` (
 -- Records of privacy
 -- ----------------------------
 BEGIN;
-INSERT INTO `privacy` (`username`, `is_location_open`, `is_hometown_open`, `is_introduction_open`, `is_faculty_open`, `is_major_open`, `is_enrollment_open`, `is_age_open`, `is_cache_allow`, `is_quick_auth_allow`, `is_robots_index_allow`) VALUES
-('gdeiassistant', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `privacy` (`username`, `is_location_open`, `is_hometown_open`, `is_introduction_open`, `is_faculty_open`, `is_major_open`, `is_enrollment_open`, `is_age_open`, `is_cache_allow`, `is_quick_auth_allow`, `is_robots_index_allow`, `dm_policy`) VALUES
+('gdeiassistant', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'MUTUAL');
 COMMIT;
 
 -- ----------------------------
@@ -561,7 +564,8 @@ CREATE TABLE `secret_like` (
   `content_id` int unsigned NOT NULL COMMENT '校园树洞信息编号ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '点赞时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_secret_like_content_user` (`content_id`,`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- ----------------------------
@@ -599,7 +603,8 @@ CREATE TABLE `topic_like` (
   `topic_id` int NOT NULL COMMENT '话题信息ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '点赞者用户名',
   `create_time` datetime NOT NULL COMMENT '点赞时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_topic_like_topic_user` (`topic_id`,`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- ----------------------------
@@ -609,24 +614,125 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
--- Table structure for user
+-- Table structure for app_user（应用账号权威模型）
 -- ----------------------------
+DROP TABLE IF EXISTS `campus_credential`;
+DROP TABLE IF EXISTS `chat_message`;
+DROP TABLE IF EXISTS `conversation_member`;
+DROP TABLE IF EXISTS `conversation`;
+DROP TABLE IF EXISTS `user_block`;
+DROP TABLE IF EXISTS `user_follow`;
+DROP TABLE IF EXISTS `app_user`;
 DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
-  `password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '密码（AES加密存储）',
-  PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+CREATE TABLE `app_user` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '应用账号内部主键',
+  `public_id` char(36) NOT NULL COMMENT '公开 UUID',
+  `status` varchar(16) NOT NULL DEFAULT 'ACTIVE' COMMENT 'ACTIVE/CLOSED',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_app_user_public_id` (`public_id`),
+  KEY `idx_app_user_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='应用账号';
 
--- ----------------------------
--- Records of user（测试账号：gdeiassistant 密码同用户名）
--- 注意：启用 AES 加密后，此处的明文密码会在首次登录时由 TypeHandler 自动加密写回数据库。
--- 初始化时仍用明文插入，应用启动后第一次 updateUser 会将其替换为密文。
--- ----------------------------
+CREATE TABLE `campus_credential` (
+  `user_id` bigint NOT NULL COMMENT '应用账号ID',
+  `campus_username` varchar(24) NOT NULL COMMENT '校园网络账号',
+  `password` varchar(128) DEFAULT NULL COMMENT '密码（AES加密存储）',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `uk_campus_credential_username` (`campus_username`),
+  CONSTRAINT `fk_campus_credential_user` FOREIGN KEY (`user_id`) REFERENCES `app_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='校园凭证';
+
 BEGIN;
-INSERT INTO `user` (`username`, `password`) VALUES ('gdeiassistant', 'gdeiassistant');
+INSERT INTO `app_user` (`id`, `public_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, '11111111-1111-4111-8111-111111111111', 'ACTIVE', NOW(), NOW()),
+(2, '22222222-2222-4222-8222-222222222222', 'ACTIVE', NOW(), NOW());
+INSERT INTO `campus_credential` (`user_id`, `campus_username`, `password`) VALUES
+(1, 'gdeiassistant', NULL),
+(2, 'demo_peer', NULL);
+-- 密码存 NULL：AES TypeHandler 不能可靠读取明文演示值。校园登录仍走现有真实认证入口，不假冒 demo 成功。
 COMMIT;
 
+CREATE TABLE `user_follow` (
+  `follower_id` bigint NOT NULL,
+  `followee_id` bigint NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`follower_id`,`followee_id`),
+  KEY `idx_user_follow_followee` (`followee_id`,`created_at`,`follower_id`),
+  KEY `idx_user_follow_follower` (`follower_id`,`created_at`,`followee_id`),
+  CONSTRAINT `fk_user_follow_follower` FOREIGN KEY (`follower_id`) REFERENCES `app_user` (`id`),
+  CONSTRAINT `fk_user_follow_followee` FOREIGN KEY (`followee_id`) REFERENCES `app_user` (`id`),
+  CONSTRAINT `chk_user_follow_not_self` CHECK (`follower_id` <> `followee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE `user_block` (
+  `blocker_id` bigint NOT NULL,
+  `blocked_id` bigint NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`blocker_id`,`blocked_id`),
+  KEY `idx_user_block_blocked` (`blocked_id`,`created_at`,`blocker_id`),
+  CONSTRAINT `fk_user_block_blocker` FOREIGN KEY (`blocker_id`) REFERENCES `app_user` (`id`),
+  CONSTRAINT `fk_user_block_blocked` FOREIGN KEY (`blocked_id`) REFERENCES `app_user` (`id`),
+  CONSTRAINT `chk_user_block_not_self` CHECK (`blocker_id` <> `blocked_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE `conversation` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_low_id` bigint NOT NULL,
+  `user_high_id` bigint NOT NULL,
+  `last_seq` bigint NOT NULL DEFAULT 0,
+  `last_message_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_conversation_pair` (`user_low_id`,`user_high_id`),
+  KEY `idx_conversation_updated` (`last_message_at`,`id`),
+  CONSTRAINT `fk_conversation_low` FOREIGN KEY (`user_low_id`) REFERENCES `app_user` (`id`),
+  CONSTRAINT `fk_conversation_high` FOREIGN KEY (`user_high_id`) REFERENCES `app_user` (`id`),
+  CONSTRAINT `chk_conversation_ordered` CHECK (`user_low_id` < `user_high_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE `conversation_member` (
+  `conversation_id` bigint NOT NULL,
+  `user_id` bigint NOT NULL,
+  `last_read_seq` bigint NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`conversation_id`,`user_id`),
+  KEY `idx_conversation_member_user` (`user_id`,`conversation_id`),
+  CONSTRAINT `fk_conversation_member_conv` FOREIGN KEY (`conversation_id`) REFERENCES `conversation` (`id`),
+  CONSTRAINT `fk_conversation_member_user` FOREIGN KEY (`user_id`) REFERENCES `app_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE `chat_message` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `conversation_id` bigint NOT NULL,
+  `seq` bigint NOT NULL,
+  `sender_id` bigint NOT NULL,
+  `client_message_id` char(36) NOT NULL,
+  `type` varchar(16) NOT NULL DEFAULT 'TEXT',
+  `content` varchar(4000) NOT NULL,
+  `image_key` varchar(255) DEFAULT NULL,
+  `image_content_type` varchar(64) DEFAULT NULL,
+  `image_width` int DEFAULT NULL,
+  `image_height` int DEFAULT NULL,
+  `image_size` int DEFAULT NULL,
+  `image_sha256` char(64) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_chat_message_seq` (`conversation_id`,`seq`),
+  UNIQUE KEY `uk_chat_message_client` (`conversation_id`,`sender_id`,`client_message_id`),
+  KEY `idx_chat_message_created` (`conversation_id`,`created_at`,`id`),
+  CONSTRAINT `fk_chat_message_conv` FOREIGN KEY (`conversation_id`) REFERENCES `conversation` (`id`),
+  CONSTRAINT `fk_chat_message_sender` FOREIGN KEY (`sender_id`) REFERENCES `app_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+BEGIN;
+INSERT INTO `profile` (`username`, `nickname`) VALUES ('demo_peer', '演示同学')
+ON DUPLICATE KEY UPDATE `nickname`=VALUES(`nickname`);
+INSERT INTO `privacy` (`username`, `is_location_open`, `is_hometown_open`, `is_introduction_open`, `is_faculty_open`, `is_major_open`, `is_enrollment_open`, `is_age_open`, `is_cache_allow`, `is_quick_auth_allow`, `is_robots_index_allow`, `dm_policy`) VALUES
+('demo_peer', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 'MUTUAL')
+ON DUPLICATE KEY UPDATE `dm_policy`=VALUES(`dm_policy`);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for feedback

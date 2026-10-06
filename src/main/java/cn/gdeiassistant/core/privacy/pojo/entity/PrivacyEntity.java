@@ -20,6 +20,7 @@ public class PrivacyEntity implements Serializable, Entity {
     private Boolean cacheAllow;
     private Boolean quickAuthAllow;
     private Boolean robotsIndexAllow;
+    private String dmPolicy;
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
@@ -43,4 +44,6 @@ public class PrivacyEntity implements Serializable, Entity {
     public void setQuickAuthAllow(Boolean quickAuthAllow) { this.quickAuthAllow = quickAuthAllow; }
     public Boolean getRobotsIndexAllow() { return robotsIndexAllow; }
     public void setRobotsIndexAllow(Boolean robotsIndexAllow) { this.robotsIndexAllow = robotsIndexAllow; }
+    public String getDmPolicy() { return dmPolicy; }
+    public void setDmPolicy(String dmPolicy) { this.dmPolicy = dmPolicy; }
 }

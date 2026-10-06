@@ -453,18 +453,23 @@ public class UserDataService {
     @Transactional("appTransactionManager")
     public void syncUserData(User user, boolean persistCredential) throws Exception {
         cn.gdeiassistant.core.user.pojo.entity.UserEntity queryUser = userMapper.selectUser(user.getUsername());
-        cn.gdeiassistant.core.user.pojo.entity.UserEntity entity = new cn.gdeiassistant.core.user.pojo.entity.UserEntity();
-        entity.setUsername(user.getUsername());
-        entity.setPassword(user.getPassword());
-        if (persistCredential) {
-            if (queryUser != null) {
-                userMapper.updateUser(entity);
-            } else {
-                userMapper.insertUser(entity);
-            }
-        } else if (queryUser == null) {
-            entity.setPassword(null);
-            userMapper.insertUser(entity);
+        if (queryUser != null && !queryUser.isActive()) {
+            // 已注销账号的校园用户名已被改名，正常不会命中；若命中则拒绝复用
+            throw new IllegalStateException("账号已注销");
+        }
+        if (queryUser == null) {
+            cn.gdeiassistant.core.user.pojo.entity.UserEntity entity = new cn.gdeiassistant.core.user.pojo.entity.UserEntity();
+            entity.setPublicId(java.util.UUID.randomUUID().toString());
+            entity.setStatus("ACTIVE");
+            entity.setUsername(user.getUsername());
+            entity.setPassword(persistCredential ? user.getPassword() : null);
+            userMapper.insertAppUser(entity);
+            userMapper.insertCampusCredential(entity);
+        } else if (persistCredential) {
+            cn.gdeiassistant.core.user.pojo.entity.UserEntity entity = new cn.gdeiassistant.core.user.pojo.entity.UserEntity();
+            entity.setUsername(user.getUsername());
+            entity.setPassword(user.getPassword());
+            userMapper.updateUser(entity);
         }
         // 以下保持原逻辑：个人资料初始化
         ProfileEntity profile = profileMapper.selectUserProfile(user.getUsername());

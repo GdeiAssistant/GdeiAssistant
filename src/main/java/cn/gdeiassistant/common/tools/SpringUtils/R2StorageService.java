@@ -116,6 +116,79 @@ public class R2StorageService {
         }
     }
 
+    /**
+     * 私信图片专用：上传到指定 bucket，显式 Content-Type；失败抛出且不吞异常。
+     */
+    public void uploadBytesStrict(String bucket, String key, byte[] bytes, String contentType) {
+        if (!isEnabled()) {
+            throw new FeatureNotEnabledException("对象存储未开启，无法上传图片");
+        }
+        if (bytes == null) {
+            throw new IllegalArgumentException("bytes 不能为空");
+        }
+        if (key == null || key.isBlank()) {
+            throw new IllegalArgumentException("key 不能为空");
+        }
+        String resolvedBucket = resolveBucket(bucket);
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(resolvedBucket)
+                .key(key)
+                .contentType(contentType == null || contentType.isBlank() ? "application/octet-stream" : contentType)
+                .contentLength((long) bytes.length)
+                .build();
+        s3Client.putObject(request, RequestBody.fromBytes(bytes));
+    }
+
+    /**
+     * 私信图片专用：严格删除指定对象；失败向上抛出，不伪装成功。
+     */
+    public void deleteObjectStrict(String bucket, String key) {
+        if (!isEnabled()) {
+            throw new FeatureNotEnabledException("对象存储未开启，无法删除图片");
+        }
+        if (key == null || key.isBlank()) {
+            throw new IllegalArgumentException("key 不能为空");
+        }
+        s3Client.deleteObject(DeleteObjectRequest.builder()
+                .bucket(resolveBucket(bucket))
+                .key(key)
+                .build());
+    }
+
+    /**
+     * 私信图片专用：有界下载，超过 maxBytes 拒绝；不存在返回 null。
+     */
+    public byte[] downloadBytesBounded(String bucket, String key, int maxBytes) throws IOException {
+        if (!isEnabled()) {
+            return null;
+        }
+        if (key == null || key.isBlank()) {
+            return null;
+        }
+        if (maxBytes <= 0) {
+            throw new IllegalArgumentException("maxBytes 必须为正");
+        }
+        try (InputStream in = s3Client.getObject(GetObjectRequest.builder()
+                .bucket(resolveBucket(bucket))
+                .key(key)
+                .build())) {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] chunk = new byte[8192];
+            int total = 0;
+            int n;
+            while ((n = in.read(chunk)) != -1) {
+                total += n;
+                if (total > maxBytes) {
+                    throw new IOException("object exceeds maxBytes");
+                }
+                buffer.write(chunk, 0, n);
+            }
+            return buffer.toByteArray();
+        } catch (NoSuchKeyException e) {
+            return null;
+        }
+    }
+
     private static final String TEMP_UPLOAD_PREFIX = "upload/";
 
     /**

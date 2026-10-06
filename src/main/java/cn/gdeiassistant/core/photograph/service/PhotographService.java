@@ -14,6 +14,7 @@ import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
 import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class PhotographService {
     @Autowired
     private InteractionNotificationService interactionNotificationService;
 
+    @Autowired
+    private PublicAuthorResolver publicAuthorResolver;
+
     public int queryPhotoStatisticalData() {
         Integer n = photographMapper.selectPhotographImageCount();
         return n != null ? n : 0;
@@ -71,8 +75,7 @@ public class PhotographService {
         List<PhotographVO> result = new ArrayList<>();
         for (PhotographEntity e : list) {
             if (e.getId() == null) continue;
-            e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername()));
-            PhotographVO vo = photographConverter.toVO(e);
+            PhotographVO vo = toPublicPhotographVO(e);
             vo.setFirstImageUrl(getPhotographItemPictureURL(e.getId(), 1));
             result.add(vo);
         }
@@ -86,8 +89,7 @@ public class PhotographService {
         List<PhotographVO> result = new ArrayList<>();
         for (PhotographEntity e : list) {
             if (e.getId() == null) continue;
-            e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername()));
-            PhotographVO vo = photographConverter.toVO(e);
+            PhotographVO vo = toPublicPhotographVO(e);
             if (e.getCount() != null && e.getCount() >= 1) {
                 vo.setFirstImageUrl(getPhotographItemPictureURL(e.getId(), 1));
             }
@@ -103,8 +105,7 @@ public class PhotographService {
             throw new DataNotExistException("照片信息不存在");
         }
         PhotographEntity e = list.get(0);
-        e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername()));
-        PhotographVO vo = photographConverter.toVO(e);
+        PhotographVO vo = toPublicPhotographVO(e);
         List<String> urls = new ArrayList<>();
         int count = e.getCount() != null ? e.getCount() : 0;
         for (int i = 1; i <= count; i++) {
@@ -115,6 +116,15 @@ public class PhotographService {
             e.getPhotographCommentList().forEach(c -> c.setUsername(AnonymizeUtils.sanitizeUsername(c.getUsername())));
             vo.setPhotographCommentList(photographCommentConverter.toVOList(e.getPhotographCommentList()));
         }
+        return vo;
+    }
+
+    private PhotographVO toPublicPhotographVO(PhotographEntity e) {
+        String campusUsername = e.getUsername();
+        PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(campusUsername);
+        e.setUsername(author.displayName());
+        PhotographVO vo = photographConverter.toVO(e);
+        vo.setAuthorId(author.authorId());
         return vo;
     }
 
@@ -209,19 +219,21 @@ public class PhotographService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         Integer count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, user.getUsername());
         if (count == null || count == 0) {
-            photographMapper.insertPhotographLike(id, user.getUsername());
-            PhotographEntity photograph = getNotificationTarget(id, user.getUsername());
-            interactionNotificationService.createInteractionNotification(
-                    "photograph",
-                    "like",
-                    photograph != null ? photograph.getUsername() : null,
-                    user.getUsername(),
-                    String.valueOf(id),
-                    null,
-                    "like",
-                    "作品收到新点赞",
-                    user.getUsername() + " 点赞了你的作品"
-            );
+            int inserted = photographMapper.insertPhotographLike(id, user.getUsername());
+            if (inserted > 0) {
+                PhotographEntity photograph = getNotificationTarget(id, user.getUsername());
+                interactionNotificationService.createInteractionNotification(
+                        "photograph",
+                        "like",
+                        photograph != null ? photograph.getUsername() : null,
+                        user.getUsername(),
+                        String.valueOf(id),
+                        null,
+                        "like",
+                        "作品收到新点赞",
+                        "有人点赞了你的作品"
+                );
+            }
         }
     }
 

@@ -25,6 +25,8 @@ docs/**
 !docs/compliance-todo.md
 !docs/environment-matrix.md
 !docs/openapi.yaml
+!docs/SOCIAL_MESSAGING_DESIGN.zh-CN.md
+!docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md
 
 # ==================================
 # Spring Boot & Java

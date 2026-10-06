@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
+import AuthAvatar from '@/components/social/AuthAvatar.vue'
 import { maskContactHandle, maskPhone } from '@/utils/mask'
 import { PackageSearch } from 'lucide-vue-next'
 
@@ -72,9 +73,12 @@ function mapErshouDetail(info) {
     location: item.location,
     desc: item.description,
     seller: {
-      name: profile.nickname || profile.username || '—',
+      name: profile.nickname || item.username || '—',
+      authorId: item.authorId || null,
       publishTime: item.publishTime || '',
-      avatar: profile.avatarURL || '/img/avatar/default.png'
+      avatar: item.authorId
+        ? `/api/social/users/${item.authorId}/avatar`
+        : (profile.avatarURL || '/img/avatar/default.png')
     },
     contact: {
       qq: item.qq || '',
@@ -154,11 +158,15 @@ onMounted(async () => {
 
       <section class="mx-2.5 mb-5">
         <!-- 发布者 -->
-        <div class="mt-2.5 bg-[var(--c-surface)] shadow-sm rounded overflow-hidden min-h-[30px] py-5 px-4 pl-[60px] relative block">
+        <div
+          class="mt-2.5 bg-[var(--c-surface)] shadow-sm rounded overflow-hidden min-h-[30px] py-5 px-4 pl-[60px] relative block cursor-pointer"
+          role="button"
+          @click="detail.seller?.authorId && router.push(`/social/users/${detail.seller.authorId}`)"
+        >
           <i class="w-[30px] h-[30px] absolute left-4 top-5 rounded-full overflow-hidden block">
             <img :src="detail.seller?.avatar || '/img/avatar/default.png'" :alt="t('profile.avatar')" class="w-full h-full object-cover">
           </i>
-          <span class="leading-[30px] text-base text-[var(--c-text-2)]">{{ t('marketplace.detail.publisher') }}{{ detail.seller?.name || '—' }}</span>
+          <span class="leading-[30px] text-base" :class="detail.seller?.authorId ? 'text-[var(--c-primary)]' : 'text-[var(--c-text-2)]'">{{ t('marketplace.detail.publisher') }}{{ detail.seller?.name || '—' }}</span>
         </div>
 
         <!-- 商品描述 -->

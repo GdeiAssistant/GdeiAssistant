@@ -10,6 +10,7 @@ public class SettingConstantUtils {
             "/api/auth/login",
             "/api/auth/logout",
             "/api/module",
+            "/api/social/realtime",
             "/download",
             "/agreement",
             "/policy",

@@ -99,8 +99,8 @@ public interface ExpressMapper {
     })
     ExpressLike selectExpressLike(@Param("expressId") int expressId, @Param("username") String username);
 
-    @Insert("insert into express_like (express_id,username,create_time) values(#{expressId},#{username},now())")
-    void insertExpressLike(@Param("expressId") int expressId, @Param("username") String username);
+    @Insert("insert ignore into express_like (express_id,username,create_time) values(#{expressId},#{username},now())")
+    int insertExpressLike(@Param("expressId") int expressId, @Param("username") String username);
 
     @Select("select el.id,el.express_id,el.username,el.create_time from express_like el " +
             "inner join express e on el.express_id=e.id where e.username=#{username} and el.username!=#{username} " +

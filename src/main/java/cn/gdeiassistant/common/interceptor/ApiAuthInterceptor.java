@@ -49,7 +49,7 @@ public class ApiAuthInterceptor implements HandlerInterceptor {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().print("{\"code\":401,\"message\":\"Unauthorized\"}");
+                response.getWriter().print("{\"success\":false,\"code\":401,\"message\":\"Unauthorized\",\"errorCode\":\"AUTH_REQUIRED\"}");
                 response.getWriter().flush();
                 response.getWriter().close();
                 return false;

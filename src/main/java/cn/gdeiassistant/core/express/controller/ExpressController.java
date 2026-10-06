@@ -6,7 +6,7 @@ import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.exception.ExpressException.CorrectRecordException;
 import cn.gdeiassistant.common.exception.ExpressException.NoRealNameException;
-import cn.gdeiassistant.common.pojo.Entity.ExpressComment;
+import cn.gdeiassistant.core.express.pojo.vo.ExpressCommentVO;
 import cn.gdeiassistant.core.express.pojo.dto.ExpressPublishDTO;
 import cn.gdeiassistant.core.express.pojo.vo.ExpressVO;
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
@@ -78,8 +78,8 @@ public class ExpressController {
     }
 
     @RequestMapping(value = "/api/express/id/{id}/comment", method = RequestMethod.GET)
-    public DataJsonResult<List<ExpressComment>> queryExpressComment(HttpServletRequest request, @PathVariable("id") Integer id) {
-        List<ExpressComment> list = expressService.queryExpressComment(id);
+    public DataJsonResult<List<ExpressCommentVO>> queryExpressComment(HttpServletRequest request, @PathVariable("id") Integer id) {
+        List<ExpressCommentVO> list = expressService.queryExpressComment(id);
         return new DataJsonResult<>(true, list);
     }
 

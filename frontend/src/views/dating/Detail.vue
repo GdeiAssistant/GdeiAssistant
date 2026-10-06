@@ -136,6 +136,8 @@ onMounted(async () => {
       item.value = {
         id: profile.profileId,
         name: profile.nickname,
+        authorId: profile.authorId || null,
+        publisherLabel: profile.username || '',
         image: data.pictureURL,
         images: data.pictureURL ? [data.pictureURL] : [],
         bio: profile.content,
@@ -162,6 +164,12 @@ onMounted(async () => {
 
     <div v-if="item" class="community-dating-shell w-[90%] mx-auto mt-4 p-6 rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
       <div class="community-dating-shell__title text-[22px] font-bold mb-4">{{ item.name }}</div>
+      <button
+        v-if="item.authorId"
+        type="button"
+        class="mb-3 text-sm text-[var(--c-primary)] bg-transparent border-0 p-0 cursor-pointer"
+        @click="router.push(`/social/users/${item.authorId}`)"
+      >{{ item.publisherLabel || t('social.viewAuthor') }}</button>
       <div class="w-full rounded-lg overflow-hidden bg-[var(--c-bg)] mb-4">
         <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" class="w-full h-auto max-h-[360px] object-cover" />
       </div>

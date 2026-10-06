@@ -134,6 +134,7 @@ class PhotographServiceTest {
         when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
         when(photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(1, "testuser"))
                 .thenReturn(0);
+        when(photographMapper.insertPhotographLike(1, "testuser")).thenReturn(1);
         when(photographMapper.selectPhotographByIdAndUsername(eq(1), eq("testuser")))
                 .thenReturn(null);
 

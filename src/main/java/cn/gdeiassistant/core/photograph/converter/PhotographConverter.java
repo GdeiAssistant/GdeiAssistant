@@ -12,6 +12,7 @@ public interface PhotographConverter {
 
     @Mapping(target = "firstImageUrl", ignore = true)
     @Mapping(target = "imageUrls", ignore = true)
+    @Mapping(target = "authorId", ignore = true)
     PhotographVO toVO(PhotographEntity entity);
 
     List<PhotographVO> toVOList(List<PhotographEntity> entities);

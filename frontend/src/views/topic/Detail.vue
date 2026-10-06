@@ -25,6 +25,8 @@ async function loadDetail() {
         publishTime: data.publishTime || '',
         likeCount: data.likeCount ?? 0,
         liked: data.liked === true,
+        authorId: data.authorId || null,
+        authorName: data.username || '',
         images: Array.isArray(data.imageUrls) ? data.imageUrls : []
       }
     } else {
@@ -67,6 +69,12 @@ onMounted(async () => {
           <span class="text-[var(--c-topic)] text-base font-semibold">#{{ topic.topic || t('topic.detail.defaultTopic') }}</span>
           <span class="text-[var(--c-text-3)] text-xs shrink-0">{{ topic.publishTime || t('common.recentUpdate') }}</span>
         </div>
+        <button
+          v-if="topic.authorId"
+          type="button"
+          class="mt-2 text-sm text-[var(--c-primary)] bg-transparent border-0 p-0 cursor-pointer"
+          @click="router.push(`/social/users/${topic.authorId}`)"
+        >{{ topic.authorName || t('social.viewAuthor') }}</button>
         <p class="mt-4 text-sm leading-[1.7] text-[var(--c-text-1)] whitespace-pre-wrap">{{ topic.content || t('topic.detail.emptyContent') }}</p>
         <div v-if="topic.images.length" class="mt-4 grid grid-cols-2 gap-2.5">
           <img

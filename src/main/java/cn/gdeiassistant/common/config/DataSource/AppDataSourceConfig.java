@@ -36,6 +36,7 @@ import java.io.IOException;
         "cn.gdeiassistant.core.privacy.mapper",
         "cn.gdeiassistant.core.profile.mapper",
         "cn.gdeiassistant.core.secret.mapper",
+        "cn.gdeiassistant.core.social.mapper",
         "cn.gdeiassistant.core.topic.mapper",
         "cn.gdeiassistant.core.user.mapper"
 }, sqlSessionFactoryRef = "appSqlSessionFactory")

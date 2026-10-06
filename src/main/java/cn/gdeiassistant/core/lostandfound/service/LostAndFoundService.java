@@ -14,6 +14,7 @@ import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundDetailEntity;
 import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundItemEntity;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundDetailVO;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundItemVO;
+import cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
 import org.slf4j.Logger;
@@ -52,6 +53,9 @@ public class LostAndFoundService {
     @Autowired
     private R2StorageService r2StorageService;
 
+    @Autowired
+    private PublicAuthorResolver publicAuthorResolver;
+
     public LostAndFoundDetailVO queryLostAndFoundInfoByID(int id) throws Exception {
         LostAndFoundDetailEntity detail = lostAndFoundMapper.selectInfoByID(id);
         if (detail == null || detail.getItem() == null) {
@@ -61,12 +65,19 @@ public class LostAndFoundService {
         if (Integer.valueOf(1).equals(item.getState())) {
             throw new ConfirmedStateException("物品已确认寻回，不可再次编辑和查看");
         }
-        String username = item.getUsername();
+        String campusUsername = item.getUsername();
+        PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(campusUsername);
         List<String> pictureURL = getLostAndFoundItemPictureURL(item.getId());
         item.setPictureURL(pictureURL);
         LostAndFoundDetailVO vo = lostAndFoundDetailConverter.toVO(detail);
-        vo.getProfile().setUsername(username);
-        vo.getProfile().setAvatarURL(userProfileService.getOtherUserAvatar(username));
+        if (vo.getItem() != null) {
+            vo.getItem().setAuthorId(author.authorId());
+            vo.getItem().setUsername(author.displayName());
+        }
+        vo.getProfile().setUsername(author.displayName());
+        vo.getProfile().setAvatarURL(author.authorId() != null
+                ? "/api/social/users/" + author.authorId() + "/avatar"
+                : null);
         return vo;
     }
 
@@ -202,7 +213,15 @@ public class LostAndFoundService {
 
     private List<LostAndFoundItemVO> toItemVOList(List<LostAndFoundItemEntity> list) {
         if (list == null || list.isEmpty()) return new ArrayList<>();
-        return lostAndFoundItemConverter.toVOList(list);
+        List<LostAndFoundItemVO> vos = lostAndFoundItemConverter.toVOList(list);
+        for (int i = 0; i < vos.size(); i++) {
+            LostAndFoundItemEntity entity = list.get(i);
+            PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(entity.getUsername());
+            LostAndFoundItemVO vo = vos.get(i);
+            vo.setAuthorId(author.authorId());
+            vo.setUsername(author.displayName());
+        }
+        return vos;
     }
 
     private static LostAndFoundItemEntity dtoToEntity(LostAndFoundPublishDTO dto) {

@@ -1,17 +1,17 @@
 package cn.gdeiassistant.core.gradequery.service;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
-import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
-import cn.gdeiassistant.common.pojo.Document.GradeDocument;
-import cn.gdeiassistant.common.pojo.Entity.Grade;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.NotAvailableConditionException;
+import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
+import cn.gdeiassistant.common.pojo.document.GradeDocument;
+import cn.gdeiassistant.common.pojo.entity.Grade;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
 import org.jsoup.nodes.Document;
@@ -77,6 +77,9 @@ public class GradeService {
      * @throws Exception
      */
     public GradeQueryResult queryGrade(String sessionId, Integer year) throws Exception {
+        // Missing year means the latest academic year for both cache and remote paths.
+        if (year == null) year = -1;
+        if (year < -1) throw new NotAvailableConditionException("当前学年暂不可查询");
         //优先从缓存中获取
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         GradeDocument gradeDocument = gradeDao.queryGrade(user.getUsername());
@@ -88,7 +91,7 @@ public class GradeService {
                 gradeDocument.setGradeList(gradeLists);
             }
             //若未指定查询学年，则默认查询最后学年的成绩信息
-            if (year == null) {
+            if (year == -1) {
                 year = gradeLists.size() - 1;
             }
             if (gradeLists.size() == 0) {

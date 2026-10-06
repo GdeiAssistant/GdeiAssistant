@@ -1,6 +1,6 @@
 package cn.gdeiassistant.integration.card;
 
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import org.apache.http.HttpResponse;
@@ -32,8 +32,12 @@ import java.util.List;
 @Component
 public class CardClient {
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
+
     private static final Logger logger = LoggerFactory.getLogger(CardClient.class);
-    private static final String ECARD_BASE = "http://ecard.gdei.edu.cn";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}")
+    private String ECARD_BASE = "http://ecard.gdei.edu.cn";
     private static final int CARD_TIMEOUT_SEC = 15;
 
     /**
@@ -41,7 +45,7 @@ public class CardClient {
      */
     @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallback")
     public Document fetchCardBasicInfoDocument(String sessionId) throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -53,7 +57,7 @@ public class CardClient {
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
             closeHttpClient(httpClient);
-            if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
 
@@ -65,7 +69,7 @@ public class CardClient {
      */
     @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallback")
     public Document fetchCardTrjnListDocument(String sessionId, int type, int pageIndex) throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -79,7 +83,7 @@ public class CardClient {
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
             closeHttpClient(httpClient);
-            if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
 
@@ -88,7 +92,7 @@ public class CardClient {
      */
     @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallback")
     public Document fetchCardTrjnListByDateDocument(String sessionId, int year, int month, int date, int pageIndex) throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -103,7 +107,7 @@ public class CardClient {
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
             closeHttpClient(httpClient);
-            if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
 
@@ -112,7 +116,7 @@ public class CardClient {
      */
     @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallback")
     public Document fetchLossCardPageDocument(String sessionId) throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -127,7 +131,7 @@ public class CardClient {
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
             closeHttpClient(httpClient);
-            if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
 
@@ -136,7 +140,7 @@ public class CardClient {
      */
     @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallbackBytes")
     public byte[] fetchKeyPadImage(String sessionId) throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -148,7 +152,7 @@ public class CardClient {
             return readBytes(httpResponse.getEntity().getContent());
         } finally {
             closeHttpClient(httpClient);
-            if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
 
@@ -157,7 +161,7 @@ public class CardClient {
      */
     @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallbackBytes")
     public byte[] fetchCheckcodeImage(String sessionId, String relativePath) throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -170,7 +174,7 @@ public class CardClient {
             return readBytes(httpResponse.getEntity().getContent());
         } finally {
             closeHttpClient(httpClient);
-            if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
 
@@ -202,7 +206,7 @@ public class CardClient {
     @CircuitBreaker(name = "cardSystem", fallbackMethod = "cardSystemFallbackString")
     public String submitSetCardLost(String sessionId, String passwordMapped, String checkCode)
             throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -221,7 +225,7 @@ public class CardClient {
             return EntityUtils.toString(httpResponse.getEntity());
         } finally {
             closeHttpClient(httpClient);
-            if (cookieStore != null) HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
     }
 

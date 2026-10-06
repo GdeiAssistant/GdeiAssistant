@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.express.converter;
 
-import cn.gdeiassistant.common.pojo.Entity.ExpressComment;
+import cn.gdeiassistant.common.pojo.entity.ExpressComment;
 import cn.gdeiassistant.core.express.pojo.vo.ExpressCommentVO;
 import org.mapstruct.Mapper;
 

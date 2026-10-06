@@ -1,8 +1,8 @@
 package cn.gdeiassistant.core.cetquery.controller;
 
-import cn.gdeiassistant.common.pojo.Entity.Cet;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.entity.Cet;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.cetquery.pojo.dto.CetNumberSaveDTO;
 import cn.gdeiassistant.core.cetquery.pojo.dto.CetQueryDTO;
 import cn.gdeiassistant.core.cetquery.pojo.vo.CetNumberVO;
@@ -28,7 +28,7 @@ public class CetQueryController {
     }
 
     @RequestMapping(value = "/api/cet/number", method = RequestMethod.POST)
-    public JsonResult SaveCetNumber(HttpServletRequest request, @RequestBody CetNumberSaveDTO body) throws Exception {
+    public JsonResult saveCetNumber(HttpServletRequest request, @RequestBody CetNumberSaveDTO body) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         if (body == null || body.getNumber() == null || body.getNumber().trim().isEmpty()) {
             return new JsonResult(false, BackendTextLocalizer.localizeMessage("准考证号不能为空", request.getHeader("Accept-Language")));

@@ -1,7 +1,7 @@
 package cn.gdeiassistant.common.typehandler;
 
-import cn.gdeiassistant.common.pojo.Encryption.AESEncryptConfig;
-import cn.gdeiassistant.common.tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.common.pojo.encryption.AESEncryptConfig;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

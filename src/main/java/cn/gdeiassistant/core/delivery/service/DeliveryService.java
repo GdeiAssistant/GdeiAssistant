@@ -1,11 +1,11 @@
 package cn.gdeiassistant.core.delivery.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.exception.DeliveryException.DeliveryOrderStateUpdatedException;
-import cn.gdeiassistant.common.exception.DeliveryException.DeliveryOrderTakenException;
-import cn.gdeiassistant.common.exception.DeliveryException.NoAccessUpdatingException;
-import cn.gdeiassistant.common.exception.DeliveryException.SelfTradingOrderException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.exception.deliveryexception.DeliveryOrderStateUpdatedException;
+import cn.gdeiassistant.common.exception.deliveryexception.DeliveryOrderTakenException;
+import cn.gdeiassistant.common.exception.deliveryexception.NoAccessUpdatingException;
+import cn.gdeiassistant.common.exception.deliveryexception.SelfTradingOrderException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.delivery.converter.DeliveryConverter;
 import cn.gdeiassistant.core.delivery.mapper.DeliveryMapper;
 import cn.gdeiassistant.core.delivery.pojo.dto.DeliveryPublishDTO;
@@ -14,8 +14,8 @@ import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryTradeEntity;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryOrderVO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryTradeVO;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +40,23 @@ public class DeliveryService {
     @Autowired
     private InteractionNotificationService interactionNotificationService;
 
+    @Autowired
+    private cn.gdeiassistant.common.tools.utils.PublicAuthorResolver publicAuthorResolver;
+
+    private DeliveryOrderVO publicOrder(DeliveryOrderEntity entity) {
+        DeliveryOrderVO view = deliveryConverter.toOrderVO(entity);
+        var author = publicAuthorResolver == null
+                ? new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户")
+                : publicAuthorResolver.resolve(entity.getUsername());
+        view.setAuthorId(author.authorId());
+        view.setDisplayName(author.displayName());
+        return view;
+    }
+
+    private List<DeliveryOrderVO> publicOrders(List<DeliveryOrderEntity> entities) {
+        return entities.stream().map(this::publicOrder).toList();
+    }
+
     /**
      * 分页查询订单信息
      *
@@ -50,7 +67,16 @@ public class DeliveryService {
     public List<DeliveryOrderVO> queryDeliveryOrderPage(Integer start, Integer size) {
         List<DeliveryOrderEntity> list = deliveryMapper.selectDeliveryOrderPage(start, size);
         if (list == null || list.isEmpty()) return new ArrayList<>();
-        return deliveryConverter.toOrderVOList(list);
+        List<DeliveryOrderVO> views = publicOrders(list);
+        views.forEach(DeliveryService::redactPublicOrder);
+        return views;
+    }
+
+    public static void redactPublicOrder(DeliveryOrderVO view) {
+        view.setPickupCode(null);
+        view.setContactPhone(null);
+        view.setDeliveryAddress(null);
+        view.setRemarks(null);
     }
 
     /**
@@ -63,7 +89,7 @@ public class DeliveryService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<DeliveryOrderEntity> list = deliveryMapper.selectDeliveryOrderByUsername(user.getUsername());
         if (list == null || list.isEmpty()) return new ArrayList<>();
-        return deliveryConverter.toOrderVOList(list);
+        return publicOrders(list);
     }
 
     /**
@@ -76,7 +102,7 @@ public class DeliveryService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<DeliveryOrderEntity> list = deliveryMapper.selectAcceptedDeliveryOrderByUsername(user.getUsername());
         if (list == null || list.isEmpty()) return new ArrayList<>();
-        return deliveryConverter.toOrderVOList(list);
+        return publicOrders(list);
     }
 
     /**
@@ -99,7 +125,7 @@ public class DeliveryService {
     public DeliveryOrderVO queryDeliveryOrderByOrderId(Integer orderId) throws DataNotExistException {
         DeliveryOrderEntity entity = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
         if (entity == null) throw new DataNotExistException("该快递代收订单不存在");
-        return deliveryConverter.toOrderVO(entity);
+        return publicOrder(entity);
     }
 
     /**
@@ -112,7 +138,13 @@ public class DeliveryService {
     public DeliveryTradeVO queryDeliveryTradeByOrderId(Integer orderId) throws DataNotExistException {
         DeliveryTradeEntity entity = deliveryMapper.selectDeliveryTradeByOrderId(orderId);
         if (entity == null) throw new DataNotExistException("该快递代收订单不存在");
-        return deliveryConverter.toTradeVO(entity);
+        DeliveryTradeVO view = deliveryConverter.toTradeVO(entity);
+        var author = publicAuthorResolver == null
+                ? new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户")
+                : publicAuthorResolver.resolve(entity.getUsername());
+        view.setAuthorId(author.authorId());
+        view.setDisplayName(author.displayName());
+        return view;
     }
 
     /**
@@ -125,7 +157,13 @@ public class DeliveryService {
     public DeliveryTradeVO queryDeliveryTradeByTradeId(Integer tradeId) throws DataNotExistException {
         DeliveryTradeEntity entity = deliveryMapper.selectDeliveryTradeByTradeId(tradeId);
         if (entity == null) throw new DataNotExistException("该快递代收交易不存在");
-        return deliveryConverter.toTradeVO(entity);
+        DeliveryTradeVO view = deliveryConverter.toTradeVO(entity);
+        var author = publicAuthorResolver == null
+                ? new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户")
+                : publicAuthorResolver.resolve(entity.getUsername());
+        view.setAuthorId(author.authorId());
+        view.setDisplayName(author.displayName());
+        return view;
     }
 
     /**
@@ -133,8 +171,8 @@ public class DeliveryService {
      * <p>
      * 返回的数值：DetailType表示信息详细程度
      * 0表示显示所有信息且显示确认交付按钮（下单者）
-     * 1表示没有权限查看（第三方）
-     * 2表示显示所有信息但没有操作按钮（接单者）
+     * 1表示未接单的公共摘要（第三方）
+     * 2表示拒绝访问；3表示已接单者
      *
      * @param sessionId
      * @param tradeId
@@ -143,7 +181,8 @@ public class DeliveryService {
      */
     public int queryDeliveryTradeDetailType(String sessionId, int tradeId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        DeliveryTradeVO deliveryTrade = queryDeliveryTradeByTradeId(tradeId);
+        DeliveryTradeEntity deliveryTrade = deliveryMapper.selectDeliveryTradeByTradeId(tradeId);
+        if (deliveryTrade == null) throw new DataNotExistException("交易不存在");
         if (deliveryTrade.getUsername().equals(user.getUsername())) {
             //自己接受的交易单
             return 2;
@@ -174,7 +213,8 @@ public class DeliveryService {
      */
     public int queryDeliveryOrderDetailType(String sessionId, int orderId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        DeliveryOrderVO deliveryOrder = queryDeliveryOrderByOrderId(orderId);
+        DeliveryOrderEntity deliveryOrder = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
+        if (deliveryOrder == null) throw new DataNotExistException("订单不存在");
         if (deliveryOrder.getUsername().equals(user.getUsername())) {
             return 0;
         } else {
@@ -198,6 +238,7 @@ public class DeliveryService {
      * @param orderId
      * @param sessionId
      */
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void acceptOrder(Integer orderId, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (checkAcceptUsername(orderId, user.getUsername())) {
@@ -220,8 +261,9 @@ public class DeliveryService {
      * @param orderId
      * @param username
      */
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void updateOrderAndInsertTradeRecord(Integer orderId, String username) throws Exception {
+        if (orderId == null || orderId <= 0) throw new IllegalArgumentException("订单编号不合法");
         //设置排他锁更新订单状态，并发情况下只允许一个线程修改该订单ID的订单状态
         int result = deliveryMapper.updateOrderState(orderId, 1);
         if (result > 0) {
@@ -230,7 +272,7 @@ public class DeliveryService {
             trade.setOrderId(orderId);
             deliveryMapper.insertTradeRecord(trade);
             DeliveryOrderEntity order = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
-            String company = order != null && StringUtils.isNotBlank(order.getCompany()) ? order.getCompany() : "快递代收";
+            String pickupLocation = order != null && StringUtils.isNotBlank(order.getPickupLocation()) ? order.getPickupLocation() : "快递代收";
             interactionNotificationService.createInteractionNotification(
                     "delivery",
                     "order_accepted",
@@ -240,7 +282,7 @@ public class DeliveryService {
                     trade.getTradeId() == null ? null : String.valueOf(trade.getTradeId()),
                     "published",
                     "订单已被接单",
-                    username + " 接取了你发布的 " + company + " 订单"
+                    username + " 接取了你发布的 " + pickupLocation + " 订单"
             );
         } else {
             //抢单失败
@@ -290,7 +332,7 @@ public class DeliveryService {
      * @throws DataNotExistException
      * @throws NoAccessUpdatingException
      */
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void deleteOrder(Integer orderId, String sessionId) throws DataNotExistException, NoAccessUpdatingException, DeliveryOrderStateUpdatedException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DeliveryOrderEntity deliveryOrder = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
@@ -315,7 +357,7 @@ public class DeliveryService {
      * @throws DataNotExistException
      * @throws NoAccessUpdatingException
      */
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void finishTrade(Integer tradeId, String sessionId) throws DataNotExistException, NoAccessUpdatingException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DeliveryTradeEntity deliveryTrade = deliveryMapper.selectDeliveryTradeByTradeId(tradeId);
@@ -332,7 +374,7 @@ public class DeliveryService {
                         if (tradeResult <= 0) {
                             throw new IllegalStateException("快递代收交易状态更新失败");
                         }
-                        String company = StringUtils.isNotBlank(deliveryOrder.getCompany()) ? deliveryOrder.getCompany() : "快递代收";
+                        String pickupLocation = StringUtils.isNotBlank(deliveryOrder.getPickupLocation()) ? deliveryOrder.getPickupLocation() : "快递代收";
                         interactionNotificationService.createInteractionNotification(
                                 "delivery",
                                 "order_finished",
@@ -342,7 +384,7 @@ public class DeliveryService {
                                 tradeId == null ? null : String.valueOf(tradeId),
                                 "accepted",
                                 "订单已完成",
-                                user.getUsername() + " 已确认你接取的 " + company + " 订单完成"
+                                user.getUsername() + " 已确认你接取的 " + pickupLocation + " 订单完成"
                         );
                         return;
                     }
@@ -360,12 +402,12 @@ public class DeliveryService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DeliveryOrderEntity order = new DeliveryOrderEntity();
         order.setUsername(user.getUsername());
-        order.setName(dto.getName());
-        order.setNumber(dto.getNumber());
-        order.setPhone(dto.getPhone());
+        order.setTaskName(dto.getTaskName());
+        order.setPickupCode(dto.getPickupCode());
+        order.setContactPhone(dto.getContactPhone());
         order.setPrice(dto.getPrice());
-        order.setCompany(dto.getCompany());
-        order.setAddress(dto.getAddress());
+        order.setPickupLocation(dto.getPickupLocation());
+        order.setDeliveryAddress(dto.getDeliveryAddress());
         order.setRemarks(dto.getRemarks());
         deliveryMapper.insertDeliveryOrder(order);
     }

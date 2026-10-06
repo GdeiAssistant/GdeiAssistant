@@ -1,8 +1,8 @@
 package cn.gdeiassistant.core.message.controller;
 
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.common.tools.Utils.PageUtils;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
+import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.core.i18n.ApiLanguageResolver;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.profile.mapper;
 
-import cn.gdeiassistant.common.pojo.Entity.Introduction;
+import cn.gdeiassistant.common.pojo.entity.Introduction;
 import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;

@@ -1,9 +1,9 @@
 package cn.gdeiassistant.core.collection.repository;
 
-import cn.gdeiassistant.common.pojo.Document.CollectionDetailEntry;
-import cn.gdeiassistant.common.pojo.Document.CollectionTestDocument;
-import cn.gdeiassistant.common.pojo.Entity.Collection;
-import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
+import cn.gdeiassistant.common.pojo.document.CollectionDetailEntry;
+import cn.gdeiassistant.common.pojo.document.CollectionTestDocument;
+import cn.gdeiassistant.common.pojo.entity.Collection;
+import cn.gdeiassistant.common.pojo.entity.CollectionDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

@@ -24,15 +24,12 @@ export function getCollectionDetail(detailURL) {
 
 /**
  * 查询我的借阅
- * GET /api/library/borrow?password=xxx
+ * POST /api/library/borrow，body: { password }
  * @param {string} password - 图书馆密码，查询借阅时应随请求一起提交
  * @returns {Promise<{ success: boolean, data: Array<Book> }>} data 为借阅列表，字段 name, author, borrowDate, returnDate, renewTime, sn, code, id
  */
 export function getBorrowedBooks(password) {
-  const config = password != null && password !== ''
-    ? { params: { password } }
-    : {}
-  return request.get('/library/borrow', config)
+  return request.post('/library/borrow', { password: password || '' })
 }
 
 /**

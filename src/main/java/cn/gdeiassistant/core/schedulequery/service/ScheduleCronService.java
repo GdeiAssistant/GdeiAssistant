@@ -1,14 +1,14 @@
 package cn.gdeiassistant.core.schedulequery.service;
 
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.pojo.Document.ScheduleDocument;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.pojo.document.ScheduleDocument;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedulequery.pojo.vo.ScheduleQueryVO;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.core.cron.mapper.CronMapper;
-import cn.gdeiassistant.core.userLogin.service.UserLoginService;
+import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;

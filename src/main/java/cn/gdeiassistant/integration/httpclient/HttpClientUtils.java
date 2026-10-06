@@ -1,7 +1,7 @@
 package cn.gdeiassistant.integration.httpclient;
 
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
-import cn.gdeiassistant.common.redis.CookieStore.CookieStoreDao;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
+import cn.gdeiassistant.common.redis.cookiestore.CookieStoreDao;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
@@ -22,18 +22,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.HttpSessionRequiredException;
 
 import javax.net.ssl.SSLContext;
-import jakarta.servlet.http.HttpSession;
 
 @Component
 public class HttpClientUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtils.class);
 
-    private static CookieStoreDao cookieStoreDao;
+    private CookieStoreDao cookieStoreDao;
+    private final PoolingHttpClientConnectionManager connectionManager = createConnectionManager();
 
     @Autowired
     public void setCookieStoreDao(CookieStoreDao cookieStoreDao) {
-        HttpClientUtils.cookieStoreDao = cookieStoreDao;
+        this.cookieStoreDao = cookieStoreDao;
+    }
+
+    @jakarta.annotation.PreDestroy
+    public void closePool() {
+        connectionManager.close();
     }
 
     /**
@@ -41,7 +46,7 @@ public class HttpClientUtils {
      *
      * @return
      */
-    private static HttpClientConnectionManager getHttpClientConnectionManager() {
+    private static PoolingHttpClientConnectionManager createConnectionManager() {
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, null, null);
@@ -53,11 +58,14 @@ public class HttpClientUtils {
                     .register("http", PlainConnectionSocketFactory.INSTANCE)
                     .register("https", sslsf)
                     .build();
-            return new PoolingHttpClientConnectionManager(registry);
+            PoolingHttpClientConnectionManager pool = new PoolingHttpClientConnectionManager(registry);
+            pool.setMaxTotal(80);
+            pool.setDefaultMaxPerRoute(20);
+            pool.setValidateAfterInactivity(5000);
+            return pool;
         } catch (Exception e) {
-            logger.error("创建 HttpClientConnectionManager 失败", e);
+            throw new IllegalStateException("Cannot initialize pooled HTTP client", e);
         }
-        return new PoolingHttpClientConnectionManager();
     }
 
     /**
@@ -66,9 +74,9 @@ public class HttpClientUtils {
      * @param sessionId
      * @param cookieStore
      */
-    public static void syncHttpClientCookieStore(String sessionId, CookieStore cookieStore) {
+    public void syncHttpClientCookieStore(String sessionId, CookieStore cookieStore) {
         if (StringUtils.isNotBlank(sessionId)) {
-            cookieStoreDao.SaveCookieStore(sessionId, cookieStore);
+            cookieStoreDao.saveCookieStore(sessionId, cookieStore);
         }
     }
 
@@ -77,9 +85,9 @@ public class HttpClientUtils {
      *
      * @param sessionId
      */
-    public static void clearHttpClientCookieStore(String sessionId) {
+    public void clearHttpClientCookieStore(String sessionId) {
         if (StringUtils.isNotBlank(sessionId)) {
-            cookieStoreDao.ClearCookieStore(sessionId);
+            cookieStoreDao.clearCookieStore(sessionId);
         }
     }
 
@@ -91,102 +99,31 @@ public class HttpClientUtils {
      * @param timeOut
      * @return
      */
-    public static HttpClientSession getHttpClient(String sessionId, boolean automaticRedirect, int timeOut) {
+    public HttpClientSession getHttpClient(String sessionId, boolean automaticRedirect, int timeOut) {
         timeOut = timeOut * 1000;
         HttpClientBuilder httpClientBuilder = HttpClients.custom();
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
         //设置超时时间
         requestConfigBuilder.setSocketTimeout(timeOut).setConnectTimeout(timeOut)
                 .setConnectionRequestTimeout(timeOut);
-        //自动检测StaleConnection
-        requestConfigBuilder.setStaleConnectionCheckEnabled(true);
         //配置默认请求配置
         httpClientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
         //设置连接管理器
-        httpClientBuilder.setConnectionManager(getHttpClientConnectionManager());
+        httpClientBuilder.setConnectionManager(connectionManager).setConnectionManagerShared(true).disableAutomaticRetries();
         //设置自动重定向配置
         if (!automaticRedirect) {
             httpClientBuilder.disableRedirectHandling();
         }
         //配置CookieStore
-        CookieStore cookieStore = null;
+        CookieStore cookieStore = new BasicCookieStore();
         if (StringUtils.isNotBlank(sessionId)) {
-            cookieStore = cookieStoreDao.QueryCookieStore(sessionId);
+            cookieStore = cookieStoreDao.queryCookieStore(sessionId);
             if (cookieStore == null) {
                 cookieStore = new BasicCookieStore();
             }
-            httpClientBuilder.setDefaultCookieStore(cookieStore);
         }
+        httpClientBuilder.setDefaultCookieStore(cookieStore);
         return new HttpClientSession(httpClientBuilder.build(), cookieStore);
     }
 
-    /**
-     * 获取携带CookieStore的CloseableHttpClient对象
-     *
-     * @param httpSession
-     * @param automaticRedirect
-     * @param timeOut
-     * @return
-     * @throws HttpSessionRequiredException
-     */
-    @Deprecated
-    public CloseableHttpClient getHttpClient(HttpSession httpSession
-            , boolean automaticRedirect, int timeOut) throws HttpSessionRequiredException {
-        timeOut = timeOut * 1000;
-        if (httpSession != null) {
-            if (httpSession.getAttribute("cookieStore") != null) {
-                if (automaticRedirect) {
-                    return HttpClients.custom()
-                            .setDefaultRequestConfig(RequestConfig.custom().
-                                    setSocketTimeout(timeOut).setConnectTimeout(timeOut).
-                                    setConnectionRequestTimeout(timeOut).setStaleConnectionCheckEnabled(true).build())
-                            .setConnectionManager(getHttpClientConnectionManager())
-                            .setDefaultCookieStore((CookieStore) httpSession
-                                    .getAttribute("cookieStore")).build();
-                }
-                return HttpClients.custom().disableRedirectHandling()
-                        .setDefaultRequestConfig(RequestConfig.custom().
-                                setSocketTimeout(timeOut).setConnectTimeout(timeOut).
-                                setConnectionRequestTimeout(timeOut).setStaleConnectionCheckEnabled(true).build())
-                        .setConnectionManager(getHttpClientConnectionManager())
-                        .setDefaultCookieStore((CookieStore) httpSession
-                                .getAttribute("cookieStore")).build();
-            } else {
-                //Session中没有CookieStore,在Session中创建新的CookieStore并在构造HttpClient将其添入
-                CookieStore cookieStore = new BasicCookieStore();
-                httpSession.setAttribute("cookieStore", cookieStore);
-                if (automaticRedirect) {
-                    return HttpClients.custom()
-                            .setDefaultRequestConfig(RequestConfig.custom()
-                                    .setSocketTimeout(timeOut).setConnectTimeout(timeOut)
-                                    .setConnectionRequestTimeout(timeOut).setStaleConnectionCheckEnabled(true).build())
-                            .setConnectionManager(getHttpClientConnectionManager())
-                            .setDefaultCookieStore(cookieStore)
-                            .build();
-                }
-                return HttpClients.custom().disableRedirectHandling()
-                        .setDefaultRequestConfig(RequestConfig.custom()
-                                .setSocketTimeout(timeOut).setConnectTimeout(timeOut)
-                                .setConnectionRequestTimeout(timeOut).setStaleConnectionCheckEnabled(true).build())
-                        .setConnectionManager(getHttpClientConnectionManager())
-                        .setDefaultCookieStore(cookieStore)
-                        .build();
-            }
-        }
-        throw new HttpSessionRequiredException("Session不存在，用户可能禁用了Cookie");
-    }
-
-    /**
-     * 清除用户登录记录和Cookie缓存
-     *
-     * @param httpSession
-     */
-    @Deprecated
-    public void clearCookies(HttpSession httpSession) {
-        if (httpSession != null) {
-            if (httpSession.getAttribute("cookieStore") != null) {
-                httpSession.removeAttribute("cookieStore");
-            }
-        }
-    }
 }

@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.authentication.service;
 
-import cn.gdeiassistant.common.pojo.Entity.Authentication;
-import cn.gdeiassistant.common.exception.AuthenticationException.InconsistentAuthenticationException;
+import cn.gdeiassistant.common.pojo.entity.Authentication;
+import cn.gdeiassistant.common.exception.authenticationexception.InconsistentAuthenticationException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,7 +15,7 @@ class AuthenticationServiceTest {
         Authentication authentication = new Authentication();
 
         assertThrows(InconsistentAuthenticationException.class,
-                () -> service.UpdateAuthentication("session-1", authentication, null));
+                () -> service.updateAuthentication("session-1", authentication, null));
     }
 
     @Test
@@ -24,6 +24,6 @@ class AuthenticationServiceTest {
         authentication.setType(99);
 
         assertThrows(InconsistentAuthenticationException.class,
-                () -> service.UpdateAuthentication("session-1", authentication, null));
+                () -> service.updateAuthentication("session-1", authentication, null));
     }
 }

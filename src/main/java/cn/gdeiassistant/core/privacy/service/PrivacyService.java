@@ -1,16 +1,16 @@
 package cn.gdeiassistant.core.privacy.service;
 
-import cn.gdeiassistant.common.exception.CommonException.CacheClearException;
-import cn.gdeiassistant.common.exception.DatabaseException.UserNotExistException;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.common.exception.commonexception.CacheClearException;
+import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.core.privacy.converter.PrivacyConverter;
 import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
 import cn.gdeiassistant.core.privacy.pojo.entity.PrivacyEntity;
 import cn.gdeiassistant.core.privacy.pojo.vo.PrivacyVO;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

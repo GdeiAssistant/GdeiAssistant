@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.user.pojo.dto;
 
-import cn.gdeiassistant.common.validgroup.User.UserLoginValidGroup;
+import cn.gdeiassistant.common.validgroup.user.UserLoginValidGroup;
 import org.apache.ibatis.type.Alias;
 
 import jakarta.validation.constraints.NotBlank;

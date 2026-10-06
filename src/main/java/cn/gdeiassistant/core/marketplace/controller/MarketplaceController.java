@@ -3,18 +3,19 @@ package cn.gdeiassistant.core.marketplace.controller;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
-import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
-import cn.gdeiassistant.common.exception.DatabaseException.ConfirmedStateException;
-import cn.gdeiassistant.common.exception.DatabaseException.NotAvailableStateException;
+import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
+import cn.gdeiassistant.common.exception.databaseexception.ConfirmedStateException;
+import cn.gdeiassistant.common.exception.databaseexception.NotAvailableStateException;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.marketplace.pojo.dto.MarketplacePublishDTO;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
+import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemResponse;
 import cn.gdeiassistant.core.marketplace.service.MarketplaceService;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.common.tools.Utils.PageUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
+import cn.gdeiassistant.common.tools.utils.PageUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -46,6 +47,23 @@ public class MarketplaceController {
     @Autowired
     private MarketplaceService marketplaceService;
 
+    @Autowired
+    private cn.gdeiassistant.common.tools.utils.PublicAuthorResolver publicAuthorResolver;
+
+    private MarketplaceItemResponse response(MarketplaceItemEntity item) {
+        var author = publicAuthorResolver == null
+                ? new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户")
+                : publicAuthorResolver.resolve(item.getUsername());
+        return new MarketplaceItemResponse(item.getId(), author.authorId(), author.displayName(),
+                item.getName(), item.getDescription(), item.getPrice(), item.getLocation(), item.getType(),
+                item.getQq(), item.getPhone(), item.getState(), item.getPublishTime(), item.getPictureURL());
+    }
+
+    public record MarketplaceMineResponse(List<MarketplaceItemResponse> doing,
+            List<MarketplaceItemResponse> sold, List<MarketplaceItemResponse> off) {}
+    public record MarketplaceAuthorResponse(String authorId, String displayName, String avatarURL) {}
+    public record MarketplaceDetailResponse(MarketplaceItemResponse item, MarketplaceAuthorResponse profile, boolean ownedByCurrentUser) {}
+
     private String localize(HttpServletRequest request, String message) {
         return BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null);
     }
@@ -54,23 +72,23 @@ public class MarketplaceController {
         return new JsonResult(false, localize(request, message));
     }
 
-    private boolean isInvalidPrice(Float price) {
+    private boolean isInvalidPrice(BigDecimal price) {
         if (price == null) {
             return true;
         }
-        BigDecimal value = new BigDecimal(price.toString());
-        return value.compareTo(MIN_PRICE) < 0 || value.compareTo(MAX_PRICE) > 0;
+        BigDecimal value = price;
+        return value.compareTo(MIN_PRICE) < 0 || value.compareTo(MAX_PRICE) > 0 || value.stripTrailingZeros().scale() > 2;
     }
 
-    @RequestMapping(value = "/api/ershou/item/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<MarketplaceItemEntity>> getItemList(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
+    @RequestMapping(value = "/api/marketplace/item/start/{start}", method = RequestMethod.GET)
+    public DataJsonResult<List<MarketplaceItemResponse>> getItemList(@PathVariable("start") int start) throws Exception {
         start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItems(start);
-        return new DataJsonResult<>(true, list);
+        return new DataJsonResult<>(true, list.stream().map(this::response).toList());
     }
 
-    @RequestMapping(value = "/api/ershou/profile", method = RequestMethod.GET)
-    public DataJsonResult<Map<String, Object>> getMySecondhandItems(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/api/marketplace/profile", method = RequestMethod.GET)
+    public DataJsonResult<MarketplaceMineResponse> getMyMarketplaceItems(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         List<MarketplaceItemEntity> list = marketplaceService.queryPersonalItems(sessionId);
         List<MarketplaceItemEntity> doing = new ArrayList<>();
@@ -85,15 +103,13 @@ public class MarketplaceController {
                 sold.add(item);
             }
         }
-        Map<String, Object> data = new HashMap<>();
-        data.put("doing", doing);
-        data.put("sold", sold);
-        data.put("off", off);
-        return new DataJsonResult<>(true, data);
+        return new DataJsonResult<>(true, new MarketplaceMineResponse(
+                doing.stream().map(this::response).toList(), sold.stream().map(this::response).toList(),
+                off.stream().map(this::response).toList()));
     }
 
     @RateLimit(maxRequests = 5, windowSeconds = 60)
-    @RequestMapping(value = "/api/ershou/item", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/marketplace/item", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addItem(HttpServletRequest request,
             @Validated MarketplacePublishDTO dto, MultipartFile image1,
@@ -137,7 +153,7 @@ public class MarketplaceController {
                         marketplaceService.uploadItemPicture(entity.getId(), imageIndex++, image.getInputStream());
                     }
                 }
-            } else {
+            } else if (imageKeys != null) {
                 for (int i = 1; i <= imageKeys.length; i++) {
                     marketplaceService.moveItemPictureFromTempObject(entity.getId(), i, imageKeys[i - 1]);
                 }
@@ -150,15 +166,15 @@ public class MarketplaceController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = "/api/ershou/keyword/{keyword}/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<MarketplaceItemEntity>> getItemWithKeyword(HttpServletRequest request, @PathVariable("keyword") String keyword,
+    @RequestMapping(value = "/api/marketplace/keyword/{keyword}/start/{start}", method = RequestMethod.GET)
+    public DataJsonResult<List<MarketplaceItemResponse>> getItemWithKeyword(@PathVariable("keyword") String keyword,
             @PathVariable("start") int start) throws Exception {
         start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItemsWithKeyword(keyword, start);
-        return new DataJsonResult<>(true, list);
+        return new DataJsonResult<>(true, list.stream().map(this::response).toList());
     }
 
-    @RequestMapping(value = "/api/ershou/item/id/{id}/preview", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/marketplace/item/id/{id}/preview", method = RequestMethod.GET)
     public DataJsonResult<String> getItemPreviewImage(HttpServletRequest request, @PathVariable("id") int id) {
         List<String> list = marketplaceService.getItemPictureURL(id);
         if (list != null && !list.isEmpty()) {
@@ -167,30 +183,34 @@ public class MarketplaceController {
         return new DataJsonResult<>(false, localize(request, "获取二手交易商品预览图失败"));
     }
 
-    @RequestMapping(value = "/api/ershou/item/id/{id}", method = RequestMethod.GET)
-    public DataJsonResult<MarketplaceItemVO> getItemDetail(@PathVariable("id") int id) throws Exception {
+    @RequestMapping(value = "/api/marketplace/item/id/{id}", method = RequestMethod.GET)
+    public DataJsonResult<MarketplaceDetailResponse> getItemDetail(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
         MarketplaceItemVO vo = marketplaceService.queryDetailById(id);
-        if (vo.getSecondhandItem().getState().equals(0)) {
+        if (vo.getMarketplaceItem().getState().equals(0)) {
             throw new NotAvailableStateException("已下架的二手交易信息不能查看");
         }
-        if (vo.getSecondhandItem().getState().equals(2)) {
+        if (vo.getMarketplaceItem().getState().equals(2)) {
             throw new ConfirmedStateException("已出售的二手交易信息不能查看");
         }
-        return new DataJsonResult<>(true, vo);
+        MarketplaceItemResponse item = response(vo.getMarketplaceItem());
+        return new DataJsonResult<>(true, new MarketplaceDetailResponse(item,
+                new MarketplaceAuthorResponse(item.authorId(), item.displayName(),
+                        item.authorId() == null ? null : "/api/social/users/" + item.authorId() + "/avatar"), marketplaceService.ownedByCurrentUser(
+                        (String) request.getAttribute("sessionId"), vo.getMarketplaceItem())));
     }
 
-    @RequestMapping(value = "/api/ershou/item/type/{type}/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<MarketplaceItemEntity>> getItemByType(HttpServletRequest request, @Validated @Range(min = 0, max = 11) @PathVariable("type") int type,
+    @RequestMapping(value = "/api/marketplace/item/type/{type}/start/{start}", method = RequestMethod.GET)
+    public DataJsonResult<List<MarketplaceItemResponse>> getItemByType(@Validated @Range(min = 0, max = 11) @PathVariable("type") int type,
             @PathVariable("start") int start) throws Exception {
         if (type < 0 || type > 11) {
             throw new IllegalArgumentException("请求参数不合法");
         }
         start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItemsByType(type, start);
-        return new DataJsonResult<>(true, list);
+        return new DataJsonResult<>(true, list.stream().map(this::response).toList());
     }
 
-    @RequestMapping(value = "/api/ershou/item/id/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/marketplace/item/id/{id}", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult updateItem(HttpServletRequest request, @Validated MarketplacePublishDTO dto,
             @PathVariable("id") int id) throws Exception {
@@ -202,7 +222,7 @@ public class MarketplaceController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = "/api/ershou/item/state/id/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/marketplace/item/state/id/{id}", method = RequestMethod.POST)
     public JsonResult updateItemState(HttpServletRequest request, @PathVariable("id") int id,
             @Validated @Range(min = 0, max = 2) int state) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");

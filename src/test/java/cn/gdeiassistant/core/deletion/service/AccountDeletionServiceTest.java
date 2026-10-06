@@ -1,10 +1,10 @@
 package cn.gdeiassistant.core.deletion.service;
 
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.DatabaseException.UserNotExistException;
-import cn.gdeiassistant.common.pojo.Entity.CetNumber;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
+import cn.gdeiassistant.common.pojo.entity.CetNumber;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.core.cet.mapper.CetMapper;
 import cn.gdeiassistant.core.close.mapper.CloseMapper;
 import cn.gdeiassistant.core.dating.mapper.DatingMapper;
@@ -28,8 +28,8 @@ import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.core.secret.mapper.SecretMapper;
 import cn.gdeiassistant.core.topic.mapper.TopicMapper;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -74,6 +74,8 @@ class AccountDeletionServiceTest {
     @Mock private PhotographMapper photographMapper;
     @Mock private InteractionNotificationMapper interactionNotificationMapper;
     @Mock private ExpressMapper expressMapper;
+    @Mock private cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper cleanupMapper;
+    @Mock private org.springframework.context.ApplicationEventPublisher events;
 
     private static final String USERNAME = "testuser";
     private static final String PASSWORD = "testpass";
@@ -112,8 +114,8 @@ class AccountDeletionServiceTest {
             verify(phoneMapper).selectPhone(USERNAME);
 
             // Verify education cache removal
-            verify(gradeDao).removeGrade(USERNAME);
-            verify(scheduleDao).removeSchedule(USERNAME);
+            verifyNoInteractions(gradeDao);
+            verifyNoInteractions(scheduleDao);
 
             // Verify dating profiles hidden
             verify(datingMapper).hideDatingProfilesByUsername(USERNAME);
@@ -126,7 +128,7 @@ class AccountDeletionServiceTest {
             verify(privacyMapper).resetPrivacy(USERNAME);
 
             // Verify avatar deletion
-            verify(userProfileService).deleteAvatar(USERNAME);
+            verifyNoInteractions(userProfileService);
 
             // Verify anonymization of community content
             verify(topicMapper).anonymizeUsername(eq(USERNAME), anyString());
@@ -140,8 +142,7 @@ class AccountDeletionServiceTest {
             verify(userMapper).closeUser(anyString(), eq(USERNAME));
 
             // Verify close log saved
-            verify(closeMapper).insertCloseLog(argThat(log ->
-                    log.getUsername().equals(USERNAME)));
+            verify(cleanupMapper).enqueue(anyString(), eq(USERNAME), startsWith("del_"), nullable(Long.class));
         }
 
         @Test
@@ -245,10 +246,7 @@ class AccountDeletionServiceTest {
         void deletionSucceedsWithNullOptionalMappers() throws Exception {
             // Build a service with optional mappers explicitly set to null via reflection
             AccountDeletionService service = new AccountDeletionService();
-            setField(service, "userProfileService", userProfileService);
             setField(service, "userCertificateService", userCertificateService);
-            setField(service, "gradeDao", gradeDao);
-            setField(service, "scheduleDao", scheduleDao);
             setField(service, "userMapper", userMapper);
             setField(service, "marketplaceMapper", marketplaceMapper);
             setField(service, "lostAndFoundMapper", lostAndFoundMapper);
@@ -257,7 +255,8 @@ class AccountDeletionServiceTest {
             setField(service, "phoneMapper", phoneMapper);
             setField(service, "profileMapper", profileMapper);
             setField(service, "privacyMapper", privacyMapper);
-            setField(service, "closeMapper", closeMapper);
+            setField(service, "cleanupMapper", cleanupMapper);
+            setField(service, "events", events);
             // Intentionally NOT setting: datingMapper, topicMapper, secretMapper,
             // photographMapper, interactionNotificationMapper, expressMapper
 
@@ -272,7 +271,7 @@ class AccountDeletionServiceTest {
             // Core non-optional operations should still be called
             verify(profileMapper).resetUserProfile(USERNAME, "已注销");
             verify(userMapper).closeUser(anyString(), eq(USERNAME));
-            verify(closeMapper).insertCloseLog(any());
+            verifyNoInteractions(closeMapper);
         }
 
         private void setField(Object target, String fieldName, Object value) throws Exception {
@@ -286,7 +285,7 @@ class AccountDeletionServiceTest {
     // CloseSocialDataState
     // =========================================================================
     @Nested
-    @DisplayName("CloseSocialDataState")
+    @DisplayName("closeSocialDataState")
     class CloseSocialDataStateTests {
 
         @Test
@@ -307,7 +306,7 @@ class AccountDeletionServiceTest {
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
 
-            accountDeletionService.CloseSocialDataState(USERNAME);
+            accountDeletionService.closeSocialDataState(USERNAME);
 
             verify(marketplaceMapper).updateItemState(10, 3);
             verify(marketplaceMapper, never()).updateItemState(eq(20), anyInt());
@@ -331,7 +330,7 @@ class AccountDeletionServiceTest {
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
 
-            accountDeletionService.CloseSocialDataState(USERNAME);
+            accountDeletionService.closeSocialDataState(USERNAME);
 
             verify(lostAndFoundMapper).updateItemState(5, 2);
             verify(lostAndFoundMapper, never()).updateItemState(eq(6), anyInt());
@@ -351,7 +350,7 @@ class AccountDeletionServiceTest {
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(List.of(openOrder));
 
-            accountDeletionService.CloseSocialDataState(USERNAME);
+            accountDeletionService.closeSocialDataState(USERNAME);
 
             verify(deliveryMapper).updateOrderState(100, 3);
         }
@@ -376,7 +375,7 @@ class AccountDeletionServiceTest {
             when(deliveryMapper.selectDeliveryTradeByOrderId(200))
                     .thenReturn(pendingTrade);
 
-            accountDeletionService.CloseSocialDataState(USERNAME);
+            accountDeletionService.closeSocialDataState(USERNAME);
 
             verify(deliveryMapper).updateTradeState(300, 0, 2);
         }
@@ -397,7 +396,7 @@ class AccountDeletionServiceTest {
             when(deliveryMapper.selectDeliveryTradeByOrderId(200))
                     .thenReturn(null);
 
-            accountDeletionService.CloseSocialDataState(USERNAME);
+            accountDeletionService.closeSocialDataState(USERNAME);
 
             verify(deliveryMapper, never()).updateTradeState(anyInt(), anyInt(), anyInt());
         }
@@ -422,7 +421,7 @@ class AccountDeletionServiceTest {
             when(deliveryMapper.selectDeliveryTradeByOrderId(200))
                     .thenReturn(completedTrade);
 
-            accountDeletionService.CloseSocialDataState(USERNAME);
+            accountDeletionService.closeSocialDataState(USERNAME);
 
             verify(deliveryMapper, never()).updateTradeState(anyInt(), anyInt(), anyInt());
         }
@@ -437,7 +436,7 @@ class AccountDeletionServiceTest {
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
 
-            accountDeletionService.CloseSocialDataState(USERNAME);
+            accountDeletionService.closeSocialDataState(USERNAME);
 
             verify(datingMapper).hideDatingProfilesByUsername(USERNAME);
         }
@@ -452,7 +451,7 @@ class AccountDeletionServiceTest {
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
 
-            accountDeletionService.CloseSocialDataState(USERNAME);
+            accountDeletionService.closeSocialDataState(USERNAME);
 
             verify(marketplaceMapper, never()).updateItemState(anyInt(), anyInt());
             verify(lostAndFoundMapper, never()).updateItemState(anyInt(), anyInt());
@@ -484,13 +483,15 @@ class AccountDeletionServiceTest {
 
         @Test
         @DisplayName("throws PasswordIncorrectException when password does not match")
-        void throwsPasswordIncorrectExceptionOnWrongPassword() {
-            UserEntity userEntity = new UserEntity();
+        void throwsPasswordIncorrectExceptionOnWrongPassword() throws Exception {
+            CampusAccountView userEntity = new CampusAccountView();
             userEntity.setUsername(USERNAME);
             userEntity.setPassword("correct-password");
 
             when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
 
+            org.mockito.Mockito.doThrow(new PasswordIncorrectException("密码错误"))
+                    .when(userCertificateService).verifyCurrentPassword(userEntity.getUsername(), "wrong-password");
             assertThrows(PasswordIncorrectException.class, () ->
                     accountDeletionService.checkAccountDeletability(SESSION_ID, "wrong-password"));
         }
@@ -498,7 +499,7 @@ class AccountDeletionServiceTest {
         @Test
         @DisplayName("returns success when no blocking conditions exist")
         void returnsSuccessWhenNoPendingItems() throws Exception {
-            UserEntity userEntity = new UserEntity();
+            CampusAccountView userEntity = new CampusAccountView();
             userEntity.setUsername(USERNAME);
             userEntity.setPassword(PASSWORD);
 
@@ -519,7 +520,7 @@ class AccountDeletionServiceTest {
         @Test
         @DisplayName("returns failure with marketplace blocking condition")
         void returnsFailureWithActiveMarketplaceItem() throws Exception {
-            UserEntity userEntity = new UserEntity();
+            CampusAccountView userEntity = new CampusAccountView();
             userEntity.setUsername(USERNAME);
             userEntity.setPassword(PASSWORD);
 
@@ -545,7 +546,7 @@ class AccountDeletionServiceTest {
         @Test
         @DisplayName("returns failure with lost-and-found blocking condition")
         void returnsFailureWithActiveLostAndFoundItem() throws Exception {
-            UserEntity userEntity = new UserEntity();
+            CampusAccountView userEntity = new CampusAccountView();
             userEntity.setUsername(USERNAME);
             userEntity.setPassword(PASSWORD);
 
@@ -571,7 +572,7 @@ class AccountDeletionServiceTest {
         @Test
         @DisplayName("returns failure with open delivery order blocking condition")
         void returnsFailureWithOpenDeliveryOrder() throws Exception {
-            UserEntity userEntity = new UserEntity();
+            CampusAccountView userEntity = new CampusAccountView();
             userEntity.setUsername(USERNAME);
             userEntity.setPassword(PASSWORD);
 
@@ -598,7 +599,7 @@ class AccountDeletionServiceTest {
         @Test
         @DisplayName("returns failure with pending delivery trade blocking condition")
         void returnsFailureWithPendingDeliveryTrade() throws Exception {
-            UserEntity userEntity = new UserEntity();
+            CampusAccountView userEntity = new CampusAccountView();
             userEntity.setUsername(USERNAME);
             userEntity.setPassword(PASSWORD);
 
@@ -631,7 +632,7 @@ class AccountDeletionServiceTest {
         @Test
         @DisplayName("returns all blocking conditions when multiple issues exist")
         void returnsAllBlockingConditions() throws Exception {
-            UserEntity userEntity = new UserEntity();
+            CampusAccountView userEntity = new CampusAccountView();
             userEntity.setUsername(USERNAME);
             userEntity.setPassword(PASSWORD);
 

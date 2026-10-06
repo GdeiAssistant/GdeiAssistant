@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.cet.mapper;
 
-import cn.gdeiassistant.common.pojo.Entity.CetNumber;
+import cn.gdeiassistant.common.pojo.entity.CetNumber;
 import org.apache.ibatis.annotations.*;
 
 public interface CetMapper {

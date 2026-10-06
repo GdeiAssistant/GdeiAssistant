@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.social.service;
 
-import cn.gdeiassistant.common.pojo.Entity.Introduction;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.pojo.entity.Introduction;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
 import cn.gdeiassistant.core.privacy.pojo.entity.PrivacyEntity;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
@@ -10,8 +10,8 @@ import cn.gdeiassistant.core.social.exception.SocialException;
 import cn.gdeiassistant.core.social.mapper.SocialRelationMapper;
 import cn.gdeiassistant.core.social.pojo.dto.SocialUserDTO;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class SocialIdentityService {
     @Autowired
     private SocialRelationMapper socialRelationMapper;
 
-    public UserEntity requireActiveViewer(String sessionId) {
+    public CampusAccountView requireActiveViewer(String sessionId) {
         if (sessionId == null || sessionId.isBlank()) {
             throw SocialException.authRequired();
         }
@@ -46,33 +46,33 @@ public class SocialIdentityService {
         if (login == null || login.getUsername() == null) {
             throw SocialException.authRequired();
         }
-        UserEntity entity = userMapper.selectUser(login.getUsername());
+        CampusAccountView entity = userMapper.selectUser(login.getUsername());
         if (entity == null || entity.getId() == null || !entity.isActive()) {
             throw SocialException.authRequired();
         }
         return entity;
     }
 
-    public UserEntity requireActiveByPublicId(String publicId) {
+    public CampusAccountView requireActiveByPublicId(String publicId) {
         if (publicId == null || publicId.isBlank()) {
             throw SocialException.userNotFound();
         }
-        UserEntity entity = userMapper.selectUserByPublicId(publicId.trim());
+        CampusAccountView entity = userMapper.selectUserByPublicId(publicId.trim());
         if (entity == null || entity.getId() == null || !entity.isActive()) {
             throw SocialException.userNotFound();
         }
         return entity;
     }
 
-    public UserEntity requireActiveById(long userId) {
-        UserEntity entity = userMapper.selectUserById(userId);
+    public CampusAccountView requireActiveById(long userId) {
+        CampusAccountView entity = userMapper.selectUserById(userId);
         if (entity == null || entity.getId() == null || !entity.isActive()) {
             throw SocialException.userNotFound();
         }
         return entity;
     }
 
-    public UserEntity findById(long userId) {
+    public CampusAccountView findById(long userId) {
         return userMapper.selectUserById(userId);
     }
 
@@ -86,7 +86,7 @@ public class SocialIdentityService {
         }
     }
 
-    public SocialUserDTO buildSocialUser(UserEntity viewer, UserEntity target) {
+    public SocialUserDTO buildSocialUser(CampusAccountView viewer, CampusAccountView target) {
         SocialUserDTO dto = new SocialUserDTO();
         dto.setId(target.getPublicId());
         ProfileEntity profile = target.getUsername() == null ? null : profileMapper.selectUserProfile(target.getUsername());
@@ -114,7 +114,7 @@ public class SocialIdentityService {
         return dto;
     }
 
-    public SocialUserDTO buildClosedPeer(UserEntity closed) {
+    public SocialUserDTO buildClosedPeer(CampusAccountView closed) {
         SocialUserDTO dto = new SocialUserDTO();
         dto.setId(closed != null && closed.getPublicId() != null ? closed.getPublicId() : "");
         dto.setNickname("已注销");
@@ -148,7 +148,7 @@ public class SocialIdentityService {
         return REL_NONE;
     }
 
-    public MessagePermission evaluateMessagePermission(UserEntity sender, UserEntity receiver) {
+    public MessagePermission evaluateMessagePermission(CampusAccountView sender, CampusAccountView receiver) {
         if (sender.getId().equals(receiver.getId())) {
             return MessagePermission.denied("SELF");
         }

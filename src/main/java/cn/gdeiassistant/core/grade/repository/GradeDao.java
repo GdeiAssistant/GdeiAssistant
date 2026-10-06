@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.grade.repository;
 
-import cn.gdeiassistant.common.pojo.Document.GradeDocument;
+import cn.gdeiassistant.common.pojo.document.GradeDocument;
 
 public interface GradeDao {
 

@@ -6,7 +6,7 @@ import AppToast from '@/components/ui/AppToast.vue'
 const route = useRoute()
 const AppSidebar = defineAsyncComponent(() => import('@/layout/AppSidebar.vue'))
 
-const COMMUNITY_PREFIXES = ['/ershou', '/marketplace', '/lostandfound', '/secret', '/express', '/topic', '/delivery', '/dating', '/photograph']
+const COMMUNITY_PREFIXES = ['/marketplace', '/marketplace', '/lostandfound', '/secret', '/express', '/topic', '/delivery', '/dating', '/photograph']
 
 const isCommunityRoute = computed(() => {
   const p = route.path

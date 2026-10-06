@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userProfile.controller.request;
+package cn.gdeiassistant.core.userprofile.controller.request;
 
 public class IntroductionUpdateRequest {
     private String introduction;

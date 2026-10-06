@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.message.service.provider;
 
-import cn.gdeiassistant.common.pojo.Entity.PhotographLike;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.pojo.entity.PhotographLike;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import cn.gdeiassistant.core.photograph.mapper.PhotographMapper;
 import cn.gdeiassistant.core.photograph.pojo.entity.PhotographCommentEntity;

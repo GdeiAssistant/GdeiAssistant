@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.secret.service;
 
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

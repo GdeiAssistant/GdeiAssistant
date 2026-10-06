@@ -1,7 +1,7 @@
 package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
-import cn.gdeiassistant.common.pojo.Entity.ElectricFees;
+import cn.gdeiassistant.common.pojo.entity.ElectricFees;
 import cn.gdeiassistant.core.dataquery.controller.DataQueryController;
 import cn.gdeiassistant.core.dataquery.service.DataQueryService;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ class DataQueryContractTest {
         fees.setName("林知远");
         fees.setNumber(20231234567L);
         fees.setYear(2026);
-        fees.setTotalElectricBill(32.5f);
+        fees.setTotalElectricBill(new java.math.BigDecimal("32.5"));
 
         when(dataQueryService.queryElectricFees("林知远", 20231234567L, 2026)).thenReturn(fees);
 

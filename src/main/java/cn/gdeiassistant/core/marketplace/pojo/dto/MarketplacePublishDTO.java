@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.marketplace.pojo.dto;
 
+import java.math.BigDecimal;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
 
@@ -22,7 +23,8 @@ public class MarketplacePublishDTO implements Serializable {
     private String description;
 
     @NotNull
-    private Float price;
+    @jakarta.validation.constraints.Digits(integer = 4, fraction = 2)
+    private BigDecimal price;
 
     @NotBlank(message = "交易地点不能为空")
     @Length(max = 30)
@@ -43,8 +45,8 @@ public class MarketplacePublishDTO implements Serializable {
     public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public Float getPrice() { return price; }
-    public void setPrice(Float price) { this.price = price; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
     public Integer getType() { return type; }

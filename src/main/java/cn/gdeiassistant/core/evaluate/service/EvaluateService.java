@@ -1,12 +1,12 @@
 package cn.gdeiassistant.core.evaluate.service;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.EvaluateException.NotAvailableTimeException;
-import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.evaluateexception.NotAvailableTimeException;
+import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
 import org.apache.http.message.BasicNameValuePair;
@@ -39,7 +39,7 @@ public class EvaluateService {
      * @param sessionId
      * @param directlySubmit
      */
-    public void TeacherEvaluate(String sessionId, boolean directlySubmit)
+    public void teacherEvaluate(String sessionId, boolean directlySubmit)
             throws NetWorkTimeoutException, TimeStampIncorrectException
             , NotAvailableTimeException, ServerErrorException, PasswordIncorrectException {
         UserCertificateEntity userCertificate = userCertificateService.getUserSessionCertificate(sessionId);

@@ -1,12 +1,12 @@
 package cn.gdeiassistant.core.email.service;
 
-import cn.gdeiassistant.common.exception.VerificationException.SendEmailException;
-import cn.gdeiassistant.common.exception.VerificationException.VerificationCodeInvalidException;
-import cn.gdeiassistant.common.pojo.Entity.Email;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.redis.VerificationCode.VerificationCodeDao;
+import cn.gdeiassistant.common.exception.verificationexception.SendEmailException;
+import cn.gdeiassistant.common.exception.verificationexception.VerificationCodeInvalidException;
+import cn.gdeiassistant.common.pojo.entity.Email;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.redis.verificationcode.VerificationCodeDao;
 import cn.gdeiassistant.core.email.mapper.EmailMapper;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.core.capability.email.EmailVerificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,12 +48,12 @@ public class EmailService {
         //生成随机数
         int randomCode = (int) ((Math.random() * 9 + 1) * 100000);
         //写入Redis缓存记录
-        verificationCodeDao.SaveEmailVerificationCode(email, randomCode);
+        verificationCodeDao.saveEmailVerificationCode(email, randomCode);
         //发送电子邮件验证码
         try {
             emailVerificationSender.sendVerificationCode(email, randomCode);
         } catch (SendEmailException e) {
-            verificationCodeDao.DeleteEmailVerificationCode(email);
+            verificationCodeDao.deleteEmailVerificationCode(email);
             throw e;
         }
     }
@@ -65,11 +65,11 @@ public class EmailService {
      * @param randomCode
      */
     public void checkVerificationCode(String email, int randomCode) throws VerificationCodeInvalidException {
-        Integer verificationCode = verificationCodeDao.QueryEmailVerificationCode(email);
+        Integer verificationCode = verificationCodeDao.queryEmailVerificationCode(email);
         if (verificationCode != null) {
             if (verificationCode.equals(randomCode)) {
                 //移除电子邮件验证码记录
-                verificationCodeDao.DeleteEmailVerificationCode(email);
+                verificationCodeDao.deleteEmailVerificationCode(email);
                 //校验通过
                 return;
             }

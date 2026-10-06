@@ -1,9 +1,9 @@
 package cn.gdeiassistant.core.evaluate.controller;
 
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.evaluate.pojo.dto.EvaluateSubmitDTO;
 import cn.gdeiassistant.core.evaluate.service.EvaluateService;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +31,7 @@ public class EvaluateController {
             return new JsonResult(false, BackendTextLocalizer.localizeMessage("未检测到有效令牌", request.getHeader("Accept-Language")));
         }
         boolean directlySubmit = body != null && Boolean.TRUE.equals(body.getDirectSubmit());
-        evaluateService.TeacherEvaluate(sessionId, directlySubmit);
+        evaluateService.teacherEvaluate(sessionId, directlySubmit);
         return new JsonResult(true);
     }
 }

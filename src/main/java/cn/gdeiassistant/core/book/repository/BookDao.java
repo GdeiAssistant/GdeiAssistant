@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.book.repository;
 
-import cn.gdeiassistant.common.pojo.Entity.Book;
+import cn.gdeiassistant.common.pojo.entity.Book;
 
 import java.util.List;
 

@@ -14,7 +14,7 @@ public interface SecretConverter {
     @Mapping(target = "liked", ignore = true)
     @Mapping(target = "voiceURL", ignore = true)
     @Mapping(target = "username",
-            expression = "java(cn.gdeiassistant.common.tools.Utils.AnonymizeUtils.treeholeAnonymousLabel())")
+            expression = "java(cn.gdeiassistant.common.tools.utils.AnonymizeUtils.treeholeAnonymousLabel())")
     SecretVO toVO(SecretContentEntity entity);
 
     List<SecretVO> toVOList(List<SecretContentEntity> entities);

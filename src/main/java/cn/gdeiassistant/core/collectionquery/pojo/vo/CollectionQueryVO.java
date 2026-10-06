@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.collectionquery.pojo.vo;
 
-import cn.gdeiassistant.common.pojo.Entity.Collection;
+import cn.gdeiassistant.common.pojo.entity.Collection;
 
 import java.io.Serializable;
 import java.util.List;

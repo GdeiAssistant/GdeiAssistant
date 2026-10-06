@@ -1,10 +1,10 @@
 package cn.gdeiassistant.core.social.websocket;
 
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.redis.UserCertificate.UserCertificateDao;
-import cn.gdeiassistant.common.tools.Utils.JwtUtil;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.redis.usercertificate.UserCertificateDao;
+import cn.gdeiassistant.common.tools.utils.JwtUtil;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import com.auth0.jwt.interfaces.Claim;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -112,7 +112,7 @@ public class SocialRealtimeHandler extends TextWebSocketHandler {
                 session.close(CloseStatus.POLICY_VIOLATION);
                 return;
             }
-            UserEntity appUser = userMapper.selectUser(username);
+            CampusAccountView appUser = userMapper.selectUser(username);
             if (appUser == null || !appUser.isActive()) {
                 session.close(CloseStatus.POLICY_VIOLATION);
                 return;
@@ -174,7 +174,7 @@ public class SocialRealtimeHandler extends TextWebSocketHandler {
             return false;
         }
         try {
-            UserEntity appUser = userMapper.selectUserById(((Number) userIdObj).longValue());
+            CampusAccountView appUser = userMapper.selectUserById(((Number) userIdObj).longValue());
             return appUser != null && appUser.isActive();
         } catch (RuntimeException ex) {
             return false;

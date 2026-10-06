@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.information.pojo.vo;
 
-import cn.gdeiassistant.common.pojo.Entity.Festival;
+import cn.gdeiassistant.common.pojo.entity.Festival;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;

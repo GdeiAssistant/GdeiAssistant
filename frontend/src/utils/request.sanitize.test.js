@@ -50,4 +50,17 @@ describe('sanitizeMessage', () => {
     expect(sanitizeMessage('Bearer abc.def.ghi')).toBe('系统繁忙，请稍后再试')
     expect(sanitizeMessage('password=super-secret')).toBe('系统繁忙，请稍后再试')
   })
+  it('keeps a replacement session when an old request returns 401', async () => {
+    const { default: service } = await import('./request.js')
+    localStorage.setItem('token', 'new-session')
+    await expect(service.get('/protected', { adapter: async (config) => {
+      config.headers.Authorization = 'Bearer old-session'
+      const error = new Error('expired')
+      error.config = config
+      error.response = { status: 401, data: {}, config }
+      throw error
+    } })).rejects.toThrow('expired')
+    expect(localStorage.getItem('token')).toBe('new-session')
+  })
+
 })

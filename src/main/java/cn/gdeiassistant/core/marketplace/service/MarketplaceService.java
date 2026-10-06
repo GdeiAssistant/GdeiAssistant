@@ -1,18 +1,18 @@
 package cn.gdeiassistant.core.marketplace.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.ConfirmedStateException;
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.exception.DatabaseException.NoAccessException;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.exception.databaseexception.ConfirmedStateException;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.exception.databaseexception.NoAccessException;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.marketplace.mapper.MarketplaceMapper;
 import cn.gdeiassistant.core.marketplace.pojo.dto.MarketplacePublishDTO;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
-import cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
+import cn.gdeiassistant.common.tools.utils.PublicAuthorResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,18 +46,23 @@ public class MarketplaceService {
     @Autowired
     private PublicAuthorResolver publicAuthorResolver;
 
+    public boolean ownedByCurrentUser(String sessionId, MarketplaceItemEntity item) throws Exception {
+        if (sessionId == null) return false;
+        User user = userCertificateService.getUserLoginCertificate(sessionId);
+        return user != null && java.util.Objects.equals(item.getUsername(), user.getUsername());
+    }
+
     public MarketplaceItemVO queryDetailById(int id) throws Exception {
         MarketplaceItemVO vo = marketplaceMapper.selectInfoByID(id);
         if (vo == null) {
             throw new DataNotExistException("二手交易商品不存在");
         }
-        String campusUsername = vo.getSecondhandItem().getUsername();
+        String campusUsername = vo.getMarketplaceItem().getUsername();
         PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(campusUsername);
-        int itemId = vo.getSecondhandItem().getId();
+        int itemId = vo.getMarketplaceItem().getId();
         List<String> pictureURL = getItemPictureURL(itemId);
-        vo.getSecondhandItem().setAuthorId(author.authorId());
-        vo.getSecondhandItem().setUsername(author.displayName());
-        vo.getSecondhandItem().setPictureURL(pictureURL);
+        vo.getMarketplaceItem().setAuthorId(author.authorId());
+        vo.getMarketplaceItem().setPictureURL(pictureURL);
         vo.getProfile().setUsername(author.displayName());
         vo.getProfile().setAvatarURL(author.authorId() != null
                 ? "/api/social/users/" + author.authorId() + "/avatar"
@@ -69,8 +74,8 @@ public class MarketplaceService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         MarketplaceItemVO vo = marketplaceMapper.selectInfoByID(id);
         if (vo != null) {
-            if (vo.getSecondhandItem().getUsername().equals(user.getUsername())) {
-                if (!vo.getSecondhandItem().getState().equals(2)) {
+            if (vo.getMarketplaceItem().getUsername().equals(user.getUsername())) {
+                if (!vo.getMarketplaceItem().getState().equals(2)) {
                     return;
                 }
                 throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
@@ -123,7 +128,6 @@ public class MarketplaceService {
     private void applyPublicAuthor(MarketplaceItemEntity e) {
         PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(e.getUsername());
         e.setAuthorId(author.authorId());
-        e.setUsername(author.displayName());
     }
 
     /** 发布：DTO -> Entity -> 持久化，返回带 id 的 Entity 供上传图片使用 */
@@ -133,7 +137,7 @@ public class MarketplaceService {
         MarketplaceItemEntity entity = new MarketplaceItemEntity();
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
-        entity.setPrice((float) (Math.round(dto.getPrice() * 100)) / 100);
+        entity.setPrice(dto.getPrice().setScale(2, java.math.RoundingMode.UNNECESSARY));
         entity.setLocation(dto.getLocation());
         entity.setType(dto.getType());
         entity.setQq(dto.getQq());
@@ -150,8 +154,8 @@ public class MarketplaceService {
         if (vo == null) {
             throw new DataNotExistException("查找的二手交易信息不存在");
         }
-        if (vo.getSecondhandItem().getUsername().equals(user.getUsername())) {
-            if (!vo.getSecondhandItem().getState().equals(2)) {
+        if (vo.getMarketplaceItem().getUsername().equals(user.getUsername())) {
+            if (!vo.getMarketplaceItem().getState().equals(2)) {
                 MarketplaceItemEntity entity = new MarketplaceItemEntity();
                 entity.setId(id);
                 entity.setName(dto.getName());
@@ -175,8 +179,8 @@ public class MarketplaceService {
         if (vo == null) {
             throw new DataNotExistException("查找的二手交易信息不存在");
         }
-        if (vo.getSecondhandItem().getUsername().equals(user.getUsername())) {
-            if (!vo.getSecondhandItem().getState().equals(2)) {
+        if (vo.getMarketplaceItem().getUsername().equals(user.getUsername())) {
+            if (!vo.getMarketplaceItem().getState().equals(2)) {
                 marketplaceMapper.updateItemState(id, state);
                 return;
             }

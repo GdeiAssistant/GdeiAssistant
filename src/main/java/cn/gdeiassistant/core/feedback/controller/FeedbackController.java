@@ -1,9 +1,9 @@
 package cn.gdeiassistant.core.feedback.controller;
 
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
-import cn.gdeiassistant.common.pojo.Entity.ClassifiedFeedback;
-import cn.gdeiassistant.common.pojo.Entity.Feedback;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.entity.ClassifiedFeedback;
+import cn.gdeiassistant.common.pojo.entity.Feedback;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.feedback.pojo.dto.FeedbackSubmitDTO;
 import cn.gdeiassistant.core.feedback.service.FeedbackService;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
@@ -39,7 +39,7 @@ public class FeedbackController {
     @RequestMapping(value = "/api/feedback", method = RequestMethod.POST)
     public JsonResult postFeedback(HttpServletRequest request, @RequestBody @Validated FeedbackSubmitDTO body) {
         String sessionId = (String) request.getAttribute("sessionId");
-        feedbackService.SubmitFeedback(sessionId, body);
+        feedbackService.submitFeedback(sessionId, body);
         return new JsonResult(true, BackendTextLocalizer.localizeMessage("感谢您的反馈", request.getHeader("Accept-Language")));
     }
 
@@ -51,7 +51,7 @@ public class FeedbackController {
      * @return
      */
     @RequestMapping(value = "/api/feedback/function", method = RequestMethod.POST)
-    public JsonResult PostFunctionalFeedback(HttpServletRequest request, @Validated Feedback feedback, MultipartFile[] images) throws IOException, MessagingException {
+    public JsonResult postFunctionalFeedback(HttpServletRequest request, @Validated Feedback feedback, MultipartFile[] images) throws IOException, MessagingException {
         List<InputStream> inputStreamList = new ArrayList<>();
         if (images != null) {
             if (images.length > 9) {
@@ -66,7 +66,7 @@ public class FeedbackController {
             }
         }
         String sessionId = (String) request.getAttribute("sessionId");
-        feedbackService.SendFeedbackEmail(sessionId, feedback.getContent(), inputStreamList.toArray(new InputStream[0]));
+        feedbackService.sendFeedbackEmail(sessionId, feedback.getContent(), inputStreamList.toArray(new InputStream[0]));
         return new JsonResult(true);
     }
 
@@ -81,7 +81,7 @@ public class FeedbackController {
      * @throws MessagingException
      */
     @RequestMapping(value = "/api/feedback/ticket", method = RequestMethod.POST)
-    public JsonResult PostTicketFeedback(HttpServletRequest request, @Validated ClassifiedFeedback feedback, MultipartFile[] images) throws IOException, MessagingException {
+    public JsonResult postTicketFeedback(HttpServletRequest request, @Validated ClassifiedFeedback feedback, MultipartFile[] images) throws IOException, MessagingException {
         List<InputStream> inputStreamList = new ArrayList<>();
         if (images != null) {
             if (images.length > 9) {
@@ -96,7 +96,7 @@ public class FeedbackController {
             }
         }
         String sessionId = (String) request.getAttribute("sessionId");
-        feedbackService.SendTicketEmail(sessionId, feedback.getContent(), feedback.getType()
+        feedbackService.sendTicketEmail(sessionId, feedback.getContent(), feedback.getType()
                 , inputStreamList.toArray(new InputStream[0]));
         return new JsonResult(true);
     }

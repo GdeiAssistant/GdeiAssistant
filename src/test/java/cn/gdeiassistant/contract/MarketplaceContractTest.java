@@ -53,7 +53,7 @@ class MarketplaceContractTest {
     void listEndpointReturnsExpectedFields() throws Exception {
         when(marketplaceService.queryItems(0)).thenReturn(List.of(mockItemEntity()));
 
-        mockMvc.perform(get("/api/ershou/item/start/0"))
+        mockMvc.perform(get("/api/marketplace/item/start/0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data[0].id").exists())
@@ -67,11 +67,11 @@ class MarketplaceContractTest {
 
     @Test
     void listEndpointRejectsNegativeStart() throws Exception {
-        mockMvc.perform(get("/api/ershou/item/start/-1"))
+        mockMvc.perform(get("/api/marketplace/item/start/-1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(get("/api/ershou/keyword/textbook/start/-1"))
+        mockMvc.perform(get("/api/marketplace/keyword/textbook/start/-1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
@@ -83,7 +83,7 @@ class MarketplaceContractTest {
         when(marketplaceService.queryItemsWithKeyword("textbook", 0))
                 .thenReturn(List.of(mockItemEntity()));
 
-        mockMvc.perform(get("/api/ershou/keyword/textbook/start/0"))
+        mockMvc.perform(get("/api/marketplace/keyword/textbook/start/0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data").isArray())
@@ -95,7 +95,7 @@ class MarketplaceContractTest {
     void keywordSearchReturnsEmptyArrayWhenNoResults() throws Exception {
         when(marketplaceService.queryItemsWithKeyword("noresult", 0)).thenReturn(List.of());
 
-        mockMvc.perform(get("/api/ershou/keyword/noresult/start/0"))
+        mockMvc.perform(get("/api/marketplace/keyword/noresult/start/0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data").isEmpty());
@@ -105,7 +105,7 @@ class MarketplaceContractTest {
     void typeFilterEndpointReturnsExpectedFields() throws Exception {
         when(marketplaceService.queryItemsByType(8, 0)).thenReturn(List.of(mockItemEntity()));
 
-        mockMvc.perform(get("/api/ershou/item/type/8/start/0"))
+        mockMvc.perform(get("/api/marketplace/item/type/8/start/0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data[0].id").exists())
@@ -114,11 +114,11 @@ class MarketplaceContractTest {
 
     @Test
     void typeFilterEndpointRejectsInvalidTypeOrStart() throws Exception {
-        mockMvc.perform(get("/api/ershou/item/type/12/start/0"))
+        mockMvc.perform(get("/api/marketplace/item/type/12/start/0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(get("/api/ershou/item/type/8/start/-1"))
+        mockMvc.perform(get("/api/marketplace/item/type/8/start/-1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
@@ -131,20 +131,20 @@ class MarketplaceContractTest {
 
         when(marketplaceService.queryDetailById(1)).thenReturn(vo);
 
-        mockMvc.perform(get("/api/ershou/item/id/1"))
+        mockMvc.perform(get("/api/marketplace/item/id/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.secondhandItem.id").value(1))
-                .andExpect(jsonPath("$.data.secondhandItem.name").value("Textbook"))
-                .andExpect(jsonPath("$.data.secondhandItem.price").value(25.0))
-                .andExpect(jsonPath("$.data.profile.nickname").exists());
+                .andExpect(jsonPath("$.data.item.id").value(1))
+                .andExpect(jsonPath("$.data.item.name").value("Textbook"))
+                .andExpect(jsonPath("$.data.item.price").value(25.0))
+                .andExpect(jsonPath("$.data.profile.displayName").exists());
     }
 
     @Test
     void previewEndpointReturnsSingleUrl() throws Exception {
         when(marketplaceService.getItemPictureURL(1)).thenReturn(List.of("https://example.com/pic1.jpg"));
 
-        mockMvc.perform(get("/api/ershou/item/id/1/preview"))
+        mockMvc.perform(get("/api/marketplace/item/id/1/preview"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data").value("https://example.com/pic1.jpg"));
@@ -154,14 +154,14 @@ class MarketplaceContractTest {
     void previewEndpointReturnsFailureWhenNoPictures() throws Exception {
         when(marketplaceService.getItemPictureURL(99)).thenReturn(List.of());
 
-        mockMvc.perform(get("/api/ershou/item/id/99/preview"))
+        mockMvc.perform(get("/api/marketplace/item/id/99/preview"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
     }
 
     @Test
     void stateEndpointUpdatesValidState() throws Exception {
-        mockMvc.perform(post("/api/ershou/item/state/id/101")
+        mockMvc.perform(post("/api/marketplace/item/state/id/101")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "2"))
                 .andExpect(status().isOk())
@@ -172,7 +172,7 @@ class MarketplaceContractTest {
 
     @Test
     void stateEndpointRejectsInvalidStateBeforeService() throws Exception {
-        mockMvc.perform(post("/api/ershou/item/state/id/101")
+        mockMvc.perform(post("/api/marketplace/item/state/id/101")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "3"))
                 .andExpect(status().isOk())
@@ -189,7 +189,7 @@ class MarketplaceContractTest {
         when(marketplaceService.publishItem(any(MarketplacePublishDTO.class), eq("test-session")))
                 .thenReturn(saved);
 
-        mockMvc.perform(post("/api/ershou/item")
+        mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "教材")
                         .param("description", "九成新微积分教材")
@@ -207,7 +207,7 @@ class MarketplaceContractTest {
         MarketplacePublishDTO dto = captor.getValue();
         assertEquals("教材", dto.getName());
         assertEquals("九成新微积分教材", dto.getDescription());
-        assertEquals(Float.valueOf(25.50f), dto.getPrice());
+        assertEquals(new java.math.BigDecimal("25.50"), dto.getPrice());
         assertEquals("图书馆门口", dto.getLocation());
         assertEquals(8, dto.getType());
         assertEquals("123456", dto.getQq());
@@ -225,7 +225,7 @@ class MarketplaceContractTest {
         when(marketplaceService.publishItem(any(MarketplacePublishDTO.class), eq("test-session")))
                 .thenReturn(minSaved, maxSaved);
 
-        mockMvc.perform(post("/api/ershou/item")
+        mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "贴纸")
                         .param("description", "边界价格测试")
@@ -236,7 +236,7 @@ class MarketplaceContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
 
-        mockMvc.perform(post("/api/ershou/item")
+        mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "电脑")
                         .param("description", "边界价格测试")
@@ -253,7 +253,7 @@ class MarketplaceContractTest {
 
     @Test
     void publishEndpointRejectsInvalidPriceOrTypeBeforeService() throws Exception {
-        mockMvc.perform(post("/api/ershou/item")
+        mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "教材")
                         .param("description", "九成新微积分教材")
@@ -263,7 +263,7 @@ class MarketplaceContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(post("/api/ershou/item")
+        mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "教材")
                         .param("description", "九成新微积分教材")
@@ -274,7 +274,7 @@ class MarketplaceContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(post("/api/ershou/item")
+        mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "教材")
                         .param("description", "九成新微积分教材")
@@ -289,7 +289,7 @@ class MarketplaceContractTest {
 
     @Test
     void publishEndpointRejectsInvalidImageKeysBeforeService() throws Exception {
-        mockMvc.perform(post("/api/ershou/item")
+        mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "教材")
                         .param("description", "九成新微积分教材")
@@ -300,7 +300,7 @@ class MarketplaceContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(post("/api/ershou/item")
+        mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "教材")
                         .param("description", "九成新微积分教材")
@@ -312,7 +312,7 @@ class MarketplaceContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(post("/api/ershou/item")
+        mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "教材")
                         .param("description", "九成新微积分教材")
@@ -334,7 +334,7 @@ class MarketplaceContractTest {
         item.setId(1);
         item.setName("Textbook");
         item.setDescription("Calculus textbook");
-        item.setPrice(25.0f);
+        item.setPrice(new java.math.BigDecimal("25.0"));
         item.setLocation("Library Gate");
         item.setType(8);
         item.setState(1);
@@ -347,7 +347,7 @@ class MarketplaceContractTest {
         item.setId(id);
         item.setName("Textbook");
         item.setDescription("Calculus textbook");
-        item.setPrice(25.0f);
+        item.setPrice(new java.math.BigDecimal("25.0"));
         item.setLocation("Library Gate");
         item.setType(8);
         item.setState(1);
@@ -358,7 +358,7 @@ class MarketplaceContractTest {
         profile.setNickname("Test User");
 
         MarketplaceItemVO vo = new MarketplaceItemVO();
-        vo.setSecondhandItem(item);
+        vo.setMarketplaceItem(item);
         vo.setProfile(profile);
         return vo;
     }

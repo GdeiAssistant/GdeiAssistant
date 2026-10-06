@@ -1,7 +1,7 @@
 package cn.gdeiassistant.contract;
 
-import cn.gdeiassistant.core.userProfile.controller.ProfileController;
-import cn.gdeiassistant.core.userProfile.service.ProfileOptionsFacade;
+import cn.gdeiassistant.core.userprofile.controller.ProfileController;
+import cn.gdeiassistant.core.userprofile.service.ProfileOptionsFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;

@@ -1,15 +1,15 @@
 package cn.gdeiassistant.core.profile.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.UserNotExistException;
-import cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException;
-import cn.gdeiassistant.common.pojo.Entity.Introduction;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
+import cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException;
+import cn.gdeiassistant.common.pojo.entity.Introduction;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.converter.UserProfileMapper;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,7 +128,7 @@ public class UserProfileService {
     public String getSelfUserAvatar(String sessionId) throws TokenExpiredException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
         return getOtherUserAvatar(user.getUsername());
     }
@@ -153,7 +153,7 @@ public class UserProfileService {
     public String getSelfUserHighDefinitionAvatar(String sessionId) throws TokenExpiredException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
         return getOtherUserHighDefinitionAvatar(user.getUsername());
     }
@@ -179,7 +179,7 @@ public class UserProfileService {
     public void updateAvatar(String sessionId, InputStream inputStream) throws TokenExpiredException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
         r2StorageService.uploadObject("gdeiassistant-userdata", "avatar/"
                 + user.getUsername() + ".jpg", inputStream);
@@ -203,7 +203,7 @@ public class UserProfileService {
     public void updateHighDefinitionAvatar(String sessionId, InputStream inputStream) throws TokenExpiredException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
         r2StorageService.uploadObject("gdeiassistant-userdata", "avatar/"
                         + user.getUsername() + "_hd.jpg"
@@ -221,7 +221,7 @@ public class UserProfileService {
     public void updateAvatarByObjectKey(String sessionId, String objectKey) throws TokenExpiredException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
         r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "avatar/" + user.getUsername() + ".jpg");
     }
@@ -229,7 +229,7 @@ public class UserProfileService {
     public void updateHighDefinitionAvatarByObjectKey(String sessionId, String objectKey) throws TokenExpiredException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
         r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "avatar/" + user.getUsername() + "_hd.jpg");
     }
@@ -242,10 +242,16 @@ public class UserProfileService {
     public void deleteAvatar(String sessionId) throws TokenExpiredException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
-        r2StorageService.deleteObject("gdeiassistant-userdata", "avatar/" + user.getUsername() + ".jpg");
-        r2StorageService.deleteObject("gdeiassistant-userdata", "avatar/" + user.getUsername() + "_hd.jpg");
+        deleteAvatarForUsername(user.getUsername());
+    }
+
+    /** Internal cleanup entry; its argument is an identity, not a session ID. */
+    public void deleteAvatarForUsername(String username) {
+        if (username == null || username.isBlank()) throw new IllegalArgumentException("Missing avatar owner");
+        r2StorageService.deleteObject("gdeiassistant-userdata", "avatar/" + username + ".jpg");
+        r2StorageService.deleteObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg");
     }
 
     /**

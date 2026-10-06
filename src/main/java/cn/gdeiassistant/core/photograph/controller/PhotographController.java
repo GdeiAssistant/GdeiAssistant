@@ -3,12 +3,12 @@ package cn.gdeiassistant.core.photograph.controller;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
-import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.common.tools.Utils.PageUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
+import cn.gdeiassistant.common.tools.utils.PageUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.photograph.pojo.dto.PhotographPublishDTO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographCommentVO;
@@ -179,8 +179,8 @@ public class PhotographController {
     }
 
     @RequestMapping(value = "/api/photograph/id/{id}/like", method = RequestMethod.POST)
-    public JsonResult LikePhotograph(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
-        photographService.LikePhotograph(id, (String) request.getAttribute("sessionId"));
+    public JsonResult likePhotograph(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
+        photographService.likePhotograph(id, (String) request.getAttribute("sessionId"));
         return new JsonResult(true);
     }
 }

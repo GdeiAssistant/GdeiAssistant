@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.capability.ocr;
 
-import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
+import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 
 public interface CaptchaRecognizer {
 

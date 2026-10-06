@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.authentication.mapper;
 
-import cn.gdeiassistant.common.pojo.Alias.DataEncryption;
-import cn.gdeiassistant.common.pojo.Entity.Authentication;
+import cn.gdeiassistant.common.pojo.alias.DataEncryption;
+import cn.gdeiassistant.common.pojo.entity.Authentication;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 

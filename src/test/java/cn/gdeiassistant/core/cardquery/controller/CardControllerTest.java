@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.cardquery.controller;
 
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.cardquery.service.CardQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

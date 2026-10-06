@@ -1,21 +1,21 @@
-package cn.gdeiassistant.core.userProfile.controller;
+package cn.gdeiassistant.core.userprofile.controller;
 
-import cn.gdeiassistant.common.pojo.Entity.Introduction;
-import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
+import cn.gdeiassistant.common.pojo.entity.Introduction;
+import cn.gdeiassistant.common.exception.commonexception.FeatureNotEnabledException;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
-import cn.gdeiassistant.core.userProfile.controller.mapper.ProfileResponseMapper;
-import cn.gdeiassistant.core.userProfile.controller.request.*;
-import cn.gdeiassistant.core.userProfile.controller.support.ProfileLocationValidator;
-import cn.gdeiassistant.core.userProfile.pojo.ProfileOptionsVO;
-import cn.gdeiassistant.core.userProfile.pojo.UserProfileVO;
+import cn.gdeiassistant.core.userprofile.controller.mapper.ProfileResponseMapper;
+import cn.gdeiassistant.core.userprofile.controller.request.*;
+import cn.gdeiassistant.core.userprofile.controller.support.ProfileLocationValidator;
+import cn.gdeiassistant.core.userprofile.pojo.ProfileOptionsVO;
+import cn.gdeiassistant.core.userprofile.pojo.UserProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
-import cn.gdeiassistant.core.userProfile.service.ProfileLocalizationService;
-import cn.gdeiassistant.core.userProfile.service.ProfileMajorCatalog;
-import cn.gdeiassistant.core.userProfile.service.ProfileOptionsFacade;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.core.userprofile.service.ProfileLocalizationService;
+import cn.gdeiassistant.core.userprofile.service.ProfileMajorCatalog;
+import cn.gdeiassistant.core.userprofile.service.ProfileOptionsFacade;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,7 +67,7 @@ public class ProfileController {
      * @return
      */
     @RequestMapping(value = "/api/profile/avatar", method = RequestMethod.GET)
-    public DataJsonResult<String> GetUserAvatar(HttpServletRequest request) throws Exception {
+    public DataJsonResult<String> getUserAvatar(HttpServletRequest request) throws Exception {
         DataJsonResult<String> jsonResult = new DataJsonResult<>();
         String url = userProfileService.getSelfUserAvatar((String) request.getAttribute("sessionId"));
         if (StringUtils.isBlank(url)) {
@@ -89,7 +89,7 @@ public class ProfileController {
      * @return
      */
     @RequestMapping(value = "/api/profile/avatar", method = RequestMethod.DELETE)
-    public JsonResult DeleteUserAvatar(HttpServletRequest request) throws Exception {
+    public JsonResult deleteUserAvatar(HttpServletRequest request) throws Exception {
         userProfileService.deleteAvatar((String) request.getAttribute("sessionId"));
         return new JsonResult(true);
     }
@@ -104,7 +104,7 @@ public class ProfileController {
      * @throws IOException
      */
     @RequestMapping(value = "/api/profile/avatar", method = RequestMethod.POST)
-    public JsonResult UpdateUserAvatar(HttpServletRequest request
+    public JsonResult updateUserAvatar(HttpServletRequest request
             , @RequestParam(value = "avatar", required = false) MultipartFile avatar
             , @RequestParam(value = "avatar_hd", required = false) MultipartFile avatarHD
             , @RequestParam(value = "avatarKey", required = false) String avatarKey
@@ -140,7 +140,7 @@ public class ProfileController {
      * GET /api/user/profile，返回标准格式 { "code": 200, "message": "success", "data": {...} }，需 JWT 鉴权。
      */
     @RequestMapping(value = "/api/user/profile", method = RequestMethod.GET)
-    public DataJsonResult<UserProfileVO> GetCurrentUserProfile(HttpServletRequest request) throws Exception {
+    public DataJsonResult<UserProfileVO> getCurrentUserProfile(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         String language = profileLocalizationService.normalizeLanguage(request.getHeader("Accept-Language"));
         ProfileVO profile = userProfileService.getSelfUserProfile(sessionId);
@@ -166,7 +166,7 @@ public class ProfileController {
      * @throws UnsupportedEncodingException
      */
     @RequestMapping(value = "/api/introduction", method = RequestMethod.POST)
-    public JsonResult UpdateIntroduction(HttpServletRequest request, @RequestBody IntroductionUpdateRequest body) throws Exception {
+    public JsonResult updateIntroduction(HttpServletRequest request, @RequestBody IntroductionUpdateRequest body) throws Exception {
         String introduction = body != null ? body.getIntroduction() : null;
         if (introduction != null && introduction.length() <= 80) {
             if (introduction.isEmpty()) {
@@ -187,7 +187,7 @@ public class ProfileController {
      * @return
      */
     @RequestMapping(value = "/api/introduction", method = RequestMethod.GET)
-    public DataJsonResult<String> GetUserIntroduction(HttpServletRequest request) throws Exception {
+    public DataJsonResult<String> getUserIntroduction(HttpServletRequest request) throws Exception {
         Introduction introduction = userProfileService.getSelfUserIntroduction((String) request.getAttribute("sessionId"));
         return new DataJsonResult<>(true, StringUtils.isBlank(introduction.getIntroductionContent()) ? "" : introduction.getIntroductionContent());
     }
@@ -198,7 +198,7 @@ public class ProfileController {
      * @return
      */
     @RequestMapping(value = "/api/profile/locations", method = RequestMethod.GET)
-    public DataJsonResult<List<ProfileLocalizationService.ProfileRegionNodeVO>> GetRegionList() {
+    public DataJsonResult<List<ProfileLocalizationService.ProfileRegionNodeVO>> getRegionList() {
         List<ProfileLocalizationService.ProfileRegionNodeVO> locationList = new ArrayList<>(profileLocalizationService.buildRegionTree());
         locationList.sort(java.util.Comparator.comparing(ProfileLocalizationService.ProfileRegionNodeVO::getCode));
         return new DataJsonResult<>(true, locationList);
@@ -221,7 +221,7 @@ public class ProfileController {
      * @return
      */
     @RequestMapping(value = "/api/profile/birthday", method = RequestMethod.POST)
-    public JsonResult UpdateBirthday(HttpServletRequest request, @RequestBody BirthdayUpdateRequest body) throws Exception {
+    public JsonResult updateBirthday(HttpServletRequest request, @RequestBody BirthdayUpdateRequest body) throws Exception {
         Integer year = body != null ? body.getYear() : null;
         Integer month = body != null ? body.getMonth() : null;
         Integer date = body != null ? body.getDate() : null;
@@ -244,7 +244,7 @@ public class ProfileController {
      * @return
      */
     @RequestMapping(value = "/api/profile/faculty", method = RequestMethod.POST)
-    public JsonResult UpdateFaculty(HttpServletRequest request, @RequestBody FacultyUpdateRequest body) throws Exception {
+    public JsonResult updateFaculty(HttpServletRequest request, @RequestBody FacultyUpdateRequest body) throws Exception {
         Integer faculty = body != null ? body.getFaculty() : null;
         if (faculty != null && faculty >= 0 && faculty < UserProfileService.getFacultyMap().size()) {
             String sessionId = (String) request.getAttribute("sessionId");
@@ -264,7 +264,7 @@ public class ProfileController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/profile/location", method = RequestMethod.POST)
-    public JsonResult UpdateLocation(HttpServletRequest request, @RequestBody LocationUpdateRequest body) throws Exception {
+    public JsonResult updateLocation(HttpServletRequest request, @RequestBody LocationUpdateRequest body) throws Exception {
         if (body == null || StringUtils.isBlank(body.getRegion())) {
             return failure(request, "不合法的国家/地区代码");
         }
@@ -289,7 +289,7 @@ public class ProfileController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/profile/hometown", method = RequestMethod.POST)
-    public JsonResult UpdateHometown(HttpServletRequest request, @RequestBody HometownUpdateRequest body) throws Exception {
+    public JsonResult updateHometown(HttpServletRequest request, @RequestBody HometownUpdateRequest body) throws Exception {
         if (body == null || StringUtils.isBlank(body.getRegion())) {
             return failure(request, "不合法的国家/地区代码");
         }
@@ -314,7 +314,7 @@ public class ProfileController {
      * @throws UnsupportedEncodingException
      */
     @RequestMapping(value = "/api/profile/major", method = RequestMethod.POST)
-    public JsonResult UpdateMajor(HttpServletRequest request, @RequestBody MajorUpdateRequest body) throws Exception {
+    public JsonResult updateMajor(HttpServletRequest request, @RequestBody MajorUpdateRequest body) throws Exception {
         String major = body != null ? body.getMajor() : null;
         if (major == null || major.isEmpty() || major.length() > 64) {
             return failure(request, "请求参数异常");
@@ -338,7 +338,7 @@ public class ProfileController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/profile/enrollment", method = RequestMethod.POST)
-    public JsonResult UpdateEnrollment(HttpServletRequest request, @RequestBody EnrollmentUpdateRequest body) throws Exception {
+    public JsonResult updateEnrollment(HttpServletRequest request, @RequestBody EnrollmentUpdateRequest body) throws Exception {
         Integer enrollment = body != null ? body.getYear() : null;
         if (enrollment != null && enrollment > LocalDate.now().getYear()) {
             return failure(request, "请求参数不合法");
@@ -360,7 +360,7 @@ public class ProfileController {
      * @throws UnsupportedEncodingException
      */
     @RequestMapping(value = "/api/profile/nickname", method = RequestMethod.POST)
-    public JsonResult UpdateNickname(HttpServletRequest request, @RequestBody NicknameUpdateRequest body) throws Exception {
+    public JsonResult updateNickname(HttpServletRequest request, @RequestBody NicknameUpdateRequest body) throws Exception {
         String nickname = body != null ? body.getNickname() : null;
         if (nickname == null || nickname.isEmpty() || nickname.length() > 32) {
             return failure(request, "昵称长度不合法");
@@ -378,7 +378,7 @@ public class ProfileController {
      * @throws Exception
      */
     @RequestMapping(value = "/api/profile/nickname", method = RequestMethod.GET)
-    public DataJsonResult<String> GetUserNickname(HttpServletRequest request) throws Exception {
+    public DataJsonResult<String> getUserNickname(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         ProfileVO profile = userProfileService.getSelfUserProfile(sessionId);
         String nickname = profile.getNickname();

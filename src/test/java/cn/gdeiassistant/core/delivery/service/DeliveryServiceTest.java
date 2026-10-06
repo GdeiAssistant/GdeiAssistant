@@ -1,8 +1,8 @@
 package cn.gdeiassistant.core.delivery.service;
 
-import cn.gdeiassistant.common.exception.DeliveryException.NoAccessUpdatingException;
-import cn.gdeiassistant.common.exception.DeliveryException.SelfTradingOrderException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.deliveryexception.NoAccessUpdatingException;
+import cn.gdeiassistant.common.exception.deliveryexception.SelfTradingOrderException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.delivery.converter.DeliveryConverter;
 import cn.gdeiassistant.core.delivery.mapper.DeliveryMapper;
 import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryOrderEntity;
@@ -10,7 +10,7 @@ import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryTradeEntity;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryOrderVO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryTradeVO;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,11 +56,6 @@ class DeliveryServiceTest {
         entity.setUsername("publisher");
         entity.setState(0);
         when(deliveryMapper.selectDeliveryOrderByOrderId(1)).thenReturn(entity);
-        DeliveryOrderVO vo = new DeliveryOrderVO();
-        vo.setOrderId(1);
-        vo.setUsername("publisher");
-        vo.setState(0);
-        when(deliveryConverter.toOrderVO(entity)).thenReturn(vo);
 
         int type = deliveryService.queryDeliveryOrderDetailType("session1", 1);
 
@@ -75,11 +70,6 @@ class DeliveryServiceTest {
         entity.setUsername("publisher");
         entity.setState(1);
         when(deliveryMapper.selectDeliveryOrderByOrderId(1)).thenReturn(entity);
-        DeliveryOrderVO vo = new DeliveryOrderVO();
-        vo.setOrderId(1);
-        vo.setUsername("publisher");
-        vo.setState(1);
-        when(deliveryConverter.toOrderVO(entity)).thenReturn(vo);
         when(deliveryMapper.selectDeliveryTradeUsernameByOrderId(1)).thenReturn("runner");
 
         int type = deliveryService.queryDeliveryOrderDetailType("session1", 1);
@@ -95,11 +85,6 @@ class DeliveryServiceTest {
         entity.setUsername("publisher");
         entity.setState(0);
         when(deliveryMapper.selectDeliveryOrderByOrderId(1)).thenReturn(entity);
-        DeliveryOrderVO vo = new DeliveryOrderVO();
-        vo.setOrderId(1);
-        vo.setUsername("publisher");
-        vo.setState(0);
-        when(deliveryConverter.toOrderVO(entity)).thenReturn(vo);
 
         int type = deliveryService.queryDeliveryOrderDetailType("session1", 1);
 
@@ -130,7 +115,7 @@ class DeliveryServiceTest {
         DeliveryOrderEntity order = new DeliveryOrderEntity();
         order.setOrderId(1);
         order.setUsername("publisher");
-        order.setCompany("SF Express");
+        order.setPickupLocation("SF Express");
         when(deliveryMapper.selectDeliveryOrderByOrderId(1)).thenReturn(order);
         when(deliveryMapper.finishOrder(1)).thenReturn(1);
         when(deliveryMapper.updateTradeState(10, 0, 1)).thenReturn(1);

@@ -1,16 +1,16 @@
 package cn.gdeiassistant.core.cetquery.service;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
-import cn.gdeiassistant.common.pojo.Entity.Cet;
-import cn.gdeiassistant.common.pojo.Entity.CetNumber;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.ErrorQueryConditionException;
+import cn.gdeiassistant.common.pojo.entity.Cet;
+import cn.gdeiassistant.common.pojo.entity.CetNumber;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.cet.mapper.CetMapper;
 import cn.gdeiassistant.core.cetquery.pojo.dto.CetQueryDTO;
 import cn.gdeiassistant.core.cetquery.pojo.vo.CetNumberVO;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.chsi.ChsiClient;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

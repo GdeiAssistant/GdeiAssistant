@@ -19,7 +19,7 @@ const MOCK_IMAGE = {
 const DEFAULT_AVATAR = MOCK_IMAGE.avatar
 
 const COMMUNITY_DEFAULT_STATE = {
-  secondhandItems: [
+  items: [
     {
       id: 101,
       name: '九成新机械键盘',
@@ -217,12 +217,12 @@ const COMMUNITY_DEFAULT_STATE = {
   deliveryOrders: [
     {
       orderId: 601,
-      name: DELIVERY_DEFAULT_ORDER_NAME,
-      number: 'A112233',
-      phone: '13612340001',
+      taskName: DELIVERY_DEFAULT_ORDER_NAME,
+      pickupCode: 'A112233',
+      contactPhone: '13612340001',
       price: 4,
-      company: '菜鸟驿站',
-      address: '南苑 5 栋 307',
+      pickupLocation: '菜鸟驿站',
+      deliveryAddress: '南苑 5 栋 307',
       remarks: '一个中号纸箱，麻烦轻拿轻放。',
       orderTime: '2026-03-15 12:08',
       state: 0,
@@ -232,12 +232,12 @@ const COMMUNITY_DEFAULT_STATE = {
     },
     {
       orderId: 602,
-      name: DELIVERY_DEFAULT_ORDER_NAME,
-      number: 'B009977',
-      phone: '13888880002',
+      taskName: DELIVERY_DEFAULT_ORDER_NAME,
+      pickupCode: 'B009977',
+      contactPhone: '13888880002',
       price: 6,
-      company: '京东站点',
-      address: '北苑 2 栋 411',
+      pickupLocation: '京东站点',
+      deliveryAddress: '北苑 2 栋 411',
       remarks: '已付款，直接放宿舍门口即可。',
       orderTime: '2026-03-14 17:30',
       state: 1,
@@ -445,6 +445,16 @@ function createComment(list, nickname, comment) {
   }
 }
 
+function deliveryResponse(order, sensitive) {
+  return {
+    orderId: order.orderId, displayName: 'Campus user', orderTime: order.orderTime,
+    taskName: order.taskName, pickupCode: sensitive ? order.pickupCode : '',
+    contactPhone: sensitive ? order.contactPhone : '', price: order.price,
+    pickupLocation: order.pickupLocation, deliveryAddress: sensitive ? order.deliveryAddress : '',
+    state: order.state, remarks: sensitive ? order.remarks : ''
+  }
+}
+
 function getDeliveryDetailType(order, username) {
   if (!order) {
     return 2
@@ -469,9 +479,9 @@ function buildRoommatePickPayload(pick, communityState) {
 }
 
 function handleSecondhand(path, method, data, token, utils) {
-  // 前端视图使用 /api/marketplace/* 路径，mock 内部统一用 /api/ershou/* 处理
-  const normalizedPath = path.replace(/^\/api\/marketplace\//, '/api/ershou/')
-  if (!/^\/api\/ershou\//.test(normalizedPath)) {
+  // 前端视图使用 /api/marketplace/* 路径，mock 内部统一用 /api/marketplace/* 处理
+  const normalizedPath = path.replace(/^\/api\/marketplace\//, '/api/marketplace/')
+  if (!/^\/api\/marketplace\//.test(normalizedPath)) {
     return null
   }
   path = normalizedPath
@@ -484,20 +494,20 @@ function handleSecondhand(path, method, data, token, utils) {
   const communityState = ensureCommunityState(utils)
   const username = getCurrentUsername(utils)
 
-  if (/^\/api\/ershou\/item\/start\/\d+$/.test(path) && method === 'GET') {
+  if (/^\/api\/marketplace\/item\/start\/\d+$/.test(path) && method === 'GET') {
     const matched = /\/start\/(\d+)$/.exec(path)
     const start = Number(matched[1])
-    const list = communityState.secondhandItems.filter(function(item) {
+    const list = communityState.items.filter(function(item) {
       return Number(item.state) === 1
     }).slice(start, start + 10)
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 
-  if (/^\/api\/ershou\/keyword\/.+\/start\/\d+$/.test(path) && method === 'GET') {
-    const matched = /^\/api\/ershou\/keyword\/(.+)\/start\/(\d+)$/.exec(path)
+  if (/^\/api\/marketplace\/keyword\/.+\/start\/\d+$/.test(path) && method === 'GET') {
+    const matched = /^\/api\/marketplace\/keyword\/(.+)\/start\/(\d+)$/.exec(path)
     const keyword = decodeURIComponent(matched[1]).toLowerCase()
     const start = Number(matched[2])
-    const list = communityState.secondhandItems.filter(function(item) {
+    const list = communityState.items.filter(function(item) {
       return Number(item.state) === 1 &&
         (String(item.name).toLowerCase().indexOf(keyword) !== -1 ||
         String(item.description).toLowerCase().indexOf(keyword) !== -1)
@@ -505,18 +515,18 @@ function handleSecondhand(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 
-  if (/^\/api\/ershou\/item\/type\/\d+\/start\/\d+$/.test(path) && method === 'GET') {
-    const matched = /^\/api\/ershou\/item\/type\/(\d+)\/start\/(\d+)$/.exec(path)
+  if (/^\/api\/marketplace\/item\/type\/\d+\/start\/\d+$/.test(path) && method === 'GET') {
+    const matched = /^\/api\/marketplace\/item\/type\/(\d+)\/start\/(\d+)$/.exec(path)
     const type = Number(matched[1])
     const start = Number(matched[2])
-    const list = communityState.secondhandItems.filter(function(item) {
+    const list = communityState.items.filter(function(item) {
       return Number(item.state) === 1 && Number(item.type) === type
     }).slice(start, start + 10)
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 
-  if (path === '/api/ershou/profile' && method === 'GET') {
-    const mine = communityState.secondhandItems.filter(function(item) {
+  if (path === '/api/marketplace/profile' && method === 'GET') {
+    const mine = communityState.items.filter(function(item) {
       return item.owner === username
     })
     return utils.resolveWithDelay(utils.buildSuccess({
@@ -526,21 +536,21 @@ function handleSecondhand(path, method, data, token, utils) {
     }))
   }
 
-  if (/^\/api\/ershou\/item\/id\/\d+$/.test(path) && method === 'GET') {
-    const matched = /^\/api\/ershou\/item\/id\/(\d+)$/.exec(path)
-    const item = findById(communityState.secondhandItems, 'id', matched[1])
+  if (/^\/api\/marketplace\/item\/id\/\d+$/.test(path) && method === 'GET') {
+    const matched = /^\/api\/marketplace\/item\/id\/(\d+)$/.exec(path)
+    const item = findById(communityState.items, 'id', matched[1])
     if (!item) {
       return utils.rejectWithMessage('商品不存在')
     }
     return utils.resolveWithDelay(utils.buildSuccess({
-      secondhandItem: item,
+      item: item,
       profile: buildProfile(item.owner)
     }))
   }
 
-  if (path === '/api/ershou/item' && method === 'POST') {
+  if (path === '/api/marketplace/item' && method === 'POST') {
     const nextItem = {
-      id: nextId(communityState.secondhandItems, 'id', 100),
+      id: nextId(communityState.items, 'id', 100),
       name: String(data.name || '').trim(),
       description: String(data.description || '').trim(),
       price: Number(data.price || 0),
@@ -559,14 +569,14 @@ function handleSecondhand(path, method, data, token, utils) {
     if (!(nextItem.price > 0)) {
       return utils.rejectWithMessage('请输入正确的商品价格')
     }
-    communityState.secondhandItems.unshift(nextItem)
+    communityState.items.unshift(nextItem)
     saveCommunityState(utils, communityState)
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/ershou\/item\/id\/\d+$/.test(path) && method === 'POST') {
-    const matched = /^\/api\/ershou\/item\/id\/(\d+)$/.exec(path)
-    const item = findById(communityState.secondhandItems, 'id', matched[1])
+  if (/^\/api\/marketplace\/item\/id\/\d+$/.test(path) && method === 'POST') {
+    const matched = /^\/api\/marketplace\/item\/id\/(\d+)$/.exec(path)
+    const item = findById(communityState.items, 'id', matched[1])
     if (!item || item.owner !== username) {
       return utils.rejectWithMessage('没有权限编辑该商品')
     }
@@ -590,9 +600,9 @@ function handleSecondhand(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/ershou\/item\/state\/id\/\d+$/.test(path) && method === 'POST') {
-    const matched = /^\/api\/ershou\/item\/state\/id\/(\d+)$/.exec(path)
-    const item = findById(communityState.secondhandItems, 'id', matched[1])
+  if (/^\/api\/marketplace\/item\/state\/id\/\d+$/.test(path) && method === 'POST') {
+    const matched = /^\/api\/marketplace\/item\/state\/id\/(\d+)$/.exec(path)
+    const item = findById(communityState.items, 'id', matched[1])
     if (!item || item.owner !== username) {
       return utils.rejectWithMessage('没有权限操作该商品')
     }
@@ -1088,7 +1098,7 @@ function handleDelivery(path, method, data, token, utils) {
     const matched = /^\/api\/delivery\/order\/start\/(\d+)\/size\/(\d+)$/.exec(path)
     const start = Number(matched[1])
     const size = Number(matched[2])
-    return utils.resolveWithDelay(utils.buildSuccess(communityState.deliveryOrders.slice(start, start + size)))
+    return utils.resolveWithDelay(utils.buildSuccess(communityState.deliveryOrders.filter((order) => order.state === 0).slice(start, start + size).map((order) => deliveryResponse(order, false))))
   }
 
   if (/^\/api\/delivery\/order\/id\/\d+$/.test(path) && method === 'GET') {
@@ -1156,12 +1166,12 @@ function handleDelivery(path, method, data, token, utils) {
   if (path === '/api/delivery/order' && method === 'POST') {
     const nextOrder = {
       orderId: nextId(communityState.deliveryOrders, 'orderId', 600),
-      name: String(data.name || DELIVERY_DEFAULT_ORDER_NAME).trim(),
-      number: String(data.number || '').trim(),
-      phone: String(data.phone || '').trim(),
+      taskName: String(data.taskName || DELIVERY_DEFAULT_ORDER_NAME).trim(),
+      pickupCode: String(data.pickupCode || '').trim(),
+      contactPhone: String(data.contactPhone || '').trim(),
       price: Number(data.price || 0),
-      company: String(data.company || '').trim(),
-      address: String(data.address || '').trim(),
+      pickupLocation: String(data.pickupLocation || '').trim(),
+      deliveryAddress: String(data.deliveryAddress || '').trim(),
       remarks: String(data.remarks || '').trim(),
       orderTime: nowText(),
       state: 0,
@@ -1169,7 +1179,7 @@ function handleDelivery(path, method, data, token, utils) {
       acceptor: '',
       tradeId: null
     }
-    if (!nextOrder.phone || !nextOrder.company || !nextOrder.address || !(nextOrder.price > 0)) {
+    if (!nextOrder.contactPhone || !nextOrder.pickupLocation || !nextOrder.deliveryAddress || !(nextOrder.price > 0)) {
       return utils.rejectWithMessage('请完整填写跑腿订单信息')
     }
     communityState.deliveryOrders.unshift(nextOrder)

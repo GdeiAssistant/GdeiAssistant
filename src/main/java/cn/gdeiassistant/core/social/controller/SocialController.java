@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.social.controller;
 
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.social.exception.SocialException;
 import cn.gdeiassistant.core.social.pojo.dto.ChatMessageDTO;
@@ -11,7 +11,7 @@ import cn.gdeiassistant.core.social.pojo.dto.SocialUserDTO;
 import cn.gdeiassistant.core.social.service.SocialChatService;
 import cn.gdeiassistant.core.social.service.SocialIdentityService;
 import cn.gdeiassistant.core.social.service.SocialRelationService;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -88,7 +88,7 @@ public class SocialController {
     public ResponseEntity<byte[]> getAvatar(HttpServletRequest request, @PathVariable("id") String id) {
         // 与公开主页同访问规则：登录 + 非拉黑 + 对方 ACTIVE
         relationService.getUser(sessionId(request), id);
-        UserEntity target = identityService.requireActiveByPublicId(id);
+        CampusAccountView target = identityService.requireActiveByPublicId(id);
         if (target.getUsername() == null) {
             return ResponseEntity.notFound().build();
         }

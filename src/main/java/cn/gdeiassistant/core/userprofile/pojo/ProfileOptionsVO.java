@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userProfile.pojo;
+package cn.gdeiassistant.core.userprofile.pojo;
 
 import java.io.Serializable;
 import java.util.List;

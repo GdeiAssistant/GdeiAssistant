@@ -1,15 +1,15 @@
 package cn.gdeiassistant.core.dating.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.exception.DatabaseException.NoAccessException;
-import cn.gdeiassistant.common.exception.DatingException.SelfPickException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.exception.databaseexception.NoAccessException;
+import cn.gdeiassistant.common.exception.datingexception.SelfPickException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.dating.mapper.DatingMapper;
 import cn.gdeiassistant.core.dating.pojo.dto.DatingPublishDTO;
 import cn.gdeiassistant.core.dating.pojo.entity.DatingProfileEntity;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

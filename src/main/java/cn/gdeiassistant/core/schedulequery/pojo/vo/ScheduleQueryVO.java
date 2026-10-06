@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.schedulequery.pojo.vo;
 
-import cn.gdeiassistant.common.pojo.Entity.Schedule;
+import cn.gdeiassistant.common.pojo.entity.Schedule;
 
 import java.util.List;
 

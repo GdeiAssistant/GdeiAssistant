@@ -1,8 +1,8 @@
 package cn.gdeiassistant.core.cron.controller;
 
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.gradequery.service.GradeCronService;
-import cn.gdeiassistant.core.information.service.SchoolNews.SchoolNewsCornService;
+import cn.gdeiassistant.core.information.service.schoolnews.SchoolNewsCronService;
 import cn.gdeiassistant.core.schedulequery.service.ScheduleCronService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ class CronControllerTest {
     private ScheduleCronService scheduleCronService;
 
     @Mock
-    private SchoolNewsCornService schoolNewsCornService;
+    private SchoolNewsCronService schoolNewsCronService;
 
     @InjectMocks
     private CronController controller;
@@ -41,7 +41,7 @@ class CronControllerTest {
         assertEquals(403, response.getStatus());
         assertTrue(response.getContentType().startsWith("application/json"));
         assertTrue(response.getContentAsString().contains("X-Cron-Secret"));
-        verifyNoInteractions(gradeCronService, scheduleCronService, schoolNewsCornService);
+        verifyNoInteractions(gradeCronService, scheduleCronService, schoolNewsCronService);
     }
 
     @Test
@@ -53,7 +53,7 @@ class CronControllerTest {
 
         assertNull(result);
         assertEquals(403, response.getStatus());
-        verifyNoInteractions(gradeCronService, scheduleCronService, schoolNewsCornService);
+        verifyNoInteractions(gradeCronService, scheduleCronService, schoolNewsCronService);
     }
 
     @Test
@@ -66,7 +66,7 @@ class CronControllerTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
         verify(gradeCronService).synchronizeGradeData();
-        verifyNoInteractions(scheduleCronService, schoolNewsCornService);
+        verifyNoInteractions(scheduleCronService, schoolNewsCronService);
     }
 
     @Test
@@ -79,7 +79,7 @@ class CronControllerTest {
 
         assertNotNull(result);
         assertFalse(result.isSuccess());
-        verifyNoInteractions(scheduleCronService, schoolNewsCornService);
+        verifyNoInteractions(scheduleCronService, schoolNewsCronService);
     }
 
     @Test
@@ -94,7 +94,7 @@ class CronControllerTest {
         assertFalse(result.isSuccess());
         assertEquals("Cron task failed: grade", result.getMessage());
         verify(gradeCronService).synchronizeGradeData();
-        verifyNoInteractions(scheduleCronService, schoolNewsCornService);
+        verifyNoInteractions(scheduleCronService, schoolNewsCronService);
     }
 
     @Test
@@ -107,7 +107,7 @@ class CronControllerTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
         verify(scheduleCronService).synchronizeScheduleData();
-        verifyNoInteractions(gradeCronService, schoolNewsCornService);
+        verifyNoInteractions(gradeCronService, schoolNewsCronService);
     }
 
     @Test
@@ -119,7 +119,7 @@ class CronControllerTest {
 
         assertNotNull(result);
         assertTrue(result.isSuccess());
-        verify(schoolNewsCornService).collectNews();
+        verify(schoolNewsCronService).collectNews();
         verifyNoInteractions(gradeCronService, scheduleCronService);
     }
 }

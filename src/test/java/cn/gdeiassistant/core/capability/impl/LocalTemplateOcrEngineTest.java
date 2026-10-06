@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.capability.impl;
 
-import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
+import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;

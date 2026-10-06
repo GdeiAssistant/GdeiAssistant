@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userData.service;
+package cn.gdeiassistant.core.userdata.service;
 
 import cn.gdeiassistant.common.constant.ItemConstantUtils;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
@@ -12,8 +12,8 @@ import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryTradeEntity;
 import cn.gdeiassistant.core.cetquery.pojo.entity.CetNumberEntity;
 import cn.gdeiassistant.core.privacy.pojo.entity.PrivacyEntity;
 import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
-import cn.gdeiassistant.common.pojo.Entity.*;
-import cn.gdeiassistant.common.redis.ExportData.ExportDataDao;
+import cn.gdeiassistant.common.pojo.entity.*;
+import cn.gdeiassistant.common.redis.exportdata.ExportDataDao;
 import cn.gdeiassistant.core.data.mapper.AppDataMapper;
 import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
 import cn.gdeiassistant.core.phone.mapper.PhoneMapper;
@@ -23,12 +23,12 @@ import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.logdata.mapper.LogDataMapper;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.secret.service.SecretService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
-import cn.gdeiassistant.common.tools.Utils.LocationUtils;
-import cn.gdeiassistant.common.tools.Utils.ReflectionUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.utils.LocationUtils;
+import cn.gdeiassistant.common.tools.utils.ReflectionUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,9 +88,9 @@ public class UserDataService {
      * @param sessionId
      * @return
      */
-    public boolean CheckAlreadyExportUserData(String sessionId) {
+    public boolean checkAlreadyExportUserData(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        return StringUtils.isNotBlank(exportDataDao.QueryExportDataToken(user.getUsername()));
+        return StringUtils.isNotBlank(exportDataDao.queryExportDataToken(user.getUsername()));
     }
 
     /**
@@ -99,9 +99,9 @@ public class UserDataService {
      * @param sessionId
      * @return
      */
-    public boolean CheckExportingUserData(String sessionId) {
+    public boolean checkExportingUserData(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        return StringUtils.isNotBlank(exportDataDao.QueryExportingDataToken(user.getUsername()));
+        return StringUtils.isNotBlank(exportDataDao.queryExportingDataToken(user.getUsername()));
     }
 
     /**
@@ -112,12 +112,12 @@ public class UserDataService {
      */
     @SuppressWarnings("unchecked")
     @Async
-    public void ExportUserData(String sessionId) throws IOException {
+    public void exportUserData(String sessionId) throws IOException {
 
         User user = userCertificateService.getUserLoginCertificate(sessionId);
 
         //写入导出任务记录
-        exportDataDao.SaveExportingDataToken(user.getUsername(), UUID.randomUUID().toString());
+        exportDataDao.saveExportingDataToken(user.getUsername(), UUID.randomUUID().toString());
 
         ByteArrayInputStream byteArrayInputStream = null;
         ByteArrayOutputStream byteArrayOutputStream = null;
@@ -384,13 +384,13 @@ public class UserDataService {
                     , byteArrayInputStream);
 
             //导出用户数据成功，写入Redis记录
-            exportDataDao.SaveExportDataToken(user.getUsername(), uuid);
+            exportDataDao.saveExportDataToken(user.getUsername(), uuid);
             //移除导出任务记录
-            exportDataDao.RemoveExportingDataToken(user.getUsername());
+            exportDataDao.removeExportingDataToken(user.getUsername());
 
         } catch (Exception e) {
             logger.error("导出用户数据失败，username={}", AnonymizeUtils.maskUsername(user.getUsername()), e);
-            exportDataDao.RemoveExportingDataToken(user.getUsername());
+            exportDataDao.removeExportingDataToken(user.getUsername());
         } finally {
             if (byteArrayInputStream != null) {
                 byteArrayInputStream.close();
@@ -422,9 +422,9 @@ public class UserDataService {
      * @param sessionId
      * @return
      */
-    public String DownloadUserData(String sessionId) {
+    public String downloadUserData(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        String token = exportDataDao.QueryExportDataToken(user.getUsername());
+        String token = exportDataDao.queryExportDataToken(user.getUsername());
         String url = null;
         if (StringUtils.isNotBlank(token)) {
             url = r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "export/" + token + ".zip"
@@ -452,13 +452,13 @@ public class UserDataService {
      */
     @Transactional("appTransactionManager")
     public void syncUserData(User user, boolean persistCredential) throws Exception {
-        cn.gdeiassistant.core.user.pojo.entity.UserEntity queryUser = userMapper.selectUser(user.getUsername());
+        cn.gdeiassistant.core.user.pojo.entity.CampusAccountView queryUser = userMapper.selectUser(user.getUsername());
         if (queryUser != null && !queryUser.isActive()) {
             // 已注销账号的校园用户名已被改名，正常不会命中；若命中则拒绝复用
             throw new IllegalStateException("账号已注销");
         }
         if (queryUser == null) {
-            cn.gdeiassistant.core.user.pojo.entity.UserEntity entity = new cn.gdeiassistant.core.user.pojo.entity.UserEntity();
+            cn.gdeiassistant.core.user.pojo.entity.CampusAccountView entity = new cn.gdeiassistant.core.user.pojo.entity.CampusAccountView();
             entity.setPublicId(java.util.UUID.randomUUID().toString());
             entity.setStatus("ACTIVE");
             entity.setUsername(user.getUsername());
@@ -466,7 +466,7 @@ public class UserDataService {
             userMapper.insertAppUser(entity);
             userMapper.insertCampusCredential(entity);
         } else if (persistCredential) {
-            cn.gdeiassistant.core.user.pojo.entity.UserEntity entity = new cn.gdeiassistant.core.user.pojo.entity.UserEntity();
+            cn.gdeiassistant.core.user.pojo.entity.CampusAccountView entity = new cn.gdeiassistant.core.user.pojo.entity.CampusAccountView();
             entity.setUsername(user.getUsername());
             entity.setPassword(user.getPassword());
             userMapper.updateUser(entity);

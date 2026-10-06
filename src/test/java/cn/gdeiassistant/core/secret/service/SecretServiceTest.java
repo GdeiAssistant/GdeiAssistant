@@ -1,13 +1,13 @@
 package cn.gdeiassistant.core.secret.service;
 
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.secret.converter.SecretConverter;
 import cn.gdeiassistant.core.secret.mapper.SecretMapper;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretContentEntity;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

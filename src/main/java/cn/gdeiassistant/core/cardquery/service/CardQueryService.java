@@ -1,21 +1,21 @@
 package cn.gdeiassistant.core.cardquery.service;
 
-import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
+import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import cn.gdeiassistant.core.cardquery.pojo.CardQuery;
 import cn.gdeiassistant.core.cardquery.pojo.CardQueryResult;
-import cn.gdeiassistant.common.pojo.Entity.Card;
-import cn.gdeiassistant.common.pojo.Entity.CardInfo;
+import cn.gdeiassistant.common.pojo.entity.Card;
+import cn.gdeiassistant.common.pojo.entity.CardInfo;
 import cn.gdeiassistant.integration.card.CardClient;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.core.imageRecognition.service.ImageRecognitionService;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.core.imagerecognition.service.ImageRecognitionService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
-import cn.gdeiassistant.common.tools.Utils.ImageEncodeUtils;
+import cn.gdeiassistant.common.tools.utils.ImageEncodeUtils;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import org.apache.http.HttpResponse;
@@ -43,6 +43,16 @@ import java.util.*;
 @Service
 public class CardQueryService {
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
+
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
+    private String casLoginUrl = "https://security.gdei.edu.cn/cas/login";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-login-url:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}")
+    private String cardLoginUrl = "http://ecard.gdei.edu.cn:8050/LoginCas.aspx";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}")
+    private String cardBaseUrl = "http://ecard.gdei.edu.cn";
+
     private final Logger logger = LoggerFactory.getLogger(CardQueryService.class);
 
     @Autowired
@@ -62,12 +72,12 @@ public class CardQueryService {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
+            HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            LoginCardSystem(httpClient, userCertificate.getUser().getUsername()
+            loginCardSystem(httpClient, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getPassword(), true);
-            HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             Document document = cardClient.fetchCardBasicInfoDocument(sessionId);
             return parseCardInfoFromDocument(document);
         } catch (PasswordIncorrectException ignored) {
@@ -90,7 +100,7 @@ public class CardQueryService {
                 }
             }
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -103,12 +113,12 @@ public class CardQueryService {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
+            HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            LoginCardSystem(httpClient, userCertificate.getUser().getUsername(),
+            loginCardSystem(httpClient, userCertificate.getUser().getUsername(),
                     userCertificate.getUser().getPassword(), true);
-            HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             CardInfo cardInfo = parseCardInfoFromDocument(cardClient.fetchCardBasicInfoDocument(sessionId));
             List<Card> cardList = queryCardListViaClient(sessionId, cardQuery);
             CardQueryResult cardQueryResult = new CardQueryResult();
@@ -133,7 +143,7 @@ public class CardQueryService {
                 }
             }
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -146,12 +156,12 @@ public class CardQueryService {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, 15);
+            HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            LoginCardSystem(httpClient, userCertificate.getUser().getUsername()
+            loginCardSystem(httpClient, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getPassword(), true);
-            HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+            httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             submitCardLostViaClient(sessionId, cardPassword);
         } catch (PasswordIncorrectException ignored) {
             throw new PasswordIncorrectException("账户密码不正确");
@@ -173,7 +183,7 @@ public class CardQueryService {
                 }
             }
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -181,8 +191,8 @@ public class CardQueryService {
     /**
      * 登录支付管理平台（CAS + ecard，严禁修改 CAS 相关逻辑）
      */
-    private void LoginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws IOException, ServerErrorException, PasswordIncorrectException {
-        HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
+    private void loginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws IOException, ServerErrorException, PasswordIncorrectException {
+        HttpGet httpGet = new HttpGet(casLoginUrl);
         HttpResponse httpResponse = httpClient.execute(httpGet);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         if (httpResponse.getStatusLine().getStatusCode() == 200 && document.getElementsByClass("pcclient").size() > 0) {
@@ -191,10 +201,10 @@ public class CardQueryService {
             basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
             basicNameValuePairs.add(new BasicNameValuePair("username", username));
             basicNameValuePairs.add(new BasicNameValuePair("password", password));
-            basicNameValuePairs.add(new BasicNameValuePair("service", "http://ecard.gdei.edu.cn:8050/LoginCas.aspx"));
+            basicNameValuePairs.add(new BasicNameValuePair("service", cardLoginUrl));
             basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
             basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
-            HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
+            HttpPost httpPost = new HttpPost(casLoginUrl);
             httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
             httpResponse = httpClient.execute(httpPost);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -229,14 +239,14 @@ public class CardQueryService {
         } else {
             if (autoRedirect) {
                 if (httpResponse.getStatusLine().getStatusCode() == 200 && document.select("span[class='style2']").size() > 0) {
-                    httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                    httpGet = new HttpGet(cardLoginUrl);
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         httpGet = new HttpGet(document.select("a").first().attr("href"));
                         httpResponse = httpClient.execute(httpGet);
                         if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                            httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                            httpGet = new HttpGet(cardBaseUrl);
                             httpResponse = httpClient.execute(httpGet);
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                             if (document.select("div[class='right menu_a'] span em").size() > 0) {
@@ -247,12 +257,12 @@ public class CardQueryService {
                 }
             } else {
                 if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                    httpGet = new HttpGet("https://security.gdei.edu.cn/cas/" + httpResponse.getFirstHeader("Location").getValue());
+                    httpGet = new HttpGet(java.net.URI.create(casLoginUrl).resolve(".").resolve(httpResponse.getFirstHeader("Location").getValue()));
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 200
                             && document.select("span[class='style2']").size() > 0) {
-                        httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                        httpGet = new HttpGet(cardBaseUrl);
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         if (httpResponse.getStatusLine().getStatusCode() == 200
@@ -260,7 +270,7 @@ public class CardQueryService {
                             if (document.select("div[class='right menu_a'] span em").size() > 0) {
                                 return;
                             }
-                            httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                            httpGet = new HttpGet(cardLoginUrl);
                             httpResponse = httpClient.execute(httpGet);
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                             if (httpResponse.getStatusLine().getStatusCode() == 302) {
@@ -393,7 +403,7 @@ public class CardQueryService {
         int j = 1;
         while (i <= 3) {
             byte[] keyPadBytes = cardClient.fetchKeyPadImage(sessionId);
-            String safeKeyBoard = imageRecognitionService.CharacterNumberRecognize(ImageEncodeUtils.convertToBase64(new ByteArrayInputStream(keyPadBytes)));
+            String safeKeyBoard = imageRecognitionService.characterNumberRecognize(ImageEncodeUtils.convertToBase64(new ByteArrayInputStream(keyPadBytes)));
             if (safeKeyBoard.length() != 10 || !safeKeyBoard.matches("^[0-9]*$")) {
                 i++;
                 continue;
@@ -401,7 +411,7 @@ public class CardQueryService {
             while (j <= 3) {
                 String checkcodePath = document.getElementById("imgCheckCode").attr("src");
                 byte[] checkcodeBytes = cardClient.fetchCheckcodeImage(sessionId, checkcodePath);
-                String checkCode = imageRecognitionService.CheckCodeRecognize(ImageEncodeUtils.convertToBase64(new ByteArrayInputStream(checkcodeBytes), ImageEncodeUtils.ImageFormTypeEnum.PNG), CheckCodeTypeEnum.NUMBER, 4);
+                String checkCode = imageRecognitionService.checkCodeRecognize(ImageEncodeUtils.convertToBase64(new ByteArrayInputStream(checkcodeBytes), ImageEncodeUtils.ImageFormTypeEnum.PNG), CheckCodeTypeEnum.NUMBER, 4);
                 if (checkCode.length() != 4 || !checkCode.matches("^[0-9]*$")) {
                     j++;
                     continue;

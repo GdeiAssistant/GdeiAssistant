@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.topic.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
@@ -12,10 +12,10 @@ import cn.gdeiassistant.core.topic.pojo.entity.TopicEntity;
 import cn.gdeiassistant.core.topic.pojo.entity.TopicLikeEntity;
 import cn.gdeiassistant.core.topic.pojo.vo.TopicVO;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,7 +186,7 @@ public class TopicService {
         String authorId = null;
         String displayName = campusUsername;
         if (userMapper != null && campusUsername != null) {
-            UserEntity author = userMapper.selectUser(campusUsername);
+            CampusAccountView author = userMapper.selectUser(campusUsername);
             if (author != null && author.isActive()) {
                 authorId = author.getPublicId();
             }

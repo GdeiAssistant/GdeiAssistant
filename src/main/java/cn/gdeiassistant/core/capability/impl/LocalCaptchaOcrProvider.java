@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.ProviderException;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import cn.gdeiassistant.core.capability.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.capability.impl;
 
-import cn.gdeiassistant.common.exception.VerificationException.SendSMSException;
+import cn.gdeiassistant.common.exception.verificationexception.SendSMSException;
 import cn.gdeiassistant.core.capability.sms.SmsVerificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

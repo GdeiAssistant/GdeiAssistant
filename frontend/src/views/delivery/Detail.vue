@@ -2,7 +2,7 @@
 import { computed, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import request from '../../utils/request'
+import { getDeliveryDetail, acceptDeliveryOrder, finishDeliveryTrade } from '../../api/delivery'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
 import {
@@ -58,7 +58,7 @@ function getSizeText(size) {
 function handleAccept() {
   if (accepting.value || !item.value) return
   accepting.value = true
-  request.post('/delivery/acceptorder', null, { params: { orderId: item.value.orderId } })
+  acceptDeliveryOrder(item.value.orderId)
     .then(() => {
       item.value.state = 1
       showDialog(t('delivery.detail.acceptSuccess'))
@@ -89,7 +89,7 @@ function handleComplete() {
   confirmCompleteVisible.value = false
   if (completing.value || !trade.value || trade.value.tradeId == null) return
   completing.value = true
-  request.post(`/delivery/trade/id/${trade.value.tradeId}/finishtrade`)
+  finishDeliveryTrade(trade.value.tradeId)
     .then(() => {
       item.value.state = 2
       showDialog(t('delivery.detail.completeSuccess'))
@@ -101,7 +101,7 @@ function handleComplete() {
 onMounted(async () => {
   loading.value = true
   try {
-    const res = await request.get(`/delivery/order/id/${route.params.id}`)
+    const res = await getDeliveryDetail(route.params.id)
     const data = res?.data
     if (data && res.success !== false) {
       const o = data.order || {}
@@ -114,12 +114,12 @@ onMounted(async () => {
         time: o.orderTime,
         size: 'small',
         type: 'express',
-        pickupAddress: o.company ? t('delivery.pickupAddressWithCompany', { company: o.company }) : t('delivery.pickupShort'),
-        deliveryAddress: o.address || '',
+        pickupAddress: o.pickupLocation ? t('delivery.pickupAddressWithCompany', { company: o.pickupLocation }) : t('delivery.pickupShort'),
+        deliveryAddress: o.deliveryAddress || '',
         remarks: o.remarks,
         description: o.remarks,
-        pickupCode: o.number || null,
-        contactPhone: o.phone || null
+        pickupCode: o.pickupCode || null,
+        contactPhone: o.contactPhone || null
       }
       detailType.value = data.detailType
       trade.value = data.trade || null

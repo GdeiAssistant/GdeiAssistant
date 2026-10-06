@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.cardquery.pojo;
 
-import cn.gdeiassistant.common.pojo.Entity.Card;
-import cn.gdeiassistant.common.pojo.Entity.CardInfo;
+import cn.gdeiassistant.common.pojo.entity.Card;
+import cn.gdeiassistant.common.pojo.entity.CardInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

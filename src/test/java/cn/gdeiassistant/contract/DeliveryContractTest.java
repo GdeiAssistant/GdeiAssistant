@@ -54,12 +54,12 @@ class DeliveryContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data[0].orderId").exists())
-                .andExpect(jsonPath("$.data[0].name").exists())
-                .andExpect(jsonPath("$.data[0].number").exists())
-                .andExpect(jsonPath("$.data[0].phone").exists())
+                .andExpect(jsonPath("$.data[0].taskName").exists())
+                .andExpect(jsonPath("$.data[0].pickupCode").exists())
+                .andExpect(jsonPath("$.data[0].contactPhone").exists())
                 .andExpect(jsonPath("$.data[0].price").exists())
-                .andExpect(jsonPath("$.data[0].company").exists())
-                .andExpect(jsonPath("$.data[0].address").exists())
+                .andExpect(jsonPath("$.data[0].pickupLocation").exists())
+                .andExpect(jsonPath("$.data[0].deliveryAddress").exists())
                 .andExpect(jsonPath("$.data[0].state").exists());
     }
 
@@ -172,12 +172,12 @@ class DeliveryContractTest {
         ArgumentCaptor<DeliveryPublishDTO> captor = ArgumentCaptor.forClass(DeliveryPublishDTO.class);
         verify(deliveryService).addDeliveryOrder(eq("test-session"), captor.capture());
         DeliveryPublishDTO dto = captor.getValue();
-        assertEquals("代收", dto.getName());
-        assertEquals("00000000000", dto.getNumber());
-        assertEquals("13800138000", dto.getPhone());
-        assertEquals(5.50f, dto.getPrice());
-        assertEquals("菜鸟驿站", dto.getCompany());
-        assertEquals("南苑5栋307", dto.getAddress());
+        assertEquals("代收", dto.getTaskName());
+        assertEquals("00000000000", dto.getPickupCode());
+        assertEquals("13800138000", dto.getContactPhone());
+        assertEquals(new java.math.BigDecimal("5.50"), dto.getPrice());
+        assertEquals("菜鸟驿站", dto.getPickupLocation());
+        assertEquals("南苑5栋307", dto.getDeliveryAddress());
         assertEquals("轻拿轻放", dto.getRemarks());
     }
 
@@ -185,12 +185,12 @@ class DeliveryContractTest {
     void publishEndpointRejectsMissingRequiredFieldsBeforeService() throws Exception {
         mockMvc.perform(post("/api/delivery/order")
                         .requestAttr("sessionId", "test-session")
-                        .param("name", "")
-                        .param("number", "00000000000")
-                        .param("phone", "13800138000")
+                        .param("taskName", "")
+                        .param("pickupCode", "00000000000")
+                        .param("contactPhone", "13800138000")
                         .param("price", "5.50")
-                        .param("company", "菜鸟驿站")
-                        .param("address", "南苑5栋307"))
+                        .param("pickupLocation", "菜鸟驿站")
+                        .param("deliveryAddress", "南苑5栋307"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
@@ -199,7 +199,7 @@ class DeliveryContractTest {
 
     @Test
     void publishEndpointRejectsInvalidNumberOrPhoneBeforeService() throws Exception {
-        mockMvc.perform(publishRequestBuilder("代收", "1234567890", "13800138000", "5.50", "菜鸟驿站", "南苑5栋307", "轻拿轻放"))
+        mockMvc.perform(publishRequestBuilder("代收", "x".repeat(65), "13800138000", "5.50", "菜鸟驿站", "南苑5栋307", "轻拿轻放"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
@@ -240,8 +240,8 @@ class DeliveryContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.order.orderId").exists())
-                .andExpect(jsonPath("$.data.order.number").value("SF123456"))
-                .andExpect(jsonPath("$.data.order.phone").value("13800138000"))
+                .andExpect(jsonPath("$.data.order.pickupCode").value("SF123456"))
+                .andExpect(jsonPath("$.data.order.contactPhone").value("13800138000"))
                 .andExpect(jsonPath("$.data.order.price").exists())
                 .andExpect(jsonPath("$.data.detailType").value(0));
     }
@@ -259,37 +259,46 @@ class DeliveryContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.order.orderId").exists())
-                .andExpect(jsonPath("$.data.order.number").doesNotExist())
-                .andExpect(jsonPath("$.data.order.phone").doesNotExist())
+                .andExpect(jsonPath("$.data.order.pickupCode").doesNotExist())
+                .andExpect(jsonPath("$.data.order.contactPhone").doesNotExist())
+                .andExpect(jsonPath("$.data.order.deliveryAddress").doesNotExist())
+                .andExpect(jsonPath("$.data.order.username").doesNotExist())
                 .andExpect(jsonPath("$.data.detailType").value(1));
+    }
+
+    @Test
+    void acceptedOrderIsNotReadableByThirdParty() throws Exception {
+        when(deliveryService.queryDeliveryOrderDetailType("test-session", 1)).thenReturn(2);
+        mockMvc.perform(get("/api/delivery/order/id/1").requestAttr("sessionId", "test-session"))
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.data").doesNotExist());
+        org.mockito.Mockito.verify(deliveryService, org.mockito.Mockito.never()).queryDeliveryOrderByOrderId(1);
     }
 
     private static MockHttpServletRequestBuilder validPublishRequestBuilder() {
         return publishRequestBuilder("代收", "00000000000", "13800138000", "5.50", "菜鸟驿站", "南苑5栋307", "轻拿轻放");
     }
 
-    private static MockHttpServletRequestBuilder publishRequestBuilder(String name,
-            String number, String phone, String price, String company, String address, String remarks) {
+    private static MockHttpServletRequestBuilder publishRequestBuilder(String taskName,
+            String pickupCode, String contactPhone, String price, String pickupLocation, String deliveryAddress, String remarks) {
         return post("/api/delivery/order")
                 .requestAttr("sessionId", "test-session")
-                .param("name", name)
-                .param("number", number)
-                .param("phone", phone)
-                .param("price", price)
-                .param("company", company)
-                .param("address", address)
-                .param("remarks", remarks);
+                .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                .content(new com.google.gson.Gson().toJson(java.util.Map.of(
+                        "taskName", taskName, "pickupCode", pickupCode, "contactPhone", contactPhone,
+                        "price", price, "pickupLocation", pickupLocation, "deliveryAddress", deliveryAddress,
+                        "remarks", remarks)));
     }
 
     private static DeliveryOrderVO mockDeliveryOrderVO() {
         DeliveryOrderVO vo = new DeliveryOrderVO();
         vo.setOrderId(1);
-        vo.setName("Zhang San");
-        vo.setNumber("SF123456");
-        vo.setPhone("13800138000");
-        vo.setPrice(5.0f);
-        vo.setCompany("Shunfeng");
-        vo.setAddress("Building A");
+        vo.setTaskName("Zhang San");
+        vo.setPickupCode("SF123456");
+        vo.setContactPhone("13800138000");
+        vo.setPrice(new java.math.BigDecimal("5.0"));
+        vo.setPickupLocation("Shunfeng");
+        vo.setDeliveryAddress("Building A");
         vo.setState(0);
         return vo;
     }

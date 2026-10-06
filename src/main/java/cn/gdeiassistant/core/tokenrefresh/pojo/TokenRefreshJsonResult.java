@@ -1,7 +1,7 @@
-package cn.gdeiassistant.core.tokenRefresh.pojo;
+package cn.gdeiassistant.core.tokenrefresh.pojo;
 
-import cn.gdeiassistant.common.pojo.Entity.Token;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.entity.Token;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 
 public class TokenRefreshJsonResult extends JsonResult {
 

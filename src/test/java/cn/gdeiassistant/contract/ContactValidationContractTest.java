@@ -1,7 +1,7 @@
 package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
-import cn.gdeiassistant.common.pojo.Entity.Email;
+import cn.gdeiassistant.common.pojo.entity.Email;
 import cn.gdeiassistant.core.email.controller.EmailController;
 import cn.gdeiassistant.core.email.service.EmailService;
 import cn.gdeiassistant.core.phone.controller.PhoneController;

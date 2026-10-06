@@ -63,8 +63,8 @@ function callPhone() {
   if (phone) window.location.href = `tel:${phone}`
 }
 
-function mapErshouDetail(info) {
-  const item = info?.secondhandItem || {}
+function mapMarketplaceDetail(info) {
+  const item = info?.item || {}
   const profile = info?.profile || {}
   return {
     images: Array.isArray(item.pictureURL) ? item.pictureURL : [],
@@ -73,7 +73,7 @@ function mapErshouDetail(info) {
     location: item.location,
     desc: item.description,
     seller: {
-      name: profile.nickname || item.username || '—',
+      name: profile.displayName || item.displayName || '—',
       authorId: item.authorId || null,
       publishTime: item.publishTime || '',
       avatar: item.authorId
@@ -90,10 +90,10 @@ function mapErshouDetail(info) {
 onMounted(async () => {
   loading.value = true
   try {
-    const res = await request.get(`/ershou/item/id/${id}`)
+    const res = await request.get(`/marketplace/item/id/${id}`)
     const info = res?.data
     if (info && res.success !== false) {
-      detail.value = mapErshouDetail(info)
+      detail.value = mapMarketplaceDetail(info)
     } else {
       detail.value = null
       errorMessage.value = res?.message || t('marketplace.detail.itemNotFound')

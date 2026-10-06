@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.express.service;
 
-import cn.gdeiassistant.common.pojo.Entity.ExpressComment;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.pojo.entity.ExpressComment;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.express.converter.ExpressCommentConverterImpl;
 import cn.gdeiassistant.core.express.converter.ExpressConverterImpl;
 import cn.gdeiassistant.core.express.mapper.ExpressMapper;
@@ -10,7 +10,7 @@ import cn.gdeiassistant.core.express.pojo.entity.ExpressEntity;
 import cn.gdeiassistant.core.express.pojo.vo.ExpressCommentVO;
 import cn.gdeiassistant.core.express.pojo.vo.ExpressVO;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

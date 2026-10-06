@@ -1,11 +1,11 @@
 package cn.gdeiassistant.common.exceptionhandler;
 
 import cn.gdeiassistant.common.constant.ErrorConstantUtils;
-import cn.gdeiassistant.common.exception.TokenValidException.SuspiciouseRequestException;
-import cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException;
-import cn.gdeiassistant.common.exception.TokenValidException.TokenNotMatchingException;
-import cn.gdeiassistant.common.exception.TokenValidException.TokenServerException;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.exception.tokenvalidexception.SuspiciouseRequestException;
+import cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException;
+import cn.gdeiassistant.common.exception.tokenvalidexception.TokenNotMatchingException;
+import cn.gdeiassistant.common.exception.tokenvalidexception.TokenServerException;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class TokenExceptionHandler {
      * @return
      */
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<JsonResult> HandleTokenExpiredException(TokenExpiredException e, HttpServletRequest request) {
+    public ResponseEntity<JsonResult> handleTokenExpiredException(TokenExpiredException e, HttpServletRequest request) {
         logger.error("TokenExceptionHandler：", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResult(ErrorConstantUtils.TOKEN_EXPIRED_EXCEPTION, false,
@@ -44,7 +44,7 @@ public class TokenExceptionHandler {
      * @return
      */
     @ExceptionHandler(SuspiciouseRequestException.class)
-    public ResponseEntity<JsonResult> HandleUnusualLocationException(SuspiciouseRequestException e, HttpServletRequest request) {
+    public ResponseEntity<JsonResult> handleUnusualLocationException(SuspiciouseRequestException e, HttpServletRequest request) {
         logger.error("TokenExceptionHandler：", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResult(ErrorConstantUtils.UNUSUAL_LOCATION_EXCEPTION, false,
@@ -57,7 +57,7 @@ public class TokenExceptionHandler {
      * @return
      */
     @ExceptionHandler(TokenNotMatchingException.class)
-    public ResponseEntity<JsonResult> HandleTokenNotMatchingException(TokenNotMatchingException e, HttpServletRequest request) {
+    public ResponseEntity<JsonResult> handleTokenNotMatchingException(TokenNotMatchingException e, HttpServletRequest request) {
         logger.error("TokenExceptionHandler：", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResult(ErrorConstantUtils.TOKEN_NOT_MATCHING, false,
@@ -70,7 +70,7 @@ public class TokenExceptionHandler {
      * @return
      */
     @ExceptionHandler(TokenServerException.class)
-    public ResponseEntity<JsonResult> HandleTokenServerException(TokenServerException e, HttpServletRequest request) {
+    public ResponseEntity<JsonResult> handleTokenServerException(TokenServerException e, HttpServletRequest request) {
         logger.error("TokenExceptionHandler：", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResult(ErrorConstantUtils.TOKEN_SERVER_ERROR, false,

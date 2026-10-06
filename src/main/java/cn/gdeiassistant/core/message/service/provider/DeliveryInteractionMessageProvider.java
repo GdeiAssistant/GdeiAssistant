@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.message.service.provider;
 
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.delivery.mapper.DeliveryMapper;
 import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryOrderEntity;
 import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryTradeEntity;
@@ -36,7 +36,7 @@ public class DeliveryInteractionMessageProvider extends BaseInteractionMessagePr
         InteractionMessageVO vo = new InteractionMessageVO();
         DeliveryOrderEntity order = entity != null ? entity.getDeliveryOrder() : null;
         String runner = entity != null && StringUtils.isNotBlank(entity.getUsername()) ? entity.getUsername() : "有同学";
-        String company = order != null && StringUtils.isNotBlank(order.getCompany()) ? order.getCompany() : "快递代收";
+        String company = order != null && StringUtils.isNotBlank(order.getPickupLocation()) ? order.getPickupLocation() : "快递代收";
         vo.setId(entity != null && entity.getTradeId() != null ? "delivery-" + entity.getTradeId() : null);
         vo.setModule("delivery");
         vo.setType("order_accepted");

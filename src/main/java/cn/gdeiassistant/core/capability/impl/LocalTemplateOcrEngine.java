@@ -1,8 +1,8 @@
 package cn.gdeiassistant.core.capability.impl;
 
-import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;

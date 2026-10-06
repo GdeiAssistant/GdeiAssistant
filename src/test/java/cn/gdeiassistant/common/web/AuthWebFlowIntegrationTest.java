@@ -2,9 +2,9 @@ package cn.gdeiassistant.common.web;
 
 import cn.gdeiassistant.common.filter.JwtSessionIdFilter;
 import cn.gdeiassistant.common.interceptor.ApiAuthInterceptor;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.tools.Utils.JwtUtil;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.tools.utils.JwtUtil;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,11 +42,17 @@ class AuthWebFlowIntegrationTest {
 
     private MockMvc mockMvc;
 
+    @Mock private cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
+
     @BeforeEach
     void setUp() {
         JwtSessionIdFilter jwtSessionIdFilter = new JwtSessionIdFilter();
         ReflectionTestUtils.setField(jwtSessionIdFilter, "jwtUtil", jwtUtil);
         ReflectionTestUtils.setField(jwtSessionIdFilter, "userCertificateService", userCertificateService);
+        ReflectionTestUtils.setField(jwtSessionIdFilter, "userMapper", userMapper);
+        var active = new cn.gdeiassistant.core.user.pojo.entity.CampusAccountView();
+        active.setStatus("ACTIVE");
+        org.mockito.Mockito.lenient().when(userMapper.selectUser(org.mockito.ArgumentMatchers.anyString())).thenReturn(active);
 
         ApiAuthInterceptor apiAuthInterceptor = new ApiAuthInterceptor(List.of("/api/auth"));
         mockMvc = MockMvcBuilders.standaloneSetup(new TestAuthController())

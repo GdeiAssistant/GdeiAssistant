@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.marketplace.pojo.entity;
 
-import cn.gdeiassistant.common.pojo.Entity.Entity;
+import java.math.BigDecimal;
+import cn.gdeiassistant.common.pojo.entity.Entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,7 +18,7 @@ public class MarketplaceItemEntity implements Serializable, Entity {
     private String authorId;
     private String name;
     private String description;
-    private Float price;
+    private BigDecimal price;
     private String location;
     private Integer type;
     private String qq;
@@ -36,8 +37,8 @@ public class MarketplaceItemEntity implements Serializable, Entity {
     public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public Float getPrice() { return price; }
-    public void setPrice(Float price) { this.price = price; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
     public Integer getType() { return type; }

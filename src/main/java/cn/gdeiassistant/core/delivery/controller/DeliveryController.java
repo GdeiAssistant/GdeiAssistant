@@ -2,13 +2,13 @@ package cn.gdeiassistant.core.delivery.controller;
 
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
-import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.exception.DeliveryException.DeliveryOrderStateUpdatedException;
-import cn.gdeiassistant.common.exception.DeliveryException.NoAccessUpdatingException;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.common.tools.Utils.PageUtils;
+import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.exception.deliveryexception.DeliveryOrderStateUpdatedException;
+import cn.gdeiassistant.common.exception.deliveryexception.NoAccessUpdatingException;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
+import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.core.delivery.pojo.dto.DeliveryPublishDTO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryOrderVO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryTradeVO;
@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -42,41 +39,35 @@ public class DeliveryController {
      * 订单详情（含 detailType；已接单时含 trade）。GET /api/delivery/order/id/{id}
      */
     @RequestMapping(value = "/api/delivery/order/id/{id}", method = RequestMethod.GET)
-    public DataJsonResult<Map<String, Object>> getDeliveryOrderDetail(HttpServletRequest request, @PathVariable("id") @Min(1) Integer id) throws DataNotExistException {
+    public DataJsonResult<DeliveryDetailResponse> getDeliveryOrderDetail(HttpServletRequest request, @PathVariable("id") @Min(1) Integer id) throws DataNotExistException {
         id = requirePositiveId(id);
         String sessionId = (String) request.getAttribute("sessionId");
-        DeliveryOrderVO order = deliveryService.queryDeliveryOrderByOrderId(id);
         int detailType = deliveryService.queryDeliveryOrderDetailType(sessionId, id);
-        Map<String, Object> data = new HashMap<>();
-        data.put("detailType", detailType);
-        if (detailType == 1 || detailType == 2) {
-            // Unauthorized viewers: strip sensitive fields and omit trade info
-            order.setNumber(null);
-            order.setPhone(null);
-            data.put("order", order);
-        } else {
-            // Owner (0) or runner (3): return full data including trade
-            data.put("order", order);
-            if (order.getState() != null && !order.getState().equals(0)) {
-                DeliveryTradeVO trade = deliveryService.queryDeliveryTradeByOrderId(order.getOrderId());
-                data.put("trade", trade);
-            }
+        if (detailType == 2) {
+            throw new DataNotExistException("该订单不可访问");
         }
-        return new DataJsonResult<>(true, data);
+        DeliveryOrderVO order = deliveryService.queryDeliveryOrderByOrderId(id);
+        DeliveryTradeVO trade = null;
+        if (detailType == 1) {
+            DeliveryService.redactPublicOrder(order);
+        } else if (Integer.valueOf(1).equals(order.getState()) || Integer.valueOf(2).equals(order.getState())) {
+            trade = deliveryService.queryDeliveryTradeByOrderId(id);
+        }
+        return new DataJsonResult<>(true, new DeliveryDetailResponse(order, detailType, trade));
     }
+
+    public record DeliveryDetailResponse(DeliveryOrderVO order, int detailType, DeliveryTradeVO trade) {}
+    public record DeliveryMineResponse(List<DeliveryOrderVO> published, List<DeliveryOrderVO> accepted) {}
 
     /**
      * 我的跑腿：我发布的 + 我接的单。GET /api/delivery/mine
      */
     @RequestMapping(value = "/api/delivery/mine", method = RequestMethod.GET)
-    public DataJsonResult<Map<String, Object>> getMyDelivery(HttpServletRequest request) {
+    public DataJsonResult<DeliveryMineResponse> getMyDelivery(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
         List<DeliveryOrderVO> published = deliveryService.queryPersonalDeliveryOrder(sessionId);
         List<DeliveryOrderVO> accepted = deliveryService.queryPersonalAcceptedDeliveryOrder(sessionId);
-        Map<String, Object> data = new HashMap<>();
-        data.put("published", published);
-        data.put("accepted", accepted);
-        return new DataJsonResult<>(true, data);
+        return new DataJsonResult<>(true, new DeliveryMineResponse(published, accepted));
     }
 
     /**
@@ -155,7 +146,7 @@ public class DeliveryController {
     @RateLimit(maxRequests = 5, windowSeconds = 60)
     @RequestMapping(value = "/api/delivery/order", method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
-    public JsonResult addDeliveryOrder(HttpServletRequest request, @Validated DeliveryPublishDTO dto) {
+    public JsonResult addDeliveryOrder(HttpServletRequest request, @RequestBody @Validated DeliveryPublishDTO dto) {
         String sessionId = (String) request.getAttribute("sessionId");
         deliveryService.addDeliveryOrder(sessionId, dto);
         return new JsonResult(true);

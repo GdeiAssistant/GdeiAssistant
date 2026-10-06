@@ -1,11 +1,11 @@
-package cn.gdeiassistant.core.userProfile.service;
+package cn.gdeiassistant.core.userprofile.service;
 
-import cn.gdeiassistant.common.pojo.Entity.Region;
-import cn.gdeiassistant.common.tools.Utils.LocationUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.pojo.entity.Region;
+import cn.gdeiassistant.common.tools.utils.LocationUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.i18n.I18nTranslationService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
-import cn.gdeiassistant.core.userProfile.pojo.ProfileLocationValueVO;
+import cn.gdeiassistant.core.userprofile.pojo.ProfileLocationValueVO;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package cn.gdeiassistant.common.filter;
 
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.Utils.JwtUtil;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.utils.JwtUtil;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,9 @@ public class JwtSessionIdFilter implements Filter {
     @Autowired
     private UserCertificateService userCertificateService;
 
+    @Autowired
+    private cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -52,7 +55,8 @@ public class JwtSessionIdFilter implements Filter {
                         // 若 session 已被 clearUserLoginAndSession 清除，则不注入 sessionId，
                         // 后续 ApiAuthInterceptor 会返回 401
                         User certificate = userCertificateService.getUserLoginCertificate(sessionId);
-                        if (certificate != null) {
+                        var account = certificate == null ? null : userMapper.selectUser(certificate.getUsername());
+                        if (account != null && account.isActive()) {
                             req.setAttribute("sessionId", sessionId);
                             req.setAttribute("user", certificate);
                         }

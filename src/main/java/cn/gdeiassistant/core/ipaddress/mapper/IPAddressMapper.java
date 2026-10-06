@@ -1,6 +1,6 @@
-package cn.gdeiassistant.core.iPAddress.mapper;
+package cn.gdeiassistant.core.ipaddress.mapper;
 
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

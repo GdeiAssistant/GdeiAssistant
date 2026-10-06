@@ -3,7 +3,6 @@ import router from '../router'
 import { showErrorTopTips } from './toast.js'
 import i18n from '../i18n'
 import { isMockMode } from '../services/data-source.js'
-import { handleRequest as mockHandleRequest } from '../mock/index.js'
 import { resetSocialRealtimeOnAuthChange } from '../composables/useSocialRealtime.js'
 
 const _t = (key) => i18n.global.t(key)
@@ -90,7 +89,10 @@ const AUTH_EXPIRED_CODE = 400302
  * 统一处理登录失效：展示后端文案、清理本地缓存并跳转登录页
  * @param {string} rawMessage
  */
-function handleLogout(rawMessage) {
+function handleLogout(rawMessage, config) {
+  const token = localStorage.getItem('token')
+  const authorization = config?.headers?.get?.('Authorization') ?? config?.headers?.Authorization
+  if (!token || authorization !== `Bearer ${token}`) return
   const safeMessage = sanitizeMessage(rawMessage || _t('common.loginExpiredDefault'))
   showErrorTopTips(safeMessage)
   try {
@@ -121,13 +123,13 @@ function createMockAdapter(config) {
   const mergedData = /\/social\/conversations\/[^/]+\/messages\/image$/.test(path) && data instanceof FormData
     ? data : Object.assign({}, params, data)
 
-  return mockHandleRequest({
+  return import('../mock/index.js').then(({ handleRequest }) => handleRequest({
     path,
     method,
     data: mergedData,
     token,
     locale: config.headers?.['Accept-Language']
-  }).then((mockData) => ({
+  })).then((mockData) => ({
     data: mockData,
     status: 200,
     statusText: 'OK (Mock)',
@@ -190,7 +192,7 @@ service.interceptors.response.use(
       if (typeof res.code === 'number' && res.code >= 400300 && res.code < 400400) {
         // 400302：无效令牌 -> 自动登出并回到登录页（文案由后端驱动）
         if (res.code === AUTH_EXPIRED_CODE) {
-          handleLogout(res.message || _t('common.invalidToken'))
+          handleLogout(res.message || _t('common.invalidToken'), response.config)
           return Promise.reject(new Error(sanitizeMessage(res.message)))
         }
         const safeMessage = sanitizeMessage(res.message)
@@ -221,7 +223,7 @@ service.interceptors.response.use(
     if (status === 401) {
       if (!isLoginRequest) {
         const backendMsg = error.response?.data?.message
-        handleLogout(backendMsg || _t('common.loginExpiredDefault'))
+        handleLogout(backendMsg || _t('common.loginExpiredDefault'), error.config)
       }
       return Promise.reject(error)
     }

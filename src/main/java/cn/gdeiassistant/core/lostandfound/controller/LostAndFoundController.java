@@ -3,11 +3,11 @@ package cn.gdeiassistant.core.lostandfound.controller;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
-import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.common.tools.Utils.PageUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
+import cn.gdeiassistant.common.tools.utils.PageUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.lostandfound.pojo.dto.LostAndFoundPublishDTO;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundDetailVO;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundItemVO;
@@ -171,7 +171,7 @@ public class LostAndFoundController {
                         lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), imageIndex++, image.getInputStream());
                     }
                 }
-            } else {
+            } else if (imageKeys != null) {
                 for (int i = 1; i <= imageKeys.length; i++) {
                     lostAndFoundService.moveLostAndFoundItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
                 }

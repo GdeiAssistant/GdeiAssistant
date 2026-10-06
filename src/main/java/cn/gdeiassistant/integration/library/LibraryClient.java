@@ -1,7 +1,7 @@
 package cn.gdeiassistant.integration.library;
 
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import cn.gdeiassistant.integration.library.pojo.LibraryRenewResult;
@@ -39,6 +39,9 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class LibraryClient {
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
+
     private static final Logger logger = LoggerFactory.getLogger(LibraryClient.class);
     private static final String OPAC_RENEW_BASE = "http://agentdockingopac.featurelib.libsou.com";
     private static final String OPAC_SEARCH_BASE = "http://agentdockingopac.featurelib.libsou.com";
@@ -56,7 +59,7 @@ public class LibraryClient {
      * @return 续借结果 result + message
      */
     public LibraryRenewResult renewBook(String sessionId, String sn, String code) throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, LIBRARY_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, LIBRARY_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -74,7 +77,7 @@ public class LibraryClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -89,7 +92,7 @@ public class LibraryClient {
      */
     public Document fetchBorrowedBooksPage(String sessionId, String number, String password)
             throws IOException, PasswordIncorrectException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, LIBRARY_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, LIBRARY_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -134,7 +137,7 @@ public class LibraryClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }

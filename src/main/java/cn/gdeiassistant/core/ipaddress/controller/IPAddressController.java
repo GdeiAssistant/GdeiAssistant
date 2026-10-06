@@ -1,10 +1,10 @@
-package cn.gdeiassistant.core.iPAddress.controller;
+package cn.gdeiassistant.core.ipaddress.controller;
 
-import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.tools.Utils.PageUtils;
-import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
+import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.tools.utils.PageUtils;
+import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

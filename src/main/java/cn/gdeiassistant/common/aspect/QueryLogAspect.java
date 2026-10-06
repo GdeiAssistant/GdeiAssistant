@@ -1,8 +1,8 @@
 package cn.gdeiassistant.common.aspect;
 
 import cn.gdeiassistant.common.constant.ObservabilityConstants;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -40,12 +40,12 @@ public class QueryLogAspect {
     private MeterRegistry meterRegistry;
 
     @Pointcut("@annotation(cn.gdeiassistant.common.annotation.QueryLogPersistence)")
-    public void QueryAction() {
+    public void queryAction() {
 
     }
 
     @Pointcut("@annotation(cn.gdeiassistant.common.annotation.RestQueryLogPersistence)")
-    public void RestQueryAction() {
+    public void restQueryAction() {
 
     }
 
@@ -57,12 +57,12 @@ public class QueryLogAspect {
             + "execution(* cn.gdeiassistant.core.delivery.controller.DeliveryController.*(..)) || "
             + "execution(* cn.gdeiassistant.core.dating.controller.DatingController.*(..)) || "
             + "execution(* cn.gdeiassistant.core.photograph.controller.PhotographController.*(..))")
-    public void CommunityQueryAction() {
+    public void communityQueryAction() {
 
     }
 
-    @Around("RestQueryAction()")
-    public Object RestSaveQueryLog(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("restQueryAction()")
+    public Object restSaveQueryLog(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         long elapsed = System.currentTimeMillis() - start;
@@ -95,8 +95,8 @@ public class QueryLogAspect {
         return result;
     }
 
-    @Around("QueryAction()")
-    public Object SaveQueryLog(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("queryAction()")
+    public Object saveQueryLog(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         long elapsed = System.currentTimeMillis() - start;
@@ -143,8 +143,8 @@ public class QueryLogAspect {
         return result;
     }
 
-    @Around("CommunityQueryAction()")
-    public Object CommunityQueryLog(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("communityQueryAction()")
+    public Object communityQueryLog(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         long elapsed = System.currentTimeMillis() - start;

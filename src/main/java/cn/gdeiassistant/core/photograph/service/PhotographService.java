@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.photograph.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.photograph.converter.PhotographCommentConverter;
 import cn.gdeiassistant.core.photograph.converter.PhotographConverter;
@@ -11,10 +11,10 @@ import cn.gdeiassistant.core.photograph.pojo.entity.PhotographCommentEntity;
 import cn.gdeiassistant.core.photograph.pojo.entity.PhotographEntity;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographCommentVO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
-import cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.utils.PublicAuthorResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,7 +211,7 @@ public class PhotographService {
     }
 
     @Transactional("appTransactionManager")
-    public void LikePhotograph(int id, String sessionId) throws DataNotExistException {
+    public void likePhotograph(int id, String sessionId) throws DataNotExistException {
         Integer photographCount = photographMapper.selectPhotographCountById(id);
         if (photographCount == null || photographCount == 0) {
             throw new DataNotExistException("照片信息不存在");

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.spareRoom.pojo.vo;
+package cn.gdeiassistant.core.spareroom.pojo.vo;
 
 import java.io.Serializable;
 

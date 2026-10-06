@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.campuscredential.controller;
 
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.core.campuscredential.pojo.dto.CampusCredentialConsentDTO;
 import cn.gdeiassistant.core.campuscredential.pojo.dto.CampusCredentialQuickAuthUpdateDTO;
 import cn.gdeiassistant.core.campuscredential.pojo.vo.CampusCredentialStatusVO;

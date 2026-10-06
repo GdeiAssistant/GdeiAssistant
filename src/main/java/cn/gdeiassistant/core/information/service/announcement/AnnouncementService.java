@@ -1,6 +1,6 @@
-package cn.gdeiassistant.core.information.service.Announcement;
+package cn.gdeiassistant.core.information.service.announcement;
 
-import cn.gdeiassistant.common.pojo.Entity.Announcement;
+import cn.gdeiassistant.common.pojo.entity.Announcement;
 import cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper;
 import cn.gdeiassistant.core.information.converter.AnnouncementConverter;
 import cn.gdeiassistant.core.information.pojo.entity.AnnouncementEntity;

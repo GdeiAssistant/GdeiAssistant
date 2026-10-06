@@ -141,7 +141,7 @@ function handleSelect(item) {
   // Navigate based on module (same logic as Info.vue)
   const { module, targetId } = item
   const paths = {
-    marketplace: targetId ? `/marketplace/detail/${targetId}` : '/ershou',
+    marketplace: targetId ? `/marketplace/detail/${targetId}` : '/marketplace',
     lostandfound: targetId ? `/lostandfound/detail/${targetId}` : '/lostandfound',
     secret: targetId ? `/secret/detail/${targetId}` : '/secret',
     express: targetId ? `/express/detail/${targetId}` : '/express',

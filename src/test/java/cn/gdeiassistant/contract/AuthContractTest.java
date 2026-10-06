@@ -1,12 +1,12 @@
 package cn.gdeiassistant.contract;
 
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
-import cn.gdeiassistant.core.userLogin.controller.AuthController;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.core.userLogin.service.UserLoginService;
-import cn.gdeiassistant.common.tools.Utils.JwtUtil;
-import cn.gdeiassistant.core.userData.service.UserDataService;
+import cn.gdeiassistant.core.userlogin.controller.AuthController;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserLoginService;
+import cn.gdeiassistant.common.tools.utils.JwtUtil;
+import cn.gdeiassistant.core.userdata.service.UserDataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

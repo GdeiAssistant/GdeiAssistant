@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.secret.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.secret.converter.SecretCommentConverter;
 import cn.gdeiassistant.core.secret.converter.SecretConverter;
 import cn.gdeiassistant.core.secret.mapper.SecretMapper;
@@ -10,10 +10,10 @@ import cn.gdeiassistant.core.secret.pojo.entity.SecretCommentEntity;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretContentEntity;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

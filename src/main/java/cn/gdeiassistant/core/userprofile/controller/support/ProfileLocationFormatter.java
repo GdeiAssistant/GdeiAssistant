@@ -1,10 +1,10 @@
-package cn.gdeiassistant.core.userProfile.controller.support;
+package cn.gdeiassistant.core.userprofile.controller.support;
 
-import cn.gdeiassistant.common.pojo.Entity.City;
-import cn.gdeiassistant.common.pojo.Entity.Region;
-import cn.gdeiassistant.common.pojo.Entity.State;
-import cn.gdeiassistant.common.tools.Utils.LocationUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.pojo.entity.City;
+import cn.gdeiassistant.common.pojo.entity.Region;
+import cn.gdeiassistant.common.pojo.entity.State;
+import cn.gdeiassistant.common.tools.utils.LocationUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import org.springframework.stereotype.Component;
 

@@ -133,7 +133,7 @@ class MapperIntegrationTest {
             List<DeliveryOrderEntity> items = mapper.selectDeliveryOrderByUsername("testuser");
             assertNotNull(items);
             assertFalse(items.isEmpty());
-            assertEquals("张三", items.get(0).getName());
+            assertEquals("张三", items.get(0).getTaskName());
         }
     }
 

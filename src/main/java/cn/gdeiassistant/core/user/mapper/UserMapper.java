@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.user.mapper;
 
-import cn.gdeiassistant.common.pojo.Alias.DataEncryption;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.common.pojo.alias.DataEncryption;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
@@ -24,7 +24,7 @@ public interface UserMapper {
             "from campus_credential cc " +
             "inner join app_user au on au.id = cc.user_id " +
             "where cc.campus_username=#{username} limit 1")
-    @Results(id = "UserEntity", value = {
+    @Results(id = "CampusAccountView", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "publicId", column = "public_id"),
             @Result(property = "status", column = "status"),
@@ -33,23 +33,23 @@ public interface UserMapper {
             @Result(property = "username", column = "username"),
             @Result(property = "password", column = "password", javaType = DataEncryption.class, jdbcType = JdbcType.VARCHAR)
     })
-    UserEntity selectUser(String username);
+    CampusAccountView selectUser(String username);
 
     @Select("select au.id, au.public_id, au.status, au.created_at, au.updated_at, " +
             "cc.campus_username as username, cc.password " +
             "from app_user au " +
             "left join campus_credential cc on cc.user_id = au.id " +
             "where au.public_id=#{publicId} limit 1")
-    @ResultMap("UserEntity")
-    UserEntity selectUserByPublicId(@Param("publicId") String publicId);
+    @ResultMap("CampusAccountView")
+    CampusAccountView selectUserByPublicId(@Param("publicId") String publicId);
 
     @Select("select au.id, au.public_id, au.status, au.created_at, au.updated_at, " +
             "cc.campus_username as username, cc.password " +
             "from app_user au " +
             "left join campus_credential cc on cc.user_id = au.id " +
             "where au.id=#{id} limit 1")
-    @ResultMap("UserEntity")
-    UserEntity selectUserById(@Param("id") Long id);
+    @ResultMap("CampusAccountView")
+    CampusAccountView selectUserById(@Param("id") Long id);
 
     /** 事务内行锁（配合 READ_COMMITTED / current read），固定按 id 升序调用避免死锁 */
     @Select("select au.id, au.public_id, au.status, au.created_at, au.updated_at, " +
@@ -57,8 +57,8 @@ public interface UserMapper {
             "from app_user au " +
             "left join campus_credential cc on cc.user_id = au.id " +
             "where au.id=#{id} limit 1 for update")
-    @ResultMap("UserEntity")
-    UserEntity selectUserByIdForUpdate(@Param("id") Long id);
+    @ResultMap("CampusAccountView")
+    CampusAccountView selectUserByIdForUpdate(@Param("id") Long id);
 
     @Select("select count(cc.campus_username) from campus_credential cc where cc.campus_username like concat(concat('%',#{username}),'%')")
     @ResultType(Integer.class)
@@ -67,15 +67,15 @@ public interface UserMapper {
     @Insert("insert into app_user (public_id, status, created_at, updated_at) " +
             "values (#{publicId}, #{status}, now(), now())")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    void insertAppUser(UserEntity user);
+    void insertAppUser(CampusAccountView user);
 
     @Insert("insert into campus_credential (user_id, campus_username, password) " +
             "values (#{id}, #{username}, #{password,typeHandler=cn.gdeiassistant.common.typehandler.MybatisEncryptionTypeHandler,jdbcType=VARCHAR})")
-    void insertCampusCredential(UserEntity user);
+    void insertCampusCredential(CampusAccountView user);
 
     @Update("update campus_credential set password=#{password,typeHandler=cn.gdeiassistant.common.typehandler.MybatisEncryptionTypeHandler,jdbcType=VARCHAR} " +
             "where campus_username=#{username}")
-    void updateUser(UserEntity user);
+    void updateUser(CampusAccountView user);
 
     @Update("update campus_credential set password=null where campus_username=#{username}")
     void clearPassword(String username);
@@ -108,8 +108,8 @@ public interface UserMapper {
             "</if>" +
             "order by au.created_at desc, au.id desc limit #{limit}" +
             "</script>")
-    @ResultMap("UserEntity")
-    List<UserEntity> searchActiveUsers(@Param("query") String query,
+    @ResultMap("CampusAccountView")
+    List<CampusAccountView> searchActiveUsers(@Param("query") String query,
                                        @Param("viewerId") Long viewerId,
                                        @Param("cursorCreatedAt") java.util.Date cursorCreatedAt,
                                        @Param("cursorId") Long cursorId,

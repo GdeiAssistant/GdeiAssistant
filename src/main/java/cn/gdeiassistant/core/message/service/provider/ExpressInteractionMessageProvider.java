@@ -1,9 +1,9 @@
 package cn.gdeiassistant.core.message.service.provider;
 
-import cn.gdeiassistant.common.pojo.Entity.ExpressComment;
-import cn.gdeiassistant.common.pojo.Entity.ExpressGuess;
-import cn.gdeiassistant.common.pojo.Entity.ExpressLike;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.pojo.entity.ExpressComment;
+import cn.gdeiassistant.common.pojo.entity.ExpressGuess;
+import cn.gdeiassistant.common.pojo.entity.ExpressLike;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.express.mapper.ExpressMapper;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import jakarta.annotation.Resource;

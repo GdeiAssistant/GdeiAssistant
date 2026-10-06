@@ -17,6 +17,19 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: gdei_synthetic_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -40,14 +53,27 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Initialize isolated upgrade fixture
+        run: docker exec -i "${{ job.services.mysql.id }}" sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql -uroot' < src/test/resources/db/architecture-before.sql
+
       - name: Run tests
-        run: ./gradlew test
+        run: ./gradlew test checkOpenApi architectureCoverage jacocoTestReport
         env:
           # Non-dev: no verbose SQL logging by default in CI
+          GDEI_UPGRADE_TEST_JDBC_BASE: jdbc:mysql://127.0.0.1:3306/
+          GDEI_UPGRADE_TEST_PASSWORD: gdei_synthetic_ci
           MYBATIS_LOG_IMPL: ""
           LOG_LEVEL_SQL: "WARN"
           LOG_LEVEL_IBATIS: "WARN"
           LOG_LEVEL_MYBATIS: "WARN"
+
+      - name: Upload full coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: backend-coverage
+          path: build/reports/jacoco/test/
+          retention-days: 7
 
       - name: Upload test reports on failure
         if: failure()

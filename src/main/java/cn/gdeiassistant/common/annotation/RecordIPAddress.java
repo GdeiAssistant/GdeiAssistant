@@ -1,6 +1,6 @@
 package cn.gdeiassistant.common.annotation;
 
-import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
+import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

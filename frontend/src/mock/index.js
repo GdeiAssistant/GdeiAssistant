@@ -337,7 +337,7 @@ export function handleRequest(options) {
     return campusHandlers.handleCollectionDetail(query, localizedUtils)
   }
 
-  if (path === '/api/library/borrow' && method === 'GET') {
+  if (path === '/api/library/borrow' && method === 'POST') {
     return campusHandlers.handleBookBorrow(token, query, localizedUtils)
   }
 

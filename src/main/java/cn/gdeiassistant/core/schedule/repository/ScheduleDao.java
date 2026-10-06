@@ -1,10 +1,10 @@
 package cn.gdeiassistant.core.schedule.repository;
 
-import cn.gdeiassistant.common.exception.CustomScheduleException.CountOverLimitException;
-import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateScheduleException;
-import cn.gdeiassistant.common.pojo.Document.CustomScheduleDocument;
-import cn.gdeiassistant.common.pojo.Document.ScheduleDocument;
-import cn.gdeiassistant.common.pojo.Entity.CustomSchedule;
+import cn.gdeiassistant.common.exception.customscheduleexception.CountOverLimitException;
+import cn.gdeiassistant.common.exception.customscheduleexception.GenerateScheduleException;
+import cn.gdeiassistant.common.pojo.document.CustomScheduleDocument;
+import cn.gdeiassistant.common.pojo.document.ScheduleDocument;
+import cn.gdeiassistant.common.pojo.entity.CustomSchedule;
 
 public interface ScheduleDao {
 

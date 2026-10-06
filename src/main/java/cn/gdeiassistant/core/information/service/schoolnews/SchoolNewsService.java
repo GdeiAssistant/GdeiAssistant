@@ -1,7 +1,7 @@
-package cn.gdeiassistant.core.information.service.SchoolNews;
+package cn.gdeiassistant.core.information.service.schoolnews;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.pojo.Entity.NewInfo;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.pojo.entity.NewInfo;
 import cn.gdeiassistant.core.news.repository.NewDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

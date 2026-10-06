@@ -1,6 +1,6 @@
-package cn.gdeiassistant.core.electricFees.mapper;
+package cn.gdeiassistant.core.electricfees.mapper;
 
-import cn.gdeiassistant.common.pojo.Entity.ElectricFees;
+import cn.gdeiassistant.common.pojo.entity.ElectricFees;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

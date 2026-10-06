@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.gradequery.pojo;
 
-import cn.gdeiassistant.common.pojo.Entity.Grade;
+import cn.gdeiassistant.common.pojo.entity.Grade;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;

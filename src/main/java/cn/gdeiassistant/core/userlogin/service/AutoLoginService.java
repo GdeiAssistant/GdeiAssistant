@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userLogin.service;
+package cn.gdeiassistant.core.userlogin.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class AutoLoginService {
      * @param request
      * @return 自动登录状态
      */
-    public int CheckAutoLogin(HttpServletRequest request) {
+    public int checkAutoLogin(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
         if (sessionId != null && userCertificateService.getUserLoginCertificate(sessionId) != null) {
             return AUTOLOGIN_SESSION;

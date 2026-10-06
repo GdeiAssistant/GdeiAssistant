@@ -1,7 +1,7 @@
-package cn.gdeiassistant.core.userLogin.pojo.vo;
+package cn.gdeiassistant.core.userlogin.pojo.vo;
 
-import cn.gdeiassistant.common.pojo.Entity.Token;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.pojo.entity.Token;
+import cn.gdeiassistant.common.pojo.entity.User;
 
 import java.io.Serializable;
 

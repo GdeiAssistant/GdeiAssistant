@@ -411,7 +411,7 @@ const routes = [
       { path: 'profile', name: 'ErshouProfile', component: ErshouProfile }
     ]
   },
-  { path: '/ershou', redirect: '/marketplace/home' },
+  { path: '/marketplace', redirect: '/marketplace/home' },
   // 失物招领模块：详情使用独立路由
   {
     path: '/lostandfound/detail/:id',

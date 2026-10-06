@@ -1,7 +1,7 @@
-package cn.gdeiassistant.core.userLogin.service;
+package cn.gdeiassistant.core.userlogin.service;
 
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.core.userData.service.UserDataService;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.core.userdata.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class UserLoginService {
 
     @Autowired
-    private cn.gdeiassistant.core.userLogin.service.UserCertificateService userCertificateService;
+    private cn.gdeiassistant.core.userlogin.service.UserCertificateService userCertificateService;
 
     @Autowired
     private UserDataService userDataService;

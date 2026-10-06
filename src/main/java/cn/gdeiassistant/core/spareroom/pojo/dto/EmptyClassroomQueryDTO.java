@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.spareRoom.pojo.dto;
+package cn.gdeiassistant.core.spareroom.pojo.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

@@ -13,7 +13,7 @@ export const ALL_FEATURES = [
   { id: 'pe', nameKey: 'feature.pe.name', descriptionKey: 'feature.pe.description', icon: 'icon-pe', path: '/pe', defaultVisible: true },
   { id: 'data', nameKey: 'feature.data.name', descriptionKey: 'feature.data.description', icon: 'icon-data', path: '/data', defaultVisible: true },
   { id: 'evaluate', nameKey: 'feature.evaluate.name', descriptionKey: 'feature.evaluate.description', icon: 'icon-evaluate', path: '/evaluate', defaultVisible: true },
-  { id: 'ershou', nameKey: 'feature.ershou.name', descriptionKey: 'feature.ershou.description', icon: 'icon-ershou', path: '/ershou', defaultVisible: true },
+  { id: 'ershou', nameKey: 'feature.ershou.name', descriptionKey: 'feature.ershou.description', icon: 'icon-ershou', path: '/marketplace', defaultVisible: true },
   { id: 'delivery', nameKey: 'feature.delivery.name', descriptionKey: 'feature.delivery.description', icon: 'icon-delivery', path: '/delivery', defaultVisible: true },
   { id: 'lostandfound', nameKey: 'feature.lostandfound.name', descriptionKey: 'feature.lostandfound.description', icon: 'icon-lostandfound', path: '/lostandfound', defaultVisible: true },
   { id: 'secret', nameKey: 'feature.secret.name', descriptionKey: 'feature.secret.description', icon: 'icon-secret', path: '/secret', defaultVisible: true },

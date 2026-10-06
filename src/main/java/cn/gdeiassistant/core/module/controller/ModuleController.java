@@ -1,9 +1,9 @@
 package cn.gdeiassistant.core.module.controller;
 
-import cn.gdeiassistant.common.enums.Module.CoreModuleEnum;
-import cn.gdeiassistant.common.enums.Module.ModuleEnum;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.tools.SpringUtils.ModuleUtils;
+import cn.gdeiassistant.common.enums.module.CoreModuleEnum;
+import cn.gdeiassistant.common.enums.module.ModuleEnum;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +25,7 @@ public class ModuleController {
      */
     @RequestMapping(value = "/api/module/state", method = RequestMethod.GET)
     public DataJsonResult<String> getModuleState() {
-        return new DataJsonResult<>(true, moduleUtils.PrintModuleStateLog());
+        return new DataJsonResult<>(true, moduleUtils.printModuleStateLog());
     }
 
 
@@ -38,12 +38,12 @@ public class ModuleController {
 
         Map<String, Boolean> extension = new LinkedHashMap<>();
         for (ModuleEnum moduleEnum : ModuleEnum.values()) {
-            extension.put(moduleEnum.name(), moduleUtils.CheckModuleState(moduleEnum));
+            extension.put(moduleEnum.name(), moduleUtils.checkModuleState(moduleEnum));
         }
 
         Map<String, Boolean> core = new LinkedHashMap<>();
         for (CoreModuleEnum coreModuleEnum : CoreModuleEnum.values()) {
-            core.put(coreModuleEnum.name(), moduleUtils.CheckCoreModuleState(coreModuleEnum));
+            core.put(coreModuleEnum.name(), moduleUtils.checkCoreModuleState(coreModuleEnum));
         }
 
         data.put("extension", extension);
@@ -58,6 +58,6 @@ public class ModuleController {
      */
     @RequestMapping(value = "/api/module/core/state", method = RequestMethod.GET)
     public DataJsonResult<String> getCoreModuleState() {
-        return new DataJsonResult<>(true, moduleUtils.PrintCoreModuleStateLog());
+        return new DataJsonResult<>(true, moduleUtils.printCoreModuleStateLog());
     }
 }

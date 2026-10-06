@@ -1,8 +1,8 @@
 package cn.gdeiassistant.core.privacy.controller;
 
-import cn.gdeiassistant.common.exception.CommonException.CacheClearException;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.exception.commonexception.CacheClearException;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.privacy.pojo.dto.PrivacyUpdateDTO;
 import cn.gdeiassistant.core.privacy.pojo.vo.PrivacyVO;
 import cn.gdeiassistant.core.privacy.service.PrivacyService;

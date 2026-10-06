@@ -1,11 +1,11 @@
 package cn.gdeiassistant.core.announcement.controller;
 
-import cn.gdeiassistant.common.pojo.Entity.Announcement;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.common.tools.Utils.PageUtils;
+import cn.gdeiassistant.common.pojo.entity.Announcement;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
+import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
-import cn.gdeiassistant.core.information.service.Announcement.AnnouncementService;
+import cn.gdeiassistant.core.information.service.announcement.AnnouncementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;

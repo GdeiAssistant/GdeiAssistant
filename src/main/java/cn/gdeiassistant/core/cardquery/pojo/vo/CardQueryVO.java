@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.cardquery.pojo.vo;
 
-import cn.gdeiassistant.common.pojo.Entity.Card;
-import cn.gdeiassistant.common.pojo.Entity.CardInfo;
+import cn.gdeiassistant.common.pojo.entity.Card;
+import cn.gdeiassistant.common.pojo.entity.CardInfo;
 import cn.gdeiassistant.core.cardquery.pojo.dto.CardQueryDTO;
 
 import java.io.Serializable;

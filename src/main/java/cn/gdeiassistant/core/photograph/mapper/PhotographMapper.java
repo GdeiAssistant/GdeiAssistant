@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.photograph.mapper;
 
-import cn.gdeiassistant.common.pojo.Entity.PhotographLike;
+import cn.gdeiassistant.common.pojo.entity.PhotographLike;
 import cn.gdeiassistant.core.photograph.pojo.entity.PhotographCommentEntity;
 import cn.gdeiassistant.core.photograph.pojo.entity.PhotographEntity;
 import org.apache.ibatis.annotations.*;

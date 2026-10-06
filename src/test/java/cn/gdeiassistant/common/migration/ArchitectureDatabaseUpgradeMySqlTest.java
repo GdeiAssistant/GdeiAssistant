@@ -28,6 +28,21 @@ class ArchitectureDatabaseUpgradeMySqlTest {
         assertTrue(String.valueOf(plan.get("possible_keys")).contains("idx_delivery_feed"));
     }
     @Test
+    void idempotencyIsUniquePerUserAndDoesNotBlockAnotherUsersKey() throws Exception {
+        ArchitectureDatabaseUpgrade.migrate(source("gdeiassistant"), source("gdeiassistant_data"), source("gdeiassistant_log"));
+        var l = new JdbcTemplate(source("gdeiassistant_log"));
+        String key = "synthetic-architecture-key";
+        String insert = "INSERT INTO charge_order(order_id,username,amount,status,idempotency_key_hash,created_at,updated_at) VALUES(?,?,1,'CREATED',?,now(),now())";
+        try {
+            l.update(insert, "synthetic-order-a", "synthetic-a", key);
+            l.update(insert, "synthetic-order-b", "synthetic-b", key);
+            assertThrows(org.springframework.dao.DataIntegrityViolationException.class,
+                    () -> l.update(insert, "synthetic-order-duplicate", "synthetic-a", key));
+            assertEquals(2, l.queryForObject("SELECT COUNT(*) FROM charge_order WHERE idempotency_key_hash=?", Integer.class, key));
+        } finally { l.update("DELETE FROM charge_order WHERE idempotency_key_hash=?", key); }
+    }
+
+    @Test
     void duplicatePreflightAbortsBeforeAnyDdl() throws Exception {
         var server = new JdbcTemplate(source("mysql"));
         server.execute("CREATE DATABASE IF NOT EXISTS gdei_preflight_test");

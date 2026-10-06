@@ -80,7 +80,7 @@ public class ScheduleService {
             int newRow = customSchedule.getPosition() / 7;
             int newCol = customSchedule.getPosition() % 7;
             int newLen = customSchedule.getScheduleLength() != null ? customSchedule.getScheduleLength() : 1;
-            int newRowEnd = Math.addExact(newRow, newLen - 1);
+            long newRowEnd = (long) newRow + newLen - 1;
             int minWeek = customSchedule.getMinScheduleWeek() != null ? customSchedule.getMinScheduleWeek() : 1;
             int maxWeek = customSchedule.getMaxScheduleWeek() != null ? customSchedule.getMaxScheduleWeek() : 20;
             for (Schedule s : doc.getScheduleMap().values()) {

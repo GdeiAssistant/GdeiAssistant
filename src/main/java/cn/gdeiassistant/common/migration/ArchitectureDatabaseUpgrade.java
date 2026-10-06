@@ -13,7 +13,7 @@ public final class ArchitectureDatabaseUpgrade {
         try (Connection a = app.getConnection(); Connection d = data.getConnection(); Connection l = log.getConnection()) {
             // Validate all constraints before issuing any DDL (DDL itself is not transactional).
             rejectDuplicates(a, "delivery_trade", "order_id");
-            rejectDuplicates(l, "charge_order", "idempotency_key_hash");
+            rejectDuplicates(l, "charge_order", "username,idempotency_key_hash");
             rejectDuplicates(l, "close_log", "resetname");
             rejectOrphans(a,"delivery_trade","order_id","delivery_order","order_id");
             rejectOrphans(a,"secret_comment","content_id","secret_content","id");
@@ -40,7 +40,7 @@ public final class ArchitectureDatabaseUpgrade {
             index(a,"secret_comment","idx_secret_comment_parent",false,"content_id,id");
             index(a,"express_comment","idx_express_comment_parent",false,"express_id,id");
             index(a,"photograph_comment","idx_photograph_comment_parent",false,"photo_id,comment_id");
-            index(l,"charge_order","idx_charge_order_idempotency_hash",true,"idempotency_key_hash");
+            index(l,"charge_order","idx_charge_order_idempotency_hash",true,"username,idempotency_key_hash");
             index(l,"close_log","uk_close_log_resetname",true,"resetname");
             foreignKey(a,"delivery_trade","fk_delivery_trade_order","order_id","delivery_order","order_id","RESTRICT");
             foreignKey(a,"secret_comment","fk_secret_comment_parent","content_id","secret_content","id","CASCADE");
@@ -65,7 +65,9 @@ public final class ArchitectureDatabaseUpgrade {
         return result;
     }
     private static void rejectDuplicates(Connection c,String table,String key) throws SQLException {
-        if(scalar(c,"SELECT COUNT(*) FROM (SELECT `"+key+"` FROM `"+table+"` WHERE `"+key+"` IS NOT NULL GROUP BY `"+key+"` HAVING COUNT(*)>1) duplicates")!=0)
+        String columns = "`" + key.replace(",", "`,`") + "`";
+        String present = java.util.Arrays.stream(key.split(",")).map(k -> "`" + k + "` IS NOT NULL").collect(java.util.stream.Collectors.joining(" AND "));
+        if(scalar(c,"SELECT COUNT(*) FROM (SELECT "+columns+" FROM `"+table+"` WHERE "+present+" GROUP BY "+columns+" HAVING COUNT(*)>1) duplicates")!=0)
             throw new SQLException("Resolve duplicate keys before migration: "+table+"."+key);
     }
     private static void rejectOrphans(Connection c,String child,String field,String parent,String key) throws SQLException {
@@ -94,9 +96,9 @@ public final class ArchitectureDatabaseUpgrade {
         execute(c,"ALTER TABLE `"+table+"` MODIFY `"+column+"` varchar("+size+") CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '"+description+"'");
     }
     private static void index(Connection c,String table,String name,boolean unique,String columns) throws SQLException {
-        try(PreparedStatement q=c.prepareStatement("SELECT NON_UNIQUE FROM information_schema.STATISTICS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=? AND INDEX_NAME=? LIMIT 1")) {
+        try(PreparedStatement q=c.prepareStatement("SELECT NON_UNIQUE,GROUP_CONCAT(COLUMN_NAME ORDER BY SEQ_IN_INDEX SEPARATOR ',') FROM information_schema.STATISTICS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=? AND INDEX_NAME=? GROUP BY NON_UNIQUE")) {
             q.setString(1,table);q.setString(2,name);
-            try(ResultSet r=q.executeQuery()) { if(r.next()) { if((r.getInt(1)==0)==unique)return;execute(c,"ALTER TABLE `"+table+"` DROP INDEX `"+name+"`"); } }
+            try(ResultSet r=q.executeQuery()) { if(r.next()) { if((r.getInt(1)==0)==unique && columns.replace(" DESC", "").replace(" ASC", "").equalsIgnoreCase(r.getString(2)))return;execute(c,"ALTER TABLE `"+table+"` DROP INDEX `"+name+"`"); } }
         }
         execute(c,"ALTER TABLE `"+table+"` ADD "+(unique?"UNIQUE ":"")+"INDEX `"+name+"` ("+columns+")");
     }

@@ -46,6 +46,13 @@ public class CardQueryService {
     @org.springframework.beans.factory.annotation.Autowired
     private HttpClientUtils httpClientUtils;
 
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
+    private String casLoginUrl = "https://security.gdei.edu.cn/cas/login";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-login-url:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}")
+    private String cardLoginUrl = "http://ecard.gdei.edu.cn:8050/LoginCas.aspx";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}")
+    private String cardBaseUrl = "http://ecard.gdei.edu.cn";
+
     private final Logger logger = LoggerFactory.getLogger(CardQueryService.class);
 
     @Autowired
@@ -185,7 +192,7 @@ public class CardQueryService {
      * 登录支付管理平台（CAS + ecard，严禁修改 CAS 相关逻辑）
      */
     private void loginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws IOException, ServerErrorException, PasswordIncorrectException {
-        HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
+        HttpGet httpGet = new HttpGet(casLoginUrl);
         HttpResponse httpResponse = httpClient.execute(httpGet);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         if (httpResponse.getStatusLine().getStatusCode() == 200 && document.getElementsByClass("pcclient").size() > 0) {
@@ -194,10 +201,10 @@ public class CardQueryService {
             basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
             basicNameValuePairs.add(new BasicNameValuePair("username", username));
             basicNameValuePairs.add(new BasicNameValuePair("password", password));
-            basicNameValuePairs.add(new BasicNameValuePair("service", "http://ecard.gdei.edu.cn:8050/LoginCas.aspx"));
+            basicNameValuePairs.add(new BasicNameValuePair("service", cardLoginUrl));
             basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
             basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
-            HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
+            HttpPost httpPost = new HttpPost(casLoginUrl);
             httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
             httpResponse = httpClient.execute(httpPost);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -232,14 +239,14 @@ public class CardQueryService {
         } else {
             if (autoRedirect) {
                 if (httpResponse.getStatusLine().getStatusCode() == 200 && document.select("span[class='style2']").size() > 0) {
-                    httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                    httpGet = new HttpGet(cardLoginUrl);
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         httpGet = new HttpGet(document.select("a").first().attr("href"));
                         httpResponse = httpClient.execute(httpGet);
                         if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                            httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                            httpGet = new HttpGet(cardBaseUrl);
                             httpResponse = httpClient.execute(httpGet);
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                             if (document.select("div[class='right menu_a'] span em").size() > 0) {
@@ -250,12 +257,12 @@ public class CardQueryService {
                 }
             } else {
                 if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                    httpGet = new HttpGet("https://security.gdei.edu.cn/cas/" + httpResponse.getFirstHeader("Location").getValue());
+                    httpGet = new HttpGet(java.net.URI.create(casLoginUrl).resolve(".").resolve(httpResponse.getFirstHeader("Location").getValue()));
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 200
                             && document.select("span[class='style2']").size() > 0) {
-                        httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                        httpGet = new HttpGet(cardBaseUrl);
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         if (httpResponse.getStatusLine().getStatusCode() == 200
@@ -263,7 +270,7 @@ public class CardQueryService {
                             if (document.select("div[class='right menu_a'] span em").size() > 0) {
                                 return;
                             }
-                            httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                            httpGet = new HttpGet(cardLoginUrl);
                             httpResponse = httpClient.execute(httpGet);
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                             if (httpResponse.getStatusLine().getStatusCode() == 302) {

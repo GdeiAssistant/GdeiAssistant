@@ -45,6 +45,17 @@ public class ChargeService {
     @org.springframework.beans.factory.annotation.Autowired
     private HttpClientUtils httpClientUtils;
 
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
+    private String casLoginUrl = "https://security.gdei.edu.cn/cas/login";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-login-url:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}")
+    private String cardLoginUrl = "http://ecard.gdei.edu.cn:8050/LoginCas.aspx";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}")
+    private String cardBaseUrl = "http://ecard.gdei.edu.cn";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.payment-base-url:https://epay.gdei.edu.cn:8443/synpay/web}")
+    private String paymentBaseUrl = "https://epay.gdei.edu.cn:8443/synpay/web";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.alipay-gateway-url:https://mapi.alipay.com/gateway.do?_input_charset=utf-8}")
+    private String alipayGatewayUrl = "https://mapi.alipay.com/gateway.do?_input_charset=utf-8";
+
     private final Logger logger = LoggerFactory.getLogger(ChargeService.class);
 
     @Autowired
@@ -115,7 +126,7 @@ public class ChargeService {
      * @throws PasswordIncorrectException
      */
     private void loginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws ServerErrorException, IOException, PasswordIncorrectException {
-        HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
+        HttpGet httpGet = new HttpGet(casLoginUrl);
         HttpResponse httpResponse = httpClient.execute(httpGet);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         if (httpResponse.getStatusLine().getStatusCode() == 200 && document.getElementsByClass("pcclient").size() > 0) {
@@ -125,10 +136,10 @@ public class ChargeService {
             basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
             basicNameValuePairs.add(new BasicNameValuePair("username", username));
             basicNameValuePairs.add(new BasicNameValuePair("password", password));
-            basicNameValuePairs.add(new BasicNameValuePair("service", "http://ecard.gdei.edu.cn:8050/LoginCas.aspx"));
+            basicNameValuePairs.add(new BasicNameValuePair("service", cardLoginUrl));
             basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
             basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
-            HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
+            HttpPost httpPost = new HttpPost(casLoginUrl);
             //绑定表单参数
             httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
             httpResponse = httpClient.execute(httpPost);
@@ -169,14 +180,14 @@ public class ChargeService {
             if (autoRedirect) {
                 if (httpResponse.getStatusLine().getStatusCode() == 200 && document.select("span[class='style2']").size() > 0) {
                     //开启自动重定向时的自动登录
-                    httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                    httpGet = new HttpGet(cardLoginUrl);
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
                         httpGet = new HttpGet(document.select("a").first().attr("href"));
                         httpResponse = httpClient.execute(httpGet);
                         if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                            httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                            httpGet = new HttpGet(cardBaseUrl);
                             httpResponse = httpClient.execute(httpGet);
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                             if (document.select("div[class='right menu_a'] span em").size() > 0) {
@@ -188,12 +199,12 @@ public class ChargeService {
             } else {
                 if (httpResponse.getStatusLine().getStatusCode() == 302) {
                     //未开启自动重定向时的自动登录
-                    httpGet = new HttpGet("https://security.gdei.edu.cn/cas/" + httpResponse.getFirstHeader("Location").getValue());
+                    httpGet = new HttpGet(java.net.URI.create(casLoginUrl).resolve(".").resolve(httpResponse.getFirstHeader("Location").getValue()));
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 200
                             && document.select("span[class='style2']").size() > 0) {
-                        httpGet = new HttpGet("http://ecard.gdei.edu.cn");
+                        httpGet = new HttpGet(cardBaseUrl);
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         if (httpResponse.getStatusLine().getStatusCode() == 200
@@ -201,7 +212,7 @@ public class ChargeService {
                             if (document.select("div[class='right menu_a'] span em").size() > 0) {
                                 return;
                             }
-                            httpGet = new HttpGet("http://ecard.gdei.edu.cn:8050/LoginCas.aspx");
+                            httpGet = new HttpGet(cardLoginUrl);
                             httpResponse = httpClient.execute(httpGet);
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                             if (httpResponse.getStatusLine().getStatusCode() == 302) {
@@ -243,7 +254,7 @@ public class ChargeService {
      */
     private Map<String, String> sendChargeRequest(CloseableHttpClient httpClient, int amount)
             throws Exception {
-        HttpPost httpPost = new HttpPost("http://ecard.gdei.edu.cn/CardManage/CardInfo/DoPay");
+        HttpPost httpPost = new HttpPost(cardBaseUrl + "/CardManage/CardInfo/DoPay");
         BasicNameValuePair basicNameValuePair1 = new BasicNameValuePair("fbankno", "epay");
         BasicNameValuePair basicNameValuePair2 = new BasicNameValuePair("tobankno", "card");
         BasicNameValuePair basicNameValuePair3 = new BasicNameValuePair("Amount", String.valueOf(amount));
@@ -260,7 +271,7 @@ public class ChargeService {
         HttpResponse httpResponse = httpClient.execute(httpPost);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         if (httpResponse.getStatusLine().getStatusCode() == 302) {
-            HttpGet httpGet = new HttpGet("http://ecard.gdei.edu.cn/SynPay/Pay");
+            HttpGet httpGet = new HttpGet(cardBaseUrl + "/SynPay/Pay");
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
@@ -274,7 +285,7 @@ public class ChargeService {
                         basicNameValuePairList.add(new BasicNameValuePair(name, value));
                     }
                 }
-                httpPost = new HttpPost("https://epay.gdei.edu.cn:8443/synpay/web/doPay");
+                httpPost = new HttpPost(paymentBaseUrl + "/doPay");
                 //绑定表单参数
                 httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairList, StandardCharsets.UTF_8));
                 httpResponse = httpClient.execute(httpPost);
@@ -284,7 +295,7 @@ public class ChargeService {
                     Element bd = document.getElementsByClass("bd").first();
                     String payeeName = (bd != null && bd.select("h3").first() != null)
                             ? bd.select("h3").first().text() : null;
-                    httpGet = new HttpGet("https://epay.gdei.edu.cn:8443/synpay/web/disOrderInfo");
+                    httpGet = new HttpGet(paymentBaseUrl + "/disOrderInfo");
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
@@ -351,7 +362,7 @@ public class ChargeService {
         for (Map.Entry<String, String> entry : ecardDataMap.entrySet()) {
             basicNameValuePairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
-        HttpPost httpPost = new HttpPost("https://epay.gdei.edu.cn:8443/synpay/web/forwardPayTool");
+        HttpPost httpPost = new HttpPost(paymentBaseUrl + "/forwardPayTool");
         //绑定表单参数
         httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
         HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -364,11 +375,11 @@ public class ChargeService {
                 String inputValue = input.attr("value");
                 mapiDataList.add(new BasicNameValuePair(inputName, inputValue));
             }
-            httpPost = new HttpPost("https://mapi.alipay.com/gateway.do?_input_charset=utf-8");
+            httpPost = new HttpPost(alipayGatewayUrl);
             //绑定表单参数
             httpPost.setEntity(new UrlEncodedFormEntity(mapiDataList, StandardCharsets.UTF_8));
             //设置头信息
-            httpPost.setHeader("Referer", "https://epay.gdei.edu.cn:8443/synpay/web/forwardPayTool");
+            httpPost.setHeader("Referer", paymentBaseUrl + "/forwardPayTool");
             httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
             httpPost.setHeader("Upgrade-Insecure-Requests", "1");
             httpResponse = httpClient.execute(httpPost);

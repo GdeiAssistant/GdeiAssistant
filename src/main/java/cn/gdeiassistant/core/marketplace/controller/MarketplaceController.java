@@ -81,7 +81,7 @@ public class MarketplaceController {
     }
 
     @RequestMapping(value = "/api/marketplace/item/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<MarketplaceItemResponse>> getItemList(HttpServletRequest request, @PathVariable("start") int start) throws Exception {
+    public DataJsonResult<List<MarketplaceItemResponse>> getItemList(@PathVariable("start") int start) throws Exception {
         start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItems(start);
         return new DataJsonResult<>(true, list.stream().map(this::response).toList());
@@ -167,7 +167,7 @@ public class MarketplaceController {
     }
 
     @RequestMapping(value = "/api/marketplace/keyword/{keyword}/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<MarketplaceItemResponse>> getItemWithKeyword(HttpServletRequest request, @PathVariable("keyword") String keyword,
+    public DataJsonResult<List<MarketplaceItemResponse>> getItemWithKeyword(@PathVariable("keyword") String keyword,
             @PathVariable("start") int start) throws Exception {
         start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItemsWithKeyword(keyword, start);
@@ -200,7 +200,7 @@ public class MarketplaceController {
     }
 
     @RequestMapping(value = "/api/marketplace/item/type/{type}/start/{start}", method = RequestMethod.GET)
-    public DataJsonResult<List<MarketplaceItemResponse>> getItemByType(HttpServletRequest request, @Validated @Range(min = 0, max = 11) @PathVariable("type") int type,
+    public DataJsonResult<List<MarketplaceItemResponse>> getItemByType(@Validated @Range(min = 0, max = 11) @PathVariable("type") int type,
             @PathVariable("start") int start) throws Exception {
         if (type < 0 || type > 11) {
             throw new IllegalArgumentException("请求参数不合法");

@@ -23,6 +23,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * @param phone
      * @return
      */
+    @Override
     public Integer queryPhoneVerificationCode(int code, String phone) {
         String s = redisDaoUtils.get(StringEncryptUtils.sha256HexString(PHONE_PREFIX + code + phone));
         return (s == null || s.isEmpty()) ? null : Integer.parseInt(s);
@@ -46,6 +47,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * @param phone
      * @param randomCode
      */
+    @Override
     public void savePhoneVerificationCode(int code, String phone, int randomCode) {
         String key = StringEncryptUtils.sha256HexString(PHONE_PREFIX + code + phone);
         redisDaoUtils.set(key, String.valueOf(randomCode));
@@ -57,11 +59,13 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * @param email
      * @return
      */
+    @Override
     public Integer queryEmailVerificationCode(String email){
         String s = redisDaoUtils.get(StringEncryptUtils.sha256HexString(EMAIL_PREFIX + email));
         return (s == null || s.isEmpty()) ? null : Integer.parseInt(s);
     }
 
+    @Override
     public void saveEmailVerificationCode(String email, int randomCode){
         String key = StringEncryptUtils.sha256HexString(EMAIL_PREFIX + email);
         redisDaoUtils.set(key, String.valueOf(randomCode));
@@ -72,6 +76,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * 删除电子邮件验证码记录
      * @param email
      */
+    @Override
     public void deleteEmailVerificationCode(String email){
         redisDaoUtils.delete(StringEncryptUtils.sha256HexString(EMAIL_PREFIX + email));
     }

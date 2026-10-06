@@ -13,7 +13,7 @@ public class CacheIndexConfig {
     @Autowired(required = false)
     public void createCacheIndexes(MongoTemplate mongoTemplate) {
         for (String collection : new String[]{"grade", "schedule"}) {
-            mongoTemplate.indexOps(collection).ensureIndex(new Index().on("username", Sort.Direction.ASC).unique());
+            mongoTemplate.indexOps(collection).createIndex(new Index().on("username", Sort.Direction.ASC).unique());
         }
     }
 }

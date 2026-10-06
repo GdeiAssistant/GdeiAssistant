@@ -977,7 +977,7 @@ CREATE TABLE `charge_order` (
   `version` int NOT NULL DEFAULT 0 COMMENT '乐观锁版本',
   PRIMARY KEY (`order_id`),
   KEY `idx_charge_order_username_created` (`username`, `created_at`),
-  UNIQUE KEY `idx_charge_order_idempotency_hash` (`idempotency_key_hash`),
+  UNIQUE KEY `idx_charge_order_idempotency_hash` (`username`, `idempotency_key_hash`),
   KEY `idx_charge_order_status_updated` (`status`, `updated_at`),
   KEY `idx_charge_order_external_order_no` (`external_order_no`),
   KEY `idx_charge_order_user_key_fingerprint` (`username`, `idempotency_key_hash`, `payload_fingerprint`)

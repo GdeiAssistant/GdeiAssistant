@@ -48,7 +48,7 @@ public class ChargeIdempotencyService {
      * </p>
      * <p>
      * <b>Mitigation:</b> The DB-level UNIQUE constraint on
-     * {@code charge_order.idempotency_key_hash} (added in upgrade-2026-06-28) catches
+     * {@code charge_order(username,idempotency_key_hash)} (enforced by the architecture upgrade) catches
      * duplicate inserts at the database layer. The caller should catch
      * {@code DuplicateKeyException} / {@code DataIntegrityViolationException} and treat it
      * as a duplicate (idempotent) request rather than a failure.

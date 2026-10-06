@@ -214,3 +214,14 @@ resilience4j:
         base-config: externalService
       casClient:
         base-config: externalService
+
+campus:
+  upstream:
+    # The campus academic/card HTTP services cannot be upgraded by this project.
+    edu-base-url: ${CAMPUS_EDU_BASE_URL:http://jwgl.gdei.edu.cn}
+    cas-login-url: ${CAMPUS_CAS_LOGIN_URL:https://security.gdei.edu.cn/cas/login}
+    portal-login-url: ${CAMPUS_PORTAL_LOGIN_URL:http://portal.gdei.edu.cn:8001/Login}
+    card-base-url: ${CAMPUS_CARD_BASE_URL:http://ecard.gdei.edu.cn}
+    card-login-url: ${CAMPUS_CARD_LOGIN_URL:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}
+    payment-base-url: ${CAMPUS_PAYMENT_BASE_URL:https://epay.gdei.edu.cn:8443/synpay/web}
+    alipay-gateway-url: ${CAMPUS_ALIPAY_GATEWAY_URL:https://mapi.alipay.com/gateway.do?_input_charset=utf-8}

@@ -182,14 +182,14 @@ observability:
 resilience4j:
   circuitbreaker:
     configs:
-      eduSystem:
+      eduSystemDefaults:
         sliding-window-size: 10
         failure-rate-threshold: 50
         wait-duration-in-open-state: 30s
         permitted-number-of-calls-in-half-open-state: 3
         slow-call-duration-threshold: 8s
         slow-call-rate-threshold: 80
-      cardSystem:
+      cardSystemDefaults:
         sliding-window-size: 10
         failure-rate-threshold: 50
         wait-duration-in-open-state: 30s
@@ -205,9 +205,9 @@ resilience4j:
         slow-call-rate-threshold: 80
     instances:
       eduSystem:
-        base-config: eduSystem
+        base-config: eduSystemDefaults
       cardSystem:
-        base-config: cardSystem
+        base-config: cardSystemDefaults
       chsiClient:
         base-config: externalService
       libraryClient:

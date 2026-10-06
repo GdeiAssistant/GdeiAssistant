@@ -276,6 +276,17 @@ onMounted(async () => {
 .community-photograph-commentbar {
 }
 
+/* 移动端社区底部 tabbar（fixed, z 500）会盖住评论栏：把评论栏抬到 tabbar 上方并给内容留出空间 */
+@media (max-width: 767px) {
+  .community-photograph-commentbar {
+    bottom: calc(57px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .community-stream-page--photograph {
+    padding-bottom: 64px;
+  }
+}
+
 .community-photograph-commentbar__input {
   background: color-mix(in srgb, var(--c-photograph) 4%, var(--c-surface));
 }

@@ -150,7 +150,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="about-page">
+  <div class="about-page" :class="{ 'has-cookie-banner': showCookieBanner }">
     <header class="about-topbar">
       <button type="button" class="about-brand" @click="goToLogin">
         <img src="/img/about/application/logo.png" :alt="t('about.appName')" />
@@ -201,7 +201,7 @@ onMounted(() => {
       <section class="about-hero campus-page-card">
         <div class="about-hero__copy">
           <h1>{{ t('about.appName') }}</h1>
-          <p>{{ t('about.appIntroContent') }}</p>
+          <p class="about-hero__lede">{{ t('about.appIntroContent') }}</p>
           <button type="button" class="about-primary-action" @click="goToLogin">
             {{ t('about.enterSystem') }}
           </button>
@@ -285,6 +285,7 @@ onMounted(() => {
 .about-page {
   min-height: 100vh;
   padding-bottom: 56px;
+  overflow-x: clip;
   color: var(--c-text-1);
   background: var(--c-bg);
 }
@@ -482,11 +483,20 @@ onMounted(() => {
 }
 
 .about-hero__copy p {
-  max-width: 56ch;
+  max-width: 34em;
   margin: 18px 0 28px;
   color: var(--c-text-2);
   font-size: 16px;
   line-height: 1.75;
+}
+
+/* The full introduction is repeated in the section below, so the hero only
+   carries a short lede and keeps the primary action near the fold. */
+.about-hero__lede {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .about-primary-action {
@@ -718,14 +728,42 @@ onMounted(() => {
   background: var(--c-surface-hover);
 }
 
+/* Reserve room under the footer so the fixed cookie notice never covers it */
+.about-page.has-cookie-banner {
+  padding-bottom: 168px;
+}
+
 @media (max-width: 860px) {
   .about-hero {
     grid-template-columns: 1fr;
-    gap: 32px;
+    justify-items: center;
+    gap: 28px;
     padding: 40px 0 36px;
+    text-align: center;
+  }
+
+  .about-hero__copy {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .about-hero__copy p {
+    max-width: 30em;
+    margin: 14px 0 24px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .about-primary-action {
+    width: 100%;
+    max-width: 360px;
   }
 
   .about-hero__visual {
+    width: 100%;
+    max-width: 340px;
     height: 300px;
   }
 
@@ -735,11 +773,15 @@ onMounted(() => {
   }
 
   .about-phone-card--front {
-    left: 12%;
+    left: calc(50% - 128px);
   }
 
   .about-phone-card--back {
-    left: 46%;
+    left: calc(50% - 12px);
+  }
+
+  .about-logo-orb {
+    left: calc(50% - 160px);
   }
 
   .about-section {
@@ -750,6 +792,10 @@ onMounted(() => {
 
   .about-gallery img {
     width: 132px;
+  }
+
+  .about-page.has-cookie-banner {
+    padding-bottom: 200px;
   }
 }
 

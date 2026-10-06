@@ -14,7 +14,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
         <ChevronLeft :size="18" aria-hidden="true" />
         <span>{{ t('about.back') }}</span>
       </button>
-      <span class="subpage-bar__title">二手交易规则</span>
+      <span class="subpage-bar__title">{{ t('about.menuSecondHandPolicy') }}</span>
       <span aria-hidden="true"></span>
     </div>
 

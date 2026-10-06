@@ -43,6 +43,24 @@ class ArchitectureDatabaseUpgradeMySqlTest {
     }
 
     @Test
+    void bootstrapsMissingLogTablesInOlderDemoWithoutTouchingExistingAppRecords() throws Exception {
+        var server = new JdbcTemplate(source("mysql"));
+        server.execute("CREATE DATABASE IF NOT EXISTS gdei_missing_log_test");
+        var oldLog = source("gdei_missing_log_test");
+        var l = new JdbcTemplate(oldLog);
+        var app = new JdbcTemplate(source("gdeiassistant"));
+        int original = app.queryForObject("SELECT COUNT(*) FROM ershou", Integer.class);
+        try {
+            ArchitectureDatabaseUpgrade.migrate(source("gdeiassistant"), source("gdeiassistant_data"), oldLog);
+            ArchitectureDatabaseUpgrade.migrate(source("gdeiassistant"), source("gdeiassistant_data"), oldLog);
+            assertEquals(0, l.queryForObject("SELECT COUNT(*) FROM charge_order", Integer.class));
+            assertEquals(0, l.queryForObject("SELECT COUNT(*) FROM close_log", Integer.class));
+            assertEquals(original, app.queryForObject("SELECT COUNT(*) FROM ershou", Integer.class));
+            assertEquals("username,idempotency_key_hash", l.queryForObject("SELECT GROUP_CONCAT(COLUMN_NAME ORDER BY SEQ_IN_INDEX) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='charge_order' AND INDEX_NAME='idx_charge_order_idempotency_hash'", String.class));
+        } finally { server.execute("DROP DATABASE gdei_missing_log_test"); }
+    }
+
+    @Test
     void duplicatePreflightAbortsBeforeAnyDdl() throws Exception {
         var server = new JdbcTemplate(source("mysql"));
         server.execute("CREATE DATABASE IF NOT EXISTS gdei_preflight_test");

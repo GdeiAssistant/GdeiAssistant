@@ -13,8 +13,8 @@ public final class ArchitectureDatabaseUpgrade {
         try (Connection a = app.getConnection(); Connection d = data.getConnection(); Connection l = log.getConnection()) {
             // Validate all constraints before issuing any DDL (DDL itself is not transactional).
             rejectDuplicates(a, "delivery_trade", "order_id");
-            rejectDuplicates(l, "charge_order", "username,idempotency_key_hash");
-            rejectDuplicates(l, "close_log", "resetname");
+            if (tableExists(l, "charge_order")) rejectDuplicates(l, "charge_order", "username,idempotency_key_hash");
+            if (tableExists(l, "close_log")) rejectDuplicates(l, "close_log", "resetname");
             rejectOrphans(a,"delivery_trade","order_id","delivery_order","order_id");
             rejectOrphans(a,"secret_comment","content_id","secret_content","id");
             rejectOrphans(a,"secret_like","content_id","secret_content","id");
@@ -26,6 +26,9 @@ public final class ArchitectureDatabaseUpgrade {
             rejectMoney(d,"electricfees","total_electric_bill",9999999999.99);
             rejectMoney(d,"electricfees","average_electric_bill",9999999999.99);
             Map<String,Long> before = counts(a,"app_user","campus_credential","delivery_order","delivery_trade","ershou");
+            Map<String,Long> logBefore = optionalCounts(l, "charge_order", "close_log");
+            org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(l,
+                    new org.springframework.core.io.ClassPathResource("db/architecture-log-tables.sql"));
             decimal(a,"delivery_order","price",6,2);
             decimal(a,"ershou","price",6,2);
             decimal(d,"electricfees","electric_price",10,4);
@@ -56,7 +59,22 @@ public final class ArchitectureDatabaseUpgrade {
             if (!before.equals(counts(a,"app_user","campus_credential","delivery_order","delivery_trade","ershou"))) {
                 throw new SQLException("Unexpected row-count change during architecture migration");
             }
+            if (!logBefore.equals(counts(l, "charge_order", "close_log"))) {
+                throw new SQLException("Unexpected log row-count change during architecture migration");
+            }
         }
+    }
+
+    private static boolean tableExists(Connection c, String table) throws SQLException {
+        try (PreparedStatement q=c.prepareStatement("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?")) {
+            q.setString(1,table);
+            try (ResultSet r=q.executeQuery()) { r.next(); return r.getInt(1)>0; }
+        }
+    }
+    private static Map<String,Long> optionalCounts(Connection c, String... tables) throws SQLException {
+        Map<String,Long> result=new LinkedHashMap<>();
+        for (String table:tables) result.put(table,tableExists(c,table)?scalar(c,"SELECT COUNT(*) FROM `"+table+"`"):0L);
+        return result;
     }
 
     private static Map<String,Long> counts(Connection c,String... tables) throws SQLException {

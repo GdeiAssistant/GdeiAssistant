@@ -201,7 +201,6 @@ onMounted(() => {
       <section class="about-hero campus-page-card">
         <div class="about-hero__copy">
           <h1>{{ t('about.appName') }}</h1>
-          <p class="about-hero__lede">{{ t('about.appIntroContent') }}</p>
           <button type="button" class="about-primary-action" @click="goToLogin">
             {{ t('about.enterSystem') }}
           </button>
@@ -482,21 +481,8 @@ onMounted(() => {
   letter-spacing: -0.02em;
 }
 
-.about-hero__copy p {
-  max-width: 34em;
-  margin: 18px 0 28px;
-  color: var(--c-text-2);
-  font-size: 16px;
-  line-height: 1.75;
-}
-
-/* The full introduction is repeated in the section below, so the hero only
-   carries a short lede and keeps the primary action near the fold. */
-.about-hero__lede {
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+.about-hero__copy .about-primary-action {
+  margin-top: 28px;
 }
 
 .about-primary-action {
@@ -749,11 +735,8 @@ onMounted(() => {
     align-items: center;
   }
 
-  .about-hero__copy p {
-    max-width: 30em;
-    margin: 14px 0 24px;
-    font-size: 15px;
-    line-height: 1.7;
+  .about-hero__copy .about-primary-action {
+    margin-top: 22px;
   }
 
   .about-primary-action {

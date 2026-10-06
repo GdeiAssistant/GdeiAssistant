@@ -34,11 +34,10 @@ const actions = createCardActions(t)
           v-for="item in actions"
           :key="item.id"
           type="button"
-          class="ui-panel flex flex-col items-start min-h-[160px] p-5 rounded-2xl bg-[var(--c-surface)] border border-[var(--c-border)] shadow-sm text-left hover:bg-[var(--c-surface-hover)] transition-colors"
+          class="ui-panel flex flex-col items-start p-5 rounded-2xl bg-[var(--c-surface)] border border-[var(--c-border)] shadow-sm text-left hover:bg-[var(--c-surface-hover)] transition-colors"
           @click="router.push(item.path)"
         >
-          <span class="inline-flex items-center h-7 px-2.5 rounded-full bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-xs font-bold">{{ item.badge }}</span>
-          <span class="mt-4 text-xl font-bold text-[var(--c-text)]">{{ item.title }}</span>
+          <span class="text-xl font-bold text-[var(--c-text)]">{{ item.title }}</span>
           <span class="mt-2.5 text-sm leading-relaxed text-[var(--c-text-2)]">{{ item.description }}</span>
         </button>
       </div>

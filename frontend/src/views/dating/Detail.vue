@@ -15,99 +15,6 @@ const pickSuccessVisible = ref(false)
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 
-const DETAIL_COPY = {
-  'zh-CN': {
-    unknownGrade: '未知',
-    noticeTitle: '提示',
-    gradeLabel: '年级：',
-    facultyLabel: '专业：',
-    hometownLabel: '家乡：',
-    qqLabel: 'QQ：',
-    wechatLabel: '微信：',
-    hiddenContact: '对方接受了撩一下后才可见哦',
-    placeholder: '来说点什么吧，不超过50字',
-    submitAction: '撩一下',
-    success: '发送成功，请耐心等待对方回复',
-    emptyMessage: '请输入撩一下的留言信息',
-    tooLongMessage: '撩一下输入的内容太长了'
-  },
-  'zh-HK': {
-    unknownGrade: '未知',
-    noticeTitle: '提示',
-    gradeLabel: '年級：',
-    facultyLabel: '專業：',
-    hometownLabel: '家鄉：',
-    qqLabel: 'QQ：',
-    wechatLabel: '微信：',
-    hiddenContact: '對方接受了撩一下後才可見哦',
-    placeholder: '來說點什麼吧，不超過50字',
-    submitAction: '撩一下',
-    success: '發送成功，請耐心等待對方回覆',
-    emptyMessage: '請輸入撩一下的留言資訊',
-    tooLongMessage: '撩一下輸入的內容太長了'
-  },
-  'zh-TW': {
-    unknownGrade: '未知',
-    noticeTitle: '提示',
-    gradeLabel: '年級：',
-    facultyLabel: '專業：',
-    hometownLabel: '家鄉：',
-    qqLabel: 'QQ：',
-    wechatLabel: '微信：',
-    hiddenContact: '對方接受了撩一下後才可見喔',
-    placeholder: '來說點什麼吧，不超過50字',
-    submitAction: '撩一下',
-    success: '發送成功，請耐心等待對方回覆',
-    emptyMessage: '請輸入撩一下的留言內容',
-    tooLongMessage: '撩一下輸入的內容太長了'
-  },
-  en: {
-    unknownGrade: 'Unknown',
-    noticeTitle: 'Notice',
-    gradeLabel: 'Year: ',
-    facultyLabel: 'Major: ',
-    hometownLabel: 'Hometown: ',
-    qqLabel: 'QQ: ',
-    wechatLabel: 'WeChat: ',
-    hiddenContact: 'Visible after the other person accepts your message.',
-    placeholder: 'Say something in up to 50 characters',
-    submitAction: 'Send a Message',
-    success: 'Message sent. Please wait for their reply.',
-    emptyMessage: 'Please enter a message first',
-    tooLongMessage: 'Your message must be within 50 characters'
-  },
-  ja: {
-    unknownGrade: '不明',
-    noticeTitle: 'お知らせ',
-    gradeLabel: '学年：',
-    facultyLabel: '専攻：',
-    hometownLabel: '出身地：',
-    qqLabel: 'QQ：',
-    wechatLabel: 'WeChat：',
-    hiddenContact: '相手がメッセージを承認すると表示されます',
-    placeholder: '50文字以内でひとこと書いてください',
-    submitAction: 'メッセージを送る',
-    success: '送信しました。返信をお待ちください',
-    emptyMessage: 'メッセージを入力してください',
-    tooLongMessage: 'メッセージは50文字以内にしてください'
-  },
-  ko: {
-    unknownGrade: '알 수 없음',
-    noticeTitle: '안내',
-    gradeLabel: '학년: ',
-    facultyLabel: '전공: ',
-    hometownLabel: '고향: ',
-    qqLabel: 'QQ: ',
-    wechatLabel: 'WeChat: ',
-    hiddenContact: '상대가 메시지를 수락하면 볼 수 있습니다',
-    placeholder: '50자 이내로 메시지를 적어 주세요',
-    submitAction: '메시지 보내기',
-    success: '보냈습니다. 답장을 기다려 주세요',
-    emptyMessage: '메시지를 먼저 입력해 주세요',
-    tooLongMessage: '메시지는 50자 이내여야 합니다'
-  }
-}
-
 function resolveDatingLocale(value) {
   const normalized = (value || 'zh-CN').toLowerCase()
   if (normalized.startsWith('zh-hk') || normalized.startsWith('zh-mo') || normalized.startsWith('zh-hant-hk') || normalized.startsWith('zh-hant-mo')) return 'zh-HK'
@@ -119,7 +26,22 @@ function resolveDatingLocale(value) {
   return 'en'
 }
 
-const copy = computed(() => DETAIL_COPY[resolveDatingLocale(locale.value)] || DETAIL_COPY.en)
+const copy = computed(() => ({
+  unknownGrade: t('dating.detail.unknownGrade'),
+  noticeTitle: t('dating.detail.noticeTitle'),
+  gradeLabel: t('dating.detail.gradeLabel'),
+  facultyLabel: t('dating.detail.facultyLabel'),
+  hometownLabel: t('dating.detail.hometownLabel'),
+  qqLabel: t('dating.detail.qqLabel'),
+  wechatLabel: t('dating.detail.wechatLabel'),
+  hiddenContact: t('dating.detail.hiddenContact'),
+  placeholder: t('dating.detail.placeholder'),
+  submitAction: t('dating.detail.submitAction'),
+  success: t('dating.detail.success'),
+  emptyMessage: t('dating.detail.emptyMessage'),
+  tooLongMessage: t('dating.detail.tooLongMessage'),
+  locale: resolveDatingLocale(locale.value)
+}))
 
 function getGradeText(grade) {
   const map = {

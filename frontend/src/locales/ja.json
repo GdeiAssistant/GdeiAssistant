@@ -1652,6 +1652,21 @@
     "wechatRequiredDescription": "体力測定の結果照会にはWeChatが必要です。WeChatでコードを読み取るか、WeChat内でこのアプリを検索して開いてください。"
   },
   "dating": {
+    "detail": {
+      "unknownGrade": "不明",
+      "noticeTitle": "お知らせ",
+      "gradeLabel": "学年：",
+      "facultyLabel": "専攻：",
+      "hometownLabel": "出身地：",
+      "qqLabel": "QQ：",
+      "wechatLabel": "WeChat：",
+      "hiddenContact": "相手がメッセージを承認すると表示されます",
+      "placeholder": "50文字以内でひとこと書いてください",
+      "submitAction": "メッセージを送る",
+      "success": "送信しました。返信をお待ちください",
+      "emptyMessage": "メッセージを入力してください",
+      "tooLongMessage": "メッセージは50文字以内にしてください"
+    },
     "publish": {
       "title": "プロフィールを投稿",
       "uploadAction": "アップロード",

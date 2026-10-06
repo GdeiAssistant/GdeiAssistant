@@ -28,6 +28,7 @@
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=following` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+          @click="!socialMeId && $event.preventDefault()"
         >
           <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followingCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.following') }}</div>
@@ -35,6 +36,7 @@
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=followers` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+          @click="!socialMeId && $event.preventDefault()"
         >
           <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followerCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.followers') }}</div>
@@ -42,6 +44,7 @@
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=friends` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+          @click="!socialMeId && $event.preventDefault()"
         >
           <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.friendCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.friends') }}</div>
@@ -52,13 +55,6 @@
         class="campus-list-row flex items-center gap-3 min-h-11 px-4 py-3 border-t border-[var(--c-border-light)]"
       >
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.searchTitle') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
-      </RouterLink>
-      <RouterLink
-        to="/user/privacy-setting"
-        class="campus-list-row flex items-center gap-3 min-h-11 px-4 py-3 border-t border-[var(--c-border-light)]"
-      >
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.privacySetting') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </RouterLink>
     </AppCard>
@@ -140,6 +136,7 @@
         v-model="tempNickname"
         type="text"
         :placeholder="$t('profile.nicknamePlaceholder')"
+        :aria-label="$t('profile.editNickname')"
         class="profile-dialog-input"
       />
     </AppDialog>
@@ -153,6 +150,7 @@
       <textarea
         v-model="tempIntro"
         :placeholder="$t('profile.introPlaceholder')"
+        :aria-label="$t('profile.editIntro')"
         rows="3"
         class="profile-dialog-input profile-dialog-textarea"
       ></textarea>

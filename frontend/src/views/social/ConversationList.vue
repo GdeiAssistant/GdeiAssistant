@@ -14,7 +14,7 @@
       <RouterLink to="/social/search" class="social-text-action text-sm text-[var(--c-primary)]">{{ $t('social.searchAction') }}</RouterLink>
     </div>
     <div v-if="items.length" class="social-inbox-list">
-      <button v-for="item in items" :key="item.id" type="button" class="social-person-row w-full text-left" @click="router.push(`/social/chat/${item.id}`)">
+      <button v-for="item in items" :key="item.id" type="button" class="social-person-row w-full text-left" :aria-label="`${item.peer?.nickname || $t('social.unknownUser')}${item.unreadCount > 0 ? ' (' + item.unreadCount + ')' : ''}`" @click="router.push(`/social/chat/${item.id}`)">
         <AuthAvatar :url="item.peer?.avatarUrl" :alt="''" :placeholder="item.peer?.nickname?.slice(0, 1) || '?'" img-class="w-12 h-12 shrink-0 rounded-full" />
         <div class="min-w-0 flex-1">
           <div class="flex items-center justify-between gap-2"><div class="font-medium truncate">{{ item.peer?.nickname || $t('social.unknownUser') }}</div><time class="social-inbox-time" :datetime="item.updatedAt">{{ inboxTime(item.updatedAt) }}</time></div>

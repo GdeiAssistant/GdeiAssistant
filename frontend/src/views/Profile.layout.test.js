@@ -9,7 +9,8 @@ describe('Profile layout ownership', () => {
   it('keeps social stats inside the avatar header card and privacy under settings', () => {
     expect(source).toContain('profile-stat-link')
     expect(source).toContain('to="/social/search"')
-    expect(source).toContain('to="/user/privacy-setting"')
+    // Privacy entry lives only under Settings, not duplicated in Profile.
+    expect(source).not.toContain('to="/user/privacy-setting"')
     expect(source).not.toContain('to="/social/privacy"')
     expect(source).not.toContain('to="/social/blocks"')
     expect(source).not.toMatch(/social\.statsTitle/)

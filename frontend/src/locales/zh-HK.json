@@ -1652,6 +1652,21 @@
     "wechatRequiredDescription": "查體測成績要喺微信入面用。請用微信掃碼，或者喺微信搜尋並開啟呢個應用。"
   },
   "dating": {
+    "detail": {
+      "unknownGrade": "未知",
+      "noticeTitle": "提示",
+      "gradeLabel": "年級：",
+      "facultyLabel": "專業：",
+      "hometownLabel": "家鄉：",
+      "qqLabel": "QQ：",
+      "wechatLabel": "微信：",
+      "hiddenContact": "對方接受了撩一下後才可見哦",
+      "placeholder": "來說點什麼吧，不超過50字",
+      "submitAction": "撩一下",
+      "success": "發送成功，請耐心等待對方回覆",
+      "emptyMessage": "請輸入撩一下的留言資訊",
+      "tooLongMessage": "撩一下輸入的內容太長了"
+    },
     "publish": {
       "title": "發佈資料",
       "uploadAction": "上傳",

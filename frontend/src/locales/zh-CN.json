@@ -1652,6 +1652,21 @@
     "wechatRequiredDescription": "体质测试查询功能需要微信环境支持。请使用微信扫码或在微信中搜索打开本应用。"
   },
   "dating": {
+    "detail": {
+      "unknownGrade": "未知",
+      "noticeTitle": "提示",
+      "gradeLabel": "年级：",
+      "facultyLabel": "专业：",
+      "hometownLabel": "家乡：",
+      "qqLabel": "QQ：",
+      "wechatLabel": "微信：",
+      "hiddenContact": "对方接受了撩一下后才可见哦",
+      "placeholder": "来说点什么吧，不超过50字",
+      "submitAction": "撩一下",
+      "success": "发送成功，请耐心等待对方回复",
+      "emptyMessage": "请输入撩一下的留言信息",
+      "tooLongMessage": "撩一下输入的内容太长了"
+    },
     "publish": {
       "title": "发布资料",
       "uploadAction": "上传",

@@ -57,7 +57,7 @@ public class SocialController {
             MissingServletRequestParameterException.class,
             IllegalArgumentException.class
     })
-    public DataJsonResult<Void> handleBadRequest(Exception ex, HttpServletResponse response, HttpServletRequest request) {
+    public DataJsonResult<Void> handleBadRequest(HttpServletResponse response, HttpServletRequest request) {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         DataJsonResult<Void> result = new DataJsonResult<>(false, null);
         result.setCode(400);

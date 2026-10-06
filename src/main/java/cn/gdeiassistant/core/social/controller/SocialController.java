@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.social.controller;
 
 import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.social.exception.SocialException;
 import cn.gdeiassistant.core.social.pojo.dto.ChatMessageDTO;
 import cn.gdeiassistant.core.social.pojo.dto.ConversationDTO;
@@ -41,11 +42,11 @@ public class SocialController {
     private R2StorageService r2StorageService;
 
     @ExceptionHandler(SocialException.class)
-    public DataJsonResult<Void> handleSocialException(SocialException ex, HttpServletResponse response) {
+    public DataJsonResult<Void> handleSocialException(SocialException ex, HttpServletResponse response, HttpServletRequest request) {
         response.setStatus(ex.getHttpStatus());
         DataJsonResult<Void> result = new DataJsonResult<>(false, null);
         result.setCode(ex.getHttpStatus());
-        result.setMessage(ex.getMessage());
+        result.setMessage(BackendTextLocalizer.localizeMessage(ex.getMessage(), request.getHeader("Accept-Language")));
         result.setErrorCode(ex.getErrorCode());
         return result;
     }
@@ -56,11 +57,11 @@ public class SocialController {
             MissingServletRequestParameterException.class,
             IllegalArgumentException.class
     })
-    public DataJsonResult<Void> handleBadRequest(Exception ex, HttpServletResponse response) {
+    public DataJsonResult<Void> handleBadRequest(Exception ex, HttpServletResponse response, HttpServletRequest request) {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         DataJsonResult<Void> result = new DataJsonResult<>(false, null);
         result.setCode(400);
-        result.setMessage(ex.getMessage() == null ? "请求参数无效" : ex.getMessage());
+        result.setMessage(BackendTextLocalizer.localizeMessage("请求参数不合法", request.getHeader("Accept-Language")));
         result.setErrorCode("INVALID_REQUEST");
         return result;
     }

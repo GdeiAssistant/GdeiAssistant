@@ -6,6 +6,7 @@ import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.objectStorage.service.UploadService;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,22 +58,22 @@ public class ObjectStorageController {
                                                                      @RequestParam("fileName") String fileName,
                                                                      @RequestParam("contentType") String contentType) {
         if (StringUtils.isBlank(fileName)) {
-            return new DataJsonResult<>(new JsonResult(false, "fileName 不能为空"));
+            return new DataJsonResult<>(new JsonResult(false, BackendTextLocalizer.localizeMessage("fileName 不能为空", request.getHeader("Accept-Language"))));
         }
         if (StringUtils.isBlank(contentType) || !contentType.contains("/")) {
-            return new DataJsonResult<>(new JsonResult(false, "contentType 不合法"));
+            return new DataJsonResult<>(new JsonResult(false, BackendTextLocalizer.localizeMessage("contentType 不合法", request.getHeader("Accept-Language"))));
         }
 
         String normalizedType = contentType.trim().toLowerCase();
         if (!ALLOWED_MIME_TYPES.contains(normalizedType)) {
-            return new DataJsonResult<>(new JsonResult(false, "不支持的文件类型: " + contentType));
+            return new DataJsonResult<>(new JsonResult(false, BackendTextLocalizer.localizeMessage("不支持的文件类型: ", request.getHeader("Accept-Language")) + contentType));
         }
 
         String extension = extractExtension(fileName);
         if (!extension.isEmpty()) {
             Set<String> validMimes = EXTENSION_MIME_MAP.get(extension);
             if (validMimes != null && !validMimes.contains(normalizedType)) {
-                return new DataJsonResult<>(new JsonResult(false, "文件扩展名与 contentType 不匹配"));
+                return new DataJsonResult<>(new JsonResult(false, BackendTextLocalizer.localizeMessage("文件扩展名与 contentType 不匹配", request.getHeader("Accept-Language"))));
             }
         }
 

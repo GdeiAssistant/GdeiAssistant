@@ -20,7 +20,7 @@ for (const entry of source.entries) {
   node.localizedNames ||= {}
   for (const [locale, label] of Object.entries(entry.labels)) {
     if (!label.trim()) throw new Error(`Empty label: ${entry.path}/${locale}`)
-    // The snapshot includes the existing reviewed overrides and the Tochigi typo correction.
+    // The snapshot includes reviewed overrides, Tochigi and the GUF country correction.
     node.localizedNames[locale] = label
   }
 }

@@ -291,7 +291,35 @@
         "lookupAlt": "통합 인증 시스템의 계정 조회 메뉴",
         "resultAlt": "교내 계정 조회 결과 예시"
       }
-    }
+    },
+    "links": {
+      "moe": "중국 교육부",
+      "gdEducation": "광둥성 교육청",
+      "gzEducation": "광저우시 교육국",
+      "gdGovernment": "광둥성 인민정부",
+      "gzGovernment": "광저우시 인민정부",
+      "eduCn": "중국 교육연구망",
+      "cnki": "중국 지식망(CNKI)",
+      "chsi": "중국 학력정보망(CHSI)",
+      "scut": "화남이공대학교",
+      "sysu": "중산대학교",
+      "jnu": "지난대학교",
+      "scnu": "화남사범대학교",
+      "gdei": "광둥제2사범학원",
+      "cpcNews": "중국 공산당 뉴스망",
+      "stayTrue": "초심을 잊지 않고 사명을 기억하는 주제교육",
+      "antiEpidemic": "감염병 대응과 당기",
+      "partyHistory": "당사 학습교육",
+      "homeland": "아름다운 조국을 위한 노력",
+      "congress20": "중국 공산당 제20차 전국대표대회 특집"
+    },
+    "media": {
+      "wechat": "학교 공식 WeChat",
+      "bilibili": "빌리빌리",
+      "xiaohongshu": "샤오홍슈",
+      "douyin": "학교 공식 더우인"
+    },
+    "rightsReserved": "모든 권리 보유"
   },
   "appearance": {
     "title": "인터페이스 및 외관",
@@ -1636,5 +1664,40 @@
   "pePage": {
     "wechatRequiredTitle": "WeChat에서 열어 주세요",
     "wechatRequiredDescription": "체력 검사 결과 조회는 WeChat 환경에서만 사용할 수 있습니다. WeChat으로 코드를 스캔하거나 WeChat에서 이 앱을 검색해 열어 주세요."
+  },
+  "dating": {
+    "publish": {
+      "title": "프로필 등록",
+      "uploadAction": "업로드",
+      "noticeTitle": "안내",
+      "genderFemale": "여성",
+      "genderMale": "남성",
+      "nicknamePlaceholder": "닉네임 입력",
+      "gradePlaceholder": "학년 선택",
+      "areaPlaceholder": "성별 선택",
+      "facultyPlaceholder": "전공 입력",
+      "hometownPlaceholder": "고향 입력",
+      "qqPlaceholder": "QQ 입력",
+      "wechatPlaceholder": "WeChat 입력",
+      "privacyHint": "교류 요청을 수락하기 전에는 QQ와 WeChat이 공개되지 않습니다.",
+      "warningHint": "다른 사람의 사진을 무단으로 사용하거나 사칭하지 마세요. 문제가 있으면 신고해 주세요.",
+      "contentPlaceholder": "어떤 사람에게 끌리나요? 이상형을 100자 이내로 알려 주세요.",
+      "submitting": "제출 중…",
+      "submitAction": "프로필 등록",
+      "invalidImageType": "지원하지 않는 이미지 형식입니다",
+      "imageTooLarge": "이미지는 5MB 이하여야 합니다",
+      "nicknameInvalid": "닉네임은 1~15자로 입력해 주세요",
+      "gradeRequired": "학년을 선택해 주세요",
+      "areaRequired": "성별을 선택해 주세요",
+      "facultyInvalid": "전공은 1~12자로 입력해 주세요",
+      "hometownInvalid": "고향은 1~10자로 입력해 주세요",
+      "contactRequired": "QQ 또는 WeChat 중 하나를 입력해 주세요",
+      "contactInvalid": "연락처가 너무 깁니다",
+      "contentRequired": "이상형에 대해 입력해 주세요",
+      "contentTooLong": "이상형 설명은 100자 이내여야 합니다",
+      "uploading": "업로드 중…",
+      "publishing": "게시 중…",
+      "publishSuccess": "등록되었습니다"
+    }
   }
 }

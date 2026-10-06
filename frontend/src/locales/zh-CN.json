@@ -1432,7 +1432,35 @@
         "lookupAlt": "统一身份认证系统的查询账号入口",
         "resultAlt": "校园网账号查询结果示例"
       }
-    }
+    },
+    "links": {
+      "moe": "教育部",
+      "gdEducation": "广东省教育厅",
+      "gzEducation": "广州市教育局",
+      "gdGovernment": "广东省人民政府",
+      "gzGovernment": "广州市人民政府",
+      "eduCn": "中国教育科研网",
+      "cnki": "中国知网",
+      "chsi": "学信网",
+      "scut": "华南理工大学",
+      "sysu": "中山大学",
+      "jnu": "暨南大学",
+      "scnu": "华南师范大学",
+      "gdei": "广东第二师范学院",
+      "cpcNews": "中国共产党新闻网",
+      "stayTrue": "\"不忘初心、牢记使命\"主题教育",
+      "antiEpidemic": "人民战\"疫\"党旗飘扬",
+      "partyHistory": "党史学习教育",
+      "homeland": "我奋斗家国美",
+      "congress20": "二十大专题报道"
+    },
+    "media": {
+      "wechat": "学校官方微信",
+      "bilibili": "哔哩哔哩",
+      "xiaohongshu": "小红书",
+      "douyin": "学校官方抖音"
+    },
+    "rightsReserved": "保留所有权利"
   },
   "appearance": {
     "title": "界面和外观",
@@ -1636,5 +1664,40 @@
   "pePage": {
     "wechatRequiredTitle": "请在微信客户端打开",
     "wechatRequiredDescription": "体质测试查询功能需要微信环境支持。请使用微信扫码或在微信中搜索打开本应用。"
+  },
+  "dating": {
+    "publish": {
+      "title": "发布资料",
+      "uploadAction": "上传",
+      "noticeTitle": "提示",
+      "genderFemale": "小姐姐",
+      "genderMale": "小哥哥",
+      "nicknamePlaceholder": "请输入你的昵称",
+      "gradePlaceholder": "请选择你的年级",
+      "areaPlaceholder": "请选择你的性别",
+      "facultyPlaceholder": "请输入你的专业",
+      "hometownPlaceholder": "请输入你的家乡",
+      "qqPlaceholder": "请输入你的QQ",
+      "wechatPlaceholder": "请输入你的微信",
+      "privacyHint": "在接受撩一下请求前，QQ和微信不会公开显示",
+      "warningHint": "请勿违规盗用他人照片或冒充他人，欢迎举报监督",
+      "contentPlaceholder": "什么样的TA会让你心动呢？谈谈你的理想对象，不超过100字",
+      "submitting": "提交中...",
+      "submitAction": "发布资料",
+      "invalidImageType": "不合法的图片文件类型",
+      "imageTooLarge": "图片文件不能超过5MB",
+      "nicknameInvalid": "昵称长度不合法（1-15字）",
+      "gradeRequired": "请选择年级",
+      "areaRequired": "请选择性别",
+      "facultyInvalid": "专业长度不合法（1-12字）",
+      "hometownInvalid": "家乡长度不合法（1-10字）",
+      "contactRequired": "QQ号码和微信至少填写一个",
+      "contactInvalid": "联系方式长度不合法",
+      "contentRequired": "填一下你心目中的那个TA吧",
+      "contentTooLong": "心动条件不超过100字",
+      "uploading": "正在上传...",
+      "publishing": "正在发布...",
+      "publishSuccess": "发布成功"
+    }
   }
 }

@@ -13,9 +13,7 @@ const { success: toastSuccess, loading: toastLoading, hideLoading } = useToast()
 const formData = ref({
   nickname: '',
   grade: '',
-  gradeLabel: '',
   area: '',
-  areaLabel: '',
   faculty: '',
   hometown: '',
   qq: '',
@@ -28,150 +26,8 @@ const submitting = ref(false)
 const dialogVisible = ref(false)
 const dialogMessage = ref('')
 
-const PUBLISH_COPY = {
-  'zh-CN': {
-    title: '发布资料',
-    uploadAction: '上传',
-    noticeTitle: '提示',
-    genderFemale: '小姐姐',
-    genderMale: '小哥哥',
-    nicknamePlaceholder: '请输入你的昵称',
-    gradePlaceholder: '请选择你的年级',
-    areaPlaceholder: '请选择你的性别',
-    facultyPlaceholder: '请输入你的专业',
-    hometownPlaceholder: '请输入你的家乡',
-    qqPlaceholder: '请输入你的QQ',
-    wechatPlaceholder: '请输入你的微信',
-    privacyHint: '在接受撩一下请求前，QQ和微信不会公开显示',
-    warningHint: '请勿违规盗用他人照片或冒充他人，欢迎举报监督',
-    contentPlaceholder: '什么样的TA会让你心动呢？谈谈你的理想对象，不超过100字',
-    submitting: '提交中...',
-    submitAction: '发布资料',
-    invalidImageType: '不合法的图片文件类型',
-    imageTooLarge: '图片文件不能超过5MB',
-    nicknameInvalid: '昵称长度不合法（1-15字）',
-    gradeRequired: '请选择年级',
-    areaRequired: '请选择性别',
-    facultyInvalid: '专业长度不合法（1-12字）',
-    hometownInvalid: '家乡长度不合法（1-10字）',
-    contactRequired: 'QQ号码和微信至少填写一个',
-    contactInvalid: '联系方式长度不合法',
-    contentRequired: '填一下你心目中的那个TA吧',
-    contentTooLong: '心动条件不超过100字',
-    uploading: '正在上传...',
-    publishing: '正在发布...',
-    publishSuccess: '发布成功'
-  },
-  'zh-HK': {
-    title: '發布資料',
-    uploadAction: '上傳',
-    noticeTitle: '提示',
-    genderFemale: '小姐姐',
-    genderMale: '小哥哥',
-    nicknamePlaceholder: '請輸入你的暱稱',
-    gradePlaceholder: '請選擇你的年級',
-    areaPlaceholder: '請選擇你的性別',
-    facultyPlaceholder: '請輸入你的專業',
-    hometownPlaceholder: '請輸入你的家鄉',
-    qqPlaceholder: '請輸入你的QQ',
-    wechatPlaceholder: '請輸入你的微信',
-    privacyHint: '在接受撩一下請求前，QQ和微信不會公開顯示',
-    warningHint: '請勿違規盜用他人照片或冒充他人，歡迎舉報監督',
-    contentPlaceholder: '什麼樣的TA會讓你心動呢？談談你的理想對象，不超過100字',
-    submitting: '提交中...',
-    submitAction: '發布資料',
-    invalidImageType: '不合法的圖片檔案類型',
-    imageTooLarge: '圖片檔案不能超過5MB',
-    nicknameInvalid: '暱稱長度不合法（1-15字）',
-    gradeRequired: '請選擇年級',
-    areaRequired: '請選擇性別',
-    facultyInvalid: '專業長度不合法（1-12字）',
-    hometownInvalid: '家鄉長度不合法（1-10字）',
-    contactRequired: 'QQ號碼和微信至少填寫一個',
-    contactInvalid: '聯絡方式長度不合法',
-    contentRequired: '填一下你心目中的那個TA吧',
-    contentTooLong: '心動條件不超過100字',
-    uploading: '正在上傳...',
-    publishing: '正在發布...',
-    publishSuccess: '發布成功'
-  },
-  'zh-TW': {
-    title: '發布資料',
-    uploadAction: '上傳',
-    noticeTitle: '提示',
-    genderFemale: '小姐姐',
-    genderMale: '小哥哥',
-    nicknamePlaceholder: '請輸入你的暱稱',
-    gradePlaceholder: '請選擇你的年級',
-    areaPlaceholder: '請選擇你的性別',
-    facultyPlaceholder: '請輸入你的專業',
-    hometownPlaceholder: '請輸入你的家鄉',
-    qqPlaceholder: '請輸入你的QQ',
-    wechatPlaceholder: '請輸入你的微信',
-    privacyHint: '在接受撩一下請求前，QQ和微信不會公開顯示',
-    warningHint: '請勿違規盜用他人照片或冒充他人，歡迎檢舉監督',
-    contentPlaceholder: '什麼樣的TA會讓你心動呢？談談你的理想對象，不超過100字',
-    submitting: '提交中...',
-    submitAction: '發布資料',
-    invalidImageType: '不合法的圖片檔案類型',
-    imageTooLarge: '圖片檔案不能超過5MB',
-    nicknameInvalid: '暱稱長度不合法（1-15字）',
-    gradeRequired: '請選擇年級',
-    areaRequired: '請選擇性別',
-    facultyInvalid: '專業長度不合法（1-12字）',
-    hometownInvalid: '家鄉長度不合法（1-10字）',
-    contactRequired: 'QQ號碼和微信至少填寫一個',
-    contactInvalid: '聯絡方式長度不合法',
-    contentRequired: '填一下你心目中的那個TA吧',
-    contentTooLong: '心動條件不超過100字',
-    uploading: '正在上傳...',
-    publishing: '正在發布...',
-    publishSuccess: '發布成功'
-  },
-  en: {
-    title: 'Post Profile',
-    uploadAction: 'Upload',
-    noticeTitle: 'Notice',
-    genderFemale: 'Female',
-    genderMale: 'Male',
-    nicknamePlaceholder: 'Enter your nickname',
-    gradePlaceholder: 'Select your year',
-    areaPlaceholder: 'Select your gender',
-    facultyPlaceholder: 'Enter your major',
-    hometownPlaceholder: 'Enter your hometown',
-    qqPlaceholder: 'Enter your QQ',
-    wechatPlaceholder: 'Enter your WeChat',
-    privacyHint: 'Your QQ and WeChat will stay hidden until a message is accepted.',
-    warningHint: 'Do not use someone else\'s photo or impersonate another person. Reports are welcome.',
-    contentPlaceholder: 'What kind of person catches your eye? Share your ideal type in up to 100 characters.',
-    submitting: 'Submitting...',
-    submitAction: 'Post Profile',
-    invalidImageType: 'Invalid image file type',
-    imageTooLarge: 'Image files must be smaller than 5MB',
-    nicknameInvalid: 'Nickname must be between 1 and 15 characters',
-    gradeRequired: 'Please select your year',
-    areaRequired: 'Please select your gender',
-    facultyInvalid: 'Major must be between 1 and 12 characters',
-    hometownInvalid: 'Hometown must be between 1 and 10 characters',
-    contactRequired: 'Please provide either QQ or WeChat',
-    contactInvalid: 'Contact information is too long',
-    contentRequired: 'Tell us about the person you have in mind',
-    contentTooLong: 'Your description must be within 100 characters',
-    uploading: 'Uploading...',
-    publishing: 'Publishing...',
-    publishSuccess: 'Posted successfully'
-  }
-}
-
-function resolveDatingLocale(value) {
-  const normalized = (value || 'zh-CN').toLowerCase()
-  if (normalized.startsWith('zh-hk')) return 'zh-HK'
-  if (normalized.startsWith('zh-tw') || normalized.startsWith('zh-hant')) return 'zh-TW'
-  if (normalized.startsWith('zh')) return 'zh-CN'
-  return 'en'
-}
-
-const copy = computed(() => PUBLISH_COPY[resolveDatingLocale(locale.value)] || PUBLISH_COPY.en)
+const PUBLISH_KEYS = ["title","uploadAction","noticeTitle","genderFemale","genderMale","nicknamePlaceholder","gradePlaceholder","areaPlaceholder","facultyPlaceholder","hometownPlaceholder","qqPlaceholder","wechatPlaceholder","privacyHint","warningHint","contentPlaceholder","submitting","submitAction","invalidImageType","imageTooLarge","nicknameInvalid","gradeRequired","areaRequired","facultyInvalid","hometownInvalid","contactRequired","contactInvalid","contentRequired","contentTooLong","uploading","publishing","publishSuccess"]
+const copy = computed(() => Object.fromEntries(PUBLISH_KEYS.map(key => [key, t(`dating.publish.${key}`)])))
 const gradeOptions = computed(() => [
   { label: t('grade.year.freshman'), value: 1 },
   { label: t('grade.year.sophomore'), value: 2 },
@@ -182,6 +38,9 @@ const areaOptions = computed(() => [
   { label: copy.value.genderFemale, value: 0 },
   { label: copy.value.genderMale, value: 1 }
 ])
+
+const selectedGradeLabel = computed(() => gradeOptions.value.find(option => option.value === formData.value.grade)?.label || '')
+const selectedAreaLabel = computed(() => areaOptions.value.find(option => option.value === formData.value.area)?.label || '')
 
 function showDialog(msg) {
   dialogMessage.value = msg
@@ -209,7 +68,6 @@ function selectGrade() {
   const idx = options.findIndex(o => o.value === formData.value.grade)
   const next = (idx + 1) % options.length
   formData.value.grade = options[next].value
-  formData.value.gradeLabel = options[next].label
 }
 
 function selectArea() {
@@ -217,7 +75,6 @@ function selectArea() {
   const idx = options.findIndex(o => o.value === formData.value.area)
   const next = idx < 0 ? 0 : (idx + 1) % options.length
   formData.value.area = options[next].value
-  formData.value.areaLabel = options[next].label
 }
 
 function openGradePicker() {
@@ -314,8 +171,8 @@ async function submit() {
       <!-- Form inputs -->
       <div class="my-6 space-y-3">
         <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.nickname" :placeholder="copy.nicknamePlaceholder" />
-        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="formData.gradeLabel" :placeholder="copy.gradePlaceholder" @click="openGradePicker" />
-        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="formData.areaLabel" :placeholder="copy.areaPlaceholder" @click="openAreaPicker" />
+        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="selectedGradeLabel" :placeholder="copy.gradePlaceholder" @click="openGradePicker" />
+        <input type="text" readonly class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)] cursor-pointer" :value="selectedAreaLabel" :placeholder="copy.areaPlaceholder" @click="openAreaPicker" />
         <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.faculty" :placeholder="copy.facultyPlaceholder" />
         <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.hometown" :placeholder="copy.hometownPlaceholder" />
         <input type="text" class="w-full max-w-xs mx-auto block h-11 px-4 border-0 border-b-2 border-[var(--c-dating)] bg-[var(--c-card)] text-base text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]" v-model="formData.qq" :placeholder="copy.qqPlaceholder" />

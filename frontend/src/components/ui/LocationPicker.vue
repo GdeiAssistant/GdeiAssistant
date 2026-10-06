@@ -13,16 +13,19 @@ const emit = defineEmits(['close', 'confirm'])
 const { t } = useI18n()
 const resolvedTitle = computed(() => props.title || t('locationPicker.title'))
 
-const selectedRegion = ref(null)
-const selectedState = ref(null)
-const selectedCity = ref(null)
+const regionCode = ref(null)
+const stateCode = ref(null)
+const cityCode = ref(null)
+const selectedRegion = computed(() => props.tree.find(region => region.code === regionCode.value) || null)
+const selectedState = computed(() => selectedRegion.value?.stateMap?.[stateCode.value] || null)
+const selectedCity = computed(() => selectedState.value?.cityMap?.[cityCode.value] || null)
 
 // reset when opened
 watch(() => props.open, (val) => {
   if (val) {
-    selectedRegion.value = null
-    selectedState.value = null
-    selectedCity.value = null
+    regionCode.value = null
+    stateCode.value = null
+    cityCode.value = null
   }
 })
 
@@ -37,18 +40,18 @@ const cities = computed(() => {
 })
 
 function selectRegion(region) {
-  selectedRegion.value = region
-  selectedState.value = null
-  selectedCity.value = null
+  regionCode.value = region.code
+  stateCode.value = null
+  cityCode.value = null
 }
 
 function selectState(state) {
-  selectedState.value = state
-  selectedCity.value = null
+  stateCode.value = state.code
+  cityCode.value = null
 }
 
 function selectCity(city) {
-  selectedCity.value = city
+  cityCode.value = city.code
 }
 
 function confirm() {

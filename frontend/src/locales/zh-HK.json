@@ -291,7 +291,35 @@
         "lookupAlt": "統一身份認證系統嘅帳號查詢入口",
         "resultAlt": "校園網帳號查詢結果示例"
       }
-    }
+    },
+    "links": {
+      "moe": "教育部",
+      "gdEducation": "廣東省教育廳",
+      "gzEducation": "廣州市教育局",
+      "gdGovernment": "廣東省人民政府",
+      "gzGovernment": "廣州市人民政府",
+      "eduCn": "中國教育科研網",
+      "cnki": "中國知網",
+      "chsi": "學信網",
+      "scut": "華南理工大學",
+      "sysu": "中山大學",
+      "jnu": "暨南大學",
+      "scnu": "華南師範大學",
+      "gdei": "廣東第二師範學院",
+      "cpcNews": "中國共產黨新聞網",
+      "stayTrue": "\"不忘初心、牢記使命\"主題教育",
+      "antiEpidemic": "人民戰\"疫\"黨旗飄揚",
+      "partyHistory": "黨史學習教育",
+      "homeland": "我奮鬥家國美",
+      "congress20": "二十大專題報道"
+    },
+    "media": {
+      "wechat": "學校官方微信",
+      "bilibili": "嗶哩嗶哩",
+      "xiaohongshu": "小紅書",
+      "douyin": "學校官方抖音"
+    },
+    "rightsReserved": "保留所有權利"
   },
   "appearance": {
     "title": "介面和外觀",
@@ -1636,5 +1664,40 @@
   "pePage": {
     "wechatRequiredTitle": "請喺微信入面開啟",
     "wechatRequiredDescription": "查體測成績要喺微信入面用。請用微信掃碼，或者喺微信搜尋並開啟呢個應用。"
+  },
+  "dating": {
+    "publish": {
+      "title": "發佈資料",
+      "uploadAction": "上傳",
+      "noticeTitle": "提示",
+      "genderFemale": "小姐姐",
+      "genderMale": "小哥哥",
+      "nicknamePlaceholder": "請輸入你嘅花名",
+      "gradePlaceholder": "請揀你嘅年級",
+      "areaPlaceholder": "請揀你嘅性別",
+      "facultyPlaceholder": "請輸入你嘅專業",
+      "hometownPlaceholder": "請輸入你嘅家鄉",
+      "qqPlaceholder": "請輸入你嘅QQ",
+      "wechatPlaceholder": "請輸入你嘅微信",
+      "privacyHint": "接受交流邀請之前，QQ同微信都唔會公開。",
+      "warningHint": "唔好盜用其他人嘅相片或者冒認其他人，有問題歡迎舉報。",
+      "contentPlaceholder": "點樣嘅對象會令你心動？講吓你嘅理想對象，最多100字。",
+      "submitting": "提交緊…",
+      "submitAction": "發佈資料",
+      "invalidImageType": "呢種圖片格式唔支援",
+      "imageTooLarge": "圖片唔可以大過5MB",
+      "nicknameInvalid": "花名要有1至15個字",
+      "gradeRequired": "請揀年級",
+      "areaRequired": "請揀性別",
+      "facultyInvalid": "專業要有1至12個字",
+      "hometownInvalid": "家鄉要有1至10個字",
+      "contactRequired": "QQ同微信至少填一個",
+      "contactInvalid": "聯絡方式太長",
+      "contentRequired": "講吓你心目中嘅對象啦",
+      "contentTooLong": "心動條件唔可以多過100字",
+      "uploading": "上傳緊…",
+      "publishing": "發佈緊…",
+      "publishSuccess": "發佈成功"
+    }
   }
 }

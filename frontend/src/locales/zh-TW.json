@@ -291,7 +291,35 @@
         "lookupAlt": "統一身分驗證系統的帳號查詢入口",
         "resultAlt": "校園網路帳號查詢結果範例"
       }
-    }
+    },
+    "links": {
+      "moe": "教育部",
+      "gdEducation": "廣東省教育廳",
+      "gzEducation": "廣州市教育局",
+      "gdGovernment": "廣東省人民政府",
+      "gzGovernment": "廣州市人民政府",
+      "eduCn": "中國教育科研網",
+      "cnki": "中國知網",
+      "chsi": "學信網",
+      "scut": "華南理工大學",
+      "sysu": "中山大學",
+      "jnu": "暨南大學",
+      "scnu": "華南師範大學",
+      "gdei": "廣東第二師範學院",
+      "cpcNews": "中國共產黨新聞網",
+      "stayTrue": "\"不忘初心、牢記使命\"主題教育",
+      "antiEpidemic": "人民戰\"疫\"黨旗飄揚",
+      "partyHistory": "黨史學習教育",
+      "homeland": "我奮鬥家國美",
+      "congress20": "二十大專題報導"
+    },
+    "media": {
+      "wechat": "學校官方微信",
+      "bilibili": "嗶哩嗶哩",
+      "xiaohongshu": "小紅書",
+      "douyin": "學校官方抖音"
+    },
+    "rightsReserved": "保留所有權利"
   },
   "appearance": {
     "title": "介面和外觀",
@@ -1636,5 +1664,40 @@
   "pePage": {
     "wechatRequiredTitle": "請使用微信開啟",
     "wechatRequiredDescription": "體能測驗查詢需要在微信環境中使用。請使用微信掃碼，或在微信中搜尋並開啟本應用程式。"
+  },
+  "dating": {
+    "publish": {
+      "title": "發布資料",
+      "uploadAction": "上傳",
+      "noticeTitle": "提示",
+      "genderFemale": "小姐姐",
+      "genderMale": "小哥哥",
+      "nicknamePlaceholder": "請輸入你的暱稱",
+      "gradePlaceholder": "請選擇你的年級",
+      "areaPlaceholder": "請選擇你的性別",
+      "facultyPlaceholder": "請輸入你的專業",
+      "hometownPlaceholder": "請輸入你的家鄉",
+      "qqPlaceholder": "請輸入你的QQ",
+      "wechatPlaceholder": "請輸入你的微信",
+      "privacyHint": "在接受撩一下請求前，QQ和微信不會公開顯示",
+      "warningHint": "請勿違規盜用他人照片或冒充他人，歡迎檢舉監督",
+      "contentPlaceholder": "什麼樣的TA會讓你心動呢？談談你的理想對象，不超過100字",
+      "submitting": "提交中...",
+      "submitAction": "發布資料",
+      "invalidImageType": "不合法的圖片檔案類型",
+      "imageTooLarge": "圖片檔案不能超過5MB",
+      "nicknameInvalid": "暱稱長度不合法（1-15字）",
+      "gradeRequired": "請選擇年級",
+      "areaRequired": "請選擇性別",
+      "facultyInvalid": "專業長度不合法（1-12字）",
+      "hometownInvalid": "家鄉長度不合法（1-10字）",
+      "contactRequired": "QQ號碼和微信至少填寫一個",
+      "contactInvalid": "聯絡方式長度不合法",
+      "contentRequired": "填一下你心目中的那個TA吧",
+      "contentTooLong": "心動條件不超過100字",
+      "uploading": "正在上傳...",
+      "publishing": "正在發布...",
+      "publishSuccess": "發布成功"
+    }
   }
 }

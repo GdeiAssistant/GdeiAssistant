@@ -2,137 +2,43 @@
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { resolveSupportedLocale } from '@/constants/localeOptions'
 
 const router = useRouter()
-const { t, locale } = useI18n({ useScope: 'global' })
-
-const ABOUT_LINK_LABELS = {
-  'zh-CN': {
-    moe: '教育部',
-    gdEducation: '广东省教育厅',
-    gzEducation: '广州市教育局',
-    gdGovernment: '广东省人民政府',
-    gzGovernment: '广州市人民政府',
-    eduCn: '中国教育科研网',
-    cnki: '中国知网',
-    chsi: '学信网',
-    scut: '华南理工大学',
-    sysu: '中山大学',
-    jnu: '暨南大学',
-    scnu: '华南师范大学',
-    gdei: '广东第二师范学院',
-    cpcNews: '中国共产党新闻网',
-    stayTrue: '"不忘初心、牢记使命"主题教育',
-    antiEpidemic: '人民战"疫"党旗飘扬',
-    partyHistory: '党史学习教育',
-    homeland: '我奋斗家国美',
-    congress20: '二十大专题报道'
-  },
-  'zh-HK': {
-    moe: '教育部',
-    gdEducation: '廣東省教育廳',
-    gzEducation: '廣州市教育局',
-    gdGovernment: '廣東省人民政府',
-    gzGovernment: '廣州市人民政府',
-    eduCn: '中國教育科研網',
-    cnki: '中國知網',
-    chsi: '學信網',
-    scut: '華南理工大學',
-    sysu: '中山大學',
-    jnu: '暨南大學',
-    scnu: '華南師範大學',
-    gdei: '廣東第二師範學院',
-    cpcNews: '中國共產黨新聞網',
-    stayTrue: '"不忘初心、牢記使命"主題教育',
-    antiEpidemic: '人民戰"疫"黨旗飄揚',
-    partyHistory: '黨史學習教育',
-    homeland: '我奮鬥家國美',
-    congress20: '二十大專題報道'
-  },
-  'zh-TW': {
-    moe: '教育部',
-    gdEducation: '廣東省教育廳',
-    gzEducation: '廣州市教育局',
-    gdGovernment: '廣東省人民政府',
-    gzGovernment: '廣州市人民政府',
-    eduCn: '中國教育科研網',
-    cnki: '中國知網',
-    chsi: '學信網',
-    scut: '華南理工大學',
-    sysu: '中山大學',
-    jnu: '暨南大學',
-    scnu: '華南師範大學',
-    gdei: '廣東第二師範學院',
-    cpcNews: '中國共產黨新聞網',
-    stayTrue: '"不忘初心、牢記使命"主題教育',
-    antiEpidemic: '人民戰"疫"黨旗飄揚',
-    partyHistory: '黨史學習教育',
-    homeland: '我奮鬥家國美',
-    congress20: '二十大專題報導'
-  },
-  en: {
-    moe: 'Ministry of Education of China',
-    gdEducation: 'Guangdong Department of Education',
-    gzEducation: 'Guangzhou Education Bureau',
-    gdGovernment: 'People\'s Government of Guangdong Province',
-    gzGovernment: 'People\'s Government of Guangzhou Municipality',
-    eduCn: 'China Education and Research Network',
-    cnki: 'CNKI',
-    chsi: 'CHSI',
-    scut: 'South China University of Technology',
-    sysu: 'Sun Yat-sen University',
-    jnu: 'Jinan University',
-    scnu: 'South China Normal University',
-    gdei: 'Guangdong University of Education',
-    cpcNews: 'Communist Party of China News Network',
-    stayTrue: 'Stay True to the Founding Mission Campaign',
-    antiEpidemic: 'People\'s Anti-Epidemic Party Banner',
-    partyHistory: 'Party History Learning Campaign',
-    homeland: 'I Strive for a Beautiful Homeland',
-    congress20: '20th CPC National Congress Special Coverage'
-  }
-}
-
-function resolveAboutLocale(value) {
-  const resolved = resolveSupportedLocale(value)
-  return ['zh-CN', 'zh-HK', 'zh-TW'].includes(resolved) ? resolved : 'en'
-}
+const { t } = useI18n({ useScope: 'global' })
 
 function aboutLinkLabel(key) {
-  const labels = ABOUT_LINK_LABELS[resolveAboutLocale(locale.value)] || ABOUT_LINK_LABELS.en
-  return labels[key] || ABOUT_LINK_LABELS.en[key] || key
+  return t(`about.links.${key}`)
 }
 
-const officialMediaLinks = [
+const officialMediaLinks = computed(() => [
   {
     key: 'wechat',
     iconSrc: '/img/about/media/wechat.png',
-    alt: '微信',
-    title: '学校官网微信',
+    alt: t('about.media.wechat'),
+    title: t('about.media.wechat'),
     href: 'https://www.gdei.edu.cn/3989/list.htm'
   },
   {
     key: 'bilibili',
     iconSrc: '/img/about/media/bilibili.png',
-    alt: 'B站',
-    title: 'B站',
+    alt: t('about.media.bilibili'),
+    title: t('about.media.bilibili'),
     href: 'https://b23.tv/VlE7GPv'
   },
   {
     key: 'xiaohongshu',
     iconSrc: '/img/about/media/xiaohongshu.png',
-    alt: '小红书',
-    title: '小红书'
+    alt: t('about.media.xiaohongshu'),
+    title: t('about.media.xiaohongshu')
   },
   {
     key: 'douyin',
     iconSrc: '/img/about/media/douyin.png',
-    alt: '抖音',
-    title: '学校官网抖音',
+    alt: t('about.media.douyin'),
+    title: t('about.media.douyin'),
     href: 'https://www.gdei.edu.cn/3987/list.htm'
   }
-]
+])
 
 // Cookie 横幅状态
 const showCookieBanner = ref(false)
@@ -144,6 +50,7 @@ const expandedMenu = ref('')
 // 菜单数据结构（从 top.jsp 提取）
 const menuItems = computed(() => [
   {
+    key: 'help',
     title: t('about.menuHelp'),
     items: [
       { text: t('about.menuSecuritySpec'), href: '/about/security' },
@@ -151,6 +58,7 @@ const menuItems = computed(() => [
     ]
   },
   {
+    key: 'policies',
     title: t('about.menuPolicies'),
     items: [
       { text: t('about.menuUserAgreement'), href: '/agreement' },
@@ -166,6 +74,7 @@ const menuItems = computed(() => [
     ]
   },
   {
+    key: 'links',
     title: t('about.menuFriendlyLinks'),
     items: [
       { text: aboutLinkLabel('moe'), href: 'http://www.moe.gov.cn', external: true },
@@ -184,6 +93,7 @@ const menuItems = computed(() => [
     ]
   },
   {
+    key: 'party',
     title: t('about.menuSmartPartyBuilding'),
     items: [
       { text: aboutLinkLabel('cpcNews'), href: 'http://cpc.people.com.cn/index.html', external: true },
@@ -204,11 +114,11 @@ function toggleMenu() {
   showMenu.value = !showMenu.value
 }
 
-function toggleSubMenu(title) {
-  if (expandedMenu.value === title) {
+function toggleSubMenu(key) {
+  if (expandedMenu.value === key) {
     expandedMenu.value = ''
   } else {
-    expandedMenu.value = title
+    expandedMenu.value = key
   }
 }
 
@@ -262,18 +172,18 @@ onMounted(() => {
       class="about-drawer-mask"
       @click="toggleMenu"
     ></div>
-    <aside class="about-drawer" :class="{ 'is-open': showMenu }" aria-label="about menu">
+    <aside class="about-drawer" :class="{ 'is-open': showMenu }" :aria-label="t('about.menuOpen')">
       <div class="about-drawer__header">
         <span>{{ t('about.appName') }}</span>
         <button type="button" :aria-label="t('about.menuClose')" @click="toggleMenu">×</button>
       </div>
       <div class="about-drawer__body">
-        <section v-for="menu in menuItems" :key="menu.title" class="about-menu-group">
-          <button type="button" class="about-menu-group__title" @click="toggleSubMenu(menu.title)">
+        <section v-for="menu in menuItems" :key="menu.key" class="about-menu-group">
+          <button type="button" class="about-menu-group__title" @click="toggleSubMenu(menu.key)">
             <span>{{ menu.title }}</span>
-            <span class="about-menu-group__chevron" :class="{ 'is-open': expandedMenu === menu.title }">⌄</span>
+            <span class="about-menu-group__chevron" :class="{ 'is-open': expandedMenu === menu.key }">⌄</span>
           </button>
-          <div v-if="expandedMenu === menu.title" class="about-menu-group__items">
+          <div v-if="expandedMenu === menu.key" class="about-menu-group__items">
             <button
               v-for="item in menu.items"
               :key="item.text"
@@ -321,7 +231,7 @@ onMounted(() => {
         <div class="about-section__heading">
           <h2>{{ t('about.screenshotsTitle') }}</h2>
         </div>
-        <div class="about-gallery" aria-label="application screenshots">
+        <div class="about-gallery" :aria-label="t('about.screenshotsTitle')">
           <img
             v-for="i in 5"
             :key="i"
@@ -349,7 +259,7 @@ onMounted(() => {
         </component>
       </div>
       <p>Copyright &copy; 2016 - 2026 GdeiAssistant</p>
-      <p>All rights reserved</p>
+      <p>{{ t('about.rightsReserved') }}</p>
       <div class="about-records">
         <a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">粤ICP备17087427号-1</a>
         <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44010502001297" target="_blank" rel="noopener noreferrer">粤公网安备44010502001297号</a>

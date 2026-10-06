@@ -1,4 +1,5 @@
 import i18n from '../i18n'
+import { resolveSupportedLocale } from '../constants/localeOptions'
 
 const FACULTY_DEFINITIONS = [
   { code: 0, key: 'unselected', majors: ['unselected'] },
@@ -215,18 +216,7 @@ function getLabels(locale) {
 }
 
 export function normalizeCatalogLocale(locale) {
-  var value = String(locale || '').trim().replace(/_/g, '-').toLowerCase()
-  if (!value) return 'zh-CN'
-  if (value === 'zh-cn' || value === 'zh-hans' || value === 'zh-hans-cn' || value === 'zh') return 'zh-CN'
-  if (value === 'zh-hk' || value === 'zh-hant-hk') return 'zh-HK'
-  if (value === 'zh-tw' || value === 'zh-hant' || value === 'zh-hant-tw') return 'zh-TW'
-  if (value.indexOf('zh-hk') === 0) return 'zh-HK'
-  if (value.indexOf('zh-tw') === 0 || value.indexOf('zh-hant') === 0) return 'zh-TW'
-  if (value.indexOf('zh') === 0) return 'zh-CN'
-  if (value.indexOf('en') === 0) return 'en'
-  if (value.indexOf('ja') === 0) return 'ja'
-  if (value.indexOf('ko') === 0) return 'ko'
-  return 'zh-CN'
+  return resolveSupportedLocale(locale)
 }
 
 function buildDefaultProfileOptionsPayload(locale) {

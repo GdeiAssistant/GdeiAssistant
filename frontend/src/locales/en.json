@@ -1432,7 +1432,35 @@
         "lookupAlt": "Account lookup in the identity authentication system",
         "resultAlt": "Example campus account lookup result"
       }
-    }
+    },
+    "links": {
+      "moe": "Ministry of Education of China",
+      "gdEducation": "Guangdong Department of Education",
+      "gzEducation": "Guangzhou Education Bureau",
+      "gdGovernment": "People's Government of Guangdong Province",
+      "gzGovernment": "People's Government of Guangzhou Municipality",
+      "eduCn": "China Education and Research Network",
+      "cnki": "CNKI",
+      "chsi": "CHSI",
+      "scut": "South China University of Technology",
+      "sysu": "Sun Yat-sen University",
+      "jnu": "Jinan University",
+      "scnu": "South China Normal University",
+      "gdei": "Guangdong University of Education",
+      "cpcNews": "Communist Party of China News Network",
+      "stayTrue": "Stay True to the Founding Mission Campaign",
+      "antiEpidemic": "People's Anti-Epidemic Party Banner",
+      "partyHistory": "Party History Learning Campaign",
+      "homeland": "I Strive for a Beautiful Homeland",
+      "congress20": "20th CPC National Congress Special Coverage"
+    },
+    "media": {
+      "wechat": "Official school WeChat",
+      "bilibili": "Bilibili",
+      "xiaohongshu": "Xiaohongshu",
+      "douyin": "Official school Douyin"
+    },
+    "rightsReserved": "All rights reserved"
   },
   "appearance": {
     "title": "Interface & Appearance",
@@ -1636,5 +1664,40 @@
   "pePage": {
     "wechatRequiredTitle": "Open in WeChat",
     "wechatRequiredDescription": "Fitness test results can only be viewed in WeChat. Scan the code with WeChat, or search for and open this app in WeChat."
+  },
+  "dating": {
+    "publish": {
+      "title": "Post Profile",
+      "uploadAction": "Upload",
+      "noticeTitle": "Notice",
+      "genderFemale": "Female",
+      "genderMale": "Male",
+      "nicknamePlaceholder": "Enter your nickname",
+      "gradePlaceholder": "Select your year",
+      "areaPlaceholder": "Select your gender",
+      "facultyPlaceholder": "Enter your major",
+      "hometownPlaceholder": "Enter your hometown",
+      "qqPlaceholder": "Enter your QQ",
+      "wechatPlaceholder": "Enter your WeChat",
+      "privacyHint": "Your QQ and WeChat will stay hidden until a message is accepted.",
+      "warningHint": "Do not use someone else's photo or impersonate another person. Reports are welcome.",
+      "contentPlaceholder": "What kind of person catches your eye? Share your ideal type in up to 100 characters.",
+      "submitting": "Submitting...",
+      "submitAction": "Post Profile",
+      "invalidImageType": "Invalid image file type",
+      "imageTooLarge": "Image files must be smaller than 5MB",
+      "nicknameInvalid": "Nickname must be between 1 and 15 characters",
+      "gradeRequired": "Please select your year",
+      "areaRequired": "Please select your gender",
+      "facultyInvalid": "Major must be between 1 and 12 characters",
+      "hometownInvalid": "Hometown must be between 1 and 10 characters",
+      "contactRequired": "Please provide either QQ or WeChat",
+      "contactInvalid": "Contact information is too long",
+      "contentRequired": "Tell us about the person you have in mind",
+      "contentTooLong": "Your description must be within 100 characters",
+      "uploading": "Uploading...",
+      "publishing": "Publishing...",
+      "publishSuccess": "Posted successfully"
+    }
   }
 }

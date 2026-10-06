@@ -30,6 +30,6 @@ export function formatProfileViewModel(payload, locale) {
     hometownState: hometown?.stateCode || '',
     hometownCity: hometown?.cityCode || '',
     introduction: data.introduction || '',
-    ipArea: data.ipArea || '',
+    ipArea: locationCatalog.systemAreaLabel(data.ipArea || ''),
   }
 }

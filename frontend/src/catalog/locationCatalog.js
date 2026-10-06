@@ -3,12 +3,11 @@ import { LOCATION_CATALOG_DATA } from './locationCatalogData.generated'
 import { normalizeCatalogLocale } from './profileCatalog'
 
 function localizeName(node, locale) {
-  const normalizedLocale = normalizeCatalogLocale(locale || i18n.global?.locale?.value)
-  if (normalizedLocale === 'en' || normalizedLocale === 'ja' || normalizedLocale === 'ko') {
-    const localizedNames = node?.localizedNames || {}
-    if (localizedNames[normalizedLocale]) {
-      return localizedNames[normalizedLocale]
-    }
+  const localizedNames = node?.localizedNames || {}
+  if (localizedNames[locale]) {
+    return localizedNames[locale]
+  }
+  if (locale === 'en' || locale === 'ja' || locale === 'ko') {
     if (node?.latinName) {
       return node.latinName
     }
@@ -17,12 +16,45 @@ function localizeName(node, locale) {
 }
 
 function formatLocationLabel(parts, locale) {
-  const normalizedLocale = normalizeCatalogLocale(locale || i18n.global?.locale?.value)
   const compactParts = parts.filter((item, index, list) => item && item !== list[index - 1])
-  if (normalizedLocale === 'en' || normalizedLocale === 'ja' || normalizedLocale === 'ko') {
+  if (locale === 'en' || locale === 'ja' || locale === 'ko') {
     return [...compactParts].reverse().join(', ')
   }
   return compactParts.join(' ')
+}
+
+let systemAreaAliases
+function getSystemAreaAliases() {
+  if (systemAreaAliases) return systemAreaAliases
+  systemAreaAliases = new Map()
+  const locales = ['zh-CN', 'zh-HK', 'zh-TW', 'en', 'ja', 'ko']
+  function visit(nodes, ancestors = []) {
+    for (const node of nodes) {
+      const path = [...ancestors, node]
+      for (let start = 0; start < path.length; start++) {
+        const suffix = path.slice(start)
+        const aliases = new Set([suffix.map(item => item.name).join(' '), suffix.map(item => item.name).join('')])
+        const latinNames = suffix.map(item => item.latinName || item.name)
+        aliases.add(latinNames.join(' '))
+        aliases.add(formatLocationLabel(latinNames, 'en'))
+        for (const language of locales) {
+          const names = suffix.map(item => localizeName(item, language))
+          aliases.add(formatLocationLabel(names, language))
+          aliases.add(names.join(' '))
+          if (language.startsWith('zh')) aliases.add(names.join(''))
+        }
+        for (const alias of aliases) {
+          if (!alias) continue
+          const matches = systemAreaAliases.get(alias) || []
+          matches.push(suffix)
+          systemAreaAliases.set(alias, matches)
+        }
+      }
+      visit(node.children || [], path)
+    }
+  }
+  visit(LOCATION_CATALOG_DATA)
+  return systemAreaAliases
 }
 
 function createMaps(locale) {
@@ -54,20 +86,31 @@ function createMaps(locale) {
   return { regions, regionMap }
 }
 
-export function getLocationCatalog(locale) {
+export function getLocationCatalog(requestedLocale) {
+  const locale = normalizeCatalogLocale(requestedLocale || i18n.global?.locale?.value)
   const { regions, regionMap } = createMaps(locale)
 
   function findLocation(regionCode, stateCode, cityCode) {
     const region = regionMap.get(regionCode)
-    if (!region) return null
+    if (!region || (!stateCode && cityCode)) return null
     const state = (region.children || []).find((item) => item.code === stateCode) || null
+    if (stateCode && !state) return null
     const city = (state?.children || []).find((item) => item.code === cityCode) || null
+    if (cityCode && !city) return null
     return { region, state, city }
   }
 
   return {
     regions,
     findLocation,
+    systemAreaLabel(value) {
+      const raw = typeof value === 'string' ? value : ''
+      const key = raw.trim()
+      if (!key) return raw
+      const paths = getSystemAreaAliases().get(key) || []
+      const matches = new Set(paths.map(path => formatLocationLabel(path.map(node => localizeName(node, locale)), locale)))
+      return matches.size === 1 ? [...matches][0] : raw
+    },
     locationLabel(regionCode, stateCode, cityCode) {
       const value = findLocation(regionCode, stateCode, cityCode)
       if (!value) return ''

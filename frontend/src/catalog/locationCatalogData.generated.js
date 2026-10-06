@@ -1,5 +1,6 @@
-// Generated from src/main/resources/location.xml. System zh-HK/zh-TW labels derived offline with OpenCC4j 1.14.0.
-// Codes and canonical source names are unchanged.
+// Generated from src/main/resources/location.xml; existing OpenCC4j zh-HK/zh-TW labels retained.
+// International names: reviewed GeoNames 2026-10-06 snapshot (CC BY 4.0); see docs/i18n/location-names.md.
+// Codes, canonical source names, hierarchy, order and legacy aliases are unchanged.
 export const LOCATION_CATALOG_DATA = [
   {
     "code": "CN",
@@ -79,7 +80,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Binhaixinqu",
             "localizedNames": {
               "zh-HK": "濱海新區",
-              "zh-TW": "濱海新區"
+              "zh-TW": "濱海新區",
+              "en": "Binhai Xinqu",
+              "ja": "Binhai Xinqu",
+              "ko": "Binhai Xinqu"
             }
           },
           {
@@ -97,7 +101,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiqing",
             "localizedNames": {
               "zh-HK": "西青",
-              "zh-TW": "西青"
+              "zh-TW": "西青",
+              "en": "Xiqing Qu",
+              "ja": "Xiqing Qu",
+              "ko": "Xiqing Qu"
             }
           },
           {
@@ -124,7 +131,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ninghe",
             "localizedNames": {
               "zh-HK": "寧河",
-              "zh-TW": "寧河"
+              "zh-TW": "寧河",
+              "en": "Ninghe",
+              "ja": "Ninghe",
+              "ko": "Ninghe"
             }
           },
           {
@@ -133,7 +143,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuqing",
             "localizedNames": {
               "zh-HK": "武清",
-              "zh-TW": "武清"
+              "zh-TW": "武清",
+              "en": "Wuqing Qu",
+              "ja": "Wuqing Qu",
+              "ko": "Wuqing Qu"
             }
           },
           {
@@ -151,7 +164,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baodi",
             "localizedNames": {
               "zh-HK": "寶坻",
-              "zh-TW": "寶坻"
+              "zh-TW": "寶坻",
+              "en": "Baodi Qu",
+              "ja": "Baodi Qu",
+              "ko": "Baodi Qu"
             }
           },
           {
@@ -160,13 +176,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jixian",
             "localizedNames": {
               "zh-HK": "薊縣",
-              "zh-TW": "薊縣"
+              "zh-TW": "薊縣",
+              "en": "Ji Xian",
+              "ja": "Ji Xian",
+              "ko": "Ji Xian"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "天津",
-          "zh-TW": "天津"
+          "zh-TW": "天津",
+          "en": "Tianjin Municipality",
+          "ja": "天津",
+          "ko": "Tianjin Municipality"
         }
       },
       {
@@ -189,7 +211,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tangshan",
             "localizedNames": {
               "zh-HK": "唐山",
-              "zh-TW": "唐山"
+              "zh-TW": "唐山",
+              "en": "Tangshan",
+              "ja": "唐山",
+              "ko": "탕산 시"
             }
           },
           {
@@ -198,7 +223,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qinhuangdao",
             "localizedNames": {
               "zh-HK": "秦皇島",
-              "zh-TW": "秦皇島"
+              "zh-TW": "秦皇島",
+              "en": "Qinhuangdao",
+              "ja": "秦皇島市",
+              "ko": "친황다오 시"
             }
           },
           {
@@ -216,7 +244,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xingtai",
             "localizedNames": {
               "zh-HK": "邢臺",
-              "zh-TW": "邢臺"
+              "zh-TW": "邢臺",
+              "en": "Xingtai",
+              "ja": "ケイ台市",
+              "ko": "싱타이 시"
             }
           },
           {
@@ -225,7 +256,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baoding",
             "localizedNames": {
               "zh-HK": "保定",
-              "zh-TW": "保定"
+              "zh-TW": "保定",
+              "en": "Baoding",
+              "ja": "保定",
+              "ko": "바오딩 시"
             }
           },
           {
@@ -234,7 +268,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhangjiakou",
             "localizedNames": {
               "zh-HK": "張家口",
-              "zh-TW": "張家口"
+              "zh-TW": "張家口",
+              "en": "Zhangjiakou",
+              "ja": "張家口",
+              "ko": "장자커우 시"
             }
           },
           {
@@ -252,7 +289,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Cangzhou",
             "localizedNames": {
               "zh-HK": "滄州",
-              "zh-TW": "滄州"
+              "zh-TW": "滄州",
+              "en": "Cangzhou",
+              "ja": "滄州市",
+              "ko": "창저우 시"
             }
           },
           {
@@ -261,7 +301,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Langfang",
             "localizedNames": {
               "zh-HK": "廊坊",
-              "zh-TW": "廊坊"
+              "zh-TW": "廊坊",
+              "en": "Langfang",
+              "ja": "Langfang",
+              "ko": "Langfang"
             }
           },
           {
@@ -270,13 +313,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hengshui",
             "localizedNames": {
               "zh-HK": "衡水",
-              "zh-TW": "衡水"
+              "zh-TW": "衡水",
+              "en": "Hengshui",
+              "ja": "衡水市",
+              "ko": "헝수이 시"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "河北",
-          "zh-TW": "河北"
+          "zh-TW": "河北",
+          "en": "Hebei",
+          "ja": "河北",
+          "ko": "Hebei"
         }
       },
       {
@@ -326,7 +375,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jincheng",
             "localizedNames": {
               "zh-HK": "晉城",
-              "zh-TW": "晉城"
+              "zh-TW": "晉城",
+              "en": "Jincheng",
+              "ja": "Jincheng",
+              "ko": "진청 시"
             }
           },
           {
@@ -335,7 +387,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shuozhou",
             "localizedNames": {
               "zh-HK": "朔州",
-              "zh-TW": "朔州"
+              "zh-TW": "朔州",
+              "en": "Shuozhou",
+              "ja": "Shuozhou",
+              "ko": "Shuozhou"
             }
           },
           {
@@ -344,7 +399,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinzhong",
             "localizedNames": {
               "zh-HK": "晉中",
-              "zh-TW": "晉中"
+              "zh-TW": "晉中",
+              "en": "Jinzhong",
+              "ja": "Jinzhong",
+              "ko": "Jinzhong"
             }
           },
           {
@@ -353,7 +411,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yuncheng",
             "localizedNames": {
               "zh-HK": "運城",
-              "zh-TW": "運城"
+              "zh-TW": "運城",
+              "en": "Yuncheng",
+              "ja": "運城市",
+              "ko": "윈청 시"
             }
           },
           {
@@ -362,7 +423,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinzhou",
             "localizedNames": {
               "zh-HK": "忻州",
-              "zh-TW": "忻州"
+              "zh-TW": "忻州",
+              "en": "Xinzhou",
+              "ja": "Xinzhou",
+              "ko": "신저우 시"
             }
           },
           {
@@ -380,13 +444,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luliang",
             "localizedNames": {
               "zh-HK": "呂梁",
-              "zh-TW": "呂梁"
+              "zh-TW": "呂梁",
+              "en": "Lüliang",
+              "ja": "Lüliang",
+              "ko": "Lüliang"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "山西",
-          "zh-TW": "山西"
+          "zh-TW": "山西",
+          "en": "Shanxi",
+          "ja": "山西",
+          "ko": "Shanxi"
         }
       },
       {
@@ -400,7 +470,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huhehaote",
             "localizedNames": {
               "zh-HK": "呼和浩特",
-              "zh-TW": "呼和浩特"
+              "zh-TW": "呼和浩特",
+              "en": "Hohhot",
+              "ja": "フフホト",
+              "ko": "후허하오터 시"
             }
           },
           {
@@ -418,7 +491,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuhai",
             "localizedNames": {
               "zh-HK": "烏海",
-              "zh-TW": "烏海"
+              "zh-TW": "烏海",
+              "en": "Wuhai",
+              "ja": "烏海市",
+              "ko": "우하이 시"
             }
           },
           {
@@ -427,7 +503,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chifeng",
             "localizedNames": {
               "zh-HK": "赤峯",
-              "zh-TW": "赤峯"
+              "zh-TW": "赤峯",
+              "en": "Chifeng",
+              "ja": "赤峰市",
+              "ko": "츠펑 시"
             }
           },
           {
@@ -436,7 +515,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tongliao",
             "localizedNames": {
               "zh-HK": "通遼",
-              "zh-TW": "通遼"
+              "zh-TW": "通遼",
+              "en": "Tongliao",
+              "ja": "通遼市",
+              "ko": "퉁랴오 시"
             }
           },
           {
@@ -454,7 +536,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hulunbeier",
             "localizedNames": {
               "zh-HK": "呼倫貝爾",
-              "zh-TW": "呼倫貝爾"
+              "zh-TW": "呼倫貝爾",
+              "en": "Hulunbuir",
+              "ja": "Hulunbuir",
+              "ko": "Hulunbuir"
             }
           },
           {
@@ -505,7 +590,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "內蒙古",
-          "zh-TW": "內蒙古"
+          "zh-TW": "內蒙古",
+          "en": "Inner Mongolia",
+          "ja": "内モンゴル自治区",
+          "ko": "내몽골 자치구"
         }
       },
       {
@@ -519,7 +607,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenyang",
             "localizedNames": {
               "zh-HK": "瀋陽",
-              "zh-TW": "瀋陽"
+              "zh-TW": "瀋陽",
+              "en": "Shenyang",
+              "ja": "瀋陽市",
+              "ko": "선양"
             }
           },
           {
@@ -546,7 +637,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fushun",
             "localizedNames": {
               "zh-HK": "撫順",
-              "zh-TW": "撫順"
+              "zh-TW": "撫順",
+              "en": "Fushun",
+              "ja": "撫順市",
+              "ko": "푸순 시"
             }
           },
           {
@@ -582,7 +676,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yingkou",
             "localizedNames": {
               "zh-HK": "營口",
-              "zh-TW": "營口"
+              "zh-TW": "營口",
+              "en": "Yingkou",
+              "ja": "営口",
+              "ko": "잉커우 시"
             }
           },
           {
@@ -609,7 +706,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Panjin",
             "localizedNames": {
               "zh-HK": "盤錦",
-              "zh-TW": "盤錦"
+              "zh-TW": "盤錦",
+              "en": "Panjin",
+              "ja": "Panjin",
+              "ko": "Panjin"
             }
           },
           {
@@ -642,7 +742,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "遼寧",
-          "zh-TW": "遼寧"
+          "zh-TW": "遼寧",
+          "en": "Liaoning",
+          "ja": "遼寧省",
+          "ko": "Liaoning"
         }
       },
       {
@@ -656,7 +759,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhangchun",
             "localizedNames": {
               "zh-HK": "長春",
-              "zh-TW": "長春"
+              "zh-TW": "長春",
+              "en": "Changchun",
+              "ja": "長春市",
+              "ko": "창춘 시"
             }
           },
           {
@@ -683,7 +789,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liaoyuan",
             "localizedNames": {
               "zh-HK": "遼源",
-              "zh-TW": "遼源"
+              "zh-TW": "遼源",
+              "en": "Liaoyuan",
+              "ja": "遼源市",
+              "ko": "랴오위안 시"
             }
           },
           {
@@ -692,7 +801,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tonghua",
             "localizedNames": {
               "zh-HK": "通化",
-              "zh-TW": "通化"
+              "zh-TW": "通化",
+              "en": "Tonghua",
+              "ja": "通化市",
+              "ko": "퉁화 시"
             }
           },
           {
@@ -710,7 +822,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Songyuan",
             "localizedNames": {
               "zh-HK": "松原",
-              "zh-TW": "松原"
+              "zh-TW": "松原",
+              "en": "Songyuan",
+              "ja": "松原",
+              "ko": "쑹위안 시"
             }
           },
           {
@@ -719,7 +834,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baicheng",
             "localizedNames": {
               "zh-HK": "白城",
-              "zh-TW": "白城"
+              "zh-TW": "白城",
+              "en": "Baicheng",
+              "ja": "白城市",
+              "ko": "바이청 시"
             }
           },
           {
@@ -728,13 +846,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yanbian",
             "localizedNames": {
               "zh-HK": "延邊",
-              "zh-TW": "延邊"
+              "zh-TW": "延邊",
+              "en": "Yanbian Korean Autonomous Prefecture",
+              "ja": "Yanbian Korean Autonomous Prefecture",
+              "ko": "Yanbian Korean Autonomous Prefecture"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "吉林",
-          "zh-TW": "吉林"
+          "zh-TW": "吉林",
+          "en": "Jilin",
+          "ja": "吉林省",
+          "ko": "길림"
         }
       },
       {
@@ -748,7 +872,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haerbin",
             "localizedNames": {
               "zh-HK": "哈爾濱",
-              "zh-TW": "哈爾濱"
+              "zh-TW": "哈爾濱",
+              "en": "Harbin",
+              "ja": "ハルビン",
+              "ko": "하얼빈 시"
             }
           },
           {
@@ -757,7 +884,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiqihaer",
             "localizedNames": {
               "zh-HK": "齊齊哈爾",
-              "zh-TW": "齊齊哈爾"
+              "zh-TW": "齊齊哈爾",
+              "en": "Qiqihar",
+              "ja": "チチハル",
+              "ko": "치치하얼 시"
             }
           },
           {
@@ -766,7 +896,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jixi",
             "localizedNames": {
               "zh-HK": "雞西",
-              "zh-TW": "雞西"
+              "zh-TW": "雞西",
+              "en": "Jixi",
+              "ja": "鶏西",
+              "ko": "지시 시"
             }
           },
           {
@@ -775,7 +908,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hegang",
             "localizedNames": {
               "zh-HK": "鶴崗",
-              "zh-TW": "鶴崗"
+              "zh-TW": "鶴崗",
+              "en": "Hegang",
+              "ja": "鶴崗市",
+              "ko": "허강 시"
             }
           },
           {
@@ -811,7 +947,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiamusi",
             "localizedNames": {
               "zh-HK": "佳木斯",
-              "zh-TW": "佳木斯"
+              "zh-TW": "佳木斯",
+              "en": "Jiamusi",
+              "ja": "ジャムス",
+              "ko": "자무쓰 시"
             }
           },
           {
@@ -820,7 +959,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qitaihe",
             "localizedNames": {
               "zh-HK": "七臺河",
-              "zh-TW": "七臺河"
+              "zh-TW": "七臺河",
+              "en": "Qitaihe",
+              "ja": "Qitaihe",
+              "ko": "Qitaihe"
             }
           },
           {
@@ -862,7 +1004,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "黑龍江",
-          "zh-TW": "黑龍江"
+          "zh-TW": "黑龍江",
+          "en": "Heilongjiang",
+          "ja": "黒龍江省",
+          "ko": "헤이룽장성"
         }
       },
       {
@@ -957,7 +1102,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Minxing",
             "localizedNames": {
               "zh-HK": "閔行",
-              "zh-TW": "閔行"
+              "zh-TW": "閔行",
+              "en": "Minhang",
+              "ja": "Minhang",
+              "ko": "Minhang"
             }
           },
           {
@@ -1029,13 +1177,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chongming",
             "localizedNames": {
               "zh-HK": "崇明",
-              "zh-TW": "崇明"
+              "zh-TW": "崇明",
+              "en": "Chongming Xian",
+              "ja": "Chongming Xian",
+              "ko": "Chongming Xian"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "上海",
-          "zh-TW": "上海"
+          "zh-TW": "上海",
+          "en": "Shanghai Municipality",
+          "ja": "上海",
+          "ko": "Shanghai Municipality"
         }
       },
       {
@@ -1049,7 +1203,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanjing",
             "localizedNames": {
               "zh-HK": "南京",
-              "zh-TW": "南京"
+              "zh-TW": "南京",
+              "en": "Nanjing",
+              "ja": "南京市",
+              "ko": "난징"
             }
           },
           {
@@ -1058,7 +1215,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuxi",
             "localizedNames": {
               "zh-HK": "無錫",
-              "zh-TW": "無錫"
+              "zh-TW": "無錫",
+              "en": "Wuxi",
+              "ja": "無錫市",
+              "ko": "우시 시"
             }
           },
           {
@@ -1076,7 +1236,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Changzhou",
             "localizedNames": {
               "zh-HK": "常州",
-              "zh-TW": "常州"
+              "zh-TW": "常州",
+              "en": "Changzhou",
+              "ja": "常州市",
+              "ko": "창저우 시"
             }
           },
           {
@@ -1094,7 +1257,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nantong",
             "localizedNames": {
               "zh-HK": "南通",
-              "zh-TW": "南通"
+              "zh-TW": "南通",
+              "en": "Nantong",
+              "ja": "南通市",
+              "ko": "난퉁 시"
             }
           },
           {
@@ -1121,7 +1287,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yancheng",
             "localizedNames": {
               "zh-HK": "鹽城",
-              "zh-TW": "鹽城"
+              "zh-TW": "鹽城",
+              "en": "Yancheng",
+              "ja": "塩城市",
+              "ko": "옌청 시"
             }
           },
           {
@@ -1139,7 +1308,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhenjiang",
             "localizedNames": {
               "zh-HK": "鎮江",
-              "zh-TW": "鎮江"
+              "zh-TW": "鎮江",
+              "en": "Zhenjiang",
+              "ja": "鎮江",
+              "ko": "Zhenjiang"
             }
           },
           {
@@ -1157,13 +1329,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suqian",
             "localizedNames": {
               "zh-HK": "宿遷",
-              "zh-TW": "宿遷"
+              "zh-TW": "宿遷",
+              "en": "Suqian",
+              "ja": "Suqian",
+              "ko": "Suqian"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "江蘇",
-          "zh-TW": "江蘇"
+          "zh-TW": "江蘇",
+          "en": "Jiangsu",
+          "ja": "江蘇",
+          "ko": "Jiangsu"
         }
       },
       {
@@ -1177,7 +1355,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hangzhou",
             "localizedNames": {
               "zh-HK": "杭州",
-              "zh-TW": "杭州"
+              "zh-TW": "杭州",
+              "en": "Hangzhou",
+              "ja": "杭州市",
+              "ko": "항저우"
             }
           },
           {
@@ -1186,7 +1367,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ningbo",
             "localizedNames": {
               "zh-HK": "寧波",
-              "zh-TW": "寧波"
+              "zh-TW": "寧波",
+              "en": "Ningbo",
+              "ja": "寧波市",
+              "ko": "닝보 시"
             }
           },
           {
@@ -1204,7 +1388,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiaxing",
             "localizedNames": {
               "zh-HK": "嘉興",
-              "zh-TW": "嘉興"
+              "zh-TW": "嘉興",
+              "en": "Jiaxing",
+              "ja": "嘉興市",
+              "ko": "자싱 시"
             }
           },
           {
@@ -1213,7 +1400,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huzhou",
             "localizedNames": {
               "zh-HK": "湖州",
-              "zh-TW": "湖州"
+              "zh-TW": "湖州",
+              "en": "Huzhou",
+              "ja": "Huzhou",
+              "ko": "Huzhou"
             }
           },
           {
@@ -1231,7 +1421,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinhua",
             "localizedNames": {
               "zh-HK": "金華",
-              "zh-TW": "金華"
+              "zh-TW": "金華",
+              "en": "Jinhua",
+              "ja": "金華市",
+              "ko": "진화 시"
             }
           },
           {
@@ -1258,7 +1451,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taizhou",
             "localizedNames": {
               "zh-HK": "台州",
-              "zh-TW": "台州"
+              "zh-TW": "台州",
+              "en": "Taizhou",
+              "ja": "台州市",
+              "ko": "타이저우 시"
             }
           },
           {
@@ -1273,7 +1469,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "浙江",
-          "zh-TW": "浙江"
+          "zh-TW": "浙江",
+          "en": "Zhejiang",
+          "ja": "浙江",
+          "ko": "Zhejiang"
         }
       },
       {
@@ -1287,7 +1486,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hefei",
             "localizedNames": {
               "zh-HK": "合肥",
-              "zh-TW": "合肥"
+              "zh-TW": "合肥",
+              "en": "Hefei",
+              "ja": "合肥市",
+              "ko": "허페이 시"
             }
           },
           {
@@ -1323,7 +1525,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maanshan",
             "localizedNames": {
               "zh-HK": "馬鞍山",
-              "zh-TW": "馬鞍山"
+              "zh-TW": "馬鞍山",
+              "en": "Ma’anshan",
+              "ja": "Ma’anshan",
+              "ko": "Ma’anshan"
             }
           },
           {
@@ -1332,7 +1537,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huaibei",
             "localizedNames": {
               "zh-HK": "淮北",
-              "zh-TW": "淮北"
+              "zh-TW": "淮北",
+              "en": "Huaibei",
+              "ja": "淮北市",
+              "ko": "화이베이 시"
             }
           },
           {
@@ -1350,7 +1558,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Anqing",
             "localizedNames": {
               "zh-HK": "安慶",
-              "zh-TW": "安慶"
+              "zh-TW": "安慶",
+              "en": "Anking",
+              "ja": "安慶市",
+              "ko": "안칭 시"
             }
           },
           {
@@ -1368,7 +1579,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chuzhou",
             "localizedNames": {
               "zh-HK": "滁州",
-              "zh-TW": "滁州"
+              "zh-TW": "滁州",
+              "en": "Chuzhou",
+              "ja": "ジョ州市",
+              "ko": "추저우 시"
             }
           },
           {
@@ -1377,7 +1591,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fuyang",
             "localizedNames": {
               "zh-HK": "阜陽",
-              "zh-TW": "阜陽"
+              "zh-TW": "阜陽",
+              "en": "Fuyang",
+              "ja": "阜陽市",
+              "ko": "푸양 시"
             }
           },
           {
@@ -1386,7 +1603,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suzhou",
             "localizedNames": {
               "zh-HK": "宿州",
-              "zh-TW": "宿州"
+              "zh-TW": "宿州",
+              "en": "Suzhou Shi",
+              "ja": "Suzhou Shi",
+              "ko": "Suzhou Shi"
             }
           },
           {
@@ -1404,7 +1624,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bozhou",
             "localizedNames": {
               "zh-HK": "亳州",
-              "zh-TW": "亳州"
+              "zh-TW": "亳州",
+              "en": "Bozhou",
+              "ja": "亳州市",
+              "ko": "보저우 시"
             }
           },
           {
@@ -1413,7 +1636,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chizhou",
             "localizedNames": {
               "zh-HK": "池州",
-              "zh-TW": "池州"
+              "zh-TW": "池州",
+              "en": "Chizhou",
+              "ja": "Chizhou",
+              "ko": "Chizhou"
             }
           },
           {
@@ -1422,13 +1648,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xuancheng",
             "localizedNames": {
               "zh-HK": "宣城",
-              "zh-TW": "宣城"
+              "zh-TW": "宣城",
+              "en": "Xuancheng",
+              "ja": "Xuancheng",
+              "ko": "Xuancheng"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "安徽",
-          "zh-TW": "安徽"
+          "zh-TW": "安徽",
+          "en": "Anhui",
+          "ja": "安徽省",
+          "ko": "안후이성"
         }
       },
       {
@@ -1460,7 +1692,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Putian",
             "localizedNames": {
               "zh-HK": "莆田",
-              "zh-TW": "莆田"
+              "zh-TW": "莆田",
+              "en": "Putian",
+              "ja": "ホ田",
+              "ko": "푸톈 시"
             }
           },
           {
@@ -1469,7 +1704,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sanming",
             "localizedNames": {
               "zh-HK": "三明",
-              "zh-TW": "三明"
+              "zh-TW": "三明",
+              "en": "Sanming",
+              "ja": "三明市",
+              "ko": "싼밍 시"
             }
           },
           {
@@ -1478,7 +1716,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Quanzhou",
             "localizedNames": {
               "zh-HK": "泉州",
-              "zh-TW": "泉州"
+              "zh-TW": "泉州",
+              "en": "Quanzhou",
+              "ja": "泉州市",
+              "ko": "취안저우 시"
             }
           },
           {
@@ -1487,7 +1728,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhangzhou",
             "localizedNames": {
               "zh-HK": "漳州",
-              "zh-TW": "漳州"
+              "zh-TW": "漳州",
+              "en": "Zhangzhou",
+              "ja": "ショウ州市",
+              "ko": "장저우 시"
             }
           },
           {
@@ -1496,7 +1740,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanping",
             "localizedNames": {
               "zh-HK": "南平",
-              "zh-TW": "南平"
+              "zh-TW": "南平",
+              "en": "Nanping",
+              "ja": "南平市",
+              "ko": "난핑 시"
             }
           },
           {
@@ -1514,13 +1761,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ningde",
             "localizedNames": {
               "zh-HK": "寧德",
-              "zh-TW": "寧德"
+              "zh-TW": "寧德",
+              "en": "Ningde",
+              "ja": "Ningde",
+              "ko": "Ningde"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "福建",
-          "zh-TW": "福建"
+          "zh-TW": "福建",
+          "en": "Fujian",
+          "ja": "福建",
+          "ko": "푸젠 성"
         }
       },
       {
@@ -1543,7 +1796,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jingdezhen",
             "localizedNames": {
               "zh-HK": "景德鎮",
-              "zh-TW": "景德鎮"
+              "zh-TW": "景德鎮",
+              "en": "Jingdezhen",
+              "ja": "景徳鎮",
+              "ko": "Jingdezhen"
             }
           },
           {
@@ -1552,7 +1808,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pingxiang",
             "localizedNames": {
               "zh-HK": "萍鄉",
-              "zh-TW": "萍鄉"
+              "zh-TW": "萍鄉",
+              "en": "Pingxiang",
+              "ja": "萍郷",
+              "ko": "핑샹 시"
             }
           },
           {
@@ -1579,7 +1838,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yingtan",
             "localizedNames": {
               "zh-HK": "鷹潭",
-              "zh-TW": "鷹潭"
+              "zh-TW": "鷹潭",
+              "en": "Yingtan",
+              "ja": "鷹潭市",
+              "ko": "잉탄 시"
             }
           },
           {
@@ -1615,7 +1877,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fuzhou",
             "localizedNames": {
               "zh-HK": "撫州",
-              "zh-TW": "撫州"
+              "zh-TW": "撫州",
+              "en": "Fuzhou",
+              "ja": "撫州市",
+              "ko": "푸저우 시"
             }
           },
           {
@@ -1630,7 +1895,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "江西",
-          "zh-TW": "江西"
+          "zh-TW": "江西",
+          "en": "Jiangxi",
+          "ja": "江西",
+          "ko": "장시성"
         }
       },
       {
@@ -1644,7 +1912,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinan",
             "localizedNames": {
               "zh-HK": "濟南",
-              "zh-TW": "濟南"
+              "zh-TW": "濟南",
+              "en": "Jinan",
+              "ja": "済南",
+              "ko": "지난 시"
             }
           },
           {
@@ -1653,7 +1924,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qingdao",
             "localizedNames": {
               "zh-HK": "青島",
-              "zh-TW": "青島"
+              "zh-TW": "青島",
+              "en": "Qingdao",
+              "ja": "青島市",
+              "ko": "칭다오 시"
             }
           },
           {
@@ -1716,7 +1990,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taian",
             "localizedNames": {
               "zh-HK": "泰安",
-              "zh-TW": "泰安"
+              "zh-TW": "泰安",
+              "en": "Tai’an",
+              "ja": "Tai’an",
+              "ko": "Tai’an"
             }
           },
           {
@@ -1725,7 +2002,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weihai",
             "localizedNames": {
               "zh-HK": "威海",
-              "zh-TW": "威海"
+              "zh-TW": "威海",
+              "en": "Weihai",
+              "ja": "威海市",
+              "ko": "웨이하이 시"
             }
           },
           {
@@ -1734,7 +2014,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Rizhao",
             "localizedNames": {
               "zh-HK": "日照",
-              "zh-TW": "日照"
+              "zh-TW": "日照",
+              "en": "Rizhao",
+              "ja": "日照市",
+              "ko": "르자오 시"
             }
           },
           {
@@ -1752,7 +2035,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Linyi",
             "localizedNames": {
               "zh-HK": "臨沂",
-              "zh-TW": "臨沂"
+              "zh-TW": "臨沂",
+              "en": "Linyi",
+              "ja": "臨沂市",
+              "ko": "린이 시"
             }
           },
           {
@@ -1761,7 +2047,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dezhou",
             "localizedNames": {
               "zh-HK": "德州",
-              "zh-TW": "德州"
+              "zh-TW": "德州",
+              "en": "Dezhou",
+              "ja": "徳州市",
+              "ko": "더저우 시"
             }
           },
           {
@@ -1770,7 +2059,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liaocheng",
             "localizedNames": {
               "zh-HK": "聊城",
-              "zh-TW": "聊城"
+              "zh-TW": "聊城",
+              "en": "Liaocheng",
+              "ja": "聊城市",
+              "ko": "랴오청 시"
             }
           },
           {
@@ -1779,7 +2071,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Binzhou",
             "localizedNames": {
               "zh-HK": "濱州",
-              "zh-TW": "濱州"
+              "zh-TW": "濱州",
+              "en": "Binzhou",
+              "ja": "浜州市",
+              "ko": "빈저우 시"
             }
           },
           {
@@ -1788,13 +2083,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Heze",
             "localizedNames": {
               "zh-HK": "菏澤",
-              "zh-TW": "菏澤"
+              "zh-TW": "菏澤",
+              "en": "Heze",
+              "ja": "カ沢市",
+              "ko": "허쩌 시"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "山東",
-          "zh-TW": "山東"
+          "zh-TW": "山東",
+          "en": "Shandong",
+          "ja": "山東",
+          "ko": "Shandong"
         }
       },
       {
@@ -1808,7 +2109,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhengzhou",
             "localizedNames": {
               "zh-HK": "鄭州",
-              "zh-TW": "鄭州"
+              "zh-TW": "鄭州",
+              "en": "Zhengzhou",
+              "ja": "鄭州市",
+              "ko": "정저우 시"
             }
           },
           {
@@ -1826,7 +2130,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luoyang",
             "localizedNames": {
               "zh-HK": "洛陽",
-              "zh-TW": "洛陽"
+              "zh-TW": "洛陽",
+              "en": "Luoyang",
+              "ja": "洛陽市",
+              "ko": "뤄양 시"
             }
           },
           {
@@ -1853,7 +2160,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hebi",
             "localizedNames": {
               "zh-HK": "鶴壁",
-              "zh-TW": "鶴壁"
+              "zh-TW": "鶴壁",
+              "en": "Hebi",
+              "ja": "鶴壁市",
+              "ko": "허비 시"
             }
           },
           {
@@ -1862,7 +2172,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinxiang",
             "localizedNames": {
               "zh-HK": "新鄉",
-              "zh-TW": "新鄉"
+              "zh-TW": "新鄉",
+              "en": "Xinxiang",
+              "ja": "Xinxiang",
+              "ko": "Xinxiang"
             }
           },
           {
@@ -1871,7 +2184,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiaozuo",
             "localizedNames": {
               "zh-HK": "焦作",
-              "zh-TW": "焦作"
+              "zh-TW": "焦作",
+              "en": "Jiaozuo",
+              "ja": "焦作市",
+              "ko": "자오쭤 시"
             }
           },
           {
@@ -1889,7 +2205,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xuchang",
             "localizedNames": {
               "zh-HK": "許昌",
-              "zh-TW": "許昌"
+              "zh-TW": "許昌",
+              "en": "Xuchang",
+              "ja": "Xuchang",
+              "ko": "Xuchang"
             }
           },
           {
@@ -1898,7 +2217,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luohe",
             "localizedNames": {
               "zh-HK": "漯河",
-              "zh-TW": "漯河"
+              "zh-TW": "漯河",
+              "en": "Luohe",
+              "ja": "ラク河市",
+              "ko": "뤄허 시"
             }
           },
           {
@@ -1925,7 +2247,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangqiu",
             "localizedNames": {
               "zh-HK": "商丘",
-              "zh-TW": "商丘"
+              "zh-TW": "商丘",
+              "en": "Shangqiu",
+              "ja": "Shangqiu",
+              "ko": "Shangqiu"
             }
           },
           {
@@ -1952,7 +2277,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhumadian",
             "localizedNames": {
               "zh-HK": "駐馬店",
-              "zh-TW": "駐馬店"
+              "zh-TW": "駐馬店",
+              "en": "Zhumadian",
+              "ja": "Zhumadian",
+              "ko": "Zhumadian"
             }
           },
           {
@@ -1967,7 +2295,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "河南",
-          "zh-TW": "河南"
+          "zh-TW": "河南",
+          "en": "Henan",
+          "ja": "河南",
+          "ko": "Henan"
         }
       },
       {
@@ -1990,7 +2321,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huangshi",
             "localizedNames": {
               "zh-HK": "黃石",
-              "zh-TW": "黃石"
+              "zh-TW": "黃石",
+              "en": "Huangshi",
+              "ja": "黄石市",
+              "ko": "황스 시"
             }
           },
           {
@@ -1999,7 +2333,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shiyan",
             "localizedNames": {
               "zh-HK": "十堰",
-              "zh-TW": "十堰"
+              "zh-TW": "十堰",
+              "en": "Shiyan",
+              "ja": "Shiyan",
+              "ko": "스옌 시"
             }
           },
           {
@@ -2035,7 +2372,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jingmen",
             "localizedNames": {
               "zh-HK": "荊門",
-              "zh-TW": "荊門"
+              "zh-TW": "荊門",
+              "en": "Jingmen",
+              "ja": "荊門市",
+              "ko": "징먼 시"
             }
           },
           {
@@ -2044,7 +2384,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiaogan",
             "localizedNames": {
               "zh-HK": "孝感",
-              "zh-TW": "孝感"
+              "zh-TW": "孝感",
+              "en": "Xiaogan",
+              "ja": "孝感市",
+              "ko": "샤오간 시"
             }
           },
           {
@@ -2053,7 +2396,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jingzhou",
             "localizedNames": {
               "zh-HK": "荊州",
-              "zh-TW": "荊州"
+              "zh-TW": "荊州",
+              "en": "Jingzhou",
+              "ja": "荊州市",
+              "ko": "징저우 시"
             }
           },
           {
@@ -2062,7 +2408,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huanggang",
             "localizedNames": {
               "zh-HK": "黃岡",
-              "zh-TW": "黃岡"
+              "zh-TW": "黃岡",
+              "en": "Huanggang",
+              "ja": "黄岡",
+              "ko": "황강 시"
             }
           },
           {
@@ -2071,7 +2420,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xianning",
             "localizedNames": {
               "zh-HK": "咸寧",
-              "zh-TW": "咸寧"
+              "zh-TW": "咸寧",
+              "en": "Xianning",
+              "ja": "Xianning",
+              "ko": "Xianning"
             }
           },
           {
@@ -2080,7 +2432,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suizhou",
             "localizedNames": {
               "zh-HK": "隨州",
-              "zh-TW": "隨州"
+              "zh-TW": "隨州",
+              "en": "Suizhou",
+              "ja": "随州市",
+              "ko": "쑤이저우 시"
             }
           },
           {
@@ -2089,7 +2444,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Enshi",
             "localizedNames": {
               "zh-HK": "恩施",
-              "zh-TW": "恩施"
+              "zh-TW": "恩施",
+              "en": "Enshi",
+              "ja": "Enshi",
+              "ko": "Enshi"
             }
           },
           {
@@ -2125,13 +2483,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shennongjia",
             "localizedNames": {
               "zh-HK": "神農架",
-              "zh-TW": "神農架"
+              "zh-TW": "神農架",
+              "en": "Shennongjia",
+              "ja": "Shennongjia",
+              "ko": "Shennongjia"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "湖北",
-          "zh-TW": "湖北"
+          "zh-TW": "湖北",
+          "en": "Hubei",
+          "ja": "湖北省",
+          "ko": "후베이 성"
         }
       },
       {
@@ -2154,7 +2518,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhuzhou",
             "localizedNames": {
               "zh-HK": "株洲",
-              "zh-TW": "株洲"
+              "zh-TW": "株洲",
+              "en": "Zhuzhou",
+              "ja": "株洲市",
+              "ko": "주저우 시"
             }
           },
           {
@@ -2163,7 +2530,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiangtan",
             "localizedNames": {
               "zh-HK": "湘潭",
-              "zh-TW": "湘潭"
+              "zh-TW": "湘潭",
+              "en": "Xiangtan",
+              "ja": "湘潭市",
+              "ko": "샹탄 시"
             }
           },
           {
@@ -2226,7 +2596,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chenzhou",
             "localizedNames": {
               "zh-HK": "郴州",
-              "zh-TW": "郴州"
+              "zh-TW": "郴州",
+              "en": "Chenzhou",
+              "ja": "Chenzhou",
+              "ko": "Chenzhou"
             }
           },
           {
@@ -2235,7 +2608,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yongzhou",
             "localizedNames": {
               "zh-HK": "永州",
-              "zh-TW": "永州"
+              "zh-TW": "永州",
+              "en": "Yongzhou",
+              "ja": "Yongzhou",
+              "ko": "융저우 시"
             }
           },
           {
@@ -2244,7 +2620,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huaihua",
             "localizedNames": {
               "zh-HK": "懷化",
-              "zh-TW": "懷化"
+              "zh-TW": "懷化",
+              "en": "Huaihua",
+              "ja": "懐化市",
+              "ko": "화이화 시"
             }
           },
           {
@@ -2253,7 +2632,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Loudi",
             "localizedNames": {
               "zh-HK": "婁底",
-              "zh-TW": "婁底"
+              "zh-TW": "婁底",
+              "en": "Loudi",
+              "ja": "婁底市",
+              "ko": "뤄디 시"
             }
           },
           {
@@ -2262,13 +2644,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiangxi",
             "localizedNames": {
               "zh-HK": "湘西",
-              "zh-TW": "湘西"
+              "zh-TW": "湘西",
+              "en": "Xiangxi Tujia and Miao Autonomous Prefecture",
+              "ja": "Xiangxi Tujia and Miao Autonomous Prefecture",
+              "ko": "Xiangxi Tujia and Miao Autonomous Prefecture"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "湖南",
-          "zh-TW": "湖南"
+          "zh-TW": "湖南",
+          "en": "Hunan",
+          "ja": "湖南",
+          "ko": "후난성"
         }
       },
       {
@@ -2284,7 +2672,8 @@ export const LOCATION_CATALOG_DATA = [
               "zh-HK": "廣州",
               "zh-TW": "廣州",
               "ja": "広州",
-              "ko": "광저우"
+              "ko": "광저우",
+              "en": "Guangzhou"
             }
           },
           {
@@ -2293,7 +2682,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shaoguan",
             "localizedNames": {
               "zh-HK": "韶關",
-              "zh-TW": "韶關"
+              "zh-TW": "韶關",
+              "en": "Shaoguan",
+              "ja": "韶関市",
+              "ko": "사오관 시"
             }
           },
           {
@@ -2302,7 +2694,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenzhen",
             "localizedNames": {
               "zh-HK": "深圳",
-              "zh-TW": "深圳"
+              "zh-TW": "深圳",
+              "en": "Shenzhen",
+              "ja": "深セン市",
+              "ko": "선전 시"
             }
           },
           {
@@ -2311,7 +2706,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhuhai",
             "localizedNames": {
               "zh-HK": "珠海",
-              "zh-TW": "珠海"
+              "zh-TW": "珠海",
+              "en": "Zhuhai",
+              "ja": "珠海",
+              "ko": "주하이 시"
             }
           },
           {
@@ -2322,7 +2720,8 @@ export const LOCATION_CATALOG_DATA = [
               "zh-HK": "汕頭",
               "zh-TW": "汕頭",
               "ja": "汕頭",
-              "ko": "산터우"
+              "ko": "산터우",
+              "en": "Shantou"
             }
           },
           {
@@ -2333,7 +2732,8 @@ export const LOCATION_CATALOG_DATA = [
               "zh-HK": "佛山",
               "zh-TW": "佛山",
               "ja": "仏山",
-              "ko": "포산"
+              "ko": "포산",
+              "en": "Foshan"
             }
           },
           {
@@ -2342,7 +2742,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiangmen",
             "localizedNames": {
               "zh-HK": "江門",
-              "zh-TW": "江門"
+              "zh-TW": "江門",
+              "en": "Jiangmen",
+              "ja": "江門市",
+              "ko": "장먼 시"
             }
           },
           {
@@ -2351,7 +2754,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhanjiang",
             "localizedNames": {
               "zh-HK": "湛江",
-              "zh-TW": "湛江"
+              "zh-TW": "湛江",
+              "en": "Zhanjiang",
+              "ja": "湛江",
+              "ko": "Zhanjiang"
             }
           },
           {
@@ -2360,7 +2766,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maoming",
             "localizedNames": {
               "zh-HK": "茂名",
-              "zh-TW": "茂名"
+              "zh-TW": "茂名",
+              "en": "Maoming",
+              "ja": "茂名市",
+              "ko": "마오밍 시"
             }
           },
           {
@@ -2369,7 +2778,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhaoqing",
             "localizedNames": {
               "zh-HK": "肇慶",
-              "zh-TW": "肇慶"
+              "zh-TW": "肇慶",
+              "en": "Zhaoqing",
+              "ja": "肇慶市",
+              "ko": "자오칭 시"
             }
           },
           {
@@ -2378,7 +2790,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huizhou",
             "localizedNames": {
               "zh-HK": "惠州",
-              "zh-TW": "惠州"
+              "zh-TW": "惠州",
+              "en": "Huizhou",
+              "ja": "恵州",
+              "ko": "후이저우 시"
             }
           },
           {
@@ -2396,7 +2811,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shanwei",
             "localizedNames": {
               "zh-HK": "汕尾",
-              "zh-TW": "汕尾"
+              "zh-TW": "汕尾",
+              "en": "Shanwei",
+              "ja": "汕尾市",
+              "ko": "산웨이 시"
             }
           },
           {
@@ -2405,7 +2823,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Heyuan",
             "localizedNames": {
               "zh-HK": "河源",
-              "zh-TW": "河源"
+              "zh-TW": "河源",
+              "en": "Heyuan",
+              "ja": "河源市",
+              "ko": "허위안 시"
             }
           },
           {
@@ -2423,7 +2844,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qingyuan",
             "localizedNames": {
               "zh-HK": "清遠",
-              "zh-TW": "清遠"
+              "zh-TW": "清遠",
+              "en": "Qingyuan",
+              "ja": "清遠市",
+              "ko": "칭위안 시"
             }
           },
           {
@@ -2450,7 +2874,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chaozhou",
             "localizedNames": {
               "zh-HK": "潮州",
-              "zh-TW": "潮州"
+              "zh-TW": "潮州",
+              "en": "Chaozhou",
+              "ja": "潮州",
+              "ko": "차오저우 시"
             }
           },
           {
@@ -2459,7 +2886,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jieyang",
             "localizedNames": {
               "zh-HK": "揭陽",
-              "zh-TW": "揭陽"
+              "zh-TW": "揭陽",
+              "en": "Jieyang",
+              "ja": "掲陽市",
+              "ko": "지에양 시"
             }
           },
           {
@@ -2468,7 +2898,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yunfu",
             "localizedNames": {
               "zh-HK": "雲浮",
-              "zh-TW": "雲浮"
+              "zh-TW": "雲浮",
+              "en": "Yunfu",
+              "ja": "雲浮市",
+              "ko": "윈푸 시"
             }
           }
         ],
@@ -2476,7 +2909,8 @@ export const LOCATION_CATALOG_DATA = [
           "zh-HK": "廣東",
           "zh-TW": "廣東",
           "ja": "広東",
-          "ko": "광둥"
+          "ko": "광둥",
+          "en": "Guangdong"
         }
       },
       {
@@ -2490,7 +2924,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanning",
             "localizedNames": {
               "zh-HK": "南寧",
-              "zh-TW": "南寧"
+              "zh-TW": "南寧",
+              "en": "Nanning",
+              "ja": "南寧市",
+              "ko": "난닝 시"
             }
           },
           {
@@ -2499,7 +2936,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liuzhou",
             "localizedNames": {
               "zh-HK": "柳州",
-              "zh-TW": "柳州"
+              "zh-TW": "柳州",
+              "en": "Liuzhou",
+              "ja": "柳州市",
+              "ko": "류저우시"
             }
           },
           {
@@ -2508,7 +2948,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guilin",
             "localizedNames": {
               "zh-HK": "桂林",
-              "zh-TW": "桂林"
+              "zh-TW": "桂林",
+              "en": "Guilin",
+              "ja": "桂林市",
+              "ko": "구이린 시"
             }
           },
           {
@@ -2517,7 +2960,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuzhou",
             "localizedNames": {
               "zh-HK": "梧州",
-              "zh-TW": "梧州"
+              "zh-TW": "梧州",
+              "en": "Wuzhou",
+              "ja": "梧州市",
+              "ko": "우저우 시"
             }
           },
           {
@@ -2526,7 +2972,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beihai",
             "localizedNames": {
               "zh-HK": "北海",
-              "zh-TW": "北海"
+              "zh-TW": "北海",
+              "en": "Beihai",
+              "ja": "北海市",
+              "ko": "베이하이 시"
             }
           },
           {
@@ -2535,7 +2984,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fangchenggang",
             "localizedNames": {
               "zh-HK": "防城港",
-              "zh-TW": "防城港"
+              "zh-TW": "防城港",
+              "en": "Fangchenggang",
+              "ja": "Fangchenggang",
+              "ko": "Fangchenggang"
             }
           },
           {
@@ -2544,7 +2996,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qinzhou",
             "localizedNames": {
               "zh-HK": "欽州",
-              "zh-TW": "欽州"
+              "zh-TW": "欽州",
+              "en": "Qinzhou",
+              "ja": "欽州市",
+              "ko": "친저우 시"
             }
           },
           {
@@ -2553,7 +3008,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guigang",
             "localizedNames": {
               "zh-HK": "貴港",
-              "zh-TW": "貴港"
+              "zh-TW": "貴港",
+              "en": "Guigang",
+              "ja": "貴港市",
+              "ko": "구이강 시"
             }
           },
           {
@@ -2571,7 +3029,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baise",
             "localizedNames": {
               "zh-HK": "百色",
-              "zh-TW": "百色"
+              "zh-TW": "百色",
+              "en": "Baise City",
+              "ja": "Baise City",
+              "ko": "Baise City"
             }
           },
           {
@@ -2580,7 +3041,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hezhou",
             "localizedNames": {
               "zh-HK": "賀州",
-              "zh-TW": "賀州"
+              "zh-TW": "賀州",
+              "en": "Hezhou",
+              "ja": "賀州市",
+              "ko": "허저우 시"
             }
           },
           {
@@ -2589,7 +3053,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hechi",
             "localizedNames": {
               "zh-HK": "河池",
-              "zh-TW": "河池"
+              "zh-TW": "河池",
+              "en": "Hechi",
+              "ja": "Hechi",
+              "ko": "Hechi"
             }
           },
           {
@@ -2598,7 +3065,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laibin",
             "localizedNames": {
               "zh-HK": "來賓",
-              "zh-TW": "來賓"
+              "zh-TW": "來賓",
+              "en": "Laibin",
+              "ja": "来賓市",
+              "ko": "라이빈 시"
             }
           },
           {
@@ -2607,13 +3077,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chongzuo",
             "localizedNames": {
               "zh-HK": "崇左",
-              "zh-TW": "崇左"
+              "zh-TW": "崇左",
+              "en": "Chongzuo",
+              "ja": "Chongzuo",
+              "ko": "Chongzuo"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "廣西",
-          "zh-TW": "廣西"
+          "zh-TW": "廣西",
+          "en": "Guangxi",
+          "ja": "広西",
+          "ko": "Guangxi"
         }
       },
       {
@@ -2627,7 +3103,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haikou",
             "localizedNames": {
               "zh-HK": "海口",
-              "zh-TW": "海口"
+              "zh-TW": "海口",
+              "en": "Haikou",
+              "ja": "海口市",
+              "ko": "하이커우 시"
             }
           },
           {
@@ -2636,7 +3115,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sanya",
             "localizedNames": {
               "zh-HK": "三亞",
-              "zh-TW": "三亞"
+              "zh-TW": "三亞",
+              "en": "Sanya",
+              "ja": "三亜市",
+              "ko": "싼야 시"
             }
           },
           {
@@ -2645,7 +3127,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sansha",
             "localizedNames": {
               "zh-HK": "三沙",
-              "zh-TW": "三沙"
+              "zh-TW": "三沙",
+              "en": "Sansha",
+              "ja": "Sansha",
+              "ko": "Sansha"
             }
           },
           {
@@ -2663,7 +3148,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qionghai",
             "localizedNames": {
               "zh-HK": "瓊海",
-              "zh-TW": "瓊海"
+              "zh-TW": "瓊海",
+              "en": "Qionghai",
+              "ja": "瓊海",
+              "ko": "충하이 시"
             }
           },
           {
@@ -2690,7 +3178,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wanning",
             "localizedNames": {
               "zh-HK": "萬寧",
-              "zh-TW": "萬寧"
+              "zh-TW": "萬寧",
+              "en": "Wanning",
+              "ja": "万寧",
+              "ko": "완닝 시"
             }
           },
           {
@@ -2762,7 +3253,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ledong",
             "localizedNames": {
               "zh-HK": "樂東",
-              "zh-TW": "樂東"
+              "zh-TW": "樂東",
+              "en": "Ledong Lizu Zizhixian",
+              "ja": "Ledong Lizu Zizhixian",
+              "ko": "Ledong Lizu Zizhixian"
             }
           },
           {
@@ -2780,7 +3274,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baoting",
             "localizedNames": {
               "zh-HK": "保亭",
-              "zh-TW": "保亭"
+              "zh-TW": "保亭",
+              "en": "Baoting Lizu Miaozu Zizhixian",
+              "ja": "Baoting Lizu Miaozu Zizhixian",
+              "ko": "Baoting Lizu Miaozu Zizhixian"
             }
           },
           {
@@ -2789,13 +3286,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiongzhong",
             "localizedNames": {
               "zh-HK": "瓊中",
-              "zh-TW": "瓊中"
+              "zh-TW": "瓊中",
+              "en": "Qiongzhong Lizu Miaozu Zizhixian",
+              "ja": "Qiongzhong Lizu Miaozu Zizhixian",
+              "ko": "Qiongzhong Lizu Miaozu Zizhixian"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "海南",
-          "zh-TW": "海南"
+          "zh-TW": "海南",
+          "en": "Hainan",
+          "ja": "海南",
+          "ko": "Hainan"
         }
       },
       {
@@ -2827,7 +3330,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yuzhong",
             "localizedNames": {
               "zh-HK": "渝中",
-              "zh-TW": "渝中"
+              "zh-TW": "渝中",
+              "en": "Yuzhong District",
+              "ja": "Yuzhong District",
+              "ko": "Yuzhong District"
             }
           },
           {
@@ -2989,7 +3495,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bishan",
             "localizedNames": {
               "zh-HK": "璧山",
-              "zh-TW": "璧山"
+              "zh-TW": "璧山",
+              "en": "Bishan",
+              "ja": "Bishan",
+              "ko": "Bishan"
             }
           },
           {
@@ -3115,7 +3624,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiushan",
             "localizedNames": {
               "zh-HK": "秀山",
-              "zh-TW": "秀山"
+              "zh-TW": "秀山",
+              "en": "Xiushan Tujiazu Miaozu Zizhixian",
+              "ja": "Xiushan Tujiazu Miaozu Zizhixian",
+              "ko": "Xiushan Tujiazu Miaozu Zizhixian"
             }
           },
           {
@@ -3124,7 +3636,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Youyang",
             "localizedNames": {
               "zh-HK": "酉陽",
-              "zh-TW": "酉陽"
+              "zh-TW": "酉陽",
+              "en": "Youyang Tujiazu Miaozu Zizhixian",
+              "ja": "Youyang Tujiazu Miaozu Zizhixian",
+              "ko": "Youyang Tujiazu Miaozu Zizhixian"
             }
           },
           {
@@ -3175,7 +3690,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "重慶",
-          "zh-TW": "重慶"
+          "zh-TW": "重慶",
+          "en": "Chongqing Municipality",
+          "ja": "重慶",
+          "ko": "Chongqing Municipality"
         }
       },
       {
@@ -3207,7 +3725,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Panzhihua",
             "localizedNames": {
               "zh-HK": "攀枝花",
-              "zh-TW": "攀枝花"
+              "zh-TW": "攀枝花",
+              "en": "Panzhihua",
+              "ja": "Panzhihua",
+              "ko": "Panzhihua"
             }
           },
           {
@@ -3216,7 +3737,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luzhou",
             "localizedNames": {
               "zh-HK": "瀘州",
-              "zh-TW": "瀘州"
+              "zh-TW": "瀘州",
+              "en": "Luzhou",
+              "ja": "瀘州市",
+              "ko": "루저우 시"
             }
           },
           {
@@ -3243,7 +3767,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guangyuan",
             "localizedNames": {
               "zh-HK": "廣元",
-              "zh-TW": "廣元"
+              "zh-TW": "廣元",
+              "en": "Guangyuan",
+              "ja": "広元市",
+              "ko": "광위안 시"
             }
           },
           {
@@ -3279,7 +3806,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanchong",
             "localizedNames": {
               "zh-HK": "南充",
-              "zh-TW": "南充"
+              "zh-TW": "南充",
+              "en": "Nanchong",
+              "ja": "南充市",
+              "ko": "난충 시"
             }
           },
           {
@@ -3306,7 +3836,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guangan",
             "localizedNames": {
               "zh-HK": "廣安",
-              "zh-TW": "廣安"
+              "zh-TW": "廣安",
+              "en": "Guang’an",
+              "ja": "Guang’an",
+              "ko": "Guang’an"
             }
           },
           {
@@ -3324,7 +3857,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yaan",
             "localizedNames": {
               "zh-HK": "雅安",
-              "zh-TW": "雅安"
+              "zh-TW": "雅安",
+              "en": "Ya'an",
+              "ja": "Ya'an",
+              "ko": "Ya'an"
             }
           },
           {
@@ -3333,7 +3869,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bazhong",
             "localizedNames": {
               "zh-HK": "巴中",
-              "zh-TW": "巴中"
+              "zh-TW": "巴中",
+              "en": "Bazhong",
+              "ja": "巴中",
+              "ko": "바중시"
             }
           },
           {
@@ -3375,7 +3914,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "四川",
-          "zh-TW": "四川"
+          "zh-TW": "四川",
+          "en": "Sichuan",
+          "ja": "四川",
+          "ko": "쓰촨 성"
         }
       },
       {
@@ -3389,7 +3931,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guiyang",
             "localizedNames": {
               "zh-HK": "貴陽",
-              "zh-TW": "貴陽"
+              "zh-TW": "貴陽",
+              "en": "Guiyang",
+              "ja": "貴陽市",
+              "ko": "구이양 시"
             }
           },
           {
@@ -3407,7 +3952,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zunyi",
             "localizedNames": {
               "zh-HK": "遵義",
-              "zh-TW": "遵義"
+              "zh-TW": "遵義",
+              "en": "Zunyi",
+              "ja": "遵義市",
+              "ko": "쭌이 시"
             }
           },
           {
@@ -3416,7 +3964,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Anshun",
             "localizedNames": {
               "zh-HK": "安順",
-              "zh-TW": "安順"
+              "zh-TW": "安順",
+              "en": "Anshun",
+              "ja": "安順市",
+              "ko": "안순 시"
             }
           },
           {
@@ -3425,7 +3976,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tongren",
             "localizedNames": {
               "zh-HK": "銅仁",
-              "zh-TW": "銅仁"
+              "zh-TW": "銅仁",
+              "en": "Tongren",
+              "ja": "Tongren",
+              "ko": "Tongren"
             }
           },
           {
@@ -3434,7 +3988,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qianxinan",
             "localizedNames": {
               "zh-HK": "黔西南",
-              "zh-TW": "黔西南"
+              "zh-TW": "黔西南",
+              "en": "Qianxinan Buyei and Miao Autonomous Prefecture",
+              "ja": "Qianxinan Buyei and Miao Autonomous Prefecture",
+              "ko": "Qianxinan Buyei and Miao Autonomous Prefecture"
             }
           },
           {
@@ -3443,7 +4000,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bijie",
             "localizedNames": {
               "zh-HK": "畢節",
-              "zh-TW": "畢節"
+              "zh-TW": "畢節",
+              "en": "Bijie",
+              "ja": "畢節市",
+              "ko": "비제 시"
             }
           },
           {
@@ -3452,7 +4012,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiandongnan",
             "localizedNames": {
               "zh-HK": "黔東南",
-              "zh-TW": "黔東南"
+              "zh-TW": "黔東南",
+              "en": "Qiandongnan Miao and Dong Autonomous Prefecture",
+              "ja": "Qiandongnan Miao and Dong Autonomous Prefecture",
+              "ko": "Qiandongnan Miao and Dong Autonomous Prefecture"
             }
           },
           {
@@ -3461,13 +4024,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiannan",
             "localizedNames": {
               "zh-HK": "黔南",
-              "zh-TW": "黔南"
+              "zh-TW": "黔南",
+              "en": "Qiannan Buyei and Miao Autonomous Prefecture",
+              "ja": "Qiannan Buyei and Miao Autonomous Prefecture",
+              "ko": "Qiannan Buyei and Miao Autonomous Prefecture"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "貴州",
-          "zh-TW": "貴州"
+          "zh-TW": "貴州",
+          "en": "Guizhou",
+          "ja": "貴州",
+          "ko": "구이저우성"
         }
       },
       {
@@ -3481,7 +4050,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kunming",
             "localizedNames": {
               "zh-HK": "昆明",
-              "zh-TW": "昆明"
+              "zh-TW": "昆明",
+              "en": "Kunming",
+              "ja": "昆明市",
+              "ko": "쿤밍 시"
             }
           },
           {
@@ -3508,7 +4080,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baoshan",
             "localizedNames": {
               "zh-HK": "保山",
-              "zh-TW": "保山"
+              "zh-TW": "保山",
+              "en": "Baoshan",
+              "ja": "保山市",
+              "ko": "바오산 시"
             }
           },
           {
@@ -3526,7 +4101,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lijiang",
             "localizedNames": {
               "zh-HK": "麗江",
-              "zh-TW": "麗江"
+              "zh-TW": "麗江",
+              "en": "Lijiang",
+              "ja": "麗江市",
+              "ko": "리장 시"
             }
           },
           {
@@ -3544,7 +4122,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lincang",
             "localizedNames": {
               "zh-HK": "臨滄",
-              "zh-TW": "臨滄"
+              "zh-TW": "臨滄",
+              "en": "Lincang",
+              "ja": "Lincang",
+              "ko": "Lincang"
             }
           },
           {
@@ -3553,7 +4134,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chuxiong",
             "localizedNames": {
               "zh-HK": "楚雄",
-              "zh-TW": "楚雄"
+              "zh-TW": "楚雄",
+              "en": "Chuxiong",
+              "ja": "Chuxiong",
+              "ko": "Chuxiong"
             }
           },
           {
@@ -3580,7 +4164,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xishuangbanna",
             "localizedNames": {
               "zh-HK": "西雙版納",
-              "zh-TW": "西雙版納"
+              "zh-TW": "西雙版納",
+              "en": "Xishuangbanna Daizu Zizhizhou",
+              "ja": "Xishuangbanna Daizu Zizhizhou",
+              "ko": "Xishuangbanna Daizu Zizhizhou"
             }
           },
           {
@@ -3589,7 +4176,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dali",
             "localizedNames": {
               "zh-HK": "大理",
-              "zh-TW": "大理"
+              "zh-TW": "大理",
+              "en": "Dali",
+              "ja": "大理",
+              "ko": "Dali"
             }
           },
           {
@@ -3598,7 +4188,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dehong",
             "localizedNames": {
               "zh-HK": "德宏",
-              "zh-TW": "德宏"
+              "zh-TW": "德宏",
+              "en": "Dehong Daizu Jingpozu Zizhizhou",
+              "ja": "Dehong Daizu Jingpozu Zizhizhou",
+              "ko": "Dehong Daizu Jingpozu Zizhizhou"
             }
           },
           {
@@ -3607,7 +4200,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nujiang",
             "localizedNames": {
               "zh-HK": "怒江",
-              "zh-TW": "怒江"
+              "zh-TW": "怒江",
+              "en": "Nujiang Lisuzu Zizhizhou",
+              "ja": "Nujiang Lisuzu Zizhizhou",
+              "ko": "Nujiang Lisuzu Zizhizhou"
             }
           },
           {
@@ -3622,7 +4218,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "雲南",
-          "zh-TW": "雲南"
+          "zh-TW": "雲南",
+          "en": "Yunnan",
+          "ja": "雲南",
+          "ko": "윈난성"
         }
       },
       {
@@ -3636,7 +4235,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lasa",
             "localizedNames": {
               "zh-HK": "拉薩",
-              "zh-TW": "拉薩"
+              "zh-TW": "拉薩",
+              "en": "Lhasa",
+              "ja": "ラサ",
+              "ko": "라사"
             }
           },
           {
@@ -3645,7 +4247,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Changdou",
             "localizedNames": {
               "zh-HK": "昌都",
-              "zh-TW": "昌都"
+              "zh-TW": "昌都",
+              "en": "Chamdo",
+              "ja": "Chamdo",
+              "ko": "Chamdo"
             }
           },
           {
@@ -3663,7 +4268,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Rikaze",
             "localizedNames": {
               "zh-HK": "日喀則",
-              "zh-TW": "日喀則"
+              "zh-TW": "日喀則",
+              "en": "Xigazê",
+              "ja": "サムドゥプツェ区",
+              "ko": "쌍주쯔 구"
             }
           },
           {
@@ -3696,7 +4304,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "西藏",
-          "zh-TW": "西藏"
+          "zh-TW": "西藏",
+          "en": "Tibet",
+          "ja": "チベット",
+          "ko": "Tibet"
         }
       },
       {
@@ -3710,7 +4321,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xian",
             "localizedNames": {
               "zh-HK": "西安",
-              "zh-TW": "西安"
+              "zh-TW": "西安",
+              "en": "Xi'an",
+              "ja": "西安市",
+              "ko": "시안 시"
             }
           },
           {
@@ -3755,7 +4369,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yanan",
             "localizedNames": {
               "zh-HK": "延安",
-              "zh-TW": "延安"
+              "zh-TW": "延安",
+              "en": "Yan’an",
+              "ja": "Yan’an",
+              "ko": "옌안 시"
             }
           },
           {
@@ -3797,7 +4414,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "陝西",
-          "zh-TW": "陝西"
+          "zh-TW": "陝西",
+          "en": "Shaanxi",
+          "ja": "陝西省",
+          "ko": "산시 성"
         }
       },
       {
@@ -3811,7 +4431,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lanzhoushi",
             "localizedNames": {
               "zh-HK": "蘭州市",
-              "zh-TW": "蘭州市"
+              "zh-TW": "蘭州市",
+              "en": "Lanzhou",
+              "ja": "蘭州",
+              "ko": "란저우 시"
             }
           },
           {
@@ -3820,7 +4443,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiayuguan",
             "localizedNames": {
               "zh-HK": "嘉峪關",
-              "zh-TW": "嘉峪關"
+              "zh-TW": "嘉峪關",
+              "en": "Jiayuguan",
+              "ja": "嘉峪関市",
+              "ko": "자위관 시"
             }
           },
           {
@@ -3856,7 +4482,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuwei",
             "localizedNames": {
               "zh-HK": "武威",
-              "zh-TW": "武威"
+              "zh-TW": "武威",
+              "en": "Wuwei",
+              "ja": "Wuwei",
+              "ko": "Wuwei"
             }
           },
           {
@@ -3865,7 +4494,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhangye",
             "localizedNames": {
               "zh-HK": "張掖",
-              "zh-TW": "張掖"
+              "zh-TW": "張掖",
+              "en": "Zhangye",
+              "ja": "張掖市",
+              "ko": "장예 시"
             }
           },
           {
@@ -3874,7 +4506,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pingliang",
             "localizedNames": {
               "zh-HK": "平涼",
-              "zh-TW": "平涼"
+              "zh-TW": "平涼",
+              "en": "Pingliang",
+              "ja": "平涼市",
+              "ko": "핑량 시"
             }
           },
           {
@@ -3883,7 +4518,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiuquan",
             "localizedNames": {
               "zh-HK": "酒泉",
-              "zh-TW": "酒泉"
+              "zh-TW": "酒泉",
+              "en": "Jiuquan",
+              "ja": "酒泉市",
+              "ko": "주취안 시"
             }
           },
           {
@@ -3892,7 +4530,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qingyang",
             "localizedNames": {
               "zh-HK": "慶陽",
-              "zh-TW": "慶陽"
+              "zh-TW": "慶陽",
+              "en": "Qingyang",
+              "ja": "Qingyang",
+              "ko": "Qingyang"
             }
           },
           {
@@ -3901,7 +4542,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dingxi",
             "localizedNames": {
               "zh-HK": "定西",
-              "zh-TW": "定西"
+              "zh-TW": "定西",
+              "en": "Dingxi",
+              "ja": "Dingxi",
+              "ko": "Dingxi"
             }
           },
           {
@@ -3910,7 +4554,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Longnan",
             "localizedNames": {
               "zh-HK": "隴南",
-              "zh-TW": "隴南"
+              "zh-TW": "隴南",
+              "en": "Longnan",
+              "ja": "隴南市",
+              "ko": "룽난 시"
             }
           },
           {
@@ -3928,13 +4575,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gannan",
             "localizedNames": {
               "zh-HK": "甘南",
-              "zh-TW": "甘南"
+              "zh-TW": "甘南",
+              "en": "Gannan Tibetan Autonomous Prefecture",
+              "ja": "Gannan Tibetan Autonomous Prefecture",
+              "ko": "Gannan Tibetan Autonomous Prefecture"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "甘肅",
-          "zh-TW": "甘肅"
+          "zh-TW": "甘肅",
+          "en": "Gansu",
+          "ja": "甘粛",
+          "ko": "간쑤성"
         }
       },
       {
@@ -3948,7 +4601,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xining",
             "localizedNames": {
               "zh-HK": "西寧",
-              "zh-TW": "西寧"
+              "zh-TW": "西寧",
+              "en": "Xining",
+              "ja": "西寧市",
+              "ko": "시닝 시"
             }
           },
           {
@@ -3966,7 +4622,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haibei",
             "localizedNames": {
               "zh-HK": "海北",
-              "zh-TW": "海北"
+              "zh-TW": "海北",
+              "en": "Haibei Tibetan Autonomous Prefecture",
+              "ja": "Haibei Tibetan Autonomous Prefecture",
+              "ko": "Haibei Tibetan Autonomous Prefecture"
             }
           },
           {
@@ -3975,7 +4634,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huangnan",
             "localizedNames": {
               "zh-HK": "黃南",
-              "zh-TW": "黃南"
+              "zh-TW": "黃南",
+              "en": "Huangnan Zangzu Zizhizhou",
+              "ja": "Huangnan Zangzu Zizhizhou",
+              "ko": "Huangnan Zangzu Zizhizhou"
             }
           },
           {
@@ -3984,7 +4646,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hainan",
             "localizedNames": {
               "zh-HK": "海南",
-              "zh-TW": "海南"
+              "zh-TW": "海南",
+              "en": "Hainan Tibetan Autonomous Prefecture",
+              "ja": "Hainan Tibetan Autonomous Prefecture",
+              "ko": "Hainan Tibetan Autonomous Prefecture"
             }
           },
           {
@@ -3993,7 +4658,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guoluo",
             "localizedNames": {
               "zh-HK": "果洛",
-              "zh-TW": "果洛"
+              "zh-TW": "果洛",
+              "en": "Golog Tibetan Autonomous Prefecture",
+              "ja": "Golog Tibetan Autonomous Prefecture",
+              "ko": "Golog Tibetan Autonomous Prefecture"
             }
           },
           {
@@ -4002,7 +4670,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yushu",
             "localizedNames": {
               "zh-HK": "玉樹",
-              "zh-TW": "玉樹"
+              "zh-TW": "玉樹",
+              "en": "Yushu",
+              "ja": "Yushu",
+              "ko": "Yushu"
             }
           },
           {
@@ -4011,13 +4682,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haixi",
             "localizedNames": {
               "zh-HK": "海西",
-              "zh-TW": "海西"
+              "zh-TW": "海西",
+              "en": "Haixi",
+              "ja": "Haixi",
+              "ko": "Haixi"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "青海",
-          "zh-TW": "青海"
+          "zh-TW": "青海",
+          "en": "Qinghai",
+          "ja": "青海",
+          "ko": "Qinghai"
         }
       },
       {
@@ -4031,7 +4708,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yinchuan",
             "localizedNames": {
               "zh-HK": "銀川",
-              "zh-TW": "銀川"
+              "zh-TW": "銀川",
+              "en": "Yinchuan",
+              "ja": "銀川市",
+              "ko": "인촨 시"
             }
           },
           {
@@ -4040,7 +4720,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shizuishan",
             "localizedNames": {
               "zh-HK": "石嘴山",
-              "zh-TW": "石嘴山"
+              "zh-TW": "石嘴山",
+              "en": "Shizuishan",
+              "ja": "Shizuishan",
+              "ko": "Shizuishan"
             }
           },
           {
@@ -4049,7 +4732,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuzhong",
             "localizedNames": {
               "zh-HK": "吳忠",
-              "zh-TW": "吳忠"
+              "zh-TW": "吳忠",
+              "en": "Wuzhong",
+              "ja": "Wuzhong",
+              "ko": "Wuzhong"
             }
           },
           {
@@ -4058,7 +4744,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guyuan",
             "localizedNames": {
               "zh-HK": "固原",
-              "zh-TW": "固原"
+              "zh-TW": "固原",
+              "en": "Guyuan",
+              "ja": "固原市",
+              "ko": "구위안 시"
             }
           },
           {
@@ -4067,13 +4756,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongwei",
             "localizedNames": {
               "zh-HK": "中衛",
-              "zh-TW": "中衛"
+              "zh-TW": "中衛",
+              "en": "Zhongwei",
+              "ja": "中衛",
+              "ko": "중웨이 시"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "寧夏",
-          "zh-TW": "寧夏"
+          "zh-TW": "寧夏",
+          "en": "Ningxia",
+          "ja": "寧夏",
+          "ko": "Ningxia"
         }
       },
       {
@@ -4087,7 +4782,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wulumuqi",
             "localizedNames": {
               "zh-HK": "烏魯木齊",
-              "zh-TW": "烏魯木齊"
+              "zh-TW": "烏魯木齊",
+              "en": "Ürümqi",
+              "ja": "ウルムチ",
+              "ko": "우루무치 시"
             }
           },
           {
@@ -4096,7 +4794,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelamayi",
             "localizedNames": {
               "zh-HK": "克拉瑪依",
-              "zh-TW": "克拉瑪依"
+              "zh-TW": "克拉瑪依",
+              "en": "Karamay",
+              "ja": "カラマイ市",
+              "ko": "커라마이 시"
             }
           },
           {
@@ -4105,7 +4806,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tulufan",
             "localizedNames": {
               "zh-HK": "吐魯番",
-              "zh-TW": "吐魯番"
+              "zh-TW": "吐魯番",
+              "en": "Turpan",
+              "ja": "トルファン市",
+              "ko": "투루판 시"
             }
           },
           {
@@ -4123,7 +4827,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Changji",
             "localizedNames": {
               "zh-HK": "昌吉",
-              "zh-TW": "昌吉"
+              "zh-TW": "昌吉",
+              "en": "Changji",
+              "ja": "Changji",
+              "ko": "Changji"
             }
           },
           {
@@ -4132,7 +4839,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Boertala",
             "localizedNames": {
               "zh-HK": "博爾塔拉",
-              "zh-TW": "博爾塔拉"
+              "zh-TW": "博爾塔拉",
+              "en": "Bortala",
+              "ja": "Bortala",
+              "ko": "Bortala"
             }
           },
           {
@@ -4150,7 +4860,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Akesu",
             "localizedNames": {
               "zh-HK": "阿克蘇",
-              "zh-TW": "阿克蘇"
+              "zh-TW": "阿克蘇",
+              "en": "Aksu",
+              "ja": "アクス",
+              "ko": "아커쑤 시"
             }
           },
           {
@@ -4186,7 +4899,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yili",
             "localizedNames": {
               "zh-HK": "伊犁",
-              "zh-TW": "伊犁"
+              "zh-TW": "伊犁",
+              "en": "Ili Kazakh Autonomous Prefecture",
+              "ja": "Ili Kazakh Autonomous Prefecture",
+              "ko": "Ili Kazakh Autonomous Prefecture"
             }
           },
           {
@@ -4195,7 +4911,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tacheng",
             "localizedNames": {
               "zh-HK": "塔城",
-              "zh-TW": "塔城"
+              "zh-TW": "塔城",
+              "en": "Tacheng",
+              "ja": "Tacheng",
+              "ko": "Tacheng"
             }
           },
           {
@@ -4231,7 +4950,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tumushuke",
             "localizedNames": {
               "zh-HK": "圖木舒克",
-              "zh-TW": "圖木舒克"
+              "zh-TW": "圖木舒克",
+              "en": "Tumxuk",
+              "ja": "Tumxuk",
+              "ko": "Tumxuk"
             }
           },
           {
@@ -4249,13 +4971,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beitun",
             "localizedNames": {
               "zh-HK": "北屯",
-              "zh-TW": "北屯"
+              "zh-TW": "北屯",
+              "en": "Beitun",
+              "ja": "Beitun",
+              "ko": "Beitun"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "新疆",
-          "zh-TW": "新疆"
+          "zh-TW": "新疆",
+          "en": "Xinjiang",
+          "ja": "新疆",
+          "ko": "Xinjiang"
         }
       },
       {
@@ -4270,7 +4998,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongxiqu",
             "localizedNames": {
               "zh-HK": "中西區",
-              "zh-TW": "中西區"
+              "zh-TW": "中西區",
+              "en": "Central and Western",
+              "ja": "中央および西部",
+              "ko": "중시 구"
             }
           },
           {
@@ -4279,7 +5010,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongqu",
             "localizedNames": {
               "zh-HK": "東區",
-              "zh-TW": "東區"
+              "zh-TW": "東區",
+              "en": "Eastern District",
+              "ja": "東部",
+              "ko": "둥 구"
             }
           },
           {
@@ -4315,7 +5049,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenshuibuqu",
             "localizedNames": {
               "zh-HK": "深水埗區",
-              "zh-TW": "深水埗區"
+              "zh-TW": "深水埗區",
+              "en": "Sham Shui Po",
+              "ja": "Sham Shui Po",
+              "ko": "Sham Shui Po"
             }
           },
           {
@@ -4324,7 +5061,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huangdaxianqu",
             "localizedNames": {
               "zh-HK": "黃大仙區",
-              "zh-TW": "黃大仙區"
+              "zh-TW": "黃大仙區",
+              "en": "Wong Tai Sin",
+              "ja": "Wong Tai Sin",
+              "ko": "Wong Tai Sin"
             }
           },
           {
@@ -4342,7 +5082,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Youjianwangqu",
             "localizedNames": {
               "zh-HK": "油尖旺區",
-              "zh-TW": "油尖旺區"
+              "zh-TW": "油尖旺區",
+              "en": "Yau Tsim Mong District",
+              "ja": "油尖旺",
+              "ko": "유젠왕 구"
             }
           },
           {
@@ -4351,7 +5094,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lidaoqu",
             "localizedNames": {
               "zh-HK": "離島區",
-              "zh-TW": "離島區"
+              "zh-TW": "離島區",
+              "en": "Islands",
+              "ja": "島嶼",
+              "ko": "리다오 구"
             }
           },
           {
@@ -4360,7 +5106,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuiqingqu",
             "localizedNames": {
               "zh-HK": "葵青區",
-              "zh-TW": "葵青區"
+              "zh-TW": "葵青區",
+              "en": "Kwai Tsing District",
+              "ja": "葵青",
+              "ko": "쿠이칭 구"
             }
           },
           {
@@ -4369,7 +5118,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beiqu",
             "localizedNames": {
               "zh-HK": "北區",
-              "zh-TW": "北區"
+              "zh-TW": "北區",
+              "en": "North District",
+              "ja": "北部",
+              "ko": "베이 구"
             }
           },
           {
@@ -4378,7 +5130,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xigongqu",
             "localizedNames": {
               "zh-HK": "西貢區",
-              "zh-TW": "西貢區"
+              "zh-TW": "西貢區",
+              "en": "Sai Kung",
+              "ja": "Sai Kung",
+              "ko": "Sai Kung"
             }
           },
           {
@@ -4414,7 +5169,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Quanwanqu",
             "localizedNames": {
               "zh-HK": "荃灣區",
-              "zh-TW": "荃灣區"
+              "zh-TW": "荃灣區",
+              "en": "Tsuen Wan",
+              "ja": "Tsuen Wan",
+              "ko": "Tsuen Wan"
             }
           },
           {
@@ -4429,7 +5187,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "香港",
-          "zh-TW": "香港"
+          "zh-TW": "香港",
+          "en": "Hong Kong",
+          "ja": "香港",
+          "ko": "홍콩"
         }
       },
       {
@@ -4453,7 +5214,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenganduonitangqu",
             "localizedNames": {
               "zh-HK": "聖安多尼堂區",
-              "zh-TW": "聖安多尼堂區"
+              "zh-TW": "聖安多尼堂區",
+              "en": "Santo António",
+              "ja": "Santo António",
+              "ko": "Santo António"
             }
           },
           {
@@ -4471,7 +5235,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wangdetangqu",
             "localizedNames": {
               "zh-HK": "望德堂區",
-              "zh-TW": "望德堂區"
+              "zh-TW": "望德堂區",
+              "en": "São Lázaro",
+              "ja": "São Lázaro",
+              "ko": "São Lázaro"
             }
           },
           {
@@ -4480,7 +5247,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fengshuntangqu",
             "localizedNames": {
               "zh-HK": "風順堂區",
-              "zh-TW": "風順堂區"
+              "zh-TW": "風順堂區",
+              "en": "São Lourenço",
+              "ja": "São Lourenço",
+              "ko": "São Lourenço"
             }
           },
           {
@@ -4489,7 +5259,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dangzi",
             "localizedNames": {
               "zh-HK": "氹仔",
-              "zh-TW": "氹仔"
+              "zh-TW": "氹仔",
+              "en": "Taipa",
+              "ja": "Taipa",
+              "ko": "Taipa"
             }
           },
           {
@@ -4504,7 +5277,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "澳門",
-          "zh-TW": "澳門"
+          "zh-TW": "澳門",
+          "en": "Macao",
+          "ja": "マカオ",
+          "ko": "마카오"
         }
       },
       {
@@ -4590,7 +5366,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yilanxian",
             "localizedNames": {
               "zh-HK": "宜蘭縣",
-              "zh-TW": "宜蘭縣"
+              "zh-TW": "宜蘭縣",
+              "en": "Yilan",
+              "ja": "宜蘭市",
+              "ko": "이란 시"
             }
           },
           {
@@ -4599,7 +5378,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taoyuanxian",
             "localizedNames": {
               "zh-HK": "桃園縣",
-              "zh-TW": "桃園縣"
+              "zh-TW": "桃園縣",
+              "en": "Taoyuan",
+              "ja": "桃園市",
+              "ko": "타오위안시"
             }
           },
           {
@@ -4617,7 +5399,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Miaolixian",
             "localizedNames": {
               "zh-HK": "苗栗縣",
-              "zh-TW": "苗栗縣"
+              "zh-TW": "苗栗縣",
+              "en": "Miaoli",
+              "ja": "Miaoli",
+              "ko": "Miaoli"
             }
           },
           {
@@ -4644,7 +5429,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nantouxian",
             "localizedNames": {
               "zh-HK": "南投縣",
-              "zh-TW": "南投縣"
+              "zh-TW": "南投縣",
+              "en": "Nantou City",
+              "ja": "南投市",
+              "ko": "난터우 시"
             }
           },
           {
@@ -4653,7 +5441,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yunlinxian",
             "localizedNames": {
               "zh-HK": "雲林縣",
-              "zh-TW": "雲林縣"
+              "zh-TW": "雲林縣",
+              "en": "Yunlin",
+              "ja": "雲林県",
+              "ko": "윈린 현"
             }
           },
           {
@@ -4689,7 +5480,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pingdongxian",
             "localizedNames": {
               "zh-HK": "屏東縣",
-              "zh-TW": "屏東縣"
+              "zh-TW": "屏東縣",
+              "en": "Pingtung City",
+              "ja": "屏東市",
+              "ko": "핑둥 시"
             }
           },
           {
@@ -4698,7 +5492,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taidongxian",
             "localizedNames": {
               "zh-HK": "臺東縣",
-              "zh-TW": "臺東縣"
+              "zh-TW": "臺東縣",
+              "en": "Taitung",
+              "ja": "Taitung",
+              "ko": "Taitung"
             }
           },
           {
@@ -4707,7 +5504,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hualianxian",
             "localizedNames": {
               "zh-HK": "花蓮縣",
-              "zh-TW": "花蓮縣"
+              "zh-TW": "花蓮縣",
+              "en": "Hualien City",
+              "ja": "花蓮市",
+              "ko": "화롄 시"
             }
           },
           {
@@ -4716,13 +5516,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Penghuxian",
             "localizedNames": {
               "zh-HK": "澎湖縣",
-              "zh-TW": "澎湖縣"
+              "zh-TW": "澎湖縣",
+              "en": "Penghu County",
+              "ja": "澎湖県",
+              "ko": "펑후 현"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "臺灣",
-          "zh-TW": "臺灣"
+          "zh-TW": "臺灣",
+          "en": "Taiwan",
+          "ja": "台湾",
+          "ko": "대만"
         }
       }
     ]
@@ -4751,7 +5557,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aierbasang",
             "localizedNames": {
               "zh-HK": "愛爾巴桑",
-              "zh-TW": "愛爾巴桑"
+              "zh-TW": "愛爾巴桑",
+              "en": "Elbasan",
+              "ja": "エルバサン",
+              "ko": "Elbasan"
             }
           },
           {
@@ -4769,7 +5578,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Delana",
             "localizedNames": {
               "zh-HK": "地拉那",
-              "zh-TW": "地拉那"
+              "zh-TW": "地拉那",
+              "en": "Tirana",
+              "ja": "ティラナ",
+              "ko": "티라나"
             }
           },
           {
@@ -4778,7 +5590,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Doulasi",
             "localizedNames": {
               "zh-HK": "都拉斯",
-              "zh-TW": "都拉斯"
+              "zh-TW": "都拉斯",
+              "en": "Durrës",
+              "ja": "ドゥラス",
+              "ko": "두러스"
             }
           },
           {
@@ -4787,7 +5602,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Faluola",
             "localizedNames": {
               "zh-HK": "發羅拉",
-              "zh-TW": "發羅拉"
+              "zh-TW": "發羅拉",
+              "en": "Vlorë",
+              "ja": "ヴロラ",
+              "ko": "블로러"
             }
           },
           {
@@ -4805,7 +5623,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinuokasite",
             "localizedNames": {
               "zh-HK": "吉諾卡斯特",
-              "zh-TW": "吉諾卡斯特"
+              "zh-TW": "吉諾卡斯特",
+              "en": "Gjirokastër",
+              "ja": "ジロカストラ",
+              "ko": "지로카스터르"
             }
           },
           {
@@ -4814,7 +5635,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keercha",
             "localizedNames": {
               "zh-HK": "科爾察",
-              "zh-TW": "科爾察"
+              "zh-TW": "科爾察",
+              "en": "Korçë",
+              "ja": "コルチャ",
+              "ko": "코르처"
             }
           },
           {
@@ -4832,7 +5656,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laishen",
             "localizedNames": {
               "zh-HK": "萊什",
-              "zh-TW": "萊什"
+              "zh-TW": "萊什",
+              "en": "Lezhë",
+              "ja": "レジェ",
+              "ko": "레저"
             }
           },
           {
@@ -4841,7 +5668,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Peilate",
             "localizedNames": {
               "zh-HK": "培拉特",
-              "zh-TW": "培拉特"
+              "zh-TW": "培拉特",
+              "en": "Berat",
+              "ja": "ベラト",
+              "ko": "베라트"
             }
           },
           {
@@ -4856,7 +5686,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "阿爾巴尼亞",
-          "zh-TW": "阿爾巴尼亞"
+          "zh-TW": "阿爾巴尼亞",
+          "en": "Albania",
+          "ja": "アルバニア",
+          "ko": "알바니아"
         }
       }
     ]
@@ -4930,7 +5763,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aolan",
             "localizedNames": {
               "zh-HK": "奧蘭",
-              "zh-TW": "奧蘭"
+              "zh-TW": "奧蘭",
+              "en": "Oran Province",
+              "ja": "オラン県",
+              "ko": "오랑주"
             }
           },
           {
@@ -5038,7 +5874,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gaierdaye",
             "localizedNames": {
               "zh-HK": "蓋爾達耶",
-              "zh-TW": "蓋爾達耶"
+              "zh-TW": "蓋爾達耶",
+              "en": "Ghardaïa",
+              "ja": "ガルダイア",
+              "ko": "가르다이아"
             }
           },
           {
@@ -5083,7 +5922,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jieleifa",
             "localizedNames": {
               "zh-HK": "傑勒法",
-              "zh-TW": "傑勒法"
+              "zh-TW": "傑勒法",
+              "en": "Djelfa Province",
+              "ja": "ジェルファ県",
+              "ko": "젤파주"
             }
           },
           {
@@ -5119,7 +5961,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maidiya",
             "localizedNames": {
               "zh-HK": "麥迪亞",
-              "zh-TW": "麥迪亞"
+              "zh-TW": "麥迪亞",
+              "en": "Medea",
+              "ja": "メディア",
+              "ko": "메데아"
             }
           },
           {
@@ -5146,7 +5991,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Muxila",
             "localizedNames": {
               "zh-HK": "姆西拉",
-              "zh-TW": "姆西拉"
+              "zh-TW": "姆西拉",
+              "en": "M'Sila Province",
+              "ja": "ムシラ県",
+              "ko": "음실라주"
             }
           },
           {
@@ -5200,7 +6048,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Talifu",
             "localizedNames": {
               "zh-HK": "塔裏夫",
-              "zh-TW": "塔裏夫"
+              "zh-TW": "塔裏夫",
+              "en": "El Tarf Province",
+              "ja": "エル・タルフ県",
+              "ko": "엘타르프주"
             }
           },
           {
@@ -5263,7 +6114,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wade",
             "localizedNames": {
               "zh-HK": "瓦德",
-              "zh-TW": "瓦德"
+              "zh-TW": "瓦德",
+              "en": "El Oued",
+              "ja": "エル・ウエド",
+              "ko": "El Oued"
             }
           },
           {
@@ -5299,7 +6153,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xielifu",
             "localizedNames": {
               "zh-HK": "謝里夫",
-              "zh-TW": "謝里夫"
+              "zh-TW": "謝里夫",
+              "en": "Chlef Province",
+              "ja": "シュレフ県",
+              "ko": "슐레프주"
             }
           },
           {
@@ -5314,7 +6171,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "阿爾及利亞",
-          "zh-TW": "阿爾及利亞"
+          "zh-TW": "阿爾及利亞",
+          "en": "Algeria",
+          "ja": "アルジェリア",
+          "ko": "알제리"
         }
       }
     ]
@@ -5376,7 +6236,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "阿富汗",
-          "zh-TW": "阿富汗"
+          "zh-TW": "阿富汗",
+          "en": "Afghanistan",
+          "ja": "アフガニスタン",
+          "ko": "아프가니스탄"
         }
       }
     ]
@@ -5405,7 +6268,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Balana",
             "localizedNames": {
               "zh-HK": "巴拉那",
-              "zh-TW": "巴拉那"
+              "zh-TW": "巴拉那",
+              "en": "Paraná",
+              "ja": "パラナ",
+              "ko": "파라나"
             }
           },
           {
@@ -5414,7 +6280,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Biedema",
             "localizedNames": {
               "zh-HK": "別德馬",
-              "zh-TW": "別德馬"
+              "zh-TW": "別德馬",
+              "en": "Viedma",
+              "ja": "ビエドマ",
+              "ko": "비에드마"
             }
           },
           {
@@ -5423,7 +6292,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bosadasi",
             "localizedNames": {
               "zh-HK": "波薩達斯",
-              "zh-TW": "波薩達斯"
+              "zh-TW": "波薩達斯",
+              "en": "Posadas",
+              "ja": "ポサーダス",
+              "ko": "포사다스"
             }
           },
           {
@@ -5432,7 +6304,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulankagang",
             "localizedNames": {
               "zh-HK": "布蘭卡港",
-              "zh-TW": "布蘭卡港"
+              "zh-TW": "布蘭卡港",
+              "en": "Bahía Blanca",
+              "ja": "バイアブランカ",
+              "ko": "바이아블랑카"
             }
           },
           {
@@ -5450,7 +6325,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fumosa",
             "localizedNames": {
               "zh-HK": "福莫薩",
-              "zh-TW": "福莫薩"
+              "zh-TW": "福莫薩",
+              "en": "Formosa",
+              "ja": "フォルモーサ",
+              "ko": "포르모사"
             }
           },
           {
@@ -5459,7 +6337,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huhuyi",
             "localizedNames": {
               "zh-HK": "胡胡伊",
-              "zh-TW": "胡胡伊"
+              "zh-TW": "胡胡伊",
+              "en": "Jujuy",
+              "ja": "フフイ州",
+              "ko": "후후이주"
             }
           },
           {
@@ -5522,7 +6403,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lapulata",
             "localizedNames": {
               "zh-HK": "拉普拉塔",
-              "zh-TW": "拉普拉塔"
+              "zh-TW": "拉普拉塔",
+              "en": "La Plata",
+              "ja": "ラプラタ",
+              "ko": "라플라타"
             }
           },
           {
@@ -5540,7 +6424,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liaojiayegesi",
             "localizedNames": {
               "zh-HK": "里奧加耶戈斯",
-              "zh-TW": "里奧加耶戈斯"
+              "zh-TW": "里奧加耶戈斯",
+              "en": "Río Gallegos",
+              "ja": "リオ・ガジェゴス",
+              "ko": "리오가예고스"
             }
           },
           {
@@ -5549,7 +6436,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liaokuaertuo",
             "localizedNames": {
               "zh-HK": "里奧夸爾託",
-              "zh-TW": "里奧夸爾託"
+              "zh-TW": "里奧夸爾託",
+              "en": "Río Cuarto",
+              "ja": "リオ・クアルト",
+              "ko": "리오쿠아르토"
             }
           },
           {
@@ -5558,7 +6448,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liwadaweiyahaijunzhunjiangcheng",
             "localizedNames": {
               "zh-HK": "裏瓦達維亞海軍准將城",
-              "zh-TW": "裏瓦達維亞海軍准將城"
+              "zh-TW": "裏瓦達維亞海軍准將城",
+              "en": "Comodoro Rivadavia",
+              "ja": "コモドーロ・リバダビア",
+              "ko": "코모도로리바다비아"
             }
           },
           {
@@ -5567,7 +6460,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luosaliao",
             "localizedNames": {
               "zh-HK": "羅薩里奧",
-              "zh-TW": "羅薩里奧"
+              "zh-TW": "羅薩里奧",
+              "en": "Rosario",
+              "ja": "ロサリオ",
+              "ko": "로사리오"
             }
           },
           {
@@ -5576,7 +6472,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luosen",
             "localizedNames": {
               "zh-HK": "羅森",
-              "zh-TW": "羅森"
+              "zh-TW": "羅森",
+              "en": "Rawson",
+              "ja": "ラウソン",
+              "ko": "라우손"
             }
           },
           {
@@ -5585,7 +6484,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Madepulata",
             "localizedNames": {
               "zh-HK": "馬德普拉塔",
-              "zh-TW": "馬德普拉塔"
+              "zh-TW": "馬德普拉塔",
+              "en": "Mar del Plata",
+              "ja": "マル・デル・プラタ",
+              "ko": "마르델플라타"
             }
           },
           {
@@ -5630,7 +6532,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengfei",
             "localizedNames": {
               "zh-HK": "聖菲",
-              "zh-TW": "聖菲"
+              "zh-TW": "聖菲",
+              "en": "Santa Fe",
+              "ja": "サンタフェ州",
+              "ko": "산타페주"
             }
           },
           {
@@ -5648,7 +6553,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenglafeier",
             "localizedNames": {
               "zh-HK": "聖拉斐爾",
-              "zh-TW": "聖拉斐爾"
+              "zh-TW": "聖拉斐爾",
+              "en": "San Rafael",
+              "ja": "サンラファエル",
+              "ko": "San Rafael"
             }
           },
           {
@@ -5666,7 +6574,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengluosha",
             "localizedNames": {
               "zh-HK": "聖羅莎",
-              "zh-TW": "聖羅莎"
+              "zh-TW": "聖羅莎",
+              "en": "Santa Rosa",
+              "ja": "サンタローサ",
+              "ko": "산타로사"
             }
           },
           {
@@ -5675,7 +6586,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengmigeer-detukuman",
             "localizedNames": {
               "zh-HK": "聖米格爾-德圖庫曼",
-              "zh-TW": "聖米格爾-德圖庫曼"
+              "zh-TW": "聖米格爾-德圖庫曼",
+              "en": "San Miguel de Tucumán",
+              "ja": "サン・ミゲル・デ・トゥクマン",
+              "ko": "산미겔데투쿠만"
             }
           },
           {
@@ -5684,7 +6598,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengnigulasi",
             "localizedNames": {
               "zh-HK": "聖尼古拉斯",
-              "zh-TW": "聖尼古拉斯"
+              "zh-TW": "聖尼古拉斯",
+              "en": "San Nicolás de los Arroyos",
+              "ja": "サンニコラスデロスアロヨス",
+              "ko": "San Nicolás de los Arroyos"
             }
           },
           {
@@ -5693,7 +6610,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Teleiliwu",
             "localizedNames": {
               "zh-HK": "特雷利烏",
-              "zh-TW": "特雷利烏"
+              "zh-TW": "特雷利烏",
+              "en": "Trelew",
+              "ja": "トレレウ",
+              "ko": "트렐레우"
             }
           },
           {
@@ -5702,13 +6622,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wusihuaiya",
             "localizedNames": {
               "zh-HK": "烏斯懷亞",
-              "zh-TW": "烏斯懷亞"
+              "zh-TW": "烏斯懷亞",
+              "en": "Ushuaia",
+              "ja": "ウシュアイア",
+              "ko": "우수아이아"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "阿根廷",
-          "zh-TW": "阿根廷"
+          "zh-TW": "阿根廷",
+          "en": "Argentina",
+          "ja": "アルゼンチン",
+          "ko": "아르헨티나"
         }
       }
     ]
@@ -5747,7 +6673,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aiyin",
             "localizedNames": {
               "zh-HK": "艾因",
-              "zh-TW": "艾因"
+              "zh-TW": "艾因",
+              "en": "Al Ain",
+              "ja": "アル・アイン",
+              "ko": "알아인"
             }
           },
           {
@@ -5756,7 +6685,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dibai",
             "localizedNames": {
               "zh-HK": "迪拜",
-              "zh-TW": "迪拜"
+              "zh-TW": "迪拜",
+              "en": "Dubai",
+              "ja": "ドバイ",
+              "ko": "두바이"
             }
           },
           {
@@ -5771,7 +6703,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "阿拉伯聯合酋長國",
-          "zh-TW": "阿拉伯聯合酋長國"
+          "zh-TW": "阿拉伯聯合酋長國",
+          "en": "United Arab Emirates",
+          "ja": "アラブ首長国連邦",
+          "ko": "아랍에미리트"
         }
       }
     ]
@@ -5859,7 +6794,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Neidedequ",
             "localizedNames": {
               "zh-HK": "內地地區",
-              "zh-TW": "內地地區"
+              "zh-TW": "內地地區",
+              "en": "Ad Dakhiliyah",
+              "ja": "ダーヒリーヤ行政区",
+              "ko": "다킬리야주"
             }
           },
           {
@@ -5868,7 +6806,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongbudequ",
             "localizedNames": {
               "zh-HK": "中部地區",
-              "zh-TW": "中部地區"
+              "zh-TW": "中部地區",
+              "en": "Al Wusta Governorate",
+              "ja": "ウスタ行政区",
+              "ko": "중부주"
             }
           },
           {
@@ -5877,13 +6818,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zuofaersheng",
             "localizedNames": {
               "zh-HK": "佐法爾省",
-              "zh-TW": "佐法爾省"
+              "zh-TW": "佐法爾省",
+              "en": "Dhofar",
+              "ja": "ドファール特別行政区",
+              "ko": "도파르주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "阿曼",
-          "zh-TW": "阿曼"
+          "zh-TW": "阿曼",
+          "en": "Oman",
+          "ja": "オマーン",
+          "ko": "오만"
         }
       }
     ]
@@ -5921,7 +6868,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haqimasi",
             "localizedNames": {
               "zh-HK": "哈奇馬斯",
-              "zh-TW": "哈奇馬斯"
+              "zh-TW": "哈奇馬斯",
+              "en": "Xaçmaz",
+              "ja": "ハチマズ",
+              "ko": "Xaçmaz"
             }
           },
           {
@@ -6029,13 +6979,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhanjia",
             "localizedNames": {
               "zh-HK": "佔賈",
-              "zh-TW": "佔賈"
+              "zh-TW": "佔賈",
+              "en": "Ganja",
+              "ja": "ギャンジャ",
+              "ko": "간자"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "阿塞拜疆",
-          "zh-TW": "阿塞拜疆"
+          "zh-TW": "阿塞拜疆",
+          "en": "Azerbaijan",
+          "ja": "アゼルバイジャン",
+          "ko": "아제르바이잔"
         }
       }
     ]
@@ -6114,13 +7070,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yalishanda",
             "localizedNames": {
               "zh-HK": "亞歷山大",
-              "zh-TW": "亞歷山大"
+              "zh-TW": "亞歷山大",
+              "en": "Alexandria Governorate",
+              "ja": "アレクサンドリア県",
+              "ko": "알렉산드리아주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "埃及",
-          "zh-TW": "埃及"
+          "zh-TW": "埃及",
+          "en": "Egypt",
+          "ja": "エジプト",
+          "ko": "이집트"
         }
       }
     ]
@@ -6149,7 +7111,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Afaer",
             "localizedNames": {
               "zh-HK": "阿法爾",
-              "zh-TW": "阿法爾"
+              "zh-TW": "阿法爾",
+              "en": "Afar Region",
+              "ja": "アファール州",
+              "ko": "아파르주"
             }
           },
           {
@@ -6158,7 +7123,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Amuhala",
             "localizedNames": {
               "zh-HK": "阿姆哈拉",
-              "zh-TW": "阿姆哈拉"
+              "zh-TW": "阿姆哈拉",
+              "en": "Amhara",
+              "ja": "アムハラ州",
+              "ko": "암하라주"
             }
           },
           {
@@ -6167,7 +7135,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoluomiya",
             "localizedNames": {
               "zh-HK": "奧羅米亞",
-              "zh-TW": "奧羅米亞"
+              "zh-TW": "奧羅米亞",
+              "en": "Oromiya",
+              "ja": "オロミア州",
+              "ko": "오로미아주"
             }
           },
           {
@@ -6185,7 +7156,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Deleidawa",
             "localizedNames": {
               "zh-HK": "德雷達瓦",
-              "zh-TW": "德雷達瓦"
+              "zh-TW": "德雷達瓦",
+              "en": "Dire Dawa",
+              "ja": "ディレ・ダワ",
+              "ko": "디레다와"
             }
           },
           {
@@ -6221,7 +7195,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suomali",
             "localizedNames": {
               "zh-HK": "索馬里",
-              "zh-TW": "索馬里"
+              "zh-TW": "索馬里",
+              "en": "Somali",
+              "ja": "ソマリ州",
+              "ko": "소말리주"
             }
           },
           {
@@ -6230,7 +7207,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tigelei",
             "localizedNames": {
               "zh-HK": "提格雷",
-              "zh-TW": "提格雷"
+              "zh-TW": "提格雷",
+              "en": "Tigray",
+              "ja": "ティグレ州",
+              "ko": "티그라이주"
             }
           },
           {
@@ -6245,7 +7225,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "埃塞俄比亞",
-          "zh-TW": "埃塞俄比亞"
+          "zh-TW": "埃塞俄比亞",
+          "en": "Ethiopia",
+          "ja": "エチオピア",
+          "ko": "에티오피아"
         }
       }
     ]
@@ -6283,7 +7266,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dipoleili",
             "localizedNames": {
               "zh-HK": "蒂珀雷裏",
-              "zh-TW": "蒂珀雷裏"
+              "zh-TW": "蒂珀雷裏",
+              "en": "Tipperary",
+              "ja": "ティペラリー",
+              "ko": "티퍼레리"
             }
           },
           {
@@ -6292,7 +7278,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Doubailin",
             "localizedNames": {
               "zh-HK": "都柏林",
-              "zh-TW": "都柏林"
+              "zh-TW": "都柏林",
+              "en": "Dublin",
+              "ja": "ダブリン",
+              "ko": "더블린"
             }
           },
           {
@@ -6301,7 +7290,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Duoneijiaer",
             "localizedNames": {
               "zh-HK": "多內加爾",
-              "zh-TW": "多內加爾"
+              "zh-TW": "多內加爾",
+              "en": "Donegal",
+              "ja": "ドニゴール",
+              "ko": "도니골"
             }
           },
           {
@@ -6310,7 +7302,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geerwei",
             "localizedNames": {
               "zh-HK": "戈爾韋",
-              "zh-TW": "戈爾韋"
+              "zh-TW": "戈爾韋",
+              "en": "Galway",
+              "ja": "ゴールウェイ",
+              "ko": "Galway"
             }
           },
           {
@@ -6328,7 +7323,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jierkenni",
             "localizedNames": {
               "zh-HK": "基爾肯尼",
-              "zh-TW": "基爾肯尼"
+              "zh-TW": "基爾肯尼",
+              "en": "County Kilkenny",
+              "ja": "キルケニー",
+              "ko": "킬케니"
             }
           },
           {
@@ -6364,7 +7362,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keke",
             "localizedNames": {
               "zh-HK": "科克",
-              "zh-TW": "科克"
+              "zh-TW": "科克",
+              "en": "Cork",
+              "ja": "コーク",
+              "ko": "코크"
             }
           },
           {
@@ -6382,7 +7383,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Langfude",
             "localizedNames": {
               "zh-HK": "朗福德",
-              "zh-TW": "朗福德"
+              "zh-TW": "朗福德",
+              "en": "Longford",
+              "ja": "ロングフォード",
+              "ko": "롱퍼드"
             }
           },
           {
@@ -6418,7 +7422,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Litelimu",
             "localizedNames": {
               "zh-HK": "利特里姆",
-              "zh-TW": "利特里姆"
+              "zh-TW": "利特里姆",
+              "en": "County Leitrim",
+              "ja": "リートリム州",
+              "ko": "리트림 주"
             }
           },
           {
@@ -6427,7 +7434,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luosikangmang",
             "localizedNames": {
               "zh-HK": "羅斯康芒",
-              "zh-TW": "羅斯康芒"
+              "zh-TW": "羅斯康芒",
+              "en": "Roscommon",
+              "ja": "Roscommon",
+              "ko": "로스커먼"
             }
           },
           {
@@ -6445,7 +7455,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Misi",
             "localizedNames": {
               "zh-HK": "米斯",
-              "zh-TW": "米斯"
+              "zh-TW": "米斯",
+              "en": "Bettystown",
+              "ja": "ベティースタウン",
+              "ko": "Bettystown"
             }
           },
           {
@@ -6463,7 +7476,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Silaige",
             "localizedNames": {
               "zh-HK": "斯萊戈",
-              "zh-TW": "斯萊戈"
+              "zh-TW": "斯萊戈",
+              "en": "Skreen",
+              "ja": "スクリーン",
+              "ko": "Skreen"
             }
           },
           {
@@ -6490,7 +7506,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wotefude",
             "localizedNames": {
               "zh-HK": "沃特福德",
-              "zh-TW": "沃特福德"
+              "zh-TW": "沃特福德",
+              "en": "Waterford",
+              "ja": "ウォーターフォード",
+              "ko": "워터퍼드"
             }
           },
           {
@@ -6505,7 +7524,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "愛爾蘭",
-          "zh-TW": "愛爾蘭"
+          "zh-TW": "愛爾蘭",
+          "en": "Ireland",
+          "ja": "アイルランド",
+          "ko": "아일랜드"
         }
       }
     ]
@@ -6579,7 +7601,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Salei",
             "localizedNames": {
               "zh-HK": "薩雷",
-              "zh-TW": "薩雷"
+              "zh-TW": "薩雷",
+              "en": "Saare",
+              "ja": "サーレ県",
+              "ko": "사레주"
             }
           },
           {
@@ -6588,7 +7613,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taertu",
             "localizedNames": {
               "zh-HK": "塔爾圖",
-              "zh-TW": "塔爾圖"
+              "zh-TW": "塔爾圖",
+              "en": "Tartu",
+              "ja": "タルトゥ県",
+              "ko": "타르투 주"
             }
           },
           {
@@ -6666,7 +7694,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "愛沙尼亞",
-          "zh-TW": "愛沙尼亞"
+          "zh-TW": "愛沙尼亞",
+          "en": "Estonia",
+          "ja": "エストニア",
+          "ko": "에스토니아"
         }
       }
     ]
@@ -6695,7 +7726,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Andaoercheng",
             "localizedNames": {
               "zh-HK": "安道爾城",
-              "zh-TW": "安道爾城"
+              "zh-TW": "安道爾城",
+              "en": "Andorra la Vella",
+              "ja": "アンドラ・ラ・ヴェリャ",
+              "ko": "안도라라베야"
             }
           },
           {
@@ -6731,7 +7765,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laisaisikaerde－engeerda",
             "localizedNames": {
               "zh-HK": "萊塞斯卡爾德－恩戈爾達",
-              "zh-TW": "萊塞斯卡爾德－恩戈爾達"
+              "zh-TW": "萊塞斯卡爾德－恩戈爾達",
+              "en": "Les Escaldes",
+              "ja": "エスカルデス＝エンゴルダニ教区",
+              "ko": "Les Escaldes"
             }
           },
           {
@@ -6755,7 +7792,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "安道爾",
-          "zh-TW": "安道爾"
+          "zh-TW": "安道爾",
+          "en": "Andorra",
+          "ja": "アンドラ",
+          "ko": "안도라"
         }
       }
     ]
@@ -6784,7 +7824,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beikuanzha",
             "localizedNames": {
               "zh-HK": "北寬扎",
-              "zh-TW": "北寬扎"
+              "zh-TW": "北寬扎",
+              "en": "Cuanza Norte Province",
+              "ja": "クアンザ・ノルテ州",
+              "ko": "쿠안자노르트주"
             }
           },
           {
@@ -6793,7 +7836,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beilongda",
             "localizedNames": {
               "zh-HK": "北隆達",
-              "zh-TW": "北隆達"
+              "zh-TW": "北隆達",
+              "en": "Luanda Norte",
+              "ja": "ルンダ・ノルテ州",
+              "ko": "룬다노르트주"
             }
           },
           {
@@ -6802,7 +7848,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Benge",
             "localizedNames": {
               "zh-HK": "本戈",
-              "zh-TW": "本戈"
+              "zh-TW": "本戈",
+              "en": "Bengo Province",
+              "ja": "ベンゴ州",
+              "ko": "벵구주"
             }
           },
           {
@@ -6811,7 +7860,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bengela",
             "localizedNames": {
               "zh-HK": "本格拉",
-              "zh-TW": "本格拉"
+              "zh-TW": "本格拉",
+              "en": "Benguela Province",
+              "ja": "ベンゲラ州",
+              "ko": "벵겔라주"
             }
           },
           {
@@ -6838,7 +7890,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuneinei",
             "localizedNames": {
               "zh-HK": "庫內內",
-              "zh-TW": "庫內內"
+              "zh-TW": "庫內內",
+              "en": "Cunene Province",
+              "ja": "クネネ州",
+              "ko": "쿠네느주"
             }
           },
           {
@@ -6865,7 +7920,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Malanre",
             "localizedNames": {
               "zh-HK": "馬蘭熱",
-              "zh-TW": "馬蘭熱"
+              "zh-TW": "馬蘭熱",
+              "en": "Malanje Province",
+              "ja": "マランジェ州",
+              "ko": "말란즈주"
             }
           },
           {
@@ -6874,7 +7932,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moxike",
             "localizedNames": {
               "zh-HK": "莫希科",
-              "zh-TW": "莫希科"
+              "zh-TW": "莫希科",
+              "en": "Moxico Province",
+              "ja": "モシコ州",
+              "ko": "모시쿠주"
             }
           },
           {
@@ -6892,7 +7953,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nankuanzha",
             "localizedNames": {
               "zh-HK": "南寬扎",
-              "zh-TW": "南寬扎"
+              "zh-TW": "南寬扎",
+              "en": "Kwanza Sul Province",
+              "ja": "クアンザ・スル州",
+              "ko": "쿠안자술주"
             }
           },
           {
@@ -6901,7 +7965,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanlongda",
             "localizedNames": {
               "zh-HK": "南隆達",
-              "zh-TW": "南隆達"
+              "zh-TW": "南隆達",
+              "en": "Lunda Sul Province",
+              "ja": "ルンダ・スル州",
+              "ko": "룬다술주"
             }
           },
           {
@@ -6919,7 +7986,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weila",
             "localizedNames": {
               "zh-HK": "威拉",
-              "zh-TW": "威拉"
+              "zh-TW": "威拉",
+              "en": "Huíla Province",
+              "ja": "ウイラ州",
+              "ko": "우일라주"
             }
           },
           {
@@ -6928,7 +7998,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weire",
             "localizedNames": {
               "zh-HK": "威熱",
-              "zh-TW": "威熱"
+              "zh-TW": "威熱",
+              "en": "Uíge Province",
+              "ja": "ウイジェ州",
+              "ko": "우이즈주"
             }
           },
           {
@@ -6943,7 +8016,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "安哥拉",
-          "zh-TW": "安哥拉"
+          "zh-TW": "安哥拉",
+          "en": "Angola",
+          "ja": "アンゴラ",
+          "ko": "앙골라"
         }
       }
     ]
@@ -7009,7 +8085,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Daerwen",
             "localizedNames": {
               "zh-HK": "達爾文",
-              "zh-TW": "達爾文"
+              "zh-TW": "達爾文",
+              "en": "Darwin",
+              "ja": "ダーウィン",
+              "ko": "다윈"
             }
           }
         ],
@@ -7029,13 +8108,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kanpeila",
             "localizedNames": {
               "zh-HK": "堪培拉",
-              "zh-TW": "堪培拉"
+              "zh-TW": "堪培拉",
+              "en": "Canberra",
+              "ja": "キャンベラ",
+              "ko": "캔버라"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "堪培拉",
-          "zh-TW": "堪培拉"
+          "zh-TW": "堪培拉",
+          "en": "Canberra",
+          "ja": "キャンベラ",
+          "ko": "캔버라"
         }
       },
       {
@@ -7049,7 +8134,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulisiban",
             "localizedNames": {
               "zh-HK": "布里斯班",
-              "zh-TW": "布里斯班"
+              "zh-TW": "布里斯班",
+              "en": "Brisbane",
+              "ja": "ブリスベン",
+              "ko": "브리즈번"
             }
           },
           {
@@ -7067,7 +8155,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaiensi",
             "localizedNames": {
               "zh-HK": "凱恩斯",
-              "zh-TW": "凱恩斯"
+              "zh-TW": "凱恩斯",
+              "en": "Cairns",
+              "ja": "ケアンズ",
+              "ko": "케언스"
             }
           },
           {
@@ -7085,7 +8176,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tangsiweier",
             "localizedNames": {
               "zh-HK": "湯斯維爾",
-              "zh-TW": "湯斯維爾"
+              "zh-TW": "湯斯維爾",
+              "en": "Townsville",
+              "ja": "タウンズビル",
+              "ko": "타운즈빌"
             }
           },
           {
@@ -7094,7 +8188,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuwenba",
             "localizedNames": {
               "zh-HK": "圖文巴",
-              "zh-TW": "圖文巴"
+              "zh-TW": "圖文巴",
+              "en": "Toowoomba",
+              "ja": "トゥーンバ",
+              "ko": "터움바"
             }
           }
         ],
@@ -7114,7 +8211,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Adelaide",
             "localizedNames": {
               "zh-HK": "阿德萊德",
-              "zh-TW": "阿德萊德"
+              "zh-TW": "阿德萊德",
+              "en": "Adelaide",
+              "ja": "アデレード",
+              "ko": "애들레이드"
             }
           },
           {
@@ -7123,7 +8223,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aogusitagang",
             "localizedNames": {
               "zh-HK": "奧古斯塔港",
-              "zh-TW": "奧古斯塔港"
+              "zh-TW": "奧古斯塔港",
+              "en": "Port Augusta",
+              "ja": "ポートオーガスタ",
+              "ko": "포트오거스타"
             }
           },
           {
@@ -7141,7 +8244,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huaiala",
             "localizedNames": {
               "zh-HK": "懷阿拉",
-              "zh-TW": "懷阿拉"
+              "zh-TW": "懷阿拉",
+              "en": "Whyalla",
+              "ja": "ホイアラ",
+              "ko": "화이앨라"
             }
           },
           {
@@ -7150,7 +8256,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Linkengang",
             "localizedNames": {
               "zh-HK": "林肯港",
-              "zh-TW": "林肯港"
+              "zh-TW": "林肯港",
+              "en": "Port Lincoln",
+              "ja": "ポートリンカーン",
+              "ko": "포트링컨"
             }
           },
           {
@@ -7215,7 +8324,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huobate",
             "localizedNames": {
               "zh-HK": "霍巴特",
-              "zh-TW": "霍巴特"
+              "zh-TW": "霍巴特",
+              "en": "Hobart",
+              "ja": "ホバート",
+              "ko": "호바트"
             }
           },
           {
@@ -7224,13 +8336,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Langsaisidun",
             "localizedNames": {
               "zh-HK": "朗塞斯頓",
-              "zh-TW": "朗塞斯頓"
+              "zh-TW": "朗塞斯頓",
+              "en": "Launceston",
+              "ja": "ローンセストン",
+              "ko": "론서스턴"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "塔斯馬尼亞",
-          "zh-TW": "塔斯馬尼亞"
+          "zh-TW": "塔斯馬尼亞",
+          "en": "Tasmania",
+          "ja": "タスマニア州",
+          "ko": "태즈메이니아주"
         }
       },
       {
@@ -7244,7 +8362,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jilang",
             "localizedNames": {
               "zh-HK": "吉朗",
-              "zh-TW": "吉朗"
+              "zh-TW": "吉朗",
+              "en": "Geelong",
+              "ja": "ジーロング",
+              "ko": "절롱"
             }
           },
           {
@@ -7253,13 +8374,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moerben",
             "localizedNames": {
               "zh-HK": "墨爾本",
-              "zh-TW": "墨爾本"
+              "zh-TW": "墨爾本",
+              "en": "Melbourne",
+              "ja": "メルボルン",
+              "ko": "멜버른"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "維多利亞",
-          "zh-TW": "維多利亞"
+          "zh-TW": "維多利亞",
+          "en": "Victoria",
+          "ja": "ビクトリア州",
+          "ko": "빅토리아"
         }
       },
       {
@@ -7300,7 +8427,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jielaerdun",
             "localizedNames": {
               "zh-HK": "傑拉爾頓",
-              "zh-TW": "傑拉爾頓"
+              "zh-TW": "傑拉爾頓",
+              "en": "Geraldton",
+              "ja": "ジェラルトン",
+              "ko": "제럴턴"
             }
           },
           {
@@ -7309,7 +8439,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaerguli",
             "localizedNames": {
               "zh-HK": "卡爾古利",
-              "zh-TW": "卡爾古利"
+              "zh-TW": "卡爾古利",
+              "en": "Kalgoorlie-Boulder",
+              "ja": "カルグーリー",
+              "ko": "캘굴리"
             }
           },
           {
@@ -7327,13 +8460,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Posi",
             "localizedNames": {
               "zh-HK": "珀斯",
-              "zh-TW": "珀斯"
+              "zh-TW": "珀斯",
+              "en": "Perth",
+              "ja": "パース",
+              "ko": "퍼스"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "西澳大利亞",
-          "zh-TW": "西澳大利亞"
+          "zh-TW": "西澳大利亞",
+          "en": "Western Australia",
+          "ja": "西オーストラリア州",
+          "ko": "웨스턴오스트레일리아주"
         }
       },
       {
@@ -7347,7 +8486,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niukasier",
             "localizedNames": {
               "zh-HK": "紐卡斯爾",
-              "zh-TW": "紐卡斯爾"
+              "zh-TW": "紐卡斯爾",
+              "en": "Newcastle",
+              "ja": "ニューカッスル",
+              "ko": "뉴캐슬"
             }
           },
           {
@@ -7371,7 +8513,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "新南威爾士",
-          "zh-TW": "新南威爾士"
+          "zh-TW": "新南威爾士",
+          "en": "New South Wales",
+          "ja": "ニューサウスウェールズ州",
+          "ko": "뉴사우스웨일스주"
         }
       }
     ]
@@ -7400,7 +8545,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buergenlan",
             "localizedNames": {
               "zh-HK": "布爾根蘭",
-              "zh-TW": "布爾根蘭"
+              "zh-TW": "布爾根蘭",
+              "en": "Burgenland",
+              "ja": "ブルゲンラント州",
+              "ko": "부르겐란트주"
             }
           },
           {
@@ -7409,7 +8557,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Diluoer",
             "localizedNames": {
               "zh-HK": "蒂羅爾",
-              "zh-TW": "蒂羅爾"
+              "zh-TW": "蒂羅爾",
+              "en": "Tyrol",
+              "ja": "チロル州",
+              "ko": "티롤주"
             }
           },
           {
@@ -7418,7 +8569,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fulaerbeige",
             "localizedNames": {
               "zh-HK": "福拉爾貝格",
-              "zh-TW": "福拉爾貝格"
+              "zh-TW": "福拉爾貝格",
+              "en": "Vorarlberg",
+              "ja": "フォアアールベルク州",
+              "ko": "포어아를베르크주"
             }
           },
           {
@@ -7427,7 +8581,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keendun",
             "localizedNames": {
               "zh-HK": "克恩頓",
-              "zh-TW": "克恩頓"
+              "zh-TW": "克恩頓",
+              "en": "Carinthia",
+              "ja": "ケルンテン州",
+              "ko": "케른텐주"
             }
           },
           {
@@ -7445,7 +8602,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangaodeli",
             "localizedNames": {
               "zh-HK": "上奧地利",
-              "zh-TW": "上奧地利"
+              "zh-TW": "上奧地利",
+              "en": "Upper Austria",
+              "ja": "オーバーエスターライヒ州",
+              "ko": "오버외스터라이히주"
             }
           },
           {
@@ -7463,7 +8623,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weiyena",
             "localizedNames": {
               "zh-HK": "維也納",
-              "zh-TW": "維也納"
+              "zh-TW": "維也納",
+              "en": "Vienna",
+              "ja": "ウィーン",
+              "ko": "빈"
             }
           },
           {
@@ -7472,13 +8635,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiaaodeli",
             "localizedNames": {
               "zh-HK": "下奧地利",
-              "zh-TW": "下奧地利"
+              "zh-TW": "下奧地利",
+              "en": "Lower Austria",
+              "ja": "ニーダーエステライヒ州",
+              "ko": "니더외스터라이히주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "奧地利",
-          "zh-TW": "奧地利"
+          "zh-TW": "奧地利",
+          "en": "Austria",
+          "ja": "オーストリア",
+          "ko": "오스트리아"
         }
       }
     ]
@@ -7537,7 +8706,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beibu",
             "localizedNames": {
               "zh-HK": "北部",
-              "zh-TW": "北部"
+              "zh-TW": "北部",
+              "en": "Oro Province",
+              "ja": "オロ州",
+              "ko": "오로주"
             }
           },
           {
@@ -7564,7 +8736,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongsaipike",
             "localizedNames": {
               "zh-HK": "東塞皮克",
-              "zh-TW": "東塞皮克"
+              "zh-TW": "東塞皮克",
+              "en": "East Sepik Province",
+              "ja": "東セピック州",
+              "ko": "동세픽주"
             }
           },
           {
@@ -7573,7 +8748,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongxinbuliedian",
             "localizedNames": {
               "zh-HK": "東新不列顛",
-              "zh-TW": "東新不列顛"
+              "zh-TW": "東新不列顛",
+              "en": "East New Britain Province",
+              "ja": "東ニューブリテン州",
+              "ko": "동뉴브리튼주"
             }
           },
           {
@@ -7582,7 +8760,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Enjia",
             "localizedNames": {
               "zh-HK": "恩加",
-              "zh-TW": "恩加"
+              "zh-TW": "恩加",
+              "en": "Enga Province",
+              "ja": "エンガ州",
+              "ko": "엥가주"
             }
           },
           {
@@ -7591,7 +8772,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haiwan",
             "localizedNames": {
               "zh-HK": "海灣",
-              "zh-TW": "海灣"
+              "zh-TW": "海灣",
+              "en": "Gulf Province",
+              "ja": "湾岸州",
+              "ko": "걸프주"
             }
           },
           {
@@ -7600,7 +8784,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Madang",
             "localizedNames": {
               "zh-HK": "馬當",
-              "zh-TW": "馬當"
+              "zh-TW": "馬當",
+              "en": "Madang Province",
+              "ja": "マダン州",
+              "ko": "마당주"
             }
           },
           {
@@ -7609,7 +8796,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manusi",
             "localizedNames": {
               "zh-HK": "馬努斯",
-              "zh-TW": "馬努斯"
+              "zh-TW": "馬努斯",
+              "en": "Manus Province",
+              "ja": "マヌス州",
+              "ko": "마누스주"
             }
           },
           {
@@ -7618,7 +8808,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mierenwan",
             "localizedNames": {
               "zh-HK": "米爾恩灣",
-              "zh-TW": "米爾恩灣"
+              "zh-TW": "米爾恩灣",
+              "en": "Milne Bay Province",
+              "ja": "ミルン湾州",
+              "ko": "밀른베이주"
             }
           },
           {
@@ -7627,7 +8820,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moerzibigang",
             "localizedNames": {
               "zh-HK": "莫爾茲比港",
-              "zh-TW": "莫爾茲比港"
+              "zh-TW": "莫爾茲比港",
+              "en": "Port Moresby",
+              "ja": "ポートモレスビー",
+              "ko": "포트모르즈비"
             }
           },
           {
@@ -7654,7 +8850,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qinbu",
             "localizedNames": {
               "zh-HK": "欽布",
-              "zh-TW": "欽布"
+              "zh-TW": "欽布",
+              "en": "Chimbu Province",
+              "ja": "シンブ州",
+              "ko": "심부주"
             }
           },
           {
@@ -7663,7 +8862,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sangdaoen",
             "localizedNames": {
               "zh-HK": "桑道恩",
-              "zh-TW": "桑道恩"
+              "zh-TW": "桑道恩",
+              "en": "Sandaun Province",
+              "ja": "サンダウン州",
+              "ko": "산다운주"
             }
           },
           {
@@ -7672,7 +8874,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xibu",
             "localizedNames": {
               "zh-HK": "西部",
-              "zh-TW": "西部"
+              "zh-TW": "西部",
+              "en": "Western Province",
+              "ja": "西部州",
+              "ko": "서부주"
             }
           },
           {
@@ -7690,7 +8895,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xixinbuliedian",
             "localizedNames": {
               "zh-HK": "西新不列顛",
-              "zh-TW": "西新不列顛"
+              "zh-TW": "西新不列顛",
+              "en": "West New Britain Province",
+              "ja": "西ニューブリテン州",
+              "ko": "서뉴브리튼주"
             }
           },
           {
@@ -7699,13 +8907,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinaierlan",
             "localizedNames": {
               "zh-HK": "新愛爾蘭",
-              "zh-TW": "新愛爾蘭"
+              "zh-TW": "新愛爾蘭",
+              "en": "New Ireland",
+              "ja": "ニューアイルランド州",
+              "ko": "뉴아일랜드주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "巴布亞新幾內亞",
-          "zh-TW": "巴布亞新幾內亞"
+          "zh-TW": "巴布亞新幾內亞",
+          "en": "Papua New Guinea",
+          "ja": "パプアニューギニア",
+          "ko": "파푸아뉴기니"
         }
       }
     ]
@@ -7748,7 +8962,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baishawa",
             "localizedNames": {
               "zh-HK": "白沙瓦",
-              "zh-TW": "白沙瓦"
+              "zh-TW": "白沙瓦",
+              "en": "Peshawar",
+              "ja": "ペシャーワル",
+              "ko": "페샤와르"
             }
           },
           {
@@ -7784,7 +9001,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalaqi",
             "localizedNames": {
               "zh-HK": "卡拉奇",
-              "zh-TW": "卡拉奇"
+              "zh-TW": "卡拉奇",
+              "en": "Karachi",
+              "ja": "カラチ",
+              "ko": "카라치"
             }
           },
           {
@@ -7793,7 +9013,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laheer",
             "localizedNames": {
               "zh-HK": "拉合爾",
-              "zh-TW": "拉合爾"
+              "zh-TW": "拉合爾",
+              "en": "Lahore",
+              "ja": "ラホール",
+              "ko": "라호르"
             }
           },
           {
@@ -7802,7 +9025,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lawaerpindi",
             "localizedNames": {
               "zh-HK": "拉瓦爾品第",
-              "zh-TW": "拉瓦爾品第"
+              "zh-TW": "拉瓦爾品第",
+              "en": "Rawalpindi",
+              "ja": "ラーワルピンディー",
+              "ko": "라왈핀디"
             }
           },
           {
@@ -7811,7 +9037,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Muertan",
             "localizedNames": {
               "zh-HK": "木爾坦",
-              "zh-TW": "木爾坦"
+              "zh-TW": "木爾坦",
+              "en": "Multan",
+              "ja": "ムルターン",
+              "ko": "물탄"
             }
           },
           {
@@ -7820,13 +9049,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yisilanbao",
             "localizedNames": {
               "zh-HK": "伊斯蘭堡",
-              "zh-TW": "伊斯蘭堡"
+              "zh-TW": "伊斯蘭堡",
+              "en": "Islamabad",
+              "ja": "イスラマバード",
+              "ko": "이슬라마바드"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "巴基斯坦",
-          "zh-TW": "巴基斯坦"
+          "zh-TW": "巴基斯坦",
+          "en": "Pakistan",
+          "ja": "パキスタン",
+          "ko": "파키스탄"
         }
       }
     ]
@@ -7855,7 +9090,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Amanbai",
             "localizedNames": {
               "zh-HK": "阿曼拜",
-              "zh-TW": "阿曼拜"
+              "zh-TW": "阿曼拜",
+              "en": "Amambay Department",
+              "ja": "アマンバイ県",
+              "ko": "아맘바이주"
             }
           },
           {
@@ -7864,7 +9102,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ayesizongtongsheng",
             "localizedNames": {
               "zh-HK": "阿耶斯總統省",
-              "zh-TW": "阿耶斯總統省"
+              "zh-TW": "阿耶斯總統省",
+              "en": "Presidente Hayes",
+              "ja": "プレシデンテ・アジェス県",
+              "ko": "프레시덴테아예스주"
             }
           },
           {
@@ -7873,7 +9114,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Balaguali",
             "localizedNames": {
               "zh-HK": "巴拉瓜裏",
-              "zh-TW": "巴拉瓜裏"
+              "zh-TW": "巴拉瓜裏",
+              "en": "Paraguari",
+              "ja": "パラグアリ",
+              "ko": "파라과리"
             }
           },
           {
@@ -7936,7 +9180,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kedileila",
             "localizedNames": {
               "zh-HK": "科迪勒拉",
-              "zh-TW": "科迪勒拉"
+              "zh-TW": "科迪勒拉",
+              "en": "Cordillera Department",
+              "ja": "コルディリェラ県",
+              "ko": "코르디예라주"
             }
           },
           {
@@ -7945,7 +9192,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mixiaoneisi",
             "localizedNames": {
               "zh-HK": "米西奧內斯",
-              "zh-TW": "米西奧內斯"
+              "zh-TW": "米西奧內斯",
+              "en": "Misiones Department",
+              "ja": "ミシオネス県",
+              "ko": "미시오네스주"
             }
           },
           {
@@ -7963,7 +9213,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangbalagui",
             "localizedNames": {
               "zh-HK": "上巴拉圭",
-              "zh-TW": "上巴拉圭"
+              "zh-TW": "上巴拉圭",
+              "en": "Alto Paraguay",
+              "ja": "アルト・パラグアイ県",
+              "ko": "알토파라과이주"
             }
           },
           {
@@ -7981,7 +9234,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengpeideluo",
             "localizedNames": {
               "zh-HK": "聖佩德羅",
-              "zh-TW": "聖佩德羅"
+              "zh-TW": "聖佩德羅",
+              "en": "San Pedro Department",
+              "ja": "サン・ペドロ県",
+              "ko": "산페드로주"
             }
           },
           {
@@ -8008,13 +9264,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongyang",
             "localizedNames": {
               "zh-HK": "中央",
-              "zh-TW": "中央"
+              "zh-TW": "中央",
+              "en": "Central Department",
+              "ja": "セントラル県",
+              "ko": "센트랄주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "巴拉圭",
-          "zh-TW": "巴拉圭"
+          "zh-TW": "巴拉圭",
+          "en": "Paraguay",
+          "ja": "パラグアイ",
+          "ko": "파라과이"
         }
       }
     ]
@@ -8043,7 +9305,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiashadedai",
             "localizedNames": {
               "zh-HK": "加沙地帶",
-              "zh-TW": "加沙地帶"
+              "zh-TW": "加沙地帶",
+              "en": "Gaza Strip",
+              "ja": "ガザ地区",
+              "ko": "가자 지구"
             }
           },
           {
@@ -8058,7 +9323,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "巴勒斯坦",
-          "zh-TW": "巴勒斯坦"
+          "zh-TW": "巴勒斯坦",
+          "en": "Palestinian Territories",
+          "ja": "パレスチナ自治区",
+          "ko": "팔레스타인 지구"
         }
       }
     ]
@@ -8087,7 +9355,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beibu",
             "localizedNames": {
               "zh-HK": "北部",
-              "zh-TW": "北部"
+              "zh-TW": "北部",
+              "en": "Northern Governorate",
+              "ja": "北部県",
+              "ko": "북부주"
             }
           },
           {
@@ -8114,7 +9385,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lifa",
             "localizedNames": {
               "zh-HK": "裏法",
-              "zh-TW": "裏法"
+              "zh-TW": "裏法",
+              "en": "Riffa",
+              "ja": "リファー",
+              "ko": "리파"
             }
           },
           {
@@ -8123,7 +9397,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mainamai",
             "localizedNames": {
               "zh-HK": "麥納麥",
-              "zh-TW": "麥納麥"
+              "zh-TW": "麥納麥",
+              "en": "Manama",
+              "ja": "マナーマ",
+              "ko": "마나마"
             }
           },
           {
@@ -8132,7 +9409,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Muhalage",
             "localizedNames": {
               "zh-HK": "穆哈拉格",
-              "zh-TW": "穆哈拉格"
+              "zh-TW": "穆哈拉格",
+              "en": "Muharraq",
+              "ja": "ムハッラク県",
+              "ko": "무하라크주"
             }
           },
           {
@@ -8150,7 +9430,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yisacheng",
             "localizedNames": {
               "zh-HK": "伊薩城",
-              "zh-TW": "伊薩城"
+              "zh-TW": "伊薩城",
+              "en": "Isa Town",
+              "ja": "イーサ・タウン",
+              "ko": "이사타운"
             }
           },
           {
@@ -8165,7 +9448,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "巴林",
-          "zh-TW": "巴林"
+          "zh-TW": "巴林",
+          "en": "Bahrain",
+          "ja": "バーレーン",
+          "ko": "바레인"
         }
       }
     ]
@@ -8217,7 +9503,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Alagesi",
             "localizedNames": {
               "zh-HK": "阿拉戈斯",
-              "zh-TW": "阿拉戈斯"
+              "zh-TW": "阿拉戈斯",
+              "en": "Alagoas",
+              "ja": "アラゴアス州",
+              "ko": "알라고아스주"
             }
           },
           {
@@ -8235,7 +9524,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Balana",
             "localizedNames": {
               "zh-HK": "巴拉那",
-              "zh-TW": "巴拉那"
+              "zh-TW": "巴拉那",
+              "en": "Paraná",
+              "ja": "パラナ州",
+              "ko": "파라나주"
             }
           },
           {
@@ -8244,7 +9536,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baxiliya",
             "localizedNames": {
               "zh-HK": "巴西利亞",
-              "zh-TW": "巴西利亞"
+              "zh-TW": "巴西利亞",
+              "en": "Brasília",
+              "ja": "ブラジリア",
+              "ko": "브라질리아"
             }
           },
           {
@@ -8262,7 +9557,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beiliaogelande",
             "localizedNames": {
               "zh-HK": "北里奧格蘭德",
-              "zh-TW": "北里奧格蘭德"
+              "zh-TW": "北里奧格蘭德",
+              "en": "Rio Grande do Norte",
+              "ja": "リオグランデ・ド・ノルテ州",
+              "ko": "히우그란지두노르치주"
             }
           },
           {
@@ -8271,7 +9569,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bonanbuge",
             "localizedNames": {
               "zh-HK": "伯南布哥",
-              "zh-TW": "伯南布哥"
+              "zh-TW": "伯南布哥",
+              "en": "Pernambuco",
+              "ja": "ペルナンブーコ州",
+              "ko": "페르남부쿠주"
             }
           },
           {
@@ -8280,7 +9581,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geyasi",
             "localizedNames": {
               "zh-HK": "戈亞斯",
-              "zh-TW": "戈亞斯"
+              "zh-TW": "戈亞斯",
+              "en": "Goiás",
+              "ja": "ゴイアス州",
+              "ko": "고이아스주"
             }
           },
           {
@@ -8289,7 +9593,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Langduoniya",
             "localizedNames": {
               "zh-HK": "朗多尼亞",
-              "zh-TW": "朗多尼亞"
+              "zh-TW": "朗多尼亞",
+              "en": "Rondônia",
+              "ja": "ロンドニア州",
+              "ko": "혼도니아주"
             }
           },
           {
@@ -8307,7 +9614,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luolaima",
             "localizedNames": {
               "zh-HK": "羅賴馬",
-              "zh-TW": "羅賴馬"
+              "zh-TW": "羅賴馬",
+              "en": "Roraima",
+              "ja": "ロライマ州",
+              "ko": "호라이마주"
             }
           },
           {
@@ -8316,7 +9626,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Malaniang",
             "localizedNames": {
               "zh-HK": "馬拉尼昂",
-              "zh-TW": "馬拉尼昂"
+              "zh-TW": "馬拉尼昂",
+              "en": "Maranhão",
+              "ja": "マラニョン州",
+              "ko": "마라냥주"
             }
           },
           {
@@ -8325,7 +9638,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Matuogeluosuo",
             "localizedNames": {
               "zh-HK": "馬託格羅索",
-              "zh-TW": "馬託格羅索"
+              "zh-TW": "馬託格羅索",
+              "en": "Mato Grosso",
+              "ja": "マットグロッソ州",
+              "ko": "마투그로수주"
             }
           },
           {
@@ -8334,7 +9650,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Minasijilasi",
             "localizedNames": {
               "zh-HK": "米納斯吉拉斯",
-              "zh-TW": "米納斯吉拉斯"
+              "zh-TW": "米納斯吉拉斯",
+              "en": "Minas Gerais",
+              "ja": "ミナス・ジェライス州",
+              "ko": "미나스제라이스주"
             }
           },
           {
@@ -8352,7 +9671,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanmatuogeluosuo",
             "localizedNames": {
               "zh-HK": "南馬託格羅索",
-              "zh-TW": "南馬託格羅索"
+              "zh-TW": "南馬託格羅索",
+              "en": "Mato Grosso do Sul",
+              "ja": "マットグロッソ・ド・スル州",
+              "ko": "마투그로수두술 주"
             }
           },
           {
@@ -8361,7 +9683,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pala",
             "localizedNames": {
               "zh-HK": "帕拉",
-              "zh-TW": "帕拉"
+              "zh-TW": "帕拉",
+              "en": "Pará",
+              "ja": "パラー州",
+              "ko": "파라 주"
             }
           },
           {
@@ -8379,7 +9704,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Piaoyi",
             "localizedNames": {
               "zh-HK": "皮奧伊",
-              "zh-TW": "皮奧伊"
+              "zh-TW": "皮奧伊",
+              "en": "Piauí",
+              "ja": "ピアウイ州",
+              "ko": "피아우이주"
             }
           },
           {
@@ -8397,7 +9725,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Saierxipei",
             "localizedNames": {
               "zh-HK": "塞爾希培",
-              "zh-TW": "塞爾希培"
+              "zh-TW": "塞爾希培",
+              "en": "Sergipe",
+              "ja": "セルジペ州",
+              "ko": "세르지피주"
             }
           },
           {
@@ -8406,7 +9737,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengaisipilitu",
             "localizedNames": {
               "zh-HK": "聖埃斯皮裏圖",
-              "zh-TW": "聖埃斯皮裏圖"
+              "zh-TW": "聖埃斯皮裏圖",
+              "en": "Espírito Santo",
+              "ja": "エスピリトサント州",
+              "ko": "이스피리투산투주"
             }
           },
           {
@@ -8424,7 +9758,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengkatalinna",
             "localizedNames": {
               "zh-HK": "聖卡塔琳娜",
-              "zh-TW": "聖卡塔琳娜"
+              "zh-TW": "聖卡塔琳娜",
+              "en": "Santa Catarina",
+              "ja": "サンタカタリーナ州",
+              "ko": "산타카타리나주"
             }
           },
           {
@@ -8442,13 +9779,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yamasun",
             "localizedNames": {
               "zh-HK": "亞馬孫",
-              "zh-TW": "亞馬孫"
+              "zh-TW": "亞馬孫",
+              "en": "Amazonas",
+              "ja": "アマゾナス州",
+              "ko": "아마조나스 주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "巴西",
-          "zh-TW": "巴西"
+          "zh-TW": "巴西",
+          "en": "Brazil",
+          "ja": "ブラジル",
+          "ko": "브라질"
         }
       }
     ]
@@ -8477,7 +9820,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buliesite",
             "localizedNames": {
               "zh-HK": "佈列斯特",
-              "zh-TW": "佈列斯特"
+              "zh-TW": "佈列斯特",
+              "en": "Brest",
+              "ja": "ブレスト",
+              "ko": "브레스트"
             }
           },
           {
@@ -8486,7 +9832,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gemeili",
             "localizedNames": {
               "zh-HK": "戈梅利",
-              "zh-TW": "戈梅利"
+              "zh-TW": "戈梅利",
+              "en": "Homyel",
+              "ja": "ホメリ",
+              "ko": "호멜"
             }
           },
           {
@@ -8495,7 +9844,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geluodenuo",
             "localizedNames": {
               "zh-HK": "格羅德諾",
-              "zh-TW": "格羅德諾"
+              "zh-TW": "格羅德諾",
+              "en": "Hrodna",
+              "ja": "フロドナ",
+              "ko": "흐로드나"
             }
           },
           {
@@ -8528,7 +9880,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "白俄羅斯",
-          "zh-TW": "白俄羅斯"
+          "zh-TW": "白俄羅斯",
+          "en": "Belarus",
+          "ja": "ベラルーシ",
+          "ko": "벨라루스"
         }
       }
     ]
@@ -8571,7 +9926,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buerjiasi",
             "localizedNames": {
               "zh-HK": "布爾加斯",
-              "zh-TW": "布爾加斯"
+              "zh-TW": "布爾加斯",
+              "en": "Burgas",
+              "ja": "ブルガス",
+              "ko": "부르가스"
             }
           },
           {
@@ -8589,7 +9947,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lusai",
             "localizedNames": {
               "zh-HK": "魯塞",
-              "zh-TW": "魯塞"
+              "zh-TW": "魯塞",
+              "en": "Rousse",
+              "ja": "ルセ",
+              "ko": "루세"
             }
           },
           {
@@ -8598,7 +9959,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luoweiqi",
             "localizedNames": {
               "zh-HK": "洛維奇",
-              "zh-TW": "洛維奇"
+              "zh-TW": "洛維奇",
+              "en": "Lovech",
+              "ja": "ロヴェチ",
+              "ko": "로베치"
             }
           },
           {
@@ -8607,7 +9971,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mengtana",
             "localizedNames": {
               "zh-HK": "蒙塔納",
-              "zh-TW": "蒙塔納"
+              "zh-TW": "蒙塔納",
+              "en": "Montana",
+              "ja": "モンタナ",
+              "ko": "몬타나"
             }
           },
           {
@@ -8616,7 +9983,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Puluofudifu",
             "localizedNames": {
               "zh-HK": "普羅夫迪夫",
-              "zh-TW": "普羅夫迪夫"
+              "zh-TW": "普羅夫迪夫",
+              "en": "Plovdiv",
+              "ja": "プロヴディフ",
+              "ko": "플로브디프"
             }
           },
           {
@@ -8643,13 +10013,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Waerna",
             "localizedNames": {
               "zh-HK": "瓦爾納",
-              "zh-TW": "瓦爾納"
+              "zh-TW": "瓦爾納",
+              "en": "Varna",
+              "ja": "ヴァルナ",
+              "ko": "바르나"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "保加利亞",
-          "zh-TW": "保加利亞"
+          "zh-TW": "保加利亞",
+          "en": "Bulgaria",
+          "ja": "ブルガリア",
+          "ko": "불가리아"
         }
       }
     ]
@@ -8692,7 +10068,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aliboli",
             "localizedNames": {
               "zh-HK": "阿黎博裏",
-              "zh-TW": "阿黎博裏"
+              "zh-TW": "阿黎博裏",
+              "en": "Alibori Department",
+              "ja": "アリボリ県",
+              "ko": "알리보리주"
             }
           },
           {
@@ -8701,7 +10080,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Atakela",
             "localizedNames": {
               "zh-HK": "阿塔科拉",
-              "zh-TW": "阿塔科拉"
+              "zh-TW": "阿塔科拉",
+              "en": "Atakora Department",
+              "ja": "アタコラ県",
+              "ko": "아타코라주"
             }
           },
           {
@@ -8710,7 +10092,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Binhai",
             "localizedNames": {
               "zh-HK": "濱海",
-              "zh-TW": "濱海"
+              "zh-TW": "濱海",
+              "en": "Littoral Department",
+              "ja": "リトラル県",
+              "ko": "리토랄주"
             }
           },
           {
@@ -8728,7 +10113,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Boergu",
             "localizedNames": {
               "zh-HK": "博爾古",
-              "zh-TW": "博爾古"
+              "zh-TW": "博爾古",
+              "en": "Borgou Department",
+              "ja": "ボルグー県",
+              "ko": "보르구주"
             }
           },
           {
@@ -8737,7 +10125,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Daxiyang",
             "localizedNames": {
               "zh-HK": "大西洋",
-              "zh-TW": "大西洋"
+              "zh-TW": "大西洋",
+              "en": "Atlantique Department",
+              "ja": "アトランティック県",
+              "ko": "아틀랑티크주"
             }
           },
           {
@@ -8746,7 +10137,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gaoyuan",
             "localizedNames": {
               "zh-HK": "高原",
-              "zh-TW": "高原"
+              "zh-TW": "高原",
+              "en": "Plateau Department",
+              "ja": "プラトー県",
+              "ko": "플라토주"
             }
           },
           {
@@ -8755,7 +10149,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kufu",
             "localizedNames": {
               "zh-HK": "庫福",
-              "zh-TW": "庫福"
+              "zh-TW": "庫福",
+              "en": "Kouffo Department",
+              "ja": "クッフォ県",
+              "ko": "쿠포주"
             }
           },
           {
@@ -8764,7 +10161,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Monuo",
             "localizedNames": {
               "zh-HK": "莫諾",
-              "zh-TW": "莫諾"
+              "zh-TW": "莫諾",
+              "en": "Mono Department",
+              "ja": "モノ県",
+              "ko": "모노주"
             }
           },
           {
@@ -8773,7 +10173,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiuling",
             "localizedNames": {
               "zh-HK": "丘陵",
-              "zh-TW": "丘陵"
+              "zh-TW": "丘陵",
+              "en": "Collines Department",
+              "ja": "コリネス県",
+              "ko": "콜린주"
             }
           },
           {
@@ -8782,7 +10185,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weimei",
             "localizedNames": {
               "zh-HK": "韋梅",
-              "zh-TW": "韋梅"
+              "zh-TW": "韋梅",
+              "en": "Ouémé Department",
+              "ja": "ウェメ県",
+              "ko": "우에메주"
             }
           },
           {
@@ -8791,7 +10197,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiagu",
             "localizedNames": {
               "zh-HK": "峽谷",
-              "zh-TW": "峽谷"
+              "zh-TW": "峽谷",
+              "en": "Donga",
+              "ja": "ドンガ県",
+              "ko": "동가주"
             }
           },
           {
@@ -8800,13 +10209,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zu",
             "localizedNames": {
               "zh-HK": "祖",
-              "zh-TW": "祖"
+              "zh-TW": "祖",
+              "en": "Zou Department",
+              "ja": "ズー県",
+              "ko": "주주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "貝寧",
-          "zh-TW": "貝寧"
+          "zh-TW": "貝寧",
+          "en": "Benin",
+          "ja": "ベナン",
+          "ko": "베냉"
         }
       }
     ]
@@ -8835,7 +10250,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ainuo",
             "localizedNames": {
               "zh-HK": "埃諾",
-              "zh-TW": "埃諾"
+              "zh-TW": "埃諾",
+              "en": "Hainaut Province",
+              "ja": "エノー州",
+              "ko": "에노주"
             }
           },
           {
@@ -8862,7 +10280,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulusaier",
             "localizedNames": {
               "zh-HK": "布魯塞爾",
-              "zh-TW": "布魯塞爾"
+              "zh-TW": "布魯塞爾",
+              "en": "Brussels",
+              "ja": "ブリュッセル",
+              "ko": "브뤼셀"
             }
           },
           {
@@ -8907,7 +10328,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lusenbao",
             "localizedNames": {
               "zh-HK": "盧森堡",
-              "zh-TW": "盧森堡"
+              "zh-TW": "盧森堡",
+              "en": "Luxembourg Province",
+              "ja": "リュクサンブール州",
+              "ko": "뤽상부르주"
             }
           },
           {
@@ -8916,7 +10340,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Namuer",
             "localizedNames": {
               "zh-HK": "那慕爾",
-              "zh-TW": "那慕爾"
+              "zh-TW": "那慕爾",
+              "en": "Namur",
+              "ja": "ナミュール",
+              "ko": "나뮈르"
             }
           },
           {
@@ -8931,7 +10358,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "比利時",
-          "zh-TW": "比利時"
+          "zh-TW": "比利時",
+          "en": "Belgium",
+          "ja": "ベルギー",
+          "ko": "벨기에"
         }
       }
     ]
@@ -9006,7 +10436,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aositeluowenka",
             "localizedNames": {
               "zh-HK": "奧斯特羅文卡",
-              "zh-TW": "奧斯特羅文卡"
+              "zh-TW": "奧斯特羅文卡",
+              "en": "Ostrołęka",
+              "ja": "オストロウェンカ",
+              "ko": "오스트로웽카"
             }
           },
           {
@@ -9015,7 +10448,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bidegeshen",
             "localizedNames": {
               "zh-HK": "比得哥什",
-              "zh-TW": "比得哥什"
+              "zh-TW": "比得哥什",
+              "en": "Bydgoszcz",
+              "ja": "ブィドゴシュチュ",
+              "ko": "비드고슈치"
             }
           },
           {
@@ -9033,7 +10469,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bituomu",
             "localizedNames": {
               "zh-HK": "比託姆",
-              "zh-TW": "比託姆"
+              "zh-TW": "比託姆",
+              "en": "Bytom",
+              "ja": "ビトム",
+              "ko": "비톰"
             }
           },
           {
@@ -9042,7 +10481,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Biyawabodelasika",
             "localizedNames": {
               "zh-HK": "比亞瓦波德拉斯卡",
-              "zh-TW": "比亞瓦波德拉斯卡"
+              "zh-TW": "比亞瓦波德拉斯卡",
+              "en": "Biała Podlaska",
+              "ja": "Biała Podlaska",
+              "ko": "비아와포들라스카"
             }
           },
           {
@@ -9069,7 +10511,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bozinan",
             "localizedNames": {
               "zh-HK": "波茲南",
-              "zh-TW": "波茲南"
+              "zh-TW": "波茲南",
+              "en": "Poznan",
+              "ja": "ポズナン",
+              "ko": "포즈난"
             }
           },
           {
@@ -9087,7 +10532,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dabolandequgerufu",
             "localizedNames": {
               "zh-HK": "大波蘭地區戈茹夫",
-              "zh-TW": "大波蘭地區戈茹夫"
+              "zh-TW": "大波蘭地區戈茹夫",
+              "en": "Gorzów Wielkopolski",
+              "ja": "ゴジュフ・ヴィエルコポルスキ",
+              "ko": "고주프비엘코폴스키"
             }
           },
           {
@@ -9096,7 +10544,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fuluociwafu",
             "localizedNames": {
               "zh-HK": "弗羅茨瓦夫",
-              "zh-TW": "弗羅茨瓦夫"
+              "zh-TW": "弗羅茨瓦夫",
+              "en": "Wroclaw",
+              "ja": "ヴロツワフ",
+              "ko": "브로츠와프"
             }
           },
           {
@@ -9105,7 +10556,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fuwociwaweike",
             "localizedNames": {
               "zh-HK": "弗沃茨瓦韋克",
-              "zh-TW": "弗沃茨瓦韋克"
+              "zh-TW": "弗沃茨瓦韋克",
+              "en": "Włocławek",
+              "ja": "ヴウォツワヴェク",
+              "ko": "브워츠와베크"
             }
           },
           {
@@ -9114,7 +10568,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gedansike",
             "localizedNames": {
               "zh-HK": "格但斯克",
-              "zh-TW": "格但斯克"
+              "zh-TW": "格但斯克",
+              "en": "Gdansk",
+              "ja": "グダニスク",
+              "ko": "그단스크"
             }
           },
           {
@@ -9123,7 +10580,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gedingniya",
             "localizedNames": {
               "zh-HK": "格丁尼亞",
-              "zh-TW": "格丁尼亞"
+              "zh-TW": "格丁尼亞",
+              "en": "Gdynia",
+              "ja": "グディニャ",
+              "ko": "그디니아"
             }
           },
           {
@@ -9132,7 +10592,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geliweicai",
             "localizedNames": {
               "zh-HK": "格利維採",
-              "zh-TW": "格利維採"
+              "zh-TW": "格利維採",
+              "en": "Gliwice",
+              "ja": "グリヴィツェ",
+              "ko": "글리비체"
             }
           },
           {
@@ -9141,7 +10604,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geluqiongzi",
             "localizedNames": {
               "zh-HK": "格魯瓊茲",
-              "zh-TW": "格魯瓊茲"
+              "zh-TW": "格魯瓊茲",
+              "en": "Grudziądz",
+              "ja": "グルジョンツ",
+              "ko": "그루지옹츠"
             }
           },
           {
@@ -9150,7 +10616,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haiwumu",
             "localizedNames": {
               "zh-HK": "海烏姆",
-              "zh-TW": "海烏姆"
+              "zh-TW": "海烏姆",
+              "en": "Chełm",
+              "ja": "ヘウム",
+              "ko": "헤움"
             }
           },
           {
@@ -9159,7 +10628,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huasha",
             "localizedNames": {
               "zh-HK": "華沙",
-              "zh-TW": "華沙"
+              "zh-TW": "華沙",
+              "en": "Warsaw",
+              "ja": "ワルシャワ",
+              "ko": "바르샤바"
             }
           },
           {
@@ -9168,7 +10640,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huorufu",
             "localizedNames": {
               "zh-HK": "霍茹夫",
-              "zh-TW": "霍茹夫"
+              "zh-TW": "霍茹夫",
+              "en": "Chorzów",
+              "ja": "ホジュフ",
+              "ko": "호주프"
             }
           },
           {
@@ -9177,7 +10652,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalishen",
             "localizedNames": {
               "zh-HK": "卡利什",
-              "zh-TW": "卡利什"
+              "zh-TW": "卡利什",
+              "en": "Kalisz",
+              "ja": "カリシュ",
+              "ko": "칼리시"
             }
           },
           {
@@ -9186,7 +10664,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Katuoweizi",
             "localizedNames": {
               "zh-HK": "卡托維茲",
-              "zh-TW": "卡托維茲"
+              "zh-TW": "卡托維茲",
+              "en": "Katowice",
+              "ja": "カトヴィツェ",
+              "ko": "카토비체"
             }
           },
           {
@@ -9195,7 +10676,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaiercai",
             "localizedNames": {
               "zh-HK": "凱爾採",
-              "zh-TW": "凱爾採"
+              "zh-TW": "凱爾採",
+              "en": "Kielce",
+              "ja": "キェルツェ",
+              "ko": "키엘체"
             }
           },
           {
@@ -9204,7 +10688,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kening",
             "localizedNames": {
               "zh-HK": "科寧",
-              "zh-TW": "科寧"
+              "zh-TW": "科寧",
+              "en": "Konin",
+              "ja": "Konin",
+              "ko": "코닌"
             }
           },
           {
@@ -9213,7 +10700,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keshalin",
             "localizedNames": {
               "zh-HK": "科沙林",
-              "zh-TW": "科沙林"
+              "zh-TW": "科沙林",
+              "en": "Koszalin",
+              "ja": "コシャリン",
+              "ko": "코샬린"
             }
           },
           {
@@ -9222,7 +10712,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelakefu",
             "localizedNames": {
               "zh-HK": "克拉科夫",
-              "zh-TW": "克拉科夫"
+              "zh-TW": "克拉科夫",
+              "en": "Krakow",
+              "ja": "クラクフ",
+              "ko": "크라쿠프"
             }
           },
           {
@@ -9231,7 +10724,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keluosinuo",
             "localizedNames": {
               "zh-HK": "克羅斯諾",
-              "zh-TW": "克羅斯諾"
+              "zh-TW": "克羅斯諾",
+              "en": "Krosno",
+              "ja": "Krosno",
+              "ko": "크로스노"
             }
           },
           {
@@ -9240,7 +10736,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laduomu",
             "localizedNames": {
               "zh-HK": "拉多姆",
-              "zh-TW": "拉多姆"
+              "zh-TW": "拉多姆",
+              "en": "Radom",
+              "ja": "ラドム",
+              "ko": "라돔"
             }
           },
           {
@@ -9249,7 +10748,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laigenicha",
             "localizedNames": {
               "zh-HK": "萊格尼察",
-              "zh-TW": "萊格尼察"
+              "zh-TW": "萊格尼察",
+              "en": "Legnica",
+              "ja": "レグニツァ",
+              "ko": "레그니차"
             }
           },
           {
@@ -9258,7 +10760,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laishennuo",
             "localizedNames": {
               "zh-HK": "萊什諾",
-              "zh-TW": "萊什諾"
+              "zh-TW": "萊什諾",
+              "en": "Leszno",
+              "ja": "レシュノ",
+              "ko": "레슈노"
             }
           },
           {
@@ -9294,7 +10799,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lushancheng",
             "localizedNames": {
               "zh-HK": "綠山城",
-              "zh-TW": "綠山城"
+              "zh-TW": "綠山城",
+              "en": "Zielona Góra",
+              "ja": "ジェロナ・グラ",
+              "ko": "지엘로나구라"
             }
           },
           {
@@ -9312,7 +10820,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Piwa",
             "localizedNames": {
               "zh-HK": "皮瓦",
-              "zh-TW": "皮瓦"
+              "zh-TW": "皮瓦",
+              "en": "Piła",
+              "ja": "ピワ",
+              "ko": "피와"
             }
           },
           {
@@ -9321,7 +10832,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Puremeixier",
             "localizedNames": {
               "zh-HK": "普熱梅希爾",
-              "zh-TW": "普熱梅希爾"
+              "zh-TW": "普熱梅希爾",
+              "en": "Przemyśl",
+              "ja": "プシェムィシル",
+              "ko": "프셰미실"
             }
           },
           {
@@ -9330,7 +10844,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Puwocike",
             "localizedNames": {
               "zh-HK": "普沃茨克",
-              "zh-TW": "普沃茨克"
+              "zh-TW": "普沃茨克",
+              "en": "Płock",
+              "ja": "プウォツク",
+              "ko": "프워츠크"
             }
           },
           {
@@ -9339,7 +10856,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiehanufu",
             "localizedNames": {
               "zh-HK": "切哈努夫",
-              "zh-TW": "切哈努夫"
+              "zh-TW": "切哈努夫",
+              "en": "Ciechanów",
+              "ja": "Ciechanów",
+              "ko": "치에하누프"
             }
           },
           {
@@ -9348,7 +10868,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Reshufu",
             "localizedNames": {
               "zh-HK": "熱舒夫",
-              "zh-TW": "熱舒夫"
+              "zh-TW": "熱舒夫",
+              "en": "Rzeszów",
+              "ja": "ジェシュフ",
+              "ko": "제슈프"
             }
           },
           {
@@ -9357,7 +10880,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenqieqing",
             "localizedNames": {
               "zh-HK": "什切青",
-              "zh-TW": "什切青"
+              "zh-TW": "什切青",
+              "en": "Szczecin",
+              "ja": "シュチェチン",
+              "ko": "슈체친"
             }
           },
           {
@@ -9375,7 +10901,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Siwupusike",
             "localizedNames": {
               "zh-HK": "斯武普斯克",
-              "zh-TW": "斯武普斯克"
+              "zh-TW": "斯武普斯克",
+              "en": "Słupsk",
+              "ja": "スウプスク",
+              "ko": "스웁스크"
             }
           },
           {
@@ -9384,7 +10913,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suwawuji",
             "localizedNames": {
               "zh-HK": "蘇瓦烏基",
-              "zh-TW": "蘇瓦烏基"
+              "zh-TW": "蘇瓦烏基",
+              "en": "Suwałki",
+              "ja": "スヴァウキ",
+              "ko": "수바우키"
             }
           },
           {
@@ -9393,7 +10925,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suobote",
             "localizedNames": {
               "zh-HK": "索波特",
-              "zh-TW": "索波特"
+              "zh-TW": "索波特",
+              "en": "Sopot",
+              "ja": "ソポト",
+              "ko": "소포트"
             }
           },
           {
@@ -9402,7 +10937,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suosinuoweici",
             "localizedNames": {
               "zh-HK": "索斯諾維茨",
-              "zh-TW": "索斯諾維茨"
+              "zh-TW": "索斯諾維茨",
+              "en": "Sosnowiec",
+              "ja": "ソスノヴィエツ",
+              "ko": "소스노비에츠"
             }
           },
           {
@@ -9411,7 +10949,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taernufu",
             "localizedNames": {
               "zh-HK": "塔爾努夫",
-              "zh-TW": "塔爾努夫"
+              "zh-TW": "塔爾努夫",
+              "en": "Tarnów",
+              "ja": "タルヌフ",
+              "ko": "타르누프"
             }
           },
           {
@@ -9420,7 +10961,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taernuoburege",
             "localizedNames": {
               "zh-HK": "塔爾諾布熱格",
-              "zh-TW": "塔爾諾布熱格"
+              "zh-TW": "塔爾諾布熱格",
+              "en": "Tarnobrzeg",
+              "ja": "タルノブジェク",
+              "ko": "타르노브제크"
             }
           },
           {
@@ -9447,7 +10991,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wawuburihe",
             "localizedNames": {
               "zh-HK": "瓦烏布日赫",
-              "zh-TW": "瓦烏布日赫"
+              "zh-TW": "瓦烏布日赫",
+              "en": "Wałbrzych",
+              "ja": "ヴァウブジフ",
+              "ko": "바우브지흐"
             }
           },
           {
@@ -9456,7 +11003,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Womuzha",
             "localizedNames": {
               "zh-HK": "沃姆扎",
-              "zh-TW": "沃姆扎"
+              "zh-TW": "沃姆扎",
+              "en": "Łomża",
+              "ja": "ウォムジャ",
+              "ko": "웜자"
             }
           },
           {
@@ -9474,7 +11024,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiweinuowuyixiqie",
             "localizedNames": {
               "zh-HK": "希維諾烏伊希切",
-              "zh-TW": "希維諾烏伊希切"
+              "zh-TW": "希維諾烏伊希切",
+              "en": "Świnoujście",
+              "ja": "シフィノウイシチェ",
+              "ko": "시비노우이시치에"
             }
           },
           {
@@ -9483,7 +11036,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiweituoheluoweicai",
             "localizedNames": {
               "zh-HK": "希維託赫洛維採",
-              "zh-TW": "希維託赫洛維採"
+              "zh-TW": "希維託赫洛維採",
+              "en": "Świętochłowice",
+              "ja": "シフィエントフウォヴィツェ",
+              "ko": "시비엥토흐워비체"
             }
           },
           {
@@ -9501,7 +11057,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xielazi",
             "localizedNames": {
               "zh-HK": "謝拉茲",
-              "zh-TW": "謝拉茲"
+              "zh-TW": "謝拉茲",
+              "en": "Sieradz",
+              "ja": "Sieradz",
+              "ko": "Sieradz"
             }
           },
           {
@@ -9510,7 +11069,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinsongqi",
             "localizedNames": {
               "zh-HK": "新鬆奇",
-              "zh-TW": "新鬆奇"
+              "zh-TW": "新鬆奇",
+              "en": "Nowy Sącz",
+              "ja": "ノヴィ・ソンチ",
+              "ko": "노비송치"
             }
           },
           {
@@ -9528,7 +11090,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yelainiyagula",
             "localizedNames": {
               "zh-HK": "耶萊尼亞古拉",
-              "zh-TW": "耶萊尼亞古拉"
+              "zh-TW": "耶萊尼亞古拉",
+              "en": "Jelenia Góra",
+              "ja": "イェレニャ・グラ",
+              "ko": "옐레니아구라"
             }
           },
           {
@@ -9537,7 +11102,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhabure",
             "localizedNames": {
               "zh-HK": "扎布熱",
-              "zh-TW": "扎布熱"
+              "zh-TW": "扎布熱",
+              "en": "Zabrze",
+              "ja": "ザブジェ",
+              "ko": "자브제"
             }
           },
           {
@@ -9546,13 +11114,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhamoxiqi",
             "localizedNames": {
               "zh-HK": "扎莫希奇",
-              "zh-TW": "扎莫希奇"
+              "zh-TW": "扎莫希奇",
+              "en": "Zamość",
+              "ja": "ザモシチ",
+              "ko": "자모시치"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "波蘭",
-          "zh-TW": "波蘭"
+          "zh-TW": "波蘭",
+          "en": "Poland",
+          "ja": "ポーランド",
+          "ko": "폴란드"
         }
       }
     ]
@@ -9599,7 +11173,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beini",
             "localizedNames": {
               "zh-HK": "貝尼",
-              "zh-TW": "貝尼"
+              "zh-TW": "貝尼",
+              "en": "Beni Department",
+              "ja": "ベニ県",
+              "ko": "베니주"
             }
           },
           {
@@ -9626,7 +11203,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keqiabanba",
             "localizedNames": {
               "zh-HK": "科恰班巴",
-              "zh-TW": "科恰班巴"
+              "zh-TW": "科恰班巴",
+              "en": "Cochabamba",
+              "ja": "コチャバンバ",
+              "ko": "코차밤바"
             }
           },
           {
@@ -9653,7 +11233,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiujisaka",
             "localizedNames": {
               "zh-HK": "丘基薩卡",
-              "zh-TW": "丘基薩卡"
+              "zh-TW": "丘基薩卡",
+              "en": "Chuquisaca Department",
+              "ja": "チュキサカ県",
+              "ko": "추키사카주"
             }
           },
           {
@@ -9671,7 +11254,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengkelusi",
             "localizedNames": {
               "zh-HK": "聖克魯斯",
-              "zh-TW": "聖克魯斯"
+              "zh-TW": "聖克魯斯",
+              "en": "Santa Cruz Department",
+              "ja": "サンタクルス県",
+              "ko": "산타크루스주"
             }
           },
           {
@@ -9686,7 +11272,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "玻利維亞",
-          "zh-TW": "玻利維亞"
+          "zh-TW": "玻利維亞",
+          "en": "Bolivia",
+          "ja": "ボリビア",
+          "ko": "볼리비아"
         }
       }
     ]
@@ -9716,7 +11305,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bosaweina",
             "localizedNames": {
               "zh-HK": "波薩維納",
-              "zh-TW": "波薩維納"
+              "zh-TW": "波薩維納",
+              "en": "Posavina Canton",
+              "ja": "Posavina Canton",
+              "ko": "Posavina Canton"
             }
           },
           {
@@ -9743,7 +11335,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Heisaigeweina－nieleitewa",
             "localizedNames": {
               "zh-HK": "黑塞哥維那－涅雷特瓦",
-              "zh-TW": "黑塞哥維那－涅雷特瓦"
+              "zh-TW": "黑塞哥維那－涅雷特瓦",
+              "en": "Herzegovina-Neretva Canton",
+              "ja": "Herzegovina-Neretva Canton",
+              "ko": "Herzegovina-Neretva Canton"
             }
           },
           {
@@ -9752,7 +11347,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Salarewo",
             "localizedNames": {
               "zh-HK": "薩拉熱窩",
-              "zh-TW": "薩拉熱窩"
+              "zh-TW": "薩拉熱窩",
+              "en": "Sarajevo",
+              "ja": "サラエヴォ",
+              "ko": "사라예보"
             }
           },
           {
@@ -9797,7 +11395,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zenicha－duoboyi",
             "localizedNames": {
               "zh-HK": "澤尼察－多博伊",
-              "zh-TW": "澤尼察－多博伊"
+              "zh-TW": "澤尼察－多博伊",
+              "en": "Zenica-Doboj Canton",
+              "ja": "Zenica-Doboj Canton",
+              "ko": "Zenica-Doboj Canton"
             }
           },
           {
@@ -9806,13 +11407,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongbosiniya",
             "localizedNames": {
               "zh-HK": "中波斯尼亞",
-              "zh-TW": "中波斯尼亞"
+              "zh-TW": "中波斯尼亞",
+              "en": "Central Bosnia Canton",
+              "ja": "Central Bosnia Canton",
+              "ko": "Central Bosnia Canton"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "波斯尼亞和黑塞哥維那",
-          "zh-TW": "波斯尼亞和黑塞哥維那"
+          "zh-TW": "波斯尼亞和黑塞哥維那",
+          "en": "Bosnia & Herzegovina",
+          "ja": "ボスニア・ヘルツェゴビナ",
+          "ko": "보스니아 헤르체고비나"
         }
       }
     ]
@@ -9864,7 +11471,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Juyuan",
             "localizedNames": {
               "zh-HK": "橘園",
-              "zh-TW": "橘園"
+              "zh-TW": "橘園",
+              "en": "Orange Walk District",
+              "ja": "オレンジウォーク州",
+              "ko": "오렌지워크구"
             }
           },
           {
@@ -9873,7 +11483,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kayue",
             "localizedNames": {
               "zh-HK": "卡約",
-              "zh-TW": "卡約"
+              "zh-TW": "卡約",
+              "en": "Cayo District",
+              "ja": "カヨ州",
+              "ko": "카요구"
             }
           },
           {
@@ -9882,7 +11495,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keluosaer",
             "localizedNames": {
               "zh-HK": "科羅薩爾",
-              "zh-TW": "科羅薩爾"
+              "zh-TW": "科羅薩爾",
+              "en": "Corozal District",
+              "ja": "コロザル州",
+              "ko": "코로살구"
             }
           },
           {
@@ -9900,13 +11516,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuolaiduo",
             "localizedNames": {
               "zh-HK": "托萊多",
-              "zh-TW": "托萊多"
+              "zh-TW": "托萊多",
+              "en": "Toledo District",
+              "ja": "トレド州",
+              "ko": "털리도구"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "伯利茲",
-          "zh-TW": "伯利茲"
+          "zh-TW": "伯利茲",
+          "en": "Belize",
+          "ja": "ベリーズ",
+          "ko": "벨리즈"
         }
       }
     ]
@@ -9994,7 +11616,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buergu",
             "localizedNames": {
               "zh-HK": "布爾古",
-              "zh-TW": "布爾古"
+              "zh-TW": "布爾古",
+              "en": "Boulgou",
+              "ja": "ブルグ県",
+              "ko": "불구현"
             }
           },
           {
@@ -10048,7 +11673,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kajiaoge",
             "localizedNames": {
               "zh-HK": "卡焦戈",
-              "zh-TW": "卡焦戈"
+              "zh-TW": "卡焦戈",
+              "en": "Kadiogo Province",
+              "ja": "カディオゴ県",
+              "ko": "카디오고현"
             }
           },
           {
@@ -10120,7 +11748,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kulitengjia",
             "localizedNames": {
               "zh-HK": "庫裏滕加",
-              "zh-TW": "庫裏滕加"
+              "zh-TW": "庫裏滕加",
+              "en": "Kouritenga Province",
+              "ja": "クリテンガ県",
+              "ko": "쿠리텡가현"
             }
           },
           {
@@ -10147,7 +11778,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Muweng",
             "localizedNames": {
               "zh-HK": "穆翁",
-              "zh-TW": "穆翁"
+              "zh-TW": "穆翁",
+              "en": "Mouhoun",
+              "ja": "ムフン県",
+              "ko": "무운현"
             }
           },
           {
@@ -10165,7 +11799,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nawuli",
             "localizedNames": {
               "zh-HK": "納烏里",
-              "zh-TW": "納烏里"
+              "zh-TW": "納烏里",
+              "en": "Nahouri Province",
+              "ja": "ナウリ県",
+              "ko": "나우리현"
             }
           },
           {
@@ -10183,7 +11820,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niyaniya",
             "localizedNames": {
               "zh-HK": "尼亞尼亞",
-              "zh-TW": "尼亞尼亞"
+              "zh-TW": "尼亞尼亞",
+              "en": "Gnagna Province",
+              "ja": "グナグナ州",
+              "ko": "냐냐현"
             }
           },
           {
@@ -10351,7 +11991,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "布基納法索",
-          "zh-TW": "布基納法索"
+          "zh-TW": "布基納法索",
+          "en": "Burkina Faso",
+          "ja": "ブルキナファソ",
+          "ko": "부르키나파소"
         }
       }
     ]
@@ -10425,7 +12068,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jilongduo",
             "localizedNames": {
               "zh-HK": "基龍多",
-              "zh-TW": "基龍多"
+              "zh-TW": "基龍多",
+              "en": "Kirundo Province",
+              "ja": "キルンド県",
+              "ko": "키룬도주"
             }
           },
           {
@@ -10443,7 +12089,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaluji",
             "localizedNames": {
               "zh-HK": "卡魯濟",
-              "zh-TW": "卡魯濟"
+              "zh-TW": "卡魯濟",
+              "en": "Karuzi Province",
+              "ja": "カルジ県",
+              "ko": "카루지주"
             }
           },
           {
@@ -10452,7 +12101,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kayangzha",
             "localizedNames": {
               "zh-HK": "卡揚扎",
-              "zh-TW": "卡揚扎"
+              "zh-TW": "卡揚扎",
+              "en": "Kayanza Province",
+              "ja": "カヤンザ県",
+              "ko": "카얀자주"
             }
           },
           {
@@ -10461,7 +12113,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kankuzuo",
             "localizedNames": {
               "zh-HK": "坎庫佐",
-              "zh-TW": "坎庫佐"
+              "zh-TW": "坎庫佐",
+              "en": "Cankuzo Province",
+              "ja": "カンクゾ県",
+              "ko": "캉쿠조주"
             }
           },
           {
@@ -10488,7 +12143,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Makanba",
             "localizedNames": {
               "zh-HK": "馬坎巴",
-              "zh-TW": "馬坎巴"
+              "zh-TW": "馬坎巴",
+              "en": "Makamba Province",
+              "ja": "マカンバ県",
+              "ko": "마캄바주"
             }
           },
           {
@@ -10497,7 +12155,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mulamuweiya",
             "localizedNames": {
               "zh-HK": "穆拉姆維亞",
-              "zh-TW": "穆拉姆維亞"
+              "zh-TW": "穆拉姆維亞",
+              "en": "Muramvya Province",
+              "ja": "ムランヴィヤ県",
+              "ko": "무람비야주"
             }
           },
           {
@@ -10506,7 +12167,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Muwaluo",
             "localizedNames": {
               "zh-HK": "穆瓦洛",
-              "zh-TW": "穆瓦洛"
+              "zh-TW": "穆瓦洛",
+              "en": "Mwaro Province",
+              "ja": "ムワロ県",
+              "ko": "음와로주"
             }
           },
           {
@@ -10515,7 +12179,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Muyinjia",
             "localizedNames": {
               "zh-HK": "穆因加",
-              "zh-TW": "穆因加"
+              "zh-TW": "穆因加",
+              "en": "Muyinga Province",
+              "ja": "ムインガ県",
+              "ko": "무잉가주"
             }
           },
           {
@@ -10524,13 +12191,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xibituokai",
             "localizedNames": {
               "zh-HK": "錫比託凱",
-              "zh-TW": "錫比託凱"
+              "zh-TW": "錫比託凱",
+              "en": "Cibitoke Province",
+              "ja": "チビトケ県",
+              "ko": "치비토케주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "布隆迪",
-          "zh-TW": "布隆迪"
+          "zh-TW": "布隆迪",
+          "en": "Burundi",
+          "ja": "ブルンジ",
+          "ko": "부룬디"
         }
       }
     ]
@@ -10573,7 +12246,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haizhou",
             "localizedNames": {
               "zh-HK": "海州",
-              "zh-TW": "海州"
+              "zh-TW": "海州",
+              "en": "Haeju",
+              "ja": "海州",
+              "ko": "해주"
             }
           },
           {
@@ -10582,7 +12258,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huishan",
             "localizedNames": {
               "zh-HK": "惠山",
-              "zh-TW": "惠山"
+              "zh-TW": "惠山",
+              "en": "Hyesan",
+              "ja": "恵山市",
+              "ko": "惠山"
             }
           },
           {
@@ -10591,7 +12270,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiangjie",
             "localizedNames": {
               "zh-HK": "江界",
-              "zh-TW": "江界"
+              "zh-TW": "江界",
+              "en": "Kanggye",
+              "ja": "江界市",
+              "ko": "강계"
             }
           },
           {
@@ -10618,7 +12300,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanpu",
             "localizedNames": {
               "zh-HK": "南浦",
-              "zh-TW": "南浦"
+              "zh-TW": "南浦",
+              "en": "Nampo",
+              "ja": "南浦",
+              "ko": "남포"
             }
           },
           {
@@ -10627,7 +12312,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pingrang",
             "localizedNames": {
               "zh-HK": "平壤",
-              "zh-TW": "平壤"
+              "zh-TW": "平壤",
+              "en": "Pyongyang",
+              "ja": "平壌",
+              "ko": "평양직할시"
             }
           },
           {
@@ -10636,7 +12324,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qingjin",
             "localizedNames": {
               "zh-HK": "清津",
-              "zh-TW": "清津"
+              "zh-TW": "清津",
+              "en": "Chongjin",
+              "ja": "清津市",
+              "ko": "청진시"
             }
           },
           {
@@ -10654,7 +12345,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xianxing",
             "localizedNames": {
               "zh-HK": "咸興",
-              "zh-TW": "咸興"
+              "zh-TW": "咸興",
+              "en": "Hamhung",
+              "ja": "咸興市",
+              "ko": "함흥시"
             }
           },
           {
@@ -10663,7 +12357,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinyizhou",
             "localizedNames": {
               "zh-HK": "新義州",
-              "zh-TW": "新義州"
+              "zh-TW": "新義州",
+              "en": "Sinuiju",
+              "ja": "新義州市",
+              "ko": "신의주시"
             }
           },
           {
@@ -10678,7 +12375,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "朝鮮",
-          "zh-TW": "朝鮮"
+          "zh-TW": "朝鮮",
+          "en": "North Korea",
+          "ja": "北朝鮮",
+          "ko": "북한"
         }
       }
     ]
@@ -10707,7 +12407,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aohusi",
             "localizedNames": {
               "zh-HK": "奧胡斯",
-              "zh-TW": "奧胡斯"
+              "zh-TW": "奧胡斯",
+              "en": "Aarhus",
+              "ja": "オーフス",
+              "ko": "Aarhus"
             }
           },
           {
@@ -10716,7 +12419,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beiridelan",
             "localizedNames": {
               "zh-HK": "北日德蘭",
-              "zh-TW": "北日德蘭"
+              "zh-TW": "北日德蘭",
+              "en": "North Denmark",
+              "ja": "北ユラン地域",
+              "ko": "북윌란 지역"
             }
           },
           {
@@ -10752,7 +12458,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gebenhagen",
             "localizedNames": {
               "zh-HK": "哥本哈根",
-              "zh-TW": "哥本哈根"
+              "zh-TW": "哥本哈根",
+              "en": "Copenhagen",
+              "ja": "コペンハーゲン",
+              "ko": "코펜하겐"
             }
           },
           {
@@ -10761,7 +12470,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Libo",
             "localizedNames": {
               "zh-HK": "裏伯",
-              "zh-TW": "裏伯"
+              "zh-TW": "裏伯",
+              "en": "Ribe",
+              "ja": "リーベ",
+              "ko": "리베"
             }
           },
           {
@@ -10779,7 +12491,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luosijilei",
             "localizedNames": {
               "zh-HK": "羅斯基勒",
-              "zh-TW": "羅斯基勒"
+              "zh-TW": "羅斯基勒",
+              "en": "Roskilde",
+              "ja": "ロスキレ",
+              "ko": "로스킬레"
             }
           },
           {
@@ -10806,7 +12521,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weibao",
             "localizedNames": {
               "zh-HK": "維堡",
-              "zh-TW": "維堡"
+              "zh-TW": "維堡",
+              "en": "Viborg",
+              "ja": "ヴィボー",
+              "ko": "비보르"
             }
           },
           {
@@ -10830,7 +12548,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "丹麥",
-          "zh-TW": "丹麥"
+          "zh-TW": "丹麥",
+          "en": "Denmark",
+          "ja": "デンマーク",
+          "ko": "덴마크"
         }
       }
     ]
@@ -10859,7 +12580,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aensibeige",
             "localizedNames": {
               "zh-HK": "阿恩斯貝格",
-              "zh-TW": "阿恩斯貝格"
+              "zh-TW": "阿恩斯貝格",
+              "en": "Arnsberg",
+              "ja": "Arnsberg",
+              "ko": "Arnsberg"
             }
           },
           {
@@ -10886,7 +12610,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aogesibao",
             "localizedNames": {
               "zh-HK": "奧格斯堡",
-              "zh-TW": "奧格斯堡"
+              "zh-TW": "奧格斯堡",
+              "en": "Augsburg",
+              "ja": "アウクスブルク",
+              "ko": "아우크스부르크"
             }
           },
           {
@@ -10913,7 +12640,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bileifeierde",
             "localizedNames": {
               "zh-HK": "比勒費爾德",
-              "zh-TW": "比勒費爾德"
+              "zh-TW": "比勒費爾德",
+              "en": "Bielefeld",
+              "ja": "ビーレフェルト",
+              "ko": "빌레펠트"
             }
           },
           {
@@ -10922,7 +12652,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bocitan",
             "localizedNames": {
               "zh-HK": "波茨坦",
-              "zh-TW": "波茨坦"
+              "zh-TW": "波茨坦",
+              "en": "Potsdam",
+              "ja": "ポツダム",
+              "ko": "포츠담"
             }
           },
           {
@@ -10931,7 +12664,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bohong",
             "localizedNames": {
               "zh-HK": "波鴻",
-              "zh-TW": "波鴻"
+              "zh-TW": "波鴻",
+              "en": "Bochum",
+              "ja": "ボーフム",
+              "ko": "보훔"
             }
           },
           {
@@ -10949,7 +12685,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulunruike",
             "localizedNames": {
               "zh-HK": "不倫瑞克",
-              "zh-TW": "不倫瑞克"
+              "zh-TW": "不倫瑞克",
+              "en": "Brunswick",
+              "ja": "ブラウンシュヴァイク",
+              "ko": "브라운슈바이크"
             }
           },
           {
@@ -10958,7 +12697,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Damushitate",
             "localizedNames": {
               "zh-HK": "達姆施塔特",
-              "zh-TW": "達姆施塔特"
+              "zh-TW": "達姆施塔特",
+              "en": "Darmstadt",
+              "ja": "ダルムシュタット",
+              "ko": "다름슈타트"
             }
           },
           {
@@ -10976,7 +12718,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Deleisidun",
             "localizedNames": {
               "zh-HK": "德累斯頓",
-              "zh-TW": "德累斯頓"
+              "zh-TW": "德累斯頓",
+              "en": "Dresden",
+              "ja": "ドレスデン",
+              "ko": "드레스덴"
             }
           },
           {
@@ -10985,7 +12730,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Deshao",
             "localizedNames": {
               "zh-HK": "德紹",
-              "zh-TW": "德紹"
+              "zh-TW": "德紹",
+              "en": "Dessau",
+              "ja": "デッサウ",
+              "ko": "데사우"
             }
           },
           {
@@ -10994,7 +12742,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dusaierduofu",
             "localizedNames": {
               "zh-HK": "杜塞爾多夫",
-              "zh-TW": "杜塞爾多夫"
+              "zh-TW": "杜塞爾多夫",
+              "en": "Düsseldorf",
+              "ja": "デュッセルドルフ",
+              "ko": "뒤셀도르프"
             }
           },
           {
@@ -11039,7 +12790,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hannuowei",
             "localizedNames": {
               "zh-HK": "漢諾威",
-              "zh-TW": "漢諾威"
+              "zh-TW": "漢諾威",
+              "en": "Hanover",
+              "ja": "ハノーファー",
+              "ko": "하노버"
             }
           },
           {
@@ -11048,7 +12802,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jier",
             "localizedNames": {
               "zh-HK": "基爾",
-              "zh-TW": "基爾"
+              "zh-TW": "基爾",
+              "en": "Kiel",
+              "ja": "キール",
+              "ko": "킬"
             }
           },
           {
@@ -11057,7 +12814,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jisen",
             "localizedNames": {
               "zh-HK": "吉森",
-              "zh-TW": "吉森"
+              "zh-TW": "吉森",
+              "en": "Giessen",
+              "ja": "ギーセン",
+              "ko": "기센"
             }
           },
           {
@@ -11066,7 +12826,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaersilue",
             "localizedNames": {
               "zh-HK": "卡爾斯魯厄",
-              "zh-TW": "卡爾斯魯厄"
+              "zh-TW": "卡爾斯魯厄",
+              "en": "Karlsruhe",
+              "ja": "カールスルーエ",
+              "ko": "카를스루에"
             }
           },
           {
@@ -11075,7 +12838,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kasaier",
             "localizedNames": {
               "zh-HK": "卡塞爾",
-              "zh-TW": "卡塞爾"
+              "zh-TW": "卡塞爾",
+              "en": "Kassel",
+              "ja": "カッセル",
+              "ko": "카셀"
             }
           },
           {
@@ -11102,7 +12868,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelong",
             "localizedNames": {
               "zh-HK": "科隆",
-              "zh-TW": "科隆"
+              "zh-TW": "科隆",
+              "en": "Cologne",
+              "ja": "ケルン",
+              "ko": "쾰른"
             }
           },
           {
@@ -11111,7 +12880,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laibixi",
             "localizedNames": {
               "zh-HK": "萊比錫",
-              "zh-TW": "萊比錫"
+              "zh-TW": "萊比錫",
+              "en": "Leipzig",
+              "ja": "ライプツィヒ",
+              "ko": "라이프치히"
             }
           },
           {
@@ -11120,7 +12892,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lancihute",
             "localizedNames": {
               "zh-HK": "蘭茨胡特",
-              "zh-TW": "蘭茨胡特"
+              "zh-TW": "蘭茨胡特",
+              "en": "Landshut",
+              "ja": "ランツフート",
+              "ko": "란츠후트"
             }
           },
           {
@@ -11129,7 +12904,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lunebao",
             "localizedNames": {
               "zh-HK": "呂訥堡",
-              "zh-TW": "呂訥堡"
+              "zh-TW": "呂訥堡",
+              "en": "Lüneburg",
+              "ja": "リューネブルク",
+              "ko": "뤼네부르크"
             }
           },
           {
@@ -11138,7 +12916,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Magedebao",
             "localizedNames": {
               "zh-HK": "馬格德堡",
-              "zh-TW": "馬格德堡"
+              "zh-TW": "馬格德堡",
+              "en": "Magdeburg",
+              "ja": "マクデブルク",
+              "ko": "마그데부르크"
             }
           },
           {
@@ -11147,7 +12928,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manhaimu",
             "localizedNames": {
               "zh-HK": "曼海姆",
-              "zh-TW": "曼海姆"
+              "zh-TW": "曼海姆",
+              "en": "Mannheim",
+              "ja": "マンハイム",
+              "ko": "만하임"
             }
           },
           {
@@ -11174,7 +12958,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Munihei",
             "localizedNames": {
               "zh-HK": "慕尼黑",
-              "zh-TW": "慕尼黑"
+              "zh-TW": "慕尼黑",
+              "en": "Munich",
+              "ja": "ミュンヘン",
+              "ko": "뮌헨"
             }
           },
           {
@@ -11183,7 +12970,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niulunbao",
             "localizedNames": {
               "zh-HK": "紐倫堡",
-              "zh-TW": "紐倫堡"
+              "zh-TW": "紐倫堡",
+              "en": "Nuremberg",
+              "ja": "ニュルンベルク",
+              "ko": "뉘른베르크"
             }
           },
           {
@@ -11192,7 +12982,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenweilin",
             "localizedNames": {
               "zh-HK": "什未林",
-              "zh-TW": "什未林"
+              "zh-TW": "什未林",
+              "en": "Schwerin",
+              "ja": "シュヴェリーン",
+              "ko": "슈베린"
             }
           },
           {
@@ -11201,7 +12994,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Situjiate",
             "localizedNames": {
               "zh-HK": "斯圖加特",
-              "zh-TW": "斯圖加特"
+              "zh-TW": "斯圖加特",
+              "en": "Stuttgart",
+              "ja": "シュトゥットガルト",
+              "ko": "슈투트가르트"
             }
           },
           {
@@ -11210,7 +13006,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Telier",
             "localizedNames": {
               "zh-HK": "特里爾",
-              "zh-TW": "特里爾"
+              "zh-TW": "特里爾",
+              "en": "Trier",
+              "ja": "トリーア",
+              "ko": "트리어"
             }
           },
           {
@@ -11219,7 +13018,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weisibadeng",
             "localizedNames": {
               "zh-HK": "威斯巴登",
-              "zh-TW": "威斯巴登"
+              "zh-TW": "威斯巴登",
+              "en": "Wiesbaden",
+              "ja": "ヴィースバーデン",
+              "ko": "비스바덴"
             }
           },
           {
@@ -11228,13 +13030,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weiercibao",
             "localizedNames": {
               "zh-HK": "維爾茨堡",
-              "zh-TW": "維爾茨堡"
+              "zh-TW": "維爾茨堡",
+              "en": "Würzburg",
+              "ja": "ヴュルツブルク",
+              "ko": "뷔르츠부르크"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "德國",
-          "zh-TW": "德國"
+          "zh-TW": "德國",
+          "en": "Germany",
+          "ja": "ドイツ",
+          "ko": "독일"
         }
       }
     ]
@@ -11272,7 +13080,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ayinaluo",
             "localizedNames": {
               "zh-HK": "阿伊納羅",
-              "zh-TW": "阿伊納羅"
+              "zh-TW": "阿伊納羅",
+              "en": "Ainaro",
+              "ja": "アイナロ県",
+              "ko": "아이나루현"
             }
           },
           {
@@ -11281,7 +13092,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aiermeila",
             "localizedNames": {
               "zh-HK": "埃爾梅拉",
-              "zh-TW": "埃爾梅拉"
+              "zh-TW": "埃爾梅拉",
+              "en": "Ermera",
+              "ja": "エルメラ県",
+              "ko": "에르메라현"
             }
           },
           {
@@ -11326,7 +13140,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kewalima",
             "localizedNames": {
               "zh-HK": "科瓦利馬",
-              "zh-TW": "科瓦利馬"
+              "zh-TW": "科瓦利馬",
+              "en": "Cova Lima",
+              "ja": "コヴァ・リマ県",
+              "ko": "코바리마 현"
             }
           },
           {
@@ -11335,7 +13152,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laoteng",
             "localizedNames": {
               "zh-HK": "勞滕",
-              "zh-TW": "勞滕"
+              "zh-TW": "勞滕",
+              "en": "Lautém",
+              "ja": "ラウテン県",
+              "ko": "라우텡현"
             }
           },
           {
@@ -11353,7 +13173,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manatutuo",
             "localizedNames": {
               "zh-HK": "馬納圖託",
-              "zh-TW": "馬納圖託"
+              "zh-TW": "馬納圖託",
+              "en": "Manatuto",
+              "ja": "マナトゥト県",
+              "ko": "마나투투현"
             }
           },
           {
@@ -11362,7 +13185,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manufayi",
             "localizedNames": {
               "zh-HK": "馬努法伊",
-              "zh-TW": "馬努法伊"
+              "zh-TW": "馬努法伊",
+              "en": "Manufahi",
+              "ja": "マヌファヒ県",
+              "ko": "마누파이현"
             }
           },
           {
@@ -11377,7 +13203,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "東帝汶",
-          "zh-TW": "東帝汶"
+          "zh-TW": "東帝汶",
+          "en": "Timor-Leste",
+          "ja": "東ティモール",
+          "ko": "동티모르"
         }
       }
     ]
@@ -11406,7 +13235,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Binhaiqu",
             "localizedNames": {
               "zh-HK": "濱海區",
-              "zh-TW": "濱海區"
+              "zh-TW": "濱海區",
+              "en": "Maritime",
+              "ja": "沿岸州",
+              "ko": "마리팀주"
             }
           },
           {
@@ -11415,7 +13247,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Caoyuanqu",
             "localizedNames": {
               "zh-HK": "草原區",
-              "zh-TW": "草原區"
+              "zh-TW": "草原區",
+              "en": "Savanes",
+              "ja": "サバナ州",
+              "ko": "사반주"
             }
           },
           {
@@ -11424,7 +13259,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gaoyuanqu",
             "localizedNames": {
               "zh-HK": "高原區",
-              "zh-TW": "高原區"
+              "zh-TW": "高原區",
+              "en": "Plateaux",
+              "ja": "高原州",
+              "ko": "플라토주"
             }
           },
           {
@@ -11433,7 +13271,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalaqu",
             "localizedNames": {
               "zh-HK": "卡拉區",
-              "zh-TW": "卡拉區"
+              "zh-TW": "卡拉區",
+              "en": "Kara",
+              "ja": "カラ州",
+              "ko": "카라주"
             }
           },
           {
@@ -11442,13 +13283,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongbuqu",
             "localizedNames": {
               "zh-HK": "中部區",
-              "zh-TW": "中部區"
+              "zh-TW": "中部區",
+              "en": "Centrale",
+              "ja": "中央州",
+              "ko": "중앙주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "多哥",
-          "zh-TW": "多哥"
+          "zh-TW": "多哥",
+          "en": "Togo",
+          "ja": "トーゴ",
+          "ko": "토고"
         }
       }
     ]
@@ -11506,7 +13353,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Abakan",
             "localizedNames": {
               "zh-HK": "阿巴坎",
-              "zh-TW": "阿巴坎"
+              "zh-TW": "阿巴坎",
+              "en": "Abakan",
+              "ja": "アバカン",
+              "ko": "아바칸"
             }
           },
           {
@@ -11515,7 +13365,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aerhangeersike",
             "localizedNames": {
               "zh-HK": "阿爾漢格爾斯克",
-              "zh-TW": "阿爾漢格爾斯克"
+              "zh-TW": "阿爾漢格爾斯克",
+              "en": "Arkhangelskaya oblast",
+              "ja": "アルハンゲリスク州",
+              "ko": "아르한겔스크주"
             }
           },
           {
@@ -11533,7 +13386,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Anadeer",
             "localizedNames": {
               "zh-HK": "阿納德爾",
-              "zh-TW": "阿納德爾"
+              "zh-TW": "阿納德爾",
+              "en": "Anadyr",
+              "ja": "アナディリ",
+              "ko": "아나디리"
             }
           },
           {
@@ -11551,7 +13407,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ailisita",
             "localizedNames": {
               "zh-HK": "埃利斯塔",
-              "zh-TW": "埃利斯塔"
+              "zh-TW": "埃利斯塔",
+              "en": "Elista",
+              "ja": "エリスタ",
+              "ko": "옐리스타"
             }
           },
           {
@@ -11560,7 +13419,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoliaoer",
             "localizedNames": {
               "zh-HK": "奧廖爾",
-              "zh-TW": "奧廖爾"
+              "zh-TW": "奧廖爾",
+              "en": "Oryol oblast",
+              "ja": "オリョール州",
+              "ko": "오룔주"
             }
           },
           {
@@ -11569,7 +13431,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aolunbao",
             "localizedNames": {
               "zh-HK": "奧倫堡",
-              "zh-TW": "奧倫堡"
+              "zh-TW": "奧倫堡",
+              "en": "Orenburg",
+              "ja": "オレンブルク",
+              "ko": "오렌부르크"
             }
           },
           {
@@ -11578,7 +13443,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baernaoer",
             "localizedNames": {
               "zh-HK": "巴爾瑙爾",
-              "zh-TW": "巴爾瑙爾"
+              "zh-TW": "巴爾瑙爾",
+              "en": "Barnaul",
+              "ja": "バルナウル",
+              "ko": "바르나울"
             }
           },
           {
@@ -11605,7 +13473,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bideluozhawocike",
             "localizedNames": {
               "zh-HK": "彼得羅扎沃茨克",
-              "zh-TW": "彼得羅扎沃茨克"
+              "zh-TW": "彼得羅扎沃茨克",
+              "en": "Petrozavodsk",
+              "ja": "ペトロザヴォーツク",
+              "ko": "페트로자보츠크"
             }
           },
           {
@@ -11614,7 +13485,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Biermu",
             "localizedNames": {
               "zh-HK": "彼爾姆",
-              "zh-TW": "彼爾姆"
+              "zh-TW": "彼爾姆",
+              "en": "Perm",
+              "ja": "ペルミ",
+              "ko": "페름"
             }
           },
           {
@@ -11623,7 +13497,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Biluobizhan",
             "localizedNames": {
               "zh-HK": "比羅比詹",
-              "zh-TW": "比羅比詹"
+              "zh-TW": "比羅比詹",
+              "en": "Birobidzhan",
+              "ja": "ビロビジャン",
+              "ko": "비로비잔"
             }
           },
           {
@@ -11641,7 +13518,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Boli",
             "localizedNames": {
               "zh-HK": "伯力",
-              "zh-TW": "伯力"
+              "zh-TW": "伯力",
+              "en": "Khabarovsk",
+              "ja": "ハバロフスク",
+              "ko": "하바롭스크"
             }
           },
           {
@@ -11650,7 +13530,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulageweishensike",
             "localizedNames": {
               "zh-HK": "布拉戈維申斯克",
-              "zh-TW": "布拉戈維申斯克"
+              "zh-TW": "布拉戈維申斯克",
+              "en": "Blagoveshchensk",
+              "ja": "Blagoveshchensk",
+              "ko": "블라고베셴스크"
             }
           },
           {
@@ -11659,7 +13542,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buliangsike",
             "localizedNames": {
               "zh-HK": "布良斯克",
-              "zh-TW": "布良斯克"
+              "zh-TW": "布良斯克",
+              "en": "Bryansk Oblast",
+              "ja": "ブリャンスク州",
+              "ko": "브랸스크주"
             }
           },
           {
@@ -11677,7 +13563,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chita",
             "localizedNames": {
               "zh-HK": "赤塔",
-              "zh-TW": "赤塔"
+              "zh-TW": "赤塔",
+              "en": "Chita",
+              "ja": "チタ",
+              "ko": "치타"
             }
           },
           {
@@ -11686,7 +13575,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dunhepanluosituofu",
             "localizedNames": {
               "zh-HK": "頓河畔羅斯托夫",
-              "zh-TW": "頓河畔羅斯托夫"
+              "zh-TW": "頓河畔羅斯托夫",
+              "en": "Rostov-on-Don",
+              "ja": "ロストフ・ナ・ドヌ",
+              "ko": "로스토프나도누"
             }
           },
           {
@@ -11722,7 +13614,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fulajigaojiasuo",
             "localizedNames": {
               "zh-HK": "弗拉季高加索",
-              "zh-TW": "弗拉季高加索"
+              "zh-TW": "弗拉季高加索",
+              "en": "Vladikavkaz",
+              "ja": "ウラジカフカス",
+              "ko": "블라디캅카스"
             }
           },
           {
@@ -11749,7 +13644,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haicanwai",
             "localizedNames": {
               "zh-HK": "海參崴",
-              "zh-TW": "海參崴"
+              "zh-TW": "海參崴",
+              "en": "Vladivostok",
+              "ja": "ウラジオストク",
+              "ko": "블라디보스토크"
             }
           },
           {
@@ -11758,7 +13656,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hante－manxisike",
             "localizedNames": {
               "zh-HK": "漢特－曼西斯克",
-              "zh-TW": "漢特－曼西斯克"
+              "zh-TW": "漢特－曼西斯克",
+              "en": "Khanty-Mansiysk",
+              "ja": "ハンティ・マンシースク",
+              "ko": "한티만시스크"
             }
           },
           {
@@ -11785,7 +13686,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kashan",
             "localizedNames": {
               "zh-HK": "喀山",
-              "zh-TW": "喀山"
+              "zh-TW": "喀山",
+              "en": "Kazan’",
+              "ja": "カザン",
+              "ko": "카잔"
             }
           },
           {
@@ -11812,7 +13716,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelasinuodaer",
             "localizedNames": {
               "zh-HK": "克拉斯諾達爾",
-              "zh-TW": "克拉斯諾達爾"
+              "zh-TW": "克拉斯諾達爾",
+              "en": "Krasnodar",
+              "ja": "クラスノダル",
+              "ko": "크라스노다르"
             }
           },
           {
@@ -11830,7 +13737,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kemailuowo",
             "localizedNames": {
               "zh-HK": "克麥羅沃",
-              "zh-TW": "克麥羅沃"
+              "zh-TW": "克麥羅沃",
+              "en": "Kemerovo",
+              "ja": "ケメロヴォ",
+              "ko": "케메로보"
             }
           },
           {
@@ -11839,7 +13749,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kezilei",
             "localizedNames": {
               "zh-HK": "克孜勒",
-              "zh-TW": "克孜勒"
+              "zh-TW": "克孜勒",
+              "en": "Kyzyl",
+              "ja": "クズル",
+              "ko": "키질"
             }
           },
           {
@@ -11848,7 +13761,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kudemukaer",
             "localizedNames": {
               "zh-HK": "庫德姆卡爾",
-              "zh-TW": "庫德姆卡爾"
+              "zh-TW": "庫德姆卡爾",
+              "en": "Kudymkar",
+              "ja": "クディムカル",
+              "ko": "쿠딤카르"
             }
           },
           {
@@ -11911,7 +13827,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Majiasi",
             "localizedNames": {
               "zh-HK": "馬加斯",
-              "zh-TW": "馬加斯"
+              "zh-TW": "馬加斯",
+              "en": "Magas",
+              "ja": "マガス",
+              "ko": "마가스"
             }
           },
           {
@@ -11965,7 +13884,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nansahalinsike",
             "localizedNames": {
               "zh-HK": "南薩哈林斯克",
-              "zh-TW": "南薩哈林斯克"
+              "zh-TW": "南薩哈林斯克",
+              "en": "Yuzhno-Sakhalinsk",
+              "ja": "ユジノサハリンスク",
+              "ko": "유즈노사할린스크"
             }
           },
           {
@@ -11974,7 +13896,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuofugeluode",
             "localizedNames": {
               "zh-HK": "諾夫哥羅德",
-              "zh-TW": "諾夫哥羅德"
+              "zh-TW": "諾夫哥羅德",
+              "en": "Novgorod Oblast",
+              "ja": "ノヴゴロド州",
+              "ko": "노브고로드주"
             }
           },
           {
@@ -11983,7 +13908,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Palana",
             "localizedNames": {
               "zh-HK": "帕拉納",
-              "zh-TW": "帕拉納"
+              "zh-TW": "帕拉納",
+              "en": "Palana",
+              "ja": "パラナ",
+              "ko": "팔라나"
             }
           },
           {
@@ -12001,7 +13929,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiebokesalei",
             "localizedNames": {
               "zh-HK": "切博克薩雷",
-              "zh-TW": "切博克薩雷"
+              "zh-TW": "切博克薩雷",
+              "en": "Cheboksary",
+              "ja": "チェボクサル",
+              "ko": "체복사리"
             }
           },
           {
@@ -12037,7 +13968,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Salansike",
             "localizedNames": {
               "zh-HK": "薩蘭斯克",
-              "zh-TW": "薩蘭斯克"
+              "zh-TW": "薩蘭斯克",
+              "en": "Saransk",
+              "ja": "サランスク",
+              "ko": "사란스크"
             }
           },
           {
@@ -12046,7 +13980,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Saliehaerde",
             "localizedNames": {
               "zh-HK": "薩列哈爾德",
-              "zh-TW": "薩列哈爾德"
+              "zh-TW": "薩列哈爾德",
+              "en": "Salekhard",
+              "ja": "サレハルド",
+              "ko": "살레하르트"
             }
           },
           {
@@ -12064,7 +14001,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Seketefukaer",
             "localizedNames": {
               "zh-HK": "瑟克特夫卡爾",
-              "zh-TW": "瑟克特夫卡爾"
+              "zh-TW": "瑟克特夫卡爾",
+              "en": "Syktyvkar",
+              "ja": "スィクティフカル",
+              "ko": "식팁카르"
             }
           },
           {
@@ -12073,7 +14013,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengbidebao",
             "localizedNames": {
               "zh-HK": "聖彼得堡",
-              "zh-TW": "聖彼得堡"
+              "zh-TW": "聖彼得堡",
+              "en": "St Petersburg",
+              "ja": "サンクトペテルブルク",
+              "ko": "상트페테르부르크"
             }
           },
           {
@@ -12127,7 +14070,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuomusike",
             "localizedNames": {
               "zh-HK": "託木斯克",
-              "zh-TW": "託木斯克"
+              "zh-TW": "託木斯克",
+              "en": "Tomsk",
+              "ja": "トムスク",
+              "ko": "톰스크"
             }
           },
           {
@@ -12154,7 +14100,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wufa",
             "localizedNames": {
               "zh-HK": "烏法",
-              "zh-TW": "烏法"
+              "zh-TW": "烏法",
+              "en": "Ufa",
+              "ja": "ウファ",
+              "ko": "우파"
             }
           },
           {
@@ -12163,7 +14112,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wulanwude",
             "localizedNames": {
               "zh-HK": "烏蘭烏德",
-              "zh-TW": "烏蘭烏德"
+              "zh-TW": "烏蘭烏德",
+              "en": "Ulan-Ude",
+              "ja": "ウラン・ウデ",
+              "ko": "울란우데"
             }
           },
           {
@@ -12190,7 +14142,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xianuofugeluode",
             "localizedNames": {
               "zh-HK": "下諾夫哥羅德",
-              "zh-TW": "下諾夫哥羅德"
+              "zh-TW": "下諾夫哥羅德",
+              "en": "Nizhny Novgorod Oblast",
+              "ja": "ニジニ・ノヴゴロド州",
+              "ko": "니즈니노브고로드주"
             }
           },
           {
@@ -12235,7 +14190,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yierkucike",
             "localizedNames": {
               "zh-HK": "伊爾庫茨克",
-              "zh-TW": "伊爾庫茨克"
+              "zh-TW": "伊爾庫茨克",
+              "en": "Irkutsk",
+              "ja": "イルクーツク",
+              "ko": "이르쿠츠크"
             }
           },
           {
@@ -12244,7 +14202,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yirefusike",
             "localizedNames": {
               "zh-HK": "伊熱夫斯克",
-              "zh-TW": "伊熱夫斯克"
+              "zh-TW": "伊熱夫斯克",
+              "en": "Izhevsk",
+              "ja": "イジェフスク",
+              "ko": "이젭스크"
             }
           },
           {
@@ -12268,7 +14229,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "俄羅斯",
-          "zh-TW": "俄羅斯"
+          "zh-TW": "俄羅斯",
+          "en": "Russia",
+          "ja": "ロシア",
+          "ko": "러시아"
         }
       }
     ]
@@ -12297,7 +14261,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Asuai",
             "localizedNames": {
               "zh-HK": "阿蘇艾",
-              "zh-TW": "阿蘇艾"
+              "zh-TW": "阿蘇艾",
+              "en": "Azuay",
+              "ja": "アスアイ県",
+              "ko": "아수아이주"
             }
           },
           {
@@ -12306,7 +14273,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aieraoluo",
             "localizedNames": {
               "zh-HK": "埃爾奧羅",
-              "zh-TW": "埃爾奧羅"
+              "zh-TW": "埃爾奧羅",
+              "en": "El Oro",
+              "ja": "エル・オロ県",
+              "ko": "엘오로주"
             }
           },
           {
@@ -12333,7 +14303,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guayasi",
             "localizedNames": {
               "zh-HK": "瓜亞斯",
-              "zh-TW": "瓜亞斯"
+              "zh-TW": "瓜亞斯",
+              "en": "Guayas",
+              "ja": "グアヤス県",
+              "ko": "과야스주"
             }
           },
           {
@@ -12351,7 +14324,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaerqi",
             "localizedNames": {
               "zh-HK": "卡爾奇",
-              "zh-TW": "卡爾奇"
+              "zh-TW": "卡爾奇",
+              "en": "Carchi",
+              "ja": "カルチ県",
+              "ko": "카르치주"
             }
           },
           {
@@ -12405,7 +14381,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moluona－shengdeyage",
             "localizedNames": {
               "zh-HK": "莫羅納－聖地亞哥",
-              "zh-TW": "莫羅納－聖地亞哥"
+              "zh-TW": "莫羅納－聖地亞哥",
+              "en": "Morona-Santiago Province",
+              "ja": "モロナ・サンティアゴ県",
+              "ko": "모로나산티아고주"
             }
           },
           {
@@ -12423,7 +14402,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pasitasa",
             "localizedNames": {
               "zh-HK": "帕斯塔薩",
-              "zh-TW": "帕斯塔薩"
+              "zh-TW": "帕斯塔薩",
+              "en": "Pastaza Province",
+              "ja": "パスタサ県",
+              "ko": "파스타사주"
             }
           },
           {
@@ -12432,7 +14414,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Piqincha",
             "localizedNames": {
               "zh-HK": "皮欽查",
-              "zh-TW": "皮欽查"
+              "zh-TW": "皮欽查",
+              "en": "Pichincha",
+              "ja": "ピチンチャ県",
+              "ko": "피친차주"
             }
           },
           {
@@ -12441,7 +14426,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qinbolasuo",
             "localizedNames": {
               "zh-HK": "欽博拉索",
-              "zh-TW": "欽博拉索"
+              "zh-TW": "欽博拉索",
+              "en": "Chimborazo Province",
+              "ja": "チンボラソ県",
+              "ko": "침보라소주"
             }
           },
           {
@@ -12450,7 +14438,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Samola－qinqipei",
             "localizedNames": {
               "zh-HK": "薩莫拉－欽奇佩",
-              "zh-TW": "薩莫拉－欽奇佩"
+              "zh-TW": "薩莫拉－欽奇佩",
+              "en": "Zamora Chinchipe",
+              "ja": "サモラ・チンチペ県",
+              "ko": "사모라친치페주"
             }
           },
           {
@@ -12468,7 +14459,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tonggulawa",
             "localizedNames": {
               "zh-HK": "通古拉瓦",
-              "zh-TW": "通古拉瓦"
+              "zh-TW": "通古拉瓦",
+              "en": "Tungurahua Province",
+              "ja": "トゥングラワ県",
+              "ko": "퉁구라우아주"
             }
           },
           {
@@ -12477,13 +14471,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yinbabula",
             "localizedNames": {
               "zh-HK": "因巴布拉",
-              "zh-TW": "因巴布拉"
+              "zh-TW": "因巴布拉",
+              "en": "Imbabura",
+              "ja": "インバブーラ県",
+              "ko": "임바부라주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "厄瓜多爾",
-          "zh-TW": "厄瓜多爾"
+          "zh-TW": "厄瓜多爾",
+          "en": "Ecuador",
+          "ja": "エクアドル",
+          "ko": "에콰도르"
         }
       }
     ]
@@ -12512,7 +14512,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ansaiba",
             "localizedNames": {
               "zh-HK": "安塞巴",
-              "zh-TW": "安塞巴"
+              "zh-TW": "安塞巴",
+              "en": "Anseba Region",
+              "ja": "アンセバ地方",
+              "ko": "안세바주"
             }
           },
           {
@@ -12521,7 +14524,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beihonghai",
             "localizedNames": {
               "zh-HK": "北紅海",
-              "zh-TW": "北紅海"
+              "zh-TW": "北紅海",
+              "en": "Northern Red Sea",
+              "ja": "セメナウィ・ケイバハリ地方",
+              "ko": "북홍해주"
             }
           },
           {
@@ -12530,7 +14536,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiashen·baerka",
             "localizedNames": {
               "zh-HK": "加什·巴爾卡",
-              "zh-TW": "加什·巴爾卡"
+              "zh-TW": "加什·巴爾卡",
+              "en": "Gash-Barka Region",
+              "ja": "ガシュ・バルカ地方",
+              "ko": "가시바르카주"
             }
           },
           {
@@ -12539,7 +14548,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanbu",
             "localizedNames": {
               "zh-HK": "南部",
-              "zh-TW": "南部"
+              "zh-TW": "南部",
+              "en": "Debub Region",
+              "ja": "デブブ地方",
+              "ko": "남부주"
             }
           },
           {
@@ -12548,7 +14560,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanhonghai",
             "localizedNames": {
               "zh-HK": "南紅海",
-              "zh-TW": "南紅海"
+              "zh-TW": "南紅海",
+              "en": "Southern Red Sea Region",
+              "ja": "デブバウィ・ケイバハリ地方",
+              "ko": "남홍해주"
             }
           },
           {
@@ -12557,13 +14572,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongbu",
             "localizedNames": {
               "zh-HK": "中部",
-              "zh-TW": "中部"
+              "zh-TW": "中部",
+              "en": "Maekel Region",
+              "ja": "マアカル地方",
+              "ko": "중앙주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "厄立特里亞",
-          "zh-TW": "厄立特里亞"
+          "zh-TW": "厄立特里亞",
+          "en": "Eritrea",
+          "ja": "エリトリア",
+          "ko": "에리트리아"
         }
       }
     ]
@@ -12592,7 +14613,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aerlei",
             "localizedNames": {
               "zh-HK": "阿爾勒",
-              "zh-TW": "阿爾勒"
+              "zh-TW": "阿爾勒",
+              "en": "Arles",
+              "ja": "アルル",
+              "ko": "아를"
             }
           },
           {
@@ -12619,7 +14643,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoerliang",
             "localizedNames": {
               "zh-HK": "奧爾良",
-              "zh-TW": "奧爾良"
+              "zh-TW": "奧爾良",
+              "en": "Orléans",
+              "ja": "オルレアン",
+              "ko": "오를레앙"
             }
           },
           {
@@ -12628,7 +14655,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bali",
             "localizedNames": {
               "zh-HK": "巴黎",
-              "zh-TW": "巴黎"
+              "zh-TW": "巴黎",
+              "en": "Paris",
+              "ja": "パリ",
+              "ko": "파리"
             }
           },
           {
@@ -12637,7 +14667,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beisangsong",
             "localizedNames": {
               "zh-HK": "貝桑鬆",
-              "zh-TW": "貝桑鬆"
+              "zh-TW": "貝桑鬆",
+              "en": "Besançon",
+              "ja": "ブザンソン",
+              "ko": "브장송"
             }
           },
           {
@@ -12646,7 +14679,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dirong",
             "localizedNames": {
               "zh-HK": "第戎",
-              "zh-TW": "第戎"
+              "zh-TW": "第戎",
+              "en": "Dijon",
+              "ja": "ディジョン",
+              "ko": "디종"
             }
           },
           {
@@ -12655,7 +14691,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fuleiruisi",
             "localizedNames": {
               "zh-HK": "弗雷瑞斯",
-              "zh-TW": "弗雷瑞斯"
+              "zh-TW": "弗雷瑞斯",
+              "en": "Fréjus",
+              "ja": "フレジュス",
+              "ko": "프레쥐스"
             }
           },
           {
@@ -12673,7 +14712,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Leien",
             "localizedNames": {
               "zh-HK": "雷恩",
-              "zh-TW": "雷恩"
+              "zh-TW": "雷恩",
+              "en": "Rennes",
+              "ja": "レンヌ",
+              "ko": "렌"
             }
           },
           {
@@ -12691,7 +14733,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lier",
             "localizedNames": {
               "zh-HK": "里爾",
-              "zh-TW": "里爾"
+              "zh-TW": "里爾",
+              "en": "Lille",
+              "ja": "リール",
+              "ko": "릴"
             }
           },
           {
@@ -12700,7 +14745,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Limori",
             "localizedNames": {
               "zh-HK": "利摩日",
-              "zh-TW": "利摩日"
+              "zh-TW": "利摩日",
+              "en": "Limoges",
+              "ja": "リモージュ",
+              "ko": "리모주"
             }
           },
           {
@@ -12736,7 +14784,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mengbiliai",
             "localizedNames": {
               "zh-HK": "蒙彼利埃",
-              "zh-TW": "蒙彼利埃"
+              "zh-TW": "蒙彼利埃",
+              "en": "Montpellier",
+              "ja": "モンペリエ",
+              "ko": "몽펠리에"
             }
           },
           {
@@ -12745,7 +14796,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nante",
             "localizedNames": {
               "zh-HK": "南特",
-              "zh-TW": "南特"
+              "zh-TW": "南特",
+              "en": "Nantes",
+              "ja": "ナント",
+              "ko": "Nantes"
             }
           },
           {
@@ -12754,7 +14808,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nisi",
             "localizedNames": {
               "zh-HK": "尼斯",
-              "zh-TW": "尼斯"
+              "zh-TW": "尼斯",
+              "en": "Nice",
+              "ja": "ニース",
+              "ko": "니스"
             }
           },
           {
@@ -12772,7 +14829,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuluzi",
             "localizedNames": {
               "zh-HK": "圖盧茲",
-              "zh-TW": "圖盧茲"
+              "zh-TW": "圖盧茲",
+              "en": "Toulouse",
+              "ja": "トゥールーズ",
+              "ko": "툴루즈"
             }
           },
           {
@@ -12790,13 +14850,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yamian",
             "localizedNames": {
               "zh-HK": "亞眠",
-              "zh-TW": "亞眠"
+              "zh-TW": "亞眠",
+              "en": "Amiens",
+              "ja": "アミアン",
+              "ko": "아미앵"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "法國",
-          "zh-TW": "法國"
+          "zh-TW": "法國",
+          "en": "France",
+          "ja": "フランス",
+          "ko": "프랑스"
         }
       }
     ]
@@ -12834,14 +14900,15 @@ export const LOCATION_CATALOG_DATA = [
     "code": "GUF",
     "name": "圭亚那",
     "aliasesName": "法属圭亚那",
-    "iso": "GY",
+    "iso": "GF",
     "latinName": "Guiyana",
     "localizedNames": {
-      "en": "Guyana",
-      "ja": "ガイアナ",
-      "ko": "가이아나",
-      "zh-HK": "圭亞那",
-      "zh-TW": "圭亞那"
+      "en": "French Guiana",
+      "ja": "仏領ギアナ",
+      "ko": "프랑스령 기아나",
+      "zh-HK": "法屬圭亞那",
+      "zh-TW": "法屬圭亞那",
+      "zh-CN": "法属圭亚那"
     },
     "children": []
   },
@@ -12901,7 +14968,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manila",
             "localizedNames": {
               "zh-HK": "馬尼拉",
-              "zh-TW": "馬尼拉"
+              "zh-TW": "馬尼拉",
+              "en": "Manila",
+              "ja": "マニラ",
+              "ko": "마닐라"
             }
           },
           {
@@ -12916,7 +14986,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "菲律賓",
-          "zh-TW": "菲律賓"
+          "zh-TW": "菲律賓",
+          "en": "Philippines",
+          "ja": "フィリピン",
+          "ko": "필리핀"
         }
       }
     ]
@@ -12968,7 +15041,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aolu",
             "localizedNames": {
               "zh-HK": "奧盧",
-              "zh-TW": "奧盧"
+              "zh-TW": "奧盧",
+              "en": "Oulu",
+              "ja": "オウル",
+              "ko": "오울루"
             }
           },
           {
@@ -12977,7 +15053,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Boli",
             "localizedNames": {
               "zh-HK": "波里",
-              "zh-TW": "波里"
+              "zh-TW": "波里",
+              "en": "Pori",
+              "ja": "ポリ",
+              "ko": "포리"
             }
           },
           {
@@ -12995,7 +15074,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haimenlinna",
             "localizedNames": {
               "zh-HK": "海門林納",
-              "zh-TW": "海門林納"
+              "zh-TW": "海門林納",
+              "en": "Hämeenlinna",
+              "ja": "ハメーンリンナ",
+              "ko": "헤멘린나"
             }
           },
           {
@@ -13004,7 +15086,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Heerxinji",
             "localizedNames": {
               "zh-HK": "赫爾辛基",
-              "zh-TW": "赫爾辛基"
+              "zh-TW": "赫爾辛基",
+              "en": "Helsinki",
+              "ja": "ヘルシンキ",
+              "ko": "헬싱키"
             }
           },
           {
@@ -13013,7 +15098,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kayani",
             "localizedNames": {
               "zh-HK": "卡亞尼",
-              "zh-TW": "卡亞尼"
+              "zh-TW": "卡亞尼",
+              "en": "Kajaani",
+              "ja": "カヤーニ",
+              "ko": "카야니"
             }
           },
           {
@@ -13022,7 +15110,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kekela",
             "localizedNames": {
               "zh-HK": "科科拉",
-              "zh-TW": "科科拉"
+              "zh-TW": "科科拉",
+              "en": "Kokkola",
+              "ja": "コッコラ",
+              "ko": "코콜라"
             }
           },
           {
@@ -13031,7 +15122,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keteka",
             "localizedNames": {
               "zh-HK": "科特卡",
-              "zh-TW": "科特卡"
+              "zh-TW": "科特卡",
+              "en": "Kotka",
+              "ja": "コトカ",
+              "ko": "콧카"
             }
           },
           {
@@ -13040,7 +15134,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuaopiao",
             "localizedNames": {
               "zh-HK": "庫奧皮奧",
-              "zh-TW": "庫奧皮奧"
+              "zh-TW": "庫奧皮奧",
+              "en": "Kuopio",
+              "ja": "クオピオ",
+              "ko": "쿠오피오"
             }
           },
           {
@@ -13049,7 +15146,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lahedi",
             "localizedNames": {
               "zh-HK": "拉赫蒂",
-              "zh-TW": "拉赫蒂"
+              "zh-TW": "拉赫蒂",
+              "en": "Lahti",
+              "ja": "ラハティ",
+              "ko": "라티"
             }
           },
           {
@@ -13058,7 +15158,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lapenglanta",
             "localizedNames": {
               "zh-HK": "拉彭蘭塔",
-              "zh-TW": "拉彭蘭塔"
+              "zh-TW": "拉彭蘭塔",
+              "en": "Lappeenranta",
+              "ja": "ラッペーンランタ",
+              "ko": "라펜란타"
             }
           },
           {
@@ -13067,7 +15170,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luowaniemi",
             "localizedNames": {
               "zh-HK": "羅瓦涅米",
-              "zh-TW": "羅瓦涅米"
+              "zh-TW": "羅瓦涅米",
+              "en": "Rovaniemi",
+              "ja": "ロヴァニエミ",
+              "ko": "로바니에미"
             }
           },
           {
@@ -13085,7 +15191,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mikaili",
             "localizedNames": {
               "zh-HK": "米凱利",
-              "zh-TW": "米凱利"
+              "zh-TW": "米凱利",
+              "en": "Mikkeli",
+              "ja": "ミッケリ",
+              "ko": "Mikkeli"
             }
           },
           {
@@ -13094,7 +15203,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tanpeilei",
             "localizedNames": {
               "zh-HK": "坦佩雷",
-              "zh-TW": "坦佩雷"
+              "zh-TW": "坦佩雷",
+              "en": "Tampere",
+              "ja": "タンペレ",
+              "ko": "탐페레"
             }
           },
           {
@@ -13103,7 +15215,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuerku",
             "localizedNames": {
               "zh-HK": "圖爾庫",
-              "zh-TW": "圖爾庫"
+              "zh-TW": "圖爾庫",
+              "en": "Turku",
+              "ja": "トゥルク",
+              "ko": "투르쿠"
             }
           },
           {
@@ -13112,7 +15227,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wasa",
             "localizedNames": {
               "zh-HK": "瓦薩",
-              "zh-TW": "瓦薩"
+              "zh-TW": "瓦薩",
+              "en": "Vaasa",
+              "ja": "ヴァーサ",
+              "ko": "바사"
             }
           },
           {
@@ -13121,7 +15239,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wanta",
             "localizedNames": {
               "zh-HK": "萬塔",
-              "zh-TW": "萬塔"
+              "zh-TW": "萬塔",
+              "en": "Vantaa",
+              "ja": "ヴァンター",
+              "ko": "반타"
             }
           },
           {
@@ -13130,13 +15251,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yueensu",
             "localizedNames": {
               "zh-HK": "約恩蘇",
-              "zh-TW": "約恩蘇"
+              "zh-TW": "約恩蘇",
+              "en": "Joensuu",
+              "ja": "ヨエンスー",
+              "ko": "요엔수"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "芬蘭",
-          "zh-TW": "芬蘭"
+          "zh-TW": "芬蘭",
+          "en": "Finland",
+          "ja": "フィンランド",
+          "ko": "핀란드"
         }
       }
     ]
@@ -13282,7 +15409,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengfeilipu",
             "localizedNames": {
               "zh-HK": "聖菲利普",
-              "zh-TW": "聖菲利普"
+              "zh-TW": "聖菲利普",
+              "en": "São Filipe",
+              "ja": "サンフィリペ",
+              "ko": "São Filipe"
             }
           },
           {
@@ -13342,7 +15472,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "佛得角",
-          "zh-TW": "佛得角"
+          "zh-TW": "佛得角",
+          "en": "Cape Verde",
+          "ja": "カーボベルデ",
+          "ko": "카보베르데"
         }
       }
     ]
@@ -13432,7 +15565,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beisangtande",
             "localizedNames": {
               "zh-HK": "北桑坦德",
-              "zh-TW": "北桑坦德"
+              "zh-TW": "北桑坦德",
+              "en": "Norte de Santander Department",
+              "ja": "ノルテ・デ・サンタンデール県",
+              "ko": "노르테데산탄데르주"
             }
           },
           {
@@ -13477,7 +15613,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guaweiyalei",
             "localizedNames": {
               "zh-HK": "瓜維亞雷",
-              "zh-TW": "瓜維亞雷"
+              "zh-TW": "瓜維亞雷",
+              "en": "Guaviare Department",
+              "ja": "グアビアーレ県",
+              "ko": "과비아레주"
             }
           },
           {
@@ -13486,7 +15625,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guaxila",
             "localizedNames": {
               "zh-HK": "瓜希拉",
-              "zh-TW": "瓜希拉"
+              "zh-TW": "瓜希拉",
+              "en": "La Guajira Department",
+              "ja": "ラ・グアヒーラ県",
+              "ko": "라과히라주"
             }
           },
           {
@@ -13495,7 +15637,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guayiniya",
             "localizedNames": {
               "zh-HK": "瓜伊尼亞",
-              "zh-TW": "瓜伊尼亞"
+              "zh-TW": "瓜伊尼亞",
+              "en": "Guainía Department",
+              "ja": "グアイニア県",
+              "ko": "과이니아주"
             }
           },
           {
@@ -13504,7 +15649,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jindiao",
             "localizedNames": {
               "zh-HK": "金迪奧",
-              "zh-TW": "金迪奧"
+              "zh-TW": "金迪奧",
+              "en": "Quindío Department",
+              "ja": "キンディオ県",
+              "ko": "킨디오주"
             }
           },
           {
@@ -13531,7 +15679,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kasanalei",
             "localizedNames": {
               "zh-HK": "卡薩納雷",
-              "zh-TW": "卡薩納雷"
+              "zh-TW": "卡薩納雷",
+              "en": "Casanare Department",
+              "ja": "カサナレ県",
+              "ko": "카사나레주"
             }
           },
           {
@@ -13540,7 +15691,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaoka",
             "localizedNames": {
               "zh-HK": "考卡",
-              "zh-TW": "考卡"
+              "zh-TW": "考卡",
+              "en": "Cauca Department",
+              "ja": "カウカ県",
+              "ko": "카우카주"
             }
           },
           {
@@ -13549,7 +15703,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaokashangu",
             "localizedNames": {
               "zh-HK": "考卡山谷",
-              "zh-TW": "考卡山谷"
+              "zh-TW": "考卡山谷",
+              "en": "Valle del Cauca Department",
+              "ja": "バジェ・デル・カウカ県",
+              "ko": "바예델카우카주"
             }
           },
           {
@@ -13567,7 +15724,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kundinamaka",
             "localizedNames": {
               "zh-HK": "昆迪納馬卡",
-              "zh-TW": "昆迪納馬卡"
+              "zh-TW": "昆迪納馬卡",
+              "en": "Cundinamarca",
+              "ja": "クンディナマルカ県",
+              "ko": "쿤디나마르카주"
             }
           },
           {
@@ -13594,7 +15754,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Meita",
             "localizedNames": {
               "zh-HK": "梅塔",
-              "zh-TW": "梅塔"
+              "zh-TW": "梅塔",
+              "en": "Meta Department",
+              "ja": "メタ県",
+              "ko": "메타주"
             }
           },
           {
@@ -13612,7 +15775,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Putumayue",
             "localizedNames": {
               "zh-HK": "普圖馬約",
-              "zh-TW": "普圖馬約"
+              "zh-TW": "普圖馬約",
+              "en": "Putumayo Department",
+              "ja": "プトゥマヨ県",
+              "ko": "푸투마요주"
             }
           },
           {
@@ -13630,7 +15796,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Saisaer",
             "localizedNames": {
               "zh-HK": "塞薩爾",
-              "zh-TW": "塞薩爾"
+              "zh-TW": "塞薩爾",
+              "en": "Cesar Department",
+              "ja": "セサール県",
+              "ko": "세사르주"
             }
           },
           {
@@ -13639,7 +15808,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sangtande",
             "localizedNames": {
               "zh-HK": "桑坦德",
-              "zh-TW": "桑坦德"
+              "zh-TW": "桑坦德",
+              "en": "Santander Department",
+              "ja": "サンタンデール県",
+              "ko": "산탄데르주"
             }
           },
           {
@@ -13666,7 +15838,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuolima",
             "localizedNames": {
               "zh-HK": "託利馬",
-              "zh-TW": "託利馬"
+              "zh-TW": "託利馬",
+              "en": "Tolima Department",
+              "ja": "トリマ県",
+              "ko": "톨리마주"
             }
           },
           {
@@ -13693,7 +15868,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuyila",
             "localizedNames": {
               "zh-HK": "烏伊拉",
-              "zh-TW": "烏伊拉"
+              "zh-TW": "烏伊拉",
+              "en": "Huila Department",
+              "ja": "ウイラ県",
+              "ko": "우일라주"
             }
           },
           {
@@ -13702,13 +15880,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yamasun",
             "localizedNames": {
               "zh-HK": "亞馬孫",
-              "zh-TW": "亞馬孫"
+              "zh-TW": "亞馬孫",
+              "en": "Amazonas Department",
+              "ja": "アマソナス県",
+              "ko": "아마소나스주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "哥倫比亞",
-          "zh-TW": "哥倫比亞"
+          "zh-TW": "哥倫比亞",
+          "en": "Colombia",
+          "ja": "コロンビア",
+          "ko": "콜롬비아"
         }
       }
     ]
@@ -13755,7 +15939,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guanakasite",
             "localizedNames": {
               "zh-HK": "瓜納卡斯特",
-              "zh-TW": "瓜納卡斯特"
+              "zh-TW": "瓜納卡斯特",
+              "en": "Guanacaste Province",
+              "ja": "グアナカステ州",
+              "ko": "과나카스테주"
             }
           },
           {
@@ -13797,7 +15984,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "哥斯達黎加",
-          "zh-TW": "哥斯達黎加"
+          "zh-TW": "哥斯達黎加",
+          "en": "Costa Rica",
+          "ja": "コスタリカ",
+          "ko": "코스타리카"
         }
       }
     ]
@@ -13887,7 +16077,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Biyakelala",
             "localizedNames": {
               "zh-HK": "比亞克拉拉",
-              "zh-TW": "比亞克拉拉"
+              "zh-TW": "比亞克拉拉",
+              "en": "Villa Clara Province",
+              "ja": "ビジャ・クララ州",
+              "ko": "비야클라라주"
             }
           },
           {
@@ -13896,7 +16089,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelama",
             "localizedNames": {
               "zh-HK": "格拉瑪",
-              "zh-TW": "格拉瑪"
+              "zh-TW": "格拉瑪",
+              "en": "Granma Province",
+              "ja": "グランマ州",
+              "ko": "그란마주"
             }
           },
           {
@@ -13905,7 +16101,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guantanamo",
             "localizedNames": {
               "zh-HK": "關塔那摩",
-              "zh-TW": "關塔那摩"
+              "zh-TW": "關塔那摩",
+              "en": "Guantánamo Province",
+              "ja": "グァンタナモ州",
+              "ko": "관타나모주"
             }
           },
           {
@@ -13914,7 +16113,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hawana",
             "localizedNames": {
               "zh-HK": "哈瓦那",
-              "zh-TW": "哈瓦那"
+              "zh-TW": "哈瓦那",
+              "en": "Havana",
+              "ja": "ハバナ",
+              "ko": "아바나"
             }
           },
           {
@@ -13941,7 +16143,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lasitunasi",
             "localizedNames": {
               "zh-HK": "拉斯圖納斯",
-              "zh-TW": "拉斯圖納斯"
+              "zh-TW": "拉斯圖納斯",
+              "en": "Las Tunas Province",
+              "ja": "ラス・トゥーナス州",
+              "ko": "라스투나스주"
             }
           },
           {
@@ -13986,7 +16191,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengdeyage",
             "localizedNames": {
               "zh-HK": "聖地亞哥",
-              "zh-TW": "聖地亞哥"
+              "zh-TW": "聖地亞哥",
+              "en": "Santiago de Cuba Province",
+              "ja": "サンティアーゴ・デ・クーバ州",
+              "ko": "산티아고데쿠바주"
             }
           },
           {
@@ -13995,7 +16203,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengsipilitusi",
             "localizedNames": {
               "zh-HK": "聖斯皮裏圖斯",
-              "zh-TW": "聖斯皮裏圖斯"
+              "zh-TW": "聖斯皮裏圖斯",
+              "en": "Sancti Spíritus Province",
+              "ja": "サンクティ・スピリトゥス州",
+              "ko": "상크티스피리투스주"
             }
           },
           {
@@ -14013,13 +16224,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiegedeaweila",
             "localizedNames": {
               "zh-HK": "謝戈德阿維拉",
-              "zh-TW": "謝戈德阿維拉"
+              "zh-TW": "謝戈德阿維拉",
+              "en": "Ciego de Ávila Province",
+              "ja": "シエゴ・デ・アビラ州",
+              "ko": "시에고데아빌라주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "古巴",
-          "zh-TW": "古巴"
+          "zh-TW": "古巴",
+          "en": "Cuba",
+          "ja": "キューバ",
+          "ko": "쿠바"
         }
       }
     ]
@@ -14076,7 +16293,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aisaikuiboqundao-xidemeilala",
             "localizedNames": {
               "zh-HK": "埃塞奎博羣島-西德梅拉拉",
-              "zh-TW": "埃塞奎博羣島-西德梅拉拉"
+              "zh-TW": "埃塞奎博羣島-西德梅拉拉",
+              "en": "Essequibo Islands-West Demerara",
+              "ja": "エセキボ諸島＝西デメララ州",
+              "ko": "에세키보아일랜즈웨스트데메라라주"
             }
           },
           {
@@ -14085,7 +16305,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Balima-wayini",
             "localizedNames": {
               "zh-HK": "巴里馬-瓦伊尼",
-              "zh-TW": "巴里馬-瓦伊尼"
+              "zh-TW": "巴里馬-瓦伊尼",
+              "en": "Barima-Waini",
+              "ja": "バリマ・ワイニ州",
+              "ko": "바리마와이니주"
             }
           },
           {
@@ -14094,7 +16317,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bomolun-supeinamu",
             "localizedNames": {
               "zh-HK": "波默倫-蘇佩納姆",
-              "zh-TW": "波默倫-蘇佩納姆"
+              "zh-TW": "波默倫-蘇佩納姆",
+              "en": "Pomeroon-Supenaam",
+              "ja": "ポメローン＝スペナーム州",
+              "ko": "포메룬수페남주"
             }
           },
           {
@@ -14103,7 +16329,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Botaluo-xipaluni",
             "localizedNames": {
               "zh-HK": "波塔羅-錫帕魯尼",
-              "zh-TW": "波塔羅-錫帕魯尼"
+              "zh-TW": "波塔羅-錫帕魯尼",
+              "en": "Potaro-Siparuni",
+              "ja": "ポタ＝シパルニ州",
+              "ko": "포타로시파루니주"
             }
           },
           {
@@ -14112,7 +16341,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Demeilala-mahaika",
             "localizedNames": {
               "zh-HK": "德梅拉拉-馬海卡",
-              "zh-TW": "德梅拉拉-馬海卡"
+              "zh-TW": "德梅拉拉-馬海卡",
+              "en": "Demerara-Mahaica",
+              "ja": "デメララ・マハイカ州",
+              "ko": "데메라라마하이카주"
             }
           },
           {
@@ -14130,7 +16362,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuyouni-mazhaluni",
             "localizedNames": {
               "zh-HK": "庫尤尼-馬紮魯尼",
-              "zh-TW": "庫尤尼-馬紮魯尼"
+              "zh-TW": "庫尤尼-馬紮魯尼",
+              "en": "Cuyuni-Mazaruni",
+              "ja": "クユニ＝マザルニ州",
+              "ko": "쿠유니마자루니주"
             }
           },
           {
@@ -14139,7 +16374,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mahaika-bobisi",
             "localizedNames": {
               "zh-HK": "馬海卡-伯比斯",
-              "zh-TW": "馬海卡-伯比斯"
+              "zh-TW": "馬海卡-伯比斯",
+              "en": "Mahaica-Berbice",
+              "ja": "マハイカ＝ベルビセ州",
+              "ko": "마하이카버비스주"
             }
           },
           {
@@ -14148,7 +16386,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangdemeilala-bobisi",
             "localizedNames": {
               "zh-HK": "上德梅拉拉-伯比斯",
-              "zh-TW": "上德梅拉拉-伯比斯"
+              "zh-TW": "上德梅拉拉-伯比斯",
+              "en": "Upper Demerara-Berbice",
+              "ja": "アッパー・デメララ＝ベルビセ州",
+              "ko": "어퍼데메라라버비스주"
             }
           },
           {
@@ -14157,13 +16398,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangtakutu-shangaisaikuibo",
             "localizedNames": {
               "zh-HK": "上塔庫圖-上埃塞奎博",
-              "zh-TW": "上塔庫圖-上埃塞奎博"
+              "zh-TW": "上塔庫圖-上埃塞奎博",
+              "en": "Upper Takutu-Upper Essequibo",
+              "ja": "アッパー・タクトゥ＝アッパー・エセキボ州",
+              "ko": "어퍼타쿠투어퍼에세키보주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "圭亞那",
-          "zh-TW": "圭亞那"
+          "zh-TW": "圭亞那",
+          "en": "Guyana",
+          "ja": "ガイアナ",
+          "ko": "가이아나"
         }
       }
     ]
@@ -14228,7 +16475,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Alamutu",
             "localizedNames": {
               "zh-HK": "阿拉木圖",
-              "zh-TW": "阿拉木圖"
+              "zh-TW": "阿拉木圖",
+              "en": "Almaty",
+              "ja": "アルマトイ",
+              "ko": "알마티"
             }
           },
           {
@@ -14246,7 +16496,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Asitanashi",
             "localizedNames": {
               "zh-HK": "阿斯塔納市",
-              "zh-TW": "阿斯塔納市"
+              "zh-TW": "阿斯塔納市",
+              "en": "Astana",
+              "ja": "Astana",
+              "ko": "아스타나"
             }
           },
           {
@@ -14255,7 +16508,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Atelao",
             "localizedNames": {
               "zh-HK": "阿特勞",
-              "zh-TW": "阿特勞"
+              "zh-TW": "阿特勞",
+              "en": "Atyrau",
+              "ja": "アティラウ",
+              "ko": "아티라우"
             }
           },
           {
@@ -14264,7 +16520,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aijibasituzi",
             "localizedNames": {
               "zh-HK": "埃基巴斯圖茲",
-              "zh-TW": "埃基巴斯圖茲"
+              "zh-TW": "埃基巴斯圖茲",
+              "en": "Ekibastuz",
+              "ja": "エキバストス",
+              "ko": "에키바스투즈"
             }
           },
           {
@@ -14336,7 +16595,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalaganda",
             "localizedNames": {
               "zh-HK": "卡拉幹達",
-              "zh-TW": "卡拉幹達"
+              "zh-TW": "卡拉幹達",
+              "en": "Karaganda",
+              "ja": "カラガンダ州",
+              "ko": "카라간다주"
             }
           },
           {
@@ -14372,7 +16634,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kezileiaoerda",
             "localizedNames": {
               "zh-HK": "克孜勒奧爾達",
-              "zh-TW": "克孜勒奧爾達"
+              "zh-TW": "克孜勒奧爾達",
+              "en": "Kyzylorda",
+              "ja": "クズロルダ",
+              "ko": "키질로르다"
             }
           },
           {
@@ -14381,7 +16646,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kentao",
             "localizedNames": {
               "zh-HK": "肯套",
-              "zh-TW": "肯套"
+              "zh-TW": "肯套",
+              "en": "Kentau",
+              "ja": "Kentau",
+              "ko": "Kentau"
             }
           },
           {
@@ -14471,7 +16739,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sijiepunuogeersike",
             "localizedNames": {
               "zh-HK": "斯捷普諾戈爾斯克",
-              "zh-TW": "斯捷普諾戈爾斯克"
+              "zh-TW": "斯捷普諾戈爾斯克",
+              "en": "Stepnogorsk",
+              "ja": "Stepnogorsk",
+              "ko": "Stepnogorsk"
             }
           },
           {
@@ -14489,7 +16760,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tiemiertao",
             "localizedNames": {
               "zh-HK": "鐵米爾套",
-              "zh-TW": "鐵米爾套"
+              "zh-TW": "鐵米爾套",
+              "en": "Temirtau",
+              "ja": "Temirtau",
+              "ko": "테미르타우"
             }
           },
           {
@@ -14522,7 +16796,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "哈薩克斯坦",
-          "zh-TW": "哈薩克斯坦"
+          "zh-TW": "哈薩克斯坦",
+          "en": "Kazakhstan",
+          "ja": "カザフスタン",
+          "ko": "카자흐스탄"
         }
       }
     ]
@@ -14574,7 +16851,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Daqiu",
             "localizedNames": {
               "zh-HK": "大邱",
-              "zh-TW": "大邱"
+              "zh-TW": "大邱",
+              "en": "Daegu",
+              "ja": "大邱",
+              "ko": "대구광역시"
             }
           },
           {
@@ -14589,7 +16869,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "大邱",
-          "zh-TW": "大邱"
+          "zh-TW": "大邱",
+          "en": "Daegu",
+          "ja": "大邱",
+          "ko": "대구광역시"
         }
       },
       {
@@ -14599,7 +16882,10 @@ export const LOCATION_CATALOG_DATA = [
         "children": [],
         "localizedNames": {
           "zh-HK": "大田",
-          "zh-TW": "大田"
+          "zh-TW": "大田",
+          "en": "Daejeon",
+          "ja": "大田",
+          "ko": "대전광역시"
         }
       },
       {
@@ -14609,7 +16895,10 @@ export const LOCATION_CATALOG_DATA = [
         "children": [],
         "localizedNames": {
           "zh-HK": "釜山",
-          "zh-TW": "釜山"
+          "zh-TW": "釜山",
+          "en": "Busan",
+          "ja": "釜山広域市",
+          "ko": "부산광역시"
         }
       },
       {
@@ -14619,7 +16908,10 @@ export const LOCATION_CATALOG_DATA = [
         "children": [],
         "localizedNames": {
           "zh-HK": "光州",
-          "zh-TW": "光州"
+          "zh-TW": "光州",
+          "en": "Gwangju",
+          "ja": "光州廣域市",
+          "ko": "광주광역시"
         }
       },
       {
@@ -14643,7 +16935,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chunchuanshi",
             "localizedNames": {
               "zh-HK": "春川市",
-              "zh-TW": "春川市"
+              "zh-TW": "春川市",
+              "en": "Chuncheon",
+              "ja": "春川市",
+              "ko": "춘천"
             }
           },
           {
@@ -14697,7 +16992,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jianglingshi",
             "localizedNames": {
               "zh-HK": "江陵市",
-              "zh-TW": "江陵市"
+              "zh-TW": "江陵市",
+              "en": "Gangneung",
+              "ja": "江陵市",
+              "ko": "강릉"
             }
           },
           {
@@ -14733,7 +17031,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pingchangjun",
             "localizedNames": {
               "zh-HK": "平昌郡",
-              "zh-TW": "平昌郡"
+              "zh-TW": "平昌郡",
+              "en": "Pyeongchang",
+              "ja": "平昌郡",
+              "ko": "평창군"
             }
           },
           {
@@ -14796,13 +17097,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yuanzhoushi",
             "localizedNames": {
               "zh-HK": "原州市",
-              "zh-TW": "原州市"
+              "zh-TW": "原州市",
+              "en": "Wŏnju",
+              "ja": "Wŏnju",
+              "ko": "원주시"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "江原道",
-          "zh-TW": "江原道"
+          "zh-TW": "江原道",
+          "en": "Gangwon-do",
+          "ja": "江原道",
+          "ko": "강원도"
         }
       },
       {
@@ -14816,7 +17123,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Anchengshi",
             "localizedNames": {
               "zh-HK": "安城市",
-              "zh-TW": "安城市"
+              "zh-TW": "安城市",
+              "en": "Anseong",
+              "ja": "安城市",
+              "ko": "안성"
             }
           },
           {
@@ -14825,7 +17135,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Anshanshi",
             "localizedNames": {
               "zh-HK": "安山市",
-              "zh-TW": "安山市"
+              "zh-TW": "安山市",
+              "en": "Ansan-si",
+              "ja": "安山市",
+              "ko": "안산시"
             }
           },
           {
@@ -14888,7 +17201,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guangmingshi",
             "localizedNames": {
               "zh-HK": "光明市",
-              "zh-TW": "光明市"
+              "zh-TW": "光明市",
+              "en": "Gwangmyeong",
+              "ja": "Gwangmyeong",
+              "ko": "광명시"
             }
           },
           {
@@ -14897,7 +17213,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guangzhoushi",
             "localizedNames": {
               "zh-HK": "廣州市",
-              "zh-TW": "廣州市"
+              "zh-TW": "廣州市",
+              "en": "Gwangju",
+              "ja": "広州市",
+              "ko": "광주시"
             }
           },
           {
@@ -14924,7 +17243,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huachengshi",
             "localizedNames": {
               "zh-HK": "華城市",
-              "zh-TW": "華城市"
+              "zh-TW": "華城市",
+              "en": "Hwaseong-si",
+              "ja": "華城市",
+              "ko": "화성시"
             }
           },
           {
@@ -14933,7 +17255,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiapingjun",
             "localizedNames": {
               "zh-HK": "加平郡",
-              "zh-TW": "加平郡"
+              "zh-TW": "加平郡",
+              "en": "Gapyeong County",
+              "ja": "加平郡",
+              "ko": "Gapyeong County"
             }
           },
           {
@@ -14969,7 +17294,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lizhoujun",
             "localizedNames": {
               "zh-HK": "驪州郡",
-              "zh-TW": "驪州郡"
+              "zh-TW": "驪州郡",
+              "en": "Yeoju",
+              "ja": "Yeoju",
+              "ko": "驪州市"
             }
           },
           {
@@ -14996,7 +17324,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Longrenshi",
             "localizedNames": {
               "zh-HK": "龍仁市",
-              "zh-TW": "龍仁市"
+              "zh-TW": "龍仁市",
+              "en": "Yongin-si",
+              "ja": "Yongin-si",
+              "ko": "용인시"
             }
           },
           {
@@ -15005,7 +17336,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanyangzhoushi",
             "localizedNames": {
               "zh-HK": "南楊州市",
-              "zh-TW": "南楊州市"
+              "zh-TW": "南楊州市",
+              "en": "Namyangju",
+              "ja": "南楊州市",
+              "ko": "남양주시"
             }
           },
           {
@@ -15041,7 +17375,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shuiyuanshi",
             "localizedNames": {
               "zh-HK": "水原市",
-              "zh-TW": "水原市"
+              "zh-TW": "水原市",
+              "en": "Suwon",
+              "ja": "水原市",
+              "ko": "수원시"
             }
           },
           {
@@ -15050,7 +17387,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wushanshi",
             "localizedNames": {
               "zh-HK": "烏山市",
-              "zh-TW": "烏山市"
+              "zh-TW": "烏山市",
+              "en": "Osan",
+              "ja": "烏山市",
+              "ko": "오산시"
             }
           },
           {
@@ -15068,7 +17408,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yangzhoushi",
             "localizedNames": {
               "zh-HK": "楊州市",
-              "zh-TW": "楊州市"
+              "zh-TW": "楊州市",
+              "en": "Yangju",
+              "ja": "楊州市",
+              "ko": "양주"
             }
           },
           {
@@ -15092,7 +17435,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "京畿道",
-          "zh-TW": "京畿道"
+          "zh-TW": "京畿道",
+          "en": "Gyeonggi-do",
+          "ja": "京畿道",
+          "ko": "경기도"
         }
       },
       {
@@ -15106,7 +17452,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Andongshi",
             "localizedNames": {
               "zh-HK": "安東市",
-              "zh-TW": "安東市"
+              "zh-TW": "安東市",
+              "en": "Andong",
+              "ja": "安東市",
+              "ko": "안동"
             }
           },
           {
@@ -15133,7 +17482,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guiweishi",
             "localizedNames": {
               "zh-HK": "龜尾市",
-              "zh-TW": "龜尾市"
+              "zh-TW": "龜尾市",
+              "en": "Gumi",
+              "ja": "亀尾市",
+              "ko": "龜尾市"
             }
           },
           {
@@ -15142,7 +17494,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinquanshi",
             "localizedNames": {
               "zh-HK": "金泉市",
-              "zh-TW": "金泉市"
+              "zh-TW": "金泉市",
+              "en": "Gimcheon",
+              "ja": "金泉市",
+              "ko": "김천"
             }
           },
           {
@@ -15205,7 +17560,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qingshanshi",
             "localizedNames": {
               "zh-HK": "慶山市",
-              "zh-TW": "慶山市"
+              "zh-TW": "慶山市",
+              "en": "Gyeongsan-si",
+              "ja": "Gyeongsan-si",
+              "ko": "경산시"
             }
           },
           {
@@ -15214,7 +17572,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qingzhoushi",
             "localizedNames": {
               "zh-HK": "慶州市",
-              "zh-TW": "慶州市"
+              "zh-TW": "慶州市",
+              "en": "Gyeongju",
+              "ja": "慶州市",
+              "ko": "경주시"
             }
           },
           {
@@ -15241,7 +17602,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weizhenjun",
             "localizedNames": {
               "zh-HK": "蔚珍郡",
-              "zh-TW": "蔚珍郡"
+              "zh-TW": "蔚珍郡",
+              "en": "Uljin County",
+              "ja": "蔚珍郡",
+              "ko": "울진군"
             }
           },
           {
@@ -15250,7 +17614,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wenqingshi",
             "localizedNames": {
               "zh-HK": "聞慶市",
-              "zh-TW": "聞慶市"
+              "zh-TW": "聞慶市",
+              "en": "Mungyeong",
+              "ja": "聞慶市",
+              "ko": "문경"
             }
           },
           {
@@ -15310,7 +17677,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "慶尚北道",
-          "zh-TW": "慶尚北道"
+          "zh-TW": "慶尚北道",
+          "en": "Gyeongsangbuk-do",
+          "ja": "慶尚北道",
+          "ko": "경상북도"
         }
       },
       {
@@ -15333,7 +17703,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Changyuanshi",
             "localizedNames": {
               "zh-HK": "昌原市",
-              "zh-TW": "昌原市"
+              "zh-TW": "昌原市",
+              "en": "Changwon",
+              "ja": "昌原市",
+              "ko": "창원시"
             }
           },
           {
@@ -15369,7 +17742,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinzhoushi",
             "localizedNames": {
               "zh-HK": "晉州市",
-              "zh-TW": "晉州市"
+              "zh-TW": "晉州市",
+              "en": "Jinju",
+              "ja": "晋州市",
+              "ko": "진주시"
             }
           },
           {
@@ -15396,7 +17772,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liangshanshi",
             "localizedNames": {
               "zh-HK": "梁山市",
-              "zh-TW": "梁山市"
+              "zh-TW": "梁山市",
+              "en": "Yangsan",
+              "ja": "梁山市",
+              "ko": "양산"
             }
           },
           {
@@ -15414,7 +17793,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Miyangshi",
             "localizedNames": {
               "zh-HK": "密陽市",
-              "zh-TW": "密陽市"
+              "zh-TW": "密陽市",
+              "en": "Miryang",
+              "ja": "密陽市",
+              "ko": "밀양시"
             }
           },
           {
@@ -15501,7 +17883,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "慶尚南道",
-          "zh-TW": "慶尚南道"
+          "zh-TW": "慶尚南道",
+          "en": "Gyeongsangnam-do",
+          "ja": "慶尚南道",
+          "ko": "경상남도"
         }
       },
       {
@@ -15551,7 +17936,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jingyishi",
             "localizedNames": {
               "zh-HK": "井邑市",
-              "zh-TW": "井邑市"
+              "zh-TW": "井邑市",
+              "en": "Jeongeup",
+              "ja": "Jeongeup",
+              "ko": "井邑市"
             }
           },
           {
@@ -15578,7 +17966,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Quanzhoushi",
             "localizedNames": {
               "zh-HK": "全州市",
-              "zh-TW": "全州市"
+              "zh-TW": "全州市",
+              "en": "Jeonju",
+              "ja": "全州市",
+              "ko": "전주시"
             }
           },
           {
@@ -15587,7 +17978,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qunshanshi",
             "localizedNames": {
               "zh-HK": "羣山市",
-              "zh-TW": "羣山市"
+              "zh-TW": "羣山市",
+              "en": "Gunsan",
+              "ja": "群山市",
+              "ko": "군산시"
             }
           },
           {
@@ -15614,7 +18008,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yishanshi",
             "localizedNames": {
               "zh-HK": "益山市",
-              "zh-TW": "益山市"
+              "zh-TW": "益山市",
+              "en": "Iksan",
+              "ja": "益山市",
+              "ko": "익산시"
             }
           },
           {
@@ -15638,7 +18035,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "全羅北道",
-          "zh-TW": "全羅北道"
+          "zh-TW": "全羅北道",
+          "en": "Jeollabuk-do",
+          "ja": "全羅北道",
+          "ko": "전라북도"
         }
       },
       {
@@ -15724,7 +18124,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lishuishi",
             "localizedNames": {
               "zh-HK": "麗水市",
-              "zh-TW": "麗水市"
+              "zh-TW": "麗水市",
+              "en": "Yeosu",
+              "ja": "麗水市",
+              "ko": "여수"
             }
           },
           {
@@ -15751,7 +18154,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luozhoushi",
             "localizedNames": {
               "zh-HK": "羅州市",
-              "zh-TW": "羅州市"
+              "zh-TW": "羅州市",
+              "en": "Naju",
+              "ja": "羅州市",
+              "ko": "나주"
             }
           },
           {
@@ -15796,7 +18202,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuanjun",
             "localizedNames": {
               "zh-HK": "務安郡",
-              "zh-TW": "務安郡"
+              "zh-TW": "務安郡",
+              "en": "Muan",
+              "ja": "務安",
+              "ko": "Muan"
             }
           },
           {
@@ -15847,7 +18256,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "全羅南道",
-          "zh-TW": "全羅南道"
+          "zh-TW": "全羅南道",
+          "en": "Jeollanam-do",
+          "ja": "全羅南道",
+          "ko": "전라남도"
         }
       },
       {
@@ -15857,7 +18269,10 @@ export const LOCATION_CATALOG_DATA = [
         "children": [],
         "localizedNames": {
           "zh-HK": "仁川",
-          "zh-TW": "仁川"
+          "zh-TW": "仁川",
+          "en": "Incheon",
+          "ja": "仁川",
+          "ko": "인천광역시"
         }
       },
       {
@@ -15867,7 +18282,10 @@ export const LOCATION_CATALOG_DATA = [
         "children": [],
         "localizedNames": {
           "zh-HK": "首爾",
-          "zh-TW": "首爾"
+          "zh-TW": "首爾",
+          "en": "Seoul",
+          "ja": "ソウル特別市",
+          "ko": "서울특별시"
         }
       },
       {
@@ -15877,7 +18295,10 @@ export const LOCATION_CATALOG_DATA = [
         "children": [],
         "localizedNames": {
           "zh-HK": "蔚山",
-          "zh-TW": "蔚山"
+          "zh-TW": "蔚山",
+          "en": "Ulsan",
+          "ja": "蔚山",
+          "ko": "울산광역시"
         }
       },
       {
@@ -15918,7 +18339,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dichuanshi",
             "localizedNames": {
               "zh-HK": "堤川市",
-              "zh-TW": "堤川市"
+              "zh-TW": "堤川市",
+              "en": "Jecheon",
+              "ja": "堤川市",
+              "ko": "제천"
             }
           },
           {
@@ -15990,13 +18414,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongzhoushi",
             "localizedNames": {
               "zh-HK": "忠州市",
-              "zh-TW": "忠州市"
+              "zh-TW": "忠州市",
+              "en": "Chungju",
+              "ja": "忠州市",
+              "ko": "충주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "忠清北道",
-          "zh-TW": "忠清北道"
+          "zh-TW": "忠清北道",
+          "en": "North Chungcheong",
+          "ja": "忠清北道",
+          "ko": "충청북도"
         }
       },
       {
@@ -16010,7 +18440,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baoningshi",
             "localizedNames": {
               "zh-HK": "保寧市",
-              "zh-TW": "保寧市"
+              "zh-TW": "保寧市",
+              "en": "Boryeong",
+              "ja": "Boryeong",
+              "ko": "보령시"
             }
           },
           {
@@ -16028,7 +18461,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gongzhoushi",
             "localizedNames": {
               "zh-HK": "公州市",
-              "zh-TW": "公州市"
+              "zh-TW": "公州市",
+              "en": "Gongju",
+              "ja": "公州市",
+              "ko": "공주시"
             }
           },
           {
@@ -16037,7 +18473,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hongchengjun",
             "localizedNames": {
               "zh-HK": "洪城郡",
-              "zh-TW": "洪城郡"
+              "zh-TW": "洪城郡",
+              "en": "Hongseong",
+              "ja": "洪城",
+              "ko": "Hongseong"
             }
           },
           {
@@ -16073,7 +18512,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lunshanshi",
             "localizedNames": {
               "zh-HK": "論山市",
-              "zh-TW": "論山市"
+              "zh-TW": "論山市",
+              "en": "Nonsan",
+              "ja": "論山市",
+              "ko": "논산시"
             }
           },
           {
@@ -16091,7 +18533,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ruishanshi",
             "localizedNames": {
               "zh-HK": "瑞山市",
-              "zh-TW": "瑞山市"
+              "zh-TW": "瑞山市",
+              "en": "Seosan City",
+              "ja": "瑞山市",
+              "ko": "서산시"
             }
           },
           {
@@ -16127,7 +18572,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tiananshi",
             "localizedNames": {
               "zh-HK": "天安市",
-              "zh-TW": "天安市"
+              "zh-TW": "天安市",
+              "en": "Cheonan",
+              "ja": "天安市",
+              "ko": "天安市"
             }
           },
           {
@@ -16136,7 +18584,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yashanshi",
             "localizedNames": {
               "zh-HK": "牙山市",
-              "zh-TW": "牙山市"
+              "zh-TW": "牙山市",
+              "en": "Asan",
+              "ja": "牙山市",
+              "ko": "아산"
             }
           },
           {
@@ -16151,7 +18602,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "忠清南道",
-          "zh-TW": "忠清南道"
+          "zh-TW": "忠清南道",
+          "en": "Chungcheongnam-do",
+          "ja": "忠清南道",
+          "ko": "충청남도"
         }
       }
     ]
@@ -16198,7 +18652,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Amusitedan",
             "localizedNames": {
               "zh-HK": "阿姆斯特丹",
-              "zh-TW": "阿姆斯特丹"
+              "zh-TW": "阿姆斯特丹",
+              "en": "Amsterdam",
+              "ja": "アムステルダム",
+              "ko": "암스테르담"
             }
           },
           {
@@ -16207,7 +18664,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Anamu",
             "localizedNames": {
               "zh-HK": "阿納姆",
-              "zh-TW": "阿納姆"
+              "zh-TW": "阿納姆",
+              "en": "Arnhem",
+              "ja": "アーネム",
+              "ko": "아른험"
             }
           },
           {
@@ -16216,7 +18676,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Apoerduolun",
             "localizedNames": {
               "zh-HK": "阿珀爾多倫",
-              "zh-TW": "阿珀爾多倫"
+              "zh-TW": "阿珀爾多倫",
+              "en": "Apeldoorn",
+              "ja": "アペルドールン",
+              "ko": "아펠도른"
             }
           },
           {
@@ -16225,7 +18688,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Asen",
             "localizedNames": {
               "zh-HK": "阿森",
-              "zh-TW": "阿森"
+              "zh-TW": "阿森",
+              "en": "Assen",
+              "ja": "アッセン",
+              "ko": "아선"
             }
           },
           {
@@ -16243,7 +18709,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aimen",
             "localizedNames": {
               "zh-HK": "埃門",
-              "zh-TW": "埃門"
+              "zh-TW": "埃門",
+              "en": "Emmen",
+              "ja": "エメン",
+              "ko": "에먼"
             }
           },
           {
@@ -16261,7 +18730,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buleida",
             "localizedNames": {
               "zh-HK": "佈雷達",
-              "zh-TW": "佈雷達"
+              "zh-TW": "佈雷達",
+              "en": "Breda",
+              "ja": "ブレダ",
+              "ko": "브레다"
             }
           },
           {
@@ -16270,7 +18742,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dierbao",
             "localizedNames": {
               "zh-HK": "蒂爾堡",
-              "zh-TW": "蒂爾堡"
+              "zh-TW": "蒂爾堡",
+              "en": "Tilburg",
+              "ja": "ティルブルフ",
+              "ko": "틸뷔르흐"
             }
           },
           {
@@ -16288,7 +18763,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ensihede",
             "localizedNames": {
               "zh-HK": "恩斯赫德",
-              "zh-TW": "恩斯赫德"
+              "zh-TW": "恩斯赫德",
+              "en": "Enschede",
+              "ja": "エンスヘーデ",
+              "ko": "엔스헤더"
             }
           },
           {
@@ -16306,7 +18784,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haleimu",
             "localizedNames": {
               "zh-HK": "哈勒姆",
-              "zh-TW": "哈勒姆"
+              "zh-TW": "哈勒姆",
+              "en": "Haarlem",
+              "ja": "ハールレム",
+              "ko": "하를럼"
             }
           },
           {
@@ -16315,7 +18796,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haiya",
             "localizedNames": {
               "zh-HK": "海牙",
-              "zh-TW": "海牙"
+              "zh-TW": "海牙",
+              "en": "The Hague",
+              "ja": "デン・ハーグ",
+              "ko": "헤이그"
             }
           },
           {
@@ -16333,7 +18817,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laidun",
             "localizedNames": {
               "zh-HK": "萊頓",
-              "zh-TW": "萊頓"
+              "zh-TW": "萊頓",
+              "en": "Leiden",
+              "ja": "ライデン",
+              "ko": "레이던"
             }
           },
           {
@@ -16342,7 +18829,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lailisitade",
             "localizedNames": {
               "zh-HK": "萊利斯塔德",
-              "zh-TW": "萊利斯塔德"
+              "zh-TW": "萊利斯塔德",
+              "en": "Lelystad",
+              "ja": "レリスタット",
+              "ko": "Lelystad"
             }
           },
           {
@@ -16351,7 +18841,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lutedan",
             "localizedNames": {
               "zh-HK": "鹿特丹",
-              "zh-TW": "鹿特丹"
+              "zh-TW": "鹿特丹",
+              "en": "Rotterdam",
+              "ja": "ロッテルダム",
+              "ko": "로테르담"
             }
           },
           {
@@ -16360,7 +18853,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lufadeng",
             "localizedNames": {
               "zh-HK": "呂伐登",
-              "zh-TW": "呂伐登"
+              "zh-TW": "呂伐登",
+              "en": "Leeuwarden",
+              "ja": "レーワルデン",
+              "ko": "레이우아르던"
             }
           },
           {
@@ -16369,7 +18865,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Masitelihete",
             "localizedNames": {
               "zh-HK": "馬斯特裏赫特",
-              "zh-TW": "馬斯特裏赫特"
+              "zh-TW": "馬斯特裏赫特",
+              "en": "Maastricht",
+              "ja": "マーストリヒト",
+              "ko": "마스트리흐트"
             }
           },
           {
@@ -16378,7 +18877,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mideerbao",
             "localizedNames": {
               "zh-HK": "米德爾堡",
-              "zh-TW": "米德爾堡"
+              "zh-TW": "米德爾堡",
+              "en": "Middelburg",
+              "ja": "ミデルブルフ",
+              "ko": "미델뷔르흐"
             }
           },
           {
@@ -16387,7 +18889,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Naimeiheng",
             "localizedNames": {
               "zh-HK": "奈梅亨",
-              "zh-TW": "奈梅亨"
+              "zh-TW": "奈梅亨",
+              "en": "Nijmegen",
+              "ja": "ナイメーヘン",
+              "ko": "네이메헌"
             }
           },
           {
@@ -16414,7 +18919,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ziwolei",
             "localizedNames": {
               "zh-HK": "茲沃勒",
-              "zh-TW": "茲沃勒"
+              "zh-TW": "茲沃勒",
+              "en": "Zwolle",
+              "ja": "ズヴォレ",
+              "ko": "즈볼러"
             }
           },
           {
@@ -16429,7 +18937,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "荷蘭",
-          "zh-TW": "荷蘭"
+          "zh-TW": "荷蘭",
+          "en": "Netherlands",
+          "ja": "オランダ",
+          "ko": "네덜란드"
         }
       }
     ]
@@ -16472,7 +18983,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Atelandida",
             "localizedNames": {
               "zh-HK": "阿特蘭蒂達",
-              "zh-TW": "阿特蘭蒂達"
+              "zh-TW": "阿特蘭蒂達",
+              "en": "Atlántida Department",
+              "ja": "アトランティダ県",
+              "ko": "아틀란티다주"
             }
           },
           {
@@ -16481,7 +18995,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aierpalayisuo",
             "localizedNames": {
               "zh-HK": "埃爾帕拉伊索",
-              "zh-TW": "埃爾帕拉伊索"
+              "zh-TW": "埃爾帕拉伊索",
+              "en": "El Paraíso Department",
+              "ja": "エル・パライソ県",
+              "ko": "엘파라이소주"
             }
           },
           {
@@ -16490,7 +19007,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoketepeike",
             "localizedNames": {
               "zh-HK": "奧科特佩克",
-              "zh-TW": "奧科特佩克"
+              "zh-TW": "奧科特佩克",
+              "en": "Ocotepeque Department",
+              "ja": "オコテペケ県",
+              "ko": "오코테페케주"
             }
           },
           {
@@ -16499,7 +19019,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aolanqiao",
             "localizedNames": {
               "zh-HK": "奧蘭喬",
-              "zh-TW": "奧蘭喬"
+              "zh-TW": "奧蘭喬",
+              "en": "Olancho Department",
+              "ja": "オランチョ県",
+              "ko": "올란초주"
             }
           },
           {
@@ -16508,7 +19031,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fulangxisike-molasang",
             "localizedNames": {
               "zh-HK": "弗朗西斯科-莫拉桑",
-              "zh-TW": "弗朗西斯科-莫拉桑"
+              "zh-TW": "弗朗西斯科-莫拉桑",
+              "en": "Francisco Morazán Department",
+              "ja": "フランシスコ・モラサン県",
+              "ko": "프란시스코모라산주"
             }
           },
           {
@@ -16517,7 +19043,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelaxiyasi-adiaosi",
             "localizedNames": {
               "zh-HK": "格拉西亞斯-阿迪奧斯",
-              "zh-TW": "格拉西亞斯-阿迪奧斯"
+              "zh-TW": "格拉西亞斯-阿迪奧斯",
+              "en": "Gracias a Dios Department",
+              "ja": "グラシアス・ア・ディオス県",
+              "ko": "그라시아스아디오스주"
             }
           },
           {
@@ -16535,7 +19064,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keertesi",
             "localizedNames": {
               "zh-HK": "科爾特斯",
-              "zh-TW": "科爾特斯"
+              "zh-TW": "科爾特斯",
+              "en": "Cortés Department",
+              "ja": "コルテス県",
+              "ko": "코르테스주"
             }
           },
           {
@@ -16544,7 +19076,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelong",
             "localizedNames": {
               "zh-HK": "科隆",
-              "zh-TW": "科隆"
+              "zh-TW": "科隆",
+              "en": "Colón Department",
+              "ja": "コロン県",
+              "ko": "콜론주"
             }
           },
           {
@@ -16562,7 +19097,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kepan",
             "localizedNames": {
               "zh-HK": "科潘",
-              "zh-TW": "科潘"
+              "zh-TW": "科潘",
+              "en": "Copán Department",
+              "ja": "コパン県",
+              "ko": "코판주"
             }
           },
           {
@@ -16580,7 +19118,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lunpila",
             "localizedNames": {
               "zh-HK": "倫皮拉",
-              "zh-TW": "倫皮拉"
+              "zh-TW": "倫皮拉",
+              "en": "Lempira Department",
+              "ja": "レンピーラ県",
+              "ko": "렘피라주"
             }
           },
           {
@@ -16589,7 +19130,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiaoluteka",
             "localizedNames": {
               "zh-HK": "喬盧特卡",
-              "zh-TW": "喬盧特卡"
+              "zh-TW": "喬盧特卡",
+              "en": "Choluteca Department",
+              "ja": "チョルテカ県",
+              "ko": "촐루테카주"
             }
           },
           {
@@ -16607,7 +19151,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangu",
             "localizedNames": {
               "zh-HK": "山谷",
-              "zh-TW": "山谷"
+              "zh-TW": "山谷",
+              "en": "Valle Department",
+              "ja": "バジェ県",
+              "ko": "바예주"
             }
           },
           {
@@ -16634,13 +19181,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yueluo",
             "localizedNames": {
               "zh-HK": "約羅",
-              "zh-TW": "約羅"
+              "zh-TW": "約羅",
+              "en": "Yoro Department",
+              "ja": "ヨロ県",
+              "ko": "요로주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "洪都拉斯",
-          "zh-TW": "洪都拉斯"
+          "zh-TW": "洪都拉斯",
+          "en": "Honduras",
+          "ja": "ホンジュラス",
+          "ko": "온두라스"
         }
       }
     ]
@@ -16669,7 +19222,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Feinikesiqundao",
             "localizedNames": {
               "zh-HK": "菲尼克斯羣島",
-              "zh-TW": "菲尼克斯羣島"
+              "zh-TW": "菲尼克斯羣島",
+              "en": "Phoenix Islands",
+              "ja": "フェニックス諸島",
+              "ko": "피닉스 제도"
             }
           },
           {
@@ -16693,7 +19249,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "基里巴斯",
-          "zh-TW": "基里巴斯"
+          "zh-TW": "基里巴斯",
+          "en": "Kiribati",
+          "ja": "キリバス",
+          "ko": "키리바시"
         }
       }
     ]
@@ -16740,7 +19299,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dijileiqu",
             "localizedNames": {
               "zh-HK": "迪基勒區",
-              "zh-TW": "迪基勒區"
+              "zh-TW": "迪基勒區",
+              "en": "Dikhil",
+              "ja": "ディキル",
+              "ko": "디크힐"
             }
           },
           {
@@ -16755,7 +19317,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "吉布提",
-          "zh-TW": "吉布提"
+          "zh-TW": "吉布提",
+          "en": "Djibouti",
+          "ja": "ジブチ",
+          "ko": "지부티"
         }
       }
     ]
@@ -16802,7 +19367,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bishenkaikeshi",
             "localizedNames": {
               "zh-HK": "比什凱克市",
-              "zh-TW": "比什凱克市"
+              "zh-TW": "比什凱克市",
+              "en": "Bishkek",
+              "ja": "ビシュケク",
+              "ko": "비슈케크"
             }
           },
           {
@@ -16811,7 +19379,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chuhe",
             "localizedNames": {
               "zh-HK": "楚河",
-              "zh-TW": "楚河"
+              "zh-TW": "楚河",
+              "en": "Chuy Region",
+              "ja": "チュイ州",
+              "ko": "추이주"
             }
           },
           {
@@ -16874,7 +19445,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nalun",
             "localizedNames": {
               "zh-HK": "納倫",
-              "zh-TW": "納倫"
+              "zh-TW": "納倫",
+              "en": "Naryn Region",
+              "ja": "ナルイン州",
+              "ko": "나린주"
             }
           },
           {
@@ -16892,7 +19466,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Talasi",
             "localizedNames": {
               "zh-HK": "塔拉斯",
-              "zh-TW": "塔拉斯"
+              "zh-TW": "塔拉斯",
+              "en": "Talas Region",
+              "ja": "タラス州",
+              "ko": "탈라스주"
             }
           },
           {
@@ -16910,7 +19487,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuzigen",
             "localizedNames": {
               "zh-HK": "烏茲根",
-              "zh-TW": "烏茲根"
+              "zh-TW": "烏茲根",
+              "en": "Uzgen",
+              "ja": "Uzgen",
+              "ko": "Uzgen"
             }
           },
           {
@@ -16919,13 +19499,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yisaikehu",
             "localizedNames": {
               "zh-HK": "伊塞克湖",
-              "zh-TW": "伊塞克湖"
+              "zh-TW": "伊塞克湖",
+              "en": "Issyk-Kul",
+              "ja": "イシク・クル州",
+              "ko": "이식쿨주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "吉爾吉斯斯坦",
-          "zh-TW": "吉爾吉斯斯坦"
+          "zh-TW": "吉爾吉斯斯坦",
+          "en": "Kyrgyzstan",
+          "ja": "キルギス",
+          "ko": "키르기스스탄"
         }
       }
     ]
@@ -16954,7 +19540,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bokai",
             "localizedNames": {
               "zh-HK": "博凱",
-              "zh-TW": "博凱"
+              "zh-TW": "博凱",
+              "en": "Boké Region",
+              "ja": "ボケ州",
+              "ko": "보케주"
             }
           },
           {
@@ -16963,7 +19552,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Enzeleikelei",
             "localizedNames": {
               "zh-HK": "恩澤雷科雷",
-              "zh-TW": "恩澤雷科雷"
+              "zh-TW": "恩澤雷科雷",
+              "en": "Nzérékoré Region",
+              "ja": "ンゼレコレ州",
+              "ko": "은제레코레주"
             }
           },
           {
@@ -16981,7 +19573,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jindiya",
             "localizedNames": {
               "zh-HK": "金迪亞",
-              "zh-TW": "金迪亞"
+              "zh-TW": "金迪亞",
+              "en": "Kindia",
+              "ja": "キンディア州",
+              "ko": "킨디아주"
             }
           },
           {
@@ -16999,7 +19594,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kenakeli",
             "localizedNames": {
               "zh-HK": "科納克里",
-              "zh-TW": "科納克里"
+              "zh-TW": "科納克里",
+              "en": "Conakry",
+              "ja": "コナクリ",
+              "ko": "코나크리"
             }
           },
           {
@@ -17008,7 +19606,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Labei",
             "localizedNames": {
               "zh-HK": "拉貝",
-              "zh-TW": "拉貝"
+              "zh-TW": "拉貝",
+              "en": "Labé Region",
+              "ja": "ラベ州",
+              "ko": "라베주"
             }
           },
           {
@@ -17023,7 +19624,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "幾內亞",
-          "zh-TW": "幾內亞"
+          "zh-TW": "幾內亞",
+          "en": "Guinea",
+          "ja": "ギニア",
+          "ko": "기니"
         }
       }
     ]
@@ -17075,7 +19679,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aidemengdun",
             "localizedNames": {
               "zh-HK": "埃德蒙頓",
-              "zh-TW": "埃德蒙頓"
+              "zh-TW": "埃德蒙頓",
+              "en": "Edmonton",
+              "ja": "エドモントン",
+              "ko": "에드먼턴"
             }
           },
           {
@@ -17093,7 +19700,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bali",
             "localizedNames": {
               "zh-HK": "巴里",
-              "zh-TW": "巴里"
+              "zh-TW": "巴里",
+              "en": "Barrie",
+              "ja": "バリー",
+              "ko": "배리"
             }
           },
           {
@@ -17111,7 +19721,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Duolunduo",
             "localizedNames": {
               "zh-HK": "多倫多",
-              "zh-TW": "多倫多"
+              "zh-TW": "多倫多",
+              "en": "Toronto",
+              "ja": "トロント",
+              "ko": "토론토"
             }
           },
           {
@@ -17147,7 +19760,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hamierdun",
             "localizedNames": {
               "zh-HK": "哈密爾頓",
-              "zh-TW": "哈密爾頓"
+              "zh-TW": "哈密爾頓",
+              "en": "Hamilton",
+              "ja": "ハミルトン",
+              "ko": "해밀턴"
             }
           },
           {
@@ -17201,7 +19817,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuibeike",
             "localizedNames": {
               "zh-HK": "魁北克",
-              "zh-TW": "魁北克"
+              "zh-TW": "魁北克",
+              "en": "Québec",
+              "ja": "ケベック・シティー",
+              "ko": "퀘벡"
             }
           },
           {
@@ -17210,7 +19829,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lijiana",
             "localizedNames": {
               "zh-HK": "里賈納",
-              "zh-TW": "里賈納"
+              "zh-TW": "里賈納",
+              "en": "Regina",
+              "ja": "レジャイナ",
+              "ko": "리자이나"
             }
           },
           {
@@ -17219,7 +19841,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lundun",
             "localizedNames": {
               "zh-HK": "倫敦",
-              "zh-TW": "倫敦"
+              "zh-TW": "倫敦",
+              "en": "London",
+              "ja": "ロンドン",
+              "ko": "런던"
             }
           },
           {
@@ -17228,7 +19853,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mengtelier",
             "localizedNames": {
               "zh-HK": "蒙特利爾",
-              "zh-TW": "蒙特利爾"
+              "zh-TW": "蒙特利爾",
+              "en": "Montreal",
+              "ja": "モントリオール",
+              "ko": "몬트리올"
             }
           },
           {
@@ -17246,7 +19874,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sasikatong",
             "localizedNames": {
               "zh-HK": "薩斯卡通",
-              "zh-TW": "薩斯卡通"
+              "zh-TW": "薩斯卡通",
+              "en": "Saskatoon",
+              "ja": "サスカトゥーン",
+              "ko": "새스커툰"
             }
           },
           {
@@ -17264,7 +19895,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sangdebei",
             "localizedNames": {
               "zh-HK": "桑德貝",
-              "zh-TW": "桑德貝"
+              "zh-TW": "桑德貝",
+              "en": "Thunder Bay",
+              "ja": "サンダーベイ",
+              "ko": "선더베이"
             }
           },
           {
@@ -17273,7 +19907,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shebuluke",
             "localizedNames": {
               "zh-HK": "舍布魯克",
-              "zh-TW": "舍布魯克"
+              "zh-TW": "舍布魯克",
+              "en": "Sherbrooke",
+              "ja": "シェルブルック",
+              "ko": "셰르브루크"
             }
           },
           {
@@ -17291,7 +19928,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengyuehansi",
             "localizedNames": {
               "zh-HK": "聖約翰斯",
-              "zh-TW": "聖約翰斯"
+              "zh-TW": "聖約翰斯",
+              "en": "St. John's",
+              "ja": "セントジョンズ",
+              "ko": "세인트존스"
             }
           },
           {
@@ -17300,7 +19940,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weiduoliya",
             "localizedNames": {
               "zh-HK": "維多利亞",
-              "zh-TW": "維多利亞"
+              "zh-TW": "維多利亞",
+              "en": "Victoria",
+              "ja": "ビクトリア",
+              "ko": "빅토리아"
             }
           },
           {
@@ -17309,7 +19952,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wengehua",
             "localizedNames": {
               "zh-HK": "溫哥華",
-              "zh-TW": "溫哥華"
+              "zh-TW": "溫哥華",
+              "en": "Vancouver",
+              "ja": "バンクーバー",
+              "ko": "밴쿠버"
             }
           },
           {
@@ -17318,7 +19964,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wennibo",
             "localizedNames": {
               "zh-HK": "溫尼伯",
-              "zh-TW": "溫尼伯"
+              "zh-TW": "溫尼伯",
+              "en": "Winnipeg",
+              "ja": "ウィニペグ",
+              "ko": "위니펙"
             }
           },
           {
@@ -17327,7 +19976,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wensha",
             "localizedNames": {
               "zh-HK": "溫莎",
-              "zh-TW": "溫莎"
+              "zh-TW": "溫莎",
+              "en": "Windsor",
+              "ja": "ウィンザー",
+              "ko": "윈저"
             }
           },
           {
@@ -17336,7 +19988,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wotaihua",
             "localizedNames": {
               "zh-HK": "渥太華",
-              "zh-TW": "渥太華"
+              "zh-TW": "渥太華",
+              "en": "Ottawa",
+              "ja": "オタワ",
+              "ko": "오타와"
             }
           },
           {
@@ -17363,13 +20018,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yikuite",
             "localizedNames": {
               "zh-HK": "伊魁特",
-              "zh-TW": "伊魁特"
+              "zh-TW": "伊魁特",
+              "en": "Iqaluit",
+              "ja": "イカルイト",
+              "ko": "이칼루이트"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "加拿大",
-          "zh-TW": "加拿大"
+          "zh-TW": "加拿大",
+          "en": "Canada",
+          "ja": "カナダ",
+          "ko": "캐나다"
         }
       }
     ]
@@ -17494,7 +20155,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "加納",
-          "zh-TW": "加納"
+          "zh-TW": "加納",
+          "en": "Ghana",
+          "ja": "ガーナ",
+          "ko": "가나"
         }
       }
     ]
@@ -17532,7 +20196,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoguowei-yiwenduo",
             "localizedNames": {
               "zh-HK": "奧果韋-伊溫多",
-              "zh-TW": "奧果韋-伊溫多"
+              "zh-TW": "奧果韋-伊溫多",
+              "en": "Ogooué-Ivindo Province",
+              "ja": "オゴウェ・イヴィンド州",
+              "ko": "오고웨이빈도주"
             }
           },
           {
@@ -17541,7 +20208,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Binhaiaoguowei",
             "localizedNames": {
               "zh-HK": "濱海奧果韋",
-              "zh-TW": "濱海奧果韋"
+              "zh-TW": "濱海奧果韋",
+              "en": "Ogooué-Maritime Province",
+              "ja": "オゴウェ・マリティム州",
+              "ko": "오고웨마리팀주"
             }
           },
           {
@@ -17559,7 +20229,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hekou",
             "localizedNames": {
               "zh-HK": "河口",
-              "zh-TW": "河口"
+              "zh-TW": "河口",
+              "en": "Estuaire",
+              "ja": "エスチュエール州",
+              "ko": "에스튀에르주"
             }
           },
           {
@@ -17568,7 +20241,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niyangjia",
             "localizedNames": {
               "zh-HK": "尼揚加",
-              "zh-TW": "尼揚加"
+              "zh-TW": "尼揚加",
+              "en": "Nyanga Province",
+              "ja": "ニャンガ州",
+              "ko": "냥가주"
             }
           },
           {
@@ -17577,7 +20253,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangaoguowei",
             "localizedNames": {
               "zh-HK": "上奧果韋",
-              "zh-TW": "上奧果韋"
+              "zh-TW": "上奧果韋",
+              "en": "Haut-Ogooué Province",
+              "ja": "オートオゴウェ州",
+              "ko": "오트오고웨주"
             }
           },
           {
@@ -17586,7 +20265,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wolei-entemu",
             "localizedNames": {
               "zh-HK": "沃勒-恩特姆",
-              "zh-TW": "沃勒-恩特姆"
+              "zh-TW": "沃勒-恩特姆",
+              "en": "Woleu-Ntem Province",
+              "ja": "ウォレウ・ンテム州",
+              "ko": "월뢰은템주"
             }
           },
           {
@@ -17595,13 +20277,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongaoguowei",
             "localizedNames": {
               "zh-HK": "中奧果韋",
-              "zh-TW": "中奧果韋"
+              "zh-TW": "中奧果韋",
+              "en": "Moyen-Ogooué Province",
+              "ja": "モワイエン・オゴウェ州",
+              "ko": "무아얭오고웨주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "加蓬",
-          "zh-TW": "加蓬"
+          "zh-TW": "加蓬",
+          "en": "Gabon",
+          "ja": "ガボン",
+          "ko": "가봉"
         }
       }
     ]
@@ -17639,7 +20327,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baimashi",
             "localizedNames": {
               "zh-HK": "白馬市",
-              "zh-TW": "白馬市"
+              "zh-TW": "白馬市",
+              "en": "Kep",
+              "ja": "ケップ",
+              "ko": "케프"
             }
           },
           {
@@ -17648,7 +20339,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baiweixia",
             "localizedNames": {
               "zh-HK": "柏威夏",
-              "zh-TW": "柏威夏"
+              "zh-TW": "柏威夏",
+              "en": "Preah Vihear",
+              "ja": "プリアヴィヒア州",
+              "ko": "프레아비헤아르주"
             }
           },
           {
@@ -17657,7 +20351,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bailinshi",
             "localizedNames": {
               "zh-HK": "拜林市",
-              "zh-TW": "拜林市"
+              "zh-TW": "拜林市",
+              "en": "Pailin",
+              "ja": "パイリン",
+              "ko": "파일린"
             }
           },
           {
@@ -17666,7 +20363,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bandiemianji",
             "localizedNames": {
               "zh-HK": "班迭棉吉",
-              "zh-TW": "班迭棉吉"
+              "zh-TW": "班迭棉吉",
+              "en": "Banteay Meanchey",
+              "ja": "バンテイメンチェイ州",
+              "ko": "반테아이메안체이주"
             }
           },
           {
@@ -17675,7 +20375,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bangqingyang",
             "localizedNames": {
               "zh-HK": "磅清揚",
-              "zh-TW": "磅清揚"
+              "zh-TW": "磅清揚",
+              "en": "Kampong Chhnang",
+              "ja": "コンポンチュナン州",
+              "ko": "캄퐁치낭주"
             }
           },
           {
@@ -17684,7 +20387,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bangshibei",
             "localizedNames": {
               "zh-HK": "磅士卑",
-              "zh-TW": "磅士卑"
+              "zh-TW": "磅士卑",
+              "en": "Kampong Speu Province",
+              "ja": "コンポンスプー州",
+              "ko": "캄퐁스페우주"
             }
           },
           {
@@ -17693,7 +20399,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bangtong",
             "localizedNames": {
               "zh-HK": "磅同",
-              "zh-TW": "磅同"
+              "zh-TW": "磅同",
+              "en": "Kampong Thom",
+              "ja": "コンポントム州",
+              "ko": "캄퐁톰주"
             }
           },
           {
@@ -17702,7 +20411,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bangzhan",
             "localizedNames": {
               "zh-HK": "磅湛",
-              "zh-TW": "磅湛"
+              "zh-TW": "磅湛",
+              "en": "Kampong Cham",
+              "ja": "コンポンチャム州",
+              "ko": "캄퐁참주"
             }
           },
           {
@@ -17729,7 +20441,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chaizhen",
             "localizedNames": {
               "zh-HK": "柴楨",
-              "zh-TW": "柴楨"
+              "zh-TW": "柴楨",
+              "en": "Svay Rieng",
+              "ja": "スヴァイリエン州",
+              "ko": "스바이리엥주"
             }
           },
           {
@@ -17738,7 +20453,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gandan",
             "localizedNames": {
               "zh-HK": "幹丹",
-              "zh-TW": "幹丹"
+              "zh-TW": "幹丹",
+              "en": "Kandal",
+              "ja": "カンダル州",
+              "ko": "칸달주"
             }
           },
           {
@@ -17747,7 +20465,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gegong",
             "localizedNames": {
               "zh-HK": "戈公",
-              "zh-TW": "戈公"
+              "zh-TW": "戈公",
+              "en": "Koh Kong",
+              "ja": "ココン州",
+              "ko": "코콩 주"
             }
           },
           {
@@ -17765,7 +20486,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinbianshi",
             "localizedNames": {
               "zh-HK": "金邊市",
-              "zh-TW": "金邊市"
+              "zh-TW": "金邊市",
+              "en": "Phnom Penh",
+              "ja": "プノンペン",
+              "ko": "프놈펜"
             }
           },
           {
@@ -17783,7 +20507,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Latanajili",
             "localizedNames": {
               "zh-HK": "臘塔納基裏",
-              "zh-TW": "臘塔納基裏"
+              "zh-TW": "臘塔納基裏",
+              "en": "Ratanakiri",
+              "ja": "ラタナキリ州",
+              "ko": "라타나키리주"
             }
           },
           {
@@ -17810,7 +20537,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pusa",
             "localizedNames": {
               "zh-HK": "菩薩",
-              "zh-TW": "菩薩"
+              "zh-TW": "菩薩",
+              "en": "Pursat",
+              "ja": "ポーサット州",
+              "ko": "푸르사트주"
             }
           },
           {
@@ -17819,7 +20549,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangding",
             "localizedNames": {
               "zh-HK": "上丁",
-              "zh-TW": "上丁"
+              "zh-TW": "上丁",
+              "en": "Stung Treng",
+              "ja": "ストゥントレン州",
+              "ko": "스퉁트렝주"
             }
           },
           {
@@ -17837,13 +20570,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xianli",
             "localizedNames": {
               "zh-HK": "暹粒",
-              "zh-TW": "暹粒"
+              "zh-TW": "暹粒",
+              "en": "Siem Reap",
+              "ja": "シェムリアップ",
+              "ko": "시엠레아프"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "柬埔寨",
-          "zh-TW": "柬埔寨"
+          "zh-TW": "柬埔寨",
+          "en": "Cambodia",
+          "ja": "カンボジア",
+          "ko": "캄보디아"
         }
       }
     ]
@@ -17882,7 +20621,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Biersen",
             "localizedNames": {
               "zh-HK": "比爾森",
-              "zh-TW": "比爾森"
+              "zh-TW": "比爾森",
+              "en": "Pilsen",
+              "ja": "プルゼニ",
+              "ko": "플젠"
             }
           },
           {
@@ -17900,7 +20642,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Heladeci-kelaluowei",
             "localizedNames": {
               "zh-HK": "赫拉德茨-克拉洛韋",
-              "zh-TW": "赫拉德茨-克拉洛韋"
+              "zh-TW": "赫拉德茨-克拉洛韋",
+              "en": "Hradec Králové",
+              "ja": "フラデツ・クラーロヴェー",
+              "ko": "흐라데츠크랄로베"
             }
           },
           {
@@ -17909,7 +20654,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaluoweifali",
             "localizedNames": {
               "zh-HK": "卡羅維發利",
-              "zh-TW": "卡羅維發利"
+              "zh-TW": "卡羅維發利",
+              "en": "Karlovy Vary",
+              "ja": "カルロヴィ・ヴァリ",
+              "ko": "카를로비바리"
             }
           },
           {
@@ -17936,7 +20684,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanmolaweiya",
             "localizedNames": {
               "zh-HK": "南摩拉維亞",
-              "zh-TW": "南摩拉維亞"
+              "zh-TW": "南摩拉維亞",
+              "en": "South Moravian",
+              "ja": "南モラヴィア州",
+              "ko": "남모라바 주"
             }
           },
           {
@@ -17945,7 +20696,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Paerdubicai",
             "localizedNames": {
               "zh-HK": "帕爾杜比採",
-              "zh-TW": "帕爾杜比採"
+              "zh-TW": "帕爾杜比採",
+              "en": "Pardubice",
+              "ja": "パルドゥビツェ",
+              "ko": "파르두비체"
             }
           },
           {
@@ -17987,7 +20741,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "捷克共和國",
-          "zh-TW": "捷克共和國"
+          "zh-TW": "捷克共和國",
+          "en": "Czechia",
+          "ja": "チェコ",
+          "ko": "체코"
         }
       }
     ]
@@ -18016,7 +20773,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beimatabeilailan",
             "localizedNames": {
               "zh-HK": "北馬塔貝萊蘭",
-              "zh-TW": "北馬塔貝萊蘭"
+              "zh-TW": "北馬塔貝萊蘭",
+              "en": "Matabeleland North",
+              "ja": "北マタベレランド州",
+              "ko": "북마타벨랜드주"
             }
           },
           {
@@ -18025,7 +20785,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulawayue",
             "localizedNames": {
               "zh-HK": "布拉瓦約",
-              "zh-TW": "布拉瓦約"
+              "zh-TW": "布拉瓦約",
+              "en": "Bulawayo",
+              "ja": "ブラワヨ",
+              "ko": "불라와요"
             }
           },
           {
@@ -18034,7 +20797,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongmashaonalan",
             "localizedNames": {
               "zh-HK": "東馬紹納蘭",
-              "zh-TW": "東馬紹納蘭"
+              "zh-TW": "東馬紹納蘭",
+              "en": "Mashonaland East Province",
+              "ja": "東マショナランド州",
+              "ko": "동마쇼날랜드주"
             }
           },
           {
@@ -18052,7 +20818,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manikalan",
             "localizedNames": {
               "zh-HK": "馬尼卡蘭",
-              "zh-TW": "馬尼卡蘭"
+              "zh-TW": "馬尼卡蘭",
+              "en": "Manicaland",
+              "ja": "マニカランド州",
+              "ko": "마니칼랜드주"
             }
           },
           {
@@ -18061,7 +20830,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Masiwenge",
             "localizedNames": {
               "zh-HK": "馬斯溫戈",
-              "zh-TW": "馬斯溫戈"
+              "zh-TW": "馬斯溫戈",
+              "en": "Masvingo Province",
+              "ja": "マシンゴ州",
+              "ko": "마스빙고주"
             }
           },
           {
@@ -18070,7 +20842,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanmatabeilailan",
             "localizedNames": {
               "zh-HK": "南馬塔貝萊蘭",
-              "zh-TW": "南馬塔貝萊蘭"
+              "zh-TW": "南馬塔貝萊蘭",
+              "en": "Matabeleland South Province",
+              "ja": "南マタベレランド州",
+              "ko": "남마타벨랜드주"
             }
           },
           {
@@ -18079,7 +20854,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ximashaonalan",
             "localizedNames": {
               "zh-HK": "西馬紹納蘭",
-              "zh-TW": "西馬紹納蘭"
+              "zh-TW": "西馬紹納蘭",
+              "en": "Mashonaland West",
+              "ja": "西マショナランド州",
+              "ko": "서마쇼날랜드주"
             }
           },
           {
@@ -18088,7 +20866,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongbu",
             "localizedNames": {
               "zh-HK": "中部",
-              "zh-TW": "中部"
+              "zh-TW": "中部",
+              "en": "Midlands Province",
+              "ja": "ミッドランズ州",
+              "ko": "미들랜즈주"
             }
           },
           {
@@ -18097,13 +20878,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongmashaonalan",
             "localizedNames": {
               "zh-HK": "中馬紹納蘭",
-              "zh-TW": "中馬紹納蘭"
+              "zh-TW": "中馬紹納蘭",
+              "en": "Mashonaland Central",
+              "ja": "中央マショナランド州",
+              "ko": "중앙마쇼날랜드주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "津巴布韋",
-          "zh-TW": "津巴布韋"
+          "zh-TW": "津巴布韋",
+          "en": "Zimbabwe",
+          "ja": "ジンバブエ",
+          "ko": "짐바브웨"
         }
       }
     ]
@@ -18132,7 +20919,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Adamawa",
             "localizedNames": {
               "zh-HK": "阿達馬瓦",
-              "zh-TW": "阿達馬瓦"
+              "zh-TW": "阿達馬瓦",
+              "en": "Adamaoua Region",
+              "ja": "アダマワ州",
+              "ko": "아다마와 주"
             }
           },
           {
@@ -18141,7 +20931,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beibu",
             "localizedNames": {
               "zh-HK": "北部",
-              "zh-TW": "北部"
+              "zh-TW": "北部",
+              "en": "North Region",
+              "ja": "北部州",
+              "ko": "북부주"
             }
           },
           {
@@ -18159,7 +20952,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Binhai",
             "localizedNames": {
               "zh-HK": "濱海",
-              "zh-TW": "濱海"
+              "zh-TW": "濱海",
+              "en": "Littoral",
+              "ja": "リトラル州",
+              "ko": "리토랄주"
             }
           },
           {
@@ -18168,7 +20964,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongbu",
             "localizedNames": {
               "zh-HK": "東部",
-              "zh-TW": "東部"
+              "zh-TW": "東部",
+              "en": "East",
+              "ja": "東部州",
+              "ko": "동부주"
             }
           },
           {
@@ -18177,7 +20976,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanbu",
             "localizedNames": {
               "zh-HK": "南部",
-              "zh-TW": "南部"
+              "zh-TW": "南部",
+              "en": "South",
+              "ja": "南部州",
+              "ko": "남부주"
             }
           },
           {
@@ -18195,7 +20997,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xibu",
             "localizedNames": {
               "zh-HK": "西部",
-              "zh-TW": "西部"
+              "zh-TW": "西部",
+              "en": "West Region",
+              "ja": "西部州",
+              "ko": "서부주"
             }
           },
           {
@@ -18213,13 +21018,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongyang",
             "localizedNames": {
               "zh-HK": "中央",
-              "zh-TW": "中央"
+              "zh-TW": "中央",
+              "en": "Centre",
+              "ja": "中央州",
+              "ko": "중앙주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "喀麥隆",
-          "zh-TW": "喀麥隆"
+          "zh-TW": "喀麥隆",
+          "en": "Cameroon",
+          "ja": "カメルーン",
+          "ko": "카메룬"
         }
       }
     ]
@@ -18257,7 +21068,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Duoha",
             "localizedNames": {
               "zh-HK": "多哈",
-              "zh-TW": "多哈"
+              "zh-TW": "多哈",
+              "en": "Doha",
+              "ja": "ドーハ",
+              "ko": "도하"
             }
           },
           {
@@ -18275,7 +21089,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haoer",
             "localizedNames": {
               "zh-HK": "豪爾",
-              "zh-TW": "豪爾"
+              "zh-TW": "豪爾",
+              "en": "Al Khor",
+              "ja": "アル＝ハウル",
+              "ko": "알코르"
             }
           },
           {
@@ -18311,7 +21128,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wumuxilalei",
             "localizedNames": {
               "zh-HK": "烏姆錫拉勒",
-              "zh-TW": "烏姆錫拉勒"
+              "zh-TW": "烏姆錫拉勒",
+              "en": "Umm Salal",
+              "ja": "ウンム・サラール",
+              "ko": "움살랄"
             }
           },
           {
@@ -18326,7 +21146,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "卡塔爾",
-          "zh-TW": "卡塔爾"
+          "zh-TW": "卡塔爾",
+          "en": "Qatar",
+          "ja": "カタール",
+          "ko": "카타르"
         }
       }
     ]
@@ -18398,7 +21221,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aniebi",
             "localizedNames": {
               "zh-HK": "阿涅比",
-              "zh-TW": "阿涅比"
+              "zh-TW": "阿涅比",
+              "en": "Agnéby",
+              "ja": "アニェビ州",
+              "ko": "아그네비 주"
             }
           },
           {
@@ -18443,7 +21269,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fuluomageer",
             "localizedNames": {
               "zh-HK": "弗羅馬格爾",
-              "zh-TW": "弗羅馬格爾"
+              "zh-TW": "弗羅馬格爾",
+              "en": "Fromager",
+              "ja": "フロマジェ州",
+              "ko": "프로마제 주"
             }
           },
           {
@@ -18461,7 +21290,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Malawei",
             "localizedNames": {
               "zh-HK": "馬拉韋",
-              "zh-TW": "馬拉韋"
+              "zh-TW": "馬拉韋",
+              "en": "Marahoué",
+              "ja": "マラウェ州",
+              "ko": "마라우에 주"
             }
           },
           {
@@ -18470,7 +21302,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanbangdama",
             "localizedNames": {
               "zh-HK": "南邦達馬",
-              "zh-TW": "南邦達馬"
+              "zh-TW": "南邦達馬",
+              "en": "Sud-Bandama",
+              "ja": "南バンダマ州",
+              "ko": "쉬드방다마 주"
             }
           },
           {
@@ -18488,7 +21323,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sasangdela",
             "localizedNames": {
               "zh-HK": "薩桑德拉",
-              "zh-TW": "薩桑德拉"
+              "zh-TW": "薩桑德拉",
+              "en": "Sassandra",
+              "ja": "Sassandra",
+              "ko": "Sassandra"
             }
           },
           {
@@ -18515,7 +21353,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Woluodugu",
             "localizedNames": {
               "zh-HK": "沃羅杜古",
-              "zh-TW": "沃羅杜古"
+              "zh-TW": "沃羅杜古",
+              "en": "Worodougou",
+              "ja": "ウォロドゥーグー州",
+              "ko": "워로두구 주"
             }
           },
           {
@@ -18551,7 +21392,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongkawali",
             "localizedNames": {
               "zh-HK": "中卡瓦利",
-              "zh-TW": "中卡瓦利"
+              "zh-TW": "中卡瓦利",
+              "en": "Moyen-Cavally",
+              "ja": "中カヴァリ州",
+              "ko": "무아얭카발리 주"
             }
           },
           {
@@ -18560,13 +21404,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongkemoai",
             "localizedNames": {
               "zh-HK": "中科莫埃",
-              "zh-TW": "中科莫埃"
+              "zh-TW": "中科莫埃",
+              "en": "Moyen-Comoé",
+              "ja": "中コモエ州",
+              "ko": "무아얭코모에 주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "科特迪瓦",
-          "zh-TW": "科特迪瓦"
+          "zh-TW": "科特迪瓦",
+          "en": "Côte d’Ivoire",
+          "ja": "コートジボワール",
+          "ko": "코트디부아르"
         }
       }
     ]
@@ -18663,7 +21513,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaerluowaci",
             "localizedNames": {
               "zh-HK": "卡爾洛瓦茨",
-              "zh-TW": "卡爾洛瓦茨"
+              "zh-TW": "卡爾洛瓦茨",
+              "en": "Karlovac",
+              "ja": "カルロヴァツ",
+              "ko": "카를로바츠"
             }
           },
           {
@@ -18708,7 +21561,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sageleibu",
             "localizedNames": {
               "zh-HK": "薩格勒布",
-              "zh-TW": "薩格勒布"
+              "zh-TW": "薩格勒布",
+              "en": "Zagreb",
+              "ja": "ザグレブ",
+              "ko": "자그레브"
             }
           },
           {
@@ -18717,7 +21573,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sageleibushi",
             "localizedNames": {
               "zh-HK": "薩格勒布市",
-              "zh-TW": "薩格勒布市"
+              "zh-TW": "薩格勒布市",
+              "en": "Zagreb",
+              "ja": "ザグレブ",
+              "ko": "자그레브"
             }
           },
           {
@@ -18735,7 +21594,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Walariding",
             "localizedNames": {
               "zh-HK": "瓦拉日丁",
-              "zh-TW": "瓦拉日丁"
+              "zh-TW": "瓦拉日丁",
+              "en": "Varaždin",
+              "ja": "ヴァラジュディン",
+              "ko": "바라주딘"
             }
           },
           {
@@ -18789,13 +21651,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhadaer",
             "localizedNames": {
               "zh-HK": "扎達爾",
-              "zh-TW": "扎達爾"
+              "zh-TW": "扎達爾",
+              "en": "Zadar",
+              "ja": "ザダル",
+              "ko": "자다르"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "克羅地亞",
-          "zh-TW": "克羅地亞"
+          "zh-TW": "克羅地亞",
+          "en": "Croatia",
+          "ja": "クロアチア",
+          "ko": "크로아티아"
         }
       }
     ]
@@ -18833,7 +21701,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Balinge",
             "localizedNames": {
               "zh-HK": "巴林戈",
-              "zh-TW": "巴林戈"
+              "zh-TW": "巴林戈",
+              "en": "Baringo",
+              "ja": "バリンゴ",
+              "ko": "바링고현"
             }
           },
           {
@@ -18842,7 +21713,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Banggema",
             "localizedNames": {
               "zh-HK": "邦戈馬",
-              "zh-TW": "邦戈馬"
+              "zh-TW": "邦戈馬",
+              "en": "Bungoma County",
+              "ja": "ブンゴマ",
+              "ko": "붕고마현"
             }
           },
           {
@@ -18851,7 +21725,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bomeite",
             "localizedNames": {
               "zh-HK": "博美特",
-              "zh-TW": "博美特"
+              "zh-TW": "博美特",
+              "en": "Bomet County",
+              "ja": "ボメット",
+              "ko": "보메트현"
             }
           },
           {
@@ -18860,7 +21737,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buxiya",
             "localizedNames": {
               "zh-HK": "布希亞",
-              "zh-TW": "布希亞"
+              "zh-TW": "布希亞",
+              "en": "Busia County",
+              "ja": "ブシア",
+              "ko": "부시아현"
             }
           },
           {
@@ -18878,7 +21758,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huomawan",
             "localizedNames": {
               "zh-HK": "霍馬灣",
-              "zh-TW": "霍馬灣"
+              "zh-TW": "霍馬灣",
+              "en": "Homa Bay County",
+              "ja": "ホマ・ベイ",
+              "ko": "호마베이현"
             }
           },
           {
@@ -18887,7 +21770,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jianbu",
             "localizedNames": {
               "zh-HK": "基安布",
-              "zh-TW": "基安布"
+              "zh-TW": "基安布",
+              "en": "Kiambu County",
+              "ja": "キアンブ",
+              "ko": "키암부현"
             }
           },
           {
@@ -18905,7 +21791,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiliniyajia",
             "localizedNames": {
               "zh-HK": "基里尼亞加",
-              "zh-TW": "基里尼亞加"
+              "zh-TW": "基里尼亞加",
+              "en": "Kirinyaga County",
+              "ja": "キリーニャガ",
+              "ko": "키리니아가현"
             }
           },
           {
@@ -18923,7 +21812,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jituyi",
             "localizedNames": {
               "zh-HK": "基圖伊",
-              "zh-TW": "基圖伊"
+              "zh-TW": "基圖伊",
+              "en": "Kitui County",
+              "ja": "キツイ",
+              "ko": "키투이현"
             }
           },
           {
@@ -18959,7 +21851,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kayeyaduo",
             "localizedNames": {
               "zh-HK": "卡耶亞多",
-              "zh-TW": "卡耶亞多"
+              "zh-TW": "卡耶亞多",
+              "en": "Kajiado County",
+              "ja": "カジアド",
+              "ko": "카지아도현"
             }
           },
           {
@@ -18968,7 +21863,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kailiqiao",
             "localizedNames": {
               "zh-HK": "凱里喬",
-              "zh-TW": "凱里喬"
+              "zh-TW": "凱里喬",
+              "en": "Kericho County",
+              "ja": "ケリチョ",
+              "ko": "케리초현"
             }
           },
           {
@@ -18977,7 +21875,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kualei",
             "localizedNames": {
               "zh-HK": "誇勒",
-              "zh-TW": "誇勒"
+              "zh-TW": "誇勒",
+              "en": "Kwale",
+              "ja": "Kwale",
+              "ko": "Kwale"
             }
           },
           {
@@ -18995,7 +21896,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laijipiya",
             "localizedNames": {
               "zh-HK": "萊基皮亞",
-              "zh-TW": "萊基皮亞"
+              "zh-TW": "萊基皮亞",
+              "en": "Laikipia",
+              "ja": "ライキピア",
+              "ko": "라이키피아현"
             }
           },
           {
@@ -19013,7 +21917,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maguani",
             "localizedNames": {
               "zh-HK": "馬瓜尼",
-              "zh-TW": "馬瓜尼"
+              "zh-TW": "馬瓜尼",
+              "en": "Makueni County",
+              "ja": "マクエニ",
+              "ko": "마쿠에니현"
             }
           },
           {
@@ -19031,7 +21938,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mandela",
             "localizedNames": {
               "zh-HK": "曼德拉",
-              "zh-TW": "曼德拉"
+              "zh-TW": "曼德拉",
+              "en": "Mandera County",
+              "ja": "マンデラ",
+              "ko": "만데라현"
             }
           },
           {
@@ -19040,7 +21950,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Meilu",
             "localizedNames": {
               "zh-HK": "梅魯",
-              "zh-TW": "梅魯"
+              "zh-TW": "梅魯",
+              "en": "Meru County",
+              "ja": "メルー",
+              "ko": "메루현"
             }
           },
           {
@@ -19058,7 +21971,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Migeli",
             "localizedNames": {
               "zh-HK": "米戈利",
-              "zh-TW": "米戈利"
+              "zh-TW": "米戈利",
+              "en": "Migori County",
+              "ja": "ミゴリ",
+              "ko": "미고리현"
             }
           },
           {
@@ -19085,7 +22001,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Naluoke",
             "localizedNames": {
               "zh-HK": "納羅克",
-              "zh-TW": "納羅克"
+              "zh-TW": "納羅克",
+              "en": "Narok County",
+              "ja": "ナロク",
+              "ko": "나로크현"
             }
           },
           {
@@ -19121,7 +22040,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niyamila",
             "localizedNames": {
               "zh-HK": "尼亞米拉",
-              "zh-TW": "尼亞米拉"
+              "zh-TW": "尼亞米拉",
+              "en": "Nyamira county",
+              "ja": "ニャミラ県",
+              "ko": "니아미라현"
             }
           },
           {
@@ -19130,7 +22052,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niandalua",
             "localizedNames": {
               "zh-HK": "年達魯阿",
-              "zh-TW": "年達魯阿"
+              "zh-TW": "年達魯阿",
+              "en": "Nyandarua County",
+              "ja": "ニャンダルア",
+              "ko": "니안다루아현"
             }
           },
           {
@@ -19139,7 +22064,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nieli",
             "localizedNames": {
               "zh-HK": "涅裏",
-              "zh-TW": "涅裏"
+              "zh-TW": "涅裏",
+              "en": "Nyeri County",
+              "ja": "ニエリ",
+              "ko": "니에리현"
             }
           },
           {
@@ -19148,7 +22076,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sangbulu",
             "localizedNames": {
               "zh-HK": "桑布盧",
-              "zh-TW": "桑布盧"
+              "zh-TW": "桑布盧",
+              "en": "Samburu County",
+              "ja": "サンブル",
+              "ko": "삼부루현"
             }
           },
           {
@@ -19157,7 +22088,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tanahe",
             "localizedNames": {
               "zh-HK": "塔納河",
-              "zh-TW": "塔納河"
+              "zh-TW": "塔納河",
+              "en": "Tana River County",
+              "ja": "タナ・リバー",
+              "ko": "타나리버현"
             }
           },
           {
@@ -19184,7 +22118,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuerkana",
             "localizedNames": {
               "zh-HK": "圖爾卡納",
-              "zh-TW": "圖爾卡納"
+              "zh-TW": "圖爾卡納",
+              "en": "Turkana County",
+              "ja": "トゥルカナ",
+              "ko": "투르카나현"
             }
           },
           {
@@ -19202,7 +22139,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Waxinjisu",
             "localizedNames": {
               "zh-HK": "瓦辛基蘇",
-              "zh-TW": "瓦辛基蘇"
+              "zh-TW": "瓦辛基蘇",
+              "en": "Uasin Gishu County",
+              "ja": "ウアシン・ギシュ",
+              "ko": "우아신기슈현"
             }
           },
           {
@@ -19220,7 +22160,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xibokete",
             "localizedNames": {
               "zh-HK": "西波克特",
-              "zh-TW": "西波克特"
+              "zh-TW": "西波克特",
+              "en": "West Pokot County",
+              "ja": "ウェスト・ポコット",
+              "ko": "서포코트현"
             }
           },
           {
@@ -19229,7 +22172,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiaya",
             "localizedNames": {
               "zh-HK": "夏亞",
-              "zh-TW": "夏亞"
+              "zh-TW": "夏亞",
+              "en": "Siaya County",
+              "ja": "シアヤ",
+              "ko": "시아야현"
             }
           },
           {
@@ -19238,7 +22184,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yixiyueluo",
             "localizedNames": {
               "zh-HK": "伊希約洛",
-              "zh-TW": "伊希約洛"
+              "zh-TW": "伊希約洛",
+              "en": "Isiolo County",
+              "ja": "イシオロ",
+              "ko": "이시올로현"
             }
           },
           {
@@ -19253,7 +22202,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "肯尼亞",
-          "zh-TW": "肯尼亞"
+          "zh-TW": "肯尼亞",
+          "en": "Kenya",
+          "ja": "ケニア",
+          "ko": "케냐"
         }
       }
     ]
@@ -19296,7 +22248,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Alukesinei",
             "localizedNames": {
               "zh-HK": "阿盧克斯內",
-              "zh-TW": "阿盧克斯內"
+              "zh-TW": "阿盧克斯內",
+              "en": "Alūksne",
+              "ja": "アルクスネ",
+              "ko": "알룩스네"
             }
           },
           {
@@ -19305,7 +22260,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aizikelaokelei",
             "localizedNames": {
               "zh-HK": "愛茲克勞克雷",
-              "zh-TW": "愛茲克勞克雷"
+              "zh-TW": "愛茲克勞克雷",
+              "en": "Aizkraukle",
+              "ja": "アイズクラウクレ",
+              "ko": "아이스크라우클레"
             }
           },
           {
@@ -19323,7 +22281,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baerwei",
             "localizedNames": {
               "zh-HK": "巴爾維",
-              "zh-TW": "巴爾維"
+              "zh-TW": "巴爾維",
+              "en": "Balvi",
+              "ja": "バルヴィ",
+              "ko": "발비"
             }
           },
           {
@@ -19332,7 +22293,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baosika",
             "localizedNames": {
               "zh-HK": "包斯卡",
-              "zh-TW": "包斯卡"
+              "zh-TW": "包斯卡",
+              "en": "Bauska",
+              "ja": "バウスカ",
+              "ko": "바우스카"
             }
           },
           {
@@ -19341,7 +22305,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Caixisi",
             "localizedNames": {
               "zh-HK": "採西斯",
-              "zh-TW": "採西斯"
+              "zh-TW": "採西斯",
+              "en": "Cēsis",
+              "ja": "ツェーシス",
+              "ko": "체시스"
             }
           },
           {
@@ -19350,7 +22317,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Duobeilai",
             "localizedNames": {
               "zh-HK": "多貝萊",
-              "zh-TW": "多貝萊"
+              "zh-TW": "多貝萊",
+              "en": "Dobele",
+              "ja": "ドベレ",
+              "ko": "도벨레"
             }
           },
           {
@@ -19359,7 +22329,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guerbeinei",
             "localizedNames": {
               "zh-HK": "古爾貝內",
-              "zh-TW": "古爾貝內"
+              "zh-TW": "古爾貝內",
+              "en": "Gulbene",
+              "ja": "グルベネ",
+              "ko": "굴베네"
             }
           },
           {
@@ -19377,7 +22350,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelasilawa",
             "localizedNames": {
               "zh-HK": "克拉斯拉瓦",
-              "zh-TW": "克拉斯拉瓦"
+              "zh-TW": "克拉斯拉瓦",
+              "en": "Krāslava",
+              "ja": "クラスラヴァ",
+              "ko": "크라슬라바"
             }
           },
           {
@@ -19386,7 +22362,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuerdijia",
             "localizedNames": {
               "zh-HK": "庫爾迪加",
-              "zh-TW": "庫爾迪加"
+              "zh-TW": "庫爾迪加",
+              "en": "Kuldīga",
+              "ja": "クルディーガ",
+              "ko": "쿨디가"
             }
           },
           {
@@ -19395,7 +22374,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Leizekenei",
             "localizedNames": {
               "zh-HK": "雷澤克內",
-              "zh-TW": "雷澤克內"
+              "zh-TW": "雷澤克內",
+              "en": "Rēzekne",
+              "ja": "レーゼクネ",
+              "ko": "레제크네"
             }
           },
           {
@@ -19404,7 +22386,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lijia",
             "localizedNames": {
               "zh-HK": "里加",
-              "zh-TW": "里加"
+              "zh-TW": "里加",
+              "en": "Riga",
+              "ja": "リガ",
+              "ko": "리가"
             }
           },
           {
@@ -19431,7 +22416,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luzha",
             "localizedNames": {
               "zh-HK": "盧扎",
-              "zh-TW": "盧扎"
+              "zh-TW": "盧扎",
+              "en": "Ludza",
+              "ja": "ルッツァ",
+              "ko": "루자"
             }
           },
           {
@@ -19440,7 +22428,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maduona",
             "localizedNames": {
               "zh-HK": "馬多納",
-              "zh-TW": "馬多納"
+              "zh-TW": "馬多納",
+              "en": "Madona",
+              "ja": "マドナ",
+              "ko": "마도나"
             }
           },
           {
@@ -19449,7 +22440,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Puleili",
             "localizedNames": {
               "zh-HK": "普雷利",
-              "zh-TW": "普雷利"
+              "zh-TW": "普雷利",
+              "en": "Preiļi",
+              "ja": "プレイリ",
+              "ko": "프레일리"
             }
           },
           {
@@ -19458,7 +22452,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Saerdusi",
             "localizedNames": {
               "zh-HK": "薩爾杜斯",
-              "zh-TW": "薩爾杜斯"
+              "zh-TW": "薩爾杜斯",
+              "en": "Saldus",
+              "ja": "サルドゥス",
+              "ko": "살두스"
             }
           },
           {
@@ -19467,7 +22464,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taerxi",
             "localizedNames": {
               "zh-HK": "塔爾西",
-              "zh-TW": "塔爾西"
+              "zh-TW": "塔爾西",
+              "en": "Talsi",
+              "ja": "タルシ",
+              "ko": "탈시"
             }
           },
           {
@@ -19503,7 +22503,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Waermiyela",
             "localizedNames": {
               "zh-HK": "瓦爾米耶拉",
-              "zh-TW": "瓦爾米耶拉"
+              "zh-TW": "瓦爾米耶拉",
+              "en": "Valmiera",
+              "ja": "ヴァルミエラ",
+              "ko": "발미에라"
             }
           },
           {
@@ -19512,7 +22515,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wencipiersi",
             "localizedNames": {
               "zh-HK": "文茨皮爾斯",
-              "zh-TW": "文茨皮爾斯"
+              "zh-TW": "文茨皮爾斯",
+              "en": "Ventspils",
+              "ja": "ヴェンツピルス",
+              "ko": "벤츠필스"
             }
           },
           {
@@ -19521,13 +22527,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yeerjiawa",
             "localizedNames": {
               "zh-HK": "葉爾加瓦",
-              "zh-TW": "葉爾加瓦"
+              "zh-TW": "葉爾加瓦",
+              "en": "Jelgava",
+              "ja": "イェルガヴァ",
+              "ko": "옐가바"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "拉脫維亞",
-          "zh-TW": "拉脫維亞"
+          "zh-TW": "拉脫維亞",
+          "en": "Latvia",
+          "ja": "ラトビア",
+          "ko": "라트비아"
         }
       }
     ]
@@ -19556,7 +22568,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Boliya",
             "localizedNames": {
               "zh-HK": "伯里亞",
-              "zh-TW": "伯里亞"
+              "zh-TW": "伯里亞",
+              "en": "Berea",
+              "ja": "ベレア県",
+              "ko": "베레아구"
             }
           },
           {
@@ -19565,7 +22580,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Butabutai",
             "localizedNames": {
               "zh-HK": "布塔布泰",
-              "zh-TW": "布塔布泰"
+              "zh-TW": "布塔布泰",
+              "en": "Butha-Buthe",
+              "ja": "ブータ・ブーテ県",
+              "ko": "부타부테구"
             }
           },
           {
@@ -19574,7 +22592,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guting",
             "localizedNames": {
               "zh-HK": "古廷",
-              "zh-TW": "古廷"
+              "zh-TW": "古廷",
+              "en": "Quthing",
+              "ja": "クティング県",
+              "ko": "쿠팅구"
             }
           },
           {
@@ -19583,7 +22604,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiachasineike",
             "localizedNames": {
               "zh-HK": "加查斯內克",
-              "zh-TW": "加查斯內克"
+              "zh-TW": "加查斯內克",
+              "en": "Qacha's Nek District",
+              "ja": "クァクハスネック県",
+              "ko": "카차스네크구"
             }
           },
           {
@@ -19592,7 +22616,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lailibei",
             "localizedNames": {
               "zh-HK": "萊裏貝",
-              "zh-TW": "萊裏貝"
+              "zh-TW": "萊裏貝",
+              "en": "Leribe",
+              "ja": "レリベ県",
+              "ko": "레리베구"
             }
           },
           {
@@ -19601,7 +22628,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mafeiteng",
             "localizedNames": {
               "zh-HK": "馬費滕",
-              "zh-TW": "馬費滕"
+              "zh-TW": "馬費滕",
+              "en": "Mafeteng District",
+              "ja": "マフェテング県",
+              "ko": "마페텡구"
             }
           },
           {
@@ -19619,7 +22649,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mohalaisihuke",
             "localizedNames": {
               "zh-HK": "莫哈萊斯胡克",
-              "zh-TW": "莫哈萊斯胡克"
+              "zh-TW": "莫哈萊斯胡克",
+              "en": "Mohale's Hoek District",
+              "ja": "モハレス・フーク県",
+              "ko": "모할레스후크구"
             }
           },
           {
@@ -19628,7 +22661,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mohuotelong",
             "localizedNames": {
               "zh-HK": "莫霍特隆",
-              "zh-TW": "莫霍特隆"
+              "zh-TW": "莫霍特隆",
+              "en": "Mokhotlong District",
+              "ja": "モコトロング県",
+              "ko": "모코틀롱구"
             }
           },
           {
@@ -19637,13 +22673,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tabacaika",
             "localizedNames": {
               "zh-HK": "塔巴採卡",
-              "zh-TW": "塔巴採卡"
+              "zh-TW": "塔巴採卡",
+              "en": "Thaba-Tseka",
+              "ja": "ターバ・ツェーカ県",
+              "ko": "타바체카구"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "萊索托",
-          "zh-TW": "萊索托"
+          "zh-TW": "萊索托",
+          "en": "Lesotho",
+          "ja": "レソト",
+          "ko": "레소토"
         }
       }
     ]
@@ -19672,7 +22714,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Asupo",
             "localizedNames": {
               "zh-HK": "阿速坡",
-              "zh-TW": "阿速坡"
+              "zh-TW": "阿速坡",
+              "en": "Attapu",
+              "ja": "アッタプー県",
+              "ko": "Attapu"
             }
           },
           {
@@ -19717,7 +22762,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ganmeng",
             "localizedNames": {
               "zh-HK": "甘蒙",
-              "zh-TW": "甘蒙"
+              "zh-TW": "甘蒙",
+              "en": "Khammouane Province",
+              "ja": "カムムアン県",
+              "ko": "캄무안 주"
             }
           },
           {
@@ -19744,7 +22792,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Langnanta",
             "localizedNames": {
               "zh-HK": "琅南塔",
-              "zh-TW": "琅南塔"
+              "zh-TW": "琅南塔",
+              "en": "Luang Namtha",
+              "ja": "ルアンナムター郡",
+              "ko": "Luang Namtha"
             }
           },
           {
@@ -19771,7 +22822,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shalawan",
             "localizedNames": {
               "zh-HK": "沙拉灣",
-              "zh-TW": "沙拉灣"
+              "zh-TW": "沙拉灣",
+              "en": "Salavan Province",
+              "ja": "サーラワン県",
+              "ko": "살라완 주"
             }
           },
           {
@@ -19780,7 +22834,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shawannaji",
             "localizedNames": {
               "zh-HK": "沙灣拿吉",
-              "zh-TW": "沙灣拿吉"
+              "zh-TW": "沙灣拿吉",
+              "en": "Savannakhet Province",
+              "ja": "サワンナケート県",
+              "ko": "사완나켓 주"
             }
           },
           {
@@ -19816,13 +22873,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhanbasai",
             "localizedNames": {
               "zh-HK": "佔巴塞",
-              "zh-TW": "佔巴塞"
+              "zh-TW": "佔巴塞",
+              "en": "Champasak Province",
+              "ja": "チャンパーサック県",
+              "ko": "참빠삭 주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "老撾",
-          "zh-TW": "老撾"
+          "zh-TW": "老撾",
+          "en": "Laos",
+          "ja": "ラオス",
+          "ko": "라오스"
         }
       }
     ]
@@ -19869,7 +22932,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beilute",
             "localizedNames": {
               "zh-HK": "貝魯特",
-              "zh-TW": "貝魯特"
+              "zh-TW": "貝魯特",
+              "en": "Beirut",
+              "ja": "ベイルート",
+              "ko": "베이루트"
             }
           },
           {
@@ -19896,13 +22962,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanbu",
             "localizedNames": {
               "zh-HK": "南部",
-              "zh-TW": "南部"
+              "zh-TW": "南部",
+              "en": "South Governorate",
+              "ja": "南レバノン県",
+              "ko": "남부주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "黎巴嫩",
-          "zh-TW": "黎巴嫩"
+          "zh-TW": "黎巴嫩",
+          "en": "Lebanon",
+          "ja": "レバノン",
+          "ko": "레바논"
         }
       }
     ]
@@ -19931,7 +23003,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Babolu",
             "localizedNames": {
               "zh-HK": "巴波盧",
-              "zh-TW": "巴波盧"
+              "zh-TW": "巴波盧",
+              "en": "Gbarpolu County",
+              "ja": "バルポル郡",
+              "ko": "바르폴루주"
             }
           },
           {
@@ -19940,7 +23015,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bang",
             "localizedNames": {
               "zh-HK": "邦",
-              "zh-TW": "邦"
+              "zh-TW": "邦",
+              "en": "Bong County",
+              "ja": "ボン郡",
+              "ko": "봉주"
             }
           },
           {
@@ -19958,7 +23036,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bomi",
             "localizedNames": {
               "zh-HK": "博米",
-              "zh-TW": "博米"
+              "zh-TW": "博米",
+              "en": "Bomi County",
+              "ja": "ボミ郡",
+              "ko": "보미주"
             }
           },
           {
@@ -19967,7 +23048,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dabasa",
             "localizedNames": {
               "zh-HK": "大巴薩",
-              "zh-TW": "大巴薩"
+              "zh-TW": "大巴薩",
+              "en": "Grand Bassa County",
+              "ja": "グランドバッサ郡",
+              "ko": "그랜드바사주"
             }
           },
           {
@@ -19976,7 +23060,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dajide",
             "localizedNames": {
               "zh-HK": "大吉德",
-              "zh-TW": "大吉德"
+              "zh-TW": "大吉德",
+              "en": "Grand Gedeh County",
+              "ja": "グランドゲデ郡",
+              "ko": "그랜드게데주"
             }
           },
           {
@@ -19985,7 +23072,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dajiaoshan",
             "localizedNames": {
               "zh-HK": "大角山",
-              "zh-TW": "大角山"
+              "zh-TW": "大角山",
+              "en": "Grand Cape Mount County",
+              "ja": "グランドケープマウント郡",
+              "ko": "그랜드케이프마운트주"
             }
           },
           {
@@ -19994,7 +23084,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dakelu",
             "localizedNames": {
               "zh-HK": "大克魯",
-              "zh-TW": "大克魯"
+              "zh-TW": "大克魯",
+              "en": "Grand Kru County",
+              "ja": "グランドクル郡",
+              "ko": "그랜드크루주"
             }
           },
           {
@@ -20012,7 +23105,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jihe",
             "localizedNames": {
               "zh-HK": "吉河",
-              "zh-TW": "吉河"
+              "zh-TW": "吉河",
+              "en": "River Gee County",
+              "ja": "リバージー郡",
+              "ko": "리버지주"
             }
           },
           {
@@ -20021,7 +23117,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lifusaisi",
             "localizedNames": {
               "zh-HK": "裏弗塞斯",
-              "zh-TW": "裏弗塞斯"
+              "zh-TW": "裏弗塞斯",
+              "en": "River Cess County",
+              "ja": "リバーセス郡",
+              "ko": "리버세스주"
             }
           },
           {
@@ -20030,7 +23129,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luofa",
             "localizedNames": {
               "zh-HK": "洛法",
-              "zh-TW": "洛法"
+              "zh-TW": "洛法",
+              "en": "Lofa County",
+              "ja": "ロファ郡",
+              "ko": "로파주"
             }
           },
           {
@@ -20039,7 +23141,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Majibi",
             "localizedNames": {
               "zh-HK": "馬吉比",
-              "zh-TW": "馬吉比"
+              "zh-TW": "馬吉比",
+              "en": "Margibi County",
+              "ja": "マージビ郡",
+              "ko": "마르지비주"
             }
           },
           {
@@ -20048,7 +23153,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Malilan",
             "localizedNames": {
               "zh-HK": "馬里蘭",
-              "zh-TW": "馬里蘭"
+              "zh-TW": "馬里蘭",
+              "en": "Maryland County",
+              "ja": "メリーランド郡",
+              "ko": "메릴랜드주"
             }
           },
           {
@@ -20057,7 +23165,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mengtesailaduo",
             "localizedNames": {
               "zh-HK": "蒙特塞拉多",
-              "zh-TW": "蒙特塞拉多"
+              "zh-TW": "蒙特塞拉多",
+              "en": "Montserrado County",
+              "ja": "モンセラード郡",
+              "ko": "몽세라도주"
             }
           },
           {
@@ -20066,7 +23177,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ningba",
             "localizedNames": {
               "zh-HK": "寧巴",
-              "zh-TW": "寧巴"
+              "zh-TW": "寧巴",
+              "en": "Nimba",
+              "ja": "ニンバ郡",
+              "ko": "님바주"
             }
           },
           {
@@ -20075,13 +23189,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinuo",
             "localizedNames": {
               "zh-HK": "錫諾",
-              "zh-TW": "錫諾"
+              "zh-TW": "錫諾",
+              "en": "Sinoe County",
+              "ja": "シノエ郡",
+              "ko": "시노에주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "利比里亞",
-          "zh-TW": "利比里亞"
+          "zh-TW": "利比里亞",
+          "en": "Liberia",
+          "ja": "リベリア",
+          "ko": "라이베리아"
         }
       }
     ]
@@ -20133,7 +23253,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaonasi",
             "localizedNames": {
               "zh-HK": "考納斯",
-              "zh-TW": "考納斯"
+              "zh-TW": "考納斯",
+              "en": "Kaunas",
+              "ja": "カウナス郡",
+              "ko": "카우나스주"
             }
           },
           {
@@ -20151,7 +23274,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maliyangpolie",
             "localizedNames": {
               "zh-HK": "馬裏揚泊列",
-              "zh-TW": "馬裏揚泊列"
+              "zh-TW": "馬裏揚泊列",
+              "en": "Marijampolė County",
+              "ja": "マリヤンポレ郡",
+              "ko": "마리얌폴레주"
             }
           },
           {
@@ -20160,7 +23286,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Panieweirisi",
             "localizedNames": {
               "zh-HK": "帕涅韋日斯",
-              "zh-TW": "帕涅韋日斯"
+              "zh-TW": "帕涅韋日斯",
+              "en": "Panevėžys",
+              "ja": "パネヴェジース郡",
+              "ko": "파네베지스주"
             }
           },
           {
@@ -20220,7 +23349,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "立陶宛",
-          "zh-TW": "立陶宛"
+          "zh-TW": "立陶宛",
+          "en": "Lithuania",
+          "ja": "リトアニア",
+          "ko": "리투아니아"
         }
       }
     ]
@@ -20263,7 +23395,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dijixi",
             "localizedNames": {
               "zh-HK": "迪基希",
-              "zh-TW": "迪基希"
+              "zh-TW": "迪基希",
+              "en": "Diekirch",
+              "ja": "ディエキルヒ",
+              "ko": "Diekirch"
             }
           },
           {
@@ -20272,7 +23407,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geleiwenmahe",
             "localizedNames": {
               "zh-HK": "格雷文馬赫",
-              "zh-TW": "格雷文馬赫"
+              "zh-TW": "格雷文馬赫",
+              "en": "Grevenmacher",
+              "ja": "グレーヴェンマハ",
+              "ko": "그레벤마허"
             }
           },
           {
@@ -20281,13 +23419,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lusenbao",
             "localizedNames": {
               "zh-HK": "盧森堡",
-              "zh-TW": "盧森堡"
+              "zh-TW": "盧森堡",
+              "en": "Luxembourg",
+              "ja": "ルクセンブルク",
+              "ko": "룩셈부르크"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "盧森堡",
-          "zh-TW": "盧森堡"
+          "zh-TW": "盧森堡",
+          "en": "Luxembourg",
+          "ja": "ルクセンブルク",
+          "ko": "룩셈부르크"
         }
       }
     ]
@@ -20388,7 +23532,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jisaini",
             "localizedNames": {
               "zh-HK": "吉塞尼",
-              "zh-TW": "吉塞尼"
+              "zh-TW": "吉塞尼",
+              "en": "Gisenyi",
+              "ja": "ギセニ",
+              "ko": "기세니"
             }
           },
           {
@@ -20397,7 +23544,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jitalama",
             "localizedNames": {
               "zh-HK": "吉塔拉馬",
-              "zh-TW": "吉塔拉馬"
+              "zh-TW": "吉塔拉馬",
+              "en": "Gitarama",
+              "ja": "ギタラマ",
+              "ko": "기타라마"
             }
           },
           {
@@ -20415,7 +23565,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luwamajiana",
             "localizedNames": {
               "zh-HK": "盧瓦馬加納",
-              "zh-TW": "盧瓦馬加納"
+              "zh-TW": "盧瓦馬加納",
+              "en": "Rwamagana",
+              "ja": "ルワマガナ",
+              "ko": "Rwamagana"
             }
           },
           {
@@ -20424,7 +23577,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luhange",
             "localizedNames": {
               "zh-HK": "魯漢戈",
-              "zh-TW": "魯漢戈"
+              "zh-TW": "魯漢戈",
+              "en": "Ruhango District",
+              "ja": "ルハンゴ郡",
+              "ko": "Ruhango District"
             }
           },
           {
@@ -20457,7 +23613,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "盧旺達",
-          "zh-TW": "盧旺達"
+          "zh-TW": "盧旺達",
+          "en": "Rwanda",
+          "ja": "ルワンダ",
+          "ko": "르완다"
         }
       }
     ]
@@ -20486,7 +23645,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aerbayouliya",
             "localizedNames": {
               "zh-HK": "阿爾巴尤利亞",
-              "zh-TW": "阿爾巴尤利亞"
+              "zh-TW": "阿爾巴尤利亞",
+              "en": "Alba Iulia",
+              "ja": "アルバ・ユリア",
+              "ko": "알바이울리아"
             }
           },
           {
@@ -20495,7 +23657,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Alade",
             "localizedNames": {
               "zh-HK": "阿拉德",
-              "zh-TW": "阿拉德"
+              "zh-TW": "阿拉德",
+              "en": "Arad County",
+              "ja": "アラド県",
+              "ko": "아라드주"
             }
           },
           {
@@ -20504,7 +23669,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoladiya",
             "localizedNames": {
               "zh-HK": "奧拉迪亞",
-              "zh-TW": "奧拉迪亞"
+              "zh-TW": "奧拉迪亞",
+              "en": "Oradea",
+              "ja": "オラデア",
+              "ko": "오라데아"
             }
           },
           {
@@ -20513,7 +23681,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bakewu",
             "localizedNames": {
               "zh-HK": "巴克烏",
-              "zh-TW": "巴克烏"
+              "zh-TW": "巴克烏",
+              "en": "Bacău County",
+              "ja": "バカウ県",
+              "ko": "바커우주"
             }
           },
           {
@@ -20540,7 +23711,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Botuoshani",
             "localizedNames": {
               "zh-HK": "博託沙尼",
-              "zh-TW": "博託沙尼"
+              "zh-TW": "博託沙尼",
+              "en": "Botoșani County",
+              "ja": "ボトシャニ県",
+              "ko": "보토샤니주"
             }
           },
           {
@@ -20549,7 +23723,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bujialeisite",
             "localizedNames": {
               "zh-HK": "布加勒斯特",
-              "zh-TW": "布加勒斯特"
+              "zh-TW": "布加勒斯特",
+              "en": "Bucharest",
+              "ja": "ブカレスト",
+              "ko": "부쿠레슈티"
             }
           },
           {
@@ -20558,7 +23735,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulasuofu",
             "localizedNames": {
               "zh-HK": "布拉索夫",
-              "zh-TW": "布拉索夫"
+              "zh-TW": "布拉索夫",
+              "en": "Brașov County",
+              "ja": "ブラショフ県",
+              "ko": "브라쇼브주"
             }
           },
           {
@@ -20567,7 +23747,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buleiyila",
             "localizedNames": {
               "zh-HK": "布勒伊拉",
-              "zh-TW": "布勒伊拉"
+              "zh-TW": "布勒伊拉",
+              "en": "Brăila County",
+              "ja": "ブライラ県",
+              "ko": "브러일라주"
             }
           },
           {
@@ -20585,7 +23768,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Deluobeita-saiweilinbao",
             "localizedNames": {
               "zh-HK": "德羅貝塔-塞維林堡",
-              "zh-TW": "德羅貝塔-塞維林堡"
+              "zh-TW": "德羅貝塔-塞維林堡",
+              "en": "Drobeta-Turnu Severin",
+              "ja": "ドロベタ＝トゥルヌ・セヴェリン",
+              "ko": "드로베타투르누세베린"
             }
           },
           {
@@ -20594,7 +23780,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dewa",
             "localizedNames": {
               "zh-HK": "德瓦",
-              "zh-TW": "德瓦"
+              "zh-TW": "德瓦",
+              "en": "Deva",
+              "ja": "デヴァ",
+              "ko": "데바"
             }
           },
           {
@@ -20630,7 +23819,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiuerjiu",
             "localizedNames": {
               "zh-HK": "久爾久",
-              "zh-TW": "久爾久"
+              "zh-TW": "久爾久",
+              "en": "Giurgiu County",
+              "ja": "ジュルジュ県",
+              "ko": "지우르지우주"
             }
           },
           {
@@ -20648,7 +23840,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelayuewa",
             "localizedNames": {
               "zh-HK": "克拉約瓦",
-              "zh-TW": "克拉約瓦"
+              "zh-TW": "克拉約瓦",
+              "en": "Craiova",
+              "ja": "クラヨーヴァ",
+              "ko": "크라이오바"
             }
           },
           {
@@ -20657,7 +23852,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keleilaxi",
             "localizedNames": {
               "zh-HK": "克勒拉希",
-              "zh-TW": "克勒拉希"
+              "zh-TW": "克勒拉希",
+              "en": "Călărași County",
+              "ja": "カララシ県",
+              "ko": "컬러라시주"
             }
           },
           {
@@ -20666,7 +23864,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelurinaboka",
             "localizedNames": {
               "zh-HK": "克盧日納波卡",
-              "zh-TW": "克盧日納波卡"
+              "zh-TW": "克盧日納波卡",
+              "en": "Cluj-Napoca",
+              "ja": "クルジュ＝ナポカ",
+              "ko": "클루지나포카"
             }
           },
           {
@@ -20675,7 +23876,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Leimunikuwoerqia",
             "localizedNames": {
               "zh-HK": "勒姆尼庫沃爾恰",
-              "zh-TW": "勒姆尼庫沃爾恰"
+              "zh-TW": "勒姆尼庫沃爾恰",
+              "en": "Râmnicu Vâlcea",
+              "ja": "ルムニク・ヴルチャ",
+              "ko": "름니쿠블체아"
             }
           },
           {
@@ -20747,7 +23951,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Siladina",
             "localizedNames": {
               "zh-HK": "斯拉蒂納",
-              "zh-TW": "斯拉蒂納"
+              "zh-TW": "斯拉蒂納",
+              "en": "Slatina",
+              "ja": "スラティナ",
+              "ko": "슬라티나"
             }
           },
           {
@@ -20792,7 +23999,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Teerguriwu",
             "localizedNames": {
               "zh-HK": "特爾古日烏",
-              "zh-TW": "特爾古日烏"
+              "zh-TW": "特爾古日烏",
+              "en": "Târgu Jiu",
+              "ja": "トゥルグ・ジウ",
+              "ko": "트르구지우"
             }
           },
           {
@@ -20810,7 +24020,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wasiluyi",
             "localizedNames": {
               "zh-HK": "瓦斯盧伊",
-              "zh-TW": "瓦斯盧伊"
+              "zh-TW": "瓦斯盧伊",
+              "en": "Vaslui",
+              "ja": "ヴァスルイ",
+              "ko": "바슬루이"
             }
           },
           {
@@ -20852,7 +24065,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "羅馬尼亞",
-          "zh-TW": "羅馬尼亞"
+          "zh-TW": "羅馬尼亞",
+          "en": "Romania",
+          "ja": "ルーマニア",
+          "ko": "루마니아"
         }
       }
     ]
@@ -20890,7 +24106,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Feiyanalanchua",
             "localizedNames": {
               "zh-HK": "菲亞納蘭楚阿",
-              "zh-TW": "菲亞納蘭楚阿"
+              "zh-TW": "菲亞納蘭楚阿",
+              "en": "Fianarantsoa",
+              "ja": "フィアナランツォア",
+              "ko": "피아나란초아"
             }
           },
           {
@@ -20899,7 +24118,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mahazanjia",
             "localizedNames": {
               "zh-HK": "馬哈贊加",
-              "zh-TW": "馬哈贊加"
+              "zh-TW": "馬哈贊加",
+              "en": "Mahajanga",
+              "ja": "マハジャンガ",
+              "ko": "마하장가"
             }
           },
           {
@@ -20908,7 +24130,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tananalifu",
             "localizedNames": {
               "zh-HK": "塔那那利佛",
-              "zh-TW": "塔那那利佛"
+              "zh-TW": "塔那那利佛",
+              "en": "Antananarivo",
+              "ja": "アンタナナリボ",
+              "ko": "안타나나리보"
             }
           },
           {
@@ -20926,13 +24151,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuliyala",
             "localizedNames": {
               "zh-HK": "圖利亞拉",
-              "zh-TW": "圖利亞拉"
+              "zh-TW": "圖利亞拉",
+              "en": "Toliara",
+              "ja": "トゥリアラ",
+              "ko": "톨리아라"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "馬達加斯加",
-          "zh-TW": "馬達加斯加"
+          "zh-TW": "馬達加斯加",
+          "en": "Madagascar",
+          "ja": "マダガスカル",
+          "ko": "마다가스카르"
         }
       }
     ]
@@ -21069,7 +24300,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Malei",
             "localizedNames": {
               "zh-HK": "馬累",
-              "zh-TW": "馬累"
+              "zh-TW": "馬累",
+              "en": "Malé",
+              "ja": "マレ",
+              "ko": "말레"
             }
           },
           {
@@ -21147,7 +24381,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "馬爾代夫",
-          "zh-TW": "馬爾代夫"
+          "zh-TW": "馬爾代夫",
+          "en": "Maldives",
+          "ja": "モルディブ",
+          "ko": "몰디브"
         }
       }
     ]
@@ -21190,7 +24427,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beibuqu",
             "localizedNames": {
               "zh-HK": "北部區",
-              "zh-TW": "北部區"
+              "zh-TW": "北部區",
+              "en": "Northern Region",
+              "ja": "北部州",
+              "ko": "북부주"
             }
           },
           {
@@ -21199,7 +24439,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanbuqu",
             "localizedNames": {
               "zh-HK": "南部區",
-              "zh-TW": "南部區"
+              "zh-TW": "南部區",
+              "en": "Southern Region",
+              "ja": "南部州",
+              "ko": "남부주"
             }
           },
           {
@@ -21208,13 +24451,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongyangqu",
             "localizedNames": {
               "zh-HK": "中央區",
-              "zh-TW": "中央區"
+              "zh-TW": "中央區",
+              "en": "Central Region",
+              "ja": "中部州",
+              "ko": "중부주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "馬拉維",
-          "zh-TW": "馬拉維"
+          "zh-TW": "馬拉維",
+          "en": "Malawi",
+          "ja": "マラウイ",
+          "ko": "말라위"
         }
       }
     ]
@@ -21243,7 +24492,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beihai",
             "localizedNames": {
               "zh-HK": "北海",
-              "zh-TW": "北海"
+              "zh-TW": "北海",
+              "en": "Butterworth",
+              "ja": "バターワース",
+              "ko": "버터워스"
             }
           },
           {
@@ -21252,7 +24504,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bincheng",
             "localizedNames": {
               "zh-HK": "檳城",
-              "zh-TW": "檳城"
+              "zh-TW": "檳城",
+              "en": "Penang",
+              "ja": "ペナン州",
+              "ko": "피낭주"
             }
           },
           {
@@ -21261,7 +24516,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dashanjiao",
             "localizedNames": {
               "zh-HK": "大山腳",
-              "zh-TW": "大山腳"
+              "zh-TW": "大山腳",
+              "en": "Bukit Mertajam",
+              "ja": "ブキット・メルタジャム",
+              "ko": "부킷 메르타잠"
             }
           },
           {
@@ -21270,7 +24528,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gaoyuan",
             "localizedNames": {
               "zh-HK": "高淵",
-              "zh-TW": "高淵"
+              "zh-TW": "高淵",
+              "en": "Nibong Tebal",
+              "ja": "ニボン・テバル",
+              "ko": "니몽 테발"
             }
           }
         ],
@@ -21290,13 +24551,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiayang",
             "localizedNames": {
               "zh-HK": "加央",
-              "zh-TW": "加央"
+              "zh-TW": "加央",
+              "en": "Kangar",
+              "ja": "カンガル",
+              "ko": "캉아르"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "玻璃市",
-          "zh-TW": "玻璃市"
+          "zh-TW": "玻璃市",
+          "en": "Perlis",
+          "ja": "プルリス州",
+          "ko": "프를리스주"
         }
       },
       {
@@ -21462,7 +24729,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "吉打",
-          "zh-TW": "吉打"
+          "zh-TW": "吉打",
+          "en": "Kedah",
+          "ja": "ケダ州",
+          "ko": "크다주"
         }
       },
       {
@@ -21521,7 +24791,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gedabalu",
             "localizedNames": {
               "zh-HK": "哥打巴魯",
-              "zh-TW": "哥打巴魯"
+              "zh-TW": "哥打巴魯",
+              "en": "Kota Bharu",
+              "ja": "コタバル",
+              "ko": "코타바루"
             }
           },
           {
@@ -21557,13 +24830,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Rili",
             "localizedNames": {
               "zh-HK": "日裏",
-              "zh-TW": "日裏"
+              "zh-TW": "日裏",
+              "en": "Jeli",
+              "ja": "Jeli",
+              "ko": "Jeli"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "吉蘭丹",
-          "zh-TW": "吉蘭丹"
+          "zh-TW": "吉蘭丹",
+          "en": "Kelantan",
+          "ja": "クランタン州",
+          "ko": "클란탄주"
         }
       },
       {
@@ -21577,13 +24856,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jilongpo",
             "localizedNames": {
               "zh-HK": "吉隆坡",
-              "zh-TW": "吉隆坡"
+              "zh-TW": "吉隆坡",
+              "en": "Kuala Lumpur",
+              "ja": "クアラルンプール",
+              "ko": "쿠알라룸푸르"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "吉隆坡",
-          "zh-TW": "吉隆坡"
+          "zh-TW": "吉隆坡",
+          "en": "Kuala Lumpur",
+          "ja": "クアラルンプール",
+          "ko": "쿠알라룸푸르"
         }
       },
       {
@@ -21597,7 +24882,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maliujiashi",
             "localizedNames": {
               "zh-HK": "馬六甲市",
-              "zh-TW": "馬六甲市"
+              "zh-TW": "馬六甲市",
+              "en": "Malacca",
+              "ja": "マラッカ",
+              "ko": "Malacca"
             }
           },
           {
@@ -21606,7 +24894,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yaluoyaye",
             "localizedNames": {
               "zh-HK": "亞羅牙也",
-              "zh-TW": "亞羅牙也"
+              "zh-TW": "亞羅牙也",
+              "en": "Alor Gajah",
+              "ja": "Alor Gajah",
+              "ko": "Alor Gajah"
             }
           },
           {
@@ -21621,7 +24912,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "馬六甲",
-          "zh-TW": "馬六甲"
+          "zh-TW": "馬六甲",
+          "en": "Malacca",
+          "ja": "マラッカ",
+          "ko": "Malacca"
         }
       },
       {
@@ -21635,7 +24929,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Namin",
             "localizedNames": {
               "zh-HK": "納閩",
-              "zh-TW": "納閩"
+              "zh-TW": "納閩",
+              "en": "Labuan",
+              "ja": "ラブアン",
+              "ko": "Labuan"
             }
           },
           {
@@ -21650,7 +24947,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "納閩",
-          "zh-TW": "納閩"
+          "zh-TW": "納閩",
+          "en": "Labuan",
+          "ja": "ラブアン",
+          "ko": "Labuan"
         }
       },
       {
@@ -21673,7 +24973,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beigen",
             "localizedNames": {
               "zh-HK": "北根",
-              "zh-TW": "北根"
+              "zh-TW": "北根",
+              "en": "Pekan",
+              "ja": "Pekan",
+              "ko": "Pekan"
             }
           },
           {
@@ -21700,7 +25003,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guandan",
             "localizedNames": {
               "zh-HK": "關丹",
-              "zh-TW": "關丹"
+              "zh-TW": "關丹",
+              "en": "Kuantan",
+              "ja": "クアンタン",
+              "ko": "쿠안탄"
             }
           },
           {
@@ -21718,7 +25024,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laowu",
             "localizedNames": {
               "zh-HK": "勞勿",
-              "zh-TW": "勞勿"
+              "zh-TW": "勞勿",
+              "en": "Raub",
+              "ja": "Raub",
+              "ko": "Raub"
             }
           },
           {
@@ -21754,13 +25063,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yunbing",
             "localizedNames": {
               "zh-HK": "雲冰",
-              "zh-TW": "雲冰"
+              "zh-TW": "雲冰",
+              "en": "Kuala Rompin",
+              "ja": "Kuala Rompin",
+              "ko": "Kuala Rompin"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "彭亨",
-          "zh-TW": "彭亨"
+          "zh-TW": "彭亨",
+          "en": "Pahang",
+          "ja": "パハン州",
+          "ko": "파항주"
         }
       },
       {
@@ -21774,7 +25089,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Anshun",
             "localizedNames": {
               "zh-HK": "安順",
-              "zh-TW": "安順"
+              "zh-TW": "安順",
+              "en": "Teluk Anson",
+              "ja": "テロックインタン",
+              "ko": "틀룩인탄"
             }
           },
           {
@@ -21828,7 +25146,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taiping",
             "localizedNames": {
               "zh-HK": "太平",
-              "zh-TW": "太平"
+              "zh-TW": "太平",
+              "en": "Taiping",
+              "ja": "タイピン",
+              "ko": "타이핑"
             }
           },
           {
@@ -21837,13 +25158,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yibao",
             "localizedNames": {
               "zh-HK": "怡保",
-              "zh-TW": "怡保"
+              "zh-TW": "怡保",
+              "en": "Ipoh",
+              "ja": "イポー",
+              "ko": "이포"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "霹靂",
-          "zh-TW": "霹靂"
+          "zh-TW": "霹靂",
+          "en": "Perak",
+          "ja": "ペラ州",
+          "ko": "페락주"
         }
       },
       {
@@ -21857,7 +25184,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Benzhen",
             "localizedNames": {
               "zh-HK": "笨珍",
-              "zh-TW": "笨珍"
+              "zh-TW": "笨珍",
+              "en": "Pontian Besar",
+              "ja": "Pontian Besar",
+              "ko": "Pontian Besar"
             }
           },
           {
@@ -21902,7 +25232,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mapo",
             "localizedNames": {
               "zh-HK": "麻坡",
-              "zh-TW": "麻坡"
+              "zh-TW": "麻坡",
+              "en": "Muar town",
+              "ja": "Muar town",
+              "ko": "Muar town"
             }
           },
           {
@@ -21920,13 +25253,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinshan",
             "localizedNames": {
               "zh-HK": "新山",
-              "zh-TW": "新山"
+              "zh-TW": "新山",
+              "en": "Johor Bahru",
+              "ja": "ジョホールバル",
+              "ko": "조호르바루"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "柔佛",
-          "zh-TW": "柔佛"
+          "zh-TW": "柔佛",
+          "en": "Johor",
+          "ja": "ジョホール州",
+          "ko": "조호르주"
         }
       },
       {
@@ -21958,7 +25297,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Furong",
             "localizedNames": {
               "zh-HK": "芙蓉",
-              "zh-TW": "芙蓉"
+              "zh-TW": "芙蓉",
+              "en": "Seremban",
+              "ja": "スレンバン",
+              "ko": "스름반"
             }
           },
           {
@@ -22000,7 +25342,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "森美蘭",
-          "zh-TW": "森美蘭"
+          "zh-TW": "森美蘭",
+          "en": "Negeri Sembilan",
+          "ja": "ヌグリ・スンビラン州",
+          "ko": "느그리슴빌란주"
         }
       },
       {
@@ -22014,7 +25359,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baba",
             "localizedNames": {
               "zh-HK": "吧巴",
-              "zh-TW": "吧巴"
+              "zh-TW": "吧巴",
+              "en": "Papar",
+              "ja": "Papar",
+              "ko": "파파르"
             }
           },
           {
@@ -22032,7 +25380,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bilulan",
             "localizedNames": {
               "zh-HK": "比魯蘭",
-              "zh-TW": "比魯蘭"
+              "zh-TW": "比魯蘭",
+              "en": "Beluran",
+              "ja": "Beluran",
+              "ko": "Beluran"
             }
           },
           {
@@ -22068,7 +25419,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dannan",
             "localizedNames": {
               "zh-HK": "丹南",
-              "zh-TW": "丹南"
+              "zh-TW": "丹南",
+              "en": "Tenom District",
+              "ja": "Tenom District",
+              "ko": "Tenom District"
             }
           },
           {
@@ -22077,7 +25431,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Douhu",
             "localizedNames": {
               "zh-HK": "鬥湖",
-              "zh-TW": "鬥湖"
+              "zh-TW": "鬥湖",
+              "en": "Tawau",
+              "ja": "タワウ",
+              "ko": "타와우"
             }
           },
           {
@@ -22086,7 +25443,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Douyalan",
             "localizedNames": {
               "zh-HK": "鬥亞蘭",
-              "zh-TW": "鬥亞蘭"
+              "zh-TW": "鬥亞蘭",
+              "en": "Tuaran",
+              "ja": "トゥアラン",
+              "ko": "투아란"
             }
           },
           {
@@ -22113,7 +25473,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gendeyao",
             "localizedNames": {
               "zh-HK": "根地咬",
-              "zh-TW": "根地咬"
+              "zh-TW": "根地咬",
+              "en": "Keningau",
+              "ja": "ケニンガウ",
+              "ko": "케닌가우"
             }
           },
           {
@@ -22131,7 +25494,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gudamaolu",
             "localizedNames": {
               "zh-HK": "古打毛律",
-              "zh-TW": "古打毛律"
+              "zh-TW": "古打毛律",
+              "en": "Kota Belud",
+              "ja": "コタ・ブルッ",
+              "ko": "Kota Belud"
             }
           },
           {
@@ -22140,7 +25506,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guna",
             "localizedNames": {
               "zh-HK": "古納",
-              "zh-TW": "古納"
+              "zh-TW": "古納",
+              "en": "Kunak",
+              "ja": "クナック",
+              "ko": "Kunak"
             }
           },
           {
@@ -22149,7 +25518,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gualabanyou",
             "localizedNames": {
               "zh-HK": "瓜拉班尤",
-              "zh-TW": "瓜拉班尤"
+              "zh-TW": "瓜拉班尤",
+              "en": "Kuala Penyu",
+              "ja": "Kuala Penyu",
+              "ko": "쿠알라픈유"
             }
           },
           {
@@ -22176,7 +25548,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nadu",
             "localizedNames": {
               "zh-HK": "拿篤",
-              "zh-TW": "拿篤"
+              "zh-TW": "拿篤",
+              "en": "Lahad Datu",
+              "ja": "ラハダトゥ",
+              "ko": "Lahad Datu"
             }
           },
           {
@@ -22194,7 +25569,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shandagen",
             "localizedNames": {
               "zh-HK": "山打根",
-              "zh-TW": "山打根"
+              "zh-TW": "山打根",
+              "en": "Sandakan",
+              "ja": "サンダカン",
+              "ko": "산다칸"
             }
           },
           {
@@ -22212,13 +25590,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xianbenna",
             "localizedNames": {
               "zh-HK": "仙本那",
-              "zh-TW": "仙本那"
+              "zh-TW": "仙本那",
+              "en": "Semporna",
+              "ja": "センポルナ",
+              "ko": "Semporna"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "沙巴",
-          "zh-TW": "沙巴"
+          "zh-TW": "沙巴",
+          "en": "Sabah",
+          "ja": "サバ州",
+          "ko": "사바주"
         }
       },
       {
@@ -22232,7 +25616,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gujin",
             "localizedNames": {
               "zh-HK": "古晉",
-              "zh-TW": "古晉"
+              "zh-TW": "古晉",
+              "en": "Kuching",
+              "ja": "クチン",
+              "ko": "쿠칭"
             }
           },
           {
@@ -22259,7 +25646,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Meili",
             "localizedNames": {
               "zh-HK": "美里",
-              "zh-TW": "美里"
+              "zh-TW": "美里",
+              "en": "Miri",
+              "ja": "ミリ",
+              "ko": "미리"
             }
           },
           {
@@ -22268,7 +25658,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mindoulu",
             "localizedNames": {
               "zh-HK": "民都魯",
-              "zh-TW": "民都魯"
+              "zh-TW": "民都魯",
+              "en": "Bintulu",
+              "ja": "Bintulu",
+              "ko": "빈툴루"
             }
           },
           {
@@ -22286,7 +25679,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Muzhong",
             "localizedNames": {
               "zh-HK": "木中",
-              "zh-TW": "木中"
+              "zh-TW": "木中",
+              "en": "Betong",
+              "ja": "ベトン",
+              "ko": "베통"
             }
           },
           {
@@ -22328,7 +25724,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "沙撈越",
-          "zh-TW": "沙撈越"
+          "zh-TW": "沙撈越",
+          "en": "Sarawak",
+          "ja": "サラワク州",
+          "ko": "사라왁주"
         }
       },
       {
@@ -22405,13 +25804,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xuebang",
             "localizedNames": {
               "zh-HK": "雪邦",
-              "zh-TW": "雪邦"
+              "zh-TW": "雪邦",
+              "en": "Sepang",
+              "ja": "Sepang",
+              "ko": "Sepang"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "雪蘭莪",
-          "zh-TW": "雪蘭莪"
+          "zh-TW": "雪蘭莪",
+          "en": "Selangor",
+          "ja": "セランゴール州",
+          "ko": "슬랑오르주"
         }
       }
     ]
@@ -22518,7 +25923,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "馬裏",
-          "zh-TW": "馬裏"
+          "zh-TW": "馬裏",
+          "en": "Mali",
+          "ja": "マリ",
+          "ko": "말리"
         }
       }
     ]
@@ -22632,7 +26040,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Adelaer",
             "localizedNames": {
               "zh-HK": "阿德拉爾",
-              "zh-TW": "阿德拉爾"
+              "zh-TW": "阿德拉爾",
+              "en": "Adrar",
+              "ja": "アドラル州",
+              "ko": "아드라르 주"
             }
           },
           {
@@ -22641,7 +26052,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Asaba",
             "localizedNames": {
               "zh-HK": "阿薩巴",
-              "zh-TW": "阿薩巴"
+              "zh-TW": "阿薩巴",
+              "en": "Assaba",
+              "ja": "アサバ州",
+              "ko": "아사바주"
             }
           },
           {
@@ -22650,7 +26064,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bolakena",
             "localizedNames": {
               "zh-HK": "卜拉克納",
-              "zh-TW": "卜拉克納"
+              "zh-TW": "卜拉克納",
+              "en": "Brakna",
+              "ja": "ブラクナ州",
+              "ko": "브라크나주"
             }
           },
           {
@@ -22659,7 +26076,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Donghude",
             "localizedNames": {
               "zh-HK": "東胡德",
-              "zh-TW": "東胡德"
+              "zh-TW": "東胡德",
+              "en": "Hodh Ech Chargi",
+              "ja": "ホズ・エッ・シャルギ州",
+              "ko": "호드에슈샤르기주"
             }
           },
           {
@@ -22668,7 +26088,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geergelei",
             "localizedNames": {
               "zh-HK": "戈爾戈勒",
-              "zh-TW": "戈爾戈勒"
+              "zh-TW": "戈爾戈勒",
+              "en": "Gorgol",
+              "ja": "ゴルゴル州",
+              "ko": "고르골주"
             }
           },
           {
@@ -22677,7 +26100,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jidimaka",
             "localizedNames": {
               "zh-HK": "吉迪馬卡",
-              "zh-TW": "吉迪馬卡"
+              "zh-TW": "吉迪馬卡",
+              "en": "Guidimaka",
+              "ja": "ギディマカ州",
+              "ko": "기디마카주"
             }
           },
           {
@@ -22686,7 +26112,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuwadibuwan",
             "localizedNames": {
               "zh-HK": "努瓦迪布灣",
-              "zh-TW": "努瓦迪布灣"
+              "zh-TW": "努瓦迪布灣",
+              "en": "Dakhlet Nouadhibou",
+              "ja": "ダフレト・ヌアジブ州",
+              "ko": "다클레트누아디부주"
             }
           },
           {
@@ -22704,7 +26133,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tagante",
             "localizedNames": {
               "zh-HK": "塔甘特",
-              "zh-TW": "塔甘特"
+              "zh-TW": "塔甘特",
+              "en": "Tagant",
+              "ja": "タガント州",
+              "ko": "타간트주"
             }
           },
           {
@@ -22713,7 +26145,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Telazha",
             "localizedNames": {
               "zh-HK": "特拉扎",
-              "zh-TW": "特拉扎"
+              "zh-TW": "特拉扎",
+              "en": "Trarza",
+              "ja": "トラルザ州",
+              "ko": "트라르자주"
             }
           },
           {
@@ -22722,7 +26157,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tilisi-zaimuer",
             "localizedNames": {
               "zh-HK": "提里斯-宰穆爾",
-              "zh-TW": "提里斯-宰穆爾"
+              "zh-TW": "提里斯-宰穆爾",
+              "en": "Tiris Zemmour",
+              "ja": "ティリス・ゼムール州",
+              "ko": "티리스젬무르주"
             }
           },
           {
@@ -22731,7 +26169,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xihude",
             "localizedNames": {
               "zh-HK": "西胡德",
-              "zh-TW": "西胡德"
+              "zh-TW": "西胡德",
+              "en": "Hodh El Gharbi",
+              "ja": "ホズ・エル・ガルビ州",
+              "ko": "호드엘가르비주"
             }
           },
           {
@@ -22740,13 +26181,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yinxili",
             "localizedNames": {
               "zh-HK": "因希裏",
-              "zh-TW": "因希裏"
+              "zh-TW": "因希裏",
+              "en": "Inchiri",
+              "ja": "インシリ州",
+              "ko": "인시리주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "毛里塔尼亞",
-          "zh-TW": "毛里塔尼亞"
+          "zh-TW": "毛里塔尼亞",
+          "en": "Mauritania",
+          "ja": "モーリタニア",
+          "ko": "모리타니"
         }
       }
     ]
@@ -22775,7 +26222,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Feiyeteweier",
             "localizedNames": {
               "zh-HK": "費耶特維爾",
-              "zh-TW": "費耶特維爾"
+              "zh-TW": "費耶特維爾",
+              "en": "Fayetteville",
+              "ja": "フェイエットビル",
+              "ko": "페이엣빌"
             }
           },
           {
@@ -22784,7 +26234,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shimisibao",
             "localizedNames": {
               "zh-HK": "史密斯堡",
-              "zh-TW": "史密斯堡"
+              "zh-TW": "史密斯堡",
+              "en": "Fort Smith",
+              "ja": "フォートスミス",
+              "ko": "Fort Smith"
             }
           },
           {
@@ -22793,13 +26246,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiaoshicheng",
             "localizedNames": {
               "zh-HK": "小石城",
-              "zh-TW": "小石城"
+              "zh-TW": "小石城",
+              "en": "Little Rock",
+              "ja": "リトルロック",
+              "ko": "리틀록"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "阿肯色",
-          "zh-TW": "阿肯色"
+          "zh-TW": "阿肯色",
+          "en": "Arkansas",
+          "ja": "アーカンソー州",
+          "ko": "아칸소주"
         }
       },
       {
@@ -22822,7 +26281,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Menggemali",
             "localizedNames": {
               "zh-HK": "蒙哥馬利",
-              "zh-TW": "蒙哥馬利"
+              "zh-TW": "蒙哥馬利",
+              "en": "Montgomery",
+              "ja": "モンゴメリー",
+              "ko": "몽고메리"
             }
           },
           {
@@ -22831,13 +26293,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mobier",
             "localizedNames": {
               "zh-HK": "莫比爾",
-              "zh-TW": "莫比爾"
+              "zh-TW": "莫比爾",
+              "en": "Mobile",
+              "ja": "モービル",
+              "ko": "모빌"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "阿拉巴馬",
-          "zh-TW": "阿拉巴馬"
+          "zh-TW": "阿拉巴馬",
+          "en": "Alabama",
+          "ja": "アラバマ州",
+          "ko": "앨라배마주"
         }
       },
       {
@@ -22860,7 +26328,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Feierbankesi",
             "localizedNames": {
               "zh-HK": "費爾班克斯",
-              "zh-TW": "費爾班克斯"
+              "zh-TW": "費爾班克斯",
+              "en": "Fairbanks",
+              "ja": "フェアバンクス",
+              "ko": "페어뱅크스"
             }
           },
           {
@@ -22869,13 +26340,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhunuo",
             "localizedNames": {
               "zh-HK": "朱諾",
-              "zh-TW": "朱諾"
+              "zh-TW": "朱諾",
+              "en": "Juneau",
+              "ja": "ジュノー",
+              "ko": "주노"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "阿拉斯加",
-          "zh-TW": "阿拉斯加"
+          "zh-TW": "阿拉斯加",
+          "en": "Alaska",
+          "ja": "アラスカ州",
+          "ko": "알래스카주"
         }
       },
       {
@@ -22889,7 +26366,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aidahefuersi",
             "localizedNames": {
               "zh-HK": "愛達荷福爾斯",
-              "zh-TW": "愛達荷福爾斯"
+              "zh-TW": "愛達荷福爾斯",
+              "en": "Idaho Falls",
+              "ja": "アイダホフォールズ",
+              "ko": "Idaho Falls"
             }
           },
           {
@@ -22898,7 +26378,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bokateluo",
             "localizedNames": {
               "zh-HK": "波卡特洛",
-              "zh-TW": "波卡特洛"
+              "zh-TW": "波卡特洛",
+              "en": "Pocatello",
+              "ja": "ポカテッロ",
+              "ko": "포커텔로"
             }
           },
           {
@@ -22934,7 +26417,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liuyisidun",
             "localizedNames": {
               "zh-HK": "劉易斯頓",
-              "zh-TW": "劉易斯頓"
+              "zh-TW": "劉易斯頓",
+              "en": "Lewiston",
+              "ja": "ルイストン",
+              "ko": "Lewiston"
             }
           },
           {
@@ -22961,7 +26447,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanpa",
             "localizedNames": {
               "zh-HK": "楠帕",
-              "zh-TW": "楠帕"
+              "zh-TW": "楠帕",
+              "en": "Nampa",
+              "ja": "ナンパ",
+              "ko": "Nampa"
             }
           },
           {
@@ -22994,7 +26483,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "愛達荷",
-          "zh-TW": "愛達荷"
+          "zh-TW": "愛達荷",
+          "en": "Idaho",
+          "ja": "アイダホ州",
+          "ko": "아이다호주"
         }
       },
       {
@@ -23008,7 +26500,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dawenbote",
             "localizedNames": {
               "zh-HK": "達文波特",
-              "zh-TW": "達文波特"
+              "zh-TW": "達文波特",
+              "en": "Davenport",
+              "ja": "ダベンポート",
+              "ko": "대븐포트"
             }
           },
           {
@@ -23017,7 +26512,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Demeiyin",
             "localizedNames": {
               "zh-HK": "得梅因",
-              "zh-TW": "得梅因"
+              "zh-TW": "得梅因",
+              "en": "Des Moines",
+              "ja": "デモイン郡",
+              "ko": "Des Moines"
             }
           },
           {
@@ -23026,13 +26524,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xidalapizi",
             "localizedNames": {
               "zh-HK": "錫達拉皮茲",
-              "zh-TW": "錫達拉皮茲"
+              "zh-TW": "錫達拉皮茲",
+              "en": "Cedar Rapids",
+              "ja": "シーダーラピッズ",
+              "ko": "시더래피즈"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "愛荷華",
-          "zh-TW": "愛荷華"
+          "zh-TW": "愛荷華",
+          "en": "Iowa",
+          "ja": "アイオワ州",
+          "ko": "아이오와주"
         }
       },
       {
@@ -23046,7 +26550,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bisimai",
             "localizedNames": {
               "zh-HK": "俾斯麥",
-              "zh-TW": "俾斯麥"
+              "zh-TW": "俾斯麥",
+              "en": "Bismarck",
+              "ja": "ビスマーク",
+              "ko": "비즈마크"
             }
           },
           {
@@ -23055,7 +26562,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dafukesi",
             "localizedNames": {
               "zh-HK": "大福克斯",
-              "zh-TW": "大福克斯"
+              "zh-TW": "大福克斯",
+              "en": "Grand Forks",
+              "ja": "グランドフォークス",
+              "ko": "그랜드포크스"
             }
           },
           {
@@ -23064,7 +26574,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fage",
             "localizedNames": {
               "zh-HK": "法戈",
-              "zh-TW": "法戈"
+              "zh-TW": "法戈",
+              "en": "Fargo",
+              "ja": "ファーゴ",
+              "ko": "파고"
             }
           },
           {
@@ -23073,13 +26586,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mainuote",
             "localizedNames": {
               "zh-HK": "邁諾特",
-              "zh-TW": "邁諾特"
+              "zh-TW": "邁諾特",
+              "en": "Minot",
+              "ja": "マイノット",
+              "ko": "마이놋"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "北達科他",
-          "zh-TW": "北達科他"
+          "zh-TW": "北達科他",
+          "en": "North Dakota",
+          "ja": "ノースダコタ州",
+          "ko": "노스다코타주"
         }
       },
       {
@@ -23111,7 +26630,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelinsibolei",
             "localizedNames": {
               "zh-HK": "格林斯伯勒",
-              "zh-TW": "格林斯伯勒"
+              "zh-TW": "格林斯伯勒",
+              "en": "Greensboro",
+              "ja": "グリーンズボロ",
+              "ko": "그린즈버러"
             }
           },
           {
@@ -23129,7 +26651,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luoli",
             "localizedNames": {
               "zh-HK": "羅利",
-              "zh-TW": "羅利"
+              "zh-TW": "羅利",
+              "en": "Raleigh",
+              "ja": "ローリー",
+              "ko": "롤리"
             }
           },
           {
@@ -23147,13 +26672,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xialuote",
             "localizedNames": {
               "zh-HK": "夏洛特",
-              "zh-TW": "夏洛特"
+              "zh-TW": "夏洛特",
+              "en": "Charlotte",
+              "ja": "シャーロット",
+              "ko": "샬럿"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "北卡羅來納",
-          "zh-TW": "北卡羅來納"
+          "zh-TW": "北卡羅來納",
+          "en": "North Carolina",
+          "ja": "ノースカロライナ州",
+          "ko": "노스캐롤라이나주"
         }
       },
       {
@@ -23167,7 +26698,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Alundun",
             "localizedNames": {
               "zh-HK": "阿倫敦",
-              "zh-TW": "阿倫敦"
+              "zh-TW": "阿倫敦",
+              "en": "Allentown",
+              "ja": "アレンタウン",
+              "ko": "앨런타운"
             }
           },
           {
@@ -23176,7 +26710,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Feicheng",
             "localizedNames": {
               "zh-HK": "費城",
-              "zh-TW": "費城"
+              "zh-TW": "費城",
+              "en": "Philadelphia",
+              "ja": "フィラデルフィア",
+              "ko": "필라델피아"
             }
           },
           {
@@ -23185,13 +26722,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pizibao",
             "localizedNames": {
               "zh-HK": "匹茲堡",
-              "zh-TW": "匹茲堡"
+              "zh-TW": "匹茲堡",
+              "en": "Pittsburgh",
+              "ja": "ピッツバーグ",
+              "ko": "피츠버그"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "賓夕法尼亞",
-          "zh-TW": "賓夕法尼亞"
+          "zh-TW": "賓夕法尼亞",
+          "en": "Pennsylvania",
+          "ja": "ペンシルベニア州",
+          "ko": "펜실베이니아주"
         }
       },
       {
@@ -23223,7 +26766,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dalasi",
             "localizedNames": {
               "zh-HK": "達拉斯",
-              "zh-TW": "達拉斯"
+              "zh-TW": "達拉斯",
+              "en": "Dallas",
+              "ja": "ダラス",
+              "ko": "댈러스"
             }
           },
           {
@@ -23250,7 +26796,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laleiduo",
             "localizedNames": {
               "zh-HK": "拉雷多",
-              "zh-TW": "拉雷多"
+              "zh-TW": "拉雷多",
+              "en": "Laredo",
+              "ja": "ラレド",
+              "ko": "러레이도"
             }
           },
           {
@@ -23268,7 +26817,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengandongniao",
             "localizedNames": {
               "zh-HK": "聖安東尼奧",
-              "zh-TW": "聖安東尼奧"
+              "zh-TW": "聖安東尼奧",
+              "en": "San Antonio",
+              "ja": "サンアントニオ",
+              "ko": "샌안토니오"
             }
           },
           {
@@ -23283,7 +26835,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "德克薩斯",
-          "zh-TW": "德克薩斯"
+          "zh-TW": "德克薩斯",
+          "en": "Texas",
+          "ja": "テキサス州",
+          "ko": "텍사스주"
         }
       },
       {
@@ -23297,7 +26852,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Daidun",
             "localizedNames": {
               "zh-HK": "代頓",
-              "zh-TW": "代頓"
+              "zh-TW": "代頓",
+              "en": "Dayton",
+              "ja": "デイトン",
+              "ko": "데이턴"
             }
           },
           {
@@ -23306,7 +26864,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelunbu",
             "localizedNames": {
               "zh-HK": "哥倫布",
-              "zh-TW": "哥倫布"
+              "zh-TW": "哥倫布",
+              "en": "Columbus",
+              "ja": "コロンバス",
+              "ko": "콜럼버스"
             }
           },
           {
@@ -23315,7 +26876,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelifulan",
             "localizedNames": {
               "zh-HK": "克利夫蘭",
-              "zh-TW": "克利夫蘭"
+              "zh-TW": "克利夫蘭",
+              "en": "Cleveland",
+              "ja": "クリーブランド",
+              "ko": "클리블랜드"
             }
           },
           {
@@ -23324,7 +26888,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuolaiduo",
             "localizedNames": {
               "zh-HK": "托萊多",
-              "zh-TW": "托萊多"
+              "zh-TW": "托萊多",
+              "en": "Toledo",
+              "ja": "トレド",
+              "ko": "털리도"
             }
           },
           {
@@ -23333,13 +26900,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinxinnati",
             "localizedNames": {
               "zh-HK": "辛辛那提",
-              "zh-TW": "辛辛那提"
+              "zh-TW": "辛辛那提",
+              "en": "Cincinnati",
+              "ja": "シンシナティ",
+              "ko": "신시내티"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "俄亥俄",
-          "zh-TW": "俄亥俄"
+          "zh-TW": "俄亥俄",
+          "en": "Ohio",
+          "ja": "オハイオ州",
+          "ko": "오하이오주"
         }
       },
       {
@@ -23353,7 +26926,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ekelahemacheng",
             "localizedNames": {
               "zh-HK": "俄克拉荷馬城",
-              "zh-TW": "俄克拉荷馬城"
+              "zh-TW": "俄克拉荷馬城",
+              "en": "Oklahoma City",
+              "ja": "オクラホマシティ",
+              "ko": "오클라호마시티"
             }
           },
           {
@@ -23362,7 +26938,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuoman",
             "localizedNames": {
               "zh-HK": "諾曼",
-              "zh-TW": "諾曼"
+              "zh-TW": "諾曼",
+              "en": "Norman",
+              "ja": "ノーマン",
+              "ko": "노먼"
             }
           },
           {
@@ -23371,13 +26950,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taersa",
             "localizedNames": {
               "zh-HK": "塔爾薩",
-              "zh-TW": "塔爾薩"
+              "zh-TW": "塔爾薩",
+              "en": "Tulsa",
+              "ja": "タルサ郡",
+              "ko": "Tulsa"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "俄克拉荷馬",
-          "zh-TW": "俄克拉荷馬"
+          "zh-TW": "俄克拉荷馬",
+          "en": "Oklahoma",
+          "ja": "オクラホマ州",
+          "ko": "오클라호마주"
         }
       },
       {
@@ -23391,7 +26976,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bende",
             "localizedNames": {
               "zh-HK": "本德",
-              "zh-TW": "本德"
+              "zh-TW": "本德",
+              "en": "Bend",
+              "ja": "ベンド",
+              "ko": "Bend"
             }
           },
           {
@@ -23400,7 +26988,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Botelan",
             "localizedNames": {
               "zh-HK": "波特蘭",
-              "zh-TW": "波特蘭"
+              "zh-TW": "波特蘭",
+              "en": "Portland",
+              "ja": "ポートランド",
+              "ko": "포틀랜드"
             }
           },
           {
@@ -23436,7 +27027,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelancipasi",
             "localizedNames": {
               "zh-HK": "格蘭茨帕斯",
-              "zh-TW": "格蘭茨帕斯"
+              "zh-TW": "格蘭茨帕斯",
+              "en": "Grants Pass",
+              "ja": "Grants Pass",
+              "ko": "그랜츠패스"
             }
           },
           {
@@ -23463,7 +27057,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kewalisi",
             "localizedNames": {
               "zh-HK": "科瓦利斯",
-              "zh-TW": "科瓦利斯"
+              "zh-TW": "科瓦利斯",
+              "en": "Corvallis",
+              "ja": "コーバリス",
+              "ko": "코밸리스"
             }
           },
           {
@@ -23481,7 +27078,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Meidefu",
             "localizedNames": {
               "zh-HK": "梅德福",
-              "zh-TW": "梅德福"
+              "zh-TW": "梅德福",
+              "en": "Medford",
+              "ja": "メドフォード",
+              "ko": "메드퍼드"
             }
           },
           {
@@ -23490,7 +27090,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Saileimu",
             "localizedNames": {
               "zh-HK": "塞勒姆",
-              "zh-TW": "塞勒姆"
+              "zh-TW": "塞勒姆",
+              "en": "Salem",
+              "ja": "セイラム",
+              "ko": "세일럼"
             }
           },
           {
@@ -23508,7 +27111,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sipulinfeierde",
             "localizedNames": {
               "zh-HK": "斯普林菲爾德",
-              "zh-TW": "斯普林菲爾德"
+              "zh-TW": "斯普林菲爾德",
+              "en": "Springfield",
+              "ja": "スプリングフィールド",
+              "ko": "스프링필드"
             }
           },
           {
@@ -23517,13 +27123,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Youjin",
             "localizedNames": {
               "zh-HK": "尤金",
-              "zh-TW": "尤金"
+              "zh-TW": "尤金",
+              "en": "Eugene",
+              "ja": "ユージン",
+              "ko": "유진"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "俄勒岡",
-          "zh-TW": "俄勒岡"
+          "zh-TW": "俄勒岡",
+          "en": "Oregon",
+          "ja": "オレゴン州",
+          "ko": "오리건주"
         }
       },
       {
@@ -23537,7 +27149,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aolanduo",
             "localizedNames": {
               "zh-HK": "奧蘭多",
-              "zh-TW": "奧蘭多"
+              "zh-TW": "奧蘭多",
+              "en": "Orlando",
+              "ja": "オーランド",
+              "ko": "올랜도"
             }
           },
           {
@@ -23546,7 +27161,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiweisite",
             "localizedNames": {
               "zh-HK": "基韋斯特",
-              "zh-TW": "基韋斯特"
+              "zh-TW": "基韋斯特",
+              "en": "Key West",
+              "ja": "キーウェスト",
+              "ko": "키웨스트"
             }
           },
           {
@@ -23555,7 +27173,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiekexunweier",
             "localizedNames": {
               "zh-HK": "傑克遜維爾",
-              "zh-TW": "傑克遜維爾"
+              "zh-TW": "傑克遜維爾",
+              "en": "Jacksonville",
+              "ja": "ジャクソンビル",
+              "ko": "잭슨빌"
             }
           },
           {
@@ -23582,7 +27203,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maiami",
             "localizedNames": {
               "zh-HK": "邁阿密",
-              "zh-TW": "邁阿密"
+              "zh-TW": "邁阿密",
+              "en": "Miami",
+              "ja": "マイアミ",
+              "ko": "마이애미"
             }
           },
           {
@@ -23609,13 +27233,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tanpa",
             "localizedNames": {
               "zh-HK": "坦帕",
-              "zh-TW": "坦帕"
+              "zh-TW": "坦帕",
+              "en": "Tampa",
+              "ja": "タンパ",
+              "ko": "탬파"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "佛羅里達",
-          "zh-TW": "佛羅里達"
+          "zh-TW": "佛羅里達",
+          "en": "Florida",
+          "ja": "フロリダ州",
+          "ko": "플로리다주"
         }
       },
       {
@@ -23629,7 +27259,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bolingdun",
             "localizedNames": {
               "zh-HK": "伯靈頓",
-              "zh-TW": "伯靈頓"
+              "zh-TW": "伯靈頓",
+              "en": "Burlington",
+              "ja": "バーリントン",
+              "ko": "벌링턴"
             }
           },
           {
@@ -23638,7 +27271,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Latelan",
             "localizedNames": {
               "zh-HK": "拉特蘭",
-              "zh-TW": "拉特蘭"
+              "zh-TW": "拉特蘭",
+              "en": "Rutland",
+              "ja": "ラトランド",
+              "ko": "Rutland"
             }
           },
           {
@@ -23647,13 +27283,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanbolingdun",
             "localizedNames": {
               "zh-HK": "南伯靈頓",
-              "zh-TW": "南伯靈頓"
+              "zh-TW": "南伯靈頓",
+              "en": "South Burlington",
+              "ja": "サウスバーリントン",
+              "ko": "South Burlington"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "佛蒙特",
-          "zh-TW": "佛蒙特"
+          "zh-TW": "佛蒙特",
+          "en": "Vermont",
+          "ja": "バーモント州",
+          "ko": "버몬트주"
         }
       },
       {
@@ -23673,7 +27315,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "哥倫比亞特區",
-          "zh-TW": "哥倫比亞特區"
+          "zh-TW": "哥倫比亞特區",
+          "en": "District of Columbia",
+          "ja": "ワシントン・コロンビア特別区",
+          "ko": "컬럼비아 특별구"
         }
       },
       {
@@ -23687,7 +27332,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sibokan",
             "localizedNames": {
               "zh-HK": "斯波坎",
-              "zh-TW": "斯波坎"
+              "zh-TW": "斯波坎",
+              "en": "Spokane",
+              "ja": "スポケーン",
+              "ko": "스포캔"
             }
           },
           {
@@ -23696,7 +27344,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Takema",
             "localizedNames": {
               "zh-HK": "塔科馬",
-              "zh-TW": "塔科馬"
+              "zh-TW": "塔科馬",
+              "en": "Tacoma",
+              "ja": "タコマ",
+              "ko": "터코마"
             }
           },
           {
@@ -23705,13 +27356,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiyatu",
             "localizedNames": {
               "zh-HK": "西雅圖",
-              "zh-TW": "西雅圖"
+              "zh-TW": "西雅圖",
+              "en": "Seattle",
+              "ja": "シアトル",
+              "ko": "시애틀"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "華盛頓",
-          "zh-TW": "華盛頓"
+          "zh-TW": "華盛頓",
+          "en": "Washington",
+          "ja": "ワシントン州",
+          "ko": "워싱턴주"
         }
       },
       {
@@ -23725,7 +27382,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aiwensidun",
             "localizedNames": {
               "zh-HK": "埃文斯頓",
-              "zh-TW": "埃文斯頓"
+              "zh-TW": "埃文斯頓",
+              "en": "Evanston",
+              "ja": "エバンストン",
+              "ko": "에번스턴"
             }
           },
           {
@@ -23734,7 +27394,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kasipo",
             "localizedNames": {
               "zh-HK": "卡斯珀",
-              "zh-TW": "卡斯珀"
+              "zh-TW": "卡斯珀",
+              "en": "Casper",
+              "ja": "キャスパー",
+              "ko": "캐스퍼"
             }
           },
           {
@@ -23761,7 +27424,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiayan",
             "localizedNames": {
               "zh-HK": "夏延",
-              "zh-TW": "夏延"
+              "zh-TW": "夏延",
+              "en": "Cheyenne",
+              "ja": "シャイアン",
+              "ko": "샤이엔"
             }
           },
           {
@@ -23770,13 +27436,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xielideng",
             "localizedNames": {
               "zh-HK": "謝里登",
-              "zh-TW": "謝里登"
+              "zh-TW": "謝里登",
+              "en": "Sheridan",
+              "ja": "Sheridan",
+              "ko": "Sheridan"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "懷俄明",
-          "zh-TW": "懷俄明"
+          "zh-TW": "懷俄明",
+          "en": "Wyoming",
+          "ja": "ワイオミング州",
+          "ko": "와이오밍주"
         }
       },
       {
@@ -23790,7 +27462,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiujinshan",
             "localizedNames": {
               "zh-HK": "舊金山",
-              "zh-TW": "舊金山"
+              "zh-TW": "舊金山",
+              "en": "San Francisco",
+              "ja": "サンフランシスコ",
+              "ko": "샌프란시스코"
             }
           },
           {
@@ -23799,7 +27474,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luoshanji",
             "localizedNames": {
               "zh-HK": "洛杉磯",
-              "zh-TW": "洛杉磯"
+              "zh-TW": "洛杉磯",
+              "en": "Los Angeles",
+              "ja": "ロサンゼルス",
+              "ko": "로스앤젤레스"
             }
           },
           {
@@ -23808,7 +27486,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengdiege",
             "localizedNames": {
               "zh-HK": "聖迭戈",
-              "zh-TW": "聖迭戈"
+              "zh-TW": "聖迭戈",
+              "en": "San Diego County",
+              "ja": "サンディエゴ郡",
+              "ko": "샌디에이고 군"
             }
           },
           {
@@ -23823,7 +27504,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "加利福尼亞",
-          "zh-TW": "加利福尼亞"
+          "zh-TW": "加利福尼亞",
+          "en": "California",
+          "ja": "カリフォルニア",
+          "ko": "캘리포니아주"
         }
       },
       {
@@ -23837,7 +27521,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Abilin",
             "localizedNames": {
               "zh-HK": "阿比林",
-              "zh-TW": "阿比林"
+              "zh-TW": "阿比林",
+              "en": "Abilene",
+              "ja": "アビリーン",
+              "ko": "애빌린"
             }
           },
           {
@@ -23864,7 +27551,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kansasicheng",
             "localizedNames": {
               "zh-HK": "堪薩斯城",
-              "zh-TW": "堪薩斯城"
+              "zh-TW": "堪薩斯城",
+              "en": "Kansas City",
+              "ja": "Kansas City",
+              "ko": "Kansas City"
             }
           },
           {
@@ -23873,7 +27563,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laiwenwosi",
             "localizedNames": {
               "zh-HK": "萊文沃思",
-              "zh-TW": "萊文沃思"
+              "zh-TW": "萊文沃思",
+              "en": "Leavenworth",
+              "ja": "レブンワース郡",
+              "ko": "Leavenworth"
             }
           },
           {
@@ -23882,7 +27575,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laolunsi",
             "localizedNames": {
               "zh-HK": "勞倫斯",
-              "zh-TW": "勞倫斯"
+              "zh-TW": "勞倫斯",
+              "en": "Lawrence",
+              "ja": "ローレンス",
+              "ko": "로렌스"
             }
           },
           {
@@ -23891,7 +27587,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manhadun",
             "localizedNames": {
               "zh-HK": "曼哈頓",
-              "zh-TW": "曼哈頓"
+              "zh-TW": "曼哈頓",
+              "en": "Manhattan",
+              "ja": "マンハッタン",
+              "ko": "맨해튼"
             }
           },
           {
@@ -23900,7 +27599,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuopika",
             "localizedNames": {
               "zh-HK": "託皮卡",
-              "zh-TW": "託皮卡"
+              "zh-TW": "託皮卡",
+              "en": "Topeka",
+              "ja": "トピカ",
+              "ko": "토피카"
             }
           },
           {
@@ -23915,7 +27617,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "堪薩斯",
-          "zh-TW": "堪薩斯"
+          "zh-TW": "堪薩斯",
+          "en": "Kansas",
+          "ja": "カンザス州",
+          "ko": "캔자스주"
         }
       },
       {
@@ -23929,7 +27634,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buliqibote",
             "localizedNames": {
               "zh-HK": "布里奇波特",
-              "zh-TW": "布里奇波特"
+              "zh-TW": "布里奇波特",
+              "en": "Bridgeport",
+              "ja": "ブリッジポート",
+              "ko": "브리지포트"
             }
           },
           {
@@ -23938,7 +27646,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dalien",
             "localizedNames": {
               "zh-HK": "達裏恩",
-              "zh-TW": "達裏恩"
+              "zh-TW": "達裏恩",
+              "en": "Darien",
+              "ja": "ダリアン",
+              "ko": "대리엔"
             }
           },
           {
@@ -23947,7 +27658,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelinnizhi",
             "localizedNames": {
               "zh-HK": "格林尼治",
-              "zh-TW": "格林尼治"
+              "zh-TW": "格林尼治",
+              "en": "Greenwich",
+              "ja": "グリニッジ",
+              "ko": "그리니치"
             }
           },
           {
@@ -23956,7 +27670,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hatefude",
             "localizedNames": {
               "zh-HK": "哈特福德",
-              "zh-TW": "哈特福德"
+              "zh-TW": "哈特福德",
+              "en": "Hartford",
+              "ja": "ハートフォード郡",
+              "ko": "Hartford"
             }
           },
           {
@@ -23992,7 +27709,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Woteboli",
             "localizedNames": {
               "zh-HK": "沃特伯裏",
-              "zh-TW": "沃特伯裏"
+              "zh-TW": "沃特伯裏",
+              "en": "Waterbury",
+              "ja": "ウォーターバリー",
+              "ko": "워터베리"
             }
           },
           {
@@ -24001,13 +27721,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinbuliedian",
             "localizedNames": {
               "zh-HK": "新不列顛",
-              "zh-TW": "新不列顛"
+              "zh-TW": "新不列顛",
+              "en": "New Britain",
+              "ja": "ニューブリテン",
+              "ko": "뉴브리튼"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "康涅狄格",
-          "zh-TW": "康涅狄格"
+          "zh-TW": "康涅狄格",
+          "en": "Connecticut",
+          "ja": "コネチカット州",
+          "ko": "코네티컷주"
         }
       },
       {
@@ -24021,7 +27747,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Asipeng",
             "localizedNames": {
               "zh-HK": "阿斯彭",
-              "zh-TW": "阿斯彭"
+              "zh-TW": "阿斯彭",
+              "en": "Aspen",
+              "ja": "アスペン",
+              "ko": "애스펀"
             }
           },
           {
@@ -24030,7 +27759,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoluola",
             "localizedNames": {
               "zh-HK": "奧羅拉",
-              "zh-TW": "奧羅拉"
+              "zh-TW": "奧羅拉",
+              "en": "Aurora",
+              "ja": "オーロラ",
+              "ko": "오로라"
             }
           },
           {
@@ -24048,7 +27780,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dazhangkeshen",
             "localizedNames": {
               "zh-HK": "大章克申",
-              "zh-TW": "大章克申"
+              "zh-TW": "大章克申",
+              "en": "Grand Junction",
+              "ja": "グランドジャンクション",
+              "ko": "Grand Junction"
             }
           },
           {
@@ -24057,7 +27792,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Danfu",
             "localizedNames": {
               "zh-HK": "丹佛",
-              "zh-TW": "丹佛"
+              "zh-TW": "丹佛",
+              "en": "Denver",
+              "ja": "デンバー",
+              "ko": "덴버"
             }
           },
           {
@@ -24075,7 +27813,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keluoladuosipulinsi",
             "localizedNames": {
               "zh-HK": "科羅拉多斯普林斯",
-              "zh-TW": "科羅拉多斯普林斯"
+              "zh-TW": "科羅拉多斯普林斯",
+              "en": "Colorado Springs",
+              "ja": "コロラドスプリングス",
+              "ko": "콜로라도스프링스"
             }
           },
           {
@@ -24084,13 +27825,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weier",
             "localizedNames": {
               "zh-HK": "韋爾",
-              "zh-TW": "韋爾"
+              "zh-TW": "韋爾",
+              "en": "Vail",
+              "ja": "Vail",
+              "ko": "Vail"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "科羅拉多",
-          "zh-TW": "科羅拉多"
+          "zh-TW": "科羅拉多",
+          "en": "Colorado",
+          "ja": "コロラド州",
+          "ko": "콜로라도주"
         }
       },
       {
@@ -24104,7 +27851,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liekexingdun",
             "localizedNames": {
               "zh-HK": "列剋星敦",
-              "zh-TW": "列剋星敦"
+              "zh-TW": "列剋星敦",
+              "en": "Lexington",
+              "ja": "レキシントン",
+              "ko": "렉싱턴"
             }
           },
           {
@@ -24122,13 +27872,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ouwensibolei",
             "localizedNames": {
               "zh-HK": "歐文斯伯勒",
-              "zh-TW": "歐文斯伯勒"
+              "zh-TW": "歐文斯伯勒",
+              "en": "Owensboro",
+              "ja": "オーエンズボロ",
+              "ko": "오언즈버러"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "肯塔基",
-          "zh-TW": "肯塔基"
+          "zh-TW": "肯塔基",
+          "en": "Kentucky",
+          "ja": "ケンタッキー州",
+          "ko": "켄터키주"
         }
       },
       {
@@ -24142,7 +27898,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Batunluri",
             "localizedNames": {
               "zh-HK": "巴吞魯日",
-              "zh-TW": "巴吞魯日"
+              "zh-TW": "巴吞魯日",
+              "en": "Baton Rouge",
+              "ja": "バトンルージュ",
+              "ko": "배턴루지"
             }
           },
           {
@@ -24151,7 +27910,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenlifubote",
             "localizedNames": {
               "zh-HK": "什裏夫波特",
-              "zh-TW": "什裏夫波特"
+              "zh-TW": "什裏夫波特",
+              "en": "Shreveport",
+              "ja": "シュリーブポート",
+              "ko": "슈리브포트"
             }
           },
           {
@@ -24160,13 +27922,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinaoerliang",
             "localizedNames": {
               "zh-HK": "新奧爾良",
-              "zh-TW": "新奧爾良"
+              "zh-TW": "新奧爾良",
+              "en": "New Orleans",
+              "ja": "ニューオーリンズ",
+              "ko": "뉴올리언스"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "路易斯安那",
-          "zh-TW": "路易斯安那"
+          "zh-TW": "路易斯安那",
+          "en": "Louisiana",
+          "ja": "ルイジアナ州",
+          "ko": "루이지애나주"
         }
       },
       {
@@ -24180,7 +27948,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Botajite",
             "localizedNames": {
               "zh-HK": "波塔基特",
-              "zh-TW": "波塔基特"
+              "zh-TW": "波塔基特",
+              "en": "Pawtucket",
+              "ja": "ポータケット",
+              "ko": "포터컷"
             }
           },
           {
@@ -24189,7 +27960,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelansidun",
             "localizedNames": {
               "zh-HK": "克蘭斯頓",
-              "zh-TW": "克蘭斯頓"
+              "zh-TW": "克蘭斯頓",
+              "en": "Cranston",
+              "ja": "クランストン",
+              "ko": "Cranston"
             }
           },
           {
@@ -24207,7 +27981,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Puluoweidengsi",
             "localizedNames": {
               "zh-HK": "普羅維登斯",
-              "zh-TW": "普羅維登斯"
+              "zh-TW": "普羅維登斯",
+              "en": "Providence",
+              "ja": "プロビデンス",
+              "ko": "프로비던스"
             }
           },
           {
@@ -24225,7 +28002,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wensuojite",
             "localizedNames": {
               "zh-HK": "文索基特",
-              "zh-TW": "文索基特"
+              "zh-TW": "文索基特",
+              "en": "Woonsocket",
+              "ja": "ウーンソケット",
+              "ko": "운소켓"
             }
           },
           {
@@ -24234,13 +28014,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Woweike",
             "localizedNames": {
               "zh-HK": "沃威克",
-              "zh-TW": "沃威克"
+              "zh-TW": "沃威克",
+              "en": "Warwick",
+              "ja": "ウォリック",
+              "ko": "워릭"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "羅德島",
-          "zh-TW": "羅德島"
+          "zh-TW": "羅德島",
+          "en": "Rhode Island",
+          "ja": "ロードアイランド州",
+          "ko": "로드아일랜드주"
         }
       },
       {
@@ -24263,7 +28049,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gaisesibao",
             "localizedNames": {
               "zh-HK": "蓋瑟斯堡",
-              "zh-TW": "蓋瑟斯堡"
+              "zh-TW": "蓋瑟斯堡",
+              "en": "Gaithersburg",
+              "ja": "ゲイザースバーグ",
+              "ko": "게이더스버그"
             }
           },
           {
@@ -24272,13 +28061,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luokeweier",
             "localizedNames": {
               "zh-HK": "羅克維爾",
-              "zh-TW": "羅克維爾"
+              "zh-TW": "羅克維爾",
+              "en": "Rockville",
+              "ja": "ロックビル",
+              "ko": "록빌"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "馬里蘭",
-          "zh-TW": "馬里蘭"
+          "zh-TW": "馬里蘭",
+          "en": "Maryland",
+          "ja": "メリーランド州",
+          "ko": "메릴랜드주"
         }
       },
       {
@@ -24301,7 +28096,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sipulinfeierde",
             "localizedNames": {
               "zh-HK": "斯普林菲爾德",
-              "zh-TW": "斯普林菲爾德"
+              "zh-TW": "斯普林菲爾德",
+              "en": "Springfield",
+              "ja": "スプリングフィールド",
+              "ko": "스프링필드"
             }
           },
           {
@@ -24310,13 +28108,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wusite",
             "localizedNames": {
               "zh-HK": "伍斯特",
-              "zh-TW": "伍斯特"
+              "zh-TW": "伍斯特",
+              "en": "Worcester",
+              "ja": "ウースター",
+              "ko": "우스터"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "馬薩諸塞",
-          "zh-TW": "馬薩諸塞"
+          "zh-TW": "馬薩諸塞",
+          "en": "Massachusetts",
+          "ja": "マサチューセッツ州",
+          "ko": "매사추세츠주"
         }
       },
       {
@@ -24348,13 +28152,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Misula",
             "localizedNames": {
               "zh-HK": "米蘇拉",
-              "zh-TW": "米蘇拉"
+              "zh-TW": "米蘇拉",
+              "en": "Missoula",
+              "ja": "ミズーラ",
+              "ko": "미줄라"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "蒙大拿",
-          "zh-TW": "蒙大拿"
+          "zh-TW": "蒙大拿",
+          "en": "Montana",
+          "ja": "モンタナ州",
+          "ko": "몬태나주"
         }
       },
       {
@@ -24368,7 +28178,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelunbiya",
             "localizedNames": {
               "zh-HK": "哥倫比亞",
-              "zh-TW": "哥倫比亞"
+              "zh-TW": "哥倫比亞",
+              "en": "Columbia",
+              "ja": "コロンビア",
+              "ko": "컬럼비아"
             }
           },
           {
@@ -24377,7 +28190,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiefuxunshi",
             "localizedNames": {
               "zh-HK": "傑佛遜市",
-              "zh-TW": "傑佛遜市"
+              "zh-TW": "傑佛遜市",
+              "en": "Jefferson",
+              "ja": "ジェファーソン郡",
+              "ko": "Jefferson"
             }
           },
           {
@@ -24386,7 +28202,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kansasicheng",
             "localizedNames": {
               "zh-HK": "堪薩斯城",
-              "zh-TW": "堪薩斯城"
+              "zh-TW": "堪薩斯城",
+              "en": "Kansas City",
+              "ja": "カンザスシティ",
+              "ko": "캔자스시티"
             }
           },
           {
@@ -24395,7 +28214,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengluyisi",
             "localizedNames": {
               "zh-HK": "聖路易斯",
-              "zh-TW": "聖路易斯"
+              "zh-TW": "聖路易斯",
+              "en": "St Louis",
+              "ja": "セントルイス",
+              "ko": "세인트루이스"
             }
           },
           {
@@ -24404,13 +28226,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sipulinfeierde",
             "localizedNames": {
               "zh-HK": "斯普林菲爾德",
-              "zh-TW": "斯普林菲爾德"
+              "zh-TW": "斯普林菲爾德",
+              "en": "Springfield",
+              "ja": "スプリングフィールド",
+              "ko": "스프링필드"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "密蘇里",
-          "zh-TW": "密蘇里"
+          "zh-TW": "密蘇里",
+          "en": "Missouri",
+          "ja": "ミズーリ州",
+          "ko": "미주리주"
         }
       },
       {
@@ -24424,7 +28252,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Biluokexi",
             "localizedNames": {
               "zh-HK": "比洛克西",
-              "zh-TW": "比洛克西"
+              "zh-TW": "比洛克西",
+              "en": "Biloxi",
+              "ja": "ビロクシ",
+              "ko": "빌럭시"
             }
           },
           {
@@ -24433,7 +28264,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geerfubote",
             "localizedNames": {
               "zh-HK": "格爾夫波特",
-              "zh-TW": "格爾夫波特"
+              "zh-TW": "格爾夫波特",
+              "en": "Gulfport",
+              "ja": "ガルフポート",
+              "ko": "Gulfport"
             }
           },
           {
@@ -24451,7 +28285,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hadisibao",
             "localizedNames": {
               "zh-HK": "哈蒂斯堡",
-              "zh-TW": "哈蒂斯堡"
+              "zh-TW": "哈蒂斯堡",
+              "en": "Hattiesburg",
+              "ja": "ハッティズバーグ",
+              "ko": "해티즈버그"
             }
           },
           {
@@ -24478,13 +28315,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weikesibao",
             "localizedNames": {
               "zh-HK": "維克斯堡",
-              "zh-TW": "維克斯堡"
+              "zh-TW": "維克斯堡",
+              "en": "Vicksburg",
+              "ja": "ヴィックスバーグ",
+              "ko": "빅스버그"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "密西西比",
-          "zh-TW": "密西西比"
+          "zh-TW": "密西西比",
+          "en": "Mississippi",
+          "ja": "ミシシッピ州",
+          "ko": "미시시피주"
         }
       },
       {
@@ -24498,7 +28341,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Annabao",
             "localizedNames": {
               "zh-HK": "安娜堡",
-              "zh-TW": "安娜堡"
+              "zh-TW": "安娜堡",
+              "en": "Ann Arbor",
+              "ja": "アナーバー",
+              "ko": "앤아버"
             }
           },
           {
@@ -24507,7 +28353,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bateerkelike",
             "localizedNames": {
               "zh-HK": "巴特爾克里克",
-              "zh-TW": "巴特爾克里克"
+              "zh-TW": "巴特爾克里克",
+              "en": "Battle Creek",
+              "ja": "バトルクリーク",
+              "ko": "배틀크리크"
             }
           },
           {
@@ -24516,7 +28365,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beicheng",
             "localizedNames": {
               "zh-HK": "貝城",
-              "zh-TW": "貝城"
+              "zh-TW": "貝城",
+              "en": "Bay City",
+              "ja": "ベイシティ",
+              "ko": "베이시티"
             }
           },
           {
@@ -24525,7 +28377,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dajiliucheng",
             "localizedNames": {
               "zh-HK": "大急流城",
-              "zh-TW": "大急流城"
+              "zh-TW": "大急流城",
+              "en": "Grand Rapids",
+              "ja": "グランドラピッズ",
+              "ko": "그랜드래피즈"
             }
           },
           {
@@ -24534,7 +28389,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dierboen",
             "localizedNames": {
               "zh-HK": "迪爾伯恩",
-              "zh-TW": "迪爾伯恩"
+              "zh-TW": "迪爾伯恩",
+              "en": "Dearborn",
+              "ja": "ディアボーン",
+              "ko": "디어본"
             }
           },
           {
@@ -24543,7 +28401,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ditelu",
             "localizedNames": {
               "zh-HK": "底特律",
-              "zh-TW": "底特律"
+              "zh-TW": "底特律",
+              "en": "Detroit",
+              "ja": "デトロイト",
+              "ko": "디트로이트"
             }
           },
           {
@@ -24552,7 +28413,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fulinte",
             "localizedNames": {
               "zh-HK": "弗林特",
-              "zh-TW": "弗林特"
+              "zh-TW": "弗林特",
+              "en": "Flint",
+              "ja": "フリント",
+              "ko": "플린트"
             }
           },
           {
@@ -24561,7 +28425,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huaienduote",
             "localizedNames": {
               "zh-HK": "懷恩多特",
-              "zh-TW": "懷恩多特"
+              "zh-TW": "懷恩多特",
+              "en": "Wyandotte",
+              "ja": "Wyandotte",
+              "ko": "Wyandotte"
             }
           },
           {
@@ -24579,7 +28446,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lanxin",
             "localizedNames": {
               "zh-HK": "蘭辛",
-              "zh-TW": "蘭辛"
+              "zh-TW": "蘭辛",
+              "en": "Lansing",
+              "ja": "ランシング",
+              "ko": "랜싱"
             }
           },
           {
@@ -24588,7 +28458,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Masijigen",
             "localizedNames": {
               "zh-HK": "馬斯基根",
-              "zh-TW": "馬斯基根"
+              "zh-TW": "馬斯基根",
+              "en": "Muskegon",
+              "ja": "マスキーゴン郡",
+              "ko": "Muskegon"
             }
           },
           {
@@ -24606,7 +28479,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sajinuo",
             "localizedNames": {
               "zh-HK": "薩吉諾",
-              "zh-TW": "薩吉諾"
+              "zh-TW": "薩吉諾",
+              "en": "Saginaw",
+              "ja": "サギノー郡",
+              "ko": "새기노군"
             }
           },
           {
@@ -24615,7 +28491,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sushengmali",
             "localizedNames": {
               "zh-HK": "蘇聖瑪麗",
-              "zh-TW": "蘇聖瑪麗"
+              "zh-TW": "蘇聖瑪麗",
+              "en": "Sault Ste. Marie",
+              "ja": "スーセントマリー",
+              "ko": "수세인트마리"
             }
           },
           {
@@ -24624,7 +28503,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wolun",
             "localizedNames": {
               "zh-HK": "沃倫",
-              "zh-TW": "沃倫"
+              "zh-TW": "沃倫",
+              "en": "Warren",
+              "ja": "ウォーレン",
+              "ko": "워런"
             }
           },
           {
@@ -24639,7 +28521,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "密歇根",
-          "zh-TW": "密歇根"
+          "zh-TW": "密歇根",
+          "en": "Michigan",
+          "ja": "ミシガン州",
+          "ko": "미시간주"
         }
       },
       {
@@ -24653,7 +28538,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bange",
             "localizedNames": {
               "zh-HK": "班戈",
-              "zh-TW": "班戈"
+              "zh-TW": "班戈",
+              "en": "Bangor",
+              "ja": "バンゴー",
+              "ko": "뱅고어"
             }
           },
           {
@@ -24662,7 +28550,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Botelan",
             "localizedNames": {
               "zh-HK": "波特蘭",
-              "zh-TW": "波特蘭"
+              "zh-TW": "波特蘭",
+              "en": "Portland",
+              "ja": "ポートランド",
+              "ko": "포틀랜드"
             }
           },
           {
@@ -24671,13 +28562,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liuyisidun",
             "localizedNames": {
               "zh-HK": "劉易斯頓",
-              "zh-TW": "劉易斯頓"
+              "zh-TW": "劉易斯頓",
+              "en": "Lewiston",
+              "ja": "ルイストン",
+              "ko": "Lewiston"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "緬因",
-          "zh-TW": "緬因"
+          "zh-TW": "緬因",
+          "en": "Maine",
+          "ja": "メイン州",
+          "ko": "메인주"
         }
       },
       {
@@ -24700,7 +28597,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mingniabolisi",
             "localizedNames": {
               "zh-HK": "明尼阿波利斯",
-              "zh-TW": "明尼阿波利斯"
+              "zh-TW": "明尼阿波利斯",
+              "en": "Minneapolis",
+              "ja": "ミネアポリス",
+              "ko": "미니애폴리스"
             }
           },
           {
@@ -24709,13 +28609,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengbaoluo",
             "localizedNames": {
               "zh-HK": "聖保羅",
-              "zh-TW": "聖保羅"
+              "zh-TW": "聖保羅",
+              "en": "Saint Paul",
+              "ja": "セントポール",
+              "ko": "세인트폴"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "明尼蘇達",
-          "zh-TW": "明尼蘇達"
+          "zh-TW": "明尼蘇達",
+          "en": "Minnesota",
+          "ja": "ミネソタ州",
+          "ko": "미네소타주"
         }
       },
       {
@@ -24729,7 +28635,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aboding",
             "localizedNames": {
               "zh-HK": "阿伯丁",
-              "zh-TW": "阿伯丁"
+              "zh-TW": "阿伯丁",
+              "en": "Aberdeen",
+              "ja": "アバディーン",
+              "ko": "애버딘"
             }
           },
           {
@@ -24738,7 +28647,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lapidecheng",
             "localizedNames": {
               "zh-HK": "拉皮德城",
-              "zh-TW": "拉皮德城"
+              "zh-TW": "拉皮德城",
+              "en": "Rapid City",
+              "ja": "ラピッドシティ",
+              "ko": "래피드시티"
             }
           },
           {
@@ -24753,7 +28665,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "南達科他",
-          "zh-TW": "南達科他"
+          "zh-TW": "南達科他",
+          "en": "South Dakota",
+          "ja": "サウスダコタ州",
+          "ko": "사우스다코타주"
         }
       },
       {
@@ -24767,7 +28682,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beichaersidun",
             "localizedNames": {
               "zh-HK": "北查爾斯頓",
-              "zh-TW": "北查爾斯頓"
+              "zh-TW": "北查爾斯頓",
+              "en": "North Charleston",
+              "ja": "ノースチャールストン",
+              "ko": "North Charleston"
             }
           },
           {
@@ -24776,7 +28694,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chaersidun",
             "localizedNames": {
               "zh-HK": "查爾斯頓",
-              "zh-TW": "查爾斯頓"
+              "zh-TW": "查爾斯頓",
+              "en": "Charleston",
+              "ja": "チャールストン",
+              "ko": "찰스턴"
             }
           },
           {
@@ -24785,13 +28706,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelunbiya",
             "localizedNames": {
               "zh-HK": "哥倫比亞",
-              "zh-TW": "哥倫比亞"
+              "zh-TW": "哥倫比亞",
+              "en": "Columbia",
+              "ja": "コロンビア",
+              "ko": "컬럼비아"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "南卡羅來納",
-          "zh-TW": "南卡羅來納"
+          "zh-TW": "南卡羅來納",
+          "en": "South Carolina",
+          "ja": "サウスカロライナ州",
+          "ko": "사우스캐롤라이나주"
         }
       },
       {
@@ -24805,7 +28732,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aomaha",
             "localizedNames": {
               "zh-HK": "奧馬哈",
-              "zh-TW": "奧馬哈"
+              "zh-TW": "奧馬哈",
+              "en": "Omaha",
+              "ja": "オマハ",
+              "ko": "오마하"
             }
           },
           {
@@ -24814,7 +28744,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beierweiyou",
             "localizedNames": {
               "zh-HK": "貝爾維尤",
-              "zh-TW": "貝爾維尤"
+              "zh-TW": "貝爾維尤",
+              "en": "Bellevue",
+              "ja": "ベルビュー",
+              "ko": "Bellevue"
             }
           },
           {
@@ -24829,7 +28762,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "內布拉斯加",
-          "zh-TW": "內布拉斯加"
+          "zh-TW": "內布拉斯加",
+          "en": "Nebraska",
+          "ja": "ネブラスカ州",
+          "ko": "네브래스카주"
         }
       },
       {
@@ -24843,7 +28779,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aierke",
             "localizedNames": {
               "zh-HK": "埃爾科",
-              "zh-TW": "埃爾科"
+              "zh-TW": "埃爾科",
+              "en": "Elko",
+              "ja": "Elko",
+              "ko": "Elko"
             }
           },
           {
@@ -24852,7 +28791,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beilasiweijiasi",
             "localizedNames": {
               "zh-HK": "北拉斯維加斯",
-              "zh-TW": "北拉斯維加斯"
+              "zh-TW": "北拉斯維加斯",
+              "en": "North Las Vegas",
+              "ja": "ノースラスベガス",
+              "ko": "노스라스베이거스"
             }
           },
           {
@@ -24861,7 +28803,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fujiniyacheng",
             "localizedNames": {
               "zh-HK": "弗吉尼亞城",
-              "zh-TW": "弗吉尼亞城"
+              "zh-TW": "弗吉尼亞城",
+              "en": "Virginia City",
+              "ja": "バージニアシティ",
+              "ko": "Virginia City"
             }
           },
           {
@@ -24870,7 +28815,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hengdesen",
             "localizedNames": {
               "zh-HK": "亨德森",
-              "zh-TW": "亨德森"
+              "zh-TW": "亨德森",
+              "en": "Henderson",
+              "ja": "ヘンダーソン",
+              "ko": "헨더슨"
             }
           },
           {
@@ -24879,7 +28827,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kasencheng",
             "localizedNames": {
               "zh-HK": "卡森城",
-              "zh-TW": "卡森城"
+              "zh-TW": "卡森城",
+              "en": "Carson City",
+              "ja": "カーソンシティ",
+              "ko": "카슨시티"
             }
           },
           {
@@ -24888,7 +28839,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lasiweijiasi",
             "localizedNames": {
               "zh-HK": "拉斯維加斯",
-              "zh-TW": "拉斯維加斯"
+              "zh-TW": "拉斯維加斯",
+              "en": "Las Vegas",
+              "ja": "ラスベガス",
+              "ko": "라스베이거스"
             }
           },
           {
@@ -24912,7 +28866,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "內華達",
-          "zh-TW": "內華達"
+          "zh-TW": "內華達",
+          "en": "Nevada",
+          "ja": "ネバダ州",
+          "ko": "네바다주"
         }
       },
       {
@@ -24944,13 +28901,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niuyueshi",
             "localizedNames": {
               "zh-HK": "紐約市",
-              "zh-TW": "紐約市"
+              "zh-TW": "紐約市",
+              "en": "New York City",
+              "ja": "ニューヨーク",
+              "ko": "뉴욕"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "紐約",
-          "zh-TW": "紐約"
+          "zh-TW": "紐約",
+          "en": "New York",
+          "ja": "ニューヨーク州",
+          "ko": "뉴욕주"
         }
       },
       {
@@ -24964,7 +28927,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Duofu",
             "localizedNames": {
               "zh-HK": "多佛",
-              "zh-TW": "多佛"
+              "zh-TW": "多佛",
+              "en": "Dover",
+              "ja": "ドーバー",
+              "ko": "도버"
             }
           },
           {
@@ -24973,7 +28939,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niuwake",
             "localizedNames": {
               "zh-HK": "紐瓦克",
-              "zh-TW": "紐瓦克"
+              "zh-TW": "紐瓦克",
+              "en": "Newark",
+              "ja": "ニューアーク",
+              "ko": "뉴어크"
             }
           },
           {
@@ -24988,7 +28957,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "特拉華",
-          "zh-TW": "特拉華"
+          "zh-TW": "特拉華",
+          "en": "Delaware",
+          "ja": "デラウェア州",
+          "ko": "델라웨어주"
         }
       },
       {
@@ -25011,7 +28983,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chatanujia",
             "localizedNames": {
               "zh-HK": "查塔努加",
-              "zh-TW": "查塔努加"
+              "zh-TW": "查塔努加",
+              "en": "Chattanooga",
+              "ja": "チャタヌーガ",
+              "ko": "채터누가"
             }
           },
           {
@@ -25020,7 +28995,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinsibote",
             "localizedNames": {
               "zh-HK": "金斯波特",
-              "zh-TW": "金斯波特"
+              "zh-TW": "金斯波特",
+              "en": "Kingsport",
+              "ja": "Kingsport",
+              "ko": "Kingsport"
             }
           },
           {
@@ -25029,7 +29007,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mengfeisi",
             "localizedNames": {
               "zh-HK": "孟菲斯",
-              "zh-TW": "孟菲斯"
+              "zh-TW": "孟菲斯",
+              "en": "Memphis",
+              "ja": "メンフィス",
+              "ko": "멤피스"
             }
           },
           {
@@ -25038,7 +29019,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nashenweier",
             "localizedNames": {
               "zh-HK": "納什維爾",
-              "zh-TW": "納什維爾"
+              "zh-TW": "納什維爾",
+              "en": "Nashville",
+              "ja": "ナッシュビル",
+              "ko": "내슈빌"
             }
           },
           {
@@ -25047,7 +29031,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuokesiweier",
             "localizedNames": {
               "zh-HK": "諾克斯維爾",
-              "zh-TW": "諾克斯維爾"
+              "zh-TW": "諾克斯維爾",
+              "en": "Knoxville",
+              "ja": "ノックスビル",
+              "ko": "녹스빌"
             }
           },
           {
@@ -25083,13 +29070,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yuehanxuncheng",
             "localizedNames": {
               "zh-HK": "約翰遜城",
-              "zh-TW": "約翰遜城"
+              "zh-TW": "約翰遜城",
+              "en": "Johnson City",
+              "ja": "ジョンソンシティ",
+              "ko": "존슨시티"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "田納西",
-          "zh-TW": "田納西"
+          "zh-TW": "田納西",
+          "en": "Tennessee",
+          "ja": "テネシー州",
+          "ko": "테네시주"
         }
       },
       {
@@ -25121,7 +29114,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelinbei",
             "localizedNames": {
               "zh-HK": "格林貝",
-              "zh-TW": "格林貝"
+              "zh-TW": "格林貝",
+              "en": "Green Bay",
+              "ja": "グリーンベイ",
+              "ko": "그린베이"
             }
           },
           {
@@ -25130,7 +29126,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinuosha",
             "localizedNames": {
               "zh-HK": "基諾沙",
-              "zh-TW": "基諾沙"
+              "zh-TW": "基諾沙",
+              "en": "Kenosha",
+              "ja": "ケノーシャ郡",
+              "ko": "Kenosha"
             }
           },
           {
@@ -25139,7 +29138,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lakeluosi",
             "localizedNames": {
               "zh-HK": "拉克羅斯",
-              "zh-TW": "拉克羅斯"
+              "zh-TW": "拉克羅斯",
+              "en": "La Crosse",
+              "ja": "ラクロス",
+              "ko": "La Crosse"
             }
           },
           {
@@ -25148,7 +29150,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laxin",
             "localizedNames": {
               "zh-HK": "拉辛",
-              "zh-TW": "拉辛"
+              "zh-TW": "拉辛",
+              "en": "Racine",
+              "ja": "ラシーン",
+              "ko": "러신"
             }
           },
           {
@@ -25175,7 +29180,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mierwoji",
             "localizedNames": {
               "zh-HK": "密爾沃基",
-              "zh-TW": "密爾沃基"
+              "zh-TW": "密爾沃基",
+              "en": "Milwaukee",
+              "ja": "ミルウォーキー",
+              "ko": "밀워키"
             }
           },
           {
@@ -25202,13 +29210,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiboyigen",
             "localizedNames": {
               "zh-HK": "希博伊根",
-              "zh-TW": "希博伊根"
+              "zh-TW": "希博伊根",
+              "en": "Sheboygan",
+              "ja": "シボイガン郡",
+              "ko": "Sheboygan"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "威斯康星",
-          "zh-TW": "威斯康星"
+          "zh-TW": "威斯康星",
+          "en": "Wisconsin",
+          "ja": "ウィスコンシン州",
+          "ko": "위스콘신주"
         }
       },
       {
@@ -25231,7 +29245,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuofuke",
             "localizedNames": {
               "zh-HK": "諾福克",
-              "zh-TW": "諾福克"
+              "zh-TW": "諾福克",
+              "en": "Norfolk",
+              "ja": "ノーフォーク",
+              "ko": "노퍽"
             }
           },
           {
@@ -25240,13 +29257,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiesapike",
             "localizedNames": {
               "zh-HK": "切薩皮克",
-              "zh-TW": "切薩皮克"
+              "zh-TW": "切薩皮克",
+              "en": "Chesapeake",
+              "ja": "チェサピーク",
+              "ko": "체서피크"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "維吉尼亞",
-          "zh-TW": "維吉尼亞"
+          "zh-TW": "維吉尼亞",
+          "en": "Virginia",
+          "ja": "バージニア州",
+          "ko": "버지니아주"
         }
       },
       {
@@ -25260,7 +29283,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chaersidun",
             "localizedNames": {
               "zh-HK": "查爾斯頓",
-              "zh-TW": "查爾斯頓"
+              "zh-TW": "查爾斯頓",
+              "en": "Charleston",
+              "ja": "チャールストン",
+              "ko": "찰스턴"
             }
           },
           {
@@ -25269,7 +29295,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hengtingdun",
             "localizedNames": {
               "zh-HK": "亨廷頓",
-              "zh-TW": "亨廷頓"
+              "zh-TW": "亨廷頓",
+              "en": "Huntington",
+              "ja": "ハンティントン",
+              "ko": "헌팅턴"
             }
           },
           {
@@ -25278,13 +29307,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pakesibao",
             "localizedNames": {
               "zh-HK": "帕克斯堡",
-              "zh-TW": "帕克斯堡"
+              "zh-TW": "帕克斯堡",
+              "en": "Parkersburg",
+              "ja": "パーカーズバーグ",
+              "ko": "파커즈버그"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "西佛吉尼亞",
-          "zh-TW": "西佛吉尼亞"
+          "zh-TW": "西佛吉尼亞",
+          "en": "West Virginia",
+          "ja": "ウェストバージニア州",
+          "ko": "웨스트버지니아주"
         }
       },
       {
@@ -25298,7 +29333,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kailua",
             "localizedNames": {
               "zh-HK": "凱盧阿",
-              "zh-TW": "凱盧阿"
+              "zh-TW": "凱盧阿",
+              "en": "Kailua",
+              "ja": "カイルア",
+              "ko": "카일루아"
             }
           },
           {
@@ -25307,7 +29345,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tanxiangshan",
             "localizedNames": {
               "zh-HK": "檀香山",
-              "zh-TW": "檀香山"
+              "zh-TW": "檀香山",
+              "en": "Honolulu",
+              "ja": "ホノルル",
+              "ko": "호놀룰루"
             }
           },
           {
@@ -25316,13 +29357,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiluo",
             "localizedNames": {
               "zh-HK": "希洛",
-              "zh-TW": "希洛"
+              "zh-TW": "希洛",
+              "en": "Hilo",
+              "ja": "ヒロ",
+              "ko": "힐로"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "夏威夷",
-          "zh-TW": "夏威夷"
+          "zh-TW": "夏威夷",
+          "en": "Hawaii",
+          "ja": "ハワイ",
+          "ko": "하와이주"
         }
       },
       {
@@ -25336,7 +29383,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kangkede",
             "localizedNames": {
               "zh-HK": "康科德",
-              "zh-TW": "康科德"
+              "zh-TW": "康科德",
+              "en": "Concord",
+              "ja": "コンコード",
+              "ko": "콩코드"
             }
           },
           {
@@ -25345,7 +29395,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manchesite",
             "localizedNames": {
               "zh-HK": "曼徹斯特",
-              "zh-TW": "曼徹斯特"
+              "zh-TW": "曼徹斯特",
+              "en": "Manchester",
+              "ja": "マンチェスター",
+              "ko": "맨체스터"
             }
           },
           {
@@ -25354,13 +29407,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nashue",
             "localizedNames": {
               "zh-HK": "納舒厄",
-              "zh-TW": "納舒厄"
+              "zh-TW": "納舒厄",
+              "en": "Nashua",
+              "ja": "ナシュア",
+              "ko": "내슈아"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "新罕布什爾",
-          "zh-TW": "新罕布什爾"
+          "zh-TW": "新罕布什爾",
+          "en": "New Hampshire",
+          "ja": "ニューハンプシャー州",
+          "ko": "뉴햄프셔주"
         }
       },
       {
@@ -25383,7 +29442,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lasikelusaisi",
             "localizedNames": {
               "zh-HK": "拉斯克魯塞斯",
-              "zh-TW": "拉斯克魯塞斯"
+              "zh-TW": "拉斯克魯塞斯",
+              "en": "Las Cruces",
+              "ja": "ラスクルーセス",
+              "ko": "라스크루시스"
             }
           },
           {
@@ -25401,13 +29463,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengfei",
             "localizedNames": {
               "zh-HK": "聖菲",
-              "zh-TW": "聖菲"
+              "zh-TW": "聖菲",
+              "en": "Santa Fe",
+              "ja": "サンタフェ",
+              "ko": "산타페"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "新墨西哥",
-          "zh-TW": "新墨西哥"
+          "zh-TW": "新墨西哥",
+          "en": "New Mexico",
+          "ja": "ニューメキシコ州",
+          "ko": "뉴멕시코주"
         }
       },
       {
@@ -25430,7 +29498,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Patesen",
             "localizedNames": {
               "zh-HK": "帕特森",
-              "zh-TW": "帕特森"
+              "zh-TW": "帕特森",
+              "en": "Paterson",
+              "ja": "パターソン",
+              "ko": "패터슨"
             }
           },
           {
@@ -25445,7 +29516,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "新澤西",
-          "zh-TW": "新澤西"
+          "zh-TW": "新澤西",
+          "en": "New Jersey",
+          "ja": "ニュージャージー州",
+          "ko": "뉴저지주"
         }
       },
       {
@@ -25459,7 +29533,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fenghuangcheng",
             "localizedNames": {
               "zh-HK": "鳳凰城",
-              "zh-TW": "鳳凰城"
+              "zh-TW": "鳳凰城",
+              "en": "Phoenix",
+              "ja": "フェニックス",
+              "ko": "피닉스"
             }
           },
           {
@@ -25477,7 +29554,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Meisa",
             "localizedNames": {
               "zh-HK": "梅薩",
-              "zh-TW": "梅薩"
+              "zh-TW": "梅薩",
+              "en": "Mesa",
+              "ja": "メサ",
+              "ko": "메사"
             }
           },
           {
@@ -25504,7 +29584,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tusen",
             "localizedNames": {
               "zh-HK": "圖森",
-              "zh-TW": "圖森"
+              "zh-TW": "圖森",
+              "en": "Tucson",
+              "ja": "ツーソン",
+              "ko": "투손"
             }
           },
           {
@@ -25519,7 +29602,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "亞利桑那",
-          "zh-TW": "亞利桑那"
+          "zh-TW": "亞利桑那",
+          "en": "Arizona",
+          "ja": "アリゾナ州",
+          "ko": "애리조나주"
         }
       },
       {
@@ -25551,7 +29637,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulumingdun",
             "localizedNames": {
               "zh-HK": "布盧明頓",
-              "zh-TW": "布盧明頓"
+              "zh-TW": "布盧明頓",
+              "en": "Bloomington",
+              "ja": "ブルーミントン",
+              "ko": "블루밍턴"
             }
           },
           {
@@ -25605,7 +29694,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gaiersibao",
             "localizedNames": {
               "zh-HK": "蓋爾斯堡",
-              "zh-TW": "蓋爾斯堡"
+              "zh-TW": "蓋爾斯堡",
+              "en": "Galesburg",
+              "ja": "ゲイルズバーグ",
+              "ko": "Galesburg"
             }
           },
           {
@@ -25623,7 +29715,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luokeailan",
             "localizedNames": {
               "zh-HK": "羅克艾蘭",
-              "zh-TW": "羅克艾蘭"
+              "zh-TW": "羅克艾蘭",
+              "en": "Rock Island",
+              "ja": "ロックアイランド郡",
+              "ko": "Rock Island"
             }
           },
           {
@@ -25632,7 +29727,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luokefude",
             "localizedNames": {
               "zh-HK": "羅克福德",
-              "zh-TW": "羅克福德"
+              "zh-TW": "羅克福德",
+              "en": "Rockford",
+              "ja": "ロックフォード",
+              "ko": "록퍼드"
             }
           },
           {
@@ -25650,7 +29748,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Piaoliya",
             "localizedNames": {
               "zh-HK": "皮奧里亞",
-              "zh-TW": "皮奧里亞"
+              "zh-TW": "皮奧里亞",
+              "en": "Peoria",
+              "ja": "ピオリア",
+              "ko": "피오리아"
             }
           },
           {
@@ -25659,7 +29760,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Senteleiliya",
             "localizedNames": {
               "zh-HK": "森特勒利亞",
-              "zh-TW": "森特勒利亞"
+              "zh-TW": "森特勒利亞",
+              "en": "Centralia",
+              "ja": "セントラリア",
+              "ko": "Centralia"
             }
           },
           {
@@ -25668,7 +29772,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sipulinfeierde",
             "localizedNames": {
               "zh-HK": "斯普林菲爾德",
-              "zh-TW": "斯普林菲爾德"
+              "zh-TW": "斯普林菲爾德",
+              "en": "Springfield",
+              "ja": "スプリングフィールド",
+              "ko": "스프링필드"
             }
           },
           {
@@ -25686,13 +29793,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhijiage",
             "localizedNames": {
               "zh-HK": "芝加哥",
-              "zh-TW": "芝加哥"
+              "zh-TW": "芝加哥",
+              "en": "Chicago",
+              "ja": "シカゴ",
+              "ko": "시카고"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "伊利諾斯",
-          "zh-TW": "伊利諾斯"
+          "zh-TW": "伊利諾斯",
+          "en": "Illinois",
+          "ja": "イリノイ州",
+          "ko": "일리노이주"
         }
       },
       {
@@ -25706,7 +29819,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aiwensiweier",
             "localizedNames": {
               "zh-HK": "埃文斯維爾",
-              "zh-TW": "埃文斯維爾"
+              "zh-TW": "埃文斯維爾",
+              "en": "Evansville",
+              "ja": "エバンズビル",
+              "ko": "에번즈빌"
             }
           },
           {
@@ -25715,7 +29831,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weienbao",
             "localizedNames": {
               "zh-HK": "韋恩堡",
-              "zh-TW": "韋恩堡"
+              "zh-TW": "韋恩堡",
+              "en": "Fort Wayne",
+              "ja": "フォートウェイン",
+              "ko": "포트웨인"
             }
           },
           {
@@ -25724,13 +29843,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yindiannabolisi",
             "localizedNames": {
               "zh-HK": "印第安納波利斯",
-              "zh-TW": "印第安納波利斯"
+              "zh-TW": "印第安納波利斯",
+              "en": "Indianapolis",
+              "ja": "インディアナポリス",
+              "ko": "인디애나폴리스"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "印第安那",
-          "zh-TW": "印第安那"
+          "zh-TW": "印第安那",
+          "en": "Indiana",
+          "ja": "インディアナ州",
+          "ko": "인디애나 주"
         }
       },
       {
@@ -25744,7 +29869,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aogedeng",
             "localizedNames": {
               "zh-HK": "奧格登",
-              "zh-TW": "奧格登"
+              "zh-TW": "奧格登",
+              "en": "Ogden",
+              "ja": "オグデン",
+              "ko": "오그던"
             }
           },
           {
@@ -25771,7 +29899,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pakecheng",
             "localizedNames": {
               "zh-HK": "帕克城",
-              "zh-TW": "帕克城"
+              "zh-TW": "帕克城",
+              "en": "Park City",
+              "ja": "パークシティ",
+              "ko": "파크시티"
             }
           },
           {
@@ -25798,7 +29929,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiwalicheng",
             "localizedNames": {
               "zh-HK": "西瓦利城",
-              "zh-TW": "西瓦利城"
+              "zh-TW": "西瓦利城",
+              "en": "West Valley City",
+              "ja": "ウェストバレーシティ",
+              "ko": "West Valley City"
             }
           },
           {
@@ -25807,13 +29941,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yanhucheng",
             "localizedNames": {
               "zh-HK": "鹽湖城",
-              "zh-TW": "鹽湖城"
+              "zh-TW": "鹽湖城",
+              "en": "Salt Lake City",
+              "ja": "ソルトレイクシティ",
+              "ko": "솔트레이크시티"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "猶他",
-          "zh-TW": "猶他"
+          "zh-TW": "猶他",
+          "en": "Utah",
+          "ja": "ユタ州",
+          "ko": "유타주"
         }
       },
       {
@@ -25827,7 +29967,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aogusita",
             "localizedNames": {
               "zh-HK": "奧古斯塔",
-              "zh-TW": "奧古斯塔"
+              "zh-TW": "奧古斯塔",
+              "en": "Augusta",
+              "ja": "オーガスタ",
+              "ko": "오거스타"
             }
           },
           {
@@ -25836,7 +29979,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelunbu",
             "localizedNames": {
               "zh-HK": "哥倫布",
-              "zh-TW": "哥倫布"
+              "zh-TW": "哥倫布",
+              "en": "Columbus",
+              "ja": "コロンバス",
+              "ko": "콜럼버스"
             }
           },
           {
@@ -25854,7 +30000,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shawana",
             "localizedNames": {
               "zh-HK": "沙瓦納",
-              "zh-TW": "沙瓦納"
+              "zh-TW": "沙瓦納",
+              "en": "Savannah",
+              "ja": "サバンナ",
+              "ko": "서배너"
             }
           },
           {
@@ -25863,13 +30012,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yatelanda",
             "localizedNames": {
               "zh-HK": "亞特蘭大",
-              "zh-TW": "亞特蘭大"
+              "zh-TW": "亞特蘭大",
+              "en": "Atlanta",
+              "ja": "アトランタ",
+              "ko": "애틀랜타"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "佐治亞",
-          "zh-TW": "佐治亞"
+          "zh-TW": "佐治亞",
+          "en": "Georgia",
+          "ja": "ジョージア州",
+          "ko": "조지아"
         }
       }
     ]
@@ -26012,7 +30167,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "美屬薩摩亞",
-          "zh-TW": "美屬薩摩亞"
+          "zh-TW": "美屬薩摩亞",
+          "en": "American Samoa",
+          "ja": "米領サモア",
+          "ko": "아메리칸 사모아"
         }
       }
     ]
@@ -26060,7 +30218,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buergan",
             "localizedNames": {
               "zh-HK": "布爾幹",
-              "zh-TW": "布爾幹"
+              "zh-TW": "布爾幹",
+              "en": "Bulgan",
+              "ja": "ボルガン県",
+              "ko": "볼간주"
             }
           },
           {
@@ -26078,7 +30239,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongfang",
             "localizedNames": {
               "zh-HK": "東方",
-              "zh-TW": "東方"
+              "zh-TW": "東方",
+              "en": "Eastern",
+              "ja": "ドルノド県",
+              "ko": "더르너드주"
             }
           },
           {
@@ -26087,7 +30251,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Donggebi",
             "localizedNames": {
               "zh-HK": "東戈壁",
-              "zh-TW": "東戈壁"
+              "zh-TW": "東戈壁",
+              "en": "East Govĭ",
+              "ja": "ドルノゴビ県",
+              "ko": "더르너고비주"
             }
           },
           {
@@ -26105,7 +30272,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gebiaertai",
             "localizedNames": {
               "zh-HK": "戈壁阿爾泰",
-              "zh-TW": "戈壁阿爾泰"
+              "zh-TW": "戈壁阿爾泰",
+              "en": "Govi-Altai Province",
+              "ja": "ゴビ・アルタイ県",
+              "ko": "고비알타이주"
             }
           },
           {
@@ -26123,7 +30293,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Houhangai",
             "localizedNames": {
               "zh-HK": "後杭愛",
-              "zh-TW": "後杭愛"
+              "zh-TW": "後杭愛",
+              "en": "Arkhangai Province",
+              "ja": "アルハンガイ県",
+              "ko": "아르항가이주"
             }
           },
           {
@@ -26159,7 +30332,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nangebi",
             "localizedNames": {
               "zh-HK": "南戈壁",
-              "zh-TW": "南戈壁"
+              "zh-TW": "南戈壁",
+              "en": "Ömnögovĭ",
+              "ja": "ウムヌゴビ県",
+              "ko": "으므느고비 주"
             }
           },
           {
@@ -26177,7 +30353,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Selengge",
             "localizedNames": {
               "zh-HK": "色楞格",
-              "zh-TW": "色楞格"
+              "zh-TW": "色楞格",
+              "en": "Selenge Province",
+              "ja": "セレンゲ県",
+              "ko": "셀렝게주"
             }
           },
           {
@@ -26195,7 +30374,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wubusu",
             "localizedNames": {
               "zh-HK": "烏布蘇",
-              "zh-TW": "烏布蘇"
+              "zh-TW": "烏布蘇",
+              "en": "Uvs Province",
+              "ja": "オブス県",
+              "ko": "오브스주"
             }
           },
           {
@@ -26204,7 +30386,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wulanbatuoshi",
             "localizedNames": {
               "zh-HK": "烏蘭巴托市",
-              "zh-TW": "烏蘭巴托市"
+              "zh-TW": "烏蘭巴托市",
+              "en": "Ulaanbaatar",
+              "ja": "ウランバートル",
+              "ko": "울란바토르"
             }
           },
           {
@@ -26237,7 +30422,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "蒙古",
-          "zh-TW": "蒙古"
+          "zh-TW": "蒙古",
+          "en": "Mongolia",
+          "ja": "モンゴル",
+          "ko": "몽골"
         }
       }
     ]
@@ -26281,7 +30469,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Daka",
             "localizedNames": {
               "zh-HK": "達卡",
-              "zh-TW": "達卡"
+              "zh-TW": "達卡",
+              "en": "Dhaka",
+              "ja": "ダッカ",
+              "ko": "다카"
             }
           },
           {
@@ -26290,7 +30481,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jidagang",
             "localizedNames": {
               "zh-HK": "吉大港",
-              "zh-TW": "吉大港"
+              "zh-TW": "吉大港",
+              "en": "Chittagong",
+              "ja": "チッタゴン",
+              "ko": "치타공"
             }
           },
           {
@@ -26299,13 +30493,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuerna",
             "localizedNames": {
               "zh-HK": "庫爾納",
-              "zh-TW": "庫爾納"
+              "zh-TW": "庫爾納",
+              "en": "Khulna",
+              "ja": "クルナ",
+              "ko": "쿨나"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "孟加拉",
-          "zh-TW": "孟加拉"
+          "zh-TW": "孟加拉",
+          "en": "Bangladesh",
+          "ja": "バングラデシュ",
+          "ko": "방글라데시"
         }
       }
     ]
@@ -26358,7 +30558,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Apulimake",
             "localizedNames": {
               "zh-HK": "阿普里馬克",
-              "zh-TW": "阿普里馬克"
+              "zh-TW": "阿普里馬克",
+              "en": "Apurímac Department",
+              "ja": "アプリマク県",
+              "ko": "아푸리막주"
             }
           },
           {
@@ -26376,7 +30579,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ankashen",
             "localizedNames": {
               "zh-HK": "安卡什",
-              "zh-TW": "安卡什"
+              "zh-TW": "安卡什",
+              "en": "Ancash",
+              "ja": "アンカシュ県",
+              "ko": "앙카시주"
             }
           },
           {
@@ -26385,7 +30591,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huliyaka",
             "localizedNames": {
               "zh-HK": "胡利亞卡",
-              "zh-TW": "胡利亞卡"
+              "zh-TW": "胡利亞卡",
+              "en": "Juliaca",
+              "ja": "フリアカ",
+              "ko": "훌리아카"
             }
           },
           {
@@ -26394,7 +30603,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huning",
             "localizedNames": {
               "zh-HK": "胡寧",
-              "zh-TW": "胡寧"
+              "zh-TW": "胡寧",
+              "en": "Junin",
+              "ja": "フニン県",
+              "ko": "후닌주"
             }
           },
           {
@@ -26412,7 +30624,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kayae",
             "localizedNames": {
               "zh-HK": "卡亞俄",
-              "zh-TW": "卡亞俄"
+              "zh-TW": "卡亞俄",
+              "en": "Callao",
+              "ja": "カヤオ",
+              "ko": "카야오"
             }
           },
           {
@@ -26430,7 +30645,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lalibotade",
             "localizedNames": {
               "zh-HK": "拉利伯塔德",
-              "zh-TW": "拉利伯塔德"
+              "zh-TW": "拉利伯塔德",
+              "en": "La Libertad",
+              "ja": "ラ・リベルタ県",
+              "ko": "라리베르타드주"
             }
           },
           {
@@ -26457,7 +30675,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luoleituo",
             "localizedNames": {
               "zh-HK": "洛雷託",
-              "zh-TW": "洛雷託"
+              "zh-TW": "洛雷託",
+              "en": "Loreto",
+              "ja": "ロレート県",
+              "ko": "로레토주"
             }
           },
           {
@@ -26484,7 +30705,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pasike",
             "localizedNames": {
               "zh-HK": "帕斯科",
-              "zh-TW": "帕斯科"
+              "zh-TW": "帕斯科",
+              "en": "Pasco",
+              "ja": "パスコ県",
+              "ko": "파스코주"
             }
           },
           {
@@ -26511,7 +30735,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qinbote",
             "localizedNames": {
               "zh-HK": "欽博特",
-              "zh-TW": "欽博特"
+              "zh-TW": "欽博特",
+              "en": "Chimbote",
+              "ja": "チンボテ",
+              "ko": "침보테"
             }
           },
           {
@@ -26529,7 +30756,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengmading",
             "localizedNames": {
               "zh-HK": "聖馬丁",
-              "zh-TW": "聖馬丁"
+              "zh-TW": "聖馬丁",
+              "en": "San Martín Department",
+              "ja": "サン・マルティン県",
+              "ko": "산마르틴주"
             }
           },
           {
@@ -26583,7 +30813,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wukayali",
             "localizedNames": {
               "zh-HK": "烏卡亞利",
-              "zh-TW": "烏卡亞利"
+              "zh-TW": "烏卡亞利",
+              "en": "Ucayali",
+              "ja": "ウカヤリ県",
+              "ko": "Ucayali"
             }
           },
           {
@@ -26592,7 +30825,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yamasun",
             "localizedNames": {
               "zh-HK": "亞馬孫",
-              "zh-TW": "亞馬孫"
+              "zh-TW": "亞馬孫",
+              "en": "Amazonas",
+              "ja": "アマソナス県",
+              "ko": "아마소나스주"
             }
           },
           {
@@ -26607,7 +30843,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "祕魯",
-          "zh-TW": "祕魯"
+          "zh-TW": "祕魯",
+          "en": "Peru",
+          "ja": "ペルー",
+          "ko": "페루"
         }
       }
     ]
@@ -26645,7 +30884,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Danbang",
             "localizedNames": {
               "zh-HK": "撣邦",
-              "zh-TW": "撣邦"
+              "zh-TW": "撣邦",
+              "en": "Shan State",
+              "ja": "シャン州",
+              "ko": "샨주"
             }
           },
           {
@@ -26654,7 +30896,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Delindayisheng",
             "localizedNames": {
               "zh-HK": "德林達依省",
-              "zh-TW": "德林達依省"
+              "zh-TW": "德林達依省",
+              "en": "Tanintharyi Region",
+              "ja": "タニンダーイー管区",
+              "ko": "타닌타리 구"
             }
           },
           {
@@ -26663,7 +30908,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelunbang",
             "localizedNames": {
               "zh-HK": "克倫邦",
-              "zh-TW": "克倫邦"
+              "zh-TW": "克倫邦",
+              "en": "Kayin State",
+              "ja": "カレン州",
+              "ko": "카인 주"
             }
           },
           {
@@ -26672,7 +30920,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keqinbang",
             "localizedNames": {
               "zh-HK": "克欽邦",
-              "zh-TW": "克欽邦"
+              "zh-TW": "克欽邦",
+              "en": "Kachin State",
+              "ja": "カチン州",
+              "ko": "카친 주"
             }
           },
           {
@@ -26681,7 +30932,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keyebang",
             "localizedNames": {
               "zh-HK": "克耶邦",
-              "zh-TW": "克耶邦"
+              "zh-TW": "克耶邦",
+              "en": "Kayah State",
+              "ja": "カヤー州",
+              "ko": "카야 주"
             }
           },
           {
@@ -26717,7 +30971,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qinbang",
             "localizedNames": {
               "zh-HK": "欽邦",
-              "zh-TW": "欽邦"
+              "zh-TW": "欽邦",
+              "en": "Chin State",
+              "ja": "チン州",
+              "ko": "친주"
             }
           },
           {
@@ -26759,7 +31016,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "緬甸",
-          "zh-TW": "緬甸"
+          "zh-TW": "緬甸",
+          "en": "Myanmar (Burma)",
+          "ja": "ミャンマー (ビルマ)",
+          "ko": "미얀마"
         }
       }
     ]
@@ -26811,7 +31071,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Detuan",
             "localizedNames": {
               "zh-HK": "得土安",
-              "zh-TW": "得土安"
+              "zh-TW": "得土安",
+              "en": "Tétouan",
+              "ja": "テトゥアン",
+              "ko": "테투안"
             }
           },
           {
@@ -26829,7 +31092,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kasabulanka",
             "localizedNames": {
               "zh-HK": "卡薩布蘭卡",
-              "zh-TW": "卡薩布蘭卡"
+              "zh-TW": "卡薩布蘭卡",
+              "en": "Casablanca",
+              "ja": "カサブランカ",
+              "ko": "카사블랑카"
             }
           },
           {
@@ -26838,7 +31104,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Labate",
             "localizedNames": {
               "zh-HK": "拉巴特",
-              "zh-TW": "拉巴特"
+              "zh-TW": "拉巴特",
+              "en": "Rabat",
+              "ja": "ラバト",
+              "ko": "라바트"
             }
           },
           {
@@ -26847,7 +31116,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Malakashen",
             "localizedNames": {
               "zh-HK": "馬拉喀什",
-              "zh-TW": "馬拉喀什"
+              "zh-TW": "馬拉喀什",
+              "en": "Marrakesh",
+              "ja": "マラケシュ",
+              "ko": "Marrakesh"
             }
           },
           {
@@ -26856,7 +31128,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Meikeneisi",
             "localizedNames": {
               "zh-HK": "梅克內斯",
-              "zh-TW": "梅克內斯"
+              "zh-TW": "梅克內斯",
+              "en": "Meknes",
+              "ja": "メクネス",
+              "ko": "Meknes"
             }
           },
           {
@@ -26865,7 +31140,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wujida",
             "localizedNames": {
               "zh-HK": "烏季達",
-              "zh-TW": "烏季達"
+              "zh-TW": "烏季達",
+              "en": "Oujda",
+              "ja": "ウジダ",
+              "ko": "우지다"
             }
           },
           {
@@ -26880,7 +31158,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "摩洛哥",
-          "zh-TW": "摩洛哥"
+          "zh-TW": "摩洛哥",
+          "en": "Morocco",
+          "ja": "モロッコ",
+          "ko": "모로코"
         }
       }
     ]
@@ -26946,7 +31227,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Akapuerke",
             "localizedNames": {
               "zh-HK": "阿卡普爾科",
-              "zh-TW": "阿卡普爾科"
+              "zh-TW": "阿卡普爾科",
+              "en": "Acapulco de Juárez",
+              "ja": "アカプルコ",
+              "ko": "아카풀코"
             }
           },
           {
@@ -26955,7 +31239,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aimoxiyue",
             "localizedNames": {
               "zh-HK": "埃莫西約",
-              "zh-TW": "埃莫西約"
+              "zh-TW": "埃莫西約",
+              "en": "Hermosillo",
+              "ja": "エルモシージョ",
+              "ko": "에르모시요"
             }
           },
           {
@@ -26973,7 +31260,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aofuleigongcheng",
             "localizedNames": {
               "zh-HK": "奧夫雷貢城",
-              "zh-TW": "奧夫雷貢城"
+              "zh-TW": "奧夫雷貢城",
+              "en": "Ciudad Obregón",
+              "ja": "シウダ・オブレゴン",
+              "ko": "시우다드오브레곤"
             }
           },
           {
@@ -26982,7 +31272,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aolisaba",
             "localizedNames": {
               "zh-HK": "奧里薩巴",
-              "zh-TW": "奧里薩巴"
+              "zh-TW": "奧里薩巴",
+              "en": "Orizaba",
+              "ja": "Orizaba",
+              "ko": "Orizaba"
             }
           },
           {
@@ -27000,7 +31293,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bayaertagang",
             "localizedNames": {
               "zh-HK": "巴亞爾塔港",
-              "zh-TW": "巴亞爾塔港"
+              "zh-TW": "巴亞爾塔港",
+              "en": "Puerto Vallarta",
+              "ja": "プエルト・バヤルタ",
+              "ko": "푸에르토바야르타"
             }
           },
           {
@@ -27018,7 +31314,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bosalika",
             "localizedNames": {
               "zh-HK": "波薩里卡",
-              "zh-TW": "波薩里卡"
+              "zh-TW": "波薩里卡",
+              "en": "Poza Rica",
+              "ja": "ポサ・リカ・デ・イダルゴ",
+              "ko": "Poza Rica"
             }
           },
           {
@@ -27027,7 +31326,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dihuana",
             "localizedNames": {
               "zh-HK": "蒂華納",
-              "zh-TW": "蒂華納"
+              "zh-TW": "蒂華納",
+              "en": "Tijuana",
+              "ja": "ティフアナ",
+              "ko": "티후아나"
             }
           },
           {
@@ -27054,7 +31356,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guadalahala",
             "localizedNames": {
               "zh-HK": "瓜達拉哈拉",
-              "zh-TW": "瓜達拉哈拉"
+              "zh-TW": "瓜達拉哈拉",
+              "en": "Guadalajara",
+              "ja": "グアダラハラ",
+              "ko": "과달라하라"
             }
           },
           {
@@ -27063,7 +31368,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guanahuatuo",
             "localizedNames": {
               "zh-HK": "瓜納華託",
-              "zh-TW": "瓜納華託"
+              "zh-TW": "瓜納華託",
+              "en": "Guanajuato City",
+              "ja": "グアナフアト",
+              "ko": "과나후아토"
             }
           },
           {
@@ -27126,7 +31434,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuainawaka",
             "localizedNames": {
               "zh-HK": "庫埃納瓦卡",
-              "zh-TW": "庫埃納瓦卡"
+              "zh-TW": "庫埃納瓦卡",
+              "en": "Cuernavaca",
+              "ja": "クエルナバカ",
+              "ko": "쿠에르나바카"
             }
           },
           {
@@ -27171,7 +31482,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Leinuosa",
             "localizedNames": {
               "zh-HK": "雷諾薩",
-              "zh-TW": "雷諾薩"
+              "zh-TW": "雷諾薩",
+              "en": "Reynosa",
+              "ja": "レイノサ",
+              "ko": "레이노사"
             }
           },
           {
@@ -27180,7 +31494,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luosimoqisi",
             "localizedNames": {
               "zh-HK": "洛斯莫奇斯",
-              "zh-TW": "洛斯莫奇斯"
+              "zh-TW": "洛斯莫奇斯",
+              "en": "Los Mochis",
+              "ja": "ロスモチス",
+              "ko": "로스모치스"
             }
           },
           {
@@ -27189,7 +31506,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Masatelan",
             "localizedNames": {
               "zh-HK": "馬薩特蘭",
-              "zh-TW": "馬薩特蘭"
+              "zh-TW": "馬薩特蘭",
+              "en": "Mazatlán",
+              "ja": "マサトラン",
+              "ko": "마사틀란"
             }
           },
           {
@@ -27198,7 +31518,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Matamoluosi",
             "localizedNames": {
               "zh-HK": "馬塔莫羅斯",
-              "zh-TW": "馬塔莫羅斯"
+              "zh-TW": "馬塔莫羅斯",
+              "en": "Matamoros Municipality",
+              "ja": "Matamoros Municipality",
+              "ko": "Matamoros Municipality"
             }
           },
           {
@@ -27207,7 +31530,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Meilida",
             "localizedNames": {
               "zh-HK": "梅里達",
-              "zh-TW": "梅里達"
+              "zh-TW": "梅里達",
+              "en": "Mérida",
+              "ja": "メリダ",
+              "ko": "메리다"
             }
           },
           {
@@ -27216,7 +31542,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mengkeluowa",
             "localizedNames": {
               "zh-HK": "蒙克洛瓦",
-              "zh-TW": "蒙克洛瓦"
+              "zh-TW": "蒙克洛瓦",
+              "en": "Monclova",
+              "ja": "Monclova",
+              "ko": "Monclova"
             }
           },
           {
@@ -27225,7 +31554,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mengtelei",
             "localizedNames": {
               "zh-HK": "蒙特雷",
-              "zh-TW": "蒙特雷"
+              "zh-TW": "蒙特雷",
+              "en": "Monterrey",
+              "ja": "モンテレイ",
+              "ko": "몬테레이"
             }
           },
           {
@@ -27234,7 +31566,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moleiliya",
             "localizedNames": {
               "zh-HK": "莫雷利亞",
-              "zh-TW": "莫雷利亞"
+              "zh-TW": "莫雷利亞",
+              "en": "Morelia",
+              "ja": "モレリア",
+              "ko": "모렐리아"
             }
           },
           {
@@ -27243,7 +31578,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moxigecheng",
             "localizedNames": {
               "zh-HK": "墨西哥城",
-              "zh-TW": "墨西哥城"
+              "zh-TW": "墨西哥城",
+              "en": "Mexico City",
+              "ja": "メキシコシティ",
+              "ko": "멕시코시티"
             }
           },
           {
@@ -27252,7 +31590,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moxikali",
             "localizedNames": {
               "zh-HK": "墨西卡利",
-              "zh-TW": "墨西卡利"
+              "zh-TW": "墨西卡利",
+              "en": "Mexicali",
+              "ja": "メヒカリ",
+              "ko": "멕시칼리"
             }
           },
           {
@@ -27261,7 +31602,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuojialaisi",
             "localizedNames": {
               "zh-HK": "諾加萊斯",
-              "zh-TW": "諾加萊斯"
+              "zh-TW": "諾加萊斯",
+              "en": "Nogales",
+              "ja": "Nogales",
+              "ko": "Nogales"
             }
           },
           {
@@ -27270,7 +31614,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Paqiuka",
             "localizedNames": {
               "zh-HK": "帕丘卡",
-              "zh-TW": "帕丘卡"
+              "zh-TW": "帕丘卡",
+              "en": "Pachuca",
+              "ja": "パチューカ",
+              "ko": "파추카"
             }
           },
           {
@@ -27306,7 +31653,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qietumaer",
             "localizedNames": {
               "zh-HK": "切圖馬爾",
-              "zh-TW": "切圖馬爾"
+              "zh-TW": "切圖馬爾",
+              "en": "Chetumal",
+              "ja": "チェトゥマル",
+              "ko": "체투말"
             }
           },
           {
@@ -27315,7 +31665,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Saerdiyue",
             "localizedNames": {
               "zh-HK": "薩爾蒂約",
-              "zh-TW": "薩爾蒂約"
+              "zh-TW": "薩爾蒂約",
+              "en": "Saltillo",
+              "ja": "サルティーヨ",
+              "ko": "살티요"
             }
           },
           {
@@ -27333,7 +31686,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sailaya",
             "localizedNames": {
               "zh-HK": "塞拉亞",
-              "zh-TW": "塞拉亞"
+              "zh-TW": "塞拉亞",
+              "en": "Celaya",
+              "ja": "セラヤ",
+              "ko": "Celaya"
             }
           },
           {
@@ -27351,7 +31707,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tapaqiula",
             "localizedNames": {
               "zh-HK": "塔帕丘拉",
-              "zh-TW": "塔帕丘拉"
+              "zh-TW": "塔帕丘拉",
+              "en": "Tapachula",
+              "ja": "Tapachula",
+              "ko": "Tapachula"
             }
           },
           {
@@ -27360,7 +31719,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tanpike",
             "localizedNames": {
               "zh-HK": "坦皮科",
-              "zh-TW": "坦皮科"
+              "zh-TW": "坦皮科",
+              "en": "Tampico",
+              "ja": "タンピコ",
+              "ko": "탐피코"
             }
           },
           {
@@ -27369,7 +31731,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Telasikala",
             "localizedNames": {
               "zh-HK": "特拉斯卡拉",
-              "zh-TW": "特拉斯卡拉"
+              "zh-TW": "特拉斯卡拉",
+              "en": "Tlaxcala",
+              "ja": "トラスカラ州",
+              "ko": "틀락스칼라주"
             }
           },
           {
@@ -27396,7 +31761,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tusitela-gutieleisi",
             "localizedNames": {
               "zh-HK": "圖斯特拉-古鐵雷斯",
-              "zh-TW": "圖斯特拉-古鐵雷斯"
+              "zh-TW": "圖斯特拉-古鐵雷斯",
+              "en": "Tuxtla Gutiérrez",
+              "ja": "トゥストラ・グティエレス",
+              "ko": "툭스틀라구티에레스"
             }
           },
           {
@@ -27405,7 +31773,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuoleiweng",
             "localizedNames": {
               "zh-HK": "託雷翁",
-              "zh-TW": "託雷翁"
+              "zh-TW": "託雷翁",
+              "en": "Torreón",
+              "ja": "トレオン",
+              "ko": "Torreón"
             }
           },
           {
@@ -27414,7 +31785,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuoluka",
             "localizedNames": {
               "zh-HK": "託盧卡",
-              "zh-TW": "託盧卡"
+              "zh-TW": "託盧卡",
+              "en": "Toluca",
+              "ja": "トルーカ",
+              "ko": "톨루카"
             }
           },
           {
@@ -27432,7 +31806,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weiduoliyacheng",
             "localizedNames": {
               "zh-HK": "維多利亞城",
-              "zh-TW": "維多利亞城"
+              "zh-TW": "維多利亞城",
+              "en": "Ciudad Victoria",
+              "ja": "シウダービクトリア",
+              "ko": "시우다드빅토리아"
             }
           },
           {
@@ -27450,7 +31827,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuluapan",
             "localizedNames": {
               "zh-HK": "烏魯阿潘",
-              "zh-TW": "烏魯阿潘"
+              "zh-TW": "烏魯阿潘",
+              "en": "Uruapan",
+              "ja": "Uruapan",
+              "ko": "우루아판"
             }
           },
           {
@@ -27459,7 +31839,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinlaleiduo",
             "localizedNames": {
               "zh-HK": "新拉雷多",
-              "zh-TW": "新拉雷多"
+              "zh-TW": "新拉雷多",
+              "en": "Nuevo Laredo",
+              "ja": "ヌエボ・ラレド",
+              "ko": "누에보라레도"
             }
           },
           {
@@ -27468,13 +31851,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yilapuatuo",
             "localizedNames": {
               "zh-HK": "伊拉普阿託",
-              "zh-TW": "伊拉普阿託"
+              "zh-TW": "伊拉普阿託",
+              "en": "Irapuato",
+              "ja": "Irapuato",
+              "ko": "Irapuato"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "墨西哥",
-          "zh-TW": "墨西哥"
+          "zh-TW": "墨西哥",
+          "en": "Mexico",
+          "ja": "メキシコ",
+          "ko": "멕시코"
         }
       }
     ]
@@ -27503,7 +31892,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ailongge",
             "localizedNames": {
               "zh-HK": "埃龍戈",
-              "zh-TW": "埃龍戈"
+              "zh-TW": "埃龍戈",
+              "en": "Erongo Region",
+              "ja": "エロンゴ州",
+              "ko": "에롱고주"
             }
           },
           {
@@ -27512,7 +31904,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aohanguina",
             "localizedNames": {
               "zh-HK": "奧漢圭納",
-              "zh-TW": "奧漢圭納"
+              "zh-TW": "奧漢圭納",
+              "en": "Ohangwena Region",
+              "ja": "オハングウェナ州",
+              "ko": "오항궤나주"
             }
           },
           {
@@ -27557,7 +31952,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoshana",
             "localizedNames": {
               "zh-HK": "奧沙納",
-              "zh-TW": "奧沙納"
+              "zh-TW": "奧沙納",
+              "en": "Oshana Region",
+              "ja": "オシャナ州",
+              "ko": "오샤나주"
             }
           },
           {
@@ -27566,7 +31964,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoxiketuo",
             "localizedNames": {
               "zh-HK": "奧希科託",
-              "zh-TW": "奧希科託"
+              "zh-TW": "奧希科託",
+              "en": "Oshikoto Region",
+              "ja": "オシコト州",
+              "ko": "오시코토주"
             }
           },
           {
@@ -27575,7 +31976,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hadapu",
             "localizedNames": {
               "zh-HK": "哈達普",
-              "zh-TW": "哈達普"
+              "zh-TW": "哈達普",
+              "en": "Hardap Region",
+              "ja": "ハルダプ州",
+              "ko": "하르다프주"
             }
           },
           {
@@ -27584,7 +31988,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huomasi",
             "localizedNames": {
               "zh-HK": "霍馬斯",
-              "zh-TW": "霍馬斯"
+              "zh-TW": "霍馬斯",
+              "en": "Khomas Region",
+              "ja": "ホマス州",
+              "ko": "호마스주"
             }
           },
           {
@@ -27593,7 +32000,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalasi",
             "localizedNames": {
               "zh-HK": "卡拉斯",
-              "zh-TW": "卡拉斯"
+              "zh-TW": "卡拉斯",
+              "en": "Karas Region",
+              "ja": "カラス州",
+              "ko": "카라스주"
             }
           },
           {
@@ -27602,7 +32012,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kapuliwei",
             "localizedNames": {
               "zh-HK": "卡普里維",
-              "zh-TW": "卡普里維"
+              "zh-TW": "卡普里維",
+              "en": "Zambezi Region",
+              "ja": "カプリビ州",
+              "ko": "카프리비 주"
             }
           },
           {
@@ -27611,13 +32024,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuneinei",
             "localizedNames": {
               "zh-HK": "庫內內",
-              "zh-TW": "庫內內"
+              "zh-TW": "庫內內",
+              "en": "Kunene Region",
+              "ja": "クネネ州",
+              "ko": "쿠네네주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "納米比亞",
-          "zh-TW": "納米比亞"
+          "zh-TW": "納米比亞",
+          "en": "Namibia",
+          "ja": "ナミビア",
+          "ko": "나미비아"
         }
       }
     ]
@@ -27682,7 +32101,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bileituoliya",
             "localizedNames": {
               "zh-HK": "比勒陀利亞",
-              "zh-TW": "比勒陀利亞"
+              "zh-TW": "比勒陀利亞",
+              "en": "Pretoria",
+              "ja": "プレトリア",
+              "ko": "프리토리아"
             }
           },
           {
@@ -27709,7 +32131,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulongfangdan",
             "localizedNames": {
               "zh-HK": "布隆方丹",
-              "zh-TW": "布隆方丹"
+              "zh-TW": "布隆方丹",
+              "en": "Bloemfontein",
+              "ja": "ブルームフォンテーン",
+              "ko": "블룸폰테인"
             }
           },
           {
@@ -27727,7 +32152,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Deaer",
             "localizedNames": {
               "zh-HK": "德阿爾",
-              "zh-TW": "德阿爾"
+              "zh-TW": "德阿爾",
+              "en": "De Aar",
+              "ja": "De Aar",
+              "ko": "De Aar"
             }
           },
           {
@@ -27736,7 +32164,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Deban",
             "localizedNames": {
               "zh-HK": "德班",
-              "zh-TW": "德班"
+              "zh-TW": "德班",
+              "en": "Durban",
+              "ja": "ダーバン",
+              "ko": "더반"
             }
           },
           {
@@ -27754,7 +32185,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongbakeli",
             "localizedNames": {
               "zh-HK": "東巴克利",
-              "zh-TW": "東巴克利"
+              "zh-TW": "東巴克利",
+              "en": "Barkly East",
+              "ja": "Barkly East",
+              "ko": "Barkly East"
             }
           },
           {
@@ -27763,7 +32197,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Donglundun",
             "localizedNames": {
               "zh-HK": "東倫敦",
-              "zh-TW": "東倫敦"
+              "zh-TW": "東倫敦",
+              "en": "East London",
+              "ja": "イースト・ロンドン",
+              "ko": "이스트런던"
             }
           },
           {
@@ -27772,7 +32209,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fuleibao",
             "localizedNames": {
               "zh-HK": "弗雷堡",
-              "zh-TW": "弗雷堡"
+              "zh-TW": "弗雷堡",
+              "en": "Vryburg",
+              "ja": "Vryburg",
+              "ko": "Vryburg"
             }
           },
           {
@@ -27781,7 +32221,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fulinixin",
             "localizedNames": {
               "zh-HK": "弗里尼欣",
-              "zh-TW": "弗里尼欣"
+              "zh-TW": "弗里尼欣",
+              "en": "Vereeniging",
+              "ja": "フェリーニヒング",
+              "ko": "페레이니힝"
             }
           },
           {
@@ -27808,7 +32251,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinboli",
             "localizedNames": {
               "zh-HK": "金伯利",
-              "zh-TW": "金伯利"
+              "zh-TW": "金伯利",
+              "en": "Kimberley",
+              "ja": "キンバリー",
+              "ko": "킴벌리"
             }
           },
           {
@@ -27817,7 +32263,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaipudun",
             "localizedNames": {
               "zh-HK": "開普敦",
-              "zh-TW": "開普敦"
+              "zh-TW": "開普敦",
+              "en": "Cape Town",
+              "ja": "ケープタウン",
+              "ko": "케이프타운"
             }
           },
           {
@@ -27826,7 +32275,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelaikesiduopu",
             "localizedNames": {
               "zh-HK": "克萊克斯多普",
-              "zh-TW": "克萊克斯多普"
+              "zh-TW": "克萊克斯多普",
+              "en": "Klerksdorp",
+              "ja": "Klerksdorp",
+              "ko": "Klerksdorp"
             }
           },
           {
@@ -27835,7 +32287,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuluman",
             "localizedNames": {
               "zh-HK": "庫魯曼",
-              "zh-TW": "庫魯曼"
+              "zh-TW": "庫魯曼",
+              "en": "Kuruman",
+              "ja": "Kuruman",
+              "ko": "Kuruman"
             }
           },
           {
@@ -27844,7 +32299,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kunshidun",
             "localizedNames": {
               "zh-HK": "昆士敦",
-              "zh-TW": "昆士敦"
+              "zh-TW": "昆士敦",
+              "en": "Queenstown",
+              "ja": "Queenstown",
+              "ko": "Queenstown"
             }
           },
           {
@@ -27889,7 +32347,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mideerbao",
             "localizedNames": {
               "zh-HK": "米德爾堡",
-              "zh-TW": "米德爾堡"
+              "zh-TW": "米德爾堡",
+              "en": "Middelburg",
+              "ja": "Middelburg",
+              "ko": "Middelburg"
             }
           },
           {
@@ -27916,7 +32377,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Neiersipuleite",
             "localizedNames": {
               "zh-HK": "內爾斯普雷特",
-              "zh-TW": "內爾斯普雷特"
+              "zh-TW": "內爾斯普雷特",
+              "en": "Mbombela",
+              "ja": "ネルスプロイト",
+              "ko": "넬스프루이트"
             }
           },
           {
@@ -27943,7 +32407,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiaozhi",
             "localizedNames": {
               "zh-HK": "喬治",
-              "zh-TW": "喬治"
+              "zh-TW": "喬治",
+              "en": "George",
+              "ja": "ジョージ",
+              "ko": "조지"
             }
           },
           {
@@ -28024,7 +32491,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weierkemu",
             "localizedNames": {
               "zh-HK": "韋爾科姆",
-              "zh-TW": "韋爾科姆"
+              "zh-TW": "韋爾科姆",
+              "en": "Welkom",
+              "ja": "ウェルコム",
+              "ko": "Welkom"
             }
           },
           {
@@ -28033,7 +32503,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wulundi",
             "localizedNames": {
               "zh-HK": "烏倫迪",
-              "zh-TW": "烏倫迪"
+              "zh-TW": "烏倫迪",
+              "en": "Ulundi",
+              "ja": "ウルンディ",
+              "ko": "울룬디"
             }
           },
           {
@@ -28042,7 +32515,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wumutata",
             "localizedNames": {
               "zh-HK": "烏姆塔塔",
-              "zh-TW": "烏姆塔塔"
+              "zh-TW": "烏姆塔塔",
+              "en": "Mthatha",
+              "ja": "ウムタタ",
+              "ko": "Mthatha"
             }
           },
           {
@@ -28051,7 +32527,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wusite",
             "localizedNames": {
               "zh-HK": "伍斯特",
-              "zh-TW": "伍斯特"
+              "zh-TW": "伍斯特",
+              "en": "Worcester",
+              "ja": "ウースター",
+              "ko": "Worcester"
             }
           },
           {
@@ -28060,7 +32539,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xibofute",
             "localizedNames": {
               "zh-HK": "西博福特",
-              "zh-TW": "西博福特"
+              "zh-TW": "西博福特",
+              "en": "Beaufort West",
+              "ja": "Beaufort West",
+              "ko": "Beaufort West"
             }
           },
           {
@@ -28087,13 +32569,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yuehanneisibao",
             "localizedNames": {
               "zh-HK": "約翰內斯堡",
-              "zh-TW": "約翰內斯堡"
+              "zh-TW": "約翰內斯堡",
+              "en": "Johannesburg",
+              "ja": "ヨハネスブルグ",
+              "ko": "요하네스버그"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "南非",
-          "zh-TW": "南非"
+          "zh-TW": "南非",
+          "en": "South Africa",
+          "ja": "南アフリカ",
+          "ko": "남아프리카"
         }
       }
     ]
@@ -28209,7 +32697,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jianakebuer",
             "localizedNames": {
               "zh-HK": "賈納克布爾",
-              "zh-TW": "賈納克布爾"
+              "zh-TW": "賈納克布爾",
+              "en": "Janakpur Dham",
+              "ja": "ジャナクプル",
+              "ko": "자낙푸르"
             }
           },
           {
@@ -28227,7 +32718,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lanpini",
             "localizedNames": {
               "zh-HK": "藍毗尼",
-              "zh-TW": "藍毗尼"
+              "zh-TW": "藍毗尼",
+              "en": "Lumbini",
+              "ja": "ルンビニ",
+              "ko": "룸비니"
             }
           },
           {
@@ -28287,7 +32781,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "尼泊爾",
-          "zh-TW": "尼泊爾"
+          "zh-TW": "尼泊爾",
+          "en": "Nepal",
+          "ja": "ネパール",
+          "ko": "네팔"
         }
       }
     ]
@@ -28334,7 +32831,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Boake",
             "localizedNames": {
               "zh-HK": "博阿科",
-              "zh-TW": "博阿科"
+              "zh-TW": "博阿科",
+              "en": "Boaco Department",
+              "ja": "ボアコ県",
+              "ko": "보아코주"
             }
           },
           {
@@ -28352,7 +32852,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalasuo",
             "localizedNames": {
               "zh-HK": "卡拉索",
-              "zh-TW": "卡拉索"
+              "zh-TW": "卡拉索",
+              "en": "Carazo Department",
+              "ja": "カラソ県",
+              "ko": "카라소주"
             }
           },
           {
@@ -28370,7 +32873,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liwasi",
             "localizedNames": {
               "zh-HK": "裏瓦斯",
-              "zh-TW": "裏瓦斯"
+              "zh-TW": "裏瓦斯",
+              "en": "Rivas Department",
+              "ja": "リバス県",
+              "ko": "리바스주"
             }
           },
           {
@@ -28379,7 +32885,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Madelisi",
             "localizedNames": {
               "zh-HK": "馬德里斯",
-              "zh-TW": "馬德里斯"
+              "zh-TW": "馬德里斯",
+              "en": "Madriz Department",
+              "ja": "マドリス県",
+              "ko": "마드리스주"
             }
           },
           {
@@ -28406,7 +32915,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Matajiaerpa",
             "localizedNames": {
               "zh-HK": "馬塔加爾帕",
-              "zh-TW": "馬塔加爾帕"
+              "zh-TW": "馬塔加爾帕",
+              "en": "Matagalpa Department",
+              "ja": "マタガルパ県",
+              "ko": "마타갈파주"
             }
           },
           {
@@ -28424,7 +32936,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qinandejia",
             "localizedNames": {
               "zh-HK": "奇南德加",
-              "zh-TW": "奇南德加"
+              "zh-TW": "奇南德加",
+              "en": "Chinandega Department",
+              "ja": "チナンデガ県",
+              "ko": "치난데가주"
             }
           },
           {
@@ -28433,7 +32948,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiongtalaisi",
             "localizedNames": {
               "zh-HK": "瓊塔萊斯",
-              "zh-TW": "瓊塔萊斯"
+              "zh-TW": "瓊塔萊斯",
+              "en": "Chontales Department",
+              "ja": "チョンタレス県",
+              "ko": "촌탈레스주"
             }
           },
           {
@@ -28442,7 +32960,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenghuanhe",
             "localizedNames": {
               "zh-HK": "聖胡安河",
-              "zh-TW": "聖胡安河"
+              "zh-TW": "聖胡安河",
+              "en": "Río San Juan Department",
+              "ja": "リオ・サン・フアン県",
+              "ko": "리오산후안주"
             }
           },
           {
@@ -28451,7 +32972,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinuotejia",
             "localizedNames": {
               "zh-HK": "希諾特加",
-              "zh-TW": "希諾特加"
+              "zh-TW": "希諾特加",
+              "en": "Jinotega Department",
+              "ja": "ヒノテガ県",
+              "ko": "히노테가주"
             }
           },
           {
@@ -28460,13 +32984,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinsaigeweiya",
             "localizedNames": {
               "zh-HK": "新塞哥維亞",
-              "zh-TW": "新塞哥維亞"
+              "zh-TW": "新塞哥維亞",
+              "en": "Nueva Segovia Department",
+              "ja": "ヌエバ・セゴビア県",
+              "ko": "누에바세고비아주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "尼加拉瓜",
-          "zh-TW": "尼加拉瓜"
+          "zh-TW": "尼加拉瓜",
+          "en": "Nicaragua",
+          "ja": "ニカラグア",
+          "ko": "니카라과"
         }
       }
     ]
@@ -28504,7 +33034,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Difa",
             "localizedNames": {
               "zh-HK": "迪法",
-              "zh-TW": "迪法"
+              "zh-TW": "迪法",
+              "en": "Diffa",
+              "ja": "ディファ州",
+              "ko": "디파주"
             }
           },
           {
@@ -28522,7 +33055,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Duosuo",
             "localizedNames": {
               "zh-HK": "多索",
-              "zh-TW": "多索"
+              "zh-TW": "多索",
+              "en": "Dosso Region",
+              "ja": "ドッソ州",
+              "ko": "도소주"
             }
           },
           {
@@ -28540,7 +33076,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maladi",
             "localizedNames": {
               "zh-HK": "馬拉迪",
-              "zh-TW": "馬拉迪"
+              "zh-TW": "馬拉迪",
+              "en": "Maradi Region",
+              "ja": "マラディ州",
+              "ko": "마라디주"
             }
           },
           {
@@ -28549,7 +33088,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niyameishi",
             "localizedNames": {
               "zh-HK": "尼亞美市",
-              "zh-TW": "尼亞美市"
+              "zh-TW": "尼亞美市",
+              "en": "Niamey",
+              "ja": "ニアメ",
+              "ko": "니아메"
             }
           },
           {
@@ -28564,7 +33106,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "尼日爾",
-          "zh-TW": "尼日爾"
+          "zh-TW": "尼日爾",
+          "en": "Niger",
+          "ja": "ニジェール",
+          "ko": "니제르"
         }
       }
     ]
@@ -28593,7 +33138,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Abiya",
             "localizedNames": {
               "zh-HK": "阿比亞",
-              "zh-TW": "阿比亞"
+              "zh-TW": "阿比亞",
+              "en": "Abia State",
+              "ja": "アビア州",
+              "ko": "아비아주"
             }
           },
           {
@@ -28620,7 +33168,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lagesi",
             "localizedNames": {
               "zh-HK": "拉各斯",
-              "zh-TW": "拉各斯"
+              "zh-TW": "拉各斯",
+              "en": "Lagos",
+              "ja": "ラゴス州",
+              "ko": "라고스주"
             }
           },
           {
@@ -28629,13 +33180,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yibadan",
             "localizedNames": {
               "zh-HK": "伊巴丹",
-              "zh-TW": "伊巴丹"
+              "zh-TW": "伊巴丹",
+              "en": "Ibadan",
+              "ja": "イバダン",
+              "ko": "이바단"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "尼日利亞",
-          "zh-TW": "尼日利亞"
+          "zh-TW": "尼日利亞",
+          "en": "Nigeria",
+          "ja": "ナイジェリア",
+          "ko": "나이지리아"
         }
       }
     ]
@@ -28678,7 +33235,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Akeshenhusi",
             "localizedNames": {
               "zh-HK": "阿克什胡斯",
-              "zh-TW": "阿克什胡斯"
+              "zh-TW": "阿克什胡斯",
+              "en": "Akershus",
+              "ja": "アーケシュフース県",
+              "ko": "아케르스후스주"
             }
           },
           {
@@ -28696,7 +33256,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aosilushi",
             "localizedNames": {
               "zh-HK": "奧斯陸市",
-              "zh-TW": "奧斯陸市"
+              "zh-TW": "奧斯陸市",
+              "en": "Oslo",
+              "ja": "オスロ",
+              "ko": "오슬로"
             }
           },
           {
@@ -28732,7 +33295,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongfuer",
             "localizedNames": {
               "zh-HK": "東福爾",
-              "zh-TW": "東福爾"
+              "zh-TW": "東福爾",
+              "en": "Østfold",
+              "ja": "エストフォル県",
+              "ko": "외스트폴주"
             }
           },
           {
@@ -28741,7 +33307,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fenmake",
             "localizedNames": {
               "zh-HK": "芬馬克",
-              "zh-TW": "芬馬克"
+              "zh-TW": "芬馬克",
+              "en": "Finnmark",
+              "ja": "フィンマルク県",
+              "ko": "핀마르크주"
             }
           },
           {
@@ -28768,7 +33337,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luojialan",
             "localizedNames": {
               "zh-HK": "羅加蘭",
-              "zh-TW": "羅加蘭"
+              "zh-TW": "羅加蘭",
+              "en": "Rogaland",
+              "ja": "ローガラン県",
+              "ko": "로갈란주"
             }
           },
           {
@@ -28795,7 +33367,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuoerlan",
             "localizedNames": {
               "zh-HK": "諾爾蘭",
-              "zh-TW": "諾爾蘭"
+              "zh-TW": "諾爾蘭",
+              "en": "Nordland",
+              "ja": "ヌールラン県",
+              "ko": "노를란주"
             }
           },
           {
@@ -28813,7 +33388,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taileimake",
             "localizedNames": {
               "zh-HK": "泰勒馬克",
-              "zh-TW": "泰勒馬克"
+              "zh-TW": "泰勒馬克",
+              "en": "Telemark",
+              "ja": "テレマルク県",
+              "ko": "텔레마르크주"
             }
           },
           {
@@ -28822,7 +33400,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Teluomusi",
             "localizedNames": {
               "zh-HK": "特羅姆斯",
-              "zh-TW": "特羅姆斯"
+              "zh-TW": "特羅姆斯",
+              "en": "Troms",
+              "ja": "トロムス県",
+              "ko": "트롬스주"
             }
           },
           {
@@ -28840,13 +33421,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xifuer",
             "localizedNames": {
               "zh-HK": "西福爾",
-              "zh-TW": "西福爾"
+              "zh-TW": "西福爾",
+              "en": "Vestfold",
+              "ja": "ヴェストフォル県",
+              "ko": "베스트폴주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "挪威",
-          "zh-TW": "挪威"
+          "zh-TW": "挪威",
+          "en": "Norway",
+          "ja": "ノルウェー",
+          "ko": "노르웨이"
         }
       }
     ]
@@ -28974,7 +33561,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fengshaer",
             "localizedNames": {
               "zh-HK": "豐沙爾",
-              "zh-TW": "豐沙爾"
+              "zh-TW": "豐沙爾",
+              "en": "Funchal",
+              "ja": "フンシャル",
+              "ko": "푼샬"
             }
           },
           {
@@ -29073,7 +33663,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pengtadeerjiada",
             "localizedNames": {
               "zh-HK": "蓬塔德爾加達",
-              "zh-TW": "蓬塔德爾加達"
+              "zh-TW": "蓬塔德爾加達",
+              "en": "Ponta Delgada",
+              "ja": "ポンタ・デルガダ",
+              "ko": "폰타델가다"
             }
           },
           {
@@ -29178,7 +33771,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "葡萄牙",
-          "zh-TW": "葡萄牙"
+          "zh-TW": "葡萄牙",
+          "en": "Portugal",
+          "ja": "ポルトガル",
+          "ko": "포르투갈"
         }
       }
     ]
@@ -29221,7 +33817,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aiyuan",
             "localizedNames": {
               "zh-HK": "愛媛",
-              "zh-TW": "愛媛"
+              "zh-TW": "愛媛",
+              "en": "Ehime",
+              "ja": "愛媛県",
+              "ko": "에히메 현"
             }
           },
           {
@@ -29230,7 +33829,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aizhi",
             "localizedNames": {
               "zh-HK": "愛知",
-              "zh-TW": "愛知"
+              "zh-TW": "愛知",
+              "en": "Aichi",
+              "ja": "愛知県",
+              "ko": "아이치 현"
             }
           },
           {
@@ -29239,7 +33841,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beihaidao",
             "localizedNames": {
               "zh-HK": "北海道",
-              "zh-TW": "北海道"
+              "zh-TW": "北海道",
+              "en": "Hokkaido",
+              "ja": "北海道",
+              "ko": "홋카이도"
             }
           },
           {
@@ -29248,7 +33853,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bingku",
             "localizedNames": {
               "zh-HK": "兵庫",
-              "zh-TW": "兵庫"
+              "zh-TW": "兵庫",
+              "en": "Hyōgo",
+              "ja": "兵庫県",
+              "ko": "효고 현"
             }
           },
           {
@@ -29257,7 +33865,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chongsheng",
             "localizedNames": {
               "zh-HK": "沖繩",
-              "zh-TW": "沖繩"
+              "zh-TW": "沖繩",
+              "en": "Okinawa",
+              "ja": "沖縄県",
+              "ko": "오키나와 현"
             }
           },
           {
@@ -29266,7 +33877,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Cicheng",
             "localizedNames": {
               "zh-HK": "茨城",
-              "zh-TW": "茨城"
+              "zh-TW": "茨城",
+              "en": "Ibaraki",
+              "ja": "茨城県",
+              "ko": "이바라키 현"
             }
           },
           {
@@ -29275,7 +33889,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Daban",
             "localizedNames": {
               "zh-HK": "大阪",
-              "zh-TW": "大阪"
+              "zh-TW": "大阪",
+              "en": "Osaka",
+              "ja": "大阪府",
+              "ko": "오사카 부"
             }
           },
           {
@@ -29284,7 +33901,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dafen",
             "localizedNames": {
               "zh-HK": "大分",
-              "zh-TW": "大分"
+              "zh-TW": "大分",
+              "en": "Oita",
+              "ja": "大分県",
+              "ko": "오이타 현"
             }
           },
           {
@@ -29293,7 +33913,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Daogen",
             "localizedNames": {
               "zh-HK": "島根",
-              "zh-TW": "島根"
+              "zh-TW": "島根",
+              "en": "Shimane",
+              "ja": "島根県",
+              "ko": "시마네현"
             }
           },
           {
@@ -29302,7 +33925,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dedao",
             "localizedNames": {
               "zh-HK": "徳島",
-              "zh-TW": "徳島"
+              "zh-TW": "徳島",
+              "en": "Tokushima",
+              "ja": "徳島県",
+              "ko": "도쿠시마 현"
             }
           },
           {
@@ -29311,7 +33937,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongjing",
             "localizedNames": {
               "zh-HK": "東京",
-              "zh-TW": "東京"
+              "zh-TW": "東京",
+              "en": "Tokyo",
+              "ja": "東京都",
+              "ko": "도쿄 도"
             }
           },
           {
@@ -29320,7 +33949,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fudao",
             "localizedNames": {
               "zh-HK": "福島",
-              "zh-TW": "福島"
+              "zh-TW": "福島",
+              "en": "Fukushima",
+              "ja": "福島県",
+              "ko": "후쿠시마 현"
             }
           },
           {
@@ -29329,7 +33961,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fugang",
             "localizedNames": {
               "zh-HK": "福岡",
-              "zh-TW": "福岡"
+              "zh-TW": "福岡",
+              "en": "Fukuoka",
+              "ja": "福岡県",
+              "ko": "후쿠오카 현"
             }
           },
           {
@@ -29338,7 +33973,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fujing",
             "localizedNames": {
               "zh-HK": "福井",
-              "zh-TW": "福井"
+              "zh-TW": "福井",
+              "en": "Fukui",
+              "ja": "福井県",
+              "ko": "후쿠이 현"
             }
           },
           {
@@ -29347,7 +33985,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fushan",
             "localizedNames": {
               "zh-HK": "富山",
-              "zh-TW": "富山"
+              "zh-TW": "富山",
+              "en": "Toyama",
+              "ja": "富山県",
+              "ko": "도야마 현"
             }
           },
           {
@@ -29356,7 +33997,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gangshan",
             "localizedNames": {
               "zh-HK": "岡山",
-              "zh-TW": "岡山"
+              "zh-TW": "岡山",
+              "en": "Okayama",
+              "ja": "岡山県",
+              "ko": "오카야마 현"
             }
           },
           {
@@ -29365,7 +34009,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gaozhi",
             "localizedNames": {
               "zh-HK": "高知",
-              "zh-TW": "高知"
+              "zh-TW": "高知",
+              "en": "Kochi",
+              "ja": "高知県",
+              "ko": "고치 현"
             }
           },
           {
@@ -29374,7 +34021,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gongcheng",
             "localizedNames": {
               "zh-HK": "宮城",
-              "zh-TW": "宮城"
+              "zh-TW": "宮城",
+              "en": "Miyagi",
+              "ja": "宮城県",
+              "ko": "미야기 현"
             }
           },
           {
@@ -29383,7 +34033,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gongqi",
             "localizedNames": {
               "zh-HK": "宮崎",
-              "zh-TW": "宮崎"
+              "zh-TW": "宮崎",
+              "en": "Miyazaki",
+              "ja": "宮崎県",
+              "ko": "미야자키 현"
             }
           },
           {
@@ -29392,7 +34045,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guangdao",
             "localizedNames": {
               "zh-HK": "廣島",
-              "zh-TW": "廣島"
+              "zh-TW": "廣島",
+              "en": "Hiroshima",
+              "ja": "広島県",
+              "ko": "히로시마 현"
             }
           },
           {
@@ -29401,7 +34057,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hegeshan",
             "localizedNames": {
               "zh-HK": "和歌山",
-              "zh-TW": "和歌山"
+              "zh-TW": "和歌山",
+              "en": "Wakayama",
+              "ja": "和歌山県",
+              "ko": "와카야마 현"
             }
           },
           {
@@ -29410,7 +34069,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jingdou",
             "localizedNames": {
               "zh-HK": "京都",
-              "zh-TW": "京都"
+              "zh-TW": "京都",
+              "en": "Kyoto",
+              "ja": "京都府",
+              "ko": "교토 부"
             }
           },
           {
@@ -29419,7 +34081,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinggang",
             "localizedNames": {
               "zh-HK": "靜岡",
-              "zh-TW": "靜岡"
+              "zh-TW": "靜岡",
+              "en": "Shizuoka",
+              "ja": "静岡県",
+              "ko": "시즈오카 현"
             }
           },
           {
@@ -29427,8 +34092,12 @@ export const LOCATION_CATALOG_DATA = [
             "name": "枥木",
             "latinName": "Limu",
             "localizedNames": {
-              "zh-HK": "櫪木",
-              "zh-TW": "櫪木"
+              "zh-HK": "栃木",
+              "zh-TW": "栃木",
+              "en": "Tochigi",
+              "ja": "栃木県",
+              "ko": "도치기 현",
+              "zh-CN": "栃木"
             }
           },
           {
@@ -29437,7 +34106,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luerdao",
             "localizedNames": {
               "zh-HK": "鹿兒島",
-              "zh-TW": "鹿兒島"
+              "zh-TW": "鹿兒島",
+              "en": "Kagoshima",
+              "ja": "鹿児島県",
+              "ko": "가고시마 현"
             }
           },
           {
@@ -29446,7 +34118,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nailiang",
             "localizedNames": {
               "zh-HK": "奈良",
-              "zh-TW": "奈良"
+              "zh-TW": "奈良",
+              "en": "Nara",
+              "ja": "奈良県",
+              "ko": "나라 현"
             }
           },
           {
@@ -29455,7 +34130,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niaoqu",
             "localizedNames": {
               "zh-HK": "鳥取",
-              "zh-TW": "鳥取"
+              "zh-TW": "鳥取",
+              "en": "Tottori",
+              "ja": "鳥取県",
+              "ko": "돗토리 현"
             }
           },
           {
@@ -29464,7 +34142,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qifu",
             "localizedNames": {
               "zh-HK": "岐阜",
-              "zh-TW": "岐阜"
+              "zh-TW": "岐阜",
+              "en": "Gifu",
+              "ja": "岐阜県",
+              "ko": "기후 현"
             }
           },
           {
@@ -29473,7 +34154,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiyu",
             "localizedNames": {
               "zh-HK": "埼玉",
-              "zh-TW": "埼玉"
+              "zh-TW": "埼玉",
+              "en": "Saitama",
+              "ja": "埼玉県",
+              "ko": "사이타마 현"
             }
           },
           {
@@ -29482,7 +34166,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qianye",
             "localizedNames": {
               "zh-HK": "千葉",
-              "zh-TW": "千葉"
+              "zh-TW": "千葉",
+              "en": "Chiba",
+              "ja": "千葉県",
+              "ko": "지바 현"
             }
           },
           {
@@ -29491,7 +34178,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qingsen",
             "localizedNames": {
               "zh-HK": "青森",
-              "zh-TW": "青森"
+              "zh-TW": "青森",
+              "en": "Aomori",
+              "ja": "青森県",
+              "ko": "아오모리현"
             }
           },
           {
@@ -29500,7 +34190,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiutian",
             "localizedNames": {
               "zh-HK": "秋田",
-              "zh-TW": "秋田"
+              "zh-TW": "秋田",
+              "en": "Akita",
+              "ja": "秋田県",
+              "ko": "아키타 현"
             }
           },
           {
@@ -29509,7 +34202,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qunma",
             "localizedNames": {
               "zh-HK": "羣馬",
-              "zh-TW": "羣馬"
+              "zh-TW": "羣馬",
+              "en": "Gunma",
+              "ja": "群馬県",
+              "ko": "군마현"
             }
           },
           {
@@ -29518,7 +34214,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sanzhong",
             "localizedNames": {
               "zh-HK": "三重",
-              "zh-TW": "三重"
+              "zh-TW": "三重",
+              "en": "Mie",
+              "ja": "三重県",
+              "ko": "미에 현"
             }
           },
           {
@@ -29527,7 +34226,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shankou",
             "localizedNames": {
               "zh-HK": "山口",
-              "zh-TW": "山口"
+              "zh-TW": "山口",
+              "en": "Yamaguchi",
+              "ja": "山口県",
+              "ko": "야마구치 현"
             }
           },
           {
@@ -29536,7 +34238,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shanli",
             "localizedNames": {
               "zh-HK": "山梨",
-              "zh-TW": "山梨"
+              "zh-TW": "山梨",
+              "en": "Yamanashi",
+              "ja": "山梨県",
+              "ko": "야마나시 현"
             }
           },
           {
@@ -29545,7 +34250,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shanxing",
             "localizedNames": {
               "zh-HK": "山形",
-              "zh-TW": "山形"
+              "zh-TW": "山形",
+              "en": "Yamagata",
+              "ja": "山形県",
+              "ko": "야마가타 현"
             }
           },
           {
@@ -29554,7 +34262,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shennaichuan",
             "localizedNames": {
               "zh-HK": "神奈川",
-              "zh-TW": "神奈川"
+              "zh-TW": "神奈川",
+              "en": "Kanagawa",
+              "ja": "神奈川県",
+              "ko": "가나가와 현"
             }
           },
           {
@@ -29563,7 +34274,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shichuan",
             "localizedNames": {
               "zh-HK": "石川",
-              "zh-TW": "石川"
+              "zh-TW": "石川",
+              "en": "Ishikawa",
+              "ja": "石川県",
+              "ko": "이시카와 현"
             }
           },
           {
@@ -29572,7 +34286,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiangchuan",
             "localizedNames": {
               "zh-HK": "香川",
-              "zh-TW": "香川"
+              "zh-TW": "香川",
+              "en": "Kagawa",
+              "ja": "香川県",
+              "ko": "가가와 현"
             }
           },
           {
@@ -29581,7 +34298,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinxi",
             "localizedNames": {
               "zh-HK": "新潟",
-              "zh-TW": "新潟"
+              "zh-TW": "新潟",
+              "en": "Niigata",
+              "ja": "新潟県",
+              "ko": "니가타 현"
             }
           },
           {
@@ -29590,7 +34310,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiongben",
             "localizedNames": {
               "zh-HK": "熊本",
-              "zh-TW": "熊本"
+              "zh-TW": "熊本",
+              "en": "Kumamoto",
+              "ja": "熊本県",
+              "ko": "구마모토 현"
             }
           },
           {
@@ -29599,7 +34322,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yanshou",
             "localizedNames": {
               "zh-HK": "巖手",
-              "zh-TW": "巖手"
+              "zh-TW": "巖手",
+              "en": "Iwate",
+              "ja": "岩手県",
+              "ko": "이화테 현"
             }
           },
           {
@@ -29608,7 +34334,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhangqi",
             "localizedNames": {
               "zh-HK": "長崎",
-              "zh-TW": "長崎"
+              "zh-TW": "長崎",
+              "en": "Nagasaki",
+              "ja": "長崎県",
+              "ko": "나가사키 현"
             }
           },
           {
@@ -29617,7 +34346,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhangye",
             "localizedNames": {
               "zh-HK": "長野",
-              "zh-TW": "長野"
+              "zh-TW": "長野",
+              "en": "Nagano",
+              "ja": "長野県",
+              "ko": "나가노 현"
             }
           },
           {
@@ -29626,7 +34358,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zihe",
             "localizedNames": {
               "zh-HK": "滋賀",
-              "zh-TW": "滋賀"
+              "zh-TW": "滋賀",
+              "en": "Shiga",
+              "ja": "滋賀県",
+              "ko": "시가 현"
             }
           },
           {
@@ -29635,13 +34370,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zuohe",
             "localizedNames": {
               "zh-HK": "佐賀",
-              "zh-TW": "佐賀"
+              "zh-TW": "佐賀",
+              "en": "Saga",
+              "ja": "佐賀県",
+              "ko": "사가 현"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "日本",
-          "zh-TW": "日本"
+          "zh-TW": "日本",
+          "en": "Japan",
+          "ja": "日本",
+          "ko": "일본"
         }
       }
     ]
@@ -29670,7 +34411,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beiboteng",
             "localizedNames": {
               "zh-HK": "北博滕",
-              "zh-TW": "北博滕"
+              "zh-TW": "北博滕",
+              "en": "Norrbotten County",
+              "ja": "ノールボッテン県",
+              "ko": "노르보텐주"
             }
           },
           {
@@ -29679,7 +34423,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulaijine",
             "localizedNames": {
               "zh-HK": "布萊金厄",
-              "zh-TW": "布萊金厄"
+              "zh-TW": "布萊金厄",
+              "en": "Blekinge County",
+              "ja": "ブレーキンゲ県",
+              "ko": "블레킹에주"
             }
           },
           {
@@ -29688,7 +34435,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dalana",
             "localizedNames": {
               "zh-HK": "達拉納",
-              "zh-TW": "達拉納"
+              "zh-TW": "達拉納",
+              "en": "Dalarna County",
+              "ja": "ダーラナ県",
+              "ko": "달라르나주"
             }
           },
           {
@@ -29697,7 +34447,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongyuetelan",
             "localizedNames": {
               "zh-HK": "東約特蘭",
-              "zh-TW": "東約特蘭"
+              "zh-TW": "東約特蘭",
+              "en": "Östergötland County",
+              "ja": "エステルイェータランド県",
+              "ko": "외스테르예틀란드주"
             }
           },
           {
@@ -29715,7 +34468,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gedelan",
             "localizedNames": {
               "zh-HK": "哥得蘭",
-              "zh-TW": "哥得蘭"
+              "zh-TW": "哥得蘭",
+              "en": "Gotland County",
+              "ja": "ゴットランド県",
+              "ko": "고틀란드주"
             }
           },
           {
@@ -29724,7 +34480,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Halan",
             "localizedNames": {
               "zh-HK": "哈蘭",
-              "zh-TW": "哈蘭"
+              "zh-TW": "哈蘭",
+              "en": "Halland County",
+              "ja": "ハッランド県",
+              "ko": "할란드주"
             }
           },
           {
@@ -29742,7 +34501,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelunubeili",
             "localizedNames": {
               "zh-HK": "克魯努貝里",
-              "zh-TW": "克魯努貝里"
+              "zh-TW": "克魯努貝里",
+              "en": "Kronoberg County",
+              "ja": "クロノベリ県",
+              "ko": "크로노베리주"
             }
           },
           {
@@ -29751,7 +34513,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanmanlan",
             "localizedNames": {
               "zh-HK": "南曼蘭",
-              "zh-TW": "南曼蘭"
+              "zh-TW": "南曼蘭",
+              "en": "Södermanland County",
+              "ja": "セーデルマンランド県",
+              "ko": "쇠데르만란드주"
             }
           },
           {
@@ -29760,7 +34525,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sidegeermo",
             "localizedNames": {
               "zh-HK": "斯德哥爾摩",
-              "zh-TW": "斯德哥爾摩"
+              "zh-TW": "斯德哥爾摩",
+              "en": "Stockholm",
+              "ja": "ストックホルム",
+              "ko": "스톡홀름"
             }
           },
           {
@@ -29778,7 +34546,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weimulan",
             "localizedNames": {
               "zh-HK": "韋姆蘭",
-              "zh-TW": "韋姆蘭"
+              "zh-TW": "韋姆蘭",
+              "en": "Värmland County",
+              "ja": "ヴェルムランド県",
+              "ko": "베름란드주"
             }
           },
           {
@@ -29796,7 +34567,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiboteng",
             "localizedNames": {
               "zh-HK": "西博滕",
-              "zh-TW": "西博滕"
+              "zh-TW": "西博滕",
+              "en": "Västerbotten County",
+              "ja": "ヴェステルボッテン県",
+              "ko": "베스테르보텐주"
             }
           },
           {
@@ -29805,7 +34579,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ximanlan",
             "localizedNames": {
               "zh-HK": "西曼蘭",
-              "zh-TW": "西曼蘭"
+              "zh-TW": "西曼蘭",
+              "en": "Västmanland County",
+              "ja": "ヴェストマンランド県",
+              "ko": "베스트만란드주"
             }
           },
           {
@@ -29814,7 +34591,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinuoerlan",
             "localizedNames": {
               "zh-HK": "西諾爾蘭",
-              "zh-TW": "西諾爾蘭"
+              "zh-TW": "西諾爾蘭",
+              "en": "Västernorrland County",
+              "ja": "ヴェステルノールランド県",
+              "ko": "베스테르노를란드주"
             }
           },
           {
@@ -29841,7 +34621,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yefuleibao",
             "localizedNames": {
               "zh-HK": "耶夫勒堡",
-              "zh-TW": "耶夫勒堡"
+              "zh-TW": "耶夫勒堡",
+              "en": "Gävleborg County",
+              "ja": "イェヴレボリ県",
+              "ko": "예블레보리주"
             }
           },
           {
@@ -29850,13 +34633,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yemutelan",
             "localizedNames": {
               "zh-HK": "耶姆特蘭",
-              "zh-TW": "耶姆特蘭"
+              "zh-TW": "耶姆特蘭",
+              "en": "Jämtland County",
+              "ja": "イェムトランド県",
+              "ko": "옘틀란드주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "瑞典",
-          "zh-TW": "瑞典"
+          "zh-TW": "瑞典",
+          "en": "Sweden",
+          "ja": "スウェーデン",
+          "ko": "스웨덴"
         }
       }
     ]
@@ -29885,7 +34674,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aergao",
             "localizedNames": {
               "zh-HK": "阿爾高",
-              "zh-TW": "阿爾高"
+              "zh-TW": "阿爾高",
+              "en": "Canton of Aargau",
+              "ja": "アールガウ州",
+              "ko": "아르가우 주"
             }
           },
           {
@@ -29903,7 +34695,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Basaierxiangcun",
             "localizedNames": {
               "zh-HK": "巴塞爾鄉村",
-              "zh-TW": "巴塞爾鄉村"
+              "zh-TW": "巴塞爾鄉村",
+              "en": "Basel-Landschaft",
+              "ja": "バーゼル＝ラント準州",
+              "ko": "바젤란트 주"
             }
           },
           {
@@ -29948,7 +34743,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelaobindeng",
             "localizedNames": {
               "zh-HK": "格勞賓登",
-              "zh-TW": "格勞賓登"
+              "zh-TW": "格勞賓登",
+              "en": "Grisons",
+              "ja": "グラウビュンデン州",
+              "ko": "그라우뷘덴 주"
             }
           },
           {
@@ -29966,7 +34764,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luosang",
             "localizedNames": {
               "zh-HK": "洛桑",
-              "zh-TW": "洛桑"
+              "zh-TW": "洛桑",
+              "en": "Lausanne",
+              "ja": "ローザンヌ",
+              "ko": "Lausanne"
             }
           },
           {
@@ -29984,7 +34785,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Neiapengceer",
             "localizedNames": {
               "zh-HK": "內阿彭策爾",
-              "zh-TW": "內阿彭策爾"
+              "zh-TW": "內阿彭策爾",
+              "en": "Appenzell Innerrhoden",
+              "ja": "アッペンツェル・インナーローデン準州",
+              "ko": "아펜첼이너로덴 주"
             }
           },
           {
@@ -30002,7 +34806,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Rula",
             "localizedNames": {
               "zh-HK": "汝拉",
-              "zh-TW": "汝拉"
+              "zh-TW": "汝拉",
+              "en": "Canton of Jura",
+              "ja": "ジュラ州",
+              "ko": "쥐라 주"
             }
           },
           {
@@ -30020,7 +34827,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangwaerdeng",
             "localizedNames": {
               "zh-HK": "上瓦爾登",
-              "zh-TW": "上瓦爾登"
+              "zh-TW": "上瓦爾登",
+              "en": "Canton of Obwalden",
+              "ja": "オプヴァルデン準州",
+              "ko": "옵발덴 주"
             }
           },
           {
@@ -30065,7 +34875,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tiqinuo",
             "localizedNames": {
               "zh-HK": "提契諾",
-              "zh-TW": "提契諾"
+              "zh-TW": "提契諾",
+              "en": "Canton Ticino",
+              "ja": "ティチーノ州",
+              "ko": "티치노 주"
             }
           },
           {
@@ -30074,7 +34887,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuergao",
             "localizedNames": {
               "zh-HK": "圖爾高",
-              "zh-TW": "圖爾高"
+              "zh-TW": "圖爾高",
+              "en": "Thurgau",
+              "ja": "トゥールガウ州",
+              "ko": "투르가우 주"
             }
           },
           {
@@ -30083,7 +34899,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Walai",
             "localizedNames": {
               "zh-HK": "瓦萊",
-              "zh-TW": "瓦萊"
+              "zh-TW": "瓦萊",
+              "en": "Valais",
+              "ja": "ヴァレー州",
+              "ko": "발레 주"
             }
           },
           {
@@ -30092,7 +34911,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Waiapengceer",
             "localizedNames": {
               "zh-HK": "外阿彭策爾",
-              "zh-TW": "外阿彭策爾"
+              "zh-TW": "外阿彭策爾",
+              "en": "Canton of Appenzell Ausserrhoden",
+              "ja": "アッペンツェル・アウサーローデン準州",
+              "ko": "아펜첼아우서로덴 주"
             }
           },
           {
@@ -30101,7 +34923,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wo",
             "localizedNames": {
               "zh-HK": "沃",
-              "zh-TW": "沃"
+              "zh-TW": "沃",
+              "en": "Canton of Vaud",
+              "ja": "ヴォー州",
+              "ko": "보 주"
             }
           },
           {
@@ -30110,7 +34935,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuli",
             "localizedNames": {
               "zh-HK": "烏里",
-              "zh-TW": "烏里"
+              "zh-TW": "烏里",
+              "en": "Canton of Uri",
+              "ja": "ウーリ州",
+              "ko": "우리 주"
             }
           },
           {
@@ -30119,13 +34947,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiawaerdeng",
             "localizedNames": {
               "zh-HK": "下瓦爾登",
-              "zh-TW": "下瓦爾登"
+              "zh-TW": "下瓦爾登",
+              "en": "Canton of Nidwalden",
+              "ja": "ニトヴァルデン準州",
+              "ko": "니트발덴 주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "瑞士",
-          "zh-TW": "瑞士"
+          "zh-TW": "瑞士",
+          "en": "Switzerland",
+          "ja": "スイス",
+          "ko": "스위스"
         }
       }
     ]
@@ -30226,7 +35060,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Labasi",
             "localizedNames": {
               "zh-HK": "拉巴斯",
-              "zh-TW": "拉巴斯"
+              "zh-TW": "拉巴斯",
+              "en": "La Paz Department",
+              "ja": "ラ・パス県",
+              "ko": "라파스주"
             }
           },
           {
@@ -30235,7 +35072,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lalibotade",
             "localizedNames": {
               "zh-HK": "拉利伯塔德",
-              "zh-TW": "拉利伯塔德"
+              "zh-TW": "拉利伯塔德",
+              "en": "La Libertad Department",
+              "ja": "ラリベルタ県",
+              "ko": "라리베르타드주"
             }
           },
           {
@@ -30280,7 +35120,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengmigeer",
             "localizedNames": {
               "zh-HK": "聖米格爾",
-              "zh-TW": "聖米格爾"
+              "zh-TW": "聖米格爾",
+              "en": "San Miguel Department",
+              "ja": "サンミゲル県",
+              "ko": "산미겔주"
             }
           },
           {
@@ -30298,7 +35141,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengweisente",
             "localizedNames": {
               "zh-HK": "聖維森特",
-              "zh-TW": "聖維森特"
+              "zh-TW": "聖維森特",
+              "en": "San Vicente Department",
+              "ja": "サン・ビセンテ県",
+              "ko": "산비센테주"
             }
           },
           {
@@ -30307,7 +35153,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Songsuonate",
             "localizedNames": {
               "zh-HK": "鬆索納特",
-              "zh-TW": "鬆索納特"
+              "zh-TW": "鬆索納特",
+              "en": "Sonsonate Department",
+              "ja": "ソンソナーテ県",
+              "ko": "손소나테주"
             }
           },
           {
@@ -30316,7 +35165,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suoyapange",
             "localizedNames": {
               "zh-HK": "索亞潘戈",
-              "zh-TW": "索亞潘戈"
+              "zh-TW": "索亞潘戈",
+              "en": "Soyapango",
+              "ja": "Soyapango",
+              "ko": "Soyapango"
             }
           },
           {
@@ -30334,7 +35186,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wusulutan",
             "localizedNames": {
               "zh-HK": "烏蘇盧坦",
-              "zh-TW": "烏蘇盧坦"
+              "zh-TW": "烏蘇盧坦",
+              "en": "Usulutan",
+              "ja": "ウスルタン",
+              "ko": "우술루탄"
             }
           },
           {
@@ -30358,7 +35213,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "薩爾瓦多",
-          "zh-TW": "薩爾瓦多"
+          "zh-TW": "薩爾瓦多",
+          "en": "El Salvador",
+          "ja": "エルサルバドル",
+          "ko": "엘살바도르"
         }
       }
     ]
@@ -30401,7 +35259,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beiergelaide",
             "localizedNames": {
               "zh-HK": "貝爾格萊德",
-              "zh-TW": "貝爾格萊德"
+              "zh-TW": "貝爾格萊德",
+              "en": "Belgrade",
+              "ja": "ベオグラード",
+              "ko": "베오그라드"
             }
           },
           {
@@ -30446,13 +35307,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zemeng",
             "localizedNames": {
               "zh-HK": "澤蒙",
-              "zh-TW": "澤蒙"
+              "zh-TW": "澤蒙",
+              "en": "Zemun",
+              "ja": "ゼムン",
+              "ko": "제문"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "塞爾維亞",
-          "zh-TW": "塞爾維亞"
+          "zh-TW": "塞爾維亞",
+          "en": "Serbia",
+          "ja": "セルビア",
+          "ko": "세르비아"
         }
       }
     ]
@@ -30495,7 +35362,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beibu",
             "localizedNames": {
               "zh-HK": "北部",
-              "zh-TW": "北部"
+              "zh-TW": "北部",
+              "en": "Northern Province",
+              "ja": "北部州",
+              "ko": "북부주"
             }
           },
           {
@@ -30504,7 +35374,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongbu",
             "localizedNames": {
               "zh-HK": "東部",
-              "zh-TW": "東部"
+              "zh-TW": "東部",
+              "en": "Eastern Province",
+              "ja": "東部州",
+              "ko": "동부주"
             }
           },
           {
@@ -30513,7 +35386,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanbu",
             "localizedNames": {
               "zh-HK": "南部",
-              "zh-TW": "南部"
+              "zh-TW": "南部",
+              "en": "Southern Province",
+              "ja": "南部州",
+              "ko": "남부주"
             }
           },
           {
@@ -30522,13 +35398,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xibuqu",
             "localizedNames": {
               "zh-HK": "西部區",
-              "zh-TW": "西部區"
+              "zh-TW": "西部區",
+              "en": "Western Area",
+              "ja": "西部地域",
+              "ko": "서부구"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "塞拉利昂",
-          "zh-TW": "塞拉利昂"
+          "zh-TW": "塞拉利昂",
+          "en": "Sierra Leone",
+          "ja": "シエラレオネ",
+          "ko": "시에라리온"
         }
       }
     ]
@@ -30629,7 +35511,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Matamu",
             "localizedNames": {
               "zh-HK": "馬塔姆",
-              "zh-TW": "馬塔姆"
+              "zh-TW": "馬塔姆",
+              "en": "Matam",
+              "ja": "マタム州",
+              "ko": "마탐주"
             }
           },
           {
@@ -30653,7 +35538,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "塞內加爾",
-          "zh-TW": "塞內加爾"
+          "zh-TW": "塞內加爾",
+          "en": "Senegal",
+          "ja": "セネガル",
+          "ko": "세네갈"
         }
       }
     ]
@@ -30727,13 +35615,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pafusi",
             "localizedNames": {
               "zh-HK": "帕福斯",
-              "zh-TW": "帕福斯"
+              "zh-TW": "帕福斯",
+              "en": "Pafos",
+              "ja": "パフォス地区",
+              "ko": "파포스 구"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "塞浦路斯",
-          "zh-TW": "塞浦路斯"
+          "zh-TW": "塞浦路斯",
+          "en": "Cyprus",
+          "ja": "キプロス",
+          "ko": "키프로스"
         }
       }
     ]
@@ -30785,7 +35679,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aiboha",
             "localizedNames": {
               "zh-HK": "艾卜哈",
-              "zh-TW": "艾卜哈"
+              "zh-TW": "艾卜哈",
+              "en": "Abhā",
+              "ja": "アブハー",
+              "ko": "아브하"
             }
           },
           {
@@ -30794,7 +35691,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baha",
             "localizedNames": {
               "zh-HK": "巴哈",
-              "zh-TW": "巴哈"
+              "zh-TW": "巴哈",
+              "en": "Al Bahah",
+              "ja": "アルバハ",
+              "ko": "바하"
             }
           },
           {
@@ -30812,7 +35712,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Daman",
             "localizedNames": {
               "zh-HK": "達曼",
-              "zh-TW": "達曼"
+              "zh-TW": "達曼",
+              "en": "Dammam",
+              "ja": "ダンマーム",
+              "ko": "담맘"
             }
           },
           {
@@ -30839,7 +35742,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haimisimuxiete",
             "localizedNames": {
               "zh-HK": "海米斯穆謝特",
-              "zh-TW": "海米斯穆謝特"
+              "zh-TW": "海米斯穆謝特",
+              "en": "Khamis Mushait",
+              "ja": "ハミース・ムシャイト",
+              "ko": "하미스무샤이트"
             }
           },
           {
@@ -30866,7 +35772,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jida",
             "localizedNames": {
               "zh-HK": "吉達",
-              "zh-TW": "吉達"
+              "zh-TW": "吉達",
+              "en": "Jeddah",
+              "ja": "ジッダ",
+              "ko": "제다"
             }
           },
           {
@@ -30893,7 +35802,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maidena",
             "localizedNames": {
               "zh-HK": "麥地那",
-              "zh-TW": "麥地那"
+              "zh-TW": "麥地那",
+              "en": "Medina",
+              "ja": "マディーナ",
+              "ko": "메디나"
             }
           },
           {
@@ -30902,7 +35814,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maijia",
             "localizedNames": {
               "zh-HK": "麥加",
-              "zh-TW": "麥加"
+              "zh-TW": "麥加",
+              "en": "Mecca",
+              "ja": "メッカ",
+              "ko": "메카"
             }
           },
           {
@@ -30947,7 +35862,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tayifu",
             "localizedNames": {
               "zh-HK": "塔伊夫",
-              "zh-TW": "塔伊夫"
+              "zh-TW": "塔伊夫",
+              "en": "Ta'if",
+              "ja": "ターイフ",
+              "ko": "타이프"
             }
           },
           {
@@ -30971,7 +35889,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "沙特阿拉伯",
-          "zh-TW": "沙特阿拉伯"
+          "zh-TW": "沙特阿拉伯",
+          "en": "Saudi Arabia",
+          "ja": "サウジアラビア",
+          "ko": "사우디아라비아"
         }
       }
     ]
@@ -31122,7 +36043,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Anpalai",
             "localizedNames": {
               "zh-HK": "安帕賴",
-              "zh-TW": "安帕賴"
+              "zh-TW": "安帕賴",
+              "en": "Ampara District",
+              "ja": "アンパーラ県",
+              "ko": "암파라구"
             }
           },
           {
@@ -31140,7 +36064,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baidikeluo",
             "localizedNames": {
               "zh-HK": "拜蒂克洛",
-              "zh-TW": "拜蒂克洛"
+              "zh-TW": "拜蒂克洛",
+              "en": "Batticaloa District",
+              "ja": "バッティカロア県",
+              "ko": "바티칼로아구"
             }
           },
           {
@@ -31158,7 +36085,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hanbantuote",
             "localizedNames": {
               "zh-HK": "漢班托特",
-              "zh-TW": "漢班托特"
+              "zh-TW": "漢班托特",
+              "en": "Hambantota District",
+              "ja": "ハンバントタ県",
+              "ko": "함반토타구"
             }
           },
           {
@@ -31203,7 +36133,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalutelei",
             "localizedNames": {
               "zh-HK": "卡盧特勒",
-              "zh-TW": "卡盧特勒"
+              "zh-TW": "卡盧特勒",
+              "en": "Kalutara District",
+              "ja": "カルタラ県",
+              "ko": "칼루타라구"
             }
           },
           {
@@ -31239,7 +36172,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuluneigelei",
             "localizedNames": {
               "zh-HK": "庫魯內格勒",
-              "zh-TW": "庫魯內格勒"
+              "zh-TW": "庫魯內格勒",
+              "en": "Kurunegala District",
+              "ja": "クルネーガラ県",
+              "ko": "쿠루네갈라구"
             }
           },
           {
@@ -31248,7 +36184,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Latenapulei",
             "localizedNames": {
               "zh-HK": "拉特納普勒",
-              "zh-TW": "拉特納普勒"
+              "zh-TW": "拉特納普勒",
+              "en": "Ratnapura",
+              "ja": "ラトゥナプラ",
+              "ko": "라트나푸라"
             }
           },
           {
@@ -31257,7 +36196,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manaer",
             "localizedNames": {
               "zh-HK": "馬納爾",
-              "zh-TW": "馬納爾"
+              "zh-TW": "馬納爾",
+              "en": "Mannar District",
+              "ja": "マンナール県",
+              "ko": "만나르구"
             }
           },
           {
@@ -31275,7 +36217,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Matelei",
             "localizedNames": {
               "zh-HK": "馬特勒",
-              "zh-TW": "馬特勒"
+              "zh-TW": "馬特勒",
+              "en": "Matara District",
+              "ja": "マータラ県",
+              "ko": "마타라구"
             }
           },
           {
@@ -31293,7 +36238,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mulaidiwu",
             "localizedNames": {
               "zh-HK": "穆萊蒂武",
-              "zh-TW": "穆萊蒂武"
+              "zh-TW": "穆萊蒂武",
+              "en": "Mullaitivu District",
+              "ja": "ムッライッティーヴー県",
+              "ko": "물라이티부구"
             }
           },
           {
@@ -31320,7 +36268,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tingkemali",
             "localizedNames": {
               "zh-HK": "亭可馬裏",
-              "zh-TW": "亭可馬裏"
+              "zh-TW": "亭可馬裏",
+              "en": "Trincomalee",
+              "ja": "トリンコマリー",
+              "ko": "트링코말리"
             }
           },
           {
@@ -31329,13 +36280,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wawuniya",
             "localizedNames": {
               "zh-HK": "瓦武尼亞",
-              "zh-TW": "瓦武尼亞"
+              "zh-TW": "瓦武尼亞",
+              "en": "Vavuniya District",
+              "ja": "バブニヤ県",
+              "ko": "바부니야구"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "斯里蘭卡",
-          "zh-TW": "斯里蘭卡"
+          "zh-TW": "斯里蘭卡",
+          "en": "Sri Lanka",
+          "ja": "スリランカ",
+          "ko": "스리랑카"
         }
       }
     ]
@@ -31364,7 +36321,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bansika-bisitelicha",
             "localizedNames": {
               "zh-HK": "班斯卡-比斯特里察",
-              "zh-TW": "班斯卡-比斯特里察"
+              "zh-TW": "班斯卡-比斯特里察",
+              "en": "Banská Bystrica",
+              "ja": "バンスカー・ビストリツァ",
+              "ko": "반스카비스트리차"
             }
           },
           {
@@ -31400,7 +36360,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Puleishaofu",
             "localizedNames": {
               "zh-HK": "普雷紹夫",
-              "zh-TW": "普雷紹夫"
+              "zh-TW": "普雷紹夫",
+              "en": "Prešov Region",
+              "ja": "プレショウ県",
+              "ko": "프레쇼우주"
             }
           },
           {
@@ -31433,7 +36396,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "斯洛伐克",
-          "zh-TW": "斯洛伐克"
+          "zh-TW": "斯洛伐克",
+          "en": "Slovakia",
+          "ja": "スロバキア",
+          "ko": "슬로바키아"
         }
       }
     ]
@@ -31567,7 +36533,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "斯洛文尼亞",
-          "zh-TW": "斯洛文尼亞"
+          "zh-TW": "斯洛文尼亞",
+          "en": "Slovenia",
+          "ja": "スロベニア",
+          "ko": "슬로베니아"
         }
       }
     ]
@@ -31624,7 +36593,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beibu",
             "localizedNames": {
               "zh-HK": "北部",
-              "zh-TW": "北部"
+              "zh-TW": "北部",
+              "en": "Northern",
+              "ja": "北部州",
+              "ko": "북부주"
             }
           },
           {
@@ -31702,7 +36674,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "蘇丹",
-          "zh-TW": "蘇丹"
+          "zh-TW": "蘇丹",
+          "en": "Sudan",
+          "ja": "スーダン",
+          "ko": "수단"
         }
       }
     ]
@@ -31731,7 +36706,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buluokepengduo",
             "localizedNames": {
               "zh-HK": "布羅科蓬多",
-              "zh-TW": "布羅科蓬多"
+              "zh-TW": "布羅科蓬多",
+              "en": "Brokopondo District",
+              "ja": "ブロコポンド",
+              "ko": "브로코폰도구"
             }
           },
           {
@@ -31740,7 +36718,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keluoni",
             "localizedNames": {
               "zh-HK": "科羅尼",
-              "zh-TW": "科羅尼"
+              "zh-TW": "科羅尼",
+              "en": "Coronie District",
+              "ja": "コロニー",
+              "ko": "코로니구"
             }
           },
           {
@@ -31749,7 +36730,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kemoweine",
             "localizedNames": {
               "zh-HK": "科默韋訥",
-              "zh-TW": "科默韋訥"
+              "zh-TW": "科默韋訥",
+              "en": "Commewijne District",
+              "ja": "コメウィン地方",
+              "ko": "코메베이너구"
             }
           },
           {
@@ -31758,7 +36742,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maluoweine",
             "localizedNames": {
               "zh-HK": "馬羅韋訥",
-              "zh-TW": "馬羅韋訥"
+              "zh-TW": "馬羅韋訥",
+              "en": "Marowijne District",
+              "ja": "マロウェイネ",
+              "ko": "마로베이너구"
             }
           },
           {
@@ -31767,7 +36754,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nikeli",
             "localizedNames": {
               "zh-HK": "尼克裏",
-              "zh-TW": "尼克裏"
+              "zh-TW": "尼克裏",
+              "en": "Nickerie District",
+              "ja": "ニッケリ",
+              "ko": "니케리구"
             }
           },
           {
@@ -31776,7 +36766,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pala",
             "localizedNames": {
               "zh-HK": "帕拉",
-              "zh-TW": "帕拉"
+              "zh-TW": "帕拉",
+              "en": "Para District",
+              "ja": "パラ",
+              "ko": "파라구"
             }
           },
           {
@@ -31794,7 +36787,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Salamaka",
             "localizedNames": {
               "zh-HK": "薩拉馬卡",
-              "zh-TW": "薩拉馬卡"
+              "zh-TW": "薩拉馬卡",
+              "en": "Saramacca District",
+              "ja": "サラマッカ地方",
+              "ko": "사라마카구"
             }
           },
           {
@@ -31803,7 +36799,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wanika",
             "localizedNames": {
               "zh-HK": "瓦尼卡",
-              "zh-TW": "瓦尼卡"
+              "zh-TW": "瓦尼卡",
+              "en": "Wanica District",
+              "ja": "ワニカ",
+              "ko": "바니카구"
             }
           },
           {
@@ -31818,7 +36817,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "蘇里南",
-          "zh-TW": "蘇里南"
+          "zh-TW": "蘇里南",
+          "en": "Suriname",
+          "ja": "スリナム",
+          "ko": "수리남"
         }
       }
     ]
@@ -31847,7 +36849,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guadaerkanaer",
             "localizedNames": {
               "zh-HK": "瓜達爾卡納爾",
-              "zh-TW": "瓜達爾卡納爾"
+              "zh-TW": "瓜達爾卡納爾",
+              "en": "Guadalcanal Province",
+              "ja": "ガダルカナル州",
+              "ko": "과달카날주"
             }
           },
           {
@@ -31856,7 +36861,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huoniyala",
             "localizedNames": {
               "zh-HK": "霍尼亞拉",
-              "zh-TW": "霍尼亞拉"
+              "zh-TW": "霍尼亞拉",
+              "en": "Honiara",
+              "ja": "ホニアラ",
+              "ko": "호니아라"
             }
           },
           {
@@ -31865,7 +36873,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lanaerhebeiluona",
             "localizedNames": {
               "zh-HK": "拉納爾和貝羅納",
-              "zh-TW": "拉納爾和貝羅納"
+              "zh-TW": "拉納爾和貝羅納",
+              "en": "Rennell and Bellona Province",
+              "ja": "レンネル・ベローナ州",
+              "ko": "렌넬벨로나주"
             }
           },
           {
@@ -31883,7 +36894,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Malaita",
             "localizedNames": {
               "zh-HK": "馬萊塔",
-              "zh-TW": "馬萊塔"
+              "zh-TW": "馬萊塔",
+              "en": "Malaita Province",
+              "ja": "マライタ州",
+              "ko": "말라이타 주"
             }
           },
           {
@@ -31901,7 +36915,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taimotu",
             "localizedNames": {
               "zh-HK": "泰莫圖",
-              "zh-TW": "泰莫圖"
+              "zh-TW": "泰莫圖",
+              "en": "Temotu Province",
+              "ja": "テモツ州",
+              "ko": "테모투주"
             }
           },
           {
@@ -31910,7 +36927,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xibu",
             "localizedNames": {
               "zh-HK": "西部",
-              "zh-TW": "西部"
+              "zh-TW": "西部",
+              "en": "Western Province",
+              "ja": "西部州",
+              "ko": "서부주"
             }
           },
           {
@@ -31928,13 +36948,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongbuqundao",
             "localizedNames": {
               "zh-HK": "中部羣島",
-              "zh-TW": "中部羣島"
+              "zh-TW": "中部羣島",
+              "en": "Central Province",
+              "ja": "中央州",
+              "ko": "중부주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "所羅門羣島",
-          "zh-TW": "所羅門羣島"
+          "zh-TW": "所羅門羣島",
+          "en": "Solomon Islands",
+          "ja": "ソロモン諸島",
+          "ko": "솔로몬 제도"
         }
       }
     ]
@@ -31977,7 +37003,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dushangbie",
             "localizedNames": {
               "zh-HK": "杜尚別",
-              "zh-TW": "杜尚別"
+              "zh-TW": "杜尚別",
+              "en": "Dushanbe",
+              "ja": "ドゥシャンベ",
+              "ko": "두샨베"
             }
           },
           {
@@ -32013,7 +37042,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kuzhan",
             "localizedNames": {
               "zh-HK": "苦盞",
-              "zh-TW": "苦盞"
+              "zh-TW": "苦盞",
+              "en": "Khujand",
+              "ja": "ホジェンド",
+              "ko": "Khujand"
             }
           },
           {
@@ -32058,7 +37090,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pengjikente",
             "localizedNames": {
               "zh-HK": "彭吉肯特",
-              "zh-TW": "彭吉肯特"
+              "zh-TW": "彭吉肯特",
+              "en": "Panjakent",
+              "ja": "パンジケント",
+              "ko": "판자켄트"
             }
           },
           {
@@ -32085,7 +37120,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuersunzhade",
             "localizedNames": {
               "zh-HK": "圖爾孫扎德",
-              "zh-TW": "圖爾孫扎德"
+              "zh-TW": "圖爾孫扎德",
+              "en": "Tursunzoda",
+              "ja": "トゥルスンゾダ",
+              "ko": "투르순조다"
             }
           },
           {
@@ -32103,13 +37141,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yisifala",
             "localizedNames": {
               "zh-HK": "伊斯法拉",
-              "zh-TW": "伊斯法拉"
+              "zh-TW": "伊斯法拉",
+              "en": "Isfara",
+              "ja": "イスファラ",
+              "ko": "이스파라"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "塔吉克斯坦",
-          "zh-TW": "塔吉克斯坦"
+          "zh-TW": "塔吉克斯坦",
+          "en": "Tajikistan",
+          "ja": "タジキスタン",
+          "ko": "타지키스탄"
         }
       }
     ]
@@ -32138,7 +37182,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Annazhaneng",
             "localizedNames": {
               "zh-HK": "安納乍能",
-              "zh-TW": "安納乍能"
+              "zh-TW": "安納乍能",
+              "en": "Amnat Charoen",
+              "ja": "アムナートチャルーン県",
+              "ko": "암낫짜른주"
             }
           },
           {
@@ -32147,7 +37194,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bashu",
             "localizedNames": {
               "zh-HK": "巴蜀",
-              "zh-TW": "巴蜀"
+              "zh-TW": "巴蜀",
+              "en": "Prachuap Khiri Khan",
+              "ja": "プラチュワップキーリーカン県",
+              "ko": "쁘라쭈압키리칸주"
             }
           },
           {
@@ -32156,7 +37206,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Batuntani",
             "localizedNames": {
               "zh-HK": "巴吞他尼",
-              "zh-TW": "巴吞他尼"
+              "zh-TW": "巴吞他尼",
+              "en": "Pathum Thani",
+              "ja": "パトゥムターニー県",
+              "ko": "빠툼타니주"
             }
           },
           {
@@ -32165,7 +37218,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bazhen",
             "localizedNames": {
               "zh-HK": "巴真",
-              "zh-TW": "巴真"
+              "zh-TW": "巴真",
+              "en": "Prachin Buri",
+              "ja": "プラーチーンブリー県",
+              "ko": "쁘라찐부리주"
             }
           },
           {
@@ -32174,7 +37230,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beibi",
             "localizedNames": {
               "zh-HK": "北碧",
-              "zh-TW": "北碧"
+              "zh-TW": "北碧",
+              "en": "Kanchanaburi",
+              "ja": "カーンチャナブリー県",
+              "ko": "깐짜나부리주"
             }
           },
           {
@@ -32183,7 +37242,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beibiao",
             "localizedNames": {
               "zh-HK": "北標",
-              "zh-TW": "北標"
+              "zh-TW": "北標",
+              "en": "Saraburi",
+              "ja": "サラブリー県",
+              "ko": "사라부리주"
             }
           },
           {
@@ -32192,7 +37254,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beidanian",
             "localizedNames": {
               "zh-HK": "北大年",
-              "zh-TW": "北大年"
+              "zh-TW": "北大年",
+              "en": "Pattani",
+              "ja": "パッターニー県",
+              "ko": "빠따니주"
             }
           },
           {
@@ -32219,7 +37284,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beiliu",
             "localizedNames": {
               "zh-HK": "北柳",
-              "zh-TW": "北柳"
+              "zh-TW": "北柳",
+              "en": "Chachoengsao",
+              "ja": "チャチューンサオ県",
+              "ko": "차층사오주"
             }
           },
           {
@@ -32228,7 +37296,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bichawen",
             "localizedNames": {
               "zh-HK": "碧差汶",
-              "zh-TW": "碧差汶"
+              "zh-TW": "碧差汶",
+              "en": "Phetchabun",
+              "ja": "ペッチャブーン県",
+              "ko": "펫차분주"
             }
           },
           {
@@ -32273,7 +37344,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chunpeng",
             "localizedNames": {
               "zh-HK": "春蓬",
-              "zh-TW": "春蓬"
+              "zh-TW": "春蓬",
+              "en": "Chumphon",
+              "ja": "チュムポーン県",
+              "ko": "춤폰주"
             }
           },
           {
@@ -32282,7 +37356,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Chunwuli",
             "localizedNames": {
               "zh-HK": "春武裏",
-              "zh-TW": "春武裏"
+              "zh-TW": "春武裏",
+              "en": "Chon Buri",
+              "ja": "チョンブリー県",
+              "ko": "촌부리주"
             }
           },
           {
@@ -32291,7 +37368,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Da",
             "localizedNames": {
               "zh-HK": "達",
-              "zh-TW": "達"
+              "zh-TW": "達",
+              "en": "Tak",
+              "ja": "ターク県",
+              "ko": "딱주"
             }
           },
           {
@@ -32309,7 +37389,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dacheng",
             "localizedNames": {
               "zh-HK": "大城",
-              "zh-TW": "大城"
+              "zh-TW": "大城",
+              "en": "Phra Nakhon Si Ayutthaya",
+              "ja": "アユタヤ県",
+              "ko": "아유타야주"
             }
           },
           {
@@ -32327,7 +37410,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fupi",
             "localizedNames": {
               "zh-HK": "佛丕",
-              "zh-TW": "佛丕"
+              "zh-TW": "佛丕",
+              "en": "Phetchaburi",
+              "ja": "ペッチャブリー県",
+              "ko": "펫차부리주"
             }
           },
           {
@@ -32345,7 +37431,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ganpengbi",
             "localizedNames": {
               "zh-HK": "甘烹碧",
-              "zh-TW": "甘烹碧"
+              "zh-TW": "甘烹碧",
+              "en": "Kamphaeng Phet",
+              "ja": "カムペーンペット県",
+              "ko": "깜팽펫주"
             }
           },
           {
@@ -32363,7 +37452,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huafuli",
             "localizedNames": {
               "zh-HK": "華富里",
-              "zh-TW": "華富里"
+              "zh-TW": "華富里",
+              "en": "Lopburi",
+              "ja": "ロッブリー県",
+              "ko": "롭부리주"
             }
           },
           {
@@ -32372,7 +37464,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jialaxin",
             "localizedNames": {
               "zh-HK": "加拉信",
-              "zh-TW": "加拉信"
+              "zh-TW": "加拉信",
+              "en": "Kalasin",
+              "ja": "カーラシン県",
+              "ko": "깔라신주"
             }
           },
           {
@@ -32390,7 +37485,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jianzhuwen",
             "localizedNames": {
               "zh-HK": "尖竹汶",
-              "zh-TW": "尖竹汶"
+              "zh-TW": "尖竹汶",
+              "en": "Chanthaburi",
+              "ja": "チャンタブリー県",
+              "ko": "짠타부리주"
             }
           },
           {
@@ -32417,7 +37515,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Langkai",
             "localizedNames": {
               "zh-HK": "廊開",
-              "zh-TW": "廊開"
+              "zh-TW": "廊開",
+              "en": "Nong Khai",
+              "ja": "ノーンカーイ県",
+              "ko": "농카이주"
             }
           },
           {
@@ -32435,7 +37536,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lepi",
             "localizedNames": {
               "zh-HK": "叻丕",
-              "zh-TW": "叻丕"
+              "zh-TW": "叻丕",
+              "en": "Ratchaburi",
+              "ja": "ラーチャブリー県",
+              "ko": "랏차부리주"
             }
           },
           {
@@ -32444,7 +37548,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Li",
             "localizedNames": {
               "zh-HK": "黎",
-              "zh-TW": "黎"
+              "zh-TW": "黎",
+              "en": "Loei",
+              "ja": "ルーイ県",
+              "ko": "르이주"
             }
           },
           {
@@ -32453,7 +37560,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liyi",
             "localizedNames": {
               "zh-HK": "黎逸",
-              "zh-TW": "黎逸"
+              "zh-TW": "黎逸",
+              "en": "Roi Et",
+              "ja": "ローイエット県",
+              "ko": "로이엣주"
             }
           },
           {
@@ -32462,7 +37572,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Longzicuo",
             "localizedNames": {
               "zh-HK": "龍仔厝",
-              "zh-TW": "龍仔厝"
+              "zh-TW": "龍仔厝",
+              "en": "Samut Sakhon",
+              "ja": "サムットサーコーン県",
+              "ko": "사뭇사콘주"
             }
           },
           {
@@ -32480,7 +37593,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luokun",
             "localizedNames": {
               "zh-HK": "洛坤",
-              "zh-TW": "洛坤"
+              "zh-TW": "洛坤",
+              "en": "Nakhon Si Thammarat",
+              "ja": "ナコーンシータンマラート県",
+              "ko": "나콘시탐마랏주"
             }
           },
           {
@@ -32516,7 +37632,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nakongnayu",
             "localizedNames": {
               "zh-HK": "那空那育",
-              "zh-TW": "那空那育"
+              "zh-TW": "那空那育",
+              "en": "Nakhon Nayok",
+              "ja": "ナコーンナーヨック県",
+              "ko": "나콘나욕주"
             }
           },
           {
@@ -32543,7 +37662,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanben",
             "localizedNames": {
               "zh-HK": "南奔",
-              "zh-TW": "南奔"
+              "zh-TW": "南奔",
+              "en": "Lamphun",
+              "ja": "ラムプーン県",
+              "ko": "람푼주"
             }
           },
           {
@@ -32561,7 +37683,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pa",
             "localizedNames": {
               "zh-HK": "帕",
-              "zh-TW": "帕"
+              "zh-TW": "帕",
+              "en": "Phrae",
+              "ja": "プレー県",
+              "ko": "프래주"
             }
           },
           {
@@ -32570,7 +37695,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Payao",
             "localizedNames": {
               "zh-HK": "帕堯",
-              "zh-TW": "帕堯"
+              "zh-TW": "帕堯",
+              "en": "Phayao",
+              "ja": "パヤオ県",
+              "ko": "파야오주"
             }
           },
           {
@@ -32579,7 +37707,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Panya",
             "localizedNames": {
               "zh-HK": "攀牙",
-              "zh-TW": "攀牙"
+              "zh-TW": "攀牙",
+              "en": "Phang Nga",
+              "ja": "パンガー県",
+              "ko": "팡응아주"
             }
           },
           {
@@ -32597,7 +37728,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Piji",
             "localizedNames": {
               "zh-HK": "披集",
-              "zh-TW": "披集"
+              "zh-TW": "披集",
+              "en": "Phichit",
+              "ja": "ピチット県",
+              "ko": "피찟주"
             }
           },
           {
@@ -32633,7 +37767,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sejun",
             "localizedNames": {
               "zh-HK": "色軍",
-              "zh-TW": "色軍"
+              "zh-TW": "色軍",
+              "en": "Sakon Nakhon",
+              "ja": "サコンナコーン県",
+              "ko": "사꼰나콘주"
             }
           },
           {
@@ -32642,7 +37779,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shadun",
             "localizedNames": {
               "zh-HK": "沙敦",
-              "zh-TW": "沙敦"
+              "zh-TW": "沙敦",
+              "en": "Satun",
+              "ja": "サトゥーン県",
+              "ko": "사뚠주"
             }
           },
           {
@@ -32651,7 +37791,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shajiao",
             "localizedNames": {
               "zh-HK": "沙繳",
-              "zh-TW": "沙繳"
+              "zh-TW": "沙繳",
+              "en": "Sa Kaeo",
+              "ja": "サケーオ県",
+              "ko": "사깨오주"
             }
           },
           {
@@ -32660,7 +37803,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Siseju",
             "localizedNames": {
               "zh-HK": "四色菊",
-              "zh-TW": "四色菊"
+              "zh-TW": "四色菊",
+              "en": "Si Sa Ket",
+              "ja": "シーサケート県",
+              "ko": "시사껫주"
             }
           },
           {
@@ -32678,7 +37824,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suketai",
             "localizedNames": {
               "zh-HK": "素可泰",
-              "zh-TW": "素可泰"
+              "zh-TW": "素可泰",
+              "en": "Sukhothai",
+              "ja": "スコータイ県",
+              "ko": "수코타이주"
             }
           },
           {
@@ -32687,7 +37836,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sule",
             "localizedNames": {
               "zh-HK": "素叻",
-              "zh-TW": "素叻"
+              "zh-TW": "素叻",
+              "en": "Surat Thani",
+              "ja": "スラートターニー県",
+              "ko": "수랏타니주"
             }
           },
           {
@@ -32696,7 +37848,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sulin",
             "localizedNames": {
               "zh-HK": "素林",
-              "zh-TW": "素林"
+              "zh-TW": "素林",
+              "en": "Surin",
+              "ja": "スリン県",
+              "ko": "수린주"
             }
           },
           {
@@ -32705,7 +37860,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Supanwuli",
             "localizedNames": {
               "zh-HK": "素攀武裏",
-              "zh-TW": "素攀武裏"
+              "zh-TW": "素攀武裏",
+              "en": "Suphan Buri",
+              "ja": "スパンブリー県",
+              "ko": "수판부리주"
             }
           },
           {
@@ -32714,7 +37872,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taogong",
             "localizedNames": {
               "zh-HK": "陶公",
-              "zh-TW": "陶公"
+              "zh-TW": "陶公",
+              "en": "Narathiwat",
+              "ja": "ナラーティワート県",
+              "ko": "나라티왓주"
             }
           },
           {
@@ -32723,7 +37884,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wulong",
             "localizedNames": {
               "zh-HK": "烏隆",
-              "zh-TW": "烏隆"
+              "zh-TW": "烏隆",
+              "en": "Udon Thani",
+              "ja": "ウドーンターニー県",
+              "ko": "우돈타니주"
             }
           },
           {
@@ -32741,7 +37905,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuwen",
             "localizedNames": {
               "zh-HK": "烏汶",
-              "zh-TW": "烏汶"
+              "zh-TW": "烏汶",
+              "en": "Ubon Ratchathani",
+              "ja": "ウボンラーチャターニー県",
+              "ko": "우본랏차타니주"
             }
           },
           {
@@ -32750,7 +37917,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wulinan",
             "localizedNames": {
               "zh-HK": "武裏南",
-              "zh-TW": "武裏南"
+              "zh-TW": "武裏南",
+              "en": "Buriram",
+              "ja": "ブリーラム県",
+              "ko": "부리람주"
             }
           },
           {
@@ -32759,7 +37929,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinwuli",
             "localizedNames": {
               "zh-HK": "信武裏",
-              "zh-TW": "信武裏"
+              "zh-TW": "信武裏",
+              "en": "Sing Buri",
+              "ja": "シンブリー県",
+              "ko": "싱부리주"
             }
           },
           {
@@ -32777,7 +37950,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yela",
             "localizedNames": {
               "zh-HK": "也拉",
-              "zh-TW": "也拉"
+              "zh-TW": "也拉",
+              "en": "Yala",
+              "ja": "ヤラー県",
+              "ko": "얄라주"
             }
           },
           {
@@ -32786,7 +37962,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yefengsong",
             "localizedNames": {
               "zh-HK": "夜豐頌",
-              "zh-TW": "夜豐頌"
+              "zh-TW": "夜豐頌",
+              "en": "Mae Hong Son",
+              "ja": "メーホンソーン県",
+              "ko": "매홍손주"
             }
           },
           {
@@ -32795,13 +37974,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yegong",
             "localizedNames": {
               "zh-HK": "夜功",
-              "zh-TW": "夜功"
+              "zh-TW": "夜功",
+              "en": "Samut Songkhram",
+              "ja": "サムットソンクラーム県",
+              "ko": "사뭇송크람주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "泰國",
-          "zh-TW": "泰國"
+          "zh-TW": "泰國",
+          "en": "Thailand",
+          "ja": "タイ",
+          "ko": "태국"
         }
       }
     ]
@@ -32857,7 +38042,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Binhai",
             "localizedNames": {
               "zh-HK": "濱海",
-              "zh-TW": "濱海"
+              "zh-TW": "濱海",
+              "en": "Pwani",
+              "ja": "プワニ州",
+              "ko": "프와니주"
             }
           },
           {
@@ -32893,7 +38081,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kagaila",
             "localizedNames": {
               "zh-HK": "卡蓋拉",
-              "zh-TW": "卡蓋拉"
+              "zh-TW": "卡蓋拉",
+              "en": "Kagera",
+              "ja": "カゲラ州",
+              "ko": "카게라주"
             }
           },
           {
@@ -32911,7 +38102,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lukua",
             "localizedNames": {
               "zh-HK": "魯誇",
-              "zh-TW": "魯誇"
+              "zh-TW": "魯誇",
+              "en": "Rukwa",
+              "ja": "ルクワ州",
+              "ko": "루콰주"
             }
           },
           {
@@ -32920,7 +38114,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luwuma",
             "localizedNames": {
               "zh-HK": "魯伍馬",
-              "zh-TW": "魯伍馬"
+              "zh-TW": "魯伍馬",
+              "en": "Ruvuma",
+              "ja": "ルヴマ州",
+              "ko": "루부마주"
             }
           },
           {
@@ -32938,7 +38135,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manyala",
             "localizedNames": {
               "zh-HK": "曼亞拉",
-              "zh-TW": "曼亞拉"
+              "zh-TW": "曼亞拉",
+              "en": "Manyara",
+              "ja": "マニャラ州",
+              "ko": "마냐라주"
             }
           },
           {
@@ -32965,7 +38165,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mutewala",
             "localizedNames": {
               "zh-HK": "姆特瓦拉",
-              "zh-TW": "姆特瓦拉"
+              "zh-TW": "姆特瓦拉",
+              "en": "Mtwara",
+              "ja": "ムトワラ州",
+              "ko": "므트와라주"
             }
           },
           {
@@ -32983,7 +38186,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qilimazhaluo",
             "localizedNames": {
               "zh-HK": "乞力馬紮羅",
-              "zh-TW": "乞力馬紮羅"
+              "zh-TW": "乞力馬紮羅",
+              "en": "Kilimanjaro",
+              "ja": "キリマンジャロ州",
+              "ko": "킬리만자로주"
             }
           },
           {
@@ -32992,7 +38198,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sanggeibaer",
             "localizedNames": {
               "zh-HK": "桑給巴爾",
-              "zh-TW": "桑給巴爾"
+              "zh-TW": "桑給巴爾",
+              "en": "Zanzibar",
+              "ja": "ザンジバルシティ",
+              "ko": "잔지바르시티"
             }
           },
           {
@@ -33070,7 +38279,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "坦桑尼亞",
-          "zh-TW": "坦桑尼亞"
+          "zh-TW": "坦桑尼亞",
+          "en": "Tanzania",
+          "ja": "タンザニア",
+          "ko": "탄자니아"
         }
       }
     ]
@@ -33141,7 +38353,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "湯加",
-          "zh-TW": "湯加"
+          "zh-TW": "湯加",
+          "en": "Tonga",
+          "ja": "トンガ",
+          "ko": "통가"
         }
       }
     ]
@@ -33212,7 +38427,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aieryanai",
             "localizedNames": {
               "zh-HK": "艾爾亞奈",
-              "zh-TW": "艾爾亞奈"
+              "zh-TW": "艾爾亞奈",
+              "en": "Aryanah",
+              "ja": "アリアナ",
+              "ko": "아리아나"
             }
           },
           {
@@ -33221,7 +38439,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bajie",
             "localizedNames": {
               "zh-HK": "巴傑",
-              "zh-TW": "巴傑"
+              "zh-TW": "巴傑",
+              "en": "Beja",
+              "ja": "ベジャ",
+              "ko": "베자"
             }
           },
           {
@@ -33248,7 +38469,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jibili",
             "localizedNames": {
               "zh-HK": "吉比利",
-              "zh-TW": "吉比利"
+              "zh-TW": "吉比利",
+              "en": "Kebili Governorate",
+              "ja": "ケビリ県",
+              "ko": "케빌리주"
             }
           },
           {
@@ -33275,7 +38499,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiandubai",
             "localizedNames": {
               "zh-HK": "堅杜拜",
-              "zh-TW": "堅杜拜"
+              "zh-TW": "堅杜拜",
+              "en": "Jendouba Governorate",
+              "ja": "ジェンドゥーバ県",
+              "ko": "젠두바주"
             }
           },
           {
@@ -33284,7 +38511,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kafu",
             "localizedNames": {
               "zh-HK": "卡夫",
-              "zh-TW": "卡夫"
+              "zh-TW": "卡夫",
+              "en": "Kef Governorate",
+              "ja": "ケフ県",
+              "ko": "케프주"
             }
           },
           {
@@ -33347,7 +38577,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nabulei",
             "localizedNames": {
               "zh-HK": "納布勒",
-              "zh-TW": "納布勒"
+              "zh-TW": "納布勒",
+              "en": "Nabeul Governorate",
+              "ja": "ナブール県",
+              "ko": "나뵐주"
             }
           },
           {
@@ -33410,7 +38643,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xileiyanai",
             "localizedNames": {
               "zh-HK": "錫勒亞奈",
-              "zh-TW": "錫勒亞奈"
+              "zh-TW": "錫勒亞奈",
+              "en": "Siliana Governorate",
+              "ja": "シリアナ県",
+              "ko": "실리아나주"
             }
           },
           {
@@ -33425,7 +38661,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "突尼斯",
-          "zh-TW": "突尼斯"
+          "zh-TW": "突尼斯",
+          "en": "Tunisia",
+          "ja": "チュニジア",
+          "ko": "튀니지"
         }
       }
     ]
@@ -33612,7 +38851,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aoerdu",
             "localizedNames": {
               "zh-HK": "奧爾杜",
-              "zh-TW": "奧爾杜"
+              "zh-TW": "奧爾杜",
+              "en": "Ordu",
+              "ja": "オルドゥ県",
+              "ko": "오르두주"
             }
           },
           {
@@ -33675,7 +38917,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bingeer",
             "localizedNames": {
               "zh-HK": "賓格爾",
-              "zh-TW": "賓格爾"
+              "zh-TW": "賓格爾",
+              "en": "Bingöl",
+              "ja": "ビンギョル県",
+              "ko": "빙괼주"
             }
           },
           {
@@ -33693,7 +38938,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buerduer",
             "localizedNames": {
               "zh-HK": "布爾杜爾",
-              "zh-TW": "布爾杜爾"
+              "zh-TW": "布爾杜爾",
+              "en": "Burdur",
+              "ja": "ブルドゥル県",
+              "ko": "부르두르주"
             }
           },
           {
@@ -33711,7 +38959,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Changkelei",
             "localizedNames": {
               "zh-HK": "昌克勒",
-              "zh-TW": "昌克勒"
+              "zh-TW": "昌克勒",
+              "en": "Çankırı",
+              "ja": "チャンクル県",
+              "ko": "창키리주"
             }
           },
           {
@@ -33738,7 +38989,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fan",
             "localizedNames": {
               "zh-HK": "凡",
-              "zh-TW": "凡"
+              "zh-TW": "凡",
+              "en": "Van",
+              "ja": "ヴァン県",
+              "ko": "반주"
             }
           },
           {
@@ -33747,7 +39001,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hakali",
             "localizedNames": {
               "zh-HK": "哈卡里",
-              "zh-TW": "哈卡里"
+              "zh-TW": "哈卡里",
+              "en": "Hakkâri",
+              "ja": "ハッキャリ県",
+              "ko": "하카리주"
             }
           },
           {
@@ -33756,7 +39013,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hatayi",
             "localizedNames": {
               "zh-HK": "哈塔伊",
-              "zh-TW": "哈塔伊"
+              "zh-TW": "哈塔伊",
+              "en": "Hatay",
+              "ja": "ハタイ県",
+              "ko": "하타이주"
             }
           },
           {
@@ -33792,7 +39052,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jumishenhanei",
             "localizedNames": {
               "zh-HK": "居米什哈內",
-              "zh-TW": "居米什哈內"
+              "zh-TW": "居米什哈內",
+              "en": "Gümüşhane Province",
+              "ja": "ギュミュシュハーネ県",
+              "ko": "귀뮈샤네주"
             }
           },
           {
@@ -33855,7 +39118,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kejiaaili",
             "localizedNames": {
               "zh-HK": "科賈埃利",
-              "zh-TW": "科賈埃利"
+              "zh-TW": "科賈埃利",
+              "en": "Kocaeli",
+              "ja": "コジャエリ県",
+              "ko": "코자엘리주"
             }
           },
           {
@@ -33909,7 +39175,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lize",
             "localizedNames": {
               "zh-HK": "裏澤",
-              "zh-TW": "裏澤"
+              "zh-TW": "裏澤",
+              "en": "Rize Province",
+              "ja": "リゼ県",
+              "ko": "리제주"
             }
           },
           {
@@ -33936,7 +39205,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manisa",
             "localizedNames": {
               "zh-HK": "馬尼薩",
-              "zh-TW": "馬尼薩"
+              "zh-TW": "馬尼薩",
+              "en": "Manisa",
+              "ja": "マニサ県",
+              "ko": "마니사주"
             }
           },
           {
@@ -34008,7 +39280,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sakaliya",
             "localizedNames": {
               "zh-HK": "薩卡里亞",
-              "zh-TW": "薩卡里亞"
+              "zh-TW": "薩卡里亞",
+              "en": "Sakarya",
+              "ja": "サカリヤ県",
+              "ko": "사카리아주"
             }
           },
           {
@@ -34017,7 +39292,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Samusong",
             "localizedNames": {
               "zh-HK": "薩姆鬆",
-              "zh-TW": "薩姆鬆"
+              "zh-TW": "薩姆鬆",
+              "en": "Samsun",
+              "ja": "サムスン県",
+              "ko": "삼순주"
             }
           },
           {
@@ -34107,7 +39385,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yidier",
             "localizedNames": {
               "zh-HK": "伊迪爾",
-              "zh-TW": "伊迪爾"
+              "zh-TW": "伊迪爾",
+              "en": "İdil",
+              "ja": "İdil",
+              "ko": "İdil"
             }
           },
           {
@@ -34167,7 +39448,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "土耳其",
-          "zh-TW": "土耳其"
+          "zh-TW": "土耳其",
+          "en": "Türkiye",
+          "ja": "トルコ",
+          "ko": "튀르키예"
         }
       }
     ]
@@ -34196,7 +39480,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ahaer",
             "localizedNames": {
               "zh-HK": "阿哈爾",
-              "zh-TW": "阿哈爾"
+              "zh-TW": "阿哈爾",
+              "en": "Ahal",
+              "ja": "アハル州",
+              "ko": "아할 주"
             }
           },
           {
@@ -34205,7 +39492,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ashenhabadeshi",
             "localizedNames": {
               "zh-HK": "阿什哈巴德市",
-              "zh-TW": "阿什哈巴德市"
+              "zh-TW": "阿什哈巴德市",
+              "en": "Ashgabat",
+              "ja": "アシガバート",
+              "ko": "아슈하바트"
             }
           },
           {
@@ -34214,7 +39504,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baerkan",
             "localizedNames": {
               "zh-HK": "巴爾坎",
-              "zh-TW": "巴爾坎"
+              "zh-TW": "巴爾坎",
+              "en": "Balkan",
+              "ja": "バルカン州",
+              "ko": "발칸 주"
             }
           },
           {
@@ -34223,7 +39516,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dashaguzi",
             "localizedNames": {
               "zh-HK": "達沙古茲",
-              "zh-TW": "達沙古茲"
+              "zh-TW": "達沙古茲",
+              "en": "Daşoguz",
+              "ja": "ダショグズ",
+              "ko": "다쇼구즈"
             }
           },
           {
@@ -34232,7 +39528,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liebapu",
             "localizedNames": {
               "zh-HK": "列巴普",
-              "zh-TW": "列巴普"
+              "zh-TW": "列巴普",
+              "en": "Lebap",
+              "ja": "レバプ州",
+              "ko": "레바프 주"
             }
           },
           {
@@ -34256,7 +39555,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "土庫曼斯坦",
-          "zh-TW": "土庫曼斯坦"
+          "zh-TW": "土庫曼斯坦",
+          "en": "Turkmenistan",
+          "ja": "トルクメニスタン",
+          "ko": "투르크메니스탄"
         }
       }
     ]
@@ -34322,7 +39624,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pengnama",
             "localizedNames": {
               "zh-HK": "彭納馬",
-              "zh-TW": "彭納馬"
+              "zh-TW": "彭納馬",
+              "en": "Penama",
+              "ja": "ペナマ州",
+              "ko": "페나마주"
             }
           },
           {
@@ -34331,7 +39636,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sangma",
             "localizedNames": {
               "zh-HK": "桑馬",
-              "zh-TW": "桑馬"
+              "zh-TW": "桑馬",
+              "en": "Sanma",
+              "ja": "サンマ州",
+              "ko": "산마주"
             }
           },
           {
@@ -34349,7 +39657,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuoerba",
             "localizedNames": {
               "zh-HK": "托爾巴",
-              "zh-TW": "托爾巴"
+              "zh-TW": "托爾巴",
+              "en": "Torba",
+              "ja": "トルバ州",
+              "ko": "토르바주"
             }
           },
           {
@@ -34364,7 +39675,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "瓦努阿圖",
-          "zh-TW": "瓦努阿圖"
+          "zh-TW": "瓦努阿圖",
+          "en": "Vanuatu",
+          "ja": "バヌアツ",
+          "ko": "바누아투"
         }
       }
     ]
@@ -34429,7 +39743,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiqie",
             "localizedNames": {
               "zh-HK": "基切",
-              "zh-TW": "基切"
+              "zh-TW": "基切",
+              "en": "Quiché",
+              "ja": "キチェ県",
+              "ko": "키체주"
             }
           },
           {
@@ -34474,7 +39791,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qijimula",
             "localizedNames": {
               "zh-HK": "奇基穆拉",
-              "zh-TW": "奇基穆拉"
+              "zh-TW": "奇基穆拉",
+              "en": "Chiquimula",
+              "ja": "チキムラ県",
+              "ko": "치키물라주"
             }
           },
           {
@@ -34483,7 +39803,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qimaertenange",
             "localizedNames": {
               "zh-HK": "奇馬爾特南戈",
-              "zh-TW": "奇馬爾特南戈"
+              "zh-TW": "奇馬爾特南戈",
+              "en": "Chimaltenango",
+              "ja": "チマルテナンゴ県",
+              "ko": "치말테낭고주"
             }
           },
           {
@@ -34492,7 +39815,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sakapa",
             "localizedNames": {
               "zh-HK": "薩卡帕",
-              "zh-TW": "薩卡帕"
+              "zh-TW": "薩卡帕",
+              "en": "Zacapa",
+              "ja": "サカパ県",
+              "ko": "사카파주"
             }
           },
           {
@@ -34501,7 +39827,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sakatepeikesi",
             "localizedNames": {
               "zh-HK": "薩卡特佩克斯",
-              "zh-TW": "薩卡特佩克斯"
+              "zh-TW": "薩卡特佩克斯",
+              "en": "Sacatepéquez",
+              "ja": "サカテペケス県",
+              "ko": "사카테페케스주"
             }
           },
           {
@@ -34546,7 +39875,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suoluola",
             "localizedNames": {
               "zh-HK": "索洛拉",
-              "zh-TW": "索洛拉"
+              "zh-TW": "索洛拉",
+              "en": "Sololá",
+              "ja": "ソロラ県",
+              "ko": "솔롤라주"
             }
           },
           {
@@ -34573,7 +39905,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weiweitenange",
             "localizedNames": {
               "zh-HK": "韋韋特南戈",
-              "zh-TW": "韋韋特南戈"
+              "zh-TW": "韋韋特南戈",
+              "en": "Huehuetenango",
+              "ja": "ウェウェテナンゴ",
+              "ko": "우에우에테낭고"
             }
           },
           {
@@ -34600,13 +39935,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yisawaer",
             "localizedNames": {
               "zh-HK": "伊薩瓦爾",
-              "zh-TW": "伊薩瓦爾"
+              "zh-TW": "伊薩瓦爾",
+              "en": "Izabal",
+              "ja": "イサバル県",
+              "ko": "이사발주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "危地馬拉",
-          "zh-TW": "危地馬拉"
+          "zh-TW": "危地馬拉",
+          "en": "Guatemala",
+          "ja": "グアテマラ",
+          "ko": "과테말라"
         }
       }
     ]
@@ -34672,7 +40013,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Amakuluosanjiaozhou",
             "localizedNames": {
               "zh-HK": "阿馬庫羅三角洲",
-              "zh-TW": "阿馬庫羅三角洲"
+              "zh-TW": "阿馬庫羅三角洲",
+              "en": "Delta Amacuro",
+              "ja": "デルタアマクロ州",
+              "ko": "델타아마쿠로 주"
             }
           },
           {
@@ -34699,7 +40043,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Balinasi",
             "localizedNames": {
               "zh-HK": "巴里納斯",
-              "zh-TW": "巴里納斯"
+              "zh-TW": "巴里納斯",
+              "en": "Barinas",
+              "ja": "バリナ",
+              "ko": "바리나스"
             }
           },
           {
@@ -34789,7 +40136,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Meilida",
             "localizedNames": {
               "zh-HK": "梅里達",
-              "zh-TW": "梅里達"
+              "zh-TW": "梅里達",
+              "en": "Mérida",
+              "ja": "メリダ",
+              "ko": "메리다"
             }
           },
           {
@@ -34843,7 +40193,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Teluxilue",
             "localizedNames": {
               "zh-HK": "特魯希略",
-              "zh-TW": "特魯希略"
+              "zh-TW": "特魯希略",
+              "en": "Trujillo",
+              "ja": "トルヒーリョ",
+              "ko": "트루히요"
             }
           },
           {
@@ -34876,7 +40229,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "委內瑞拉",
-          "zh-TW": "委內瑞拉"
+          "zh-TW": "委內瑞拉",
+          "en": "Venezuela",
+          "ja": "ベネズエラ",
+          "ko": "베네수엘라"
         }
       }
     ]
@@ -34919,7 +40275,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Alua",
             "localizedNames": {
               "zh-HK": "阿魯阿",
-              "zh-TW": "阿魯阿"
+              "zh-TW": "阿魯阿",
+              "en": "Arua",
+              "ja": "Arua",
+              "ko": "아루아"
             }
           },
           {
@@ -34928,7 +40287,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Apake",
             "localizedNames": {
               "zh-HK": "阿帕克",
-              "zh-TW": "阿帕克"
+              "zh-TW": "阿帕克",
+              "en": "Apac District",
+              "ja": "アパッチ県",
+              "ko": "아파크구"
             }
           },
           {
@@ -34937,7 +40299,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Azhumani",
             "localizedNames": {
               "zh-HK": "阿朱馬尼",
-              "zh-TW": "阿朱馬尼"
+              "zh-TW": "阿朱馬尼",
+              "en": "Adjumani District",
+              "ja": "アジュマニ県",
+              "ko": "아주마니구"
             }
           },
           {
@@ -34946,7 +40311,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bendibujiao",
             "localizedNames": {
               "zh-HK": "本迪布焦",
-              "zh-TW": "本迪布焦"
+              "zh-TW": "本迪布焦",
+              "en": "Bundibugyo District",
+              "ja": "ブンディブギョ県",
+              "ko": "분디부교구"
             }
           },
           {
@@ -34955,7 +40323,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bujili",
             "localizedNames": {
               "zh-HK": "布吉里",
-              "zh-TW": "布吉里"
+              "zh-TW": "布吉里",
+              "en": "Bugiri District",
+              "ja": "ブギリ県",
+              "ko": "부기리구"
             }
           },
           {
@@ -34964,7 +40335,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buxiya",
             "localizedNames": {
               "zh-HK": "布西亞",
-              "zh-TW": "布西亞"
+              "zh-TW": "布西亞",
+              "en": "Busia",
+              "ja": "Busia",
+              "ko": "Busia"
             }
           },
           {
@@ -34973,7 +40347,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buxieni",
             "localizedNames": {
               "zh-HK": "布謝尼",
-              "zh-TW": "布謝尼"
+              "zh-TW": "布謝尼",
+              "en": "Bushenyi District",
+              "ja": "ブシェニ県",
+              "ko": "부셰니구"
             }
           },
           {
@@ -34982,7 +40359,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Entongjiamo",
             "localizedNames": {
               "zh-HK": "恩通加莫",
-              "zh-TW": "恩通加莫"
+              "zh-TW": "恩通加莫",
+              "en": "Ntungamo District",
+              "ja": "ントゥンガモ県",
+              "ko": "은퉁가모구"
             }
           },
           {
@@ -34991,7 +40371,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gulu",
             "localizedNames": {
               "zh-HK": "古盧",
-              "zh-TW": "古盧"
+              "zh-TW": "古盧",
+              "en": "Gulu",
+              "ja": "グル",
+              "ko": "굴루"
             }
           },
           {
@@ -35000,7 +40383,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Huoyima",
             "localizedNames": {
               "zh-HK": "霍伊馬",
-              "zh-TW": "霍伊馬"
+              "zh-TW": "霍伊馬",
+              "en": "Hoima District",
+              "ja": "ホイマ県",
+              "ko": "호이마구"
             }
           },
           {
@@ -35018,7 +40404,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jibojia",
             "localizedNames": {
               "zh-HK": "基博加",
-              "zh-TW": "基博加"
+              "zh-TW": "基博加",
+              "en": "Kiboga District",
+              "ja": "キボガ県",
+              "ko": "키보가구"
             }
           },
           {
@@ -35027,7 +40416,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jienqiaoqiao",
             "localizedNames": {
               "zh-HK": "基恩喬喬",
-              "zh-TW": "基恩喬喬"
+              "zh-TW": "基恩喬喬",
+              "en": "Kyenjojo District",
+              "ja": "キエンジョジョ県",
+              "ko": "키엔조조구"
             }
           },
           {
@@ -35036,7 +40428,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jisuoluo",
             "localizedNames": {
               "zh-HK": "基索羅",
-              "zh-TW": "基索羅"
+              "zh-TW": "基索羅",
+              "en": "Kisoro District",
+              "ja": "キソロ県",
+              "ko": "키소로구"
             }
           },
           {
@@ -35045,7 +40440,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jitegumu",
             "localizedNames": {
               "zh-HK": "基特古姆",
-              "zh-TW": "基特古姆"
+              "zh-TW": "基特古姆",
+              "en": "Kitgum District",
+              "ja": "キトゥグム県",
+              "ko": "키트굼구"
             }
           },
           {
@@ -35054,7 +40452,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinjia",
             "localizedNames": {
               "zh-HK": "金賈",
-              "zh-TW": "金賈"
+              "zh-TW": "金賈",
+              "en": "Jinja",
+              "ja": "ジンジャ",
+              "ko": "진자"
             }
           },
           {
@@ -35063,7 +40464,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kabalai",
             "localizedNames": {
               "zh-HK": "卡巴萊",
-              "zh-TW": "卡巴萊"
+              "zh-TW": "卡巴萊",
+              "en": "Kabale District",
+              "ja": "カバレ県",
+              "ko": "카발레구"
             }
           },
           {
@@ -35072,7 +40476,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kabaluolai",
             "localizedNames": {
               "zh-HK": "卡巴羅萊",
-              "zh-TW": "卡巴羅萊"
+              "zh-TW": "卡巴羅萊",
+              "en": "Kabarole District",
+              "ja": "カバロレ県",
+              "ko": "카바롤레구"
             }
           },
           {
@@ -35081,7 +40488,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kabeilamayiduo",
             "localizedNames": {
               "zh-HK": "卡貝拉馬伊多",
-              "zh-TW": "卡貝拉馬伊多"
+              "zh-TW": "卡貝拉馬伊多",
+              "en": "Kaberamaido District",
+              "ja": "カベラマイド県",
+              "ko": "카베라마이도구"
             }
           },
           {
@@ -35090,7 +40500,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalanjiala",
             "localizedNames": {
               "zh-HK": "卡蘭加拉",
-              "zh-TW": "卡蘭加拉"
+              "zh-TW": "卡蘭加拉",
+              "en": "Kalangala District",
+              "ja": "カランガラ県",
+              "ko": "칼랑갈라구"
             }
           },
           {
@@ -35099,7 +40512,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kamuwengai",
             "localizedNames": {
               "zh-HK": "卡姆文蓋",
-              "zh-TW": "卡姆文蓋"
+              "zh-TW": "卡姆文蓋",
+              "en": "Kamwenge District",
+              "ja": "カムウェンゲ県",
+              "ko": "캄웽게구"
             }
           },
           {
@@ -35108,7 +40524,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kamuli",
             "localizedNames": {
               "zh-HK": "卡穆利",
-              "zh-TW": "卡穆利"
+              "zh-TW": "卡穆利",
+              "en": "Kamuli District",
+              "ja": "カムリ県",
+              "ko": "카물리구"
             }
           },
           {
@@ -35117,7 +40536,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kanonggu",
             "localizedNames": {
               "zh-HK": "卡農古",
-              "zh-TW": "卡農古"
+              "zh-TW": "卡農古",
+              "en": "Kanungu District",
+              "ja": "カヌング県",
+              "ko": "카눙구구"
             }
           },
           {
@@ -35126,7 +40548,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kapuqiaoluwa",
             "localizedNames": {
               "zh-HK": "卡普喬魯瓦",
-              "zh-TW": "卡普喬魯瓦"
+              "zh-TW": "卡普喬魯瓦",
+              "en": "Kapchorwa District",
+              "ja": "カプチョルワ県",
+              "ko": "카프초르와구"
             }
           },
           {
@@ -35135,7 +40560,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kasaisai",
             "localizedNames": {
               "zh-HK": "卡塞塞",
-              "zh-TW": "卡塞塞"
+              "zh-TW": "卡塞塞",
+              "en": "Kasese",
+              "ja": "Kasese",
+              "ko": "Kasese"
             }
           },
           {
@@ -35144,7 +40572,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Katakui",
             "localizedNames": {
               "zh-HK": "卡塔奎",
-              "zh-TW": "卡塔奎"
+              "zh-TW": "卡塔奎",
+              "en": "Katakwi District",
+              "ja": "カタクイ県",
+              "ko": "카타퀴구"
             }
           },
           {
@@ -35153,7 +40584,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kayongjia",
             "localizedNames": {
               "zh-HK": "卡永加",
-              "zh-TW": "卡永加"
+              "zh-TW": "卡永加",
+              "en": "Kayunga District",
+              "ja": "カユンガ県",
+              "ko": "카융가구"
             }
           },
           {
@@ -35162,7 +40596,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kanpala",
             "localizedNames": {
               "zh-HK": "坎帕拉",
-              "zh-TW": "坎帕拉"
+              "zh-TW": "坎帕拉",
+              "en": "Kampala",
+              "ja": "カンパラ",
+              "ko": "캄팔라"
             }
           },
           {
@@ -35180,7 +40617,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kumi",
             "localizedNames": {
               "zh-HK": "庫米",
-              "zh-TW": "庫米"
+              "zh-TW": "庫米",
+              "en": "Kumi District",
+              "ja": "クミ県",
+              "ko": "쿠미구"
             }
           },
           {
@@ -35189,7 +40629,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lakayi",
             "localizedNames": {
               "zh-HK": "拉卡伊",
-              "zh-TW": "拉卡伊"
+              "zh-TW": "拉卡伊",
+              "en": "Rakai District",
+              "ja": "ラカイ県",
+              "ko": "라카이구"
             }
           },
           {
@@ -35198,7 +40641,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lila",
             "localizedNames": {
               "zh-HK": "利拉",
-              "zh-TW": "利拉"
+              "zh-TW": "利拉",
+              "en": "Lira District",
+              "ja": "リラ県",
+              "ko": "리라구"
             }
           },
           {
@@ -35207,7 +40653,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luweiluo",
             "localizedNames": {
               "zh-HK": "盧韋羅",
-              "zh-TW": "盧韋羅"
+              "zh-TW": "盧韋羅",
+              "en": "Luwero District",
+              "ja": "ルウェロ県",
+              "ko": "루웨로구"
             }
           },
           {
@@ -35216,7 +40665,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lukunjili",
             "localizedNames": {
               "zh-HK": "魯昆吉里",
-              "zh-TW": "魯昆吉里"
+              "zh-TW": "魯昆吉里",
+              "en": "Rukungiri District",
+              "ja": "ルクンギリ県",
+              "ko": "루쿵기리구"
             }
           },
           {
@@ -35225,7 +40677,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Masaka",
             "localizedNames": {
               "zh-HK": "馬薩卡",
-              "zh-TW": "馬薩卡"
+              "zh-TW": "馬薩卡",
+              "en": "Masaka District",
+              "ja": "マサカ県",
+              "ko": "마사카구"
             }
           },
           {
@@ -35234,7 +40689,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maxindi",
             "localizedNames": {
               "zh-HK": "馬辛迪",
-              "zh-TW": "馬辛迪"
+              "zh-TW": "馬辛迪",
+              "en": "Masindi District",
+              "ja": "マシンディ県",
+              "ko": "마신디구"
             }
           },
           {
@@ -35243,7 +40701,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mayougai",
             "localizedNames": {
               "zh-HK": "馬尤蓋",
-              "zh-TW": "馬尤蓋"
+              "zh-TW": "馬尤蓋",
+              "en": "Mayuge District",
+              "ja": "マユゲ県",
+              "ko": "마유게구"
             }
           },
           {
@@ -35252,7 +40713,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moluotuo",
             "localizedNames": {
               "zh-HK": "莫羅託",
-              "zh-TW": "莫羅託"
+              "zh-TW": "莫羅託",
+              "en": "Moroto District",
+              "ja": "モロト県",
+              "ko": "모로토구"
             }
           },
           {
@@ -35261,7 +40725,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moyue",
             "localizedNames": {
               "zh-HK": "莫約",
-              "zh-TW": "莫約"
+              "zh-TW": "莫約",
+              "en": "Moyo District",
+              "ja": "モヨ県",
+              "ko": "모요구"
             }
           },
           {
@@ -35279,7 +40746,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mubalai",
             "localizedNames": {
               "zh-HK": "姆巴萊",
-              "zh-TW": "姆巴萊"
+              "zh-TW": "姆巴萊",
+              "en": "Mbale",
+              "ja": "Mbale",
+              "ko": "Mbale"
             }
           },
           {
@@ -35288,7 +40758,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mupiji",
             "localizedNames": {
               "zh-HK": "姆皮吉",
-              "zh-TW": "姆皮吉"
+              "zh-TW": "姆皮吉",
+              "en": "Mpigi District",
+              "ja": "ムピジ県",
+              "ko": "음피기구"
             }
           },
           {
@@ -35297,7 +40770,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mubende",
             "localizedNames": {
               "zh-HK": "穆本德",
-              "zh-TW": "穆本德"
+              "zh-TW": "穆本德",
+              "en": "Mubende District",
+              "ja": "ムベンデ県",
+              "ko": "무벤데구"
             }
           },
           {
@@ -35306,7 +40782,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mukenuo",
             "localizedNames": {
               "zh-HK": "穆科諾",
-              "zh-TW": "穆科諾"
+              "zh-TW": "穆科諾",
+              "en": "Mukono District",
+              "ja": "ムコノ県",
+              "ko": "무코노구"
             }
           },
           {
@@ -35315,7 +40794,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nakapilipilite",
             "localizedNames": {
               "zh-HK": "納卡皮裏皮裏特",
-              "zh-TW": "納卡皮裏皮裏特"
+              "zh-TW": "納卡皮裏皮裏特",
+              "en": "Nakapiripirit District",
+              "ja": "ナカピリピリ県",
+              "ko": "나카피리피리트구"
             }
           },
           {
@@ -35324,7 +40806,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nakasonggela",
             "localizedNames": {
               "zh-HK": "納卡鬆戈拉",
-              "zh-TW": "納卡鬆戈拉"
+              "zh-TW": "納卡鬆戈拉",
+              "en": "Nakasongola District",
+              "ja": "ナカソンゴラ県",
+              "ko": "나카송골라구"
             }
           },
           {
@@ -35333,7 +40818,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Neibi",
             "localizedNames": {
               "zh-HK": "內比",
-              "zh-TW": "內比"
+              "zh-TW": "內比",
+              "en": "Nebbi District",
+              "ja": "ネビ県",
+              "ko": "네비구"
             }
           },
           {
@@ -35342,7 +40830,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Padeer",
             "localizedNames": {
               "zh-HK": "帕德爾",
-              "zh-TW": "帕德爾"
+              "zh-TW": "帕德爾",
+              "en": "Pader District",
+              "ja": "パデル県",
+              "ko": "파데르구"
             }
           },
           {
@@ -35351,7 +40842,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Palisa",
             "localizedNames": {
               "zh-HK": "帕利薩",
-              "zh-TW": "帕利薩"
+              "zh-TW": "帕利薩",
+              "en": "Pallisa District",
+              "ja": "パリサ県",
+              "ko": "팔리사구"
             }
           },
           {
@@ -35360,7 +40854,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Senbabulai",
             "localizedNames": {
               "zh-HK": "森巴布萊",
-              "zh-TW": "森巴布萊"
+              "zh-TW": "森巴布萊",
+              "en": "Sembabule District",
+              "ja": "センバブレ県",
+              "ko": "셈바불레구"
             }
           },
           {
@@ -35369,7 +40866,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suoluoti",
             "localizedNames": {
               "zh-HK": "索羅提",
-              "zh-TW": "索羅提"
+              "zh-TW": "索羅提",
+              "en": "Soroti",
+              "ja": "Soroti",
+              "ko": "Soroti"
             }
           },
           {
@@ -35378,7 +40878,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuoluoluo",
             "localizedNames": {
               "zh-HK": "託羅羅",
-              "zh-TW": "託羅羅"
+              "zh-TW": "託羅羅",
+              "en": "Tororo",
+              "ja": "トロロ",
+              "ko": "토로로"
             }
           },
           {
@@ -35387,7 +40890,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wajisuo",
             "localizedNames": {
               "zh-HK": "瓦基索",
-              "zh-TW": "瓦基索"
+              "zh-TW": "瓦基索",
+              "en": "Wakiso District",
+              "ja": "ワキソ県",
+              "ko": "와키소구"
             }
           },
           {
@@ -35396,7 +40902,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xilongke",
             "localizedNames": {
               "zh-HK": "錫龍科",
-              "zh-TW": "錫龍科"
+              "zh-TW": "錫龍科",
+              "en": "Sironko",
+              "ja": "Sironko",
+              "ko": "Sironko"
             }
           },
           {
@@ -35405,7 +40914,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yiganjia",
             "localizedNames": {
               "zh-HK": "伊甘加",
-              "zh-TW": "伊甘加"
+              "zh-TW": "伊甘加",
+              "en": "Iganga District",
+              "ja": "イガンガ県",
+              "ko": "이강가구"
             }
           },
           {
@@ -35414,13 +40926,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yongbei",
             "localizedNames": {
               "zh-HK": "永貝",
-              "zh-TW": "永貝"
+              "zh-TW": "永貝",
+              "en": "Yumbe District",
+              "ja": "ユンベ県",
+              "ko": "윰베구"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "烏干達",
-          "zh-TW": "烏干達"
+          "zh-TW": "烏干達",
+          "en": "Uganda",
+          "ja": "ウガンダ",
+          "ko": "우간다"
         }
       }
     ]
@@ -35503,7 +41021,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hemeiliniciji",
             "localizedNames": {
               "zh-HK": "赫梅利尼茨基",
-              "zh-TW": "赫梅利尼茨基"
+              "zh-TW": "赫梅利尼茨基",
+              "en": "Khmelnytskyi Oblast",
+              "ja": "フメリヌィーツィクィイ州",
+              "ko": "흐멜니츠키주"
             }
           },
           {
@@ -35521,7 +41042,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiluofugelei",
             "localizedNames": {
               "zh-HK": "基洛夫格勒",
-              "zh-TW": "基洛夫格勒"
+              "zh-TW": "基洛夫格勒",
+              "en": "Kirovohrad Oblast",
+              "ja": "キロヴォフラード州",
+              "ko": "키로보흐라드주"
             }
           },
           {
@@ -35539,7 +41063,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelimiyazizhigongheguo",
             "localizedNames": {
               "zh-HK": "克里米亞自治共和國",
-              "zh-TW": "克里米亞自治共和國"
+              "zh-TW": "克里米亞自治共和國",
+              "en": "Crimea",
+              "ja": "クリミア自治共和国",
+              "ko": "크림 자치 공화국"
             }
           },
           {
@@ -35566,7 +41093,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luofunuo",
             "localizedNames": {
               "zh-HK": "羅夫諾",
-              "zh-TW": "羅夫諾"
+              "zh-TW": "羅夫諾",
+              "en": "Rivne",
+              "ja": "リウネ",
+              "ko": "리우네"
             }
           },
           {
@@ -35575,7 +41105,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nigulayefu",
             "localizedNames": {
               "zh-HK": "尼古拉耶夫",
-              "zh-TW": "尼古拉耶夫"
+              "zh-TW": "尼古拉耶夫",
+              "en": "Mykolaiv Oblast",
+              "ja": "ムィコラーイウ州",
+              "ko": "미콜라이우주"
             }
           },
           {
@@ -35602,7 +41135,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qieernuofuce",
             "localizedNames": {
               "zh-HK": "切爾諾夫策",
-              "zh-TW": "切爾諾夫策"
+              "zh-TW": "切爾諾夫策",
+              "en": "Chernivtsi",
+              "ja": "チェルニウツィー",
+              "ko": "체르니우치"
             }
           },
           {
@@ -35611,7 +41147,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Rituomier",
             "localizedNames": {
               "zh-HK": "日托米爾",
-              "zh-TW": "日托米爾"
+              "zh-TW": "日托米爾",
+              "en": "Zhytomyr",
+              "ja": "ジトームィル",
+              "ko": "지토미르"
             }
           },
           {
@@ -35629,7 +41168,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Waikaerbaqian",
             "localizedNames": {
               "zh-HK": "外喀爾巴阡",
-              "zh-TW": "外喀爾巴阡"
+              "zh-TW": "外喀爾巴阡",
+              "en": "Zakarpattia Oblast",
+              "ja": "ザカルパッチャ州",
+              "ko": "자카르파탸주"
             }
           },
           {
@@ -35647,7 +41189,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wolun",
             "localizedNames": {
               "zh-HK": "沃倫",
-              "zh-TW": "沃倫"
+              "zh-TW": "沃倫",
+              "en": "Volyn Oblast",
+              "ja": "ヴォルィーニ州",
+              "ko": "볼린주"
             }
           },
           {
@@ -35671,7 +41216,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "烏克蘭",
-          "zh-TW": "烏克蘭"
+          "zh-TW": "烏克蘭",
+          "en": "Ukraine",
+          "ja": "ウクライナ",
+          "ko": "우크라이나"
         }
       }
     ]
@@ -35718,7 +41266,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fuluolida",
             "localizedNames": {
               "zh-HK": "佛羅里達",
-              "zh-TW": "佛羅里達"
+              "zh-TW": "佛羅里達",
+              "en": "Florida",
+              "ja": "フロリダ県",
+              "ko": "플로리다주"
             }
           },
           {
@@ -35736,7 +41287,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaneiluoneisi",
             "localizedNames": {
               "zh-HK": "卡內洛內斯",
-              "zh-TW": "卡內洛內斯"
+              "zh-TW": "卡內洛內斯",
+              "en": "Canelones",
+              "ja": "カネロネス県",
+              "ko": "카넬로네스주"
             }
           },
           {
@@ -35745,7 +41299,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keluoniya",
             "localizedNames": {
               "zh-HK": "科洛尼亞",
-              "zh-TW": "科洛尼亞"
+              "zh-TW": "科洛尼亞",
+              "en": "Colonia",
+              "ja": "コロニア県",
+              "ko": "콜로니아주"
             }
           },
           {
@@ -35754,7 +41311,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lawayeha",
             "localizedNames": {
               "zh-HK": "拉瓦耶哈",
-              "zh-TW": "拉瓦耶哈"
+              "zh-TW": "拉瓦耶哈",
+              "en": "Lavalleja Department",
+              "ja": "ラバジェハ県",
+              "ko": "라바예하주"
             }
           },
           {
@@ -35799,7 +41359,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Neigeluohe",
             "localizedNames": {
               "zh-HK": "內格羅河",
-              "zh-TW": "內格羅河"
+              "zh-TW": "內格羅河",
+              "en": "Río Negro Department",
+              "ja": "リオ・ネグロ県",
+              "ko": "리오네그로주"
             }
           },
           {
@@ -35826,7 +41389,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sailuolaerge",
             "localizedNames": {
               "zh-HK": "塞羅拉爾戈",
-              "zh-TW": "塞羅拉爾戈"
+              "zh-TW": "塞羅拉爾戈",
+              "en": "Cerro Largo",
+              "ja": "セロ・ラルゴ県",
+              "ko": "세로라르고주"
             }
           },
           {
@@ -35835,7 +41401,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sanshisanren",
             "localizedNames": {
               "zh-HK": "三十三人",
-              "zh-TW": "三十三人"
+              "zh-TW": "三十三人",
+              "en": "Treinta y Tres Department",
+              "ja": "トレインタ・イ・トレス県",
+              "ko": "트레인타이트레스주"
             }
           },
           {
@@ -35844,7 +41413,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenghesai",
             "localizedNames": {
               "zh-HK": "聖何塞",
-              "zh-TW": "聖何塞"
+              "zh-TW": "聖何塞",
+              "en": "San José Department",
+              "ja": "サン・ホセ県",
+              "ko": "산호세주"
             }
           },
           {
@@ -35853,7 +41425,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suoliyanuo",
             "localizedNames": {
               "zh-HK": "索里亞諾",
-              "zh-TW": "索里亞諾"
+              "zh-TW": "索里亞諾",
+              "en": "Soriano",
+              "ja": "ソリアノ県",
+              "ko": "소리아노주"
             }
           },
           {
@@ -35868,7 +41443,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "烏拉圭",
-          "zh-TW": "烏拉圭"
+          "zh-TW": "烏拉圭",
+          "en": "Uruguay",
+          "ja": "ウルグアイ",
+          "ko": "우루과이"
         }
       }
     ]
@@ -35924,7 +41502,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hualazimo",
             "localizedNames": {
               "zh-HK": "花拉子模",
-              "zh-TW": "花拉子模"
+              "zh-TW": "花拉子模",
+              "en": "Xorazm Region",
+              "ja": "ホラズム州",
+              "ko": "호레즘주"
             }
           },
           {
@@ -35942,7 +41523,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalakaerpakesitangongheguo",
             "localizedNames": {
               "zh-HK": "卡拉卡爾帕克斯坦共和國",
-              "zh-TW": "卡拉卡爾帕克斯坦共和國"
+              "zh-TW": "卡拉卡爾帕克斯坦共和國",
+              "en": "Karakalpakstan",
+              "ja": "カラカルパクスタン共和国",
+              "ko": "카라칼파크스탄 공화국"
             }
           },
           {
@@ -35951,7 +41535,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kashenkadaliya",
             "localizedNames": {
               "zh-HK": "卡什卡達里亞",
-              "zh-TW": "卡什卡達里亞"
+              "zh-TW": "卡什卡達里亞",
+              "en": "Qashqadaryo",
+              "ja": "カシュカダリヤ州",
+              "ko": "카슈카다리야주"
             }
           },
           {
@@ -35960,7 +41547,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Namangan",
             "localizedNames": {
               "zh-HK": "納曼幹",
-              "zh-TW": "納曼幹"
+              "zh-TW": "納曼幹",
+              "en": "Namangan",
+              "ja": "ナマンガン州",
+              "ko": "나망간주"
             }
           },
           {
@@ -35987,7 +41577,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suerhanhe",
             "localizedNames": {
               "zh-HK": "蘇爾漢河",
-              "zh-TW": "蘇爾漢河"
+              "zh-TW": "蘇爾漢河",
+              "en": "Surxondaryo Region",
+              "ja": "スルハンダリヤ州",
+              "ko": "수르한다리야주"
             }
           },
           {
@@ -36014,13 +41607,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xierhe",
             "localizedNames": {
               "zh-HK": "錫爾河",
-              "zh-TW": "錫爾河"
+              "zh-TW": "錫爾河",
+              "en": "Sirdaryo Region",
+              "ja": "シルダリヤ州",
+              "ko": "시르다리야주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "烏茲別克斯坦",
-          "zh-TW": "烏茲別克斯坦"
+          "zh-TW": "烏茲別克斯坦",
+          "en": "Uzbekistan",
+          "ja": "ウズベキスタン",
+          "ko": "우즈베키스탄"
         }
       }
     ]
@@ -36049,7 +41648,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aermeiliya",
             "localizedNames": {
               "zh-HK": "阿爾梅里亞",
-              "zh-TW": "阿爾梅里亞"
+              "zh-TW": "阿爾梅里亞",
+              "en": "Almería",
+              "ja": "アルメリア",
+              "ko": "알메리아"
             }
           },
           {
@@ -36058,7 +41660,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aerwasaite",
             "localizedNames": {
               "zh-HK": "阿爾瓦塞特",
-              "zh-TW": "阿爾瓦塞特"
+              "zh-TW": "阿爾瓦塞特",
+              "en": "Albacete",
+              "ja": "アルバセテ",
+              "ko": "알바세테"
             }
           },
           {
@@ -36076,7 +41681,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Alikante",
             "localizedNames": {
               "zh-HK": "阿利坎特",
-              "zh-TW": "阿利坎特"
+              "zh-TW": "阿利坎特",
+              "en": "Alicante",
+              "ja": "アリカンテ",
+              "ko": "알리칸테"
             }
           },
           {
@@ -36094,7 +41702,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aweila",
             "localizedNames": {
               "zh-HK": "阿維拉",
-              "zh-TW": "阿維拉"
+              "zh-TW": "阿維拉",
+              "en": "Ávila",
+              "ja": "アビラ",
+              "ko": "아빌라"
             }
           },
           {
@@ -36103,7 +41714,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aolunsai",
             "localizedNames": {
               "zh-HK": "奧倫塞",
-              "zh-TW": "奧倫塞"
+              "zh-TW": "奧倫塞",
+              "en": "Ourense",
+              "ja": "オレンセ（オウレンセ）",
+              "ko": "오렌세주"
             }
           },
           {
@@ -36130,7 +41744,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baliyaduolide",
             "localizedNames": {
               "zh-HK": "巴利亞多利德",
-              "zh-TW": "巴利亞多利德"
+              "zh-TW": "巴利亞多利德",
+              "en": "Valladolid",
+              "ja": "バリャドリッド",
+              "ko": "바야돌리드"
             }
           },
           {
@@ -36148,7 +41765,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Basailuona",
             "localizedNames": {
               "zh-HK": "巴塞羅那",
-              "zh-TW": "巴塞羅那"
+              "zh-TW": "巴塞羅那",
+              "en": "Barcelona",
+              "ja": "バルセロナ",
+              "ko": "바르셀로나"
             }
           },
           {
@@ -36157,7 +41777,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bisikai",
             "localizedNames": {
               "zh-HK": "比斯開",
-              "zh-TW": "比斯開"
+              "zh-TW": "比斯開",
+              "en": "Biscay",
+              "ja": "ビスカヤ",
+              "ko": "비스카야 주"
             }
           },
           {
@@ -36166,7 +41789,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buergesi",
             "localizedNames": {
               "zh-HK": "布爾戈斯",
-              "zh-TW": "布爾戈斯"
+              "zh-TW": "布爾戈斯",
+              "en": "Burgos",
+              "ja": "ブルゴス",
+              "ko": "부르고스"
             }
           },
           {
@@ -36175,7 +41801,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelanada",
             "localizedNames": {
               "zh-HK": "格拉納達",
-              "zh-TW": "格拉納達"
+              "zh-TW": "格拉納達",
+              "en": "Granada",
+              "ja": "グラナダ",
+              "ko": "그라나다"
             }
           },
           {
@@ -36184,7 +41813,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Guadalahala",
             "localizedNames": {
               "zh-HK": "瓜達拉哈拉",
-              "zh-TW": "瓜達拉哈拉"
+              "zh-TW": "瓜達拉哈拉",
+              "en": "Guadalajara",
+              "ja": "グアダラハラ",
+              "ko": "과달라하라"
             }
           },
           {
@@ -36193,7 +41825,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haen",
             "localizedNames": {
               "zh-HK": "哈恩",
-              "zh-TW": "哈恩"
+              "zh-TW": "哈恩",
+              "en": "Jaén",
+              "ja": "ハエン",
+              "ko": "하엔"
             }
           },
           {
@@ -36202,7 +41837,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Heluona",
             "localizedNames": {
               "zh-HK": "赫羅納",
-              "zh-TW": "赫羅納"
+              "zh-TW": "赫羅納",
+              "en": "Girona",
+              "ja": "ジローナ",
+              "ko": "지로나"
             }
           },
           {
@@ -36211,7 +41849,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jipusikua",
             "localizedNames": {
               "zh-HK": "吉普斯夸",
-              "zh-TW": "吉普斯夸"
+              "zh-TW": "吉普斯夸",
+              "en": "Gipuzkoa",
+              "ja": "ギプスコア",
+              "ko": "기푸스코아 주"
             }
           },
           {
@@ -36220,7 +41861,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiadesi",
             "localizedNames": {
               "zh-HK": "加的斯",
-              "zh-TW": "加的斯"
+              "zh-TW": "加的斯",
+              "en": "Cadiz",
+              "ja": "カディス",
+              "ko": "카디스"
             }
           },
           {
@@ -36229,7 +41873,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kasaileisi",
             "localizedNames": {
               "zh-HK": "卡塞雷斯",
-              "zh-TW": "卡塞雷斯"
+              "zh-TW": "卡塞雷斯",
+              "en": "Cáceres",
+              "ja": "カセレス",
+              "ko": "카세레스"
             }
           },
           {
@@ -36247,7 +41894,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kasiteliweng",
             "localizedNames": {
               "zh-HK": "卡斯特利翁",
-              "zh-TW": "卡斯特利翁"
+              "zh-TW": "卡斯特利翁",
+              "en": "Castellon",
+              "ja": "カステヨン",
+              "ko": "카스테욘"
             }
           },
           {
@@ -36256,7 +41906,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Keerduowa",
             "localizedNames": {
               "zh-HK": "科爾多瓦",
-              "zh-TW": "科爾多瓦"
+              "zh-TW": "科爾多瓦",
+              "en": "Córdoba",
+              "ja": "コルドバ",
+              "ko": "코르도바"
             }
           },
           {
@@ -36265,7 +41918,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kunka",
             "localizedNames": {
               "zh-HK": "昆卡",
-              "zh-TW": "昆卡"
+              "zh-TW": "昆卡",
+              "en": "Cuenca",
+              "ja": "クエンカ",
+              "ko": "쿠엥카"
             }
           },
           {
@@ -36274,7 +41930,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lakeluniya",
             "localizedNames": {
               "zh-HK": "拉科魯尼亞",
-              "zh-TW": "拉科魯尼亞"
+              "zh-TW": "拉科魯尼亞",
+              "en": "A Coruña",
+              "ja": "ア・コルーニャ",
+              "ko": "라코루냐"
             }
           },
           {
@@ -36283,7 +41942,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laliaoha",
             "localizedNames": {
               "zh-HK": "拉里奧哈",
-              "zh-TW": "拉里奧哈"
+              "zh-TW": "拉里奧哈",
+              "en": "La Rioja",
+              "ja": "ラ・リオハ",
+              "ko": "라리오하 지방"
             }
           },
           {
@@ -36292,7 +41954,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lasipaermasi",
             "localizedNames": {
               "zh-HK": "拉斯帕爾馬斯",
-              "zh-TW": "拉斯帕爾馬斯"
+              "zh-TW": "拉斯帕爾馬斯",
+              "en": "Las Palmas de Gran Canaria",
+              "ja": "ラス・パルマス・デ・グラン・カナリア",
+              "ko": "Las Palmas de Gran Canaria"
             }
           },
           {
@@ -36301,7 +41966,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laiang",
             "localizedNames": {
               "zh-HK": "萊昂",
-              "zh-TW": "萊昂"
+              "zh-TW": "萊昂",
+              "en": "León",
+              "ja": "レオン",
+              "ko": "레온"
             }
           },
           {
@@ -36319,7 +41987,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luge",
             "localizedNames": {
               "zh-HK": "盧戈",
-              "zh-TW": "盧戈"
+              "zh-TW": "盧戈",
+              "en": "Lugo",
+              "ja": "ルーゴ",
+              "ko": "루고"
             }
           },
           {
@@ -36337,7 +42008,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Malajia",
             "localizedNames": {
               "zh-HK": "馬拉加",
-              "zh-TW": "馬拉加"
+              "zh-TW": "馬拉加",
+              "en": "Málaga",
+              "ja": "マラガ",
+              "ko": "말라가"
             }
           },
           {
@@ -36355,7 +42029,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nawala",
             "localizedNames": {
               "zh-HK": "納瓦拉",
-              "zh-TW": "納瓦拉"
+              "zh-TW": "納瓦拉",
+              "en": "Navarre",
+              "ja": "ナバーラ",
+              "ko": "나바라 지방"
             }
           },
           {
@@ -36364,7 +42041,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Palunxiya",
             "localizedNames": {
               "zh-HK": "帕倫西亞",
-              "zh-TW": "帕倫西亞"
+              "zh-TW": "帕倫西亞",
+              "en": "Palencia",
+              "ja": "パレンシア",
+              "ko": "팔렌시아"
             }
           },
           {
@@ -36382,7 +42062,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Salagesa",
             "localizedNames": {
               "zh-HK": "薩拉戈薩",
-              "zh-TW": "薩拉戈薩"
+              "zh-TW": "薩拉戈薩",
+              "en": "Zaragoza",
+              "ja": "サラゴサ",
+              "ko": "사라고사"
             }
           },
           {
@@ -36391,7 +42074,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Salamanka",
             "localizedNames": {
               "zh-HK": "薩拉曼卡",
-              "zh-TW": "薩拉曼卡"
+              "zh-TW": "薩拉曼卡",
+              "en": "Salamanca",
+              "ja": "サラマンカ",
+              "ko": "살라망카"
             }
           },
           {
@@ -36400,7 +42086,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Samola",
             "localizedNames": {
               "zh-HK": "薩莫拉",
-              "zh-TW": "薩莫拉"
+              "zh-TW": "薩莫拉",
+              "en": "Zamora",
+              "ja": "サモラ",
+              "ko": "사모라"
             }
           },
           {
@@ -36409,7 +42098,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Saigeweiya",
             "localizedNames": {
               "zh-HK": "塞哥維亞",
-              "zh-TW": "塞哥維亞"
+              "zh-TW": "塞哥維亞",
+              "en": "Segovia",
+              "ja": "セゴビア",
+              "ko": "세고비아"
             }
           },
           {
@@ -36418,7 +42110,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Saiweiliya",
             "localizedNames": {
               "zh-HK": "塞維利亞",
-              "zh-TW": "塞維利亞"
+              "zh-TW": "塞維利亞",
+              "en": "Seville",
+              "ja": "セビリア",
+              "ko": "세비야"
             }
           },
           {
@@ -36427,7 +42122,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sangtande",
             "localizedNames": {
               "zh-HK": "桑坦德",
-              "zh-TW": "桑坦德"
+              "zh-TW": "桑坦德",
+              "en": "Santander",
+              "ja": "サンタンデール",
+              "ko": "산탄데르"
             }
           },
           {
@@ -36436,7 +42134,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengkelusi-deteneilifei",
             "localizedNames": {
               "zh-HK": "聖克魯斯-德特內里費",
-              "zh-TW": "聖克魯斯-德特內里費"
+              "zh-TW": "聖克魯斯-德特內里費",
+              "en": "Santa Cruz de Tenerife",
+              "ja": "サンタ・クルス・デ・テネリフェ",
+              "ko": "산타크루스데테네리페"
             }
           },
           {
@@ -36445,7 +42146,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suoliya",
             "localizedNames": {
               "zh-HK": "索里亞",
-              "zh-TW": "索里亞"
+              "zh-TW": "索里亞",
+              "en": "Soria",
+              "ja": "ソリア",
+              "ko": "소리아"
             }
           },
           {
@@ -36463,7 +42167,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Teluaier",
             "localizedNames": {
               "zh-HK": "特魯埃爾",
-              "zh-TW": "特魯埃爾"
+              "zh-TW": "特魯埃爾",
+              "en": "Teruel",
+              "ja": "テルエル",
+              "ko": "테루엘"
             }
           },
           {
@@ -36472,7 +42179,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuolaiduo",
             "localizedNames": {
               "zh-HK": "托萊多",
-              "zh-TW": "托萊多"
+              "zh-TW": "托萊多",
+              "en": "Toledo",
+              "ja": "トレド",
+              "ko": "톨레도"
             }
           },
           {
@@ -36481,7 +42191,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weierwa",
             "localizedNames": {
               "zh-HK": "韋爾瓦",
-              "zh-TW": "韋爾瓦"
+              "zh-TW": "韋爾瓦",
+              "en": "Huelva",
+              "ja": "ウエルバ",
+              "ko": "우엘바"
             }
           },
           {
@@ -36490,13 +42203,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weisika",
             "localizedNames": {
               "zh-HK": "韋斯卡",
-              "zh-TW": "韋斯卡"
+              "zh-TW": "韋斯卡",
+              "en": "Huesca",
+              "ja": "ウエスカ",
+              "ko": "우에스카"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "西班牙",
-          "zh-TW": "西班牙"
+          "zh-TW": "西班牙",
+          "en": "Spain",
+          "ja": "スペイン",
+          "ko": "스페인"
         }
       }
     ]
@@ -36525,7 +42244,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bileiaifusi",
             "localizedNames": {
               "zh-HK": "比雷埃夫斯",
-              "zh-TW": "比雷埃夫斯"
+              "zh-TW": "比雷埃夫斯",
+              "en": "Piraeus",
+              "ja": "ピレウス",
+              "ko": "피레아스"
             }
           },
           {
@@ -36597,7 +42319,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yadian",
             "localizedNames": {
               "zh-HK": "雅典",
-              "zh-TW": "雅典"
+              "zh-TW": "雅典",
+              "en": "Athens",
+              "ja": "アテネ",
+              "ko": "아테네"
             }
           },
           {
@@ -36612,7 +42337,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "希臘",
-          "zh-TW": "希臘"
+          "zh-TW": "希臘",
+          "en": "Greece",
+          "ja": "ギリシャ",
+          "ko": "그리스"
         }
       }
     ]
@@ -36669,7 +42397,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aokelan",
             "localizedNames": {
               "zh-HK": "奧克蘭",
-              "zh-TW": "奧克蘭"
+              "zh-TW": "奧克蘭",
+              "en": "Auckland",
+              "ja": "オークランド地方",
+              "ko": "오클랜드 지방"
             }
           },
           {
@@ -36678,7 +42409,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beian",
             "localizedNames": {
               "zh-HK": "北岸",
-              "zh-TW": "北岸"
+              "zh-TW": "北岸",
+              "en": "North Shore",
+              "ja": "North Shore",
+              "ko": "North Shore"
             }
           },
           {
@@ -36723,7 +42457,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geleimaosi",
             "localizedNames": {
               "zh-HK": "格雷茅斯",
-              "zh-TW": "格雷茅斯"
+              "zh-TW": "格雷茅斯",
+              "en": "Greymouth",
+              "ja": "グレイマウス",
+              "ko": "그레이마우스"
             }
           },
           {
@@ -36732,7 +42469,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hamierdun",
             "localizedNames": {
               "zh-HK": "哈密爾頓",
-              "zh-TW": "哈密爾頓"
+              "zh-TW": "哈密爾頓",
+              "en": "Hamilton",
+              "ja": "ハミルトン",
+              "ko": "해밀턴"
             }
           },
           {
@@ -36777,7 +42517,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelaisitecheqi",
             "localizedNames": {
               "zh-HK": "克賴斯特徹奇",
-              "zh-TW": "克賴斯特徹奇"
+              "zh-TW": "克賴斯特徹奇",
+              "en": "Christchurch",
+              "ja": "クライストチャーチ",
+              "ko": "크라이스트처치"
             }
           },
           {
@@ -36849,7 +42592,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wangalei",
             "localizedNames": {
               "zh-HK": "旺阿雷",
-              "zh-TW": "旺阿雷"
+              "zh-TW": "旺阿雷",
+              "en": "Whangarei",
+              "ja": "ファンガレイ",
+              "ko": "황아레이"
             }
           },
           {
@@ -36867,7 +42613,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xinpulimaosi",
             "localizedNames": {
               "zh-HK": "新普利茅斯",
-              "zh-TW": "新普利茅斯"
+              "zh-TW": "新普利茅斯",
+              "en": "New Plymouth",
+              "ja": "ニュープリマス",
+              "ko": "뉴플리머스"
             }
           },
           {
@@ -36876,13 +42625,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yinfukajier",
             "localizedNames": {
               "zh-HK": "因弗卡吉爾",
-              "zh-TW": "因弗卡吉爾"
+              "zh-TW": "因弗卡吉爾",
+              "en": "Invercargill",
+              "ja": "インバーカーギル",
+              "ko": "인버카길"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "新西蘭",
-          "zh-TW": "新西蘭"
+          "zh-TW": "新西蘭",
+          "en": "New Zealand",
+          "ja": "ニュージーランド",
+          "ko": "뉴질랜드"
         }
       }
     ]
@@ -36920,7 +42675,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baqi-jishenkong",
             "localizedNames": {
               "zh-HK": "巴奇-基什孔",
-              "zh-TW": "巴奇-基什孔"
+              "zh-TW": "巴奇-基什孔",
+              "en": "Bács-Kiskun",
+              "ja": "バーチ・キシュクン県",
+              "ko": "바치키슈쿤 주"
             }
           },
           {
@@ -36929,7 +42687,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baoershaode-aobaowuyi-cengpulun",
             "localizedNames": {
               "zh-HK": "包爾紹德-奧包烏伊-曾普倫",
-              "zh-TW": "包爾紹德-奧包烏伊-曾普倫"
+              "zh-TW": "包爾紹德-奧包烏伊-曾普倫",
+              "en": "Borsod-Abaúj-Zemplén",
+              "ja": "ボルショド・アバウイ・ゼンプレン",
+              "ko": "보르쇼드어버우이젬플렌 주"
             }
           },
           {
@@ -36947,7 +42708,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Budapeisi",
             "localizedNames": {
               "zh-HK": "布達佩斯",
-              "zh-TW": "布達佩斯"
+              "zh-TW": "布達佩斯",
+              "en": "Budapest",
+              "ja": "ブダペスト",
+              "ko": "부다페스트"
             }
           },
           {
@@ -36956,7 +42720,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Feiyeer",
             "localizedNames": {
               "zh-HK": "費耶爾",
-              "zh-TW": "費耶爾"
+              "zh-TW": "費耶爾",
+              "en": "Fejér",
+              "ja": "フェイエール",
+              "ko": "페예르 주"
             }
           },
           {
@@ -36965,7 +42732,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Haoyidu-bihaoer",
             "localizedNames": {
               "zh-HK": "豪伊杜-比豪爾",
-              "zh-TW": "豪伊杜-比豪爾"
+              "zh-TW": "豪伊杜-比豪爾",
+              "en": "Hajdú-Bihar",
+              "ja": "ハイドゥー・ビハール県",
+              "ko": "허이두비허르 주"
             }
           },
           {
@@ -37001,7 +42771,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kemaluomu",
             "localizedNames": {
               "zh-HK": "科馬羅姆",
-              "zh-TW": "科馬羅姆"
+              "zh-TW": "科馬羅姆",
+              "en": "Komárom",
+              "ja": "コマーロム",
+              "ko": "코마롬"
             }
           },
           {
@@ -37037,7 +42810,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shaomoji",
             "localizedNames": {
               "zh-HK": "紹莫吉",
-              "zh-TW": "紹莫吉"
+              "zh-TW": "紹莫吉",
+              "en": "Somogy County",
+              "ja": "ショモジ県",
+              "ko": "쇼모지 주"
             }
           },
           {
@@ -37046,7 +42822,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Suoboerqi-suotemaer-beilage",
             "localizedNames": {
               "zh-HK": "索博爾奇-索特馬爾-貝拉格",
-              "zh-TW": "索博爾奇-索特馬爾-貝拉格"
+              "zh-TW": "索博爾奇-索特馬爾-貝拉格",
+              "en": "Szabolcs-Szatmár-Bereg",
+              "ja": "サボルチ・サトマール・ベレグ県",
+              "ko": "서볼치서트마르베레그 주"
             }
           },
           {
@@ -37055,7 +42834,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tuoernao",
             "localizedNames": {
               "zh-HK": "托爾瑙",
-              "zh-TW": "托爾瑙"
+              "zh-TW": "托爾瑙",
+              "en": "Tolna County",
+              "ja": "トルナ県",
+              "ko": "톨너 주"
             }
           },
           {
@@ -37064,7 +42846,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weisipuleimu",
             "localizedNames": {
               "zh-HK": "維斯普雷姆",
-              "zh-TW": "維斯普雷姆"
+              "zh-TW": "維斯普雷姆",
+              "en": "Veszprém",
+              "ja": "ヴェスプレーム",
+              "ko": "베스프렘"
             }
           },
           {
@@ -37073,7 +42858,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Woshen",
             "localizedNames": {
               "zh-HK": "沃什",
-              "zh-TW": "沃什"
+              "zh-TW": "沃什",
+              "en": "Vas County",
+              "ja": "ヴァシュ県",
+              "ko": "버시 주"
             }
           },
           {
@@ -37082,13 +42870,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zuoluo",
             "localizedNames": {
               "zh-HK": "佐洛",
-              "zh-TW": "佐洛"
+              "zh-TW": "佐洛",
+              "en": "Zala County",
+              "ja": "ザラ県",
+              "ko": "절러 주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "匈牙利",
-          "zh-TW": "匈牙利"
+          "zh-TW": "匈牙利",
+          "en": "Hungary",
+          "ja": "ハンガリー",
+          "ko": "헝가리"
         }
       }
     ]
@@ -37162,7 +42956,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hama",
             "localizedNames": {
               "zh-HK": "哈馬",
-              "zh-TW": "哈馬"
+              "zh-TW": "哈馬",
+              "en": "Hama Governorate",
+              "ja": "ハマー県",
+              "ko": "하마주"
             }
           },
           {
@@ -37243,7 +43040,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Taertusi",
             "localizedNames": {
               "zh-HK": "塔爾圖斯",
-              "zh-TW": "塔爾圖斯"
+              "zh-TW": "塔爾圖斯",
+              "en": "Tartus Governorate",
+              "ja": "タルトゥース県",
+              "ko": "타르투스주"
             }
           },
           {
@@ -37258,7 +43058,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "敘利亞",
-          "zh-TW": "敘利亞"
+          "zh-TW": "敘利亞",
+          "en": "Syria",
+          "ja": "シリア",
+          "ko": "시리아"
         }
       }
     ]
@@ -37287,7 +43090,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Botelan",
             "localizedNames": {
               "zh-HK": "波特蘭",
-              "zh-TW": "波特蘭"
+              "zh-TW": "波特蘭",
+              "en": "Portland Parish",
+              "ja": "ポートランド教区",
+              "ko": "포틀랜드구"
             }
           },
           {
@@ -37296,7 +43102,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hannuowei",
             "localizedNames": {
               "zh-HK": "漢諾威",
-              "zh-TW": "漢諾威"
+              "zh-TW": "漢諾威",
+              "en": "Hanover Parish",
+              "ja": "ハノーバー教区",
+              "ko": "해노버구"
             }
           },
           {
@@ -37305,7 +43114,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinsidun",
             "localizedNames": {
               "zh-HK": "金斯敦",
-              "zh-TW": "金斯敦"
+              "zh-TW": "金斯敦",
+              "en": "Kingston",
+              "ja": "キングストン教区",
+              "ko": "킹스턴구"
             }
           },
           {
@@ -37314,7 +43126,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kelalundeng",
             "localizedNames": {
               "zh-HK": "克拉倫登",
-              "zh-TW": "克拉倫登"
+              "zh-TW": "克拉倫登",
+              "en": "Clarendon",
+              "ja": "クラレンドン教区",
+              "ko": "클래런던구"
             }
           },
           {
@@ -37323,7 +43138,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manchesite",
             "localizedNames": {
               "zh-HK": "曼徹斯特",
-              "zh-TW": "曼徹斯特"
+              "zh-TW": "曼徹斯特",
+              "en": "Manchester",
+              "ja": "マンチェスター教区",
+              "ko": "맨체스터구"
             }
           },
           {
@@ -37341,7 +43159,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shenganna",
             "localizedNames": {
               "zh-HK": "聖安娜",
-              "zh-TW": "聖安娜"
+              "zh-TW": "聖安娜",
+              "en": "Saint Ann Parish",
+              "ja": "セント・アン教区",
+              "ko": "세인트앤구"
             }
           },
           {
@@ -37350,7 +43171,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengkaiselin",
             "localizedNames": {
               "zh-HK": "聖凱瑟琳",
-              "zh-TW": "聖凱瑟琳"
+              "zh-TW": "聖凱瑟琳",
+              "en": "Saint Catherine Parish",
+              "ja": "セント・キャサリン教区",
+              "ko": "세인트캐서린구"
             }
           },
           {
@@ -37359,7 +43183,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengmali",
             "localizedNames": {
               "zh-HK": "聖瑪麗",
-              "zh-TW": "聖瑪麗"
+              "zh-TW": "聖瑪麗",
+              "en": "Saint Mary Parish",
+              "ja": "セント・メアリー教区",
+              "ko": "세인트메리구"
             }
           },
           {
@@ -37368,7 +43195,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengtuomasi",
             "localizedNames": {
               "zh-HK": "聖托馬斯",
-              "zh-TW": "聖托馬斯"
+              "zh-TW": "聖托馬斯",
+              "en": "Saint Thomas Parish",
+              "ja": "セント・トーマス教区",
+              "ko": "세인트토머스구"
             }
           },
           {
@@ -37377,7 +43207,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengyilishabai",
             "localizedNames": {
               "zh-HK": "聖伊麗莎白",
-              "zh-TW": "聖伊麗莎白"
+              "zh-TW": "聖伊麗莎白",
+              "en": "Saint Elizabeth",
+              "ja": "セント・エリザベス教区",
+              "ko": "세인트엘리자베스구"
             }
           },
           {
@@ -37386,7 +43219,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengzhanmusi",
             "localizedNames": {
               "zh-HK": "聖詹姆斯",
-              "zh-TW": "聖詹姆斯"
+              "zh-TW": "聖詹姆斯",
+              "en": "Saint James Parish",
+              "ja": "セント・ジェームズ教区",
+              "ko": "세인트제임스구"
             }
           },
           {
@@ -37395,7 +43231,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Teliluoni",
             "localizedNames": {
               "zh-HK": "特里洛尼",
-              "zh-TW": "特里洛尼"
+              "zh-TW": "特里洛尼",
+              "en": "Trelawny Parish",
+              "ja": "トレローニー教区",
+              "ko": "트렐로니구"
             }
           },
           {
@@ -37404,13 +43243,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ximolan",
             "localizedNames": {
               "zh-HK": "西摩蘭",
-              "zh-TW": "西摩蘭"
+              "zh-TW": "西摩蘭",
+              "en": "Westmoreland",
+              "ja": "ウェストモアランド教区",
+              "ko": "웨스트모얼랜드구"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "牙買加",
-          "zh-TW": "牙買加"
+          "zh-TW": "牙買加",
+          "en": "Jamaica",
+          "ja": "ジャマイカ",
+          "ko": "자메이카"
         }
       }
     ]
@@ -37448,7 +43293,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Alajiacuoteen",
             "localizedNames": {
               "zh-HK": "阿拉加措特恩",
-              "zh-TW": "阿拉加措特恩"
+              "zh-TW": "阿拉加措特恩",
+              "en": "Aragatsotn",
+              "ja": "アラガツォトゥン地方",
+              "ko": "아라가초튼주"
             }
           },
           {
@@ -37457,7 +43305,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Alalate",
             "localizedNames": {
               "zh-HK": "阿拉拉特",
-              "zh-TW": "阿拉拉特"
+              "zh-TW": "阿拉拉特",
+              "en": "Ararat",
+              "ja": "アララト地方",
+              "ko": "아라라트주"
             }
           },
           {
@@ -37466,7 +43317,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ailiwenshi",
             "localizedNames": {
               "zh-HK": "埃裏溫市",
-              "zh-TW": "埃裏溫市"
+              "zh-TW": "埃裏溫市",
+              "en": "Yerevan",
+              "ja": "イェレヴァン",
+              "ko": "예레반"
             }
           },
           {
@@ -37475,7 +43329,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gejiaerkunike",
             "localizedNames": {
               "zh-HK": "格加爾庫尼克",
-              "zh-TW": "格加爾庫尼克"
+              "zh-TW": "格加爾庫尼克",
+              "en": "Gegharkunik",
+              "ja": "ゲガルクニク地方",
+              "ko": "게가르쿠니크주"
             }
           },
           {
@@ -37484,7 +43341,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ketaike",
             "localizedNames": {
               "zh-HK": "科泰克",
-              "zh-TW": "科泰克"
+              "zh-TW": "科泰克",
+              "en": "Kotayk",
+              "ja": "コタイク地方",
+              "ko": "코타이크주"
             }
           },
           {
@@ -37502,7 +43362,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tawushen",
             "localizedNames": {
               "zh-HK": "塔武什",
-              "zh-TW": "塔武什"
+              "zh-TW": "塔武什",
+              "en": "Tavush",
+              "ja": "タヴシュ地方",
+              "ko": "타부시주"
             }
           },
           {
@@ -37520,7 +43383,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xilake",
             "localizedNames": {
               "zh-HK": "希拉剋",
-              "zh-TW": "希拉剋"
+              "zh-TW": "希拉剋",
+              "en": "Shirak",
+              "ja": "シラク地方",
+              "ko": "시라크주"
             }
           },
           {
@@ -37529,13 +43395,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiunike",
             "localizedNames": {
               "zh-HK": "休尼克",
-              "zh-TW": "休尼克"
+              "zh-TW": "休尼克",
+              "en": "Syunik",
+              "ja": "シュニク地方",
+              "ko": "슈니크주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "亞美尼亞",
-          "zh-TW": "亞美尼亞"
+          "zh-TW": "亞美尼亞",
+          "en": "Armenia",
+          "ja": "アルメニア",
+          "ko": "아르메니아"
         }
       }
     ]
@@ -37564,7 +43436,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Abiyang",
             "localizedNames": {
               "zh-HK": "阿比揚",
-              "zh-TW": "阿比揚"
+              "zh-TW": "阿比揚",
+              "en": "Abyan Governorate",
+              "ja": "アビヤン県",
+              "ko": "아브얀주"
             }
           },
           {
@@ -37573,7 +43448,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Amulan",
             "localizedNames": {
               "zh-HK": "阿姆蘭",
-              "zh-TW": "阿姆蘭"
+              "zh-TW": "阿姆蘭",
+              "en": "Omran",
+              "ja": "アムラーン県",
+              "ko": "암란주"
             }
           },
           {
@@ -37582,7 +43460,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beida",
             "localizedNames": {
               "zh-HK": "貝達",
-              "zh-TW": "貝達"
+              "zh-TW": "貝達",
+              "en": "Al Bayda",
+              "ja": "バイダー県",
+              "ko": "바이다주"
             }
           },
           {
@@ -37600,7 +43481,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hadelamao",
             "localizedNames": {
               "zh-HK": "哈德拉毛",
-              "zh-TW": "哈德拉毛"
+              "zh-TW": "哈德拉毛",
+              "en": "Hadramaout",
+              "ja": "ハドラマウト県",
+              "ko": "하드라마우트주"
             }
           },
           {
@@ -37609,7 +43493,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hajie",
             "localizedNames": {
               "zh-HK": "哈傑",
-              "zh-TW": "哈傑"
+              "zh-TW": "哈傑",
+              "en": "Ḩajjah",
+              "ja": "ハッジャ県",
+              "ko": "하자주"
             }
           },
           {
@@ -37618,7 +43505,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hetaida",
             "localizedNames": {
               "zh-HK": "荷臺達",
-              "zh-TW": "荷臺達"
+              "zh-TW": "荷臺達",
+              "en": "Al Hudaydah Governorate",
+              "ja": "フダイダ県",
+              "ko": "호데이다주"
             }
           },
           {
@@ -37627,7 +43517,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiaofu",
             "localizedNames": {
               "zh-HK": "焦夫",
-              "zh-TW": "焦夫"
+              "zh-TW": "焦夫",
+              "en": "Al Jawf",
+              "ja": "ジャウフ県",
+              "ko": "자우프주"
             }
           },
           {
@@ -37636,7 +43529,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laheji",
             "localizedNames": {
               "zh-HK": "拉赫季",
-              "zh-TW": "拉赫季"
+              "zh-TW": "拉赫季",
+              "en": "Laḩij",
+              "ja": "ラヒジュ県",
+              "ko": "라히즈주"
             }
           },
           {
@@ -37645,7 +43541,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Malibo",
             "localizedNames": {
               "zh-HK": "馬裏卜",
-              "zh-TW": "馬裏卜"
+              "zh-TW": "馬裏卜",
+              "en": "Ma’rib",
+              "ja": "マアリブ県",
+              "ko": "마리브주"
             }
           },
           {
@@ -37654,7 +43553,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maihela",
             "localizedNames": {
               "zh-HK": "邁赫拉",
-              "zh-TW": "邁赫拉"
+              "zh-TW": "邁赫拉",
+              "en": "Al Mahrah Governorate",
+              "ja": "マフラ県",
+              "ko": "마라주"
             }
           },
           {
@@ -37663,7 +43565,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maiheweite",
             "localizedNames": {
               "zh-HK": "邁赫維特",
-              "zh-TW": "邁赫維特"
+              "zh-TW": "邁赫維特",
+              "en": "Al Mahwit Governorate",
+              "ja": "マフウィート県",
+              "ko": "마위트주"
             }
           },
           {
@@ -37672,7 +43577,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sada",
             "localizedNames": {
               "zh-HK": "薩達",
-              "zh-TW": "薩達"
+              "zh-TW": "薩達",
+              "en": "Şa‘dah",
+              "ja": "サアダ県",
+              "ko": "사다주"
             }
           },
           {
@@ -37699,7 +43607,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shebowo",
             "localizedNames": {
               "zh-HK": "舍卜沃",
-              "zh-TW": "舍卜沃"
+              "zh-TW": "舍卜沃",
+              "en": "Shabwah",
+              "ja": "シャブワ県",
+              "ko": "샤브와주"
             }
           },
           {
@@ -37708,7 +43619,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tayizi",
             "localizedNames": {
               "zh-HK": "塔伊茲",
-              "zh-TW": "塔伊茲"
+              "zh-TW": "塔伊茲",
+              "en": "Ta‘izz",
+              "ja": "タイズ県",
+              "ko": "타이즈주"
             }
           },
           {
@@ -37726,7 +43640,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yading",
             "localizedNames": {
               "zh-HK": "亞丁",
-              "zh-TW": "亞丁"
+              "zh-TW": "亞丁",
+              "en": "Aden",
+              "ja": "アデン",
+              "ko": "아덴"
             }
           },
           {
@@ -37750,7 +43667,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "也門",
-          "zh-TW": "也門"
+          "zh-TW": "也門",
+          "en": "Yemen",
+          "ja": "イエメン",
+          "ko": "예멘"
         }
       }
     ]
@@ -37807,7 +43727,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ashendude",
             "localizedNames": {
               "zh-HK": "阿什杜德",
-              "zh-TW": "阿什杜德"
+              "zh-TW": "阿什杜德",
+              "en": "Ashdod",
+              "ja": "アシュドッド",
+              "ko": "아슈도드"
             }
           },
           {
@@ -37816,7 +43739,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beierxieba",
             "localizedNames": {
               "zh-HK": "貝爾謝巴",
-              "zh-TW": "貝爾謝巴"
+              "zh-TW": "貝爾謝巴",
+              "en": "Beersheba",
+              "ja": "ベエルシェバ",
+              "ko": "베르셰바"
             }
           },
           {
@@ -37852,7 +43778,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Neitanya",
             "localizedNames": {
               "zh-HK": "內坦亞",
-              "zh-TW": "內坦亞"
+              "zh-TW": "內坦亞",
+              "en": "Netanya",
+              "ja": "ネタニヤ",
+              "ko": "네타냐"
             }
           },
           {
@@ -37876,7 +43805,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "以色列",
-          "zh-TW": "以色列"
+          "zh-TW": "以色列",
+          "en": "Israel",
+          "ja": "イスラエル",
+          "ko": "이스라엘"
         }
       }
     ]
@@ -37905,7 +43837,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Asidi",
             "localizedNames": {
               "zh-HK": "阿斯蒂",
-              "zh-TW": "阿斯蒂"
+              "zh-TW": "阿斯蒂",
+              "en": "Asti",
+              "ja": "アスティ",
+              "ko": "Asti"
             }
           },
           {
@@ -37914,7 +43849,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Asikelipiqienuo",
             "localizedNames": {
               "zh-HK": "阿斯科利皮切諾",
-              "zh-TW": "阿斯科利皮切諾"
+              "zh-TW": "阿斯科利皮切諾",
+              "en": "Ascoli Piceno",
+              "ja": "アスコリ・ピチェーノ",
+              "ko": "Ascoli Piceno"
             }
           },
           {
@@ -37923,7 +43861,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Ankena",
             "localizedNames": {
               "zh-HK": "安科納",
-              "zh-TW": "安科納"
+              "zh-TW": "安科納",
+              "en": "Ancona",
+              "ja": "アンコーナ",
+              "ko": "Ancona"
             }
           },
           {
@@ -37941,7 +43882,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aolisitanuo",
             "localizedNames": {
               "zh-HK": "奧里斯塔諾",
-              "zh-TW": "奧里斯塔諾"
+              "zh-TW": "奧里斯塔諾",
+              "en": "Oristano",
+              "ja": "オリスターノ",
+              "ko": "Oristano"
             }
           },
           {
@@ -37950,7 +43894,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aosita",
             "localizedNames": {
               "zh-HK": "奧斯塔",
-              "zh-TW": "奧斯塔"
+              "zh-TW": "奧斯塔",
+              "en": "Aosta",
+              "ja": "アオスタ",
+              "ko": "아오스타"
             }
           },
           {
@@ -37959,7 +43906,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baleimo",
             "localizedNames": {
               "zh-HK": "巴勒莫",
-              "zh-TW": "巴勒莫"
+              "zh-TW": "巴勒莫",
+              "en": "Palermo",
+              "ja": "パレルモ",
+              "ko": "팔레르모"
             }
           },
           {
@@ -37968,7 +43918,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bali",
             "localizedNames": {
               "zh-HK": "巴里",
-              "zh-TW": "巴里"
+              "zh-TW": "巴里",
+              "en": "Bari",
+              "ja": "バーリ",
+              "ko": "바리"
             }
           },
           {
@@ -37995,7 +43948,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bisa",
             "localizedNames": {
               "zh-HK": "比薩",
-              "zh-TW": "比薩"
+              "zh-TW": "比薩",
+              "en": "Pisa",
+              "ja": "ピサ",
+              "ko": "Pisa"
             }
           },
           {
@@ -38004,7 +43960,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bodainuonei",
             "localizedNames": {
               "zh-HK": "波代諾內",
-              "zh-TW": "波代諾內"
+              "zh-TW": "波代諾內",
+              "en": "Pordenone",
+              "ja": "ポルデノーネ",
+              "ko": "포르데노네"
             }
           },
           {
@@ -38022,7 +43981,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Boluoniya",
             "localizedNames": {
               "zh-HK": "博洛尼亞",
-              "zh-TW": "博洛尼亞"
+              "zh-TW": "博洛尼亞",
+              "en": "Bologna",
+              "ja": "ボローニャ",
+              "ko": "볼로냐"
             }
           },
           {
@@ -38040,7 +44002,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buleixiya",
             "localizedNames": {
               "zh-HK": "佈雷西亞",
-              "zh-TW": "佈雷西亞"
+              "zh-TW": "佈雷西亞",
+              "en": "Brescia",
+              "ja": "ブレシア",
+              "ko": "Brescia"
             }
           },
           {
@@ -38058,7 +44023,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Deliyasite",
             "localizedNames": {
               "zh-HK": "的裏雅斯特",
-              "zh-TW": "的裏雅斯特"
+              "zh-TW": "的裏雅斯特",
+              "en": "Trieste",
+              "ja": "トリエステ",
+              "ko": "트리에스테"
             }
           },
           {
@@ -38067,7 +44035,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Douling",
             "localizedNames": {
               "zh-HK": "都靈",
-              "zh-TW": "都靈"
+              "zh-TW": "都靈",
+              "en": "Turin",
+              "ja": "トリノ",
+              "ko": "투린"
             }
           },
           {
@@ -38085,7 +44056,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Fuluolunsa",
             "localizedNames": {
               "zh-HK": "佛羅倫薩",
-              "zh-TW": "佛羅倫薩"
+              "zh-TW": "佛羅倫薩",
+              "en": "Florence",
+              "ja": "フィレンツェ",
+              "ko": "피렌체"
             }
           },
           {
@@ -38103,7 +44077,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaliyali",
             "localizedNames": {
               "zh-HK": "卡利亞里",
-              "zh-TW": "卡利亞里"
+              "zh-TW": "卡利亞里",
+              "en": "Cagliari",
+              "ja": "カリャリ",
+              "ko": "칼리아리"
             }
           },
           {
@@ -38130,7 +44107,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Katanzhaluo",
             "localizedNames": {
               "zh-HK": "卡坦扎羅",
-              "zh-TW": "卡坦扎羅"
+              "zh-TW": "卡坦扎羅",
+              "en": "Catanzaro",
+              "ja": "カタンザーロ",
+              "ko": "카탄차로"
             }
           },
           {
@@ -38139,7 +44119,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kanbobasuo",
             "localizedNames": {
               "zh-HK": "坎波巴索",
-              "zh-TW": "坎波巴索"
+              "zh-TW": "坎波巴索",
+              "en": "Campobasso",
+              "ja": "カンポバッソ",
+              "ko": "캄포바소"
             }
           },
           {
@@ -38157,7 +44140,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kesenzha",
             "localizedNames": {
               "zh-HK": "科森扎",
-              "zh-TW": "科森扎"
+              "zh-TW": "科森扎",
+              "en": "Cosenza",
+              "ja": "コゼンツァ",
+              "ko": "코센차"
             }
           },
           {
@@ -38184,7 +44170,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lakuila",
             "localizedNames": {
               "zh-HK": "拉奎拉",
-              "zh-TW": "拉奎拉"
+              "zh-TW": "拉奎拉",
+              "en": "L'Aquila",
+              "ja": "ラクイラ",
+              "ko": "라퀼라"
             }
           },
           {
@@ -38193,7 +44182,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lasipeiqiya",
             "localizedNames": {
               "zh-HK": "拉斯佩齊亞",
-              "zh-TW": "拉斯佩齊亞"
+              "zh-TW": "拉斯佩齊亞",
+              "en": "La Spezia",
+              "ja": "ラ・スペツィア",
+              "ko": "라스페치아"
             }
           },
           {
@@ -38211,7 +44203,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Laiqie",
             "localizedNames": {
               "zh-HK": "萊切",
-              "zh-TW": "萊切"
+              "zh-TW": "萊切",
+              "en": "Lecce",
+              "ja": "レッチェ",
+              "ko": "레체"
             }
           },
           {
@@ -38229,7 +44224,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Leijiaokalabuliya",
             "localizedNames": {
               "zh-HK": "雷焦卡拉布里亞",
-              "zh-TW": "雷焦卡拉布里亞"
+              "zh-TW": "雷焦卡拉布里亞",
+              "en": "Reggio Calabria",
+              "ja": "レッジョ・ディ・カラブリア",
+              "ko": "Reggio Calabria"
             }
           },
           {
@@ -38238,7 +44236,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liwona",
             "localizedNames": {
               "zh-HK": "裏窩那",
-              "zh-TW": "裏窩那"
+              "zh-TW": "裏窩那",
+              "en": "Livorno",
+              "ja": "リヴォルノ",
+              "ko": "리보르노"
             }
           },
           {
@@ -38247,7 +44248,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Luoma",
             "localizedNames": {
               "zh-HK": "羅馬",
-              "zh-TW": "羅馬"
+              "zh-TW": "羅馬",
+              "en": "Rome",
+              "ja": "ローマ",
+              "ko": "로마"
             }
           },
           {
@@ -38256,7 +44260,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Masa",
             "localizedNames": {
               "zh-HK": "馬薩",
-              "zh-TW": "馬薩"
+              "zh-TW": "馬薩",
+              "en": "Massa",
+              "ja": "マッサ",
+              "ko": "마사"
             }
           },
           {
@@ -38265,7 +44272,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mataila",
             "localizedNames": {
               "zh-HK": "馬泰拉",
-              "zh-TW": "馬泰拉"
+              "zh-TW": "馬泰拉",
+              "en": "Matera",
+              "ja": "マテーラ",
+              "ko": "Matera"
             }
           },
           {
@@ -38274,7 +44284,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mengzha",
             "localizedNames": {
               "zh-HK": "蒙扎",
-              "zh-TW": "蒙扎"
+              "zh-TW": "蒙扎",
+              "en": "Monza",
+              "ja": "モンツァ",
+              "ko": "Monza"
             }
           },
           {
@@ -38283,7 +44296,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Milan",
             "localizedNames": {
               "zh-HK": "米蘭",
-              "zh-TW": "米蘭"
+              "zh-TW": "米蘭",
+              "en": "Milan",
+              "ja": "ミラノ",
+              "ko": "밀라노"
             }
           },
           {
@@ -38292,7 +44308,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Modena",
             "localizedNames": {
               "zh-HK": "摩德納",
-              "zh-TW": "摩德納"
+              "zh-TW": "摩德納",
+              "en": "Modena",
+              "ja": "モデナ",
+              "ko": "모데나"
             }
           },
           {
@@ -38301,7 +44320,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Moxina",
             "localizedNames": {
               "zh-HK": "墨西拿",
-              "zh-TW": "墨西拿"
+              "zh-TW": "墨西拿",
+              "en": "Messina",
+              "ja": "メッシーナ",
+              "ko": "메시나"
             }
           },
           {
@@ -38310,7 +44332,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nabuleisi",
             "localizedNames": {
               "zh-HK": "那不勒斯",
-              "zh-TW": "那不勒斯"
+              "zh-TW": "那不勒斯",
+              "en": "Naples",
+              "ja": "ナポリ",
+              "ko": "나폴리"
             }
           },
           {
@@ -38319,7 +44344,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuaoluo",
             "localizedNames": {
               "zh-HK": "努奧羅",
-              "zh-TW": "努奧羅"
+              "zh-TW": "努奧羅",
+              "en": "Nuoro",
+              "ja": "ヌーオロ",
+              "ko": "Nuoro"
             }
           },
           {
@@ -38328,7 +44356,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuowala",
             "localizedNames": {
               "zh-HK": "諾瓦拉",
-              "zh-TW": "諾瓦拉"
+              "zh-TW": "諾瓦拉",
+              "en": "Novara",
+              "ja": "ノヴァーラ",
+              "ko": "노바라"
             }
           },
           {
@@ -38337,7 +44368,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Paerma",
             "localizedNames": {
               "zh-HK": "帕爾馬",
-              "zh-TW": "帕爾馬"
+              "zh-TW": "帕爾馬",
+              "en": "Parma",
+              "ja": "パルマ",
+              "ko": "파르마"
             }
           },
           {
@@ -38346,7 +44380,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Paweiya",
             "localizedNames": {
               "zh-HK": "帕維亞",
-              "zh-TW": "帕維亞"
+              "zh-TW": "帕維亞",
+              "en": "Pavia",
+              "ja": "パヴィア",
+              "ko": "Pavia"
             }
           },
           {
@@ -38355,7 +44392,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Peilujia",
             "localizedNames": {
               "zh-HK": "佩魯賈",
-              "zh-TW": "佩魯賈"
+              "zh-TW": "佩魯賈",
+              "en": "Perugia",
+              "ja": "ペルージャ",
+              "ko": "Perugia"
             }
           },
           {
@@ -38364,7 +44404,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Renaya",
             "localizedNames": {
               "zh-HK": "熱那亞",
-              "zh-TW": "熱那亞"
+              "zh-TW": "熱那亞",
+              "en": "Genoa",
+              "ja": "ジェノヴァ",
+              "ko": "제노바"
             }
           },
           {
@@ -38373,7 +44416,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Salainuo",
             "localizedNames": {
               "zh-HK": "薩萊諾",
-              "zh-TW": "薩萊諾"
+              "zh-TW": "薩萊諾",
+              "en": "Salerno",
+              "ja": "サレルノ",
+              "ko": "살레르노"
             }
           },
           {
@@ -38382,7 +44428,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sasali",
             "localizedNames": {
               "zh-HK": "薩薩里",
-              "zh-TW": "薩薩里"
+              "zh-TW": "薩薩里",
+              "en": "Sassari",
+              "ja": "サッサリ",
+              "ko": "사사리"
             }
           },
           {
@@ -38391,7 +44440,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sawona",
             "localizedNames": {
               "zh-HK": "薩沃納",
-              "zh-TW": "薩沃納"
+              "zh-TW": "薩沃納",
+              "en": "Savona",
+              "ja": "サヴォーナ",
+              "ko": "Savona"
             }
           },
           {
@@ -38400,7 +44452,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Talantuo",
             "localizedNames": {
               "zh-HK": "塔蘭託",
-              "zh-TW": "塔蘭託"
+              "zh-TW": "塔蘭託",
+              "en": "Taranto",
+              "ja": "ターラント",
+              "ko": "타란토"
             }
           },
           {
@@ -38418,7 +44473,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Teluntuo",
             "localizedNames": {
               "zh-HK": "特倫託",
-              "zh-TW": "特倫託"
+              "zh-TW": "特倫託",
+              "en": "Trento",
+              "ja": "トレント",
+              "ko": "트렌토"
             }
           },
           {
@@ -38427,7 +44485,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weinisi",
             "localizedNames": {
               "zh-HK": "威尼斯",
-              "zh-TW": "威尼斯"
+              "zh-TW": "威尼斯",
+              "en": "Venice",
+              "ja": "ベニス",
+              "ko": "베니스"
             }
           },
           {
@@ -38436,7 +44497,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weierqieli",
             "localizedNames": {
               "zh-HK": "韋爾切利",
-              "zh-TW": "韋爾切利"
+              "zh-TW": "韋爾切利",
+              "en": "Vercelli",
+              "ja": "ヴェルチェッリ",
+              "ko": "Vercelli"
             }
           },
           {
@@ -38445,7 +44509,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weitaibo",
             "localizedNames": {
               "zh-HK": "維泰博",
-              "zh-TW": "維泰博"
+              "zh-TW": "維泰博",
+              "en": "Viterbo",
+              "ja": "ヴィテルボ",
+              "ko": "Viterbo"
             }
           },
           {
@@ -38454,7 +44521,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wudinei",
             "localizedNames": {
               "zh-HK": "烏迪內",
-              "zh-TW": "烏迪內"
+              "zh-TW": "烏迪內",
+              "en": "Udine",
+              "ja": "ウーディネ",
+              "ko": "우디네"
             }
           },
           {
@@ -38463,7 +44533,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xilakuzha",
             "localizedNames": {
               "zh-HK": "錫拉庫扎",
-              "zh-TW": "錫拉庫扎"
+              "zh-TW": "錫拉庫扎",
+              "en": "Syracuse",
+              "ja": "シラクサ",
+              "ko": "시라쿠사"
             }
           },
           {
@@ -38472,7 +44545,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiyena",
             "localizedNames": {
               "zh-HK": "錫耶納",
-              "zh-TW": "錫耶納"
+              "zh-TW": "錫耶納",
+              "en": "Siena",
+              "ja": "シエーナ",
+              "ko": "시에나"
             }
           },
           {
@@ -38481,7 +44557,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yalishandeliya",
             "localizedNames": {
               "zh-HK": "亞歷山德里亞",
-              "zh-TW": "亞歷山德里亞"
+              "zh-TW": "亞歷山德里亞",
+              "en": "Alessandria",
+              "ja": "アレッサンドリア",
+              "ko": "알레산드리아"
             }
           },
           {
@@ -38490,13 +44569,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yisaierniya",
             "localizedNames": {
               "zh-HK": "伊塞爾尼亞",
-              "zh-TW": "伊塞爾尼亞"
+              "zh-TW": "伊塞爾尼亞",
+              "en": "Isernia",
+              "ja": "イゼルニア",
+              "ko": "Isernia"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "意大利",
-          "zh-TW": "意大利"
+          "zh-TW": "意大利",
+          "en": "Italy",
+          "ja": "イタリア",
+          "ko": "이탈리아"
         }
       }
     ]
@@ -38525,7 +44610,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aizaoer",
             "localizedNames": {
               "zh-HK": "艾藻爾",
-              "zh-TW": "艾藻爾"
+              "zh-TW": "艾藻爾",
+              "en": "Aizawl",
+              "ja": "アイザウル",
+              "ko": "아이자울"
             }
           },
           {
@@ -38534,7 +44622,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Banjialuoer",
             "localizedNames": {
               "zh-HK": "班加羅爾",
-              "zh-TW": "班加羅爾"
+              "zh-TW": "班加羅爾",
+              "en": "Bengaluru",
+              "ja": "バンガロール",
+              "ko": "벵갈루루"
             }
           },
           {
@@ -38552,7 +44643,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bopaer",
             "localizedNames": {
               "zh-HK": "博帕爾",
-              "zh-TW": "博帕爾"
+              "zh-TW": "博帕爾",
+              "en": "Bhopal",
+              "ja": "ボパール",
+              "ko": "보팔"
             }
           },
           {
@@ -38579,7 +44673,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Daman",
             "localizedNames": {
               "zh-HK": "達曼",
-              "zh-TW": "達曼"
+              "zh-TW": "達曼",
+              "en": "Daman",
+              "ja": "ダマン",
+              "ko": "다만"
             }
           },
           {
@@ -38588,7 +44685,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Diwu",
             "localizedNames": {
               "zh-HK": "第烏",
-              "zh-TW": "第烏"
+              "zh-TW": "第烏",
+              "en": "Diu",
+              "ja": "ディーウ",
+              "ko": "디우"
             }
           },
           {
@@ -38597,7 +44697,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gantuoke",
             "localizedNames": {
               "zh-HK": "甘托克",
-              "zh-TW": "甘托克"
+              "zh-TW": "甘托克",
+              "en": "Gangtok",
+              "ja": "ガントク",
+              "ko": "강토크"
             }
           },
           {
@@ -38606,7 +44709,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geyinbaituo",
             "localizedNames": {
               "zh-HK": "哥印拜陀",
-              "zh-TW": "哥印拜陀"
+              "zh-TW": "哥印拜陀",
+              "en": "Coimbatore",
+              "ja": "コーヤンブットゥール",
+              "ko": "코임바토르"
             }
           },
           {
@@ -38615,7 +44721,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiaergeda",
             "localizedNames": {
               "zh-HK": "加爾各答",
-              "zh-TW": "加爾各答"
+              "zh-TW": "加爾各答",
+              "en": "Kolkata",
+              "ja": "コルカタ",
+              "ko": "콜카타"
             }
           },
           {
@@ -38642,7 +44751,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jialangdaer",
             "localizedNames": {
               "zh-HK": "賈朗達爾",
-              "zh-TW": "賈朗達爾"
+              "zh-TW": "賈朗達爾",
+              "en": "Jalandhar",
+              "ja": "ジャランダル",
+              "ko": "잘란다르"
             }
           },
           {
@@ -38651,7 +44763,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jiaotebuer",
             "localizedNames": {
               "zh-HK": "焦特布爾",
-              "zh-TW": "焦特布爾"
+              "zh-TW": "焦特布爾",
+              "en": "Jodhpur",
+              "ja": "ジョドプル",
+              "ko": "조드푸르"
             }
           },
           {
@@ -38660,7 +44775,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jinnai",
             "localizedNames": {
               "zh-HK": "金奈",
-              "zh-TW": "金奈"
+              "zh-TW": "金奈",
+              "en": "Chennai",
+              "ja": "チェンナイ",
+              "ko": "첸나이"
             }
           },
           {
@@ -38669,7 +44787,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kawaladi",
             "localizedNames": {
               "zh-HK": "卡瓦拉蒂",
-              "zh-TW": "卡瓦拉蒂"
+              "zh-TW": "卡瓦拉蒂",
+              "en": "Kavaratti",
+              "ja": "カバラティ",
+              "ko": "카바라티"
             }
           },
           {
@@ -38678,7 +44799,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kexima",
             "localizedNames": {
               "zh-HK": "科希馬",
-              "zh-TW": "科希馬"
+              "zh-TW": "科希馬",
+              "en": "Kohima",
+              "ja": "コヒマ",
+              "ko": "코히마"
             }
           },
           {
@@ -38696,7 +44820,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Madulai",
             "localizedNames": {
               "zh-HK": "馬杜賴",
-              "zh-TW": "馬杜賴"
+              "zh-TW": "馬杜賴",
+              "en": "Madurai",
+              "ja": "マドゥライ",
+              "ko": "마두라이"
             }
           },
           {
@@ -38714,7 +44841,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Telifandelang",
             "localizedNames": {
               "zh-HK": "特里凡得琅",
-              "zh-TW": "特里凡得琅"
+              "zh-TW": "特里凡得琅",
+              "en": "Thiruvananthapuram",
+              "ja": "ティルヴァナンタプラム",
+              "ko": "티루바난타푸람"
             }
           },
           {
@@ -38732,7 +44862,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xilong",
             "localizedNames": {
               "zh-HK": "西隆",
-              "zh-TW": "西隆"
+              "zh-TW": "西隆",
+              "en": "Shillong",
+              "ja": "シロン",
+              "ko": "실롱"
             }
           },
           {
@@ -38750,7 +44883,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xindeli",
             "localizedNames": {
               "zh-HK": "新德里",
-              "zh-TW": "新德里"
+              "zh-TW": "新德里",
+              "en": "New Delhi",
+              "ja": "ニューデリー",
+              "ko": "뉴델리"
             }
           },
           {
@@ -38792,7 +44928,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "印度",
-          "zh-TW": "印度"
+          "zh-TW": "印度",
+          "en": "India",
+          "ja": "インド",
+          "ko": "인도"
         }
       }
     ]
@@ -38840,7 +44979,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beisulaweixi",
             "localizedNames": {
               "zh-HK": "北蘇拉威西",
-              "zh-TW": "北蘇拉威西"
+              "zh-TW": "北蘇拉威西",
+              "en": "North Sulawesi",
+              "ja": "北スラウェシ州",
+              "ko": "술라웨시우타라 주"
             }
           },
           {
@@ -38849,7 +44991,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beisumendala",
             "localizedNames": {
               "zh-HK": "北蘇門答臘",
-              "zh-TW": "北蘇門答臘"
+              "zh-TW": "北蘇門答臘",
+              "en": "North Sumatra",
+              "ja": "北スマトラ州",
+              "ko": "수마트라우타라 주"
             }
           },
           {
@@ -38867,7 +45012,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongjialimandan",
             "localizedNames": {
               "zh-HK": "東加里曼丹",
-              "zh-TW": "東加里曼丹"
+              "zh-TW": "東加里曼丹",
+              "en": "East Kalimantan",
+              "ja": "東カリマンタン州",
+              "ko": "East Kalimantan"
             }
           },
           {
@@ -38885,7 +45033,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongnushadengjiala",
             "localizedNames": {
               "zh-HK": "東努沙登加拉",
-              "zh-TW": "東努沙登加拉"
+              "zh-TW": "東努沙登加拉",
+              "en": "East Nusa Tenggara",
+              "ja": "東ヌサトゥンガラ州",
+              "ko": "East Nusa Tenggara"
             }
           },
           {
@@ -38894,7 +45045,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongzhaowa",
             "localizedNames": {
               "zh-HK": "東爪哇",
-              "zh-TW": "東爪哇"
+              "zh-TW": "東爪哇",
+              "en": "East Java",
+              "ja": "東ジャワ州",
+              "ko": "자와티무르 주"
             }
           },
           {
@@ -38921,7 +45075,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Minggulu",
             "localizedNames": {
               "zh-HK": "明古魯",
-              "zh-TW": "明古魯"
+              "zh-TW": "明古魯",
+              "en": "Bengkulu",
+              "ja": "Bengkulu",
+              "ko": "븡쿨루"
             }
           },
           {
@@ -38939,7 +45096,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nanjialimandan",
             "localizedNames": {
               "zh-HK": "南加裏曼丹",
-              "zh-TW": "南加裏曼丹"
+              "zh-TW": "南加裏曼丹",
+              "en": "South Kalimantan",
+              "ja": "南カリマンタン州",
+              "ko": "South Kalimantan"
             }
           },
           {
@@ -38957,7 +45117,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nansumendala",
             "localizedNames": {
               "zh-HK": "南蘇門答臘",
-              "zh-TW": "南蘇門答臘"
+              "zh-TW": "南蘇門答臘",
+              "en": "South Sumatra",
+              "ja": "南スマトラ州",
+              "ko": "수마트라슬라탄 주"
             }
           },
           {
@@ -38975,7 +45138,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wandan",
             "localizedNames": {
               "zh-HK": "萬丹",
-              "zh-TW": "萬丹"
+              "zh-TW": "萬丹",
+              "en": "Banten",
+              "ja": "バンテン州",
+              "ko": "반텐 주"
             }
           },
           {
@@ -39002,7 +45168,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xizhaowa",
             "localizedNames": {
               "zh-HK": "西爪哇",
-              "zh-TW": "西爪哇"
+              "zh-TW": "西爪哇",
+              "en": "West Java",
+              "ja": "西ジャワ州",
+              "ko": "자와바랏 주"
             }
           },
           {
@@ -39011,7 +45180,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yajiada",
             "localizedNames": {
               "zh-HK": "雅加達",
-              "zh-TW": "雅加達"
+              "zh-TW": "雅加達",
+              "en": "Jakarta",
+              "ja": "ジャカルタ",
+              "ko": "자카르타"
             }
           },
           {
@@ -39056,7 +45228,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongsulaweixi",
             "localizedNames": {
               "zh-HK": "中蘇拉威西",
-              "zh-TW": "中蘇拉威西"
+              "zh-TW": "中蘇拉威西",
+              "en": "Central Sulawesi",
+              "ja": "中部スラウェシ州",
+              "ko": "술라웨시틍아 주"
             }
           },
           {
@@ -39065,13 +45240,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongzhaowa",
             "localizedNames": {
               "zh-HK": "中爪哇",
-              "zh-TW": "中爪哇"
+              "zh-TW": "中爪哇",
+              "en": "Central Java",
+              "ja": "中央ジャワ州",
+              "ko": "Central Java"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "印度尼西亞",
-          "zh-TW": "印度尼西亞"
+          "zh-TW": "印度尼西亞",
+          "en": "Indonesia",
+          "ja": "インドネシア",
+          "ko": "인도네시아"
         }
       }
     ]
@@ -39109,7 +45290,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Deli",
             "localizedNames": {
               "zh-HK": "德里",
-              "zh-TW": "德里"
+              "zh-TW": "德里",
+              "en": "Londonderry",
+              "ja": "ロンドンデリー",
+              "ko": "데리"
             }
           },
           {
@@ -39118,7 +45302,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lisiben",
             "localizedNames": {
               "zh-HK": "利斯本",
-              "zh-TW": "利斯本"
+              "zh-TW": "利斯本",
+              "en": "Lisburn",
+              "ja": "リスバーン",
+              "ko": "리즈번"
             }
           },
           {
@@ -39127,13 +45314,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niuli",
             "localizedNames": {
               "zh-HK": "紐裏",
-              "zh-TW": "紐裏"
+              "zh-TW": "紐裏",
+              "en": "Newry",
+              "ja": "ニューリー",
+              "ko": "뉴리"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "北愛爾蘭",
-          "zh-TW": "北愛爾蘭"
+          "zh-TW": "北愛爾蘭",
+          "en": "Northern Ireland",
+          "ja": "北アイルランド",
+          "ko": "북아일랜드"
         }
       },
       {
@@ -39156,7 +45349,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aidingbao",
             "localizedNames": {
               "zh-HK": "愛丁堡",
-              "zh-TW": "愛丁堡"
+              "zh-TW": "愛丁堡",
+              "en": "Edinburgh",
+              "ja": "エディンバラ",
+              "ko": "에든버러"
             }
           },
           {
@@ -39174,7 +45370,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Gelasige",
             "localizedNames": {
               "zh-HK": "格拉斯哥",
-              "zh-TW": "格拉斯哥"
+              "zh-TW": "格拉斯哥",
+              "en": "Glasgow",
+              "ja": "グラスゴー",
+              "ko": "글래스고"
             }
           },
           {
@@ -39198,7 +45397,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "蘇格蘭",
-          "zh-TW": "蘇格蘭"
+          "zh-TW": "蘇格蘭",
+          "en": "Scotland",
+          "ja": "スコットランド",
+          "ko": "스코틀랜드"
         }
       },
       {
@@ -39212,7 +45414,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bange",
             "localizedNames": {
               "zh-HK": "班戈",
-              "zh-TW": "班戈"
+              "zh-TW": "班戈",
+              "en": "Bangor",
+              "ja": "バンガー",
+              "ko": "뱅고어"
             }
           },
           {
@@ -39230,7 +45435,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niubote",
             "localizedNames": {
               "zh-HK": "紐波特",
-              "zh-TW": "紐波特"
+              "zh-TW": "紐波特",
+              "en": "Newport",
+              "ja": "ニューポート",
+              "ko": "뉴포트"
             }
           },
           {
@@ -39239,13 +45447,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Siwangxi",
             "localizedNames": {
               "zh-HK": "斯旺西",
-              "zh-TW": "斯旺西"
+              "zh-TW": "斯旺西",
+              "en": "Swansea",
+              "ja": "スウォンジ",
+              "ko": "스완지"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "威爾士",
-          "zh-TW": "威爾士"
+          "zh-TW": "威爾士",
+          "en": "Wales",
+          "ja": "ウェールズ",
+          "ko": "Wales"
         }
       },
       {
@@ -39259,7 +45473,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Aikesaite",
             "localizedNames": {
               "zh-HK": "埃克塞特",
-              "zh-TW": "埃克塞特"
+              "zh-TW": "埃克塞特",
+              "en": "Exeter",
+              "ja": "エクセター",
+              "ko": "엑서터"
             }
           },
           {
@@ -39268,7 +45485,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Basi",
             "localizedNames": {
               "zh-HK": "巴斯",
-              "zh-TW": "巴斯"
+              "zh-TW": "巴斯",
+              "en": "Bath",
+              "ja": "バース",
+              "ko": "바스"
             }
           },
           {
@@ -39277,7 +45497,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bidebolei",
             "localizedNames": {
               "zh-HK": "彼得伯勒",
-              "zh-TW": "彼得伯勒"
+              "zh-TW": "彼得伯勒",
+              "en": "Peterborough",
+              "ja": "ピーターバラ",
+              "ko": "피터버러"
             }
           },
           {
@@ -39286,7 +45509,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bominghan",
             "localizedNames": {
               "zh-HK": "伯明翰",
-              "zh-TW": "伯明翰"
+              "zh-TW": "伯明翰",
+              "en": "Birmingham",
+              "ja": "バーミンガム",
+              "ko": "버밍엄"
             }
           },
           {
@@ -39295,7 +45521,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Buladefude",
             "localizedNames": {
               "zh-HK": "布拉德福德",
-              "zh-TW": "布拉德福德"
+              "zh-TW": "布拉德福德",
+              "en": "Bradford",
+              "ja": "ブラッドフォード",
+              "ko": "브래드퍼드"
             }
           },
           {
@@ -39313,7 +45542,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bulisituoer",
             "localizedNames": {
               "zh-HK": "布裏斯托爾",
-              "zh-TW": "布裏斯托爾"
+              "zh-TW": "布裏斯托爾",
+              "en": "Bristol",
+              "ja": "ブリストル",
+              "ko": "브리스틀"
             }
           },
           {
@@ -39340,7 +45572,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Geluosite",
             "localizedNames": {
               "zh-HK": "格洛斯特",
-              "zh-TW": "格洛斯特"
+              "zh-TW": "格洛斯特",
+              "en": "Gloucester",
+              "ja": "グロスター",
+              "ko": "글로스터"
             }
           },
           {
@@ -39358,7 +45593,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Helifude",
             "localizedNames": {
               "zh-HK": "赫裏福德",
-              "zh-TW": "赫裏福德"
+              "zh-TW": "赫裏福德",
+              "en": "Hereford",
+              "ja": "ヘレフォード",
+              "ko": "헤리퍼드"
             }
           },
           {
@@ -39367,7 +45605,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jianqiao",
             "localizedNames": {
               "zh-HK": "劍橋",
-              "zh-TW": "劍橋"
+              "zh-TW": "劍橋",
+              "en": "Cambridge",
+              "ja": "ケンブリッジ",
+              "ko": "케임브리지"
             }
           },
           {
@@ -39376,7 +45617,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kalaier",
             "localizedNames": {
               "zh-HK": "卡萊爾",
-              "zh-TW": "卡萊爾"
+              "zh-TW": "卡萊爾",
+              "en": "Carlisle",
+              "ja": "カーライル",
+              "ko": "칼라일"
             }
           },
           {
@@ -39385,7 +45629,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kantebolei",
             "localizedNames": {
               "zh-HK": "坎特伯雷",
-              "zh-TW": "坎特伯雷"
+              "zh-TW": "坎特伯雷",
+              "en": "Canterbury",
+              "ja": "カンタベリー",
+              "ko": "캔터베리"
             }
           },
           {
@@ -39394,7 +45641,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaowenchui",
             "localizedNames": {
               "zh-HK": "考文垂",
-              "zh-TW": "考文垂"
+              "zh-TW": "考文垂",
+              "en": "Coventry",
+              "ja": "コヴェントリー",
+              "ko": "코번트리"
             }
           },
           {
@@ -39412,7 +45662,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lipeng",
             "localizedNames": {
               "zh-HK": "裏彭",
-              "zh-TW": "裏彭"
+              "zh-TW": "裏彭",
+              "en": "Ripon",
+              "ja": "リポン",
+              "ko": "리펀"
             }
           },
           {
@@ -39421,7 +45674,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liqifeierde",
             "localizedNames": {
               "zh-HK": "利奇菲爾德",
-              "zh-TW": "利奇菲爾德"
+              "zh-TW": "利奇菲爾德",
+              "en": "Lichfield",
+              "ja": "リッチフィールド",
+              "ko": "리치필드"
             }
           },
           {
@@ -39430,7 +45686,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Liwupu",
             "localizedNames": {
               "zh-HK": "利物浦",
-              "zh-TW": "利物浦"
+              "zh-TW": "利物浦",
+              "en": "Liverpool",
+              "ja": "リヴァプール",
+              "ko": "리버풀"
             }
           },
           {
@@ -39457,7 +45716,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Linken",
             "localizedNames": {
               "zh-HK": "林肯",
-              "zh-TW": "林肯"
+              "zh-TW": "林肯",
+              "en": "Lincoln",
+              "ja": "リンカン",
+              "ko": "링컨"
             }
           },
           {
@@ -39466,7 +45728,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Lundun",
             "localizedNames": {
               "zh-HK": "倫敦",
-              "zh-TW": "倫敦"
+              "zh-TW": "倫敦",
+              "en": "London",
+              "ja": "ロンドン",
+              "ko": "런던"
             }
           },
           {
@@ -39475,7 +45740,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manchesite",
             "localizedNames": {
               "zh-HK": "曼徹斯特",
-              "zh-TW": "曼徹斯特"
+              "zh-TW": "曼徹斯特",
+              "en": "Manchester",
+              "ja": "マンチェスター",
+              "ko": "맨체스터"
             }
           },
           {
@@ -39484,7 +45752,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nananpudun",
             "localizedNames": {
               "zh-HK": "南安普敦",
-              "zh-TW": "南安普敦"
+              "zh-TW": "南安普敦",
+              "en": "Southampton",
+              "ja": "サウサンプトン",
+              "ko": "사우샘프턴"
             }
           },
           {
@@ -39493,7 +45764,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Niujin",
             "localizedNames": {
               "zh-HK": "牛津",
-              "zh-TW": "牛津"
+              "zh-TW": "牛津",
+              "en": "Oxford",
+              "ja": "オックスフォード",
+              "ko": "옥스퍼드"
             }
           },
           {
@@ -39511,7 +45785,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuodinghan",
             "localizedNames": {
               "zh-HK": "諾丁漢",
-              "zh-TW": "諾丁漢"
+              "zh-TW": "諾丁漢",
+              "en": "Nottingham",
+              "ja": "ノッティンガム",
+              "ko": "Nottingham"
             }
           },
           {
@@ -39520,7 +45797,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nuoliqi",
             "localizedNames": {
               "zh-HK": "諾里奇",
-              "zh-TW": "諾里奇"
+              "zh-TW": "諾里奇",
+              "en": "Norwich",
+              "ja": "ノリッチ",
+              "ko": "노리치"
             }
           },
           {
@@ -39538,7 +45818,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Puleisidun",
             "localizedNames": {
               "zh-HK": "普雷斯頓",
-              "zh-TW": "普雷斯頓"
+              "zh-TW": "普雷斯頓",
+              "en": "Preston",
+              "ja": "プレストン",
+              "ko": "프레스턴"
             }
           },
           {
@@ -39547,7 +45830,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Pulimaosi",
             "localizedNames": {
               "zh-HK": "普利茅斯",
-              "zh-TW": "普利茅斯"
+              "zh-TW": "普利茅斯",
+              "en": "Plymouth",
+              "ja": "プリマス",
+              "ko": "플리머스"
             }
           },
           {
@@ -39556,7 +45842,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiqiesite",
             "localizedNames": {
               "zh-HK": "奇切斯特",
-              "zh-TW": "奇切斯特"
+              "zh-TW": "奇切斯特",
+              "en": "Chichester",
+              "ja": "チチェスター",
+              "ko": "치체스터"
             }
           },
           {
@@ -39565,7 +45854,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Qiesite",
             "localizedNames": {
               "zh-HK": "切斯特",
-              "zh-TW": "切斯特"
+              "zh-TW": "切斯特",
+              "en": "Chester",
+              "ja": "チェスター",
+              "ko": "체스터"
             }
           },
           {
@@ -39574,7 +45866,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sangdelan",
             "localizedNames": {
               "zh-HK": "桑德蘭",
-              "zh-TW": "桑德蘭"
+              "zh-TW": "桑德蘭",
+              "en": "Sunderland",
+              "ja": "サンダーランド",
+              "ko": "선덜랜드"
             }
           },
           {
@@ -39610,7 +45905,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Teluluo",
             "localizedNames": {
               "zh-HK": "特魯羅",
-              "zh-TW": "特魯羅"
+              "zh-TW": "特魯羅",
+              "en": "Truro",
+              "ja": "トゥルーロ",
+              "ko": "트루로"
             }
           },
           {
@@ -39637,7 +45935,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Weikefeierde",
             "localizedNames": {
               "zh-HK": "韋克菲爾德",
-              "zh-TW": "韋克菲爾德"
+              "zh-TW": "韋克菲爾德",
+              "en": "Wakefield",
+              "ja": "ウェイクフィールド",
+              "ko": "웨이크필드"
             }
           },
           {
@@ -39646,7 +45947,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wenchesite",
             "localizedNames": {
               "zh-HK": "溫徹斯特",
-              "zh-TW": "溫徹斯特"
+              "zh-TW": "溫徹斯特",
+              "en": "Winchester",
+              "ja": "ウィンチェスター",
+              "ko": "윈체스터"
             }
           },
           {
@@ -39655,7 +45959,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wuerfuhanpudun",
             "localizedNames": {
               "zh-HK": "伍爾弗漢普頓",
-              "zh-TW": "伍爾弗漢普頓"
+              "zh-TW": "伍爾弗漢普頓",
+              "en": "Wolverhampton",
+              "ja": "ウォルヴァーハンプトン",
+              "ko": "울버햄프턴"
             }
           },
           {
@@ -39664,7 +45971,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wusite",
             "localizedNames": {
               "zh-HK": "伍斯特",
-              "zh-TW": "伍斯特"
+              "zh-TW": "伍斯特",
+              "en": "Worcester",
+              "ja": "ウスター",
+              "ko": "우스터"
             }
           },
           {
@@ -39673,7 +45983,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiefeierde",
             "localizedNames": {
               "zh-HK": "謝菲爾德",
-              "zh-TW": "謝菲爾德"
+              "zh-TW": "謝菲爾德",
+              "en": "Sheffield",
+              "ja": "シェフィールド",
+              "ko": "셰필드"
             }
           },
           {
@@ -39682,7 +45995,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yili",
             "localizedNames": {
               "zh-HK": "伊利",
-              "zh-TW": "伊利"
+              "zh-TW": "伊利",
+              "en": "Ely",
+              "ja": "イーリー",
+              "ko": "일리"
             }
           },
           {
@@ -39697,7 +46013,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "英格蘭",
-          "zh-TW": "英格蘭"
+          "zh-TW": "英格蘭",
+          "en": "England",
+          "ja": "イングランド",
+          "ko": "잉글랜드"
         }
       }
     ]
@@ -39758,7 +46077,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Baileijia",
             "localizedNames": {
               "zh-HK": "拜勒加",
-              "zh-TW": "拜勒加"
+              "zh-TW": "拜勒加",
+              "en": "Balqa Governorate",
+              "ja": "バルカ県",
+              "ko": "발카주"
             }
           },
           {
@@ -39767,7 +46089,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Jielashen",
             "localizedNames": {
               "zh-HK": "傑拉什",
-              "zh-TW": "傑拉什"
+              "zh-TW": "傑拉什",
+              "en": "Jerash Governorate",
+              "ja": "ジェラシュ県",
+              "ko": "제라시주"
             }
           },
           {
@@ -39794,7 +46119,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Maan",
             "localizedNames": {
               "zh-HK": "馬安",
-              "zh-TW": "馬安"
+              "zh-TW": "馬安",
+              "en": "Ma'an Governorate",
+              "ja": "マアーン県",
+              "ko": "마안주"
             }
           },
           {
@@ -39821,7 +46149,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tafeila",
             "localizedNames": {
               "zh-HK": "塔菲拉",
-              "zh-TW": "塔菲拉"
+              "zh-TW": "塔菲拉",
+              "en": "Tafilah Governorate",
+              "ja": "タフィラ県",
+              "ko": "타필라주"
             }
           },
           {
@@ -39830,7 +46161,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Yakaba",
             "localizedNames": {
               "zh-HK": "亞喀巴",
-              "zh-TW": "亞喀巴"
+              "zh-TW": "亞喀巴",
+              "en": "Aqaba",
+              "ja": "アカバ",
+              "ko": "Aqaba"
             }
           },
           {
@@ -39848,13 +46182,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhaerka",
             "localizedNames": {
               "zh-HK": "扎爾卡",
-              "zh-TW": "扎爾卡"
+              "zh-TW": "扎爾卡",
+              "en": "Zarqa",
+              "ja": "ザルカ",
+              "ko": "자르카"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "約旦",
-          "zh-TW": "約旦"
+          "zh-TW": "約旦",
+          "en": "Jordan",
+          "ja": "ヨルダン",
+          "ko": "요르단"
         }
       }
     ]
@@ -39892,7 +46232,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Henei",
             "localizedNames": {
               "zh-HK": "河內",
-              "zh-TW": "河內"
+              "zh-TW": "河內",
+              "en": "Hanoi",
+              "ja": "ハノイ",
+              "ko": "하노이"
             }
           },
           {
@@ -39907,7 +46250,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "越南",
-          "zh-TW": "越南"
+          "zh-TW": "越南",
+          "en": "Vietnam",
+          "ja": "ベトナム",
+          "ko": "베트남"
         }
       }
     ]
@@ -39936,7 +46282,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Beifang",
             "localizedNames": {
               "zh-HK": "北方",
-              "zh-TW": "北方"
+              "zh-TW": "北方",
+              "en": "Northern Province",
+              "ja": "北部州",
+              "ko": "북부주"
             }
           },
           {
@@ -39945,7 +46294,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Dongfang",
             "localizedNames": {
               "zh-HK": "東方",
-              "zh-TW": "東方"
+              "zh-TW": "東方",
+              "en": "Eastern Province",
+              "ja": "東部州",
+              "ko": "동부주"
             }
           },
           {
@@ -39981,7 +46333,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Tongdai",
             "localizedNames": {
               "zh-HK": "銅帶",
-              "zh-TW": "銅帶"
+              "zh-TW": "銅帶",
+              "en": "Copperbelt",
+              "ja": "カッパーベルト州",
+              "ko": "코퍼벨트주"
             }
           },
           {
@@ -39999,7 +46354,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xifang",
             "localizedNames": {
               "zh-HK": "西方",
-              "zh-TW": "西方"
+              "zh-TW": "西方",
+              "en": "Western Province",
+              "ja": "西部州",
+              "ko": "서부주"
             }
           },
           {
@@ -40008,13 +46366,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Zhongyang",
             "localizedNames": {
               "zh-HK": "中央",
-              "zh-TW": "中央"
+              "zh-TW": "中央",
+              "en": "Central Province",
+              "ja": "中央州",
+              "ko": "중부 주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "贊比亞",
-          "zh-TW": "贊比亞"
+          "zh-TW": "贊比亞",
+          "en": "Zambia",
+          "ja": "ザンビア",
+          "ko": "잠비아"
         }
       }
     ]
@@ -40103,7 +46467,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Antuofajiasitadaqu",
             "localizedNames": {
               "zh-HK": "安託法加斯塔大區",
-              "zh-TW": "安託法加斯塔大區"
+              "zh-TW": "安託法加斯塔大區",
+              "en": "Antofagasta",
+              "ja": "アントファガスタ",
+              "ko": "안토파가스타"
             }
           },
           {
@@ -40130,7 +46497,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Hudaqu",
             "localizedNames": {
               "zh-HK": "湖大區",
-              "zh-TW": "湖大區"
+              "zh-TW": "湖大區",
+              "en": "Los Lagos Region",
+              "ja": "ロス・ラゴス州",
+              "ko": "로스라고스주"
             }
           },
           {
@@ -40166,7 +46536,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shengdeyage",
             "localizedNames": {
               "zh-HK": "聖地亞哥",
-              "zh-TW": "聖地亞哥"
+              "zh-TW": "聖地亞哥",
+              "en": "Santiago",
+              "ja": "サンティアゴ",
+              "ko": "산티아고"
             }
           },
           {
@@ -40175,7 +46548,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Talapakadaqu",
             "localizedNames": {
               "zh-HK": "塔拉帕卡大區",
-              "zh-TW": "塔拉帕卡大區"
+              "zh-TW": "塔拉帕卡大區",
+              "en": "Tarapacá",
+              "ja": "タラパカ州",
+              "ko": "타라파카주"
             }
           },
           {
@@ -40184,7 +46560,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Waerpalaisuodaqu",
             "localizedNames": {
               "zh-HK": "瓦爾帕萊索大區",
-              "zh-TW": "瓦爾帕萊索大區"
+              "zh-TW": "瓦爾帕萊索大區",
+              "en": "Valparaíso",
+              "ja": "バルパライソ",
+              "ko": "발파라이소"
             }
           },
           {
@@ -40199,7 +46578,10 @@ export const LOCATION_CATALOG_DATA = [
         ],
         "localizedNames": {
           "zh-HK": "智利",
-          "zh-TW": "智利"
+          "zh-TW": "智利",
+          "en": "Chile",
+          "ja": "チリ",
+          "ko": "칠레"
         }
       }
     ]
@@ -40229,7 +46611,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Bamingji-bangelan",
             "localizedNames": {
               "zh-HK": "巴明吉-班戈蘭",
-              "zh-TW": "巴明吉-班戈蘭"
+              "zh-TW": "巴明吉-班戈蘭",
+              "en": "Bamingui-Bangoran Prefecture",
+              "ja": "バミンギ・バンゴラン州",
+              "ko": "바밍기방고랑주"
             }
           },
           {
@@ -40256,7 +46641,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Kaimo",
             "localizedNames": {
               "zh-HK": "凱莫",
-              "zh-TW": "凱莫"
+              "zh-TW": "凱莫",
+              "en": "Kémo Prefecture",
+              "ja": "ケモ州",
+              "ko": "케모주"
             }
           },
           {
@@ -40274,7 +46662,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Manbeilei-kadai",
             "localizedNames": {
               "zh-HK": "曼貝雷-卡代",
-              "zh-TW": "曼貝雷-卡代"
+              "zh-TW": "曼貝雷-卡代",
+              "en": "Mambéré-Kadéï Prefecture",
+              "ja": "マンベレ・カデイ州",
+              "ko": "맘베레카데이주"
             }
           },
           {
@@ -40283,7 +46674,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Mubomu",
             "localizedNames": {
               "zh-HK": "姆博穆",
-              "zh-TW": "姆博穆"
+              "zh-TW": "姆博穆",
+              "en": "Mbomou Prefecture",
+              "ja": "ムボム州",
+              "ko": "음보무주"
             }
           },
           {
@@ -40301,7 +46695,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Nana-manbeilei",
             "localizedNames": {
               "zh-HK": "納納-曼貝雷",
-              "zh-TW": "納納-曼貝雷"
+              "zh-TW": "納納-曼貝雷",
+              "en": "Nana-Mambéré Prefecture",
+              "ja": "ナナ・メンベレ州",
+              "ko": "나나맘베레주"
             }
           },
           {
@@ -40310,7 +46707,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Sangjia-mubaailei",
             "localizedNames": {
               "zh-HK": "桑加-姆巴埃雷",
-              "zh-TW": "桑加-姆巴埃雷"
+              "zh-TW": "桑加-姆巴埃雷",
+              "en": "Sangha-Mbaéré Prefecture",
+              "ja": "サンガ・ムバエレ州",
+              "ko": "상가음바에레주"
             }
           },
           {
@@ -40319,7 +46719,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangketuo",
             "localizedNames": {
               "zh-HK": "上科託",
-              "zh-TW": "上科託"
+              "zh-TW": "上科託",
+              "en": "Haute-Kotto Prefecture",
+              "ja": "オート・コト州",
+              "ko": "오트코토주"
             }
           },
           {
@@ -40328,7 +46731,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Shangmubomu",
             "localizedNames": {
               "zh-HK": "上姆博穆",
-              "zh-TW": "上姆博穆"
+              "zh-TW": "上姆博穆",
+              "en": "Haut-Mbomou Prefecture",
+              "ja": "オー・ムボム州",
+              "ko": "오트음보무주"
             }
           },
           {
@@ -40337,7 +46743,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Waka",
             "localizedNames": {
               "zh-HK": "瓦卡",
-              "zh-TW": "瓦卡"
+              "zh-TW": "瓦卡",
+              "en": "Ouaka Prefecture",
+              "ja": "ワカ州",
+              "ko": "와카주"
             }
           },
           {
@@ -40346,7 +46755,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wakajia",
             "localizedNames": {
               "zh-HK": "瓦卡加",
-              "zh-TW": "瓦卡加"
+              "zh-TW": "瓦卡加",
+              "en": "Vakaga Prefecture",
+              "ja": "バカガ州",
+              "ko": "바카가주"
             }
           },
           {
@@ -40355,7 +46767,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wamu",
             "localizedNames": {
               "zh-HK": "瓦姆",
-              "zh-TW": "瓦姆"
+              "zh-TW": "瓦姆",
+              "en": "Ouham Prefecture",
+              "ja": "ウハム州",
+              "ko": "우암주"
             }
           },
           {
@@ -40364,7 +46779,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wamu-pengdai",
             "localizedNames": {
               "zh-HK": "瓦姆-彭代",
-              "zh-TW": "瓦姆-彭代"
+              "zh-TW": "瓦姆-彭代",
+              "en": "Ouham-Pendé Prefecture",
+              "ja": "ウハム・ペンデ州",
+              "ko": "우암펭데주"
             }
           },
           {
@@ -40373,7 +46791,10 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Wengbeila-muboke",
             "localizedNames": {
               "zh-HK": "翁貝拉-姆波科",
-              "zh-TW": "翁貝拉-姆波科"
+              "zh-TW": "翁貝拉-姆波科",
+              "en": "Ombella-M'Poko Prefecture",
+              "ja": "オンベラ・ムポコ州",
+              "ko": "옴벨라음포코주"
             }
           },
           {
@@ -40382,13 +46803,19 @@ export const LOCATION_CATALOG_DATA = [
             "latinName": "Xiaketuo",
             "localizedNames": {
               "zh-HK": "下科託",
-              "zh-TW": "下科託"
+              "zh-TW": "下科託",
+              "en": "Basse-Kotto Prefecture",
+              "ja": "バス・コト州",
+              "ko": "바스코토주"
             }
           }
         ],
         "localizedNames": {
           "zh-HK": "中非共和國",
-          "zh-TW": "中非共和國"
+          "zh-TW": "中非共和國",
+          "en": "Central African Republic",
+          "ja": "中央アフリカ共和国",
+          "ko": "중앙 아프리카 공화국"
         }
       }
     ]

@@ -13,6 +13,49 @@ const examples = {
 const allNodes = nodes => nodes.flatMap(node => [node, ...allNodes(node.children || [])])
 
 describe('system region labels', () => {
+  it.each([
+    ['en', 'New York City', 'London', 'Paris', 'Los Angeles', 'Tochigi'],
+    ['ja', 'ニューヨーク', 'ロンドン', 'パリ', 'ロサンゼルス', '栃木県'],
+    ['ko', '뉴욕', '런던', '파리', '로스앤젤레스', '도치기 현']
+  ])('uses international city names rather than Chinese pinyin in %s', (locale, newYork, london, paris, losAngeles, tochigi) => {
+    const catalog = getLocationCatalog(locale)
+    expect(catalog.findLocation('USA', 'NY', 'QEE').city.name).toBe(newYork)
+    expect(catalog.findLocation('GBR', 'ENG', 'LND').city.name).toBe(london)
+    expect(catalog.findLocation('FRA', 'FRA', 'PAR').city.name).toBe(paris)
+    expect(catalog.findLocation('USA', 'CA', 'LAX').city.name).toBe(losAngeles)
+    expect(catalog.findLocation('JPN', 'JPN', '9').city.name).toBe(tochigi)
+    expect(catalog.systemAreaLabel('美国 纽约 纽约市')).toBe(catalog.locationLabel('USA', 'NY', 'QEE'))
+    const tree = catalog.toPickerTree([{ code: 'USA', children: [{ code: 'NY', children: [{ code: 'QEE' }] }] }])
+    expect(tree[0].stateMap.NY.cityMap.QEE).toMatchObject({ code: 'QEE', name: newYork })
+    expect(catalog.systemAreaLabel('纽约市 / 用户自定义')).toBe('纽约市 / 用户自定义')
+  })
+
+  it('distinguishes French Guiana from Guyana without guessing ambiguous legacy text', () => {
+    const frenchGuiana = LOCATION_CATALOG_DATA.find(node => node.code === 'GUF')
+    expect(frenchGuiana).toMatchObject({ name: '圭亚那', iso: 'GF', aliasesName: '法属圭亚那' })
+    const names = { 'zh-CN': '法属圭亚那', 'zh-HK': '法屬圭亞那', 'zh-TW': '法屬圭亞那', en: 'French Guiana', ja: '仏領ギアナ', ko: '프랑스령 기아나' }
+    for (const [locale, name] of Object.entries(names)) {
+      const catalog = getLocationCatalog(locale)
+      expect(catalog.findLocation('GUF', '', '').region.name).toBe(name)
+      expect(catalog.systemAreaLabel('法属圭亚那')).toBe(name)
+    }
+    expect(getLocationCatalog('en').systemAreaLabel('圭亚那')).toBe('圭亚那')
+    expect(getLocationCatalog('en').locationLabel('USA', 'NY', 'QEE')).toBe('New York City, New York, United States')
+  })
+
+  it('covers all 47 Japanese prefectures without changing their stored identity', () => {
+    const raw = LOCATION_CATALOG_DATA.find(node => node.code === 'JPN').children[0].children
+    expect(raw).toHaveLength(47)
+    for (const node of raw) {
+      for (const locale of ['en', 'ja', 'ko']) expect(node.localizedNames[locale], `${node.code}:${locale}`).toBeTruthy()
+    }
+    const tochigi = raw.find(node => node.code === '9')
+    expect(tochigi.name).toBe('枥木')
+    for (const locale of ['zh-CN', 'zh-HK', 'zh-TW']) {
+      expect(getLocationCatalog(locale).findLocation('JPN', 'JPN', '9').city.name).toBe('栃木')
+    }
+  })
+
   it.each(Object.entries(examples))('renders location, hometown and known IP areas in %s', (locale, expected) => {
     const catalog = getLocationCatalog(locale)
     expect(catalog.locationLabel('CN', '44', '1')).toBe(expected[0])

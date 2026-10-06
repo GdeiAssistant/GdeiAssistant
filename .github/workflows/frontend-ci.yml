@@ -47,6 +47,9 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      - name: Check generated location names
+        run: npm run check:location-names
+
       - name: Run unit tests
         run: npm run test:unit
 

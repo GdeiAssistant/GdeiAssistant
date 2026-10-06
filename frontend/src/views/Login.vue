@@ -14,6 +14,8 @@ const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const username = ref('')
 const password = ref('')
+// 数据源切换和模拟账号提示只在本地开发构建中显示
+const isDev = import.meta.env.DEV
 const mockMode = ref(isMockMode())
 const campusCredentialConsent = ref(false)
 
@@ -82,7 +84,6 @@ function handleThirdPartyLogin(type) {
       </div>
       <div class="login-visual__card">
         <h2>{{ t('loginPage.title') }}</h2>
-        <p>{{ t('loginPage.visualIntro') }}</p>
       </div>
       <svg class="login-visual__grid" viewBox="0 0 400 400" preserveAspectRatio="none" focusable="false">
         <defs>
@@ -140,7 +141,7 @@ function handleThirdPartyLogin(type) {
         </button>
       </form>
 
-      <div class="login-mock">
+      <div v-if="isDev" class="login-mock">
         <div class="login-mock__top">
           <span>{{ t('loginPage.mockMode') }}</span>
           <button
@@ -245,13 +246,6 @@ function handleThirdPartyLogin(type) {
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.1;
-}
-
-.login-visual p {
-  margin: 16px 0 0;
-  color: rgb(255 255 255 / 82%);
-  font-size: 17px;
-  line-height: 1.7;
 }
 
 /* Form column */

@@ -211,7 +211,7 @@ onMounted(async () => {
     </div>
 
     <!-- 底部悬浮操作栏 -->
-    <div v-if="detail && !loading" class="fixed bottom-0 left-0 right-0 w-full flex items-center gap-3 px-3 py-2.5 bg-[var(--c-surface)] shadow-[0_-2px_10px_rgba(0,0,0,0.08)] z-[400]">
+    <div v-if="detail && !loading" class="marketplace-detail-actionbar fixed bottom-0 left-0 right-0 w-full flex items-center gap-3 px-3 py-2.5 bg-[var(--c-surface)] shadow-[0_-2px_10px_rgba(0,0,0,0.08)] z-[400]">
       <button type="button" class="flex-1 h-11 border-none rounded bg-[var(--c-bg)] text-[var(--c-text-1)] text-base cursor-pointer flex items-center justify-center" @click="copyQQ">{{ t('marketplace.detail.copyQQ') }}</button>
       <button v-if="detail.contact?.phone" type="button" class="marketplace-detail-call flex-1 h-11 border-none rounded text-white text-base cursor-pointer flex items-center justify-center" @click="callPhone">{{ t('marketplace.detail.call') }}</button>
     </div>
@@ -257,6 +257,15 @@ onMounted(async () => {
 .marketplace-detail-call {
   background: var(--c-primary);
   box-shadow: none;
+}
+
+/* 桌面端操作栏变为 sticky 卡片后 w-full 会伸到侧栏下方：与内容卡片左右对齐 */
+@media (min-width: 768px) {
+  .marketplace-detail-actionbar {
+    width: auto;
+    margin-left: 16px;
+    margin-right: 10px;
+  }
 }
 
 .marketplace-detail-state-shell {

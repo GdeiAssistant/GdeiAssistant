@@ -827,12 +827,10 @@
   "card": {
     "action": {
       "info": {
-        "badge": "資訊",
         "description": "查看校園卡餘額、狀態及當前掛失情況，支持在線掛失",
         "title": "基本資訊"
       },
       "records": {
-        "badge": "消費",
         "description": "按日期查詢校園卡當日消費流水",
         "title": "消費記錄"
       }
@@ -936,10 +934,6 @@
     "releaseToRefresh": "釋放立即重新整理",
     "select": "請選擇",
     "loadFailed": "載入失敗，請稍後再試"
-  },
-  "dataSource": {
-    "mock": "Mock 數據源",
-    "remote": "遠程數據源"
   },
   "deleteAccount": {
     "agreement": "我已充分閱讀並同意上述註銷後果",
@@ -1279,7 +1273,6 @@
       "empty": "暫無借閱記錄",
       "initialHint": "先輸入圖書館密碼，再查詢當前借閱記錄",
       "intro": "輸入圖書館密碼後查看借閱記錄，續借時會再次校驗密碼。",
-      "mockPassword": "模擬密碼：123456",
       "passwordLabel": "圖書館密碼",
       "passwordPlaceholder": "請輸入圖書館密碼",
       "passwordRequired": "請輸入圖書館密碼",
@@ -1304,14 +1297,11 @@
       "title": "館藏詳情",
       "emptyDescription": "目前找不到這本書的館藏詳細資料，可以返回上一頁重新選擇，或稍後再查看。"
     },
-    "heroBadge": "圖書館",
     "heroDescription": "搜索館藏圖書，查看並管理當前借閱記錄。",
     "heroTitle": "圖書館",
     "home": {
-      "borrowBadge": "借閱",
       "borrowDescription": "輸入圖書館密碼後查看借閱記錄並繼續續借",
       "borrowTitle": "我的借閱",
-      "searchBadge": "檢索",
       "searchDescription": "按書名、作者和出版社檢索館藏圖書",
       "searchTitle": "館藏檢索"
     },
@@ -1360,8 +1350,7 @@
     "title": "廣東二師助手",
     "usernameLabel": "帳號",
     "usernamePlaceholder": "請輸入你的校園網帳號",
-    "credentialNotice": "校園帳號憑證可能用於校園認證、快速認證與工作階段同步。請僅使用本人帳號；若您拒絕儲存相關憑證，或後續透過帳號設定、回饋管道申請刪除，部分校園查詢或快速認證功能可能無法使用。",
-    "visualIntro": "把課表、校園卡、資訊和校園生活放在一個清爽入口裡。"
+    "credentialNotice": "校園帳號憑證可能用於校園認證、快速認證與工作階段同步。請僅使用本人帳號；若您拒絕儲存相關憑證，或後續透過帳號設定、回饋管道申請刪除，部分校園查詢或快速認證功能可能無法使用。"
   },
   "loginRecord": {
     "clientDevice": "{network} 客戶端",
@@ -1630,14 +1619,9 @@
   "community": {
     "navAriaLabel": "社區導航",
     "defaultPublish": "發布資訊",
-    "noticeFallback": "校內通知",
-    "heroSubtitle": "發現校園精彩，連結你我生活",
     "backHome": "返回功能主頁",
     "railAriaLabel": "校園生活側欄",
-    "todayCampus": "今日校園",
-    "goSee": "去看看",
     "myPosts": "我的發布",
-    "manage": "管理",
     "latest": "最新動態",
     "safetyTitle": "安全提示",
     "safetyTip": "交易和代取請優先選擇校內當面確認，避免洩露個人隱私。"

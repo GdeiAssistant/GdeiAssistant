@@ -5,7 +5,6 @@ describe('card localized content', () => {
   const messages = {
     'card.action.info.title': 'Basic Info',
     'card.action.info.description': 'View balance, status, and loss status',
-    'card.action.info.badge': 'Info',
     'card.amountUnit': ' CNY'
   }
 
@@ -16,8 +15,7 @@ describe('card localized content', () => {
       id: 'info',
       title: 'Basic Info',
       description: 'View balance, status, and loss status',
-      path: '/card/info',
-      badge: 'Info'
+      path: '/card/info'
     })
   })
 

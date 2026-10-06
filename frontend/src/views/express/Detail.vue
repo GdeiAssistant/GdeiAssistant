@@ -248,7 +248,7 @@ onMounted(async () => {
     </div>
 
     <!-- 底部固定评论输入框 -->
-    <div class="fixed bottom-0 left-0 right-0 flex items-center px-4 py-2.5 bg-[var(--c-surface)] border-t border-[var(--c-border)] z-[500]">
+    <div class="express-detail-commentbar fixed bottom-0 left-0 right-0 flex items-center px-4 py-2.5 bg-[var(--c-surface)] border-t border-[var(--c-border)] z-[500]">
       <input
         type="text"
         class="ui-control flex-1 h-9 px-3 border border-[var(--c-border)] rounded-full text-sm outline-none text-[var(--c-text-1)] bg-[var(--c-bg)] focus:border-[var(--c-express)]"
@@ -276,5 +276,13 @@ onMounted(async () => {
 
 .express-submit {
   background: var(--c-primary);
+}
+
+/* 桌面端评论栏变为 sticky 卡片后会伸到侧栏下方：与内容卡片左右对齐 */
+@media (min-width: 768px) {
+  .express-detail-commentbar {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
 }
 </style>

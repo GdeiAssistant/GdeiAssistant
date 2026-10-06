@@ -1,10 +1,9 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { ArrowRight, Megaphone, Send, ShieldCheck, Sparkles } from 'lucide-vue-next'
+import { ArrowRight, Send, ShieldCheck, Sparkles } from 'lucide-vue-next'
 import CommunityTabbar from './CommunityTabbar.vue'
-import request from '../../utils/request'
 
 const props = defineProps({
   title: { type: String, required: true },
@@ -17,10 +16,6 @@ const props = defineProps({
 
 const router = useRouter()
 const { t } = useI18n()
-const campusItems = ref([
-  { id: 'campus-music', title: '校园歌手大赛决赛', meta: '19:00 · 音乐厅', path: '/info' },
-  { id: 'library-night', title: '图书馆夜读打卡', meta: '20:00 · 图书馆', path: '/info' }
-])
 
 const publishTarget = computed(() => {
   return props.publishPath || props.tabs.find((tab) => tab.key === 'publish')?.path || props.basePath
@@ -33,21 +28,6 @@ const activeModuleLabel = computed(() => {
 function goTo(path) {
   router.push(path)
 }
-
-onMounted(async () => {
-  try {
-    const res = await request.get('/information/announcement/start/0/size/2')
-    const list = Array.isArray(res?.data) ? res.data : []
-    if (list.length > 0) {
-      campusItems.value = list.map((item) => ({
-        id: item.id || item.announcementId || item.title,
-        title: item.title,
-        meta: item.publishDate || item.createTime || '',
-        path: item.id ? `/info/announcements/${item.id}` : '/info'
-      }))
-    }
-  } catch (_) {}
-})
 </script>
 
 <template>
@@ -55,7 +35,7 @@ onMounted(async () => {
     <section class="community-module-layout__hero" aria-labelledby="community-module-title">
       <div class="community-module-layout__hero-copy">
         <h1 id="community-module-title">{{ title }}</h1>
-        <p>{{ subtitle || t('community.heroSubtitle') }}</p>
+        <p v-if="subtitle">{{ subtitle }}</p>
       </div>
 
       <div class="community-module-layout__hero-actions">
@@ -78,30 +58,9 @@ onMounted(async () => {
       </main>
 
       <aside class="community-module-layout__rail" :aria-label="t('community.railAriaLabel')">
-        <section class="community-module-layout__rail-card community-module-layout__rail-card--today">
-          <div class="community-module-layout__rail-head">
-            <h2>{{ t('community.todayCampus') }}</h2>
-            <span>{{ t('community.goSee') }}</span>
-          </div>
-          <ul class="community-module-layout__activity-list">
-            <li v-for="(item, index) in campusItems" :key="item.id" @click="goTo(item.path)">
-              <component
-                :is="index === 0 ? Megaphone : Sparkles"
-                class="community-module-layout__rail-icon"
-                :class="index === 0 ? 'community-module-layout__rail-icon--blue' : 'community-module-layout__rail-icon--green'"
-              />
-              <div>
-                <strong>{{ item.title }}</strong>
-                <small>{{ item.meta || t('community.noticeFallback') }}</small>
-              </div>
-            </li>
-          </ul>
-        </section>
-
         <section class="community-module-layout__rail-card community-module-layout__rail-card--manage">
           <div class="community-module-layout__rail-head">
             <h2>{{ t('community.myPosts') }}</h2>
-            <span>{{ t('community.manage') }}</span>
           </div>
           <div class="community-module-layout__quick-grid">
             <button type="button" @click="goTo(publishTarget)">
@@ -259,68 +218,6 @@ onMounted(async () => {
   font-weight: 650;
 }
 
-.community-module-layout__rail-head span {
-  color: var(--c-text-3);
-  font-size: 12px;
-}
-
-.community-module-layout__activity-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.community-module-layout__activity-list li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.community-module-layout__activity-list li + li {
-  border-top: 1px solid var(--c-divider);
-}
-
-.community-module-layout__activity-list li:hover {
-  background: var(--c-surface-hover);
-}
-
-.community-module-layout__activity-list strong,
-.community-module-layout__activity-list small {
-  display: block;
-}
-
-.community-module-layout__activity-list strong {
-  color: var(--c-text-1);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.community-module-layout__activity-list small {
-  margin-top: 2px;
-  color: var(--c-text-3);
-  font-size: 12px;
-}
-
-.community-module-layout__rail-icon {
-  box-sizing: content-box;
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  padding: 8px;
-  border-radius: var(--radius-control);
-  background: var(--c-primary-soft);
-  color: var(--c-primary);
-}
-
-.community-module-layout__rail-icon--blue,
-.community-module-layout__rail-icon--green {
-  background: var(--c-primary-soft);
-  color: var(--c-primary);
-}
-
 .community-module-layout__quick-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -467,8 +364,7 @@ onMounted(async () => {
 @media (prefers-reduced-motion: reduce) {
   .community-module-layout__primary,
   .community-module-layout__secondary,
-  .community-module-layout__quick-grid button,
-  .community-module-layout__activity-list li {
+  .community-module-layout__quick-grid button {
     transition: none;
   }
 }

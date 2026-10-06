@@ -827,12 +827,10 @@
   "card": {
     "action": {
       "info": {
-        "badge": "情報",
         "description": "キャンパスカードの残高・状態・紛失状況を確認し、オンラインで紛失届けできます",
         "title": "基本情報"
       },
       "records": {
-        "badge": "利用履歴",
         "description": "日付を指定してキャンパスカードの当日利用明細を照会",
         "title": "利用明細"
       }
@@ -936,10 +934,6 @@
     "releaseToRefresh": "離して更新",
     "select": "選択してください",
     "loadFailed": "読み込みに失敗しました。しばらくしてからもう一度お試しください"
-  },
-  "dataSource": {
-    "mock": "Mock データソース",
-    "remote": "リモートデータソース"
   },
   "deleteAccount": {
     "agreement": "上記の注销に関する内容を読み、同意しました",
@@ -1279,7 +1273,6 @@
       "empty": "貸出記録がありません",
       "initialHint": "図書館パスワードを入力してから貸出記録を照会",
       "intro": "図書館パスワードで貸出記録を表示。延長時も再認証します。",
-      "mockPassword": "デモ用パスワード：123456",
       "passwordLabel": "図書館パスワード",
       "passwordPlaceholder": "図書館パスワードを入力",
       "passwordRequired": "図書館パスワードを入力してください",
@@ -1304,14 +1297,11 @@
       "title": "蔵書詳細",
       "emptyDescription": "この本の所蔵詳細が見つかりません。前の画面で選び直すか、しばらくしてからご確認ください。"
     },
-    "heroBadge": "図書館",
     "heroDescription": "蔵書を検索し、現在の貸出を管理できます。",
     "heroTitle": "図書館",
     "home": {
-      "borrowBadge": "貸出",
       "borrowDescription": "図書館パスワードで貸出記録の確認・延長",
       "borrowTitle": "マイ貸出",
-      "searchBadge": "検索",
       "searchDescription": "書名・著者・出版社で蔵書検索",
       "searchTitle": "蔵書検索"
     },
@@ -1360,8 +1350,7 @@
     "title": "GdeiAssistant",
     "usernameLabel": "アカウント",
     "usernamePlaceholder": "キャンパスネットのアカウントを入力",
-    "credentialNotice": "キャンパス認証情報は、キャンパス認証・クイック認証・セッション同期に使われる場合があります。本人のアカウントのみを使用してください。保存を拒否したり、設定やフィードバックから削除したりすると、一部の照会やクイック認証が使えなくなることがあります。",
-    "visualIntro": "時間割、キャンパスカード、お知らせ、キャンパスライフをひとつのすっきりした入口にまとめます。"
+    "credentialNotice": "キャンパス認証情報は、キャンパス認証・クイック認証・セッション同期に使われる場合があります。本人のアカウントのみを使用してください。保存を拒否したり、設定やフィードバックから削除したりすると、一部の照会やクイック認証が使えなくなることがあります。"
   },
   "loginRecord": {
     "clientDevice": "{network} クライアント",
@@ -1630,14 +1619,9 @@
   "community": {
     "navAriaLabel": "コミュニティナビゲーション",
     "defaultPublish": "情報を投稿",
-    "noticeFallback": "学内お知らせ",
-    "heroSubtitle": "キャンパスの魅力を見つけ、暮らしをつなぐ",
     "backHome": "機能ホームに戻る",
     "railAriaLabel": "キャンパスライフサイドバー",
-    "todayCampus": "今日のキャンパス",
-    "goSee": "見てみる",
     "myPosts": "自分の投稿",
-    "manage": "管理",
     "latest": "最新の動向",
     "safetyTitle": "安全のヒント",
     "safetyTip": "取引や代理受取は、できるだけ学内で対面確認し、個人情報の漏えいを避けてください。"

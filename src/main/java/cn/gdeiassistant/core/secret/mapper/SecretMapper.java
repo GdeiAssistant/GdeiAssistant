@@ -93,8 +93,8 @@ public interface SecretMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertSecretComment(SecretCommentEntity secretComment);
 
-    @Insert("insert into secret_like (content_id,username,create_time) values(#{content_id},#{username},now())")
-    void insertSecretLike(@Param("content_id") int contentId, @Param("username") String username);
+    @Insert("insert ignore into secret_like (content_id,username,create_time) values(#{content_id},#{username},now())")
+    int insertSecretLike(@Param("content_id") int contentId, @Param("username") String username);
 
     @Update("update secret_content set state=1 where id=#{id}")
     void deleteSecret(@Param("id") int id);

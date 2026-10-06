@@ -55,6 +55,25 @@ async function login(data = {}) {
 }
 
 describe('mock smoke', () => {
+  it('hides anonymous authors in responses while preserving private mock ownership', async () => {
+    const token = await login()
+    const secret = (await request('/api/secret/id/301', { token })).data
+    expect(secret.username).toBe('匿名用户')
+    expect(secret).not.toHaveProperty('owner')
+    expect(secret).not.toHaveProperty('likedUsers')
+    const express = (await request('/api/express/id/401', { token })).data
+    expect(express.username).toBeNull()
+    expect(express.realname).toBeNull()
+    expect(express.canGuess).toBe(true)
+    expect(express).not.toHaveProperty('owner')
+    expect(express).not.toHaveProperty('likedUsers')
+    const internal = JSON.parse(storage.mockRuntimeState).community
+    expect(internal.secrets.find(item => item.id === 301).owner).toBeTruthy()
+    expect(internal.expressItems.find(item => item.id === 401).realname).toBeTruthy()
+    const mine = (await request('/api/secret/profile', { token })).data
+    expect(mine.some(item => item.id === 301)).toBe(true)
+  })
+
   it('covers auth, profile and account center flows', async () => {
     const token = await login()
 

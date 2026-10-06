@@ -13,6 +13,8 @@ public class TopicVO implements Serializable {
 
     private Integer id;
     private String username;
+    /** 公开应用账号 UUID；树洞等匿名内容不设置 */
+    private String authorId;
     private String topic;
     private String content;
     private Integer count;
@@ -27,6 +29,8 @@ public class TopicVO implements Serializable {
     public void setId(Integer id) { this.id = id; }
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+    public String getAuthorId() { return authorId; }
+    public void setAuthorId(String authorId) { this.authorId = authorId; }
     public String getTopic() { return topic; }
     public void setTopic(String topic) { this.topic = topic; }
     public String getContent() { return content; }

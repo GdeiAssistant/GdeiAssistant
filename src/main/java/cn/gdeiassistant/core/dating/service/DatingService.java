@@ -5,6 +5,7 @@ import cn.gdeiassistant.common.exception.DatabaseException.NoAccessException;
 import cn.gdeiassistant.common.exception.DatingException.RepeatPickException;
 import cn.gdeiassistant.common.exception.DatingException.SelfPickException;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver;
 import cn.gdeiassistant.common.tools.Utils.StringUtils;
 import cn.gdeiassistant.core.dating.mapper.DatingMapper;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
@@ -46,6 +47,9 @@ public class DatingService {
 
     @Autowired
     private InteractionNotificationService interactionNotificationService;
+
+    @Autowired
+    private PublicAuthorResolver publicAuthorResolver;
 
     public DatingProfileVO queryDatingProfile(Integer id) throws DataNotExistException {
         DatingProfileEntity entity = datingMapper.selectDatingProfileById(id);
@@ -292,7 +296,10 @@ public class DatingService {
     private DatingProfileVO profileEntityToVO(DatingProfileEntity e) {
         DatingProfileVO vo = new DatingProfileVO();
         vo.setProfileId(e.getProfileId());
-        vo.setUsername(e.getUsername());
+        // authorId 指向发布者，不是被介绍的室友人物
+        PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(e.getUsername());
+        vo.setAuthorId(author.authorId());
+        vo.setUsername(author.displayName());
         vo.setNickname(e.getNickname());
         vo.setGrade(e.getGrade());
         vo.setFaculty(e.getFaculty());

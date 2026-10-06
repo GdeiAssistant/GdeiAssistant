@@ -365,20 +365,29 @@ function buildProfile(username) {
 }
 
 function buildSecretPayload(secret, username, commentList) {
-  return Object.assign({}, secret, {
+  const payload = Object.assign({}, secret, {
     liked: Array.isArray(secret.likedUsers) && secret.likedUsers.indexOf(username) !== -1 ? 1 : 0,
     likeCount: Array.isArray(secret.likedUsers) ? secret.likedUsers.length : 0,
-    commentCount: Array.isArray(commentList) ? commentList.length : 0
+    commentCount: Array.isArray(commentList) ? commentList.length : 0,
+    username: '匿名用户'
   })
+  delete payload.owner
+  delete payload.likedUsers
+  return payload
 }
 
 function buildExpressPayload(item, username, commentList) {
-  return Object.assign({}, item, {
+  const payload = Object.assign({}, item, {
     liked: Array.isArray(item.likedUsers) && item.likedUsers.indexOf(username) !== -1,
     likeCount: Array.isArray(item.likedUsers) ? item.likedUsers.length : 0,
     commentCount: Array.isArray(commentList) ? commentList.length : 0,
-    canGuess: !!item.realname
+    canGuess: !!item.realname,
+    username: null,
+    realname: null
   })
+  delete payload.owner
+  delete payload.likedUsers
+  return payload
 }
 
 function buildTopicPayload(item, username) {

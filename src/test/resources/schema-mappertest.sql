@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS express_like (
   id INT AUTO_INCREMENT PRIMARY KEY,
   express_id INT NOT NULL,
   username VARCHAR(24) NOT NULL,
-  create_time DATETIME DEFAULT CURRENT_TIMESTAMP
+  create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (express_id, username)
 );
 
 CREATE TABLE IF NOT EXISTS express_comment (
@@ -110,7 +111,8 @@ CREATE TABLE IF NOT EXISTS secret_like (
   id INT AUTO_INCREMENT PRIMARY KEY,
   content_id INT NOT NULL,
   username VARCHAR(24) NOT NULL,
-  create_time DATETIME DEFAULT CURRENT_TIMESTAMP
+  create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (content_id, username)
 );
 
 CREATE TABLE IF NOT EXISTS topic (
@@ -126,7 +128,81 @@ CREATE TABLE IF NOT EXISTS topic_like (
   id INT AUTO_INCREMENT PRIMARY KEY,
   topic_id INT NOT NULL,
   username VARCHAR(24) NOT NULL,
-  create_time DATETIME DEFAULT CURRENT_TIMESTAMP
+  create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (topic_id, username)
+);
+
+CREATE TABLE IF NOT EXISTS photograph_like (
+  like_id INT AUTO_INCREMENT PRIMARY KEY,
+  photo_id INT NOT NULL,
+  username VARCHAR(24) NOT NULL,
+  create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (photo_id, username)
+);
+
+CREATE TABLE IF NOT EXISTS app_user (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  public_id CHAR(36) NOT NULL UNIQUE,
+  status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS campus_credential (
+  user_id BIGINT PRIMARY KEY,
+  campus_username VARCHAR(24) NOT NULL UNIQUE,
+  password VARCHAR(128)
+);
+
+CREATE TABLE IF NOT EXISTS user_follow (
+  follower_id BIGINT NOT NULL,
+  followee_id BIGINT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (follower_id, followee_id)
+);
+
+CREATE TABLE IF NOT EXISTS user_block (
+  blocker_id BIGINT NOT NULL,
+  blocked_id BIGINT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (blocker_id, blocked_id)
+);
+
+CREATE TABLE IF NOT EXISTS conversation (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_low_id BIGINT NOT NULL,
+  user_high_id BIGINT NOT NULL,
+  last_seq BIGINT DEFAULT 0,
+  last_message_at DATETIME,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (user_low_id, user_high_id)
+);
+
+CREATE TABLE IF NOT EXISTS conversation_member (
+  conversation_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  last_read_seq BIGINT DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (conversation_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS chat_message (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  conversation_id BIGINT NOT NULL,
+  seq BIGINT NOT NULL,
+  sender_id BIGINT NOT NULL,
+  client_message_id CHAR(36) NOT NULL,
+  type VARCHAR(16) NOT NULL DEFAULT 'TEXT',
+  content VARCHAR(4000) NOT NULL,
+  image_key VARCHAR(255),
+  image_content_type VARCHAR(64),
+  image_width INT,
+  image_height INT,
+  image_size INT,
+  image_sha256 CHAR(64),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (conversation_id, seq),
+  UNIQUE (conversation_id, sender_id, client_message_id)
 );
 
 CREATE TABLE IF NOT EXISTS charge_order (

@@ -59,7 +59,6 @@ public class SecretService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
-        list.forEach(e -> e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername())));
         List<SecretVO> result = secretConverter.toVOList(list);
         enrichVOsWithBatchCounts(result, list, user.getUsername());
         return result;
@@ -75,7 +74,6 @@ public class SecretService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
-        list.forEach(e -> e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername())));
         List<SecretVO> result = secretConverter.toVOList(list);
         enrichVOsWithBatchCounts(result, list, user.getUsername());
         return result;
@@ -84,7 +82,6 @@ public class SecretService {
     public List<SecretCommentVO> getSecretComments(int contentId) throws Exception {
         List<SecretCommentEntity> list = secretMapper.selectSecretCommentsByContentId(contentId);
         if (list == null) return new ArrayList<>();
-        list.forEach(e -> e.setUsername(AnonymizeUtils.sanitizeUsername(e.getUsername())));
         return secretCommentConverter.toVOList(list);
     }
 
@@ -147,7 +144,6 @@ public class SecretService {
         if (entity == null) {
             throw new DataNotExistException("查询的树洞消息不存在");
         }
-        entity.setUsername(AnonymizeUtils.sanitizeUsername(entity.getUsername()));
         SecretVO vo = secretConverter.toVO(entity);
         if (entity.getType() != null && entity.getType() == 1) {
             vo.setVoiceURL(getSecretVoiceURL(entity.getId()));
@@ -202,7 +198,7 @@ public class SecretService {
                 entity.getId() == null ? null : String.valueOf(entity.getId()),
                 "comment",
                 "树洞收到新评论",
-                user.getUsername() + " 评论了你的树洞：" + comment
+                AnonymizeUtils.treeholeAnonymousLabel() + " 评论了你的树洞"
         );
     }
 
@@ -212,19 +208,21 @@ public class SecretService {
         if (like) {
             Integer existingLikeCount = secretMapper.selectSecretLike(id, user.getUsername());
             if (existingLikeCount == null || existingLikeCount == 0) {
-                secretMapper.insertSecretLike(id, user.getUsername());
-                SecretContentEntity contentEntity = secretMapper.selectSecretByID(id);
-                interactionNotificationService.createInteractionNotification(
-                        "secret",
-                        "like",
-                        contentEntity != null ? contentEntity.getUsername() : null,
-                        user.getUsername(),
-                        String.valueOf(id),
-                        null,
-                        "like",
-                        "树洞收到新点赞",
-                        user.getUsername() + " 点赞了你的树洞"
-                );
+                int inserted = secretMapper.insertSecretLike(id, user.getUsername());
+                if (inserted > 0) {
+                    SecretContentEntity contentEntity = secretMapper.selectSecretByID(id);
+                    interactionNotificationService.createInteractionNotification(
+                            "secret",
+                            "like",
+                            contentEntity != null ? contentEntity.getUsername() : null,
+                            user.getUsername(),
+                            String.valueOf(id),
+                            null,
+                            "like",
+                            "树洞收到新点赞",
+                            AnonymizeUtils.treeholeAnonymousLabel() + " 点赞了你的树洞"
+                    );
+                }
             }
         } else {
             secretMapper.deleteSecretLike(id, user.getUsername());

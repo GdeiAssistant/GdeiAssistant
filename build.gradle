@@ -10,6 +10,8 @@ plugins {
 dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    // 社交实时通道：契约要求简单原生 WebSocket JSON（非 STOMP/SockJS），仅新增本依赖
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'

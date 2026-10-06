@@ -1,7 +1,7 @@
 package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
-import cn.gdeiassistant.common.pojo.Entity.ExpressComment;
+import cn.gdeiassistant.core.express.pojo.vo.ExpressCommentVO;
 import cn.gdeiassistant.core.express.controller.ExpressController;
 import cn.gdeiassistant.core.express.pojo.vo.ExpressVO;
 import cn.gdeiassistant.core.express.service.ExpressService;
@@ -103,6 +103,8 @@ class ExpressContractTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data[0].id").exists())
                 .andExpect(jsonPath("$.data[0].comment").exists())
+                .andExpect(jsonPath("$.data[0].username").doesNotExist())
+                .andExpect(jsonPath("$.data[0].authorId").doesNotExist())
                 .andExpect(jsonPath("$.data[0].publishTime").exists());
     }
 
@@ -153,8 +155,8 @@ class ExpressContractTest {
         return vo;
     }
 
-    private static ExpressComment mockExpressComment() {
-        ExpressComment comment = new ExpressComment();
+    private static ExpressCommentVO mockExpressComment() {
+        ExpressCommentVO comment = new ExpressCommentVO();
         comment.setId(1);
         comment.setComment("nice");
         comment.setPublishTime(new Date());

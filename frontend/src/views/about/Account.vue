@@ -1,4 +1,5 @@
 <script setup>
+import { resetSocialRealtimeOnAuthChange } from '../../composables/useSocialRealtime.js'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from '@/composables/useToast'
@@ -119,6 +120,7 @@ async function toggleQuickAuth(enabled) {
 
 function forceRelogin() {
   localStorage.removeItem('token')
+  resetSocialRealtimeOnAuthChange()
   sessionStorage.clear()
   setTimeout(() => router.replace('/login'), 700)
 }

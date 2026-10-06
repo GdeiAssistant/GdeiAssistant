@@ -63,6 +63,37 @@
         />
       </div>
     </AppCard>
+
+    <!-- Direct messages -->
+    <AppCard>
+      <template #header>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold">{{ $t('social.chatsTitle') }}</span>
+          <span
+            v-if="dmUnreadCount > 0"
+            class="info-interaction-badge min-w-[18px] h-[18px] px-1 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
+          >{{ dmUnreadCount > 99 ? '99+' : dmUnreadCount }}</span>
+        </div>
+        <button
+          type="button"
+          class="text-xs text-[var(--c-primary)] bg-transparent border-none cursor-pointer"
+          @click="router.push('/social/chats')"
+        >{{ $t('info.expand') }}</button>
+      </template>
+      <div class="p-4">
+        <button
+          type="button"
+          class="w-full flex items-center gap-3 text-left cursor-pointer bg-transparent border-none"
+          @click="router.push('/social/chats')"
+        >
+          <div class="flex-1 min-w-0">
+            <div class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ $t('social.chatsEntry') }}</div>
+            <div class="mt-1 text-[13px] text-[var(--c-text-2)]">{{ $t('social.chatsDesc') }}</div>
+          </div>
+          <div class="info-news-chevron w-2 h-2 rotate-45 shrink-0" />
+        </button>
+      </div>
+    </AppCard>
   </div>
 </template>
 
@@ -71,6 +102,7 @@ import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import request from '../utils/request'
+import { fetchDmUnread } from '../api/social.js'
 import AppCard from '../components/ui/AppCard.vue'
 import NoticeBlock from '../components/info/NoticeBlock.vue'
 import InteractionBlock from '../components/info/InteractionBlock.vue'
@@ -81,6 +113,7 @@ const infoData = ref({})
 const announcementList = ref([])
 const interactionItems = ref([])
 const interactionUnreadCount = ref(0)
+const dmUnreadCount = ref(0)
 const interactionHasMore = ref(false)
 const interactionLoadingMore = ref(false)
 const INTERACTION_PAGE_SIZE = 20
@@ -252,11 +285,12 @@ function handleMarkAllInteractionsRead() {
 }
 
 async function loadInfoPage() {
-  const [announcementRes, informationRes, interactionRes, unreadRes] = await Promise.allSettled([
+  const [announcementRes, informationRes, interactionRes, unreadRes, dmUnreadRes] = await Promise.allSettled([
     request.get('/information/announcement/start/0/size/5'),
     request.get('/information/overview'),
     request.get('/information/message/interaction/start/0/size/20'),
-    request.get('/information/message/unread')
+    request.get('/information/message/unread'),
+    fetchDmUnread()
   ])
 
   if (announcementRes.status === 'fulfilled' && announcementRes.value?.success) {
@@ -272,6 +306,9 @@ async function loadInfoPage() {
   }
   if (unreadRes.status === 'fulfilled') {
     interactionUnreadCount.value = Number(unreadRes.value?.data || 0)
+  }
+  if (dmUnreadRes.status === 'fulfilled') {
+    dmUnreadCount.value = Number(dmUnreadRes.value?.data?.total || 0)
   }
 }
 

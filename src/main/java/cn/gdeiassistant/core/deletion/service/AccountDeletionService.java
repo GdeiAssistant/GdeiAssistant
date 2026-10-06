@@ -93,6 +93,12 @@ public class AccountDeletionService {
     @Autowired(required = false)
     private cn.gdeiassistant.core.express.mapper.ExpressMapper expressMapper;
 
+    @Autowired(required = false)
+    private cn.gdeiassistant.core.social.websocket.SocialRealtimeHub socialRealtimeHub;
+
+    @Autowired(required = false)
+    private cn.gdeiassistant.core.social.mapper.SocialRelationMapper socialRelationMapper;
+
     /**
      * 关闭待处理的社区功能信息
      */
@@ -194,6 +200,15 @@ public class AccountDeletionService {
     @Transactional("appTransactionManager")
     public void deleteAccount(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
+        UserEntity existing = userMapper.selectUser(user.getUsername());
+        // 与发信/关注同一把有序 app_user 行锁，关闭后发送侧锁后重查会得到 CONTACT_UNAVAILABLE
+        if (existing != null && existing.getId() != null) {
+            userMapper.selectUserByIdForUpdate(existing.getId());
+            if (socialRelationMapper != null) {
+                socialRelationMapper.deleteAllFollowsForUser(existing.getId());
+                socialRelationMapper.deleteAllBlocksForUser(existing.getId());
+            }
+        }
         //开始进行账号关闭事务
 
         //删除四六级准考证号
@@ -243,7 +258,15 @@ public class AccountDeletionService {
             expressMapper.anonymizeByUsername(user.getUsername(), deletedUsername);
             expressMapper.anonymizeCommentsByUsername(user.getUsername(), deletedUsername);
         }
+        if (existing != null && existing.getId() != null) {
+            userMapper.closeAppUser(existing.getId());
+        }
         userMapper.closeUser(deletedUsername, user.getUsername());
+        // 撤销该用户全部 Redis 会话，使既有 JWT 立即失效
+        userCertificateService.clearReusableCredentials(user.getUsername());
+        if (existing != null && existing.getId() != null && socialRealtimeHub != null) {
+            socialRealtimeHub.disconnectUser(existing.getId());
+        }
         //保存注销日志
         SaveCloseLog(user.getUsername(), count);
     }

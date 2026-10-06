@@ -15,6 +15,7 @@ public class PhotographVO implements Serializable {
     private Integer count;
     private Integer type;
     private String username;
+    private String authorId;
     private Date createTime;
     private Integer likeCount;
     private Integer commentCount;
@@ -35,6 +36,8 @@ public class PhotographVO implements Serializable {
     public void setType(Integer type) { this.type = type; }
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+    public String getAuthorId() { return authorId; }
+    public void setAuthorId(String authorId) { this.authorId = authorId; }
     public Date getCreateTime() { return createTime; }
     public void setCreateTime(Date createTime) { this.createTime = createTime; }
     public Integer getLikeCount() { return likeCount; }

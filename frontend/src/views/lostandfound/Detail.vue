@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import request from '../../utils/request'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
+import AuthAvatar from '@/components/social/AuthAvatar.vue'
 import { maskContactHandle, maskPhone } from '@/utils/mask'
 import { SearchX } from 'lucide-vue-next'
 
@@ -28,7 +29,8 @@ function mapDetail(info) {
     images: Array.isArray(item.pictureURL) ? item.pictureURL : [],
     seller: {
       name: profile.nickname || profile.username || t('topic.anonymousUser'),
-      avatar: profile.avatarURL || '/img/avatar/default.png'
+      avatar: profile.avatarURL || '/img/avatar/default.png',
+      authorId: item.authorId || null
     },
     contact: {
       qq: item.qq || '',
@@ -119,9 +121,14 @@ function copyText(text) {
 
       <!-- 发布者信息 -->
       <div class="bg-[var(--c-surface)] p-4 border-b border-[var(--c-border)] rounded-none">
-        <a class="flex items-center gap-2.5 no-underline text-[var(--c-text-1)]" href="javascript:;">
+        <a
+          class="flex items-center gap-2.5 no-underline"
+          :class="detail.seller?.authorId ? 'text-[var(--c-primary)]' : 'text-[var(--c-text-1)]'"
+          href="javascript:;"
+          @click="detail.seller?.authorId && router.push(`/social/users/${detail.seller.authorId}`)"
+        >
           <i class="w-10 h-10 rounded-full overflow-hidden block shrink-0">
-            <img :src="detail.seller?.avatar || '/img/avatar/default.png'" :alt="t('profile.avatar')" class="w-full h-full object-cover" />
+            <AuthAvatar :url="detail.seller?.avatar" :alt="t('profile.avatar')" img-class="w-full h-full" />
           </i>
           <span class="text-sm text-[var(--c-text-1)]">{{ t('lostandfound.detail.publisher') }}{{ detail.seller?.name || t('topic.anonymousUser') }}</span>
         </a>

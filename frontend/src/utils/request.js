@@ -4,6 +4,7 @@ import { showErrorTopTips } from './toast.js'
 import i18n from '../i18n'
 import { isMockMode } from '../services/data-source.js'
 import { handleRequest as mockHandleRequest } from '../mock/index.js'
+import { resetSocialRealtimeOnAuthChange } from '../composables/useSocialRealtime.js'
 
 const _t = (key) => i18n.global.t(key)
 
@@ -86,6 +87,7 @@ function handleLogout(rawMessage) {
   showErrorTopTips(safeMessage)
   try {
     localStorage.removeItem('token')
+    resetSocialRealtimeOnAuthChange()
     sessionStorage.clear()
   } catch (_) {}
   router.push(LOGIN_PATH).catch(() => {})
@@ -108,7 +110,8 @@ function createMockAdapter(config) {
 
   // GET 请求的 query params 在 config.params 里，合并进 data 供 mock handler 读取
   const params = config.params && typeof config.params === 'object' ? config.params : {}
-  const mergedData = Object.assign({}, params, data)
+  const mergedData = /\/social\/conversations\/[^/]+\/messages\/image$/.test(path) && data instanceof FormData
+    ? data : Object.assign({}, params, data)
 
   return mockHandleRequest({
     path,
@@ -126,7 +129,7 @@ function createMockAdapter(config) {
     // Mock handler rejected — wrap as axios-compatible error response
     const status = err.statusCode || 400
     const errorResponse = {
-      data: { success: false, message: err.message || _t('common.saveFailed') },
+      data: { success: false, code: status, errorCode: err.errorCode, message: err.message || _t('common.saveFailed') },
       status,
       statusText: 'Mock Error',
       headers: {},
@@ -169,6 +172,10 @@ service.interceptors.request.use(
 // 响应拦截器：统一处理错误并展示 WEUI Toast
 service.interceptors.response.use(
   (response) => {
+    // 鉴权头像等 blob：直接返回二进制，不做 JSON success 包装解析
+    if (response.config?.responseType === 'blob' || response.data instanceof Blob) {
+      return response.data
+    }
     const res = response.data
     if (res) {
       // 1) 样板间受限：后端约定 code 处于 400300 - 400399 区间
@@ -179,14 +186,21 @@ service.interceptors.response.use(
           return Promise.reject(new Error(sanitizeMessage(res.message)))
         }
         const safeMessage = sanitizeMessage(res.message)
-        showErrorTopTips(safeMessage)
+        if (!response.config?.skipErrorTip) {
+          showErrorTopTips(safeMessage)
+        }
         return Promise.reject(new Error(safeMessage))
       }
       // 2) 通用业务失败
       if (res.success === false) {
         const safeMessage = sanitizeMessage(res.message)
-        showErrorTopTips(safeMessage)
-        return Promise.reject(new Error(safeMessage))
+        if (!response.config?.skipErrorTip) {
+          showErrorTopTips(safeMessage)
+        }
+        const err = new Error(safeMessage)
+        err.errorCode = res.errorCode
+        err.response = { data: res, status: response.status }
+        return Promise.reject(err)
       }
     }
     return res

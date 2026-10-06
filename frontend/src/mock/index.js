@@ -6,6 +6,7 @@ import * as profileHandlers from './profile-handlers.js'
 import * as campusHandlers from './campus-handlers.js'
 import * as infoHandlers from './info-handlers.js'
 import * as messageHandlers from './message-handlers.js'
+import * as socialHandlers from './social-handlers.js'
 import { localizeMockValue } from './mock-i18n.js'
 
 // ---------------------------------------------------------------------------
@@ -43,6 +44,7 @@ function readState() {
     if (state && typeof state === 'object') {
       return {
         token: state.token || '',
+        social: state.social || null,
         savedCetNumber: state.savedCetNumber || '',
         savedCetName: state.savedCetName || '',
         cardLostState: state.cardLostState || '正常',
@@ -83,6 +85,9 @@ function rejectWithMessage(message, options, locale) {
   const error = new Error(localizedMessage)
   error.message = localizedMessage
   error.statusCode = options && options.statusCode ? options.statusCode : 400
+  if (options && options.errorCode) {
+    error.errorCode = options.errorCode
+  }
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
       reject(error)
@@ -218,6 +223,14 @@ export function handleRequest(options) {
 
   if (path === '/api/campus-credential/quick-auth' && method === 'POST') {
     return campusCredentialHandlers.handleCampusCredentialQuickAuth(token, payload, localizedUtils)
+  }
+
+  // --- Social / messaging ---
+  if (path.startsWith('/api/social')) {
+    const socialResult = socialHandlers.handleSocialRequest(method, path, query, payload, token, localizedUtils)
+    if (socialResult) {
+      return socialResult
+    }
   }
 
   // --- Profile ---

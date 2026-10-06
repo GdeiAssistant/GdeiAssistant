@@ -93,6 +93,42 @@
 
     </AppCard>
 
+    <!-- Social stats -->
+    <AppCard>
+      <template #header>
+        <div class="flex items-center gap-2">
+          <Users class="w-4 h-4 text-[var(--c-text-tertiary)]" />
+          <span class="text-sm font-medium text-[var(--c-text-secondary)]">{{ $t('social.statsTitle') }}</span>
+        </div>
+      </template>
+      <div class="grid grid-cols-3 gap-2 px-4 py-3 text-center text-sm">
+        <RouterLink :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=following` : '/social/search'" class="rounded-lg bg-[var(--c-bg)] py-2">
+          <div class="font-semibold">{{ socialStats.followingCount }}</div>
+          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.following') }}</div>
+        </RouterLink>
+        <RouterLink :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=followers` : '/social/search'" class="rounded-lg bg-[var(--c-bg)] py-2">
+          <div class="font-semibold">{{ socialStats.followerCount }}</div>
+          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.followers') }}</div>
+        </RouterLink>
+        <RouterLink :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=friends` : '/social/search'" class="rounded-lg bg-[var(--c-bg)] py-2">
+          <div class="font-semibold">{{ socialStats.friendCount }}</div>
+          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.friends') }}</div>
+        </RouterLink>
+      </div>
+      <RouterLink to="/social/search" class="campus-list-row flex items-center gap-3 px-4 py-3 border-t border-[var(--c-border-light)]">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.searchTitle') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+      <RouterLink to="/social/privacy" class="campus-list-row flex items-center gap-3 px-4 py-3 border-t border-[var(--c-border-light)]">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.dmPrivacyTitle') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+      <RouterLink to="/social/blocks" class="campus-list-row flex items-center gap-3 px-4 py-3 border-t border-[var(--c-border-light)]">
+        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.blocksTitle') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+      </RouterLink>
+    </AppCard>
+
     <AppDialog
       :open="showNicknameDialog"
       :title="$t('profile.editNickname')"
@@ -199,10 +235,14 @@ import LocationPicker from '@/components/ui/LocationPicker.vue'
 import { formatProfileOptions } from '@/catalog/profileCatalog'
 import { getLocationCatalog } from '@/catalog/locationCatalog'
 import { formatProfileViewModel } from '@/formatters/profileFormatter'
-import { User, ChevronRight } from 'lucide-vue-next'
+import { User, Users, ChevronRight } from 'lucide-vue-next'
+import { fetchSocialMe } from '../api/social.js'
 
 const { t, locale } = useI18n()
 const { success: toastSuccess, error: toastError } = useToast()
+
+const socialMeId = ref('')
+const socialStats = ref({ followingCount: 0, followerCount: 0, friendCount: 0 })
 
 const selectedLocale = computed(() => locale.value)
 const changeLocale = () => {
@@ -504,6 +544,18 @@ onMounted(() => {
   updateMajorListByFaculty()
   fetchProfileDictionary()
   fetchUserProfile()
+  fetchSocialMe()
+    .then((res) => {
+      if (res?.data) {
+        socialMeId.value = res.data.id || ''
+        socialStats.value = {
+          followingCount: res.data.followingCount || 0,
+          followerCount: res.data.followerCount || 0,
+          friendCount: res.data.friendCount || 0
+        }
+      }
+    })
+    .catch(() => {})
   getLocationList()
     .then(res => {
       if (res && res.success && res.data) {

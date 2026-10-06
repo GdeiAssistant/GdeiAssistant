@@ -44,7 +44,7 @@ class ApiAuthInterceptorTest {
 
         assertFalse(allowed);
         assertEquals(401, response.getStatus());
-        assertEquals("{\"code\":401,\"message\":\"Unauthorized\"}", response.getContentAsString());
+        assertEquals("{\"success\":false,\"code\":401,\"message\":\"Unauthorized\",\"errorCode\":\"AUTH_REQUIRED\"}", response.getContentAsString());
     }
 
     @Test

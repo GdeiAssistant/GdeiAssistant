@@ -119,8 +119,8 @@ public interface PhotographMapper {
     List<PhotographLike> selectReceivedPhotographLikePage(@Param("username") String username,
             @Param("start") int start, @Param("size") int size);
 
-    @Insert("insert into photograph_like (photo_id,username,create_time) values(#{id},#{username},now())")
-    void insertPhotographLike(@Param("id") int id, @Param("username") String username);
+    @Insert("insert ignore into photograph_like (photo_id,username,create_time) values(#{id},#{username},now())")
+    int insertPhotographLike(@Param("id") int id, @Param("username") String username);
 
     @Select("select count(id) from photograph where id=#{id}")
     @ResultType(Integer.class)

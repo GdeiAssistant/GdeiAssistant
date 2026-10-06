@@ -10,7 +10,7 @@ public interface TopicMapper {
 
     @Select("select t.id,t.username,t.topic,t.content,t.count,t.publish_time," +
             "sum(distinct CASE WHEN tl.username=#{username} THEN 1 ELSE 0 END) as liked," +
-            "count(distinct tl.topic_id) as like_count " +
+            "count(tl.id) as like_count " +
             "from topic t " +
             "left join topic_like tl on t.id=tl.topic_id " +
             "group by t.id order by t.id limit #{start},#{size}")
@@ -28,7 +28,7 @@ public interface TopicMapper {
 
     @Select("select t.id,t.username,t.topic,t.content,t.count,t.publish_time," +
             "sum(distinct CASE WHEN tl.username=#{username} THEN 1 ELSE 0 END) as liked," +
-            "count(distinct tl.topic_id) as like_count " +
+            "count(tl.id) as like_count " +
             "from topic t " +
             "left join topic_like tl on t.id=tl.topic_id " +
             "where t.username=#{publisherUsername} group by t.id order by t.id desc limit #{start},#{size}")
@@ -37,7 +37,7 @@ public interface TopicMapper {
 
     @Select("select t.id,t.username,t.topic,t.content,t.count,t.publish_time," +
             "sum(distinct CASE WHEN tl.username=#{username} THEN 1 ELSE 0 END) as liked," +
-            "count(distinct tl.topic_id) as like_count " +
+            "count(tl.id) as like_count " +
             "from topic t " +
             "left join topic_like tl on t.id=tl.topic_id " +
             "where (t.topic like concat(concat('%',#{keyword}),'%') or t.content like concat(concat('%',#{keyword}),'%')) group by t.id order by t.id limit #{start},#{size}")
@@ -46,7 +46,7 @@ public interface TopicMapper {
 
     @Select("select t.id,t.username,t.topic,t.content,t.count,t.publish_time," +
             "sum(distinct CASE WHEN tl.username=#{username} THEN 1 ELSE 0 END) as liked," +
-            "count(distinct tl.topic_id) as like_count " +
+            "count(tl.id) as like_count " +
             "from topic t " +
             "left join topic_like tl on t.id=tl.topic_id " +
             "where t.id=#{id} group by t.id")
@@ -66,8 +66,8 @@ public interface TopicMapper {
     })
     TopicLikeEntity selectTopicLike(@Param("id") int id, @Param("username") String username);
 
-    @Insert("insert into topic_like (topic_id,username,create_time) values(#{topicId},#{username},now())")
-    void insertTopicLike(@Param("topicId") int id, @Param("username") String username);
+    @Insert("insert ignore into topic_like (topic_id,username,create_time) values(#{topicId},#{username},now())")
+    int insertTopicLike(@Param("topicId") int id, @Param("username") String username);
 
     @Delete("delete from topic where id=#{id}")
     void deleteTopic(@Param("id") int id);

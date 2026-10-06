@@ -142,6 +142,7 @@
 </template>
 
 <script setup>
+import { resetSocialRealtimeOnAuthChange } from '../composables/useSocialRealtime.js'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -167,6 +168,7 @@ function handleLogoutClick() { showLogoutDialog.value = true }
 async function doLogout() {
   try { await logout() } catch (_) {}
   localStorage.removeItem('token')
+  resetSocialRealtimeOnAuthChange()
   sessionStorage.clear()
   toastSuccess(t('common.logoutSuccess'))
   setTimeout(() => router.replace('/login'), 600)

@@ -1,4 +1,5 @@
 <script setup>
+import { resetSocialRealtimeOnAuthChange } from '../composables/useSocialRealtime.js'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -57,6 +58,7 @@ async function handleLogin() {
     // 仅当后端返回 code === 200 时存 Token 并跳转；401 或其他错误码展示后端 message 并停留在登录页
     if (res && res.code === 200 && res.data && res.data.token) {
       localStorage.setItem('token', res.data.token)
+      resetSocialRealtimeOnAuthChange()
       router.push('/home')
     } else {
       showError(res?.message || t('loginPage.failed'))

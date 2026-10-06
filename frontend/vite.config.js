@@ -22,11 +22,12 @@ export default defineConfig({
     exclude: ['e2e/**', 'node_modules/**'],
   },
   server: {
-    // /api 代理到 Java 后端
+    // /api 代理到 Java 后端（含 WebSocket）
     proxy: {
       '/api': {
         target: backendProxyTarget,
-        changeOrigin: true
+        changeOrigin: true,
+        ws: true
       }
     }
   }

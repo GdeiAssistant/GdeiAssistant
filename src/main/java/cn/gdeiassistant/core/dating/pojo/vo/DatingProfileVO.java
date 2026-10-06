@@ -9,6 +9,7 @@ public class DatingProfileVO implements Serializable {
 
     private Integer profileId;
     private String username;
+    private String authorId;
     private String nickname;
     private Integer grade;
     private String faculty;
@@ -24,6 +25,8 @@ public class DatingProfileVO implements Serializable {
     public void setProfileId(Integer profileId) { this.profileId = profileId; }
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+    public String getAuthorId() { return authorId; }
+    public void setAuthorId(String authorId) { this.authorId = authorId; }
     public String getNickname() { return nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
     public Integer getGrade() { return grade; }

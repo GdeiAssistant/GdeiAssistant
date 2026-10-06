@@ -1,16 +1,17 @@
 package cn.gdeiassistant.core.express.service;
 
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
 import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
 import cn.gdeiassistant.common.exception.ExpressException.CorrectRecordException;
 import cn.gdeiassistant.common.exception.ExpressException.NoRealNameException;
 import cn.gdeiassistant.common.pojo.Entity.ExpressComment;
 import cn.gdeiassistant.common.pojo.Entity.ExpressLike;
 import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.core.express.converter.ExpressCommentConverter;
 import cn.gdeiassistant.core.express.converter.ExpressConverter;
 import cn.gdeiassistant.core.express.mapper.ExpressMapper;
 import cn.gdeiassistant.core.express.pojo.dto.ExpressPublishDTO;
 import cn.gdeiassistant.core.express.pojo.entity.ExpressEntity;
+import cn.gdeiassistant.core.express.pojo.vo.ExpressCommentVO;
 import cn.gdeiassistant.core.express.pojo.vo.ExpressVO;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
@@ -30,6 +31,9 @@ public class ExpressService {
 
     @Autowired
     private ExpressConverter expressConverter;
+
+    @Autowired
+    private ExpressCommentConverter expressCommentConverter;
 
     @Autowired
     private UserCertificateService userCertificateService;
@@ -61,22 +65,13 @@ public class ExpressService {
         if (entity == null) {
             throw new DataNotExistException("表白信息不存在");
         }
-        entity.setCanGuess(StringUtils.isNotBlank(entity.getRealname()));
-        entity.setRealname(null);
         return expressConverter.toVO(entity);
     }
 
-    public List<ExpressComment> queryExpressComment(int expressId) {
+    public List<ExpressCommentVO> queryExpressComment(int expressId) {
         List<ExpressComment> list = expressMapper.selectExpressComment(expressId);
         if (list == null || list.isEmpty()) return new ArrayList<>();
-        for (ExpressComment c : list) {
-            String sanitized = AnonymizeUtils.sanitizeUsername(c.getUsername());
-            if (c.getNickname() == null || c.getNickname().isEmpty()) {
-                c.setNickname(sanitized);
-            }
-            c.setUsername(sanitized);
-        }
-        return list;
+        return expressCommentConverter.toVOList(list);
     }
 
     @Transactional("appTransactionManager")
@@ -103,7 +98,7 @@ public class ExpressService {
                 expressComment.getId() == null ? null : String.valueOf(expressComment.getId()),
                 "comment",
                 "表白墙收到新评论",
-                user.getUsername() + " 评论了你的表白：" + comment
+                "有人评论了你的表白：" + comment
         );
     }
 
@@ -129,18 +124,20 @@ public class ExpressService {
         }
         ExpressLike like = expressMapper.selectExpressLike(expressId, user.getUsername());
         if (like == null) {
-            expressMapper.insertExpressLike(expressId, user.getUsername());
-            interactionNotificationService.createInteractionNotification(
-                    "express",
-                    "like",
-                    entity.getUsername(),
-                    user.getUsername(),
-                    String.valueOf(expressId),
-                    null,
-                    "like",
-                    "表白墙收到新点赞",
-                    user.getUsername() + " 点赞了你的表白"
-            );
+            int inserted = expressMapper.insertExpressLike(expressId, user.getUsername());
+            if (inserted > 0) {
+                interactionNotificationService.createInteractionNotification(
+                        "express",
+                        "like",
+                        entity.getUsername(),
+                        user.getUsername(),
+                        String.valueOf(expressId),
+                        null,
+                        "like",
+                        "表白墙收到新点赞",
+                        "有人点赞了你的表白"
+                );
+            }
         }
     }
 
@@ -174,7 +171,7 @@ public class ExpressService {
                 null,
                 "guess",
                 correct ? "表白墙有人猜中了" : "表白墙有人参与猜名字",
-                correct ? user.getUsername() + " 猜中了你的表白对象" : user.getUsername() + " 参与了你的猜名字"
+                correct ? "有人猜中了你的表白对象" : "有人参与了你的猜名字"
         );
         return correct;
     }

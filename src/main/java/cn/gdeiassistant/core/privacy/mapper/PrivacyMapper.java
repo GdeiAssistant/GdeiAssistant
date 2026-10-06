@@ -17,15 +17,19 @@ public interface PrivacyMapper {
             @Result(property = "ageOpen", column = "is_age_open", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
             @Result(property = "cacheAllow", column = "is_cache_allow", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
             @Result(property = "quickAuthAllow", column = "is_quick_auth_allow", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
-            @Result(property = "robotsIndexAllow", column = "is_robots_index_allow", javaType = Boolean.class, jdbcType = JdbcType.TINYINT)
+            @Result(property = "robotsIndexAllow", column = "is_robots_index_allow", javaType = Boolean.class, jdbcType = JdbcType.TINYINT),
+            @Result(property = "dmPolicy", column = "dm_policy")
     })
     PrivacyEntity selectPrivacy(String username);
 
-    @Insert("insert into privacy (username,is_cache_allow,is_quick_auth_allow) values(#{username},false,false)")
+    @Insert("insert into privacy (username,is_cache_allow,is_quick_auth_allow,dm_policy) values(#{username},false,false,'MUTUAL')")
     void initPrivacy(String username);
 
-    @Update("update privacy set is_cache_allow=0,is_quick_auth_allow=0 where username=#{username}")
+    @Update("update privacy set is_cache_allow=0,is_quick_auth_allow=0,dm_policy='MUTUAL' where username=#{username}")
     void resetPrivacy(String username);
+
+    @Update("update privacy set dm_policy=#{dmPolicy} where username=#{username}")
+    void updateDmPolicy(@Param("dmPolicy") String dmPolicy, @Param("username") String username);
 
     @Update("<script>" +
             "update privacy" +

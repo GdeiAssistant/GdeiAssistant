@@ -21,6 +21,9 @@ GdeiAssistant/                 # 仓库根目录
 ├── db-init/                   # 数据库初始化脚本
 │   ├── mysql/                 # MySQL 结构与 Mock 数据
 │   └── mongodb/               # MongoDB 初始化
+├── docs/                      # 指定放行的设计/实现说明（见 .gitignore 例外）
+│   ├── SOCIAL_MESSAGING_DESIGN.zh-CN.md
+│   └── SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md
 ├── docker-compose.yml         # 基础设施全栈编排
 └── .env.template              # 环境变量配置模板
 

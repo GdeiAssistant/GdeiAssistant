@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 
 const apacheLicenseText = `                                 Apache License
@@ -191,9 +191,9 @@ const apacheLicenseText = `                                 Apache License
     <div class="subpage-bar">
       <button type="button" class="subpage-bar__back" @click="router.back()">
         <ChevronLeft :size="18" aria-hidden="true" />
-        <span>返回</span>
+        <span>{{ t('about.back') }}</span>
       </button>
-      <span class="subpage-bar__title">开源协议</span>
+      <span class="subpage-bar__title">{{ t('about.menuOpenSourceLicense') }}</span>
       <span aria-hidden="true"></span>
     </div>
 

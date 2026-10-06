@@ -83,7 +83,7 @@ function handleThirdPartyLogin(type) {
         <img class="login-visual__mark" src="/favicon.svg" alt="" width="40" height="40" />
       </div>
       <div class="login-visual__card">
-        <h2>广东二师助手</h2>
+        <h2>{{ t('loginPage.title') }}</h2>
       </div>
       <svg class="login-visual__grid" viewBox="0 0 400 400" preserveAspectRatio="none" focusable="false">
         <defs>

@@ -34,7 +34,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p class="text-center">生效日期：2026年10月14日</p>
 
           <div class="policy-notice policy-notice--neutral px-4 py-3 mb-5 text-sm leading-relaxed">
-            <p class="!mb-2"><strong>阅读提示：</strong>本页面用于说明平台通常采取或建议采取的安全措施，具体实现仍以实际部署、版本和配置为准。</p>
+            <p class="!mb-2"><strong>阅读提示：</strong>本页面用于说明平台采取的安全措施，具体实现仍以实际部署、版本和配置为准。</p>
             <p class="!mb-0"><strong>本次修订说明：</strong>本次修订内容将自 2026 年 10 月 14 日起适用；生效日前仍适用修订前版本。</p>
           </div>
 

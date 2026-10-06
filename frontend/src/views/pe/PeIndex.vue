@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const isWechat = ref(true) // 默认设为 true 避免渲染闪烁
 
@@ -20,8 +23,8 @@ onMounted(() => {
   <div v-if="!isWechat" class="min-h-screen bg-[var(--c-bg)]">
     <!-- Sticky header -->
     <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
-      <span class="flex-1 text-center text-sm font-bold">体质测试查询</span>
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('feature.pe.name') }}</span>
       <div class="w-10"></div>
     </div>
 
@@ -34,16 +37,16 @@ onMounted(() => {
           </svg>
         </div>
 
-        <h2 class="text-lg font-semibold text-[var(--c-text)] mb-2">请在微信客户端打开</h2>
+        <h2 class="text-lg font-semibold text-[var(--c-text)] mb-2">{{ t('pePage.wechatRequiredTitle') }}</h2>
         <p class="text-sm text-[var(--c-text-secondary)] leading-relaxed max-w-xs">
-          体质测试查询功能需要微信环境支持。请使用微信扫码或在微信中搜索打开本应用。
+          {{ t('pePage.wechatRequiredDescription') }}
         </p>
 
         <button
           @click="$router.back()"
           class="mt-8 px-8 py-2.5 rounded-xl border border-[var(--c-border)] text-sm text-[var(--c-text)] bg-[var(--c-surface)] active:bg-black/5 transition-colors"
         >
-          返回上一页
+          {{ t('common.back') }}
         </button>
       </div>
     </div>

@@ -9,20 +9,28 @@ import { resetSocialRealtimeOnAuthChange } from '../composables/useSocialRealtim
 const _t = (key) => i18n.global.t(key)
 
 /**
- * 仅允许纯中文友好文案进入 UI，严禁 500、Request、status code、Error 等原始报错泄露
+ * Allow localized friendly messages (zh/en/ja/ko etc.), but never leak
+ * raw HTTP/status/stack/credential technical errors into the UI.
  * @param {string} [raw]
  * @returns {string}
  */
-function sanitizeMessage(raw) {
+export function sanitizeMessage(raw) {
   const s = String(raw || '').trim()
   if (!s) return _t('common.saveFailed')
+
   const lower = s.toLowerCase()
-  if (/status\s*code|request\s*failed|500|502|503|504|econnrefused|network\s*error|timeout|error\s*message/i.test(lower) || /^\d{3}\s/.test(s)) {
+  if (
+    /status\s*code|request\s*failed|econnrefused|enetunreach|econnreset|socket hang up|network\s*error|timeout|error\s*message|stack\s*trace|axioserror|sqlException|nullpointer|at\s+\S+\s*\(/i.test(lower)
+    || /^\d{3}\b/.test(s)
+    || /\b(500|502|503|504)\b/.test(s)
+    || /^(error|exception)\s*:/i.test(s)
+    || /[A-Za-z]+(Error|Exception)\b/.test(s)
+    || /bearer\s+[a-z0-9._\-+=/]+/i.test(s)
+    || /\b(api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret)\s*[=:]\s*\S+/i.test(s)
+  ) {
     return _t('common.systemBusy')
   }
-  if (/^[a-z][a-z\s\d_-]+$/i.test(s) && !/[\u4e00-\u9fa5]/.test(s)) {
-    return _t('common.saveFailed')
-  }
+
   return s
 }
 

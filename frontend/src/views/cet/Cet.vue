@@ -224,13 +224,13 @@ onMounted(() => {
     <!-- 查询结果 -->
     <template v-else>
       <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
-        <span class="flex-1 text-center text-sm font-bold">查询结果</span>
+        <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
+        <span class="flex-1 text-center text-sm font-bold">{{ t('cetPage.resultTitle') }}</span>
         <div class="w-10"></div>
       </div>
 
       <div class="max-w-lg mx-auto px-4 py-6" v-if="cetResult">
-        <p class="text-center text-sm text-[var(--c-text-2)] mb-5">成绩仅供参考，请以成绩单为准</p>
+        <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('cetPage.resultDisclaimer') }}</p>
 
         <div class="bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
           <h2 class="text-lg font-bold text-center mb-1">{{ cetResult.name }}</h2>
@@ -238,21 +238,21 @@ onMounted(() => {
           <p class="text-sm text-[var(--c-text-2)] text-center mb-4">{{ cetResult.school }}</p>
 
           <div class="bg-[var(--c-primary)]/5 rounded-xl p-4 text-center mb-4">
-            <div class="text-xs text-[var(--c-text-2)] mb-1">考试总分</div>
+            <div class="text-xs text-[var(--c-text-2)] mb-1">{{ t('cetPage.totalScore') }}</div>
             <div class="font-mono text-3xl font-bold text-[var(--c-primary)]">{{ cetResult.totalScore }}</div>
           </div>
 
           <div class="divide-y divide-[var(--c-border-light)]">
             <div class="flex justify-between py-3">
-              <span class="text-sm text-[var(--c-text-2)]">听力分数</span>
+              <span class="text-sm text-[var(--c-text-2)]">{{ t('cetPage.listeningScore') }}</span>
               <span class="text-sm font-semibold">{{ cetResult.listeningScore }}</span>
             </div>
             <div class="flex justify-between py-3">
-              <span class="text-sm text-[var(--c-text-2)]">阅读分数</span>
+              <span class="text-sm text-[var(--c-text-2)]">{{ t('cetPage.readingScore') }}</span>
               <span class="text-sm font-semibold">{{ cetResult.readingScore }}</span>
             </div>
             <div class="flex justify-between py-3">
-              <span class="text-sm text-[var(--c-text-2)]">写作翻译</span>
+              <span class="text-sm text-[var(--c-text-2)]">{{ t('cetPage.writingScore') }}</span>
               <span class="text-sm font-semibold">{{ cetResult.writingAndTranslatingScore }}</span>
             </div>
           </div>
@@ -263,12 +263,12 @@ onMounted(() => {
             type="button"
             class="w-full bg-[var(--c-primary)] text-white rounded-lg py-2.5 font-semibold transition-opacity hover:opacity-90"
             @click="reQuery"
-          >重新查询</button>
+          >{{ t('cetPage.reQuery') }}</button>
           <button
             type="button"
             class="w-full bg-[var(--c-surface)] text-[var(--c-text)] border border-[var(--c-border)] rounded-lg py-2.5 font-semibold transition-opacity hover:opacity-80"
             @click="router.push('/')"
-          >返回主页</button>
+          >{{ t('cetPage.backHome') }}</button>
         </div>
       </div>
     </template>

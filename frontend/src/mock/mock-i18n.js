@@ -1,3 +1,11 @@
+import { resolveSupportedLocale } from '../constants/localeOptions.js'
+import zhCN from '../locales/zh-CN.json'
+import zhHK from '../locales/zh-HK.json'
+import zhTW from '../locales/zh-TW.json'
+import en from '../locales/en.json'
+import ja from '../locales/ja.json'
+import ko from '../locales/ko.json'
+
 const EN_TEXT_MAP = {
   '账号：gdeiassistant  密码：gdeiassistant  图书馆密码：library123': 'Account: gdeiassistant  Password: gdeiassistant  Library Password: library123',
   '登录凭证已过期，请重新登录': 'Session expired. Please sign in again.',
@@ -287,7 +295,168 @@ const EN_TEXT_MAP = {
   '工商管理': 'Business Administration',
   '会计学': 'Accounting',
   '马克思主义理论': 'Marxist Theory',
-  '未选择': 'Not selected'
+  '未选择': 'Not selected',
+  '请选择 JPEG 或 PNG 图片，大小不超过 5 MB': 'Please choose a JPEG or PNG image up to 5 MB',
+  '图片格式不正确': 'Invalid image format',
+  '会话不存在': 'Conversation not found',
+  '客户端消息冲突': 'Client message conflict',
+  '无法发送私信': 'Unable to send message'
+}
+
+const LOCALE_MESSAGES = {
+  'zh-CN': zhCN,
+  'zh-HK': zhHK,
+  'zh-TW': zhTW,
+  en,
+  ja,
+  ko
+}
+
+const SYSTEM_MESSAGE_KEYS = {
+  '登录凭证已过期，请重新登录': 'common.loginExpired',
+  '登录状态已过期，请重新登录': 'common.loginExpired',
+  '登录状态已失效，请重新登录': 'common.loginExpiredDefault',
+  '未检测到有效令牌': 'common.invalidToken',
+  '账号或密码错误': 'common.wrongCredentials',
+  '系统繁忙，请稍后再试': 'common.systemBusy',
+  '网络连接失败，请检查服务器状态': 'common.networkError',
+  '网络连接异常，请稍后重试': 'common.networkException',
+  '服务器开小差了，请稍后再试': 'common.serverError',
+  '操作失败': 'common.saveFailed',
+  '保存成功': 'common.saveSuccess',
+  '未选择': 'common.unselected'
+}
+
+const SYSTEM_TEXT_BY_LOCALE = {
+  'zh-HK': {
+    '登录凭证已过期，请重新登录': '登入憑證已過期，請重新登入',
+    '该模拟接口暂未实现': '此模擬介面尚未實現',
+    '请选择 JPEG 或 PNG 图片，大小不超过 5 MB': '請選擇 JPEG 或 PNG 圖片，大小唔超過 5 MB',
+    '图片格式不正确': '圖片格式唔正確',
+    '会话不存在': '對話唔存在',
+    '客户端消息冲突': '用戶端訊息衝突',
+    '无法发送私信': '無法傳送私訊',
+    '请输入正确的校园卡查询密码': '請輸入正確嘅校園卡查詢密碼',
+    '图书馆密码不正确': '圖書館密碼唔正確',
+    '请输入图书馆密码': '請輸入圖書館密碼'
+  },
+  'zh-TW': {
+    '登录凭证已过期，请重新登录': '登入憑證已過期，請重新登入',
+    '该模拟接口暂未实现': '此模擬介面尚未實作',
+    '请选择 JPEG 或 PNG 图片，大小不超过 5 MB': '請選擇 JPEG 或 PNG 圖片，大小不超過 5 MB',
+    '图片格式不正确': '圖片格式不正確',
+    '会话不存在': '對話不存在',
+    '客户端消息冲突': '用戶端訊息衝突',
+    '无法发送私信': '無法傳送私訊',
+    '请输入正确的校园卡查询密码': '請輸入正確的校園卡查詢密碼',
+    '图书馆密码不正确': '圖書館密碼不正確',
+    '请输入图书馆密码': '請輸入圖書館密碼'
+  },
+  ja: {
+    '登录凭证已过期，请重新登录': 'ログインの有効期限が切れました。再度ログインしてください',
+    '该模拟接口暂未实现': 'このモック API はまだ実装されていません',
+    '请选择 JPEG 或 PNG 图片，大小不超过 5 MB': 'JPEG または PNG 画像を選択してください（5 MB 以下）',
+    '图片格式不正确': '画像形式が正しくありません',
+    '会话不存在': '会話が存在しません',
+    '客户端消息冲突': 'クライアントメッセージが競合しています',
+    '无法发送私信': 'メッセージを送信できません',
+    '请输入正确的校园卡查询密码': '正しいキャンパスカード照会パスワードを入力してください',
+    '图书馆密码不正确': '図書館パスワードが正しくありません',
+    '请输入图书馆密码': '図書館パスワードを入力してください',
+    '未匹配到新闻接口': 'ニュース API に一致しません',
+    '未匹配到新闻详情接口': 'ニュース詳細 API に一致しません',
+    '新闻通知不存在': 'お知らせが存在しません',
+    '模拟挂失失败：校园卡查询密码不正确': 'モック紛失届に失敗しました：キャンパスカード照会パスワードが正しくありません',
+    '请输入图书馆密码后再查询借阅': '貸出照会の前に図書館パスワードを入力してください',
+    '模拟续借失败：图书馆密码不正确': 'モック延長に失敗しました：図書館パスワードが正しくありません',
+    '准考证号必须为15位数字': '受験番号は15桁の数字である必要があります',
+    '模拟查询失败：验证码错误': 'モック照会に失敗しました：認証コードが正しくありません',
+    '请完整填写姓名和学号': '氏名と学籍番号を入力してください',
+    '请完整填写考研查询信息': '大学院入試照会情報をすべて入力してください'
+  },
+  ko: {
+    '登录凭证已过期，请重新登录': '로그인 자격 증명이 만료되었습니다. 다시 로그인해 주세요',
+    '该模拟接口暂未实现': '이 모의 API는 아직 구현되지 않았습니다',
+    '请选择 JPEG 或 PNG 图片，大小不超过 5 MB': 'JPEG 또는 PNG 이미지를 선택하세요(최대 5 MB)',
+    '图片格式不正确': '이미지 형식이 올바르지 않습니다',
+    '会话不存在': '대화가 존재하지 않습니다',
+    '客户端消息冲突': '클라이언트 메시지 충돌',
+    '无法发送私信': '메시지를 보낼 수 없습니다',
+    '请输入正确的校园卡查询密码': '올바른 캠퍼스 카드 조회 비밀번호를 입력하세요',
+    '图书馆密码不正确': '도서관 비밀번호가 올바르지 않습니다',
+    '请输入图书馆密码': '도서관 비밀번호를 입력하세요',
+    '未匹配到新闻接口': '뉴스 API와 일치하지 않습니다',
+    '未匹配到新闻详情接口': '뉴스 상세 API와 일치하지 않습니다',
+    '新闻通知不存在': '공지사항이 존재하지 않습니다',
+    '模拟挂失失败：校园卡查询密码不正确': '모의 분실 신고 실패: 캠퍼스 카드 조회 비밀번호가 올바르지 않습니다',
+    '请输入图书馆密码后再查询借阅': '대출 조회 전에 도서관 비밀번호를 입력하세요',
+    '模拟续借失败：图书馆密码不正确': '모의 연장 실패: 도서관 비밀번호가 올바르지 않습니다',
+    '准考证号必须为15位数字': '수험번호는 15자리 숫자여야 합니다',
+    '模拟查询失败：验证码错误': '모의 조회 실패: 인증코드가 올바르지 않습니다',
+    '请完整填写姓名和学号': '이름과 학번을 모두 입력하세요',
+    '请完整填写考研查询信息': '대학원 입시 조회 정보를 모두 입력하세요'
+  }
+}
+
+const IDENTITY_KEYS = new Set([
+  'id',
+  'userId',
+  'username',
+  'nickname',
+  'name',
+  'title',
+  'avatar',
+  'avatarUrl',
+  'introduction',
+  'content',
+  'text',
+  'body',
+  'clientMessageId',
+  'conversationId',
+  'token',
+  'password',
+  'email',
+  'phone',
+  'maskedCampusAccount',
+  'followerId',
+  'followeeId',
+  'blockerId',
+  'blockedId',
+  'senderId',
+  'receiverId',
+  'imageId',
+  'publicId'
+])
+
+function lookupMessage(locale, key) {
+  const parts = key.split('.')
+  let cursor = LOCALE_MESSAGES[locale]
+  for (const part of parts) {
+    if (!cursor || typeof cursor !== 'object') return null
+    cursor = cursor[part]
+  }
+  return typeof cursor === 'string' ? cursor : null
+}
+
+function translateSystemText(value, locale) {
+  const messageKey = SYSTEM_MESSAGE_KEYS[value]
+  if (messageKey) {
+    const localized = lookupMessage(locale, messageKey)
+    if (localized) return localized
+  }
+
+  const localeMap = SYSTEM_TEXT_BY_LOCALE[locale]
+  if (localeMap && localeMap[value]) {
+    return localeMap[value]
+  }
+
+  if (locale === 'en') {
+    return EN_TEXT_MAP[value] ?? value
+  }
+
+  // Demo catalog copy may stay English for EN only; other locales keep original
+  // unless a system message mapping matched above.
+  return value
 }
 
 function translateText(value, locale) {
@@ -299,27 +468,18 @@ function translateText(value, locale) {
     return value
   }
 
-  return EN_TEXT_MAP[value] ?? value
+  if (locale === 'en') {
+    return EN_TEXT_MAP[value] ?? translateSystemText(value, locale)
+  }
+
+  return translateSystemText(value, locale)
 }
 
 export function normalizeMockLocale(locale) {
-  const raw = String(locale || '').trim()
-  if (!raw) {
-    return 'zh-CN'
-  }
-
-  if (raw.startsWith('zh')) {
-    return 'zh-CN'
-  }
-
-  if (raw.startsWith('en')) {
-    return 'en'
-  }
-
-  return 'en'
+  return resolveSupportedLocale(locale)
 }
 
-export function localizeMockValue(value, locale) {
+export function localizeMockValue(value, locale, keyHint) {
   const normalizedLocale = normalizeMockLocale(locale)
 
   if (Array.isArray(value)) {
@@ -328,8 +488,17 @@ export function localizeMockValue(value, locale) {
 
   if (value && typeof value === 'object') {
     return Object.fromEntries(
-      Object.entries(value).map(([key, nestedValue]) => [key, localizeMockValue(nestedValue, normalizedLocale)])
+      Object.entries(value).map(([key, nestedValue]) => {
+        if (IDENTITY_KEYS.has(key)) {
+          return [key, nestedValue]
+        }
+        return [key, localizeMockValue(nestedValue, normalizedLocale, key)]
+      })
     )
+  }
+
+  if (IDENTITY_KEYS.has(keyHint)) {
+    return value
   }
 
   return translateText(value, normalizedLocale)

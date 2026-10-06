@@ -31,27 +31,82 @@
     "noData": "No data",
     "loadingRegions": "Loading region list, please wait...",
     "recentUpdate": "Recently updated",
-    "back": "Back"
+    "back": "Back",
+    "unknown": "Unknown"
   },
   "feature": {
-    "grade": { "name": "Grades", "description": "Check grades and GPA by term" },
-    "schedule": { "name": "Schedule", "description": "See this week's classes at a glance" },
-    "cet": { "name": "CET Scores", "description": "Check CET results with ticket number and captcha" },
-    "kaoyan": { "name": "Graduate Exam", "description": "View graduate exam scores and details" },
-    "spare": { "name": "Empty Classrooms", "description": "Find available classrooms right now" },
-    "collection": { "name": "Library", "description": "Search holdings, view loans and renew books" },
-    "card": { "name": "Campus Card", "description": "Check balance, transactions and report loss" },
-    "pe": { "name": "PE Test", "description": "View physical test scores and records" },
-    "data": { "name": "Data Query", "description": "Check electricity fees and useful campus numbers" },
-    "evaluate": { "name": "Teaching Review", "description": "Complete course evaluations here" },
-    "ershou": { "name": "Marketplace", "description": "Sell idle items and trade on campus" },
-    "delivery": { "name": "Delivery", "description": "Post errands and pickup requests" },
-    "lostandfound": { "name": "Lost & Found", "description": "Report lost items or claim found ones" },
-    "secret": { "name": "Secret", "description": "Share anonymous thoughts safely" },
-    "dating": { "name": "Roommate Match", "description": "Introduce your roommate to the world" },
-    "express": { "name": "Confession Wall", "description": "Say what you really feel" },
-    "topic": { "name": "Topics", "description": "Join hot campus discussions" },
-    "photograph": { "name": "Campus Photography", "description": "Capture the best moments on campus" }
+    "grade": {
+      "name": "Grades",
+      "description": "Check grades and GPA by term"
+    },
+    "schedule": {
+      "name": "Schedule",
+      "description": "See this week's classes at a glance"
+    },
+    "cet": {
+      "name": "CET Scores",
+      "description": "Check CET results with ticket number and captcha"
+    },
+    "kaoyan": {
+      "name": "Graduate Exam",
+      "description": "View graduate exam scores and details"
+    },
+    "spare": {
+      "name": "Empty Classrooms",
+      "description": "Find available classrooms right now"
+    },
+    "collection": {
+      "name": "Library",
+      "description": "Search holdings, view loans and renew books"
+    },
+    "card": {
+      "name": "Campus Card",
+      "description": "Check balance, transactions and report loss"
+    },
+    "pe": {
+      "name": "PE Test",
+      "description": "View physical test scores and records"
+    },
+    "data": {
+      "name": "Data Query",
+      "description": "Check electricity fees and useful campus numbers"
+    },
+    "evaluate": {
+      "name": "Teaching Review",
+      "description": "Complete course evaluations here"
+    },
+    "ershou": {
+      "name": "Marketplace",
+      "description": "Sell idle items and trade on campus"
+    },
+    "delivery": {
+      "name": "Delivery",
+      "description": "Post errands and pickup requests"
+    },
+    "lostandfound": {
+      "name": "Lost & Found",
+      "description": "Report lost items or claim found ones"
+    },
+    "secret": {
+      "name": "Secret",
+      "description": "Share anonymous thoughts safely"
+    },
+    "dating": {
+      "name": "Roommate Match",
+      "description": "Introduce your roommate to the world"
+    },
+    "express": {
+      "name": "Confession Wall",
+      "description": "Say what you really feel"
+    },
+    "topic": {
+      "name": "Topics",
+      "description": "Join hot campus discussions"
+    },
+    "photograph": {
+      "name": "Campus Photography",
+      "description": "Capture the best moments on campus"
+    }
   },
   "grade": {
     "year": {
@@ -191,7 +246,9 @@
     "incompleteFields": "Please complete all required fields",
     "loading": "Signing in...",
     "failed": "Login failed",
-    "thirdPartyUnavailable": "This login method is not available yet"
+    "thirdPartyUnavailable": "This login method is not available yet",
+    "credentialNotice": "Campus credentials may be used for campus authentication, quick auth, and session sync. Use only your own account. If you refuse to save credentials or later delete them via account settings or feedback, some campus queries or quick auth may become unavailable.",
+    "visualIntro": "Schedules, campus cards, news, and campus life—all in one clean entry point."
   },
   "libraryPage": {
     "title": "Library",
@@ -230,7 +287,8 @@
       "author": "Author",
       "principal": "Title / Responsibility",
       "publisher": "Publisher",
-      "empty": "No details available"
+      "empty": "No details available",
+      "emptyDescription": "Catalog details for this book are currently unavailable. Go back and choose again, or try later."
     },
     "borrow": {
       "title": "My Borrowing",
@@ -282,7 +340,15 @@
     "fallbackNeea": "NEEA CET Score Lookup",
     "saveSuccess": "Saved successfully",
     "saveFailed": "Failed to save",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "resultTitle": "Results",
+    "resultDisclaimer": "Scores are for reference only. Please refer to the official score report.",
+    "totalScore": "Total Score",
+    "listeningScore": "Listening",
+    "readingScore": "Reading",
+    "writingScore": "Writing & Translation",
+    "reQuery": "Search Again",
+    "backHome": "Back to Home"
   },
   "settings": {
     "section": {
@@ -316,7 +382,8 @@
     "deleteConfirm": "Delete this avatar and restore the default one?",
     "deleting": "Deleting avatar...",
     "deleteSuccess": "Default avatar restored",
-    "deleteFailed": "Failed to delete avatar. Please try again later."
+    "deleteFailed": "Failed to delete avatar. Please try again later.",
+    "privacyHint": "Before uploading an avatar or image, check that it does not contain unnecessary faces, location details, identity documents, student cards, contact details or other highly sensitive information."
   },
   "bindEmail": {
     "retryIn": "Retry in {seconds}s",
@@ -412,7 +479,8 @@
     "targetAccepted": "Accepted",
     "targetComment": "Comment",
     "targetLike": "Like",
-    "targetGuess": "Guess Name"
+    "targetGuess": "Guess Name",
+    "announcementMissing": "This announcement does not exist or has been deleted."
   },
   "router": {
     "siteTitle": "GdeiAssistant - Guangdong University of Education"
@@ -797,7 +865,8 @@
       "male": "Male",
       "female": "Female",
       "secret": "Other / Private"
-    }
+    },
+    "loadFailed": "Failed to load. Please try again later."
   },
   "marketplace": {
     "title": "Marketplace",
@@ -855,7 +924,8 @@
         "location": "Trading location is required",
         "type": "No category selected",
         "qq": "QQ number is required"
-      }
+      },
+      "safetyHint": "Do not list illegal or prohibited items, dangerous goods, original identity documents, account credentials, or infringing or pirated content. Be careful when publishing phone numbers, WeChat IDs, addresses and other contact details. Verify the item’s condition, price and in-person transaction risks yourself."
     },
     "detail": {
       "title": "Item Details",
@@ -1059,6 +1129,20 @@
       "voiceMessage": "Voice Message",
       "empty": "No secret posts yet",
       "loadMore": "Load More"
+    },
+    "detail": {
+      "title": "Secret Detail",
+      "audioLoadFailed": "Failed to load voice. Please try again later.",
+      "audioLoading": "Loading voice...",
+      "audioPause": "Tap to pause",
+      "audioResume": "Tap to resume",
+      "audioPlay": "Tap to play voice",
+      "audioUnsupported": "This browser cannot play the voice recording",
+      "commentEmpty": "Comment cannot be empty",
+      "commentTooLong": "Comment cannot exceed {max} characters",
+      "floor": "Floor {n}",
+      "notFound": "This secret does not exist or was deleted",
+      "commentPlaceholder": "Anonymous comment"
     }
   },
   "lostandfound": {
@@ -1125,7 +1209,8 @@
       },
       "placeholder": {
         "title": "Up to 25 characters"
-      }
+      },
+      "privacyHint": "Mask or minimize the display of identity documents, student cards, photos and contact details. Avoid publishing full ID numbers, full phone numbers, complete QR codes or other information that could enable a false claim."
     },
     "detail": {
       "title": "Details",
@@ -1222,7 +1307,8 @@
       "rewardInvalid": "Please enter a valid reward amount (0.01-9999.99)",
       "publishSuccess": "Posted successfully",
       "payloadName": "Pickup Request",
-      "defaultCompany": "Package Pickup"
+      "defaultCompany": "Package Pickup",
+      "privacyHint": "Pickup codes, addresses, phone numbers and names are usually highly sensitive. Enter and display only what is necessary. Do not accept illegal, prohibited or dangerous tasks, tasks involving valuables, or tasks clearly beyond your abilities."
     },
     "detail": {
       "title": "Task Details",
@@ -1289,7 +1375,64 @@
     "securityTitle": "Security Notice",
     "privacyPolicyTitle": "Privacy Policy",
     "userAgreementTitle": "User Agreement",
-    "chineseOnlyNotice": "The legal text on this page is currently available in Chinese only."
+    "chineseOnlyNotice": "The legal text on this page is currently available in Chinese only.",
+    "account": {
+      "title": "Campus Account & Credentials",
+      "sectionTitle": "Campus credentials and quick auth",
+      "sectionDesc": "Review consent, saved credentials, and quick auth. After revoke or delete, some campus queries may require signing in again.",
+      "statusTitle": "Current status",
+      "refresh": "Refresh",
+      "loading": "Loading status...",
+      "consentStatus": "Consent",
+      "authorized": "Authorized",
+      "unauthorized": "Not authorized",
+      "savedCredential": "Saved credential",
+      "yes": "Yes",
+      "no": "No",
+      "quickAuth": "Quick auth",
+      "enabled": "On",
+      "disabled": "Off",
+      "campusAccount": "Campus account",
+      "notProvided": "Not provided",
+      "consentedAt": "Consented at",
+      "revokedAt": "Revoked at",
+      "none": "None",
+      "disableQuickAuth": "Turn off quick auth",
+      "enableQuickAuth": "Turn on quick auth",
+      "quickAuthHint": "Quick auth can be turned on only after an active consent and a reusable campus credential are available.",
+      "dangerTitle": "Danger zone",
+      "revoke": "Revoke consent",
+      "deleteCredential": "Delete saved credential",
+      "feedbackAction": "Request help via feedback",
+      "privacyAction": "View campus credential notes in the privacy policy",
+      "loginRequired": "Please sign in to view campus credential management.",
+      "statusUnavailable": "Unable to load campus credential status. Please use Help & Feedback first.",
+      "revokeSuccess": "Campus credential consent has been revoked",
+      "deleteSuccess": "Saved campus credential deleted",
+      "quickAuthOnSuccess": "Quick auth enabled",
+      "quickAuthOffSuccess": "Quick auth disabled",
+      "revokeDescription": "Revoking consent also deletes the saved campus credential. Related features may require signing in or authorizing again.",
+      "deleteDescription": "After deletion, schedule, grades, campus card, and library queries may require signing in again. Saved credentials and quick auth will also be cleared.",
+      "revokeTitle": "Revoke campus credential consent",
+      "deleteTitle": "Delete saved campus credential",
+      "guide": {
+        "title": "GDEI Assistant campus network account guide",
+        "updated": "Updated: June 28, 2022",
+        "welcome": "Welcome to Campus Assistant, students of Guangdong University of Education.",
+        "firstUse": "If you are a new student or first-time user, please read this guide first.",
+        "login": "Sign in with your campus network username and password.",
+        "usernameHint": "Your username is not your student number.",
+        "activation": "New students usually wait about a week for the network center to activate their university application account. If sign-in is unavailable, please wait for activation.",
+        "steps": "To look up your campus network account:",
+        "homepage": "Open www.gdei.edu.cn and choose “内网登录” (intranet sign-in) in the navigation on the right.",
+        "lookup": "Choose “查询账号” (account lookup) in the unified identity authentication system.",
+        "result": "Enter your name, student or staff number, identity document number and verification code correctly to view your campus network account.",
+        "passwordHint": "Use the displayed username to sign in here. The original guide records that the initial password for students entering in 2015 or later is the last six digits of their identity document number. Change the initial password promptly to protect your account.",
+        "homepageAlt": "Intranet sign-in on the university homepage",
+        "lookupAlt": "Account lookup in the identity authentication system",
+        "resultAlt": "Example campus account lookup result"
+      }
+    }
   },
   "appearance": {
     "title": "Interface & Appearance",
@@ -1381,7 +1524,16 @@
     "fillAllFields": "Please fill in all query fields!",
     "wish": "Best wishes to all 2019 graduate exam candidates!",
     "altEntry": "Alternative Query Portal",
-    "chsiLink": "CHSI Master Preliminary Score Query"
+    "chsiLink": "CHSI Master Preliminary Score Query",
+    "totalScore": "Preliminary Total",
+    "politics": "Ideological and Political Theory",
+    "foreignLanguage": "Foreign Language",
+    "business1": "Major Subject 1",
+    "business2": "Major Subject 2",
+    "reQuery": "Search Again",
+    "emptyTitle": "No score data",
+    "emptyDescription": "No matching candidate scores were found. Please check the name, candidate number, and ID number, then try again.",
+    "emptyAction": "Search Again"
   },
   "social": {
     "chooseImage": "Choose image",
@@ -1444,6 +1596,45 @@
     "policyMutual": "Mutual follows",
     "policyMutualDesc": "Only mutual friends can message me (default)",
     "policyNone": "No one",
-    "policyNoneDesc": "Do not receive DMs; I can still send"
+    "policyNoneDesc": "Do not receive DMs; I can still send",
+    "backToPrivacySettings": "Back to privacy settings"
+  },
+  "community": {
+    "navAriaLabel": "Community navigation",
+    "defaultPublish": "Post",
+    "noticeFallback": "Campus notice",
+    "heroSubtitle": "Discover campus life and stay connected",
+    "backHome": "Back to home",
+    "railAriaLabel": "Campus life sidebar",
+    "todayCampus": "Campus today",
+    "goSee": "Explore",
+    "myPosts": "My posts",
+    "manage": "Manage",
+    "latest": "Latest",
+    "safetyTitle": "Safety tip",
+    "safetyTip": "For trading and deliveries, prefer meeting on campus in person and avoid sharing private information."
+  },
+  "evaluatePage": {
+    "title": "Teaching Evaluation",
+    "directSubmit": "Submit evaluation directly",
+    "submitAction": "One-tap evaluate",
+    "riskNotice": "Note: Once submitted, evaluation information cannot be changed.",
+    "confirmMessage": "Proceed with one-tap evaluation? This action cannot be undone.",
+    "loading": "Evaluating...",
+    "success": "Evaluation submitted!",
+    "error": "Evaluation failed. Please try again later."
+  },
+  "navigationAccessibility": {
+    "sidebarNavigation": "Sidebar navigation",
+    "primaryNavigation": "Primary navigation",
+    "mainNavigation": "Main navigation",
+    "openSidebar": "Open sidebar",
+    "closeSidebar": "Close sidebar",
+    "lightMode": "Switch to light mode",
+    "darkMode": "Switch to dark mode"
+  },
+  "pePage": {
+    "wechatRequiredTitle": "Open in WeChat",
+    "wechatRequiredDescription": "Fitness test results can only be viewed in WeChat. Scan the code with WeChat, or search for and open this app in WeChat."
   }
 }

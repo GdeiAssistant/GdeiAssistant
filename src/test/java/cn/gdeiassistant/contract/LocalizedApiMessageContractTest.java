@@ -3,11 +3,15 @@ package cn.gdeiassistant.contract;
 import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.core.cetquery.controller.CetQueryController;
+import cn.gdeiassistant.core.library.controller.LibraryController;
 import cn.gdeiassistant.core.message.controller.MessageController;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import cn.gdeiassistant.core.message.service.MessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -90,6 +95,28 @@ class LocalizedApiMessageContractTest {
                 BackendTextLocalizer.localizeMessage("校园新闻站点访问失败", "en-US"));
         assertEquals("The academic system page structure has changed and the term selector could not be found",
                 BackendTextLocalizer.localizeMessage("教务系统页面结构异常，未找到学期下拉框", "en-US"));
+    }
+
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = {
+            "zh-CN|准考证号不能为空|请提供图书馆密码",
+            "zh-HK|請輸入准考證號碼|請輸入圖書館密碼",
+            "zh-TW|請輸入准考證號碼|請輸入圖書館密碼",
+            "en|Please enter your admission ticket number|Please enter your library password",
+            "ja|受験番号を入力してください|図書館のパスワードを入力してください",
+            "ko|수험 번호를 입력해 주세요|도서관 비밀번호를 입력해 주세요"
+    })
+    void manualValidationResponsesRespectAllSupportedLocales(String locale, String ticket, String library) throws Exception {
+        MockMvc validationMockMvc = MockMvcBuilders
+                .standaloneSetup(new CetQueryController(), new LibraryController()).build();
+        validationMockMvc.perform(post("/api/cet/number")
+                        .header("Accept-Language", locale)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"number\":\"\"}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.message").value(ticket));
+        validationMockMvc.perform(post("/api/library/renew")
+                        .header("Accept-Language", locale)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"sn\":\"demo\",\"code\":\"demo\"}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.message").value(library));
     }
 
     @RestController

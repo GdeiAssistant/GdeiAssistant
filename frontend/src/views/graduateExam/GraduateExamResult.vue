@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { queryKaoyanScore } from '@/api/graduateExam'
 import { useToast } from '@/composables/useToast'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
@@ -8,6 +9,7 @@ import { GraduationCap } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
 const { loading: showLoading, hideLoading } = useToast()
 const scoreData = ref({})
 const hasData = ref(false)
@@ -25,7 +27,7 @@ onMounted(() => {
   }
 
   isLoading.value = true
-  showLoading('加载中...')
+  showLoading(t('common.loading'))
   const payload = {
     name,
     examNumber: candidateNo,
@@ -60,8 +62,8 @@ onMounted(() => {
   <div class="min-h-screen bg-[var(--c-bg)]">
     <!-- Sticky header -->
     <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; 返回</button>
-      <span class="flex-1 text-center text-sm font-bold">考研成绩查询</span>
+      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">&larr; {{ t('common.back') }}</button>
+      <span class="flex-1 text-center text-sm font-bold">{{ t('graduateExam.title') }}</span>
       <div class="w-10"></div>
     </div>
 
@@ -69,41 +71,41 @@ onMounted(() => {
       <!-- Loading -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-16 text-[var(--c-text-secondary)]">
         <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-3"></div>
-        <span class="text-sm">加载中</span>
+        <span class="text-sm">{{ t('common.loading') }}</span>
       </div>
 
       <!-- Has data -->
       <template v-if="!isLoading && hasData">
         <!-- Total score highlight -->
         <div class="text-center mb-6">
-          <p class="text-sm text-[var(--c-primary)] mb-1">初试总分</p>
+          <p class="text-sm text-[var(--c-primary)] mb-1">{{ t('graduateExam.totalScore') }}</p>
           <p class="text-4xl font-semibold text-[var(--c-primary)]">{{ scoreData.totalScore }}</p>
         </div>
 
         <!-- Score details card -->
         <div class="bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
           <div class="flex items-center justify-between px-4 py-3">
-            <span class="text-sm text-[var(--c-text-secondary)]">姓名</span>
+            <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.name') }}</span>
             <span class="text-sm text-[var(--c-text)]">{{ scoreData.name ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
-            <span class="text-sm text-[var(--c-text-secondary)]">考号</span>
+            <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.candidateNo') }}</span>
             <span class="text-sm text-[var(--c-text)]">{{ scoreData.candidateNo ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
-            <span class="text-sm text-[var(--c-text-secondary)]">思想政治理论</span>
+            <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.politics') }}</span>
             <span class="text-sm text-[var(--c-text)]">{{ scoreData.politics ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
-            <span class="text-sm text-[var(--c-text-secondary)]">外国语</span>
+            <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.foreignLanguage') }}</span>
             <span class="text-sm text-[var(--c-text)]">{{ scoreData.foreignLanguage ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
-            <span class="text-sm text-[var(--c-text-secondary)]">业务课一</span>
+            <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.business1') }}</span>
             <span class="text-sm text-[var(--c-text)]">{{ scoreData.business1 ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
-            <span class="text-sm text-[var(--c-text-secondary)]">业务课二</span>
+            <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.business2') }}</span>
             <span class="text-sm text-[var(--c-text)]">{{ scoreData.business2 ?? '—' }}</span>
           </div>
         </div>
@@ -114,16 +116,16 @@ onMounted(() => {
           class="mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-white text-[15px] font-medium active:opacity-80 transition-opacity"
           @click="reQuery"
         >
-          重新查询
+          {{ t('graduateExam.reQuery') }}
         </button>
       </template>
 
       <!-- No data -->
       <div v-if="!isLoading && !hasData" class="graduate-empty-shell">
         <AppEmpty
-          title="暂无成绩数据"
-          description="当前未查询到对应考生的成绩信息，请检查姓名、考号和证件号码后重新查询。"
-          action-text="返回重查"
+          :title="t('graduateExam.emptyTitle')"
+          :description="t('graduateExam.emptyDescription')"
+          :action-text="t('graduateExam.emptyAction')"
           @action="reQuery"
         >
           <template #icon>

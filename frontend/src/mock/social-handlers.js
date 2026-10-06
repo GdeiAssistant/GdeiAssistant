@@ -9,7 +9,8 @@ function ensureSocialState(utils) {
   if (!state.social) {
     state.social = {
       dmPolicy: 'MUTUAL',
-      follows: [], // {followerId, followeeId}
+      // Demo: peer already follows me so a first-run user can mutual-follow and try DM/images.
+      follows: [{ followerId: PEER_ID, followeeId: ME_ID }],
       blocks: [], // {blockerId, blockedId}
       users: {
         [ME_ID]: {

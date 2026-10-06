@@ -36,16 +36,30 @@ describe('social mock contract', () => {
     expect(privacy.data.dmPolicy).toBe('NONE')
   })
 
-  it('follow mutual then allow dm under MUTUAL policy', async () => {
+  it('seeds peer one-way follow so first-run mutual DM is reachable', async () => {
+    const me = '11111111-1111-4111-8111-111111111111'
     const peer = '22222222-2222-4222-8222-222222222222'
+    await handleSocialRequest('GET', '/api/social/me', {}, {}, 'tok', utils)
+    expect(utils.readState().social.follows).toEqual([{ followerId: peer, followeeId: me }])
+  })
+
+  it('follow mutual then allow dm under MUTUAL policy', async () => {
+    const me = '11111111-1111-4111-8111-111111111111'
+    const peer = '22222222-2222-4222-8222-222222222222'
+    await handleSocialRequest('GET', '/api/social/me', {}, {}, 'tok', utils)
+    // Isolate the privacy gate: start without the default peer→me seed.
+    const cleared = utils.readState()
+    cleared.social.follows = []
+    utils.writeState(cleared)
+
     await handleSocialRequest('PUT', `/api/social/users/${peer}/follow`, {}, {}, 'tok', utils)
     // peer does not follow back yet
-    let create = handleSocialRequest('POST', '/api/social/conversations', {}, { peerId: peer }, 'tok', utils)
+    const create = handleSocialRequest('POST', '/api/social/conversations', {}, { peerId: peer }, 'tok', utils)
     await expect(create).rejects.toMatchObject({ errorCode: 'PRIVACY_RESTRICTED' })
 
     // simulate mutual by writing reverse follow
     const social = utils.readState().social
-    social.follows.push({ followerId: peer, followeeId: '11111111-1111-4111-8111-111111111111' })
+    social.follows.push({ followerId: peer, followeeId: me })
     utils.writeState({ ...utils.readState(), social })
 
     const ok = await handleSocialRequest('POST', '/api/social/conversations', {}, { peerId: peer }, 'tok', utils)

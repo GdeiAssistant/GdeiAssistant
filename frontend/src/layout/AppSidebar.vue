@@ -39,7 +39,7 @@ function avatarInitial() {
 </script>
 
 <template>
-  <aside class="campus-sidebar" aria-label="侧边导航">
+  <aside class="campus-sidebar" :aria-label="t('navigationAccessibility.sidebarNavigation')">
     <div class="campus-sidebar__brand">
       <div class="campus-sidebar__mark" aria-hidden="true">
         <BookOpen class="w-5 h-5" />
@@ -47,7 +47,7 @@ function avatarInitial() {
       <span class="campus-sidebar__brand-name">{{ $t('about.appName') }}</span>
     </div>
 
-    <nav class="campus-sidebar__nav" aria-label="主要导航">
+    <nav class="campus-sidebar__nav" :aria-label="t('navigationAccessibility.primaryNavigation')">
       <ul class="campus-sidebar__list">
         <li v-for="item in navItems" :key="item.path">
           <button

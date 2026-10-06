@@ -1,7 +1,7 @@
 {
   "common": {
-    "loading": "載入中...",
-    "retry": "重試",
+    "loading": "載入緊...",
+    "retry": "再試一次",
     "confirm": "確定",
     "cancel": "取消",
     "save": "儲存",
@@ -10,28 +10,29 @@
     "close": "關閉",
     "saveFailed": "操作失敗",
     "saveSuccess": "儲存成功",
-    "systemBusy": "系統繁忙，請稍後再試",
-    "networkError": "網絡連接失敗，請檢查伺服器狀態",
-    "networkException": "網絡連接異常，請稍後重試",
-    "noPermission": "您沒有權限訪問該功能",
-    "resourceNotFound": "請求的資源不存在",
-    "apiNotFound": "請求的介面不存在",
-    "serverError": "伺服器開小差了，請稍後再試",
-    "loginExpired": "登入狀態已過期，請重新登入",
-    "loginExpiredDefault": "登入狀態已失效，請重新登入",
-    "invalidToken": "未檢測到有效令牌",
-    "wrongCredentials": "帳號或密碼錯誤",
-    "logoutSuccess": "已成功退出登入",
-    "unselected": "未選擇",
-    "notFilled": "去填寫",
-    "filled": "已填寫",
-    "clickToSet": "點擊設置",
-    "iKnow": "我知道了",
+    "systemBusy": "系統而家好繁忙，請陣間再試",
+    "networkError": "網絡連唔上，請檢查吓伺服器狀態",
+    "networkException": "網絡暫時唔穩定，請陣間再試",
+    "noPermission": "你冇權限使用呢個功能",
+    "resourceNotFound": "搵唔到你要嘅資源",
+    "apiNotFound": "搵唔到呢個介面",
+    "serverError": "伺服器暫時出咗問題，請陣間再試",
+    "loginExpired": "登入已過期，請重新登入",
+    "loginExpiredDefault": "登入已失效，請重新登入",
+    "invalidToken": "偵測唔到有效權杖",
+    "wrongCredentials": "帳戶或密碼唔啱",
+    "logoutSuccess": "已經成功登出",
+    "unselected": "未揀",
+    "notFilled": "去填",
+    "filled": "已填",
+    "clickToSet": "撳呢度設定",
+    "iKnow": "我知啦",
     "hint": "提示",
-    "noData": "暫無數據",
-    "loadingRegions": "地區列表載入中，請稍後再試",
+    "noData": "暫時未有資料",
+    "loadingRegions": "地區列表載入緊，請陣間再試",
     "recentUpdate": "最近更新",
-    "back": "返回"
+    "back": "返回",
+    "unknown": "未知"
   },
   "grade": {
     "year": {
@@ -70,47 +71,47 @@
   },
   "tab": {
     "home": "功能主頁",
-    "info": "資訊信息",
+    "info": "資訊",
     "profile": "個人中心"
   },
   "communityTab": {
     "home": "首頁",
     "publish": "發佈",
     "profile": "我的",
-    "search": "搜索",
+    "search": "搜尋",
     "hall": "大廳",
     "confess": "表白"
   },
   "home": {
     "title": "廣東二師助手",
-    "subtitle": "四年時光，廣東二師助手陪你一起走過。",
+    "subtitle": "四年時光，廣東二師助手陪你一齊走過。",
     "sectionService": "校園服務",
-    "sectionServiceDesc": "查成績、課表、四六級、圖書館、校園卡和常用查詢工具",
+    "sectionServiceDesc": "查成績、時間表、四六級、圖書館、校園卡同常用查詢工具",
     "sectionLife": "校園生活",
-    "sectionLifeDesc": "二手交易、快遞代取、失物招領、樹洞、賣室友、表白牆、話題和校園攝影",
-    "noFeatures": "當前沒有可展示的功能入口",
-    "heroPrimary": "查看校園服務",
+    "sectionLifeDesc": "二手交易、速遞代取、失物招領、樹洞、賣室友、表白牆、話題同校園攝影",
+    "noFeatures": "而家未有可以展示嘅功能入口",
+    "heroPrimary": "睇校園服務",
     "heroSecondary": "逛校園生活",
     "todayTitle": "校園今日",
-    "todayMore": "查看更多",
+    "todayMore": "睇多啲",
     "todayScheduleTitle": "今日課程",
-    "todayScheduleDesc": "打開課表查看下一節安排",
-    "todayScheduleMeta": "去查看",
+    "todayScheduleDesc": "打開時間表睇下一堂點安排",
+    "todayScheduleMeta": "去睇",
     "todayCardTitle": "校園卡",
-    "todayCardDesc": "餘額和消費記錄統一查看",
-    "todayCardMeta": "去查看",
+    "todayCardDesc": "餘額同消費紀錄一齊睇",
+    "todayCardMeta": "去睇",
     "todayNoticeTitle": "通知公告",
-    "todayNoticeDesc": "校內通知與互動消息",
-    "todayNoticeMeta": "去查看",
-    "todayDeliveryTitle": "我的快遞",
-    "todayDeliveryDesc": "跑腿和快遞代取需求",
+    "todayNoticeDesc": "校內通知同互動訊息",
+    "todayNoticeMeta": "去睇",
+    "todayDeliveryTitle": "我的速遞",
+    "todayDeliveryDesc": "跑腿同速遞代取需求",
     "todayDeliveryMeta": "去處理"
   },
   "profile": {
     "title": "個人中心",
     "avatar": "頭像",
     "username": "用戶名",
-    "nickname": "暱稱",
+    "nickname": "花名",
     "birthday": "生日",
     "faculty": "院系",
     "major": "專業",
@@ -118,58 +119,59 @@
     "location": "所在地",
     "hometown": "家鄉",
     "introduction": "個人簡介",
-    "ipArea": "IP屬地",
-    "privacySetting": "私隱設置",
+    "ipArea": "IP 屬地",
+    "privacySetting": "私隱設定",
     "featureManage": "功能管理",
-    "changePassword": "修改密碼",
-    "loginRecord": "登入記錄",
+    "changePassword": "改密碼",
+    "loginRecord": "登入紀錄",
     "realname": "實名認證",
     "bindPhone": "綁定手機",
-    "bindEmail": "綁定郵箱",
-    "deleteAccount": "註銷帳號",
+    "bindEmail": "綁定電郵",
+    "deleteAccount": "註銷帳戶",
     "reportChannel": "不良「校園貸」舉報通道",
-    "downloadData": "下載用戶數據",
-    "helpFeedback": "幫助與反饋",
-    "logout": "退出帳號",
-    "logoutConfirm": "確定要退出帳號嗎？",
+    "downloadData": "下載用戶資料",
+    "helpFeedback": "求助同意見",
+    "logout": "退出帳戶",
+    "logoutConfirm": "確定要退出帳戶嗎？",
     "logoutConfirmBtn": "確定退出",
-    "editNickname": "修改暱稱",
-    "nicknamePlaceholder": "請輸入新暱稱",
-    "editIntro": "修改個人簡介",
-    "introPlaceholder": "一句話介紹自己...",
-    "passwordNotAvailable": "修改密碼功能暫未開放。如需修改，請前往學校統一身份認證平台或教務系統進行操作。",
-    "selectBirthday": "選擇生日",
-    "selectFaculty": "請選擇院系",
-    "selectMajor": "請選擇專業",
-    "selectYear": "請選擇年份",
-    "selectLocation": "請選擇所在地",
-    "selectHometown": "請選擇家鄉",
-    "selectFacultyFirst": "請先選擇院系",
-    "language": "語言 / Language"
+    "editNickname": "改花名",
+    "nicknamePlaceholder": "請輸入新花名",
+    "editIntro": "改個人簡介",
+    "introPlaceholder": "用一句話介紹吓自己...",
+    "passwordNotAvailable": "改密碼功能暫時未開放。如果要改，請去學校統一身份認證平台或者教務系統操作。",
+    "selectBirthday": "揀生日",
+    "selectFaculty": "請揀院系",
+    "selectMajor": "請揀專業",
+    "selectYear": "請揀年份",
+    "selectLocation": "請揀所在地",
+    "selectHometown": "請揀家鄉",
+    "selectFacultyFirst": "請先揀院系",
+    "language": "語言 / Language",
+    "campusCredentialManage": "校園憑證管理"
   },
   "info": {
     "news": "新聞",
     "newsBadge": "校園",
     "newsEntryTitle": "校園新聞",
-    "newsDesc": "查看學校公開發佈的校園新聞",
+    "newsDesc": "睇學校公開發佈嘅校園新聞",
     "systemNotice": "系統公告",
-    "noNotice": "暫無系統公告",
-    "interaction": "互動消息",
-    "loadingInfo": "正在載入資訊信息...",
+    "noNotice": "暫時未有系統公告",
+    "interaction": "互動訊息",
+    "loadingInfo": "資訊載入緊...",
     "noticeTitle": "通知公告",
-    "expand": "查看更多",
+    "expand": "睇多啲",
     "collapse": "收起",
     "noticeTime": "時間：",
     "todayInWorld": "世界上的今日",
-    "todayIntro": "你知道嗎？每年的",
-    "todayIs": "，是",
-    "interactionTitle": "統一互動消息",
+    "todayIntro": "你知唔知？每年嘅",
+    "todayIs": "，係",
+    "interactionTitle": "統一互動訊息",
     "markAllRead": "全部已讀",
-    "noInteraction": "暫無互動消息",
-    "defaultInteractionTitle": "互動消息",
-    "defaultInteractionContent": "你有一條新的互動消息",
-    "loadMore": "載入更多",
-    "loadingMore": "載入中...",
+    "noInteraction": "暫時未有互動訊息",
+    "defaultInteractionTitle": "互動訊息",
+    "defaultInteractionContent": "你有一條新嘅互動訊息",
+    "loadMore": "載入多啲",
+    "loadingMore": "載入緊...",
     "read": "已讀",
     "unread": "未讀",
     "moduleMarketplace": "二手交易",
@@ -188,7 +190,8 @@
     "targetAccepted": "我接的",
     "targetComment": "評論",
     "targetLike": "點讚",
-    "targetGuess": "猜名字"
+    "targetGuess": "猜名字",
+    "announcementMissing": "公告唔存在，或者已經刪除咗"
   },
   "router": {
     "siteTitle": "廣東第二師範學院校園助手系統"
@@ -231,7 +234,64 @@
     "securityTitle": "安全說明",
     "privacyPolicyTitle": "隱私政策",
     "userAgreementTitle": "用戶協議",
-    "chineseOnlyNotice": "本頁面正文目前僅提供中文版本。"
+    "chineseOnlyNotice": "本頁面正文目前僅提供中文版本。",
+    "account": {
+      "title": "校園帳戶同憑證管理",
+      "sectionTitle": "校園帳戶憑證同快速認證管理",
+      "sectionDesc": "睇授權狀態、已儲存憑證同快速認證；撤回授權或者刪除憑證之後，相關校園查詢可能要重新登入。",
+      "statusTitle": "而家管理狀態",
+      "refresh": "重新整理",
+      "loading": "狀態攞緊...",
+      "consentStatus": "授權狀態",
+      "authorized": "已授權",
+      "unauthorized": "未授權",
+      "savedCredential": "已儲存憑證",
+      "yes": "係",
+      "no": "唔係",
+      "quickAuth": "快速認證",
+      "enabled": "已開啟",
+      "disabled": "已關閉",
+      "campusAccount": "校園帳戶",
+      "notProvided": "未提供",
+      "consentedAt": "授權時間",
+      "revokedAt": "撤回時間",
+      "none": "暫時未有",
+      "disableQuickAuth": "關閉快速認證",
+      "enableQuickAuth": "開啟快速認證",
+      "quickAuthHint": "要先有有效授權紀錄，同埋儲存可重用嘅校園憑證，先可以再開快速認證。",
+      "dangerTitle": "危險操作",
+      "revoke": "撤回授權",
+      "deleteCredential": "刪除已儲存憑證",
+      "feedbackAction": "經求助同意見申請處理",
+      "privacyAction": "睇私隱政策入面嘅校園憑證說明",
+      "loginRequired": "請先登入再睇校園憑證管理狀態。",
+      "statusUnavailable": "而家暫時攞唔到校園憑證管理狀態，請優先經「求助同意見」申請處理。",
+      "revokeSuccess": "已撤回校園帳戶憑證授權",
+      "deleteSuccess": "已刪除儲存嘅校園憑證",
+      "quickAuthOnSuccess": "已開啟快速認證",
+      "quickAuthOffSuccess": "已關閉快速認證",
+      "revokeDescription": "撤回授權會同時刪除已儲存嘅校園憑證，之後用相關功能可能要重新登入或者重新授權。",
+      "deleteDescription": "刪除之後，時間表、成績、校園卡、圖書館等查詢可能要重新登入。已儲存嘅校園憑證同快速認證狀態都會一併清除。",
+      "revokeTitle": "撤回校園帳戶憑證授權",
+      "deleteTitle": "刪除已儲存嘅校園憑證",
+      "guide": {
+        "title": "廣東二師助手校園網絡帳號說明",
+        "updated": "更新日期：2022年6月28日",
+        "welcome": "廣東第二師範學院嘅同學，歡迎使用校園助手系統。",
+        "firstUse": "如果你係新生或者第一次用，建議先睇呢份說明。",
+        "login": "請用校園網帳號嘅用戶名同密碼登入。",
+        "usernameHint": "用戶名唔係學號。",
+        "activation": "新生一般要等大約一星期，由網絡中心啟用學院應用資訊系統帳號；未登入到嘅話，請耐心等候。",
+        "steps": "可以按以下步驟查詢校園網帳號：",
+        "homepage": "打開學校主頁 www.gdei.edu.cn，撳右邊導覽列嘅「內網登錄」。",
+        "lookup": "喺統一身份認證系統，撳「查詢帳號」。",
+        "result": "填啱姓名、學工號、身份證號碼同驗證碼之後，頁面會顯示校園網帳號資料。",
+        "passwordHint": "「用戶名」就係登入呢個系統要填嘅帳號。按呢份說明嘅原始記錄，2015級及之後學生嘅初始密碼係身份證最後六位數字；初始密碼有安全風險，請及時更改。",
+        "homepageAlt": "學校主頁嘅內網登入入口",
+        "lookupAlt": "統一身份認證系統嘅帳號查詢入口",
+        "resultAlt": "校園網帳號查詢結果示例"
+      }
+    }
   },
   "appearance": {
     "title": "介面和外觀",
@@ -353,6 +413,20 @@
       "voiceMessage": "語音消息",
       "empty": "暫無發佈的樹洞",
       "loadMore": "載入更多"
+    },
+    "detail": {
+      "title": "樹洞詳情",
+      "audioLoadFailed": "語音載入失敗，請稍後再試",
+      "audioLoading": "語音載入中...",
+      "audioPause": "撳一下暫停播放",
+      "audioResume": "撳一下繼續播放",
+      "audioPlay": "撳一下播放語音",
+      "audioUnsupported": "而家嘅瀏覽器播唔到呢段語音",
+      "commentEmpty": "評論內容唔可以留空",
+      "commentTooLong": "評論內容唔可以超過{max}字",
+      "floor": "{n}樓",
+      "notFound": "樹洞唔存在或者已刪除",
+      "commentPlaceholder": "匿名評論"
     }
   },
   "marketplace": {
@@ -385,7 +459,98 @@
         "relist": "已重新上架"
       },
       "soldHint": "已售出的商品不再支援編輯或重新上架"
-    }
+    },
+    "category": {
+      "appliance": "電器",
+      "books": "圖書教材",
+      "clothing": "衣物傘帽",
+      "computer": "電腦",
+      "digital": "數碼",
+      "digitalAccessory": "數碼配件",
+      "life": "生活娛樂",
+      "other": "其他",
+      "phone": "手機",
+      "rental": "租賃",
+      "sports": "運動健身",
+      "vehicle": "校園代步"
+    },
+    "categoryTitle": "分類",
+    "detail": {
+      "call": "打電話",
+      "copyFailed": "複製失敗，請手動複製",
+      "copyQQ": "複製QQ",
+      "description": "商品描述：",
+      "imageAlt": "商品圖{index}",
+      "itemNotFound": "商品不存在",
+      "loadFailed": "載入失敗，請稍後重試",
+      "loadFailedOrMissing": "載入失敗或商品不存在",
+      "location": "交易地點：",
+      "phone": "手機號：",
+      "publishTime": "發佈時間：",
+      "publisher": "發佈者：",
+      "qq": "QQ：",
+      "qqCopied": "QQ號已複製",
+      "riskHint": "網絡交易有風險，交易時請自行覈實",
+      "sms": "發短訊",
+      "title": "商品詳情"
+    },
+    "emptyByCategory": "暫無該分類的商品",
+    "publish": {
+      "descriptionRequired": "請填寫商品描述",
+      "editTitle": "編輯二手商品",
+      "error": {
+        "description": "商品描述不能爲空",
+        "location": "交易地點不能爲空",
+        "name": "商品名稱不能爲空",
+        "price": "商品價格金額不合法",
+        "qq": "QQ號不能爲空",
+        "type": "分類未選擇"
+      },
+      "field": {
+        "description": "商品描述",
+        "location": "交易地點",
+        "name": "商品名稱",
+        "phone": "手機號",
+        "price": "商品價格",
+        "qq": "QQ號",
+        "type": "選擇分類"
+      },
+      "finish": "完成",
+      "formInvalid": "請檢查表單內容",
+      "imageEditUnsupported": "編輯模式暫不支持修改商品圖片",
+      "imageLimit": "最多隻能選擇四張圖片",
+      "imageLimitHint": "最多可上載4張圖片",
+      "imageTooLarge": "圖片文件不能超過5MB",
+      "invalidImageType": "不合法的圖片文件類型",
+      "itemNotFound": "未找到要編輯的商品",
+      "loading": "正在載入商品資訊...",
+      "locationRequired": "請填寫交易地點",
+      "nameRequired": "請填寫商品名稱",
+      "placeholder": {
+        "description": "填寫商品用途、新舊程度",
+        "name": "最多25個字",
+        "phone": "選填",
+        "price": "金額不能超過9999.99元"
+      },
+      "priceInvalid": "請填寫有效的商品價格（0-9999.99元）",
+      "publishSuccess": "發佈成功",
+      "qqRequired": "請填寫QQ號",
+      "saving": "正在儲存...",
+      "selectImageRequired": "請至少選擇一張圖片",
+      "submitting": "提交中",
+      "title": "發佈二手商品",
+      "typePickerTitle": "選擇分類",
+      "typeRequired": "請選擇商品分類",
+      "uploading": "正在上載...",
+      "safetyHint": "唔好發佈違法違規物品、危險品、證件正本、賬號憑證，或者侵權盜版內容。公開手機號碼、微信號、住址等聯絡資料前要諗清楚，並自行核實商品狀況、價錢同當面交易嘅風險。"
+    },
+    "searchAction": "搜索",
+    "searchEmpty": "未搜索到相關商品",
+    "searchPlaceholder": "搜搜看",
+    "searchPrompt": "請輸入關鍵詞搜索",
+    "searchRequired": "請輸入搜索關鍵詞",
+    "searchTitle": "搜索結果",
+    "title": "二手交易"
   },
   "lostandfound": {
     "profile": {
@@ -411,7 +576,90 @@
       "success": {
         "didFound": "已標記為確認尋回"
       }
-    }
+    },
+    "badge": {
+      "found": "招領",
+      "lost": "尋物"
+    },
+    "detail": {
+      "call": "打電話",
+      "contact": "聯繫方式：",
+      "copyQQ": "複製QQ",
+      "copyWechat": "複製微信",
+      "description": "物品描述：",
+      "foundLocation": "撿到地點：",
+      "imageAlt": "物品圖{index}",
+      "lostLocation": "丟失地點：",
+      "phone": "手機號：",
+      "publishTime": "發佈時間：",
+      "publisher": "發佈者：",
+      "qq": "QQ號：",
+      "sms": "發短訊",
+      "title": "詳情",
+      "wechat": "微信："
+    },
+    "emptyFound": "暫無招領資訊",
+    "emptyLost": "暫無尋物資訊",
+    "itemType": {
+      "bag": "包包",
+      "bankCard": "銀行卡",
+      "book": "書",
+      "campusCard": "校園卡",
+      "clothing": "衣帽",
+      "digitalAccessory": "數碼配件",
+      "idCard": "身份證",
+      "key": "鑰匙",
+      "other": "其他",
+      "phone": "手機",
+      "sports": "運動健身",
+      "vehicle": "校園代步"
+    },
+    "publish": {
+      "contactRequired": "聯繫方式至少需要填寫一項",
+      "contactTip": "QQ號/微信/手機號任填其中一項即可",
+      "descRequired": "請填寫物品描述",
+      "descTooLong": "物品描述不能超過100個字符",
+      "editTitle": "編輯資訊",
+      "field": {
+        "desc": "物品描述",
+        "title": "物品名稱"
+      },
+      "finish": "完成",
+      "foundLocation": "撿到地點",
+      "imageEditUnsupported": "編輯模式暫不支持修改圖片",
+      "imageLimit": "最多隻能上載4張圖片",
+      "imageLimitHint": "最多可上載4張圖片",
+      "imageRequired": "請至少上載一張圖片",
+      "imageTooLarge": "圖片大小不能超過5MB",
+      "invalidImageType": "只能上載圖片文件",
+      "itemNotFound": "未找到要編輯的資訊",
+      "itemTypePickerTitle": "選擇物品分類",
+      "itemTypeRequired": "請選擇物品分類",
+      "itemTypeTitle": "物品分類",
+      "loading": "正在載入資訊...",
+      "locationRequired": "請填寫地點",
+      "locationTooLong": "地點不能超過30個字符",
+      "lostLocation": "丟失地點",
+      "modeFoundOwner": "尋主",
+      "modeTitle": "尋找類型",
+      "placeholder": {
+        "title": "最多25個字"
+      },
+      "previewAlt": "預覽圖",
+      "publishSuccess": "發佈成功",
+      "saving": "正在儲存...",
+      "submitting": "提交中",
+      "title": "發佈資訊",
+      "titleRequired": "請填寫物品名稱",
+      "titleTooLong": "物品名稱不能超過25個字符",
+      "uploading": "正在上載...",
+      "privacyHint": "證件、學生卡、相片同聯絡資料，請盡量遮住敏感部分，或者只展示必需內容。唔好公開完整證件號碼、手機號碼、二維碼，或者其他可能畀人冒領嘅資料。"
+    },
+    "tab": {
+      "found": "失物招領",
+      "lost": "尋物啓事"
+    },
+    "title": "失物招領"
   },
   "locationPicker": {
     "title": "選擇地區",
@@ -430,7 +678,16 @@
     "fillAllFields": "請完整填寫查詢資訊！",
     "wish": "祝2019考研er金榜題名",
     "altEntry": "備用查詢入口",
-    "chsiLink": "研招網碩士初試成績查詢"
+    "chsiLink": "研招網碩士初試成績查詢",
+    "totalScore": "初試總分",
+    "politics": "思想政治理論",
+    "foreignLanguage": "外國語",
+    "business1": "業務課一",
+    "business2": "業務課二",
+    "reQuery": "重新查詢",
+    "emptyTitle": "暫無成績數據",
+    "emptyDescription": "而家查唔到對應考生嘅成績資訊，請檢查姓名、考號同證件號碼後再查。",
+    "emptyAction": "返回重查"
   },
   "social": {
     "chooseImage": "選擇圖片",
@@ -470,7 +727,7 @@
     "chatsDesc": "同互關好友或其他授權聯絡人傾偈",
     "chatTitle": "傾偈",
     "dmPrivacyTitle": "邊個可以私訊我",
-    "dmPrivacyHint": "每次傳送都會跟對方而家設定判斷",
+    "dmPrivacyHint": "每次傳送都會按對方而家嘅設定判斷，之前開咗嘅對話都一樣。",
     "noIntro": "暫無簡介",
     "cannotMessage": "而家唔可以向對方傳送私訊",
     "userNotFound": "用戶唔存在或唔可用",
@@ -493,6 +750,891 @@
     "policyMutual": "互相關注嘅人",
     "policyMutualDesc": "只有互關好友可以私訊我（預設）",
     "policyNone": "唔接收私訊",
-    "policyNoneDesc": "關閉陌生人同好友私訊；我仍然可以主動發出"
+    "policyNoneDesc": "關閉陌生人同好友私訊；我仍然可以主動發出",
+    "backToPrivacySettings": "返回私隱設定"
+  },
+  "avatarEdit": {
+    "change": "更換頭像",
+    "crop": "裁剪頭像",
+    "cropFailed": "裁剪失敗",
+    "currentAvatar": "當前頭像",
+    "delete": "刪除頭像",
+    "deleteConfirm": "確定要刪除頭像並恢復預設嗎？",
+    "deleteFailed": "刪除頭像失敗，請稍後再試",
+    "deleteSuccess": "已恢復預設頭像",
+    "deleting": "正在刪除頭像...",
+    "title": "個人頭像",
+    "updateSuccess": "更新頭像完成",
+    "uploading": "正在上載頭像...",
+    "privacyHint": "上傳頭像或圖片之前，請先確認冇包含唔必要嘅人臉、位置、證件、學生卡、聯絡資料，或者其他高度敏感資料。"
+  },
+  "bindEmail": {
+    "bindFailed": "綁定失敗，請稍後重試",
+    "bindNow": "立即綁定",
+    "bindSuccess": "綁定成功",
+    "binding": "綁定中...",
+    "boundDescription": "您當前綁定的電郵爲：{email}",
+    "boundTitle": "已綁定電郵",
+    "code": "驗證碼",
+    "codePlaceholder": "請輸入電郵驗證碼",
+    "codeRequired": "請輸入驗證碼",
+    "codeSent": "驗證碼已發送，請檢查電郵",
+    "confirm": "確認綁定",
+    "confirmUnbind": "確認解綁",
+    "edit": "修改綁定",
+    "editDescription": "請輸入新的電郵地址進行綁定。",
+    "email": "電郵",
+    "emailPlaceholder": "請輸入您的電子電郵",
+    "getCode": "獲取驗證碼",
+    "invalidEmail": "電郵格式不正確",
+    "newEmailPlaceholder": "請輸入新的電子電郵",
+    "retryIn": "{seconds}s 後重試",
+    "sendFailed": "發送驗證碼失敗，請稍後重試",
+    "unbind": "解除綁定",
+    "unbindConfirm": "確定要解除綁定該電郵嗎？解除後將無法使用該電郵找回帳號。",
+    "unbindSuccess": "已解除綁定",
+    "unboundDescription": "您尚未綁定電子電郵，綁定後可用於接收重要通知。",
+    "unboundTitle": "未綁定電郵"
+  },
+  "card": {
+    "action": {
+      "info": {
+        "badge": "資訊",
+        "description": "查看校園卡餘額、狀態及當前報失情況，支持在線報失",
+        "title": "基本資訊"
+      },
+      "records": {
+        "badge": "消費",
+        "description": "按日期查詢校園卡當日消費流水",
+        "title": "消費記錄"
+      }
+    },
+    "amountUnit": "元",
+    "description": "查詢餘額、消費記錄，辦理報失業務。",
+    "info": {
+      "balanceTitle": "校園卡餘額",
+      "basicInfoTitle": "基本資訊",
+      "dialogDescription": "請輸入查詢密碼進行驗證",
+      "dialogPlaceholder": "校園卡查詢密碼",
+      "dialogTitle": "報失校園卡驗證",
+      "field": {
+        "cardNumber": "校園卡號",
+        "freezeState": "凍結狀態",
+        "lostState": "報失狀態",
+        "name": "姓名",
+        "number": "學號"
+      },
+      "interimBalance": "過渡餘額: ",
+      "passwordDigitsOnly": "密碼只能包含數字",
+      "passwordRequired": "密碼不能爲空",
+      "reportPromptLink": "校園卡報失",
+      "reportPromptPrefix": "校園卡遺失？點擊",
+      "reportSuccess": "報失成功",
+      "reportedState": "已報失",
+      "statusTitle": "卡片狀態",
+      "submitting": "提交中",
+      "title": "校園卡資訊"
+    },
+    "list": {
+      "empty": "當日暫無消費記錄",
+      "invalidDate": "查詢日期格式不正確，請重新選擇",
+      "queryDate": "查詢日期：",
+      "retry": "重新查詢",
+      "unknownMerchant": "未知商戶"
+    },
+    "search": {
+      "dateLabel": "查詢日期",
+      "datePlaceholder": "請選擇日期",
+      "dateRequired": "請選擇查詢日期！",
+      "description": "選擇日期後查詢當日校園卡流水",
+      "submit": "查詢"
+    },
+    "title": "校園卡"
+  },
+  "cetPage": {
+    "captchaLabel": "驗證碼",
+    "captchaPlaceholder": "請輸入驗證碼",
+    "captchaRequired": "請輸入驗證碼",
+    "examNumberLabel": "准考證號",
+    "examNumberPlaceholder": "請輸入15位準考證號",
+    "fallbackChsi": "學信網四六級查分",
+    "fallbackNeea": "中國教育考試網查詢",
+    "fallbackTitle": "備用查詢入口",
+    "importButton": "導入考號",
+    "importLoading": "導入中",
+    "invalidNumber": "准考證號必須爲15位",
+    "missingFields": "請填寫准考證號和姓名",
+    "nameLabel": "姓名",
+    "namePlaceholder": "姓名超過3個字可只輸入前3個",
+    "noSavedNumber": "你未儲存准考證號",
+    "queryLoading": "正在查詢...",
+    "refreshCaptcha": "點擊獲取",
+    "saveFailed": "儲存失敗",
+    "savePromptLink": "儲存考號",
+    "savePromptPrefix": "擔心遺忘准考證號？點擊",
+    "saveSuccess": "儲存成功",
+    "saveTitle": "儲存考號",
+    "saving": "儲存中...",
+    "submit": "查詢",
+    "title": "四六級查詢",
+    "resultTitle": "查詢結果",
+    "resultDisclaimer": "成績只供參考，請以成績單為準",
+    "totalScore": "考試總分",
+    "listeningScore": "聽力分數",
+    "readingScore": "閱讀分數",
+    "writingScore": "寫作翻譯",
+    "reQuery": "重新查詢",
+    "backHome": "返回主頁"
+  },
+  "commandPalette": {
+    "academicGroup": "學業服務",
+    "close": "關閉",
+    "communityGroup": "社區服務",
+    "empty": "沒有匹配的功能",
+    "navigate": "導航",
+    "open": "跳轉",
+    "searchPlaceholder": "搜索功能..."
+  },
+  "communityCommon": {
+    "gender": {
+      "female": "女",
+      "male": "男",
+      "secret": "其他或保密"
+    },
+    "loading": "載入緊",
+    "noMore": "冇更多喇",
+    "pullToRefresh": "下拉重新整理",
+    "refreshing": "重新整理緊...",
+    "releaseToRefresh": "鬆手即刻重新整理",
+    "select": "請揀",
+    "loadFailed": "載入失敗，請陣間再試"
+  },
+  "dataSource": {
+    "mock": "Mock 數據源",
+    "remote": "遠程數據源"
+  },
+  "deleteAccount": {
+    "agreement": "我已充分閱讀並同意上述註銷後果",
+    "confirm": "確認註銷",
+    "deleting": "註銷中...",
+    "finalConfirmAction": "殘忍註銷",
+    "finalConfirmDescription": "註銷操作不可逆，確定要永久刪除該帳號嗎？",
+    "finalConfirmTitle": "最後確認",
+    "irreversible": "註銷操作不可逆，請謹慎操作。",
+    "risk": {
+      "academic": "自定義課程以及儲存的四六級准考證號資訊將被刪除",
+      "account": "帳號及所有個人資料將被清空",
+      "community": "社交功能平臺的用戶數據和交易記錄將被清空",
+      "identity": "綁定的手機號、電郵地址等身份資訊將被刪除",
+      "interactions": "所有互動記錄（評論、點贊等）將被清除",
+      "posts": "表白牆、話題、跑腿等所有發佈內容將被永久刪除"
+    },
+    "riskTitle": "註銷後，以下資訊將被永久刪除且無法恢復：",
+    "success": "帳號已註銷",
+    "warningTitle": "將註銷您的廣東第二師範學院助手帳號"
+  },
+  "delivery": {
+    "deliveryBadge": "送",
+    "detail": {
+      "acceptAction": "立即搶單",
+      "acceptSuccess": "接單成功！",
+      "accepting": "接單中...",
+      "completeAction": "確認完成",
+      "completeConfirmMessage": "確定要完成這個訂單嗎？完成後將無法撤銷。",
+      "completeConfirmTitle": "確認完成",
+      "completeSuccess": "訂單已完成！",
+      "completing": "確認中...",
+      "contactPhone": "聯繫電話：",
+      "descriptionLabel": "備註說明：",
+      "myRole": "我的角色：",
+      "pickupCode": "取件碼：",
+      "publishTime": "發佈時間：",
+      "publisherRole": "發佈者",
+      "runnerRole": "接單者",
+      "sizeLabel": "物品大小：",
+      "statusLabel": "任務狀態：",
+      "title": "任務詳情"
+    },
+    "empty": "暫無任務",
+    "mine": {
+      "acceptedTab": "我接的單",
+      "emptyAccepted": "暫無接單的任務",
+      "emptyPublished": "暫無發佈的任務",
+      "publishedTab": "我發佈的",
+      "title": "我的跑腿"
+    },
+    "pickupAddressWithCompany": "{company} 取件",
+    "pickupBadge": "取",
+    "pickupShort": "取件",
+    "publish": {
+      "contactPhone": "聯繫人電話",
+      "defaultCompany": "代取快遞",
+      "deliveryAddress": "送達地址",
+      "deliveryPlaceholder": "如：南苑1棟301",
+      "deliveryRequired": "請輸入送達地址",
+      "deliverySection": "送達資訊",
+      "descriptionLabel": "備註說明（可選）",
+      "descriptionPlaceholder": "補充說明...",
+      "imageTooLarge": "圖片大小不能超過5MB",
+      "invalidImageType": "只能上載圖片文件",
+      "itemSection": "物品描述",
+      "payloadName": "代收",
+      "phonePlaceholder": "請輸入手機號",
+      "phoneRequired": "請輸入聯繫人電話",
+      "pickupAddress": "取件地點",
+      "pickupCode": "取件碼/憑證（可選）",
+      "pickupCodePlaceholder": "如：1-2-3456",
+      "pickupImage": "取件憑證圖片（可選）",
+      "pickupPlaceholder": "如：菜鳥驛站、南門快遞點",
+      "pickupRequired": "請輸入取件地點",
+      "pickupSection": "取件資訊",
+      "publishSuccess": "發佈成功",
+      "rewardInvalid": "請輸入有效的跑腿費（0.01-9999.99元）",
+      "rewardLabel": "跑腿費：",
+      "sizeLabel": "重量/體積",
+      "submitAction": "確認發佈",
+      "submitting": "提交中...",
+      "title": "發佈任務",
+      "uploadImage": "上載圖片",
+      "privacyHint": "取件碼、地址、手機號碼同姓名等通常屬於高度敏感資料，請只填寫同展示必需內容。唔好接涉及違法違規、危險、貴重物品，或者明顯超出自己能力嘅任務。"
+    },
+    "size": {
+      "large": "大件(重物)",
+      "medium": "中件(鞋服)",
+      "small": "小件(外賣/文件)"
+    },
+    "smallSize": "小件",
+    "status": {
+      "completed": "已完成",
+      "inTransit": "配送中",
+      "pending": "待接單"
+    },
+    "title": "全民快遞",
+    "type": {
+      "express": "代取快遞",
+      "food": "買飯",
+      "other": "跑腿"
+    },
+    "unknownStatus": "未知"
+  },
+  "electricityFees": {
+    "field": {
+      "name": "姓名",
+      "number": "學號",
+      "year": "年份"
+    },
+    "loading": "正在查詢電費...",
+    "placeholder": {
+      "name": "請輸入姓名",
+      "number": "請輸入學號"
+    },
+    "queryFailed": "查詢失敗，請稍後重試",
+    "result": {
+      "averageElectricBill": "人均電費",
+      "dormitory": "宿舍",
+      "electricPrice": "電價",
+      "feeBasedElectricAmount": "計費電量",
+      "freeElectricAmount": "免費電量",
+      "peopleNumber": "入住人數",
+      "title": "查詢結果",
+      "totalElectricBill": "總電費",
+      "usedElectricAmount": "已用電量",
+      "year": "年份"
+    },
+    "retry": "重新查詢",
+    "submit": "開始查詢",
+    "title": "電費查詢",
+    "validation": {
+      "nameRequired": "請輸入姓名",
+      "numberInvalid": "請輸入 11 位學號",
+      "numberRequired": "請輸入學號",
+      "yearInvalid": "年份不合法",
+      "yearRequired": "請選擇年份"
+    }
+  },
+  "express": {
+    "bannerTitle": "廣東第二師範學院表白牆",
+    "detail": {
+      "commentEmpty": "暫無評論，快來搶沙發吧！",
+      "commentList": "評論列表",
+      "commentPlaceholder": "我想說...",
+      "commentRequired": "請輸入評論內容",
+      "commentTooLong": "評論不能超過50字",
+      "floor": "{index}樓",
+      "me": "我",
+      "send": "發送",
+      "sending": "發送中...",
+      "title": "表白詳情"
+    },
+    "empty": "暫無表白牆內容",
+    "guessCorrect": "恭喜你，猜對了！",
+    "guessDialogTitle": "猜名字",
+    "guessPlaceholder": "請輸入你猜的真實姓名：",
+    "guessRequired": "請輸入你猜的真實姓名",
+    "guessUnavailable": "TA很神祕，沒有留下真名讓人猜哦~",
+    "guessWrong": "猜錯了，再試試看吧！",
+    "justNow": "剛剛",
+    "legend": "藍色下劃線：男生 / 紅色下劃線：女生 / 黑色下劃線：其他或保密",
+    "publish": {
+      "contentPlaceholder": "寫下你想對TA說的話...",
+      "contentRequired": "請填寫表白內容",
+      "contentTitle": "表白內容",
+      "contentTooLong": "表白內容不能超過 250 個字",
+      "gender": "性別",
+      "myGenderRequired": "請選擇你的性別",
+      "myInfo": "你的資訊",
+      "nicknamePlaceholder": "請輸入暱稱",
+      "nicknameRequired": "請輸入暱稱",
+      "nicknameTooLong": "暱稱不能超過 10 個字",
+      "publishSuccess": "發佈成功",
+      "publishing": "正在發佈...",
+      "realName": "真名",
+      "realNamePlaceholder": "請輸入真名",
+      "realNameTip": "注：真實姓名可選填，預設保密不顯示！填寫即可參加猜名字遊戲。",
+      "realNameTooLong": "真實姓名不能超過 10 個字",
+      "receiverGenderRequired": "請選擇TA的性別",
+      "receiverNamePlaceholder": "請輸入TA的名字",
+      "receiverNameRequired": "請輸入TA的名字",
+      "receiverNameTooLong": "TA的名字不能超過 10 個字",
+      "submitAction": "發佈表白",
+      "submitting": "提交中...",
+      "targetInfo": "TA的資訊",
+      "targetName": "名字",
+      "title": "發佈表白"
+    },
+    "searchAction": "搜索",
+    "searchEmpty": "未找到相關表白",
+    "searchPlaceholder": "搜索發件人/收件人/內容",
+    "searchPrompt": "輸入關鍵詞搜索",
+    "searchRequired": "請輸入搜索關鍵詞",
+    "searchTitle": "搜索表白",
+    "title": "表白牆"
+  },
+  "feature": {
+    "card": {
+      "description": "查餘額、查消費、辦報失",
+      "name": "校園卡"
+    },
+    "cet": {
+      "description": "輸入考號和驗證碼即可查分",
+      "name": "四六級查詢"
+    },
+    "collection": {
+      "description": "搜館藏、看借閱、辦續借",
+      "name": "圖書館"
+    },
+    "data": {
+      "description": "查電費，也能找校內常用號碼",
+      "name": "數據查詢"
+    },
+    "dating": {
+      "description": "把室友介紹給全世界",
+      "name": "賣室友"
+    },
+    "delivery": {
+      "description": "發跑腿需求，幫取快遞",
+      "name": "全民快遞"
+    },
+    "ershou": {
+      "description": "閒置物品轉讓，校內面交",
+      "name": "二手交易"
+    },
+    "evaluate": {
+      "description": "需要評教時直接來這裏",
+      "name": "教學評價"
+    },
+    "express": {
+      "description": "勇敢說出你的心意",
+      "name": "表白牆"
+    },
+    "grade": {
+      "description": "查每學年每學期成績和績點",
+      "name": "成績查詢"
+    },
+    "kaoyan": {
+      "description": "查詢考研成績和相關資訊",
+      "name": "考研查詢"
+    },
+    "lostandfound": {
+      "description": "丟東西、撿東西都來這",
+      "name": "失物招領"
+    },
+    "pe": {
+      "description": "查看體測成績和數據",
+      "name": "體測查詢"
+    },
+    "photograph": {
+      "description": "用鏡頭記錄校園美好",
+      "name": "拍好校園"
+    },
+    "schedule": {
+      "description": "一眼看清這周每天上什麼課",
+      "name": "課表查詢"
+    },
+    "secret": {
+      "description": "匿名傾訴，說出心裏話",
+      "name": "校園樹洞"
+    },
+    "spare": {
+      "description": "看看現在還有哪些空課室",
+      "name": "課室查詢"
+    },
+    "topic": {
+      "description": "熱門討論，校園八卦",
+      "name": "話題"
+    }
+  },
+  "featureManage": {
+    "description": "首頁功能模塊展示設置（關閉後將不在首頁顯示）",
+    "saved": "修改已儲存，首頁將實時生效"
+  },
+  "feedback": {
+    "faq": {
+      "cache": {
+        "content": "教務數據緩存用於在獲得你授權的前提下，定期從學校教務系統同步成績和課表，以提升查詢速度和穩定性。數據僅用於教務展示，不會對外泄露，你可以在私隱設置中隨時關閉該功能。",
+        "title": "什麼是教務數據緩存？開啓後是否安全？"
+      },
+      "delete": {
+        "content": "你可以在個人中心-刪除帳號中發起註銷申請，系統會校驗密碼並判斷是否滿足註銷條件。如果無法自助註銷，可以在此處提交工單或發送郵件至 support{'@'}gdeiassistant.cn 聯繫管理員協助處理。",
+        "title": "如何註銷帳戶？"
+      },
+      "login": {
+        "content": "用戶名和密碼與校園網上網帳號、學校教務系統帳號保持一致。如果不清楚自己的帳號資訊，可以在\"關於應用-校園網絡帳號說明\"中查看詳細指引。",
+        "title": "登入應用的用戶名和密碼是什麼？"
+      },
+      "moreHelpPrefix": "以上未能解決您的問題？請切換到",
+      "moreHelpSuffix": "告訴我們您的疑問和建議。",
+      "password": {
+        "content": "請前往學校統一身份認證系統修改密碼。修改完成後，重新登入廣東二師助手即可同步最新密碼，本應用不會單獨儲存你的登入密碼。",
+        "title": "應用帳號是否支持修改密碼？"
+      },
+      "schedule": {
+        "content": "教務查詢依賴學校官網和教務系統的穩定性。當源站維護或更新時，可能出現查詢異常或暫時不可用的情況，一般會在24小時內恢復。如果長時間異常，可以通過本頁的\"意見意見\"提交故障工單。",
+        "title": "爲什麼成績/課表查詢會提示系統異常？"
+      }
+    },
+    "form": {
+      "addImage": "添加圖片",
+      "contactPlaceholder": "請留下您的QQ/微信或手機號，方便我們聯繫您（選填）",
+      "contactTitle": "聯繫方式（選填）",
+      "contentPlaceholder": "請詳細描述您遇到的問題或建議...",
+      "contentRequired": "請填寫意見內容",
+      "contentTitle": "意見內容",
+      "screenshotLimit": "（可選，最多 {count} 張）",
+      "screenshotPreview": "截圖預覽",
+      "screenshotTitle": "截圖上載",
+      "submit": "提交意見",
+      "submitSuccess": "提交成功",
+      "submitting": "提交中...",
+      "typeTitle": "選擇意見類型"
+    },
+    "tab": {
+      "faq": "常見問題",
+      "form": "意見意見"
+    },
+    "title": "幫助與意見",
+    "type": {
+      "account": "帳號綁定、管理和註銷",
+      "appError": "應用功能異常",
+      "crash": "閃退、卡頓或界面錯位",
+      "login": "用戶登入和密碼設置",
+      "other": "其它",
+      "profile": "個人資料和私隱設置",
+      "verification": "實名認證和手機綁定"
+    }
+  },
+  "libraryPage": {
+    "borrow": {
+      "author": "作者",
+      "bookName": "書名",
+      "borrowDate": "借出日期",
+      "empty": "暫無借閱記錄",
+      "initialHint": "先輸入圖書館密碼，再查詢當前借閱記錄",
+      "intro": "輸入圖書館密碼後查看借閱記錄，續借時會再次校驗密碼。",
+      "mockPassword": "模擬密碼：123456",
+      "passwordLabel": "圖書館密碼",
+      "passwordPlaceholder": "請輸入圖書館密碼",
+      "passwordRequired": "請輸入圖書館密碼",
+      "query": "查詢借閱記錄",
+      "recordsTitle": "借閱記錄",
+      "refresh": "重新整理借閱記錄",
+      "renew": "續借",
+      "renewCount": "續借次數",
+      "renewDialogDescription": "請輸入圖書館密碼完成續借校驗",
+      "renewDialogPlaceholder": "圖書館密碼",
+      "renewDialogTitle": "續借圖書",
+      "renewLoading": "續借中...",
+      "renewSuccess": "續借成功",
+      "returnDate": "應還日期",
+      "title": "我的借閱"
+    },
+    "detail": {
+      "author": "著者",
+      "empty": "暫無詳情",
+      "principal": "題名/責任者",
+      "publisher": "出版者",
+      "title": "館藏詳情",
+      "emptyDescription": "暫時搵唔到呢本書嘅館藏詳情，可以返上一頁重新揀過，或者遲啲再睇。"
+    },
+    "heroBadge": "圖書館",
+    "heroDescription": "搜索館藏圖書，查看並管理當前借閱記錄。",
+    "heroTitle": "圖書館",
+    "home": {
+      "borrowBadge": "借閱",
+      "borrowDescription": "輸入圖書館密碼後查看借閱記錄並繼續續借",
+      "borrowTitle": "我的借閱",
+      "searchBadge": "檢索",
+      "searchDescription": "按書名、作者和出版社檢索館藏圖書",
+      "searchTitle": "館藏檢索"
+    },
+    "list": {
+      "author": "著者: ",
+      "description": "圖書館館藏檢索結果",
+      "empty": "暫無館藏結果",
+      "nextPage": "下一頁",
+      "pageText": "第 {page} 頁",
+      "prevPage": "上一頁",
+      "publisher": "出版者: ",
+      "resultTitle": "館藏檢索結果",
+      "title": "館藏檢索"
+    },
+    "search": {
+      "description": "按書名、作者和出版社搜索圖書館館藏",
+      "keywordLabel": "關鍵詞",
+      "keywordPlaceholder": "請輸入書名、作者等",
+      "keywordRequired": "請輸入查詢關鍵詞！",
+      "submit": "查詢",
+      "title": "館藏檢索"
+    },
+    "title": "圖書館"
+  },
+  "loginPage": {
+    "accountHelpLink": "《校園網絡帳號說明》",
+    "accountHelpPrefix": "關於登入帳戶請閱讀",
+    "agreementLink": "《用戶協議》",
+    "agreementPrefix": "使用前請仔細閱讀",
+    "and": "和",
+    "autoFilledSuffix": "（已自動填入）",
+    "campusConsentLabel": "我已閱讀並單獨同意平臺在必要範圍內處理我的校園帳號憑證，用於校園身份認證、快速認證、校園數據查詢及與學校系統的必要會話同步。我知悉可通過帳號設置或意見渠道關閉快速認證、撤回授權或申請刪除已儲存的校園憑證；關閉或刪除後，部分校園查詢和快速認證功能可能無法使用。",
+    "campusConsentRequired": "請先單獨同意校園帳號憑證處理說明後再登入",
+    "failed": "登入失敗",
+    "incompleteFields": "請將資訊填寫完整",
+    "loading": "登入中...",
+    "mockActive": "已開啓",
+    "mockMode": "本地示例數據",
+    "otherLogin": "其他方式登入",
+    "passwordLabel": "密碼",
+    "passwordPlaceholder": "請輸入你的校園網密碼",
+    "privacyLink": "《私隱政策》",
+    "submit": "登入",
+    "subtitle": "請登入校園網系統",
+    "thirdPartyUnavailable": "該登入方式暫未開放",
+    "title": "廣東二師助手",
+    "usernameLabel": "帳號",
+    "usernamePlaceholder": "請輸入你的校園網帳號",
+    "credentialNotice": "校園帳戶憑證可能用於校園認證、快速認證同會話同步。請只用你本人帳戶；如果你拒絕儲存相關憑證，或者之後經帳戶設置、意見渠道申請刪除，部份校園查詢或者快速認證功能可能唔用得。",
+    "visualIntro": "將課表、校園卡、資訊同校園生活放喺一個清爽入口度。"
+  },
+  "loginRecord": {
+    "clientDevice": "{network} 客戶端",
+    "empty": "暫無登入記錄",
+    "success": "登入成功",
+    "unknownDevice": "未知設備"
+  },
+  "news": {
+    "defaultTitle": "新聞",
+    "detail": {
+      "attachments": "附件鏈接",
+      "empty": "暫無詳細內容",
+      "loadFailed": "新聞詳情載入失敗，請稍後重試",
+      "loading": "正在載入新聞詳情",
+      "noDate": "—",
+      "notFound": "未找到對應的新聞",
+      "openSource": "打開原文鏈接"
+    },
+    "empty": "暫無新聞",
+    "loadFailed": "載入失敗，請稍後重試",
+    "noMore": "沒有更多數據了",
+    "openAttachment": "打開附件",
+    "tab": {
+      "academic": "學術動態",
+      "department": "院部通知",
+      "notice": "通知公告",
+      "school": "學校要聞"
+    }
+  },
+  "privacy": {
+    "field": {
+      "age": "公開我嘅年齡",
+      "cache": "暫存我嘅教務資料",
+      "enrollment": "公開我嘅入學年份",
+      "faculty": "公開我嘅院系",
+      "hometown": "公開我嘅家鄉",
+      "introduction": "公開我嘅個人簡介",
+      "location": "公開我嘅國家／地區",
+      "major": "公開我嘅專業",
+      "robots": "允許搜尋引擎連結到我嘅個人資料頁"
+    },
+    "partialSuccess": "設定已儲存，但清理舊快取時連線有延遲，可能要遲啲先完全生效。"
+  },
+  "realname": {
+    "back": "返回上一頁",
+    "unavailableDescription": "當前實名認證能力仍在接入公安數據接口，暫未對外開放。待後端和外部校驗鏈路就緒後再開放。",
+    "unavailableTitle": "實名認證暫未開放"
+  },
+  "schedule": {
+    "action": {
+      "addCustomCourse": "添加自定義課程",
+      "manageCache": "管理教務緩存",
+      "refresh": "重新整理課表"
+    },
+    "addDialog": {
+      "dayOfWeek": "星期",
+      "location": "上課地點",
+      "locationPlaceholder": "請輸入上課地點",
+      "maxWeek": "結束周次",
+      "minWeek": "開始周次",
+      "name": "課程名稱",
+      "namePlaceholder": "請輸入課程名稱",
+      "scheduleLength": "課程長度",
+      "startSection": "開始節次",
+      "submit": "儲存課程",
+      "submitting": "儲存中...",
+      "title": "添加自定義課程"
+    },
+    "day": {
+      "friday": "週五",
+      "monday": "週一",
+      "saturday": "週六",
+      "sunday": "週日",
+      "thursday": "週四",
+      "tuesday": "週二",
+      "wednesday": "週三"
+    },
+    "detail": {
+      "location": "上課地點",
+      "name": "課程名稱",
+      "teacher": "授課教師",
+      "title": "課程詳情",
+      "weekRangeTitle": "上課周次"
+    },
+    "empty": "本週暫無課程安排",
+    "lengthLabel": "{count} 節",
+    "message": {
+      "addSuccess": "自定義課程已添加",
+      "deleteConfirm": "確定刪除這門自定義課程嗎？",
+      "deleteSuccess": "自定義課程已刪除",
+      "duplicateCourse": "當前時間段已有課程安排",
+      "invalidSectionRange": "課程節次超出當天範圍",
+      "invalidWeekRange": "結束周次不能早於開始周次",
+      "locationRequired": "請輸入上課地點",
+      "nameRequired": "請輸入課程名稱",
+      "syncLoading": "正在同步課表...",
+      "syncSuccess": "課表已重新整理"
+    },
+    "more": "更多",
+    "noTeacher": "暫無教師資訊",
+    "pageTitle": "課表查詢",
+    "sectionLabel": "第 {section} 節",
+    "selectWeek": "選擇周次",
+    "weekLabel": "第 {week} 周",
+    "weekRange": "第 {start} 周 - 第 {end} 周"
+  },
+  "settings": {
+    "section": {
+      "preference": "偏好設置",
+      "security": "帳號安全"
+    }
+  },
+  "spare": {
+    "campus": {
+      "correspondence": "業餘函授校區",
+      "haizhu": "海珠",
+      "huadu": "花都",
+      "nanhai": "廣東輕工南海校區"
+    },
+    "empty": "暫無空課室數據",
+    "field": {
+      "campus": "校區",
+      "period": "節數",
+      "roomType": "課室類別",
+      "seatsMax": "座位數≤",
+      "seatsMin": "座位數≥",
+      "weekType": "單雙週",
+      "weekday": "星期"
+    },
+    "option": {
+      "unlimited": "不限"
+    },
+    "optional": "選填",
+    "pageTitle": "空課室查詢",
+    "period": {
+      "afternoon": "下午",
+      "allDay": "整天",
+      "daytime": "白天",
+      "eightNine": "第8,9節",
+      "evening": "晚上",
+      "fourFive": "第4,5節",
+      "morning": "上午",
+      "oneTwo": "第1,2節",
+      "sixSeven": "第6,7節",
+      "tenToTwelve": "第10,11,12節",
+      "three": "第3節"
+    },
+    "result": {
+      "campus": "校區",
+      "number": "編號",
+      "seats": "座位",
+      "type": "類型"
+    },
+    "resultList": "空課室列表",
+    "resultTitle": "查詢結果",
+    "roomType": {
+      "anatomyLab": "解剖實驗室",
+      "artClassroom": "美術課室",
+      "artStudio": "畫室",
+      "biologyLab": "生物實驗室",
+      "bodyTrainingRoom": "形體房",
+      "ceramicRoom": "陶藝室",
+      "chemistryLab": "化學實驗室",
+      "computerLab": "電腦專業機房",
+      "computerRoom": "機房",
+      "consultingRoom": "諮詢室",
+      "danceRoomA": "舞蹈室",
+      "danceRoomB": "舞蹈室",
+      "educationLab": "教育實驗室",
+      "fashionLab": "服裝實驗室",
+      "financialMathLab": "金融數學實驗室",
+      "graphicDesignLab": "平面製作實驗室",
+      "groupClassroom": "小組課室",
+      "gymnasticsRoom": "體操房",
+      "integratedPaintingLab": "綜合繪畫實驗室",
+      "languageLab": "語音室",
+      "largeMultimedia": "大多媒體",
+      "majorClassroom": "專業課課室",
+      "majorLab": "專業實驗室",
+      "majorTheoryRoom": "專業理論課室",
+      "mediumMultimedia": "中多媒體(70-100)",
+      "microteachingRoom": "微格課室",
+      "modelMakingLab": "模型製作實驗室",
+      "montessoriRoom": "蒙氏教學法專用課室",
+      "multimediaRoom": "多媒體課室",
+      "musicMajorRoom": "音樂專業課室",
+      "musicPracticeRoom": "琴房",
+      "musicRoom": "音樂室",
+      "networkLab": "網絡實驗室",
+      "noClassroom": "不用課室的課程",
+      "noNeedClassroom": "無須課室",
+      "photographyLab": "攝影實驗室",
+      "physicsLab": "物理實驗室",
+      "pianoRoomA": "鋼琴室",
+      "pianoRoomB": "鋼琴室",
+      "playground": "操場",
+      "publicComputerRoom": "公共機房",
+      "sculptureRoom": "雕塑室",
+      "smallClassroomUnder70": "小普通課室(<70)",
+      "smallMultimedia": "小多媒體",
+      "smallMultimediaUnder70": "小多媒體(<70)",
+      "smartRecordingRoom": "智能錄像室",
+      "solfeggioRoom": "視唱練耳室",
+      "teachingAidRoom": "教具室",
+      "traditionalPaintingRoom": "國畫臨摹室",
+      "trainingRoom": "實訓室",
+      "translationRoom": "翻譯室",
+      "unlimited": "不限",
+      "vocalRoom": "聲樂課室"
+    },
+    "search": "查詢",
+    "weekType": {
+      "double": "雙",
+      "single": "單"
+    },
+    "weekday": {
+      "friday": "五",
+      "monday": "一",
+      "saturday": "六",
+      "sunday": "日",
+      "thursday": "四",
+      "tuesday": "二",
+      "wednesday": "三"
+    }
+  },
+  "topic": {
+    "anonymousUser": "匿名",
+    "detail": {
+      "defaultTopic": "校園話題",
+      "emptyContent": "暫無內容",
+      "like": "點贊",
+      "liked": "已點贊",
+      "notFound": "話題不存在或已被刪除",
+      "title": "話題詳情"
+    },
+    "empty": "暫無話題",
+    "imageAlt": "圖片{index}",
+    "publish": {
+      "addImage": "添加圖片",
+      "contentPlaceholder": "請輸入你的內容...",
+      "contentRequired": "請輸入內容",
+      "contentTooLong": "內容不能超過250字",
+      "imageLimit": "最多隻能上載9張圖片",
+      "imageTooLarge": "圖片大小不能超過5MB",
+      "invalidImageType": "只能上載圖片文件",
+      "publishSuccess": "發佈成功",
+      "publishing": "正在發佈...",
+      "submitAction": "提交",
+      "submitting": "提交中...",
+      "title": "發佈話題",
+      "topicPlaceholder": "請輸入你的話題",
+      "topicRequired": "請輸入話題標籤",
+      "uploading": "正在上載..."
+    },
+    "searchAction": "搜索",
+    "searchEmpty": "暫無結果",
+    "searchPlaceholder": "搜索話題、內容...",
+    "searchRequired": "請輸入您要搜索的話題或內容！",
+    "searchTitle": "搜索話題",
+    "searching": "搜索中...",
+    "title": "話題"
+  },
+  "yellowPage": {
+    "title": "黃頁查詢"
+  },
+  "community": {
+    "navAriaLabel": "社區導航",
+    "defaultPublish": "發佈資訊",
+    "noticeFallback": "校內通知",
+    "heroSubtitle": "發掘校園精彩，連結你我生活",
+    "backHome": "返回功能主頁",
+    "railAriaLabel": "校園生活側欄",
+    "todayCampus": "今日校園",
+    "goSee": "去睇睇",
+    "myPosts": "我嘅發佈",
+    "manage": "管理",
+    "latest": "最新動態",
+    "safetyTitle": "安全提示",
+    "safetyTip": "交易同代取請優先揀校內當面確認，避免洩露個人私隱。"
+  },
+  "evaluatePage": {
+    "title": "教學質量評價",
+    "directSubmit": "直接提交評教資訊",
+    "submitAction": "一鍵評教",
+    "riskNotice": "注意：評教資訊提交之後，就唔可以再改。",
+    "confirmMessage": "確定要進行一鍵評教嗎？呢個操作唔可以還原。",
+    "loading": "自動評教中...",
+    "success": "評價提交成功！",
+    "error": "評教提交失敗，請稍後再試"
+  },
+  "navigationAccessibility": {
+    "sidebarNavigation": "側邊導覽",
+    "primaryNavigation": "主要導覽",
+    "mainNavigation": "主導覽",
+    "openSidebar": "打開側邊欄",
+    "closeSidebar": "關閉側邊欄",
+    "lightMode": "轉用淺色模式",
+    "darkMode": "轉用深色模式"
+  },
+  "pePage": {
+    "wechatRequiredTitle": "請喺微信入面開啟",
+    "wechatRequiredDescription": "查體測成績要喺微信入面用。請用微信掃碼，或者喺微信搜尋並開啟呢個應用。"
   }
 }

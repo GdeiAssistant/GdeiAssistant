@@ -11,6 +11,7 @@ import cn.gdeiassistant.core.bookquery.service.BookQueryService;
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
 import jakarta.servlet.http.HttpServletRequest;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,10 +83,10 @@ public class LibraryController {
         String code = body != null ? body.getCode() : null;
         String password = body != null ? body.getPassword() : null;
         if (sn == null || sn.isEmpty() || code == null || code.isEmpty()) {
-            return new JsonResult(false, "缺少 sn 或 code");
+            return new JsonResult(false, BackendTextLocalizer.localizeMessage("缺少 sn 或 code", request.getHeader("Accept-Language")));
         }
         if (password == null || password.isEmpty()) {
-            return new JsonResult(false, "请提供图书馆密码");
+            return new JsonResult(false, BackendTextLocalizer.localizeMessage("请提供图书馆密码", request.getHeader("Accept-Language")));
         }
         String sessionId = (String) request.getAttribute("sessionId");
         bookQueryService.bookquery(sessionId, password);

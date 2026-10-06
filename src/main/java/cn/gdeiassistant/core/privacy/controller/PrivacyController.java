@@ -6,6 +6,7 @@ import cn.gdeiassistant.common.pojo.Result.JsonResult;
 import cn.gdeiassistant.core.privacy.pojo.dto.PrivacyUpdateDTO;
 import cn.gdeiassistant.core.privacy.pojo.vo.PrivacyVO;
 import cn.gdeiassistant.core.privacy.service.PrivacyService;
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,7 @@ public class PrivacyController {
     @RequestMapping(value = "/api/privacy", method = RequestMethod.POST)
     public JsonResult updateUserPrivacySetting(HttpServletRequest request, @RequestBody PrivacyUpdateDTO body) throws Exception {
         if (body == null) {
-            return new JsonResult(false, "请求体不能为空");
+            return new JsonResult(false, BackendTextLocalizer.localizeMessage("请求体不能为空", request.getHeader("Accept-Language")));
         }
         String sessionId = (String) request.getAttribute("sessionId");
         boolean faculty = Boolean.TRUE.equals(body.getFacultyOpen());
@@ -59,7 +60,7 @@ public class PrivacyController {
             privacyService.updateRobotsIndex(robots, sessionId);
             return new JsonResult(true);
         } catch (CacheClearException e) {
-            JsonResult result = new JsonResult(true, e.getMessage());
+            JsonResult result = new JsonResult(true, BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language")));
             result.setCode(206);
             return result;
         }

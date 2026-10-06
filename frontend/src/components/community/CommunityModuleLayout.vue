@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { ArrowRight, Megaphone, Send, ShieldCheck, Sparkles } from 'lucide-vue-next'
 import CommunityTabbar from './CommunityTabbar.vue'
 import request from '../../utils/request'
@@ -15,6 +16,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const { t } = useI18n()
 const campusItems = ref([
   { id: 'campus-music', title: '校园歌手大赛决赛', meta: '19:00 · 音乐厅', path: '/info' },
   { id: 'library-night', title: '图书馆夜读打卡', meta: '20:00 · 图书馆', path: '/info' }
@@ -25,7 +27,7 @@ const publishTarget = computed(() => {
 })
 
 const activeModuleLabel = computed(() => {
-  return props.tabs.find((tab) => tab.path === publishTarget.value)?.label || '发布信息'
+  return props.tabs.find((tab) => tab.path === publishTarget.value)?.label || t('community.defaultPublish')
 })
 
 function goTo(path) {
@@ -40,7 +42,7 @@ onMounted(async () => {
       campusItems.value = list.map((item) => ({
         id: item.id || item.announcementId || item.title,
         title: item.title,
-        meta: item.publishDate || item.createTime || '校内通知',
+        meta: item.publishDate || item.createTime || '',
         path: item.id ? `/info/announcements/${item.id}` : '/info'
       }))
     }
@@ -53,7 +55,7 @@ onMounted(async () => {
     <section class="community-module-layout__hero" aria-labelledby="community-module-title">
       <div class="community-module-layout__hero-copy">
         <h1 id="community-module-title">{{ title }}</h1>
-        <p>{{ subtitle || '发现校园精彩，连接你我生活' }}</p>
+        <p>{{ subtitle || t('community.heroSubtitle') }}</p>
       </div>
 
       <div class="community-module-layout__hero-actions">
@@ -62,7 +64,7 @@ onMounted(async () => {
           {{ activeModuleLabel }}
         </button>
         <button type="button" class="community-module-layout__secondary" @click="goTo('/home')">
-          返回功能主页
+          {{ t('community.backHome') }}
           <ArrowRight class="w-4 h-4" />
         </button>
       </div>
@@ -75,11 +77,11 @@ onMounted(async () => {
         <slot />
       </main>
 
-      <aside class="community-module-layout__rail" aria-label="校园生活侧栏">
+      <aside class="community-module-layout__rail" :aria-label="t('community.railAriaLabel')">
         <section class="community-module-layout__rail-card community-module-layout__rail-card--today">
           <div class="community-module-layout__rail-head">
-            <h2>今日校园</h2>
-            <span>去看看</span>
+            <h2>{{ t('community.todayCampus') }}</h2>
+            <span>{{ t('community.goSee') }}</span>
           </div>
           <ul class="community-module-layout__activity-list">
             <li v-for="(item, index) in campusItems" :key="item.id" @click="goTo(item.path)">
@@ -90,7 +92,7 @@ onMounted(async () => {
               />
               <div>
                 <strong>{{ item.title }}</strong>
-                <small>{{ item.meta }}</small>
+                <small>{{ item.meta || t('community.noticeFallback') }}</small>
               </div>
             </li>
           </ul>
@@ -98,27 +100,27 @@ onMounted(async () => {
 
         <section class="community-module-layout__rail-card community-module-layout__rail-card--manage">
           <div class="community-module-layout__rail-head">
-            <h2>我的发布</h2>
-            <span>管理</span>
+            <h2>{{ t('community.myPosts') }}</h2>
+            <span>{{ t('community.manage') }}</span>
           </div>
           <div class="community-module-layout__quick-grid">
             <button type="button" @click="goTo(publishTarget)">
               <Send class="w-5 h-5" />
-              <span>发布信息</span>
+              <span>{{ t('community.defaultPublish') }}</span>
             </button>
             <button type="button" @click="goTo(basePath)">
               <Sparkles class="w-5 h-5" />
-              <span>最新动态</span>
+              <span>{{ t('community.latest') }}</span>
             </button>
           </div>
         </section>
 
         <section class="community-module-layout__rail-card community-module-layout__rail-card--safe">
           <div class="community-module-layout__rail-head">
-            <h2>安全提示</h2>
+            <h2>{{ t('community.safetyTitle') }}</h2>
             <ShieldCheck class="community-module-layout__safe-icon" />
           </div>
-          <p>交易和代取请优先选择校内当面确认，避免泄露个人隐私。</p>
+          <p>{{ t('community.safetyTip') }}</p>
         </section>
       </aside>
     </div>

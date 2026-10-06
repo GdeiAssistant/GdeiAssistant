@@ -2,16 +2,19 @@ import { describe, expect, it } from 'vitest'
 import { localizeMockValue, normalizeMockLocale } from './mock-i18n'
 
 describe('mock i18n', () => {
-  it('normalizes locale with english fallback for non-chinese locales', () => {
+  it('normalizes all six supported locales without collapsing ja/ko to english', () => {
     expect(normalizeMockLocale('zh-CN')).toBe('zh-CN')
-    expect(normalizeMockLocale('ja-JP')).toBe('en')
-    expect(normalizeMockLocale('ko-KR')).toBe('en')
+    expect(normalizeMockLocale('zh_HK')).toBe('zh-HK')
+    expect(normalizeMockLocale('zh-Hant-MO')).toBe('zh-HK')
+    expect(normalizeMockLocale('ja-JP')).toBe('ja')
+    expect(normalizeMockLocale('ko-KR')).toBe('ko')
     expect(normalizeMockLocale('en-US')).toBe('en')
   })
 
-  it('localizes nested mock payload values recursively', () => {
+  it('localizes system time labels but keeps article titles and user content intact', () => {
     const payload = {
       title: '系统维护通知',
+      nickname: '林知远',
       list: [
         { content: '今天终于把小程序的 mock 流程跑通了，开心。' },
         '刚刚'
@@ -19,12 +22,35 @@ describe('mock i18n', () => {
     }
 
     expect(localizeMockValue(payload, 'en')).toEqual({
-      title: 'System Maintenance Notice',
+      title: '系统维护通知',
+      nickname: '林知远',
       list: [
-        { content: 'Finally got the mini-app mock flow working today. So happy.' },
+        { content: '今天终于把小程序的 mock 流程跑通了，开心。' },
         'Just now'
       ]
     })
+  })
+
+  it('preserves names and titles that happen to equal known system translations in every locale', () => {
+    const payload = {
+      name: '林知远',
+      title: '系统维护通知',
+      articles: [{ title: '无法发送私信', content: '系统维护通知' }],
+      book: { name: '系统维护通知', title: '登录凭证已过期，请重新登录', body: '林知远' }
+    }
+    for (const locale of ['zh-CN', 'zh-HK', 'zh-TW', 'en', 'ja', 'ko']) {
+      expect(localizeMockValue(payload, locale)).toEqual(payload)
+      expect(localizeMockValue(payload.name, locale, 'name')).toBe(payload.name)
+      expect(localizeMockValue(payload.title, locale, 'title')).toBe(payload.title)
+    }
+    expect(localizeMockValue(['校园代步', '待接单'], 'en')).toEqual(['Campus Transportation', 'Pending'])
+    expect(localizeMockValue('无法发送私信', 'ja')).toBe('メッセージを送信できません')
+  })
+
+  it('uses japanese system errors instead of english fallback', () => {
+    expect(localizeMockValue('登录凭证已过期，请重新登录', 'ja')).toContain('ログイン')
+    expect(localizeMockValue('无法发送私信', 'ja')).toBe('メッセージを送信できません')
+    expect(localizeMockValue('无法发送私信', 'ja')).not.toBe('Unable to send message')
   })
 
   it('localizes option and status values used by mock profile and community data', () => {

@@ -31,27 +31,82 @@
     "noData": "暂无数据",
     "loadingRegions": "地区列表加载中，请稍后再试",
     "recentUpdate": "最近更新",
-    "back": "返回"
+    "back": "返回",
+    "unknown": "未知"
   },
   "feature": {
-    "grade": { "name": "成绩查询", "description": "查每学年每学期成绩和绩点" },
-    "schedule": { "name": "课表查询", "description": "一眼看清这周每天上什么课" },
-    "cet": { "name": "四六级查询", "description": "输入考号和验证码即可查分" },
-    "kaoyan": { "name": "考研查询", "description": "查询考研成绩和相关信息" },
-    "spare": { "name": "教室查询", "description": "看看现在还有哪些空教室" },
-    "collection": { "name": "图书馆", "description": "搜馆藏、看借阅、办续借" },
-    "card": { "name": "校园卡", "description": "查余额、查消费、办挂失" },
-    "pe": { "name": "体测查询", "description": "查看体测成绩和数据" },
-    "data": { "name": "数据查询", "description": "查电费，也能找校内常用号码" },
-    "evaluate": { "name": "教学评价", "description": "需要评教时直接来这里" },
-    "ershou": { "name": "二手交易", "description": "闲置物品转让，校内面交" },
-    "delivery": { "name": "全民快递", "description": "发跑腿需求，帮取快递" },
-    "lostandfound": { "name": "失物招领", "description": "丢东西、捡东西都来这" },
-    "secret": { "name": "校园树洞", "description": "匿名倾诉，说出心里话" },
-    "dating": { "name": "卖室友", "description": "把室友介绍给全世界" },
-    "express": { "name": "表白墙", "description": "勇敢说出你的心意" },
-    "topic": { "name": "话题", "description": "热门讨论，校园八卦" },
-    "photograph": { "name": "拍好校园", "description": "用镜头记录校园美好" }
+    "grade": {
+      "name": "成绩查询",
+      "description": "查每学年每学期成绩和绩点"
+    },
+    "schedule": {
+      "name": "课表查询",
+      "description": "一眼看清这周每天上什么课"
+    },
+    "cet": {
+      "name": "四六级查询",
+      "description": "输入考号和验证码即可查分"
+    },
+    "kaoyan": {
+      "name": "考研查询",
+      "description": "查询考研成绩和相关信息"
+    },
+    "spare": {
+      "name": "教室查询",
+      "description": "看看现在还有哪些空教室"
+    },
+    "collection": {
+      "name": "图书馆",
+      "description": "搜馆藏、看借阅、办续借"
+    },
+    "card": {
+      "name": "校园卡",
+      "description": "查余额、查消费、办挂失"
+    },
+    "pe": {
+      "name": "体测查询",
+      "description": "查看体测成绩和数据"
+    },
+    "data": {
+      "name": "数据查询",
+      "description": "查电费，也能找校内常用号码"
+    },
+    "evaluate": {
+      "name": "教学评价",
+      "description": "需要评教时直接来这里"
+    },
+    "ershou": {
+      "name": "二手交易",
+      "description": "闲置物品转让，校内面交"
+    },
+    "delivery": {
+      "name": "全民快递",
+      "description": "发跑腿需求，帮取快递"
+    },
+    "lostandfound": {
+      "name": "失物招领",
+      "description": "丢东西、捡东西都来这"
+    },
+    "secret": {
+      "name": "校园树洞",
+      "description": "匿名倾诉，说出心里话"
+    },
+    "dating": {
+      "name": "卖室友",
+      "description": "把室友介绍给全世界"
+    },
+    "express": {
+      "name": "表白墙",
+      "description": "勇敢说出你的心意"
+    },
+    "topic": {
+      "name": "话题",
+      "description": "热门讨论，校园八卦"
+    },
+    "photograph": {
+      "name": "拍好校园",
+      "description": "用镜头记录校园美好"
+    }
   },
   "grade": {
     "year": {
@@ -191,7 +246,9 @@
     "incompleteFields": "请将信息填写完整",
     "loading": "登录中...",
     "failed": "登录失败",
-    "thirdPartyUnavailable": "该登录方式暂未开放"
+    "thirdPartyUnavailable": "该登录方式暂未开放",
+    "credentialNotice": "校园账号凭证可能用于校园认证、快速认证和会话同步。请仅使用本人账号；如您拒绝保存相关凭证或后续通过账号设置、反馈渠道申请删除，部分校园查询或快速认证功能可能不可用。",
+    "visualIntro": "把课表、校园卡、资讯和校园生活放在一个清爽入口里。"
   },
   "libraryPage": {
     "title": "图书馆",
@@ -230,7 +287,8 @@
       "author": "著者",
       "principal": "题名/责任者",
       "publisher": "出版者",
-      "empty": "暂无详情"
+      "empty": "暂无详情",
+      "emptyDescription": "暂时没有查到这本书的馆藏详情，可以返回上一页重新选择，或稍后再查看。"
     },
     "borrow": {
       "title": "我的借阅",
@@ -282,7 +340,15 @@
     "fallbackNeea": "中国教育考试网查询",
     "saveSuccess": "保存成功",
     "saveFailed": "保存失败",
-    "saving": "保存中..."
+    "saving": "保存中...",
+    "resultTitle": "查询结果",
+    "resultDisclaimer": "成绩仅供参考，请以成绩单为准",
+    "totalScore": "考试总分",
+    "listeningScore": "听力分数",
+    "readingScore": "阅读分数",
+    "writingScore": "写作翻译",
+    "reQuery": "重新查询",
+    "backHome": "返回主页"
   },
   "settings": {
     "section": {
@@ -316,7 +382,8 @@
     "deleteConfirm": "确定要删除头像并恢复默认吗？",
     "deleting": "正在删除头像...",
     "deleteSuccess": "已恢复默认头像",
-    "deleteFailed": "删除头像失败，请稍后再试"
+    "deleteFailed": "删除头像失败，请稍后再试",
+    "privacyHint": "上传头像或图片前，请自行确认其中不包含不必要的人脸、位置、证件、学生卡、联系方式或其他高敏信息。"
   },
   "bindEmail": {
     "retryIn": "{seconds}s 后重试",
@@ -412,7 +479,8 @@
     "targetAccepted": "我接的",
     "targetComment": "评论",
     "targetLike": "点赞",
-    "targetGuess": "猜名字"
+    "targetGuess": "猜名字",
+    "announcementMissing": "公告不存在或已删除"
   },
   "router": {
     "siteTitle": "广东第二师范学院校园助手系统"
@@ -797,7 +865,8 @@
       "male": "男",
       "female": "女",
       "secret": "其他或保密"
-    }
+    },
+    "loadFailed": "加载失败，请稍后重试"
   },
   "marketplace": {
     "title": "二手交易",
@@ -855,7 +924,8 @@
         "location": "交易地点不能为空",
         "type": "分类未选择",
         "qq": "QQ号不能为空"
-      }
+      },
+      "safetyHint": "请勿发布违法违规物品、危险品、证件原件、账号凭证或侵权盗版内容。请谨慎公开手机号、微信号、住址等联系方式，并自行核验商品状态、价格和线下交易风险。"
     },
     "detail": {
       "title": "商品详情",
@@ -1059,6 +1129,20 @@
       "voiceMessage": "语音消息",
       "empty": "暂无发布的树洞",
       "loadMore": "加载更多"
+    },
+    "detail": {
+      "title": "树洞详情",
+      "audioLoadFailed": "语音加载失败，请稍后重试",
+      "audioLoading": "语音加载中...",
+      "audioPause": "点击暂停播放",
+      "audioResume": "点击继续播放",
+      "audioPlay": "点击播放语音",
+      "audioUnsupported": "当前浏览器无法播放该语音",
+      "commentEmpty": "评论内容不能为空",
+      "commentTooLong": "评论内容不能超过{max}字",
+      "floor": "{n}楼",
+      "notFound": "树洞不存在或已删除",
+      "commentPlaceholder": "匿名评论"
     }
   },
   "lostandfound": {
@@ -1125,7 +1209,8 @@
       },
       "placeholder": {
         "title": "最多25个字"
-      }
+      },
+      "privacyHint": "证件、学生卡、照片、联系方式等信息请尽量打码或最小化展示，避免公开完整证件号、完整手机号、完整二维码和其他足以导致冒领的信息。"
     },
     "detail": {
       "title": "详情",
@@ -1222,7 +1307,8 @@
       "rewardInvalid": "请输入有效的跑腿费（0.01-9999.99元）",
       "publishSuccess": "发布成功",
       "payloadName": "代收",
-      "defaultCompany": "代取快递"
+      "defaultCompany": "代取快递",
+      "privacyHint": "取件码、地址、手机号、姓名等通常属于高敏信息，请最小化填写和展示。请勿承接违法违规、危险、贵重或明显超出自身能力范围的任务。"
     },
     "detail": {
       "title": "任务详情",
@@ -1289,7 +1375,64 @@
     "securityTitle": "安全说明",
     "privacyPolicyTitle": "隐私政策",
     "userAgreementTitle": "用户协议",
-    "chineseOnlyNotice": "本页面正文目前仅提供中文版本。"
+    "chineseOnlyNotice": "本页面正文目前仅提供中文版本。",
+    "account": {
+      "title": "校园账号与凭证管理",
+      "sectionTitle": "校园账号凭证与快速认证管理",
+      "sectionDesc": "查看授权状态、已保存凭证和快速认证；撤回授权或删除凭证后，相关校园查询可能需要重新登录。",
+      "statusTitle": "当前管理状态",
+      "refresh": "刷新",
+      "loading": "正在获取状态...",
+      "consentStatus": "授权状态",
+      "authorized": "已授权",
+      "unauthorized": "未授权",
+      "savedCredential": "已保存凭证",
+      "yes": "是",
+      "no": "否",
+      "quickAuth": "快速认证",
+      "enabled": "已开启",
+      "disabled": "已关闭",
+      "campusAccount": "校园账号",
+      "notProvided": "未提供",
+      "consentedAt": "授权时间",
+      "revokedAt": "撤回时间",
+      "none": "暂无",
+      "disableQuickAuth": "关闭快速认证",
+      "enableQuickAuth": "开启快速认证",
+      "quickAuthHint": "需要先存在有效授权记录，并保存可复用的校园凭证后，才可重新开启快速认证。",
+      "dangerTitle": "危险操作",
+      "revoke": "撤回授权",
+      "deleteCredential": "删除已保存凭证",
+      "feedbackAction": "通过帮助与反馈申请处理",
+      "privacyAction": "查看隐私政策中的校园凭证说明",
+      "loginRequired": "请先登录后查看校园凭证管理状态。",
+      "statusUnavailable": "当前暂时无法获取校园凭证管理状态，请优先通过“帮助与反馈”申请处理。",
+      "revokeSuccess": "校园账号凭证授权已撤回",
+      "deleteSuccess": "已删除保存的校园凭证",
+      "quickAuthOnSuccess": "快速认证已开启",
+      "quickAuthOffSuccess": "快速认证已关闭",
+      "revokeDescription": "撤回授权将同时删除已保存的校园凭证，后续使用相关功能需要重新登录或重新授权。",
+      "deleteDescription": "删除后，课表、成绩、校园卡、图书馆等查询可能需要重新登录。已保存的校园凭证和快速认证状态将一并清除。",
+      "revokeTitle": "撤回校园账号凭证授权",
+      "deleteTitle": "删除已保存的校园凭证",
+      "guide": {
+        "title": "广东二师助手校园网络账号说明",
+        "updated": "更新日期：2022年6月28日",
+        "welcome": "广东第二师范学院的同学们，欢迎使用校园助手系统。",
+        "firstUse": "若你为新生或首次使用本系统，建议先阅读本说明。",
+        "login": "请使用校园网账号的用户名与密码登录。",
+        "usernameHint": "用户名并不是学号。",
+        "activation": "新生通常需要等待约一周，由网络中心激活学院应用信息系统账号；无法登录时，请耐心等待。",
+        "steps": "查询校园网账号的方法如下：",
+        "homepage": "打开学校主页 www.gdei.edu.cn，点击右侧导航栏的“内网登录”。",
+        "lookup": "在统一身份认证系统中，点击“查询账号”。",
+        "result": "正确填写姓名、学工号、身份证号及验证码后，页面会显示校园网账号信息。",
+        "passwordHint": "其中“用户名”是登录本系统需要填写的账号。根据本说明的原始记录，2015级及之后学生的初始密码为身份证后六位数字；初始密码存在安全风险，请及时修改。",
+        "homepageAlt": "学校主页的内网登录入口",
+        "lookupAlt": "统一身份认证系统的查询账号入口",
+        "resultAlt": "校园网账号查询结果示例"
+      }
+    }
   },
   "appearance": {
     "title": "界面和外观",
@@ -1381,7 +1524,16 @@
     "fillAllFields": "请完整填写查询信息！",
     "wish": "祝2019考研er金榜题名",
     "altEntry": "备用查询入口",
-    "chsiLink": "研招网硕士初试成绩查询"
+    "chsiLink": "研招网硕士初试成绩查询",
+    "totalScore": "初试总分",
+    "politics": "思想政治理论",
+    "foreignLanguage": "外国语",
+    "business1": "业务课一",
+    "business2": "业务课二",
+    "reQuery": "重新查询",
+    "emptyTitle": "暂无成绩数据",
+    "emptyDescription": "当前未查询到对应考生的成绩信息，请检查姓名、考号和证件号码后重新查询。",
+    "emptyAction": "返回重查"
   },
   "social": {
     "chooseImage": "选择图片",
@@ -1444,6 +1596,45 @@
     "policyMutual": "互相关注的人",
     "policyMutualDesc": "只有互关好友可以私信我（默认）",
     "policyNone": "不接收私信",
-    "policyNoneDesc": "关闭陌生人及好友私信；我仍可主动发出"
+    "policyNoneDesc": "关闭陌生人及好友私信；我仍可主动发出",
+    "backToPrivacySettings": "返回隐私设置"
+  },
+  "community": {
+    "navAriaLabel": "社区导航",
+    "defaultPublish": "发布信息",
+    "noticeFallback": "校内通知",
+    "heroSubtitle": "发现校园精彩，连接你我生活",
+    "backHome": "返回功能主页",
+    "railAriaLabel": "校园生活侧栏",
+    "todayCampus": "今日校园",
+    "goSee": "去看看",
+    "myPosts": "我的发布",
+    "manage": "管理",
+    "latest": "最新动态",
+    "safetyTitle": "安全提示",
+    "safetyTip": "交易和代取请优先选择校内当面确认，避免泄露个人隐私。"
+  },
+  "evaluatePage": {
+    "title": "教学质量评价",
+    "directSubmit": "直接提交评教信息",
+    "submitAction": "一键评教",
+    "riskNotice": "注意：评教信息提交后，将不能再作修改。",
+    "confirmMessage": "确定要进行一键评教吗？此操作不可逆。",
+    "loading": "自动评教中...",
+    "success": "评价提交成功！",
+    "error": "评教提交失败，请稍后重试"
+  },
+  "navigationAccessibility": {
+    "sidebarNavigation": "侧边导航",
+    "primaryNavigation": "主要导航",
+    "mainNavigation": "主导航",
+    "openSidebar": "打开侧边栏",
+    "closeSidebar": "关闭侧边栏",
+    "lightMode": "切换到浅色模式",
+    "darkMode": "切换到深色模式"
+  },
+  "pePage": {
+    "wechatRequiredTitle": "请在微信客户端打开",
+    "wechatRequiredDescription": "体质测试查询功能需要微信环境支持。请使用微信扫码或在微信中搜索打开本应用。"
   }
 }

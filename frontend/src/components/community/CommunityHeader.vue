@@ -1,6 +1,7 @@
 <script setup>
 import { computed, useSlots } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   /** 页面标题 */
@@ -15,6 +16,7 @@ const props = defineProps({
 
 const emit = defineEmits(['back'])
 const router = useRouter()
+const { t } = useI18n()
 const slots = useSlots()
 const hasRightSlot = computed(() => Boolean(slots.right))
 
@@ -36,7 +38,7 @@ function handleBack() {
       v-if="showBack"
       type="button"
       class="community-header__back"
-      aria-label="返回"
+      :aria-label="t('common.back')"
       @click="handleBack"
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

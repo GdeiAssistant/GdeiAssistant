@@ -12,7 +12,7 @@
       <div class="max-w-lg mx-auto px-4 py-6">
         <div class="avatar-edit-card rounded-xl shadow-sm p-6">
           <div class="avatar-edit-tip mb-4 rounded-xl px-4 py-3 text-xs leading-6">
-            上传头像或图片前，请自行确认其中不包含不必要的人脸、位置、证件、学生卡、联系方式或其他高敏信息。
+            {{ t('avatarEdit.privacyHint') }}
           </div>
           <div class="flex items-center justify-center min-h-[320px] w-full">
             <img :src="currentAvatar" class="w-[92%] max-w-[92%] h-auto max-h-[70vh] object-contain block" :alt="t('avatarEdit.currentAvatar')" />

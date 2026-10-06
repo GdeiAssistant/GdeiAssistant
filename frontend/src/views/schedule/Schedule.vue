@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -291,12 +292,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)] pb-6">
+  <div class="subpage min-h-screen bg-[var(--c-bg)] pb-6">
     <!-- Header -->
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="$router.back()" class="text-[var(--c-primary)] text-sm font-medium">← {{ t('common.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('schedule.pageTitle') }}</span>
-      <button @click="showOptionMenu" class="text-[var(--c-primary)] text-sm font-medium w-10 text-right">{{ t('schedule.more') }}</button>
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="$router.back()">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('schedule.pageTitle') }}</span>
+      <button type="button" class="subpage-bar__action" @click="showOptionMenu">{{ t('schedule.more') }}</button>
     </div>
 
     <!-- Loading -->

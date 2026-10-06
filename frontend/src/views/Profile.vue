@@ -29,21 +29,21 @@
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=following` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
         >
-          <div class="font-semibold">{{ socialStats.followingCount }}</div>
+          <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followingCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.following') }}</div>
         </RouterLink>
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=followers` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
         >
-          <div class="font-semibold">{{ socialStats.followerCount }}</div>
+          <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followerCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.followers') }}</div>
         </RouterLink>
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=friends` : '/social/search'"
           class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
         >
-          <div class="font-semibold">{{ socialStats.friendCount }}</div>
+          <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.friendCount }}</div>
           <div class="text-[var(--c-text-tertiary)]">{{ $t('social.friends') }}</div>
         </RouterLink>
       </div>
@@ -537,39 +537,20 @@ onMounted(() => {
 
 <style scoped>
 .profile-page {
-  width: min(1140px, calc(100% - 64px));
+  width: 100%;
+  max-width: 960px;
   margin: 0 auto;
-  padding-top: 26px;
 }
 
 .profile-avatar-ring {
-  background:
-    linear-gradient(135deg,
-      color-mix(in srgb, var(--c-primary) 86%, #67e8f9) 0%,
-      color-mix(in srgb, var(--c-primary) 72%, #2dd4bf) 52%,
-      color-mix(in srgb, var(--c-primary) 44%, #93c5fd) 100%);
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--c-primary) 16%, transparent);
-}
-
-[data-theme="dark"] .profile-avatar-ring {
-  background:
-    linear-gradient(135deg,
-      color-mix(in srgb, var(--c-primary) 64%, #7dd3c7) 0%,
-      color-mix(in srgb, var(--c-primary) 54%, #67e8f9) 58%,
-      color-mix(in srgb, var(--c-primary) 34%, #93c5fd) 100%);
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-primary) 18%, transparent);
-}
-
-[data-theme="dark"] .profile-page {
-  background:
-    radial-gradient(circle at 0 0, rgba(45, 212, 191, 0.05), transparent 18%);
+  background: var(--c-primary);
 }
 
 .profile-dialog-input {
   width: 100%;
   border: 1px solid var(--c-border);
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--c-bg) 72%, white);
+  border-radius: var(--radius-control);
+  background: var(--c-surface);
   color: var(--c-text-1);
   font: inherit;
   font-size: 15px;
@@ -624,8 +605,8 @@ onMounted(() => {
 .profile-dialog-list__cancel {
   min-height: 42px;
   border: 1px solid var(--c-border);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.75);
+  border-radius: var(--radius-control);
+  background: var(--c-surface);
   color: var(--c-text-2);
   cursor: pointer;
   font: inherit;
@@ -634,26 +615,4 @@ onMounted(() => {
   padding: 0 18px;
 }
 
-[data-theme="dark"] .profile-dialog-input {
-  background: rgba(31, 41, 55, 0.72);
-}
-
-[data-theme="dark"] .profile-dialog-list__item {
-  border-bottom-color: rgba(45, 58, 73, 0.86);
-}
-
-[data-theme="dark"] .profile-dialog-list__item:hover {
-  background: color-mix(in srgb, var(--c-primary) 8%, rgba(31, 41, 55, 0.38));
-}
-
-[data-theme="dark"] .profile-dialog-list__cancel {
-  background: rgba(31, 41, 55, 0.86);
-}
-
-@media (max-width: 768px) {
-  .profile-page {
-    width: calc(100% - 24px);
-    padding-top: 16px;
-  }
-}
 </style>

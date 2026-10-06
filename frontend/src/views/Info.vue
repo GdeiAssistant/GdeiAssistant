@@ -348,8 +348,8 @@ onMounted(() => {
 }
 
 [data-theme="dark"] .info-news-badge {
-  background: color-mix(in srgb, var(--c-primary) 16%, rgba(24, 38, 53, 0.9));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 16%, rgba(103, 232, 249, 0.1));
+  background: var(--c-primary-soft);
+  box-shadow: none;
 }
 
 [data-theme="dark"] .info-news-chevron {

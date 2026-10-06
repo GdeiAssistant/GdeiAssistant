@@ -36,7 +36,7 @@ function onOpenChange(val) {
 <template>
   <DialogRoot :open="open" @update:open="onOpenChange">
     <DialogPortal>
-      <DialogOverlay class="dialog-overlay fixed inset-0 z-[300] bg-slate-950/45 backdrop-blur-[3px]" />
+      <DialogOverlay class="dialog-overlay fixed inset-0 z-[300] bg-[rgb(10_20_17/48%)]" />
       <DialogContent class="dialog-content">
         <DialogTitle v-if="title" class="dialog-title">
           {{ title }}
@@ -89,29 +89,29 @@ function onOpenChange(val) {
   left: 50%;
   top: 50%;
   z-index: 301;
-  width: 390px;
-  max-width: 90vw;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
   transform: translate(-50%, -50%);
-  border: 1px solid rgba(205, 222, 226, 0.82);
-  border-radius: 26px;
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 28px 80px rgba(15, 39, 49, 0.18);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-lg);
   padding: 24px;
   outline: none;
-  backdrop-filter: blur(18px);
 }
 
 .dialog-title {
   margin: 0 0 8px;
   color: var(--c-text-1);
-  font-size: 19px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
+  font-size: 17px;
+  font-weight: 650;
 }
 
 .dialog-description,
 .dialog-body {
-  margin-bottom: 22px;
+  margin-bottom: 24px;
   color: var(--c-text-2);
   font-size: 14px;
   line-height: 1.7;
@@ -120,7 +120,7 @@ function onOpenChange(val) {
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 8px;
 }
 
 .dialog-actions--single .dialog-button {
@@ -129,44 +129,47 @@ function onOpenChange(val) {
 
 .dialog-button {
   min-height: 42px;
-  border-radius: 14px;
+  border-radius: var(--radius-control);
   cursor: pointer;
   font: inherit;
   font-size: 14px;
-  font-weight: 820;
+  font-weight: 600;
   padding: 0 18px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .dialog-button--secondary {
   border: 1px solid var(--c-border);
-  background: rgba(255, 255, 255, 0.75);
-  color: var(--c-text-2);
+  background: var(--c-surface);
+  color: var(--c-text-1);
+}
+
+.dialog-button--secondary:hover {
+  background: var(--c-surface-hover);
 }
 
 .dialog-button--primary {
   border: 0;
   background: var(--c-primary);
-  color: #fff;
-  box-shadow: 0 12px 24px color-mix(in srgb, var(--c-primary) 18%, transparent);
+  color: var(--c-on-primary);
+}
+
+.dialog-button--primary:hover {
+  background: var(--c-primary-hover);
 }
 
 .dialog-button--danger {
   border: 0;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-danger) 92%, #ef4444),
-    color-mix(in srgb, var(--c-danger) 76%, #991b1b)
-  );
-  color: #fff;
-  box-shadow: 0 12px 24px color-mix(in srgb, var(--c-danger) 18%, transparent);
+  background: var(--c-danger);
+  color: var(--c-on-primary);
 }
 
 .dialog-overlay {
-  animation: overlay-in 0.2s ease-out;
+  animation: overlay-in 0.18s ease-out;
 }
 
 .dialog-content {
-  animation: content-in 0.2s ease-out;
+  animation: content-in 0.18s ease-out;
 }
 
 @keyframes overlay-in {
@@ -177,30 +180,21 @@ function onOpenChange(val) {
 @keyframes content-in {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.95);
+    transform: translate(-50%, -48%);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%);
   }
 }
 
-[data-theme="dark"] .dialog-content {
-  border-color: rgba(45, 58, 73, 0.9);
-  background: rgba(20, 27, 37, 0.94);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.46);
-}
+@media (max-width: 480px) {
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
 
-[data-theme="dark"] .dialog-button--secondary {
-  background: rgba(31, 41, 55, 0.86);
-}
-
-[data-theme="dark"] .dialog-button--danger {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--c-danger) 88%, rgba(24, 38, 53, 0.12)),
-    color-mix(in srgb, var(--c-danger) 68%, rgba(24, 38, 53, 0.3))
-  );
-  box-shadow: 0 14px 28px color-mix(in srgb, var(--c-danger) 22%, transparent);
+  .dialog-button {
+    width: 100%;
+  }
 }
 </style>

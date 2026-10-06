@@ -105,22 +105,19 @@ onUnmounted(() => {
 .campus-app-shell {
   position: relative;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 18% 10%, rgba(175, 225, 255, 0.42), transparent 28%),
-    radial-gradient(circle at 82% 6%, rgba(183, 238, 207, 0.38), transparent 26%),
-    linear-gradient(180deg, #f6fcff 0%, var(--c-bg) 44%, #f8fbf9 100%);
+  background: var(--c-bg);
 }
 
 .campus-main {
   min-height: 100vh;
-  margin-left: 232px;
+  margin-left: var(--rail-width, 248px);
 }
 
 .campus-content {
   width: 100%;
-  max-width: 1360px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 26px 32px 56px;
+  padding: 28px 40px 64px;
 }
 
 .campus-sidebar-backdrop {
@@ -129,12 +126,17 @@ onUnmounted(() => {
   z-index: 45;
   display: none;
   border: 0;
-  background: rgba(15, 23, 42, 0.28);
-  backdrop-filter: blur(6px);
+  background: rgb(10 20 17 / 42%);
 }
 
 .campus-mobile-tabbar {
   display: none;
+}
+
+@media (max-width: 1023px) {
+  .campus-content {
+    padding: 24px 24px 56px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -143,7 +145,7 @@ onUnmounted(() => {
   }
 
   .campus-content {
-    padding: 16px 14px 104px;
+    padding: 16px 16px calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
   .campus-sidebar-backdrop {
@@ -158,57 +160,49 @@ onUnmounted(() => {
     z-index: 50;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    padding: 9px 18px calc(9px + env(safe-area-inset-bottom, 0));
-    border-top: 1px solid rgba(207, 221, 225, 0.72);
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 -16px 34px rgba(15, 39, 49, 0.08);
-    backdrop-filter: blur(18px);
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--c-border);
+    background: var(--c-surface);
   }
 
   .campus-mobile-tabbar__item {
+    position: relative;
     display: flex;
-    min-height: 54px;
+    min-height: 52px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 3px;
     border: 0;
-    border-radius: 18px;
+    border-radius: var(--radius-control);
     background: transparent;
     color: var(--c-text-3);
     font: inherit;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
   }
 
   .campus-mobile-tabbar__icon {
     width: 22px;
     height: 22px;
+    stroke-width: 1.75;
   }
 
   .campus-mobile-tabbar__item--active {
     color: var(--c-primary);
-    background: var(--c-primary-50);
   }
-}
 
-@media (max-width: 480px) {
-  .campus-content {
-    padding-right: 12px;
-    padding-left: 12px;
+  .campus-mobile-tabbar__item--active::before {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    width: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--c-primary);
+    content: '';
+    transform: translateX(-50%);
   }
-}
-
-[data-theme="dark"] .campus-app-shell {
-  background:
-    radial-gradient(circle at 15% 8%, rgba(45, 212, 191, 0.1), transparent 28%),
-    radial-gradient(circle at 84% 10%, rgba(96, 165, 250, 0.1), transparent 26%),
-    linear-gradient(180deg, #101923 0%, #0f1822 100%);
-}
-
-[data-theme="dark"] .campus-mobile-tabbar {
-  border-top-color: rgba(68, 89, 112, 0.74);
-  background: rgba(18, 30, 42, 0.92);
-  box-shadow: 0 -16px 34px rgba(0, 0, 0, 0.28);
 }
 </style>

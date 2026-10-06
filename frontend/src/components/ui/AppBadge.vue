@@ -17,15 +17,15 @@ const props = defineProps({
 })
 
 const badgeVariants = cva(
-  'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium',
+  'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold leading-4',
   {
     variants: {
       variant: {
-        default: 'bg-[var(--c-border-light)] text-[var(--c-text-2)]',
-        success: 'bg-[var(--c-primary-50)] text-[var(--c-primary)]',
-        warning: 'bg-amber-50 text-amber-600',
-        danger: 'bg-red-50 text-red-600',
-        info: 'bg-blue-50 text-blue-600',
+        default: 'bg-[var(--c-fill-2)] text-[var(--c-text-2)]',
+        success: 'bg-[var(--c-primary-soft)] text-[var(--c-primary)]',
+        warning: 'bg-[color-mix(in_srgb,var(--c-warning)_14%,var(--c-surface))] text-[var(--c-warning)]',
+        danger: 'bg-[color-mix(in_srgb,var(--c-danger)_12%,var(--c-surface))] text-[var(--c-danger)]',
+        info: 'bg-[var(--c-fill-2)] text-[var(--c-text-1)]',
         module: '',
       },
     },
@@ -42,7 +42,7 @@ const classes = computed(() =>
 const moduleStyle = computed(() => {
   if (props.variant !== 'module' || !props.color) return {}
   return {
-    backgroundColor: `color-mix(in srgb, ${props.color} 10%, transparent)`,
+    backgroundColor: `color-mix(in srgb, ${props.color} 14%, var(--c-surface))`,
     color: props.color,
   }
 })

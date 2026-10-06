@@ -6,7 +6,7 @@ defineOptions({
 
 <template>
   <div
-    class="rounded-lg bg-[var(--c-border-light)] animate-pulse"
+    class="rounded-[8px] bg-[var(--c-fill-2)] animate-pulse"
     v-bind="$attrs"
   />
 </template>

@@ -1,4 +1,5 @@
 <script setup>
+import { ChevronLeft } from 'lucide-vue-next'
 import { computed, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -96,12 +97,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--c-bg)]">
+  <div class="subpage min-h-screen bg-[var(--c-bg)]">
     <!-- Header bar -->
-    <div class="sticky top-0 z-30 flex items-center h-[52px] px-5 bg-[var(--c-surface)]/90 backdrop-blur-xl border-b border-[var(--c-border)]">
-      <button @click="goBack" class="text-[var(--c-primary)] text-sm font-medium">← {{ t('common.back') }}</button>
-      <span class="flex-1 text-center text-sm font-bold">{{ t('gradePage.title') }}</span>
-      <button @click="showOptionMenu" class="text-[var(--c-primary)] text-sm font-medium w-10 text-right">{{ t('gradePage.moreAction') }}</button>
+    <div class="subpage-bar">
+      <button type="button" class="subpage-bar__back" @click="goBack">
+        <ChevronLeft :size="18" aria-hidden="true" />
+        <span>{{ t('common.back') }}</span>
+      </button>
+      <span class="subpage-bar__title">{{ t('gradePage.title') }}</span>
+      <button type="button" class="subpage-bar__action" @click="showOptionMenu">{{ t('gradePage.moreAction') }}</button>
     </div>
 
     <!-- Year/term selector pills -->
@@ -113,7 +117,7 @@ onMounted(() => {
         :class="[
           'shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all whitespace-nowrap',
           activeYear === tab.value
-            ? 'bg-[var(--c-primary)] text-white'
+            ? 'bg-[var(--c-primary)] text-[var(--c-on-primary)]'
             : 'bg-[var(--c-surface)] text-[var(--c-text-2)] border border-[var(--c-border)]'
         ]"
       >
